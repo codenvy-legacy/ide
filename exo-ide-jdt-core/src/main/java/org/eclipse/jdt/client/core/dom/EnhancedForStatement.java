@@ -16,16 +16,17 @@ import java.util.List;
 
 /**
  * Enhanced For statement AST node type (added in JLS3 API).
- *
+ * 
  * <pre>
  * EnhancedForStatement:
  *    <b>for</b> <b>(</b> FormalParameter <b>:</b> Expression <b>)</b>
  * 			Statement
  * </pre>
  * 
- * <p>The FormalParameter is represented by a {@link SingleVariableDeclaration}
- * (without an initializer).</p>
- *
+ * <p>
+ * The FormalParameter is represented by a {@link SingleVariableDeclaration} (without an initializer).
+ * </p>
+ * 
  * @since 3.1
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -51,9 +52,7 @@ public class EnhancedForStatement extends Statement
       "body", Statement.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -68,14 +67,11 @@ public class EnhancedForStatement extends Statement
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     */
    public static List propertyDescriptors(int apiLevel)
    {
@@ -83,28 +79,24 @@ public class EnhancedForStatement extends Statement
    }
 
    /**
-    * The parameter; lazily initialized; defaults to a unspecified,
-    * legal node.
+    * The parameter; lazily initialized; defaults to a unspecified, legal node.
     */
    private SingleVariableDeclaration parameter = null;
 
    /**
-    * The expression; lazily initialized; defaults to a unspecified, but legal,
-    * expression.
+    * The expression; lazily initialized; defaults to a unspecified, but legal, expression.
     */
    private Expression expression = null;
 
    /**
-    * The body statement; lazily initialized; defaults to an empty block
-    * statement.
+    * The body statement; lazily initialized; defaults to an empty block statement.
     */
    private Statement body = null;
 
    /**
-    * Creates a new AST node for an enchanced for statement owned by the
-    * given AST. By default, the parameter and expression are unspecified
-    * but legal subtrees, and the body is an empty block.
-    *
+    * Creates a new AST node for an enchanced for statement owned by the given AST. By default, the parameter and expression are
+    * unspecified but legal subtrees, and the body is an empty block.
+    * 
     * @param ast the AST that is to own this node
     */
    EnhancedForStatement(AST ast)
@@ -113,16 +105,16 @@ public class EnhancedForStatement extends Statement
       unsupportedIn2();
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -166,16 +158,16 @@ public class EnhancedForStatement extends Statement
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return ENHANCED_FOR_STATEMENT;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -188,8 +180,8 @@ public class EnhancedForStatement extends Statement
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -197,8 +189,8 @@ public class EnhancedForStatement extends Statement
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -215,7 +207,7 @@ public class EnhancedForStatement extends Statement
 
    /**
     * Returns the formal parameter in this enhanced for statement.
-    *
+    * 
     * @return the parameter
     */
    public SingleVariableDeclaration getParameter()
@@ -238,13 +230,13 @@ public class EnhancedForStatement extends Statement
 
    /**
     * Sets the formal parameter in this enhanced for statement.
-    *
+    * 
     * @param parameter the new parameter
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     */
    public void setParameter(SingleVariableDeclaration parameter)
    {
@@ -260,7 +252,7 @@ public class EnhancedForStatement extends Statement
 
    /**
     * Returns the expression of this enhanced for statement.
-    *
+    * 
     * @return the expression node
     */
    public Expression getExpression()
@@ -283,14 +275,14 @@ public class EnhancedForStatement extends Statement
 
    /**
     * Sets the expression of this enhanced for statement.
-    *
+    * 
     * @param expression the new expression node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setExpression(Expression expression)
    {
@@ -306,7 +298,7 @@ public class EnhancedForStatement extends Statement
 
    /**
     * Returns the body of this enchanced for statement.
-    *
+    * 
     * @return the body statement node
     */
    public Statement getBody()
@@ -329,14 +321,14 @@ public class EnhancedForStatement extends Statement
 
    /**
     * Sets the body of this enhanced for statement.
-    *
+    * 
     * @param statement the body statement node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setBody(Statement statement)
    {
@@ -350,16 +342,16 @@ public class EnhancedForStatement extends Statement
       postReplaceChild(oldChild, statement, BODY_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return super.memSize() + 3 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

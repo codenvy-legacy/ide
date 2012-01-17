@@ -25,21 +25,16 @@ import org.eclipse.jdt.client.internal.core.util.Messages;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 
 /**
- * A source element parser extracts structural and reference information
- * from a piece of source.
- *
+ * A source element parser extracts structural and reference information from a piece of source.
+ * 
  * also see @ISourceElementRequestor
- *
- * The structural investigation includes:
- * - the package statement
- * - import statements
- * - top-level types: package member, member types (member types of member types...)
- * - fields
- * - methods
- *
- * If reference information is requested, then all source constructs are
- * investigated and type, field & method references are provided as well.
- *
+ * 
+ * The structural investigation includes: - the package statement - import statements - top-level types: package member, member
+ * types (member types of member types...) - fields - methods
+ * 
+ * If reference information is requested, then all source constructs are investigated and type, field & method references are
+ * provided as well.
+ * 
  * Any (parsing) problem encountered is also provided.
  */
 public class SourceElementParser extends CommentRecorderParser
@@ -82,7 +77,8 @@ public class SourceElementParser extends CommentRecorderParser
          {
             public void record(CategorizedProblem problem, CompilationResult unitResult, ReferenceContext context)
             {
-               unitResult.record(problem, context); // TODO (jerome) clients are trapping problems either through factory or requestor... is result storing needed?
+               unitResult.record(problem, context); // TODO (jerome) clients are trapping problems either through factory or
+                                                    // requestor... is result storing needed?
                SourceElementParser.this.requestor.acceptProblem(problem);
             }
          };
@@ -117,7 +113,8 @@ public class SourceElementParser extends CommentRecorderParser
    {
       // Note that:
       // - the only requestor interested in references is the SourceIndexerRequestor
-      // - a name reference can become a type reference only during the cast case, it is then tagged later with the Binding.TYPE bit
+      // - a name reference can become a type reference only during the cast case, it is then tagged later with the Binding.TYPE
+      // bit
       // However since the indexer doesn't make the distinction between name reference and type reference, there is no need
       // to report a type reference in the SourceElementParser.
       // This gained 3.7% in the indexing performance test.
@@ -127,7 +124,7 @@ public class SourceElementParser extends CommentRecorderParser
       }
       else
       {
-         //QualifiedNameReference
+         // QualifiedNameReference
          this.requestor.acceptUnknownReference(((QualifiedNameReference)nameRef).tokens, nameRef.sourceStart,
             nameRef.sourceEnd);
       }
@@ -168,7 +165,7 @@ public class SourceElementParser extends CommentRecorderParser
             lastComment--; // non javadoc comment have negative end positions
          if (lastComment >= 0 && this.javadocParser != null)
          {
-            int commentEnd = this.scanner.commentStops[lastComment] - 1; //stop is one over
+            int commentEnd = this.scanner.commentStops[lastComment] - 1; // stop is one over
             // do not report problem before last parsed comment while recovering code...
             if (this.javadocParser.shouldReportProblems)
             {
@@ -449,7 +446,7 @@ public class SourceElementParser extends CommentRecorderParser
    }
 
    /*
-    *
+    * 
     * INTERNAL USE-ONLY
     */
    protected void consumeFieldAccess(boolean isSuperAccess)
@@ -529,7 +526,7 @@ public class SourceElementParser extends CommentRecorderParser
    }
 
    /*
-    *
+    * 
     * INTERNAL USE-ONLY
     */
    protected void consumeMethodInvocationName()
@@ -563,7 +560,7 @@ public class SourceElementParser extends CommentRecorderParser
    }
 
    /*
-    *
+    * 
     * INTERNAL USE-ONLY
     */
    protected void consumeMethodInvocationPrimary()
@@ -579,7 +576,7 @@ public class SourceElementParser extends CommentRecorderParser
    }
 
    /*
-    *
+    * 
     * INTERNAL USE-ONLY
     */
    protected void consumeMethodInvocationPrimaryWithTypeArguments()
@@ -595,7 +592,7 @@ public class SourceElementParser extends CommentRecorderParser
    }
 
    /*
-    *
+    * 
     * INTERNAL USE-ONLY
     */
    protected void consumeMethodInvocationSuper()
@@ -669,7 +666,7 @@ public class SourceElementParser extends CommentRecorderParser
          impt.declarationSourceEnd = impt.sourceEnd;
       }
       impt.declarationEnd = impt.declarationSourceEnd;
-      //this.endPosition is just before the ;
+      // this.endPosition is just before the ;
       impt.declarationSourceStart = this.intStack[this.intPtr--];
 
       if (!this.statementRecoveryActivated && this.options.sourceLevel < ClassFileConstants.JDK1_5
@@ -713,8 +710,9 @@ public class SourceElementParser extends CommentRecorderParser
    protected void consumeSingleTypeImportDeclarationName()
    {
       // SingleTypeImportDeclarationName ::= 'import' Name
-      /* push an ImportRef build from the last name
-      stored in the identifier stack. */
+      /*
+       * push an ImportRef build from the last name stored in the identifier stack.
+       */
 
       ImportReference impt;
       int length;
@@ -734,7 +732,7 @@ public class SourceElementParser extends CommentRecorderParser
          impt.declarationSourceEnd = impt.sourceEnd;
       }
       impt.declarationEnd = impt.declarationSourceEnd;
-      //this.endPosition is just before the ;
+      // this.endPosition is just before the ;
       impt.declarationSourceStart = this.intStack[this.intPtr--];
 
       // recovery
@@ -754,8 +752,9 @@ public class SourceElementParser extends CommentRecorderParser
    protected void consumeStaticImportOnDemandDeclarationName()
    {
       // TypeImportOnDemandDeclarationName ::= 'import' 'static' Name '.' '*'
-      /* push an ImportRef build from the last name
-      stored in the identifier stack. */
+      /*
+       * push an ImportRef build from the last name stored in the identifier stack.
+       */
 
       ImportReference impt;
       int length;
@@ -780,7 +779,7 @@ public class SourceElementParser extends CommentRecorderParser
          impt.declarationSourceEnd = impt.sourceEnd;
       }
       impt.declarationEnd = impt.declarationSourceEnd;
-      //this.endPosition is just before the ;
+      // this.endPosition is just before the ;
       impt.declarationSourceStart = this.intStack[this.intPtr--];
 
       if (!this.statementRecoveryActivated && this.options.sourceLevel < ClassFileConstants.JDK1_5
@@ -807,8 +806,9 @@ public class SourceElementParser extends CommentRecorderParser
    protected void consumeTypeImportOnDemandDeclarationName()
    {
       // TypeImportOnDemandDeclarationName ::= 'import' Name '.' '*'
-      /* push an ImportRef build from the last name
-      stored in the identifier stack. */
+      /*
+       * push an ImportRef build from the last name stored in the identifier stack.
+       */
 
       ImportReference impt;
       int length;
@@ -830,7 +830,7 @@ public class SourceElementParser extends CommentRecorderParser
          impt.declarationSourceEnd = impt.sourceEnd;
       }
       impt.declarationEnd = impt.declarationSourceEnd;
-      //this.endPosition is just before the ;
+      // this.endPosition is just before the ;
       impt.declarationSourceStart = this.intStack[this.intPtr--];
 
       // recovery
@@ -879,12 +879,13 @@ public class SourceElementParser extends CommentRecorderParser
 
    public TypeReference getTypeReference(int dim)
    {
-      /* build a Reference on a variable that may be qualified or not
-       * This variable is a type reference and dim will be its dimensions
+      /*
+       * build a Reference on a variable that may be qualified or not This variable is a type reference and dim will be its
+       * dimensions
        */
       int length = this.identifierLengthStack[this.identifierLengthPtr--];
       if (length < 0)
-      { //flag for precompiled type reference on base types
+      { // flag for precompiled type reference on base types
          TypeReference ref = TypeReference.baseTypeReference(-length, dim);
          ref.sourceStart = this.intStack[this.intPtr--];
          if (dim == 0)
@@ -957,7 +958,7 @@ public class SourceElementParser extends CommentRecorderParser
             }
          }
          else
-         {//Qualified variable reference
+         {// Qualified variable reference
             this.genericsLengthPtr--;
             char[][] tokens = new char[length][];
             this.identifierPtr -= length;
@@ -989,7 +990,7 @@ public class SourceElementParser extends CommentRecorderParser
 
    public NameReference getUnspecifiedReference()
    {
-      /* build a (unspecified) NameReference which may be qualified*/
+      /* build a (unspecified) NameReference which may be qualified */
 
       int length;
       if ((length = this.identifierLengthStack[this.identifierLengthPtr--]) == 1)
@@ -1006,7 +1007,7 @@ public class SourceElementParser extends CommentRecorderParser
       }
       else
       {
-         //Qualified variable reference
+         // Qualified variable reference
          char[][] tokens = new char[length][];
          this.identifierPtr -= length;
          System.arraycopy(this.identifierStack, this.identifierPtr + 1, tokens, 0, length);
@@ -1026,12 +1027,11 @@ public class SourceElementParser extends CommentRecorderParser
 
    public NameReference getUnspecifiedReferenceOptimized()
    {
-      /* build a (unspecified) NameReference which may be qualified
-      The optimization occurs for qualified reference while we are
-      certain in this case the last item of the qualified name is
-      a field access. This optimization is IMPORTANT while it results
-      that when a NameReference is build, the type checker should always
-      look for that it is not a type reference */
+      /*
+       * build a (unspecified) NameReference which may be qualified The optimization occurs for qualified reference while we are
+       * certain in this case the last item of the qualified name is a field access. This optimization is IMPORTANT while it
+       * results that when a NameReference is build, the type checker should always look for that it is not a type reference
+       */
 
       int length;
       if ((length = this.identifierLengthStack[this.identifierLengthPtr--]) == 1)
@@ -1049,11 +1049,11 @@ public class SourceElementParser extends CommentRecorderParser
          return ref;
       }
 
-      //Qualified-variable-reference
-      //In fact it is variable-reference DOT field-ref , but it would result in a type
-      //conflict tha can be only reduce by making a superclass (or inetrface ) between
-      //nameReference and FiledReference or putting FieldReference under NameReference
-      //or else..........This optimisation is not really relevant so just leave as it is
+      // Qualified-variable-reference
+      // In fact it is variable-reference DOT field-ref , but it would result in a type
+      // conflict tha can be only reduce by making a superclass (or inetrface ) between
+      // nameReference and FiledReference or putting FieldReference under NameReference
+      // or else..........This optimisation is not really relevant so just leave as it is
 
       char[][] tokens = new char[length][];
       this.identifierPtr -= length;

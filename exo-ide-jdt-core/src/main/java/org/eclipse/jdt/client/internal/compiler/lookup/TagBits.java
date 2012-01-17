@@ -38,7 +38,8 @@ public interface TagBits
 
    long IsBinaryBinding = ASTNode.Bit7;
 
-   // set for all bindings either representing a missing type (type), or directly referencing a missing type (field/method/variable)
+   // set for all bindings either representing a missing type (type), or directly referencing a missing type
+   // (field/method/variable)
    long HasMissingType = ASTNode.Bit8;
 
    // for method
@@ -111,7 +112,8 @@ public interface TagBits
 
    long HasUnresolvedMemberTypes = ASTNode.Bit29;
 
-   long HasTypeVariable = ASTNode.Bit30; // set either for type variables (direct) or parameterized types indirectly referencing type variables
+   long HasTypeVariable = ASTNode.Bit30; // set either for type variables (direct) or parameterized types indirectly referencing
+                                         // type variables
 
    long HasDirectWildcard = ASTNode.Bit31; // set for parameterized types directly referencing wildcards
 
@@ -171,7 +173,7 @@ public interface TagBits
    /** @since 3.7 - java 7 safe vargs invocation */
    long AnnotationSafeVarargs = ASTNode.Bit52L;
 
-   /** @since 3.7 - java 7 MethodHandle.invokeExact(..)/invokeGeneric(..)*/
+   /** @since 3.7 - java 7 MethodHandle.invokeExact(..)/invokeGeneric(..) */
    long AnnotationPolymorphicSignature = ASTNode.Bit53L;
 
    long AllStandardAnnotationsMask = AnnotationTargetMASK | AnnotationRetentionMASK | AnnotationDeprecated

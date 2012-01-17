@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * Enumeration constant declaration AST node type (added in JLS3 API).
- *
+ * 
  * <pre>
  * EnumConstantDeclaration:
  *     [ Javadoc ] { ExtendedModifier } Identifier
@@ -24,18 +24,14 @@ import java.util.List;
  *         [ AnonymousClassDeclaration ]
  * </pre>
  * <p>
- * When a Javadoc comment is present, the source
- * range begins with the first character of the "/**" comment delimiter.
- * When there is no Javadoc comment, the source range begins with the first
- * character of the identifier. If there are class body declarations, the
- * source range extends through the last character of the last character of
- * the "}" token following the body declarations. If there are arguments but
- * no class body declarations, the source range extends through the last
- * character of the ")" token following the arguments. If there are no
- * arguments and no class body declarations, the source range extends through
+ * When a Javadoc comment is present, the source range begins with the first character of the "/**" comment delimiter. When there
+ * is no Javadoc comment, the source range begins with the first character of the identifier. If there are class body
+ * declarations, the source range extends through the last character of the last character of the "}" token following the body
+ * declarations. If there are arguments but no class body declarations, the source range extends through the last character of the
+ * ")" token following the arguments. If there are no arguments and no class body declarations, the source range extends through
  * the last character of the identifier.
  * </p>
- *
+ * 
  * @since 3.1
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -74,9 +70,7 @@ public class EnumConstantDeclaration extends BodyDeclaration
          "anonymousClassDeclaration", AnonymousClassDeclaration.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -93,14 +87,11 @@ public class EnumConstantDeclaration extends BodyDeclaration
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     */
    public static List propertyDescriptors(int apiLevel)
    {
@@ -108,34 +99,29 @@ public class EnumConstantDeclaration extends BodyDeclaration
    }
 
    /**
-    * The constant name; lazily initialized; defaults to a unspecified,
-    * legal Java class identifier.
+    * The constant name; lazily initialized; defaults to a unspecified, legal Java class identifier.
     */
    private SimpleName constantName = null;
 
    /**
-    * The list of argument expressions (element type:
-    * {@link Expression}). Defaults to an empty list.
+    * The list of argument expressions (element type: {@link Expression}). Defaults to an empty list.
     */
    private ASTNode.NodeList arguments = new ASTNode.NodeList(ARGUMENTS_PROPERTY);
 
    /**
-    * The optional anonymous class declaration; <code>null</code> for none;
-    * defaults to none.
+    * The optional anonymous class declaration; <code>null</code> for none; defaults to none.
     */
    private AnonymousClassDeclaration optionalAnonymousClassDeclaration = null;
 
    /**
-    * Creates a new AST node for an enumeration constants declaration owned by
-    * the given AST. By default, the enumeration constant has an unspecified,
-    * but legal, name; no javadoc; an empty list of modifiers and annotations;
-    * an empty list of arguments; and does not declare an anonymous class.
+    * Creates a new AST node for an enumeration constants declaration owned by the given AST. By default, the enumeration constant
+    * has an unspecified, but legal, name; no javadoc; an empty list of modifiers and annotations; an empty list of arguments; and
+    * does not declare an anonymous class.
     * <p>
-    * N.B. This constructor is package-private; all subclasses must be
-    * declared in the same package; clients are unable to declare
+    * N.B. This constructor is package-private; all subclasses must be declared in the same package; clients are unable to declare
     * additional subclasses.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    EnumConstantDeclaration(AST ast)
@@ -144,16 +130,16 @@ public class EnumConstantDeclaration extends BodyDeclaration
       unsupportedIn2();
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -197,8 +183,8 @@ public class EnumConstantDeclaration extends BodyDeclaration
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
@@ -214,24 +200,24 @@ public class EnumConstantDeclaration extends BodyDeclaration
       return super.internalGetChildListProperty(property);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on BodyDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on BodyDeclaration.
     */
    final ChildPropertyDescriptor internalJavadocProperty()
    {
       return JAVADOC_PROPERTY;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on BodyDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on BodyDeclaration.
     */
    final ChildListPropertyDescriptor internalModifiers2Property()
    {
       return MODIFIERS2_PROPERTY;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on BodyDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on BodyDeclaration.
     */
    final SimplePropertyDescriptor internalModifiersProperty()
    {
@@ -239,16 +225,16 @@ public class EnumConstantDeclaration extends BodyDeclaration
       return null;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return ENUM_CONSTANT_DECLARATION;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -263,8 +249,8 @@ public class EnumConstantDeclaration extends BodyDeclaration
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -272,8 +258,8 @@ public class EnumConstantDeclaration extends BodyDeclaration
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -292,7 +278,7 @@ public class EnumConstantDeclaration extends BodyDeclaration
 
    /**
     * Returns the name of the constant declared in this enum declaration.
-    *
+    * 
     * @return the constant name node
     */
    public SimpleName getName()
@@ -314,15 +300,14 @@ public class EnumConstantDeclaration extends BodyDeclaration
    }
 
    /**
-    * Sets the name of the constant declared in this enum declaration to the
-    * given name.
-    *
+    * Sets the name of the constant declared in this enum declaration to the given name.
+    * 
     * @param constantName the new constant name
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     */
    public void setName(SimpleName constantName)
    {
@@ -337,12 +322,10 @@ public class EnumConstantDeclaration extends BodyDeclaration
    }
 
    /**
-    * Returns the live ordered list of argument expressions in this enumeration
-    * constant declaration. Note that an empty list of arguments is equivalent
-    * to not explicitly specifying arguments.
-    *
-    * @return the live list of argument expressions
-    *    (element type: {@link Expression})
+    * Returns the live ordered list of argument expressions in this enumeration constant declaration. Note that an empty list of
+    * arguments is equivalent to not explicitly specifying arguments.
+    * 
+    * @return the live list of argument expressions (element type: {@link Expression})
     */
    public List arguments()
    {
@@ -350,9 +333,8 @@ public class EnumConstantDeclaration extends BodyDeclaration
    }
 
    /**
-    * Returns the anonymous class declaration introduced by this
-    * enum constant declaration, if it has one.
-    *
+    * Returns the anonymous class declaration introduced by this enum constant declaration, if it has one.
+    * 
     * @return the anonymous class declaration, or <code>null</code> if none
     */
    public AnonymousClassDeclaration getAnonymousClassDeclaration()
@@ -361,11 +343,9 @@ public class EnumConstantDeclaration extends BodyDeclaration
    }
 
    /**
-    * Sets whether this enum constant declaration declares
-    * an anonymous class (that is, has class body declarations).
-    *
-    * @param decl the anonymous class declaration, or <code>null</code>
-    *    if none
+    * Sets whether this enum constant declaration declares an anonymous class (that is, has class body declarations).
+    * 
+    * @param decl the anonymous class declaration, or <code>null</code> if none
     */
    public void setAnonymousClassDeclaration(AnonymousClassDeclaration decl)
    {
@@ -376,15 +356,12 @@ public class EnumConstantDeclaration extends BodyDeclaration
    }
 
    /**
-    * Resolves and returns the binding for the constructor invoked by this
-    * enum constant.
+    * Resolves and returns the binding for the constructor invoked by this enum constant.
     * <p>
-    * Note that bindings are generally unavailable unless requested when the
-    * AST is being built.
+    * Note that bindings are generally unavailable unless requested when the AST is being built.
     * </p>
-    *
-    * @return the constructor binding, or <code>null</code> if the binding
-    *    cannot be resolved
+    * 
+    * @return the constructor binding, or <code>null</code> if the binding cannot be resolved
     */
    public IMethodBinding resolveConstructorBinding()
    {
@@ -394,28 +371,26 @@ public class EnumConstantDeclaration extends BodyDeclaration
    /**
     * Resolves and returns the field binding for this enum constant.
     * <p>
-    * Note that bindings are generally unavailable unless requested when the
-    * AST is being built.
+    * Note that bindings are generally unavailable unless requested when the AST is being built.
     * </p>
-    *
-    * @return the binding, or <code>null</code> if the binding cannot be
-    *    resolved
+    * 
+    * @return the binding, or <code>null</code> if the binding cannot be resolved
     */
    public IVariableBinding resolveVariable()
    {
       return this.ast.getBindingResolver().resolveVariable(this);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return super.memSize() + 3 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

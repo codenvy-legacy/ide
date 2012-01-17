@@ -32,13 +32,8 @@ public class JavadocFieldReference extends FieldReference
    }
 
    /*
-   public Binding getBinding() {
-   	if (this.methodBinding != null) {
-   		return this.methodBinding;
-   	}
-   	return this.binding;
-   }
-   */
+    * public Binding getBinding() { if (this.methodBinding != null) { return this.methodBinding; } return this.binding; }
+    */
 
    /*
     * Resolves type on a Block or Class scope.
@@ -66,7 +61,7 @@ public class JavadocFieldReference extends FieldReference
 
       Binding fieldBinding =
          (this.receiver != null && this.receiver.isThis()) ? scope.classScope().getBinding(this.token,
-            this.bits & RestrictiveFlagMASK, this, true /*resolve*/) : scope.getField(this.actualReceiverType,
+            this.bits & RestrictiveFlagMASK, this, true /* resolve */) : scope.getField(this.actualReceiverType,
             this.token, this);
       if (!fieldBinding.isValidBinding())
       {
@@ -117,7 +112,8 @@ public class JavadocFieldReference extends FieldReference
                {
                   if (fieldBinding.isValidBinding())
                   {
-                     // When the binding is not on a field (e.g. local variable), we need to create a problem field binding to report the correct problem
+                     // When the binding is not on a field (e.g. local variable), we need to create a problem field binding to
+                     // report the correct problem
                      // see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=254825
                      fieldBinding =
                         new ProblemFieldBinding(refBinding, fieldBinding.readableName(), ProblemReasons.NotFound);
@@ -168,9 +164,11 @@ public class JavadocFieldReference extends FieldReference
       return internalResolveType(scope);
    }
 
-   /* (non-Javadoc)
-    * Redefine to capture javadoc specific signatures
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+   /*
+    * (non-Javadoc) Redefine to capture javadoc specific signatures
+    * 
+    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor,
+    * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, BlockScope scope)
    {

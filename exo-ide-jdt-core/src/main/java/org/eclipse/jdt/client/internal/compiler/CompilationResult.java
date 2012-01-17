@@ -91,7 +91,8 @@ public class CompilationResult
 
    public char[][] packageName;
 
-   public boolean checkSecondaryTypes = false; // check for secondary types which were created after the initial buildTypeBindings call
+   public boolean checkSecondaryTypes = false; // check for secondary types which were created after the initial buildTypeBindings
+                                               // call
 
    private int numberOfErrors;
 
@@ -230,11 +231,11 @@ public class CompilationResult
       return allProblems;
    }
 
-   //public ClassFile[] getClassFiles() {
-   //	ClassFile[] classFiles = new ClassFile[this.compiledTypes.size()];
-   //	this.compiledTypes.values().toArray(classFiles);
-   //	return classFiles;
-   //}
+   // public ClassFile[] getClassFiles() {
+   // ClassFile[] classFiles = new ClassFile[this.compiledTypes.size()];
+   // this.compiledTypes.values().toArray(classFiles);
+   // return classFiles;
+   // }
 
    /**
     * Answer the initial compilation unit corresponding to the present compilation result
@@ -283,11 +284,9 @@ public class CompilationResult
 
    /**
     * Answer the problems (errors and warnings) encountered during compilation.
-    *
-    * This is not a compiler internal API - it has side-effects !
-    * It is intended to be used only once all problems have been detected,
-    * and makes sure the problems slot as the exact size of the number of
-    * problems.
+    * 
+    * This is not a compiler internal API - it has side-effects ! It is intended to be used only once all problems have been
+    * detected, and makes sure the problems slot as the exact size of the number of problems.
     */
    public CategorizedProblem[] getProblems()
    {
@@ -310,18 +309,16 @@ public class CompilationResult
 
          // Stable sort problems per source positions.
          Arrays.sort(this.problems, 0, this.problems.length, CompilationResult.PROBLEM_COMPARATOR);
-         //quickSort(problems, 0, problems.length-1);
+         // quickSort(problems, 0, problems.length-1);
       }
       return this.problems;
    }
 
    /**
     * Answer the tasks (TO-DO, ...) encountered during compilation.
-    *
-    * This is not a compiler internal API - it has side-effects !
-    * It is intended to be used only once all problems have been detected,
-    * and makes sure the problems slot as the exact size of the number of
-    * problems.
+    * 
+    * This is not a compiler internal API - it has side-effects ! It is intended to be used only once all problems have been
+    * detected, and makes sure the problems slot as the exact size of the number of problems.
     */
    public CategorizedProblem[] getTasks()
    {
@@ -335,7 +332,7 @@ public class CompilationResult
          }
          // Stable sort problems per source positions.
          Arrays.sort(this.tasks, 0, this.tasks.length, CompilationResult.PROBLEM_COMPARATOR);
-         //quickSort(tasks, 0, tasks.length-1);
+         // quickSort(tasks, 0, tasks.length-1);
       }
       return this.tasks;
    }
@@ -406,7 +403,7 @@ public class CompilationResult
 
    public void record(CategorizedProblem newProblem, ReferenceContext referenceContext)
    {
-      //new Exception("VERBOSE PROBLEM REPORTING").printStackTrace();
+      // new Exception("VERBOSE PROBLEM REPORTING").printStackTrace();
       if (newProblem.getID() == IProblem.Task)
       {
          recordTask(newProblem);
@@ -442,16 +439,16 @@ public class CompilationResult
       }
    }
 
-   ///**
+   // /**
    // * For now, remember the compiled type using its compound name.
    // */
-   //public void record(char[] typeName, ClassFile classFile) {
-   //    SourceTypeBinding sourceType = classFile.referenceBinding;
-   //    if (!sourceType.isLocalType() && sourceType.isHierarchyInconsistent()) {
-   //        this.hasInconsistentToplevelHierarchies = true;
-   //    }
-   //	this.compiledTypes.put(typeName, classFile);
-   //}
+   // public void record(char[] typeName, ClassFile classFile) {
+   // SourceTypeBinding sourceType = classFile.referenceBinding;
+   // if (!sourceType.isLocalType() && sourceType.isHierarchyInconsistent()) {
+   // this.hasInconsistentToplevelHierarchies = true;
+   // }
+   // this.compiledTypes.put(typeName, classFile);
+   // }
 
    private void recordTask(CategorizedProblem newProblem)
    {

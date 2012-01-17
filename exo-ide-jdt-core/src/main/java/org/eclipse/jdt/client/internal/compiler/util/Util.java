@@ -22,175 +22,155 @@ public class Util implements SuffixConstants
 {
 
    /**
-    * Character constant indicating the primitive type boolean in a signature.
-    * Value is <code>'Z'</code>.
+    * Character constant indicating the primitive type boolean in a signature. Value is <code>'Z'</code>.
     */
    public static final char C_BOOLEAN = 'Z';
 
    /**
-    * Character constant indicating the primitive type byte in a signature.
-    * Value is <code>'B'</code>.
+    * Character constant indicating the primitive type byte in a signature. Value is <code>'B'</code>.
     */
    public static final char C_BYTE = 'B';
 
    /**
-    * Character constant indicating the primitive type char in a signature.
-    * Value is <code>'C'</code>.
+    * Character constant indicating the primitive type char in a signature. Value is <code>'C'</code>.
     */
    public static final char C_CHAR = 'C';
 
    /**
-    * Character constant indicating the primitive type double in a signature.
-    * Value is <code>'D'</code>.
+    * Character constant indicating the primitive type double in a signature. Value is <code>'D'</code>.
     */
    public static final char C_DOUBLE = 'D';
 
    /**
-    * Character constant indicating the primitive type float in a signature.
-    * Value is <code>'F'</code>.
+    * Character constant indicating the primitive type float in a signature. Value is <code>'F'</code>.
     */
    public static final char C_FLOAT = 'F';
 
    /**
-    * Character constant indicating the primitive type int in a signature.
-    * Value is <code>'I'</code>.
+    * Character constant indicating the primitive type int in a signature. Value is <code>'I'</code>.
     */
    public static final char C_INT = 'I';
 
    /**
-    * Character constant indicating the semicolon in a signature.
-    * Value is <code>';'</code>.
+    * Character constant indicating the semicolon in a signature. Value is <code>';'</code>.
     */
    public static final char C_SEMICOLON = ';';
 
    /**
-    * Character constant indicating the colon in a signature.
-    * Value is <code>':'</code>.
+    * Character constant indicating the colon in a signature. Value is <code>':'</code>.
+    * 
     * @since 3.0
     */
    public static final char C_COLON = ':';
 
    /**
-    * Character constant indicating the primitive type long in a signature.
-    * Value is <code>'J'</code>.
+    * Character constant indicating the primitive type long in a signature. Value is <code>'J'</code>.
     */
    public static final char C_LONG = 'J';
 
    /**
-    * Character constant indicating the primitive type short in a signature.
-    * Value is <code>'S'</code>.
+    * Character constant indicating the primitive type short in a signature. Value is <code>'S'</code>.
     */
    public static final char C_SHORT = 'S';
 
    /**
-    * Character constant indicating result type void in a signature.
-    * Value is <code>'V'</code>.
+    * Character constant indicating result type void in a signature. Value is <code>'V'</code>.
     */
    public static final char C_VOID = 'V';
 
    /**
-    * Character constant indicating the start of a resolved type variable in a
-    * signature. Value is <code>'T'</code>.
+    * Character constant indicating the start of a resolved type variable in a signature. Value is <code>'T'</code>.
+    * 
     * @since 3.0
     */
    public static final char C_TYPE_VARIABLE = 'T';
 
    /**
-    * Character constant indicating an unbound wildcard type argument
-    * in a signature.
-    * Value is <code>'*'</code>.
+    * Character constant indicating an unbound wildcard type argument in a signature. Value is <code>'*'</code>.
+    * 
     * @since 3.0
     */
    public static final char C_STAR = '*';
 
    /**
-    * Character constant indicating an exception in a signature.
-    * Value is <code>'^'</code>.
+    * Character constant indicating an exception in a signature. Value is <code>'^'</code>.
+    * 
     * @since 3.1
     */
    public static final char C_EXCEPTION_START = '^';
 
    /**
-    * Character constant indicating a bound wildcard type argument
-    * in a signature with extends clause.
-    * Value is <code>'+'</code>.
+    * Character constant indicating a bound wildcard type argument in a signature with extends clause. Value is <code>'+'</code>.
+    * 
     * @since 3.1
     */
    public static final char C_EXTENDS = '+';
 
    /**
-    * Character constant indicating a bound wildcard type argument
-    * in a signature with super clause.
-    * Value is <code>'-'</code>.
+    * Character constant indicating a bound wildcard type argument in a signature with super clause. Value is <code>'-'</code>.
+    * 
     * @since 3.1
     */
    public static final char C_SUPER = '-';
 
    /**
-    * Character constant indicating the dot in a signature.
-    * Value is <code>'.'</code>.
+    * Character constant indicating the dot in a signature. Value is <code>'.'</code>.
     */
    public static final char C_DOT = '.';
 
    /**
-    * Character constant indicating the dollar in a signature.
-    * Value is <code>'$'</code>.
+    * Character constant indicating the dollar in a signature. Value is <code>'$'</code>.
     */
    public static final char C_DOLLAR = '$';
 
    /**
-    * Character constant indicating an array type in a signature.
-    * Value is <code>'['</code>.
+    * Character constant indicating an array type in a signature. Value is <code>'['</code>.
     */
    public static final char C_ARRAY = '[';
 
    /**
-    * Character constant indicating the start of a resolved, named type in a
-    * signature. Value is <code>'L'</code>.
+    * Character constant indicating the start of a resolved, named type in a signature. Value is <code>'L'</code>.
     */
    public static final char C_RESOLVED = 'L';
 
    /**
-    * Character constant indicating the start of an unresolved, named type in a
-    * signature. Value is <code>'Q'</code>.
+    * Character constant indicating the start of an unresolved, named type in a signature. Value is <code>'Q'</code>.
     */
    public static final char C_UNRESOLVED = 'Q';
 
    /**
-    * Character constant indicating the end of a named type in a signature.
-    * Value is <code>';'</code>.
+    * Character constant indicating the end of a named type in a signature. Value is <code>';'</code>.
     */
    public static final char C_NAME_END = ';';
 
    /**
-    * Character constant indicating the start of a parameter type list in a
-    * signature. Value is <code>'('</code>.
+    * Character constant indicating the start of a parameter type list in a signature. Value is <code>'('</code>.
     */
    public static final char C_PARAM_START = '(';
 
    /**
-    * Character constant indicating the end of a parameter type list in a
-    * signature. Value is <code>')'</code>.
+    * Character constant indicating the end of a parameter type list in a signature. Value is <code>')'</code>.
     */
    public static final char C_PARAM_END = ')';
 
    /**
-    * Character constant indicating the start of a formal type parameter
-    * (or type argument) list in a signature. Value is <code>'&lt;'</code>.
+    * Character constant indicating the start of a formal type parameter (or type argument) list in a signature. Value is
+    * <code>'&lt;'</code>.
+    * 
     * @since 3.0
     */
    public static final char C_GENERIC_START = '<';
 
    /**
-    * Character constant indicating the end of a generic type list in a
-    * signature. Value is <code>'&gt;'</code>.
+    * Character constant indicating the end of a generic type list in a signature. Value is <code>'&gt;'</code>.
+    * 
     * @since 3.0
     */
    public static final char C_GENERIC_END = '>';
 
    /**
-    * Character constant indicating a capture of a wildcard type in a
-    * signature. Value is <code>'!'</code>.
+    * Character constant indicating a capture of a wildcard type in a signature. Value is <code>'!'</code>.
+    * 
     * @since 3.1
     */
    public static final char C_CAPTURE = '!';
@@ -208,133 +188,132 @@ public class Util implements SuffixConstants
 
    public static final int[] EMPTY_INT_ARRAY = new int[0];
 
-   //	/**
-   //	 * Build all the directories and subdirectories corresponding to the packages names
-   //	 * into the directory specified in parameters.
-   //	 *
-   //	 * outputPath is formed like:
-   //	 *	   c:\temp\ the last character is a file separator
-   //	 * relativeFileName is formed like:
-   //	 *     java\lang\String.class *
-   //	 *
-   //	 * @param outputPath java.lang.String
-   //	 * @param relativeFileName java.lang.String
-   //	 * @return java.lang.String
-   //	 */
-   //	public static String buildAllDirectoriesInto(String outputPath, String relativeFileName) throws IOException {
-   //		char fileSeparatorChar = File.separatorChar;
-   //		String fileSeparator = File.separator;
-   //		File f;
-   //		outputPath = outputPath.replace('/', fileSeparatorChar);
-   //			// these could be optimized out if we normalized paths once and for
-   //			// all
-   //		relativeFileName = relativeFileName.replace('/', fileSeparatorChar);
-   //		String outputDirPath, fileName;
-   //		int separatorIndex = relativeFileName.lastIndexOf(fileSeparatorChar);
-   //		if (separatorIndex == -1) {
-   //			if (outputPath.endsWith(fileSeparator)) {
-   //				outputDirPath = outputPath.substring(0, outputPath.length() - 1);
-   //				fileName = outputPath + relativeFileName;
-   //			} else {
-   //				outputDirPath = outputPath;
-   //				fileName = outputPath + fileSeparator + relativeFileName;
-   //			}
-   //		} else {
-   //			if (outputPath.endsWith(fileSeparator)) {
-   //				outputDirPath = outputPath +
-   //					relativeFileName.substring(0, separatorIndex);
-   //				fileName = outputPath + relativeFileName;
-   //			} else {
-   //				outputDirPath = outputPath + fileSeparator +
-   //					relativeFileName.substring(0, separatorIndex);
-   //				fileName = outputPath + fileSeparator + relativeFileName;
-   //			}
-   //		}
-   //		f = new File(outputDirPath);
-   //		f.mkdirs();
-   //		if (f.isDirectory()) {
-   //			return fileName;
-   //		} else {
-   //			// the directory creation failed for some reason - retry using
-   //			// a slower algorithm so as to refine the diagnostic
-   //			if (outputPath.endsWith(fileSeparator)) {
-   //				outputPath = outputPath.substring(0, outputPath.length() - 1);
-   //			}
-   //			f = new File(outputPath);
-   //			boolean checkFileType = false;
-   //			if (f.exists()) {
-   //				  checkFileType = true; // pre-existed
-   //			} else {
-   //				// we have to create that directory
-   //				if (!f.mkdirs()) {
-   //					  if (f.exists()) {
-   //							// someone else created f -- need to check its type
-   //							checkFileType = true;
-   //					  } else {
-   //							// no one could create f -- complain
-   //						throw new IOException(Messages.bind(
-   //							Messages.output_notValidAll, f.getAbsolutePath()));
-   //					  }
-   //				}
-   //			}
-   //			if (checkFileType) {
-   //				  if (!f.isDirectory()) {
-   //					throw new IOException(Messages.bind(
-   //						Messages.output_isFile, f.getAbsolutePath()));
-   //				  }
-   //			}
-   //			StringBuffer outDir = new StringBuffer(outputPath);
-   //			outDir.append(fileSeparator);
-   //			StringTokenizer tokenizer =
-   //				new StringTokenizer(relativeFileName, fileSeparator);
-   //			String token = tokenizer.nextToken();
-   //			while (tokenizer.hasMoreTokens()) {
-   //				f = new File(outDir.append(token).append(fileSeparator).toString());
-   //				  checkFileType = false; // reset
-   //				if (f.exists()) {
-   //					  checkFileType = true; // this is suboptimal, but it catches corner cases
-   //											// in which a regular file pre-exists
-   //				} else {
-   //				// we have to create that directory
-   //					if (!f.mkdir()) {
-   //						  if (f.exists()) {
-   //								// someone else created f -- need to check its type
-   //								checkFileType = true;
-   //						  } else {
-   //								// no one could create f -- complain
-   //							throw new IOException(Messages.bind(
-   //								Messages.output_notValid,
-   //									outDir.substring(outputPath.length() + 1,
-   //										outDir.length() - 1),
-   //									outputPath));
-   //						  }
-   //					}
-   //				}
-   //				if (checkFileType) {
-   //					  if (!f.isDirectory()) {
-   //						throw new IOException(Messages.bind(
-   //							Messages.output_isFile, f.getAbsolutePath()));
-   //					  }
-   //				}
-   //				token = tokenizer.nextToken();
-   //			}
-   //			// token contains the last one
-   //			return outDir.append(token).toString();
-   //		}
-   //	}
+   // /**
+   // * Build all the directories and subdirectories corresponding to the packages names
+   // * into the directory specified in parameters.
+   // *
+   // * outputPath is formed like:
+   // * c:\temp\ the last character is a file separator
+   // * relativeFileName is formed like:
+   // * java\lang\String.class *
+   // *
+   // * @param outputPath java.lang.String
+   // * @param relativeFileName java.lang.String
+   // * @return java.lang.String
+   // */
+   // public static String buildAllDirectoriesInto(String outputPath, String relativeFileName) throws IOException {
+   // char fileSeparatorChar = File.separatorChar;
+   // String fileSeparator = File.separator;
+   // File f;
+   // outputPath = outputPath.replace('/', fileSeparatorChar);
+   // // these could be optimized out if we normalized paths once and for
+   // // all
+   // relativeFileName = relativeFileName.replace('/', fileSeparatorChar);
+   // String outputDirPath, fileName;
+   // int separatorIndex = relativeFileName.lastIndexOf(fileSeparatorChar);
+   // if (separatorIndex == -1) {
+   // if (outputPath.endsWith(fileSeparator)) {
+   // outputDirPath = outputPath.substring(0, outputPath.length() - 1);
+   // fileName = outputPath + relativeFileName;
+   // } else {
+   // outputDirPath = outputPath;
+   // fileName = outputPath + fileSeparator + relativeFileName;
+   // }
+   // } else {
+   // if (outputPath.endsWith(fileSeparator)) {
+   // outputDirPath = outputPath +
+   // relativeFileName.substring(0, separatorIndex);
+   // fileName = outputPath + relativeFileName;
+   // } else {
+   // outputDirPath = outputPath + fileSeparator +
+   // relativeFileName.substring(0, separatorIndex);
+   // fileName = outputPath + fileSeparator + relativeFileName;
+   // }
+   // }
+   // f = new File(outputDirPath);
+   // f.mkdirs();
+   // if (f.isDirectory()) {
+   // return fileName;
+   // } else {
+   // // the directory creation failed for some reason - retry using
+   // // a slower algorithm so as to refine the diagnostic
+   // if (outputPath.endsWith(fileSeparator)) {
+   // outputPath = outputPath.substring(0, outputPath.length() - 1);
+   // }
+   // f = new File(outputPath);
+   // boolean checkFileType = false;
+   // if (f.exists()) {
+   // checkFileType = true; // pre-existed
+   // } else {
+   // // we have to create that directory
+   // if (!f.mkdirs()) {
+   // if (f.exists()) {
+   // // someone else created f -- need to check its type
+   // checkFileType = true;
+   // } else {
+   // // no one could create f -- complain
+   // throw new IOException(Messages.bind(
+   // Messages.output_notValidAll, f.getAbsolutePath()));
+   // }
+   // }
+   // }
+   // if (checkFileType) {
+   // if (!f.isDirectory()) {
+   // throw new IOException(Messages.bind(
+   // Messages.output_isFile, f.getAbsolutePath()));
+   // }
+   // }
+   // StringBuffer outDir = new StringBuffer(outputPath);
+   // outDir.append(fileSeparator);
+   // StringTokenizer tokenizer =
+   // new StringTokenizer(relativeFileName, fileSeparator);
+   // String token = tokenizer.nextToken();
+   // while (tokenizer.hasMoreTokens()) {
+   // f = new File(outDir.append(token).append(fileSeparator).toString());
+   // checkFileType = false; // reset
+   // if (f.exists()) {
+   // checkFileType = true; // this is suboptimal, but it catches corner cases
+   // // in which a regular file pre-exists
+   // } else {
+   // // we have to create that directory
+   // if (!f.mkdir()) {
+   // if (f.exists()) {
+   // // someone else created f -- need to check its type
+   // checkFileType = true;
+   // } else {
+   // // no one could create f -- complain
+   // throw new IOException(Messages.bind(
+   // Messages.output_notValid,
+   // outDir.substring(outputPath.length() + 1,
+   // outDir.length() - 1),
+   // outputPath));
+   // }
+   // }
+   // }
+   // if (checkFileType) {
+   // if (!f.isDirectory()) {
+   // throw new IOException(Messages.bind(
+   // Messages.output_isFile, f.getAbsolutePath()));
+   // }
+   // }
+   // token = tokenizer.nextToken();
+   // }
+   // // token contains the last one
+   // return outDir.append(token).toString();
+   // }
+   // }
    //
-   //	/**
-   //	 * Returns the given bytes as a char array using a given encoding (null means platform default).
-   //	 */
-   //	public static char[] bytesToChar(byte[] bytes, String encoding) throws IOException {
+   // /**
+   // * Returns the given bytes as a char array using a given encoding (null means platform default).
+   // */
+   // public static char[] bytesToChar(byte[] bytes, String encoding) throws IOException {
    //
-   //		return getInputStreamAsCharArray(new ByteArrayInputStream(bytes), bytes.length, encoding);
+   // return getInputStreamAsCharArray(new ByteArrayInputStream(bytes), bytes.length, encoding);
    //
-   //	}
+   // }
 
    /**
-    * Returns the outer most enclosing type's visibility for the given TypeDeclaration
-    * and visibility based on compiler options.
+    * Returns the outer most enclosing type's visibility for the given TypeDeclaration and visibility based on compiler options.
     */
    public static int computeOuterMostVisibility(TypeDeclaration typeDeclaration, int visibility)
    {
@@ -363,286 +342,267 @@ public class Util implements SuffixConstants
       return visibility;
    }
 
-   //	/**
-   //	 * Returns the contents of the given file as a byte array.
-   //	 * @throws IOException if a problem occured reading the file.
-   //	 */
-   //	public static byte[] getFileByteContent(File file) throws IOException {
-   //		InputStream stream = null;
-   //		try {
-   //			stream = new BufferedInputStream(new FileInputStream(file));
-   //			return getInputStreamAsByteArray(stream, (int) file.length());
-   //		} finally {
-   //			if (stream != null) {
-   //				try {
-   //					stream.close();
-   //				} catch (IOException e) {
-   //					// ignore
-   //				}
-   //			}
-   //		}
-   //	}
-   //	/**
-   //	 * Returns the contents of the given file as a char array.
-   //	 * When encoding is null, then the platform default one is used
-   //	 * @throws IOException if a problem occured reading the file.
-   //	 */
-   //	public static char[] getFileCharContent(File file, String encoding) throws IOException {
-   //		InputStream stream = null;
-   //		try {
-   //			stream = new FileInputStream(file);
-   //			return getInputStreamAsCharArray(stream, (int) file.length(), encoding);
-   //		} finally {
-   //			if (stream != null) {
-   //				try {
-   //					stream.close();
-   //				} catch (IOException e) {
-   //					// ignore
-   //				}
-   //			}
-   //		}
-   //	}
-   //	private static FileOutputStream getFileOutputStream(boolean generatePackagesStructure, String outputPath, String relativeFileName) throws IOException {
-   //		if (generatePackagesStructure) {
-   //			return new FileOutputStream(new File(buildAllDirectoriesInto(outputPath, relativeFileName)));
-   //		} else {
-   //			String fileName = null;
-   //			char fileSeparatorChar = File.separatorChar;
-   //			String fileSeparator = File.separator;
-   //			// First we ensure that the outputPath exists
-   //			outputPath = outputPath.replace('/', fileSeparatorChar);
-   //			// To be able to pass the mkdirs() method we need to remove the extra file separator at the end of the outDir name
-   //			int indexOfPackageSeparator = relativeFileName.lastIndexOf(fileSeparatorChar);
-   //			if (indexOfPackageSeparator == -1) {
-   //				if (outputPath.endsWith(fileSeparator)) {
-   //					fileName = outputPath + relativeFileName;
-   //				} else {
-   //					fileName = outputPath + fileSeparator + relativeFileName;
-   //				}
-   //			} else {
-   //				int length = relativeFileName.length();
-   //				if (outputPath.endsWith(fileSeparator)) {
-   //					fileName = outputPath + relativeFileName.substring(indexOfPackageSeparator + 1, length);
-   //				} else {
-   //					fileName = outputPath + fileSeparator + relativeFileName.substring(indexOfPackageSeparator + 1, length);
-   //				}
-   //			}
-   //			return new FileOutputStream(new File(fileName));
-   //		}
-   //	}
+   // /**
+   // * Returns the contents of the given file as a byte array.
+   // * @throws IOException if a problem occured reading the file.
+   // */
+   // public static byte[] getFileByteContent(File file) throws IOException {
+   // InputStream stream = null;
+   // try {
+   // stream = new BufferedInputStream(new FileInputStream(file));
+   // return getInputStreamAsByteArray(stream, (int) file.length());
+   // } finally {
+   // if (stream != null) {
+   // try {
+   // stream.close();
+   // } catch (IOException e) {
+   // // ignore
+   // }
+   // }
+   // }
+   // }
+   // /**
+   // * Returns the contents of the given file as a char array.
+   // * When encoding is null, then the platform default one is used
+   // * @throws IOException if a problem occured reading the file.
+   // */
+   // public static char[] getFileCharContent(File file, String encoding) throws IOException {
+   // InputStream stream = null;
+   // try {
+   // stream = new FileInputStream(file);
+   // return getInputStreamAsCharArray(stream, (int) file.length(), encoding);
+   // } finally {
+   // if (stream != null) {
+   // try {
+   // stream.close();
+   // } catch (IOException e) {
+   // // ignore
+   // }
+   // }
+   // }
+   // }
+   // private static FileOutputStream getFileOutputStream(boolean generatePackagesStructure, String outputPath, String
+   // relativeFileName) throws IOException {
+   // if (generatePackagesStructure) {
+   // return new FileOutputStream(new File(buildAllDirectoriesInto(outputPath, relativeFileName)));
+   // } else {
+   // String fileName = null;
+   // char fileSeparatorChar = File.separatorChar;
+   // String fileSeparator = File.separator;
+   // // First we ensure that the outputPath exists
+   // outputPath = outputPath.replace('/', fileSeparatorChar);
+   // // To be able to pass the mkdirs() method we need to remove the extra file separator at the end of the outDir name
+   // int indexOfPackageSeparator = relativeFileName.lastIndexOf(fileSeparatorChar);
+   // if (indexOfPackageSeparator == -1) {
+   // if (outputPath.endsWith(fileSeparator)) {
+   // fileName = outputPath + relativeFileName;
+   // } else {
+   // fileName = outputPath + fileSeparator + relativeFileName;
+   // }
+   // } else {
+   // int length = relativeFileName.length();
+   // if (outputPath.endsWith(fileSeparator)) {
+   // fileName = outputPath + relativeFileName.substring(indexOfPackageSeparator + 1, length);
+   // } else {
+   // fileName = outputPath + fileSeparator + relativeFileName.substring(indexOfPackageSeparator + 1, length);
+   // }
+   // }
+   // return new FileOutputStream(new File(fileName));
+   // }
+   // }
 
    /*
-    * NIO support to get input stream as byte array.
-    * Not used as with JDK 1.4.2 this support is slower than standard IO one...
-    * Keep it as comment for future in case of next JDK versions improve performance
-    * in this area...
-    *
-   public static byte[] getInputStreamAsByteArray(FileInputStream stream, int length)
-   	throws IOException {
-
-   	FileChannel channel = stream.getChannel();
-   	int size = (int)channel.size();
-   	if (length >= 0 && length < size) size = length;
-   	byte[] contents = new byte[size];
-   	ByteBuffer buffer = ByteBuffer.wrap(contents);
-   	channel.read(buffer);
-   	return contents;
-   }
-   */
-   //	/**
-   //	 * Returns the given input stream's contents as a byte array.
-   //	 * If a length is specified (i.e. if length != -1), only length bytes
-   //	 * are returned. Otherwise all bytes in the stream are returned.
-   //	 * Note this doesn't close the stream.
-   //	 * @throws IOException if a problem occured reading the stream.
-   //	 */
-   //	public static byte[] getInputStreamAsByteArray(InputStream stream, int length)
-   //			throws IOException {
-   //		byte[] contents;
-   //		if (length == -1) {
-   //			contents = new byte[0];
-   //			int contentsLength = 0;
-   //			int amountRead = -1;
-   //			do {
-   //				int amountRequested = Math.max(stream.available(), DEFAULT_READING_SIZE);  // read at least 8K
+    * NIO support to get input stream as byte array. Not used as with JDK 1.4.2 this support is slower than standard IO one...
+    * Keep it as comment for future in case of next JDK versions improve performance in this area...
+    * 
+    * public static byte[] getInputStreamAsByteArray(FileInputStream stream, int length) throws IOException {
+    * 
+    * FileChannel channel = stream.getChannel(); int size = (int)channel.size(); if (length >= 0 && length < size) size = length;
+    * byte[] contents = new byte[size]; ByteBuffer buffer = ByteBuffer.wrap(contents); channel.read(buffer); return contents; }
+    */
+   // /**
+   // * Returns the given input stream's contents as a byte array.
+   // * If a length is specified (i.e. if length != -1), only length bytes
+   // * are returned. Otherwise all bytes in the stream are returned.
+   // * Note this doesn't close the stream.
+   // * @throws IOException if a problem occured reading the stream.
+   // */
+   // public static byte[] getInputStreamAsByteArray(InputStream stream, int length)
+   // throws IOException {
+   // byte[] contents;
+   // if (length == -1) {
+   // contents = new byte[0];
+   // int contentsLength = 0;
+   // int amountRead = -1;
+   // do {
+   // int amountRequested = Math.max(stream.available(), DEFAULT_READING_SIZE); // read at least 8K
    //
-   //				// resize contents if needed
-   //				if (contentsLength + amountRequested > contents.length) {
-   //					System.arraycopy(
-   //						contents,
-   //						0,
-   //						contents = new byte[contentsLength + amountRequested],
-   //						0,
-   //						contentsLength);
-   //				}
+   // // resize contents if needed
+   // if (contentsLength + amountRequested > contents.length) {
+   // System.arraycopy(
+   // contents,
+   // 0,
+   // contents = new byte[contentsLength + amountRequested],
+   // 0,
+   // contentsLength);
+   // }
    //
-   //				// read as many bytes as possible
-   //				amountRead = stream.read(contents, contentsLength, amountRequested);
+   // // read as many bytes as possible
+   // amountRead = stream.read(contents, contentsLength, amountRequested);
    //
-   //				if (amountRead > 0) {
-   //					// remember length of contents
-   //					contentsLength += amountRead;
-   //				}
-   //			} while (amountRead != -1);
+   // if (amountRead > 0) {
+   // // remember length of contents
+   // contentsLength += amountRead;
+   // }
+   // } while (amountRead != -1);
    //
-   //			// resize contents if necessary
-   //			if (contentsLength < contents.length) {
-   //				System.arraycopy(
-   //					contents,
-   //					0,
-   //					contents = new byte[contentsLength],
-   //					0,
-   //					contentsLength);
-   //			}
-   //		} else {
-   //			contents = new byte[length];
-   //			int len = 0;
-   //			int readSize = 0;
-   //			while ((readSize != -1) && (len != length)) {
-   //				// See PR 1FMS89U
-   //				// We record first the read size. In this case len is the actual read size.
-   //				len += readSize;
-   //				readSize = stream.read(contents, len, length - len);
-   //			}
-   //		}
+   // // resize contents if necessary
+   // if (contentsLength < contents.length) {
+   // System.arraycopy(
+   // contents,
+   // 0,
+   // contents = new byte[contentsLength],
+   // 0,
+   // contentsLength);
+   // }
+   // } else {
+   // contents = new byte[length];
+   // int len = 0;
+   // int readSize = 0;
+   // while ((readSize != -1) && (len != length)) {
+   // // See PR 1FMS89U
+   // // We record first the read size. In this case len is the actual read size.
+   // len += readSize;
+   // readSize = stream.read(contents, len, length - len);
+   // }
+   // }
    //
-   //		return contents;
-   //	}
+   // return contents;
+   // }
 
    /*
-    * NIO support to get input stream as char array.
-    * Not used as with JDK 1.4.2 this support is slower than standard IO one...
-    * Keep it as comment for future in case of next JDK versions improve performance
-    * in this area...
-   public static char[] getInputStreamAsCharArray(FileInputStream stream, int length, String encoding)
-   	throws IOException {
-
-   	FileChannel channel = stream.getChannel();
-   	int size = (int)channel.size();
-   	if (length >= 0 && length < size) size = length;
-   	Charset charset = encoding==null?systemCharset:Charset.forName(encoding);
-   	if (charset != null) {
-   		MappedByteBuffer bbuffer = channel.map(FileChannel.MapMode.READ_ONLY, 0, size);
-   	    CharsetDecoder decoder = charset.newDecoder();
-   	    CharBuffer buffer = decoder.decode(bbuffer);
-   	    char[] contents = new char[buffer.limit()];
-   	    buffer.get(contents);
-   	    return contents;
-   	}
-   	throw new UnsupportedCharsetException(SYSTEM_FILE_ENCODING);
-   }
-   */
-   //	/**
-   //	 * Returns the given input stream's contents as a character array.
-   //	 * If a length is specified (i.e. if length != -1), this represents the number of bytes in the stream.
-   //	 * Note this doesn't close the stream.
-   //	 * @throws IOException if a problem occured reading the stream.
-   //	 */
-   //	public static char[] getInputStreamAsCharArray(InputStream stream, int length, String encoding)
-   //			throws IOException {
-   //		BufferedReader reader = null;
-   //		try {
-   //			reader = encoding == null
-   //						? new BufferedReader(new InputStreamReader(stream))
-   //						: new BufferedReader(new InputStreamReader(stream, encoding));
-   //		} catch (UnsupportedEncodingException e) {
-   //			// encoding is not supported
-   //			reader =  new BufferedReader(new InputStreamReader(stream));
-   //		}
-   //		char[] contents;
-   //		int totalRead = 0;
-   //		if (length == -1) {
-   //			contents = CharOperation.NO_CHAR;
-   //		} else {
-   //			// length is a good guess when the encoding produces less or the same amount of characters than the file length
-   //			contents = new char[length]; // best guess
-   //		}
+    * NIO support to get input stream as char array. Not used as with JDK 1.4.2 this support is slower than standard IO one...
+    * Keep it as comment for future in case of next JDK versions improve performance in this area... public static char[]
+    * getInputStreamAsCharArray(FileInputStream stream, int length, String encoding) throws IOException {
+    * 
+    * FileChannel channel = stream.getChannel(); int size = (int)channel.size(); if (length >= 0 && length < size) size = length;
+    * Charset charset = encoding==null?systemCharset:Charset.forName(encoding); if (charset != null) { MappedByteBuffer bbuffer =
+    * channel.map(FileChannel.MapMode.READ_ONLY, 0, size); CharsetDecoder decoder = charset.newDecoder(); CharBuffer buffer =
+    * decoder.decode(bbuffer); char[] contents = new char[buffer.limit()]; buffer.get(contents); return contents; } throw new
+    * UnsupportedCharsetException(SYSTEM_FILE_ENCODING); }
+    */
+   // /**
+   // * Returns the given input stream's contents as a character array.
+   // * If a length is specified (i.e. if length != -1), this represents the number of bytes in the stream.
+   // * Note this doesn't close the stream.
+   // * @throws IOException if a problem occured reading the stream.
+   // */
+   // public static char[] getInputStreamAsCharArray(InputStream stream, int length, String encoding)
+   // throws IOException {
+   // BufferedReader reader = null;
+   // try {
+   // reader = encoding == null
+   // ? new BufferedReader(new InputStreamReader(stream))
+   // : new BufferedReader(new InputStreamReader(stream, encoding));
+   // } catch (UnsupportedEncodingException e) {
+   // // encoding is not supported
+   // reader = new BufferedReader(new InputStreamReader(stream));
+   // }
+   // char[] contents;
+   // int totalRead = 0;
+   // if (length == -1) {
+   // contents = CharOperation.NO_CHAR;
+   // } else {
+   // // length is a good guess when the encoding produces less or the same amount of characters than the file length
+   // contents = new char[length]; // best guess
+   // }
    //
-   //		while (true) {
-   //			int amountRequested;
-   //			if (totalRead < length) {
-   //				// until known length is met, reuse same array sized eagerly
-   //				amountRequested = length - totalRead;
-   //			} else {
-   //				// reading beyond known length
-   //				int current = reader.read();
-   //				if (current < 0) break;
+   // while (true) {
+   // int amountRequested;
+   // if (totalRead < length) {
+   // // until known length is met, reuse same array sized eagerly
+   // amountRequested = length - totalRead;
+   // } else {
+   // // reading beyond known length
+   // int current = reader.read();
+   // if (current < 0) break;
    //
-   //				amountRequested = Math.max(stream.available(), DEFAULT_READING_SIZE);  // read at least 8K
+   // amountRequested = Math.max(stream.available(), DEFAULT_READING_SIZE); // read at least 8K
    //
-   //				// resize contents if needed
-   //				if (totalRead + 1 + amountRequested > contents.length)
-   //					System.arraycopy(contents, 	0, 	contents = new char[totalRead + 1 + amountRequested], 0, totalRead);
+   // // resize contents if needed
+   // if (totalRead + 1 + amountRequested > contents.length)
+   // System.arraycopy(contents, 0, contents = new char[totalRead + 1 + amountRequested], 0, totalRead);
    //
-   //				// add current character
-   //				contents[totalRead++] = (char) current; // coming from totalRead==length
-   //			}
-   //			// read as many chars as possible
-   //			int amountRead = reader.read(contents, totalRead, amountRequested);
-   //			if (amountRead < 0) break;
-   //			totalRead += amountRead;
-   //		}
+   // // add current character
+   // contents[totalRead++] = (char) current; // coming from totalRead==length
+   // }
+   // // read as many chars as possible
+   // int amountRead = reader.read(contents, totalRead, amountRequested);
+   // if (amountRead < 0) break;
+   // totalRead += amountRead;
+   // }
    //
-   //		// Do not keep first character for UTF-8 BOM encoding
-   //		int start = 0;
-   //		if (totalRead > 0 && UTF_8.equals(encoding)) {
-   //			if (contents[0] == 0xFEFF) { // if BOM char then skip
-   //				totalRead--;
-   //				start = 1;
-   //			}
-   //		}
+   // // Do not keep first character for UTF-8 BOM encoding
+   // int start = 0;
+   // if (totalRead > 0 && UTF_8.equals(encoding)) {
+   // if (contents[0] == 0xFEFF) { // if BOM char then skip
+   // totalRead--;
+   // start = 1;
+   // }
+   // }
    //
-   //		// resize contents if necessary
-   //		if (totalRead < contents.length)
-   //			System.arraycopy(contents, start, contents = new char[totalRead], 	0, 	totalRead);
+   // // resize contents if necessary
+   // if (totalRead < contents.length)
+   // System.arraycopy(contents, start, contents = new char[totalRead], 0, totalRead);
    //
-   //		return contents;
-   //	}
+   // return contents;
+   // }
    //
    /**
     * Returns a one line summary for an exception (extracted from its stacktrace: name + first frame)
+    * 
     * @param exception
     * @return one line summary for an exception
     */
    public static String getExceptionSummary(Throwable exception)
    {
-      //		StringWriter stringWriter = new StringWriter();
-      //		exception.printStackTrace(new PrintWriter(stringWriter));
-      //		StringBuffer buffer = exception.p stringWriter.getBuffer();		
+      // StringWriter stringWriter = new StringWriter();
+      // exception.printStackTrace(new PrintWriter(stringWriter));
+      // StringBuffer buffer = exception.p stringWriter.getBuffer();
       StringBuffer exceptionBuffer = new StringBuffer(50);
       exceptionBuffer.append(exception.toString());
-      //TODO find way to use printStackTrace to fill buffer
+      // TODO find way to use printStackTrace to fill buffer
 
       // only keep leading frame portion of the trace (i.e. line no. 2 from the stacktrace)
-      //      lookupLine2 : for (int i = 0, lineSep = 0, max = buffer.length(), line2Start = 0; i < max; i++)
-      //      {
-      //         switch (buffer.charAt(i))
-      //         {
-      //            case '\n' :
-      //            case '\r' :
-      //               if (line2Start > 0)
-      //               {
-      //                  exceptionBuffer.append(' ').append(buffer.substring(line2Start, i));
-      //                  break lookupLine2;
-      //               }
-      //               lineSep++;
-      //               break;
-      //            case ' ' :
-      //            case '\t' :
-      //               break;
-      //            default :
-      //               if (lineSep > 0)
-      //               {
-      //                  line2Start = i;
-      //                  lineSep = 0;
-      //               }
-      //               break;
-      //         }
-      //      }
+      // lookupLine2 : for (int i = 0, lineSep = 0, max = buffer.length(), line2Start = 0; i < max; i++)
+      // {
+      // switch (buffer.charAt(i))
+      // {
+      // case '\n' :
+      // case '\r' :
+      // if (line2Start > 0)
+      // {
+      // exceptionBuffer.append(' ').append(buffer.substring(line2Start, i));
+      // break lookupLine2;
+      // }
+      // lineSep++;
+      // break;
+      // case ' ' :
+      // case '\t' :
+      // break;
+      // default :
+      // if (lineSep > 0)
+      // {
+      // line2Start = i;
+      // lineSep = 0;
+      // }
+      // break;
+      // }
+      // }
       return exceptionBuffer.toString();
    }
 
-   //	
+   //
    public static int getLineNumber(int position, int[] lineEnds, int g, int d)
    {
       if (lineEnds == null)
@@ -673,29 +633,29 @@ public class Util implements SuffixConstants
       return m + 2;
    }
 
-   //	/**
-   //	 * Returns the contents of the given zip entry as a byte array.
-   //	 * @throws IOException if a problem occured reading the zip entry.
-   //	 */
-   //	public static byte[] getZipEntryByteContent(ZipEntry ze, ZipFile zip)
-   //		throws IOException {
+   // /**
+   // * Returns the contents of the given zip entry as a byte array.
+   // * @throws IOException if a problem occured reading the zip entry.
+   // */
+   // public static byte[] getZipEntryByteContent(ZipEntry ze, ZipFile zip)
+   // throws IOException {
    //
-   //		InputStream stream = null;
-   //		try {
-   //			InputStream inputStream = zip.getInputStream(ze);
+   // InputStream stream = null;
+   // try {
+   // InputStream inputStream = zip.getInputStream(ze);
    //			if (inputStream == null) throw new IOException("Invalid zip entry name : " + ze.getName()); //$NON-NLS-1$
-   //			stream = new BufferedInputStream(inputStream);
-   //			return getInputStreamAsByteArray(stream, (int) ze.getSize());
-   //		} finally {
-   //			if (stream != null) {
-   //				try {
-   //					stream.close();
-   //				} catch (IOException e) {
-   //					// ignore
-   //				}
-   //			}
-   //		}
-   //	}
+   // stream = new BufferedInputStream(inputStream);
+   // return getInputStreamAsByteArray(stream, (int) ze.getSize());
+   // } finally {
+   // if (stream != null) {
+   // try {
+   // stream.close();
+   // } catch (IOException e) {
+   // // ignore
+   // }
+   // }
+   // }
+   // }
    public static int hashCode(Object[] array)
    {
       int prime = 31;
@@ -711,42 +671,41 @@ public class Util implements SuffixConstants
       return result;
    }
 
-   //	/**
-   //	 * Returns whether the given name is potentially a zip archive file name
-   //	 * (it has a file extension and it is not ".java" nor ".class")
-   //	 */
-   //	public final static boolean isPotentialZipArchive(String name) {
-   //		int lastDot = name.lastIndexOf('.');
-   //		if (lastDot == -1)
-   //			return false; // no file extension, it cannot be a zip archive name
-   //		if (name.lastIndexOf(File.separatorChar) > lastDot)
-   //			return false; // dot was before the last file separator, it cannot be a zip archive name
-   //		int length = name.length();
-   //		int extensionLength = length - lastDot - 1;
-   //		if (extensionLength == EXTENSION_java.length()) {
-   //			for (int i = extensionLength-1; i >=0; i--) {
-   //				if (Character.toLowerCase(name.charAt(length - extensionLength + i)) != EXTENSION_java.charAt(i)) {
-   //					break; // not a ".java" file, check ".class" file case below
-   //				}
-   //				if (i == 0) {
-   //					return false; // it is a ".java" file, it cannot be a zip archive name
-   //				}
-   //			}
-   //		}
-   //		if (extensionLength == EXTENSION_class.length()) {
-   //			for (int i = extensionLength-1; i >=0; i--) {
-   //				if (Character.toLowerCase(name.charAt(length - extensionLength + i)) != EXTENSION_class.charAt(i)) {
-   //					return true; // not a ".class" file, so this is a potential archive name
-   //				}
-   //			}
-   //			return false; // it is a ".class" file, it cannot be a zip archive name
-   //		}
-   //		return true; // it is neither a ".java" file nor a ".class" file, so this is a potential archive name
-   //	}
+   // /**
+   // * Returns whether the given name is potentially a zip archive file name
+   // * (it has a file extension and it is not ".java" nor ".class")
+   // */
+   // public final static boolean isPotentialZipArchive(String name) {
+   // int lastDot = name.lastIndexOf('.');
+   // if (lastDot == -1)
+   // return false; // no file extension, it cannot be a zip archive name
+   // if (name.lastIndexOf(File.separatorChar) > lastDot)
+   // return false; // dot was before the last file separator, it cannot be a zip archive name
+   // int length = name.length();
+   // int extensionLength = length - lastDot - 1;
+   // if (extensionLength == EXTENSION_java.length()) {
+   // for (int i = extensionLength-1; i >=0; i--) {
+   // if (Character.toLowerCase(name.charAt(length - extensionLength + i)) != EXTENSION_java.charAt(i)) {
+   // break; // not a ".java" file, check ".class" file case below
+   // }
+   // if (i == 0) {
+   // return false; // it is a ".java" file, it cannot be a zip archive name
+   // }
+   // }
+   // }
+   // if (extensionLength == EXTENSION_class.length()) {
+   // for (int i = extensionLength-1; i >=0; i--) {
+   // if (Character.toLowerCase(name.charAt(length - extensionLength + i)) != EXTENSION_class.charAt(i)) {
+   // return true; // not a ".class" file, so this is a potential archive name
+   // }
+   // }
+   // return false; // it is a ".class" file, it cannot be a zip archive name
+   // }
+   // return true; // it is neither a ".java" file nor a ".class" file, so this is a potential archive name
+   // }
 
    /**
-    * Returns true iff str.toLowerCase().endsWith(".class")
-    * implementation is not creating extra strings.
+    * Returns true iff str.toLowerCase().endsWith(".class") implementation is not creating extra strings.
     */
    public final static boolean isClassFileName(char[] name)
    {
@@ -765,8 +724,7 @@ public class Util implements SuffixConstants
    }
 
    /**
-    * Returns true iff str.toLowerCase().endsWith(".class")
-    * implementation is not creating extra strings.
+    * Returns true iff str.toLowerCase().endsWith(".class") implementation is not creating extra strings.
     */
    public final static boolean isClassFileName(String name)
    {
@@ -785,11 +743,12 @@ public class Util implements SuffixConstants
       return true;
    }
 
-   /* TODO (philippe) should consider promoting it to CharOperation
-    * Returns whether the given resource path matches one of the inclusion/exclusion
-    * patterns.
-    * NOTE: should not be asked directly using pkg root pathes
+   /*
+    * TODO (philippe) should consider promoting it to CharOperation Returns whether the given resource path matches one of the
+    * inclusion/exclusion patterns. NOTE: should not be asked directly using pkg root pathes
+    * 
     * @see IClasspathEntry#getInclusionPatterns
+    * 
     * @see IClasspathEntry#getExclusionPatterns
     */
    public final static boolean isExcluded(char[] path, char[][] inclusionPatterns, char[][] exclusionPatterns,
@@ -841,8 +800,7 @@ public class Util implements SuffixConstants
    }
 
    /**
-    * Returns true iff str.toLowerCase().endsWith(".java")
-    * implementation is not creating extra strings.
+    * Returns true iff str.toLowerCase().endsWith(".java") implementation is not creating extra strings.
     */
    public final static boolean isJavaFileName(char[] name)
    {
@@ -861,8 +819,7 @@ public class Util implements SuffixConstants
    }
 
    /**
-    * Returns true iff str.toLowerCase().endsWith(".java")
-    * implementation is not creating extra strings.
+    * Returns true iff str.toLowerCase().endsWith(".java") implementation is not creating extra strings.
     */
    public final static boolean isJavaFileName(String name)
    {
@@ -955,8 +912,7 @@ public class Util implements SuffixConstants
    }
 
    /**
-    * INTERNAL USE-ONLY
-    * Search the column number corresponding to a specific position
+    * INTERNAL USE-ONLY Search the column number corresponding to a specific position
     */
    public static final int searchColumnNumber(int[] startLineIndexes, int lineNumber, int position)
    {
@@ -979,6 +935,7 @@ public class Util implements SuffixConstants
 
    /**
     * Converts a boolean value into Boolean.
+    * 
     * @param bool The boolean to convert
     * @return The corresponding Boolean object (TRUE or FALSE).
     */
@@ -1027,195 +984,196 @@ public class Util implements SuffixConstants
       return buffer.toString();
    }
 
-   //	/**
-   //	 * outputPath is formed like:
-   //	 *	   c:\temp\ the last character is a file separator
-   //	 * relativeFileName is formed like:
-   //	 *     java\lang\String.class
-   //	 * @param generatePackagesStructure a flag to know if the packages structure has to be generated.
-   //	 * @param outputPath the given output directory
-   //	 * @param relativeFileName the given relative file name
-   //	 * @param classFile the given classFile to write
-   //	 *
-   //	 */
-   //	public static void writeToDisk(boolean generatePackagesStructure, String outputPath, String relativeFileName, ClassFile classFile) throws IOException {
-   //		FileOutputStream file = getFileOutputStream(generatePackagesStructure, outputPath, relativeFileName);
-   //		/* use java.nio to write
-   //		if (true) {
-   //			FileChannel ch = file.getChannel();
-   //			try {
-   //				ByteBuffer buffer = ByteBuffer.allocate(classFile.headerOffset + classFile.contentsOffset);
-   //				buffer.put(classFile.header, 0, classFile.headerOffset);
-   //				buffer.put(classFile.contents, 0, classFile.contentsOffset);
-   //				buffer.flip();
-   //				while (true) {
-   //					if (ch.write(buffer) == 0) break;
-   //				}
-   //			} finally {
-   //				ch.close();
-   //			}
-   //			return;
-   //		}
-   //		*/
-   //		BufferedOutputStream output = new BufferedOutputStream(file, DEFAULT_WRITING_SIZE);
-   ////		BufferedOutputStream output = new BufferedOutputStream(file);
-   //		try {
-   //			// if no IOException occured, output cannot be null
-   //			output.write(classFile.header, 0, classFile.headerOffset);
-   //			output.write(classFile.contents, 0, classFile.contentsOffset);
-   //			output.flush();
-   //		} catch(IOException e) {
-   //			throw e;
-   //		} finally {
-   //			output.close();
-   //		}
-   //	}
-   //	public static void recordNestedType(ClassFile classFile, TypeBinding typeBinding) {
-   //		if (classFile.visitedTypes == null) {
-   //			classFile.visitedTypes = new HashSet(3);
-   //		} else if (classFile.visitedTypes.contains(typeBinding)) {
-   //			// type is already visited
-   //			return;
-   //		}
-   //		classFile.visitedTypes.add(typeBinding);
-   //		if (typeBinding.isParameterizedType()
-   //				&& ((typeBinding.tagBits & TagBits.ContainsNestedTypeReferences) != 0)) {
-   //			ParameterizedTypeBinding parameterizedTypeBinding = (ParameterizedTypeBinding) typeBinding;
-   //			ReferenceBinding genericType = parameterizedTypeBinding.genericType();
-   //			if ((genericType.tagBits & TagBits.ContainsNestedTypeReferences) != 0) {
-   //				recordNestedType(classFile, genericType);
-   //			}
-   //			TypeBinding[] arguments = parameterizedTypeBinding.arguments;
-   //			if (arguments != null) {
-   //				for (int j = 0, max2 = arguments.length; j < max2; j++) {
-   //					TypeBinding argument = arguments[j];
-   //					if (argument.isWildcard()) {
-   //						WildcardBinding wildcardBinding = (WildcardBinding) argument;
-   //						TypeBinding bound = wildcardBinding.bound;
-   //						if (bound != null
-   //								&& ((bound.tagBits & TagBits.ContainsNestedTypeReferences) != 0)) {
-   //							recordNestedType(classFile, bound);
-   //						}
-   //						ReferenceBinding superclass = wildcardBinding.superclass();
-   //						if (superclass != null
-   //								&& ((superclass.tagBits & TagBits.ContainsNestedTypeReferences) != 0)) {
-   //							recordNestedType(classFile, superclass);
-   //						}
-   //						ReferenceBinding[] superInterfaces = wildcardBinding.superInterfaces();
-   //						if (superInterfaces != null) {
-   //							for (int k = 0, max3 =  superInterfaces.length; k < max3; k++) {
-   //								ReferenceBinding superInterface = superInterfaces[k];
-   //								if ((superInterface.tagBits & TagBits.ContainsNestedTypeReferences) != 0) {
-   //									recordNestedType(classFile, superInterface);
-   //								}
-   //							}
-   //						}
-   //					} else if ((argument.tagBits & TagBits.ContainsNestedTypeReferences) != 0) {
-   //						recordNestedType(classFile, argument);
-   //					}
-   //				}
-   //			}
-   //		} else if (typeBinding.isTypeVariable()
-   //				&& ((typeBinding.tagBits & TagBits.ContainsNestedTypeReferences) != 0)) {
-   //			TypeVariableBinding typeVariableBinding = (TypeVariableBinding) typeBinding;
-   //			TypeBinding upperBound = typeVariableBinding.upperBound();
-   //			if (upperBound != null && ((upperBound.tagBits & TagBits.ContainsNestedTypeReferences) != 0)) {
-   //				recordNestedType(classFile, upperBound);
-   //			}
-   //			TypeBinding[] upperBounds = typeVariableBinding.otherUpperBounds();
-   //			if (upperBounds != null) {
-   //				for (int k = 0, max3 =  upperBounds.length; k < max3; k++) {
-   //					TypeBinding otherUpperBound = upperBounds[k];
-   //					if ((otherUpperBound.tagBits & TagBits.ContainsNestedTypeReferences) != 0) {
-   //						recordNestedType(classFile, otherUpperBound);
-   //					}
-   //				}
-   //			}
-   //		} else if (typeBinding.isNestedType()) {
-   //			classFile.recordInnerClasses(typeBinding);
-   //		}
-   //	}
+   // /**
+   // * outputPath is formed like:
+   // * c:\temp\ the last character is a file separator
+   // * relativeFileName is formed like:
+   // * java\lang\String.class
+   // * @param generatePackagesStructure a flag to know if the packages structure has to be generated.
+   // * @param outputPath the given output directory
+   // * @param relativeFileName the given relative file name
+   // * @param classFile the given classFile to write
+   // *
+   // */
+   // public static void writeToDisk(boolean generatePackagesStructure, String outputPath, String relativeFileName, ClassFile
+   // classFile) throws IOException {
+   // FileOutputStream file = getFileOutputStream(generatePackagesStructure, outputPath, relativeFileName);
+   // /* use java.nio to write
+   // if (true) {
+   // FileChannel ch = file.getChannel();
+   // try {
+   // ByteBuffer buffer = ByteBuffer.allocate(classFile.headerOffset + classFile.contentsOffset);
+   // buffer.put(classFile.header, 0, classFile.headerOffset);
+   // buffer.put(classFile.contents, 0, classFile.contentsOffset);
+   // buffer.flip();
+   // while (true) {
+   // if (ch.write(buffer) == 0) break;
+   // }
+   // } finally {
+   // ch.close();
+   // }
+   // return;
+   // }
+   // */
+   // BufferedOutputStream output = new BufferedOutputStream(file, DEFAULT_WRITING_SIZE);
+   // // BufferedOutputStream output = new BufferedOutputStream(file);
+   // try {
+   // // if no IOException occured, output cannot be null
+   // output.write(classFile.header, 0, classFile.headerOffset);
+   // output.write(classFile.contents, 0, classFile.contentsOffset);
+   // output.flush();
+   // } catch(IOException e) {
+   // throw e;
+   // } finally {
+   // output.close();
+   // }
+   // }
+   // public static void recordNestedType(ClassFile classFile, TypeBinding typeBinding) {
+   // if (classFile.visitedTypes == null) {
+   // classFile.visitedTypes = new HashSet(3);
+   // } else if (classFile.visitedTypes.contains(typeBinding)) {
+   // // type is already visited
+   // return;
+   // }
+   // classFile.visitedTypes.add(typeBinding);
+   // if (typeBinding.isParameterizedType()
+   // && ((typeBinding.tagBits & TagBits.ContainsNestedTypeReferences) != 0)) {
+   // ParameterizedTypeBinding parameterizedTypeBinding = (ParameterizedTypeBinding) typeBinding;
+   // ReferenceBinding genericType = parameterizedTypeBinding.genericType();
+   // if ((genericType.tagBits & TagBits.ContainsNestedTypeReferences) != 0) {
+   // recordNestedType(classFile, genericType);
+   // }
+   // TypeBinding[] arguments = parameterizedTypeBinding.arguments;
+   // if (arguments != null) {
+   // for (int j = 0, max2 = arguments.length; j < max2; j++) {
+   // TypeBinding argument = arguments[j];
+   // if (argument.isWildcard()) {
+   // WildcardBinding wildcardBinding = (WildcardBinding) argument;
+   // TypeBinding bound = wildcardBinding.bound;
+   // if (bound != null
+   // && ((bound.tagBits & TagBits.ContainsNestedTypeReferences) != 0)) {
+   // recordNestedType(classFile, bound);
+   // }
+   // ReferenceBinding superclass = wildcardBinding.superclass();
+   // if (superclass != null
+   // && ((superclass.tagBits & TagBits.ContainsNestedTypeReferences) != 0)) {
+   // recordNestedType(classFile, superclass);
+   // }
+   // ReferenceBinding[] superInterfaces = wildcardBinding.superInterfaces();
+   // if (superInterfaces != null) {
+   // for (int k = 0, max3 = superInterfaces.length; k < max3; k++) {
+   // ReferenceBinding superInterface = superInterfaces[k];
+   // if ((superInterface.tagBits & TagBits.ContainsNestedTypeReferences) != 0) {
+   // recordNestedType(classFile, superInterface);
+   // }
+   // }
+   // }
+   // } else if ((argument.tagBits & TagBits.ContainsNestedTypeReferences) != 0) {
+   // recordNestedType(classFile, argument);
+   // }
+   // }
+   // }
+   // } else if (typeBinding.isTypeVariable()
+   // && ((typeBinding.tagBits & TagBits.ContainsNestedTypeReferences) != 0)) {
+   // TypeVariableBinding typeVariableBinding = (TypeVariableBinding) typeBinding;
+   // TypeBinding upperBound = typeVariableBinding.upperBound();
+   // if (upperBound != null && ((upperBound.tagBits & TagBits.ContainsNestedTypeReferences) != 0)) {
+   // recordNestedType(classFile, upperBound);
+   // }
+   // TypeBinding[] upperBounds = typeVariableBinding.otherUpperBounds();
+   // if (upperBounds != null) {
+   // for (int k = 0, max3 = upperBounds.length; k < max3; k++) {
+   // TypeBinding otherUpperBound = upperBounds[k];
+   // if ((otherUpperBound.tagBits & TagBits.ContainsNestedTypeReferences) != 0) {
+   // recordNestedType(classFile, otherUpperBound);
+   // }
+   // }
+   // }
+   // } else if (typeBinding.isNestedType()) {
+   // classFile.recordInnerClasses(typeBinding);
+   // }
+   // }
    /*
-   //	 * External API
-   //	 */
-   //	public static File getJavaHome() {
+    * // * External API //
+    */
+   // public static File getJavaHome() {
    //		String javaHome = System.getProperty("java.home");//$NON-NLS-1$
-   //		if (javaHome != null) {
-   //			File javaHomeFile = new File(javaHome);
-   //			if (javaHomeFile.exists()) {
-   //				return javaHomeFile;
-   //			}
-   //		}
-   //		return null;
-   //	}
+   // if (javaHome != null) {
+   // File javaHomeFile = new File(javaHome);
+   // if (javaHomeFile.exists()) {
+   // return javaHomeFile;
+   // }
+   // }
+   // return null;
+   // }
 
    public static void collectRunningVMBootclasspath(List bootclasspaths)
    {
-      //		/* no bootclasspath specified
-      //		 * we can try to retrieve the default librairies of the VM used to run
-      //		 * the batch compiler
-      //		 */
+      // /* no bootclasspath specified
+      // * we can try to retrieve the default librairies of the VM used to run
+      // * the batch compiler
+      // */
       //		String javaversion = System.getProperty("java.version");//$NON-NLS-1$
       //		if (javaversion != null && javaversion.equalsIgnoreCase("1.1.8")) { //$NON-NLS-1$
-      //			throw new IllegalStateException();
-      //		}
+      // throw new IllegalStateException();
+      // }
       //
-      //		/*
-      //		 * Handle >= JDK 1.2.2 settings: retrieve the bootclasspath
-      //		 */
-      //		// check bootclasspath properties for Sun, JRockit and Harmony VMs
+      // /*
+      // * Handle >= JDK 1.2.2 settings: retrieve the bootclasspath
+      // */
+      // // check bootclasspath properties for Sun, JRockit and Harmony VMs
       //		String bootclasspathProperty = System.getProperty("sun.boot.class.path"); //$NON-NLS-1$
-      //		if ((bootclasspathProperty == null) || (bootclasspathProperty.length() == 0)) {
-      //			// IBM J9 VMs
+      // if ((bootclasspathProperty == null) || (bootclasspathProperty.length() == 0)) {
+      // // IBM J9 VMs
       //			bootclasspathProperty = System.getProperty("vm.boot.class.path"); //$NON-NLS-1$
-      //			if ((bootclasspathProperty == null) || (bootclasspathProperty.length() == 0)) {
-      //				// Harmony using IBM VME
+      // if ((bootclasspathProperty == null) || (bootclasspathProperty.length() == 0)) {
+      // // Harmony using IBM VME
       //				bootclasspathProperty = System.getProperty("org.apache.harmony.boot.class.path"); //$NON-NLS-1$
-      //			}
-      //		}
-      //		if ((bootclasspathProperty != null) && (bootclasspathProperty.length() != 0)) {
-      //			StringTokenizer tokenizer = new StringTokenizer(bootclasspathProperty, File.pathSeparator);
-      //			String token;
-      //			while (tokenizer.hasMoreTokens()) {
-      //				token = tokenizer.nextToken();
-      //				FileSystem.Classpath currentClasspath = FileSystem.getClasspath(token, null, null);
-      //				if (currentClasspath != null) {
-      //					bootclasspaths.add(currentClasspath);
-      //				}
-      //			}
-      //		} else {
-      //			// try to get all jars inside the lib folder of the java home
-      //			final File javaHome = getJavaHome();
-      //			if (javaHome != null) {
-      //				File[] directoriesToCheck = null;
+      // }
+      // }
+      // if ((bootclasspathProperty != null) && (bootclasspathProperty.length() != 0)) {
+      // StringTokenizer tokenizer = new StringTokenizer(bootclasspathProperty, File.pathSeparator);
+      // String token;
+      // while (tokenizer.hasMoreTokens()) {
+      // token = tokenizer.nextToken();
+      // FileSystem.Classpath currentClasspath = FileSystem.getClasspath(token, null, null);
+      // if (currentClasspath != null) {
+      // bootclasspaths.add(currentClasspath);
+      // }
+      // }
+      // } else {
+      // // try to get all jars inside the lib folder of the java home
+      // final File javaHome = getJavaHome();
+      // if (javaHome != null) {
+      // File[] directoriesToCheck = null;
       //				if (System.getProperty("os.name").startsWith("Mac")) {//$NON-NLS-1$//$NON-NLS-2$
-      //					directoriesToCheck = new File[] {
+      // directoriesToCheck = new File[] {
       //						new File(javaHome, "../Classes"), //$NON-NLS-1$
-      //					};
-      //				} else {
-      //					// fall back to try to retrieve them out of the lib directory
-      //					directoriesToCheck = new File[] {
+      // };
+      // } else {
+      // // fall back to try to retrieve them out of the lib directory
+      // directoriesToCheck = new File[] {
       //						new File(javaHome, "lib") //$NON-NLS-1$
-      //					};
-      //				}
-      //				File[][] systemLibrariesJars = Main.getLibrariesFiles(directoriesToCheck);
-      //				if (systemLibrariesJars != null) {
-      //					for (int i = 0, max = systemLibrariesJars.length; i < max; i++) {
-      //						File[] current = systemLibrariesJars[i];
-      //						if (current != null) {
-      //							for (int j = 0, max2 = current.length; j < max2; j++) {
-      //								FileSystem.Classpath classpath =
-      //									FileSystem.getClasspath(current[j].getAbsolutePath(),
-      //										null, false, null, null);
-      //								if (classpath != null) {
-      //									bootclasspaths.add(classpath);
-      //								}
-      //							}
-      //						}
-      //					}
-      //				}
-      //			}
-      //		}
+      // };
+      // }
+      // File[][] systemLibrariesJars = Main.getLibrariesFiles(directoriesToCheck);
+      // if (systemLibrariesJars != null) {
+      // for (int i = 0, max = systemLibrariesJars.length; i < max; i++) {
+      // File[] current = systemLibrariesJars[i];
+      // if (current != null) {
+      // for (int j = 0, max2 = current.length; j < max2; j++) {
+      // FileSystem.Classpath classpath =
+      // FileSystem.getClasspath(current[j].getAbsolutePath(),
+      // null, false, null, null);
+      // if (classpath != null) {
+      // bootclasspaths.add(classpath);
+      // }
+      // }
+      // }
+      // }
+      // }
+      // }
+      // }
    }
 
    public static int getParameterCount(char[] methodSignature)
@@ -1257,8 +1215,8 @@ public class Util implements SuffixConstants
    }
 
    /**
-    * Scans the given string for a type signature starting at the given index
-    * and returns the index of the last character.
+    * Scans the given string for a type signature starting at the given index and returns the index of the last character.
+    * 
     * <pre>
     * TypeSignature:
     *  |  BaseTypeSignature
@@ -1266,7 +1224,7 @@ public class Util implements SuffixConstants
     *  |  ClassTypeSignature
     *  |  TypeVariableSignature
     * </pre>
-    *
+    * 
     * @param string the signature string
     * @param start the 0-based character index of the first character
     * @return the 0-based character index of the last character
@@ -1311,17 +1269,17 @@ public class Util implements SuffixConstants
    }
 
    /**
-    * Scans the given string for a base type signature starting at the given index
-    * and returns the index of the last character.
+    * Scans the given string for a base type signature starting at the given index and returns the index of the last character.
+    * 
     * <pre>
     * BaseTypeSignature:
     *     <b>B</b> | <b>C</b> | <b>D</b> | <b>F</b> | <b>I</b>
     *   | <b>J</b> | <b>S</b> | <b>V</b> | <b>Z</b>
     * </pre>
-    * Note that although the base type "V" is only allowed in method return types,
-    * there is no syntactic ambiguity. This method will accept them anywhere
-    * without complaint.
-    *
+    * 
+    * Note that although the base type "V" is only allowed in method return types, there is no syntactic ambiguity. This method
+    * will accept them anywhere without complaint.
+    * 
     * @param string the signature string
     * @param start the 0-based character index of the first character
     * @return the 0-based character index of the last character
@@ -1345,13 +1303,13 @@ public class Util implements SuffixConstants
    }
 
    /**
-    * Scans the given string for an array type signature starting at the given
-    * index and returns the index of the last character.
+    * Scans the given string for an array type signature starting at the given index and returns the index of the last character.
+    * 
     * <pre>
     * ArrayTypeSignature:
     *     <b>[</b> TypeSignature
     * </pre>
-    *
+    * 
     * @param string the signature string
     * @param start the 0-based character index of the first character
     * @return the 0-based character index of the last character
@@ -1385,13 +1343,14 @@ public class Util implements SuffixConstants
    }
 
    /**
-    * Scans the given string for a capture of a wildcard type signature starting at the given
-    * index and returns the index of the last character.
+    * Scans the given string for a capture of a wildcard type signature starting at the given index and returns the index of the
+    * last character.
+    * 
     * <pre>
     * CaptureTypeSignature:
     *     <b>!</b> TypeBoundSignature
     * </pre>
-    *
+    * 
     * @param string the signature string
     * @param start the 0-based character index of the first character
     * @return the 0-based character index of the last character
@@ -1413,13 +1372,14 @@ public class Util implements SuffixConstants
    }
 
    /**
-    * Scans the given string for a type variable signature starting at the given
-    * index and returns the index of the last character.
+    * Scans the given string for a type variable signature starting at the given index and returns the index of the last
+    * character.
+    * 
     * <pre>
     * TypeVariableSignature:
     *     <b>T</b> Identifier <b>;</b>
     * </pre>
-    *
+    * 
     * @param string the signature string
     * @param start the 0-based character index of the first character
     * @return the 0-based character index of the last character
@@ -1451,10 +1411,9 @@ public class Util implements SuffixConstants
    }
 
    /**
-    * Scans the given string for an identifier starting at the given
-    * index and returns the index of the last character.
-    * Stop characters are: ";", ":", "&lt;", "&gt;", "/", ".".
-    *
+    * Scans the given string for an identifier starting at the given index and returns the index of the last character. Stop
+    * characters are: ";", ":", "&lt;", "&gt;", "/", ".".
+    * 
     * @param string the signature string
     * @param start the 0-based character index of the first character
     * @return the 0-based character index of the last character
@@ -1484,18 +1443,18 @@ public class Util implements SuffixConstants
    }
 
    /**
-    * Scans the given string for a class type signature starting at the given
-    * index and returns the index of the last character.
+    * Scans the given string for a class type signature starting at the given index and returns the index of the last character.
+    * 
     * <pre>
     * ClassTypeSignature:
     *     { <b>L</b> | <b>Q</b> } Identifier
     *           { { <b>/</b> | <b>.</b> Identifier [ <b>&lt;</b> TypeArgumentSignature* <b>&gt;</b> ] }
     *           <b>;</b>
     * </pre>
-    * Note that although all "/"-identifiers most come before "."-identifiers,
-    * there is no syntactic ambiguity. This method will accept them without
-    * complaint.
-    *
+    * 
+    * Note that although all "/"-identifiers most come before "."-identifiers, there is no syntactic ambiguity. This method will
+    * accept them without complaint.
+    * 
     * @param string the signature string
     * @param start the 0-based character index of the first character
     * @return the 0-based character index of the last character
@@ -1542,14 +1501,14 @@ public class Util implements SuffixConstants
    }
 
    /**
-    * Scans the given string for a type bound signature starting at the given
-    * index and returns the index of the last character.
+    * Scans the given string for a type bound signature starting at the given index and returns the index of the last character.
+    * 
     * <pre>
     * TypeBoundSignature:
     *     <b>[-+]</b> TypeSignature <b>;</b>
     *     <b>*</b></b>
     * </pre>
-    *
+    * 
     * @param string the signature string
     * @param start the 0-based character index of the first character
     * @return the 0-based character index of the last character
@@ -1603,21 +1562,21 @@ public class Util implements SuffixConstants
    }
 
    /**
-    * Scans the given string for a list of type argument signatures starting at
-    * the given index and returns the index of the last character.
+    * Scans the given string for a list of type argument signatures starting at the given index and returns the index of the last
+    * character.
+    * 
     * <pre>
     * TypeArgumentSignatures:
     *     <b>&lt;</b> TypeArgumentSignature* <b>&gt;</b>
     * </pre>
-    * Note that although there is supposed to be at least one type argument, there
-    * is no syntactic ambiguity if there are none. This method will accept zero
-    * type argument signatures without complaint.
-    *
+    * 
+    * Note that although there is supposed to be at least one type argument, there is no syntactic ambiguity if there are none.
+    * This method will accept zero type argument signatures without complaint.
+    * 
     * @param string the signature string
     * @param start the 0-based character index of the first character
     * @return the 0-based character index of the last character
-    * @exception IllegalArgumentException if this is not a list of type arguments
-    * signatures
+    * @exception IllegalArgumentException if this is not a list of type arguments signatures
     */
    public static int scanTypeArgumentSignatures(char[] string, int start)
    {
@@ -1649,8 +1608,9 @@ public class Util implements SuffixConstants
    }
 
    /**
-    * Scans the given string for a type argument signature starting at the given
-    * index and returns the index of the last character.
+    * Scans the given string for a type argument signature starting at the given index and returns the index of the last
+    * character.
+    * 
     * <pre>
     * TypeArgumentSignature:
     *     <b>&#42;</b>
@@ -1658,9 +1618,10 @@ public class Util implements SuffixConstants
     *  |  <b>-</b> TypeSignature
     *  |  TypeSignature
     * </pre>
-    * Note that although base types are not allowed in type arguments, there is
-    * no syntactic ambiguity. This method will accept them without complaint.
-    *
+    * 
+    * Note that although base types are not allowed in type arguments, there is no syntactic ambiguity. This method will accept
+    * them without complaint.
+    * 
     * @param string the signature string
     * @param start the 0-based character index of the first character
     * @return the 0-based character index of the last character

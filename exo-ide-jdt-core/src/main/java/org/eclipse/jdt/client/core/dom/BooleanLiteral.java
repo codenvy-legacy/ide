@@ -16,13 +16,13 @@ import java.util.List;
 
 /**
  * Boolean literal node.
- *
+ * 
  * <pre>
  * BooleanLiteral:
  * 		<b>true</b>
  * 		<b>false</b>
  * </pre>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -31,15 +31,14 @@ public class BooleanLiteral extends Expression
 
    /**
     * The "booleanValue" structural property of this node type (type: {@link Boolean}).
+    * 
     * @since 3.0
     */
    public static final SimplePropertyDescriptor BOOLEAN_VALUE_PROPERTY = new SimplePropertyDescriptor(
       BooleanLiteral.class, "booleanValue", boolean.class, MANDATORY); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -52,14 +51,11 @@ public class BooleanLiteral extends Expression
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -77,7 +73,7 @@ public class BooleanLiteral extends Expression
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    BooleanLiteral(AST ast)
@@ -85,16 +81,16 @@ public class BooleanLiteral extends Expression
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean newValue)
    {
@@ -114,16 +110,16 @@ public class BooleanLiteral extends Expression
       return super.internalGetSetBooleanProperty(property, get, newValue);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return BOOLEAN_LITERAL;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -133,8 +129,8 @@ public class BooleanLiteral extends Expression
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -142,8 +138,8 @@ public class BooleanLiteral extends Expression
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -153,10 +149,9 @@ public class BooleanLiteral extends Expression
 
    /**
     * Returns the boolean value of this boolean literal node.
-    *
-    * @return <code>true</code> for the boolean literal spelled
-    *    <code>"true"</code>, and <code>false</code> for the boolean literal
-    *    spelled <code>"false"</code>.
+    * 
+    * @return <code>true</code> for the boolean literal spelled <code>"true"</code>, and <code>false</code> for the boolean
+    *         literal spelled <code>"false"</code>.
     */
    public boolean booleanValue()
    {
@@ -165,10 +160,9 @@ public class BooleanLiteral extends Expression
 
    /**
     * Sets the boolean value of this boolean literal node.
-    *
-    * @param value <code>true</code> for the boolean literal spelled
-    *    <code>"true"</code>, and <code>false</code> for the boolean literal
-    *    spelled <code>"false"</code>.
+    * 
+    * @param value <code>true</code> for the boolean literal spelled <code>"true"</code>, and <code>false</code> for the boolean
+    *           literal spelled <code>"false"</code>.
     */
    public void setBooleanValue(boolean value)
    {
@@ -177,16 +171,16 @@ public class BooleanLiteral extends Expression
       postValueChange(BOOLEAN_VALUE_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return BASE_NODE_SIZE + 1 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

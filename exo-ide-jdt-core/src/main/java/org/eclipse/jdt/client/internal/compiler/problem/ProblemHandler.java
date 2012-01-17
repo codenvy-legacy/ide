@@ -40,10 +40,8 @@ public class ProblemHandler
    public final CompilerOptions options;
 
    /*
-    * Problem handler can be supplied with a policy to specify
-    * its behavior in error handling. Also see static methods for
+    * Problem handler can be supplied with a policy to specify its behavior in error handling. Also see static methods for
     * built-in policies.
-    *
     */
    public ProblemHandler(IErrorHandlingPolicy policy, CompilerOptions options, IProblemFactory problemFactory)
    {
@@ -53,9 +51,7 @@ public class ProblemHandler
    }
 
    /*
-    * Given the current configuration, answers which category the problem
-    * falls into:
-    *		Error | Warning | Ignore
+    * Given the current configuration, answers which category the problem falls into: Error | Warning | Ignore
     */
    public int computeSeverity(int problemId)
    {
@@ -142,8 +138,8 @@ public class ProblemHandler
    }
 
    /**
-    * Standard problem handling API, the actual severity (warning/error/ignore) is deducted
-    * from the problem ID and the current compiler options.
+    * Standard problem handling API, the actual severity (warning/error/ignore) is deducted from the problem ID and the current
+    * compiler options.
     */
    public void handle(int problemId, String[] problemArguments, String[] messageArguments, int problemStartPosition,
       int problemEndPosition, ReferenceContext referenceContext, CompilationResult unitResult)

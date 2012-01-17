@@ -54,10 +54,10 @@ public final class LocalTypeBinding extends NestedTypeBinding
       }
    }
 
-   /* Record a dependency onto a source target type which may be altered
-   * by the end of the innerclass emulation. Later on, we will revisit
-   * all its dependents so as to update them (see updateInnerEmulationDependents()).
-   */
+   /*
+    * Record a dependency onto a source target type which may be altered by the end of the innerclass emulation. Later on, we will
+    * revisit all its dependents so as to update them (see updateInnerEmulationDependents()).
+    */
    public void addInnerEmulationDependent(BlockScope dependentScope, boolean wasEnclosingInstanceSupplied)
    {
       int index;
@@ -75,7 +75,8 @@ public final class LocalTypeBinding extends NestedTypeBinding
          System.arraycopy(this.dependents, 0, (this.dependents = new InnerEmulationDependency[index + 1]), 0, index);
       }
       this.dependents[index] = new InnerEmulationDependency(dependentScope, wasEnclosingInstanceSupplied);
-      //  System.out.println("Adding dependency: "+ new String(scope.enclosingType().readableName()) + " --> " + new String(this.readableName()));
+      // System.out.println("Adding dependency: "+ new String(scope.enclosingType().readableName()) + " --> " + new
+      // String(this.readableName()));
    }
 
    /*
@@ -160,9 +161,8 @@ public final class LocalTypeBinding extends NestedTypeBinding
    }
 
    /*
-    * Overriden for code assist. In this case, the constantPoolName() has not been computed yet.
-    * Slam the source name so that the signature is syntactically correct.
-    * (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=99686)
+    * Overriden for code assist. In this case, the constantPoolName() has not been computed yet. Slam the source name so that the
+    * signature is syntactically correct. (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=99686)
     */
    public char[] genericTypeSignature()
    {
@@ -176,7 +176,7 @@ public final class LocalTypeBinding extends NestedTypeBinding
       return super.genericTypeSignature();
    }
 
-   public char[] readableName() /*java.lang.Object,  p.X<T> */
+   public char[] readableName() /* java.lang.Object, p.X<T> */
    {
       char[] readableName;
       if (isAnonymousType())
@@ -212,7 +212,7 @@ public final class LocalTypeBinding extends NestedTypeBinding
       return readableName;
    }
 
-   public char[] shortReadableName() /*Object*/
+   public char[] shortReadableName() /* Object */
    {
       char[] shortReadableName;
       if (isAnonymousType())
@@ -260,9 +260,8 @@ public final class LocalTypeBinding extends NestedTypeBinding
    }
 
    /*
-    * Overriden for code assist. In this case, the constantPoolName() has not been computed yet.
-    * Slam the source name so that the signature is syntactically correct.
-    * (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=102284)
+    * Overriden for code assist. In this case, the constantPoolName() has not been computed yet. Slam the source name so that the
+    * signature is syntactically correct. (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=102284)
     */
    public char[] signature()
    {
@@ -296,9 +295,9 @@ public final class LocalTypeBinding extends NestedTypeBinding
       return "Local type : " + new String(sourceName()) + " " + super.toString(); //$NON-NLS-2$ //$NON-NLS-1$
    }
 
-   /* Trigger the dependency mechanism forcing the innerclass emulation
-   * to be propagated to all dependent source types.
-   */
+   /*
+    * Trigger the dependency mechanism forcing the innerclass emulation to be propagated to all dependent source types.
+    */
    public void updateInnerEmulationDependents()
    {
       if (this.dependents != null)
@@ -306,7 +305,8 @@ public final class LocalTypeBinding extends NestedTypeBinding
          for (int i = 0; i < this.dependents.length; i++)
          {
             InnerEmulationDependency dependency = this.dependents[i];
-            // System.out.println("Updating " + new String(this.readableName()) + " --> " + new String(dependency.scope.enclosingType().readableName()));
+            // System.out.println("Updating " + new String(this.readableName()) + " --> " + new
+            // String(dependency.scope.enclosingType().readableName()));
             dependency.scope.propagateInnerEmulation(this, dependency.wasEnclosingInstanceSupplied);
          }
       }

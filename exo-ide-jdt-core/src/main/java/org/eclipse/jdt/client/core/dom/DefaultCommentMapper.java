@@ -18,7 +18,7 @@ import org.eclipse.jdt.client.internal.compiler.util.Util;
 
 /**
  * Internal class for associating comments with AST nodes.
- *
+ * 
  * @since 3.0
  */
 class DefaultCommentMapper
@@ -57,7 +57,7 @@ class DefaultCommentMapper
 
    /**
     * Get comment of the list which includes a given position
-    *
+    * 
     * @param position The position belonging to the looked up comment
     * @return comment which includes the given position or null if none was found
     */
@@ -82,11 +82,9 @@ class DefaultCommentMapper
    }
 
    /*
-    * Get the index of comment which contains given position.
-    * If there's no matching comment, then return depends on exact parameter:
-    *		= 0: return -1
-    *		< 0: return index of the comment before the given position
-    *		> 0: return index of the comment after the given position
+    * Get the index of comment which contains given position. If there's no matching comment, then return depends on exact
+    * parameter: = 0: return -1 < 0: return index of the comment before the given position > 0: return index of the comment after
+    * the given position
     */
    private int getCommentIndex(int start, int position, int exact)
    {
@@ -136,14 +134,12 @@ class DefaultCommentMapper
    }
 
    /**
-    * Returns the extended start position of the given node. Unlike
-    * {@link ASTNode#getStartPosition()} and {@link ASTNode#getLength()},
-    * the extended source range may include comments and whitespace
-    * immediately before or after the normal source range for the node.
-    *
+    * Returns the extended start position of the given node. Unlike {@link ASTNode#getStartPosition()} and
+    * {@link ASTNode#getLength()}, the extended source range may include comments and whitespace immediately before or after the
+    * normal source range for the node.
+    * 
     * @param node the node
-    * @return the 0-based character index, or <code>-1</code>
-    *    if no source position information is recorded for this node
+    * @return the 0-based character index, or <code>-1</code> if no source position information is recorded for this node
     * @see #getExtendedLength(ASTNode)
     * @since 3.0
     */
@@ -166,10 +162,12 @@ class DefaultCommentMapper
    }
 
    /*
-    * Search the line number corresponding to a specific position
-    * between the given line range (inclusive)
+    * Search the line number corresponding to a specific position between the given line range (inclusive)
+    * 
     * @param position int
+    * 
     * @parem lineRange size-2 int[]
+    * 
     * @return int
     */
    public final int getLineNumber(int position, int[] lineRange)
@@ -204,14 +202,12 @@ class DefaultCommentMapper
    }
 
    /**
-    * Returns the extended source length of the given node. Unlike
-    * {@link ASTNode#getStartPosition()} and {@link ASTNode#getLength()},
-    * the extended source range may include comments and whitespace
-    * immediately before or after the normal source range for the node.
-    *
+    * Returns the extended source length of the given node. Unlike {@link ASTNode#getStartPosition()} and
+    * {@link ASTNode#getLength()}, the extended source range may include comments and whitespace immediately before or after the
+    * normal source range for the node.
+    * 
     * @param node the node
-    * @return a (possibly 0) length, or <code>0</code>
-    *    if no source position information is recorded for this node
+    * @return a (possibly 0) length, or <code>0</code> if no source position information is recorded for this node
     * @see #getExtendedStartPosition(ASTNode)
     * @see #getExtendedEnd(ASTNode)
     * @since 3.0
@@ -223,7 +219,7 @@ class DefaultCommentMapper
 
    /**
     * Return index of first leading comment of a given node.
-    *
+    * 
     * @param node
     * @return index of first leading comment or -1 if node has no leading comment
     */
@@ -244,7 +240,7 @@ class DefaultCommentMapper
 
    /**
     * Return index of last trailing comment of a given node.
-    *
+    * 
     * @param node
     * @return index of last trailing comment or -1 if node has no trailing comment
     */
@@ -264,10 +260,8 @@ class DefaultCommentMapper
    }
 
    /*
-    * Initialize leading and trailing comments tables in whole nodes hierarchy of a compilation
-    * unit.
-    * Scanner is necessary to scan between nodes and comments and verify if there's
-    * nothing else than white spaces.
+    * Initialize leading and trailing comments tables in whole nodes hierarchy of a compilation unit. Scanner is necessary to scan
+    * between nodes and comments and verify if there's nothing else than white spaces.
     */
    void initialize(CompilationUnit unit, Scanner sc)
    {
@@ -333,25 +327,25 @@ class DefaultCommentMapper
    }
 
    /**
-    * Search and store node leading comments. Comments are searched in position range
-    * from previous extended position to node start position. If one or several comment are found,
-    * returns first comment start position, otherwise returns node start position.
+    * Search and store node leading comments. Comments are searched in position range from previous extended position to node
+    * start position. If one or several comment are found, returns first comment start position, otherwise returns node start
+    * position.
     * <p>
     * Starts to search for first comment before node start position and return if none was found...
-    *</p><p>
-    * When first comment is found before node, goes up in comment list until one of
-    * following conditions becomes true:
+    * </p>
+    * <p>
+    * When first comment is found before node, goes up in comment list until one of following conditions becomes true:
     * <ol>
-    * 	<li>comment end is before previous end</li>
-    * 	<li>comment start and previous end is on the same line but not on same line of node start</li>
-    * 	<li>there's other than white characters between current node and comment</li>
-    * 	<li>there's more than 1 line between current node and comment</li>
+    * <li>comment end is before previous end</li>
+    * <li>comment start and previous end is on the same line but not on same line of node start</li>
+    * <li>there's other than white characters between current node and comment</li>
+    * <li>there's more than 1 line between current node and comment</li>
     * </ol>
-    * If some comment have been found, then no token should be on
-    * on the same line before, so remove all comments which do not verify this assumption.
-    * </p><p>
-    * If finally there's leading still comments, then stores indexes of the first and last one
-    * in leading comments table.
+    * If some comment have been found, then no token should be on on the same line before, so remove all comments which do not
+    * verify this assumption.
+    * </p>
+    * <p>
+    * If finally there's leading still comments, then stores indexes of the first and last one in leading comments table.
     */
    int storeLeadingComments(ASTNode node, int previousEnd, int[] parentLineRange)
    {
@@ -480,25 +474,23 @@ class DefaultCommentMapper
    }
 
    /**
-    * Search and store node trailing comments. Comments are searched in position range
-    * from node end position to specified next start. If one or several comment are found,
-    * returns last comment end position, otherwise returns node end position.
+    * Search and store node trailing comments. Comments are searched in position range from node end position to specified next
+    * start. If one or several comment are found, returns last comment end position, otherwise returns node end position.
     * <p>
     * Starts to search for first comment after node end position and return if none was found...
-    *</p><p>
-    * When first comment is found after node, goes down in comment list until one of
-    * following conditions becomes true:
+    * </p>
+    * <p>
+    * When first comment is found after node, goes down in comment list until one of following conditions becomes true:
     * <ol>
-    * 	<li>comment start is after next start</li>
-    * 	<li>there's other than white characters between current node and comment</li>
-    * 	<li>there's more than 1 line between current node and comment</li>
-    *</ol>
-    * If at least potential comments have been found, then all of them has to be separated
-    * from following node. So, remove all comments which do not verify this assumption.
-    * Note that this verification is not applicable on last node.
-    * </p><p>
-    * If finally there's still trailing comments, then stores indexes of the first and last one
-    * in trailing comments table.
+    * <li>comment start is after next start</li>
+    * <li>there's other than white characters between current node and comment</li>
+    * <li>there's more than 1 line between current node and comment</li>
+    * </ol>
+    * If at least potential comments have been found, then all of them has to be separated from following node. So, remove all
+    * comments which do not verify this assumption. Note that this verification is not applicable on last node.
+    * </p>
+    * <p>
+    * If finally there's still trailing comments, then stores indexes of the first and last one in trailing comments table.
     */
    int storeTrailingComments(ASTNode node, int nextStart, boolean lastChild, int[] parentLineRange)
    {
@@ -773,7 +765,7 @@ class DefaultCommentMapper
             }
          }
          // Remove sibling if needed
-         if (this.topSiblingParent != null /*not a CompilationUnit*/
+         if (this.topSiblingParent != null /* not a CompilationUnit */
             && this.topSiblingParent == node)
          {
             this.siblingPtr--;

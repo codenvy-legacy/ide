@@ -12,9 +12,9 @@
 package org.eclipse.jdt.client.core.dom;
 
 /**
- * Internal marker-type interface used to tag node types that can legitimately
- * be included in {@link TagElement#fragments() TagElement.fragments()}.
- *
+ * Internal marker-type interface used to tag node types that can legitimately be included in {@link TagElement#fragments()
+ * TagElement.fragments()}.
+ * 
  * @since 3.0
  */
 interface IDocElement

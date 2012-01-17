@@ -16,12 +16,14 @@ import java.util.List;
 /**
  * Normal annotation node (added in JLS3 API).
  * <p>
+ * 
  * <pre>
  * NormalAnnotation:
  *   <b>@</b> TypeName <b>(</b> [ MemberValuePair { <b>,</b> MemberValuePair } ] <b>)</b>
  * </pre>
+ * 
  * </p>
- *
+ * 
  * @since 3.1
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -41,9 +43,7 @@ public final class NormalAnnotation extends Annotation
       NormalAnnotation.class, "values", MemberValuePair.class, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -57,12 +57,10 @@ public final class NormalAnnotation extends Annotation
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
     * @param apiLevel the API level; one of the AST.JLS* constants
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     */
    public static List propertyDescriptors(int apiLevel)
    {
@@ -70,20 +68,17 @@ public final class NormalAnnotation extends Annotation
    }
 
    /**
-    * The list of member value pairs (element type:
-    * {@link MemberValuePair}). Defaults to an empty list.
+    * The list of member value pairs (element type: {@link MemberValuePair}). Defaults to an empty list.
     */
    private ASTNode.NodeList values = new ASTNode.NodeList(VALUES_PROPERTY);
 
    /**
-    * Creates a new unparented normal annotation node owned
-    * by the given AST.  By default, the annotation has an
-    * unspecified type name and an empty list of member value
-    * pairs.
+    * Creates a new unparented normal annotation node owned by the given AST. By default, the annotation has an unspecified type
+    * name and an empty list of member value pairs.
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    NormalAnnotation(AST ast)
@@ -92,16 +87,16 @@ public final class NormalAnnotation extends Annotation
       unsupportedIn2();
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -121,8 +116,8 @@ public final class NormalAnnotation extends Annotation
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
@@ -134,24 +129,24 @@ public final class NormalAnnotation extends Annotation
       return super.internalGetChildListProperty(property);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on BodyDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on BodyDeclaration.
     */
    final ChildPropertyDescriptor internalTypeNameProperty()
    {
       return TYPE_NAME_PROPERTY;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return NORMAL_ANNOTATION;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -162,8 +157,8 @@ public final class NormalAnnotation extends Annotation
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -171,8 +166,8 @@ public final class NormalAnnotation extends Annotation
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -187,30 +182,27 @@ public final class NormalAnnotation extends Annotation
    }
 
    /**
-    * Returns the live list of member value pairs in this annotation.
-    * Adding and removing nodes from this list affects this node
-    * dynamically. All nodes in this list must be
-    * {@link MemberValuePair}s; attempts to add any other
-    * type of node will trigger an exception.
-    *
-    * @return the live list of member value pairs in this
-    *    annotation (element type: {@link MemberValuePair})
+    * Returns the live list of member value pairs in this annotation. Adding and removing nodes from this list affects this node
+    * dynamically. All nodes in this list must be {@link MemberValuePair}s; attempts to add any other type of node will trigger an
+    * exception.
+    * 
+    * @return the live list of member value pairs in this annotation (element type: {@link MemberValuePair})
     */
    public List values()
    {
       return this.values;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return super.memSize() + 1 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

@@ -181,35 +181,23 @@ public interface ISourceElementRequestor
    void acceptFieldReference(char[] fieldName, int sourcePosition);
 
    /**
-    * @param declarationStart
-    *                   This is the position of the first character of the import
-    *                   keyword.
-    * @param declarationEnd
-    *                   This is the position of the ';' ending the import statement or
-    *                   the end of the comment following the import.
-    * @param nameStart
-    *                   This is the position of the first character of the import declaration's
-    *                   name.
-    * @param nameEnd
-    *                   This is the position of the last character of the import declaration's
-    *                   name.
-    * @param tokens
-    *                   This are the tokens of the import like specified in the source.
-    * @param onDemand
-    *                   set to true if the import is an import on demand (e.g. import
-    *                   java.io.*). False otherwise.
-    * @param modifiers
-    *                   can be set to static from 1.5 on.
+    * @param declarationStart This is the position of the first character of the import keyword.
+    * @param declarationEnd This is the position of the ';' ending the import statement or the end of the comment following the
+    *           import.
+    * @param nameStart This is the position of the first character of the import declaration's name.
+    * @param nameEnd This is the position of the last character of the import declaration's name.
+    * @param tokens This are the tokens of the import like specified in the source.
+    * @param onDemand set to true if the import is an import on demand (e.g. import java.io.*). False otherwise.
+    * @param modifiers can be set to static from 1.5 on.
     */
    void acceptImport(int declarationStart, int declarationEnd, int nameStart, int nameEnd, char[][] tokens,
       boolean onDemand, int modifiers);
 
    /*
-    * Table of line separator position. This table is passed once at the end of
-    * the parse action, so as to allow computation of normalized ranges.
-    *
+    * Table of line separator position. This table is passed once at the end of the parse action, so as to allow computation of
+    * normalized ranges.
+    * 
     * A line separator might corresponds to several characters in the source,
-    *
     */
    void acceptLineSeparatorPositions(int[] positions);
 
@@ -244,8 +232,8 @@ public interface ISourceElementRequestor
    void exitConstructor(int declarationEnd);
 
    /*
-    * initializationStart denotes the source start of the expression used for
-    * initializing the field if any (-1 if no initialization).
+    * initializationStart denotes the source start of the expression used for initializing the field if any (-1 if no
+    * initialization).
     */
    void exitField(int initializationStart, int declarationEnd, int declarationSourceEnd);
 

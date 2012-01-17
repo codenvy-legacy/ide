@@ -22,8 +22,8 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 public class IfStatement extends Statement
 {
 
-   //this class represents the case of only one statement in
-   //either else and/or then branches.
+   // this class represents the case of only one statement in
+   // either else and/or then branches.
 
    public Expression condition;
 
@@ -161,115 +161,115 @@ public class IfStatement extends Statement
       // merge THEN & ELSE initializations
       FlowInfo mergedInfo =
          FlowInfo.mergedOptimizedBranchesIfElse(thenFlowInfo, isConditionOptimizedTrue, elseFlowInfo,
-            isConditionOptimizedFalse, true /*if(true){ return; }  fake-reachable(); */, flowInfo, this);
+            isConditionOptimizedFalse, true /* if(true){ return; } fake-reachable(); */, flowInfo, this);
       this.mergedInitStateIndex = currentScope.methodScope().recordInitializationStates(mergedInfo);
       return mergedInfo;
    }
 
-   //   /**
-   //    * If code generation
-   //    *
-   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   //    */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-   //   {
-   //      if ((this.bits & IsReachable) == 0)
-   //      {
-   //         return;
-   //      }
-   //      int pc = codeStream.position;
-   //      BranchLabel endifLabel = new BranchLabel(codeStream);
+   // /**
+   // * If code generation
+   // *
+   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   // {
+   // if ((this.bits & IsReachable) == 0)
+   // {
+   // return;
+   // }
+   // int pc = codeStream.position;
+   // BranchLabel endifLabel = new BranchLabel(codeStream);
    //
-   //      // optimizing the then/else part code gen
-   //      Constant cst;
-   //      boolean hasThenPart =
-   //         !(((cst = this.condition.optimizedBooleanConstant()) != Constant.NotAConstant && cst.booleanValue() == false)
-   //            || this.thenStatement == null || this.thenStatement.isEmptyBlock());
-   //      boolean hasElsePart =
-   //         !((cst != Constant.NotAConstant && cst.booleanValue() == true) || this.elseStatement == null || this.elseStatement
-   //            .isEmptyBlock());
-   //      if (hasThenPart)
-   //      {
-   //         BranchLabel falseLabel = null;
-   //         // generate boolean condition only if needed
-   //         if (cst != Constant.NotAConstant && cst.booleanValue() == true)
-   //         {
-   //            this.condition.generateCode(currentScope, codeStream, false);
-   //         }
-   //         else
-   //         {
-   //            this.condition.generateOptimizedBoolean(currentScope, codeStream, null, hasElsePart ? (falseLabel =
-   //               new BranchLabel(codeStream)) : endifLabel, true/*cst == Constant.NotAConstant*/);
-   //         }
-   //         // May loose some local variable initializations : affecting the local variable attributes
-   //         if (this.thenInitStateIndex != -1)
-   //         {
-   //            codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.thenInitStateIndex);
-   //            codeStream.addDefinitelyAssignedVariables(currentScope, this.thenInitStateIndex);
-   //         }
-   //         // generate then statement
-   //         this.thenStatement.generateCode(currentScope, codeStream);
-   //         // jump around the else statement
-   //         if (hasElsePart)
-   //         {
-   //            if ((this.bits & ASTNode.ThenExit) == 0)
-   //            {
-   //               this.thenStatement.branchChainTo(endifLabel);
-   //               int position = codeStream.position;
-   //               codeStream.goto_(endifLabel);
-   //               //goto is tagged as part of the thenAction block
-   //               codeStream.updateLastRecordedEndPC((this.thenStatement instanceof Block)
-   //                  ? ((Block)this.thenStatement).scope : currentScope, position);
-   //               // generate else statement
-   //            }
-   //            // May loose some local variable initializations : affecting the local variable attributes
-   //            if (this.elseInitStateIndex != -1)
-   //            {
-   //               codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.elseInitStateIndex);
-   //               codeStream.addDefinitelyAssignedVariables(currentScope, this.elseInitStateIndex);
-   //            }
-   //            if (falseLabel != null)
-   //               falseLabel.place();
-   //            this.elseStatement.generateCode(currentScope, codeStream);
-   //         }
-   //      }
-   //      else if (hasElsePart)
-   //      {
-   //         // generate boolean condition only if needed
-   //         if (cst != Constant.NotAConstant && cst.booleanValue() == false)
-   //         {
-   //            this.condition.generateCode(currentScope, codeStream, false);
-   //         }
-   //         else
-   //         {
-   //            this.condition
-   //               .generateOptimizedBoolean(currentScope, codeStream, endifLabel, null, true/*cst == Constant.NotAConstant*/);
-   //         }
-   //         // generate else statement
-   //         // May loose some local variable initializations : affecting the local variable attributes
-   //         if (this.elseInitStateIndex != -1)
-   //         {
-   //            codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.elseInitStateIndex);
-   //            codeStream.addDefinitelyAssignedVariables(currentScope, this.elseInitStateIndex);
-   //         }
-   //         this.elseStatement.generateCode(currentScope, codeStream);
-   //      }
-   //      else
-   //      {
-   //         // generate condition side-effects
-   //         this.condition.generateCode(currentScope, codeStream, false);
-   //         codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //      }
-   //      // May loose some local variable initializations : affecting the local variable attributes
-   //      if (this.mergedInitStateIndex != -1)
-   //      {
-   //         codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //         codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //      }
-   //      endifLabel.place();
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // // optimizing the then/else part code gen
+   // Constant cst;
+   // boolean hasThenPart =
+   // !(((cst = this.condition.optimizedBooleanConstant()) != Constant.NotAConstant && cst.booleanValue() == false)
+   // || this.thenStatement == null || this.thenStatement.isEmptyBlock());
+   // boolean hasElsePart =
+   // !((cst != Constant.NotAConstant && cst.booleanValue() == true) || this.elseStatement == null || this.elseStatement
+   // .isEmptyBlock());
+   // if (hasThenPart)
+   // {
+   // BranchLabel falseLabel = null;
+   // // generate boolean condition only if needed
+   // if (cst != Constant.NotAConstant && cst.booleanValue() == true)
+   // {
+   // this.condition.generateCode(currentScope, codeStream, false);
+   // }
+   // else
+   // {
+   // this.condition.generateOptimizedBoolean(currentScope, codeStream, null, hasElsePart ? (falseLabel =
+   // new BranchLabel(codeStream)) : endifLabel, true/*cst == Constant.NotAConstant*/);
+   // }
+   // // May loose some local variable initializations : affecting the local variable attributes
+   // if (this.thenInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.thenInitStateIndex);
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.thenInitStateIndex);
+   // }
+   // // generate then statement
+   // this.thenStatement.generateCode(currentScope, codeStream);
+   // // jump around the else statement
+   // if (hasElsePart)
+   // {
+   // if ((this.bits & ASTNode.ThenExit) == 0)
+   // {
+   // this.thenStatement.branchChainTo(endifLabel);
+   // int position = codeStream.position;
+   // codeStream.goto_(endifLabel);
+   // //goto is tagged as part of the thenAction block
+   // codeStream.updateLastRecordedEndPC((this.thenStatement instanceof Block)
+   // ? ((Block)this.thenStatement).scope : currentScope, position);
+   // // generate else statement
+   // }
+   // // May loose some local variable initializations : affecting the local variable attributes
+   // if (this.elseInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.elseInitStateIndex);
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.elseInitStateIndex);
+   // }
+   // if (falseLabel != null)
+   // falseLabel.place();
+   // this.elseStatement.generateCode(currentScope, codeStream);
+   // }
+   // }
+   // else if (hasElsePart)
+   // {
+   // // generate boolean condition only if needed
+   // if (cst != Constant.NotAConstant && cst.booleanValue() == false)
+   // {
+   // this.condition.generateCode(currentScope, codeStream, false);
+   // }
+   // else
+   // {
+   // this.condition
+   // .generateOptimizedBoolean(currentScope, codeStream, endifLabel, null, true/*cst == Constant.NotAConstant*/);
+   // }
+   // // generate else statement
+   // // May loose some local variable initializations : affecting the local variable attributes
+   // if (this.elseInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.elseInitStateIndex);
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.elseInitStateIndex);
+   // }
+   // this.elseStatement.generateCode(currentScope, codeStream);
+   // }
+   // else
+   // {
+   // // generate condition side-effects
+   // this.condition.generateCode(currentScope, codeStream, false);
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
+   // // May loose some local variable initializations : affecting the local variable attributes
+   // if (this.mergedInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // }
+   // endifLabel.place();
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    public StringBuffer printStatement(int indent, StringBuffer output)
    {

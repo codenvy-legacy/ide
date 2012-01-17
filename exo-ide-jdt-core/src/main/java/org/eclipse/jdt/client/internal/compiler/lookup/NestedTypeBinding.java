@@ -30,9 +30,10 @@ public class NestedTypeBinding extends SourceTypeBinding
       this.enclosingType = enclosingType;
    }
 
-   /* Add a new synthetic argument for <actualOuterLocalVariable>.
-   * Answer the new argument or the existing argument if one already existed.
-   */
+   /*
+    * Add a new synthetic argument for <actualOuterLocalVariable>. Answer the new argument or the existing argument if one already
+    * existed.
+    */
    public SyntheticArgumentBinding addSyntheticArgument(LocalVariableBinding actualOuterLocalVariable)
    {
       SyntheticArgumentBinding synthLocal = null;
@@ -59,15 +60,16 @@ public class NestedTypeBinding extends SourceTypeBinding
          System.arraycopy(this.outerLocalVariables, newArgIndex, synthLocals, newArgIndex + 1, size - newArgIndex);
          this.outerLocalVariables = synthLocals;
       }
-      //System.out.println("Adding synth arg for local var: " + new String(actualOuterLocalVariable.name) + " to: " + new String(this.readableName()));
+      // System.out.println("Adding synth arg for local var: " + new String(actualOuterLocalVariable.name) + " to: " + new
+      // String(this.readableName()));
       if (this.scope.referenceCompilationUnit().isPropagatingInnerClassEmulation)
          updateInnerEmulationDependents();
       return synthLocal;
    }
 
-   /* Add a new synthetic argument for <enclosingType>.
-   * Answer the new argument or the existing argument if one already existed.
-   */
+   /*
+    * Add a new synthetic argument for <enclosingType>. Answer the new argument or the existing argument if one already existed.
+    */
    public SyntheticArgumentBinding addSyntheticArgument(ReferenceBinding targetEnclosingType)
    {
       SyntheticArgumentBinding synthLocal = null;
@@ -92,15 +94,17 @@ public class NestedTypeBinding extends SourceTypeBinding
          newInstances[newArgIndex] = synthLocal = new SyntheticArgumentBinding(targetEnclosingType);
          this.enclosingInstances = newInstances;
       }
-      //System.out.println("Adding synth arg for enclosing type: " + new String(enclosingType.readableName()) + " to: " + new String(this.readableName()));
+      // System.out.println("Adding synth arg for enclosing type: " + new String(enclosingType.readableName()) + " to: " + new
+      // String(this.readableName()));
       if (this.scope.referenceCompilationUnit().isPropagatingInnerClassEmulation)
          updateInnerEmulationDependents();
       return synthLocal;
    }
 
-   /* Add a new synthetic argument and field for <actualOuterLocalVariable>.
-   * Answer the new argument or the existing argument if one already existed.
-   */
+   /*
+    * Add a new synthetic argument and field for <actualOuterLocalVariable>. Answer the new argument or the existing argument if
+    * one already existed.
+    */
    public SyntheticArgumentBinding addSyntheticArgumentAndField(LocalVariableBinding actualOuterLocalVariable)
    {
       SyntheticArgumentBinding synthLocal = addSyntheticArgument(actualOuterLocalVariable);
@@ -112,9 +116,10 @@ public class NestedTypeBinding extends SourceTypeBinding
       return synthLocal;
    }
 
-   /* Add a new synthetic argument and field for <enclosingType>.
-   * Answer the new argument or the existing argument if one already existed.
-   */
+   /*
+    * Add a new synthetic argument and field for <enclosingType>. Answer the new argument or the existing argument if one already
+    * existed.
+    */
    public SyntheticArgumentBinding addSyntheticArgumentAndField(ReferenceBinding targetEnclosingType)
    {
       SyntheticArgumentBinding synthLocal = addSyntheticArgument(targetEnclosingType);
@@ -126,8 +131,9 @@ public class NestedTypeBinding extends SourceTypeBinding
       return synthLocal;
    }
 
-   /* Answer the receiver's enclosing type... null if the receiver is a top level type.
-   */
+   /*
+    * Answer the receiver's enclosing type... null if the receiver is a top level type.
+    */
    public ReferenceBinding enclosingType()
    {
       return this.enclosingType;
@@ -168,8 +174,9 @@ public class NestedTypeBinding extends SourceTypeBinding
       return this.outerLocalVariablesSlotSize;
    }
 
-   /* Answer the synthetic argument for <actualOuterLocalVariable> or null if one does not exist.
-   */
+   /*
+    * Answer the synthetic argument for <actualOuterLocalVariable> or null if one does not exist.
+    */
    public SyntheticArgumentBinding getSyntheticArgument(LocalVariableBinding actualOuterLocalVariable)
    {
       if (this.outerLocalVariables == null)
@@ -180,8 +187,9 @@ public class NestedTypeBinding extends SourceTypeBinding
       return null;
    }
 
-   /* Answer the synthetic argument for <targetEnclosingType> or null if one does not exist.
-   */
+   /*
+    * Answer the synthetic argument for <targetEnclosingType> or null if one does not exist.
+    */
    public SyntheticArgumentBinding getSyntheticArgument(ReferenceBinding targetEnclosingType, boolean onlyExactMatch)
    {
       if (this.enclosingInstances == null)
@@ -194,7 +202,8 @@ public class NestedTypeBinding extends SourceTypeBinding
 
       // type compatibility : to handle cases such as
       // class T { class M{}}
-      // class S extends T { class N extends M {}} --> need to use S as a default enclosing instance for the super constructor call in N().
+      // class S extends T { class N extends M {}} --> need to use S as a default enclosing instance for the super constructor
+      // call in N().
       if (!onlyExactMatch)
       {
          for (int i = this.enclosingInstances.length; --i >= 0;)
@@ -237,8 +246,7 @@ public class NestedTypeBinding extends SourceTypeBinding
    }
 
    /*
-    * Trigger the dependency mechanism forcing the innerclass emulation
-    * to be propagated to all dependent source types.
+    * Trigger the dependency mechanism forcing the innerclass emulation to be propagated to all dependent source types.
     */
    public void updateInnerEmulationDependents()
    {

@@ -54,7 +54,15 @@ abstract public class TypeBinding extends Binding
    public final static BaseTypeBinding BOOLEAN = new BaseTypeBinding(TypeIds.T_boolean, TypeConstants.BOOLEAN,
       new char[]{'Z'});
 
-   public final static BaseTypeBinding NULL = new BaseTypeBinding(TypeIds.T_null, TypeConstants.NULL, new char[]{'N'}); //N stands for null even if it is never internally used
+   public final static BaseTypeBinding NULL = new BaseTypeBinding(TypeIds.T_null, TypeConstants.NULL, new char[]{'N'}); // N
+                                                                                                                        // stands
+                                                                                                                        // for
+                                                                                                                        // null
+                                                                                                                        // even if
+                                                                                                                        // it is
+                                                                                                                        // never
+                                                                                                                        // internally
+                                                                                                                        // used
 
    public final static BaseTypeBinding VOID = new BaseTypeBinding(TypeIds.T_void, TypeConstants.VOID, new char[]{'V'});
 
@@ -90,7 +98,8 @@ abstract public class TypeBinding extends Binding
       }
    }
 
-   /* Answer true if the receiver can be instantiated
+   /*
+    * Answer true if the receiver can be instantiated
     */
    public boolean canBeInstantiated()
    {
@@ -106,8 +115,8 @@ abstract public class TypeBinding extends Binding
    }
 
    /**
-    * In case of problems, returns the closest match found. It may not be perfect match, but the
-    * result of a best effort to improve fault-tolerance.
+    * In case of problems, returns the closest match found. It may not be perfect match, but the result of a best effort to
+    * improve fault-tolerance.
     */
    public TypeBinding closestMatch()
    {
@@ -116,6 +125,7 @@ abstract public class TypeBinding extends Binding
 
    /**
     * Iterate through the type components to collect instances of leaf missing types
+    * 
     * @param missingTypes
     * @return missing types
     */
@@ -125,12 +135,10 @@ abstract public class TypeBinding extends Binding
    }
 
    /**
-    * Collect the substitutes into a map for certain type variables inside the receiver type
-    * e.g.   Collection<T>.findSubstitute(T, Collection<List<X>>):   T --> List<X>
-    * Constraints:
-    *   A << F   corresponds to:   F.collectSubstitutes(..., A, ..., CONSTRAINT_EXTENDS (1))
-    *   A = F   corresponds to:      F.collectSubstitutes(..., A, ..., CONSTRAINT_EQUAL (0))
-    *   A >> F   corresponds to:   F.collectSubstitutes(..., A, ..., CONSTRAINT_SUPER (2))
+    * Collect the substitutes into a map for certain type variables inside the receiver type e.g. Collection<T>.findSubstitute(T,
+    * Collection<List<X>>): T --> List<X> Constraints: A << F corresponds to: F.collectSubstitutes(..., A, ..., CONSTRAINT_EXTENDS
+    * (1)) A = F corresponds to: F.collectSubstitutes(..., A, ..., CONSTRAINT_EQUAL (0)) A >> F corresponds to:
+    * F.collectSubstitutes(..., A, ..., CONSTRAINT_SUPER (2))
     */
    public void collectSubstitutes(Scope scope, TypeBinding actualType, InferenceContext inferenceContext, int constraint)
    {
@@ -138,9 +146,8 @@ abstract public class TypeBinding extends Binding
    }
 
    /**
-    *  Answer the receiver's constant pool name.
-    *  NOTE: This method should only be used during/after code gen.
-    *  e.g. 'java/lang/Object'
+    * Answer the receiver's constant pool name. NOTE: This method should only be used during/after code gen. e.g.
+    * 'java/lang/Object'
     */
    public abstract char[] constantPoolName();
 
@@ -157,7 +164,8 @@ abstract public class TypeBinding extends Binding
       return 0;
    }
 
-   /* Answer the receiver's enclosing type... null if the receiver is a top level type.
+   /*
+    * Answer the receiver's enclosing type... null if the receiver is a top level type.
     */
    public ReferenceBinding enclosingType()
    {
@@ -170,10 +178,10 @@ abstract public class TypeBinding extends Binding
    }
 
    /**
-    * Find supertype which originates from a given well-known type, or null if not found
-    * (using id avoids triggering the load of well-known type: 73740)
-    * NOTE: only works for erasures of well-known types, as random other types may share
-    * same id though being distincts.
+    * Find supertype which originates from a given well-known type, or null if not found (using id avoids triggering the load of
+    * well-known type: 73740) NOTE: only works for erasures of well-known types, as random other types may share same id though
+    * being distincts.
+    * 
     * @see TypeIds
     */
    public ReferenceBinding findSuperTypeOriginatingFrom(int wellKnownOriginalID, boolean originalIsClass)
@@ -406,8 +414,7 @@ abstract public class TypeBinding extends Binding
    }
 
    /**
-    * Answer the receiver classfile signature.
-    * Arrays & base types do not distinguish between signature() & constantPoolName().
+    * Answer the receiver classfile signature. Arrays & base types do not distinguish between signature() & constantPoolName().
     * NOTE: This method should only be used during/after code gen.
     */
    public char[] genericTypeSignature()
@@ -416,10 +423,10 @@ abstract public class TypeBinding extends Binding
    }
 
    /**
-    * Return the supertype which would erase as a subtype of a given declaring class.
-    * If the receiver is already erasure compatible, then it will returned. If not, then will return the alternate lowest
-    * upper bound compatible with declaring class.
-    * NOTE: the declaringClass is already know to be compatible with the receiver
+    * Return the supertype which would erase as a subtype of a given declaring class. If the receiver is already erasure
+    * compatible, then it will returned. If not, then will return the alternate lowest upper bound compatible with declaring
+    * class. NOTE: the declaringClass is already know to be compatible with the receiver
+    * 
     * @param declaringClass to look for
     * @return the lowest erasure compatible type (considering alternate bounds)
     */
@@ -488,14 +495,16 @@ abstract public class TypeBinding extends Binding
       return (this.tagBits & TagBits.IsAnonymousType) != 0;
    }
 
-   /* Answer true if the receiver is an array
+   /*
+    * Answer true if the receiver is an array
     */
    public final boolean isArrayType()
    {
       return (this.tagBits & TagBits.IsArrayType) != 0;
    }
 
-   /* Answer true if the receiver is a base type
+   /*
+    * Answer true if the receiver is a base type
     */
    public final boolean isBaseType()
    {
@@ -503,7 +512,7 @@ abstract public class TypeBinding extends Binding
    }
 
    /**
-    *  Returns true if parameterized type AND not of the form List<?>
+    * Returns true if parameterized type AND not of the form List<?>
     */
    public boolean isBoundParameterizedType()
    {
@@ -523,7 +532,8 @@ abstract public class TypeBinding extends Binding
       return false;
    }
 
-   /* Answer true if the receiver type can be assigned to the argument type (right)
+   /*
+    * Answer true if the receiver type can be assigned to the argument type (right)
     */
    public abstract boolean isCompatibleWith(TypeBinding right);
 
@@ -533,8 +543,7 @@ abstract public class TypeBinding extends Binding
    }
 
    /**
-    * Returns true if a type is identical to another one,
-    * or for generic types, true if compared to its raw type.
+    * Returns true if a type is identical to another one, or for generic types, true if compared to its raw type.
     */
    public boolean isEquivalentTo(TypeBinding otherType)
    {
@@ -556,7 +565,8 @@ abstract public class TypeBinding extends Binding
       return false;
    }
 
-   /* Answer true if the receiver's hierarchy has problems (always false for arrays & base types)
+   /*
+    * Answer true if the receiver's hierarchy has problems (always false for arrays & base types)
     */
    public final boolean isHierarchyInconsistent()
    {
@@ -609,9 +619,9 @@ abstract public class TypeBinding extends Binding
    }
 
    /**
-    * Returns true if the type is parameterized, e.g. List<String>.
-    * Note that some instances of ParameterizedTypeBinding have no arguments, like for non-generic members 
-    * of a parameterized type. Use {@link #isParameterizedTypeWithActualArguments()} instead to find out.
+    * Returns true if the type is parameterized, e.g. List<String>. Note that some instances of ParameterizedTypeBinding have no
+    * arguments, like for non-generic members of a parameterized type. Use {@link #isParameterizedTypeWithActualArguments()}
+    * instead to find out.
     */
    public final boolean isParameterizedType()
    {
@@ -619,10 +629,10 @@ abstract public class TypeBinding extends Binding
    }
 
    /**
-    * Returns true if the type is parameterized, e.g. List<String>
-    * Note that some instances of ParameterizedTypeBinding do answer false to {@link #isParameterizedType()}
-    * in case they have no arguments, like for non-generic members of a parameterized type.
-    * i.e. {@link #isParameterizedType()} is not equivalent to testing <code>type.kind() == Binding.PARAMETERIZED_TYPE</code>
+    * Returns true if the type is parameterized, e.g. List<String> Note that some instances of ParameterizedTypeBinding do answer
+    * false to {@link #isParameterizedType()} in case they have no arguments, like for non-generic members of a parameterized
+    * type. i.e. {@link #isParameterizedType()} is not equivalent to testing
+    * <code>type.kind() == Binding.PARAMETERIZED_TYPE</code>
     */
    public final boolean isParameterizedTypeWithActualArguments()
    {
@@ -694,15 +704,13 @@ abstract public class TypeBinding extends Binding
    public boolean isProvablyDistinct(TypeBinding otherType)
    {
 
-      /* With the hybrid 1.4/1.5+ projects modes, while establishing type equivalence, we need to
-         be prepared for a type such as Map appearing in one of three forms: As (a) a ParameterizedTypeBinding 
-         e.g Map<String, String>, (b) as RawTypeBinding Map#RAW and finally (c) as a BinaryTypeBinding 
-         When the usage of a type lacks type parameters, whether we land up with the raw form or not depends
-         on whether the underlying type was "seen to be" a generic type in the particular build environment or
-         not. See:
-          https://bugs.eclipse.org/bugs/show_bug.cgi?id=186565
-           https://bugs.eclipse.org/bugs/show_bug.cgi?id=328827 
-           https://bugs.eclipse.org/bugs/show_bug.cgi?id=329588
+      /*
+       * With the hybrid 1.4/1.5+ projects modes, while establishing type equivalence, we need to be prepared for a type such as
+       * Map appearing in one of three forms: As (a) a ParameterizedTypeBinding e.g Map<String, String>, (b) as RawTypeBinding
+       * Map#RAW and finally (c) as a BinaryTypeBinding When the usage of a type lacks type parameters, whether we land up with
+       * the raw form or not depends on whether the underlying type was "seen to be" a generic type in the particular build
+       * environment or not. See: https://bugs.eclipse.org/bugs/show_bug.cgi?id=186565
+       * https://bugs.eclipse.org/bugs/show_bug.cgi?id=328827 https://bugs.eclipse.org/bugs/show_bug.cgi?id=329588
        */
 
       if (this == otherType)
@@ -824,10 +832,8 @@ abstract public class TypeBinding extends Binding
    }
 
    /**
-    * Returns false if two given types could not intersect as argument types:
-    * List<Throwable> & List<Runnable> --> false
-    * List<? extends Throwable> & List<? extends Runnable> --> true
-    * List<? extends String> & List<? extends Runnable> --> false
+    * Returns false if two given types could not intersect as argument types: List<Throwable> & List<Runnable> --> false List<?
+    * extends Throwable> & List<? extends Runnable> --> true List<? extends String> & List<? extends Runnable> --> false
     */
    private boolean isProvablyDistinctTypeArgument(TypeBinding otherArgument, final ParameterizedTypeBinding paramType,
       final int rank)
@@ -1026,8 +1032,7 @@ abstract public class TypeBinding extends Binding
    }
 
    /**
-    * JLS(3) 4.7.
-    * Note: Foo<?>.Bar is also reifiable
+    * JLS(3) 4.7. Note: Foo<?>.Bar is also reifiable
     */
    public boolean isReifiable()
    {
@@ -1112,7 +1117,8 @@ abstract public class TypeBinding extends Binding
             // Given class A<T extends B<?>>, A<?> cannot be the universe of all parameterizations of A
             if (upperBound.id == TypeIds.T_JavaLangObject && otherBounds == null)
             {
-               return false; // but given class A<T>, A<?> stays an unbounded wildcard, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=348956
+               return false; // but given class A<T>, A<?> stays an unbounded wildcard, see
+                             // https://bugs.eclipse.org/bugs/show_bug.cgi?id=348956
             }
             otherType = capture.environment.createWildcard(null, 0, upperBound, otherBounds, Wildcard.EXTENDS);
             return isTypeArgumentContainedBy(otherType);
@@ -1161,27 +1167,27 @@ abstract public class TypeBinding extends Binding
             {
                case Wildcard.EXTENDS :
                   if (otherBound == this)
-                     return true; // ? extends T  <=  ? extends ? extends T
+                     return true; // ? extends T <= ? extends ? extends T
                   if (upperBound == null)
                      return false;
                   TypeBinding match = upperBound.findSuperTypeOriginatingFrom(otherBound);
                   if (match != null && (match = match.leafComponentType()).isRawType())
                   {
-                     return match == otherBound.leafComponentType(); // forbide: Collection <=  ? extends Collection<?>
-                                                                     // forbide: Collection[] <=  ? extends Collection<?>[]
+                     return match == otherBound.leafComponentType(); // forbide: Collection <= ? extends Collection<?>
+                                                                     // forbide: Collection[] <= ? extends Collection<?>[]
                   }
                   return upperBound.isCompatibleWith(otherBound);
 
                case Wildcard.SUPER :
                   if (otherBound == this)
-                     return true; // ? super T  <=  ? super ? super T
+                     return true; // ? super T <= ? super ? super T
                   if (lowerBound == null)
                      return false;
                   match = otherBound.findSuperTypeOriginatingFrom(lowerBound);
                   if (match != null && (match = match.leafComponentType()).isRawType())
                   {
-                     return match == lowerBound.leafComponentType(); // forbide: Collection <=  ? super Collection<?>
-                                                                     // forbide: Collection[] <=  ? super Collection<?>[]
+                     return match == lowerBound.leafComponentType(); // forbide: Collection <= ? super Collection<?>
+                                                                     // forbide: Collection[] <= ? super Collection<?>[]
                   }
                   return otherBound.isCompatibleWith(lowerBound);
 
@@ -1313,8 +1319,8 @@ abstract public class TypeBinding extends Binding
       return false;
    }
 
-   /* API
-    * Answer the receiver's binding type from Binding.BindingID.
+   /*
+    * API Answer the receiver's binding type from Binding.BindingID.
     */
    public int kind()
    {
@@ -1358,8 +1364,8 @@ abstract public class TypeBinding extends Binding
    }
 
    /**
-    * Returns the orignal generic type instantiated by the receiver type, or itself if not.
-    * This is similar to erasure process, except it doesn't erase type variable, wildcard, intersection types etc...
+    * Returns the orignal generic type instantiated by the receiver type, or itself if not. This is similar to erasure process,
+    * except it doesn't erase type variable, wildcard, intersection types etc...
     */
    public TypeBinding original()
    {
@@ -1375,9 +1381,8 @@ abstract public class TypeBinding extends Binding
    }
 
    /**
-    * Answer the qualified name of the receiver's package separated by periods
-    * or an empty string if its the default package.
-    *
+    * Answer the qualified name of the receiver's package separated by periods or an empty string if its the default package.
+    * 
     * For example, {java.util}.
     */
 
@@ -1389,16 +1394,14 @@ abstract public class TypeBinding extends Binding
    }
 
    /**
-    * Answer the source name for the type.
-    * In the case of member types, as the qualified name from its top level type.
-    * For example, for a member type N defined inside M & A: "A.M.N".
+    * Answer the source name for the type. In the case of member types, as the qualified name from its top level type. For
+    * example, for a member type N defined inside M & A: "A.M.N".
     */
 
    public abstract char[] qualifiedSourceName();
 
    /**
-    * Answer the receiver classfile signature.
-    * Arrays & base types do not distinguish between signature() & constantPoolName().
+    * Answer the receiver classfile signature. Arrays & base types do not distinguish between signature() & constantPoolName().
     * NOTE: This method should only be used during/after code gen.
     */
    public char[] signature()

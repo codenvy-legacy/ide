@@ -26,8 +26,8 @@ public class TypeVariableBinding extends ReferenceBinding
    public int rank; // declaration rank, can be used to match variable in parameterized type
 
    /**
-    * Denote the first explicit (binding) bound amongst the supertypes (from declaration in source)
-    * If no superclass was specified, then it denotes the first superinterface, or null if none was specified.
+    * Denote the first explicit (binding) bound amongst the supertypes (from declaration in source) If no superclass was
+    * specified, then it denotes the first superinterface, or null if none was specified.
     */
    public TypeBinding firstBound;
 
@@ -63,7 +63,8 @@ public class TypeVariableBinding extends ReferenceBinding
       if (!(argumentType instanceof ReferenceBinding || argumentType.isArrayType()))
          return TypeConstants.MISMATCH;
       // special case for re-entrant source types (selection, code assist, etc)...
-      // can request additional types during hierarchy walk that are found as source types that also 'need' to connect their hierarchy
+      // can request additional types during hierarchy walk that are found as source types that also 'need' to connect their
+      // hierarchy
       if (this.superclass == null)
          return TypeConstants.OK;
 
@@ -150,7 +151,8 @@ public class TypeVariableBinding extends ReferenceBinding
                break;
 
             case Wildcard.SUPER :
-               // if the wildcard is lower-bounded by a type variable that has no relevant upper bound there's nothing to check here (bug 282152):
+               // if the wildcard is lower-bounded by a type variable that has no relevant upper bound there's nothing to check
+               // here (bug 282152):
                if (wildcard.bound.isTypeVariable()
                   && ((TypeVariableBinding)wildcard.bound).superclass.id == TypeIds.T_JavaLangObject)
                   break;
@@ -228,17 +230,15 @@ public class TypeVariableBinding extends ReferenceBinding
    }
 
    /**
-    * Collect the substitutes into a map for certain type variables inside the receiver type
-    * e.g.   Collection<T>.collectSubstitutes(Collection<List<X>>, Map), will populate Map with: T --> List<X>
-    * Constraints:
-    *   A << F   corresponds to:   F.collectSubstitutes(..., A, ..., CONSTRAINT_EXTENDS (1))
-    *   A = F   corresponds to:      F.collectSubstitutes(..., A, ..., CONSTRAINT_EQUAL (0))
-    *   A >> F   corresponds to:   F.collectSubstitutes(..., A, ..., CONSTRAINT_SUPER (2))
+    * Collect the substitutes into a map for certain type variables inside the receiver type e.g.
+    * Collection<T>.collectSubstitutes(Collection<List<X>>, Map), will populate Map with: T --> List<X> Constraints: A << F
+    * corresponds to: F.collectSubstitutes(..., A, ..., CONSTRAINT_EXTENDS (1)) A = F corresponds to: F.collectSubstitutes(..., A,
+    * ..., CONSTRAINT_EQUAL (0)) A >> F corresponds to: F.collectSubstitutes(..., A, ..., CONSTRAINT_SUPER (2))
     */
    public void collectSubstitutes(Scope scope, TypeBinding actualType, InferenceContext inferenceContext, int constraint)
    {
 
-      //	only infer for type params of the generic method
+      // only infer for type params of the generic method
       if (this.declaringElement != inferenceContext.genericMethod)
          return;
 
@@ -257,7 +257,7 @@ public class TypeVariableBinding extends ReferenceBinding
             return; // wildcards are not true type expressions (JLS 15.12.2.7, p.453 2nd discussion)
       }
 
-      // reverse constraint, to reflect variable on rhs:   A << T --> T >: A
+      // reverse constraint, to reflect variable on rhs: A << T --> T >: A
       int variableConstraint;
       switch (constraint)
       {
@@ -268,7 +268,7 @@ public class TypeVariableBinding extends ReferenceBinding
             variableConstraint = TypeConstants.CONSTRAINT_SUPER;
             break;
          default :
-            //case CONSTRAINT_SUPER :
+            // case CONSTRAINT_SUPER :
             variableConstraint = TypeConstants.CONSTRAINT_EXTENDS;
             break;
       }
@@ -276,9 +276,7 @@ public class TypeVariableBinding extends ReferenceBinding
    }
 
    /*
-    * declaringUniqueKey : genericTypeSignature
-    * p.X<T> { ... } --> Lp/X;:TT;
-    * p.X { <T> void foo() {...} } --> Lp/X;.foo()V:TT;
+    * declaringUniqueKey : genericTypeSignature p.X<T> { ... } --> Lp/X;:TT; p.X { <T> void foo() {...} } --> Lp/X;.foo()V:TT;
     */
    public char[] computeUniqueKey(boolean isLeaf)
    {
@@ -288,7 +286,7 @@ public class TypeVariableBinding extends ReferenceBinding
       { // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=97902
          MethodBinding methodBinding = (MethodBinding)declaring;
          ReferenceBinding declaringClass = methodBinding.declaringClass;
-         buffer.append(declaringClass.computeUniqueKey(false/*not a leaf*/));
+         buffer.append(declaringClass.computeUniqueKey(false/* not a leaf */));
          buffer.append(':');
          MethodBinding[] methods = declaringClass.methods();
          if (methods != null)
@@ -304,7 +302,7 @@ public class TypeVariableBinding extends ReferenceBinding
       }
       else
       {
-         buffer.append(declaring.computeUniqueKey(false/*not a leaf*/));
+         buffer.append(declaring.computeUniqueKey(false/* not a leaf */));
          buffer.append(':');
       }
       buffer.append(genericTypeSignature());
@@ -341,8 +339,7 @@ public class TypeVariableBinding extends ReferenceBinding
    }
 
    /**
-    * T::Ljava/util/Map;:Ljava/io/Serializable;
-    * T:LY<TT;>
+    * T::Ljava/util/Map;:Ljava/io/Serializable; T:LY<TT;>
     */
    public char[] genericSignature()
    {
@@ -365,8 +362,7 @@ public class TypeVariableBinding extends ReferenceBinding
    }
 
    /**
-    * T::Ljava/util/Map;:Ljava/io/Serializable;
-    * T:LY<TT;>
+    * T::Ljava/util/Map;:Ljava/io/Serializable; T:LY<TT;>
     */
    public char[] genericTypeSignature()
    {
@@ -410,9 +406,8 @@ public class TypeVariableBinding extends ReferenceBinding
    }
 
    /**
-    * Returns true if the 2 variables are playing exact same role: they have
-    * the same bounds, providing one is substituted with the other: <T1 extends
-    * List<T1>> is interchangeable with <T2 extends List<T2>>.
+    * Returns true if the 2 variables are playing exact same role: they have the same bounds, providing one is substituted with
+    * the other: <T1 extends List<T1>> is interchangeable with <T2 extends List<T2>>.
     */
    public boolean isInterchangeableWith(TypeVariableBinding otherVariable, Substitution substitute)
    {
@@ -444,26 +439,26 @@ public class TypeVariableBinding extends ReferenceBinding
       return true;
    }
 
-   //	/**
-   //	 * Returns the original type variable for a given variable.
-   //	 * Only different from receiver for type variables of generic methods of parameterized types
-   //	 * e.g. X<U> {   <V1 extends U> U foo(V1)   } --> X<String> { <V2 extends String> String foo(V2)  }
-   //	 *         and V2.original() --> V1
-   //	 */
-   //	public TypeVariableBinding original() {
-   //		if (this.declaringElement.kind() == Binding.METHOD) {
-   //			MethodBinding originalMethod = ((MethodBinding)this.declaringElement).original();
-   //			if (originalMethod != this.declaringElement) {
-   //				return originalMethod.typeVariables[this.rank];
-   //			}
-   //		} else {
-   //			ReferenceBinding originalType = (ReferenceBinding)((ReferenceBinding)this.declaringElement).erasure();
-   //			if (originalType != this.declaringElement) {
-   //				return originalType.typeVariables()[this.rank];
-   //			}
-   //		}
-   //		return this;
-   //	}
+   // /**
+   // * Returns the original type variable for a given variable.
+   // * Only different from receiver for type variables of generic methods of parameterized types
+   // * e.g. X<U> { <V1 extends U> U foo(V1) } --> X<String> { <V2 extends String> String foo(V2) }
+   // * and V2.original() --> V1
+   // */
+   // public TypeVariableBinding original() {
+   // if (this.declaringElement.kind() == Binding.METHOD) {
+   // MethodBinding originalMethod = ((MethodBinding)this.declaringElement).original();
+   // if (originalMethod != this.declaringElement) {
+   // return originalMethod.typeVariables[this.rank];
+   // }
+   // } else {
+   // ReferenceBinding originalType = (ReferenceBinding)((ReferenceBinding)this.declaringElement).erasure();
+   // if (originalType != this.declaringElement) {
+   // return originalType.typeVariables()[this.rank];
+   // }
+   // }
+   // return this;
+   // }
 
    public int kind()
    {
@@ -487,8 +482,8 @@ public class TypeVariableBinding extends ReferenceBinding
    }
 
    /**
-     * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#readableName()
-     */
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#readableName()
+    */
    public char[] readableName()
    {
       return this.sourceName;
@@ -539,8 +534,8 @@ public class TypeVariableBinding extends ReferenceBinding
    }
 
    /**
-     * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#shortReadableName()
-     */
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#shortReadableName()
+    */
    public char[] shortReadableName()
    {
       return readableName();
@@ -562,7 +557,7 @@ public class TypeVariableBinding extends ReferenceBinding
    public String toString()
    {
       StringBuffer buffer = new StringBuffer(10);
-      buffer.append('<').append(this.sourceName);//.append('[').append(this.rank).append(']');
+      buffer.append('<').append(this.sourceName);// .append('[').append(this.rank).append(']');
       if (this.superclass != null && this.firstBound == this.superclass)
       {
          buffer.append(" extends ").append(this.superclass.debugName()); //$NON-NLS-1$

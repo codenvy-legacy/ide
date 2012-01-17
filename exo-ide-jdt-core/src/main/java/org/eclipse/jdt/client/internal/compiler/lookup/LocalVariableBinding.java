@@ -31,7 +31,8 @@ public class LocalVariableBinding extends VariableBinding
 
    public static final int FAKE_USED = 2;
 
-   public int useFlag; // for flow analysis (default is UNUSED), values < 0 indicate the number of compound uses (postIncrement or compoundAssignment)
+   public int useFlag; // for flow analysis (default is UNUSED), values < 0 indicate the number of compound uses (postIncrement or
+                       // compoundAssignment)
 
    public BlockScope declaringScope; // back-pointer to its declaring scope
 
@@ -43,7 +44,8 @@ public class LocalVariableBinding extends VariableBinding
 
    // for synthetic local variables
    // if declaration slot is not positionned, the variable will not be listed in attribute
-   // note that the name of a variable should be chosen so as not to conflict with user ones (usually starting with a space char is all needed)
+   // note that the name of a variable should be chosen so as not to conflict with user ones (usually starting with a space char
+   // is all needed)
    public LocalVariableBinding(char[] name, TypeBinding type, int modifiers, boolean isArgument)
    {
       super(name, type, modifiers, isArgument ? Constant.NotAConstant : null);
@@ -61,17 +63,17 @@ public class LocalVariableBinding extends VariableBinding
       this.tagBits |= TagBits.IsEffectivelyFinal;
    }
 
-   /* API
-   * Answer the receiver's binding type from Binding.BindingID.
-   */
+   /*
+    * API Answer the receiver's binding type from Binding.BindingID.
+    */
    public final int kind()
    {
       return LOCAL;
    }
 
    /*
-    * declaringUniqueKey # scopeIndex(0-based) # varName [# occurrenceCount(0-based)]
-    * p.X { void foo() { int local; int local;} } --> Lp/X;.foo()V#1#local#1
+    * declaringUniqueKey # scopeIndex(0-based) # varName [# occurrenceCount(0-based)] p.X { void foo() { int local; int local;} }
+    * --> Lp/X;.foo()V#1#local#1
     */
    public char[] computeUniqueKey(boolean isLeaf)
    {
@@ -90,7 +92,7 @@ public class LocalVariableBinding extends VariableBinding
             MethodBinding methodBinding = ((AbstractMethodDeclaration)referenceContext).binding;
             if (methodBinding != null)
             {
-               buffer.append(methodBinding.computeUniqueKey(false/*not a leaf*/));
+               buffer.append(methodBinding.computeUniqueKey(false/* not a leaf */));
             }
          }
          else if (referenceContext instanceof TypeDeclaration)
@@ -98,7 +100,7 @@ public class LocalVariableBinding extends VariableBinding
             TypeBinding typeBinding = ((TypeDeclaration)referenceContext).binding;
             if (typeBinding != null)
             {
-               buffer.append(typeBinding.computeUniqueKey(false/*not a leaf*/));
+               buffer.append(typeBinding.computeUniqueKey(false/* not a leaf */));
             }
          }
 
@@ -233,7 +235,8 @@ public class LocalVariableBinding extends VariableBinding
          // optimize cases where reopening a contiguous interval
          if (previousEndPC == pc)
          {
-            this.initializationPCs[((this.initializationCount - 1) << 1) + 1] = -1; // reuse previous interval (its range will be augmented)
+            this.initializationPCs[((this.initializationCount - 1) << 1) + 1] = -1; // reuse previous interval (its range will be
+                                                                                    // augmented)
             return;
          }
       }

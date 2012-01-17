@@ -46,7 +46,9 @@ public class SourceJavadocParser extends JavadocParser
       return result;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#parseIdentifierTag()
     */
    protected boolean parseIdentifierTag(boolean report)
@@ -98,7 +100,9 @@ public class SourceJavadocParser extends JavadocParser
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.JavadocParser#parseSimpleTag()
     */
    protected void parseSimpleTag()

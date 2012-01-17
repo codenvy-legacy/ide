@@ -23,8 +23,8 @@ public abstract class Label
    }
 
    /*
-   * Place the label target position.
-   */
+    * Place the label target position.
+    */
    public abstract void place();
 
 }

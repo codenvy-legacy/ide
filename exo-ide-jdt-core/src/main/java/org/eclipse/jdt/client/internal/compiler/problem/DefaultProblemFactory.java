@@ -49,6 +49,7 @@ public class DefaultProblemFactory implements IProblemFactory
     * <li>endPosition the end position of the problem
     * <li>lineNumber the line on which the problem occured
     * </ul>
+    * 
     * @param originatingFileName char[]
     * @param problemId int
     * @param problemArguments String[]

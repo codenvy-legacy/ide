@@ -12,7 +12,7 @@ package org.eclipse.jdt.client.core.util;
 
 /**
  * Definition of the modifier constants as specified in the JVM specifications.
- *
+ * 
  * @since 2.0
  * @noimplement This interface is not intended to be implemented by clients.
  */
@@ -37,6 +37,7 @@ public interface IModifierConstants
 
    /**
     * Indicates a bridge method (added in J2SE 1.5).
+    * 
     * @since 3.0
     */
    int ACC_BRIDGE = 0x0040;
@@ -45,6 +46,7 @@ public interface IModifierConstants
 
    /**
     * Indicates a variable arity method (added in J2SE 1.5).
+    * 
     * @since 3.0
     */
    int ACC_VARARGS = 0x0080;
@@ -59,18 +61,21 @@ public interface IModifierConstants
 
    /**
     * Indicates a synthetic member.
+    * 
     * @since 3.0
     */
    int ACC_SYNTHETIC = 0x1000;
 
    /**
     * Indicates an annotation (added in J2SE 1.5).
+    * 
     * @since 3.0
     */
    int ACC_ANNOTATION = 0x2000;
 
    /**
     * Indicates an enum (added in J2SE 1.5).
+    * 
     * @since 3.0
     */
    int ACC_ENUM = 0x4000;

@@ -33,7 +33,9 @@ public class ProblemNode extends ASTAttribute
       fProblem = problem;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getParent()
     */
    public Object getParent()
@@ -41,7 +43,9 @@ public class ProblemNode extends ASTAttribute
       return fParent;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getChildren()
     */
    public Object[] getChildren()
@@ -51,7 +55,8 @@ public class ProblemNode extends ASTAttribute
 
       children.add(new GeneralAttribute(this, "CONSTANT NAME", getConstantName()));
       children.add(new GeneralAttribute(this, "ID", getErrorLabel()));
-      //		children.add(new GeneralAttribute(this, "OPTION FOR CONFIGURABLE SEVERITY", JavaCore.getOptionForConfigurableSeverity(fProblem.getID())));
+      // children.add(new GeneralAttribute(this, "OPTION FOR CONFIGURABLE SEVERITY",
+      // JavaCore.getOptionForConfigurableSeverity(fProblem.getID())));
       if (fProblem instanceof CategorizedProblem)
       {
          children.add(new GeneralAttribute(this, "CATEGORY ID", getCategoryCode()));
@@ -64,7 +69,9 @@ public class ProblemNode extends ASTAttribute
       return children.toArray();
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getLabel()
     */
    public String getLabel()
@@ -131,24 +138,24 @@ public class ProblemNode extends ASTAttribute
    {
       int id = fProblem.getID();
       return String.valueOf(id);
-//      for (int i = 0; i < fields.length; i++)
-//      {
-//         Field f = fields[i];
-//         try
-//         {
-//            if (f.getType() == int.class && f.getInt(f) == id)
-//            {
-//               return "IProblem." + f.getName();
-//            }
-//         }
-//         catch (IllegalArgumentException e)
-//         {
-//         }
-//         catch (IllegalAccessException e)
-//         {
-//         }
-//      }
-//      return "<UNKNOWN CONSTANT>";
+      // for (int i = 0; i < fields.length; i++)
+      // {
+      // Field f = fields[i];
+      // try
+      // {
+      // if (f.getType() == int.class && f.getInt(f) == id)
+      // {
+      // return "IProblem." + f.getName();
+      // }
+      // }
+      // catch (IllegalArgumentException e)
+      // {
+      // }
+      // catch (IllegalAccessException e)
+      // {
+      // }
+      // }
+      // return "<UNKNOWN CONSTANT>";
    }
 
    private String getCategoryCode()
@@ -218,7 +225,9 @@ public class ProblemNode extends ASTAttribute
       return buf.toString();
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getImage()
     */
    public Image getImage()

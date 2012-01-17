@@ -78,7 +78,9 @@ class RecoveredTypeBinding implements ITypeBinding
       this.resolver = resolver;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#createArrayType(int)
     */
    public ITypeBinding createArrayType(int dims)
@@ -86,7 +88,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return this.resolver.getTypeBinding(this, dims);
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getBinaryName()
     */
    public String getBinaryName()
@@ -94,7 +98,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getBound()
     */
    public ITypeBinding getBound()
@@ -102,7 +108,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getGenericTypeOfWildcardType()
     */
    public ITypeBinding getGenericTypeOfWildcardType()
@@ -110,7 +118,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getRank()
     */
    public int getRank()
@@ -118,7 +128,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return -1;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getComponentType()
     */
    public ITypeBinding getComponentType()
@@ -128,7 +140,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return this.resolver.getTypeBinding(this, -1);
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getDeclaredFields()
     */
    public IVariableBinding[] getDeclaredFields()
@@ -136,7 +150,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return TypeBinding.NO_VARIABLE_BINDINGS;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getDeclaredMethods()
     */
    public IMethodBinding[] getDeclaredMethods()
@@ -144,7 +160,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return TypeBinding.NO_METHOD_BINDINGS;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getDeclaredModifiers()
     */
    public int getDeclaredModifiers()
@@ -152,7 +170,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return 0;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getDeclaredTypes()
     */
    public ITypeBinding[] getDeclaredTypes()
@@ -160,7 +180,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return TypeBinding.NO_TYPE_BINDINGS;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getDeclaringClass()
     */
    public ITypeBinding getDeclaringClass()
@@ -168,7 +190,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getDeclaringMethod()
     */
    public IMethodBinding getDeclaringMethod()
@@ -176,7 +200,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getDimensions()
     */
    public int getDimensions()
@@ -184,7 +210,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return this.dimensions;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getElementType()
     */
    public ITypeBinding getElementType()
@@ -216,7 +244,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getErasure()
     */
    public ITypeBinding getErasure()
@@ -224,7 +254,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return this;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getInterfaces()
     */
    public ITypeBinding[] getInterfaces()
@@ -232,7 +264,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return TypeBinding.NO_TYPE_BINDINGS;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getModifiers()
     */
    public int getModifiers()
@@ -240,7 +274,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return Modifier.NONE;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getName()
     */
    public String getName()
@@ -270,7 +306,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return getTypeNameFrom(getType());
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getPackage()
     */
    public IPackageBinding getPackage()
@@ -302,7 +340,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getQualifiedName()
     */
    public String getQualifiedName()
@@ -351,7 +391,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getSuperclass()
     */
    public ITypeBinding getSuperclass()
@@ -362,7 +404,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return this.resolver.resolveWellKnownType("java.lang.Object"); //$NON-NLS-1$
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getTypeArguments()
     */
    public ITypeBinding[] getTypeArguments()
@@ -401,7 +445,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return this.typeArguments = TypeBinding.NO_TYPE_BINDINGS;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getTypeBounds()
     */
    public ITypeBinding[] getTypeBounds()
@@ -409,7 +455,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return TypeBinding.NO_TYPE_BINDINGS;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getTypeDeclaration()
     */
    public ITypeBinding getTypeDeclaration()
@@ -417,7 +465,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return this;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getTypeParameters()
     */
    public ITypeBinding[] getTypeParameters()
@@ -425,7 +475,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return TypeBinding.NO_TYPE_BINDINGS;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getWildcard()
     */
    public ITypeBinding getWildcard()
@@ -433,7 +485,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isAnnotation()
     */
    public boolean isAnnotation()
@@ -441,7 +495,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isAnonymous()
     */
    public boolean isAnonymous()
@@ -449,7 +505,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isArray()
     */
    public boolean isArray()
@@ -457,7 +515,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isAssignmentCompatible(org.eclipse.jdt.core.dom.ITypeBinding)
     */
    public boolean isAssignmentCompatible(ITypeBinding typeBinding)
@@ -469,7 +529,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return isEqualTo(typeBinding);
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isCapture()
     */
    public boolean isCapture()
@@ -477,7 +539,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isCastCompatible(org.eclipse.jdt.core.dom.ITypeBinding)
     */
    public boolean isCastCompatible(ITypeBinding typeBinding)
@@ -489,7 +553,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return isEqualTo(typeBinding);
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isClass()
     */
    public boolean isClass()
@@ -497,7 +563,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return true;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isEnum()
     */
    public boolean isEnum()
@@ -505,7 +573,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isFromSource()
     */
    public boolean isFromSource()
@@ -513,7 +583,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isGenericType()
     */
    public boolean isGenericType()
@@ -521,7 +593,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isInterface()
     */
    public boolean isInterface()
@@ -529,7 +603,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isLocal()
     */
    public boolean isLocal()
@@ -537,7 +613,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isMember()
     */
    public boolean isMember()
@@ -545,7 +623,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isNested()
     */
    public boolean isNested()
@@ -553,7 +633,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isNullType()
     */
    public boolean isNullType()
@@ -561,7 +643,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isParameterizedType()
     */
    public boolean isParameterizedType()
@@ -577,7 +661,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isPrimitive()
     */
    public boolean isPrimitive()
@@ -585,7 +671,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isRawType()
     */
    public boolean isRawType()
@@ -593,7 +681,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isSubTypeCompatible(org.eclipse.jdt.core.dom.ITypeBinding)
     */
    public boolean isSubTypeCompatible(ITypeBinding typeBinding)
@@ -605,7 +695,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return isEqualTo(typeBinding);
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isTopLevel()
     */
    public boolean isTopLevel()
@@ -613,7 +705,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return true;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isTypeVariable()
     */
    public boolean isTypeVariable()
@@ -621,7 +715,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isUpperbound()
     */
    public boolean isUpperbound()
@@ -629,7 +725,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isWildcardType()
     */
    public boolean isWildcardType()
@@ -637,7 +735,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.IBinding#getAnnotations()
     */
    public IAnnotationBinding[] getAnnotations()
@@ -645,7 +745,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return AnnotationBinding.NoAnnotations;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.IBinding#getKey()
     */
    public String getKey()
@@ -690,7 +792,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return String.valueOf(buffer);
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.IBinding#getKind()
     */
    public int getKind()
@@ -698,7 +802,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return IBinding.TYPE;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.IBinding#isDeprecated()
     */
    public boolean isDeprecated()
@@ -706,7 +812,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.IBinding#isEqualTo(org.eclipse.jdt.core.dom.IBinding)
     */
    public boolean isEqualTo(IBinding other)
@@ -716,7 +824,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return getKey().equals(other.getKey());
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.IBinding#isRecovered()
     */
    public boolean isRecovered()
@@ -724,7 +834,9 @@ class RecoveredTypeBinding implements ITypeBinding
       return true;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.IBinding#isSynthetic()
     */
    public boolean isSynthetic()

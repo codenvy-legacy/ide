@@ -46,19 +46,18 @@ public class ProblemBinding extends Binding
       this.searchType = searchType;
    }
 
-   /* API
-   * Answer the receiver's binding type from Binding.BindingID.
-   */
+   /*
+    * API Answer the receiver's binding type from Binding.BindingID.
+    */
 
    public final int kind()
    {
       return VARIABLE | TYPE;
    }
 
-   /* API
-   * Answer the problem id associated with the receiver.
-   * NoError if the receiver is a valid binding.
-   */
+   /*
+    * API Answer the problem id associated with the receiver. NoError if the receiver is a valid binding.
+    */
 
    public final int problemId()
    {

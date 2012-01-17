@@ -23,8 +23,8 @@ public interface ISourceField extends IGenericField
    int getDeclarationSourceStart();
 
    /**
-    * Answer the initialization source for this constant field.
-    * Answer null if the field is not a constant or if it has no initialization.
+    * Answer the initialization source for this constant field. Answer null if the field is not a constant or if it has no
+    * initialization.
     */
    char[] getInitializationSource();
 
@@ -40,9 +40,8 @@ public interface ISourceField extends IGenericField
 
    /**
     * Answer the type name of the field.
-    *
-    * The name is a simple name or a qualified, dot separated name.
-    * For example, Hashtable or java.util.Hashtable.
+    * 
+    * The name is a simple name or a qualified, dot separated name. For example, Hashtable or java.util.Hashtable.
     */
    char[] getTypeName();
 }

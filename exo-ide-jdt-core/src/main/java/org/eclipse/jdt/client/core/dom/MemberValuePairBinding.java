@@ -273,6 +273,7 @@ class MemberValuePairBinding implements IMemberValuePairBinding
 
    /*
     * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.IBinding#isRecovered()
     */
    public boolean isRecovered()

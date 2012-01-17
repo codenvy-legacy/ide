@@ -21,9 +21,8 @@ import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
 //import org.eclipse.jdt.internal.compiler.flow.UnconditionalFlowInfo;
 
 /**
- * Specific block scope used for methods, constructors or clinits, representing
- * its outermost blockscope. Note also that such a scope will be provided to enclose
- * field initializers subscopes as well.
+ * Specific block scope used for methods, constructors or clinits, representing its outermost blockscope. Note also that such a
+ * scope will be provided to enclose field initializers subscopes as well.
  */
 public class MethodScope extends BlockScope
 {
@@ -32,7 +31,7 @@ public class MethodScope extends BlockScope
 
    public boolean isStatic; // method modifier or initializer one
 
-   //fields used during name resolution
+   // fields used during name resolution
    public boolean isConstructorCall = false;
 
    public FieldBinding initializedField; // the field being initialized
@@ -177,9 +176,10 @@ public class MethodScope extends BlockScope
          }
       }
 
-      //		// if the receiver's declaring class is a private nested type, then make sure the receiver is not private (causes problems for inner type emulation)
-      //		if (declaringClass.isPrivate() && (modifiers & ClassFileConstants.AccPrivate) != 0)
-      //			modifiers &= ~ClassFileConstants.AccPrivate;
+      // // if the receiver's declaring class is a private nested type, then make sure the receiver is not private (causes
+      // problems for inner type emulation)
+      // if (declaringClass.isPrivate() && (modifiers & ClassFileConstants.AccPrivate) != 0)
+      // modifiers &= ~ClassFileConstants.AccPrivate;
 
       methodBinding.modifiers = modifiers;
    }
@@ -259,11 +259,10 @@ public class MethodScope extends BlockScope
                (AbstractMethodDeclaration)this.referenceContext);
       }
 
-      /* DISABLED for backward compatibility with javac (if enabled should also mark private methods as final)
-      // methods from a final class are final : 8.4.3.3
-      if (methodBinding.declaringClass.isFinal())
-      	modifiers |= AccFinal;
-      */
+      /*
+       * DISABLED for backward compatibility with javac (if enabled should also mark private methods as final) // methods from a
+       * final class are final : 8.4.3.3 if (methodBinding.declaringClass.isFinal()) modifiers |= AccFinal;
+       */
       // native methods cannot also be tagged as strictfp
       if ((modifiers & ClassFileConstants.AccNative) != 0 && (modifiers & ClassFileConstants.AccStrictfp) != 0)
          problemReporter().nativeMethodsCannotBeStrictfp(declaringClass,
@@ -304,76 +303,74 @@ public class MethodScope extends BlockScope
       }
    }
 
-   //   /**
-   //    * Compute variable positions in scopes given an initial position offset
-   //    * ignoring unused local variables.
-   //    *
-   //    * Deal with arguments here, locals and subscopes are processed in BlockScope method
-   //    */
-   //   public void computeLocalVariablePositions(int initOffset, CodeStream codeStream)
-   //   {
-   //      this.offset = initOffset;
-   //      this.maxOffset = initOffset;
+   // /**
+   // * Compute variable positions in scopes given an initial position offset
+   // * ignoring unused local variables.
+   // *
+   // * Deal with arguments here, locals and subscopes are processed in BlockScope method
+   // */
+   // public void computeLocalVariablePositions(int initOffset, CodeStream codeStream)
+   // {
+   // this.offset = initOffset;
+   // this.maxOffset = initOffset;
    //
-   //      // manage arguments
-   //      int ilocal = 0, maxLocals = this.localIndex;
-   //      while (ilocal < maxLocals)
-   //      {
-   //         LocalVariableBinding local = this.locals[ilocal];
-   //         if (local == null || ((local.tagBits & TagBits.IsArgument) == 0))
-   //            break; // done with arguments
+   // // manage arguments
+   // int ilocal = 0, maxLocals = this.localIndex;
+   // while (ilocal < maxLocals)
+   // {
+   // LocalVariableBinding local = this.locals[ilocal];
+   // if (local == null || ((local.tagBits & TagBits.IsArgument) == 0))
+   // break; // done with arguments
    //
-   //         // record user-defined argument for attribute generation
-   //         codeStream.record(local);
+   // // record user-defined argument for attribute generation
+   // codeStream.record(local);
    //
-   //         // assign variable position
-   //         local.resolvedPosition = this.offset;
+   // // assign variable position
+   // local.resolvedPosition = this.offset;
    //
-   //         if ((local.type == TypeBinding.LONG) || (local.type == TypeBinding.DOUBLE))
-   //         {
-   //            this.offset += 2;
-   //         }
-   //         else
-   //         {
-   //            this.offset++;
-   //         }
-   //         // check for too many arguments/local variables
-   //         if (this.offset > 0xFF)
-   //         { // no more than 255 words of arguments
-   //            problemReporter().noMoreAvailableSpaceForArgument(local, local.declaration);
-   //         }
-   //         ilocal++;
-   //      }
+   // if ((local.type == TypeBinding.LONG) || (local.type == TypeBinding.DOUBLE))
+   // {
+   // this.offset += 2;
+   // }
+   // else
+   // {
+   // this.offset++;
+   // }
+   // // check for too many arguments/local variables
+   // if (this.offset > 0xFF)
+   // { // no more than 255 words of arguments
+   // problemReporter().noMoreAvailableSpaceForArgument(local, local.declaration);
+   // }
+   // ilocal++;
+   // }
    //
-   //      // sneak in extra argument before other local variables
-   //      if (this.extraSyntheticArguments != null)
-   //      {
-   //         for (int iarg = 0, maxArguments = this.extraSyntheticArguments.length; iarg < maxArguments; iarg++)
-   //         {
-   //            SyntheticArgumentBinding argument = this.extraSyntheticArguments[iarg];
-   //            argument.resolvedPosition = this.offset;
-   //            if ((argument.type == TypeBinding.LONG) || (argument.type == TypeBinding.DOUBLE))
-   //            {
-   //               this.offset += 2;
-   //            }
-   //            else
-   //            {
-   //               this.offset++;
-   //            }
-   //            if (this.offset > 0xFF)
-   //            { // no more than 255 words of arguments
-   //               problemReporter().noMoreAvailableSpaceForArgument(argument, (ASTNode)this.referenceContext);
-   //            }
-   //         }
-   //      }
-   //      this.computeLocalVariablePositions(ilocal, this.offset, codeStream);
-   //   }
+   // // sneak in extra argument before other local variables
+   // if (this.extraSyntheticArguments != null)
+   // {
+   // for (int iarg = 0, maxArguments = this.extraSyntheticArguments.length; iarg < maxArguments; iarg++)
+   // {
+   // SyntheticArgumentBinding argument = this.extraSyntheticArguments[iarg];
+   // argument.resolvedPosition = this.offset;
+   // if ((argument.type == TypeBinding.LONG) || (argument.type == TypeBinding.DOUBLE))
+   // {
+   // this.offset += 2;
+   // }
+   // else
+   // {
+   // this.offset++;
+   // }
+   // if (this.offset > 0xFF)
+   // { // no more than 255 words of arguments
+   // problemReporter().noMoreAvailableSpaceForArgument(argument, (ASTNode)this.referenceContext);
+   // }
+   // }
+   // }
+   // this.computeLocalVariablePositions(ilocal, this.offset, codeStream);
+   // }
 
    /**
-    * Error management:
-    * 		keep null for all the errors that prevent the method to be created
-    * 		otherwise return a correct method binding (but without the element
-    *		that caused the problem) : i.e. Incorrect thrown exception
+    * Error management: keep null for all the errors that prevent the method to be created otherwise return a correct method
+    * binding (but without the element that caused the problem) : i.e. Incorrect thrown exception
     */
    MethodBinding createMethod(AbstractMethodDeclaration method)
    {
@@ -412,7 +409,8 @@ public class MethodScope extends BlockScope
       }
 
       TypeParameter[] typeParameters = method.typeParameters();
-      // https://bugs.eclipse.org/bugs/show_bug.cgi?id=324850, If they exist at all, process type parameters irrespective of source level.
+      // https://bugs.eclipse.org/bugs/show_bug.cgi?id=324850, If they exist at all, process type parameters irrespective of
+      // source level.
       if (typeParameters == null || typeParameters.length == 0)
       {
          method.binding.typeVariables = Binding.NO_TYPE_VARIABLES;
@@ -426,14 +424,8 @@ public class MethodScope extends BlockScope
    }
 
    /**
-    * Overridden to detect the error case inside an explicit constructor call:
-   class X {
-   	int i;
-   	X myX;
-   	X(X x) {
-   		this(i, myX.i, x.i); // same for super calls... only the first 2 field accesses are errors
-   	}
-   }
+    * Overridden to detect the error case inside an explicit constructor call: class X { int i; X myX; X(X x) { this(i, myX.i,
+    * x.i); // same for super calls... only the first 2 field accesses are errors } }
     */
    public FieldBinding findField(TypeBinding receiverType, char[] fieldName, InvocationSite invocationSite,
       boolean needResolve)
@@ -483,10 +475,9 @@ public class MethodScope extends BlockScope
 
    /**
     * Answer the problem reporter to use for raising new problems.
-    *
-    * Note that as a side-effect, this updates the current reference context
-    * (unit, type or method) in case the problem handler decides it is necessary
-    * to abort.
+    * 
+    * Note that as a side-effect, this updates the current reference context (unit, type or method) in case the problem handler
+    * decides it is necessary to abort.
     */
    public ProblemReporter problemReporter()
    {
@@ -551,7 +542,7 @@ public class MethodScope extends BlockScope
    }
 
    /**
-    *  Answer the reference method of this scope, or null if initialization scope.
+    * Answer the reference method of this scope, or null if initialization scope.
     */
    public AbstractMethodDeclaration referenceMethod()
    {
@@ -561,8 +552,7 @@ public class MethodScope extends BlockScope
    }
 
    /**
-    *  Answer the reference type of this scope.
-    * It is the nearest enclosing type of this scope.
+    * Answer the reference type of this scope. It is the nearest enclosing type of this scope.
     */
    public TypeDeclaration referenceType()
    {

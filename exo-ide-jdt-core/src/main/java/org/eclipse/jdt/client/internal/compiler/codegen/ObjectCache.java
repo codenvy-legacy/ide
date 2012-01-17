@@ -21,8 +21,8 @@ public class ObjectCache
    int threshold;
 
    /**
-    * Constructs a new, empty hashtable. A default capacity is used.
-    * Note that the hashtable will automatically grow when it gets full.
+    * Constructs a new, empty hashtable. A default capacity is used. Note that the hashtable will automatically grow when it gets
+    * full.
     */
    public ObjectCache()
    {
@@ -30,10 +30,9 @@ public class ObjectCache
    }
 
    /**
-    * Constructs a new, empty hashtable with the specified initial
-    * capacity.
-    * @param initialCapacity int
-    *  the initial number of buckets
+    * Constructs a new, empty hashtable with the specified initial capacity.
+    * 
+    * @param initialCapacity int the initial number of buckets
     */
    public ObjectCache(int initialCapacity)
    {
@@ -56,8 +55,9 @@ public class ObjectCache
       this.elementSize = 0;
    }
 
-   /** Returns true if the collection contains an element for the key.
-    *
+   /**
+    * Returns true if the collection contains an element for the key.
+    * 
     * @param key char[] the key that we are looking for
     * @return boolean
     */
@@ -76,11 +76,11 @@ public class ObjectCache
       return false;
    }
 
-   /** Gets the object associated with the specified key in the
-    * hashtable.
+   /**
+    * Gets the object associated with the specified key in the hashtable.
+    * 
     * @param key <CODE>char[]</CODE> the specified key
-    * @return int the element for the key or -1 if the key is not
-    *  defined in the hash table.
+    * @return int the element for the key or -1 if the key is not defined in the hash table.
     */
    public int get(Object key)
    {
@@ -99,7 +99,7 @@ public class ObjectCache
 
    /**
     * Return the hashcode for the key parameter
-    *
+    * 
     * @param key org.eclipse.jdt.internal.compiler.lookup.MethodBinding
     * @return int
     */
@@ -109,10 +109,9 @@ public class ObjectCache
    }
 
    /**
-    * Puts the specified element into the hashtable, using the specified
-    * key.  The element may be retrieved by doing a get() with the same key.
-    * The key and the element cannot be null.
-    *
+    * Puts the specified element into the hashtable, using the specified key. The element may be retrieved by doing a get() with
+    * the same key. The key and the element cannot be null.
+    * 
     * @param key <CODE>Object</CODE> the specified key in the hashtable
     * @param value <CODE>int</CODE> the specified element
     * @return int the old value of the key, or -1 if it did not have one.
@@ -139,9 +138,8 @@ public class ObjectCache
    }
 
    /**
-    * Rehashes the content of the table into a bigger table.
-    * This method is called automatically when the hashtable's
-    * size exceeds the threshold.
+    * Rehashes the content of the table into a bigger table. This method is called automatically when the hashtable's size exceeds
+    * the threshold.
     */
    private void rehash()
    {
@@ -157,7 +155,7 @@ public class ObjectCache
 
    /**
     * Returns the number of elements contained in the hashtable.
-    *
+    * 
     * @return <CODE>int</CODE> The size of the table
     */
    public int size()
@@ -167,7 +165,7 @@ public class ObjectCache
 
    /**
     * Converts to a rather lengthy String.
-    *
+    * 
     * @return String the ascii representation of the receiver
     */
    public String toString()

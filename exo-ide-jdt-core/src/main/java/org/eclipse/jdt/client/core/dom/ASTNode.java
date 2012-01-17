@@ -24,42 +24,31 @@ import org.eclipse.jdt.client.internal.core.dom.NaiveASTFlattener;
 /**
  * Abstract superclass of all Abstract Syntax Tree (AST) node types.
  * <p>
- * An AST node represents a Java source code construct, such
- * as a name, type, expression, statement, or declaration.
+ * An AST node represents a Java source code construct, such as a name, type, expression, statement, or declaration.
  * </p>
  * <p>
- * Each AST node belongs to a unique AST instance, called the owning AST.
- * The children of an AST node always have the same owner as their parent node.
- * If a node from one AST is to be added to a different AST, the subtree must
- * be cloned first to ensure that the added nodes have the correct owning AST.
+ * Each AST node belongs to a unique AST instance, called the owning AST. The children of an AST node always have the same owner
+ * as their parent node. If a node from one AST is to be added to a different AST, the subtree must be cloned first to ensure that
+ * the added nodes have the correct owning AST.
  * </p>
  * <p>
- * When an AST node is part of an AST, it has a unique parent node.
- * Clients can navigate upwards, from child to parent, as well as downwards,
- * from parent to child. Newly created nodes are unparented. When an
- * unparented node is set as a child of a node (using a
- * <code>set<i>CHILD</i></code> method), its parent link is set automatically
- * and the parent link of the former child is set to <code>null</code>.
- * For nodes with properties that include a list of children (for example,
- * <code>Block</code> whose <code>statements</code> property is a list
- * of statements), adding or removing an element to/for the list property
- * automatically updates the parent links. These lists support the
- * <code>List.set</code> method; however, the constraint that the same
- * node cannot appear more than once means that this method cannot be used
- * to swap elements without first removing the node.
+ * When an AST node is part of an AST, it has a unique parent node. Clients can navigate upwards, from child to parent, as well as
+ * downwards, from parent to child. Newly created nodes are unparented. When an unparented node is set as a child of a node (using
+ * a <code>set<i>CHILD</i></code> method), its parent link is set automatically and the parent link of the former child is set to
+ * <code>null</code>. For nodes with properties that include a list of children (for example, <code>Block</code> whose
+ * <code>statements</code> property is a list of statements), adding or removing an element to/for the list property automatically
+ * updates the parent links. These lists support the <code>List.set</code> method; however, the constraint that the same node
+ * cannot appear more than once means that this method cannot be used to swap elements without first removing the node.
  * </p>
  * <p>
- * ASTs must not contain cycles. All operations that could create a cycle
- * detect this possibility and fail.
+ * ASTs must not contain cycles. All operations that could create a cycle detect this possibility and fail.
  * </p>
  * <p>
- * ASTs do not contain "holes" (missing subtrees). If a node is required to
- * have a certain property, a syntactically plausible initial value is
- * always supplied.
+ * ASTs do not contain "holes" (missing subtrees). If a node is required to have a certain property, a syntactically plausible
+ * initial value is always supplied.
  * </p>
  * <p>
- * The hierarchy of AST node types has some convenient groupings marked
- * by abstract superclasses:
+ * The hierarchy of AST node types has some convenient groupings marked by abstract superclasses:
  * <ul>
  * <li>expressions - <code>Expression</code></li>
  * <li>names - <code>Name</code> (a sub-kind of expression)</li>
@@ -69,53 +58,39 @@ import org.eclipse.jdt.client.internal.core.dom.NaiveASTFlattener;
  * </ul>
  * </p>
  * <p>
- * Abstract syntax trees may be hand constructed by clients, using the
- * <code>new<i>TYPE</i></code> factory methods (see <code>AST</code>) to
- * create new nodes, and the various <code>set<i>CHILD</i></code> methods
- * to connect them together.
+ * Abstract syntax trees may be hand constructed by clients, using the <code>new<i>TYPE</i></code> factory methods (see
+ * <code>AST</code>) to create new nodes, and the various <code>set<i>CHILD</i></code> methods to connect them together.
  * </p>
  * <p>
- * The class {@link ASTParser} parses a string
- * containing a Java source code and returns an abstract syntax tree
- * for it. The resulting nodes carry source ranges relating the node back to
- * the original source characters. The source range covers the construct
- * as a whole.
+ * The class {@link ASTParser} parses a string containing a Java source code and returns an abstract syntax tree for it. The
+ * resulting nodes carry source ranges relating the node back to the original source characters. The source range covers the
+ * construct as a whole.
  * </p>
  * <p>
- * Each AST node carries bit flags, which may convey additional information about
- * the node. For instance, the parser uses a flag to indicate a syntax error.
- * Newly created nodes have no flags set.
+ * Each AST node carries bit flags, which may convey additional information about the node. For instance, the parser uses a flag
+ * to indicate a syntax error. Newly created nodes have no flags set.
  * </p>
  * <p>
- * Each AST node is capable of carrying an open-ended collection of
- * client-defined properties. Newly created nodes have none.
- * <code>getProperty</code> and <code>setProperty</code> are used to access
- * these properties.
+ * Each AST node is capable of carrying an open-ended collection of client-defined properties. Newly created nodes have none.
+ * <code>getProperty</code> and <code>setProperty</code> are used to access these properties.
  * </p>
  * <p>
- * AST nodes are thread-safe for readers provided there are no active writers.
- * If one thread is modifying an AST, including creating new nodes or cloning
- * existing ones, it is <b>not</b> safe for another thread to read, visit,
- * write, create, or clone <em>any</em> of the nodes on the same AST.
- * When synchronization is required, consider using the common AST
- * object that owns the node; that is, use
- * <code>synchronize (node.getAST()) {...}</code>.
+ * AST nodes are thread-safe for readers provided there are no active writers. If one thread is modifying an AST, including
+ * creating new nodes or cloning existing ones, it is <b>not</b> safe for another thread to read, visit, write, create, or clone
+ * <em>any</em> of the nodes on the same AST. When synchronization is required, consider using the common AST object that owns the
+ * node; that is, use <code>synchronize (node.getAST()) {...}</code>.
  * </p>
  * <p>
- * ASTs also support the visitor pattern; see the class <code>ASTVisitor</code>
- * for details. The <code>NodeFinder</code> class can be used to find a specific
- * node inside a tree.
+ * ASTs also support the visitor pattern; see the class <code>ASTVisitor</code> for details. The <code>NodeFinder</code> class can
+ * be used to find a specific node inside a tree.
  * </p>
  * <p>
- * Compilation units created by <code>ASTParser</code> from a
- * source document can be serialized after arbitrary modifications
- * with minimal loss of original formatting. See
- * {@link CompilationUnit#recordModifications()} for details.
- * See also {@link org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite} for
- * an alternative way to describe and serialize changes to a
+ * Compilation units created by <code>ASTParser</code> from a source document can be serialized after arbitrary modifications with
+ * minimal loss of original formatting. See {@link CompilationUnit#recordModifications()} for details. See also
+ * {@link org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite} for an alternative way to describe and serialize changes to a
  * read-only AST.
  * </p>
- *
+ * 
  * @see ASTParser
  * @see ASTVisitor
  * @see NodeFinder
@@ -126,644 +101,638 @@ public abstract class ASTNode
 {
    /*
     * INSTRUCTIONS FOR ADDING NEW CONCRETE AST NODE TYPES
-    *
-    * There are several things that need to be changed when a
-    * new concrete AST node type (call it "FooBar"):
-    *
-    * 1. Create the FooBar AST node type class.
-    * The most effective way to do this is to copy a similar
-    * existing concrete node class to get a template that
-     * includes all the framework methods that must be implemented.
-    *
-    * 2. Add node type constant ASTNode.FOO_BAR.
-    * Node constants are numbered consecutively. Add the
-    * constant after the existing ones.
-    *
+    * 
+    * There are several things that need to be changed when a new concrete AST node type (call it "FooBar"):
+    * 
+    * 1. Create the FooBar AST node type class. The most effective way to do this is to copy a similar existing concrete node
+    * class to get a template that includes all the framework methods that must be implemented.
+    * 
+    * 2. Add node type constant ASTNode.FOO_BAR. Node constants are numbered consecutively. Add the constant after the existing
+    * ones.
+    * 
     * 3. Add entry to ASTNode.nodeClassForType(int).
-    *
+    * 
     * 4. Add AST.newFooBar() factory method.
-    *
+    * 
     * 5. Add ASTVisitor.visit(FooBar) and endVisit(FooBar) methods.
-    *
+    * 
     * 6. Add ASTMatcher.match(FooBar,Object) method.
-    *
-    * 7. Ensure that SimpleName.isDeclaration() covers FooBar
-    * nodes if required.
-    *
-    * 8. Add NaiveASTFlattener.visit(FooBar) method to illustrate
-    * how these nodes should be serialized.
-    *
+    * 
+    * 7. Ensure that SimpleName.isDeclaration() covers FooBar nodes if required.
+    * 
+    * 8. Add NaiveASTFlattener.visit(FooBar) method to illustrate how these nodes should be serialized.
+    * 
     * 9. Update the AST test suites.
-    *
-    * The next steps are to update AST.parse* to start generating
-    * the new type of nodes, and ASTRewrite to serialize them back out.
+    * 
+    * The next steps are to update AST.parse* to start generating the new type of nodes, and ASTRewrite to serialize them back
+    * out.
     */
 
    /**
-    * Node type constant indicating a node of type
-    * <code>AnonymousClassDeclaration</code>.
+    * Node type constant indicating a node of type <code>AnonymousClassDeclaration</code>.
+    * 
     * @see AnonymousClassDeclaration
     */
    public static final int ANONYMOUS_CLASS_DECLARATION = 1;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>ArrayAccess</code>.
+    * Node type constant indicating a node of type <code>ArrayAccess</code>.
+    * 
     * @see ArrayAccess
     */
    public static final int ARRAY_ACCESS = 2;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>ArrayCreation</code>.
+    * Node type constant indicating a node of type <code>ArrayCreation</code>.
+    * 
     * @see ArrayCreation
     */
    public static final int ARRAY_CREATION = 3;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>ArrayInitializer</code>.
+    * Node type constant indicating a node of type <code>ArrayInitializer</code>.
+    * 
     * @see ArrayInitializer
     */
    public static final int ARRAY_INITIALIZER = 4;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>ArrayType</code>.
+    * Node type constant indicating a node of type <code>ArrayType</code>.
+    * 
     * @see ArrayType
     */
    public static final int ARRAY_TYPE = 5;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>AssertStatement</code>.
+    * Node type constant indicating a node of type <code>AssertStatement</code>.
+    * 
     * @see AssertStatement
     */
    public static final int ASSERT_STATEMENT = 6;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>Assignment</code>.
+    * Node type constant indicating a node of type <code>Assignment</code>.
+    * 
     * @see Assignment
     */
    public static final int ASSIGNMENT = 7;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>Block</code>.
+    * Node type constant indicating a node of type <code>Block</code>.
+    * 
     * @see Block
     */
    public static final int BLOCK = 8;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>BooleanLiteral</code>.
+    * Node type constant indicating a node of type <code>BooleanLiteral</code>.
+    * 
     * @see BooleanLiteral
     */
    public static final int BOOLEAN_LITERAL = 9;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>BreakStatement</code>.
+    * Node type constant indicating a node of type <code>BreakStatement</code>.
+    * 
     * @see BreakStatement
     */
    public static final int BREAK_STATEMENT = 10;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>CastExpression</code>.
+    * Node type constant indicating a node of type <code>CastExpression</code>.
+    * 
     * @see CastExpression
     */
    public static final int CAST_EXPRESSION = 11;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>CatchClause</code>.
+    * Node type constant indicating a node of type <code>CatchClause</code>.
+    * 
     * @see CatchClause
     */
    public static final int CATCH_CLAUSE = 12;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>CharacterLiteral</code>.
+    * Node type constant indicating a node of type <code>CharacterLiteral</code>.
+    * 
     * @see CharacterLiteral
     */
    public static final int CHARACTER_LITERAL = 13;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>ClassInstanceCreation</code>.
+    * Node type constant indicating a node of type <code>ClassInstanceCreation</code>.
+    * 
     * @see ClassInstanceCreation
     */
    public static final int CLASS_INSTANCE_CREATION = 14;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>CompilationUnit</code>.
+    * Node type constant indicating a node of type <code>CompilationUnit</code>.
+    * 
     * @see CompilationUnit
     */
    public static final int COMPILATION_UNIT = 15;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>ConditionalExpression</code>.
+    * Node type constant indicating a node of type <code>ConditionalExpression</code>.
+    * 
     * @see ConditionalExpression
     */
    public static final int CONDITIONAL_EXPRESSION = 16;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>ConstructorInvocation</code>.
+    * Node type constant indicating a node of type <code>ConstructorInvocation</code>.
+    * 
     * @see ConstructorInvocation
     */
    public static final int CONSTRUCTOR_INVOCATION = 17;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>ContinueStatement</code>.
+    * Node type constant indicating a node of type <code>ContinueStatement</code>.
+    * 
     * @see ContinueStatement
     */
    public static final int CONTINUE_STATEMENT = 18;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>DoStatement</code>.
+    * Node type constant indicating a node of type <code>DoStatement</code>.
+    * 
     * @see DoStatement
     */
    public static final int DO_STATEMENT = 19;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>EmptyStatement</code>.
+    * Node type constant indicating a node of type <code>EmptyStatement</code>.
+    * 
     * @see EmptyStatement
     */
    public static final int EMPTY_STATEMENT = 20;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>ExpressionStatement</code>.
+    * Node type constant indicating a node of type <code>ExpressionStatement</code>.
+    * 
     * @see ExpressionStatement
     */
    public static final int EXPRESSION_STATEMENT = 21;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>FieldAccess</code>.
+    * Node type constant indicating a node of type <code>FieldAccess</code>.
+    * 
     * @see FieldAccess
     */
    public static final int FIELD_ACCESS = 22;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>FieldDeclaration</code>.
+    * Node type constant indicating a node of type <code>FieldDeclaration</code>.
+    * 
     * @see FieldDeclaration
     */
    public static final int FIELD_DECLARATION = 23;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>ForStatement</code>.
+    * Node type constant indicating a node of type <code>ForStatement</code>.
+    * 
     * @see ForStatement
     */
    public static final int FOR_STATEMENT = 24;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>IfStatement</code>.
+    * Node type constant indicating a node of type <code>IfStatement</code>.
+    * 
     * @see IfStatement
     */
    public static final int IF_STATEMENT = 25;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>ImportDeclaration</code>.
+    * Node type constant indicating a node of type <code>ImportDeclaration</code>.
+    * 
     * @see ImportDeclaration
     */
    public static final int IMPORT_DECLARATION = 26;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>InfixExpression</code>.
+    * Node type constant indicating a node of type <code>InfixExpression</code>.
+    * 
     * @see InfixExpression
     */
    public static final int INFIX_EXPRESSION = 27;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>Initializer</code>.
+    * Node type constant indicating a node of type <code>Initializer</code>.
+    * 
     * @see Initializer
     */
    public static final int INITIALIZER = 28;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>Javadoc</code>.
+    * Node type constant indicating a node of type <code>Javadoc</code>.
+    * 
     * @see Javadoc
     */
    public static final int JAVADOC = 29;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>LabeledStatement</code>.
+    * Node type constant indicating a node of type <code>LabeledStatement</code>.
+    * 
     * @see LabeledStatement
     */
    public static final int LABELED_STATEMENT = 30;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>MethodDeclaration</code>.
+    * Node type constant indicating a node of type <code>MethodDeclaration</code>.
+    * 
     * @see MethodDeclaration
     */
    public static final int METHOD_DECLARATION = 31;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>MethodInvocation</code>.
+    * Node type constant indicating a node of type <code>MethodInvocation</code>.
+    * 
     * @see MethodInvocation
     */
    public static final int METHOD_INVOCATION = 32;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>NullLiteral</code>.
+    * Node type constant indicating a node of type <code>NullLiteral</code>.
+    * 
     * @see NullLiteral
     */
    public static final int NULL_LITERAL = 33;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>NumberLiteral</code>.
+    * Node type constant indicating a node of type <code>NumberLiteral</code>.
+    * 
     * @see NumberLiteral
     */
    public static final int NUMBER_LITERAL = 34;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>PackageDeclaration</code>.
+    * Node type constant indicating a node of type <code>PackageDeclaration</code>.
+    * 
     * @see PackageDeclaration
     */
    public static final int PACKAGE_DECLARATION = 35;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>ParenthesizedExpression</code>.
+    * Node type constant indicating a node of type <code>ParenthesizedExpression</code>.
+    * 
     * @see ParenthesizedExpression
     */
    public static final int PARENTHESIZED_EXPRESSION = 36;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>PostfixExpression</code>.
+    * Node type constant indicating a node of type <code>PostfixExpression</code>.
+    * 
     * @see PostfixExpression
     */
    public static final int POSTFIX_EXPRESSION = 37;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>PrefixExpression</code>.
+    * Node type constant indicating a node of type <code>PrefixExpression</code>.
+    * 
     * @see PrefixExpression
     */
    public static final int PREFIX_EXPRESSION = 38;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>PrimitiveType</code>.
+    * Node type constant indicating a node of type <code>PrimitiveType</code>.
+    * 
     * @see PrimitiveType
     */
    public static final int PRIMITIVE_TYPE = 39;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>QualifiedName</code>.
+    * Node type constant indicating a node of type <code>QualifiedName</code>.
+    * 
     * @see QualifiedName
     */
    public static final int QUALIFIED_NAME = 40;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>ReturnStatement</code>.
+    * Node type constant indicating a node of type <code>ReturnStatement</code>.
+    * 
     * @see ReturnStatement
     */
    public static final int RETURN_STATEMENT = 41;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>SimpleName</code>.
+    * Node type constant indicating a node of type <code>SimpleName</code>.
+    * 
     * @see SimpleName
     */
    public static final int SIMPLE_NAME = 42;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>SimpleType</code>.
+    * Node type constant indicating a node of type <code>SimpleType</code>.
+    * 
     * @see SimpleType
     */
    public static final int SIMPLE_TYPE = 43;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>SingleVariableDeclaration</code>.
+    * Node type constant indicating a node of type <code>SingleVariableDeclaration</code>.
+    * 
     * @see SingleVariableDeclaration
     */
    public static final int SINGLE_VARIABLE_DECLARATION = 44;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>StringLiteral</code>.
+    * Node type constant indicating a node of type <code>StringLiteral</code>.
+    * 
     * @see StringLiteral
     */
    public static final int STRING_LITERAL = 45;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>SuperConstructorInvocation</code>.
+    * Node type constant indicating a node of type <code>SuperConstructorInvocation</code>.
+    * 
     * @see SuperConstructorInvocation
     */
    public static final int SUPER_CONSTRUCTOR_INVOCATION = 46;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>SuperFieldAccess</code>.
+    * Node type constant indicating a node of type <code>SuperFieldAccess</code>.
+    * 
     * @see SuperFieldAccess
     */
    public static final int SUPER_FIELD_ACCESS = 47;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>SuperMethodInvocation</code>.
+    * Node type constant indicating a node of type <code>SuperMethodInvocation</code>.
+    * 
     * @see SuperMethodInvocation
     */
    public static final int SUPER_METHOD_INVOCATION = 48;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>SwitchCase</code>.
+    * Node type constant indicating a node of type <code>SwitchCase</code>.
+    * 
     * @see SwitchCase
     */
    public static final int SWITCH_CASE = 49;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>SwitchStatement</code>.
+    * Node type constant indicating a node of type <code>SwitchStatement</code>.
+    * 
     * @see SwitchStatement
     */
    public static final int SWITCH_STATEMENT = 50;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>SynchronizedStatement</code>.
+    * Node type constant indicating a node of type <code>SynchronizedStatement</code>.
+    * 
     * @see SynchronizedStatement
     */
    public static final int SYNCHRONIZED_STATEMENT = 51;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>ThisExpression</code>.
+    * Node type constant indicating a node of type <code>ThisExpression</code>.
+    * 
     * @see ThisExpression
     */
    public static final int THIS_EXPRESSION = 52;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>ThrowStatement</code>.
+    * Node type constant indicating a node of type <code>ThrowStatement</code>.
+    * 
     * @see ThrowStatement
     */
    public static final int THROW_STATEMENT = 53;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>TryStatement</code>.
+    * Node type constant indicating a node of type <code>TryStatement</code>.
+    * 
     * @see TryStatement
     */
    public static final int TRY_STATEMENT = 54;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>TypeDeclaration</code>.
+    * Node type constant indicating a node of type <code>TypeDeclaration</code>.
+    * 
     * @see TypeDeclaration
     */
    public static final int TYPE_DECLARATION = 55;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>TypeDeclarationStatement</code>.
+    * Node type constant indicating a node of type <code>TypeDeclarationStatement</code>.
+    * 
     * @see TypeDeclarationStatement
     */
    public static final int TYPE_DECLARATION_STATEMENT = 56;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>TypeLiteral</code>.
+    * Node type constant indicating a node of type <code>TypeLiteral</code>.
+    * 
     * @see TypeLiteral
     */
    public static final int TYPE_LITERAL = 57;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>VariableDeclarationExpression</code>.
+    * Node type constant indicating a node of type <code>VariableDeclarationExpression</code>.
+    * 
     * @see VariableDeclarationExpression
     */
    public static final int VARIABLE_DECLARATION_EXPRESSION = 58;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>VariableDeclarationFragment</code>.
+    * Node type constant indicating a node of type <code>VariableDeclarationFragment</code>.
+    * 
     * @see VariableDeclarationFragment
     */
    public static final int VARIABLE_DECLARATION_FRAGMENT = 59;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>VariableDeclarationStatement</code>.
+    * Node type constant indicating a node of type <code>VariableDeclarationStatement</code>.
+    * 
     * @see VariableDeclarationStatement
     */
    public static final int VARIABLE_DECLARATION_STATEMENT = 60;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>WhileStatement</code>.
+    * Node type constant indicating a node of type <code>WhileStatement</code>.
+    * 
     * @see WhileStatement
     */
    public static final int WHILE_STATEMENT = 61;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>InstanceofExpression</code>.
+    * Node type constant indicating a node of type <code>InstanceofExpression</code>.
+    * 
     * @see InstanceofExpression
     */
    public static final int INSTANCEOF_EXPRESSION = 62;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>LineComment</code>.
+    * Node type constant indicating a node of type <code>LineComment</code>.
+    * 
     * @see LineComment
     * @since 3.0
     */
    public static final int LINE_COMMENT = 63;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>BlockComment</code>.
+    * Node type constant indicating a node of type <code>BlockComment</code>.
+    * 
     * @see BlockComment
     * @since 3.0
     */
    public static final int BLOCK_COMMENT = 64;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>TagElement</code>.
+    * Node type constant indicating a node of type <code>TagElement</code>.
+    * 
     * @see TagElement
     * @since 3.0
     */
    public static final int TAG_ELEMENT = 65;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>TextElement</code>.
+    * Node type constant indicating a node of type <code>TextElement</code>.
+    * 
     * @see TextElement
     * @since 3.0
     */
    public static final int TEXT_ELEMENT = 66;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>MemberRef</code>.
+    * Node type constant indicating a node of type <code>MemberRef</code>.
+    * 
     * @see MemberRef
     * @since 3.0
     */
    public static final int MEMBER_REF = 67;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>MethodRef</code>.
+    * Node type constant indicating a node of type <code>MethodRef</code>.
+    * 
     * @see MethodRef
     * @since 3.0
     */
    public static final int METHOD_REF = 68;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>MethodRefParameter</code>.
+    * Node type constant indicating a node of type <code>MethodRefParameter</code>.
+    * 
     * @see MethodRefParameter
     * @since 3.0
     */
    public static final int METHOD_REF_PARAMETER = 69;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>EnhancedForStatement</code>.
+    * Node type constant indicating a node of type <code>EnhancedForStatement</code>.
+    * 
     * @see EnhancedForStatement
     * @since 3.1
     */
    public static final int ENHANCED_FOR_STATEMENT = 70;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>EnumDeclaration</code>.
+    * Node type constant indicating a node of type <code>EnumDeclaration</code>.
+    * 
     * @see EnumDeclaration
     * @since 3.1
     */
    public static final int ENUM_DECLARATION = 71;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>EnumConstantDeclaration</code>.
+    * Node type constant indicating a node of type <code>EnumConstantDeclaration</code>.
+    * 
     * @see EnumConstantDeclaration
     * @since 3.1
     */
    public static final int ENUM_CONSTANT_DECLARATION = 72;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>TypeParameter</code>.
+    * Node type constant indicating a node of type <code>TypeParameter</code>.
+    * 
     * @see TypeParameter
     * @since 3.1
     */
    public static final int TYPE_PARAMETER = 73;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>ParameterizedType</code>.
+    * Node type constant indicating a node of type <code>ParameterizedType</code>.
+    * 
     * @see ParameterizedType
     * @since 3.1
     */
    public static final int PARAMETERIZED_TYPE = 74;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>QualifiedType</code>.
+    * Node type constant indicating a node of type <code>QualifiedType</code>.
+    * 
     * @see QualifiedType
     * @since 3.1
     */
    public static final int QUALIFIED_TYPE = 75;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>WildcardType</code>.
+    * Node type constant indicating a node of type <code>WildcardType</code>.
+    * 
     * @see WildcardType
     * @since 3.1
     */
    public static final int WILDCARD_TYPE = 76;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>NormalAnnotation</code>.
+    * Node type constant indicating a node of type <code>NormalAnnotation</code>.
+    * 
     * @see NormalAnnotation
     * @since 3.1
     */
    public static final int NORMAL_ANNOTATION = 77;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>MarkerAnnotation</code>.
+    * Node type constant indicating a node of type <code>MarkerAnnotation</code>.
+    * 
     * @see MarkerAnnotation
     * @since 3.1
     */
    public static final int MARKER_ANNOTATION = 78;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>SingleMemberAnnotation</code>.
+    * Node type constant indicating a node of type <code>SingleMemberAnnotation</code>.
+    * 
     * @see SingleMemberAnnotation
     * @since 3.1
     */
    public static final int SINGLE_MEMBER_ANNOTATION = 79;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>MemberValuePair</code>.
+    * Node type constant indicating a node of type <code>MemberValuePair</code>.
+    * 
     * @see MemberValuePair
     * @since 3.1
     */
    public static final int MEMBER_VALUE_PAIR = 80;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>AnnotationTypeDeclaration</code>.
+    * Node type constant indicating a node of type <code>AnnotationTypeDeclaration</code>.
+    * 
     * @see AnnotationTypeDeclaration
     * @since 3.1
     */
    public static final int ANNOTATION_TYPE_DECLARATION = 81;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>AnnotationTypeMemberDeclaration</code>.
+    * Node type constant indicating a node of type <code>AnnotationTypeMemberDeclaration</code>.
+    * 
     * @see AnnotationTypeMemberDeclaration
     * @since 3.1
     */
    public static final int ANNOTATION_TYPE_MEMBER_DECLARATION = 82;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>Modifier</code>.
+    * Node type constant indicating a node of type <code>Modifier</code>.
+    * 
     * @see Modifier
     * @since 3.1
     */
    public static final int MODIFIER = 83;
 
    /**
-    * Node type constant indicating a node of type
-    * <code>UnionType</code>.
+    * Node type constant indicating a node of type <code>UnionType</code>.
+    * 
     * @see UnionType
     * @since 3.7.1
     */
@@ -771,12 +740,11 @@ public abstract class ASTNode
 
    /**
     * Returns the node class for the corresponding node type.
-    *
+    * 
     * @param nodeType AST node type
-    * @param tHIS_AST 
+    * @param tHIS_AST
     * @return the corresponding <code>ASTNode</code> subclass
-    * @exception IllegalArgumentException if <code>nodeType</code> is
-    * not a legal AST node type
+    * @exception IllegalArgumentException if <code>nodeType</code> is not a legal AST node type
     * @see #getNodeType()
     * @since 3.0
     */
@@ -958,16 +926,14 @@ public abstract class ASTNode
 
    /**
     * Owning AST.
-     * <p>
-     * N.B. This ia a private field, but declared as package-visible
-     * for more efficient access from inner classes.
-     * </p>
+    * <p>
+    * N.B. This ia a private field, but declared as package-visible for more efficient access from inner classes.
+    * </p>
     */
    final AST ast;
 
    /**
-    * Parent AST node, or <code>null</code> if this node is a root.
-    * Initially <code>null</code>.
+    * Parent AST node, or <code>null</code> if this node is a root. Initially <code>null</code>.
     */
    private ASTNode parent = null;
 
@@ -977,64 +943,55 @@ public abstract class ASTNode
    private static final Map UNMODIFIABLE_EMPTY_MAP = Collections.unmodifiableMap(new HashMap(1));
 
    /**
-    * Primary field used in representing node properties efficiently.
-    * If <code>null</code>, this node has no properties.
-    * If a {@link String}, this is the name of this node's sole property,
-    * and <code>property2</code> contains its value.
-    * If a {@link Map}, this is the table of property name-value
-    * mappings; <code>property2</code>, if non-null is its unmodifiable
-    * equivalent.
-    * Initially <code>null</code>.
-    *
+    * Primary field used in representing node properties efficiently. If <code>null</code>, this node has no properties. If a
+    * {@link String}, this is the name of this node's sole property, and <code>property2</code> contains its value. If a
+    * {@link Map}, this is the table of property name-value mappings; <code>property2</code>, if non-null is its unmodifiable
+    * equivalent. Initially <code>null</code>.
+    * 
     * @see #property2
     */
    private Object property1 = null;
 
    /**
     * Auxillary field used in representing node properties efficiently.
-    *
+    * 
     * @see #property1
     */
    private Object property2 = null;
 
    /**
-    * A character index into the original source string,
-    * or <code>-1</code> if no source position information is available
-    * for this node; <code>-1</code> by default.
+    * A character index into the original source string, or <code>-1</code> if no source position information is available for
+    * this node; <code>-1</code> by default.
     */
    private int startPosition = -1;
 
    /**
-    * A character length, or <code>0</code> if no source position
-    * information is recorded for this node; <code>0</code> by default.
+    * A character length, or <code>0</code> if no source position information is recorded for this node; <code>0</code> by
+    * default.
     */
    private int length = 0;
 
    /**
-    * Flag constant (bit mask, value 1) indicating that there is something
-    * not quite right with this AST node.
+    * Flag constant (bit mask, value 1) indicating that there is something not quite right with this AST node.
     * <p>
-    * The standard parser (<code>ASTParser</code>) sets this
-    * flag on a node to indicate a syntax error detected in the vicinity.
+    * The standard parser (<code>ASTParser</code>) sets this flag on a node to indicate a syntax error detected in the vicinity.
     * </p>
     */
    public static final int MALFORMED = 1;
 
    /**
-    * Flag constant (bit mask, value 2) indicating that this is a node
-    * that was created by the parser (as opposed to one created by another
-    * party).
+    * Flag constant (bit mask, value 2) indicating that this is a node that was created by the parser (as opposed to one created
+    * by another party).
     * <p>
-    * The standard parser (<code>ASTParser</code>) sets this
-    * flag on the nodes it creates.
+    * The standard parser (<code>ASTParser</code>) sets this flag on the nodes it creates.
     * </p>
+    * 
     * @since 3.0
     */
    public static final int ORIGINAL = 2;
 
    /**
-    * Flag constant (bit mask, value 4) indicating that this node
-    * is unmodifiable. When a node is marked unmodifiable, the
+    * Flag constant (bit mask, value 4) indicating that this node is unmodifiable. When a node is marked unmodifiable, the
     * following operations result in a runtime exception:
     * <ul>
     * <li>Change a simple property of this node.</li>
@@ -1042,85 +999,85 @@ public abstract class ASTNode
     * <li>Parent (or reparent) this node.</li>
     * </ul>
     * <p>
-    * The standard parser (<code>ASTParser</code>) does not set
-    * this flag on the nodes it creates. However, clients may set
-    * this flag on a node to prevent further modification of the
-    * its structural properties.
+    * The standard parser (<code>ASTParser</code>) does not set this flag on the nodes it creates. However, clients may set this
+    * flag on a node to prevent further modification of the its structural properties.
     * </p>
+    * 
     * @since 3.0
     */
    public static final int PROTECT = 4;
 
    /**
-    * Flag constant (bit mask, value 8) indicating that this node
-    * or a part of this node is recovered from source that contains
-    * a syntax error detected in the vicinity.
+    * Flag constant (bit mask, value 8) indicating that this node or a part of this node is recovered from source that contains a
+    * syntax error detected in the vicinity.
     * <p>
-    * The standard parser (<code>ASTParser</code>) sets this
-    * flag on a node to indicate a recovered node.
+    * The standard parser (<code>ASTParser</code>) sets this flag on a node to indicate a recovered node.
     * </p>
+    * 
     * @since 3.2
     */
    public static final int RECOVERED = 8;
 
    /**
-    * int containing the node type in the top 16 bits and
-    * flags in the bottom 16 bits; none set by default.
-     * <p>
-     * N.B. This is a private field, but declared as package-visible
-     * for more efficient access from inner classes.
-     * </p>
-    *
+    * int containing the node type in the top 16 bits and flags in the bottom 16 bits; none set by default.
+    * <p>
+    * N.B. This is a private field, but declared as package-visible for more efficient access from inner classes.
+    * </p>
+    * 
     * @see #MALFORMED
     */
    int typeAndFlags = 0;
 
    /**
-    * Property of parent in which this node is a child, or <code>null</code>
-    * if this node is a root. Initially <code>null</code>.
-    *
+    * Property of parent in which this node is a child, or <code>null</code> if this node is a root. Initially <code>null</code>.
+    * 
     * @see #getLocationInParent
     * @since 3.0
     */
    private StructuralPropertyDescriptor location = null;
 
-   /** Internal convenience constant indicating that there is definite risk of cycles.
+   /**
+    * Internal convenience constant indicating that there is definite risk of cycles.
+    * 
     * @since 3.0
     */
    static final boolean CYCLE_RISK = true;
 
-   /** Internal convenience constant indicating that there is no risk of cycles.
+   /**
+    * Internal convenience constant indicating that there is no risk of cycles.
+    * 
     * @since 3.0
     */
    static final boolean NO_CYCLE_RISK = false;
 
-   /** Internal convenience constant indicating that a structural property is mandatory.
+   /**
+    * Internal convenience constant indicating that a structural property is mandatory.
+    * 
     * @since 3.0
     */
    static final boolean MANDATORY = true;
 
-   /** Internal convenience constant indicating that a structural property is optional.
+   /**
+    * Internal convenience constant indicating that a structural property is optional.
+    * 
     * @since 3.0
     */
    static final boolean OPTIONAL = false;
 
    /**
-    * A specialized implementation of a list of ASTNodes. The
-    * implementation is based on an ArrayList.
+    * A specialized implementation of a list of ASTNodes. The implementation is based on an ArrayList.
     */
    class NodeList extends AbstractList
    {
 
       /**
-       * The underlying list in which the nodes of this list are
-       * stored (element type: {@link ASTNode}).
+       * The underlying list in which the nodes of this list are stored (element type: {@link ASTNode}).
        * <p>
        * Be stingy on storage - assume that list will be empty.
        * </p>
        * <p>
-       * This field declared default visibility (rather than private)
-       * so that accesses from <code>NodeList.Cursor</code> do not require
-       * a synthetic accessor method.
+       * This field declared default visibility (rather than private) so that accesses from <code>NodeList.Cursor</code> do not
+       * require a synthetic accessor method.
        * </p>
        */
       ArrayList store = new ArrayList(0);
@@ -1131,30 +1088,27 @@ public abstract class ASTNode
       ChildListPropertyDescriptor propertyDescriptor;
 
       /**
-       * A cursor for iterating over the elements of the list.
-       * Does not lose its position if the list is changed during
-       * the iteration.
+       * A cursor for iterating over the elements of the list. Does not lose its position if the list is changed during the
+       * iteration.
        */
       class Cursor implements Iterator
       {
          /**
-          * The position of the cursor between elements. If the value
-          * is N, then the cursor sits between the element at positions
-          * N-1 and N. Initially just before the first element of the
-          * list.
+          * The position of the cursor between elements. If the value is N, then the cursor sits between the element at positions
+          * N-1 and N. Initially just before the first element of the list.
           */
          private int position = 0;
 
-         /* (non-Javadoc)
-          * Method declared on <code>Iterator</code>.
+         /*
+          * (non-Javadoc) Method declared on <code>Iterator</code>.
           */
          public boolean hasNext()
          {
             return this.position < NodeList.this.store.size();
          }
 
-         /* (non-Javadoc)
-          * Method declared on <code>Iterator</code>.
+         /*
+          * (non-Javadoc) Method declared on <code>Iterator</code>.
           */
          public Object next()
          {
@@ -1163,8 +1117,8 @@ public abstract class ASTNode
             return result;
          }
 
-         /* (non-Javadoc)
-          * Method declared on <code>Iterator</code>.
+         /*
+          * (non-Javadoc) Method declared on <code>Iterator</code>.
           */
          public void remove()
          {
@@ -1172,11 +1126,9 @@ public abstract class ASTNode
          }
 
          /**
-          * Adjusts this cursor to accomodate an add/remove at the given
-          * index.
-          *
-          * @param index the position at which the element was added
-          *    or removed
+          * Adjusts this cursor to accomodate an add/remove at the given index.
+          * 
+          * @param index the position at which the element was added or removed
           * @param delta +1 for add, and -1 for remove
           */
          void update(int index, int delta)
@@ -1190,25 +1142,20 @@ public abstract class ASTNode
       }
 
       /**
-       * A list of currently active cursors (element type:
-       * {@link Cursor}), or <code>null</code> if there are no
-       * active cursors.
+       * A list of currently active cursors (element type: {@link Cursor}), or <code>null</code> if there are no active cursors.
        * <p>
-       * It is important for storage considerations to maintain the
-       * null-means-empty invariant; otherwise, every NodeList instance
-       * will waste a lot of space. A cursor is needed only for the duration
-       * of a visit to the child nodes. Under normal circumstances, only a
-       * single cursor is needed; multiple cursors are only required if there
-       * are multiple visits going on at the same time.
+       * It is important for storage considerations to maintain the null-means-empty invariant; otherwise, every NodeList instance
+       * will waste a lot of space. A cursor is needed only for the duration of a visit to the child nodes. Under normal
+       * circumstances, only a single cursor is needed; multiple cursors are only required if there are multiple visits going on
+       * at the same time.
        * </p>
        */
       private List cursors = null;
 
       /**
-       * Creates a new empty list of nodes owned by this node.
-       * This node will be the common parent of all nodes added to
-       * this list.
-       *
+       * Creates a new empty list of nodes owned by this node. This node will be the common parent of all nodes added to this
+       * list.
+       * 
        * @param property the property descriptor
        * @since 3.0
        */
@@ -1218,7 +1165,9 @@ public abstract class ASTNode
          this.propertyDescriptor = property;
       }
 
-      /* (non-javadoc)
+      /*
+       * (non-javadoc)
+       * 
        * @see java.util.AbstractCollection#size()
        */
       public int size()
@@ -1226,7 +1175,9 @@ public abstract class ASTNode
          return this.store.size();
       }
 
-      /* (non-javadoc)
+      /*
+       * (non-javadoc)
+       * 
        * @see AbstractList#get(int)
        */
       public Object get(int index)
@@ -1234,7 +1185,9 @@ public abstract class ASTNode
          return this.store.get(index);
       }
 
-      /* (non-javadoc)
+      /*
+       * (non-javadoc)
+       * 
        * @see List#set(int, java.lang.Object)
        */
       public Object set(int index, Object element)
@@ -1272,7 +1225,9 @@ public abstract class ASTNode
          return result;
       }
 
-      /* (non-javadoc)
+      /*
+       * (non-javadoc)
+       * 
        * @see List#add(int, java.lang.Object)
        */
       public void add(int index, Object element)
@@ -1299,7 +1254,9 @@ public abstract class ASTNode
          ASTNode.this.ast.postAddChildEvent(ASTNode.this, newChild, this.propertyDescriptor);
       }
 
-      /* (non-javadoc)
+      /*
+       * (non-javadoc)
+       * 
        * @see List#remove(int)
        */
       public Object remove(int index)
@@ -1328,15 +1285,12 @@ public abstract class ASTNode
       }
 
       /**
-       * Allocate a cursor to use for a visit. The client must call
-       * <code>releaseCursor</code> when done.
+       * Allocate a cursor to use for a visit. The client must call <code>releaseCursor</code> when done.
        * <p>
-       * This method is internally synchronized on this NodeList.
-       * It is thread-safe to create a cursor.
+       * This method is internally synchronized on this NodeList. It is thread-safe to create a cursor.
        * </p>
-       *
-       * @return a new cursor positioned before the first element
-       *    of the list
+       * 
+       * @return a new cursor positioned before the first element of the list
        */
       Cursor newCursor()
       {
@@ -1357,10 +1311,9 @@ public abstract class ASTNode
       /**
        * Releases the given cursor at the end of a visit.
        * <p>
-       * This method is internally synchronized on this NodeList.
-       * It is thread-safe to release a cursor.
+       * This method is internally synchronized on this NodeList. It is thread-safe to release a cursor.
        * </p>
-       *
+       * 
        * @param cursor the cursor
        */
       void releaseCursor(Cursor cursor)
@@ -1379,15 +1332,13 @@ public abstract class ASTNode
       }
 
       /**
-       * Adjusts all cursors to accomodate an add/remove at the given
-       * index.
+       * Adjusts all cursors to accomodate an add/remove at the given index.
        * <p>
-       * This method is only used when the list is being modified.
-       * The AST is not thread-safe if any of the clients are modifying it.
+       * This method is only used when the list is being modified. The AST is not thread-safe if any of the clients are modifying
+       * it.
        * </p>
-       *
-       * @param index the position at which the element was added
-       *    or removed
+       * 
+       * @param index the position at which the element was added or removed
        * @param delta +1 for add, and -1 for remove
        */
       private synchronized void updateCursors(int index, int delta)
@@ -1405,18 +1356,17 @@ public abstract class ASTNode
       }
 
       /**
-       * Returns an estimate of the memory footprint of this node list
-       * instance in bytes.
-        * <ul>
-        * <li>1 object header for the NodeList instance</li>
-        * <li>5 4-byte fields of the NodeList instance</li>
-        * <li>0 for cursors since null unless walk in progress</li>
-        * <li>1 object header for the ArrayList instance</li>
-        * <li>2 4-byte fields of the ArrayList instance</li>
-        * <li>1 object header for an Object[] instance</li>
-        * <li>4 bytes in array for each element</li>
-        * </ul>
-       *
+       * Returns an estimate of the memory footprint of this node list instance in bytes.
+       * <ul>
+       * <li>1 object header for the NodeList instance</li>
+       * <li>5 4-byte fields of the NodeList instance</li>
+       * <li>0 for cursors since null unless walk in progress</li>
+       * <li>1 object header for the ArrayList instance</li>
+       * <li>2 4-byte fields of the ArrayList instance</li>
+       * <li>1 object header for an Object[] instance</li>
+       * <li>4 bytes in array for each element</li>
+       * </ul>
+       * 
        * @return the size of this node list in bytes
        */
       int memSize()
@@ -1428,9 +1378,8 @@ public abstract class ASTNode
       }
 
       /**
-       * Returns an estimate of the memory footprint in bytes of this node
-       * list and all its subtrees.
-       *
+       * Returns an estimate of the memory footprint in bytes of this node list and all its subtrees.
+       * 
        * @return the size of this list of subtrees in bytes
        */
       int listSize()
@@ -1446,16 +1395,13 @@ public abstract class ASTNode
    }
 
    /**
-    * Creates a new AST node owned by the given AST. Once established,
-    * the relationship between an AST node and its owning AST does not change
-    * over the lifetime of the node. The new node has no parent node,
-    * and no properties.
+    * Creates a new AST node owned by the given AST. Once established, the relationship between an AST node and its owning AST
+    * does not change over the lifetime of the node. The new node has no parent node, and no properties.
     * <p>
-    * N.B. This constructor is package-private; all subclasses my be
-    * declared in the same package; clients are unable to declare
+    * N.B. This constructor is package-private; all subclasses my be declared in the same package; clients are unable to declare
     * additional subclasses.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    ASTNode(AST ast)
@@ -1474,10 +1420,9 @@ public abstract class ASTNode
    /**
     * Returns this node's AST.
     * <p>
-    * Note that the relationship between an AST node and its owing AST does
-    * not change over the lifetime of a node.
+    * Note that the relationship between an AST node and its owing AST does not change over the lifetime of a node.
     * </p>
-    *
+    * 
     * @return the AST that owns this node
     */
    public final AST getAST()
@@ -1486,13 +1431,11 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns this node's parent node, or <code>null</code> if this is the
-    * root node.
+    * Returns this node's parent node, or <code>null</code> if this is the root node.
     * <p>
-    * Note that the relationship between an AST node and its parent node
-    * may change over the lifetime of a node.
+    * Note that the relationship between an AST node and its parent node may change over the lifetime of a node.
     * </p>
-    *
+    * 
     * @return the parent of this node, or <code>null</code> if none
     */
    public final ASTNode getParent()
@@ -1501,9 +1444,9 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns the location of this node within its parent,
-    * or <code>null</code> if this is a root node.
+    * Returns the location of this node within its parent, or <code>null</code> if this is a root node.
     * <p>
+    * 
     * <pre>
     * ASTNode node = ...;
     * ASTNode parent = node.getParent();
@@ -1514,14 +1457,13 @@ public abstract class ASTNode
     * if ((location != null) && location.isChildListProperty())
     *    assert ((List) parent.getStructuralProperty(location)).contains(node);
     * </pre>
+    * 
     * </p>
     * <p>
-    * Note that the relationship between an AST node and its parent node
-    * may change over the lifetime of a node.
+    * Note that the relationship between an AST node and its parent node may change over the lifetime of a node.
     * </p>
-    *
-    * @return the location of this node in its parent,
-    * or <code>null</code> if this node has no parent
+    * 
+    * @return the location of this node in its parent, or <code>null</code> if this node has no parent
     * @since 3.0
     */
    public final StructuralPropertyDescriptor getLocationInParent()
@@ -1530,9 +1472,8 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns the root node at or above this node; returns this node if
-    * it is a root.
-    *
+    * Returns the root node at or above this node; returns this node if it is a root.
+    * 
     * @return the root node at or above this node
     */
    public final ASTNode getRoot()
@@ -1551,16 +1492,14 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns the value of the given structural property for this node. The value
-    * returned depends on the kind of property:
+    * Returns the value of the given structural property for this node. The value returned depends on the kind of property:
     * <ul>
-    * <li>{@link SimplePropertyDescriptor} - the value of the given simple property,
-    * or <code>null</code> if none; primitive values are "boxed"</li>
-    * <li>{@link ChildPropertyDescriptor} - the child node (type <code>ASTNode</code>),
-    * or <code>null</code> if none</li>
+    * <li>{@link SimplePropertyDescriptor} - the value of the given simple property, or <code>null</code> if none; primitive
+    * values are "boxed"</li>
+    * <li>{@link ChildPropertyDescriptor} - the child node (type <code>ASTNode</code>), or <code>null</code> if none</li>
     * <li>{@link ChildListPropertyDescriptor} - the list (element type: {@link ASTNode})</li>
     * </ul>
-    *
+    * 
     * @param property the property
     * @return the value, or <code>null</code> if none
     * @exception RuntimeException if this node does not have the given property
@@ -1598,20 +1537,17 @@ public abstract class ASTNode
    }
 
    /**
-    * Sets the value of the given structural property for this node. The value
-    * passed depends on the kind of property:
+    * Sets the value of the given structural property for this node. The value passed depends on the kind of property:
     * <ul>
-    * <li>{@link SimplePropertyDescriptor} - the new value of the given simple property,
-    * or <code>null</code> if none; primitive values are "boxed"</li>
-    * <li>{@link ChildPropertyDescriptor} - the new child node (type <code>ASTNode</code>),
-    * or <code>null</code> if none</li>
+    * <li>{@link SimplePropertyDescriptor} - the new value of the given simple property, or <code>null</code> if none; primitive
+    * values are "boxed"</li>
+    * <li>{@link ChildPropertyDescriptor} - the new child node (type <code>ASTNode</code>), or <code>null</code> if none</li>
     * <li>{@link ChildListPropertyDescriptor} - not allowed</li>
     * </ul>
-    *
+    * 
     * @param property the property
     * @param value the property value
-    * @exception RuntimeException if this node does not have the
-    * given property, or if the given property cannot be set
+    * @exception RuntimeException if this node does not have the given property, or if the given property cannot be set
     * @since 3.0
     */
    public final void setStructuralProperty(StructuralPropertyDescriptor property, Object value)
@@ -1659,20 +1595,15 @@ public abstract class ASTNode
    }
 
    /**
-    * Sets the value of the given int-valued property for this node.
-    * The default implementation of this method throws an exception explaining
-    * that this node does not have such a property. This method should be
-    * extended in subclasses that have at leasy one simple property whose value
-    * type is int.
-    *
+    * Sets the value of the given int-valued property for this node. The default implementation of this method throws an exception
+    * explaining that this node does not have such a property. This method should be extended in subclasses that have at leasy one
+    * simple property whose value type is int.
+    * 
     * @param property the property
-    * @param get <code>true</code> for a get operation, and
-    * <code>false</code> for a set operation
+    * @param get <code>true</code> for a get operation, and <code>false</code> for a set operation
     * @param value the new property value; ignored for get operations
-    * @return the value; always returns
-    * <code>0</code> for set operations
-    * @exception RuntimeException if this node does not have the
-    * given property, or if the given value cannot be set as specified
+    * @return the value; always returns <code>0</code> for set operations
+    * @exception RuntimeException if this node does not have the given property, or if the given value cannot be set as specified
     * @since 3.0
     */
    int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value)
@@ -1681,20 +1612,15 @@ public abstract class ASTNode
    }
 
    /**
-    * Sets the value of the given boolean-valued property for this node.
-    * The default implementation of this method throws an exception explaining
-    * that this node does not have such a property. This method should be
-    * extended in subclasses that have at leasy one simple property whose value
-    * type is boolean.
-    *
+    * Sets the value of the given boolean-valued property for this node. The default implementation of this method throws an
+    * exception explaining that this node does not have such a property. This method should be extended in subclasses that have at
+    * leasy one simple property whose value type is boolean.
+    * 
     * @param property the property
-    * @param get <code>true</code> for a get operation, and
-    * <code>false</code> for a set operation
+    * @param get <code>true</code> for a get operation, and <code>false</code> for a set operation
     * @param value the new property value; ignored for get operations
-    * @return the value; always returns
-    * <code>false</code> for set operations
-    * @exception RuntimeException if this node does not have the
-    * given property, or if the given value cannot be set as specified
+    * @return the value; always returns <code>false</code> for set operations
+    * @exception RuntimeException if this node does not have the given property, or if the given value cannot be set as specified
     * @since 3.0
     */
    boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value)
@@ -1703,21 +1629,15 @@ public abstract class ASTNode
    }
 
    /**
-    * Sets the value of the given property for this node.
-    * The default implementation of this method throws an exception explaining
-    * that this node does not have such a property. This method should be
-    * extended in subclasses that have at leasy one simple property whose value
-    * type is a reference type.
-    *
+    * Sets the value of the given property for this node. The default implementation of this method throws an exception explaining
+    * that this node does not have such a property. This method should be extended in subclasses that have at leasy one simple
+    * property whose value type is a reference type.
+    * 
     * @param property the property
-    * @param get <code>true</code> for a get operation, and
-    * <code>false</code> for a set operation
-    * @param value the new property value, or <code>null</code> if none;
-    * ignored for get operations
-    * @return the value, or <code>null</code> if none; always returns
-    * <code>null</code> for set operations
-    * @exception RuntimeException if this node does not have the
-    * given property, or if the given value cannot be set as specified
+    * @param get <code>true</code> for a get operation, and <code>false</code> for a set operation
+    * @param value the new property value, or <code>null</code> if none; ignored for get operations
+    * @return the value, or <code>null</code> if none; always returns <code>null</code> for set operations
+    * @exception RuntimeException if this node does not have the given property, or if the given value cannot be set as specified
     * @since 3.0
     */
    Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value)
@@ -1726,20 +1646,15 @@ public abstract class ASTNode
    }
 
    /**
-    * Sets the child value of the given property for this node.
-    * The default implementation of this method throws an exception explaining
-    * that this node does not have such a property. This method should be
-    * extended in subclasses that have at leasy one child property.
-    *
+    * Sets the child value of the given property for this node. The default implementation of this method throws an exception
+    * explaining that this node does not have such a property. This method should be extended in subclasses that have at leasy one
+    * child property.
+    * 
     * @param property the property
-    * @param get <code>true</code> for a get operation, and
-    * <code>false</code> for a set operation
-    * @param child the new child value, or <code>null</code> if none;
-    * always <code>null</code> for get operations
-    * @return the child, or <code>null</code> if none; always returns
-    * <code>null</code> for set operations
-    * @exception RuntimeException if this node does not have the
-    * given property, or if the given child cannot be set as specified
+    * @param get <code>true</code> for a get operation, and <code>false</code> for a set operation
+    * @param child the new child value, or <code>null</code> if none; always <code>null</code> for get operations
+    * @return the child, or <code>null</code> if none; always returns <code>null</code> for set operations
+    * @exception RuntimeException if this node does not have the given property, or if the given child cannot be set as specified
     * @since 3.0
     */
    ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
@@ -1748,15 +1663,13 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns the list value of the given property for this node.
-    * The default implementation of this method throws an exception explaining
-    * that this noed does not have such a property. This method should be
-    * extended in subclasses that have at leasy one child list property.
-    *
+    * Returns the list value of the given property for this node. The default implementation of this method throws an exception
+    * explaining that this noed does not have such a property. This method should be extended in subclasses that have at leasy one
+    * child list property.
+    * 
     * @param property the property
     * @return the list (element type: {@link ASTNode})
-    * @exception RuntimeException if the given node does not have the
-    * given property
+    * @exception RuntimeException if the given node does not have the given property
     * @since 3.0
     */
    List internalGetChildListProperty(ChildListPropertyDescriptor property)
@@ -1765,16 +1678,14 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns a list of structural property descriptors for nodes of the
-    * same type as this node. Clients must not modify the result.
+    * Returns a list of structural property descriptors for nodes of the same type as this node. Clients must not modify the
+    * result.
     * <p>
-    * Note that property descriptors are a meta-level mechanism
-    * for manipulating ASTNodes in a generic way. They are
-    * unrelated to <code>get/setProperty</code>.
+    * Note that property descriptors are a meta-level mechanism for manipulating ASTNodes in a generic way. They are unrelated to
+    * <code>get/setProperty</code>.
     * </p>
-    *
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public final List structuralPropertiesForType()
@@ -1783,26 +1694,22 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns a list of property descriptors for this node type.
-    * Clients must not modify the result. This abstract method
-    * must be implemented in each concrete AST node type.
+    * Returns a list of property descriptors for this node type. Clients must not modify the result. This abstract method must be
+    * implemented in each concrete AST node type.
     * <p>
-    * N.B. This method is package-private, so that the implementations
-    * of this method in each of the concrete AST node types do not
-    * clutter up the API doc.
+    * N.B. This method is package-private, so that the implementations of this method in each of the concrete AST node types do
+    * not clutter up the API doc.
     * </p>
-    *
+    * 
     * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    abstract List internalStructuralPropertiesForType(int apiLevel);
 
    /**
-    * Internal helper method that starts the building a list of
-    * property descriptors for the given node type.
-    *
+    * Internal helper method that starts the building a list of property descriptors for the given node type.
+    * 
     * @param nodeClass the class for a concrete node type
     * @param propertyList empty list
     */
@@ -1814,10 +1721,9 @@ public abstract class ASTNode
 
    /**
     * Internal helper method that adding a property descriptor.
-    *
+    * 
     * @param property the structural property descriptor
-    * @param propertyList list beginning with the AST node class
-    * followed by accumulated structural property descriptors
+    * @param propertyList list beginning with the AST node class followed by accumulated structural property descriptors
     */
    static void addProperty(StructuralPropertyDescriptor property, List propertyList)
    {
@@ -1831,13 +1737,10 @@ public abstract class ASTNode
    }
 
    /**
-    * Internal helper method that completes the building of
-    * a node type's structural property descriptor list.
-    *
-    * @param propertyList list beginning with the AST node class
-    * followed by accumulated structural property descriptors
-    * @return unmodifiable list of structural property descriptors
-    * (element type: {@link StructuralPropertyDescriptor})
+    * Internal helper method that completes the building of a node type's structural property descriptor list.
+    * 
+    * @param propertyList list beginning with the AST node class followed by accumulated structural property descriptors
+    * @return unmodifiable list of structural property descriptors (element type: {@link StructuralPropertyDescriptor})
     */
    static List reapPropertyList(List propertyList)
    {
@@ -1849,15 +1752,14 @@ public abstract class ASTNode
    }
 
    /**
-     * Checks that this AST operation is not used when
-     * building JLS2 level ASTs.
-     * <p>
-     * Use this method to prevent access to new properties that have been added in JLS3.
-     * </p>
-     * 
-     * @exception UnsupportedOperationException
+    * Checks that this AST operation is not used when building JLS2 level ASTs.
+    * <p>
+    * Use this method to prevent access to new properties that have been added in JLS3.
+    * </p>
+    * 
+    * @exception UnsupportedOperationException
     * @since 3.0
-     */
+    */
    final void unsupportedIn2()
    {
       if (this.ast.apiLevel == AST.JLS2_INTERNAL)
@@ -1867,12 +1769,11 @@ public abstract class ASTNode
    }
 
    /**
-     * Checks that this AST operation is not used when
-     * building JLS2 or JLS3 level ASTs.
-     * <p>
-     * Use this method to prevent access to new properties that have been added in JLS4.
-     * </p>
-     * 
+    * Checks that this AST operation is not used when building JLS2 or JLS3 level ASTs.
+    * <p>
+    * Use this method to prevent access to new properties that have been added in JLS4.
+    * </p>
+    * 
     * @exception UnsupportedOperationException
     * @since 3.7
     */
@@ -1885,15 +1786,14 @@ public abstract class ASTNode
    }
 
    /**
-     * Checks that this AST operation is only used when
-     * building JLS2 level ASTs.
-     * <p>
-     * Use this method to prevent access to deprecated properties (deprecated in JLS3).
-     * </p>
-     * 
-     * @exception UnsupportedOperationException
+    * Checks that this AST operation is only used when building JLS2 level ASTs.
+    * <p>
+    * Use this method to prevent access to deprecated properties (deprecated in JLS3).
+    * </p>
+    * 
+    * @exception UnsupportedOperationException
     * @since 3.0
-     */
+    */
    final void supportedOnlyIn2()
    {
       if (this.ast.apiLevel != AST.JLS2_INTERNAL)
@@ -1905,15 +1805,12 @@ public abstract class ASTNode
    /**
     * Sets or clears this node's parent node and location.
     * <p>
-    * Note that this method is package-private. The pointer from a node
-    * to its parent is set implicitly as a side effect of inserting or
-    * removing the node as a child of another node. This method calls
-    * <code>ast.modifying()</code>.
+    * Note that this method is package-private. The pointer from a node to its parent is set implicitly as a side effect of
+    * inserting or removing the node as a child of another node. This method calls <code>ast.modifying()</code>.
     * </p>
-    *
+    * 
     * @param parent the new parent of this node, or <code>null</code> if none
-    * @param property the location of this node in its parent,
-    * or <code>null</code> if <code>parent</code> is <code>null</code>
+    * @param property the location of this node in its parent, or <code>null</code> if <code>parent</code> is <code>null</code>
     * @see #getLocationInParent
     * @see #getParent
     * @since 3.0
@@ -1926,15 +1823,11 @@ public abstract class ASTNode
    }
 
    /**
-    * Removes this node from its parent. Has no effect if this node
-    * is unparented. If this node appears as an element of a child list
-    * property of its parent, then this node is removed from the
-    * list using <code>List.remove</code>.
-    * If this node appears as the value of a child property of its
-    * parent, then this node is detached from its parent
-    * by passing <code>null</code> to the appropriate setter method;
-    * this operation fails if this node is in a mandatory property.
-    *
+    * Removes this node from its parent. Has no effect if this node is unparented. If this node appears as an element of a child
+    * list property of its parent, then this node is removed from the list using <code>List.remove</code>. If this node appears as
+    * the value of a child property of its parent, then this node is detached from its parent by passing <code>null</code> to the
+    * appropriate setter method; this operation fails if this node is in a mandatory property.
+    * 
     * @since 3.0
     */
    public final void delete()
@@ -1958,27 +1851,23 @@ public abstract class ASTNode
    }
 
    /**
-    * Checks whether the given new child node is a node
-    * in a different AST from its parent-to-be, whether it is
-    * already has a parent, whether adding it to its
-    * parent-to-be would create a cycle, and whether the child is of
-    * the right type. The parent-to-be is the enclosing instance.
-    *
+    * Checks whether the given new child node is a node in a different AST from its parent-to-be, whether it is already has a
+    * parent, whether adding it to its parent-to-be would create a cycle, and whether the child is of the right type. The
+    * parent-to-be is the enclosing instance.
+    * 
     * @param node the parent-to-be node
     * @param newChild the new child of the parent
-    * @param cycleCheck <code>true</code> if cycles are possible and need
-    *   to be checked, <code>false</code> if cycles are impossible and do
-    *   not need to be checked
-    * @param nodeType a type constraint on child nodes, or <code>null</code>
-    *   if no special check is required
+    * @param cycleCheck <code>true</code> if cycles are possible and need to be checked, <code>false</code> if cycles are
+    *           impossible and do not need to be checked
+    * @param nodeType a type constraint on child nodes, or <code>null</code> if no special check is required
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the child is null</li>
-    * <li>the node belongs to a different AST</li>
-    * <li>the child has the incorrect node type</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the child is null</li>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the child has the incorrect node type</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    static void checkNewChild(ASTNode node, ASTNode newChild, boolean cycleCheck, Class nodeType)
    {
@@ -1997,12 +1886,12 @@ public abstract class ASTNode
          // inserting new child would create a cycle
          throw new IllegalArgumentException();
       }
-      //TODO find solution for GWT emulation of 'isAssignableFrom' method
-      //		Class childClass = newChild.getClass();
-      //		if (nodeType != null && !nodeType.isAssignableFrom(childClass)) {
-      //			// new child is not of the right type
-      //			throw new ClassCastException();
-      //		}
+      // TODO find solution for GWT emulation of 'isAssignableFrom' method
+      // Class childClass = newChild.getClass();
+      // if (nodeType != null && !nodeType.isAssignableFrom(childClass)) {
+      // // new child is not of the right type
+      // throw new ClassCastException();
+      // }
       if ((newChild.typeAndFlags & PROTECT) != 0)
       {
          // new child node is protected => cannot be parented
@@ -2011,42 +1900,35 @@ public abstract class ASTNode
    }
 
    /**
-     * Prelude portion of the "3 step program" for replacing the
-    * old child of this node with another node.
-     * Here is the code pattern found in all AST node subclasses:
-     * <pre>
-     * ASTNode oldChild = this.foo;
-     * preReplaceChild(oldChild, newFoo, FOO_PROPERTY);
-     * this.foo = newFoo;
-     * postReplaceChild(oldChild, newFoo, FOO_PROPERTY);
-     * </pre>
-     * The first part (preReplaceChild) does all the precondition checks,
-     * reports pre-delete events, and changes parent links.
-    * The old child is delinked from its parent (making it a root node),
-    * and the new child node is linked to its parent. The new child node
-    * must be a root node in the same AST as its new parent, and must not
-    * be an ancestor of this node. All three nodes must be
-     * modifiable (not PROTECTED). The replace operation must fail
-     * atomically; so it is crucial that all precondition checks
-     * be done before any linking and delinking happens.
-     * The final part (postReplaceChild )reports post-add events.
+    * Prelude portion of the "3 step program" for replacing the old child of this node with another node. Here is the code pattern
+    * found in all AST node subclasses:
+    * 
+    * <pre>
+    * ASTNode oldChild = this.foo;
+    * preReplaceChild(oldChild, newFoo, FOO_PROPERTY);
+    * this.foo = newFoo;
+    * postReplaceChild(oldChild, newFoo, FOO_PROPERTY);
+    * </pre>
+    * 
+    * The first part (preReplaceChild) does all the precondition checks, reports pre-delete events, and changes parent links. The
+    * old child is delinked from its parent (making it a root node), and the new child node is linked to its parent. The new child
+    * node must be a root node in the same AST as its new parent, and must not be an ancestor of this node. All three nodes must
+    * be modifiable (not PROTECTED). The replace operation must fail atomically; so it is crucial that all precondition checks be
+    * done before any linking and delinking happens. The final part (postReplaceChild )reports post-add events.
     * <p>
     * This method calls <code>ast.modifying()</code> for the nodes affected.
     * </p>
-    *
-    * @param oldChild the old child of this node, or <code>null</code> if
-    *   there was no old child to replace
-    * @param newChild the new child of this node, or <code>null</code> if
-    *   there is no replacement child
-    * @param property the property descriptor of this node describing
-     * the relationship between node and child
+    * 
+    * @param oldChild the old child of this node, or <code>null</code> if there was no old child to replace
+    * @param newChild the new child of this node, or <code>null</code> if there is no replacement child
+    * @param property the property descriptor of this node describing the relationship between node and child
     * @exception RuntimeException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * <li>any of the nodes involved are unmodifiable</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               <li>any of the nodes involved are unmodifiable</li>
+    *               </ul>
     * @since 3.0
     */
    final void preReplaceChild(ASTNode oldChild, ASTNode newChild, ChildPropertyDescriptor property)
@@ -2094,10 +1976,9 @@ public abstract class ASTNode
    }
 
    /**
-     * Postlude portion of the "3 step program" for replacing the
-    * old child of this node with another node.
-     * See {@link #preReplaceChild(ASTNode, ASTNode, ChildPropertyDescriptor)}
-     * for details.
+    * Postlude portion of the "3 step program" for replacing the old child of this node with another node. See
+    * {@link #preReplaceChild(ASTNode, ASTNode, ChildPropertyDescriptor)} for details.
+    * 
     * @since 3.0
     */
    final void postReplaceChild(ASTNode oldChild, ASTNode newChild, ChildPropertyDescriptor property)
@@ -2121,29 +2002,27 @@ public abstract class ASTNode
    }
 
    /**
-     * Prelude portion of the "3 step program" for changing the
-    * value of a simple property of this node.
-     * Here is the code pattern found in all AST node subclasses:
-     * <pre>
-     * preValueChange(FOO_PROPERTY);
-     * this.foo = newFoo;
-     * postValueChange(FOO_PROPERTY);
-     * </pre>
-     * The first part (preValueChange) does the precondition check
-     * to make sure the node is modifiable (not PROTECTED).
-     * The change operation must fail atomically; so it is crucial
-     * that the precondition checks are done before the field is
-     * hammered. The final part (postValueChange)reports post-change
-     * events.
+    * Prelude portion of the "3 step program" for changing the value of a simple property of this node. Here is the code pattern
+    * found in all AST node subclasses:
+    * 
+    * <pre>
+    * preValueChange(FOO_PROPERTY);
+    * this.foo = newFoo;
+    * postValueChange(FOO_PROPERTY);
+    * </pre>
+    * 
+    * The first part (preValueChange) does the precondition check to make sure the node is modifiable (not PROTECTED). The change
+    * operation must fail atomically; so it is crucial that the precondition checks are done before the field is hammered. The
+    * final part (postValueChange)reports post-change events.
     * <p>
     * This method calls <code>ast.modifying()</code> for the node affected.
     * </p>
-    *
+    * 
     * @param property the property descriptor of this node
     * @exception RuntimeException if:
-    * <ul>
-    * <li>this node is unmodifiable</li>
-    * </ul>
+    *               <ul>
+    *               <li>this node is unmodifiable</li>
+    *               </ul>
     * @since 3.0
     */
    final void preValueChange(SimplePropertyDescriptor property)
@@ -2158,9 +2037,9 @@ public abstract class ASTNode
    }
 
    /**
-     * Postlude portion of the "3 step program" for replacing the
-    * old child of this node with another node.
-     * See {@link #preValueChange(SimplePropertyDescriptor)} for details.
+    * Postlude portion of the "3 step program" for replacing the old child of this node with another node. See
+    * {@link #preValueChange(SimplePropertyDescriptor)} for details.
+    * 
     * @since 3.0
     */
    final void postValueChange(SimplePropertyDescriptor property)
@@ -2169,10 +2048,10 @@ public abstract class ASTNode
    }
 
    /**
-     * Ensures that this node is modifiable (that is, not marked PROTECTED).
-     * If successful, calls ast.modifying().
-     * @exception RuntimeException is not modifiable
-     */
+    * Ensures that this node is modifiable (that is, not marked PROTECTED). If successful, calls ast.modifying().
+    * 
+    * @exception RuntimeException is not modifiable
+    */
    final void checkModifiable()
    {
       if ((this.typeAndFlags & PROTECT) != 0)
@@ -2183,23 +2062,23 @@ public abstract class ASTNode
    }
 
    /**
-     * Begin lazy initialization of this node.
-     * Here is the code pattern found in all AST
-     * node subclasses:
-     * <pre>
-     * if (this.foo == null) {
+    * Begin lazy initialization of this node. Here is the code pattern found in all AST node subclasses:
+    * 
+    * <pre>
+    * if (this.foo == null) {
     *    // lazy init must be thread-safe for readers
-     *    synchronized (this) {
-     *       if (this.foo == null) {
-     *          preLazyInit();
-     *          this.foo = ...; // code to create new node
-     *          postLazyInit(this.foo, FOO_PROPERTY);
-     *       }
-     *    }
-     * }
-     * </pre>
-     * @since 3.0
-     */
+    *    synchronized (this) {
+    *       if (this.foo == null) {
+    *          preLazyInit();
+    *          this.foo = ...; // code to create new node
+    *          postLazyInit(this.foo, FOO_PROPERTY);
+    *       }
+    *    }
+    * }
+    * </pre>
+    * 
+    * @since 3.0
+    */
    final void preLazyInit()
    {
       // IMPORTANT: this method is called by readers
@@ -2209,14 +2088,12 @@ public abstract class ASTNode
    }
 
    /**
-     * End lazy initialization of this node.
-     *
-    * @param newChild the new child of this node, or <code>null</code> if
-    *   there is no replacement child
-    * @param property the property descriptor of this node describing
-     * the relationship between node and child
-     * @since 3.0
-     */
+    * End lazy initialization of this node.
+    * 
+    * @param newChild the new child of this node, or <code>null</code> if there is no replacement child
+    * @param property the property descriptor of this node describing the relationship between node and child
+    * @since 3.0
+    */
    final void postLazyInit(ASTNode newChild, ChildPropertyDescriptor property)
    {
       // IMPORTANT: this method is called by readers
@@ -2229,7 +2106,7 @@ public abstract class ASTNode
 
    /**
     * Returns the value of the named property of this node, or <code>null</code> if none.
-    *
+    * 
     * @param propertyName the property name
     * @return the property value, or <code>null</code> if none
     * @see #setProperty(String,Object)
@@ -2263,20 +2140,17 @@ public abstract class ASTNode
    }
 
    /**
-    * Sets the named property of this node to the given value,
-    * or to <code>null</code> to clear it.
+    * Sets the named property of this node to the given value, or to <code>null</code> to clear it.
     * <p>
-    * Clients should employ property names that are sufficiently unique
-    * to avoid inadvertent conflicts with other clients that might also be
-    * setting properties on the same node.
+    * Clients should employ property names that are sufficiently unique to avoid inadvertent conflicts with other clients that
+    * might also be setting properties on the same node.
     * </p>
     * <p>
-    * Note that modifying a property is not considered a modification to the
-    * AST itself. This is to allow clients to decorate existing nodes with
-    * their own properties without jeopardizing certain things (like the
-    * validity of bindings), which rely on the underlying tree remaining static.
+    * Note that modifying a property is not considered a modification to the AST itself. This is to allow clients to decorate
+    * existing nodes with their own properties without jeopardizing certain things (like the validity of bindings), which rely on
+    * the underlying tree remaining static.
     * </p>
-    *
+    * 
     * @param propertyName the property name
     * @param data the new property value, or <code>null</code> if none
     * @see #getProperty(String)
@@ -2361,11 +2235,9 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns an unmodifiable table of the properties of this node with
-    * non-<code>null</code> values.
-    *
-    * @return the table of property values keyed by property name
-    *   (key type: <code>String</code>; value type: <code>Object</code>)
+    * Returns an unmodifiable table of the properties of this node with non-<code>null</code> values.
+    * 
+    * @return the table of property values keyed by property name (key type: <code>String</code>; value type: <code>Object</code>)
     */
    public final Map properties()
    {
@@ -2395,21 +2267,16 @@ public abstract class ASTNode
     * No flags are associated with newly created nodes.
     * </p>
     * <p>
-    * The flags are the bitwise-or of individual flags.
-    * The following flags are currently defined:
+    * The flags are the bitwise-or of individual flags. The following flags are currently defined:
     * <ul>
-    * <li>{@link #MALFORMED} - indicates node is syntactically
-    *   malformed</li>
-    * <li>{@link #ORIGINAL} - indicates original node
-    * created by ASTParser</li>
-    * <li>{@link #PROTECT} - indicates node is protected
-    * from further modification</li>
-    * <li>{@link #RECOVERED} - indicates node or a part of this node
-    *  is recovered from source that contains a syntax error</li>
+    * <li>{@link #MALFORMED} - indicates node is syntactically malformed</li>
+    * <li>{@link #ORIGINAL} - indicates original node created by ASTParser</li>
+    * <li>{@link #PROTECT} - indicates node is protected from further modification</li>
+    * <li>{@link #RECOVERED} - indicates node or a part of this node is recovered from source that contains a syntax error</li>
     * </ul>
     * Other bit positions are reserved for future use.
     * </p>
-    *
+    * 
     * @return the bitwise-or of individual flags
     * @see #setFlags(int)
     */
@@ -2421,26 +2288,20 @@ public abstract class ASTNode
    /**
     * Sets the flags associated with this node to the given value.
     * <p>
-    * The flags are the bitwise-or of individual flags.
-    * The following flags are currently defined:
+    * The flags are the bitwise-or of individual flags. The following flags are currently defined:
     * <ul>
-    * <li>{@link #MALFORMED} - indicates node is syntactically
-    *   malformed</li>
-    * <li>{@link #ORIGINAL} - indicates original node
-    * created by ASTParser</li>
-    * <li>{@link #PROTECT} - indicates node is protected
-    * from further modification</li>
-    * <li>{@link #RECOVERED} - indicates node or a part of this node
-    *  is recovered from source that contains a syntax error</li>
+    * <li>{@link #MALFORMED} - indicates node is syntactically malformed</li>
+    * <li>{@link #ORIGINAL} - indicates original node created by ASTParser</li>
+    * <li>{@link #PROTECT} - indicates node is protected from further modification</li>
+    * <li>{@link #RECOVERED} - indicates node or a part of this node is recovered from source that contains a syntax error</li>
     * </ul>
     * Other bit positions are reserved for future use.
     * </p>
     * <p>
-    * Note that the flags are <em>not</em> considered a structural
-    * property of the node, and can be changed even if the
-    * node is marked as protected.
+    * Note that the flags are <em>not</em> considered a structural property of the node, and can be changed even if the node is
+    * marked as protected.
     * </p>
-    *
+    * 
     * @param flags the bitwise-or of individual flags
     * @see #getFlags()
     */
@@ -2452,14 +2313,13 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns an integer value identifying the type of this concrete AST node.
-    * The values are small positive integers, suitable for use in switch statements.
+    * Returns an integer value identifying the type of this concrete AST node. The values are small positive integers, suitable
+    * for use in switch statements.
     * <p>
-    * For each concrete node type there is a unique node type constant (name
-    * and value). The unique node type constant for a concrete node type such as
-    * <code>CastExpression</code> is <code>ASTNode.CAST_EXPRESSION</code>.
+    * For each concrete node type there is a unique node type constant (name and value). The unique node type constant for a
+    * concrete node type such as <code>CastExpression</code> is <code>ASTNode.CAST_EXPRESSION</code>.
     * </p>
-    *
+    * 
     * @return one of the node type constants
     */
    public final int getNodeType()
@@ -2468,9 +2328,9 @@ public abstract class ASTNode
    }
 
    /**
-    * Sets the integer value identifying the type of this concrete AST node.
-    * The values are small positive integers, suitable for use in switch statements.
-    *
+    * Sets the integer value identifying the type of this concrete AST node. The values are small positive integers, suitable for
+    * use in switch statements.
+    * 
     * @param nodeType one of the node type constants
     */
    private void setNodeType(int nodeType)
@@ -2482,19 +2342,17 @@ public abstract class ASTNode
    /**
     * Returns an integer value identifying the type of this concrete AST node.
     * <p>
-    * This internal method is implemented in each of the
-    * concrete node subclasses.
+    * This internal method is implemented in each of the concrete node subclasses.
     * </p>
-    *
+    * 
     * @return one of the node type constants
     */
    abstract int getNodeType0();
 
    /**
-    * The <code>ASTNode</code> implementation of this <code>Object</code>
-    * method uses object identity (==). Use <code>subtreeMatch</code> to
-    * compare two subtrees for equality.
-    *
+    * The <code>ASTNode</code> implementation of this <code>Object</code> method uses object identity (==). Use
+    * <code>subtreeMatch</code> to compare two subtrees for equality.
+    * 
     * @param obj {@inheritDoc}
     * @return {@inheritDoc}
     * @see #subtreeMatch(ASTMatcher matcher, Object other)
@@ -2505,8 +2363,8 @@ public abstract class ASTNode
    }
 
    /*
-    * (non-Javadoc)
-    * This makes it consistent with the fact that a equals methods has been provided.
+    * (non-Javadoc) This makes it consistent with the fact that a equals methods has been provided.
+    * 
     * @see java.lang.Object#hashCode()
     */
    public final int hashCode()
@@ -2515,13 +2373,11 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns whether the subtree rooted at the given node matches the
-    * given other object as decided by the given matcher.
-    *
+    * Returns whether the subtree rooted at the given node matches the given other object as decided by the given matcher.
+    * 
     * @param matcher the matcher
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    * <code>false</code> if they do not match
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match
     */
    public final boolean subtreeMatch(ASTMatcher matcher, Object other)
    {
@@ -2529,38 +2385,32 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns whether the subtree rooted at the given node matches the
-    * given other object as decided by the given matcher.
+    * Returns whether the subtree rooted at the given node matches the given other object as decided by the given matcher.
     * <p>
-    * This internal method is implemented in each of the
-    * concrete node subclasses.
+    * This internal method is implemented in each of the concrete node subclasses.
     * </p>
-    *
+    * 
     * @param matcher the matcher
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    * <code>false</code> if they do not match
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match
     */
    abstract boolean subtreeMatch0(ASTMatcher matcher, Object other);
 
    /**
-    * Returns a deep copy of the subtree of AST nodes rooted at the
-    * given node. The resulting nodes are owned by the given AST,
-    * which may be different from the ASTs of the given node.
-    * Even if the given node has a parent, the result node will be unparented.
+    * Returns a deep copy of the subtree of AST nodes rooted at the given node. The resulting nodes are owned by the given AST,
+    * which may be different from the ASTs of the given node. Even if the given node has a parent, the result node will be
+    * unparented.
     * <p>
-    * Source range information on the original nodes is automatically copied to the new
-    * nodes. Client properties (<code>properties</code>) are not carried over.
+    * Source range information on the original nodes is automatically copied to the new nodes. Client properties (
+    * <code>properties</code>) are not carried over.
     * </p>
     * <p>
-    * The node's <code>AST</code> and the target <code>AST</code> must support
-     * the same API level.
+    * The node's <code>AST</code> and the target <code>AST</code> must support the same API level.
     * </p>
-    *
+    * 
     * @param target the AST that is to own the nodes in the result
     * @param node the node to copy, or <code>null</code> if none
-    * @return the copied node, or <code>null</code> if <code>node</code>
-    *    is <code>null</code>
+    * @return the copied node, or <code>null</code> if <code>node</code> is <code>null</code>
     */
    public static ASTNode copySubtree(AST target, ASTNode node)
    {
@@ -2581,21 +2431,17 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns a deep copy of the subtrees of AST nodes rooted at the
-    * given list of nodes. The resulting nodes are owned by the given AST,
-    * which may be different from the ASTs of the nodes in the list.
-    * Even if the nodes in the list have parents, the nodes in the result
-    * will be unparented.
+    * Returns a deep copy of the subtrees of AST nodes rooted at the given list of nodes. The resulting nodes are owned by the
+    * given AST, which may be different from the ASTs of the nodes in the list. Even if the nodes in the list have parents, the
+    * nodes in the result will be unparented.
     * <p>
-    * Source range information on the original nodes is automatically copied to the new
-    * nodes. Client properties (<code>properties</code>) are not carried over.
+    * Source range information on the original nodes is automatically copied to the new nodes. Client properties (
+    * <code>properties</code>) are not carried over.
     * </p>
-    *
+    * 
     * @param target the AST that is to own the nodes in the result
-    * @param nodes the list of nodes to copy
-    *    (element type: {@link ASTNode})
-    * @return the list of copied subtrees
-    *    (element type: {@link ASTNode})
+    * @param nodes the list of nodes to copy (element type: {@link ASTNode})
+    * @return the list of copied subtrees (element type: {@link ASTNode})
     */
    public static List copySubtrees(AST target, List nodes)
    {
@@ -2610,15 +2456,13 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns a deep copy of the subtree of AST nodes rooted at this node.
-    * The resulting nodes are owned by the given AST, which may be different
-    * from the AST of this node. Even if this node has a parent, the
-    * result node will be unparented.
+    * Returns a deep copy of the subtree of AST nodes rooted at this node. The resulting nodes are owned by the given AST, which
+    * may be different from the AST of this node. Even if this node has a parent, the result node will be unparented.
     * <p>
-    * This method reports pre- and post-clone events, and dispatches
-    * to <code>clone0(AST)</code> which is reimplemented in node subclasses.
+    * This method reports pre- and post-clone events, and dispatches to <code>clone0(AST)</code> which is reimplemented in node
+    * subclasses.
     * </p>
-    *
+    * 
     * @param target the AST that is to own the nodes in the result
     * @return the root node of the copies subtree
     */
@@ -2631,24 +2475,20 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns a deep copy of the subtree of AST nodes rooted at this node.
-    * The resulting nodes are owned by the given AST, which may be different
-    * from the AST of this node. Even if this node has a parent, the
-    * result node will be unparented.
+    * Returns a deep copy of the subtree of AST nodes rooted at this node. The resulting nodes are owned by the given AST, which
+    * may be different from the AST of this node. Even if this node has a parent, the result node will be unparented.
     * <p>
     * This method must be implemented in subclasses.
     * </p>
     * <p>
-    * This method does not report pre- and post-clone events.
-    * All callers should instead call <code>clone(AST)</code>
-    * to ensure that pre- and post-clone events are reported.
+    * This method does not report pre- and post-clone events. All callers should instead call <code>clone(AST)</code> to ensure
+    * that pre- and post-clone events are reported.
     * </p>
     * <p>
-    * N.B. This method is package-private, so that the implementations
-    * of this method in each of the concrete AST node types do not
-    * clutter up the API doc.
+    * N.B. This method is package-private, so that the implementations of this method in each of the concrete AST node types do
+    * not clutter up the API doc.
     * </p>
-    *
+    * 
     * @param target the AST that is to own the nodes in the result
     * @return the root node of the copies subtree
     */
@@ -2656,7 +2496,7 @@ public abstract class ASTNode
 
    /**
     * Accepts the given visitor on a visit of the current node.
-    *
+    * 
     * @param visitor the visitor object
     * @exception IllegalArgumentException if the visitor is null
     */
@@ -2677,10 +2517,11 @@ public abstract class ASTNode
    }
 
    /**
-    * Accepts the given visitor on a type-specific visit of the current node.
-    * This method must be implemented in all concrete AST node types.
+    * Accepts the given visitor on a type-specific visit of the current node. This method must be implemented in all concrete AST
+    * node types.
     * <p>
     * General template for implementation on each concrete ASTNode class:
+    * 
     * <pre>
     * <code>
     * boolean visitChildren = visitor.visit(this);
@@ -2693,10 +2534,11 @@ public abstract class ASTNode
     * visitor.endVisit(this);
     * </code>
     * </pre>
-    * Note that the caller (<code>accept</code>) take cares of invoking
-    * <code>visitor.preVisit(this)</code> and <code>visitor.postVisit(this)</code>.
+    * 
+    * Note that the caller (<code>accept</code>) take cares of invoking <code>visitor.preVisit(this)</code> and
+    * <code>visitor.postVisit(this)</code>.
     * </p>
-    *
+    * 
     * @param visitor the visitor object
     */
    abstract void accept0(ASTVisitor visitor);
@@ -2704,15 +2546,12 @@ public abstract class ASTNode
    /**
     * Accepts the given visitor on a visit of the current node.
     * <p>
-    * This method should be used by the concrete implementations of
-    * <code>accept0</code> to traverse optional properties. Equivalent
-    * to <code>child.accept(visitor)</code> if <code>child</code>
-    * is not <code>null</code>.
+    * This method should be used by the concrete implementations of <code>accept0</code> to traverse optional properties.
+    * Equivalent to <code>child.accept(visitor)</code> if <code>child</code> is not <code>null</code>.
     * </p>
-    *
+    * 
     * @param visitor the visitor object
-    * @param child the child AST node to dispatch too, or <code>null</code>
-    *    if none
+    * @param child the child AST node to dispatch too, or <code>null</code> if none
     */
    final void acceptChild(ASTVisitor visitor, ASTNode child)
    {
@@ -2724,17 +2563,14 @@ public abstract class ASTNode
    }
 
    /**
-    * Accepts the given visitor on a visit of the given live list of
-    * child nodes.
+    * Accepts the given visitor on a visit of the given live list of child nodes.
     * <p>
-    * This method must be used by the concrete implementations of
-    * <code>accept</code> to traverse list-values properties; it
+    * This method must be used by the concrete implementations of <code>accept</code> to traverse list-values properties; it
     * encapsulates the proper handling of on-the-fly changes to the list.
     * </p>
-    *
+    * 
     * @param visitor the visitor object
-    * @param children the child AST node to dispatch too, or <code>null</code>
-    *    if none
+    * @param children the child AST node to dispatch too, or <code>null</code> if none
     */
    final void acceptChildren(ASTVisitor visitor, ASTNode.NodeList children)
    {
@@ -2756,16 +2592,14 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns the character index into the original source file indicating
-    * where the source fragment corresponding to this node begins.
+    * Returns the character index into the original source file indicating where the source fragment corresponding to this node
+    * begins.
     * <p>
-    * The parser supplies useful well-defined source ranges to the nodes it creates.
-    * See {@link ASTParser#setKind(int)} for details
-    * on precisely where source ranges begin and end.
+    * The parser supplies useful well-defined source ranges to the nodes it creates. See {@link ASTParser#setKind(int)} for
+    * details on precisely where source ranges begin and end.
     * </p>
-    *
-    * @return the 0-based character index, or <code>-1</code>
-    *    if no source position information is recorded for this node
+    * 
+    * @return the 0-based character index, or <code>-1</code> if no source position information is recorded for this node
     * @see #getLength()
     * @see ASTParser
     */
@@ -2775,16 +2609,14 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns the length in characters of the original source file indicating
-    * where the source fragment corresponding to this node ends.
+    * Returns the length in characters of the original source file indicating where the source fragment corresponding to this node
+    * ends.
     * <p>
-    * The parser supplies useful well-defined source ranges to the nodes it creates.
-    * See {@link ASTParser#setKind(int)} methods for details
-    * on precisely where source ranges begin and end.
+    * The parser supplies useful well-defined source ranges to the nodes it creates. See {@link ASTParser#setKind(int)} methods
+    * for details on precisely where source ranges begin and end.
     * </p>
-    *
-    * @return a (possibly 0) length, or <code>0</code>
-    *    if no source position information is recorded for this node
+    * 
+    * @return a (possibly 0) length, or <code>0</code> if no source position information is recorded for this node
     * @see #getStartPosition()
     * @see ASTParser
     */
@@ -2794,19 +2626,14 @@ public abstract class ASTNode
    }
 
    /**
-    * Sets the source range of the original source file where the source
-    * fragment corresponding to this node was found.
+    * Sets the source range of the original source file where the source fragment corresponding to this node was found.
     * <p>
-    * See {@link ASTParser#setKind(int)} for details
-    * on precisely where source ranges are supposed to begin and end.
+    * See {@link ASTParser#setKind(int)} for details on precisely where source ranges are supposed to begin and end.
     * </p>
-    *
-    * @param startPosition a 0-based character index,
-    *    or <code>-1</code> if no source position information is
-    *    available for this node
-    * @param length a (possibly 0) length,
-    *    or <code>0</code> if no source position information is recorded
-    *    for this node
+    * 
+    * @param startPosition a 0-based character index, or <code>-1</code> if no source position information is available for this
+    *           node
+    * @param length a (possibly 0) length, or <code>0</code> if no source position information is recorded for this node
     * @see #getStartPosition()
     * @see #getLength()
     * @see ASTParser
@@ -2829,9 +2656,8 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns a string representation of this node suitable for debugging
-    * purposes only.
-    *
+    * Returns a string representation of this node suitable for debugging purposes only.
+    * 
     * @return a debug string
     */
    public final String toString()
@@ -2854,9 +2680,8 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns the string representation of this node produced by the standard
-    * <code>Object.toString</code> method.
-    *
+    * Returns the string representation of this node produced by the standard <code>Object.toString</code> method.
+    * 
     * @return a debug string
     */
    final String standardToString()
@@ -2867,10 +2692,10 @@ public abstract class ASTNode
    /**
     * Appends a debug representation of this node to the given string buffer.
     * <p>
-    * The <code>ASTNode</code> implementation of this method prints out the entire
-    * subtree. Subclasses may override to provide a more succinct representation.
+    * The <code>ASTNode</code> implementation of this method prints out the entire subtree. Subclasses may override to provide a
+    * more succinct representation.
     * </p>
-    *
+    * 
     * @param buffer the string buffer to append to
     */
    void appendDebugString(StringBuffer buffer)
@@ -2880,9 +2705,8 @@ public abstract class ASTNode
    }
 
    /**
-    * Appends a standard Java source code representation of this subtree to the given
-    * string buffer.
-    *
+    * Appends a standard Java source code representation of this subtree to the given string buffer.
+    * 
     * @param buffer the string buffer to append to
     */
    final void appendPrintString(StringBuffer buffer)
@@ -2898,20 +2722,17 @@ public abstract class ASTNode
    static final int HEADERS = 12;
 
    /**
-    * Approximate base size of an AST node instance in bytes,
-    * including object header and instance fields.
-    * That is, HEADERS + (# instance vars in ASTNode)*4.
+    * Approximate base size of an AST node instance in bytes, including object header and instance fields. That is, HEADERS + (#
+    * instance vars in ASTNode)*4.
     */
    static final int BASE_NODE_SIZE = HEADERS + 7 * 4;
 
    /**
-    * Returns an estimate of the memory footprint, in bytes,
-    * of the given string.
-    *
+    * Returns an estimate of the memory footprint, in bytes, of the given string.
+    * 
     * @param string the string to measure, or <code>null</code>
-    * @return the size of this string object in bytes, or
-    *   0 if the string is <code>null</code>
-     * @since 3.0
+    * @return the size of this string object in bytes, or 0 if the string is <code>null</code>
+    * @since 3.0
     */
    static int stringSize(String string)
    {
@@ -2927,9 +2748,8 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns an estimate of the memory footprint in bytes of the entire
-    * subtree rooted at this node.
-    *
+    * Returns an estimate of the memory footprint in bytes of the entire subtree rooted at this node.
+    * 
     * @return the size of this subtree in bytes
     */
    public final int subtreeBytes()
@@ -2938,22 +2758,20 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns an estimate of the memory footprint in bytes of the entire
-    * subtree rooted at this node.
+    * Returns an estimate of the memory footprint in bytes of the entire subtree rooted at this node.
     * <p>
-    * N.B. This method is package-private, so that the implementations
-    * of this method in each of the concrete AST node types do not
-    * clutter up the API doc.
+    * N.B. This method is package-private, so that the implementations of this method in each of the concrete AST node types do
+    * not clutter up the API doc.
     * </p>
-    *
+    * 
     * @return the size of this subtree in bytes
     */
    abstract int treeSize();
 
    /**
-    * Returns an estimate of the memory footprint of this node in bytes.
-    * The estimate does not include the space occupied by child nodes.
-    *
+    * Returns an estimate of the memory footprint of this node in bytes. The estimate does not include the space occupied by child
+    * nodes.
+    * 
     * @return the size of this node in bytes
     */
    abstract int memSize();

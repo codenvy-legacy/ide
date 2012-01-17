@@ -16,11 +16,14 @@ import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 
 /**
- * Abstract base class of AST nodes that represent statements.
- * There are many kinds of statements.
+ * Abstract base class of AST nodes that represent statements. There are many kinds of statements.
  * <p>
- * The grammar combines both Statement and BlockStatement.</p>
- * <p>For JLS2:</p>
+ * The grammar combines both Statement and BlockStatement.
+ * </p>
+ * <p>
+ * For JLS2:
+ * </p>
+ * 
  * <pre>
  * Statement:
  *    {@link AssertStatement},
@@ -45,22 +48,24 @@ import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
  *    {@link VariableDeclarationStatement},
  *    {@link WhileStatement}
  * </pre>
- * <p>For JLS3, an enhanced for node type was added:</p>
+ * <p>
+ * For JLS3, an enhanced for node type was added:
+ * </p>
+ * 
  * <pre>
  * Statement:
  *    <i>&lt;JLS2 statements&gt;...</i>,
  *    {@link EnhancedForStatement}
  * </pre>
- *
+ * 
  * @since 2.0
  */
 public abstract class Statement extends ASTNode
 {
 
    /**
-    * The leading comment, or <code>null</code> if none.
-    * Defaults to none.
-    *
+    * The leading comment, or <code>null</code> if none. Defaults to none.
+    * 
     * @deprecated The leading comment feature was removed in 2.1.
     */
    private String optionalLeadingComment = null;
@@ -70,7 +75,7 @@ public abstract class Statement extends ASTNode
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    Statement(AST ast)
@@ -79,26 +84,20 @@ public abstract class Statement extends ASTNode
    }
 
    /**
-    * Returns the leading comment string, including the starting
-    * and ending comment delimiters, and any embedded line breaks.
+    * Returns the leading comment string, including the starting and ending comment delimiters, and any embedded line breaks.
     * <p>
-    * A leading comment is a comment that appears before the statement.
-    * It may be either a traditional comment or an end-of-line comment.
-    * Traditional comments must begin with "/&#42;, may contain line breaks,
-    * and must end with "&#42;/. End-of-line comments must begin with "//",
-    * must end with a line delimiter (as per JLS 3.7), and must not contain
+    * A leading comment is a comment that appears before the statement. It may be either a traditional comment or an end-of-line
+    * comment. Traditional comments must begin with "/&#42;, may contain line breaks, and must end with
+    * "&#42;/. End-of-line comments must begin with "//", must end with a line delimiter (as per JLS 3.7), and must not contain
     * line breaks.
     * </p>
-    *
+    * 
     * @return the comment string, or <code>null</code> if none
-    * @deprecated This feature was removed in the 2.1 release because it was
-    * only a partial, and inadequate, solution to the issue of associating
-    * comments with statements. Furthermore, AST.parseCompilationUnit did not
-    * associate leading comments, making this moot. Clients that need to access
-    * comments preceding a statement should either consult the compilation
-    * unit's {@linkplain CompilationUnit#getCommentList() comment table}
-    * or use a scanner to reanalyze the source text immediately preceding
-    * the statement's source range.
+    * @deprecated This feature was removed in the 2.1 release because it was only a partial, and inadequate, solution to the issue
+    *             of associating comments with statements. Furthermore, AST.parseCompilationUnit did not associate leading
+    *             comments, making this moot. Clients that need to access comments preceding a statement should either consult the
+    *             compilation unit's {@linkplain CompilationUnit#getCommentList() comment table} or use a scanner to reanalyze the
+    *             source text immediately preceding the statement's source range.
     */
    public String getLeadingComment()
    {
@@ -106,19 +105,15 @@ public abstract class Statement extends ASTNode
    }
 
    /**
-    * Sets or clears the leading comment string. The comment
-    * string must include the starting and ending comment delimiters,
-    * and any embedded linebreaks.
+    * Sets or clears the leading comment string. The comment string must include the starting and ending comment delimiters, and
+    * any embedded linebreaks.
     * <p>
-    * A leading comment is a comment that appears before the statement.
-    * It may be either a traditional comment or an end-of-line comment.
-    * Traditional comments must begin with "/&#42;, may contain line breaks,
-    * and must end with "&#42;/. End-of-line comments must begin with "//"
-    * (as per JLS 3.7), and must not contain line breaks.
+    * A leading comment is a comment that appears before the statement. It may be either a traditional comment or an end-of-line
+    * comment. Traditional comments must begin with "/&#42;, may contain line breaks, and must end with
+    * "&#42;/. End-of-line comments must begin with "//" (as per JLS 3.7), and must not contain line breaks.
     * </p>
     * <p>
-    * Examples:
-    * <code>
+    * Examples: <code>
     * <pre>
     * setLeadingComment("/&#42; traditional comment &#42;/");  // correct
     * setLeadingComment("missing comment delimiters");  // wrong
@@ -130,12 +125,11 @@ public abstract class Statement extends ASTNode
     * </pre>
     * </code>
     * </p>
-    *
+    * 
     * @param comment the comment string, or <code>null</code> if none
     * @exception IllegalArgumentException if the comment string is invalid
-    * @deprecated This feature was removed in the 2.1 release because it was
-    * only a partial, and inadequate, solution to the issue of associating
-    * comments with statements.
+    * @deprecated This feature was removed in the 2.1 release because it was only a partial, and inadequate, solution to the issue
+    *             of associating comments with statements.
     */
    public void setLeadingComment(String comment)
    {
@@ -184,7 +178,7 @@ public abstract class Statement extends ASTNode
 
    /**
     * Copies the leading comment from the given statement.
-    *
+    * 
     * @param source the statement that supplies the leading comment
     * @since 2.1
     */
@@ -193,8 +187,8 @@ public abstract class Statement extends ASTNode
       setLeadingComment(source.getLeadingComment());
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {

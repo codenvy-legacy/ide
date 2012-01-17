@@ -24,17 +24,18 @@ import junit.framework.TestCase;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Jan 12, 2012 2:44:53 PM evgen $
- *
+ * @version ${Id}: Jan 12, 2012 2:44:53 PM evgen $
+ * 
  */
 public class GwtTestSuite extends TestCase
 {
    public static Test suite()
    {
-      GWTTestSuite suite = new GWTTestSuite( "All Gwt Tests go in here" );
+      GWTTestSuite suite = new GWTTestSuite("All Gwt Tests go in here");
       suite.addTestSuite(ASTParserTestGwt.class);
       suite.addTestSuite(ASTVisitorTestGwt.class);
-      
+      suite.addTestSuite(CodeAssistantTestGwt.class);
+
       return suite;
    }
 }

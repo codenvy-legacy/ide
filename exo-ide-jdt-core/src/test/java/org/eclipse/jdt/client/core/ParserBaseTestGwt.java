@@ -30,13 +30,15 @@ import org.eclipse.jdt.client.core.dom.CompilationUnit;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Jan 12, 2012 3:23:29 PM evgen $
- *
+ * @version ${Id}: Jan 12, 2012 3:23:29 PM evgen $
+ * 
  */
 public abstract class ParserBaseTestGwt extends GWTTestCase
 {
 
    protected CompilationUnit unit;
+
+   protected char[] javaFiles;
 
    protected interface Resources extends ClientBundle
    {
@@ -55,18 +57,18 @@ public abstract class ParserBaseTestGwt extends GWTTestCase
    public void gwtSetUp()
    {
       Resources rs = GWT.create(Resources.class);
-      char[] javaFile = rs.resource().getText().toCharArray();
-        
+      javaFiles = rs.resource().getText().toCharArray();
+
       ASTParser parser = ASTParser.newParser(AST.JLS3);
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
       parser.setUnitName("CreateJavaClassPresenter");
-      parser.setSource(javaFile);
-   
+      parser.setSource(javaFiles);
+
       parser.setEnvironment(null, new String[]{"/my/path"}, new String[]{"UTF-8"}, true);
       ASTNode ast = parser.createAST(null);
       unit = (CompilationUnit)ast;
    }
-   
+
    /**
     * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
     */

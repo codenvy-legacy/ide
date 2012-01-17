@@ -117,13 +117,13 @@ public class ConditionalExpression extends OperatorExpression
       {
          // this block must meet two conflicting requirements (see https://bugs.eclipse.org/324178):
          // (1) For null analysis of "Object o2 = (o1 != null) ? o1 : new Object();" we need to distinguish
-         //     the paths *originating* from the evaluation of the condition to true/false respectively.
-         //     This is used to determine the possible null status of the entire conditional expression.
+         // the paths *originating* from the evaluation of the condition to true/false respectively.
+         // This is used to determine the possible null status of the entire conditional expression.
          // (2) For definite assignment analysis (JLS 16.1.5) of boolean conditional expressions of the form
-         //     "if (c1 ? expr1 : expr2) use(v);" we need to check whether any variable v will be definitely
-         //     assigned whenever the entire conditional expression evaluates to true (to reach the then branch).
-         //     I.e., we need to collect flowInfo *towards* the overall outcome true/false 
-         //     (regardless of the evaluation of the condition).
+         // "if (c1 ? expr1 : expr2) use(v);" we need to check whether any variable v will be definitely
+         // assigned whenever the entire conditional expression evaluates to true (to reach the then branch).
+         // I.e., we need to collect flowInfo *towards* the overall outcome true/false
+         // (regardless of the evaluation of the condition).
 
          // to support (1) use the infos of both branches originating from the condition for computing the nullStatus:
          computeNullStatus(trueFlowInfo, falseFlowInfo);
@@ -132,7 +132,7 @@ public class ConditionalExpression extends OperatorExpression
          // if (b ? false : (true && (v = false))) return v; -- ok
          // - expr1 ("false") has no path towards true (mark as unreachable)
          // - expr2 ("(true && (v = false))") has a branch towards true on which v is assigned.
-         //   -> merging these two branches yields: v is assigned
+         // -> merging these two branches yields: v is assigned
          // - the paths towards false are irrelevant since the enclosing if has no else.
          cst = this.optimizedIfTrueConstant;
          boolean isValueIfTrueOptimizedTrue = cst != null && cst != Constant.NotAConstant && cst.booleanValue() == true;
@@ -176,7 +176,7 @@ public class ConditionalExpression extends OperatorExpression
 
    private void computeNullStatus(FlowInfo trueBranchInfo, FlowInfo falseBranchInfo)
    {
-      // given that the condition cannot be optimized to a constant 
+      // given that the condition cannot be optimized to a constant
       // we now merge the nullStatus from both branches:
       int ifTrueNullStatus = this.valueIfTrue.nullStatus(trueBranchInfo);
       int ifFalseNullStatus = this.valueIfFalse.nullStatus(falseBranchInfo);
@@ -200,200 +200,200 @@ public class ConditionalExpression extends OperatorExpression
          this.nullStatus = status;
    }
 
-   //   /**
-   //    * Code generation for the conditional operator ?:
-   //    *
-   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   //    * @param valueRequired boolean
-   //   */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   //   {
+   // /**
+   // * Code generation for the conditional operator ?:
+   // *
+   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   // * @param valueRequired boolean
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   // {
    //
-   //      int pc = codeStream.position;
-   //      BranchLabel endifLabel, falseLabel;
-   //      if (this.constant != Constant.NotAConstant)
-   //      {
-   //         if (valueRequired)
-   //            codeStream.generateConstant(this.constant, this.implicitConversion);
-   //         codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //         return;
-   //      }
-   //      Constant cst = this.condition.optimizedBooleanConstant();
-   //      boolean needTruePart = !(cst != Constant.NotAConstant && cst.booleanValue() == false);
-   //      boolean needFalsePart = !(cst != Constant.NotAConstant && cst.booleanValue() == true);
-   //      endifLabel = new BranchLabel(codeStream);
+   // int pc = codeStream.position;
+   // BranchLabel endifLabel, falseLabel;
+   // if (this.constant != Constant.NotAConstant)
+   // {
+   // if (valueRequired)
+   // codeStream.generateConstant(this.constant, this.implicitConversion);
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // return;
+   // }
+   // Constant cst = this.condition.optimizedBooleanConstant();
+   // boolean needTruePart = !(cst != Constant.NotAConstant && cst.booleanValue() == false);
+   // boolean needFalsePart = !(cst != Constant.NotAConstant && cst.booleanValue() == true);
+   // endifLabel = new BranchLabel(codeStream);
    //
-   //      // Generate code for the condition
-   //      falseLabel = new BranchLabel(codeStream);
-   //      falseLabel.tagBits |= BranchLabel.USED;
-   //      this.condition.generateOptimizedBoolean(currentScope, codeStream, null, falseLabel, cst == Constant.NotAConstant);
+   // // Generate code for the condition
+   // falseLabel = new BranchLabel(codeStream);
+   // falseLabel.tagBits |= BranchLabel.USED;
+   // this.condition.generateOptimizedBoolean(currentScope, codeStream, null, falseLabel, cst == Constant.NotAConstant);
    //
-   //      if (this.trueInitStateIndex != -1)
-   //      {
-   //         codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.trueInitStateIndex);
-   //         codeStream.addDefinitelyAssignedVariables(currentScope, this.trueInitStateIndex);
-   //      }
-   //      // Then code generation
-   //      if (needTruePart)
-   //      {
-   //         this.valueIfTrue.generateCode(currentScope, codeStream, valueRequired);
-   //         if (needFalsePart)
-   //         {
-   //            // Jump over the else part
-   //            int position = codeStream.position;
-   //            codeStream.goto_(endifLabel);
-   //            codeStream.updateLastRecordedEndPC(currentScope, position);
-   //            // Tune codestream stack size
-   //            if (valueRequired)
-   //            {
-   //               switch (this.resolvedType.id)
-   //               {
-   //                  case TypeIds.T_long :
-   //                  case TypeIds.T_double :
-   //                     codeStream.decrStackSize(2);
-   //                     break;
-   //                  default :
-   //                     codeStream.decrStackSize(1);
-   //                     break;
-   //               }
-   //            }
-   //         }
-   //      }
-   //      if (needFalsePart)
-   //      {
-   //         if (this.falseInitStateIndex != -1)
-   //         {
-   //            codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.falseInitStateIndex);
-   //            codeStream.addDefinitelyAssignedVariables(currentScope, this.falseInitStateIndex);
-   //         }
-   //         if (falseLabel.forwardReferenceCount() > 0)
-   //         {
-   //            falseLabel.place();
-   //         }
-   //         this.valueIfFalse.generateCode(currentScope, codeStream, valueRequired);
-   //         if (valueRequired)
-   //         {
-   //            codeStream.recordExpressionType(this.resolvedType);
-   //         }
-   //         if (needTruePart)
-   //         {
-   //            // End of if statement
-   //            endifLabel.place();
-   //         }
-   //      }
-   //      // May loose some local variable initializations : affecting the local variable attributes
-   //      if (this.mergedInitStateIndex != -1)
-   //      {
-   //         codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //      }
-   //      // implicit conversion
-   //      if (valueRequired)
-   //         codeStream.generateImplicitConversion(this.implicitConversion);
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // if (this.trueInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.trueInitStateIndex);
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.trueInitStateIndex);
+   // }
+   // // Then code generation
+   // if (needTruePart)
+   // {
+   // this.valueIfTrue.generateCode(currentScope, codeStream, valueRequired);
+   // if (needFalsePart)
+   // {
+   // // Jump over the else part
+   // int position = codeStream.position;
+   // codeStream.goto_(endifLabel);
+   // codeStream.updateLastRecordedEndPC(currentScope, position);
+   // // Tune codestream stack size
+   // if (valueRequired)
+   // {
+   // switch (this.resolvedType.id)
+   // {
+   // case TypeIds.T_long :
+   // case TypeIds.T_double :
+   // codeStream.decrStackSize(2);
+   // break;
+   // default :
+   // codeStream.decrStackSize(1);
+   // break;
+   // }
+   // }
+   // }
+   // }
+   // if (needFalsePart)
+   // {
+   // if (this.falseInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.falseInitStateIndex);
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.falseInitStateIndex);
+   // }
+   // if (falseLabel.forwardReferenceCount() > 0)
+   // {
+   // falseLabel.place();
+   // }
+   // this.valueIfFalse.generateCode(currentScope, codeStream, valueRequired);
+   // if (valueRequired)
+   // {
+   // codeStream.recordExpressionType(this.resolvedType);
+   // }
+   // if (needTruePart)
+   // {
+   // // End of if statement
+   // endifLabel.place();
+   // }
+   // }
+   // // May loose some local variable initializations : affecting the local variable attributes
+   // if (this.mergedInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // }
+   // // implicit conversion
+   // if (valueRequired)
+   // codeStream.generateImplicitConversion(this.implicitConversion);
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
-   //   /**
-   //    * Optimized boolean code generation for the conditional operator ?:
-   //   */
-   //   public void generateOptimizedBoolean(BlockScope currentScope, CodeStream codeStream, BranchLabel trueLabel,
-   //      BranchLabel falseLabel, boolean valueRequired)
-   //   {
+   // /**
+   // * Optimized boolean code generation for the conditional operator ?:
+   // */
+   // public void generateOptimizedBoolean(BlockScope currentScope, CodeStream codeStream, BranchLabel trueLabel,
+   // BranchLabel falseLabel, boolean valueRequired)
+   // {
    //
-   //      if ((this.constant != Constant.NotAConstant) && (this.constant.typeID() == T_boolean) // constant
-   //         || ((this.valueIfTrue.implicitConversion & IMPLICIT_CONVERSION_MASK) >> 4) != T_boolean)
-   //      { // non boolean values
-   //         super.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
-   //         return;
-   //      }
-   //      Constant cst = this.condition.constant;
-   //      Constant condCst = this.condition.optimizedBooleanConstant();
-   //      boolean needTruePart =
-   //         !(((cst != Constant.NotAConstant) && (cst.booleanValue() == false)) || ((condCst != Constant.NotAConstant) && (condCst
-   //            .booleanValue() == false)));
-   //      boolean needFalsePart =
-   //         !(((cst != Constant.NotAConstant) && (cst.booleanValue() == true)) || ((condCst != Constant.NotAConstant) && (condCst
-   //            .booleanValue() == true)));
+   // if ((this.constant != Constant.NotAConstant) && (this.constant.typeID() == T_boolean) // constant
+   // || ((this.valueIfTrue.implicitConversion & IMPLICIT_CONVERSION_MASK) >> 4) != T_boolean)
+   // { // non boolean values
+   // super.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
+   // return;
+   // }
+   // Constant cst = this.condition.constant;
+   // Constant condCst = this.condition.optimizedBooleanConstant();
+   // boolean needTruePart =
+   // !(((cst != Constant.NotAConstant) && (cst.booleanValue() == false)) || ((condCst != Constant.NotAConstant) && (condCst
+   // .booleanValue() == false)));
+   // boolean needFalsePart =
+   // !(((cst != Constant.NotAConstant) && (cst.booleanValue() == true)) || ((condCst != Constant.NotAConstant) && (condCst
+   // .booleanValue() == true)));
    //
-   //      BranchLabel internalFalseLabel, endifLabel = new BranchLabel(codeStream);
+   // BranchLabel internalFalseLabel, endifLabel = new BranchLabel(codeStream);
    //
-   //      // Generate code for the condition
-   //      boolean needConditionValue = (cst == Constant.NotAConstant) && (condCst == Constant.NotAConstant);
-   //      this.condition.generateOptimizedBoolean(currentScope, codeStream, null, internalFalseLabel =
-   //         new BranchLabel(codeStream), needConditionValue);
+   // // Generate code for the condition
+   // boolean needConditionValue = (cst == Constant.NotAConstant) && (condCst == Constant.NotAConstant);
+   // this.condition.generateOptimizedBoolean(currentScope, codeStream, null, internalFalseLabel =
+   // new BranchLabel(codeStream), needConditionValue);
    //
-   //      if (this.trueInitStateIndex != -1)
-   //      {
-   //         codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.trueInitStateIndex);
-   //         codeStream.addDefinitelyAssignedVariables(currentScope, this.trueInitStateIndex);
-   //      }
-   //      // Then code generation
-   //      if (needTruePart)
-   //      {
-   //         this.valueIfTrue.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
+   // if (this.trueInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.trueInitStateIndex);
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.trueInitStateIndex);
+   // }
+   // // Then code generation
+   // if (needTruePart)
+   // {
+   // this.valueIfTrue.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
    //
-   //         if (needFalsePart)
-   //         {
-   //            // Jump over the else part
-   //            JumpEndif :
-   //            {
-   //               if (falseLabel == null)
-   //               {
-   //                  if (trueLabel != null)
-   //                  {
-   //                     // implicit falling through the FALSE case
-   //                     cst = this.optimizedIfTrueConstant;
-   //                     boolean isValueIfTrueOptimizedTrue =
-   //                        cst != null && cst != Constant.NotAConstant && cst.booleanValue() == true;
-   //                     if (isValueIfTrueOptimizedTrue)
-   //                        break JumpEndif; // no need to jump over, since branched to true already
-   //                  }
-   //               }
-   //               else
-   //               {
-   //                  // implicit falling through the TRUE case
-   //                  if (trueLabel == null)
-   //                  {
-   //                     cst = this.optimizedIfTrueConstant;
-   //                     boolean isValueIfTrueOptimizedFalse =
-   //                        cst != null && cst != Constant.NotAConstant && cst.booleanValue() == false;
-   //                     if (isValueIfTrueOptimizedFalse)
-   //                        break JumpEndif; // no need to jump over, since branched to false already
-   //                  }
-   //                  else
-   //                  {
-   //                     // no implicit fall through TRUE/FALSE --> should never occur
-   //                  }
-   //               }
-   //               int position = codeStream.position;
-   //               codeStream.goto_(endifLabel);
-   //               codeStream.updateLastRecordedEndPC(currentScope, position);
-   //            }
-   //            // No need to decrement codestream stack size
-   //            // since valueIfTrue was already consumed by branch bytecode
-   //         }
-   //      }
-   //      if (needFalsePart)
-   //      {
-   //         internalFalseLabel.place();
-   //         if (this.falseInitStateIndex != -1)
-   //         {
-   //            codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.falseInitStateIndex);
-   //            codeStream.addDefinitelyAssignedVariables(currentScope, this.falseInitStateIndex);
-   //         }
-   //         this.valueIfFalse.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
+   // if (needFalsePart)
+   // {
+   // // Jump over the else part
+   // JumpEndif :
+   // {
+   // if (falseLabel == null)
+   // {
+   // if (trueLabel != null)
+   // {
+   // // implicit falling through the FALSE case
+   // cst = this.optimizedIfTrueConstant;
+   // boolean isValueIfTrueOptimizedTrue =
+   // cst != null && cst != Constant.NotAConstant && cst.booleanValue() == true;
+   // if (isValueIfTrueOptimizedTrue)
+   // break JumpEndif; // no need to jump over, since branched to true already
+   // }
+   // }
+   // else
+   // {
+   // // implicit falling through the TRUE case
+   // if (trueLabel == null)
+   // {
+   // cst = this.optimizedIfTrueConstant;
+   // boolean isValueIfTrueOptimizedFalse =
+   // cst != null && cst != Constant.NotAConstant && cst.booleanValue() == false;
+   // if (isValueIfTrueOptimizedFalse)
+   // break JumpEndif; // no need to jump over, since branched to false already
+   // }
+   // else
+   // {
+   // // no implicit fall through TRUE/FALSE --> should never occur
+   // }
+   // }
+   // int position = codeStream.position;
+   // codeStream.goto_(endifLabel);
+   // codeStream.updateLastRecordedEndPC(currentScope, position);
+   // }
+   // // No need to decrement codestream stack size
+   // // since valueIfTrue was already consumed by branch bytecode
+   // }
+   // }
+   // if (needFalsePart)
+   // {
+   // internalFalseLabel.place();
+   // if (this.falseInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.falseInitStateIndex);
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.falseInitStateIndex);
+   // }
+   // this.valueIfFalse.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
    //
-   //         // End of if statement
-   //         endifLabel.place();
-   //      }
-   //      // May loose some local variable initializations : affecting the local variable attributes
-   //      if (this.mergedInitStateIndex != -1)
-   //      {
-   //         codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //      }
-   //      // no implicit conversion for boolean values
-   //      codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
-   //   }
+   // // End of if statement
+   // endifLabel.place();
+   // }
+   // // May loose some local variable initializations : affecting the local variable attributes
+   // if (this.mergedInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // }
+   // // no implicit conversion for boolean values
+   // codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
+   // }
 
    public int nullStatus(FlowInfo flowInfo)
    {
@@ -515,7 +515,7 @@ public class ConditionalExpression extends OperatorExpression
                && this.optimizedIfFalseConstant != Constant.NotAConstant
                && this.optimizedIfTrueConstant.booleanValue() == this.optimizedIfFalseConstant.booleanValue())
             {
-               // a ? true : true  /   a ? false : false
+               // a ? true : true / a ? false : false
                this.optimizedBooleanConstant = this.optimizedIfTrueConstant;
             }
             else if ((condConstant = this.condition.optimizedBooleanConstant()) != Constant.NotAConstant)
@@ -538,7 +538,7 @@ public class ConditionalExpression extends OperatorExpression
             this.valueIfFalse.computeConversion(scope, TypeBinding.SHORT, originalValueIfFalseType);
             return this.resolvedType = TypeBinding.SHORT;
          }
-         // <Byte|Short|Char> x constant(Int)  ---> <Byte|Short|Char>   and reciprocally
+         // <Byte|Short|Char> x constant(Int) ---> <Byte|Short|Char> and reciprocally
          if ((valueIfTrueType == TypeBinding.BYTE || valueIfTrueType == TypeBinding.SHORT || valueIfTrueType == TypeBinding.CHAR)
             && (valueIfFalseType == TypeBinding.INT && this.valueIfFalse.isConstantValueOfTypeAssignableToType(
                valueIfFalseType, valueIfTrueType)))

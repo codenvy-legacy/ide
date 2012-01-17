@@ -16,8 +16,8 @@ import java.util.Arrays;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 
 /**
- * Represents a reference to a enum constant in the class file.
- * One of the possible results for the default value of an annotation method.
+ * Represents a reference to a enum constant in the class file. One of the possible results for the default value of an annotation
+ * method.
  */
 public class EnumConstantSignature
 {

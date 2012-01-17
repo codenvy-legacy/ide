@@ -16,31 +16,28 @@ import java.util.List;
 
 /**
  * Type node for a qualified type (added in JLS3 API).
+ * 
  * <pre>
  * QualifiedType:
  *    Type <b>.</b> SimpleName
  * </pre>
  * <p>
- * Not all node arrangements will represent legal Java constructs. In particular,
- * it is nonsense if the type is an array type or primitive type. The normal use
- * is when the type is a simple or parameterized type.
+ * Not all node arrangements will represent legal Java constructs. In particular, it is nonsense if the type is an array type or
+ * primitive type. The normal use is when the type is a simple or parameterized type.
  * </p>
  * <p>
  * A type like "A.B" can be represented either of two ways:
  * <ol>
  * <li>
- * <code>QualifiedType(SimpleType(SimpleName("A")),SimpleName("B"))</code>
- * </li>
+ * <code>QualifiedType(SimpleType(SimpleName("A")),SimpleName("B"))</code></li>
  * <li>
- * <code>SimpleType(QualifiedName(SimpleName("A"),SimpleName("B")))</code>
- * </li>
+ * <code>SimpleType(QualifiedName(SimpleName("A"),SimpleName("B")))</code></li>
  * </ol>
- * The first form is preferred when "A" is known to be a type. However, a
- * parser cannot always determine this. Clients should be prepared to handle
- * either rather than make assumptions. (Note also that the first form
- * became possible as of JLS3; only the second form existed in JLS2 API.)
+ * The first form is preferred when "A" is known to be a type. However, a parser cannot always determine this. Clients should be
+ * prepared to handle either rather than make assumptions. (Note also that the first form became possible as of JLS3; only the
+ * second form existed in JLS2 API.)
  * </p>
- *
+ * 
  * @since 3.1
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -64,9 +61,7 @@ public class QualifiedType extends Type
       "name", SimpleName.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -80,13 +75,10 @@ public class QualifiedType extends Type
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     */
    public static List propertyDescriptors(int apiLevel)
    {
@@ -94,24 +86,22 @@ public class QualifiedType extends Type
    }
 
    /**
-    * The type node; lazily initialized; defaults to a type with
-    * an unspecfied, but legal, simple name.
+    * The type node; lazily initialized; defaults to a type with an unspecfied, but legal, simple name.
     */
    private Type qualifier = null;
 
    /**
-    * The name being qualified; lazily initialized; defaults to a unspecified,
-    * legal Java identifier.
+    * The name being qualified; lazily initialized; defaults to a unspecified, legal Java identifier.
     */
    private SimpleName name = null;
 
    /**
-    * Creates a new unparented node for a qualified type owned by the
-    * given AST. By default, an unspecified, but legal, qualifier and name.
+    * Creates a new unparented node for a qualified type owned by the given AST. By default, an unspecified, but legal, qualifier
+    * and name.
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    QualifiedType(AST ast)
@@ -120,16 +110,16 @@ public class QualifiedType extends Type
       unsupportedIn2();
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -161,16 +151,16 @@ public class QualifiedType extends Type
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return QUALIFIED_TYPE;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -181,8 +171,8 @@ public class QualifiedType extends Type
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -190,8 +180,8 @@ public class QualifiedType extends Type
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -207,7 +197,7 @@ public class QualifiedType extends Type
 
    /**
     * Returns the qualifier of this qualified type.
-    *
+    * 
     * @return the qualifier of this qualified type
     */
    public Type getQualifier()
@@ -230,13 +220,13 @@ public class QualifiedType extends Type
 
    /**
     * Sets the qualifier of this qualified type to the given type.
-    *
+    * 
     * @param type the new qualifier of this qualified type
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     */
    public void setQualifier(Type type)
    {
@@ -252,7 +242,7 @@ public class QualifiedType extends Type
 
    /**
     * Returns the name part of this qualified type.
-    *
+    * 
     * @return the name being qualified
     */
    public SimpleName getName()
@@ -275,13 +265,13 @@ public class QualifiedType extends Type
 
    /**
     * Sets the name part of this qualified type to the given simple name.
-    *
+    * 
     * @param name the identifier of this qualified name
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     */
    public void setName(SimpleName name)
    {
@@ -295,8 +285,8 @@ public class QualifiedType extends Type
       postReplaceChild(oldChild, name, NAME_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
@@ -304,8 +294,8 @@ public class QualifiedType extends Type
       return BASE_NODE_SIZE + 3 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

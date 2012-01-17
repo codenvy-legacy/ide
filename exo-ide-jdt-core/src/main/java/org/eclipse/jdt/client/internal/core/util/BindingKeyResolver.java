@@ -108,10 +108,9 @@ public class BindingKeyResolver extends BindingKeyParser
    }
 
    /*
-    * If not already cached, computes and cache the compound name (pkg name + top level name) of this key.
-    * Returns the package name if key is a pkg key.
-    * Returns an empty array if malformed.
-    * This key's scanner should be positioned on the package or type token.
+    * If not already cached, computes and cache the compound name (pkg name + top level name) of this key. Returns the package
+    * name if key is a pkg key. Returns an empty array if malformed. This key's scanner should be positioned on the package or
+    * type token.
     */
    public char[][] compoundName()
    {
@@ -330,7 +329,7 @@ public class BindingKeyResolver extends BindingKeyParser
    {
       LocalTypeBinding[] localTypeBindings = this.parsedUnit.localTypes;
       for (int i = 0; i < this.parsedUnit.localTypeCount; i++)
-         if (CharOperation.equals(uniqueKey, localTypeBindings[i].computeUniqueKey(false/*not a leaf*/)))
+         if (CharOperation.equals(uniqueKey, localTypeBindings[i].computeUniqueKey(false/* not a leaf */)))
          {
             this.typeBinding = localTypeBindings[i];
             return;
@@ -503,9 +502,10 @@ public class BindingKeyResolver extends BindingKeyParser
          this.genericType = (ReferenceBinding)this.typeBinding;
          ReferenceBinding enclosing = this.genericType.enclosingType();
          if (enclosing != null)
-            enclosing =
-               (ReferenceBinding)this.environment
-                  .convertToRawType(enclosing, false /*do not force conversion of enclosing types*/);
+            enclosing = (ReferenceBinding)this.environment.convertToRawType(enclosing, false /*
+                                                                                              * do not force conversion of
+                                                                                              * enclosing types
+                                                                                              */);
          this.typeBinding = this.environment.createParameterizedType(this.genericType, arguments, enclosing);
       }
    }
@@ -533,7 +533,7 @@ public class BindingKeyResolver extends BindingKeyParser
       if (this.typeBinding == null)
          return;
       this.typeBinding =
-         this.environment.convertToRawType(this.typeBinding, false /*do not force conversion of enclosing types*/);
+         this.environment.convertToRawType(this.typeBinding, false /* do not force conversion of enclosing types */);
    }
 
    public void consumeSecondaryType(char[] simpleTypeName)
@@ -553,7 +553,8 @@ public class BindingKeyResolver extends BindingKeyParser
       if (this.parsedUnit != null && this.compiler != null
          && !this.resolvedUnits.containsKey(fileName = this.parsedUnit.getFileName()))
       {
-         this.compiler.process(this.parsedUnit, this.compiler.totalUnits + 1); // unit is resolved only once thanks to the resolvedUnits protection
+         this.compiler.process(this.parsedUnit, this.compiler.totalUnits + 1); // unit is resolved only once thanks to the
+                                                                               // resolvedUnits protection
          this.resolvedUnits.put(fileName, fileName);
       }
       if (this.parsedUnit == null)
@@ -640,7 +641,7 @@ public class BindingKeyResolver extends BindingKeyParser
             {
                this.typeBinding =
                   this.environment.createWildcard((ReferenceBinding)this.typeBinding, this.wildcardRank,
-                     (TypeBinding)boundBinding, null /*no extra bound*/, kind);
+                     (TypeBinding)boundBinding, null /* no extra bound */, kind);
             }
             else
             {
@@ -650,7 +651,7 @@ public class BindingKeyResolver extends BindingKeyParser
          case Wildcard.UNBOUND :
             this.typeBinding =
                this.environment.createWildcard((ReferenceBinding)this.typeBinding, this.wildcardRank,
-                  null/*no bound*/, null /*no extra bound*/, kind);
+                  null/* no bound */, null /* no extra bound */, kind);
             break;
       }
    }
@@ -661,9 +662,8 @@ public class BindingKeyResolver extends BindingKeyParser
    }
 
    /*
-    * If the given dimension is greater than 0 returns an array binding for the given type binding.
-    * Otherwise return the given type binding.
-    * Returns null if the given type binding is null.
+    * If the given dimension is greater than 0 returns an array binding for the given type binding. Otherwise return the given
+    * type binding. Returns null if the given type binding is null.
     */
    private TypeBinding getArrayBinding(int dim, TypeBinding binding)
    {
@@ -704,8 +704,7 @@ public class BindingKeyResolver extends BindingKeyParser
    }
 
    /*
-    * Returns a binary binding corresonding to this key's compound name.
-    * Returns null if not found.
+    * Returns a binary binding corresonding to this key's compound name. Returns null if not found.
     */
    private TypeBinding getBinaryBinding()
    {
@@ -715,9 +714,8 @@ public class BindingKeyResolver extends BindingKeyParser
    }
 
    /*
-    * Finds the compilation unit declaration corresponding to the key in the given lookup environment.
-    * Returns null if no compilation unit declaration could be found.
-    * This key's scanner should be positioned on the package token.
+    * Finds the compilation unit declaration corresponding to the key in the given lookup environment. Returns null if no
+    * compilation unit declaration could be found. This key's scanner should be positioned on the package token.
     */
    public CompilationUnitDeclaration getCompilationUnitDeclaration()
    {
@@ -746,9 +744,8 @@ public class BindingKeyResolver extends BindingKeyParser
    }
 
    /*
-    * Returns the compiler binding corresponding to this key.
-    * Returns null is malformed.
-    * This key's scanner should be positioned on the package token.
+    * Returns the compiler binding corresponding to this key. Returns null is malformed. This key's scanner should be positioned
+    * on the package token.
     */
    public Binding getCompilerBinding()
    {

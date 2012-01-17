@@ -16,12 +16,12 @@ import java.util.List;
 
 /**
  * Array initializer AST node type.
- *
+ * 
  * <pre>
  * ArrayInitializer:
  * 		<b>{</b> [ Expression { <b>,</b> Expression} [ <b>,</b> ]] <b>}</b>
  * </pre>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -30,15 +30,14 @@ public class ArrayInitializer extends Expression
 
    /**
     * The "expressions" structural property of this node type (element type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildListPropertyDescriptor EXPRESSIONS_PROPERTY = new ChildListPropertyDescriptor(
       ArrayInitializer.class, "expressions", Expression.class, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -51,14 +50,11 @@ public class ArrayInitializer extends Expression
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -67,15 +63,13 @@ public class ArrayInitializer extends Expression
    }
 
    /**
-    * The list of expressions (element type:
-    * {@link Expression}). Defaults to an empty list.
+    * The list of expressions (element type: {@link Expression}). Defaults to an empty list.
     */
    private ASTNode.NodeList expressions = new ASTNode.NodeList(EXPRESSIONS_PROPERTY);
 
    /**
-    * Creates a new AST node for an array initializer owned by the
-    * given AST. By default, the list of expressions is empty.
-    *
+    * Creates a new AST node for an array initializer owned by the given AST. By default, the list of expressions is empty.
+    * 
     * @param ast the AST that is to own this node
     */
    ArrayInitializer(AST ast)
@@ -83,16 +77,16 @@ public class ArrayInitializer extends Expression
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
@@ -104,16 +98,16 @@ public class ArrayInitializer extends Expression
       return super.internalGetChildListProperty(property);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return ARRAY_INITIALIZER;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -123,8 +117,8 @@ public class ArrayInitializer extends Expression
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -132,8 +126,8 @@ public class ArrayInitializer extends Expression
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -147,25 +141,24 @@ public class ArrayInitializer extends Expression
 
    /**
     * Returns the live ordered list of expressions in this array initializer.
-    *
-    * @return the live list of expressions
-    *    (element type: {@link Expression})
+    * 
+    * @return the live list of expressions (element type: {@link Expression})
     */
    public List expressions()
    {
       return this.expressions;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return BASE_NODE_SIZE + 1 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

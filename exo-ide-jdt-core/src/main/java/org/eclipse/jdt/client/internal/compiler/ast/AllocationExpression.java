@@ -114,79 +114,79 @@ public class AllocationExpression extends Expression implements InvocationSite
       return null;
    }
 
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   //   {
-   //      if (!valueRequired)
-   //         currentScope.problemReporter().unusedObjectAllocation(this);
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   // {
+   // if (!valueRequired)
+   // currentScope.problemReporter().unusedObjectAllocation(this);
    //
-   //      int pc = codeStream.position;
-   //      MethodBinding codegenBinding = this.binding.original();
-   //      ReferenceBinding allocatedType = codegenBinding.declaringClass;
+   // int pc = codeStream.position;
+   // MethodBinding codegenBinding = this.binding.original();
+   // ReferenceBinding allocatedType = codegenBinding.declaringClass;
    //
-   //      codeStream.new_(allocatedType);
-   //      boolean isUnboxing = (this.implicitConversion & TypeIds.UNBOXING) != 0;
-   //      if (valueRequired || isUnboxing)
-   //      {
-   //         codeStream.dup();
-   //      }
-   //      // better highlight for allocation: display the type individually
-   //      if (this.type != null)
-   //      { // null for enum constant body
-   //         codeStream.recordPositionsFrom(pc, this.type.sourceStart);
-   //      }
-   //      else
-   //      {
-   //         // push enum constant name and ordinal
-   //         codeStream.ldc(String.valueOf(this.enumConstant.name));
-   //         codeStream.generateInlinedValue(this.enumConstant.binding.id);
-   //      }
+   // codeStream.new_(allocatedType);
+   // boolean isUnboxing = (this.implicitConversion & TypeIds.UNBOXING) != 0;
+   // if (valueRequired || isUnboxing)
+   // {
+   // codeStream.dup();
+   // }
+   // // better highlight for allocation: display the type individually
+   // if (this.type != null)
+   // { // null for enum constant body
+   // codeStream.recordPositionsFrom(pc, this.type.sourceStart);
+   // }
+   // else
+   // {
+   // // push enum constant name and ordinal
+   // codeStream.ldc(String.valueOf(this.enumConstant.name));
+   // codeStream.generateInlinedValue(this.enumConstant.binding.id);
+   // }
    //
-   //      // handling innerclass instance allocation - enclosing instance arguments
-   //      if (allocatedType.isNestedType())
-   //      {
-   //         codeStream.generateSyntheticEnclosingInstanceValues(currentScope, allocatedType, enclosingInstance(), this);
-   //      }
-   //      // generate the arguments for constructor
-   //      generateArguments(this.binding, this.arguments, currentScope, codeStream);
-   //      // handling innerclass instance allocation - outer local arguments
-   //      if (allocatedType.isNestedType())
-   //      {
-   //         codeStream.generateSyntheticOuterArgumentValues(currentScope, allocatedType, this);
-   //      }
-   //      // invoke constructor
-   //      if (this.syntheticAccessor == null)
-   //      {
-   //         codeStream.invoke(Opcodes.OPC_invokespecial, codegenBinding, null /* default declaringClass */);
-   //      }
-   //      else
-   //      {
-   //         // synthetic accessor got some extra arguments appended to its signature, which need values
-   //         for (int i = 0, max = this.syntheticAccessor.parameters.length - codegenBinding.parameters.length; i < max; i++)
-   //         {
-   //            codeStream.aconst_null();
-   //         }
-   //         codeStream.invoke(Opcodes.OPC_invokespecial, this.syntheticAccessor, null /* default declaringClass */);
-   //      }
-   //      if (valueRequired)
-   //      {
-   //         codeStream.generateImplicitConversion(this.implicitConversion);
-   //      }
-   //      else if (isUnboxing)
-   //      {
-   //         // conversion only generated if unboxing
-   //         codeStream.generateImplicitConversion(this.implicitConversion);
-   //         switch (postConversionType(currentScope).id)
-   //         {
-   //            case T_long :
-   //            case T_double :
-   //               codeStream.pop2();
-   //               break;
-   //            default :
-   //               codeStream.pop();
-   //         }
-   //      }
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // // handling innerclass instance allocation - enclosing instance arguments
+   // if (allocatedType.isNestedType())
+   // {
+   // codeStream.generateSyntheticEnclosingInstanceValues(currentScope, allocatedType, enclosingInstance(), this);
+   // }
+   // // generate the arguments for constructor
+   // generateArguments(this.binding, this.arguments, currentScope, codeStream);
+   // // handling innerclass instance allocation - outer local arguments
+   // if (allocatedType.isNestedType())
+   // {
+   // codeStream.generateSyntheticOuterArgumentValues(currentScope, allocatedType, this);
+   // }
+   // // invoke constructor
+   // if (this.syntheticAccessor == null)
+   // {
+   // codeStream.invoke(Opcodes.OPC_invokespecial, codegenBinding, null /* default declaringClass */);
+   // }
+   // else
+   // {
+   // // synthetic accessor got some extra arguments appended to its signature, which need values
+   // for (int i = 0, max = this.syntheticAccessor.parameters.length - codegenBinding.parameters.length; i < max; i++)
+   // {
+   // codeStream.aconst_null();
+   // }
+   // codeStream.invoke(Opcodes.OPC_invokespecial, this.syntheticAccessor, null /* default declaringClass */);
+   // }
+   // if (valueRequired)
+   // {
+   // codeStream.generateImplicitConversion(this.implicitConversion);
+   // }
+   // else if (isUnboxing)
+   // {
+   // // conversion only generated if unboxing
+   // codeStream.generateImplicitConversion(this.implicitConversion);
+   // switch (postConversionType(currentScope).id)
+   // {
+   // case T_long :
+   // case T_double :
+   // codeStream.pop2();
+   // break;
+   // default :
+   // codeStream.pop();
+   // }
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    /**
     * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments()
@@ -206,12 +206,11 @@ public class AllocationExpression extends Expression implements InvocationSite
       return true;
    }
 
-   /* Inner emulation consists in either recording a dependency
-    * link only, or performing one level of propagation.
-    *
-    * Dependency mechanism is used whenever dealing with source target
-    * types, since by the time we reach them, we might not yet know their
-    * exact need.
+   /*
+    * Inner emulation consists in either recording a dependency link only, or performing one level of propagation.
+    * 
+    * Dependency mechanism is used whenever dealing with source target types, since by the time we reach them, we might not yet
+    * know their exact need.
     */
    public void manageEnclosingInstanceAccessIfNecessary(BlockScope currentScope, FlowInfo flowInfo)
    {
@@ -311,7 +310,7 @@ public class AllocationExpression extends Expression implements InvocationSite
       }
       else
       {
-         this.resolvedType = this.type.resolveType(scope, true /* check bounds*/);
+         this.resolvedType = this.type.resolveType(scope, true /* check bounds */);
          checkParameterizedAllocation :
          {
             if (this.type instanceof ParameterizedQualifiedTypeReference)
@@ -352,7 +351,7 @@ public class AllocationExpression extends Expression implements InvocationSite
          for (int i = 0; i < length; i++)
          {
             TypeReference typeReference = this.typeArguments[i];
-            if ((this.genericTypeArguments[i] = typeReference.resolveType(scope, true /* check bounds*/)) == null)
+            if ((this.genericTypeArguments[i] = typeReference.resolveType(scope, true /* check bounds */)) == null)
             {
                argHasError = true;
             }
@@ -402,9 +401,10 @@ public class AllocationExpression extends Expression implements InvocationSite
          }
          if (argHasError)
          {
-            /* https://bugs.eclipse.org/bugs/show_bug.cgi?id=345359, if arguments have errors, completely bail out in the <> case.
-               No meaningful type resolution is possible since inference of the elided types is fully tied to argument types. Do
-               not return the partially resolved type.
+            /*
+             * https://bugs.eclipse.org/bugs/show_bug.cgi?id=345359, if arguments have errors, completely bail out in the <> case.
+             * No meaningful type resolution is possible since inference of the elided types is fully tied to argument types. Do
+             * not return the partially resolved type.
              */
             if (isDiamond)
             {
@@ -416,7 +416,8 @@ public class AllocationExpression extends Expression implements InvocationSite
                TypeBinding[] pseudoArgs = new TypeBinding[length];
                for (int i = length; --i >= 0;)
                {
-                  pseudoArgs[i] = argumentTypes[i] == null ? TypeBinding.NULL : argumentTypes[i]; // replace args with errors with null type
+                  pseudoArgs[i] = argumentTypes[i] == null ? TypeBinding.NULL : argumentTypes[i]; // replace args with errors with
+                                                                                                  // null type
                }
                this.binding =
                   scope.findMethod((ReferenceBinding)this.resolvedType, TypeConstants.INIT, pseudoArgs, this);
@@ -512,10 +513,11 @@ public class AllocationExpression extends Expression implements InvocationSite
    public TypeBinding[] inferElidedTypes(ReferenceBinding allocationType, ReferenceBinding enclosingType,
       TypeBinding[] argumentTypes, final BlockScope scope)
    {
-      /* Given the allocation type and the arguments to the constructor, see if we can synthesize a generic static factory
-         method that would, given the argument types and the invocation site, manufacture a parameterized object of type allocationType.
-         If we are successful then by design and construction, the parameterization of the return type of the factory method is identical
-         to the types elided in the <>.
+      /*
+       * Given the allocation type and the arguments to the constructor, see if we can synthesize a generic static factory method
+       * that would, given the argument types and the invocation site, manufacture a parameterized object of type allocationType.
+       * If we are successful then by design and construction, the parameterization of the return type of the factory method is
+       * identical to the types elided in the <>.
        */
       MethodBinding factory = scope.getStaticFactory(allocationType, enclosingType, argumentTypes, this);
       if (factory instanceof ParameterizedGenericMethodBinding && factory.isValidBinding())

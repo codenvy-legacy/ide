@@ -73,8 +73,8 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Jan 13, 2012 10:30:27 AM evgen $
- *
+ * @version ${Id}: Jan 13, 2012 10:30:27 AM evgen $
+ * 
  */
 public class ASTTreeViewModel implements TreeViewModel
 {
@@ -83,7 +83,8 @@ public class ASTTreeViewModel implements TreeViewModel
    {
 
       /**
-       * @see com.google.gwt.cell.client.AbstractCell#render(com.google.gwt.cell.client.Cell.Context, java.lang.Object, com.google.gwt.safehtml.shared.SafeHtmlBuilder)
+       * @see com.google.gwt.cell.client.AbstractCell#render(com.google.gwt.cell.client.Cell.Context, java.lang.Object,
+       *      com.google.gwt.safehtml.shared.SafeHtmlBuilder)
        */
       @Override
       public void render(com.google.gwt.cell.client.Cell.Context context, Object value, SafeHtmlBuilder sb)
@@ -138,7 +139,7 @@ public class ASTTreeViewModel implements TreeViewModel
    @Override
    public <T> NodeInfo<?> getNodeInfo(T value)
    {
-      //root
+      // root
       if (value == null)
       {
          return new DefaultNodeInfo<Object>(astListDataProvider, new AstCell());
@@ -302,7 +303,7 @@ public class ASTTreeViewModel implements TreeViewModel
       if (node instanceof CompilationUnit)
       {
          CompilationUnit root = (CompilationUnit)node;
-         //         res.add(new JavaElement(root, root.getJavaElement()));
+         // res.add(new JavaElement(root, root.getJavaElement()));
          res.add(new CommentsProperty(root));
          res.add(new ProblemsProperty(root));
          res.add(new SettingsProperty(root));
@@ -362,10 +363,10 @@ public class ASTTreeViewModel implements TreeViewModel
    @Override
    public boolean isLeaf(Object parent)
    {
-      //root
-      if(parent == null)
+      // root
+      if (parent == null)
          return false;
-      
+
       return getChildren(parent).length == 0;
    }
 

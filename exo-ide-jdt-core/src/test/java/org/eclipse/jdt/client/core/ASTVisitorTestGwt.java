@@ -18,16 +18,14 @@
  */
 package org.eclipse.jdt.client.core;
 
-
 import org.eclipse.jdt.client.core.dom.ASTVisitor;
 import org.eclipse.jdt.client.core.dom.MethodDeclaration;
 import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 
-
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Jan 4, 2012 2:50:05 PM evgen $
- *
+ * @version ${Id}: Jan 4, 2012 2:50:05 PM evgen $
+ * 
  */
 public class ASTVisitorTestGwt extends ParserBaseTestGwt
 {
@@ -37,7 +35,7 @@ public class ASTVisitorTestGwt extends ParserBaseTestGwt
       TypeDeclarationVisitor visitor = new TypeDeclarationVisitor();
       unit.accept(visitor);
       assertEquals(2, visitor.typeCount);
-      
+
    }
 
    public void testMethodDeclarationVisitor() throws Exception
@@ -68,8 +66,8 @@ public class ASTVisitorTestGwt extends ParserBaseTestGwt
       private int typeCount;
 
       /**
-      * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.TypeDeclaration)
-      */
+       * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.TypeDeclaration)
+       */
       @Override
       public boolean visit(TypeDeclaration node)
       {

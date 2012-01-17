@@ -20,14 +20,14 @@ public interface IBinaryField extends IGenericField
    IBinaryAnnotation[] getAnnotations();
 
    /**
-    *
+    * 
     * @return org.eclipse.jdt.internal.compiler.Constant
     */
    Constant getConstant();
 
    /**
-    * Answer the receiver's signature which describes the parameter &
-    * return types as specified in section 4.4.4 of the Java 2 VM spec.
+    * Answer the receiver's signature which describes the parameter & return types as specified in section 4.4.4 of the Java 2 VM
+    * spec.
     */
    char[] getGenericSignature();
 
@@ -42,14 +42,11 @@ public interface IBinaryField extends IGenericField
    long getTagBits();
 
    /**
-    * Answer the resolved name of the receiver's type in the
-    * class file format as specified in section 4.3.2 of the Java 2 VM spec.
-    *
-    * For example:
-    *   - java.lang.String is Ljava/lang/String;
-    *   - an int is I
-    *   - a 2 dimensional array of strings is [[Ljava/lang/String;
-    *   - an array of floats is [F
+    * Answer the resolved name of the receiver's type in the class file format as specified in section 4.3.2 of the Java 2 VM
+    * spec.
+    * 
+    * For example: - java.lang.String is Ljava/lang/String; - an int is I - a 2 dimensional array of strings is
+    * [[Ljava/lang/String; - an array of floats is [F
     */
    char[] getTypeName();
 }

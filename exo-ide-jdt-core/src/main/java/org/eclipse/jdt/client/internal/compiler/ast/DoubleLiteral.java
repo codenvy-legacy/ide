@@ -79,7 +79,7 @@ public class DoubleLiteral extends NumberLiteral
          // 1.0e-5000d is non-zero, but underflows to 0
          boolean isHexaDecimal = false;
          label : for (int i = 0; i < this.source.length; i++)
-         { //it is welled formated so just test against '0' and potential . D d
+         { // it is welled formated so just test against '0' and potential . D d
             switch (this.source[i])
             {
                case '0' :
@@ -115,22 +115,22 @@ public class DoubleLiteral extends NumberLiteral
       this.constant = DoubleConstant.fromValue(this.value);
    }
 
-   //   /**
-   //    * Code generation for the double literak
-   //    *
-   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   //    * @param valueRequired boolean
-   //    */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   //   {
-   //      int pc = codeStream.position;
-   //      if (valueRequired)
-   //      {
-   //         codeStream.generateConstant(this.constant, this.implicitConversion);
-   //      }
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // /**
+   // * Code generation for the double literak
+   // *
+   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   // * @param valueRequired boolean
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   // {
+   // int pc = codeStream.position;
+   // if (valueRequired)
+   // {
+   // codeStream.generateConstant(this.constant, this.implicitConversion);
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    public TypeBinding literalType(BlockScope scope)
    {

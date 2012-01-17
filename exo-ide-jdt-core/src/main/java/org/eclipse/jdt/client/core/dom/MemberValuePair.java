@@ -17,14 +17,15 @@ import java.util.List;
 /**
  * Member value pair node (added in JLS3 API). Member value pairs appear in annotations.
  * <p>
+ * 
  * <pre>
  * MemberValuePair:
  *   SimpleName <b>=</b> Expression
  * </pre>
- * Within annotations, only certain kinds of expressions are meaningful,
- * including other annotations.
+ * 
+ * Within annotations, only certain kinds of expressions are meaningful, including other annotations.
  * </p>
- *
+ * 
  * @see NormalAnnotation
  * @since 3.1
  * @noinstantiate This class is not intended to be instantiated by clients.
@@ -45,9 +46,7 @@ public class MemberValuePair extends ASTNode
       "value", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -61,12 +60,10 @@ public class MemberValuePair extends ASTNode
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
     * @param apiLevel the API level; one of the AST.JLS* constants
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     */
    public static List propertyDescriptors(int apiLevel)
    {
@@ -74,25 +71,22 @@ public class MemberValuePair extends ASTNode
    }
 
    /**
-    * The member name; lazily initialized; defaults to a unspecified,
-    * legal name.
+    * The member name; lazily initialized; defaults to a unspecified, legal name.
     */
    private SimpleName name = null;
 
    /**
-    * The value; lazily initialized; defaults to a unspecified,
-    * legal expression.
+    * The value; lazily initialized; defaults to a unspecified, legal expression.
     */
    private Expression value = null;
 
    /**
-    * Creates a new AST node for a member value pair owned by the given
-    * AST. By default, the node has an unspecified (but legal) member
-    * name and value.
+    * Creates a new AST node for a member value pair owned by the given AST. By default, the node has an unspecified (but legal)
+    * member name and value.
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    MemberValuePair(AST ast)
@@ -101,16 +95,16 @@ public class MemberValuePair extends ASTNode
       unsupportedIn2();
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -142,16 +136,16 @@ public class MemberValuePair extends ASTNode
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return MEMBER_VALUE_PAIR;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -162,8 +156,8 @@ public class MemberValuePair extends ASTNode
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -171,8 +165,8 @@ public class MemberValuePair extends ASTNode
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -188,7 +182,7 @@ public class MemberValuePair extends ASTNode
 
    /**
     * Returns the member name.
-    *
+    * 
     * @return the member name node
     */
    public SimpleName getName()
@@ -212,12 +206,10 @@ public class MemberValuePair extends ASTNode
    /**
     * Resolves and returns the member value pair binding for this member value pair.
     * <p>
-    * Note that bindings are generally unavailable unless requested when the
-    * AST is being built.
+    * Note that bindings are generally unavailable unless requested when the AST is being built.
     * </p>
-    *
-    * @return the binding, or <code>null</code> if the binding cannot be
-    *    resolved
+    * 
+    * @return the binding, or <code>null</code> if the binding cannot be resolved
     * @since 3.2
     */
    public final IMemberValuePairBinding resolveMemberValuePairBinding()
@@ -227,13 +219,13 @@ public class MemberValuePair extends ASTNode
 
    /**
     * Sets the member name.
-    *
+    * 
     * @param name the member name node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     */
    public void setName(SimpleName name)
    {
@@ -249,7 +241,7 @@ public class MemberValuePair extends ASTNode
 
    /**
     * Returns the value expression.
-    *
+    * 
     * @return the value expression
     */
    public Expression getValue()
@@ -272,14 +264,14 @@ public class MemberValuePair extends ASTNode
 
    /**
     * Sets the value of this pair.
-    *
+    * 
     * @param value the new value
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setValue(Expression value)
    {
@@ -293,16 +285,16 @@ public class MemberValuePair extends ASTNode
       postReplaceChild(oldChild, value, VALUE_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return BASE_NODE_SIZE + 2 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

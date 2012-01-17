@@ -88,7 +88,7 @@ public class RecoveredUnit extends RecoveredElement
    }
 
    /*
-    *	Record a method declaration: should be attached to last type
+    * Record a method declaration: should be attached to last type
     */
    public RecoveredElement add(AbstractMethodDeclaration methodDeclaration, int bracketBalanceValue)
    {
@@ -126,7 +126,7 @@ public class RecoveredUnit extends RecoveredElement
    }
 
    /*
-    *	Record a field declaration: should be attached to last type
+    * Record a field declaration: should be attached to last type
     */
    public RecoveredElement add(FieldDeclaration fieldDeclaration, int bracketBalanceValue)
    {

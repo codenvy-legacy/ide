@@ -16,11 +16,12 @@ import java.util.List;
 
 /**
  * Instanceof expression AST node type.
+ * 
  * <pre>
  * InstanceofExpression:
  *    Expression <b>instanceof</b> Type
  * </pre>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -29,6 +30,7 @@ public class InstanceofExpression extends Expression
 
    /**
     * The "leftOperand" structural property of this node type (child type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor LEFT_OPERAND_PROPERTY = new ChildPropertyDescriptor(
@@ -36,15 +38,14 @@ public class InstanceofExpression extends Expression
 
    /**
     * The "rightOperand" structural property of this node type (child type: {@link Type}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor RIGHT_OPERAND_PROPERTY = new ChildPropertyDescriptor(
       InstanceofExpression.class, "rightOperand", Type.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -58,14 +59,11 @@ public class InstanceofExpression extends Expression
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -74,22 +72,19 @@ public class InstanceofExpression extends Expression
    }
 
    /**
-    * The left operand; lazily initialized; defaults to an unspecified,
-    * but legal, simple name.
+    * The left operand; lazily initialized; defaults to an unspecified, but legal, simple name.
     */
    private Expression leftOperand = null;
 
    /**
-    * The right operand; lazily initialized; defaults to an unspecified,
-    * but legal, simple type.
+    * The right operand; lazily initialized; defaults to an unspecified, but legal, simple type.
     */
    private Type rightOperand = null;
 
    /**
-    * Creates a new AST node for an instanceof expression owned by the given
-    * AST. By default, the node has unspecified (but legal) operator,
-    * left and right operands.
-    *
+    * Creates a new AST node for an instanceof expression owned by the given AST. By default, the node has unspecified (but legal)
+    * operator, left and right operands.
+    * 
     * @param ast the AST that is to own this node
     */
    InstanceofExpression(AST ast)
@@ -97,16 +92,16 @@ public class InstanceofExpression extends Expression
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -138,16 +133,16 @@ public class InstanceofExpression extends Expression
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return INSTANCEOF_EXPRESSION;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -158,8 +153,8 @@ public class InstanceofExpression extends Expression
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -167,8 +162,8 @@ public class InstanceofExpression extends Expression
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -184,7 +179,7 @@ public class InstanceofExpression extends Expression
 
    /**
     * Returns the left operand of this instanceof expression.
-    *
+    * 
     * @return the left operand node
     */
    public Expression getLeftOperand()
@@ -207,14 +202,14 @@ public class InstanceofExpression extends Expression
 
    /**
     * Sets the left operand of this instanceof expression.
-    *
+    * 
     * @param expression the left operand node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setLeftOperand(Expression expression)
    {
@@ -230,7 +225,7 @@ public class InstanceofExpression extends Expression
 
    /**
     * Returns the right operand of this instanceof expression.
-    *
+    * 
     * @return the right operand node
     */
    public Type getRightOperand()
@@ -253,14 +248,14 @@ public class InstanceofExpression extends Expression
 
    /**
     * Sets the right operand of this instanceof expression.
-    *
+    * 
     * @param referenceType the right operand node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setRightOperand(Type referenceType)
    {
@@ -274,8 +269,8 @@ public class InstanceofExpression extends Expression
       postReplaceChild(oldChild, referenceType, RIGHT_OPERAND_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
@@ -283,8 +278,8 @@ public class InstanceofExpression extends Expression
       return BASE_NODE_SIZE + 2 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

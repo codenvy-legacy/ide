@@ -30,8 +30,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 
 /**
- * Reflects the context of code analysis, keeping track of enclosing
- *	try statements, exception handlers, etc...
+ * Reflects the context of code analysis, keeping track of enclosing try statements, exception handlers, etc...
  */
 public class ExceptionHandlingFlowContext extends FlowContext
 {
@@ -44,7 +43,8 @@ public class ExceptionHandlingFlowContext extends FlowContext
 
    int[] isNeeded;
 
-   // WARNING: This is an array that maps to catch blocks, not caught exceptions (which could be more than catch blocks in a multi-catch block)
+   // WARNING: This is an array that maps to catch blocks, not caught exceptions (which could be more than catch blocks in a
+   // multi-catch block)
    UnconditionalFlowInfo[] initsOnExceptions;
 
    ObjectCache indexes = new ObjectCache();
@@ -92,7 +92,7 @@ public class ExceptionHandlingFlowContext extends FlowContext
       {
          ReferenceBinding handledException = handledExceptions[i];
          int catchBlock = this.exceptionToCatchBlockMap != null ? this.exceptionToCatchBlockMap[i] : i;
-         this.indexes.put(handledException, i); // key type  -> value index
+         this.indexes.put(handledException, i); // key type -> value index
          if (handledException.isUncheckedException(true))
          {
             if (markExceptionsAndThrowableAsReached || handledException.id != TypeIds.T_JavaLangThrowable
@@ -243,8 +243,8 @@ public class ExceptionHandlingFlowContext extends FlowContext
    }
 
    /*
-    * Compute a merged list of unhandled exception types (keeping only the most generic ones).
-    * This is necessary to add synthetic thrown exceptions for anonymous type constructors (JLS 8.6).
+    * Compute a merged list of unhandled exception types (keeping only the most generic ones). This is necessary to add synthetic
+    * thrown exceptions for anonymous type constructors (JLS 8.6).
     */
    public void mergeUnhandledException(TypeBinding newException)
    {
@@ -319,10 +319,9 @@ public class ExceptionHandlingFlowContext extends FlowContext
    }
 
    /**
-    * Exception handlers (with no finally block) are also included with subroutine
-    * only once (in case parented with true InsideSubRoutineFlowContext).
-    * Standard management of subroutines need to also operate on intermediate
-    * exception handlers.
+    * Exception handlers (with no finally block) are also included with subroutine only once (in case parented with true
+    * InsideSubRoutineFlowContext). Standard management of subroutines need to also operate on intermediate exception handlers.
+    * 
     * @see org.eclipse.jdt.client.internal.compiler.flow.FlowContext#subroutine()
     */
    public SubRoutineStatement subroutine()

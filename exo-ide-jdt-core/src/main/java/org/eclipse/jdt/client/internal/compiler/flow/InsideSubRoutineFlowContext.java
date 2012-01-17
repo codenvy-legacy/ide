@@ -14,8 +14,7 @@ import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.SubRoutineStatement;
 
 /**
- * Reflects the context of code analysis, keeping track of enclosing
- *	try statements, exception handlers, etc...
+ * Reflects the context of code analysis, keeping track of enclosing try statements, exception handlers, etc...
  */
 public class InsideSubRoutineFlowContext extends FlowContext
 {

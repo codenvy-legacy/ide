@@ -52,7 +52,7 @@ public class Javadoc extends ASTNode
 
    /**
     * Returns whether a type can be seen at a given visibility level or not.
-    *
+    * 
     * @param visibility Level of visiblity allowed to see references
     * @param modifiers modifiers of java element to be seen
     * @return true if the type can be seen, false otherwise
@@ -319,8 +319,8 @@ public class Javadoc extends ASTNode
          return;
       }
       // Do nothing - This is to mimic the SDK's javadoc tool behavior, which neither
-      // sanity checks nor generates documentation using comments at the CU scope 
-      // (unless the unit happens to be package-info.java - in which case we don't come here.) 
+      // sanity checks nor generates documentation using comments at the CU scope
+      // (unless the unit happens to be package-info.java - in which case we don't come here.)
    }
 
    /*
@@ -431,7 +431,7 @@ public class Javadoc extends ASTNode
 
       // @param tags
       CompilerOptions compilerOptions = methScope.compilerOptions();
-      resolveParamTags(methScope, reportMissing, compilerOptions.reportUnusedParameterIncludeDocCommentReference /* considerParamRefAsUsage*/);
+      resolveParamTags(methScope, reportMissing, compilerOptions.reportUnusedParameterIncludeDocCommentReference /* considerParamRefAsUsage */);
       resolveTypeParameterTags(methScope, reportMissing && compilerOptions.reportMissingJavadocTagsMethodTypeParameters);
 
       // @return tags
@@ -752,7 +752,7 @@ public class Javadoc extends ASTNode
       // If no param tags then report a problem for each declaration type parameter
       if (parameters != null)
       {
-         // https://bugs.eclipse.org/bugs/show_bug.cgi?id=324850, avoid secondary errors when <= 1.4 
+         // https://bugs.eclipse.org/bugs/show_bug.cgi?id=324850, avoid secondary errors when <= 1.4
          reportMissing = reportMissing && scope.compilerOptions().sourceLevel >= ClassFileConstants.JDK1_5;
          int typeParametersLength = parameters.length;
          if (paramTypeParamLength == 0)
@@ -963,7 +963,7 @@ public class Javadoc extends ASTNode
                   }
                }
 
-               //  If not compatible only complain on unchecked exception
+               // If not compatible only complain on unchecked exception
                if (!compatible && !typeRef.resolvedType.isUncheckedException(false))
                {
                   methScope.problemReporter().javadocInvalidThrowsClassName(typeRef, md.binding.modifiers);
@@ -1129,7 +1129,7 @@ public class Javadoc extends ASTNode
          }
          /*
           * https://bugs.eclipse.org/bugs/show_bug.cgi?id=286918
-          *
+          * 
           * We are concerned only about the Single type references (i.e. without any package) If they are not in default package,
           * then report an error. References with qualified yet incorrect names would have already been taken care of.
           */

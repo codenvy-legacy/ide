@@ -63,9 +63,11 @@ public class JavadocSingleNameReference extends SingleNameReference
       }
    }
 
-   /* (non-Javadoc)
-    * Redefine to capture javadoc specific signatures
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+   /*
+    * (non-Javadoc) Redefine to capture javadoc specific signatures
+    * 
+    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor,
+    * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, BlockScope scope)
    {
@@ -73,9 +75,11 @@ public class JavadocSingleNameReference extends SingleNameReference
       visitor.endVisit(this, scope);
    }
 
-   /* (non-Javadoc)
-    * Redefine to capture javadoc specific signatures
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+   /*
+    * (non-Javadoc) Redefine to capture javadoc specific signatures
+    * 
+    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor,
+    * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, ClassScope scope)
    {

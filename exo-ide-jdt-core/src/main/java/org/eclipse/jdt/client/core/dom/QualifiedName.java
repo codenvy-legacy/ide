@@ -15,18 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * AST node for a qualified name. A qualified name is defined recursively
- * as a simple name preceded by a name, which qualifies it. Expressing it this
- * way means that the qualifier and the simple name get their own AST nodes.
+ * AST node for a qualified name. A qualified name is defined recursively as a simple name preceded by a name, which qualifies it.
+ * Expressing it this way means that the qualifier and the simple name get their own AST nodes.
+ * 
  * <pre>
  * QualifiedName:
  *    Name <b>.</b> SimpleName
  * </pre>
  * <p>
- * See <code>FieldAccess</code> for guidelines on handling other expressions
- * that resemble qualified names.
+ * See <code>FieldAccess</code> for guidelines on handling other expressions that resemble qualified names.
  * </p>
- *
+ * 
  * @see FieldAccess
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
@@ -36,6 +35,7 @@ public class QualifiedName extends Name
 
    /**
     * The "qualifier" structural property of this node type (child type: {@link Name}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor QUALIFIER_PROPERTY = new ChildPropertyDescriptor(QualifiedName.class,
@@ -43,15 +43,14 @@ public class QualifiedName extends Name
 
    /**
     * The "name" structural property of this node type (child type: {@link SimpleName}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor NAME_PROPERTY = new ChildPropertyDescriptor(QualifiedName.class,
       "name", SimpleName.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -65,13 +64,10 @@ public class QualifiedName extends Name
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -80,25 +76,22 @@ public class QualifiedName extends Name
    }
 
    /**
-    * The identifier; lazily initialized; defaults to a unspecified, legal
-    * Java identifier.
+    * The identifier; lazily initialized; defaults to a unspecified, legal Java identifier.
     */
    private Name qualifier = null;
 
    /**
-    * The name being qualified; lazily initialized; defaults to a unspecified,
-    * legal Java identifier.
+    * The name being qualified; lazily initialized; defaults to a unspecified, legal Java identifier.
     */
    private SimpleName name = null;
 
    /**
     * Creates a new AST node for a qualified name owned by the given AST.
     * <p>
-    * N.B. This constructor is package-private; all subclasses must be
-    * declared in the same package; clients are unable to declare
+    * N.B. This constructor is package-private; all subclasses must be declared in the same package; clients are unable to declare
     * additional subclasses.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    QualifiedName(AST ast)
@@ -106,16 +99,16 @@ public class QualifiedName extends Name
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -147,16 +140,16 @@ public class QualifiedName extends Name
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return QUALIFIED_NAME;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -167,8 +160,8 @@ public class QualifiedName extends Name
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -176,8 +169,8 @@ public class QualifiedName extends Name
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -193,7 +186,7 @@ public class QualifiedName extends Name
 
    /**
     * Returns the qualifier part of this qualified name.
-    *
+    * 
     * @return the qualifier part of this qualified name
     */
    public Name getQualifier()
@@ -216,14 +209,14 @@ public class QualifiedName extends Name
 
    /**
     * Sets the qualifier of this qualified name to the given name.
-    *
+    * 
     * @param qualifier the qualifier of this qualified name
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setQualifier(Name qualifier)
    {
@@ -239,7 +232,7 @@ public class QualifiedName extends Name
 
    /**
     * Returns the name part of this qualified name.
-    *
+    * 
     * @return the name being qualified
     */
    public SimpleName getName()
@@ -262,13 +255,13 @@ public class QualifiedName extends Name
 
    /**
     * Sets the name part of this qualified name to the given simple name.
-    *
+    * 
     * @param name the identifier of this qualified name
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     */
    public void setName(SimpleName name)
    {
@@ -282,8 +275,8 @@ public class QualifiedName extends Name
       postReplaceChild(oldChild, name, NAME_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on Name.
+   /*
+    * (omit javadoc for this method) Method declared on Name.
     */
    void appendName(StringBuffer buffer)
    {
@@ -292,16 +285,16 @@ public class QualifiedName extends Name
       getName().appendName(buffer);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return BASE_NAME_NODE_SIZE + 3 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

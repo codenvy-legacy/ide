@@ -18,13 +18,16 @@
  */
 package org.eclipse.jdt.client;
 
+import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
+import org.eclipse.jdt.client.internal.codeassist.ISearchRequestor;
 import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.client.internal.compiler.env.NameEnvironmentAnswer;
+import org.eclipse.jdt.client.runtime.IProgressMonitor;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Jan 13, 2012 3:10:43 PM evgen $
- *
+ * @version ${Id}: Jan 13, 2012 3:10:43 PM evgen $
+ * 
  */
 public class DummyNameEnvirement implements INameEnvironment
 {
@@ -35,8 +38,6 @@ public class DummyNameEnvirement implements INameEnvironment
    @Override
    public NameEnvironmentAnswer findType(char[][] compoundTypeName)
    {
-      System.out.println("DummyNameEnvirement.findType()");
-      System.out.println(compoundTypeName);
       return null;
    }
 
@@ -47,8 +48,6 @@ public class DummyNameEnvirement implements INameEnvironment
    public NameEnvironmentAnswer findType(char[] typeName, char[][] packageName)
    {
       // TODO Auto-generated method stub
-      System.out.println("DummyNameEnvirement.findType()");
-      System.out.println(typeName);
       return null;
    }
 
@@ -58,7 +57,6 @@ public class DummyNameEnvirement implements INameEnvironment
    @Override
    public boolean isPackage(char[][] parentPackageName, char[] packageName)
    {
-      System.out.println("DummyNameEnvirement.isPackage()");
       // TODO Auto-generated method stub
       return false;
    }
@@ -70,7 +68,56 @@ public class DummyNameEnvirement implements INameEnvironment
    public void cleanup()
    {
       // TODO Auto-generated method stub
-      
+
+   }
+
+   /**
+    * @param qualifiedName
+    * @param camelCaseMatch
+    * @param completionEngine
+    * @param monitor
+    */
+   public void findConstructorDeclarations(char[] qualifiedName, boolean camelCaseMatch,
+      CompletionEngine completionEngine, IProgressMonitor monitor)
+   {
+      // TODO Auto-generated method stub
+
+   }
+
+   /**
+    * @param qualifiedName
+    * @param completionEngine
+    */
+   public void findPackages(char[] qualifiedName, CompletionEngine completionEngine)
+   {
+      // TODO Auto-generated method stub
+
+   }
+
+   /**
+    * @param qualifiedName
+    * @param b
+    * @param camelCaseMatch
+    * @param searchFor
+    * @param completionEngine
+    * @param monitor
+    */
+   public void findTypes(char[] qualifiedName, boolean b, boolean camelCaseMatch, int searchFor,
+      CompletionEngine completionEngine, IProgressMonitor monitor)
+   {
+      // TODO Auto-generated method stub
+   }
+
+   /**
+    * @param missingSimpleName
+    * @param b
+    * @param type
+    * @param storage
+    */
+   public void findExactTypes(char[] missingSimpleName, boolean b, int type, ISearchRequestor storage)
+   {
+      // TODO Auto-generated method stub
+
    }
 
 }

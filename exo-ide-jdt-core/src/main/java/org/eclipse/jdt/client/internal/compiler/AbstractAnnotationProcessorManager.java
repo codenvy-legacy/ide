@@ -18,19 +18,18 @@ import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
 public abstract class AbstractAnnotationProcessorManager
 {
    /**
-    * Configure the receiver using the given batch compiler and the given options.
-    * The parameter batchCompiler is expected to be an instance of the batch compiler. This method is
-    * only used for the batch mode. For the IDE mode, please see {@link #configureFromPlatform(Compiler, Object, Object)}.
-    *
+    * Configure the receiver using the given batch compiler and the given options. The parameter batchCompiler is expected to be
+    * an instance of the batch compiler. This method is only used for the batch mode. For the IDE mode, please see
+    * {@link #configureFromPlatform(Compiler, Object, Object)}.
+    * 
     * @param batchCompiler the given batch compiler object
     * @param options the given options
     */
    public abstract void configure(Object batchCompiler, String[] options);
 
    /**
-    * Configure the receiver using the given compiler, the given compilationUnitLocator and
-    * the given java project.
-    *
+    * Configure the receiver using the given compiler, the given compilationUnitLocator and the given java project.
+    * 
     * @param compiler the given compiler
     * @param compilationUnitLocator the given compilation unit locator
     * @param javaProject the given java project
@@ -39,20 +38,21 @@ public abstract class AbstractAnnotationProcessorManager
 
    /**
     * Return the new units created in the last round.
-    *
+    * 
     * @return the new units created in the last round
     */
    public abstract ICompilationUnit[] getNewUnits();
 
    /**
     * Return the new binary bindings created in the last round.
-    *
+    * 
     * @return the new binary bindings created in the last round
     */
    public abstract ReferenceBinding[] getNewClassFiles();
 
    /**
     * Returns the deleted units.
+    * 
     * @return the deleted units
     */
    public abstract ICompilationUnit[] getDeletedUnits();
@@ -64,7 +64,7 @@ public abstract class AbstractAnnotationProcessorManager
 
    /**
     * Run a new annotation processing round on the given values.
-    *
+    * 
     * @param units the given source type
     * @param referenceBindings the given binary types
     * @param isLastRound flag to notify the last round
@@ -74,7 +74,7 @@ public abstract class AbstractAnnotationProcessorManager
 
    /**
     * Set the processors for annotation processing.
-    *
+    * 
     * @param processors the given processors
     */
    public abstract void setProcessors(Object[] processors);

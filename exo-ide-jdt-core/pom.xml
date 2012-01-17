@@ -106,11 +106,14 @@
                <mode>htmlunit</mode>
                <htmlunit>FF3</htmlunit>
                <extraJvmArgs>-Xmx1048m -XX:MaxPermSize=256m -Xss35m</extraJvmArgs>
+               <mergedWebXml>${project.build.directory}/www-test/WEB-INF/web.xml</mergedWebXml>
+               <out>${project.build.directory}/www-test</out>
             </configuration>
             <executions>
                <execution>
                   <goals>
                      <goal>test</goal>
+                      <goal>mergewebxml</goal>
                   </goals>
                </execution>
             </executions>

@@ -46,9 +46,9 @@ public class FieldBinding extends VariableBinding
       setAnnotations(initialFieldBinding.getAnnotations());
    }
 
-   /* API
-   * Answer the receiver's binding type from Binding.BindingID.
-   */
+   /*
+    * API Answer the receiver's binding type from Binding.BindingID.
+    */
    public FieldBinding(FieldDeclaration field, TypeBinding type, int modifiers, ReferenceBinding declaringClass)
    {
       this(field.name, type, modifiers, declaringClass, null);
@@ -66,12 +66,12 @@ public class FieldBinding extends VariableBinding
       return invocationPackage == this.declaringClass.getPackage();
    }
 
-   /* Answer true if the receiver is visible to the type provided by the scope.
-   * InvocationSite implements isSuperAccess() to provide additional information
-   * if the receiver is protected.
-   *
-   * NOTE: Cannot invoke this method with a compilation unit scope.
-   */
+   /*
+    * Answer true if the receiver is visible to the type provided by the scope. InvocationSite implements isSuperAccess() to
+    * provide additional information if the receiver is protected.
+    * 
+    * NOTE: Cannot invoke this method with a compilation unit scope.
+    */
 
    public final boolean canBeSeenBy(TypeBinding receiverType, InvocationSite invocationSite, Scope scope)
    {
@@ -89,9 +89,9 @@ public class FieldBinding extends VariableBinding
       {
          // answer true if the invocationType is the declaringClass or they are in the same package
          // OR the invocationType is a subclass of the declaringClass
-         //    AND the receiverType is the invocationType or its subclass
-         //    OR the method is a static method accessed directly through a type
-         //    OR previous assertions are true for one of the enclosing type
+         // AND the receiverType is the invocationType or its subclass
+         // OR the method is a static method accessed directly through a type
+         // OR previous assertions are true for one of the enclosing type
          if (invocationType == this.declaringClass)
             return true;
          if (invocationType.fPackage == this.declaringClass.fPackage)
@@ -138,7 +138,8 @@ public class FieldBinding extends VariableBinding
          {
             if (receiverType != this.declaringClass)
             {
-               // special tolerance for type variable direct bounds, but only if compliance <= 1.6, see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=334622
+               // special tolerance for type variable direct bounds, but only if compliance <= 1.6, see:
+               // https://bugs.eclipse.org/bugs/show_bug.cgi?id=334622
                if (scope.compilerOptions().complianceLevel <= ClassFileConstants.JDK1_6
                   && receiverType.isTypeVariable()
                   && ((TypeVariableBinding)receiverType).isErasureBoundTo(this.declaringClass.erasure()))
@@ -202,21 +203,20 @@ public class FieldBinding extends VariableBinding
    }
 
    /*
-    * declaringUniqueKey dot fieldName ) returnTypeUniqueKey
-    * p.X { X<T> x} --> Lp/X;.x)p/X<TT;>;
+    * declaringUniqueKey dot fieldName ) returnTypeUniqueKey p.X { X<T> x} --> Lp/X;.x)p/X<TT;>;
     */
    public char[] computeUniqueKey(boolean isLeaf)
    {
       // declaring key
-      char[] declaringKey = this.declaringClass == null /*case of length field for an array*/
-      ? CharOperation.NO_CHAR : this.declaringClass.computeUniqueKey(false/*not a leaf*/);
+      char[] declaringKey = this.declaringClass == null /* case of length field for an array */
+      ? CharOperation.NO_CHAR : this.declaringClass.computeUniqueKey(false/* not a leaf */);
       int declaringLength = declaringKey.length;
 
       // name
       int nameLength = this.name.length;
 
       // return type
-      char[] returnTypeKey = this.type == null ? new char[]{'V'} : this.type.computeUniqueKey(false/*not a leaf*/);
+      char[] returnTypeKey = this.type == null ? new char[]{'V'} : this.type.computeUniqueKey(false/* not a leaf */);
       int returnTypeLength = returnTypeKey.length;
 
       char[] uniqueKey = new char[declaringLength + 1 + nameLength + 1 + returnTypeLength];
@@ -238,10 +238,10 @@ public class FieldBinding extends VariableBinding
       {
          if (isFinal())
          {
-            //The field has not been yet type checked.
-            //It also means that the field is not coming from a class that
-            //has already been compiled. It can only be from a class within
-            //compilation units to process. Thus the field is NOT from a BinaryTypeBinbing
+            // The field has not been yet type checked.
+            // It also means that the field is not coming from a class that
+            // has already been compiled. It can only be from a class within
+            // compilation units to process. Thus the field is NOT from a BinaryTypeBinbing
             FieldBinding originalField = original();
             if (originalField.declaringClass instanceof SourceTypeBinding)
             {
@@ -256,7 +256,7 @@ public class FieldBinding extends VariableBinding
                   try
                   {
                      initScope.insideTypeAnnotation = false;
-                     fieldDecl.resolve(initScope); //side effect on binding
+                     fieldDecl.resolve(initScope); // side effect on binding
                   }
                   finally
                   {
@@ -284,7 +284,7 @@ public class FieldBinding extends VariableBinding
    }
 
    /**
-    * X<T> t   -->  LX<TT;>;
+    * X<T> t --> LX<TT;>;
     */
    public char[] genericSignature()
    {
@@ -310,8 +310,9 @@ public class FieldBinding extends VariableBinding
    }
 
    /**
-    * Compute the tagbits for standard annotations. For source types, these could require
-    * lazily resolving corresponding annotation nodes, in case of forward references.
+    * Compute the tagbits for standard annotations. For source types, these could require lazily resolving corresponding
+    * annotation nodes, in case of forward references.
+    * 
     * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#getAnnotationTagBits()
     */
    public long getAnnotationTagBits()
@@ -354,27 +355,31 @@ public class FieldBinding extends VariableBinding
       return !isPublic() && !isProtected() && !isPrivate();
    }
 
-   /* Answer true if the receiver is a deprecated field
-   */
+   /*
+    * Answer true if the receiver is a deprecated field
+    */
 
-   /* Answer true if the receiver has default visibility
-   */
+   /*
+    * Answer true if the receiver has default visibility
+    */
 
    public final boolean isDeprecated()
    {
       return (this.modifiers & ClassFileConstants.AccDeprecated) != 0;
    }
 
-   /* Answer true if the receiver has private visibility
-   */
+   /*
+    * Answer true if the receiver has private visibility
+    */
 
    public final boolean isPrivate()
    {
       return (this.modifiers & ClassFileConstants.AccPrivate) != 0;
    }
 
-   /* Answer true if the receiver has private visibility or is enclosed by a class that does.
-   */
+   /*
+    * Answer true if the receiver has private visibility or is enclosed by a class that does.
+    */
 
    public final boolean isOrEnclosedByPrivateType()
    {
@@ -383,55 +388,62 @@ public class FieldBinding extends VariableBinding
       return this.declaringClass != null && this.declaringClass.isOrEnclosedByPrivateType();
    }
 
-   /* Answer true if the receiver has private visibility and is used locally
-   */
+   /*
+    * Answer true if the receiver has private visibility and is used locally
+    */
 
    public final boolean isProtected()
    {
       return (this.modifiers & ClassFileConstants.AccProtected) != 0;
    }
 
-   /* Answer true if the receiver has public visibility
-   */
+   /*
+    * Answer true if the receiver has public visibility
+    */
 
    public final boolean isPublic()
    {
       return (this.modifiers & ClassFileConstants.AccPublic) != 0;
    }
 
-   /* Answer true if the receiver is a static field
-   */
+   /*
+    * Answer true if the receiver is a static field
+    */
 
    public final boolean isStatic()
    {
       return (this.modifiers & ClassFileConstants.AccStatic) != 0;
    }
 
-   /* Answer true if the receiver is not defined in the source of the declaringClass
-   */
+   /*
+    * Answer true if the receiver is not defined in the source of the declaringClass
+    */
 
    public final boolean isSynthetic()
    {
       return (this.modifiers & ClassFileConstants.AccSynthetic) != 0;
    }
 
-   /* Answer true if the receiver is a transient field
-   */
+   /*
+    * Answer true if the receiver is a transient field
+    */
 
    public final boolean isTransient()
    {
       return (this.modifiers & ClassFileConstants.AccTransient) != 0;
    }
 
-   /* Answer true if the receiver's declaring type is deprecated (or any of its enclosing types)
-   */
+   /*
+    * Answer true if the receiver's declaring type is deprecated (or any of its enclosing types)
+    */
 
    public final boolean isUsed()
    {
       return (this.modifiers & ExtraCompilerModifiers.AccLocallyUsed) != 0 || this.compoundUseFlag > 0;
    }
 
-   /* Answer true if the only use of this field is in compound assignment or post increment
+   /*
+    * Answer true if the only use of this field is in compound assignment or post increment
     */
 
    public final boolean isUsedOnlyInCompound()
@@ -439,16 +451,18 @@ public class FieldBinding extends VariableBinding
       return (this.modifiers & ExtraCompilerModifiers.AccLocallyUsed) == 0 && this.compoundUseFlag > 0;
    }
 
-   /* Answer true if the receiver has protected visibility
-   */
+   /*
+    * Answer true if the receiver has protected visibility
+    */
 
    public final boolean isViewedAsDeprecated()
    {
       return (this.modifiers & (ClassFileConstants.AccDeprecated | ExtraCompilerModifiers.AccDeprecatedImplicitly)) != 0;
    }
 
-   /* Answer true if the receiver is a volatile field
-   */
+   /*
+    * Answer true if the receiver is a volatile field
+    */
 
    public final boolean isVolatile()
    {
@@ -460,8 +474,9 @@ public class FieldBinding extends VariableBinding
       return FIELD;
    }
 
-   /* Answer true if the receiver is visible to the invocationPackage.
-   */
+   /*
+    * Answer true if the receiver is visible to the invocationPackage.
+    */
    /**
     * Returns the original field (as opposed to parameterized instances)
     */

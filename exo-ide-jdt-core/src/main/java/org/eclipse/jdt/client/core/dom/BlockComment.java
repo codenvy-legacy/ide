@@ -16,20 +16,15 @@ import java.util.List;
 /**
  * Block comment AST node type.
  * <p>
- * Block comments (also called "traditional" comments in JLS 3.7)
- * begin with "/&#42;", may contain line breaks, and must end
- * with "&#42;/". Following the definition in the JLS (first edition
- * but not second edition), block comment normally exclude comments
- * that begin with "/&#42;#42;", which are instead classified as doc
- * comments ({@link Javadoc}).
+ * Block comments (also called "traditional" comments in JLS 3.7) begin with "/&#42;", may contain line breaks, and must end with
+ * "&#42;/". Following the definition in the JLS (first edition but not second edition), block comment normally exclude comments
+ * that begin with "/&#42;#42;", which are instead classified as doc comments ({@link Javadoc}).
  * </p>
  * <p>
- * Note that this node type is a comment placeholder, and is
- * only useful for recording the source range where a comment
- * was found in a source string. It is not useful for creating
- * comments.
+ * Note that this node type is a comment placeholder, and is only useful for recording the source range where a comment was found
+ * in a source string. It is not useful for creating comments.
  * </p>
- *
+ * 
  * @since 3.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -37,9 +32,7 @@ public final class BlockComment extends Comment
 {
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -51,14 +44,11 @@ public final class BlockComment extends Comment
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -71,7 +61,7 @@ public final class BlockComment extends Comment
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    BlockComment(AST ast)
@@ -79,24 +69,24 @@ public final class BlockComment extends Comment
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return BLOCK_COMMENT;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -105,8 +95,8 @@ public final class BlockComment extends Comment
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -114,8 +104,8 @@ public final class BlockComment extends Comment
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -123,16 +113,16 @@ public final class BlockComment extends Comment
       visitor.endVisit(this);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return super.memSize();
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

@@ -58,7 +58,7 @@ public abstract class TypeReference extends Expression
                return new SingleTypeReference(TypeBinding.SHORT.simpleName, 0);
             case (TypeIds.T_int) :
                return new SingleTypeReference(TypeBinding.INT.simpleName, 0);
-            default : //T_long
+            default : // T_long
                return new SingleTypeReference(TypeBinding.LONG.simpleName, 0);
          }
       }
@@ -80,7 +80,7 @@ public abstract class TypeReference extends Expression
             return new ArrayTypeReference(TypeBinding.SHORT.simpleName, dim, 0);
          case (TypeIds.T_int) :
             return new ArrayTypeReference(TypeBinding.INT.simpleName, dim, 0);
-         default : //T_long
+         default : // T_long
             return new ArrayTypeReference(TypeBinding.LONG.simpleName, dim, 0);
       }
    }
@@ -111,8 +111,7 @@ public abstract class TypeReference extends Expression
    public abstract char[] getLastToken();
 
    /**
-    * @return char[][]
-    * TODO (jerome) should merge back into #getTypeName()
+    * @return char[][] TODO (jerome) should merge back into #getTypeName()
     */
    public char[][] getParameterizedTypeName()
    {
@@ -147,7 +146,7 @@ public abstract class TypeReference extends Expression
                   if (type == null)
                      return null;
                   return scope.environment()
-                     .convertToRawType(type, false /*do not force conversion of enclosing types*/);
+                     .convertToRawType(type, false /* do not force conversion of enclosing types */);
                default :
                   return null;
             }
@@ -180,12 +179,13 @@ public abstract class TypeReference extends Expression
          scope.problemReporter().cannotAllocateVoidArray(this);
          return null;
       }
-      if (!(this instanceof QualifiedTypeReference) // QualifiedTypeReference#getTypeBinding called above will have already checked deprecation
+      if (!(this instanceof QualifiedTypeReference) // QualifiedTypeReference#getTypeBinding called above will have already
+                                                    // checked deprecation
          && isTypeUseDeprecated(type, scope))
       {
          reportDeprecatedType(type, scope);
       }
-      type = scope.environment().convertToRawType(type, false /*do not force conversion of enclosing types*/);
+      type = scope.environment().convertToRawType(type, false /* do not force conversion of enclosing types */);
       if (type.leafComponentType().isRawType() && (this.bits & ASTNode.IgnoreRawTypeCheck) == 0
          && scope.compilerOptions().getSeverity(CompilerOptions.RawTypeReference) != ProblemSeverities.Ignore)
       {
@@ -257,14 +257,14 @@ public abstract class TypeReference extends Expression
 
    public TypeBinding resolveTypeArgument(BlockScope blockScope, ReferenceBinding genericType, int rank)
    {
-      return resolveType(blockScope, true /* check bounds*/);
+      return resolveType(blockScope, true /* check bounds */);
    }
 
    public TypeBinding resolveTypeArgument(ClassScope classScope, ReferenceBinding genericType, int rank)
    {
       // https://bugs.eclipse.org/bugs/show_bug.cgi?id=294057, circularity is allowed when we are
-      // resolving type arguments i.e interface A<T extends C> {}	interface B extends A<D> {}
-      // interface D extends C {}	interface C extends B {}
+      // resolving type arguments i.e interface A<T extends C> {} interface B extends A<D> {}
+      // interface D extends C {} interface C extends B {}
       ReferenceBinding ref = classScope.referenceContext.binding;
       boolean pauseHierarchyCheck = false;
       try

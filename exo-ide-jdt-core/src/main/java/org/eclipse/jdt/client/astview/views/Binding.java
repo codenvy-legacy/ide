@@ -49,7 +49,9 @@ public class Binding extends ASTAttribute
       fIsRelevant = isRelevant;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getParent()
     */
    public Object getParent()
@@ -77,7 +79,9 @@ public class Binding extends ASTAttribute
       return (typeKinds & kind) != 0;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getChildren()
     */
    public Object[] getChildren()
@@ -303,16 +307,16 @@ public class Binding extends ASTAttribute
          {
             String label = "Error in IBinding#getAnnotations() for \"" + fBinding.getKey() + "\"";
             res.add(new Error(this, label, e));
-            //				ASTViewPlugin.log("Exception thrown in IBinding#getAnnotations() for \"" + fBinding.getKey() + "\"", e);
+            // ASTViewPlugin.log("Exception thrown in IBinding#getAnnotations() for \"" + fBinding.getKey() + "\"", e);
          }
-         //			try {
-         //				IJavaElement javaElement= fBinding.getJavaElement();
-         //				res.add(new JavaElement(this, javaElement));
-         //			} catch (RuntimeException e) {
+         // try {
+         // IJavaElement javaElement= fBinding.getJavaElement();
+         // res.add(new JavaElement(this, javaElement));
+         // } catch (RuntimeException e) {
          //				String label= ">java element: " + e.getClass().getName() + " for \"" + fBinding.getKey() + "\"";  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-         //				res.add(new Error(this, label, e));
-         //				ASTViewPlugin.log("Exception thrown in IBinding#getJavaElement() for \"" + fBinding.getKey() + "\"", e);
-         //			}
+         // res.add(new Error(this, label, e));
+         // ASTViewPlugin.log("Exception thrown in IBinding#getJavaElement() for \"" + fBinding.getKey() + "\"", e);
+         // }
          return res.toArray();
       }
       return EMPTY;
@@ -359,7 +363,9 @@ public class Binding extends ASTAttribute
       return REF_TYPE;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getLabel()
     */
    public String getLabel()
@@ -428,7 +434,9 @@ public class Binding extends ASTAttribute
 
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getImage()
     */
    public Image getImage()
@@ -436,7 +444,9 @@ public class Binding extends ASTAttribute
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see java.lang.Object#toString()
     */
    public String toString()
@@ -538,8 +548,7 @@ public class Binding extends ASTAttribute
    }
 
    /**
-    * Creates an {@link ASTAttribute} for a value from
-    * {@link IMemberValuePairBinding#getValue()} or from
+    * Creates an {@link ASTAttribute} for a value from {@link IMemberValuePairBinding#getValue()} or from
     * {@link IMethodBinding#getDefaultValue()}.
     */
    public static ASTAttribute createValueAttribute(ASTAttribute parent, String name, Object value)

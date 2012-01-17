@@ -44,38 +44,38 @@ public class QualifiedThisReference extends ThisReference
       return flowInfo;
    }
 
-   //	/**
-   //	 * Code generation for QualifiedThisReference
-   //	 *
-   //	 * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   //	 * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   //	 * @param valueRequired boolean
-   //	 */
-   //	public void generateCode(
-   //		BlockScope currentScope,
-   //		CodeStream codeStream,
-   //		boolean valueRequired) {
+   // /**
+   // * Code generation for QualifiedThisReference
+   // *
+   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   // * @param valueRequired boolean
+   // */
+   // public void generateCode(
+   // BlockScope currentScope,
+   // CodeStream codeStream,
+   // boolean valueRequired) {
    //
-   //		int pc = codeStream.position;
-   //		if (valueRequired) {
-   //			if ((this.bits & DepthMASK) != 0) {
-   //				Object[] emulationPath =
-   //					currentScope.getEmulationPath(this.currentCompatibleType, true /*only exact match*/, false/*consider enclosing arg*/);
-   //				codeStream.generateOuterAccess(emulationPath, this, this.currentCompatibleType, currentScope);
-   //			} else {
-   //				// nothing particular after all
-   //				codeStream.aload_0();
-   //			}
-   //		}
-   //		codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //	}
+   // int pc = codeStream.position;
+   // if (valueRequired) {
+   // if ((this.bits & DepthMASK) != 0) {
+   // Object[] emulationPath =
+   // currentScope.getEmulationPath(this.currentCompatibleType, true /*only exact match*/, false/*consider enclosing arg*/);
+   // codeStream.generateOuterAccess(emulationPath, this, this.currentCompatibleType, currentScope);
+   // } else {
+   // // nothing particular after all
+   // codeStream.aload_0();
+   // }
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    public TypeBinding resolveType(BlockScope scope)
    {
 
       this.constant = Constant.NotAConstant;
       // X.this is not a param/raw type as denoting enclosing instance
-      TypeBinding type = this.qualification.resolveType(scope, true /* check bounds*/);
+      TypeBinding type = this.qualification.resolveType(scope, true /* check bounds */);
       if (type == null || !type.isValidBinding())
          return null;
       // X.this is not a param/raw type as denoting enclosing instance

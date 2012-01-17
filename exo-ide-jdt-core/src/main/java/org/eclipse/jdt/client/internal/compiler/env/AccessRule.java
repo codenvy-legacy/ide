@@ -16,7 +16,8 @@ import org.eclipse.jdt.client.core.compiler.IProblem;
 public class AccessRule
 {
 
-   public static final int IgnoreIfBetter = 0x02000000; // value must be greater than IProblem#ForbiddenReference and DiscouragedReference
+   public static final int IgnoreIfBetter = 0x02000000; // value must be greater than IProblem#ForbiddenReference and
+                                                        // DiscouragedReference
 
    public char[] pattern;
 

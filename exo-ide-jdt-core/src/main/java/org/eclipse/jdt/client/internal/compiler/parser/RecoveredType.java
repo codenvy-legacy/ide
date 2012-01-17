@@ -100,8 +100,9 @@ public class RecoveredType extends RecoveredStatement implements TerminalTokens
    public RecoveredElement add(AbstractMethodDeclaration methodDeclaration, int bracketBalanceValue)
    {
 
-      /* do not consider a method starting passed the type end (if set)
-      	it must be belonging to an enclosing type */
+      /*
+       * do not consider a method starting passed the type end (if set) it must be belonging to an enclosing type
+       */
       if (this.typeDeclaration.declarationSourceEnd != 0
          && methodDeclaration.declarationSourceStart > this.typeDeclaration.declarationSourceEnd)
       {
@@ -172,8 +173,9 @@ public class RecoveredType extends RecoveredStatement implements TerminalTokens
    {
       this.pendingTypeParameters = null;
 
-      /* do not consider a field starting passed the type end (if set)
-      it must be belonging to an enclosing type */
+      /*
+       * do not consider a field starting passed the type end (if set) it must be belonging to an enclosing type
+       */
       if (this.typeDeclaration.declarationSourceEnd != 0
          && fieldDeclaration.declarationSourceStart > this.typeDeclaration.declarationSourceEnd)
       {
@@ -234,8 +236,9 @@ public class RecoveredType extends RecoveredStatement implements TerminalTokens
    {
       this.pendingTypeParameters = null;
 
-      /* do not consider a type starting passed the type end (if set)
-      	it must be belonging to an enclosing type */
+      /*
+       * do not consider a type starting passed the type end (if set) it must be belonging to an enclosing type
+       */
       if (this.typeDeclaration.declarationSourceEnd != 0
          && memberTypeDeclaration.declarationSourceStart > this.typeDeclaration.declarationSourceEnd)
       {
@@ -812,8 +815,7 @@ public class RecoveredType extends RecoveredStatement implements TerminalTokens
    }
 
    /*
-    * Update the corresponding parse node from parser state which
-    * is about to disappear because of restarting recovery
+    * Update the corresponding parse node from parser state which is about to disappear because of restarting recovery
     */
    public void updateFromParserState()
    {
@@ -887,8 +889,7 @@ public class RecoveredType extends RecoveredStatement implements TerminalTokens
    }
 
    /*
-    * A closing brace got consumed, might have closed the current element,
-    * in which case both the currentElement is exited
+    * A closing brace got consumed, might have closed the current element, in which case both the currentElement is exited
     */
    public RecoveredElement updateOnClosingBrace(int braceStart, int braceEnd)
    {
@@ -902,8 +903,8 @@ public class RecoveredType extends RecoveredStatement implements TerminalTokens
    }
 
    /*
-    * An opening brace got consumed, might be the expected opening one of the current element,
-    * in which case the bodyStart is updated.
+    * An opening brace got consumed, might be the expected opening one of the current element, in which case the bodyStart is
+    * updated.
     */
    public RecoveredElement updateOnOpeningBrace(int braceStart, int braceEnd)
    {
@@ -911,8 +912,7 @@ public class RecoveredType extends RecoveredStatement implements TerminalTokens
       if (this.bracketBalance == 0)
       {
          /*
-         	if (parser.scanner.searchLineNumber(typeDeclaration.sourceEnd)
-         		!= parser.scanner.searchLineNumber(braceEnd)){
+          * if (parser.scanner.searchLineNumber(typeDeclaration.sourceEnd) != parser.scanner.searchLineNumber(braceEnd)){
           */
          Parser parser = parser();
          switch (parser.lastIgnoredToken)

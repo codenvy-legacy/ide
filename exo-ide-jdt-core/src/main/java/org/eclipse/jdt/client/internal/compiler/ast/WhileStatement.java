@@ -152,7 +152,7 @@ public class WhileStatement extends Statement
          { // https://bugs.eclipse.org/bugs/show_bug.cgi?id=321926
             FlowInfo loopbackFlowInfo = flowInfo.copy();
             if (this.continueLabel != null)
-            { // we do get to the bottom 
+            { // we do get to the bottom
                loopbackFlowInfo.mergedWith(actionInfo.unconditionalCopy());
             }
             loopingContext.simulateThrowAfterLoopBack(loopbackFlowInfo);
@@ -163,102 +163,103 @@ public class WhileStatement extends Statement
       FlowInfo mergedInfo =
          FlowInfo
             .mergedOptimizedBranches((loopingContext.initsOnBreak.tagBits & FlowInfo.UNREACHABLE) != 0
-               ? loopingContext.initsOnBreak : flowInfo.addInitializationsFrom(loopingContext.initsOnBreak), // recover upstream null info
-               isConditionOptimizedTrue, exitBranch, isConditionOptimizedFalse, !isConditionTrue /*while(true); unreachable(); */);
+               ? loopingContext.initsOnBreak : flowInfo.addInitializationsFrom(loopingContext.initsOnBreak), // recover upstream
+                                                                                                             // null info
+               isConditionOptimizedTrue, exitBranch, isConditionOptimizedFalse, !isConditionTrue /* while(true); unreachable(); */);
       this.mergedInitStateIndex = currentScope.methodScope().recordInitializationStates(mergedInfo);
       return mergedInfo;
    }
 
-   //   /**
-   //    * While code generation
-   //    *
-   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   //    */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-   //   {
+   // /**
+   // * While code generation
+   // *
+   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   // {
    //
-   //      if ((this.bits & IsReachable) == 0)
-   //      {
-   //         return;
-   //      }
-   //      int pc = codeStream.position;
-   //      Constant cst = this.condition.optimizedBooleanConstant();
-   //      boolean isConditionOptimizedFalse = cst != Constant.NotAConstant && cst.booleanValue() == false;
-   //      if (isConditionOptimizedFalse)
-   //      {
-   //         this.condition.generateCode(currentScope, codeStream, false);
-   //         // May loose some local variable initializations : affecting the local variable attributes
-   //         if (this.mergedInitStateIndex != -1)
-   //         {
-   //            codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //            codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //         }
-   //         codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //         return;
-   //      }
+   // if ((this.bits & IsReachable) == 0)
+   // {
+   // return;
+   // }
+   // int pc = codeStream.position;
+   // Constant cst = this.condition.optimizedBooleanConstant();
+   // boolean isConditionOptimizedFalse = cst != Constant.NotAConstant && cst.booleanValue() == false;
+   // if (isConditionOptimizedFalse)
+   // {
+   // this.condition.generateCode(currentScope, codeStream, false);
+   // // May loose some local variable initializations : affecting the local variable attributes
+   // if (this.mergedInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // return;
+   // }
    //
-   //      this.breakLabel.initialize(codeStream);
+   // this.breakLabel.initialize(codeStream);
    //
-   //      // generate condition
-   //      if (this.continueLabel == null)
-   //      {
-   //         // no need to reverse condition
-   //         if (this.condition.constant == Constant.NotAConstant)
-   //         {
-   //            this.condition.generateOptimizedBoolean(currentScope, codeStream, null, this.breakLabel, true);
-   //         }
-   //      }
-   //      else
-   //      {
-   //         this.continueLabel.initialize(codeStream);
-   //         if (!(((this.condition.constant != Constant.NotAConstant) && (this.condition.constant.booleanValue() == true))
-   //            || (this.action == null) || this.action.isEmptyBlock()))
-   //         {
-   //            int jumpPC = codeStream.position;
-   //            codeStream.goto_(this.continueLabel);
-   //            codeStream.recordPositionsFrom(jumpPC, this.condition.sourceStart);
-   //         }
-   //      }
-   //      // generate the action
-   //      BranchLabel actionLabel = new BranchLabel(codeStream);
-   //      if (this.action != null)
-   //      {
-   //         actionLabel.tagBits |= BranchLabel.USED;
-   //         // Required to fix 1PR0XVS: LFRE:WINNT - Compiler: variable table for method appears incorrect
-   //         if (this.condIfTrueInitStateIndex != -1)
-   //         {
-   //            // insert all locals initialized inside the condition into the action generated prior to the condition
-   //            codeStream.addDefinitelyAssignedVariables(currentScope, this.condIfTrueInitStateIndex);
-   //         }
-   //         actionLabel.place();
-   //         this.action.generateCode(currentScope, codeStream);
-   //         // May loose some local variable initializations : affecting the local variable attributes
-   //         if (this.preCondInitStateIndex != -1)
-   //         {
-   //            codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.preCondInitStateIndex);
-   //         }
-   //      }
-   //      else
-   //      {
-   //         actionLabel.place();
-   //      }
-   //      // output condition and branch back to the beginning of the repeated action
-   //      if (this.continueLabel != null)
-   //      {
-   //         this.continueLabel.place();
-   //         this.condition.generateOptimizedBoolean(currentScope, codeStream, actionLabel, null, true);
-   //      }
+   // // generate condition
+   // if (this.continueLabel == null)
+   // {
+   // // no need to reverse condition
+   // if (this.condition.constant == Constant.NotAConstant)
+   // {
+   // this.condition.generateOptimizedBoolean(currentScope, codeStream, null, this.breakLabel, true);
+   // }
+   // }
+   // else
+   // {
+   // this.continueLabel.initialize(codeStream);
+   // if (!(((this.condition.constant != Constant.NotAConstant) && (this.condition.constant.booleanValue() == true))
+   // || (this.action == null) || this.action.isEmptyBlock()))
+   // {
+   // int jumpPC = codeStream.position;
+   // codeStream.goto_(this.continueLabel);
+   // codeStream.recordPositionsFrom(jumpPC, this.condition.sourceStart);
+   // }
+   // }
+   // // generate the action
+   // BranchLabel actionLabel = new BranchLabel(codeStream);
+   // if (this.action != null)
+   // {
+   // actionLabel.tagBits |= BranchLabel.USED;
+   // // Required to fix 1PR0XVS: LFRE:WINNT - Compiler: variable table for method appears incorrect
+   // if (this.condIfTrueInitStateIndex != -1)
+   // {
+   // // insert all locals initialized inside the condition into the action generated prior to the condition
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.condIfTrueInitStateIndex);
+   // }
+   // actionLabel.place();
+   // this.action.generateCode(currentScope, codeStream);
+   // // May loose some local variable initializations : affecting the local variable attributes
+   // if (this.preCondInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.preCondInitStateIndex);
+   // }
+   // }
+   // else
+   // {
+   // actionLabel.place();
+   // }
+   // // output condition and branch back to the beginning of the repeated action
+   // if (this.continueLabel != null)
+   // {
+   // this.continueLabel.place();
+   // this.condition.generateOptimizedBoolean(currentScope, codeStream, actionLabel, null, true);
+   // }
    //
-   //      // May loose some local variable initializations : affecting the local variable attributes
-   //      if (this.mergedInitStateIndex != -1)
-   //      {
-   //         codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //         codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //      }
-   //      this.breakLabel.place();
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // // May loose some local variable initializations : affecting the local variable attributes
+   // if (this.mergedInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // }
+   // this.breakLabel.place();
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    public void resolve(BlockScope scope)
    {

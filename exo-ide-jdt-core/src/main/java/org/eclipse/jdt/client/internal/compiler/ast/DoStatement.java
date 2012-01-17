@@ -84,10 +84,9 @@ public class DoStatement extends Statement
       {
          this.condition.checkNPE(currentScope, flowContext, initsOnCondition);
       }
-      /* Reset reach mode, to address following scenario.
-       *   final blank;
-       *   do { if (true) break; else blank = 0; } while(false);
-       *   blank = 1; // may be initialized already
+      /*
+       * Reset reach mode, to address following scenario. final blank; do { if (true) break; else blank = 0; } while(false); blank
+       * = 1; // may be initialized already
        */
       actionInfo.setReachMode(previousMode);
 
@@ -123,75 +122,75 @@ public class DoStatement extends Statement
                : condInfo,
             // recover null inits from before condition analysis
             false, // never consider opt false case for DO loop, since break can always occur (47776)
-            !isConditionTrue /*do{}while(true); unreachable(); */);
+            !isConditionTrue /* do{}while(true); unreachable(); */);
       this.mergedInitStateIndex = currentScope.methodScope().recordInitializationStates(mergedInfo);
       return mergedInfo;
    }
 
-   //   /**
-   //    * Do statement code generation
-   //    *
-   //    */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-   //   {
-   //      if ((this.bits & ASTNode.IsReachable) == 0)
-   //      {
-   //         return;
-   //      }
-   //      int pc = codeStream.position;
+   // /**
+   // * Do statement code generation
+   // *
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   // {
+   // if ((this.bits & ASTNode.IsReachable) == 0)
+   // {
+   // return;
+   // }
+   // int pc = codeStream.position;
    //
-   //      // labels management
-   //      BranchLabel actionLabel = new BranchLabel(codeStream);
-   //      if (this.action != null)
-   //         actionLabel.tagBits |= BranchLabel.USED;
-   //      actionLabel.place();
-   //      this.breakLabel.initialize(codeStream);
-   //      boolean hasContinueLabel = this.continueLabel != null;
-   //      if (hasContinueLabel)
-   //      {
-   //         this.continueLabel.initialize(codeStream);
-   //      }
+   // // labels management
+   // BranchLabel actionLabel = new BranchLabel(codeStream);
+   // if (this.action != null)
+   // actionLabel.tagBits |= BranchLabel.USED;
+   // actionLabel.place();
+   // this.breakLabel.initialize(codeStream);
+   // boolean hasContinueLabel = this.continueLabel != null;
+   // if (hasContinueLabel)
+   // {
+   // this.continueLabel.initialize(codeStream);
+   // }
    //
-   //      // generate action
-   //      if (this.action != null)
-   //      {
-   //         this.action.generateCode(currentScope, codeStream);
-   //      }
-   //      // continue label (135602)
-   //      if (hasContinueLabel)
-   //      {
-   //         this.continueLabel.place();
-   //         // May loose some local variable initializations : affecting the local variable attributes
-   //         if (this.preConditionInitStateIndex != -1)
-   //         {
-   //            codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.preConditionInitStateIndex);
-   //            codeStream.addDefinitelyAssignedVariables(currentScope, this.preConditionInitStateIndex);
-   //         }
-   //         // generate condition
-   //         Constant cst = this.condition.optimizedBooleanConstant();
-   //         boolean isConditionOptimizedFalse = cst != Constant.NotAConstant && cst.booleanValue() == false;
-   //         if (isConditionOptimizedFalse)
-   //         {
-   //            this.condition.generateCode(currentScope, codeStream, false);
-   //         }
-   //         else
-   //         {
-   //            this.condition.generateOptimizedBoolean(currentScope, codeStream, actionLabel, null, true);
-   //         }
-   //      }
-   //      // May loose some local variable initializations : affecting the local variable attributes
-   //      if (this.mergedInitStateIndex != -1)
-   //      {
-   //         codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //         codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //      }
-   //      if (this.breakLabel.forwardReferenceCount() > 0)
-   //      {
-   //         this.breakLabel.place();
-   //      }
+   // // generate action
+   // if (this.action != null)
+   // {
+   // this.action.generateCode(currentScope, codeStream);
+   // }
+   // // continue label (135602)
+   // if (hasContinueLabel)
+   // {
+   // this.continueLabel.place();
+   // // May loose some local variable initializations : affecting the local variable attributes
+   // if (this.preConditionInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.preConditionInitStateIndex);
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.preConditionInitStateIndex);
+   // }
+   // // generate condition
+   // Constant cst = this.condition.optimizedBooleanConstant();
+   // boolean isConditionOptimizedFalse = cst != Constant.NotAConstant && cst.booleanValue() == false;
+   // if (isConditionOptimizedFalse)
+   // {
+   // this.condition.generateCode(currentScope, codeStream, false);
+   // }
+   // else
+   // {
+   // this.condition.generateOptimizedBoolean(currentScope, codeStream, actionLabel, null, true);
+   // }
+   // }
+   // // May loose some local variable initializations : affecting the local variable attributes
+   // if (this.mergedInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // }
+   // if (this.breakLabel.forwardReferenceCount() > 0)
+   // {
+   // this.breakLabel.place();
+   // }
    //
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    public StringBuffer printStatement(int indent, StringBuffer output)
    {

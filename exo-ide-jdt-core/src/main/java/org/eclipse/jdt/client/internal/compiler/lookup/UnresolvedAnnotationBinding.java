@@ -27,8 +27,7 @@ public class UnresolvedAnnotationBinding extends AnnotationBinding
       if (this.typeUnresolved)
       { // the type is resolved when requested
          this.type =
-            (ReferenceBinding)BinaryTypeBinding
-               .resolveType(this.type, this.env, false /* no raw conversion for now */);
+            (ReferenceBinding)BinaryTypeBinding.resolveType(this.type, this.env, false /* no raw conversion for now */);
          // annotation type are never parameterized
          this.typeUnresolved = false;
       }

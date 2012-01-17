@@ -223,7 +223,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public static char asr[] = null;
 
-   //ast stack
+   // ast stack
    protected final static int AstStackIncrement = 100;
 
    public static char base_action[] = null;
@@ -238,7 +238,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    private static final boolean DEBUG_AUTOMATON = false;
 
-   //expression stack
+   // expression stack
    protected final static int ExpressionStackIncrement = 100;
 
    protected final static int GenericsStackIncrement = 10;
@@ -287,7 +287,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public static final int SquareBracket = 1;
 
-   //internal data for the automat
+   // internal data for the automat
    protected final static int StackIncrement = 255;
 
    public static char term_action[] = null;
@@ -382,7 +382,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       name = readNameTable(resources.parser20().getText().toCharArray()); //$NON-NLS-1$
 
       rules_compliance = JSONUtil.parseJsonAsLongArray(resources.parser21().getText()); //readLongTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      readableName = parseJsonArray(resources.readebleNames().getText()); //readReadableNameTable(READABLE_NAMES_FILE_NAME);
+      readableName = parseJsonArray(resources.readebleNames().getText()); // readReadableNameTable(READABLE_NAMES_FILE_NAME);
 
       reverse_index = computeReverseTable(terminal_index, non_terminal_index, name);
 
@@ -451,17 +451,19 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected ASTNode[] astStack = new ASTNode[AstStackIncrement];
 
-   public CompilationUnitDeclaration compilationUnit; /*the result from parse()*/
+   public CompilationUnitDeclaration compilationUnit; /* the result from parse() */
 
    protected RecoveredElement currentElement;
 
    public int currentToken;
 
-   protected boolean diet = false; //tells the scanner to jump over some parts of the code/expressions like method bodies
+   protected boolean diet = false; // tells the scanner to jump over some parts of the code/expressions like method bodies
 
-   protected int dietInt = 0; // if > 0 force the none-diet-parsing mode (even if diet if requested) [field parsing with anonymous inner classes...]
+   protected int dietInt = 0; // if > 0 force the none-diet-parsing mode (even if diet if requested) [field parsing with anonymous
+                              // inner classes...]
 
-   protected int endPosition; //accurate only when used ! (the start position is pushed into intStack while the end the current one)
+   protected int endPosition; // accurate only when used ! (the start position is pushed into intStack while the end the current
+                              // one)
 
    protected int endStatementPosition;
 
@@ -492,7 +494,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected boolean hasReportedError;
 
-   //identifiers stacks
+   // identifiers stacks
    protected int identifierLengthPtr;
 
    protected int[] identifierLengthStack;
@@ -505,14 +507,14 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected boolean ignoreNextOpeningBrace;
 
-   //positions , dimensions , .... (int stacks)
+   // positions , dimensions , .... (int stacks)
    protected int intPtr;
 
    protected int[] intStack;
 
-   public int lastAct; //handle for multiple parsing goals
+   public int lastAct; // handle for multiple parsing goals
 
-   //error recovery management
+   // error recovery management
    protected int lastCheckPoint;
 
    protected int lastErrorEndPosition;
@@ -525,13 +527,13 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected int listTypeParameterLength; // for recovering some incomplete list (type parameters)
 
-   protected int lParenPos, rParenPos; //accurate only when used !
+   protected int lParenPos, rParenPos; // accurate only when used !
 
    protected int modifiers;
 
    protected int modifiersSourceStart;
 
-   protected int[] nestedMethod; //the ptr is nestedType
+   protected int[] nestedMethod; // the ptr is nestedType
 
    protected int nestedType, dimensions;
 
@@ -539,14 +541,14 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    Expression[] noExpressions = new Expression[ExpressionStackIncrement];
 
-   //modifiers dimensions nestedType etc.......
+   // modifiers dimensions nestedType etc.......
    protected boolean optimizeStringLiterals = true;
 
    protected CompilerOptions options;
 
    protected ProblemReporter problemReporter;
 
-   protected int rBraceStart, rBraceEnd, rBraceSuccessorStart; //accurate only when used !
+   protected int rBraceStart, rBraceEnd, rBraceSuccessorStart; // accurate only when used !
 
    protected int realBlockPtr;
 
@@ -581,7 +583,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public RecoveryScanner recoveryScanner;
 
-   //scanner token
+   // scanner token
    public Scanner scanner;
 
    protected int[] stack = new int[StackIncrement];
@@ -637,8 +639,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void arrayInitializer(int length)
    {
-      //length is the size of the array Initializer
-      //expressionPtr points on the last elt of the arrayInitializer,
+      // length is the size of the array Initializer
+      // expressionPtr points on the last elt of the arrayInitializer,
       // in other words, it has not been decremented yet.
 
       ArrayInitializer ai = new ArrayInitializer();
@@ -649,7 +651,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
             length);
       }
       pushOnExpressionStack(ai);
-      //positionning
+      // positionning
       ai.sourceEnd = this.endStatementPosition;
       ai.sourceStart = this.intStack[this.intPtr--];
    }
@@ -662,14 +664,13 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    }
 
    /*
-    * Build initial recovery state.
-    * Recovery state is inferred from the current state of the parser (reduced node stack).
+    * Build initial recovery state. Recovery state is inferred from the current state of the parser (reduced node stack).
     */
    public RecoveredElement buildInitialRecoveryState()
    {
 
-      /* initialize recovery by retrieving available reduced nodes
-       * also rebuild bracket balance
+      /*
+       * initialize recovery by retrieving available reduced nodes also rebuild bracket balance
        */
       this.lastCheckPoint = 0;
       this.lastErrorEndPositionBeforeRecovery = this.scanner.currentPosition;
@@ -679,8 +680,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       {
          element = new RecoveredUnit(this.compilationUnit, 0, this);
 
-         /* ignore current stack state, since restarting from the beginnning
-            since could not trust simple brace count */
+         /*
+          * ignore current stack state, since restarting from the beginnning since could not trust simple brace count
+          */
          // restart recovery from scratch
          this.compilationUnit.currentPackage = null;
          this.compilationUnit.imports = null;
@@ -874,12 +876,11 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void checkAndSetModifiers(int flag)
    {
-      /*modify the current modifiers buffer.
-      When the startPosition of the modifiers is 0
-      it means that the modifier being parsed is the first
-      of a list of several modifiers. The startPosition
-      is zeroed when a copy of modifiers-buffer is push
-      onto the this.astStack. */
+      /*
+       * modify the current modifiers buffer. When the startPosition of the modifiers is 0 it means that the modifier being parsed
+       * is the first of a list of several modifiers. The startPosition is zeroed when a copy of modifiers-buffer is push onto the
+       * this.astStack.
+       */
 
       if ((this.modifiers & flag) != 0)
       { // duplicate modifier
@@ -932,7 +933,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
             lastComment--; // non javadoc comment have negative end positions
          if (lastComment >= 0 && this.javadocParser != null)
          {
-            int commentEnd = this.scanner.commentStops[lastComment] - 1; //stop is one over,
+            int commentEnd = this.scanner.commentStops[lastComment] - 1; // stop is one over,
             // do not report problem before last parsed comment while recovering code...
             if (this.javadocParser.shouldReportProblems)
             {
@@ -961,7 +962,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          try
          {
             while (this.scanner.getNextToken() != TokenNameEOF)
-            {/*empty*/
+            {/* empty */
             }
          }
          catch (InvalidInputException e)
@@ -982,7 +983,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       int length;
       if (((length = this.astLengthStack[this.astLengthPtr--]) == 1) && (this.astStack[this.astPtr] == null))
       {
-         //NO ClassBody
+         // NO ClassBody
          this.astPtr--;
          if (isQualified)
          {
@@ -992,7 +993,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          {
             alloc = new AllocationExpression();
          }
-         alloc.sourceEnd = this.endPosition; //the position has been stored explicitly
+         alloc.sourceEnd = this.endPosition; // the position has been stored explicitly
 
          if ((length = this.expressionLengthStack[this.expressionLengthPtr--]) != 0)
          {
@@ -1003,8 +1004,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          alloc.type = getTypeReference(0);
          checkForDiamond(alloc.type);
 
-         //the default constructor with the correct number of argument
-         //will be created and added by the TC (see createsInternalConstructorWithBinding)
+         // the default constructor with the correct number of argument
+         // will be created and added by the TC (see createsInternalConstructorWithBinding)
          alloc.sourceStart = this.intStack[this.intPtr--];
          pushOnExpressionStack(alloc);
       }
@@ -1155,16 +1156,11 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void concatNodeLists()
    {
       /*
-       * This is a case where you have two sublists into the this.astStack that you want
-       * to merge in one list. There is no action required on the this.astStack. The only
-       * thing you need to do is merge the two lengths specified on the astStackLength.
-       * The top two length are for example:
-       * ... p   n
-       * and you want to result in a list like:
-       * ... n+p
-       * This means that the p could be equals to 0 in case there is no astNode pushed
-       * on the this.astStack.
-       * Look at the InterfaceMemberDeclarations for an example.
+       * This is a case where you have two sublists into the this.astStack that you want to merge in one list. There is no action
+       * required on the this.astStack. The only thing you need to do is merge the two lengths specified on the astStackLength.
+       * The top two length are for example: ... p n and you want to result in a list like: ... n+p This means that the p could be
+       * equals to 0 in case there is no astNode pushed on the this.astStack. Look at the InterfaceMemberDeclarations for an
+       * example.
        */
 
       this.astLengthStack[this.astLengthPtr - 1] += this.astLengthStack[this.astLengthPtr--];
@@ -1257,17 +1253,17 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       int length;
       if ((length = this.astLengthStack[this.astLengthPtr--]) != 0)
       {
-         //there are length declarations
-         //dispatch according to the type of the declarations
+         // there are length declarations
+         // dispatch according to the type of the declarations
          dispatchDeclarationInto(length);
       }
 
       TypeDeclaration typeDecl = (TypeDeclaration)this.astStack[this.astPtr];
 
-      //convert constructor that do not have the type's name into methods
+      // convert constructor that do not have the type's name into methods
       typeDecl.checkConstructors(this);
 
-      //always add <clinit> (will be remove at code gen time if empty)
+      // always add <clinit> (will be remove at code gen time if empty)
       if (this.scanner.containsAssertKeyword)
       {
          typeDecl.bits |= ASTNode.ContainsAssertion;
@@ -1316,14 +1312,14 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          blockReal();
       }
 
-      //highlight the name of the type
+      // highlight the name of the type
       long pos = this.identifierPositionStack[this.identifierPtr];
       annotationTypeDeclaration.sourceEnd = (int)pos;
       annotationTypeDeclaration.sourceStart = (int)(pos >>> 32);
       annotationTypeDeclaration.name = this.identifierStack[this.identifierPtr--];
       this.identifierLengthPtr--;
 
-      //compute the declaration source too
+      // compute the declaration source too
       // 'interface' push two int positions: the beginning of the class token and its end.
       // we want to keep the beginning position but get rid of the end position
       // it is only used for the ClassLiteralAccess positions.
@@ -1400,7 +1396,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       annotationTypeDeclaration.bodyStart =
          annotationTypeDeclaration.typeParameters[length - 1].declarationSourceEnd + 1;
 
-      //	annotationTypeDeclaration.typeParameters = null;
+      // annotationTypeDeclaration.typeParameters = null;
 
       this.listTypeParameterLength = 0;
 
@@ -1419,14 +1415,14 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          blockReal();
       }
 
-      //highlight the name of the type
+      // highlight the name of the type
       long pos = this.identifierPositionStack[this.identifierPtr];
       annotationTypeDeclaration.sourceEnd = (int)pos;
       annotationTypeDeclaration.sourceStart = (int)(pos >>> 32);
       annotationTypeDeclaration.name = this.identifierStack[this.identifierPtr--];
       this.identifierLengthPtr--;
 
-      //compute the declaration source too
+      // compute the declaration source too
       // 'interface' push two int positions: the beginning of the class token and its end.
       // we want to keep the beginning position but get rid of the end position
       // it is only used for the ClassLiteralAccess positions.
@@ -1486,7 +1482,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeAnnotationTypeMemberDeclaration()
    {
-      // AnnotationTypeMemberDeclaration ::= AnnotationTypeMemberDeclarationHeader AnnotationTypeMemberHeaderExtendedDims DefaultValueopt ';'
+      // AnnotationTypeMemberDeclaration ::= AnnotationTypeMemberDeclarationHeader AnnotationTypeMemberHeaderExtendedDims
+      // DefaultValueopt ';'
       AnnotationMethodDeclaration annotationTypeMemberDeclaration =
          (AnnotationMethodDeclaration)this.astStack[this.astPtr];
       annotationTypeMemberDeclaration.modifiers |= ExtraCompilerModifiers.AccSemicolonBody;
@@ -1527,7 +1524,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // ArrayAccess ::= Name '[' Expression ']' ==> true
       // ArrayAccess ::= PrimaryNoNewArray '[' Expression ']' ==> false
 
-      //optimize push/pop
+      // optimize push/pop
       Expression exp;
       if (unspecifiedReference)
       {
@@ -1631,9 +1628,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumeAssignment()
    {
       // Assignment ::= LeftHandSide AssignmentOperator AssignmentExpression
-      //optimize the push/pop
+      // optimize the push/pop
 
-      int op = this.intStack[this.intPtr--]; //<--the encoded operator
+      int op = this.intStack[this.intPtr--]; // <--the encoded operator
 
       this.expressionPtr--;
       this.expressionLengthPtr--;
@@ -1684,11 +1681,11 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // MultiplicativeExpression ::= MultiplicativeExpression '%' UnaryExpression
       // AdditiveExpression ::= AdditiveExpression '+' MultiplicativeExpression
       // AdditiveExpression ::= AdditiveExpression '-' MultiplicativeExpression
-      // ShiftExpression ::= ShiftExpression '<<'  AdditiveExpression
-      // ShiftExpression ::= ShiftExpression '>>'  AdditiveExpression
+      // ShiftExpression ::= ShiftExpression '<<' AdditiveExpression
+      // ShiftExpression ::= ShiftExpression '>>' AdditiveExpression
       // ShiftExpression ::= ShiftExpression '>>>' AdditiveExpression
-      // RelationalExpression ::= RelationalExpression '<'  ShiftExpression
-      // RelationalExpression ::= RelationalExpression '>'  ShiftExpression
+      // RelationalExpression ::= RelationalExpression '<' ShiftExpression
+      // RelationalExpression ::= RelationalExpression '>' ShiftExpression
       // RelationalExpression ::= RelationalExpression '<=' ShiftExpression
       // RelationalExpression ::= RelationalExpression '>=' ShiftExpression
       // AndExpression ::= AndExpression '&' EqualityExpression
@@ -1697,7 +1694,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // ConditionalAndExpression ::= ConditionalAndExpression '&&' InclusiveOrExpression
       // ConditionalOrExpression ::= ConditionalOrExpression '||' ConditionalAndExpression
 
-      //optimize the push/pop
+      // optimize the push/pop
 
       this.expressionPtr--;
       this.expressionLengthPtr--;
@@ -1725,7 +1722,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
                            ((StringLiteral)expr1).extendWith((CharLiteral)expr2);
                      }
                      else if (expr2 instanceof StringLiteral)
-                     { //string+string
+                     { // string+string
                         this.expressionStack[this.expressionPtr] =
                            ((StringLiteral)expr1).extendWith((StringLiteral)expr2);
                      }
@@ -1762,8 +1759,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
                   cursor.sourceEnd = expr2.sourceEnd;
                   this.expressionStack[this.expressionPtr] = cursor;
                   // BE_INSTRUMENTATION: neutralized in the released code
-                  //					cursor.depthTracker = ((BinaryExpression)cursor.left).
-                  //						depthTracker + 1;
+                  // cursor.depthTracker = ((BinaryExpression)cursor.left).
+                  // depthTracker + 1;
                }
                else if (expr1 instanceof BinaryExpression &&
                // single out the a + b case, which is a BE
@@ -1815,8 +1812,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
                cursor.right = expr2;
                cursor.sourceEnd = expr2.sourceEnd;
                // BE_INSTRUMENTATION: neutralized in the released code
-               //					cursor.depthTracker = ((BinaryExpression)cursor.left).
-               //						depthTracker + 1;
+               // cursor.depthTracker = ((BinaryExpression)cursor.left).
+               // depthTracker + 1;
                this.expressionStack[this.expressionPtr] = cursor;
             }
             else if (expr1 instanceof BinaryExpression
@@ -1849,52 +1846,23 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       this.expressionPtr--;
       this.expressionLengthPtr--;
       /*
-      if (op == OR_OR) {
-      	this.expressionStack[this.expressionPtr] =
-      		new OR_OR_Expression(
-      			this.expressionStack[this.expressionPtr + 1],
-      			this.expressionStack[this.expressionPtr],
-      			op);
-      } else {
-      	if (op == AND_AND) {
-      		this.expressionStack[this.expressionPtr] =
-      			new AND_AND_Expression(
-      				this.expressionStack[this.expressionPtr + 1],
-      				this.expressionStack[this.expressionPtr],
-      				op);
-      	} else {
-      		// look for "string1" + "string2"
-      		if ((op == PLUS) && this.optimizeStringLiterals) {
-      			Expression expr1, expr2;
-      			expr1 = this.expressionStack[this.expressionPtr + 1];
-      			expr2 = this.expressionStack[this.expressionPtr];
-      			if (expr1 instanceof StringLiteral) {
-      				if (expr2 instanceof CharLiteral) { // string+char
-      					this.expressionStack[this.expressionPtr] =
-      						((StringLiteral) expr1).extendWith((CharLiteral) expr2);
-      				} else if (expr2 instanceof StringLiteral) { //string+string
-      					this.expressionStack[this.expressionPtr] =
-      						((StringLiteral) expr1).extendWith((StringLiteral) expr2);
-      				} else {
-      					this.expressionStack[this.expressionPtr] = new BinaryExpression(expr1, expr2, PLUS);
-      				}
-      			} else {
-      				this.expressionStack[this.expressionPtr] = new BinaryExpression(expr1, expr2, PLUS);
-      			}
-      		} else {
-      			this.expressionStack[this.expressionPtr] =
-      				new BinaryExpression(
-      					this.expressionStack[this.expressionPtr + 1],
-      					this.expressionStack[this.expressionPtr],
-      					op);
-      		}
-      	}
-      }
-      */
+       * if (op == OR_OR) { this.expressionStack[this.expressionPtr] = new OR_OR_Expression(
+       * this.expressionStack[this.expressionPtr + 1], this.expressionStack[this.expressionPtr], op); } else { if (op == AND_AND)
+       * { this.expressionStack[this.expressionPtr] = new AND_AND_Expression( this.expressionStack[this.expressionPtr + 1],
+       * this.expressionStack[this.expressionPtr], op); } else { // look for "string1" + "string2" if ((op == PLUS) &&
+       * this.optimizeStringLiterals) { Expression expr1, expr2; expr1 = this.expressionStack[this.expressionPtr + 1]; expr2 =
+       * this.expressionStack[this.expressionPtr]; if (expr1 instanceof StringLiteral) { if (expr2 instanceof CharLiteral) { //
+       * string+char this.expressionStack[this.expressionPtr] = ((StringLiteral) expr1).extendWith((CharLiteral) expr2); } else if
+       * (expr2 instanceof StringLiteral) { //string+string this.expressionStack[this.expressionPtr] = ((StringLiteral)
+       * expr1).extendWith((StringLiteral) expr2); } else { this.expressionStack[this.expressionPtr] = new BinaryExpression(expr1,
+       * expr2, PLUS); } } else { this.expressionStack[this.expressionPtr] = new BinaryExpression(expr1, expr2, PLUS); } } else {
+       * this.expressionStack[this.expressionPtr] = new BinaryExpression( this.expressionStack[this.expressionPtr + 1],
+       * this.expressionStack[this.expressionPtr], op); } } }
+       */
       Expression expr1 = this.expressionStack[this.expressionPtr + 1];
       Expression expr2 = this.expressionStack[this.expressionPtr];
       // Note: we do not attempt to promote BinaryExpression-s to
-      //       IndexedBinaryExpression-s here since expr1 always holds a name
+      // IndexedBinaryExpression-s here since expr1 always holds a name
       switch (op)
       {
          case OR_OR :
@@ -1915,7 +1883,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
                      this.expressionStack[this.expressionPtr] = ((StringLiteral)expr1).extendWith((CharLiteral)expr2);
                   }
                   else if (expr2 instanceof StringLiteral)
-                  { //string+string
+                  { // string+string
                      this.expressionStack[this.expressionPtr] = ((StringLiteral)expr1).extendWith((StringLiteral)expr2);
                   }
                   else
@@ -2009,10 +1977,10 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeCastExpressionLL1()
    {
-      //CastExpression ::= '(' Expression ')' InsideCastExpressionLL1 UnaryExpressionNotPlusMinus
+      // CastExpression ::= '(' Expression ')' InsideCastExpressionLL1 UnaryExpressionNotPlusMinus
       // Expression is used in order to make the grammar LL1
 
-      //optimize push/pop
+      // optimize push/pop
 
       Expression cast;
       Expression exp;
@@ -2072,9 +2040,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    {
       // CastExpression ::= PushLPAREN PrimitiveType Dimsopt PushRPAREN InsideCastExpression UnaryExpression
 
-      //this.intStack : posOfLeftParen dim posOfRightParen
+      // this.intStack : posOfLeftParen dim posOfRightParen
 
-      //optimize the push/pop
+      // optimize the push/pop
 
       Expression exp;
       Expression cast;
@@ -2091,7 +2059,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeCastExpressionWithQualifiedGenericsArray()
    {
-      // CastExpression ::= PushLPAREN Name OnlyTypeArguments '.' ClassOrInterfaceType Dims PushRPAREN InsideCastExpression UnaryExpressionNotPlusMinus
+      // CastExpression ::= PushLPAREN Name OnlyTypeArguments '.' ClassOrInterfaceType Dims PushRPAREN InsideCastExpression
+      // UnaryExpressionNotPlusMinus
       Expression exp;
       Expression cast;
       TypeReference castType;
@@ -2147,8 +2116,10 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
             new Annotation[length], 0, length);
       }
       pushOnAstStack(arg);
-      /* if incomplete method header, this.listLength counter will not have been reset,
-      	indicating that some arguments are available on the stack */
+      /*
+       * if incomplete method header, this.listLength counter will not have been reset, indicating that some arguments are
+       * available on the stack
+       */
       this.listLength++;
    }
 
@@ -2213,8 +2184,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumeClassBodyDeclaration()
    {
       // ClassBodyDeclaration ::= Diet NestedMethod CreateInitializer Block
-      //push an Initializer
-      //optimize the push/pop
+      // push an Initializer
+      // optimize the push/pop
       this.nestedMethod[this.nestedType]--;
       Block block = (Block)this.astStack[this.astPtr--];
       this.astLengthPtr--;
@@ -2264,17 +2235,17 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       int length;
       if ((length = this.astLengthStack[this.astLengthPtr--]) != 0)
       {
-         //there are length declarations
-         //dispatch according to the type of the declarations
+         // there are length declarations
+         // dispatch according to the type of the declarations
          dispatchDeclarationInto(length);
       }
 
       TypeDeclaration typeDecl = (TypeDeclaration)this.astStack[this.astPtr];
 
-      //convert constructor that do not have the type's name into methods
+      // convert constructor that do not have the type's name into methods
       boolean hasConstructor = typeDecl.checkConstructors(this);
 
-      //add the default constructor when needed (interface don't have it)
+      // add the default constructor when needed (interface don't have it)
       if (!hasConstructor)
       {
          switch (TypeDeclaration.kind(typeDecl.modifiers))
@@ -2296,7 +2267,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
                typeDecl.createDefaultConstructor(!this.diet || insideFieldInitializer, true);
          }
       }
-      //always add <clinit> (will be remove at code gen time if empty)
+      // always add <clinit> (will be remove at code gen time if empty)
       if (this.scanner.containsAssertKeyword)
       {
          typeDecl.bits |= ASTNode.ContainsAssertion;
@@ -2331,7 +2302,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumeClassHeaderExtends()
    {
       // ClassHeaderExtends ::= 'extends' ClassType
-      //superclass
+      // superclass
       TypeReference superClass = getTypeReference(0);
       // There is a class declaration on the top of stack
       TypeDeclaration typeDecl = (TypeDeclaration)this.astStack[this.astPtr];
@@ -2349,7 +2320,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    {
       // ClassHeaderImplements ::= 'implements' InterfaceTypeList
       int length = this.astLengthStack[this.astLengthPtr--];
-      //super interfaces
+      // super interfaces
       this.astPtr -= length;
       // There is a class declaration on the top of stack
       TypeDeclaration typeDecl = (TypeDeclaration)this.astStack[this.astPtr];
@@ -2386,14 +2357,14 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          blockReal();
       }
 
-      //highlight the name of the type
+      // highlight the name of the type
       long pos = this.identifierPositionStack[this.identifierPtr];
       typeDecl.sourceEnd = (int)pos;
       typeDecl.sourceStart = (int)(pos >>> 32);
       typeDecl.name = this.identifierStack[this.identifierPtr--];
       this.identifierLengthPtr--;
 
-      //compute the declaration source too
+      // compute the declaration source too
       // 'class' and 'interface' push two int positions: the beginning of the class token and its end.
       // we want to keep the beginning position but get rid of the end position
       // it is only used for the ClassLiteralAccess positions.
@@ -2455,7 +2426,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumeClassInstanceCreationExpressionQualified()
    {
       // ClassInstanceCreationExpression ::= Primary '.' 'new' SimpleName '(' ArgumentListopt ')' ClassBodyopt
-      // ClassInstanceCreationExpression ::= ClassInstanceCreationExpressionName 'new' SimpleName '(' ArgumentListopt ')' ClassBodyopt
+      // ClassInstanceCreationExpression ::= ClassInstanceCreationExpressionName 'new' SimpleName '(' ArgumentListopt ')'
+      // ClassBodyopt
       classInstanceCreation(true);
 
       QualifiedAllocationExpression qae = (QualifiedAllocationExpression)this.expressionStack[this.expressionPtr];
@@ -2473,16 +2445,17 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumeClassInstanceCreationExpressionQualifiedWithTypeArguments()
    {
       // ClassInstanceCreationExpression ::= Primary '.' 'new' TypeArguments SimpleName '(' ArgumentListopt ')' ClassBodyopt
-      // ClassInstanceCreationExpression ::= ClassInstanceCreationExpressionName 'new' TypeArguments SimpleName '(' ArgumentListopt ')' ClassBodyopt
+      // ClassInstanceCreationExpression ::= ClassInstanceCreationExpressionName 'new' TypeArguments SimpleName '('
+      // ArgumentListopt ')' ClassBodyopt
 
       QualifiedAllocationExpression alloc;
       int length;
       if (((length = this.astLengthStack[this.astLengthPtr--]) == 1) && (this.astStack[this.astPtr] == null))
       {
-         //NO ClassBody
+         // NO ClassBody
          this.astPtr--;
          alloc = new QualifiedAllocationExpression();
-         alloc.sourceEnd = this.endPosition; //the position has been stored explicitly
+         alloc.sourceEnd = this.endPosition; // the position has been stored explicitly
 
          if ((length = this.expressionLengthStack[this.expressionLengthPtr--]) != 0)
          {
@@ -2498,8 +2471,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
             length);
          this.intPtr--;
 
-         //the default constructor with the correct number of argument
-         //will be created and added by the TC (see createsInternalConstructorWithBinding)
+         // the default constructor with the correct number of argument
+         // will be created and added by the TC (see createsInternalConstructorWithBinding)
          alloc.sourceStart = this.intStack[this.intPtr--];
          pushOnExpressionStack(alloc);
       }
@@ -2549,10 +2522,10 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       int length;
       if (((length = this.astLengthStack[this.astLengthPtr--]) == 1) && (this.astStack[this.astPtr] == null))
       {
-         //NO ClassBody
+         // NO ClassBody
          this.astPtr--;
          alloc = new AllocationExpression();
-         alloc.sourceEnd = this.endPosition; //the position has been stored explicitly
+         alloc.sourceEnd = this.endPosition; // the position has been stored explicitly
 
          if ((length = this.expressionLengthStack[this.expressionLengthPtr--]) != 0)
          {
@@ -2569,8 +2542,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
             length);
          this.intPtr--;
 
-         //the default constructor with the correct number of argument
-         //will be created and added by the TC (see createsInternalConstructorWithBinding)
+         // the default constructor with the correct number of argument
+         // will be created and added by the TC (see createsInternalConstructorWithBinding)
          alloc.sourceStart = this.intStack[this.intPtr--];
          pushOnExpressionStack(alloc);
       }
@@ -2619,8 +2592,10 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    {
       // ClassTypeElt ::= ClassType
       pushOnAstStack(getTypeReference(0));
-      /* if incomplete thrown exception list, this.listLength counter will not have been reset,
-      	indicating that some items are available on the stack */
+      /*
+       * if incomplete thrown exception list, this.listLength counter will not have been reset, indicating that some items are
+       * available on the stack
+       */
       this.listLength++;
    }
 
@@ -2639,8 +2614,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumeConditionalExpression(int op)
    {
       // ConditionalExpression ::= ConditionalOrExpression '?' Expression ':' ConditionalExpression
-      //optimize the push/pop
-      this.intPtr -= 2;//consume position of the question mark
+      // optimize the push/pop
+      this.intPtr -= 2;// consume position of the question mark
       this.expressionPtr -= 2;
       this.expressionLengthPtr -= 2;
       this.expressionStack[this.expressionPtr] =
@@ -2654,7 +2629,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumeConditionalExpressionWithName(int op)
    {
       // ConditionalExpression ::= Name '?' Expression ':' ConditionalExpression
-      this.intPtr -= 2;//consume position of the question mark
+      this.intPtr -= 2;// consume position of the question mark
       pushOnExpressionStack(getUnspecifiedReferenceOptimized());
       this.expressionPtr -= 2;
       this.expressionLengthPtr -= 2;
@@ -2671,8 +2646,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeConstructorBody()
    {
-      // ConstructorBody ::= NestedMethod  '{' BlockStatementsopt '}'
-      // ConstructorBody ::= NestedMethod  '{' ExplicitConstructorInvocation '}'
+      // ConstructorBody ::= NestedMethod '{' BlockStatementsopt '}'
+      // ConstructorBody ::= NestedMethod '{' ExplicitConstructorInvocation '}'
       this.nestedMethod[this.nestedType]--;
    }
 
@@ -2681,22 +2656,19 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // ConstructorDeclaration ::= ConstructorHeader ConstructorBody
 
       /*
-      this.astStack : MethodDeclaration statements
-      this.identifierStack : name
-       ==>
-      this.astStack : MethodDeclaration
-      this.identifierStack :
-      */
+       * this.astStack : MethodDeclaration statements this.identifierStack : name ==> this.astStack : MethodDeclaration
+       * this.identifierStack :
+       */
 
-      //must provide a default constructor call when needed
+      // must provide a default constructor call when needed
 
       int length;
 
-      // pop the position of the {  (body of the method) pushed in block decl
+      // pop the position of the { (body of the method) pushed in block decl
       this.intPtr--;
       this.intPtr--;
 
-      //statements
+      // statements
       this.realBlockPtr--;
       ExplicitConstructorCall constructorCall = null;
       Statement[] statements = null;
@@ -2707,12 +2679,12 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          {
             if (this.astStack[this.astPtr + 1] instanceof ExplicitConstructorCall)
             {
-               //avoid a isSomeThing that would only be used here BUT what is faster between two alternatives ?
+               // avoid a isSomeThing that would only be used here BUT what is faster between two alternatives ?
                System.arraycopy(this.astStack, this.astPtr + 2, statements = new Statement[length - 1], 0, length - 1);
                constructorCall = (ExplicitConstructorCall)this.astStack[this.astPtr + 1];
             }
             else
-            { //need to add explicitly the super();
+            { // need to add explicitly the super();
                System.arraycopy(this.astStack, this.astPtr + 1, statements = new Statement[length], 0, length);
                constructorCall = SuperReference.implicitSuperConstructorCall();
             }
@@ -2745,7 +2717,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       cd.constructorCall = constructorCall;
       cd.statements = statements;
 
-      //highlight of the implicit call on the method name
+      // highlight of the implicit call on the method name
       if (constructorCall != null && cd.constructorCall.sourceEnd == 0)
       {
          cd.constructorCall.sourceEnd = cd.sourceEnd;
@@ -2759,7 +2731,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          cd.bits |= ASTNode.UndocumentedEmptyBlock;
       }
 
-      //watch for } that could be given as a unicode ! ( u007D is '}' )
+      // watch for } that could be given as a unicode ! ( u007D is '}' )
       // store the this.endPosition (position just before the '}') in case there is
       // a trailing comment behind the end of the method
       cd.bodyEnd = this.endPosition;
@@ -2807,15 +2779,15 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          }
       }
 
-      // ConstructorHeaderName ::=  Modifiersopt 'Identifier' '('
+      // ConstructorHeaderName ::= Modifiersopt 'Identifier' '('
       ConstructorDeclaration cd = new ConstructorDeclaration(this.compilationUnit.compilationResult);
 
-      //name -- this is not really revelant but we do .....
+      // name -- this is not really revelant but we do .....
       cd.selector = this.identifierStack[this.identifierPtr];
       long selectorSource = this.identifierPositionStack[this.identifierPtr--];
       this.identifierLengthPtr--;
 
-      //modifiers
+      // modifiers
       cd.declarationSourceStart = this.intStack[this.intPtr--];
       cd.modifiers = this.intStack[this.intPtr--];
       // consume annotations
@@ -2829,7 +2801,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       cd.javadoc = this.javadoc;
       this.javadoc = null;
 
-      //highlight starts at the selector starts
+      // highlight starts at the selector starts
       cd.sourceStart = (int)(selectorSource >>> 32);
       pushOnAstStack(cd);
       cd.sourceEnd = this.lParenPos;
@@ -2863,10 +2835,10 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          }
       }
 
-      // ConstructorHeaderName ::=  Modifiersopt TypeParameters 'Identifier' '('
+      // ConstructorHeaderName ::= Modifiersopt TypeParameters 'Identifier' '('
       ConstructorDeclaration cd = new ConstructorDeclaration(this.compilationUnit.compilationResult);
 
-      //name -- this is not really revelant but we do .....
+      // name -- this is not really revelant but we do .....
       cd.selector = this.identifierStack[this.identifierPtr];
       long selectorSource = this.identifierPositionStack[this.identifierPtr--];
       this.identifierLengthPtr--;
@@ -2877,7 +2849,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       System.arraycopy(this.genericsStack, this.genericsPtr + 1, cd.typeParameters = new TypeParameter[length], 0,
          length);
 
-      //modifiers
+      // modifiers
       cd.declarationSourceStart = this.intStack[this.intPtr--];
       cd.modifiers = this.intStack[this.intPtr--];
       // consume annotations
@@ -2890,7 +2862,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       cd.javadoc = this.javadoc;
       this.javadoc = null;
 
-      //highlight starts at the selector starts
+      // highlight starts at the selector starts
       cd.sourceStart = (int)(selectorSource >>> 32);
       pushOnAstStack(cd);
       cd.sourceEnd = this.lParenPos;
@@ -3099,7 +3071,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // DefaultValueopt ::= $empty
       AbstractMethodDeclaration method = (AbstractMethodDeclaration)this.astStack[this.astPtr];
       if (method.isAnnotationMethod())
-      { //'method' can be a MethodDeclaration when recovery is started
+      { // 'method' can be a MethodDeclaration when recovery is started
          pushOnExpressionStackLengthStack(0);
       }
       this.recordStringLiterals = true;
@@ -3161,7 +3133,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // EnhancedForStatement ::= EnhancedForStatementHeader Statement
       // EnhancedForStatementNoShortIf ::= EnhancedForStatementHeader StatementNoShortIf
 
-      //statements
+      // statements
       this.astLengthPtr--;
       Statement statement = (Statement)this.astStack[this.astPtr--];
 
@@ -3179,7 +3151,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    {
       // EnhancedForStatementHeader ::= EnhancedForStatementHeaderInit ':' Expression ')'
       final ForeachStatement statement = (ForeachStatement)this.astStack[this.astPtr];
-      //updates are on the expression stack
+      // updates are on the expression stack
       this.expressionLengthPtr--;
       final Expression collection = this.expressionStack[this.expressionPtr--];
       statement.collection = collection;
@@ -3257,7 +3229,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       markEnclosingMemberWithLocalType();
       pushOnAstStack(anonymousType);
 
-      alloc.sourceEnd = this.rParenPos; //the position has been stored explicitly
+      alloc.sourceEnd = this.rParenPos; // the position has been stored explicitly
       int argumentLength;
       if ((argumentLength = this.expressionLengthStack[this.expressionLengthPtr--]) != 0)
       {
@@ -3275,7 +3247,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       alloc.type = typeReference;
 
       anonymousType.sourceEnd = alloc.sourceEnd;
-      //position at the type while it impacts the anonymous declaration
+      // position at the type while it impacts the anonymous declaration
       anonymousType.sourceStart = anonymousType.declarationSourceStart = alloc.type.sourceStart;
       alloc.sourceStart = this.intStack[this.intPtr--];
       pushOnExpressionStack(alloc);
@@ -3429,7 +3401,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       if (this.currentElement != null)
       {
          if (!(this.currentElement instanceof RecoveredType) && (this.currentToken == TokenNameDOT
-         //|| declaration.modifiers != 0
+         // || declaration.modifiers != 0
             || (Util.getLineNumber(declaration.type.sourceStart, this.scanner.lineEnds, 0, this.scanner.linePtr) != Util
                .getLineNumber((int)(namePosition >>> 32), this.scanner.lineEnds, 0, this.scanner.linePtr))))
          {
@@ -3630,17 +3602,17 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       int length;
       if ((length = this.astLengthStack[this.astLengthPtr--]) != 0)
       {
-         //there are length declarations
-         //dispatch according to the type of the declarations
+         // there are length declarations
+         // dispatch according to the type of the declarations
          dispatchDeclarationIntoEnumDeclaration(length);
       }
 
       TypeDeclaration enumDeclaration = (TypeDeclaration)this.astStack[this.astPtr];
 
-      //convert constructor that do not have the type's name into methods
+      // convert constructor that do not have the type's name into methods
       boolean hasConstructor = enumDeclaration.checkConstructors(this);
 
-      //add the default constructor when needed
+      // add the default constructor when needed
       if (!hasConstructor)
       {
          boolean insideFieldInitializer = false;
@@ -3658,7 +3630,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          enumDeclaration.createDefaultConstructor(!this.diet || insideFieldInitializer, true);
       }
 
-      //always add <clinit> (will be remove at code gen time if empty)
+      // always add <clinit> (will be remove at code gen time if empty)
       if (this.scanner.containsAssertKeyword)
       {
          enumDeclaration.bits |= ASTNode.ContainsAssertion;
@@ -3709,17 +3681,17 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       else
       {
          // Record that the block has a declaration for local types
-         //		markEnclosingMemberWithLocalType();
+         // markEnclosingMemberWithLocalType();
          blockReal();
       }
-      //highlight the name of the type
+      // highlight the name of the type
       long pos = this.identifierPositionStack[this.identifierPtr];
       enumDeclaration.sourceEnd = (int)pos;
       enumDeclaration.sourceStart = (int)(pos >>> 32);
       enumDeclaration.name = this.identifierStack[this.identifierPtr--];
       this.identifierLengthPtr--;
 
-      //compute the declaration source too
+      // compute the declaration source too
       // 'class' and 'interface' push two int positions: the beginning of the class token and its end.
       // we want to keep the beginning position but get rid of the end position
       // it is only used for the ClassLiteralAccess positions.
@@ -3750,9 +3722,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          System.arraycopy(this.expressionStack, (this.expressionPtr -= length) + 1, enumDeclaration.annotations =
             new Annotation[length], 0, length);
       }
-      //	if (this.currentToken == TokenNameLBRACE) {
-      //		enumDeclaration.bodyStart = this.scanner.currentPosition;
-      //	}
+      // if (this.currentToken == TokenNameLBRACE) {
+      // enumDeclaration.bodyStart = this.scanner.currentPosition;
+      // }
       enumDeclaration.bodyStart = enumDeclaration.sourceEnd + 1;
       pushOnAstStack(enumDeclaration);
 
@@ -3761,7 +3733,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       if (!this.statementRecoveryActivated && this.options.sourceLevel < ClassFileConstants.JDK1_5
          && this.lastErrorEndPositionBeforeRecovery < this.scanner.currentPosition)
       {
-         //TODO this code will be never run while 'enum' is an identifier in 1.3 scanner
+         // TODO this code will be never run while 'enum' is an identifier in 1.3 scanner
          problemReporter().invalidUsageOfEnumDeclarations(enumDeclaration);
       }
 
@@ -3791,7 +3763,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
       enumDeclaration.bodyStart = enumDeclaration.typeParameters[length - 1].declarationSourceEnd + 1;
 
-      //	enumDeclaration.typeParameters = null;
+      // enumDeclaration.typeParameters = null;
 
       this.listTypeParameterLength = 0;
 
@@ -3805,17 +3777,17 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       else
       {
          // Record that the block has a declaration for local types
-         //		markEnclosingMemberWithLocalType();
+         // markEnclosingMemberWithLocalType();
          blockReal();
       }
-      //highlight the name of the type
+      // highlight the name of the type
       long pos = this.identifierPositionStack[this.identifierPtr];
       enumDeclaration.sourceEnd = (int)pos;
       enumDeclaration.sourceStart = (int)(pos >>> 32);
       enumDeclaration.name = this.identifierStack[this.identifierPtr--];
       this.identifierLengthPtr--;
 
-      //compute the declaration source too
+      // compute the declaration source too
       // 'class' and 'interface' push two int positions: the beginning of the class token and its end.
       // we want to keep the beginning position but get rid of the end position
       // it is only used for the ClassLiteralAccess positions.
@@ -3845,9 +3817,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          System.arraycopy(this.expressionStack, (this.expressionPtr -= length) + 1, enumDeclaration.annotations =
             new Annotation[length], 0, length);
       }
-      //	if (this.currentToken == TokenNameLBRACE) {
-      //		enumDeclaration.bodyStart = this.scanner.currentPosition;
-      //	}
+      // if (this.currentToken == TokenNameLBRACE) {
+      // enumDeclaration.bodyStart = this.scanner.currentPosition;
+      // }
       enumDeclaration.bodyStart = enumDeclaration.sourceEnd + 1;
       pushOnAstStack(enumDeclaration);
 
@@ -3856,7 +3828,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       if (!this.statementRecoveryActivated && this.options.sourceLevel < ClassFileConstants.JDK1_5
          && this.lastErrorEndPositionBeforeRecovery < this.scanner.currentPosition)
       {
-         //TODO this code will be never run while 'enum' is an identifier in 1.3 scanner
+         // TODO this code will be never run while 'enum' is an identifier in 1.3 scanner
          problemReporter().invalidUsageOfEnumDeclarations(enumDeclaration);
       }
 
@@ -3877,7 +3849,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // EqualityExpression ::= EqualityExpression '==' RelationalExpression
       // EqualityExpression ::= EqualityExpression '!=' RelationalExpression
 
-      //optimize the push/pop
+      // optimize the push/pop
 
       this.expressionPtr--;
       this.expressionLengthPtr--;
@@ -3912,7 +3884,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeExitTryBlock()
    {
-      //ExitTryBlock ::= $empty
+      // ExitTryBlock ::= $empty
       if (this.currentElement != null)
       {
          this.restartRecovery = true;
@@ -3954,17 +3926,13 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumeExplicitConstructorInvocation(int flag, int recFlag)
    {
 
-      /* flag allows to distinguish 3 cases :
-      (0) :
-      ExplicitConstructorInvocation ::= 'this' '(' ArgumentListopt ')' ';'
-      ExplicitConstructorInvocation ::= 'super' '(' ArgumentListopt ')' ';'
-      (1) :
-      ExplicitConstructorInvocation ::= Primary '.' 'super' '(' ArgumentListopt ')' ';'
-      ExplicitConstructorInvocation ::= Primary '.' 'this' '(' ArgumentListopt ')' ';'
-      (2) :
-      ExplicitConstructorInvocation ::= Name '.' 'super' '(' ArgumentListopt ')' ';'
-      ExplicitConstructorInvocation ::= Name '.' 'this' '(' ArgumentListopt ')' ';'
-      */
+      /*
+       * flag allows to distinguish 3 cases : (0) : ExplicitConstructorInvocation ::= 'this' '(' ArgumentListopt ')' ';'
+       * ExplicitConstructorInvocation ::= 'super' '(' ArgumentListopt ')' ';' (1) : ExplicitConstructorInvocation ::= Primary '.'
+       * 'super' '(' ArgumentListopt ')' ';' ExplicitConstructorInvocation ::= Primary '.' 'this' '(' ArgumentListopt ')' ';' (2)
+       * : ExplicitConstructorInvocation ::= Name '.' 'super' '(' ArgumentListopt ')' ';' ExplicitConstructorInvocation ::= Name
+       * '.' 'this' '(' ArgumentListopt ')' ';'
+       */
       int startPosition = this.intStack[this.intPtr--];
       ExplicitConstructorCall ecc = new ExplicitConstructorCall(recFlag);
       int length;
@@ -3994,17 +3962,14 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumeExplicitConstructorInvocationWithTypeArguments(int flag, int recFlag)
    {
 
-      /* flag allows to distinguish 3 cases :
-      (0) :
-      ExplicitConstructorInvocation ::= TypeArguments 'this' '(' ArgumentListopt ')' ';'
-      ExplicitConstructorInvocation ::= TypeArguments 'super' '(' ArgumentListopt ')' ';'
-      (1) :
-      ExplicitConstructorInvocation ::= Primary '.' TypeArguments 'super' '(' ArgumentListopt ')' ';'
-      ExplicitConstructorInvocation ::= Primary '.' TypeArguments 'this' '(' ArgumentListopt ')' ';'
-      (2) :
-      ExplicitConstructorInvocation ::= Name '.' TypeArguments 'super' '(' ArgumentListopt ')' ';'
-      ExplicitConstructorInvocation ::= Name '.' TypeArguments 'this' '(' ArgumentListopt ')' ';'
-      */
+      /*
+       * flag allows to distinguish 3 cases : (0) : ExplicitConstructorInvocation ::= TypeArguments 'this' '(' ArgumentListopt ')'
+       * ';' ExplicitConstructorInvocation ::= TypeArguments 'super' '(' ArgumentListopt ')' ';' (1) :
+       * ExplicitConstructorInvocation ::= Primary '.' TypeArguments 'super' '(' ArgumentListopt ')' ';'
+       * ExplicitConstructorInvocation ::= Primary '.' TypeArguments 'this' '(' ArgumentListopt ')' ';' (2) :
+       * ExplicitConstructorInvocation ::= Name '.' TypeArguments 'super' '(' ArgumentListopt ')' ';'
+       * ExplicitConstructorInvocation ::= Name '.' TypeArguments 'this' '(' ArgumentListopt ')' ';'
+       */
       int startPosition = this.intStack[this.intPtr--];
       ExplicitConstructorCall ecc = new ExplicitConstructorCall(recFlag);
       int length;
@@ -4059,16 +4024,16 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       this.identifierLengthPtr--;
       if (isSuperAccess)
       {
-         //considers the fieldReference beginning at the 'super' ....
+         // considers the fieldReference beginning at the 'super' ....
          fr.sourceStart = this.intStack[this.intPtr--];
          fr.receiver = new SuperReference(fr.sourceStart, this.endPosition);
          pushOnExpressionStack(fr);
       }
       else
       {
-         //optimize push/pop
+         // optimize push/pop
          fr.receiver = this.expressionStack[this.expressionPtr];
-         //field reference begins at the receiver
+         // field reference begins at the receiver
          fr.sourceStart = fr.receiver.sourceStart;
          this.expressionStack[this.expressionPtr] = fr;
       }
@@ -4080,17 +4045,10 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // FieldDeclaration ::= Modifiersopt Type VariableDeclarators ';'
 
       /*
-      this.astStack :
-      this.expressionStack: Expression Expression ...... Expression
-      this.identifierStack : type  identifier identifier ...... identifier
-      this.intStack : typeDim      dim        dim               dim
-       ==>
-      this.astStack : FieldDeclaration FieldDeclaration ...... FieldDeclaration
-      this.expressionStack :
-      this.identifierStack :
-      this.intStack :
-
-      */
+       * this.astStack : this.expressionStack: Expression Expression ...... Expression this.identifierStack : type identifier
+       * identifier ...... identifier this.intStack : typeDim dim dim dim ==> this.astStack : FieldDeclaration FieldDeclaration
+       * ...... FieldDeclaration this.expressionStack : this.identifierStack : this.intStack :
+       */
       int variableDeclaratorsCounter = this.astLengthStack[this.astLengthPtr];
 
       for (int i = variableDeclaratorsCounter - 1; i >= 0; i--)
@@ -4149,14 +4107,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // FormalParameter ::= Type VariableDeclaratorId ==> false
       // FormalParameter ::= Modifiers Type VariableDeclaratorId ==> true
       /*
-      this.astStack :
-      this.identifierStack : type identifier
-      this.intStack : dim dim
-       ==>
-      this.astStack : Argument
-      this.identifierStack :
-      this.intStack :
-      */
+       * this.astStack : this.identifierStack : type identifier this.intStack : dim dim ==> this.astStack : Argument
+       * this.identifierStack : this.intStack :
+       */
 
       this.identifierLengthPtr--;
       char[] identifierName = this.identifierStack[this.identifierPtr];
@@ -4194,8 +4147,10 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       }
       pushOnAstStack(arg);
 
-      /* if incomplete method header, this.listLength counter will not have been reset,
-      	indicating that some arguments are available on the stack */
+      /*
+       * if incomplete method header, this.listLength counter will not have been reset, indicating that some arguments are
+       * available on the stack
+       */
       this.listLength++;
 
       if (isVarArgs)
@@ -4249,7 +4204,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // zero type arguments == <>
       pushOnGenericsLengthStack(-1);
       concatGenericsLists();
-      this.intPtr--; // pop the null dimension pushed in by consumeReferenceType, as we have no type between <>, getTypeReference won't kick in 
+      this.intPtr--; // pop the null dimension pushed in by consumeReferenceType, as we have no type between <>, getTypeReference
+                     // won't kick in
    }
 
    protected void consumeImportDeclaration()
@@ -4298,9 +4254,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumeInstanceOfExpression()
    {
       // RelationalExpression ::= RelationalExpression 'instanceof' ReferenceType
-      //optimize the push/pop
+      // optimize the push/pop
 
-      //by construction, no base type may be used in getTypeReference
+      // by construction, no base type may be used in getTypeReference
       Expression exp;
       this.expressionStack[this.expressionPtr] =
          exp =
@@ -4308,18 +4264,18 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
                getTypeReference(this.intStack[this.intPtr--]));
       if (exp.sourceEnd == 0)
       {
-         //array on base type....
+         // array on base type....
          exp.sourceEnd = this.scanner.startPosition - 1;
       }
-      //the scanner is on the next token already....
+      // the scanner is on the next token already....
    }
 
    protected void consumeInstanceOfExpressionWithName()
    {
       // RelationalExpression_NotName ::= Name instanceof ReferenceType
-      //optimize the push/pop
+      // optimize the push/pop
 
-      //by construction, no base type may be used in getTypeReference
+      // by construction, no base type may be used in getTypeReference
       TypeReference reference = getTypeReference(this.intStack[this.intPtr--]);
       pushOnExpressionStack(getUnspecifiedReferenceOptimized());
       Expression exp;
@@ -4327,10 +4283,10 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          exp = new InstanceOfExpression(this.expressionStack[this.expressionPtr], reference);
       if (exp.sourceEnd == 0)
       {
-         //array on base type....
+         // array on base type....
          exp.sourceEnd = this.scanner.startPosition - 1;
       }
-      //the scanner is on the next token already....
+      // the scanner is on the next token already....
    }
 
    protected void consumeInterfaceDeclaration()
@@ -4340,17 +4296,17 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       int length;
       if ((length = this.astLengthStack[this.astLengthPtr--]) != 0)
       {
-         //there are length declarations
-         //dispatch.....according to the type of the declarations
+         // there are length declarations
+         // dispatch.....according to the type of the declarations
          dispatchDeclarationInto(length);
       }
 
       TypeDeclaration typeDecl = (TypeDeclaration)this.astStack[this.astPtr];
 
-      //convert constructor that do not have the type's name into methods
+      // convert constructor that do not have the type's name into methods
       typeDecl.checkConstructors(this);
 
-      // https://bugs.eclipse.org/bugs/show_bug.cgi?id=212713, 
+      // https://bugs.eclipse.org/bugs/show_bug.cgi?id=212713,
       // reject initializers that have been tolerated by the grammar.
       FieldDeclaration[] fields = typeDecl.fields;
       int fieldCount = fields == null ? 0 : fields.length;
@@ -4363,7 +4319,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          }
       }
 
-      //always add <clinit> (will be remove at code gen time if empty)
+      // always add <clinit> (will be remove at code gen time if empty)
       if (this.scanner.containsAssertKeyword)
       {
          typeDecl.bits |= ASTNode.ContainsAssertion;
@@ -4398,7 +4354,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    {
       // InterfaceHeaderExtends ::= 'extends' InterfaceTypeList
       int length = this.astLengthStack[this.astLengthPtr--];
-      //super interfaces
+      // super interfaces
       this.astPtr -= length;
       TypeDeclaration typeDecl = (TypeDeclaration)this.astStack[this.astPtr];
       System.arraycopy(this.astStack, this.astPtr + 1, typeDecl.superInterfaces = new TypeReference[length], 0, length);
@@ -4435,14 +4391,14 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          blockReal();
       }
 
-      //highlight the name of the type
+      // highlight the name of the type
       long pos = this.identifierPositionStack[this.identifierPtr];
       typeDecl.sourceEnd = (int)pos;
       typeDecl.sourceStart = (int)(pos >>> 32);
       typeDecl.name = this.identifierStack[this.identifierPtr--];
       this.identifierLengthPtr--;
 
-      //compute the declaration source too
+      // compute the declaration source too
       // 'class' and 'interface' push two int positions: the beginning of the class token and its end.
       // we want to keep the beginning position but get rid of the end position
       // it is only used for the ClassLiteralAccess positions.
@@ -4503,8 +4459,10 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    {
       // InterfaceType ::= ClassOrInterfaceType
       pushOnAstStack(getTypeReference(0));
-      /* if incomplete type header, this.listLength counter will not have been reset,
-      	indicating that some interfaces are available on the stack */
+      /*
+       * if incomplete type header, this.listLength counter will not have been reset, indicating that some interfaces are
+       * available on the stack
+       */
       this.listLength++;
    }
 
@@ -4583,19 +4541,16 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // InvalidConstructorDeclaration ::= ConstructorHeader ';' ==> false
 
       /*
-      this.astStack : modifiers arguments throws statements
-      this.identifierStack : name
-       ==>
-      this.astStack : MethodDeclaration
-      this.identifierStack :
-      */
+       * this.astStack : modifiers arguments throws statements this.identifierStack : name ==> this.astStack : MethodDeclaration
+       * this.identifierStack :
+       */
       if (hasBody)
       {
-         // pop the position of the {  (body of the method) pushed in block decl
+         // pop the position of the { (body of the method) pushed in block decl
          this.intPtr--;
       }
 
-      //statements
+      // statements
       if (hasBody)
       {
          this.realBlockPtr--;
@@ -4630,7 +4585,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumeInvalidInterfaceDeclaration()
    {
       // BlockStatement ::= InvalidInterfaceDeclaration
-      //InterfaceDeclaration ::= Modifiersopt 'interface' 'Identifier' ExtendsInterfacesopt InterfaceHeader InterfaceBody
+      // InterfaceDeclaration ::= Modifiersopt 'interface' 'Identifier' ExtendsInterfacesopt InterfaceHeader InterfaceBody
       TypeDeclaration typeDecl = (TypeDeclaration)this.astStack[this.astPtr];
       if (!this.statementRecoveryActivated)
          problemReporter().illegalLocalTypeDeclaration(typeDecl);
@@ -4645,20 +4600,15 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // InterfaceMemberDeclaration ::= InvalidMethodDeclaration
 
       /*
-      this.astStack : modifiers arguments throws statements
-      this.identifierStack : type name
-      this.intStack : dim dim dim
-       ==>
-      this.astStack : MethodDeclaration
-      this.identifierStack :
-      this.intStack :
-      */
+       * this.astStack : modifiers arguments throws statements this.identifierStack : type name this.intStack : dim dim dim ==>
+       * this.astStack : MethodDeclaration this.identifierStack : this.intStack :
+       */
 
-      // pop the position of the {  (body of the method) pushed in block decl
+      // pop the position of the { (body of the method) pushed in block decl
       this.intPtr--;
       // retrieve end position of method declarator
 
-      //statements
+      // statements
       this.realBlockPtr--;
       int length;
       if ((length = this.astLengthStack[this.astLengthPtr--]) != 0)
@@ -4666,7 +4616,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          this.astPtr -= length;
       }
 
-      //watch for } that could be given as a unicode ! ( u007D is '}' )
+      // watch for } that could be given as a unicode ! ( u007D is '}' )
       MethodDeclaration md = (MethodDeclaration)this.astStack[this.astPtr];
       md.bodyEnd = this.endPosition;
       md.declarationSourceEnd = flushCommentsDefinedPriorTo(this.endStatementPosition);
@@ -4692,17 +4642,10 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // LocalVariableDeclaration ::= Modifiers Type VariableDeclarators ';'
 
       /*
-      this.astStack :
-      this.expressionStack: Expression Expression ...... Expression
-      this.identifierStack : type  identifier identifier ...... identifier
-      this.intStack : typeDim      dim        dim               dim
-       ==>
-      this.astStack : FieldDeclaration FieldDeclaration ...... FieldDeclaration
-      this.expressionStack :
-      this.identifierStack :
-      this.intStack :
-
-      */
+       * this.astStack : this.expressionStack: Expression Expression ...... Expression this.identifierStack : type identifier
+       * identifier ...... identifier this.intStack : typeDim dim dim dim ==> this.astStack : FieldDeclaration FieldDeclaration
+       * ...... FieldDeclaration this.expressionStack : this.identifierStack : this.intStack :
+       */
       int variableDeclaratorsCounter = this.astLengthStack[this.astLengthPtr];
 
       // update the this.astStack, this.astPtr and this.astLengthStack
@@ -4812,19 +4755,14 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // AbstractMethodDeclaration ::= MethodHeader ';'
 
       /*
-      this.astStack : modifiers arguments throws statements
-      this.identifierStack : type name
-      this.intStack : dim dim dim
-       ==>
-      this.astStack : MethodDeclaration
-      this.identifierStack :
-      this.intStack :
-      */
+       * this.astStack : modifiers arguments throws statements this.identifierStack : type name this.intStack : dim dim dim ==>
+       * this.astStack : MethodDeclaration this.identifierStack : this.intStack :
+       */
 
       int length;
       if (isNotAbstract)
       {
-         // pop the position of the {  (body of the method) pushed in block decl
+         // pop the position of the { (body of the method) pushed in block decl
          this.intPtr--;
          this.intPtr--;
       }
@@ -4833,7 +4771,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       Statement[] statements = null;
       if (isNotAbstract)
       {
-         //statements
+         // statements
          explicitDeclarations = this.realBlockStack[this.realBlockPtr--];
          if (!this.options.ignoreMethodBodies)
          {
@@ -4858,7 +4796,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // cannot be done in consumeMethodHeader because we have no idea whether or not there
       // is a body when we reduce the method header
       if (!isNotAbstract)
-      { //remember the fact that the method has a semicolon body
+      { // remember the fact that the method has a semicolon body
          md.modifiers |= ExtraCompilerModifiers.AccSemicolonBody;
       }
       else if (!(this.diet && this.dietInt == 0) && statements == null
@@ -4875,9 +4813,12 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumeMethodHeader()
    {
       // MethodHeader ::= MethodHeaderName MethodHeaderParameters MethodHeaderExtendedDims ThrowsClauseopt
-      // AnnotationMethodHeader ::= AnnotationMethodHeaderName FormalParameterListopt MethodHeaderRightParen MethodHeaderExtendedDims AnnotationMethodHeaderDefaultValueopt
-      // RecoveryMethodHeader ::= RecoveryMethodHeaderName FormalParameterListopt MethodHeaderRightParen MethodHeaderExtendedDims AnnotationMethodHeaderDefaultValueopt
-      // RecoveryMethodHeader ::= RecoveryMethodHeaderName FormalParameterListopt MethodHeaderRightParen MethodHeaderExtendedDims MethodHeaderThrowsClause
+      // AnnotationMethodHeader ::= AnnotationMethodHeaderName FormalParameterListopt MethodHeaderRightParen
+      // MethodHeaderExtendedDims AnnotationMethodHeaderDefaultValueopt
+      // RecoveryMethodHeader ::= RecoveryMethodHeaderName FormalParameterListopt MethodHeaderRightParen MethodHeaderExtendedDims
+      // AnnotationMethodHeaderDefaultValueopt
+      // RecoveryMethodHeader ::= RecoveryMethodHeaderName FormalParameterListopt MethodHeaderRightParen MethodHeaderExtendedDims
+      // MethodHeaderThrowsClause
 
       // retrieve end position of method declarator
       AbstractMethodDeclaration method = (AbstractMethodDeclaration)this.astStack[this.astPtr];
@@ -4889,13 +4830,13 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // recovery
       if (this.currentElement != null)
       {
-         //		if(method.isAnnotationMethod()) {
-         //			method.modifiers |= AccSemicolonBody;
-         //			method.declarationSourceEnd = this.scanner.currentPosition-1;
-         //			method.bodyEnd = this.scanner.currentPosition-1;
-         //			this.currentElement = this.currentElement.parent;
-         //		} else
-         if (this.currentToken == TokenNameSEMICOLON /*&& !method.isAnnotationMethod()*/)
+         // if(method.isAnnotationMethod()) {
+         // method.modifiers |= AccSemicolonBody;
+         // method.declarationSourceEnd = this.scanner.currentPosition-1;
+         // method.bodyEnd = this.scanner.currentPosition-1;
+         // this.currentElement = this.currentElement.parent;
+         // } else
+         if (this.currentToken == TokenNameSEMICOLON /* && !method.isAnnotationMethod() */)
          {
             method.modifiers |= ExtraCompilerModifiers.AccSemicolonBody;
             method.declarationSourceEnd = this.scanner.currentPosition - 1;
@@ -4990,13 +4931,13 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          md = new MethodDeclaration(this.compilationUnit.compilationResult);
       }
 
-      //name
+      // name
       md.selector = this.identifierStack[this.identifierPtr];
       long selectorSource = this.identifierPositionStack[this.identifierPtr--];
       this.identifierLengthPtr--;
-      //type
+      // type
       md.returnType = getTypeReference(this.intStack[this.intPtr--]);
-      //modifiers
+      // modifiers
       md.declarationSourceStart = this.intStack[this.intPtr--];
       md.modifiers = this.intStack[this.intPtr--];
       // consume annotations
@@ -5010,7 +4951,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       md.javadoc = this.javadoc;
       this.javadoc = null;
 
-      //highlight starts at selector start
+      // highlight starts at selector start
       md.sourceStart = (int)(selectorSource >>> 32);
       pushOnAstStack(md);
       md.sourceEnd = this.lParenPos;
@@ -5021,7 +4962,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       if (this.currentElement != null)
       {
          if (this.currentElement instanceof RecoveredType
-         //|| md.modifiers != 0
+         // || md.modifiers != 0
             || (Util.getLineNumber(md.returnType.sourceStart, this.scanner.lineEnds, 0, this.scanner.linePtr) == Util
                .getLineNumber(md.sourceStart, this.scanner.lineEnds, 0, this.scanner.linePtr)))
          {
@@ -5053,11 +4994,11 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          md = new MethodDeclaration(this.compilationUnit.compilationResult);
       }
 
-      //name
+      // name
       md.selector = this.identifierStack[this.identifierPtr];
       long selectorSource = this.identifierPositionStack[this.identifierPtr--];
       this.identifierLengthPtr--;
-      //type
+      // type
       md.returnType = getTypeReference(this.intStack[this.intPtr--]);
 
       // consume type parameters
@@ -5066,7 +5007,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       System.arraycopy(this.genericsStack, this.genericsPtr + 1, md.typeParameters = new TypeParameter[length], 0,
          length);
 
-      //modifiers
+      // modifiers
       md.declarationSourceStart = this.intStack[this.intPtr--];
       md.modifiers = this.intStack[this.intPtr--];
       // consume annotations
@@ -5079,7 +5020,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       md.javadoc = this.javadoc;
       this.javadoc = null;
 
-      //highlight starts at selector start
+      // highlight starts at selector start
       md.sourceStart = (int)(selectorSource >>> 32);
       pushOnAstStack(md);
       md.sourceEnd = this.lParenPos;
@@ -5091,7 +5032,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       {
          boolean isType;
          if ((isType = this.currentElement instanceof RecoveredType)
-         //|| md.modifiers != 0
+         // || md.modifiers != 0
             || (Util.getLineNumber(md.returnType.sourceStart, this.scanner.lineEnds, 0, this.scanner.linePtr) == Util
                .getLineNumber(md.sourceStart, this.scanner.lineEnds, 0, this.scanner.linePtr)))
          {
@@ -5118,7 +5059,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       this.astPtr -= length;
       AbstractMethodDeclaration md = (AbstractMethodDeclaration)this.astStack[this.astPtr];
       md.sourceEnd = this.rParenPos;
-      //arguments
+      // arguments
       if (length != 0)
       {
          System.arraycopy(this.astStack, this.astPtr + 1, md.arguments = new Argument[length], 0, length);
@@ -5211,8 +5152,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeMethodInvocationPrimary()
    {
-      //optimize the push/pop
-      //MethodInvocation ::= Primary '.' 'Identifier' '(' ArgumentListopt ')'
+      // optimize the push/pop
+      // MethodInvocation ::= Primary '.' 'Identifier' '(' ArgumentListopt ')'
 
       MessageSend m = newMessageSend();
       m.sourceStart = (int)((m.nameSourcePosition = this.identifierPositionStack[this.identifierPtr]) >>> 32);
@@ -5226,8 +5167,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeMethodInvocationPrimaryWithTypeArguments()
    {
-      //optimize the push/pop
-      //MethodInvocation ::= Primary '.' TypeArguments 'Identifier' '(' ArgumentListopt ')'
+      // optimize the push/pop
+      // MethodInvocation ::= Primary '.' TypeArguments 'Identifier' '(' ArgumentListopt ')'
 
       MessageSend m = newMessageSendWithTypeArguments();
       m.sourceStart = (int)((m.nameSourcePosition = this.identifierPositionStack[this.identifierPtr]) >>> 32);
@@ -5330,7 +5271,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       if (++this.nestedType >= length)
       {
          System.arraycopy(this.nestedMethod, 0, this.nestedMethod = new int[length + 30], 0, length);
-         // increase the size of the variablesCounter as well. It has to be consistent with the size of the nestedMethod collection
+         // increase the size of the variablesCounter as well. It has to be consistent with the size of the nestedMethod
+         // collection
          System.arraycopy(this.variablesCounter, 0, this.variablesCounter = new int[length + 30], 0, length);
       }
       this.nestedMethod[this.nestedType] = 0;
@@ -5431,8 +5373,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumePackageDeclaration()
    {
       // PackageDeclaration ::= 'package' Name ';'
-      /* build an ImportRef build from the last name
-      stored in the identifier stack. */
+      /*
+       * build an ImportRef build from the last name stored in the identifier stack.
+       */
 
       ImportReference impt = this.compilationUnit.currentPackage;
       this.compilationUnit.javadoc = this.javadoc;
@@ -5445,8 +5388,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumePackageDeclarationName()
    {
       // PackageDeclarationName ::= 'package' Name
-      /* build an ImportRef build from the last name
-      stored in the identifier stack. */
+      /*
+       * build an ImportRef build from the last name stored in the identifier stack.
+       */
 
       ImportReference impt;
       int length;
@@ -5468,7 +5412,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          impt.declarationSourceEnd = impt.sourceEnd;
       }
       impt.declarationEnd = impt.declarationSourceEnd;
-      //this.endPosition is just before the ;
+      // this.endPosition is just before the ;
       impt.declarationSourceStart = this.intStack[this.intPtr--];
 
       // get possible comment source start
@@ -5488,8 +5432,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumePackageDeclarationNameWithModifiers()
    {
       // PackageDeclarationName ::= Modifiers 'package' Name
-      /* build an ImportRef build from the last name
-      stored in the identifier stack. */
+      /*
+       * build an ImportRef build from the last name stored in the identifier stack.
+       */
 
       ImportReference impt;
       int length;
@@ -5548,7 +5493,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumePrimaryNoNewArray()
    {
-      // PrimaryNoNewArray ::=  PushLPAREN Expression PushRPAREN
+      // PrimaryNoNewArray ::= PushLPAREN Expression PushRPAREN
       final Expression parenthesizedExpression = this.expressionStack[this.expressionPtr];
       updateSourcePosition(parenthesizedExpression);
       int numberOfParenthesis =
@@ -5628,7 +5573,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumePrimaryNoNewArrayWithName()
    {
-      // PrimaryNoNewArray ::=  PushLPAREN Expression PushRPAREN
+      // PrimaryNoNewArray ::= PushLPAREN Expression PushRPAREN
       pushOnExpressionStack(getUnspecifiedReferenceOptimized());
       final Expression parenthesizedExpression = this.expressionStack[this.expressionPtr];
       updateSourcePosition(parenthesizedExpression);
@@ -5690,8 +5635,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumeQualifiedName()
    {
       // QualifiedName ::= Name '.' SimpleName
-      /*back from the recursive loop of QualifiedName.
-      Updates identifier length into the length stack*/
+      /*
+       * back from the recursive loop of QualifiedName. Updates identifier length into the length stack
+       */
 
       this.identifierLengthStack[--this.identifierLengthPtr]++;
    }
@@ -5770,8 +5716,10 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeResourceAsLocalVariableDeclaration()
    {
-      // Resource ::= Type PushModifiers VariableDeclaratorId EnterVariable '=' ForceNoDiet VariableInitializer RestoreDiet ExitVariableWithInitialization
-      // Resource ::= Modifiers Type PushRealModifiers VariableDeclaratorId EnterVariable '=' ForceNoDiet VariableInitializer RestoreDiet ExitVariableWithInitialization
+      // Resource ::= Type PushModifiers VariableDeclaratorId EnterVariable '=' ForceNoDiet VariableInitializer RestoreDiet
+      // ExitVariableWithInitialization
+      // Resource ::= Modifiers Type PushRealModifiers VariableDeclaratorId EnterVariable '=' ForceNoDiet VariableInitializer
+      // RestoreDiet ExitVariableWithInitialization
       consumeLocalVariableDeclaration();
    }
 
@@ -8910,8 +8858,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumeSingleStaticImportDeclarationName()
    {
       // SingleTypeImportDeclarationName ::= 'import' 'static' Name
-      /* push an ImportRef build from the last name
-      stored in the identifier stack. */
+      /*
+       * push an ImportRef build from the last name stored in the identifier stack.
+       */
 
       ImportReference impt;
       int length;
@@ -8934,7 +8883,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          impt.declarationSourceEnd = impt.sourceEnd;
       }
       impt.declarationEnd = impt.declarationSourceEnd;
-      //this.endPosition is just before the ;
+      // this.endPosition is just before the ;
       impt.declarationSourceStart = this.intStack[this.intPtr--];
 
       if (!this.statementRecoveryActivated && this.options.sourceLevel < ClassFileConstants.JDK1_5
@@ -8957,8 +8906,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumeSingleTypeImportDeclarationName()
    {
       // SingleTypeImportDeclarationName ::= 'import' Name
-      /* push an ImportRef build from the last name
-      stored in the identifier stack. */
+      /*
+       * push an ImportRef build from the last name stored in the identifier stack.
+       */
 
       ImportReference impt;
       int length;
@@ -8978,7 +8928,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          impt.declarationSourceEnd = impt.sourceEnd;
       }
       impt.declarationEnd = impt.declarationSourceEnd;
-      //this.endPosition is just before the ;
+      // this.endPosition is just before the ;
       impt.declarationSourceStart = this.intStack[this.intPtr--];
 
       // recovery
@@ -9026,13 +8976,13 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeStatementCatch()
    {
-      // CatchClause ::= 'catch' '(' FormalParameter ')'    Block
+      // CatchClause ::= 'catch' '(' FormalParameter ')' Block
 
-      //catch are stored directly into the Try
-      //has they always comes two by two....
-      //we remove one entry from the astlengthPtr.
-      //The construction of the try statement must
-      //then fetch the catches using  2*i and 2*i + 1
+      // catch are stored directly into the Try
+      // has they always comes two by two....
+      // we remove one entry from the astlengthPtr.
+      // The construction of the try statement must
+      // then fetch the catches using 2*i and 2*i + 1
 
       this.astLengthPtr--;
       this.listLength = 0; // reset formalParameter counter (incremented for catch variable)
@@ -9060,7 +9010,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    {
       // DoStatement ::= 'do' Statement 'while' '(' Expression ')' ';'
 
-      //the 'while' pushes a value on this.intStack that we need to remove
+      // the 'while' pushes a value on this.intStack that we need to remove
       this.intPtr--;
 
       Statement statement = (Statement)this.astStack[this.astPtr];
@@ -9086,11 +9036,11 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       Statement[] inits, updates;
       boolean scope = true;
 
-      //statements
+      // statements
       this.astLengthPtr--;
       Statement statement = (Statement)this.astStack[this.astPtr--];
 
-      //updates are on the expresion stack
+      // updates are on the expresion stack
       if ((length = this.expressionLengthStack[this.expressionLengthPtr--]) == 0)
       {
          updates = null;
@@ -9104,7 +9054,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       if (this.expressionLengthStack[this.expressionLengthPtr--] != 0)
          cond = this.expressionStack[this.expressionPtr--];
 
-      //inits may be on two different stacks
+      // inits may be on two different stacks
       if ((length = this.astLengthStack[this.astLengthPtr--]) == 0)
       {
          inits = null;
@@ -9113,14 +9063,14 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       else
       {
          if (length == -1)
-         { //on this.expressionStack
+         { // on this.expressionStack
             scope = false;
             length = this.expressionLengthStack[this.expressionLengthPtr--];
             this.expressionPtr -= length;
             System.arraycopy(this.expressionStack, this.expressionPtr + 1, inits = new Statement[length], 0, length);
          }
          else
-         { //on this.astStack
+         { // on this.astStack
             this.astPtr -= length;
             System.arraycopy(this.astStack, this.astPtr + 1, inits = new Statement[length], 0, length);
          }
@@ -9131,9 +9081,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeStatementIfNoElse()
    {
-      // IfThenStatement ::=  'if' '(' Expression ')' Statement
+      // IfThenStatement ::= 'if' '(' Expression ')' Statement
 
-      //optimize the push/pop
+      // optimize the push/pop
       this.expressionLengthPtr--;
       Statement thenStatement = (Statement)this.astStack[this.astPtr];
       this.astStack[this.astPtr] =
@@ -9143,15 +9093,15 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeStatementIfWithElse()
    {
-      // IfThenElseStatement ::=  'if' '(' Expression ')' StatementNoShortIf 'else' Statement
-      // IfThenElseStatementNoShortIf ::=  'if' '(' Expression ')' StatementNoShortIf 'else' StatementNoShortIf
+      // IfThenElseStatement ::= 'if' '(' Expression ')' StatementNoShortIf 'else' Statement
+      // IfThenElseStatementNoShortIf ::= 'if' '(' Expression ')' StatementNoShortIf 'else' StatementNoShortIf
 
       this.expressionLengthPtr--;
 
       // optimized {..., Then, Else } ==> {..., If }
       this.astLengthPtr--;
 
-      //optimize the push/pop
+      // optimize the push/pop
       this.astStack[--this.astPtr] =
          new IfStatement(this.expressionStack[this.expressionPtr--], (Statement)this.astStack[this.astPtr],
             (Statement)this.astStack[this.astPtr + 1], this.intStack[this.intPtr--], this.endStatementPosition);
@@ -9162,7 +9112,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // LabeledStatement ::= 'Identifier' ':' Statement
       // LabeledStatementNoShortIf ::= 'Identifier' ':' StatementNoShortIf
 
-      //optimize push/pop
+      // optimize push/pop
       Statement statement = (Statement)this.astStack[this.astPtr];
       this.astStack[this.astPtr] =
          new LabeledStatement(this.identifierStack[this.identifierPtr], statement,
@@ -9190,9 +9140,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    {
       // SwitchStatement ::= 'switch' OpenBlock '(' Expression ')' SwitchBlock
 
-      //OpenBlock just makes the semantic action blockStart()
-      //the block is inlined but a scope need to be created
-      //if some declaration occurs.
+      // OpenBlock just makes the semantic action blockStart()
+      // the block is inlined but a scope need to be created
+      // if some declaration occurs.
 
       int length;
       SwitchStatement switchStatement = new SwitchStatement();
@@ -9218,7 +9168,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumeStatementSynchronized()
    {
       // SynchronizedStatement ::= OnlySynchronized '(' Expression ')' Block
-      //optimize the push/pop
+      // optimize the push/pop
 
       if (this.astLengthStack[this.astLengthPtr] == 0)
       {
@@ -9248,20 +9198,20 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeStatementTry(boolean withFinally, boolean hasResources)
    {
-      // TryStatement ::= 'try'  Block Catches
-      // TryStatement ::= 'try'  Block Catchesopt Finally
+      // TryStatement ::= 'try' Block Catches
+      // TryStatement ::= 'try' Block Catchesopt Finally
       // TryStatementWithResources ::= 'try' ResourceSpecification TryBlock Catchesopt
       // TryStatementWithResources ::= 'try' ResourceSpecification TryBlock Catchesopt Finally
 
       int length;
       TryStatement tryStmt = new TryStatement();
-      //finally
+      // finally
       if (withFinally)
       {
          this.astLengthPtr--;
          tryStmt.finallyBlock = (Block)this.astStack[this.astPtr--];
       }
-      //catches are handle by two <argument-block> [see statementCatch]
+      // catches are handle by two <argument-block> [see statementCatch]
       if ((length = this.astLengthStack[this.astLengthPtr--]) != 0)
       {
          if (length == 1)
@@ -9280,7 +9230,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
             }
          }
       }
-      //try
+      // try
       this.astLengthPtr--;
       tryStmt.tryBlock = (Block)this.astStack[this.astPtr--];
 
@@ -9296,7 +9246,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
             problemReporter().autoManagedResourcesNotBelow17(resources);
          }
       }
-      //positions
+      // positions
       tryStmt.sourceEnd = this.endStatementPosition;
       tryStmt.sourceStart = this.intStack[this.intPtr--];
       pushOnAstStack(tryStmt);
@@ -9317,8 +9267,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumeStaticImportOnDemandDeclarationName()
    {
       // TypeImportOnDemandDeclarationName ::= 'import' 'static' Name '.' '*'
-      /* push an ImportRef build from the last name
-      stored in the identifier stack. */
+      /*
+       * push an ImportRef build from the last name stored in the identifier stack.
+       */
 
       ImportReference impt;
       int length;
@@ -9343,7 +9294,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          impt.declarationSourceEnd = impt.sourceEnd;
       }
       impt.declarationEnd = impt.declarationSourceEnd;
-      //this.endPosition is just before the ;
+      // this.endPosition is just before the ;
       impt.declarationSourceStart = this.intStack[this.intPtr--];
 
       if (!this.statementRecoveryActivated && this.options.sourceLevel < ClassFileConstants.JDK1_5
@@ -9365,9 +9316,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeStaticInitializer()
    {
-      // StaticInitializer ::=  StaticOnly Block
-      //push an Initializer
-      //optimize the push/pop
+      // StaticInitializer ::= StaticOnly Block
+      // push an Initializer
+      // optimize the push/pop
       Block block = (Block)this.astStack[this.astPtr];
       if (this.diet)
          block.bits &= ~ASTNode.UndocumentedEmptyBlock; // clear bit set since was diet
@@ -9411,7 +9362,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // recovery
       if (this.currentElement != null)
       {
-         this.recoveredStaticInitializerStart = this.intStack[this.intPtr]; // remember start position only for static initializers
+         this.recoveredStaticInitializerStart = this.intStack[this.intPtr]; // remember start position only for static
+                                                                            // initializers
       }
    }
 
@@ -9443,24 +9395,24 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    {
       /* remember the last consumed value */
       /* try to minimize the number of build values */
-      //	// clear the commentPtr of the scanner in case we read something different from a modifier
-      //	switch(type) {
-      //		case TokenNameabstract :
-      //		case TokenNamestrictfp :
-      //		case TokenNamefinal :
-      //		case TokenNamenative :
-      //		case TokenNameprivate :
-      //		case TokenNameprotected :
-      //		case TokenNamepublic :
-      //		case TokenNametransient :
-      //		case TokenNamevolatile :
-      //		case TokenNamestatic :
-      //		case TokenNamesynchronized :
-      //			break;
-      //		default:
-      //			this.scanner.commentPtr = -1;
-      //	}
-      //System.out.println(this.scanner.toStringAction(type));
+      // // clear the commentPtr of the scanner in case we read something different from a modifier
+      // switch(type) {
+      // case TokenNameabstract :
+      // case TokenNamestrictfp :
+      // case TokenNamefinal :
+      // case TokenNamenative :
+      // case TokenNameprivate :
+      // case TokenNameprotected :
+      // case TokenNamepublic :
+      // case TokenNametransient :
+      // case TokenNamevolatile :
+      // case TokenNamestatic :
+      // case TokenNamesynchronized :
+      // break;
+      // default:
+      // this.scanner.commentPtr = -1;
+      // }
+      // System.out.println(this.scanner.toStringAction(type));
       switch (type)
       {
          case TokenNameIdentifier :
@@ -9481,7 +9433,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
             }
             break;
          case TokenNameinterface :
-            //'class' is pushing two int (positions) on the stack ==> 'interface' needs to do it too....
+            // 'class' is pushing two int (positions) on the stack ==> 'interface' needs to do it too....
             pushOnIntStack(this.scanner.currentPosition - 1);
             pushOnIntStack(this.scanner.startPosition);
             break;
@@ -9530,15 +9482,15 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
             checkAndSetModifiers(ClassFileConstants.AccSynchronized);
             pushOnExpressionStackLengthStack(0);
             break;
-         //==============================
+         // ==============================
          case TokenNamevoid :
             pushIdentifier(-T_void);
             pushOnIntStack(this.scanner.currentPosition - 1);
             pushOnIntStack(this.scanner.startPosition);
             break;
-         //push a default dimension while void is not part of the primitive
-         //declaration baseType and so takes the place of a type without getting into
-         //regular type parsing that generates a dimension on this.intStack
+         // push a default dimension while void is not part of the primitive
+         // declaration baseType and so takes the place of a type without getting into
+         // regular type parsing that generates a dimension on this.intStack
          case TokenNameboolean :
             pushIdentifier(-T_boolean);
             pushOnIntStack(this.scanner.currentPosition - 1);
@@ -9579,7 +9531,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
             pushOnIntStack(this.scanner.currentPosition - 1);
             pushOnIntStack(this.scanner.startPosition);
             break;
-         //==============================
+         // ==============================
          case TokenNameIntegerLiteral :
             pushOnExpressionStack(IntLiteral.buildIntLiteral(this.scanner.getCurrentTokenSource(),
                this.scanner.startPosition, this.scanner.currentPosition - 1));
@@ -9628,7 +9580,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          case TokenNamenull :
             pushOnExpressionStack(new NullLiteral(this.scanner.startPosition, this.scanner.currentPosition - 1));
             break;
-         //============================
+         // ============================
          case TokenNamesuper :
          case TokenNamethis :
             this.endPosition = this.scanner.currentPosition - 1;
@@ -9667,7 +9619,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
             pushOnIntStack(this.scanner.startPosition);
             pushOnIntStack(this.scanner.currentPosition - 1);
             break;
-         //let extra semantic action decide when to push
+         // let extra semantic action decide when to push
          case TokenNameRBRACKET :
             this.endPosition = this.scanner.startPosition;
             this.endStatementPosition = this.scanner.currentPosition - 1;
@@ -9690,11 +9642,12 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          case TokenNameSEMICOLON :
             this.endStatementPosition = this.scanner.currentPosition - 1;
             this.endPosition = this.scanner.startPosition - 1;
-            //the item is not part of the potential futur expression/statement
+            // the item is not part of the potential futur expression/statement
             break;
          case TokenNameRPAREN :
             // in order to handle ( expression) ////// (cast)expression///// foo(x)
-            this.rParenPos = this.scanner.currentPosition - 1; // position of the end of right parenthesis (in case of unicode \u0029) lex00101
+            this.rParenPos = this.scanner.currentPosition - 1; // position of the end of right parenthesis (in case of unicode
+                                                               // \u0029) lex00101
             break;
          case TokenNameLPAREN :
             this.lParenPos = this.scanner.startPosition;
@@ -9726,47 +9679,47 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
             // star end position
             pushOnIntStack(this.scanner.currentPosition - 1);
             break;
-      //  case TokenNameCOMMA :
-      //  case TokenNameCOLON  :
-      //  case TokenNameLBRACKET  :
-      //  case TokenNameDOT :
-      //  case TokenNameERROR :
-      //  case TokenNameEOF  :
-      //  case TokenNamecase  :
-      //  case TokenNamecatch  :
-      //  case TokenNameelse  :
-      //  case TokenNameextends  :
-      //  case TokenNamefinally  :
-      //  case TokenNameimplements  :
-      //  case TokenNamethrows  :
-      //  case TokenNameinstanceof  :
-      //  case TokenNameEQUAL_EQUAL  :
-      //  case TokenNameLESS_EQUAL  :
-      //  case TokenNameGREATER_EQUAL  :
-      //  case TokenNameNOT_EQUAL  :
-      //  case TokenNameLEFT_SHIFT  :
-      //  case TokenNameRIGHT_SHIFT  :
-      //  case TokenNameUNSIGNED_RIGHT_SHIFT :
-      //  case TokenNamePLUS_EQUAL  :
-      //  case TokenNameMINUS_EQUAL  :
-      //  case TokenNameMULTIPLY_EQUAL  :
-      //  case TokenNameDIVIDE_EQUAL  :
-      //  case TokenNameAND_EQUAL  :
-      //  case TokenNameOR_EQUAL  :
-      //  case TokenNameXOR_EQUAL  :
-      //  case TokenNameREMAINDER_EQUAL  :
-      //  case TokenNameLEFT_SHIFT_EQUAL  :
-      //  case TokenNameRIGHT_SHIFT_EQUAL  :
-      //  case TokenNameUNSIGNED_RIGHT_SHIFT_EQUAL  :
-      //  case TokenNameOR_OR  :
-      //  case TokenNameAND_AND  :
-      //  case TokenNameREMAINDER :
-      //  case TokenNameXOR  :
-      //  case TokenNameAND  :
-      //  case TokenNameMULTIPLY :
-      //  case TokenNameOR  :
-      //  case TokenNameDIVIDE :
-      //  case TokenNameGREATER  :
+      // case TokenNameCOMMA :
+      // case TokenNameCOLON :
+      // case TokenNameLBRACKET :
+      // case TokenNameDOT :
+      // case TokenNameERROR :
+      // case TokenNameEOF :
+      // case TokenNamecase :
+      // case TokenNamecatch :
+      // case TokenNameelse :
+      // case TokenNameextends :
+      // case TokenNamefinally :
+      // case TokenNameimplements :
+      // case TokenNamethrows :
+      // case TokenNameinstanceof :
+      // case TokenNameEQUAL_EQUAL :
+      // case TokenNameLESS_EQUAL :
+      // case TokenNameGREATER_EQUAL :
+      // case TokenNameNOT_EQUAL :
+      // case TokenNameLEFT_SHIFT :
+      // case TokenNameRIGHT_SHIFT :
+      // case TokenNameUNSIGNED_RIGHT_SHIFT :
+      // case TokenNamePLUS_EQUAL :
+      // case TokenNameMINUS_EQUAL :
+      // case TokenNameMULTIPLY_EQUAL :
+      // case TokenNameDIVIDE_EQUAL :
+      // case TokenNameAND_EQUAL :
+      // case TokenNameOR_EQUAL :
+      // case TokenNameXOR_EQUAL :
+      // case TokenNameREMAINDER_EQUAL :
+      // case TokenNameLEFT_SHIFT_EQUAL :
+      // case TokenNameRIGHT_SHIFT_EQUAL :
+      // case TokenNameUNSIGNED_RIGHT_SHIFT_EQUAL :
+      // case TokenNameOR_OR :
+      // case TokenNameAND_AND :
+      // case TokenNameREMAINDER :
+      // case TokenNameXOR :
+      // case TokenNameAND :
+      // case TokenNameMULTIPLY :
+      // case TokenNameOR :
+      // case TokenNameDIVIDE :
+      // case TokenNameGREATER :
       }
    }
 
@@ -9867,8 +9820,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void consumeTypeImportOnDemandDeclarationName()
    {
       // TypeImportOnDemandDeclarationName ::= 'import' Name '.' '*'
-      /* push an ImportRef build from the last name
-      stored in the identifier stack. */
+      /*
+       * push an ImportRef build from the last name stored in the identifier stack.
+       */
 
       ImportReference impt;
       int length;
@@ -9890,7 +9844,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          impt.declarationSourceEnd = impt.sourceEnd;
       }
       impt.declarationEnd = impt.declarationSourceEnd;
-      //this.endPosition is just before the ;
+      // this.endPosition is just before the ;
       impt.declarationSourceStart = this.intStack[this.intPtr--];
 
       // recovery
@@ -9910,7 +9864,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeTypeParameter1WithExtends()
    {
-      //TypeParameter1 ::= TypeParameterHeader 'extends' ReferenceType1
+      // TypeParameter1 ::= TypeParameterHeader 'extends' ReferenceType1
       TypeReference superType = (TypeReference)this.genericsStack[this.genericsPtr--];
       this.genericsLengthPtr--;
       TypeParameter typeParameter = (TypeParameter)this.genericsStack[this.genericsPtr];
@@ -9922,7 +9876,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeTypeParameter1WithExtendsAndBounds()
    {
-      //TypeParameter1 ::= TypeParameterHeader 'extends' ReferenceType AdditionalBoundList1
+      // TypeParameter1 ::= TypeParameterHeader 'extends' ReferenceType AdditionalBoundList1
       int additionalBoundsLength = this.genericsLengthStack[this.genericsLengthPtr--];
       TypeReference[] bounds = new TypeReference[additionalBoundsLength];
       this.genericsPtr -= additionalBoundsLength;
@@ -9941,7 +9895,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeTypeParameterHeader()
    {
-      //TypeParameterHeader ::= Identifier
+      // TypeParameterHeader ::= Identifier
       TypeParameter typeParameter = new TypeParameter();
       long pos = this.identifierPositionStack[this.identifierPtr];
       final int end = (int)pos;
@@ -9959,13 +9913,13 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeTypeParameterList()
    {
-      //TypeParameterList ::= TypeParameterList ',' TypeParameter
+      // TypeParameterList ::= TypeParameterList ',' TypeParameter
       concatGenericsLists();
    }
 
    protected void consumeTypeParameterList1()
    {
-      //TypeParameterList1 ::= TypeParameterList ',' TypeParameter1
+      // TypeParameterList1 ::= TypeParameterList ',' TypeParameter1
       concatGenericsLists();
    }
 
@@ -9998,7 +9952,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeTypeParameterWithExtends()
    {
-      //TypeParameter ::= TypeParameterHeader 'extends' ReferenceType
+      // TypeParameter ::= TypeParameterHeader 'extends' ReferenceType
       TypeReference superType = getTypeReference(this.intStack[this.intPtr--]);
       TypeParameter typeParameter = (TypeParameter)this.genericsStack[this.genericsPtr];
       typeParameter.declarationSourceEnd = superType.sourceEnd;
@@ -10008,7 +9962,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void consumeTypeParameterWithExtendsAndBounds()
    {
-      //TypeParameter ::= TypeParameterHeader 'extends' ReferenceType AdditionalBoundList
+      // TypeParameter ::= TypeParameterHeader 'extends' ReferenceType AdditionalBoundList
       int additionalBoundsLength = this.genericsLengthStack[this.genericsLengthPtr--];
       TypeReference[] bounds = new TypeReference[additionalBoundsLength];
       this.genericsPtr -= additionalBoundsLength;
@@ -10032,14 +9986,14 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // UnaryExpressionNotPlusMinus ::= '~' PushPosition UnaryExpression
       // UnaryExpressionNotPlusMinus ::= '!' PushPosition UnaryExpression
 
-      //optimize the push/pop
+      // optimize the push/pop
 
-      //handle manually the -2147483648 while it is not a real
-      //computation of an - and 2147483648 (notice that 2147483648
-      //is Integer.MAX_VALUE+1.....)
-      //Same for -9223372036854775808L ............
+      // handle manually the -2147483648 while it is not a real
+      // computation of an - and 2147483648 (notice that 2147483648
+      // is Integer.MAX_VALUE+1.....)
+      // Same for -9223372036854775808L ............
 
-      //this.intStack have the position of the operator
+      // this.intStack have the position of the operator
 
       Expression r, exp = this.expressionStack[this.expressionPtr];
       if (op == MINUS)
@@ -10092,9 +10046,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // PreDecrementExpression ::= '--' PushPosition UnaryExpression
 
       // ++ and -- operators
-      //optimize the push/pop
+      // optimize the push/pop
 
-      //this.intStack has the position of the operator when prefix
+      // this.intStack has the position of the operator when prefix
 
       Expression leftHandSide = this.expressionStack[this.expressionPtr];
       if (leftHandSide instanceof Reference)
@@ -10113,7 +10067,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       }
       else
       {
-         //the ++ or the -- is NOT taken into account if code gen proceeds
+         // the ++ or the -- is NOT taken into account if code gen proceeds
          if (!post)
          {
             this.intPtr--;
@@ -10277,7 +10231,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    /**
     * Given the current comment stack, answer whether some comment is available in a certain exclusive range
-    *
+    * 
     * @param sourceStart int
     * @param sourceEnd int
     * @return boolean
@@ -10383,16 +10337,17 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void dispatchDeclarationInto(int length)
    {
-      /* they are length on this.astStack that should go into
-         methods fields constructors lists of the typeDecl
-
-         Return if there is a constructor declaration in the methods declaration */
+      /*
+       * they are length on this.astStack that should go into methods fields constructors lists of the typeDecl
+       * 
+       * Return if there is a constructor declaration in the methods declaration
+       */
 
       // Looks for the size of each array .
 
       if (length == 0)
          return;
-      int[] flag = new int[length + 1]; //plus one -- see <HERE>
+      int[] flag = new int[length + 1]; // plus one -- see <HERE>
       int size1 = 0, size2 = 0, size3 = 0;
       boolean hasAbstractMethods = false;
       for (int i = length - 1; i >= 0; i--)
@@ -10400,7 +10355,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          ASTNode astNode = this.astStack[this.astPtr--];
          if (astNode instanceof AbstractMethodDeclaration)
          {
-            //methods and constructors have been regrouped into one single list
+            // methods and constructors have been regrouped into one single list
             flag[i] = 2;
             size2++;
             if (((AbstractMethodDeclaration)astNode).isAbstract())
@@ -10415,13 +10370,13 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          }
          else
          {
-            //field
+            // field
             flag[i] = 1;
             size1++;
          }
       }
 
-      //arrays creation
+      // arrays creation
       TypeDeclaration typeDecl = (TypeDeclaration)this.astStack[this.astPtr];
       if (size1 != 0)
       {
@@ -10438,14 +10393,14 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          typeDecl.memberTypes = new TypeDeclaration[size3];
       }
 
-      //arrays fill up
+      // arrays fill up
       size1 = size2 = size3 = 0;
       int flagI = flag[0], start = 0;
       int length2;
-      for (int end = 0; end <= length; end++) //<HERE> the plus one allows to
+      for (int end = 0; end <= length; end++) // <HERE> the plus one allows to
       {
-         if (flagI != flag[end]) //treat the last element as a ended flag.....
-         { //array copy
+         if (flagI != flag[end]) // treat the last element as a ended flag.....
+         { // array copy
             switch (flagI)
             {
                case 1 :
@@ -10480,7 +10435,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
       if (length == 0)
          return;
-      int[] flag = new int[length + 1]; //plus one -- see <HERE>
+      int[] flag = new int[length + 1]; // plus one -- see <HERE>
       int size1 = 0, size2 = 0, size3 = 0;
       TypeDeclaration enumDeclaration = (TypeDeclaration)this.astStack[this.astPtr - length];
       boolean hasAbstractMethods = false;
@@ -10490,7 +10445,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          ASTNode astNode = this.astStack[this.astPtr--];
          if (astNode instanceof AbstractMethodDeclaration)
          {
-            //methods and constructors have been regrouped into one single list
+            // methods and constructors have been regrouped into one single list
             flag[i] = 2;
             size2++;
             if (((AbstractMethodDeclaration)astNode).isAbstract())
@@ -10514,7 +10469,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          }
       }
 
-      //arrays creation
+      // arrays creation
       if (size1 != 0)
       {
          enumDeclaration.fields = new FieldDeclaration[size1];
@@ -10530,14 +10485,14 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          enumDeclaration.memberTypes = new TypeDeclaration[size3];
       }
 
-      //arrays fill up
+      // arrays fill up
       size1 = size2 = size3 = 0;
       int flagI = flag[0], start = 0;
       int length2;
-      for (int end = 0; end <= length; end++) //<HERE> the plus one allows to
+      for (int end = 0; end <= length; end++) // <HERE> the plus one allows to
       {
-         if (flagI != flag[end]) //treat the last element as a ended flag.....
-         { //array copy
+         if (flagI != flag[end]) // treat the last element as a ended flag.....
+         { // array copy
             switch (flagI)
             {
                case 1 :
@@ -10622,15 +10577,12 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    /*
     * Flush comments defined prior to a given positions.
-    *
+    * 
     * Note: comments are stacked in syntactical order
-    *
-    * Either answer given <position>, or the end position of a comment line
-    * immediately following the <position> (same line)
-    *
-    * e.g.
-    * void foo(){
-    * } // end of method foo
+    * 
+    * Either answer given <position>, or the end position of a comment line immediately following the <position> (same line)
+    * 
+    * e.g. void foo(){ } // end of method foo
     */
    public int flushCommentsDefinedPriorTo(int position)
    {
@@ -10658,7 +10610,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // flush this comment and shift <position> to the comment end.
       if (validCount > 0)
       {
-         int immediateCommentEnd = -this.scanner.commentStops[index + 1]; //non-javadoc comment end positions are negative
+         int immediateCommentEnd = -this.scanner.commentStops[index + 1]; // non-javadoc comment end positions are negative
          if (immediateCommentEnd > 0)
          { // only tolerating non-javadoc comments
            // is there any line break until the end of the immediate comment ? (thus only tolerating line comment)
@@ -10755,12 +10707,12 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    }
 
    /*
-    * Answer back an array of sourceStart/sourceEnd positions of the available JavaDoc comments.
-    * The array is a flattened structure: 2*n entries with consecutives start and end positions.
-    *
+    * Answer back an array of sourceStart/sourceEnd positions of the available JavaDoc comments. The array is a flattened
+    * structure: 2*n entries with consecutives start and end positions.
+    * 
     * If no JavaDoc is available, then null is answered instead of an empty array.
-    *
-    * e.g. { 10, 20, 25, 45 }  --> javadoc1 from 10 to 20, javadoc2 from 25 to 45
+    * 
+    * e.g. { 10, 20, 25, 45 } --> javadoc1 from 10 to 20, javadoc2 from 25 to 45
     */
    public int[] getJavaDocPositions()
    {
@@ -10790,7 +10742,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
             if (commentStop > 0)
             {
                positions[index++] = commentStart;
-               positions[index++] = commentStop - 1; //stop is one over
+               positions[index++] = commentStop - 1; // stop is one over
             }
          }
       }
@@ -10799,7 +10751,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void getMethodBodies(CompilationUnitDeclaration unit)
    {
-      //fill the methods bodies in order for the code to be generated
+      // fill the methods bodies in order for the code to be generated
 
       if (unit == null)
          return;
@@ -10812,14 +10764,14 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       }
 
       if ((unit.bits & ASTNode.HasAllMethodBodies) != 0)
-         return; //work already done ...
+         return; // work already done ...
 
       // save existing values to restore them at the end of the parsing process
       // see bug 47079 for more details
       int[] oldLineEnds = this.scanner.lineEnds;
       int oldLinePtr = this.scanner.linePtr;
 
-      //real parse of the method....
+      // real parse of the method....
       CompilationResult compilationResult = unit.compilationResult;
       char[] contents =
          this.readManager != null ? this.readManager.getContents(compilationResult.compilationUnit)
@@ -10880,13 +10832,15 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected TypeReference getTypeReference(int dim)
    {
-      /* build a Reference on a variable that may be qualified or not
-       This variable is a type reference and dim will be its dimensions*/
+      /*
+       * build a Reference on a variable that may be qualified or not This variable is a type reference and dim will be its
+       * dimensions
+       */
 
       TypeReference ref;
       int length = this.identifierLengthStack[this.identifierLengthPtr--];
       if (length < 0)
-      { //flag for precompiled type reference on base types
+      { // flag for precompiled type reference on base types
          ref = TypeReference.baseTypeReference(-length, dim);
          ref.sourceStart = this.intStack[this.intPtr--];
          if (dim == 0)
@@ -10928,7 +10882,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          else
          {
             this.genericsLengthPtr--;
-            //Qualified variable reference
+            // Qualified variable reference
             char[][] tokens = new char[length][];
             this.identifierPtr -= length;
             long[] positions = new long[length];
@@ -10971,11 +10925,12 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          {
             parameterizedSingleTypeReference.sourceEnd = this.endStatementPosition;
          }
-         /* We used to eagerly mark the PSTR as constituting diamond usage if we encountered <>, but that is too eager and
-            complicates error handling by making it hard to distinguish legitimate use cases from ill formed ones. We are
-            more discriminating now and tag a type as being diamond only where <> can legally occur. 
-            See https://bugs.eclipse.org/bugs/show_bug.cgi?id=339478#c11
-         */
+         /*
+          * We used to eagerly mark the PSTR as constituting diamond usage if we encountered <>, but that is too eager and
+          * complicates error handling by making it hard to distinguish legitimate use cases from ill formed ones. We are more
+          * discriminating now and tag a type as being diamond only where <> can legally occur. See
+          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=339478#c11
+          */
          return parameterizedSingleTypeReference;
       }
       else
@@ -11026,18 +10981,19 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          {
             parameterizedQualifiedTypeReference.sourceEnd = this.endStatementPosition;
          }
-         /* We used to eagerly mark the PQTR as constituting diamond usage if we encountered <>, but that is too eager and
-            complicates error handling by making it hard to distinguish legitimate use cases from ill formed ones. We are
-            more discriminating now and tag a type as being diamond only where <> can legally occur. 
-            See https://bugs.eclipse.org/bugs/show_bug.cgi?id=339478#c11
-         */
+         /*
+          * We used to eagerly mark the PQTR as constituting diamond usage if we encountered <>, but that is too eager and
+          * complicates error handling by making it hard to distinguish legitimate use cases from ill formed ones. We are more
+          * discriminating now and tag a type as being diamond only where <> can legally occur. See
+          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=339478#c11
+          */
          return parameterizedQualifiedTypeReference;
       }
    }
 
    protected NameReference getUnspecifiedReference()
    {
-      /* build a (unspecified) NameReference which may be qualified*/
+      /* build a (unspecified) NameReference which may be qualified */
 
       int length;
       NameReference ref;
@@ -11047,7 +11003,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
             new SingleNameReference(this.identifierStack[this.identifierPtr],
                this.identifierPositionStack[this.identifierPtr--]);
       else
-      //Qualified variable reference
+      // Qualified variable reference
       {
          char[][] tokens = new char[length][];
          this.identifierPtr -= length;
@@ -11064,12 +11020,11 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected NameReference getUnspecifiedReferenceOptimized()
    {
-      /* build a (unspecified) NameReference which may be qualified
-      The optimization occurs for qualified reference while we are
-      certain in this case the last item of the qualified name is
-      a field access. This optimization is IMPORTANT while it results
-      that when a NameReference is build, the type checker should always
-      look for that it is not a type reference */
+      /*
+       * build a (unspecified) NameReference which may be qualified The optimization occurs for qualified reference while we are
+       * certain in this case the last item of the qualified name is a field access. This optimization is IMPORTANT while it
+       * results that when a NameReference is build, the type checker should always look for that it is not a type reference
+       */
 
       int length;
       NameReference ref;
@@ -11084,11 +11039,11 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          return ref;
       }
 
-      //Qualified-variable-reference
-      //In fact it is variable-reference DOT field-ref , but it would result in a type
-      //conflict tha can be only reduce by making a superclass (or inetrface ) between
-      //nameReference and FiledReference or putting FieldReference under NameReference
-      //or else..........This optimisation is not really relevant so just leave as it is
+      // Qualified-variable-reference
+      // In fact it is variable-reference DOT field-ref , but it would result in a type
+      // conflict tha can be only reduce by making a superclass (or inetrface ) between
+      // nameReference and FiledReference or putting FieldReference under NameReference
+      // or else..........This optimisation is not really relevant so just leave as it is
 
       char[][] tokens = new char[length][];
       this.identifierPtr -= length;
@@ -11106,7 +11061,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void goForBlockStatementsopt()
    {
-      //tells the scanner to go for block statements opt parsing
+      // tells the scanner to go for block statements opt parsing
 
       this.firstToken = TokenNameTWIDDLE;
       this.scanner.recordLineSeparator = false;
@@ -11114,7 +11069,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void goForBlockStatementsOrCatchHeader()
    {
-      //tells the scanner to go for block statements or method headers parsing
+      // tells the scanner to go for block statements or method headers parsing
 
       this.firstToken = TokenNameMULTIPLY;
       this.scanner.recordLineSeparator = false;
@@ -11122,7 +11077,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void goForClassBodyDeclarations()
    {
-      //tells the scanner to go for any body declarations parsing
+      // tells the scanner to go for any body declarations parsing
 
       this.firstToken = TokenNameAND;
       this.scanner.recordLineSeparator = true;
@@ -11130,7 +11085,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void goForCompilationUnit()
    {
-      //tells the scanner to go for compilation unit parsing
+      // tells the scanner to go for compilation unit parsing
 
       this.firstToken = TokenNamePLUS_PLUS;
       this.scanner.foundTaskCount = 0;
@@ -11139,7 +11094,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void goForExpression()
    {
-      //tells the scanner to go for an expression parsing
+      // tells the scanner to go for an expression parsing
 
       this.firstToken = TokenNameREMAINDER;
       this.scanner.recordLineSeparator = true; // recovery goals must record line separators
@@ -11147,7 +11102,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void goForFieldDeclaration()
    {
-      //tells the scanner to go for field declaration parsing
+      // tells the scanner to go for field declaration parsing
 
       this.firstToken = TokenNameAND_AND;
       this.scanner.recordLineSeparator = true;
@@ -11155,7 +11110,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void goForGenericMethodDeclaration()
    {
-      //tells the scanner to go for generic method declarations parsing
+      // tells the scanner to go for generic method declarations parsing
 
       this.firstToken = TokenNameDIVIDE;
       this.scanner.recordLineSeparator = true;
@@ -11163,7 +11118,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void goForHeaders()
    {
-      //tells the scanner to go for headers only parsing
+      // tells the scanner to go for headers only parsing
       RecoveredType currentType = currentRecoveryType();
       if (currentType != null && currentType.insideEnumConstantPart)
       {
@@ -11178,7 +11133,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void goForImportDeclaration()
    {
-      //tells the scanner to go for import declaration parsing
+      // tells the scanner to go for import declaration parsing
 
       this.firstToken = TokenNameOR_OR;
       this.scanner.recordLineSeparator = true;
@@ -11186,7 +11141,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void goForInitializer()
    {
-      //tells the scanner to go for initializer parsing
+      // tells the scanner to go for initializer parsing
 
       this.firstToken = TokenNameRIGHT_SHIFT;
       this.scanner.recordLineSeparator = false;
@@ -11194,7 +11149,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void goForMemberValue()
    {
-      //tells the scanner to go for a member value parsing
+      // tells the scanner to go for a member value parsing
 
       this.firstToken = TokenNameOR_OR;
       this.scanner.recordLineSeparator = true; // recovery goals must record line separators
@@ -11202,7 +11157,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void goForMethodBody()
    {
-      //tells the scanner to go for method body parsing
+      // tells the scanner to go for method body parsing
 
       this.firstToken = TokenNameMINUS_MINUS;
       this.scanner.recordLineSeparator = false;
@@ -11210,7 +11165,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void goForPackageDeclaration()
    {
-      //tells the scanner to go for package declaration parsing
+      // tells the scanner to go for package declaration parsing
 
       this.firstToken = TokenNameQUESTION;
       this.scanner.recordLineSeparator = true;
@@ -11218,7 +11173,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void goForTypeDeclaration()
    {
-      //tells the scanner to go for type (interface or class) declaration parsing
+      // tells the scanner to go for type (interface or class) declaration parsing
 
       this.firstToken = TokenNamePLUS;
       this.scanner.recordLineSeparator = true;
@@ -11226,6 +11181,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    /**
     * Look for a specific tag comment leading a given source range (comment located after any statement in astStack)
+    * 
     * @param rangeEnd int
     * @return boolean
     */
@@ -11296,8 +11252,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void initialize(boolean initializeNLS)
    {
-      //positionning the parser for a new compilation unit
-      //avoiding stack reallocation and all that....
+      // positionning the parser for a new compilation unit
+      // avoiding stack reallocation and all that....
       this.astPtr = -1;
       this.astLengthPtr = -1;
       this.expressionPtr = -1;
@@ -11313,14 +11269,14 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       this.referenceContext = null;
       this.endStatementPosition = 0;
 
-      //remove objects from stack too, while the same parser/compiler couple is
-      //re-used between two compilations ....
+      // remove objects from stack too, while the same parser/compiler couple is
+      // re-used between two compilations ....
 
       int astLength = this.astStack.length;
       if (this.noAstNodes.length < astLength)
       {
          this.noAstNodes = new ASTNode[astLength];
-         //System.out.println("Resized AST stacks : "+ astLength);
+         // System.out.println("Resized AST stacks : "+ astLength);
 
       }
       System.arraycopy(this.noAstNodes, 0, this.astStack, 0, astLength);
@@ -11329,7 +11285,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       if (this.noExpressions.length < expressionLength)
       {
          this.noExpressions = new Expression[expressionLength];
-         //System.out.println("Resized EXPR stacks : "+ expressionLength);
+         // System.out.println("Resized EXPR stacks : "+ expressionLength);
       }
       System.arraycopy(this.noExpressions, 0, this.expressionStack, 0, expressionLength);
 
@@ -11372,19 +11328,19 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    public void initializeScanner()
    {
       this.scanner =
-         new Scanner(false /*comment*/, false /*whitespace*/, false, /* will be set in initialize(boolean) */
-         this.options.sourceLevel /*sourceLevel*/, this.options.complianceLevel /*complianceLevel*/,
-            this.options.taskTags/*taskTags*/, this.options.taskPriorities/*taskPriorities*/,
-            this.options.isTaskCaseSensitive/*taskCaseSensitive*/);
+         new Scanner(false /* comment */, false /* whitespace */, false, /* will be set in initialize(boolean) */
+         this.options.sourceLevel /* sourceLevel */, this.options.complianceLevel /* complianceLevel */,
+            this.options.taskTags/* taskTags */, this.options.taskPriorities/* taskPriorities */,
+            this.options.isTaskCaseSensitive/* taskCaseSensitive */);
    }
 
    public void jumpOverMethodBody()
    {
-      //on diet parsing.....do not buffer method statements
+      // on diet parsing.....do not buffer method statements
 
-      //the scanner.diet is reinitialized to false
-      //automatically by the scanner once it has jumped over
-      //the statements
+      // the scanner.diet is reinitialized to false
+      // automatically by the scanner once it has jumped over
+      // the statements
 
       if (this.diet && (this.dietInt == 0))
          this.scanner.diet = true;
@@ -11468,9 +11424,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    /*
     * Move checkpoint location (current implementation is moving it by one token)
-    *
-    * Answers true if successfully moved checkpoint (in other words, it did not attempt to move it
-    * beyond end of file).
+    * 
+    * Answers true if successfully moved checkpoint (in other words, it did not attempt to move it beyond end of file).
     */
    protected boolean moveRecoveryCheckpoint()
    {
@@ -11520,7 +11475,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       }
       this.lastCheckPoint = this.scanner.currentPosition;
 
-      /* reset this.scanner again to previous checkpoint location*/
+      /* reset this.scanner again to previous checkpoint location */
       this.scanner.startPosition = pos;
       this.scanner.currentPosition = pos;
       this.scanner.commentPtr = -1;
@@ -11528,71 +11483,34 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       return true;
 
       /*
-       	The following implementation moves the checkpoint location by one line:
-
-      	int pos = this.lastCheckPoint;
-      	// reset this.scanner, and move checkpoint by one token
-      	this.scanner.startPosition = pos;
-      	this.scanner.currentPosition = pos;
-      	this.scanner.diet = false; // quit jumping over method bodies
-
-      	// if about to restart, then no need to shift token
-      	if (this.restartRecovery){
-      		this.lastIgnoredToken = -1;
-      		return true;
-      	}
-
-      	// protect against shifting on an invalid token
-      	this.lastIgnoredToken = this.nextIgnoredToken;
-      	this.nextIgnoredToken = -1;
-
-      	boolean wasTokenizingWhiteSpace = this.scanner.tokenizeWhiteSpace;
-      	this.scanner.tokenizeWhiteSpace = true;
-      	checkpointMove:
-      		do {
-      			try {
-      				this.nextIgnoredToken = this.scanner.getNextToken();
-      				switch(this.nextIgnoredToken){
-      					case Scanner.TokenNameWHITESPACE :
-      						if(this.scanner.getLineNumber(this.scanner.startPosition)
-      							== this.scanner.getLineNumber(this.scanner.currentPosition)){
-      							this.nextIgnoredToken = -1;
-      							}
-      						break;
-      					case TokenNameSEMICOLON :
-      					case TokenNameLBRACE :
-      					case TokenNameRBRACE :
-      						break;
-      					case TokenNameIdentifier :
-      						if(this.scanner.currentPosition == this.scanner.startPosition){
-      							this.scanner.currentPosition++; // on fake completion identifier
-      						}
-      					default:
-      						this.nextIgnoredToken = -1;
-      						break;
-      					case TokenNameEOF :
-      						break checkpointMove;
-      				}
-      			} catch(InvalidInputException e){
-      				pos = this.scanner.currentPosition;
-      			}
-      		} while (this.nextIgnoredToken < 0);
-      	this.scanner.tokenizeWhiteSpace = wasTokenizingWhiteSpace;
-
-      	if (this.nextIgnoredToken == TokenNameEOF) { // no more recovery after this point
-      		if (this.currentToken == TokenNameEOF) { // already tried one iteration on EOF
-      			return false;
-      		}
-      	}
-      	this.lastCheckPoint = this.scanner.currentPosition;
-
-      	// reset this.scanner again to previous checkpoint location
-      	this.scanner.startPosition = pos;
-      	this.scanner.currentPosition = pos;
-      	this.scanner.commentPtr = -1;
-
-      	return true;
-      */
+       * The following implementation moves the checkpoint location by one line:
+       * 
+       * int pos = this.lastCheckPoint; // reset this.scanner, and move checkpoint by one token this.scanner.startPosition = pos;
+       * this.scanner.currentPosition = pos; this.scanner.diet = false; // quit jumping over method bodies
+       * 
+       * // if about to restart, then no need to shift token if (this.restartRecovery){ this.lastIgnoredToken = -1; return true; }
+       * 
+       * // protect against shifting on an invalid token this.lastIgnoredToken = this.nextIgnoredToken; this.nextIgnoredToken =
+       * -1;
+       * 
+       * boolean wasTokenizingWhiteSpace = this.scanner.tokenizeWhiteSpace; this.scanner.tokenizeWhiteSpace = true;
+       * checkpointMove: do { try { this.nextIgnoredToken = this.scanner.getNextToken(); switch(this.nextIgnoredToken){ case
+       * Scanner.TokenNameWHITESPACE : if(this.scanner.getLineNumber(this.scanner.startPosition) ==
+       * this.scanner.getLineNumber(this.scanner.currentPosition)){ this.nextIgnoredToken = -1; } break; case TokenNameSEMICOLON :
+       * case TokenNameLBRACE : case TokenNameRBRACE : break; case TokenNameIdentifier : if(this.scanner.currentPosition ==
+       * this.scanner.startPosition){ this.scanner.currentPosition++; // on fake completion identifier } default:
+       * this.nextIgnoredToken = -1; break; case TokenNameEOF : break checkpointMove; } } catch(InvalidInputException e){ pos =
+       * this.scanner.currentPosition; } } while (this.nextIgnoredToken < 0); this.scanner.tokenizeWhiteSpace =
+       * wasTokenizingWhiteSpace;
+       * 
+       * if (this.nextIgnoredToken == TokenNameEOF) { // no more recovery after this point if (this.currentToken == TokenNameEOF)
+       * { // already tried one iteration on EOF return false; } } this.lastCheckPoint = this.scanner.currentPosition;
+       * 
+       * // reset this.scanner again to previous checkpoint location this.scanner.startPosition = pos;
+       * this.scanner.currentPosition = pos; this.scanner.commentPtr = -1;
+       * 
+       * return true;
+       */
    }
 
    protected MessageSend newMessageSend()
@@ -11626,30 +11544,25 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void optimizedConcatNodeLists()
    {
-      /*back from a recursive loop. Virtualy group the
-      astNode into an array using this.astLengthStack*/
+      /*
+       * back from a recursive loop. Virtualy group the astNode into an array using this.astLengthStack
+       */
 
       /*
-       * This is a case where you have two sublists into the this.astStack that you want
-       * to merge in one list. There is no action required on the this.astStack. The only
-       * thing you need to do is merge the two lengths specified on the astStackLength.
-       * The top two length are for example:
-       * ... p   n
-       * and you want to result in a list like:
-       * ... n+p
-       * This means that the p could be equals to 0 in case there is no astNode pushed
-       * on the this.astStack.
-       * Look at the InterfaceMemberDeclarations for an example.
-       * This case optimizes the fact that p == 1.
+       * This is a case where you have two sublists into the this.astStack that you want to merge in one list. There is no action
+       * required on the this.astStack. The only thing you need to do is merge the two lengths specified on the astStackLength.
+       * The top two length are for example: ... p n and you want to result in a list like: ... n+p This means that the p could be
+       * equals to 0 in case there is no astNode pushed on the this.astStack. Look at the InterfaceMemberDeclarations for an
+       * example. This case optimizes the fact that p == 1.
        */
 
       this.astLengthStack[--this.astLengthPtr]++;
    }
 
-   /*main loop of the automat
-   When a rule is reduced, the method consumeRule(int) is called with the number
-   of the consumed rule. When a terminal is consumed, the method consumeToken(int) is
-   called in order to remember (when needed) the consumed token */
+   /*
+    * main loop of the automat When a rule is reduced, the method consumeRule(int) is called with the number of the consumed rule.
+    * When a terminal is consumed, the method consumeToken(int) is called in order to remember (when needed) the consumed token
+    */
    // (int)asr[asi(act)]
    // name[symbol_index[currentKind]]
    protected void parse()
@@ -11891,10 +11804,10 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void parse(ConstructorDeclaration cd, CompilationUnitDeclaration unit, boolean recordLineSeparator)
    {
-      //only parse the method body of cd
-      //fill out its statements
+      // only parse the method body of cd
+      // fill out its statements
 
-      //convert bugs into parse error
+      // convert bugs into parse error
 
       boolean oldMethodRecoveryActivated = this.methodRecoveryActivated;
       if (this.options.performMethodsFullRecovery)
@@ -11941,7 +11854,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          return;
       }
 
-      //statements
+      // statements
       cd.explicitDeclarations = this.realBlockStack[this.realBlockPtr--];
       int length;
       if (this.astLengthPtr > -1 && (length = this.astLengthStack[this.astLengthPtr--]) != 0)
@@ -11950,14 +11863,14 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          if (!this.options.ignoreMethodBodies)
          {
             if (this.astStack[this.astPtr + 1] instanceof ExplicitConstructorCall)
-            //avoid a isSomeThing that would only be used here BUT what is faster between two alternatives ?
+            // avoid a isSomeThing that would only be used here BUT what is faster between two alternatives ?
             {
                System.arraycopy(this.astStack, this.astPtr + 2, cd.statements = new Statement[length - 1], 0,
                   length - 1);
                cd.constructorCall = (ExplicitConstructorCall)this.astStack[this.astPtr + 1];
             }
             else
-            { //need to add explicitly the super();
+            { // need to add explicitly the super();
                System.arraycopy(this.astStack, this.astPtr + 1, cd.statements = new Statement[length], 0, length);
                cd.constructorCall = SuperReference.implicitSuperConstructorCall();
             }
@@ -11988,9 +11901,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    public void parse(FieldDeclaration field, TypeDeclaration type, CompilationUnitDeclaration unit,
       char[] initializationSource)
    {
-      //only parse the initializationSource of the given field
+      // only parse the initializationSource of the given field
 
-      //convert bugs into parse error
+      // convert bugs into parse error
 
       initialize();
       goForExpression();
@@ -12035,7 +11948,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    {
       // parses a compilation unit and manages error handling (even bugs....)
 
-      return parse(sourceUnit, compilationResult, -1, -1/*parse without reseting the scanner*/);
+      return parse(sourceUnit, compilationResult, -1, -1/* parse without reseting the scanner */);
    }
 
    // A P I
@@ -12097,10 +12010,10 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    public void parse(Initializer initializer, TypeDeclaration type, CompilationUnitDeclaration unit)
    {
-      //only parse the method body of md
-      //fill out method statements
+      // only parse the method body of md
+      // fill out method statements
 
-      //convert bugs into parse error
+      // convert bugs into parse error
 
       boolean oldMethodRecoveryActivated = this.methodRecoveryActivated;
       if (this.options.performMethodsFullRecovery)
@@ -12142,7 +12055,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          return;
       }
 
-      //refill statements
+      // refill statements
       initializer.block.explicitDeclarations = this.realBlockStack[this.realBlockPtr--];
       int length;
       if (this.astLengthPtr > -1 && (length = this.astLengthStack[this.astLengthPtr--]) > 0)
@@ -12169,10 +12082,10 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    // A P I
    public void parse(MethodDeclaration md, CompilationUnitDeclaration unit)
    {
-      //only parse the method body of md
-      //fill out method statements
+      // only parse the method body of md
+      // fill out method statements
 
-      //convert bugs into parse error
+      // convert bugs into parse error
 
       if (md.isAbstract())
          return;
@@ -12222,7 +12135,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          return;
       }
 
-      //refill statements
+      // refill statements
       md.explicitDeclarations = this.realBlockStack[this.realBlockPtr--];
       int length;
       if (this.astLengthPtr > -1 && (length = this.astLengthStack[this.astLengthPtr--]) != 0)
@@ -12549,10 +12462,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    }
 
    /**
-    * Returns this parser's problem reporter initialized with its reference context.
-    * Also it is assumed that a problem is going to be reported, so initializes
-    * the compilation result's line positions.
-    *
+    * Returns this parser's problem reporter initialized with its reference context. Also it is assumed that a problem is going to
+    * be reported, so initializes the compilation result's line positions.
+    * 
     * @return ProblemReporter
     */
    public ProblemReporter problemReporter()
@@ -12567,9 +12479,10 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void pushIdentifier()
    {
-      /*push the consumeToken on the identifier stack.
-      Increase the total number of identifier in the stack.
-      identifierPtr points on the next top */
+      /*
+       * push the consumeToken on the identifier stack. Increase the total number of identifier in the stack. identifierPtr points
+       * on the next top
+       */
 
       int stackLength = this.identifierStack.length;
       if (++this.identifierPtr >= stackLength)
@@ -12593,10 +12506,10 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void pushIdentifier(int flag)
    {
-      /*push a special flag on the stack :
-      -zero stands for optional Name
-      -negative number for direct ref to base types.
-      identifierLengthPtr points on the top */
+      /*
+       * push a special flag on the stack : -zero stands for optional Name -negative number for direct ref to base types.
+       * identifierLengthPtr points on the top
+       */
 
       int stackLength = this.identifierLengthStack.length;
       if (++this.identifierLengthPtr >= stackLength)
@@ -12621,8 +12534,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void pushOnAstStack(ASTNode node)
    {
-      /*add a new obj on top of the ast stack
-      astPtr points on the top*/
+      /*
+       * add a new obj on top of the ast stack astPtr points on the top
+       */
 
       int stackLength = this.astStack.length;
       if (++this.astPtr >= stackLength)
@@ -12698,8 +12612,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void pushOnGenericsStack(ASTNode node)
    {
-      /*add a new obj on top of the generics stack
-      genericsPtr points on the top*/
+      /*
+       * add a new obj on top of the generics stack genericsPtr points on the top
+       */
 
       int stackLength = this.genericsStack.length;
       if (++this.genericsPtr >= stackLength)
@@ -12971,7 +12886,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
             && !(this.currentElement instanceof RecoveredInitializer))
          {
             // Do not move focus to parent if we are still inside an array initializer
-            // https://bugs.eclipse.org/bugs/show_bug.cgi?id=292087 
+            // https://bugs.eclipse.org/bugs/show_bug.cgi?id=292087
             if (this.currentElement.bracketBalance <= 0)
             {
                int end = ((RecoveredField)this.currentElement).fieldDeclaration.sourceEnd;
@@ -12982,8 +12897,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       }
    }
 
-   /* Token check performed on every token shift once having entered
-    * recovery mode.
+   /*
+    * Token check performed on every token shift once having entered recovery mode.
     */
    public void recoveryTokenCheck()
    {
@@ -13025,11 +12940,11 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
             if (newElement != this.currentElement)
             {
                this.currentElement = newElement;
-               //				if (newElement instanceof RecoveredField && this.dietInt <= 0) {
-               //					if (((RecoveredField)newElement).fieldDeclaration.type == null) { // enum constant
-               //						this.isInsideEnumConstantPart = true; // restore status
-               //					}
-               //				}
+               // if (newElement instanceof RecoveredField && this.dietInt <= 0) {
+               // if (((RecoveredField)newElement).fieldDeclaration.type == null) { // enum constant
+               // this.isInsideEnumConstantPart = true; // restore status
+               // }
+               // }
             }
             break;
          case TokenNameSEMICOLON :
@@ -13185,11 +13100,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    }
 
    /*
-    * Reset context so as to resume to regular parse loop
-    * If unable to reset for resuming, answers false.
-    *
-    * Move checkpoint location, reset internal stacks and
-    * decide which grammar goal is activated.
+    * Reset context so as to resume to regular parse loop If unable to reset for resuming, answers false.
+    * 
+    * Move checkpoint location, reset internal stacks and decide which grammar goal is activated.
     */
    protected boolean resumeAfterRecovery()
    {
@@ -13370,29 +13283,29 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       /* expose parser state to recovery state */
       this.currentElement.updateFromParserState();
 
-      /* check and update recovered state based on current token,
-      	this action is also performed when shifting token after recovery
-      	got activated once.
-      */
+      /*
+       * check and update recovered state based on current token, this action is also performed when shifting token after recovery
+       * got activated once.
+       */
       recoveryTokenCheck();
    }
 
    protected void updateSourceDeclarationParts(int variableDeclaratorsCounter)
    {
-      //fields is a definition of fields that are grouped together like in
-      //public int[] a, b[], c
-      //which results into 3 fields.
+      // fields is a definition of fields that are grouped together like in
+      // public int[] a, b[], c
+      // which results into 3 fields.
 
       FieldDeclaration field;
       int endTypeDeclarationPosition = -1 + this.astStack[this.astPtr - variableDeclaratorsCounter + 1].sourceStart;
       for (int i = 0; i < variableDeclaratorsCounter - 1; i++)
       {
-         //last one is special(see below)
+         // last one is special(see below)
          field = (FieldDeclaration)this.astStack[this.astPtr - i - 1];
          field.endPart1Position = endTypeDeclarationPosition;
          field.endPart2Position = -1 + this.astStack[this.astPtr - i].sourceStart;
       }
-      //last one
+      // last one
       (field = (FieldDeclaration)this.astStack[this.astPtr]).endPart1Position = endTypeDeclarationPosition;
       field.endPart2Position = field.declarationSourceEnd;
 
@@ -13400,11 +13313,11 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void updateSourcePosition(Expression exp)
    {
-      //update the source Position of the expression
+      // update the source Position of the expression
 
-      //this.intStack : int int
-      //-->
-      //this.intStack :
+      // this.intStack : int int
+      // -->
+      // this.intStack :
 
       exp.sourceEnd = this.intStack[this.intPtr--];
       exp.sourceStart = this.intStack[this.intPtr--];

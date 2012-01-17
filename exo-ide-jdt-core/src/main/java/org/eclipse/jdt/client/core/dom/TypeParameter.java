@@ -16,11 +16,12 @@ import java.util.List;
 
 /**
  * Type parameter node (added in JLS3 API).
+ * 
  * <pre>
  * TypeParameter:
  *    TypeVariable [ <b>extends</b> Type { <b>&</b> Type } ]
  * </pre>
- *
+ * 
  * @since 3.1
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -40,9 +41,7 @@ public class TypeParameter extends ASTNode
       TypeParameter.class, "typeBounds", Type.class, NO_CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -56,14 +55,11 @@ public class TypeParameter extends ASTNode
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     */
    public static List propertyDescriptors(int apiLevel)
    {
@@ -71,25 +67,22 @@ public class TypeParameter extends ASTNode
    }
 
    /**
-    * The type variable node; lazily initialized; defaults to an unspecfied,
-    * but legal, name.
+    * The type variable node; lazily initialized; defaults to an unspecfied, but legal, name.
     */
    private SimpleName typeVariableName = null;
 
    /**
-    * The type bounds (element type: {@link Type}).
-    * Defaults to an empty list.
+    * The type bounds (element type: {@link Type}). Defaults to an empty list.
     */
    private ASTNode.NodeList typeBounds = new ASTNode.NodeList(TYPE_BOUNDS_PROPERTY);
 
    /**
-    * Creates a new unparented node for a parameterized type owned by the
-    * given AST. By default, an unspecified, but legal, type variable name,
-    * and no type bounds.
+    * Creates a new unparented node for a parameterized type owned by the given AST. By default, an unspecified, but legal, type
+    * variable name, and no type bounds.
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    TypeParameter(AST ast)
@@ -98,16 +91,16 @@ public class TypeParameter extends ASTNode
       unsupportedIn2();
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -127,8 +120,8 @@ public class TypeParameter extends ASTNode
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
@@ -140,16 +133,16 @@ public class TypeParameter extends ASTNode
       return super.internalGetChildListProperty(property);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return TYPE_PARAMETER;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -160,8 +153,8 @@ public class TypeParameter extends ASTNode
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -169,8 +162,8 @@ public class TypeParameter extends ASTNode
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -186,7 +179,7 @@ public class TypeParameter extends ASTNode
 
    /**
     * Returns the name of the type variable declared in this type parameter.
-    *
+    * 
     * @return the name of the type variable
     */
    public SimpleName getName()
@@ -210,12 +203,10 @@ public class TypeParameter extends ASTNode
    /**
     * Resolves and returns the binding for this type parameter.
     * <p>
-    * Note that bindings are generally unavailable unless requested when the
-    * AST is being built.
+    * Note that bindings are generally unavailable unless requested when the AST is being built.
     * </p>
-    *
-    * @return the binding, or <code>null</code> if the binding cannot be
-    *    resolved
+    * 
+    * @return the binding, or <code>null</code> if the binding cannot be resolved
     */
    public final ITypeBinding resolveBinding()
    {
@@ -223,15 +214,14 @@ public class TypeParameter extends ASTNode
    }
 
    /**
-    * Sets the name of the type variable of this type parameter to the given
-    * name.
-    *
+    * Sets the name of the type variable of this type parameter to the given name.
+    * 
     * @param typeName the new name of this type parameter
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     */
    public void setName(SimpleName typeName)
    {
@@ -246,22 +236,19 @@ public class TypeParameter extends ASTNode
    }
 
    /**
-    * Returns the live ordered list of type bounds of this type parameter.
-    * For the type parameter to be plausible, there can be at most one
-    * class in the list, and it must be first, and the remaining ones must be
-    * interfaces; the list should not contain primitive types (but array types
-    * and parameterized types are allowed).
-    *
-    * @return the live list of type bounds
-    *    (element type: {@link Type})
+    * Returns the live ordered list of type bounds of this type parameter. For the type parameter to be plausible, there can be at
+    * most one class in the list, and it must be first, and the remaining ones must be interfaces; the list should not contain
+    * primitive types (but array types and parameterized types are allowed).
+    * 
+    * @return the live list of type bounds (element type: {@link Type})
     */
    public List typeBounds()
    {
       return this.typeBounds;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
@@ -269,8 +256,8 @@ public class TypeParameter extends ASTNode
       return BASE_NODE_SIZE + 2 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

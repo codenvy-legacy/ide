@@ -99,7 +99,10 @@ public final class HashtableOfType
 
    private void rehash()
    {
-      HashtableOfType newHashtable = new HashtableOfType(this.elementSize < 100 ? 100 : this.elementSize * 2); // double the number of expected elements
+      HashtableOfType newHashtable = new HashtableOfType(this.elementSize < 100 ? 100 : this.elementSize * 2); // double the
+                                                                                                               // number of
+                                                                                                               // expected
+                                                                                                               // elements
       char[] currentKey;
       for (int i = this.keyTable.length; --i >= 0;)
          if ((currentKey = this.keyTable[i]) != null)

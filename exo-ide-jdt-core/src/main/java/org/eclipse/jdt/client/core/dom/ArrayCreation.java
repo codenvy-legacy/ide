@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Array creation expression AST node type.
- * For JLS2:
+ * Array creation expression AST node type. For JLS2:
+ * 
  * <pre>
  * ArrayCreation:
  *    <b>new</b> PrimitiveType <b>[</b> Expression <b>]</b> { <b>[</b> Expression <b>]</b> } { <b>[</b> <b>]</b> }
@@ -26,13 +26,12 @@ import java.util.List;
  * <p>
  * The mapping from Java language syntax to AST nodes is as follows:
  * <ul>
- * <li>the type node is the array type of the creation expression,
- *   with one level of array per set of square brackets,</li>
- * <li>the dimension expressions are collected into the <code>dimensions</code>
- *   list.</li>
+ * <li>the type node is the array type of the creation expression, with one level of array per set of square brackets,</li>
+ * <li>the dimension expressions are collected into the <code>dimensions</code> list.</li>
  * </ul>
  * </p>
  * For JLS3, type arguments are added:
+ * 
  * <pre>
  * ArrayCreation:
  *    <b>new</b> PrimitiveType <b>[</b> Expression <b>]</b> { <b>[</b> Expression <b>]</b> } { <b>[</b> <b>]</b> }
@@ -42,7 +41,7 @@ import java.util.List;
  *    <b>new</b> TypeName [ <b>&lt;</b> Type { <b>,</b> Type } <b>&gt;</b> ]
  *        <b>[</b> <b>]</b> { <b>[</b> <b>]</b> } ArrayInitializer
  * </pre>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -51,6 +50,7 @@ public class ArrayCreation extends Expression
 
    /**
     * The "type" structural property of this node type (child type: {@link ArrayType}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor TYPE_PROPERTY = new ChildPropertyDescriptor(ArrayCreation.class,
@@ -58,6 +58,7 @@ public class ArrayCreation extends Expression
 
    /**
     * The "dimensions" structural property of this node type (element type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildListPropertyDescriptor DIMENSIONS_PROPERTY = new ChildListPropertyDescriptor(
@@ -65,15 +66,14 @@ public class ArrayCreation extends Expression
 
    /**
     * The "initializer" structural property of this node type (child type: {@link ArrayInitializer}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor INITIALIZER_PROPERTY = new ChildPropertyDescriptor(ArrayCreation.class,
       "initializer", ArrayInitializer.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -88,14 +88,11 @@ public class ArrayCreation extends Expression
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -104,29 +101,24 @@ public class ArrayCreation extends Expression
    }
 
    /**
-    * The array type; lazily initialized; defaults to a unspecified,
-    * legal array type.
+    * The array type; lazily initialized; defaults to a unspecified, legal array type.
     */
    private ArrayType arrayType = null;
 
    /**
-    * The list of dimension expressions (element type:
-    * {@link Expression}). Defaults to an empty list.
+    * The list of dimension expressions (element type: {@link Expression}). Defaults to an empty list.
     */
    private ASTNode.NodeList dimensions = new ASTNode.NodeList(DIMENSIONS_PROPERTY);
 
    /**
-    * The optional array initializer, or <code>null</code> if none;
-    * defaults to none.
+    * The optional array initializer, or <code>null</code> if none; defaults to none.
     */
    private ArrayInitializer optionalInitializer = null;
 
    /**
-    * Creates a new AST node for an array creation expression owned by the
-    * given AST. By default, the array type is an unspecified 1-dimensional
-    * array, the list of dimensions is empty, and there is no array
-    * initializer.
-    *
+    * Creates a new AST node for an array creation expression owned by the given AST. By default, the array type is an unspecified
+    * 1-dimensional array, the list of dimensions is empty, and there is no array initializer.
+    * 
     * @param ast the AST that is to own this node
     */
    ArrayCreation(AST ast)
@@ -134,16 +126,16 @@ public class ArrayCreation extends Expression
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -175,8 +167,8 @@ public class ArrayCreation extends Expression
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
@@ -188,16 +180,16 @@ public class ArrayCreation extends Expression
       return super.internalGetChildListProperty(property);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return ARRAY_CREATION;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -209,8 +201,8 @@ public class ArrayCreation extends Expression
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -218,8 +210,8 @@ public class ArrayCreation extends Expression
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -236,7 +228,7 @@ public class ArrayCreation extends Expression
 
    /**
     * Returns the array type in this array creation expression.
-    *
+    * 
     * @return the array type
     */
    public ArrayType getType()
@@ -259,13 +251,13 @@ public class ArrayCreation extends Expression
 
    /**
     * Sets the array type in this array creation expression.
-    *
+    * 
     * @param type the new array type
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     */
    public void setType(ArrayType type)
    {
@@ -281,11 +273,9 @@ public class ArrayCreation extends Expression
    }
 
    /**
-    * Returns the live ordered list of dimension expressions in this array
-    * initializer.
-    *
-    * @return the live list of dimension expressions
-    *    (element type: {@link Expression})
+    * Returns the live ordered list of dimension expressions in this array initializer.
+    * 
+    * @return the live list of dimension expressions (element type: {@link Expression})
     */
    public List dimensions()
    {
@@ -293,11 +283,9 @@ public class ArrayCreation extends Expression
    }
 
    /**
-    * Returns the array initializer of this array creation expression, or
-    * <code>null</code> if there is none.
-    *
-    * @return the array initializer node, or <code>null</code> if
-    *    there is none
+    * Returns the array initializer of this array creation expression, or <code>null</code> if there is none.
+    * 
+    * @return the array initializer node, or <code>null</code> if there is none
     */
    public ArrayInitializer getInitializer()
    {
@@ -306,15 +294,14 @@ public class ArrayCreation extends Expression
 
    /**
     * Sets or clears the array initializer of this array creation expression.
-    *
-    * @param initializer the array initializer node, or <code>null</code>
-    *    if there is none
+    * 
+    * @param initializer the array initializer node, or <code>null</code> if there is none
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setInitializer(ArrayInitializer initializer)
    {
@@ -326,16 +313,16 @@ public class ArrayCreation extends Expression
       postReplaceChild(oldChild, initializer, INITIALIZER_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return BASE_NODE_SIZE + 3 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

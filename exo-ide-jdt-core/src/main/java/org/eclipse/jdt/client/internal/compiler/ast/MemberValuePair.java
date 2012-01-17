@@ -33,7 +33,7 @@ public class MemberValuePair extends ASTNode
    public MethodBinding binding;
 
    /**
-    *  The representation of this pair in the type system.
+    * The representation of this pair in the type system.
     */
    public ElementValuePair compilerElementPair = null;
 
@@ -49,7 +49,9 @@ public class MemberValuePair extends ASTNode
       }
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#print(int, java.lang.StringBuffer)
     */
    public StringBuffer print(int indent, StringBuffer output)

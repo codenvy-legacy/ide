@@ -16,12 +16,12 @@ import java.util.List;
 
 /**
  * Throw statement AST node type.
- *
+ * 
  * <pre>
  * ThrowStatement:
  *    <b>throw</b> Expression <b>;</b>
  * </pre>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -30,15 +30,14 @@ public class ThrowStatement extends Statement
 
    /**
     * The "expression" structural property of this node type (child type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(ThrowStatement.class,
       "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -51,14 +50,11 @@ public class ThrowStatement extends Statement
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -67,19 +63,17 @@ public class ThrowStatement extends Statement
    }
 
    /**
-    * The expression; lazily initialized; defaults to a unspecified, but legal,
-    * expression.
+    * The expression; lazily initialized; defaults to a unspecified, but legal, expression.
     */
    private Expression expression = null;
 
    /**
-    * Creates a new unparented throw statement node owned by the given
-    * AST. By default, the throw statement has an unspecified, but legal,
-    * expression.
+    * Creates a new unparented throw statement node owned by the given AST. By default, the throw statement has an unspecified,
+    * but legal, expression.
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    ThrowStatement(AST ast)
@@ -87,16 +81,16 @@ public class ThrowStatement extends Statement
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -116,16 +110,16 @@ public class ThrowStatement extends Statement
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return THROW_STATEMENT;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -136,8 +130,8 @@ public class ThrowStatement extends Statement
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -145,8 +139,8 @@ public class ThrowStatement extends Statement
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -160,7 +154,7 @@ public class ThrowStatement extends Statement
 
    /**
     * Returns the expression of this throw statement.
-    *
+    * 
     * @return the expression node
     */
    public Expression getExpression()
@@ -183,14 +177,14 @@ public class ThrowStatement extends Statement
 
    /**
     * Sets the expression of this throw statement.
-    *
+    * 
     * @param expression the new expression node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setExpression(Expression expression)
    {
@@ -204,16 +198,16 @@ public class ThrowStatement extends Statement
       postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return super.memSize() + 1 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

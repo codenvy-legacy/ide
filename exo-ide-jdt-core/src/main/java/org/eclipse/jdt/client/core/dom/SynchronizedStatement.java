@@ -16,12 +16,12 @@ import java.util.List;
 
 /**
  * Synchronized statement AST node type.
- *
+ * 
  * <pre>
  * SynchronizedStatement:
  *    <b>synchronized</b> <b>(</b> Expression <b>)</b> Block
  * </pre>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -30,6 +30,7 @@ public class SynchronizedStatement extends Statement
 
    /**
     * The "expression" structural property of this node type (child type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(
@@ -37,15 +38,14 @@ public class SynchronizedStatement extends Statement
 
    /**
     * The "body" structural property of this node type (child type: {@link Block}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(SynchronizedStatement.class,
       "body", Block.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -59,14 +59,11 @@ public class SynchronizedStatement extends Statement
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -75,8 +72,7 @@ public class SynchronizedStatement extends Statement
    }
 
    /**
-    * The expression; lazily initialized; defaults to an unspecified, but
-    * legal, expression.
+    * The expression; lazily initialized; defaults to an unspecified, but legal, expression.
     */
    private Expression expression = null;
 
@@ -86,13 +82,12 @@ public class SynchronizedStatement extends Statement
    private Block body = null;
 
    /**
-    * Creates a new unparented synchronized statement node owned by the given
-    * AST. By default, the expression is unspecified, but legal, and the
-    * blody is an empty block.
+    * Creates a new unparented synchronized statement node owned by the given AST. By default, the expression is unspecified, but
+    * legal, and the blody is an empty block.
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    SynchronizedStatement(AST ast)
@@ -100,16 +95,16 @@ public class SynchronizedStatement extends Statement
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -141,16 +136,16 @@ public class SynchronizedStatement extends Statement
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return SYNCHRONIZED_STATEMENT;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -162,8 +157,8 @@ public class SynchronizedStatement extends Statement
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -171,8 +166,8 @@ public class SynchronizedStatement extends Statement
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -188,7 +183,7 @@ public class SynchronizedStatement extends Statement
 
    /**
     * Returns the expression of this synchronized statement.
-    *
+    * 
     * @return the expression node
     */
    public Expression getExpression()
@@ -211,14 +206,14 @@ public class SynchronizedStatement extends Statement
 
    /**
     * Sets the expression of this synchronized statement.
-    *
+    * 
     * @param expression the expression node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setExpression(Expression expression)
    {
@@ -234,7 +229,7 @@ public class SynchronizedStatement extends Statement
 
    /**
     * Returns the body of this synchronized statement.
-    *
+    * 
     * @return the body block node
     */
    public Block getBody()
@@ -257,14 +252,14 @@ public class SynchronizedStatement extends Statement
 
    /**
     * Sets the body of this synchronized statement.
-    *
+    * 
     * @param block the body statement node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setBody(Block block)
    {
@@ -278,16 +273,16 @@ public class SynchronizedStatement extends Statement
       postReplaceChild(oldChild, block, BODY_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return super.memSize() + 2 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

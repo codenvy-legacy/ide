@@ -19,7 +19,7 @@ public class ImportReference extends ASTNode
 
    public char[][] tokens;
 
-   public long[] sourcePositions; //each entry is using the code : (start<<32) + end
+   public long[] sourcePositions; // each entry is using the code : (start<<32) + end
 
    public int declarationEnd; // doesn't include an potential trailing comment
 

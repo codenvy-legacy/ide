@@ -26,5 +26,5 @@ public class LongLiteralMinValue extends LongLiteral
 
    public void computeConstant()
    {
-      /*precomputed at creation time*/}
+      /* precomputed at creation time */}
 }

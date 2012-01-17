@@ -29,10 +29,11 @@ public final class MemberTypeBinding extends NestedTypeBinding
       this.addSyntheticArgumentAndField(this.enclosingType);
    }
 
-   /* Answer the receiver's constant pool name.
-   *
-   * NOTE: This method should only be used during/after code gen.
-   */
+   /*
+    * Answer the receiver's constant pool name.
+    * 
+    * NOTE: This method should only be used during/after code gen.
+    */
 
    public char[] constantPoolName() /* java/lang/Object */
    {

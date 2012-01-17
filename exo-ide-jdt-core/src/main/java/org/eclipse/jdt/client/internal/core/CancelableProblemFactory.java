@@ -30,7 +30,7 @@ public class CancelableProblemFactory extends DefaultProblemFactory
       String[] messageArguments, int severity, int startPosition, int endPosition, int lineNumber, int columnNumber)
    {
       if (this.monitor != null && this.monitor.isCanceled())
-         throw new AbortCompilation(true/*silent*/, new OperationCanceledException());
+         throw new AbortCompilation(true/* silent */, new OperationCanceledException());
       return super.createProblem(originatingFileName, problemId, problemArguments, messageArguments, severity,
          startPosition, endPosition, lineNumber, columnNumber);
    }
@@ -40,7 +40,7 @@ public class CancelableProblemFactory extends DefaultProblemFactory
       int columnNumber)
    {
       if (this.monitor != null && this.monitor.isCanceled())
-         throw new AbortCompilation(true/*silent*/, new OperationCanceledException());
+         throw new AbortCompilation(true/* silent */, new OperationCanceledException());
       return super.createProblem(originatingFileName, problemId, problemArguments, elaborationId, messageArguments,
          severity, startPosition, endPosition, lineNumber, columnNumber);
    }

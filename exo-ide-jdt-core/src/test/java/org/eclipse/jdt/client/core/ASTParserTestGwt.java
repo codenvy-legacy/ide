@@ -18,21 +18,19 @@
  */
 package org.eclipse.jdt.client.core;
 
-
-
 import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 34360 2009-07-22 23:58:59Z evgen $
- *
+ * 
  */
 public class ASTParserTestGwt extends ParserBaseTestGwt
 {
 
    public void testParseUnit() throws Exception
    {
-      assertFalse(unit.types().size() == 0 );
+      assertFalse(unit.types().size() == 0);
       assertEquals(1, unit.types().size());
    }
 

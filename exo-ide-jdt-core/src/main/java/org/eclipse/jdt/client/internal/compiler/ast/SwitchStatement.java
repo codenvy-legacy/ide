@@ -171,299 +171,300 @@ public class SwitchStatement extends Statement
       }
    }
 
-   //	/**
-   //	 * Switch on String code generation
-   //	 * This assumes that hashCode() specification for java.lang.String is API
-   //	 * and is stable.
-   //	 * @see "http://java.sun.com/j2se/1.4.2/docs/api/java/lang/String.html"
-   //	 * @see "http://download.oracle.com/docs/cd/E17409_01/javase/6/docs/api/java/lang/String.html"
-   //	 *
-   //	 * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   //	 * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   //	 */
-   //	public void generateCodeForStringSwitch(BlockScope currentScope, CodeStream codeStream) {
+   // /**
+   // * Switch on String code generation
+   // * This assumes that hashCode() specification for java.lang.String is API
+   // * and is stable.
+   // * @see "http://java.sun.com/j2se/1.4.2/docs/api/java/lang/String.html"
+   // * @see "http://download.oracle.com/docs/cd/E17409_01/javase/6/docs/api/java/lang/String.html"
+   // *
+   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   // */
+   // public void generateCodeForStringSwitch(BlockScope currentScope, CodeStream codeStream) {
    //
-   //		try {
-   //			if ((this.bits & IsReachable) == 0) {
-   //				return;
-   //			}
-   //			int pc = codeStream.position;
-   //			
-   //			class StringSwitchCase implements Comparable {
-   //				int hashCode;
-   //				String string;
-   //				BranchLabel label;
-   //				public StringSwitchCase(int hashCode, String string, BranchLabel label) {
-   //					this.hashCode = hashCode;
-   //					this.string = string;
-   //					this.label = label;
-   //				}
-   //				public int compareTo(Object o) {
-   //					StringSwitchCase that = (StringSwitchCase) o;
-   //					if (this.hashCode == that.hashCode) {
-   //						return 0;
-   //					}
-   //					if (this.hashCode > that.hashCode) {
-   //						return 1;
-   //					}
-   //					return -1;
-   //				}
-   //				public String toString() {
+   // try {
+   // if ((this.bits & IsReachable) == 0) {
+   // return;
+   // }
+   // int pc = codeStream.position;
+   //
+   // class StringSwitchCase implements Comparable {
+   // int hashCode;
+   // String string;
+   // BranchLabel label;
+   // public StringSwitchCase(int hashCode, String string, BranchLabel label) {
+   // this.hashCode = hashCode;
+   // this.string = string;
+   // this.label = label;
+   // }
+   // public int compareTo(Object o) {
+   // StringSwitchCase that = (StringSwitchCase) o;
+   // if (this.hashCode == that.hashCode) {
+   // return 0;
+   // }
+   // if (this.hashCode > that.hashCode) {
+   // return 1;
+   // }
+   // return -1;
+   // }
+   // public String toString() {
    //					return "StringSwitchCase :\n" + //$NON-NLS-1$
    //					       "case " + this.hashCode + ":(" + this.string + ")\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$	       
-   //				}
-   //			}
+   // }
+   // }
    //
-   //			final boolean hasCases = this.caseCount != 0;
+   // final boolean hasCases = this.caseCount != 0;
    //
-   //			StringSwitchCase [] stringCases = new StringSwitchCase[this.caseCount]; // may have to shrink later if multiple strings hash to same code.
-   //			BranchLabel[] sourceCaseLabels = new BranchLabel[this.caseCount];
-   //			CaseLabel [] hashCodeCaseLabels = new CaseLabel[this.caseCount];
-   //			this.constants = new int[this.caseCount];  // hashCode() values.
-   //			for (int i = 0, max = this.caseCount; i < max; i++) {
-   //				this.cases[i].targetLabel = (sourceCaseLabels[i] = new BranchLabel(codeStream));  // A branch label, not a case label.
-   //				sourceCaseLabels[i].tagBits |= BranchLabel.USED;
-   //				stringCases[i] = new StringSwitchCase(this.stringConstants[i].hashCode(), this.stringConstants[i], sourceCaseLabels[i]);
-   //				hashCodeCaseLabels[i] = new CaseLabel(codeStream);
-   //				hashCodeCaseLabels[i].tagBits |= BranchLabel.USED;
-   //				
-   //			}
-   //			Arrays.sort(stringCases);
+   // StringSwitchCase [] stringCases = new StringSwitchCase[this.caseCount]; // may have to shrink later if multiple strings hash
+   // to same code.
+   // BranchLabel[] sourceCaseLabels = new BranchLabel[this.caseCount];
+   // CaseLabel [] hashCodeCaseLabels = new CaseLabel[this.caseCount];
+   // this.constants = new int[this.caseCount]; // hashCode() values.
+   // for (int i = 0, max = this.caseCount; i < max; i++) {
+   // this.cases[i].targetLabel = (sourceCaseLabels[i] = new BranchLabel(codeStream)); // A branch label, not a case label.
+   // sourceCaseLabels[i].tagBits |= BranchLabel.USED;
+   // stringCases[i] = new StringSwitchCase(this.stringConstants[i].hashCode(), this.stringConstants[i], sourceCaseLabels[i]);
+   // hashCodeCaseLabels[i] = new CaseLabel(codeStream);
+   // hashCodeCaseLabels[i].tagBits |= BranchLabel.USED;
    //
-   //			int uniqHashCount = 0;
-   //			int lastHashCode = 0; 
-   //			for (int i = 0, length = this.caseCount; i < length; ++i) {
-   //				int hashCode = stringCases[i].hashCode;
-   //				if (i == 0 || hashCode != lastHashCode) {
-   //					lastHashCode = this.constants[uniqHashCount++] = hashCode;
-   //				}
-   //			}
-   //				
-   //			if (uniqHashCount != this.caseCount) { // multiple keys hashed to the same value.
-   //				System.arraycopy(this.constants, 0, this.constants = new int[uniqHashCount], 0, uniqHashCount);
-   //				System.arraycopy(hashCodeCaseLabels, 0, hashCodeCaseLabels = new CaseLabel[uniqHashCount], 0, uniqHashCount);
-   //			}
-   //			int[] sortedIndexes = new int[uniqHashCount]; // hash code are sorted already anyways.
-   //			for (int i = 0; i < uniqHashCount; i++) {
-   //				sortedIndexes[i] = i;
-   //			}
+   // }
+   // Arrays.sort(stringCases);
    //
-   //			CaseLabel defaultCaseLabel = new CaseLabel(codeStream);
-   //			defaultCaseLabel.tagBits |= BranchLabel.USED;
+   // int uniqHashCount = 0;
+   // int lastHashCode = 0;
+   // for (int i = 0, length = this.caseCount; i < length; ++i) {
+   // int hashCode = stringCases[i].hashCode;
+   // if (i == 0 || hashCode != lastHashCode) {
+   // lastHashCode = this.constants[uniqHashCount++] = hashCode;
+   // }
+   // }
    //
-   //			// prepare the labels and constants
-   //			this.breakLabel.initialize(codeStream);
-   //			
-   //			BranchLabel defaultBranchLabel = new BranchLabel(codeStream);
-   //			if (hasCases) defaultBranchLabel.tagBits |= BranchLabel.USED;
-   //			if (this.defaultCase != null) {
-   //				this.defaultCase.targetLabel = defaultBranchLabel;
-   //			}
-   //			// generate expression
-   //			this.expression.generateCode(currentScope, codeStream, true);
-   //			codeStream.store(this.dispatchStringCopy, true);  // leaves string on operand stack
-   //			codeStream.addVariable(this.dispatchStringCopy);
-   //			codeStream.invokeStringHashCode();
-   //			if (hasCases) {
-   //				codeStream.lookupswitch(defaultCaseLabel, this.constants, sortedIndexes, hashCodeCaseLabels);
-   //				for (int i = 0, j = 0, max = this.caseCount; i < max; i++) {
-   //					int hashCode = stringCases[i].hashCode;
-   //					if (i == 0 || hashCode != lastHashCode) {
-   //						lastHashCode = hashCode;
-   //						if (i != 0) {
-   //							codeStream.goto_(defaultBranchLabel);
-   //						}
-   //						hashCodeCaseLabels[j++].place();
-   //					}
-   //					codeStream.load(this.dispatchStringCopy);
-   //					codeStream.ldc(stringCases[i].string);
-   //					codeStream.invokeStringEquals();
-   //					codeStream.ifne(stringCases[i].label);
-   //				}
-   //				codeStream.goto_(defaultBranchLabel);
-   //			} else {
-   //				codeStream.pop();
-   //			}
+   // if (uniqHashCount != this.caseCount) { // multiple keys hashed to the same value.
+   // System.arraycopy(this.constants, 0, this.constants = new int[uniqHashCount], 0, uniqHashCount);
+   // System.arraycopy(hashCodeCaseLabels, 0, hashCodeCaseLabels = new CaseLabel[uniqHashCount], 0, uniqHashCount);
+   // }
+   // int[] sortedIndexes = new int[uniqHashCount]; // hash code are sorted already anyways.
+   // for (int i = 0; i < uniqHashCount; i++) {
+   // sortedIndexes[i] = i;
+   // }
    //
-   //			// generate the switch block statements
-   //			int caseIndex = 0;
-   //			if (this.statements != null) {
-   //				for (int i = 0, maxCases = this.statements.length; i < maxCases; i++) {
-   //					Statement statement = this.statements[i];
-   //					if ((caseIndex < this.caseCount) && (statement == this.cases[caseIndex])) { // statements[i] is a case
-   //						this.scope.enclosingCase = this.cases[caseIndex]; // record entering in a switch case block
-   //						if (this.preSwitchInitStateIndex != -1) {
-   //							codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.preSwitchInitStateIndex);
-   //						}
-   //						caseIndex++;
-   //					} else {
-   //						if (statement == this.defaultCase) { // statements[i] is a case or a default case
-   //							defaultCaseLabel.place(); // branch label gets placed by generateCode below.
-   //							this.scope.enclosingCase = this.defaultCase; // record entering in a switch case block
-   //							if (this.preSwitchInitStateIndex != -1) {
-   //								codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.preSwitchInitStateIndex);
-   //							}
-   //						}
-   //					}
-   //					statement.generateCode(this.scope, codeStream);
-   //				}
-   //			}
-   //			
-   //			// May loose some local variable initializations : affecting the local variable attributes
-   //			if (this.mergedInitStateIndex != -1) {
-   //				codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //				codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //			}
-   //			codeStream.removeVariable(this.dispatchStringCopy);
-   //			if (this.scope != currentScope) {
-   //				codeStream.exitUserScope(this.scope);
-   //			}
-   //			// place the trailing labels (for break and default case)
-   //			this.breakLabel.place();
-   //			if (this.defaultCase == null) {
-   //				// we want to force an line number entry to get an end position after the switch statement
-   //				codeStream.recordPositionsFrom(codeStream.position, this.sourceEnd, true);
-   //				defaultCaseLabel.place();
-   //				defaultBranchLabel.place();
-   //			}
-   //			codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //		} catch (Throwable e) {
-   //			e.printStackTrace();
-   //		}
-   //		finally {
-   //			if (this.scope != null) this.scope.enclosingCase = null; // no longer inside switch case block
-   //		}
-   //	}
+   // CaseLabel defaultCaseLabel = new CaseLabel(codeStream);
+   // defaultCaseLabel.tagBits |= BranchLabel.USED;
    //
-   //	
-   //	/**
-   //	 * Switch code generation
-   //	 *
-   //	 * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   //	 * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   //	 */
-   //	public void generateCode(BlockScope currentScope, CodeStream codeStream) {
-   //		if (this.expression.resolvedType.id == TypeIds.T_JavaLangString) {
-   //			generateCodeForStringSwitch(currentScope, codeStream);
-   //			return;
-   //		}
-   //		try {
-   //			if ((this.bits & IsReachable) == 0) {
-   //				return;
-   //			}
-   //			int pc = codeStream.position;
+   // // prepare the labels and constants
+   // this.breakLabel.initialize(codeStream);
    //
-   //			// prepare the labels and constants
-   //			this.breakLabel.initialize(codeStream);
-   //			CaseLabel[] caseLabels = new CaseLabel[this.caseCount];
-   //			for (int i = 0, max = this.caseCount; i < max; i++) {
-   //				this.cases[i].targetLabel = (caseLabels[i] = new CaseLabel(codeStream));
-   //				caseLabels[i].tagBits |= BranchLabel.USED;
-   //			}
-   //			CaseLabel defaultLabel = new CaseLabel(codeStream);
-   //			final boolean hasCases = this.caseCount != 0;
-   //			if (hasCases) defaultLabel.tagBits |= BranchLabel.USED;
-   //			if (this.defaultCase != null) {
-   //				this.defaultCase.targetLabel = defaultLabel;
-   //			}
+   // BranchLabel defaultBranchLabel = new BranchLabel(codeStream);
+   // if (hasCases) defaultBranchLabel.tagBits |= BranchLabel.USED;
+   // if (this.defaultCase != null) {
+   // this.defaultCase.targetLabel = defaultBranchLabel;
+   // }
+   // // generate expression
+   // this.expression.generateCode(currentScope, codeStream, true);
+   // codeStream.store(this.dispatchStringCopy, true); // leaves string on operand stack
+   // codeStream.addVariable(this.dispatchStringCopy);
+   // codeStream.invokeStringHashCode();
+   // if (hasCases) {
+   // codeStream.lookupswitch(defaultCaseLabel, this.constants, sortedIndexes, hashCodeCaseLabels);
+   // for (int i = 0, j = 0, max = this.caseCount; i < max; i++) {
+   // int hashCode = stringCases[i].hashCode;
+   // if (i == 0 || hashCode != lastHashCode) {
+   // lastHashCode = hashCode;
+   // if (i != 0) {
+   // codeStream.goto_(defaultBranchLabel);
+   // }
+   // hashCodeCaseLabels[j++].place();
+   // }
+   // codeStream.load(this.dispatchStringCopy);
+   // codeStream.ldc(stringCases[i].string);
+   // codeStream.invokeStringEquals();
+   // codeStream.ifne(stringCases[i].label);
+   // }
+   // codeStream.goto_(defaultBranchLabel);
+   // } else {
+   // codeStream.pop();
+   // }
    //
-   //			final TypeBinding resolvedType = this.expression.resolvedType;
-   //			boolean valueRequired = false;
-   //			if (resolvedType.isEnum()) {
-   //				// go through the translation table
-   //				codeStream.invoke(Opcodes.OPC_invokestatic, this.synthetic, null /* default declaringClass */);
-   //				this.expression.generateCode(currentScope, codeStream, true);
-   //				// get enum constant ordinal()
-   //				codeStream.invokeEnumOrdinal(resolvedType.constantPoolName());
-   //				codeStream.iaload();
-   //				if (!hasCases) {
-   //					// we can get rid of the generated ordinal value
-   //					codeStream.pop();
-   //				}
-   //			} else {
-   //				valueRequired = this.expression.constant == Constant.NotAConstant || hasCases;
-   //				// generate expression
-   //				this.expression.generateCode(currentScope, codeStream, valueRequired);
-   //			}
-   //			// generate the appropriate switch table/lookup bytecode
-   //			if (hasCases) {
-   //				int[] sortedIndexes = new int[this.caseCount];
-   //				// we sort the keys to be able to generate the code for tableswitch or lookupswitch
-   //				for (int i = 0; i < this.caseCount; i++) {
-   //					sortedIndexes[i] = i;
-   //				}
-   //				int[] localKeysCopy;
-   //				System.arraycopy(this.constants, 0, (localKeysCopy = new int[this.caseCount]), 0, this.caseCount);
-   //				CodeStream.sort(localKeysCopy, 0, this.caseCount - 1, sortedIndexes);
+   // // generate the switch block statements
+   // int caseIndex = 0;
+   // if (this.statements != null) {
+   // for (int i = 0, maxCases = this.statements.length; i < maxCases; i++) {
+   // Statement statement = this.statements[i];
+   // if ((caseIndex < this.caseCount) && (statement == this.cases[caseIndex])) { // statements[i] is a case
+   // this.scope.enclosingCase = this.cases[caseIndex]; // record entering in a switch case block
+   // if (this.preSwitchInitStateIndex != -1) {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.preSwitchInitStateIndex);
+   // }
+   // caseIndex++;
+   // } else {
+   // if (statement == this.defaultCase) { // statements[i] is a case or a default case
+   // defaultCaseLabel.place(); // branch label gets placed by generateCode below.
+   // this.scope.enclosingCase = this.defaultCase; // record entering in a switch case block
+   // if (this.preSwitchInitStateIndex != -1) {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.preSwitchInitStateIndex);
+   // }
+   // }
+   // }
+   // statement.generateCode(this.scope, codeStream);
+   // }
+   // }
    //
-   //				int max = localKeysCopy[this.caseCount - 1];
-   //				int min = localKeysCopy[0];
-   //				if ((long) (this.caseCount * 2.5) > ((long) max - (long) min)) {
+   // // May loose some local variable initializations : affecting the local variable attributes
+   // if (this.mergedInitStateIndex != -1) {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // }
+   // codeStream.removeVariable(this.dispatchStringCopy);
+   // if (this.scope != currentScope) {
+   // codeStream.exitUserScope(this.scope);
+   // }
+   // // place the trailing labels (for break and default case)
+   // this.breakLabel.place();
+   // if (this.defaultCase == null) {
+   // // we want to force an line number entry to get an end position after the switch statement
+   // codeStream.recordPositionsFrom(codeStream.position, this.sourceEnd, true);
+   // defaultCaseLabel.place();
+   // defaultBranchLabel.place();
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // } catch (Throwable e) {
+   // e.printStackTrace();
+   // }
+   // finally {
+   // if (this.scope != null) this.scope.enclosingCase = null; // no longer inside switch case block
+   // }
+   // }
    //
-   //					// work-around 1.3 VM bug, if max>0x7FFF0000, must use lookup bytecode
-   //					// see http://dev.eclipse.org/bugs/show_bug.cgi?id=21557
-   //					if (max > 0x7FFF0000 && currentScope.compilerOptions().complianceLevel < ClassFileConstants.JDK1_4) {
-   //						codeStream.lookupswitch(defaultLabel, this.constants, sortedIndexes, caseLabels);
    //
-   //					} else {
-   //						codeStream.tableswitch(
-   //							defaultLabel,
-   //							min,
-   //							max,
-   //							this.constants,
-   //							sortedIndexes,
-   //							caseLabels);
-   //					}
-   //				} else {
-   //					codeStream.lookupswitch(defaultLabel, this.constants, sortedIndexes, caseLabels);
-   //				}
-   //				codeStream.updateLastRecordedEndPC(this.scope, codeStream.position);
-   //			} else if (valueRequired) {
-   //				codeStream.pop();
-   //			}
+   // /**
+   // * Switch code generation
+   // *
+   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream) {
+   // if (this.expression.resolvedType.id == TypeIds.T_JavaLangString) {
+   // generateCodeForStringSwitch(currentScope, codeStream);
+   // return;
+   // }
+   // try {
+   // if ((this.bits & IsReachable) == 0) {
+   // return;
+   // }
+   // int pc = codeStream.position;
    //
-   //			// generate the switch block statements
-   //			int caseIndex = 0;
-   //			if (this.statements != null) {
-   //				for (int i = 0, maxCases = this.statements.length; i < maxCases; i++) {
-   //					Statement statement = this.statements[i];
-   //					if ((caseIndex < this.caseCount) && (statement == this.cases[caseIndex])) { // statements[i] is a case
-   //						this.scope.enclosingCase = this.cases[caseIndex]; // record entering in a switch case block
-   //						if (this.preSwitchInitStateIndex != -1) {
-   //							codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.preSwitchInitStateIndex);
-   //						}
-   //						caseIndex++;
-   //					} else {
-   //						if (statement == this.defaultCase) { // statements[i] is a case or a default case
-   //							this.scope.enclosingCase = this.defaultCase; // record entering in a switch case block
-   //							if (this.preSwitchInitStateIndex != -1) {
-   //								codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.preSwitchInitStateIndex);
-   //							}
-   //						}
-   //					}
-   //					statement.generateCode(this.scope, codeStream);
-   //				}
-   //			}
-   //			// May loose some local variable initializations : affecting the local variable attributes
-   //			if (this.mergedInitStateIndex != -1) {
-   //				codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //				codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //			}
-   //			if (this.scope != currentScope) {
-   //				codeStream.exitUserScope(this.scope);
-   //			}
-   //			// place the trailing labels (for break and default case)
-   //			this.breakLabel.place();
-   //			if (this.defaultCase == null) {
-   //				// we want to force an line number entry to get an end position after the switch statement
-   //				codeStream.recordPositionsFrom(codeStream.position, this.sourceEnd, true);
-   //				defaultLabel.place();
-   //			}
-   //			codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //		} finally {
-   //			if (this.scope != null) this.scope.enclosingCase = null; // no longer inside switch case block
-   //		}
-   //	}
+   // // prepare the labels and constants
+   // this.breakLabel.initialize(codeStream);
+   // CaseLabel[] caseLabels = new CaseLabel[this.caseCount];
+   // for (int i = 0, max = this.caseCount; i < max; i++) {
+   // this.cases[i].targetLabel = (caseLabels[i] = new CaseLabel(codeStream));
+   // caseLabels[i].tagBits |= BranchLabel.USED;
+   // }
+   // CaseLabel defaultLabel = new CaseLabel(codeStream);
+   // final boolean hasCases = this.caseCount != 0;
+   // if (hasCases) defaultLabel.tagBits |= BranchLabel.USED;
+   // if (this.defaultCase != null) {
+   // this.defaultCase.targetLabel = defaultLabel;
+   // }
+   //
+   // final TypeBinding resolvedType = this.expression.resolvedType;
+   // boolean valueRequired = false;
+   // if (resolvedType.isEnum()) {
+   // // go through the translation table
+   // codeStream.invoke(Opcodes.OPC_invokestatic, this.synthetic, null /* default declaringClass */);
+   // this.expression.generateCode(currentScope, codeStream, true);
+   // // get enum constant ordinal()
+   // codeStream.invokeEnumOrdinal(resolvedType.constantPoolName());
+   // codeStream.iaload();
+   // if (!hasCases) {
+   // // we can get rid of the generated ordinal value
+   // codeStream.pop();
+   // }
+   // } else {
+   // valueRequired = this.expression.constant == Constant.NotAConstant || hasCases;
+   // // generate expression
+   // this.expression.generateCode(currentScope, codeStream, valueRequired);
+   // }
+   // // generate the appropriate switch table/lookup bytecode
+   // if (hasCases) {
+   // int[] sortedIndexes = new int[this.caseCount];
+   // // we sort the keys to be able to generate the code for tableswitch or lookupswitch
+   // for (int i = 0; i < this.caseCount; i++) {
+   // sortedIndexes[i] = i;
+   // }
+   // int[] localKeysCopy;
+   // System.arraycopy(this.constants, 0, (localKeysCopy = new int[this.caseCount]), 0, this.caseCount);
+   // CodeStream.sort(localKeysCopy, 0, this.caseCount - 1, sortedIndexes);
+   //
+   // int max = localKeysCopy[this.caseCount - 1];
+   // int min = localKeysCopy[0];
+   // if ((long) (this.caseCount * 2.5) > ((long) max - (long) min)) {
+   //
+   // // work-around 1.3 VM bug, if max>0x7FFF0000, must use lookup bytecode
+   // // see http://dev.eclipse.org/bugs/show_bug.cgi?id=21557
+   // if (max > 0x7FFF0000 && currentScope.compilerOptions().complianceLevel < ClassFileConstants.JDK1_4) {
+   // codeStream.lookupswitch(defaultLabel, this.constants, sortedIndexes, caseLabels);
+   //
+   // } else {
+   // codeStream.tableswitch(
+   // defaultLabel,
+   // min,
+   // max,
+   // this.constants,
+   // sortedIndexes,
+   // caseLabels);
+   // }
+   // } else {
+   // codeStream.lookupswitch(defaultLabel, this.constants, sortedIndexes, caseLabels);
+   // }
+   // codeStream.updateLastRecordedEndPC(this.scope, codeStream.position);
+   // } else if (valueRequired) {
+   // codeStream.pop();
+   // }
+   //
+   // // generate the switch block statements
+   // int caseIndex = 0;
+   // if (this.statements != null) {
+   // for (int i = 0, maxCases = this.statements.length; i < maxCases; i++) {
+   // Statement statement = this.statements[i];
+   // if ((caseIndex < this.caseCount) && (statement == this.cases[caseIndex])) { // statements[i] is a case
+   // this.scope.enclosingCase = this.cases[caseIndex]; // record entering in a switch case block
+   // if (this.preSwitchInitStateIndex != -1) {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.preSwitchInitStateIndex);
+   // }
+   // caseIndex++;
+   // } else {
+   // if (statement == this.defaultCase) { // statements[i] is a case or a default case
+   // this.scope.enclosingCase = this.defaultCase; // record entering in a switch case block
+   // if (this.preSwitchInitStateIndex != -1) {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.preSwitchInitStateIndex);
+   // }
+   // }
+   // }
+   // statement.generateCode(this.scope, codeStream);
+   // }
+   // }
+   // // May loose some local variable initializations : affecting the local variable attributes
+   // if (this.mergedInitStateIndex != -1) {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // }
+   // if (this.scope != currentScope) {
+   // codeStream.exitUserScope(this.scope);
+   // }
+   // // place the trailing labels (for break and default case)
+   // this.breakLabel.place();
+   // if (this.defaultCase == null) {
+   // // we want to force an line number entry to get an end position after the switch statement
+   // codeStream.recordPositionsFrom(codeStream.position, this.sourceEnd, true);
+   // defaultLabel.place();
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // } finally {
+   // if (this.scope != null) this.scope.enclosingCase = null; // no longer inside switch case block
+   // }
+   // }
 
    public StringBuffer printStatement(int indent, StringBuffer output)
    {
@@ -569,7 +570,7 @@ public class SwitchStatement extends Statement
                   if (!isStringSwitch)
                   {
                      int key = constant.intValue();
-                     //----check for duplicate case statement------------
+                     // ----check for duplicate case statement------------
                      for (int j = 0; j < counter; j++)
                      {
                         if (this.constants[j] == key)
@@ -582,7 +583,7 @@ public class SwitchStatement extends Statement
                   else
                   {
                      String key = constant.stringValue();
-                     //----check for duplicate case statement------------
+                     // ----check for duplicate case statement------------
                      for (int j = 0; j < counter; j++)
                      {
                         if (this.stringConstants[j].equals(key))

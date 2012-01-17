@@ -635,7 +635,7 @@ class DefaultASTVisitor extends ASTVisitor
 
    public boolean visit(Javadoc node)
    {
-      //	do not visit Javadoc tags by default. Use constructor with boolean to enable.
+      // do not visit Javadoc tags by default. Use constructor with boolean to enable.
       if (super.visit(node))
       {
          return visitNode(node);

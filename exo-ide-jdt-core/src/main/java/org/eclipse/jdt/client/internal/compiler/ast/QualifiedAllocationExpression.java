@@ -33,15 +33,13 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeConstants;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 
 /**
- * Variation on allocation, where can optionally be specified any of:
- * - leading enclosing instance
- * - trailing anonymous type
- * - generic type arguments for generic constructor invocation
+ * Variation on allocation, where can optionally be specified any of: - leading enclosing instance - trailing anonymous type -
+ * generic type arguments for generic constructor invocation
  */
 public class QualifiedAllocationExpression extends AllocationExpression
 {
 
-   //qualification may be on both side
+   // qualification may be on both side
    public Expression enclosingInstance;
 
    public TypeDeclaration anonymousType;
@@ -112,76 +110,76 @@ public class QualifiedAllocationExpression extends AllocationExpression
       return this.enclosingInstance;
    }
 
-   //	public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired) {
-   //		if (!valueRequired)
-   //			currentScope.problemReporter().unusedObjectAllocation(this);
-   //		int pc = codeStream.position;
-   //		MethodBinding codegenBinding = this.binding.original();
-   //		ReferenceBinding allocatedType = codegenBinding.declaringClass;
-   //		codeStream.new_(allocatedType);
-   //		boolean isUnboxing = (this.implicitConversion & TypeIds.UNBOXING) != 0;
-   //		if (valueRequired || isUnboxing) {
-   //			codeStream.dup();
-   //		}
-   //		// better highlight for allocation: display the type individually
-   //		if (this.type != null) { // null for enum constant body
-   //			codeStream.recordPositionsFrom(pc, this.type.sourceStart);
-   //		} else {
-   //			// push enum constant name and ordinal
-   //			codeStream.ldc(String.valueOf(this.enumConstant.name));
-   //			codeStream.generateInlinedValue(this.enumConstant.binding.id);
-   //		}
-   //		// handling innerclass instance allocation - enclosing instance arguments
-   //		if (allocatedType.isNestedType()) {
-   //			codeStream.generateSyntheticEnclosingInstanceValues(
-   //				currentScope,
-   //				allocatedType,
-   //				enclosingInstance(),
-   //				this);
-   //		}
-   //		// generate the arguments for constructor
-   //		generateArguments(this.binding, this.arguments, currentScope, codeStream);
-   //		// handling innerclass instance allocation - outer local arguments
-   //		if (allocatedType.isNestedType()) {
-   //			codeStream.generateSyntheticOuterArgumentValues(
-   //				currentScope,
-   //				allocatedType,
-   //				this);
-   //		}
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired) {
+   // if (!valueRequired)
+   // currentScope.problemReporter().unusedObjectAllocation(this);
+   // int pc = codeStream.position;
+   // MethodBinding codegenBinding = this.binding.original();
+   // ReferenceBinding allocatedType = codegenBinding.declaringClass;
+   // codeStream.new_(allocatedType);
+   // boolean isUnboxing = (this.implicitConversion & TypeIds.UNBOXING) != 0;
+   // if (valueRequired || isUnboxing) {
+   // codeStream.dup();
+   // }
+   // // better highlight for allocation: display the type individually
+   // if (this.type != null) { // null for enum constant body
+   // codeStream.recordPositionsFrom(pc, this.type.sourceStart);
+   // } else {
+   // // push enum constant name and ordinal
+   // codeStream.ldc(String.valueOf(this.enumConstant.name));
+   // codeStream.generateInlinedValue(this.enumConstant.binding.id);
+   // }
+   // // handling innerclass instance allocation - enclosing instance arguments
+   // if (allocatedType.isNestedType()) {
+   // codeStream.generateSyntheticEnclosingInstanceValues(
+   // currentScope,
+   // allocatedType,
+   // enclosingInstance(),
+   // this);
+   // }
+   // // generate the arguments for constructor
+   // generateArguments(this.binding, this.arguments, currentScope, codeStream);
+   // // handling innerclass instance allocation - outer local arguments
+   // if (allocatedType.isNestedType()) {
+   // codeStream.generateSyntheticOuterArgumentValues(
+   // currentScope,
+   // allocatedType,
+   // this);
+   // }
    //
-   //		// invoke constructor
-   //		if (this.syntheticAccessor == null) {
-   //			codeStream.invoke(Opcodes.OPC_invokespecial, codegenBinding, null /* default declaringClass */);
-   //		} else {
-   //			// synthetic accessor got some extra arguments appended to its signature, which need values
-   //			for (int i = 0,
-   //				max = this.syntheticAccessor.parameters.length - codegenBinding.parameters.length;
-   //				i < max;
-   //				i++) {
-   //				codeStream.aconst_null();
-   //			}
-   //			codeStream.invoke(Opcodes.OPC_invokespecial, this.syntheticAccessor, null /* default declaringClass */);
-   //		}
-   //		if (valueRequired) {
-   //			codeStream.generateImplicitConversion(this.implicitConversion);
-   //		} else if (isUnboxing) {
-   //			// conversion only generated if unboxing
-   //			codeStream.generateImplicitConversion(this.implicitConversion);
-   //			switch (postConversionType(currentScope).id) {
-   //				case T_long :
-   //				case T_double :
-   //					codeStream.pop2();
-   //					break;
-   //				default :
-   //					codeStream.pop();
-   //			}
-   //		}
-   //		codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // // invoke constructor
+   // if (this.syntheticAccessor == null) {
+   // codeStream.invoke(Opcodes.OPC_invokespecial, codegenBinding, null /* default declaringClass */);
+   // } else {
+   // // synthetic accessor got some extra arguments appended to its signature, which need values
+   // for (int i = 0,
+   // max = this.syntheticAccessor.parameters.length - codegenBinding.parameters.length;
+   // i < max;
+   // i++) {
+   // codeStream.aconst_null();
+   // }
+   // codeStream.invoke(Opcodes.OPC_invokespecial, this.syntheticAccessor, null /* default declaringClass */);
+   // }
+   // if (valueRequired) {
+   // codeStream.generateImplicitConversion(this.implicitConversion);
+   // } else if (isUnboxing) {
+   // // conversion only generated if unboxing
+   // codeStream.generateImplicitConversion(this.implicitConversion);
+   // switch (postConversionType(currentScope).id) {
+   // case T_long :
+   // case T_double :
+   // codeStream.pop2();
+   // break;
+   // default :
+   // codeStream.pop();
+   // }
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
    //
-   //		if (this.anonymousType != null) {
-   //			this.anonymousType.generateCode(currentScope, codeStream);
-   //		}
-   //	}
+   // if (this.anonymousType != null) {
+   // this.anonymousType.generateCode(currentScope, codeStream);
+   // }
+   // }
 
    public boolean isSuperAccess()
    {
@@ -190,12 +188,11 @@ public class QualifiedAllocationExpression extends AllocationExpression
       return this.anonymousType != null;
    }
 
-   /* Inner emulation consists in either recording a dependency
-    * link only, or performing one level of propagation.
-    *
-    * Dependency mechanism is used whenever dealing with source target
-    * types, since by the time we reach them, we might not yet know their
-    * exact need.
+   /*
+    * Inner emulation consists in either recording a dependency link only, or performing one level of propagation.
+    * 
+    * Dependency mechanism is used whenever dealing with source target types, since by the time we reach them, we might not yet
+    * know their exact need.
     */
    public void manageEnclosingInstanceAccessIfNecessary(BlockScope currentScope, FlowInfo flowInfo)
    {
@@ -304,7 +301,7 @@ public class QualifiedAllocationExpression extends AllocationExpression
          }
          else
          {
-            receiverType = this.type.resolveType(scope, true /* check bounds*/);
+            receiverType = this.type.resolveType(scope, true /* check bounds */);
             checkParameterizedAllocation :
             {
                if (receiverType == null || !receiverType.isValidBinding())
@@ -349,7 +346,7 @@ public class QualifiedAllocationExpression extends AllocationExpression
          for (int i = 0; i < length; i++)
          {
             TypeReference typeReference = this.typeArguments[i];
-            if ((this.genericTypeArguments[i] = typeReference.resolveType(scope, true /* check bounds*/)) == null)
+            if ((this.genericTypeArguments[i] = typeReference.resolveType(scope, true /* check bounds */)) == null)
             {
                argHasError = true;
             }
@@ -400,9 +397,10 @@ public class QualifiedAllocationExpression extends AllocationExpression
       // limit of fault-tolerance
       if (hasError)
       {
-         /* https://bugs.eclipse.org/bugs/show_bug.cgi?id=345359, if arguments have errors, completely bail out in the <> case.
-            No meaningful type resolution is possible since inference of the elided types is fully tied to argument types. Do
-            not return the partially resolved type.
+         /*
+          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=345359, if arguments have errors, completely bail out in the <> case. No
+          * meaningful type resolution is possible since inference of the elided types is fully tied to argument types. Do not
+          * return the partially resolved type.
           */
          if (isDiamond)
          {
@@ -418,7 +416,8 @@ public class QualifiedAllocationExpression extends AllocationExpression
                TypeBinding[] pseudoArgs = new TypeBinding[length];
                for (int i = length; --i >= 0;)
                {
-                  pseudoArgs[i] = argumentTypes[i] == null ? TypeBinding.NULL : argumentTypes[i]; // replace args with errors with null type
+                  pseudoArgs[i] = argumentTypes[i] == null ? TypeBinding.NULL : argumentTypes[i]; // replace args with errors with
+                                                                                                  // null type
                }
                this.binding = scope.findMethod(referenceReceiver, TypeConstants.INIT, pseudoArgs, this);
                if (this.binding != null && !this.binding.isValidBinding())

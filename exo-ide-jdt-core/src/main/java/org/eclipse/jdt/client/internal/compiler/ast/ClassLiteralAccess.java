@@ -54,25 +54,25 @@ public class ClassLiteralAccess extends Expression
       return flowInfo;
    }
 
-   //   /**
-   //    * MessageSendDotClass code generation
-   //    *
-   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   //    * @param valueRequired boolean
-   //    */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   //   {
-   //      int pc = codeStream.position;
+   // /**
+   // * MessageSendDotClass code generation
+   // *
+   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   // * @param valueRequired boolean
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   // {
+   // int pc = codeStream.position;
    //
-   //      // in interface case, no caching occurs, since cannot make a cache field for interface
-   //      if (valueRequired)
-   //      {
-   //         codeStream.generateClassLiteralAccessForType(this.type.resolvedType, this.syntheticField);
-   //         codeStream.generateImplicitConversion(this.implicitConversion);
-   //      }
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // // in interface case, no caching occurs, since cannot make a cache field for interface
+   // if (valueRequired)
+   // {
+   // codeStream.generateClassLiteralAccessForType(this.type.resolvedType, this.syntheticField);
+   // codeStream.generateImplicitConversion(this.implicitConversion);
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    public StringBuffer printExpression(int indent, StringBuffer output)
    {
@@ -84,19 +84,18 @@ public class ClassLiteralAccess extends Expression
    {
 
       this.constant = Constant.NotAConstant;
-      if ((this.targetType = this.type.resolveType(scope, true /* check bounds*/)) == null)
+      if ((this.targetType = this.type.resolveType(scope, true /* check bounds */)) == null)
          return null;
 
-      /* https://bugs.eclipse.org/bugs/show_bug.cgi?id=320463
-         https://bugs.eclipse.org/bugs/show_bug.cgi?id=312076
-         JLS3 15.8.2 forbids the type named in the class literal expression from being a parameterized type.
-         And the grammar in 18.1 disallows (where X and Y are some concrete types) constructs of the form
-         Outer<X>.class, Outer<X>.Inner.class, Outer.Inner<X>.class, Outer<X>.Inner<Y>.class etc.
-         Corollary wise, we should resolve the type of the class literal expression to be a raw type as
-         class literals exist only for the raw underlying type. 
+      /*
+       * https://bugs.eclipse.org/bugs/show_bug.cgi?id=320463 https://bugs.eclipse.org/bugs/show_bug.cgi?id=312076 JLS3 15.8.2
+       * forbids the type named in the class literal expression from being a parameterized type. And the grammar in 18.1 disallows
+       * (where X and Y are some concrete types) constructs of the form Outer<X>.class, Outer<X>.Inner.class,
+       * Outer.Inner<X>.class, Outer<X>.Inner<Y>.class etc. Corollary wise, we should resolve the type of the class literal
+       * expression to be a raw type as class literals exist only for the raw underlying type.
        */
       this.targetType =
-         scope.environment().convertToRawType(this.targetType, true /* force conversion of enclosing types*/);
+         scope.environment().convertToRawType(this.targetType, true /* force conversion of enclosing types */);
 
       if (this.targetType.isArrayType())
       {
@@ -131,7 +130,8 @@ public class ClassLiteralAccess extends Expression
             boxedType = scope.boxing(this.targetType);
          }
          this.resolvedType =
-            scope.environment().createParameterizedType(classType, new TypeBinding[]{boxedType}, null/*not a member*/);
+            scope.environment()
+               .createParameterizedType(classType, new TypeBinding[]{boxedType}, null/* not a member */);
       }
       else
       {

@@ -179,23 +179,15 @@ public class SyntheticMethodBinding extends MethodBinding
          }
       }
 
-      /* did not find the target field declaration - it is a synthetic one
-      	public class A {
-      		public class B {
-      			public class C {
-      				void foo() {
-      					System.out.println("A.this = " + A.this);
-      				}
-      			}
-      		}
-      		public static void main(String args[]) {
-      			new A().new B().new C().foo();
-      		}
-      	}
-      */
+      /*
+       * did not find the target field declaration - it is a synthetic one public class A { public class B { public class C { void
+       * foo() { System.out.println("A.this = " + A.this); } } } public static void main(String args[]) { new A().new B().new
+       * C().foo(); } }
+       */
       // We now at this point - per construction - it is for sure an enclosing instance, we are going to
       // show the target field type declaration location.
-      this.sourceStart = declaringSourceType.scope.referenceContext.sourceStart; // use the target declaring class name position instead
+      this.sourceStart = declaringSourceType.scope.referenceContext.sourceStart; // use the target declaring class name position
+                                                                                 // instead
    }
 
    public SyntheticMethodBinding(FieldBinding targetField, ReferenceBinding declaringClass, TypeBinding enumBinding,
@@ -276,7 +268,8 @@ public class SyntheticMethodBinding extends MethodBinding
 
       // We now at this point - per construction - it is for sure an enclosing instance, we are going to
       // show the target field type declaration location.
-      this.sourceStart = declaringSourceType.scope.referenceContext.sourceStart; // use the target declaring class name position instead
+      this.sourceStart = declaringSourceType.scope.referenceContext.sourceStart; // use the target declaring class name position
+                                                                                 // instead
    }
 
    public SyntheticMethodBinding(MethodBinding targetMethod, boolean isSuperAccess, ReferenceBinding declaringClass)
@@ -397,8 +390,8 @@ public class SyntheticMethodBinding extends MethodBinding
    }
 
    /**
-    * An constructor accessor is a constructor with an extra argument (declaringClass), in case of
-    * collision with an existing constructor, then add again an extra argument (declaringClass again).
+    * An constructor accessor is a constructor with an extra argument (declaringClass), in case of collision with an existing
+    * constructor, then add again an extra argument (declaringClass again).
     */
    public void initializeConstructorAccessor(MethodBinding accessedConstructor)
    {

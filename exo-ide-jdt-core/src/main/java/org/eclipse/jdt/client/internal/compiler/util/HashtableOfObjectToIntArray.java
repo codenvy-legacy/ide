@@ -147,7 +147,8 @@ public final class HashtableOfObjectToIntArray implements Cloneable
    private void rehash()
    {
 
-      HashtableOfObjectToIntArray newHashtable = new HashtableOfObjectToIntArray(this.elementSize * 2); // double the number of expected elements
+      HashtableOfObjectToIntArray newHashtable = new HashtableOfObjectToIntArray(this.elementSize * 2); // double the number of
+                                                                                                        // expected elements
       Object currentKey;
       for (int i = this.keyTable.length; --i >= 0;)
          if ((currentKey = this.keyTable[i]) != null)

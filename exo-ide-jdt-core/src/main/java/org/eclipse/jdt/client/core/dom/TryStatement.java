@@ -15,15 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Try statement AST node type.
- * For JLS2 and JLS3:
+ * Try statement AST node type. For JLS2 and JLS3:
+ * 
  * <pre>
  * TryStatement:
  *     <b>try</b> Block
  *         [ { CatchClause } ]
  *         [ <b>finally</b> Block ]
  * </pre>
+ * 
  * For JLS4, resources were added:
+ * 
  * <pre>
  * TryStatement:
  *     <b>try</b> [ <b>(</b> Resources <b>)</b> ]
@@ -31,10 +33,11 @@ import java.util.List;
  *         [ { CatchClause } ]
  *         [ <b>finally</b> Block ]
  * </pre>
- *
+ * 
  * <p>
- * Not all node arrangements will represent legal Java constructs. In particular,
- * at least one resource, catch clause, or finally block must be present.</p>
+ * Not all node arrangements will represent legal Java constructs. In particular, at least one resource, catch clause, or finally
+ * block must be present.
+ * </p>
  * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
@@ -43,7 +46,9 @@ public class TryStatement extends Statement
 {
 
    /**
-    * The "resources" structural property of this node type (element type: {@link VariableDeclarationExpression}) (added in JLS4 API).
+    * The "resources" structural property of this node type (element type: {@link VariableDeclarationExpression}) (added in JLS4
+    * API).
+    * 
     * @since 3.7.1
     */
    public static final ChildListPropertyDescriptor RESOURCES_PROPERTY = new ChildListPropertyDescriptor(
@@ -51,6 +56,7 @@ public class TryStatement extends Statement
 
    /**
     * The "body" structural property of this node type (child type: {@link Block}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(TryStatement.class,
@@ -58,6 +64,7 @@ public class TryStatement extends Statement
 
    /**
     * The "catchClauses" structural property of this node type (element type: {@link CatchClause}).
+    * 
     * @since 3.0
     */
    public static final ChildListPropertyDescriptor CATCH_CLAUSES_PROPERTY = new ChildListPropertyDescriptor(
@@ -65,22 +72,20 @@ public class TryStatement extends Statement
 
    /**
     * The "finally" structural property of this node type (child type: {@link Block}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor FINALLY_PROPERTY = new ChildPropertyDescriptor(TryStatement.class,
       "finally", Block.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
+    * 
     * @since 3.7
     */
    private static final List PROPERTY_DESCRIPTORS_4_0;
@@ -104,13 +109,10 @@ public class TryStatement extends Statement
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -126,9 +128,9 @@ public class TryStatement extends Statement
    }
 
    /**
-    * The resource expressions (element type: {@link VariableDeclarationExpression}).
-    * Null in JLS2 and JLS3. Added in JLS4; defaults to an empty list
-    * (see constructor).
+    * The resource expressions (element type: {@link VariableDeclarationExpression}). Null in JLS2 and JLS3. Added in JLS4;
+    * defaults to an empty list (see constructor).
+    * 
     * @since 3.7
     */
    private ASTNode.NodeList resources = null;
@@ -139,25 +141,22 @@ public class TryStatement extends Statement
    private Block body = null;
 
    /**
-    * The catch clauses (element type: {@link CatchClause}).
-    * Defaults to an empty list.
+    * The catch clauses (element type: {@link CatchClause}). Defaults to an empty list.
     */
    private ASTNode.NodeList catchClauses = new ASTNode.NodeList(CATCH_CLAUSES_PROPERTY);
 
    /**
-    * The finally block, or <code>null</code> if none.
-    * Defaults to none.
+    * The finally block, or <code>null</code> if none. Defaults to none.
     */
    private Block optionalFinallyBody = null;
 
    /**
-    * Creates a new AST node for a try statement owned by the given
-    * AST. By default, the try statement has no resources, an empty block, no catch
-    * clauses, and no finally block.
+    * Creates a new AST node for a try statement owned by the given AST. By default, the try statement has no resources, an empty
+    * block, no catch clauses, and no finally block.
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    TryStatement(AST ast)
@@ -169,16 +168,16 @@ public class TryStatement extends Statement
       }
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -210,8 +209,8 @@ public class TryStatement extends Statement
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
@@ -227,16 +226,16 @@ public class TryStatement extends Statement
       return super.internalGetChildListProperty(property);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return TRY_STATEMENT;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -253,8 +252,8 @@ public class TryStatement extends Statement
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -262,8 +261,8 @@ public class TryStatement extends Statement
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -284,7 +283,7 @@ public class TryStatement extends Statement
 
    /**
     * Returns the body of this try statement.
-    *
+    * 
     * @return the try body
     */
    public Block getBody()
@@ -307,14 +306,14 @@ public class TryStatement extends Statement
 
    /**
     * Sets the body of this try statement.
-    *
+    * 
     * @param body the block node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setBody(Block body)
    {
@@ -330,9 +329,8 @@ public class TryStatement extends Statement
 
    /**
     * Returns the live ordered list of catch clauses for this try statement.
-    *
-    * @return the live list of catch clauses
-    *    (element type: {@link CatchClause})
+    * 
+    * @return the live list of catch clauses (element type: {@link CatchClause})
     */
    public List catchClauses()
    {
@@ -340,11 +338,9 @@ public class TryStatement extends Statement
    }
 
    /**
-    * Returns the finally block of this try statement, or <code>null</code> if
-    * this try statement has <b>no</b> finally block.
-    *
-    * @return the finally block, or <code>null</code> if this try statement
-    *    has none
+    * Returns the finally block of this try statement, or <code>null</code> if this try statement has <b>no</b> finally block.
+    * 
+    * @return the finally block, or <code>null</code> if this try statement has none
     */
    public Block getFinally()
    {
@@ -353,15 +349,14 @@ public class TryStatement extends Statement
 
    /**
     * Sets or clears the finally block of this try statement.
-    *
-    * @param block the finally block node, or <code>null</code> if
-    *    there is none
+    * 
+    * @param block the finally block node, or <code>null</code> if there is none
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setFinally(Block block)
    {
@@ -373,11 +368,9 @@ public class TryStatement extends Statement
 
    /**
     * Returns the live ordered list of resources for this try statement.
-    *
-    * @return the live list of resources
-    *    (element type: {@link VariableDeclarationExpression})
-    * @exception UnsupportedOperationException if this operation is used
-    *            in a JLS2 or JLS3 AST
+    * 
+    * @return the live list of resources (element type: {@link VariableDeclarationExpression})
+    * @exception UnsupportedOperationException if this operation is used in a JLS2 or JLS3 AST
     * @since 3.7.1
     */
    public List resources()
@@ -390,16 +383,16 @@ public class TryStatement extends Statement
       return this.resources;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return super.memSize() + 4 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

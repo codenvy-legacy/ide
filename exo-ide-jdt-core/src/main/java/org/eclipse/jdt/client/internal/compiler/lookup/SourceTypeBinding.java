@@ -60,7 +60,8 @@ public class SourceTypeBinding extends ReferenceBinding
 
    char[] genericReferenceTypeSignature;
 
-   private SimpleLookupTable storedAnnotations = null; // keys are this ReferenceBinding & its fields and methods, value is an AnnotationHolder
+   private SimpleLookupTable storedAnnotations = null; // keys are this ReferenceBinding & its fields and methods, value is an
+                                                       // AnnotationHolder
 
    public SourceTypeBinding(char[][] compoundName, PackageBinding fPackage, ClassScope scope)
    {
@@ -166,9 +167,9 @@ public class SourceTypeBinding extends ReferenceBinding
       }
    }
 
-   /* Add a new synthetic field for <actualOuterLocalVariable>.
-   *	Answer the new field or the existing field if one already existed.
-   */
+   /*
+    * Add a new synthetic field for <actualOuterLocalVariable>. Answer the new field or the existing field if one already existed.
+    */
    public FieldBinding addSyntheticFieldForInnerclass(LocalVariableBinding actualOuterLocalVariable)
    {
       if (this.synthetics == null)
@@ -195,7 +196,7 @@ public class SourceTypeBinding extends ReferenceBinding
       {
          needRecheck = false;
          FieldBinding existingField;
-         if ((existingField = getField(synthField.name, true /*resolve*/)) != null)
+         if ((existingField = getField(synthField.name, true /* resolve */)) != null)
          {
             TypeDeclaration typeDecl = this.scope.referenceContext;
             FieldDeclaration[] fieldDeclarations = typeDecl.fields;
@@ -218,9 +219,9 @@ public class SourceTypeBinding extends ReferenceBinding
       return synthField;
    }
 
-   /* Add a new synthetic field for <enclosingType>.
-   *	Answer the new field or the existing field if one already existed.
-   */
+   /*
+    * Add a new synthetic field for <enclosingType>. Answer the new field or the existing field if one already existed.
+    */
    public FieldBinding addSyntheticFieldForInnerclass(ReferenceBinding enclosingType)
    {
       if (this.synthetics == null)
@@ -244,7 +245,7 @@ public class SourceTypeBinding extends ReferenceBinding
       {
          needRecheck = false;
          FieldBinding existingField;
-         if ((existingField = getField(synthField.name, true /*resolve*/)) != null)
+         if ((existingField = getField(synthField.name, true /* resolve */)) != null)
          {
             TypeDeclaration typeDecl = this.scope.referenceContext;
             FieldDeclaration[] fieldDeclarations = typeDecl.fields;
@@ -272,9 +273,9 @@ public class SourceTypeBinding extends ReferenceBinding
       return synthField;
    }
 
-   /* Add a new synthetic field for a class literal access.
-   *	Answer the new field or the existing field if one already existed.
-   */
+   /*
+    * Add a new synthetic field for a class literal access. Answer the new field or the existing field if one already existed.
+    */
    public FieldBinding addSyntheticFieldForClassLiteral(TypeBinding targetType, BlockScope blockScope)
    {
       if (this.synthetics == null)
@@ -296,7 +297,7 @@ public class SourceTypeBinding extends ReferenceBinding
       }
       // ensure there is not already such a field defined by the user
       FieldBinding existingField;
-      if ((existingField = getField(synthField.name, true /*resolve*/)) != null)
+      if ((existingField = getField(synthField.name, true /* resolve */)) != null)
       {
          TypeDeclaration typeDecl = blockScope.referenceType();
          FieldDeclaration[] typeDeclarationFields = typeDecl.fields;
@@ -314,9 +315,10 @@ public class SourceTypeBinding extends ReferenceBinding
       return synthField;
    }
 
-   /* Add a new synthetic field for the emulation of the assert statement.
-   *	Answer the new field or the existing field if one already existed.
-   */
+   /*
+    * Add a new synthetic field for the emulation of the assert statement. Answer the new field or the existing field if one
+    * already existed.
+    */
    public FieldBinding addSyntheticFieldForAssert(BlockScope blockScope)
    {
       if (this.synthetics == null)
@@ -342,7 +344,7 @@ public class SourceTypeBinding extends ReferenceBinding
       {
          needRecheck = false;
          FieldBinding existingField;
-         if ((existingField = getField(synthField.name, true /*resolve*/)) != null)
+         if ((existingField = getField(synthField.name, true /* resolve */)) != null)
          {
             TypeDeclaration typeDecl = this.scope.referenceContext;
             int max = (typeDecl.fields == null) ? 0 : typeDecl.fields.length;
@@ -364,9 +366,10 @@ public class SourceTypeBinding extends ReferenceBinding
       return synthField;
    }
 
-   /* Add a new synthetic field for recording all enum constant values
-   *	Answer the new field or the existing field if one already existed.
-   */
+   /*
+    * Add a new synthetic field for recording all enum constant values Answer the new field or the existing field if one already
+    * existed.
+    */
    public FieldBinding addSyntheticFieldForEnumValues()
    {
       if (this.synthetics == null)
@@ -392,7 +395,7 @@ public class SourceTypeBinding extends ReferenceBinding
       {
          needRecheck = false;
          FieldBinding existingField;
-         if ((existingField = getField(synthField.name, true /*resolve*/)) != null)
+         if ((existingField = getField(synthField.name, true /* resolve */)) != null)
          {
             TypeDeclaration typeDecl = this.scope.referenceContext;
             FieldDeclaration[] fieldDeclarations = typeDecl.fields;
@@ -415,9 +418,10 @@ public class SourceTypeBinding extends ReferenceBinding
       return synthField;
    }
 
-   /* Add a new synthetic access method for read/write access to <targetField>.
-   	Answer the new method or the existing method if one already existed.
-   */
+   /*
+    * Add a new synthetic access method for read/write access to <targetField>. Answer the new method or the existing method if
+    * one already existed.
+    */
    public SyntheticMethodBinding addSyntheticMethod(FieldBinding targetField, boolean isReadAccess,
       boolean isSuperAccess)
    {
@@ -446,9 +450,10 @@ public class SourceTypeBinding extends ReferenceBinding
       return accessMethod;
    }
 
-   /* Add a new synthetic method the enum type. Selector can either be 'values' or 'valueOf'.
-    * char[] constants from TypeConstants must be used: TypeConstants.VALUES/VALUEOF
-   */
+   /*
+    * Add a new synthetic method the enum type. Selector can either be 'values' or 'valueOf'. char[] constants from TypeConstants
+    * must be used: TypeConstants.VALUES/VALUEOF
+    */
    public SyntheticMethodBinding addSyntheticEnumMethod(char[] selector)
    {
       if (this.synthetics == null)
@@ -502,7 +507,7 @@ public class SourceTypeBinding extends ReferenceBinding
       {
          needRecheck = false;
          FieldBinding existingField;
-         if ((existingField = getField(synthField.name, true /*resolve*/)) != null)
+         if ((existingField = getField(synthField.name, true /* resolve */)) != null)
          {
             TypeDeclaration typeDecl = this.scope.referenceContext;
             FieldDeclaration[] fieldDeclarations = typeDecl.fields;
@@ -523,9 +528,10 @@ public class SourceTypeBinding extends ReferenceBinding
       return synthField;
    }
 
-   /* Add a new synthetic method the enum type. Selector can either be 'values' or 'valueOf'.
-    * char[] constants from TypeConstants must be used: TypeConstants.VALUES/VALUEOF
-   */
+   /*
+    * Add a new synthetic method the enum type. Selector can either be 'values' or 'valueOf'. char[] constants from TypeConstants
+    * must be used: TypeConstants.VALUES/VALUEOF
+    */
    public SyntheticMethodBinding addSyntheticMethodForSwitchEnum(TypeBinding enumBinding)
    {
       if (this.synthetics == null)
@@ -574,10 +580,10 @@ public class SourceTypeBinding extends ReferenceBinding
       return accessMethod;
    }
 
-   /* Add a new synthetic access method for access to <targetMethod>.
-    * Must distinguish access method used for super access from others (need to use invokespecial bytecode)
-   	Answer the new method or the existing method if one already existed.
-   */
+   /*
+    * Add a new synthetic access method for access to <targetMethod>. Must distinguish access method used for super access from
+    * others (need to use invokespecial bytecode) Answer the new method or the existing method if one already existed.
+    */
    public SyntheticMethodBinding addSyntheticMethod(MethodBinding targetMethod, boolean isSuperAccess)
    {
       if (this.synthetics == null)
@@ -680,8 +686,8 @@ public class SourceTypeBinding extends ReferenceBinding
    }
 
    /*
-    * https://bugs.eclipse.org/bugs/show_bug.cgi?id=288658. Generate a bridge method if a public method is inherited
-    * from a non-public class into a public class (only in 1.6 or greater)
+    * https://bugs.eclipse.org/bugs/show_bug.cgi?id=288658. Generate a bridge method if a public method is inherited from a
+    * non-public class into a public class (only in 1.6 or greater)
     */
    public SyntheticMethodBinding addSyntheticBridgeMethod(MethodBinding inheritedMethodToBridge)
    {
@@ -887,8 +893,8 @@ public class SourceTypeBinding extends ReferenceBinding
    }
 
    /**
-    * <param1 ... paramN>superclass superinterface1 ... superinterfaceN
-    * <T:LY<TT;>;U:Ljava/lang/Object;V::Ljava/lang/Runnable;:Ljava/lang/Cloneable;:Ljava/util/Map;>Ljava/lang/Exception;Ljava/lang/Runnable;
+    * <param1 ... paramN>superclass superinterface1 ... superinterfaceN <T:LY
+    * <TT;>;U:Ljava/lang/Object;V::Ljava/lang/Runnable;:Ljava/lang/Cloneable;:Ljava/util/Map;>Ljava/lang/Exception;Ljava/lang/Runnable;
     */
    public char[] genericSignature()
    {
@@ -924,8 +930,9 @@ public class SourceTypeBinding extends ReferenceBinding
    }
 
    /**
-    * Compute the tagbits for standard annotations. For source types, these could require
-    * lazily resolving corresponding annotation nodes, in case of forward references.
+    * Compute the tagbits for standard annotations. For source types, these could require lazily resolving corresponding
+    * annotation nodes, in case of forward references.
+    * 
     * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#getAnnotationTagBits()
     */
    public long getAnnotationTagBits()
@@ -1024,8 +1031,8 @@ public class SourceTypeBinding extends ReferenceBinding
       return null;
    }
 
-   //NOTE: the return type, arg & exception types of each method of a source type are resolved when needed
-   //searches up the hierarchy as long as no potential (but not exact) match was found.
+   // NOTE: the return type, arg & exception types of each method of a source type are resolved when needed
+   // searches up the hierarchy as long as no potential (but not exact) match was found.
    public MethodBinding getExactMethod(char[] selector, TypeBinding[] argumentTypes, CompilationUnitScope refScope)
    {
       // sender from refScope calls recordTypeReference(this)
@@ -1074,7 +1081,8 @@ public class SourceTypeBinding extends ReferenceBinding
                if (resolveTypesFor(method) == null || method.returnType == null)
                {
                   methods();
-                  return getExactMethod(selector, argumentTypes, refScope); // try again since the problem methods have been removed
+                  return getExactMethod(selector, argumentTypes, refScope); // try again since the problem methods have been
+                                                                            // removed
                }
             }
             // check dup collisions
@@ -1090,7 +1098,8 @@ public class SourceTypeBinding extends ReferenceBinding
                   if (paramsMatch)
                   {
                      methods();
-                     return getExactMethod(selector, argumentTypes, refScope); // try again since the problem methods have been removed
+                     return getExactMethod(selector, argumentTypes, refScope); // try again since the problem methods have been
+                                                                               // removed
                   }
                }
             }
@@ -1130,7 +1139,7 @@ public class SourceTypeBinding extends ReferenceBinding
       return null;
    }
 
-   //NOTE: the type of a field of a source type is resolved when needed
+   // NOTE: the type of a field of a source type is resolved when needed
    public FieldBinding getField(char[] fieldName, boolean needResolve)
    {
 
@@ -1250,9 +1259,9 @@ public class SourceTypeBinding extends ReferenceBinding
       return result;
    }
 
-   /* Answer the synthetic field for <actualOuterLocalVariable>
-   *	or null if one does not exist.
-   */
+   /*
+    * Answer the synthetic field for <actualOuterLocalVariable> or null if one does not exist.
+    */
    public FieldBinding getSyntheticField(LocalVariableBinding actualOuterLocalVariable)
    {
       if (this.synthetics == null || this.synthetics[SourceTypeBinding.FIELD_EMUL] == null)
@@ -1260,9 +1269,9 @@ public class SourceTypeBinding extends ReferenceBinding
       return (FieldBinding)this.synthetics[SourceTypeBinding.FIELD_EMUL].get(actualOuterLocalVariable);
    }
 
-   /* Answer the synthetic field for <targetEnclosingType>
-   *	or null if one does not exist.
-   */
+   /*
+    * Answer the synthetic field for <targetEnclosingType> or null if one does not exist.
+    */
    public FieldBinding getSyntheticField(ReferenceBinding targetEnclosingType, boolean onlyExactMatch)
    {
 
@@ -1274,7 +1283,8 @@ public class SourceTypeBinding extends ReferenceBinding
 
       // type compatibility : to handle cases such as
       // class T { class M{}}
-      // class S extends T { class N extends M {}} --> need to use S as a default enclosing instance for the super constructor call in N().
+      // class S extends T { class N extends M {}} --> need to use S as a default enclosing instance for the super constructor
+      // call in N().
       if (!onlyExactMatch)
       {
          Iterator accessFields = this.synthetics[SourceTypeBinding.FIELD_EMUL].values().iterator();
@@ -1290,7 +1300,7 @@ public class SourceTypeBinding extends ReferenceBinding
    }
 
    /*
-    * Answer the bridge method associated for an  inherited methods or null if one does not exist
+    * Answer the bridge method associated for an inherited methods or null if one does not exist
     */
    public SyntheticMethodBinding getSyntheticBridgeMethod(MethodBinding inheritedMethodToBridge)
    {
@@ -1345,8 +1355,7 @@ public class SourceTypeBinding extends ReferenceBinding
    }
 
    /**
-    * Returns true if a type is identical to another one,
-    * or for generic types, true if compared to its raw type.
+    * Returns true if a type is identical to another one, or for generic types, true if compared to its raw type.
     */
    public boolean isEquivalentTo(TypeBinding otherType)
    {
@@ -1481,7 +1490,7 @@ public class SourceTypeBinding extends ReferenceBinding
                {
                   if (method.areParameterErasuresEqual(method2))
                   {
-                     // we now ignore return types in 1.7 when detecting duplicates, just as we did before 1.5 
+                     // we now ignore return types in 1.7 when detecting duplicates, just as we did before 1.5
                      // Only in 1.6, we have to make sure even return types are different
                      // https://bugs.eclipse.org/bugs/show_bug.cgi?id=317719
                      if (compliance16 && method.returnType != null && method2.returnType != null)
@@ -1530,7 +1539,8 @@ public class SourceTypeBinding extends ReferenceBinding
                                     if (type instanceof SourceTypeBinding
                                        && type.typeVariables() != Binding.NO_TYPE_VARIABLES)
                                     {
-                                       index = pLength; // handle comparing identical source types like X<T>... its erasure is itself BUT we need to answer false
+                                       index = pLength; // handle comparing identical source types like X<T>... its erasure is
+                                                        // itself BUT we need to answer false
                                        break;
                                     }
                                  }
@@ -1574,10 +1584,12 @@ public class SourceTypeBinding extends ReferenceBinding
                      && (CharOperation.equals(selector, TypeConstants.VALUEOF) || CharOperation.equals(selector,
                         TypeConstants.VALUES));
                // report duplicate
-               boolean removeMethod2 = (severity == ProblemSeverities.Error) ? true : false; // do not remove if in 1.6 and just a warning given
+               boolean removeMethod2 = (severity == ProblemSeverities.Error) ? true : false; // do not remove if in 1.6 and just a
+                                                                                             // warning given
                if (methodDecl == null)
                {
-                  methodDecl = method.sourceMethod(); // cannot be retrieved after binding is lost & may still be null if method is special
+                  methodDecl = method.sourceMethod(); // cannot be retrieved after binding is lost & may still be null if method
+                                                      // is special
                   if (methodDecl != null && methodDecl.binding != null)
                   { // ensure its a valid user defined method
                      boolean removeMethod = method.returnType == null && method2.returnType != null;
@@ -1698,8 +1710,9 @@ public class SourceTypeBinding extends ReferenceBinding
             FieldDeclaration fieldDecl = fieldDecls[f];
             TypeBinding fieldType =
                fieldDecl.getKind() == AbstractVariableDeclaration.ENUM_CONSTANT ? initializationScope.environment()
-                  .convertToRawType(this, false /*do not force conversion of enclosing types*/) // enum constant is implicitly of declaring enum type
-                  : fieldDecl.type.resolveType(initializationScope, true /* check bounds*/);
+                  .convertToRawType(this, false /* do not force conversion of enclosing types */) // enum constant is implicitly
+                                                                                                  // of declaring enum type
+                  : fieldDecl.type.resolveType(initializationScope, true /* check bounds */);
             field.type = fieldType;
             field.modifiers &= ~ExtraCompilerModifiers.AccUnresolved;
             if (fieldType == null)
@@ -1776,7 +1789,7 @@ public class SourceTypeBinding extends ReferenceBinding
          for (int i = 0; i < size; i++)
          {
             resolvedExceptionType =
-               (ReferenceBinding)exceptionTypes[i].resolveType(methodDecl.scope, true /* check bounds*/);
+               (ReferenceBinding)exceptionTypes[i].resolveType(methodDecl.scope, true /* check bounds */);
             if (resolvedExceptionType == null)
                continue;
             if (resolvedExceptionType.isBoundParameterizedType())
@@ -1831,7 +1844,7 @@ public class SourceTypeBinding extends ReferenceBinding
             }
             try
             {
-               parameterType = arg.type.resolveType(methodDecl.scope, true /* check bounds*/);
+               parameterType = arg.type.resolveType(methodDecl.scope, true /* check bounds */);
             }
             finally
             {
@@ -1918,7 +1931,7 @@ public class SourceTypeBinding extends ReferenceBinding
             }
             try
             {
-               methodType = returnType.resolveType(methodDecl.scope, true /* check bounds*/);
+               methodType = returnType.resolveType(methodDecl.scope, true /* check bounds */);
             }
             finally
             {
@@ -2255,7 +2268,8 @@ public class SourceTypeBinding extends ReferenceBinding
             this.memberTypes[i].modifiers |= ExtraCompilerModifiers.AccLocallyUsed;
       }
       if (this.superclass.isPrivate())
-         if (this.superclass instanceof SourceTypeBinding) // should always be true because private super type can only be accessed in same CU
+         if (this.superclass instanceof SourceTypeBinding) // should always be true because private super type can only be
+                                                           // accessed in same CU
             ((SourceTypeBinding)this.superclass).tagIndirectlyAccessibleMembers();
    }
 }

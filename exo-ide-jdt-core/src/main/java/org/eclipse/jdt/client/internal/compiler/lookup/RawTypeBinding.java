@@ -13,17 +13,16 @@ package org.eclipse.jdt.client.internal.compiler.lookup;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 
 /**
- * Denote a raw type, i.e. a generic type referenced without any type arguments.
- * e.g. X<T extends Exception> can be used a raw type 'X', in which case it
- * 	will behave as X<Exception>
+ * Denote a raw type, i.e. a generic type referenced without any type arguments. e.g. X<T extends Exception> can be used a raw
+ * type 'X', in which case it will behave as X<Exception>
  */
 public class RawTypeBinding extends ParameterizedTypeBinding
 {
 
    /**
-    * Raw type arguments are erasure of respective parameter bounds. But we may not have resolved
-    * these bounds yet if creating raw types while supertype hierarchies are being connected.
-    * Therefore, use 'null' instead, and access these in a lazy way later on (when substituting).
+    * Raw type arguments are erasure of respective parameter bounds. But we may not have resolved these bounds yet if creating raw
+    * types while supertype hierarchies are being connected. Therefore, use 'null' instead, and access these in a lazy way later
+    * on (when substituting).
     */
    public RawTypeBinding(ReferenceBinding type, ReferenceBinding enclosingType, LookupEnvironment environment)
    {
@@ -70,13 +69,13 @@ public class RawTypeBinding extends ParameterizedTypeBinding
       StringBuffer sig = new StringBuffer(10);
       if (isMemberType() && enclosingType().isParameterizedType())
       {
-         char[] typeSig = enclosingType().computeUniqueKey(false/*not a leaf*/);
+         char[] typeSig = enclosingType().computeUniqueKey(false/* not a leaf */);
          sig.append(typeSig, 0, typeSig.length - 1); // copy all but trailing semicolon
          sig.append('.').append(sourceName()).append('<').append('>').append(';');
       }
       else
       {
-         sig.append(genericType().computeUniqueKey(false/*not a leaf*/));
+         sig.append(genericType().computeUniqueKey(false/* not a leaf */));
          sig.insert(sig.length() - 1, "<>"); //$NON-NLS-1$
       }
 
@@ -114,8 +113,7 @@ public class RawTypeBinding extends ParameterizedTypeBinding
    }
 
    /**
-    * Ltype<param1 ... paramN>;
-    * LY<TT;>;
+    * Ltype<param1 ... paramN>; LY<TT;>;
     */
    public char[] genericTypeSignature()
    {
@@ -203,9 +201,10 @@ public class RawTypeBinding extends ParameterizedTypeBinding
       for (int i = 0; i < length; i++)
       {
          // perform raw conversion on variable upper bound - could cause infinite regression if arguments were initialized lazily
-         typeArguments[i] =
-            this.environment
-               .convertToRawType(typeVariables[i].erasure(), false /*do not force conversion of enclosing types*/);
+         typeArguments[i] = this.environment.convertToRawType(typeVariables[i].erasure(), false /*
+                                                                                                 * do not force conversion of
+                                                                                                 * enclosing types
+                                                                                                 */);
       }
       this.arguments = typeArguments;
    }
@@ -213,7 +212,7 @@ public class RawTypeBinding extends ParameterizedTypeBinding
    /**
     * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#readableName()
     */
-   public char[] readableName() /*java.lang.Object,  p.X<T> */
+   public char[] readableName() /* java.lang.Object, p.X<T> */
    {
       char[] readableName;
       if (isMemberType())
@@ -230,7 +229,7 @@ public class RawTypeBinding extends ParameterizedTypeBinding
    /**
     * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#shortReadableName()
     */
-   public char[] shortReadableName() /*Object*/
+   public char[] shortReadableName() /* Object */
    {
       char[] shortReadableName;
       if (isMemberType())

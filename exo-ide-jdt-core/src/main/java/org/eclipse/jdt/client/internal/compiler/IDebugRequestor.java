@@ -14,9 +14,8 @@ public interface IDebugRequestor
 {
 
    /*
-    * Debug callback method allowing to take into account a new compilation result.
-    * Any side-effect performed on the actual result might interfere with the
-    * original compiler requestor, and should be prohibited.
+    * Debug callback method allowing to take into account a new compilation result. Any side-effect performed on the actual result
+    * might interfere with the original compiler requestor, and should be prohibited.
     */
    void acceptDebugResult(CompilationResult result);
 

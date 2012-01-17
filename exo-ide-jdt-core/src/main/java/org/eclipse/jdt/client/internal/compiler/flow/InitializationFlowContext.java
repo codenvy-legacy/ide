@@ -17,8 +17,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
 /**
- * Reflects the context of code analysis, keeping track of enclosing
- *	try statements, exception handlers, etc...
+ * Reflects the context of code analysis, keeping track of enclosing try statements, exception handlers, etc...
  */
 public class InitializationFlowContext extends ExceptionHandlingFlowContext
 {

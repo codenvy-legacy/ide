@@ -33,9 +33,9 @@ public abstract class Constant implements TypeIds, OperatorIds
 
    public final Constant castTo(int conversionToTargetType)
    {
-      //the cast is an int of the form
+      // the cast is an int of the form
       // (castId<<4)+typeId (in order to follow the
-      //user written style (cast)expression ....
+      // user written style (cast)expression ....
 
       if (this == NotAConstant)
          return NotAConstant;
@@ -43,209 +43,209 @@ public abstract class Constant implements TypeIds, OperatorIds
       {
          case T_undefined :
             return this;
-            //            TARGET TYPE  <- FROM TYPE
-            //	    case (T_undefined<<4)+T_undefined  	 : return NotAConstant;
-            //	    case (T_undefined<<4)+T_byte  		 : return NotAConstant;
-            //	    case (T_undefined<<4)+T_long  		 : return NotAConstant;
-            //	    case (T_undefined<<4)+T_short  		 : return NotAConstant;
-            //	    case (T_undefined<<4)+T_void  		 : return NotAConstant;
-            //	    case (T_undefined<<4)+T_String  	 : return NotAConstant;
-            //	    case (T_undefined<<4)+T_Object  	 : return NotAConstant;
-            //	    case (T_undefined<<4)+T_double  	 : return NotAConstant;
-            //	    case (T_undefined<<4)+T_float  		 : return NotAConstant;
-            //	    case (T_undefined<<4)+T_boolean 	 : return NotAConstant;
-            //	    case (T_undefined<<4)+T_char  		 : return NotAConstant;
-            //	    case (T_undefined<<4)+T_int  		 : return NotAConstant;
+            // TARGET TYPE <- FROM TYPE
+            // case (T_undefined<<4)+T_undefined : return NotAConstant;
+            // case (T_undefined<<4)+T_byte : return NotAConstant;
+            // case (T_undefined<<4)+T_long : return NotAConstant;
+            // case (T_undefined<<4)+T_short : return NotAConstant;
+            // case (T_undefined<<4)+T_void : return NotAConstant;
+            // case (T_undefined<<4)+T_String : return NotAConstant;
+            // case (T_undefined<<4)+T_Object : return NotAConstant;
+            // case (T_undefined<<4)+T_double : return NotAConstant;
+            // case (T_undefined<<4)+T_float : return NotAConstant;
+            // case (T_undefined<<4)+T_boolean : return NotAConstant;
+            // case (T_undefined<<4)+T_char : return NotAConstant;
+            // case (T_undefined<<4)+T_int : return NotAConstant;
 
-            //	    case (T_byte<<4)+T_undefined  	 : return NotAConstant;
+            // case (T_byte<<4)+T_undefined : return NotAConstant;
          case (T_byte << 4) + T_byte :
             return this;
          case (T_byte << 4) + T_long :
             return ByteConstant.fromValue((byte)longValue());
          case (T_byte << 4) + T_short :
             return ByteConstant.fromValue((byte)shortValue());
-            //	    case (T_byte<<4)+T_void  		 : return NotAConstant;
-            //	    case (T_byte<<4)+T_String  	 	 : return NotAConstant;
-            //	    case (T_byte<<4)+T_Object  	 	 : return NotAConstant;
+            // case (T_byte<<4)+T_void : return NotAConstant;
+            // case (T_byte<<4)+T_String : return NotAConstant;
+            // case (T_byte<<4)+T_Object : return NotAConstant;
          case (T_byte << 4) + T_double :
             return ByteConstant.fromValue((byte)doubleValue());
          case (T_byte << 4) + T_float :
             return ByteConstant.fromValue((byte)floatValue());
-            //	    case (T_byte<<4)+T_boolean  	 : return NotAConstant;
+            // case (T_byte<<4)+T_boolean : return NotAConstant;
          case (T_byte << 4) + T_char :
             return ByteConstant.fromValue((byte)charValue());
          case (T_byte << 4) + T_int :
             return ByteConstant.fromValue((byte)intValue());
 
-            //	    case (T_long<<4)+T_undefined  	 : return NotAConstant;
+            // case (T_long<<4)+T_undefined : return NotAConstant;
          case (T_long << 4) + T_byte :
             return LongConstant.fromValue(byteValue());
          case (T_long << 4) + T_long :
             return this;
          case (T_long << 4) + T_short :
             return LongConstant.fromValue(shortValue());
-            //	    case (T_long<<4)+T_void  		 : return NotAConstant;
-            //	    case (T_long<<4)+T_String  		 : return NotAConstant;
-            //	    case (T_long<<4)+T_Object  		 : return NotAConstant;
+            // case (T_long<<4)+T_void : return NotAConstant;
+            // case (T_long<<4)+T_String : return NotAConstant;
+            // case (T_long<<4)+T_Object : return NotAConstant;
          case (T_long << 4) + T_double :
             return LongConstant.fromValue((long)doubleValue());
          case (T_long << 4) + T_float :
             return LongConstant.fromValue((long)floatValue());
-            //	    case (T_long<<4)+T_boolean  	 : return NotAConstant;
+            // case (T_long<<4)+T_boolean : return NotAConstant;
          case (T_long << 4) + T_char :
             return LongConstant.fromValue(charValue());
          case (T_long << 4) + T_int :
             return LongConstant.fromValue(intValue());
 
-            //	    case (T_short<<4)+T_undefined  	 : return NotAConstant;
+            // case (T_short<<4)+T_undefined : return NotAConstant;
          case (T_short << 4) + T_byte :
             return ShortConstant.fromValue(byteValue());
          case (T_short << 4) + T_long :
             return ShortConstant.fromValue((short)longValue());
          case (T_short << 4) + T_short :
             return this;
-            //	    case (T_short<<4)+T_void  		 : return NotAConstant;
-            //	    case (T_short<<4)+T_String  	 : return NotAConstant;
-            //	    case (T_short<<4)+T_Object  	 : return NotAConstant;
+            // case (T_short<<4)+T_void : return NotAConstant;
+            // case (T_short<<4)+T_String : return NotAConstant;
+            // case (T_short<<4)+T_Object : return NotAConstant;
          case (T_short << 4) + T_double :
             return ShortConstant.fromValue((short)doubleValue());
          case (T_short << 4) + T_float :
             return ShortConstant.fromValue((short)floatValue());
-            //	    case (T_short<<4)+T_boolean 	 : return NotAConstant;
+            // case (T_short<<4)+T_boolean : return NotAConstant;
          case (T_short << 4) + T_char :
             return ShortConstant.fromValue((short)charValue());
          case (T_short << 4) + T_int :
             return ShortConstant.fromValue((short)intValue());
 
-            //	    case (T_void<<4)+T_undefined  	 : return NotAConstant;
-            //	    case (T_void<<4)+T_byte  		 : return NotAConstant;
-            //	    case (T_void<<4)+T_long  		 : return NotAConstant;
-            //	    case (T_void<<4)+T_short  		 : return NotAConstant;
-            //	    case (T_void<<4)+T_void  		 : return NotAConstant;
-            //	    case (T_void<<4)+T_String  	 	 : return NotAConstant;
-            //	    case (T_void<<4)+T_Object  	 	 : return NotAConstant;
-            //	    case (T_void<<4)+T_double  	 	 : return NotAConstant;
-            //	    case (T_void<<4)+T_float  		 : return NotAConstant;
-            //	    case (T_void<<4)+T_boolean  	 : return NotAConstant;
-            //	    case (T_void<<4)+T_char  		 : return NotAConstant;
-            //	    case (T_void<<4)+T_int  		 : return NotAConstant;
+            // case (T_void<<4)+T_undefined : return NotAConstant;
+            // case (T_void<<4)+T_byte : return NotAConstant;
+            // case (T_void<<4)+T_long : return NotAConstant;
+            // case (T_void<<4)+T_short : return NotAConstant;
+            // case (T_void<<4)+T_void : return NotAConstant;
+            // case (T_void<<4)+T_String : return NotAConstant;
+            // case (T_void<<4)+T_Object : return NotAConstant;
+            // case (T_void<<4)+T_double : return NotAConstant;
+            // case (T_void<<4)+T_float : return NotAConstant;
+            // case (T_void<<4)+T_boolean : return NotAConstant;
+            // case (T_void<<4)+T_char : return NotAConstant;
+            // case (T_void<<4)+T_int : return NotAConstant;
 
-            //	    case (T_String<<4)+T_undefined   : return NotAConstant;
-            //	    case (T_String<<4)+T_byte  		 : return NotAConstant;
-            //	    case (T_String<<4)+T_long  		 : return NotAConstant;
-            //	    case (T_String<<4)+T_short  	 : return NotAConstant;
-            //	    case (T_String<<4)+T_void  		 : return NotAConstant;
+            // case (T_String<<4)+T_undefined : return NotAConstant;
+            // case (T_String<<4)+T_byte : return NotAConstant;
+            // case (T_String<<4)+T_long : return NotAConstant;
+            // case (T_String<<4)+T_short : return NotAConstant;
+            // case (T_String<<4)+T_void : return NotAConstant;
          case (T_JavaLangString << 4) + T_JavaLangString :
             return this;
-            //	    case (T_String<<4)+T_Object  	 : return NotAConstant;
-            //	    case (T_String<<4)+T_double  	 : return NotAConstant;
-            //	    case (T_String<<4)+T_float  	 : return NotAConstant;
-            //	    case (T_String<<4)+T_boolean 	 : return NotAConstant;
-            //	    case (T_String<<4)+T_char  		 : return NotAConstant;
-            //	    case (T_String<<4)+T_int  		 : return NotAConstant;
+            // case (T_String<<4)+T_Object : return NotAConstant;
+            // case (T_String<<4)+T_double : return NotAConstant;
+            // case (T_String<<4)+T_float : return NotAConstant;
+            // case (T_String<<4)+T_boolean : return NotAConstant;
+            // case (T_String<<4)+T_char : return NotAConstant;
+            // case (T_String<<4)+T_int : return NotAConstant;
 
-            //	    case (T_Object<<4)+T_undefined   	: return NotAConstant;
-            //	    case (T_Object<<4)+T_byte  		 	: return NotAConstant;
-            //	    case (T_Object<<4)+T_long  		 	: return NotAConstant;
-            //	    case (T_Object<<4)+T_short 		 	: return NotAConstant;
-            //	    case (T_Object<<4)+T_void  		 	: return NotAConstant;
-            //	    case (T_Object<<4)+T_String  		: return NotAConstant;
-            //	    case (T_Object<<4)+T_Object  		: return NotAConstant;
-            //	    case (T_Object<<4)+T_double  		: return NotAConstant;
-            //	    case (T_Object<<4)+T_float  		: return NotAConstant;
-            //	    case (T_Object<<4)+T_boolean 		: return NotAConstant;
-            //	    case (T_Object<<4)+T_char  		 	: return NotAConstant;
-            //	    case (T_Object<<4)+T_int  			: return NotAConstant;
+            // case (T_Object<<4)+T_undefined : return NotAConstant;
+            // case (T_Object<<4)+T_byte : return NotAConstant;
+            // case (T_Object<<4)+T_long : return NotAConstant;
+            // case (T_Object<<4)+T_short : return NotAConstant;
+            // case (T_Object<<4)+T_void : return NotAConstant;
+            // case (T_Object<<4)+T_String : return NotAConstant;
+            // case (T_Object<<4)+T_Object : return NotAConstant;
+            // case (T_Object<<4)+T_double : return NotAConstant;
+            // case (T_Object<<4)+T_float : return NotAConstant;
+            // case (T_Object<<4)+T_boolean : return NotAConstant;
+            // case (T_Object<<4)+T_char : return NotAConstant;
+            // case (T_Object<<4)+T_int : return NotAConstant;
 
-            //	    case (T_double<<4)+T_undefined  	: return NotAConstant;
+            // case (T_double<<4)+T_undefined : return NotAConstant;
          case (T_double << 4) + T_byte :
             return DoubleConstant.fromValue(byteValue());
          case (T_double << 4) + T_long :
             return DoubleConstant.fromValue(longValue());
          case (T_double << 4) + T_short :
             return DoubleConstant.fromValue(shortValue());
-            //	    case (T_double<<4)+T_void  		 	: return NotAConstant;
-            //	    case (T_double<<4)+T_String  		: return NotAConstant;
-            //	    case (T_double<<4)+T_Object  		: return NotAConstant;
+            // case (T_double<<4)+T_void : return NotAConstant;
+            // case (T_double<<4)+T_String : return NotAConstant;
+            // case (T_double<<4)+T_Object : return NotAConstant;
          case (T_double << 4) + T_double :
             return this;
          case (T_double << 4) + T_float :
             return DoubleConstant.fromValue(floatValue());
-            //	    case (T_double<<4)+T_boolean  		: return NotAConstant;
+            // case (T_double<<4)+T_boolean : return NotAConstant;
          case (T_double << 4) + T_char :
             return DoubleConstant.fromValue(charValue());
          case (T_double << 4) + T_int :
             return DoubleConstant.fromValue(intValue());
 
-            //	    case (T_float<<4)+T_undefined  	 : return NotAConstant;
+            // case (T_float<<4)+T_undefined : return NotAConstant;
          case (T_float << 4) + T_byte :
             return FloatConstant.fromValue(byteValue());
          case (T_float << 4) + T_long :
             return FloatConstant.fromValue(longValue());
          case (T_float << 4) + T_short :
             return FloatConstant.fromValue(shortValue());
-            //	    case (T_float<<4)+T_void  		 : return NotAConstant;
-            //	    case (T_float<<4)+T_String  	 : return NotAConstant;
-            //	    case (T_float<<4)+T_Object  	 : return NotAConstant;
+            // case (T_float<<4)+T_void : return NotAConstant;
+            // case (T_float<<4)+T_String : return NotAConstant;
+            // case (T_float<<4)+T_Object : return NotAConstant;
          case (T_float << 4) + T_double :
             return FloatConstant.fromValue((float)doubleValue());
          case (T_float << 4) + T_float :
             return this;
-            //	    case (T_float<<4)+T_boolean 	 : return NotAConstant;
+            // case (T_float<<4)+T_boolean : return NotAConstant;
          case (T_float << 4) + T_char :
             return FloatConstant.fromValue(charValue());
          case (T_float << 4) + T_int :
             return FloatConstant.fromValue(intValue());
 
-            //	    case (T_boolean<<4)+T_undefined  		 : return NotAConstant;
-            //	    case (T_boolean<<4)+T_byte  			 : return NotAConstant;
-            //	    case (T_boolean<<4)+T_long  			 : return NotAConstant;
-            //	    case (T_boolean<<4)+T_short  			 : return NotAConstant;
-            //	    case (T_boolean<<4)+T_void  			 : return NotAConstant;
-            //	    case (T_boolean<<4)+T_String  			 : return NotAConstant;
-            //	    case (T_boolean<<4)+T_Object  			 : return NotAConstant;
-            //	    case (T_boolean<<4)+T_double  			 : return NotAConstant;
-            //	    case (T_boolean<<4)+T_float  			 : return NotAConstant;
+            // case (T_boolean<<4)+T_undefined : return NotAConstant;
+            // case (T_boolean<<4)+T_byte : return NotAConstant;
+            // case (T_boolean<<4)+T_long : return NotAConstant;
+            // case (T_boolean<<4)+T_short : return NotAConstant;
+            // case (T_boolean<<4)+T_void : return NotAConstant;
+            // case (T_boolean<<4)+T_String : return NotAConstant;
+            // case (T_boolean<<4)+T_Object : return NotAConstant;
+            // case (T_boolean<<4)+T_double : return NotAConstant;
+            // case (T_boolean<<4)+T_float : return NotAConstant;
          case (T_boolean << 4) + T_boolean :
             return this;
-            //	    case (T_boolean<<4)+T_char  			 : return NotAConstant;
-            //	    case (T_boolean<<4)+T_int  				 : return NotAConstant;
+            // case (T_boolean<<4)+T_char : return NotAConstant;
+            // case (T_boolean<<4)+T_int : return NotAConstant;
 
-            //	    case (T_char<<4)+T_undefined  	 : return NotAConstant;
+            // case (T_char<<4)+T_undefined : return NotAConstant;
          case (T_char << 4) + T_byte :
             return CharConstant.fromValue((char)byteValue());
          case (T_char << 4) + T_long :
             return CharConstant.fromValue((char)longValue());
          case (T_char << 4) + T_short :
             return CharConstant.fromValue((char)shortValue());
-            //	    case (T_char<<4)+T_void  		 : return NotAConstant;
-            //	    case (T_char<<4)+T_String  		 : return NotAConstant;
-            //	    case (T_char<<4)+T_Object  		 : return NotAConstant;
+            // case (T_char<<4)+T_void : return NotAConstant;
+            // case (T_char<<4)+T_String : return NotAConstant;
+            // case (T_char<<4)+T_Object : return NotAConstant;
          case (T_char << 4) + T_double :
             return CharConstant.fromValue((char)doubleValue());
          case (T_char << 4) + T_float :
             return CharConstant.fromValue((char)floatValue());
-            //	    case (T_char<<4)+T_boolean  	 : return NotAConstant;
+            // case (T_char<<4)+T_boolean : return NotAConstant;
          case (T_char << 4) + T_char :
             return this;
          case (T_char << 4) + T_int :
             return CharConstant.fromValue((char)intValue());
 
-            //	    case (T_int<<4)+T_undefined  	 : return NotAConstant;
+            // case (T_int<<4)+T_undefined : return NotAConstant;
          case (T_int << 4) + T_byte :
             return IntConstant.fromValue(byteValue());
          case (T_int << 4) + T_long :
             return IntConstant.fromValue((int)longValue());
          case (T_int << 4) + T_short :
             return IntConstant.fromValue(shortValue());
-            //	    case (T_int<<4)+T_void  		 : return NotAConstant;
-            //	    case (T_int<<4)+T_String  		 : return NotAConstant;
-            //	    case (T_int<<4)+T_Object  		 : return NotAConstant;
+            // case (T_int<<4)+T_void : return NotAConstant;
+            // case (T_int<<4)+T_String : return NotAConstant;
+            // case (T_int<<4)+T_Object : return NotAConstant;
          case (T_int << 4) + T_double :
             return IntConstant.fromValue((int)doubleValue());
          case (T_int << 4) + T_float :
             return IntConstant.fromValue((int)floatValue());
-            //	    case (T_int<<4)+T_boolean  	 	 : return NotAConstant;
+            // case (T_int<<4)+T_boolean : return NotAConstant;
          case (T_int << 4) + T_char :
             return IntConstant.fromValue(charValue());
          case (T_int << 4) + T_int :
@@ -268,29 +268,29 @@ public abstract class Constant implements TypeIds, OperatorIds
             return BooleanConstant.fromValue(!cst.booleanValue());
          case PLUS :
             return computeConstantOperationPLUS(IntConstant.fromValue(0), T_int, cst, id);
-         case MINUS : //the two special -9223372036854775808L and -2147483648 are inlined at parseTime
+         case MINUS : // the two special -9223372036854775808L and -2147483648 are inlined at parseTime
             switch (id)
             {
                case T_float :
                   float f;
                   if ((f = cst.floatValue()) == 0.0f)
-                  { //positive and negative 0....
+                  { // positive and negative 0....
                      if (MathUtil.floatToIntBits(f) == 0)
                         return FloatConstant.fromValue(-0.0f);
                      else
                         return FloatConstant.fromValue(0.0f);
                   }
-                  break; //default case
+                  break; // default case
                case T_double :
                   double d;
                   if ((d = cst.doubleValue()) == 0.0d)
-                  { //positive and negative 0....
+                  { // positive and negative 0....
                      if (MathUtil.doubleToLongBits(d) == 0)
                         return DoubleConstant.fromValue(-0.0d);
                      else
                         return DoubleConstant.fromValue(0.0d);
                   }
-                  break; //default case
+                  break; // default case
             }
             return computeConstantOperationMINUS(IntConstant.fromValue(0), T_int, cst, id);
          case TWIDDLE :
@@ -735,8 +735,8 @@ public abstract class Constant implements TypeIds, OperatorIds
          case T_JavaLangString :
             if (rightId == T_JavaLangString)
             {
-               //String are interned in th compiler==>thus if two string constant
-               //get to be compared, it is an equal on the vale which is done
+               // String are interned in th compiler==>thus if two string constant
+               // get to be compared, it is an equal on the vale which is done
                return BooleanConstant.fromValue(((StringConstant)left).hasSameValue(right));
             }
             break;
@@ -1957,18 +1957,18 @@ public abstract class Constant implements TypeIds, OperatorIds
                   return StringConstant.fromValue(left.stringValue() + right.booleanValue());
             }
             break;
-      //			case T_null :
-      //				switch (rightId){
-      //					case T_char :	return Constant.fromValue(left.stringValue() + String.valueOf(right.charValue()));
-      //					case T_float:	return Constant.fromValue(left.stringValue() + String.valueOf(right.floatValue()));
-      //					case T_double:	return Constant.fromValue(left.stringValue() + String.valueOf(right.doubleValue()));
-      //					case T_byte:	return Constant.fromValue(left.stringValue() + String.valueOf(right.byteValue()));
-      //					case T_short:	return Constant.fromValue(left.stringValue() + String.valueOf(right.shortValue()));
-      //					case T_int:		return Constant.fromValue(left.stringValue() + String.valueOf(right.intValue()));
-      //					case T_long:	return Constant.fromValue(left.stringValue() + String.valueOf(right.longValue()));
-      //					case T_JavaLangString:	return Constant.fromValue(left.stringValue() + right.stringValue());
-      //					case T_boolean:	return Constant.fromValue(left.stringValue() + right.booleanValue());
-      //				}
+      // case T_null :
+      // switch (rightId){
+      // case T_char : return Constant.fromValue(left.stringValue() + String.valueOf(right.charValue()));
+      // case T_float: return Constant.fromValue(left.stringValue() + String.valueOf(right.floatValue()));
+      // case T_double: return Constant.fromValue(left.stringValue() + String.valueOf(right.doubleValue()));
+      // case T_byte: return Constant.fromValue(left.stringValue() + String.valueOf(right.byteValue()));
+      // case T_short: return Constant.fromValue(left.stringValue() + String.valueOf(right.shortValue()));
+      // case T_int: return Constant.fromValue(left.stringValue() + String.valueOf(right.intValue()));
+      // case T_long: return Constant.fromValue(left.stringValue() + String.valueOf(right.longValue()));
+      // case T_JavaLangString: return Constant.fromValue(left.stringValue() + right.stringValue());
+      // case T_boolean: return Constant.fromValue(left.stringValue() + right.booleanValue());
+      // }
       }
       return NotAConstant;
    }
@@ -2375,6 +2375,7 @@ public abstract class Constant implements TypeIds, OperatorIds
 
    /**
     * Returns true if both constants have the same type and the same actual value
+    * 
     * @param otherConstant
     */
    public boolean hasSameValue(Constant otherConstant)

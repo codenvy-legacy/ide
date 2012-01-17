@@ -87,8 +87,8 @@ public class RecoveredField extends RecoveredElement
    }
 
    /*
-    * Record an expression statement if field is expecting an initialization expression,
-    * used for completion inside field initializers.
+    * Record an expression statement if field is expecting an initialization expression, used for completion inside field
+    * initializers.
     */
    public RecoveredElement add(Statement statement, int bracketBalanceValue)
    {
@@ -108,9 +108,8 @@ public class RecoveredField extends RecoveredElement
    }
 
    /*
-    * Record a type declaration if this field is expecting an initialization expression
-    * and the type is an anonymous type.
-    * Used for completion inside field initializers.
+    * Record a type declaration if this field is expecting an initialization expression and the type is an anonymous type. Used
+    * for completion inside field initializers.
     */
    public RecoveredElement add(TypeDeclaration typeDeclaration, int bracketBalanceValue)
    {
@@ -304,9 +303,8 @@ public class RecoveredField extends RecoveredElement
    }
 
    /*
-    * A closing brace got consumed, might have closed the current element,
-    * in which case both the currentElement is exited.
-    *
+    * A closing brace got consumed, might have closed the current element, in which case both the currentElement is exited.
+    * 
     * Fields have no associated braces, thus if matches, then update parent.
     */
    public RecoveredElement updateOnClosingBrace(int braceStart, int braceEnd)
@@ -342,8 +340,8 @@ public class RecoveredField extends RecoveredElement
    }
 
    /*
-    * An opening brace got consumed, might be the expected opening one of the current element,
-    * in which case the bodyStart is updated.
+    * An opening brace got consumed, might be the expected opening one of the current element, in which case the bodyStart is
+    * updated.
     */
    public RecoveredElement updateOnOpeningBrace(int braceStart, int braceEnd)
    {
@@ -355,22 +353,22 @@ public class RecoveredField extends RecoveredElement
             if (!this.alreadyCompletedFieldInitialization)
             {
                this.bracketBalance++;
-               return null; // no update is necessary	(array initializer)
+               return null; // no update is necessary (array initializer)
             }
          }
          else
          { // https://bugs.eclipse.org/bugs/show_bug.cgi?id=308980
-            // in case an initializer bracket is opened in a non-array field
-            // e.g. int field = {..
+           // in case an initializer bracket is opened in a non-array field
+           // e.g. int field = {..
             this.bracketBalance++;
-            return null; // no update is necessary	(array initializer)
+            return null; // no update is necessary (array initializer)
          }
       }
       if (this.fieldDeclaration.declarationSourceEnd == 0
          && this.fieldDeclaration.getKind() == AbstractVariableDeclaration.ENUM_CONSTANT)
       {
          this.bracketBalance++;
-         return null; // no update is necessary	(enum constant)
+         return null; // no update is necessary (enum constant)
       }
       // might be an array initializer
       this.updateSourceEndIfNecessary(braceStart - 1, braceEnd - 1);

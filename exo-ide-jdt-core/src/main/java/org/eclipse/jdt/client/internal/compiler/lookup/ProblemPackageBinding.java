@@ -27,10 +27,9 @@ public class ProblemPackageBinding extends PackageBinding
       this(new char[][]{name}, problemId);
    }
 
-   /* API
-   * Answer the problem id associated with the receiver.
-   * NoError if the receiver is a valid binding.
-   */
+   /*
+    * API Answer the problem id associated with the receiver. NoError if the receiver is a valid binding.
+    */
 
    public final int problemId()
    {

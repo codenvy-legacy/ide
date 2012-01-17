@@ -20,7 +20,7 @@ import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 
 /**
  * Number literal nodes.
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -29,15 +29,14 @@ public class NumberLiteral extends Expression
 
    /**
     * The "token" structural property of this node type (type: {@link String}).
+    * 
     * @since 3.0
     */
    public static final SimplePropertyDescriptor TOKEN_PROPERTY = new SimplePropertyDescriptor(NumberLiteral.class,
       "token", String.class, MANDATORY); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -50,14 +49,11 @@ public class NumberLiteral extends Expression
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -71,12 +67,12 @@ public class NumberLiteral extends Expression
    private String tokenValue = "0";//$NON-NLS-1$
 
    /**
-    * Creates a new unparented number literal node owned by the given AST.
-    * By default, the number literal is the token "<code>0</code>".
+    * Creates a new unparented number literal node owned by the given AST. By default, the number literal is the token "
+    * <code>0</code>".
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    NumberLiteral(AST ast)
@@ -84,16 +80,16 @@ public class NumberLiteral extends Expression
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value)
    {
@@ -113,16 +109,16 @@ public class NumberLiteral extends Expression
       return super.internalGetSetObjectProperty(property, get, value);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return NUMBER_LITERAL;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -132,8 +128,8 @@ public class NumberLiteral extends Expression
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -141,8 +137,8 @@ public class NumberLiteral extends Expression
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -151,9 +147,9 @@ public class NumberLiteral extends Expression
    }
 
    /**
-    * Returns the token of this number literal node. The value is the sequence
-    * of characters that would appear in the source program.
-    *
+    * Returns the token of this number literal node. The value is the sequence of characters that would appear in the source
+    * program.
+    * 
     * @return the numeric literal token
     */
    public String getToken()
@@ -162,9 +158,8 @@ public class NumberLiteral extends Expression
    }
 
    /**
-    * Sets the token of this number literal node. The value is the sequence
-    * of characters that would appear in the source program.
-    *
+    * Sets the token of this number literal node. The value is the sequence of characters that would appear in the source program.
+    * 
     * @param token the numeric literal token
     * @exception IllegalArgumentException if the argument is incorrect
     */
@@ -222,8 +217,8 @@ public class NumberLiteral extends Expression
       postValueChange(TOKEN_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * This method is a copy of setToken(String) that doesn't do any validation.
+   /*
+    * (omit javadoc for this method) This method is a copy of setToken(String) that doesn't do any validation.
     */
    void internalSetToken(String token)
    {
@@ -232,8 +227,8 @@ public class NumberLiteral extends Expression
       postValueChange(TOKEN_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
@@ -241,8 +236,8 @@ public class NumberLiteral extends Expression
       return size;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

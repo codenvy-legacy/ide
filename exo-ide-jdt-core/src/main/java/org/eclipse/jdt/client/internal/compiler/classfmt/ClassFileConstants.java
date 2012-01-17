@@ -62,33 +62,33 @@ public interface ClassFileConstants
    /**
     * Extra flags for types and members attributes.
     */
-   int AccAnnotationDefault = ASTNode.Bit18; // indicate presence of an attribute  "DefaultValue" (annotation method)
+   int AccAnnotationDefault = ASTNode.Bit18; // indicate presence of an attribute "DefaultValue" (annotation method)
 
    int AccDeprecated = ASTNode.Bit21; // indicate presence of an attribute "Deprecated"
 
-   //	int Utf8Tag = 1;
-   //	int IntegerTag = 3;
-   //	int FloatTag = 4;
-   //	int LongTag = 5;
-   //	int DoubleTag = 6;
-   //	int ClassTag = 7;
-   //	int StringTag = 8;
-   //	int FieldRefTag = 9;
-   //	int MethodRefTag = 10;
-   //	int InterfaceMethodRefTag = 11;
-   //	int NameAndTypeTag = 12;
+   // int Utf8Tag = 1;
+   // int IntegerTag = 3;
+   // int FloatTag = 4;
+   // int LongTag = 5;
+   // int DoubleTag = 6;
+   // int ClassTag = 7;
+   // int StringTag = 8;
+   // int FieldRefTag = 9;
+   // int MethodRefTag = 10;
+   // int InterfaceMethodRefTag = 11;
+   // int NameAndTypeTag = 12;
    //
-   //	int ConstantMethodRefFixedSize = 5;
-   //	int ConstantClassFixedSize = 3;
-   //	int ConstantDoubleFixedSize = 9;
-   //	int ConstantFieldRefFixedSize = 5;
-   //	int ConstantFloatFixedSize = 5;
-   //	int ConstantIntegerFixedSize = 5;
-   //	int ConstantInterfaceMethodRefFixedSize = 5;
-   //	int ConstantLongFixedSize = 9;
-   //	int ConstantStringFixedSize = 3;
-   //	int ConstantUtf8FixedSize = 3;
-   //	int ConstantNameAndTypeFixedSize = 5;
+   // int ConstantMethodRefFixedSize = 5;
+   // int ConstantClassFixedSize = 3;
+   // int ConstantDoubleFixedSize = 9;
+   // int ConstantFieldRefFixedSize = 5;
+   // int ConstantFloatFixedSize = 5;
+   // int ConstantIntegerFixedSize = 5;
+   // int ConstantInterfaceMethodRefFixedSize = 5;
+   // int ConstantLongFixedSize = 9;
+   // int ConstantStringFixedSize = 3;
+   // int ConstantUtf8FixedSize = 3;
+   // int ConstantNameAndTypeFixedSize = 5;
 
    int MAJOR_VERSION_1_1 = 45;
 
@@ -106,8 +106,8 @@ public interface ClassFileConstants
 
    int MINOR_VERSION_0 = 0;
 
-   //	int MINOR_VERSION_1 = 1;
-   //	int MINOR_VERSION_2 = 2;
+   // int MINOR_VERSION_1 = 1;
+   // int MINOR_VERSION_2 = 2;
    int MINOR_VERSION_3 = 3;
 
    int MINOR_VERSION_4 = 4;
@@ -129,23 +129,24 @@ public interface ClassFileConstants
    long JDK1_7 = ((long)ClassFileConstants.MAJOR_VERSION_1_7 << 16) + ClassFileConstants.MINOR_VERSION_0;
 
    /*
-    * cldc1.1 is 45.3, but we modify it to be different from JDK1_1.
-    * In the code gen, we will generate the same target value as JDK1_1
+    * cldc1.1 is 45.3, but we modify it to be different from JDK1_1. In the code gen, we will generate the same target value as
+    * JDK1_1
     */
    long CLDC_1_1 = ((long)ClassFileConstants.MAJOR_VERSION_1_1 << 16) + ClassFileConstants.MINOR_VERSION_4;
 
-   //	// jdk level used to denote future releases: optional behavior is not enabled for now, but may become so. In order to enable these,
-   //	// search for references to this constant, and change it to one of the official JDT constants above.
-   //	long JDK_DEFERRED = Long.MAX_VALUE;
+   // // jdk level used to denote future releases: optional behavior is not enabled for now, but may become so. In order to enable
+   // these,
+   // // search for references to this constant, and change it to one of the official JDT constants above.
+   // long JDK_DEFERRED = Long.MAX_VALUE;
    //
-   //	int INT_ARRAY = 10;
-   //	int BYTE_ARRAY = 8;
-   //	int BOOLEAN_ARRAY = 4;
-   //	int SHORT_ARRAY = 9;
-   //	int CHAR_ARRAY = 5;
-   //	int LONG_ARRAY = 11;
-   //	int FLOAT_ARRAY = 6;
-   //	int DOUBLE_ARRAY = 7;
+   // int INT_ARRAY = 10;
+   // int BYTE_ARRAY = 8;
+   // int BOOLEAN_ARRAY = 4;
+   // int SHORT_ARRAY = 9;
+   // int CHAR_ARRAY = 5;
+   // int LONG_ARRAY = 11;
+   // int FLOAT_ARRAY = 6;
+   // int DOUBLE_ARRAY = 7;
 
    // Debug attributes
    int ATTR_SOURCE = 0x1; // SourceFileAttribute
@@ -153,6 +154,6 @@ public interface ClassFileConstants
    int ATTR_LINES = 0x2; // LineNumberAttribute
 
    int ATTR_VARS = 0x4; // LocalVariableTableAttribute
-   //	int ATTR_STACK_MAP_TABLE = 0x8; // Stack map table attribute
-   //	int ATTR_STACK_MAP = 0x10; // Stack map attribute: cldc
+   // int ATTR_STACK_MAP_TABLE = 0x8; // Stack map table attribute
+   // int ATTR_STACK_MAP = 0x10; // Stack map attribute: cldc
 }

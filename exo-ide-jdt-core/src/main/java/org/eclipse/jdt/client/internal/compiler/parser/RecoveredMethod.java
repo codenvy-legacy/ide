@@ -84,10 +84,10 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
     */
    public RecoveredElement add(Block nestedBlockDeclaration, int bracketBalanceValue)
    {
-      /* default behavior is to delegate recording to parent if any,
-      do not consider elements passed the known end (if set)
-      it must be belonging to an enclosing element
-      */
+      /*
+       * default behavior is to delegate recording to parent if any, do not consider elements passed the known end (if set) it
+       * must be belonging to an enclosing element
+       */
       if (this.methodDeclaration.declarationSourceEnd > 0
          && nestedBlockDeclaration.sourceStart > this.methodDeclaration.declarationSourceEnd)
       {
@@ -138,10 +138,10 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
             return this.parent.add(fieldDeclaration, bracketBalanceValue);
          }
       }
-      /* default behavior is to delegate recording to parent if any,
-      do not consider elements passed the known end (if set)
-      it must be belonging to an enclosing element
-      */
+      /*
+       * default behavior is to delegate recording to parent if any, do not consider elements passed the known end (if set) it
+       * must be belonging to an enclosing element
+       */
       if (this.methodDeclaration.declarationSourceEnd > 0
          && fieldDeclaration.declarationSourceStart > this.methodDeclaration.declarationSourceEnd)
       {
@@ -173,22 +173,17 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
 
       /* local variables inside method can only be final and non void */
       /*
-      	char[][] localTypeName;
-      	if ((localDeclaration.modifiers & ~AccFinal) != 0 // local var can only be final
-      		|| (localDeclaration.type == null) // initializer
-      		|| ((localTypeName = localDeclaration.type.getTypeName()).length == 1 // non void
-      			&& CharOperation.equals(localTypeName[0], VoidBinding.sourceName()))){
-
-      		if (this.parent == null){
-      			return this; // ignore
-      		} else {
-      			this.updateSourceEndIfNecessary(this.previousAvailableLineEnd(localDeclaration.declarationSourceStart - 1));
-      			return this.parent.add(localDeclaration, bracketBalance);
-      		}
-      	}
-      */
-      /* do not consider a type starting passed the type end (if set)
-      	it must be belonging to an enclosing type */
+       * char[][] localTypeName; if ((localDeclaration.modifiers & ~AccFinal) != 0 // local var can only be final ||
+       * (localDeclaration.type == null) // initializer || ((localTypeName = localDeclaration.type.getTypeName()).length == 1 //
+       * non void && CharOperation.equals(localTypeName[0], VoidBinding.sourceName()))){
+       * 
+       * if (this.parent == null){ return this; // ignore } else {
+       * this.updateSourceEndIfNecessary(this.previousAvailableLineEnd(localDeclaration.declarationSourceStart - 1)); return
+       * this.parent.add(localDeclaration, bracketBalance); } }
+       */
+      /*
+       * do not consider a type starting passed the type end (if set) it must be belonging to an enclosing type
+       */
       if (this.methodDeclaration.declarationSourceEnd != 0
          && localDeclaration.declarationSourceStart > this.methodDeclaration.declarationSourceEnd)
       {
@@ -227,8 +222,9 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
    {
       resetPendingModifiers();
 
-      /* do not consider a type starting passed the type end (if set)
-      	it must be belonging to an enclosing type */
+      /*
+       * do not consider a type starting passed the type end (if set) it must be belonging to an enclosing type
+       */
       if (this.methodDeclaration.declarationSourceEnd != 0
          && statement.sourceStart > this.methodDeclaration.declarationSourceEnd)
       {
@@ -263,8 +259,9 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
    public RecoveredElement add(TypeDeclaration typeDeclaration, int bracketBalanceValue)
    {
 
-      /* do not consider a type starting passed the type end (if set)
-      	it must be belonging to an enclosing type */
+      /*
+       * do not consider a type starting passed the type end (if set) it must be belonging to an enclosing type
+       */
       if (this.methodDeclaration.declarationSourceEnd != 0
          && typeDeclaration.declarationSourceStart > this.methodDeclaration.declarationSourceEnd)
       {
@@ -491,8 +488,7 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
    }
 
    /*
-    * Update the corresponding parse node from parser state which
-    * is about to disappear because of restarting recovery
+    * Update the corresponding parse node from parser state which is about to disappear because of restarting recovery
     */
    public void updateFromParserState()
    {
@@ -670,8 +666,8 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
    }
 
    /*
-    * An opening brace got consumed, might be the expected opening one of the current element,
-    * in which case the bodyStart is updated.
+    * An opening brace got consumed, might be the expected opening one of the current element, in which case the bodyStart is
+    * updated.
     */
    public RecoveredElement updateOnOpeningBrace(int braceStart, int braceEnd)
    {
@@ -680,8 +676,7 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
       if (this.bracketBalance == 0)
       {
          /*
-         	if (parser.scanner.searchLineNumber(methodDeclaration.sourceEnd)
-         		!= parser.scanner.searchLineNumber(braceEnd)){
+          * if (parser.scanner.searchLineNumber(methodDeclaration.sourceEnd) != parser.scanner.searchLineNumber(braceEnd)){
           */
          switch (parser().lastIgnoredToken)
          {

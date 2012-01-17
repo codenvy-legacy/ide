@@ -49,29 +49,29 @@ public class Block extends Statement
       return flowInfo;
    }
 
-   //   /**
-   //    * Code generation for a block
-   //    */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-   //   {
-   //      if ((this.bits & IsReachable) == 0)
-   //      {
-   //         return;
-   //      }
-   //      int pc = codeStream.position;
-   //      if (this.statements != null)
-   //      {
-   //         for (int i = 0, max = this.statements.length; i < max; i++)
-   //         {
-   //            this.statements[i].generateCode(this.scope, codeStream);
-   //         }
-   //      } // for local variable debug attributes
-   //      if (this.scope != currentScope)
-   //      { // was really associated with its own scope
-   //         codeStream.exitUserScope(this.scope);
-   //      }
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // /**
+   // * Code generation for a block
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   // {
+   // if ((this.bits & IsReachable) == 0)
+   // {
+   // return;
+   // }
+   // int pc = codeStream.position;
+   // if (this.statements != null)
+   // {
+   // for (int i = 0, max = this.statements.length; i < max; i++)
+   // {
+   // this.statements[i].generateCode(this.scope, codeStream);
+   // }
+   // } // for local variable debug attributes
+   // if (this.scope != currentScope)
+   // { // was really associated with its own scope
+   // codeStream.exitUserScope(this.scope);
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    public boolean isEmptyBlock()
    {

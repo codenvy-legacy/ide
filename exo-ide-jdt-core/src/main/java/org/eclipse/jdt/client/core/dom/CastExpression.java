@@ -16,12 +16,12 @@ import java.util.List;
 
 /**
  * Cast expression AST node type.
- *
+ * 
  * <pre>
  * CastExpression:
  *    <b>(</b> Type <b>)</b> Expression
  * </pre>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -30,6 +30,7 @@ public class CastExpression extends Expression
 
    /**
     * The "type" structural property of this node type (child type: {@link Type}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor TYPE_PROPERTY = new ChildPropertyDescriptor(CastExpression.class,
@@ -37,15 +38,14 @@ public class CastExpression extends Expression
 
    /**
     * The "expression" structural property of this node type (child type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(CastExpression.class,
       "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -59,13 +59,10 @@ public class CastExpression extends Expression
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -74,24 +71,22 @@ public class CastExpression extends Expression
    }
 
    /**
-    * The type; lazily initialized; defaults to a unspecified,
-    * legal type.
+    * The type; lazily initialized; defaults to a unspecified, legal type.
     */
    private Type type = null;
 
    /**
-    * The expression; lazily initialized; defaults to a unspecified, but legal,
-    * expression.
+    * The expression; lazily initialized; defaults to a unspecified, but legal, expression.
     */
    private Expression expression = null;
 
    /**
-    * Creates a new AST node for a cast expression owned by the given
-    * AST. By default, the type and expression are unspecified (but legal).
+    * Creates a new AST node for a cast expression owned by the given AST. By default, the type and expression are unspecified
+    * (but legal).
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    CastExpression(AST ast)
@@ -99,16 +94,16 @@ public class CastExpression extends Expression
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -140,16 +135,16 @@ public class CastExpression extends Expression
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return CAST_EXPRESSION;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -160,8 +155,8 @@ public class CastExpression extends Expression
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -169,8 +164,8 @@ public class CastExpression extends Expression
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -186,7 +181,7 @@ public class CastExpression extends Expression
 
    /**
     * Returns the type in this cast expression.
-    *
+    * 
     * @return the type
     */
    public Type getType()
@@ -209,13 +204,13 @@ public class CastExpression extends Expression
 
    /**
     * Sets the type in this cast expression to the given type.
-    *
+    * 
     * @param type the new type
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     */
    public void setType(Type type)
    {
@@ -231,7 +226,7 @@ public class CastExpression extends Expression
 
    /**
     * Returns the expression of this cast expression.
-    *
+    * 
     * @return the expression node
     */
    public Expression getExpression()
@@ -254,14 +249,14 @@ public class CastExpression extends Expression
 
    /**
     * Sets the expression of this cast expression.
-    *
+    * 
     * @param expression the new expression node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setExpression(Expression expression)
    {
@@ -275,8 +270,8 @@ public class CastExpression extends Expression
       postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
@@ -284,8 +279,8 @@ public class CastExpression extends Expression
       return BASE_NODE_SIZE + 2 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

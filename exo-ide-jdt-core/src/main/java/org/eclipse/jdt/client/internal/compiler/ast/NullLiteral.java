@@ -34,23 +34,23 @@ public class NullLiteral extends MagicLiteral
    }
 
    //
-   //   /**
-   //    * Code generation for the null literal
-   //    *
-   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   //    * @param valueRequired boolean
-   //    */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   //   {
-   //      int pc = codeStream.position;
-   //      if (valueRequired)
-   //      {
-   //         codeStream.aconst_null();
-   //         codeStream.generateImplicitConversion(this.implicitConversion);
-   //      }
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // /**
+   // * Code generation for the null literal
+   // *
+   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   // * @param valueRequired boolean
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   // {
+   // int pc = codeStream.position;
+   // if (valueRequired)
+   // {
+   // codeStream.aconst_null();
+   // codeStream.generateImplicitConversion(this.implicitConversion);
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    public TypeBinding literalType(BlockScope scope)
    {

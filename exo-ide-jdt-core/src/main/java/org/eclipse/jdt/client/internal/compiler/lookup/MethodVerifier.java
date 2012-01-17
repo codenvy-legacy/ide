@@ -31,22 +31,15 @@ public class MethodVerifier
    private boolean allowCompatibleReturnTypes;
 
    /*
-   Binding creation is responsible for reporting all problems with types:
-   	- all modifier problems (duplicates & multiple visibility modifiers + incompatible combinations - abstract/final)
-   		- plus invalid modifiers given the context (the verifier did not do this before)
-   	- qualified name collisions between a type and a package (types in default packages are excluded)
-   	- all type hierarchy problems:
-   		- cycles in the superclass or superinterface hierarchy
-   		- an ambiguous, invisible or missing superclass or superinterface
-   		- extending a final class
-   		- extending an interface instead of a class
-   		- implementing a class instead of an interface
-   		- implementing the same interface more than once (i.e. duplicate interfaces)
-   	- with nested types:
-   		- shadowing an enclosing type's source name
-   		- defining a static class or interface inside a non-static nested class
-   		- defining an interface as a local type (local types can only be classes)
-   */
+    * Binding creation is responsible for reporting all problems with types: - all modifier problems (duplicates & multiple
+    * visibility modifiers + incompatible combinations - abstract/final) - plus invalid modifiers given the context (the verifier
+    * did not do this before) - qualified name collisions between a type and a package (types in default packages are excluded) -
+    * all type hierarchy problems: - cycles in the superclass or superinterface hierarchy - an ambiguous, invisible or missing
+    * superclass or superinterface - extending a final class - extending an interface instead of a class - implementing a class
+    * instead of an interface - implementing the same interface more than once (i.e. duplicate interfaces) - with nested types: -
+    * shadowing an enclosing type's source name - defining a static class or interface inside a non-static nested class - defining
+    * an interface as a local type (local types can only be classes)
+    */
    MethodVerifier(LookupEnvironment environment)
    {
       this.type = null; // Initialized with the public method verify(SourceTypeBinding)
@@ -190,10 +183,10 @@ public class MethodVerifier
                   currentMethod.modifiers |=
                      ExtraCompilerModifiers.AccImplementing | ExtraCompilerModifiers.AccOverriding;
                }
-               //			with the above change an abstract method is tagged as implementing the inherited abstract method
-               //			if (!currentMethod.isAbstract() && inheritedMethod.isAbstract()) {
-               //				if ((currentMethod.modifiers & CompilerModifiers.AccOverriding) == 0)
-               //					currentMethod.modifiers |= CompilerModifiers.AccImplementing;
+               // with the above change an abstract method is tagged as implementing the inherited abstract method
+               // if (!currentMethod.isAbstract() && inheritedMethod.isAbstract()) {
+               // if ((currentMethod.modifiers & CompilerModifiers.AccOverriding) == 0)
+               // currentMethod.modifiers |= CompilerModifiers.AccImplementing;
             }
             else if (inheritedMethod.isPublic() || !this.type.isInterface())
             {
@@ -277,11 +270,9 @@ public class MethodVerifier
    }
 
    /*
-   "8.4.4"
-   Verify that newExceptions are all included in inheritedExceptions.
-   Assumes all exceptions are valid and throwable.
-   Unchecked exceptions (compatible with runtime & error) are ignored (see the spec on pg. 203).
-   */
+    * "8.4.4" Verify that newExceptions are all included in inheritedExceptions. Assumes all exceptions are valid and throwable.
+    * Unchecked exceptions (compatible with runtime & error) are ignored (see the spec on pg. 203).
+    */
    void checkExceptions(MethodBinding newMethod, MethodBinding inheritedMethod)
    {
       ReferenceBinding[] newExceptions = resolvedExceptionTypesFor(newMethod);
@@ -291,7 +282,7 @@ public class MethodVerifier
          ReferenceBinding newException = newExceptions[i];
          int j = inheritedExceptions.length;
          while (--j > -1 && !isSameClassOrSubclassOf(newException, inheritedExceptions[j]))
-         {/*empty*/
+         {/* empty */
          }
          if (j == -1)
             if (!newException.isUncheckedException(false) && (newException.tagBits & TagBits.HasMissingType) == 0)
@@ -457,15 +448,13 @@ public class MethodVerifier
    void checkInheritedMethods(MethodBinding[] methods, int length)
    {
       /*
-      1. find concrete method
-      2. if it doesn't exist then find first inherited abstract method whose return type is compatible with all others
-         if no such method exists then report incompatible return type error
-         otherwise report abstract method must be implemented
-      3. if concrete method exists, check to see if its return type is compatible with all others
-         if it is then check concrete method against abstract methods
-         if its not, then find most specific abstract method & report abstract method must be implemented since concrete method is insufficient
-         if no most specific return type abstract method exists, then report incompatible return type with all inherited methods 
-      */
+       * 1. find concrete method 2. if it doesn't exist then find first inherited abstract method whose return type is compatible
+       * with all others if no such method exists then report incompatible return type error otherwise report abstract method must
+       * be implemented 3. if concrete method exists, check to see if its return type is compatible with all others if it is then
+       * check concrete method against abstract methods if its not, then find most specific abstract method & report abstract
+       * method must be implemented since concrete method is insufficient if no most specific return type abstract method exists,
+       * then report incompatible return type with all inherited methods
+       */
 
       MethodBinding concreteMethod = this.type.isInterface() || methods[0].isAbstract() ? null : methods[0];
       if (concreteMethod == null)
@@ -519,7 +508,7 @@ public class MethodVerifier
 
       int index = length;
       while (--index > 0 && checkInheritedReturnTypes(concreteMethod, methods[index]))
-      {/*empty*/
+      {/* empty */
       }
       if (index > 0)
       {
@@ -560,27 +549,19 @@ public class MethodVerifier
    }
 
    /*
-   For each inherited method identifier (message pattern - vm signature minus the return type)
-   	if current method exists
-   		if current's vm signature does not match an inherited signature then complain
-   		else compare current's exceptions & visibility against each inherited method
-   	else
-   		if inherited methods = 1
-   			if inherited is abstract && type is NOT an interface or abstract, complain
-   		else
-   			if vm signatures do not match complain
-   			else
-   				find the concrete implementation amongst the abstract methods (can only be 1)
-   				if one exists then
-   					it must be a public instance method
-   					compare concrete's exceptions against each abstract method
-   				else
-   					complain about missing implementation only if type is NOT an interface or abstract
-   */
+    * For each inherited method identifier (message pattern - vm signature minus the return type) if current method exists if
+    * current's vm signature does not match an inherited signature then complain else compare current's exceptions & visibility
+    * against each inherited method else if inherited methods = 1 if inherited is abstract && type is NOT an interface or
+    * abstract, complain else if vm signatures do not match complain else find the concrete implementation amongst the abstract
+    * methods (can only be 1) if one exists then it must be a public instance method compare concrete's exceptions against each
+    * abstract method else complain about missing implementation only if type is NOT an interface or abstract
+    */
    void checkMethods()
    {
       boolean mustImplementAbstractMethods = mustImplementAbstractMethods();
-      boolean skipInheritedMethods = mustImplementAbstractMethods && canSkipInheritedMethods(); // have a single concrete superclass so only check overridden methods
+      boolean skipInheritedMethods = mustImplementAbstractMethods && canSkipInheritedMethods(); // have a single concrete
+                                                                                                // superclass so only check
+                                                                                                // overridden methods
       boolean isOrEnclosedByPrivateType = this.type.isOrEnclosedByPrivateType();
       char[][] methodSelectors = this.inheritedMethods.keyTable;
       nextSelector : for (int s = methodSelectors.length; --s >= 0;)
@@ -633,7 +614,8 @@ public class MethodVerifier
                }
                if (index >= 0)
                {
-                  checkAgainstInheritedMethods(currentMethod, matchingInherited, index + 1, inherited); // pass in the length of matching
+                  checkAgainstInheritedMethods(currentMethod, matchingInherited, index + 1, inherited); // pass in the length of
+                                                                                                        // matching
                   while (index >= 0)
                      matchingInherited[index--] = null; // clear the contents of the matching methods
                }
@@ -716,30 +698,27 @@ public class MethodVerifier
 
    void computeInheritedMethods()
    {
-      ReferenceBinding superclass = this.type.isInterface() ? this.type.scope.getJavaLangObject() // check interface methods against Object
+      ReferenceBinding superclass = this.type.isInterface() ? this.type.scope.getJavaLangObject() // check interface methods
+                                                                                                  // against Object
          : this.type.superclass(); // class or enum
       computeInheritedMethods(superclass, this.type.superInterfaces());
       checkForRedundantSuperinterfaces(superclass, this.type.superInterfaces());
    }
 
    /*
-   Binding creation is responsible for reporting:
-   	- all modifier problems (duplicates & multiple visibility modifiers + incompatible combinations)
-   		- plus invalid modifiers given the context... examples:
-   			- interface methods can only be public
-   			- abstract methods can only be defined by abstract classes
-   	- collisions... 2 methods with identical vmSelectors
-   	- multiple methods with the same message pattern but different return types
-   	- ambiguous, invisible or missing return/argument/exception types
-   	- check the type of any array is not void
-   	- check that each exception type is Throwable or a subclass of it
-   */
+    * Binding creation is responsible for reporting: - all modifier problems (duplicates & multiple visibility modifiers +
+    * incompatible combinations) - plus invalid modifiers given the context... examples: - interface methods can only be public -
+    * abstract methods can only be defined by abstract classes - collisions... 2 methods with identical vmSelectors - multiple
+    * methods with the same message pattern but different return types - ambiguous, invisible or missing return/argument/exception
+    * types - check the type of any array is not void - check that each exception type is Throwable or a subclass of it
+    */
    void computeInheritedMethods(ReferenceBinding superclass, ReferenceBinding[] superInterfaces)
    {
       // only want to remember inheritedMethods that can have an impact on the current type
       // if an inheritedMethod has been 'replaced' by a supertype's method then skip it, however
       // see usage of canOverridingMethodDifferInErasure below.
-      this.inheritedMethods = new HashtableOfObject(51); // maps method selectors to an array of methods... must search to match paramaters & return type
+      this.inheritedMethods = new HashtableOfObject(51); // maps method selectors to an array of methods... must search to match
+                                                         // paramaters & return type
       ReferenceBinding[] interfacesToVisit = null;
       int nextPosition = 0;
       ReferenceBinding[] itsInterfaces = superInterfaces;
@@ -849,7 +828,8 @@ public class MethodVerifier
                }
                nonVisibleDefaultMethods.put(inheritedMethod.selector, nonVisible);
 
-               if (inheritedMethod.isAbstract() && !this.type.isAbstract()) // non visible abstract methods cannot be overridden so the type must be defined abstract
+               if (inheritedMethod.isAbstract() && !this.type.isAbstract()) // non visible abstract methods cannot be overridden
+                                                                            // so the type must be defined abstract
                   problemReporter().abstractMethodCannotBeOverridden(this.type, inheritedMethod);
 
                MethodBinding[] current = (MethodBinding[])this.currentMethods.get(inheritedMethod.selector);
@@ -927,14 +907,15 @@ public class MethodVerifier
    // differs in erasure from overridingMethod could override `inheritedMethod'
    protected boolean canOverridingMethodDifferInErasure(MethodBinding overridingMethod, MethodBinding inheritedMethod)
    {
-      return false; // the case for <= 1.4  (cannot differ)
+      return false; // the case for <= 1.4 (cannot differ)
    }
 
    void computeMethods()
    {
       MethodBinding[] methods = this.type.methods();
       int size = methods.length;
-      this.currentMethods = new HashtableOfObject(size == 0 ? 1 : size); // maps method selectors to an array of methods... must search to match paramaters & return type
+      this.currentMethods = new HashtableOfObject(size == 0 ? 1 : size); // maps method selectors to an array of methods... must
+                                                                         // search to match paramaters & return type
       for (int m = size; --m >= 0;)
       {
          MethodBinding method = methods[m];
@@ -1158,10 +1139,12 @@ public class MethodVerifier
       else
       {
          if (this.type.implementsInterface(declaringClass, false))
-            if (!superclass.implementsInterface(declaringClass, true)) // only if a superclass does not also implement the interface
+            if (!superclass.implementsInterface(declaringClass, true)) // only if a superclass does not also implement the
+                                                                       // interface
                return true;
          while (superclass.isAbstract() && !superclass.implementsInterface(declaringClass, false))
-            superclass = superclass.superclass(); // find the first concrete superclass or the superclass which implements the interface
+            superclass = superclass.superclass(); // find the first concrete superclass or the superclass which implements the
+                                                  // interface
       }
       return superclass.isAbstract(); // if it is a concrete class then we have already reported problem against it
    }
@@ -1179,20 +1162,21 @@ public class MethodVerifier
    ProblemReporter problemReporter(MethodBinding currentMethod)
    {
       ProblemReporter reporter = problemReporter();
-      if (currentMethod.declaringClass == this.type && currentMethod.sourceMethod() != null) // only report against the currentMethod if its implemented by the type
+      if (currentMethod.declaringClass == this.type && currentMethod.sourceMethod() != null) // only report against the
+                                                                                             // currentMethod if its implemented
+                                                                                             // by the type
          reporter.referenceContext = currentMethod.sourceMethod();
       return reporter;
    }
 
    /**
-    * Return true and report an incompatibleReturnType error if currentMethod's
-    * return type is strictly incompatible with inheritedMethod's, else return
-    * false and report an unchecked conversion warning. Do not call when
+    * Return true and report an incompatibleReturnType error if currentMethod's return type is strictly incompatible with
+    * inheritedMethod's, else return false and report an unchecked conversion warning. Do not call when
     * areReturnTypesCompatible(currentMethod, inheritedMethod) returns true.
+    * 
     * @param currentMethod the (potentially) inheriting method
     * @param inheritedMethod the inherited method
-    * @return true if currentMethod's return type is strictly incompatible with
-    *         inheritedMethod's
+    * @return true if currentMethod's return type is strictly incompatible with inheritedMethod's
     */
    boolean reportIncompatibleReturnTypeError(MethodBinding currentMethod, MethodBinding inheritedMethod)
    {
@@ -1211,8 +1195,7 @@ public class MethodVerifier
 
       for (int i = exceptions.length; --i >= 0;)
          exceptions[i] =
-            (ReferenceBinding)BinaryTypeBinding
-               .resolveType(exceptions[i], this.environment, true /* raw conversion */);
+            (ReferenceBinding)BinaryTypeBinding.resolveType(exceptions[i], this.environment, true /* raw conversion */);
       return exceptions;
    }
 

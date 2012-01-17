@@ -29,17 +29,17 @@ public class CharLiteral extends NumberLiteral
 
    public void computeConstant()
    {
-      //The source is a  char[3] first and last char are '
-      //This is true for both regular char AND unicode char
-      //BUT not for escape char like '\b' which are char[4]....
+      // The source is a char[3] first and last char are '
+      // This is true for both regular char AND unicode char
+      // BUT not for escape char like '\b' which are char[4]....
       this.constant = CharConstant.fromValue(this.value);
    }
 
    private void computeValue()
    {
-      //The source is a  char[3] first and last char are '
-      //This is true for both regular char AND unicode char
-      //BUT not for escape char like '\b' which are char[4]....
+      // The source is a char[3] first and last char are '
+      // This is true for both regular char AND unicode char
+      // BUT not for escape char like '\b' which are char[4]....
       if ((this.value = this.source[1]) != '\\')
          return;
       char digit;
@@ -69,7 +69,7 @@ public class CharLiteral extends NumberLiteral
          case '\\' :
             this.value = '\\';
             break;
-         default : //octal (well-formed: ended by a ' )
+         default : // octal (well-formed: ended by a ' )
             int number = ScannerHelper.getNumericValue(digit);
             if ((digit = this.source[3]) != '\'')
                number = (number * 8) + ScannerHelper.getNumericValue(digit);
@@ -85,22 +85,22 @@ public class CharLiteral extends NumberLiteral
       }
    }
 
-   //   /**
-   //    * CharLiteral code generation
-   //    *
-   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   //    * @param valueRequired boolean
-   //    */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   //   {
-   //      int pc = codeStream.position;
-   //      if (valueRequired)
-   //      {
-   //         codeStream.generateConstant(this.constant, this.implicitConversion);
-   //      }
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // /**
+   // * CharLiteral code generation
+   // *
+   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   // * @param valueRequired boolean
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   // {
+   // int pc = codeStream.position;
+   // if (valueRequired)
+   // {
+   // codeStream.generateConstant(this.constant, this.implicitConversion);
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    public TypeBinding literalType(BlockScope scope)
    {

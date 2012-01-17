@@ -38,8 +38,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 import org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding;
 
 /**
- * Reflects the context of code analysis, keeping track of enclosing
- *	try statements, exception handlers, etc...
+ * Reflects the context of code analysis, keeping track of enclosing try statements, exception handlers, etc...
  */
 public class FlowContext implements TypeConstants
 {
@@ -63,19 +62,19 @@ public class FlowContext implements TypeConstants
    public static final int PREEMPT_NULL_DIAGNOSTIC = 0x2;
 
    /**
-    * used to hide null comparison related warnings inside assert statements 
+    * used to hide null comparison related warnings inside assert statements
     */
    public static final int HIDE_NULL_COMPARISON_WARNING = 0x4;
 
    public static final int CAN_ONLY_NULL_NON_NULL = 0x0000;
 
-   //check against null and non null, with definite values -- comparisons
+   // check against null and non null, with definite values -- comparisons
    public static final int CAN_ONLY_NULL = 0x0001;
 
-   //check against null, with definite values -- comparisons
+   // check against null, with definite values -- comparisons
    public static final int CAN_ONLY_NON_NULL = 0x0002;
 
-   //check against non null, with definite values -- comparisons
+   // check against non null, with definite values -- comparisons
    public static final int MAY_NULL = 0x0003;
 
    // check against null, with potential values -- NPE guard
@@ -119,9 +118,8 @@ public class FlowContext implements TypeConstants
    }
 
    /**
-    * @param isExceptionOnAutoClose This is for checking exception handlers for exceptions raised during the
-    * auto close of resources inside a try with resources statement. (Relevant for
-    * source levels 1.7 and above only)
+    * @param isExceptionOnAutoClose This is for checking exception handlers for exceptions raised during the auto close of
+    *           resources inside a try with resources statement. (Relevant for source levels 1.7 and above only)
     */
    public void checkExceptionHandlers(TypeBinding raisedException, ASTNode location, FlowInfo flowInfo,
       BlockScope scope, boolean isExceptionOnAutoClose)
@@ -137,7 +135,7 @@ public class FlowContext implements TypeConstants
       {
          Expression throwExpression = ((ThrowStatement)location).exception;
          LocalVariableBinding throwArgBinding = throwExpression.localVariableBinding();
-         if (throwExpression instanceof SingleNameReference // https://bugs.eclipse.org/bugs/show_bug.cgi?id=350361 
+         if (throwExpression instanceof SingleNameReference // https://bugs.eclipse.org/bugs/show_bug.cgi?id=350361
             && throwArgBinding instanceof CatchParameterBinding && throwArgBinding.isEffectivelyFinal())
          {
             CatchParameterBinding parameter = (CatchParameterBinding)throwArgBinding;
@@ -637,16 +635,14 @@ public class FlowContext implements TypeConstants
    }
 
    /**
-    * Record a null reference for use by deferred checks. Only looping or
-    * finally contexts really record that information.
+    * Record a null reference for use by deferred checks. Only looping or finally contexts really record that information.
+    * 
     * @param local the local variable involved in the check
     * @param expression the expression within which local lays
-    * @param status the status against which the check must be performed; one of
-    * 		{@link #CAN_ONLY_NULL CAN_ONLY_NULL}, {@link #CAN_ONLY_NULL_NON_NULL
-    * 		CAN_ONLY_NULL_NON_NULL}, {@link #MAY_NULL MAY_NULL},
-    *      {@link #CAN_ONLY_NON_NULL CAN_ONLY_NON_NULL}, potentially
-    *      combined with a context indicator (one of {@link #IN_COMPARISON_NULL},
-    *      {@link #IN_COMPARISON_NON_NULL}, {@link #IN_ASSIGNMENT} or {@link #IN_INSTANCEOF})
+    * @param status the status against which the check must be performed; one of {@link #CAN_ONLY_NULL CAN_ONLY_NULL},
+    *           {@link #CAN_ONLY_NULL_NON_NULL CAN_ONLY_NULL_NON_NULL}, {@link #MAY_NULL MAY_NULL}, {@link #CAN_ONLY_NON_NULL
+    *           CAN_ONLY_NON_NULL}, potentially combined with a context indicator (one of {@link #IN_COMPARISON_NULL},
+    *           {@link #IN_COMPARISON_NON_NULL}, {@link #IN_ASSIGNMENT} or {@link #IN_INSTANCEOF})
     */
    protected void recordNullReference(LocalVariableBinding local, Expression expression, int status)
    {
@@ -676,25 +672,21 @@ public class FlowContext implements TypeConstants
    }
 
    /**
-    * Record a null reference for use by deferred checks. Only looping or
-    * finally contexts really record that information. The context may
-    * emit an error immediately depending on the status of local against
-    * flowInfo and its nature (only looping of finally contexts defer part
-    * of the checks; nonetheless, contexts that are nested into a looping or a
-    * finally context get affected and delegate some checks to their enclosing
-    * context).
+    * Record a null reference for use by deferred checks. Only looping or finally contexts really record that information. The
+    * context may emit an error immediately depending on the status of local against flowInfo and its nature (only looping of
+    * finally contexts defer part of the checks; nonetheless, contexts that are nested into a looping or a finally context get
+    * affected and delegate some checks to their enclosing context).
+    * 
     * @param scope the scope into which the check is performed
     * @param local the local variable involved in the check
     * @param reference the expression within which local lies
-    * @param checkType the status against which the check must be performed; one
-    * 		of {@link #CAN_ONLY_NULL CAN_ONLY_NULL}, {@link #CAN_ONLY_NULL_NON_NULL
-    * 		CAN_ONLY_NULL_NON_NULL}, {@link #MAY_NULL MAY_NULL}, potentially
-    *      combined with a context indicator (one of {@link #IN_COMPARISON_NULL},
-    *      {@link #IN_COMPARISON_NON_NULL}, {@link #IN_ASSIGNMENT} or {@link #IN_INSTANCEOF})
-    * @param flowInfo the flow info at the check point; deferring contexts will
-    *  	perform supplementary checks against flow info instances that cannot
-    *  	be known at the time of calling this method (they are influenced by
-    * 		code that follows the current point)
+    * @param checkType the status against which the check must be performed; one of {@link #CAN_ONLY_NULL CAN_ONLY_NULL},
+    *           {@link #CAN_ONLY_NULL_NON_NULL CAN_ONLY_NULL_NON_NULL}, {@link #MAY_NULL MAY_NULL}, potentially combined with a
+    *           context indicator (one of {@link #IN_COMPARISON_NULL}, {@link #IN_COMPARISON_NON_NULL}, {@link #IN_ASSIGNMENT} or
+    *           {@link #IN_INSTANCEOF})
+    * @param flowInfo the flow info at the check point; deferring contexts will perform supplementary checks against flow info
+    *           instances that cannot be known at the time of calling this method (they are influenced by code that follows the
+    *           current point)
     */
    public void recordUsingNullReference(Scope scope, LocalVariableBinding local, Expression reference, int checkType,
       FlowInfo flowInfo)

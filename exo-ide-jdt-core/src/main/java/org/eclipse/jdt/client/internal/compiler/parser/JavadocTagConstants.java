@@ -15,7 +15,7 @@ import org.eclipse.jdt.client.core.compiler.CharOperation;
 
 /**
  * Javadoc tag constants.
- *
+ * 
  * @since 3.2
  */
 public interface JavadocTagConstants
@@ -193,24 +193,28 @@ public interface JavadocTagConstants
    /*
     * Tags versions
     */
-   public static final char[][][] BLOCK_TAGS =
-      {
-         // since 1.0
-         {TAG_AUTHOR, TAG_DEPRECATED, TAG_EXCEPTION, TAG_PARAM, TAG_RETURN, TAG_SEE, TAG_VERSION, TAG_CATEGORY /* 1.6 tag but put here as we support it for all compliances */},
-         // since 1.1
-         {TAG_SINCE},
-         // since 1.2
-         {TAG_SERIAL, TAG_SERIAL_DATA, TAG_SERIAL_FIELD, TAG_THROWS},
-         // since 1.3
-         {},
-         // since 1.4
-         {},
-         // since 1.5
-         {},
-         // since 1.6
-         {},
-         // since 1.7
-         {},};
+   public static final char[][][] BLOCK_TAGS = {
+      // since 1.0
+      {TAG_AUTHOR, TAG_DEPRECATED, TAG_EXCEPTION, TAG_PARAM, TAG_RETURN, TAG_SEE, TAG_VERSION, TAG_CATEGORY /*
+                                                                                                             * 1.6 tag but put
+                                                                                                             * here as we support
+                                                                                                             * it for all
+                                                                                                             * compliances
+                                                                                                             */},
+      // since 1.1
+      {TAG_SINCE},
+      // since 1.2
+      {TAG_SERIAL, TAG_SERIAL_DATA, TAG_SERIAL_FIELD, TAG_THROWS},
+      // since 1.3
+      {},
+      // since 1.4
+      {},
+      // since 1.5
+      {},
+      // since 1.6
+      {},
+      // since 1.7
+      {},};
 
    public static final char[][][] INLINE_TAGS = {
       // since 1.0

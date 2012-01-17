@@ -24,5 +24,5 @@ public class IntLiteralMinValue extends IntLiteral
 
    public void computeConstant()
    {
-      /*precomputed at creation time*/}
+      /* precomputed at creation time */}
 }

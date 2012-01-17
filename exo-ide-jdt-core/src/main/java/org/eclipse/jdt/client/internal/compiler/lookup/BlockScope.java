@@ -74,7 +74,8 @@ public class BlockScope extends Scope
       super(kind, parent);
    }
 
-   /* Create the class scope & binding for the anonymous type.
+   /*
+    * Create the class scope & binding for the anonymous type.
     */
    public final void addAnonymousType(TypeDeclaration anonymousType, ReferenceBinding superBinding)
    {
@@ -82,7 +83,8 @@ public class BlockScope extends Scope
       anonymousClassScope.buildAnonymousTypeBinding(enclosingSourceType(), superBinding);
    }
 
-   /* Create the class scope & binding for the local type.
+   /*
+    * Create the class scope & binding for the local type.
     */
    public final void addLocalType(TypeDeclaration localType)
    {
@@ -91,8 +93,9 @@ public class BlockScope extends Scope
       localTypeScope.buildLocalTypeBinding(enclosingSourceType());
    }
 
-   /* Insert a local variable into a given scope, updating its position
-    * and checking there are not too many locals or arguments allocated.
+   /*
+    * Insert a local variable into a given scope, updating its position and checking there are not too many locals or arguments
+    * allocated.
     */
    public final void addLocalVariable(LocalVariableBinding binding)
    {
@@ -118,8 +121,8 @@ public class BlockScope extends Scope
    }
 
    /**
-    * Answer true if the receiver is suitable for assigning final blank fields.
-    * in other words, it is inside an initializer, a constructor or a clinit
+    * Answer true if the receiver is suitable for assigning final blank fields. in other words, it is inside an initializer, a
+    * constructor or a clinit
     */
    public final boolean allowBlankFinalFieldAssignment(FieldBinding binding)
    {
@@ -165,113 +168,111 @@ public class BlockScope extends Scope
       varBinding.modifiers = modifiers;
    }
 
-   //   /* Compute variable positions in scopes given an initial position offset
-   //    * ignoring unused local variables.
-   //    *
-   //    * No argument is expected here (ilocal is the first non-argument local of the outermost scope)
-   //    * Arguments are managed by the MethodScope method
-   //    */
-   //   void computeLocalVariablePositions(int ilocal, int initOffset, CodeStream codeStream)
-   //   {
-   //      this.offset = initOffset;
-   //      this.maxOffset = initOffset;
+   // /* Compute variable positions in scopes given an initial position offset
+   // * ignoring unused local variables.
+   // *
+   // * No argument is expected here (ilocal is the first non-argument local of the outermost scope)
+   // * Arguments are managed by the MethodScope method
+   // */
+   // void computeLocalVariablePositions(int ilocal, int initOffset, CodeStream codeStream)
+   // {
+   // this.offset = initOffset;
+   // this.maxOffset = initOffset;
    //
-   //      // local variable init
-   //      int maxLocals = this.localIndex;
-   //      boolean hasMoreVariables = ilocal < maxLocals;
+   // // local variable init
+   // int maxLocals = this.localIndex;
+   // boolean hasMoreVariables = ilocal < maxLocals;
    //
-   //      // scope init
-   //      int iscope = 0, maxScopes = this.subscopeCount;
-   //      boolean hasMoreScopes = maxScopes > 0;
+   // // scope init
+   // int iscope = 0, maxScopes = this.subscopeCount;
+   // boolean hasMoreScopes = maxScopes > 0;
    //
-   //      // iterate scopes and variables in parallel
-   //      while (hasMoreVariables || hasMoreScopes)
-   //      {
-   //         if (hasMoreScopes && (!hasMoreVariables || (this.subscopes[iscope].startIndex() <= ilocal)))
-   //         {
-   //            // consider subscope first
-   //            if (this.subscopes[iscope] instanceof BlockScope)
-   //            {
-   //               BlockScope subscope = (BlockScope)this.subscopes[iscope];
-   //               int subOffset = subscope.shiftScopes == null ? this.offset : subscope.maxShiftedOffset();
-   //               subscope.computeLocalVariablePositions(0, subOffset, codeStream);
-   //               if (subscope.maxOffset > this.maxOffset)
-   //                  this.maxOffset = subscope.maxOffset;
-   //            }
-   //            hasMoreScopes = ++iscope < maxScopes;
-   //         }
-   //         else
-   //         {
+   // // iterate scopes and variables in parallel
+   // while (hasMoreVariables || hasMoreScopes)
+   // {
+   // if (hasMoreScopes && (!hasMoreVariables || (this.subscopes[iscope].startIndex() <= ilocal)))
+   // {
+   // // consider subscope first
+   // if (this.subscopes[iscope] instanceof BlockScope)
+   // {
+   // BlockScope subscope = (BlockScope)this.subscopes[iscope];
+   // int subOffset = subscope.shiftScopes == null ? this.offset : subscope.maxShiftedOffset();
+   // subscope.computeLocalVariablePositions(0, subOffset, codeStream);
+   // if (subscope.maxOffset > this.maxOffset)
+   // this.maxOffset = subscope.maxOffset;
+   // }
+   // hasMoreScopes = ++iscope < maxScopes;
+   // }
+   // else
+   // {
    //
-   //            // consider variable first
-   //            LocalVariableBinding local = this.locals[ilocal]; // if no local at all, will be locals[ilocal]==null
+   // // consider variable first
+   // LocalVariableBinding local = this.locals[ilocal]; // if no local at all, will be locals[ilocal]==null
    //
-   //            // check if variable is actually used, and may force it to be preserved
-   //            boolean generateCurrentLocalVar =
-   //               (local.useFlag > LocalVariableBinding.UNUSED && local.constant() == Constant.NotAConstant);
+   // // check if variable is actually used, and may force it to be preserved
+   // boolean generateCurrentLocalVar =
+   // (local.useFlag > LocalVariableBinding.UNUSED && local.constant() == Constant.NotAConstant);
    //
-   //            // do not report fake used variable
-   //            if (local.useFlag == LocalVariableBinding.UNUSED && (local.declaration != null) // unused (and non secret) local
-   //               && ((local.declaration.bits & ASTNode.IsLocalDeclarationReachable) != 0))
-   //            { // declaration is reachable
+   // // do not report fake used variable
+   // if (local.useFlag == LocalVariableBinding.UNUSED && (local.declaration != null) // unused (and non secret) local
+   // && ((local.declaration.bits & ASTNode.IsLocalDeclarationReachable) != 0))
+   // { // declaration is reachable
    //
-   //               if (!(local.declaration instanceof Argument)) // do not report unused catch arguments
-   //                  problemReporter().unusedLocalVariable(local.declaration);
-   //            }
+   // if (!(local.declaration instanceof Argument)) // do not report unused catch arguments
+   // problemReporter().unusedLocalVariable(local.declaration);
+   // }
    //
-   //            // could be optimized out, but does need to preserve unread variables ?
-   //            if (!generateCurrentLocalVar)
-   //            {
-   //               if (local.declaration != null && compilerOptions().preserveAllLocalVariables)
-   //               {
-   //                  generateCurrentLocalVar = true; // force it to be preserved in the generated code
-   //                  if (local.useFlag == LocalVariableBinding.UNUSED)
-   //                     local.useFlag = LocalVariableBinding.USED;
-   //               }
-   //            }
+   // // could be optimized out, but does need to preserve unread variables ?
+   // if (!generateCurrentLocalVar)
+   // {
+   // if (local.declaration != null && compilerOptions().preserveAllLocalVariables)
+   // {
+   // generateCurrentLocalVar = true; // force it to be preserved in the generated code
+   // if (local.useFlag == LocalVariableBinding.UNUSED)
+   // local.useFlag = LocalVariableBinding.USED;
+   // }
+   // }
    //
-   //            // allocate variable
-   //            if (generateCurrentLocalVar)
-   //            {
+   // // allocate variable
+   // if (generateCurrentLocalVar)
+   // {
    //
-   //               if (local.declaration != null)
-   //               {
-   //                  codeStream.record(local); // record user-defined local variables for attribute generation
-   //               }
-   //               // assign variable position
-   //               local.resolvedPosition = this.offset;
+   // if (local.declaration != null)
+   // {
+   // codeStream.record(local); // record user-defined local variables for attribute generation
+   // }
+   // // assign variable position
+   // local.resolvedPosition = this.offset;
    //
-   //               if ((local.type == TypeBinding.LONG) || (local.type == TypeBinding.DOUBLE))
-   //               {
-   //                  this.offset += 2;
-   //               }
-   //               else
-   //               {
-   //                  this.offset++;
-   //               }
-   //               if (this.offset > 0xFFFF)
-   //               { // no more than 65535 words of locals
-   //                  problemReporter().noMoreAvailableSpaceForLocal(local,
-   //                     local.declaration == null ? (ASTNode)methodScope().referenceContext : local.declaration);
-   //               }
-   //            }
-   //            else
-   //            {
-   //               local.resolvedPosition = -1; // not generated
-   //            }
-   //            hasMoreVariables = ++ilocal < maxLocals;
-   //         }
-   //      }
-   //      if (this.offset > this.maxOffset)
-   //         this.maxOffset = this.offset;
-   //   }
+   // if ((local.type == TypeBinding.LONG) || (local.type == TypeBinding.DOUBLE))
+   // {
+   // this.offset += 2;
+   // }
+   // else
+   // {
+   // this.offset++;
+   // }
+   // if (this.offset > 0xFFFF)
+   // { // no more than 65535 words of locals
+   // problemReporter().noMoreAvailableSpaceForLocal(local,
+   // local.declaration == null ? (ASTNode)methodScope().referenceContext : local.declaration);
+   // }
+   // }
+   // else
+   // {
+   // local.resolvedPosition = -1; // not generated
+   // }
+   // hasMoreVariables = ++ilocal < maxLocals;
+   // }
+   // }
+   // if (this.offset > this.maxOffset)
+   // this.maxOffset = this.offset;
+   // }
 
    /*
-    *	Record the suitable binding denoting a synthetic field or constructor argument,
-    * mapping to the actual outer local variable in the scope context.
-    * Note that this may not need any effect, in case the outer local variable does not
-    * need to be emulated and can directly be used as is (using its back pointer to its
-    * declaring scope).
+    * Record the suitable binding denoting a synthetic field or constructor argument, mapping to the actual outer local variable
+    * in the scope context. Note that this may not need any effect, in case the outer local variable does not need to be emulated
+    * and can directly be used as is (using its back pointer to its declaring scope).
     */
    public void emulateOuterAccess(LocalVariableBinding outerLocalVariable)
    {
@@ -283,7 +284,7 @@ public class BlockScope extends Scope
       {
          NestedTypeBinding currentType = (NestedTypeBinding)enclosingSourceType();
 
-         //do nothing for member types, pre emulation was performed already
+         // do nothing for member types, pre emulation was performed already
          if (!currentType.isLocalType())
          {
             return;
@@ -300,24 +301,12 @@ public class BlockScope extends Scope
       }
    }
 
-   /* Note that it must never produce a direct access to the targetEnclosingType,
-    * but instead a field sequence (this$2.this$1.this$0) so as to handle such a test case:
-    *
-    * class XX {
-    *	void foo() {
-    *		class A {
-    *			class B {
-    *				class C {
-    *					boolean foo() {
-    *						return (Object) A.this == (Object) B.this;
-    *					}
-    *				}
-    *			}
-    *		}
-    *		new A().new B().new C();
-    *	}
-    * }
-    * where we only want to deal with ONE enclosing instance for C (could not figure out an A for C)
+   /*
+    * Note that it must never produce a direct access to the targetEnclosingType, but instead a field sequence
+    * (this$2.this$1.this$0) so as to handle such a test case:
+    * 
+    * class XX { void foo() { class A { class B { class C { boolean foo() { return (Object) A.this == (Object) B.this; } } } } new
+    * A().new B().new C(); } } where we only want to deal with ONE enclosing instance for C (could not figure out an A for C)
     */
    public final ReferenceBinding findLocalType(char[] name)
    {
@@ -343,9 +332,8 @@ public class BlockScope extends Scope
    }
 
    /**
-    * Returns all declarations of most specific locals containing a given position in their source range.
-    * This code does not recurse in nested types.
-    * Returned array may have null values at trailing indexes.
+    * Returns all declarations of most specific locals containing a given position in their source range. This code does not
+    * recurse in nested types. Returned array may have null values at trailing indexes.
     */
    public LocalDeclaration[] findLocalVariableDeclarations(int position)
    {
@@ -426,36 +414,31 @@ public class BlockScope extends Scope
       return null;
    }
 
-   /* API
-    * flag is a mask of the following values VARIABLE (= FIELD or LOCAL), TYPE.
-    * Only bindings corresponding to the mask will be answered.
-    *
-    *	if the VARIABLE mask is set then
-    *		If the first name provided is a field (or local) then the field (or local) is answered
-    *		Otherwise, package names and type names are consumed until a field is found.
-    *		In this case, the field is answered.
-    *
-    *	if the TYPE mask is set,
-    *		package names and type names are consumed until the end of the input.
-    *		Only if all of the input is consumed is the type answered
-    *
-    *	All other conditions are errors, and a problem binding is returned.
-    *
-    *	NOTE: If a problem binding is returned, senders should extract the compound name
-    *	from the binding & not assume the problem applies to the entire compoundName.
-    *
-    *	The VARIABLE mask has precedence over the TYPE mask.
-    *
-    *	InvocationSite implements
-    *		isSuperAccess(); this is used to determine if the discovered field is visible.
-    *		setFieldIndex(int); this is used to record the number of names that were consumed.
-    *
-    *	For example, getBinding({"foo","y","q", VARIABLE, site) will answer
-    *	the binding for the field or local named "foo" (or an error binding if none exists).
-    *	In addition, setFieldIndex(1) will be sent to the invocation site.
-    *	If a type named "foo" exists, it will not be detected (and an error binding will be answered)
-    *
-    *	IMPORTANT NOTE: This method is written under the assumption that compoundName is longer than length 1.
+   /*
+    * API flag is a mask of the following values VARIABLE (= FIELD or LOCAL), TYPE. Only bindings corresponding to the mask will
+    * be answered.
+    * 
+    * if the VARIABLE mask is set then If the first name provided is a field (or local) then the field (or local) is answered
+    * Otherwise, package names and type names are consumed until a field is found. In this case, the field is answered.
+    * 
+    * if the TYPE mask is set, package names and type names are consumed until the end of the input. Only if all of the input is
+    * consumed is the type answered
+    * 
+    * All other conditions are errors, and a problem binding is returned.
+    * 
+    * NOTE: If a problem binding is returned, senders should extract the compound name from the binding & not assume the problem
+    * applies to the entire compoundName.
+    * 
+    * The VARIABLE mask has precedence over the TYPE mask.
+    * 
+    * InvocationSite implements isSuperAccess(); this is used to determine if the discovered field is visible. setFieldIndex(int);
+    * this is used to record the number of names that were consumed.
+    * 
+    * For example, getBinding({"foo","y","q", VARIABLE, site) will answer the binding for the field or local named "foo" (or an
+    * error binding if none exists). In addition, setFieldIndex(1) will be sent to the invocation site. If a type named "foo"
+    * exists, it will not be detected (and an error binding will be answered)
+    * 
+    * IMPORTANT NOTE: This method is written under the assumption that compoundName is longer than length 1.
     */
    public Binding getBinding(char[][] compoundName, int mask, InvocationSite invocationSite, boolean needResolve)
    {
@@ -510,7 +493,8 @@ public class BlockScope extends Scope
 
       // know binding is now a ReferenceBinding
       ReferenceBinding referenceBinding = (ReferenceBinding)binding;
-      binding = environment().convertToRawType(referenceBinding, false /*do not force conversion of enclosing types*/);
+      binding =
+         environment().convertToRawType(referenceBinding, false /* do not force conversion of enclosing types */);
       if (invocationSite instanceof ASTNode)
       {
          ASTNode invocationNode = (ASTNode)invocationSite;
@@ -527,7 +511,7 @@ public class BlockScope extends Scope
          invocationSite.setFieldIndex(currentIndex);
          invocationSite.setActualReceiverType(referenceBinding);
          if ((mask & Binding.FIELD) != 0
-            && (binding = findField(referenceBinding, nextName, invocationSite, true /*resolve*/)) != null)
+            && (binding = findField(referenceBinding, nextName, invocationSite, true /* resolve */)) != null)
          {
             if (binding.isValidBinding())
             {
@@ -538,7 +522,7 @@ public class BlockScope extends Scope
                   ((ProblemFieldBinding)binding).declaringClass, CharOperation.concatWith(
                      CharOperation.subarray(compoundName, 0, currentIndex), '.'), binding.problemId());
             // https://bugs.eclipse.org/bugs/show_bug.cgi?id=317858 : If field is inaccessible,
-            // don't give up yet, continue to look for a visible member type 
+            // don't give up yet, continue to look for a visible member type
             if (binding.problemId() != ProblemReasons.NotVisible)
             {
                return problemFieldBinding;
@@ -609,7 +593,7 @@ public class BlockScope extends Scope
       int length = compoundName.length;
       Binding binding =
          getBinding(compoundName[currentIndex++], Binding.VARIABLE | Binding.TYPE | Binding.PACKAGE, invocationSite,
-            true /*resolve*/);
+            true /* resolve */);
       if (!binding.isValidBinding())
          return binding;
 
@@ -650,7 +634,7 @@ public class BlockScope extends Scope
             ReferenceBinding typeBinding = (ReferenceBinding)binding;
             char[] nextName = compoundName[currentIndex++];
             TypeBinding receiverType = typeBinding.capture(this, invocationSite.sourceEnd());
-            if ((binding = findField(receiverType, nextName, invocationSite, true /*resolve*/)) != null)
+            if ((binding = findField(receiverType, nextName, invocationSite, true /* resolve */)) != null)
             {
                if (!binding.isValidBinding())
                {
@@ -688,7 +672,7 @@ public class BlockScope extends Scope
                CharOperation.subarray(compoundName, 0, currentIndex), '.'), ProblemReasons.NotFound);
          }
          TypeBinding receiverType = typeBinding.capture(this, invocationSite.sourceEnd());
-         variableBinding = findField(receiverType, compoundName[currentIndex++], invocationSite, true /*resolve*/);
+         variableBinding = findField(receiverType, compoundName[currentIndex++], invocationSite, true /* resolve */);
          if (variableBinding == null)
          {
             return new ProblemFieldBinding(null, receiverType instanceof ReferenceBinding
@@ -702,21 +686,15 @@ public class BlockScope extends Scope
    }
 
    /*
-    * This retrieves the argument that maps to an enclosing instance of the suitable type,
-    * 	if not found then answers nil -- do not create one
-    *
-    *		#implicitThis		  	 			: the implicit this will be ok
-    *		#((arg) this$n)						: available as a constructor arg
-    * 		#((arg) this$n ... this$p) 			: available as as a constructor arg + a sequence of fields
-    * 		#((fieldDescr) this$n ... this$p) 	: available as a sequence of fields
-    * 		nil 		 											: not found
-    *
-    * 	Note that this algorithm should answer the shortest possible sequence when
-    * 		shortcuts are available:
-    * 				this$0 . this$0 . this$0
-    * 		instead of
-    * 				this$2 . this$1 . this$0 . this$1 . this$0
-    * 		thus the code generation will be more compact and runtime faster
+    * This retrieves the argument that maps to an enclosing instance of the suitable type, if not found then answers nil -- do not
+    * create one
+    * 
+    * #implicitThis : the implicit this will be ok #((arg) this$n) : available as a constructor arg #((arg) this$n ... this$p) :
+    * available as as a constructor arg + a sequence of fields #((fieldDescr) this$n ... this$p) : available as a sequence of
+    * fields nil : not found
+    * 
+    * Note that this algorithm should answer the shortest possible sequence when shortcuts are available: this$0 . this$0 . this$0
+    * instead of this$2 . this$1 . this$0 . this$1 . this$0 thus the code generation will be more compact and runtime faster
     */
    public VariableBinding[] getEmulationPath(LocalVariableBinding outerLocalVariable)
    {
@@ -725,7 +703,7 @@ public class BlockScope extends Scope
 
       // identity check
       BlockScope variableScope = outerLocalVariable.declaringScope;
-      if (variableScope == null /*val$this$0*/|| currentMethodScope == variableScope.methodScope())
+      if (variableScope == null /* val$this$0 */|| currentMethodScope == variableScope.methodScope())
       {
          return new VariableBinding[]{outerLocalVariable};
          // implicit this is good enough
@@ -752,15 +730,13 @@ public class BlockScope extends Scope
    }
 
    /*
-    * This retrieves the argument that maps to an enclosing instance of the suitable type,
-    * 	if not found then answers nil -- do not create one
-    *
-    *		#implicitThis		  	 											:  the implicit this will be ok
-    *		#((arg) this$n)													: available as a constructor arg
-    * 	#((arg) this$n access$m... access$p) 		: available as as a constructor arg + a sequence of synthetic accessors to synthetic fields
-    * 	#((fieldDescr) this$n access#m... access$p)	: available as a first synthetic field + a sequence of synthetic accessors to synthetic fields
-    * 	null 		 															: not found
-    *	jls 15.9.2 + http://www.ergnosis.com/java-spec-report/java-language/jls-8.8.5.1-d.html
+    * This retrieves the argument that maps to an enclosing instance of the suitable type, if not found then answers nil -- do not
+    * create one
+    * 
+    * #implicitThis : the implicit this will be ok #((arg) this$n) : available as a constructor arg #((arg) this$n access$m...
+    * access$p) : available as as a constructor arg + a sequence of synthetic accessors to synthetic fields #((fieldDescr) this$n
+    * access#m... access$p) : available as a first synthetic field + a sequence of synthetic accessors to synthetic fields null :
+    * not found jls 15.9.2 + http://www.ergnosis.com/java-spec-report/java-language/jls-8.8.5.1-d.html
     */
    public Object[] getEmulationPath(ReferenceBinding targetEnclosingType, boolean onlyExactMatch,
       boolean denyEnclosingArgInConstructorCall)
@@ -867,7 +843,7 @@ public class BlockScope extends Scope
          while ((currentEnclosingType = currentType.enclosingType()) != null)
          {
 
-            //done?
+            // done?
             if (currentType == targetEnclosingType
                || (!onlyExactMatch && currentType.findSuperTypeOriginatingFrom(targetEnclosingType) != null))
                break;
@@ -896,8 +872,8 @@ public class BlockScope extends Scope
             }
             // private access emulation is necessary since synthetic field is private
             path[count++] =
-               ((SourceTypeBinding)syntheticField.declaringClass).addSyntheticMethod(syntheticField, true/*read*/,
-                  false /*not super access*/);
+               ((SourceTypeBinding)syntheticField.declaringClass).addSyntheticMethod(syntheticField, true/* read */,
+                  false /* not super access */);
             currentType = currentEnclosingType;
          }
          if (currentType == targetEnclosingType
@@ -909,7 +885,8 @@ public class BlockScope extends Scope
       return null;
    }
 
-   /* Answer true if the variable name already exists within the receiver's scope.
+   /*
+    * Answer true if the variable name already exists within the receiver's scope.
     */
    public final boolean isDuplicateLocalVariable(char[] name)
    {
@@ -946,8 +923,8 @@ public class BlockScope extends Scope
    }
 
    /**
-    * Returns true if the context requires to check initialization of final blank fields.
-    * in other words, it is inside an initializer, a constructor or a clinit
+    * Returns true if the context requires to check initialization of final blank fields. in other words, it is inside an
+    * initializer, a constructor or a clinit
     */
    public final boolean needBlankFinalFieldInitializationCheck(FieldBinding binding)
    {
@@ -978,11 +955,11 @@ public class BlockScope extends Scope
       return false;
    }
 
-   /* Answer the problem reporter to use for raising new problems.
-    *
-    * Note that as a side-effect, this updates the current reference context
-    * (unit, type or method) in case the problem handler decides it is necessary
-    * to abort.
+   /*
+    * Answer the problem reporter to use for raising new problems.
+    * 
+    * Note that as a side-effect, this updates the current reference context (unit, type or method) in case the problem handler
+    * decides it is necessary to abort.
     */
    public ProblemReporter problemReporter()
    {
@@ -990,8 +967,8 @@ public class BlockScope extends Scope
    }
 
    /*
-    * Code responsible to request some more emulation work inside the invocation type, so as to supply
-    * correct synthetic arguments to any allocation of the target type.
+    * Code responsible to request some more emulation work inside the invocation type, so as to supply correct synthetic arguments
+    * to any allocation of the target type.
     */
    public void propagateInnerEmulation(ReferenceBinding targetType, boolean isEnclosingInstanceSupplied)
    {
@@ -1012,8 +989,9 @@ public class BlockScope extends Scope
       }
    }
 
-   /* Answer the reference type of this scope.
-    *
+   /*
+    * Answer the reference type of this scope.
+    * 
     * It is the nearest enclosing type of this scope.
     */
    public TypeDeclaration referenceType()
@@ -1022,8 +1000,7 @@ public class BlockScope extends Scope
    }
 
    /*
-    * Answer the index of this scope relatively to its parent.
-    * For method scope, answers -1 (not a classScope relative position)
+    * Answer the index of this scope relatively to its parent. For method scope, answers -1 (not a classScope relative position)
     */
    public int scopeIndex()
    {

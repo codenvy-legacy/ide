@@ -18,6 +18,7 @@ import java.util.Map;
 
 /**
  * Primitive type nodes.
+ * 
  * <pre>
  * PrimitiveType:
  *    <b>byte</b>
@@ -31,11 +32,10 @@ import java.util.Map;
  *    <b>void</b>
  * </pre>
  * <p>
- * Note that due to the fact that AST nodes belong to a specific AST and
- * have a specific parent, there needs to multiple instances of these
- * nodes.
+ * Note that due to the fact that AST nodes belong to a specific AST and have a specific parent, there needs to multiple instances
+ * of these nodes.
  * </p>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -44,6 +44,7 @@ public class PrimitiveType extends Type
 
    /**
     * Primitive type codes (typesafe enumeration).
+    * 
     * <pre>
     *    <b>byte</b> 	BYTE
     *    <b>short</b> 	SHORT
@@ -67,10 +68,9 @@ public class PrimitiveType extends Type
       /**
        * Creates a new primitive type code with the given name.
        * <p>
-       * Note: this constructor is package-private. The only instances
-       * ever created are the ones for the standard primitive types.
+       * Note: this constructor is package-private. The only instances ever created are the ones for the standard primitive types.
        * </p>
-       *
+       * 
        * @param name the standard name of the primitive type
        */
       Code(String name)
@@ -80,7 +80,7 @@ public class PrimitiveType extends Type
 
       /**
        * Returns the standard name of the primitive type.
-       *
+       * 
        * @return the standard name of the primitive type
        */
       public String toString()
@@ -113,21 +113,19 @@ public class PrimitiveType extends Type
    /** Type code for the primitive type "byte". */
    public static final Code BYTE = new Code("byte");//$NON-NLS-1$
 
-   /** Type code for the primitive type "void". Note that "void" is
-    * special in that its only legitimate uses are as a method return
+   /**
+    * Type code for the primitive type "void". Note that "void" is special in that its only legitimate uses are as a method return
     * type and as a type literal.
     */
    public static final Code VOID = new Code("void");//$NON-NLS-1$
 
    /**
-    * The primitive type code; one of the PrimitiveType constants; default
-    * is int.
+    * The primitive type code; one of the PrimitiveType constants; default is int.
     */
    private PrimitiveType.Code typeCode = INT;
 
    /**
-    * Map from token to primitive type code (key type: <code>String</code>;
-    * value type: <code>PrimitiveType.Code</code>).
+    * Map from token to primitive type code (key type: <code>String</code>; value type: <code>PrimitiveType.Code</code>).
     */
    private static final Map CODES;
    static
@@ -141,15 +139,12 @@ public class PrimitiveType extends Type
    }
 
    /**
-    * Returns the primitive type code corresponding to the given string,
-    * or <code>null</code> if none.
+    * Returns the primitive type code corresponding to the given string, or <code>null</code> if none.
     * <p>
-    * <code>toCode</code> is the converse of <code>toString</code>:
-    * that is,
-    * <code>PrimitiveType.Code.toCode(code.toString()) == code</code>
-    * for all type code <code>code</code>.
+    * <code>toCode</code> is the converse of <code>toString</code>: that is,
+    * <code>PrimitiveType.Code.toCode(code.toString()) == code</code> for all type code <code>code</code>.
     * </p>
-    *
+    * 
     * @param token the standard name of the primitive type
     * @return the primitive type code, or <code>null</code> if none
     */
@@ -160,15 +155,14 @@ public class PrimitiveType extends Type
 
    /**
     * The "primitiveTypeCode" structural property of this node type (type: {@link PrimitiveType.Code}).
+    * 
     * @since 3.0
     */
    public static final SimplePropertyDescriptor PRIMITIVE_TYPE_CODE_PROPERTY = new SimplePropertyDescriptor(
       PrimitiveType.class, "primitiveTypeCode", PrimitiveType.Code.class, MANDATORY); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -181,14 +175,11 @@ public class PrimitiveType extends Type
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -197,12 +188,11 @@ public class PrimitiveType extends Type
    }
 
    /**
-    * Creates a new unparented node for a primitive type owned by the given
-    * AST. By default, the node has type "int".
+    * Creates a new unparented node for a primitive type owned by the given AST. By default, the node has type "int".
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    PrimitiveType(AST ast)
@@ -210,16 +200,16 @@ public class PrimitiveType extends Type
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value)
    {
@@ -239,16 +229,16 @@ public class PrimitiveType extends Type
       return super.internalGetSetObjectProperty(property, get, value);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return PRIMITIVE_TYPE;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -258,8 +248,8 @@ public class PrimitiveType extends Type
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -267,8 +257,8 @@ public class PrimitiveType extends Type
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -278,9 +268,8 @@ public class PrimitiveType extends Type
 
    /**
     * Returns the primitive type code.
-    *
-    * @return one of the primitive type code constants declared in this
-    *    class
+    * 
+    * @return one of the primitive type code constants declared in this class
     */
    public PrimitiveType.Code getPrimitiveTypeCode()
    {
@@ -289,9 +278,8 @@ public class PrimitiveType extends Type
 
    /**
     * Sets the primitive type code.
-    *
-    * @param typeCode one of the primitive type code constants declared in
-    *    this class
+    * 
+    * @param typeCode one of the primitive type code constants declared in this class
     * @exception IllegalArgumentException if the argument is incorrect
     */
    public void setPrimitiveTypeCode(PrimitiveType.Code typeCode)
@@ -305,8 +293,8 @@ public class PrimitiveType extends Type
       postValueChange(PRIMITIVE_TYPE_CODE_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
@@ -314,8 +302,8 @@ public class PrimitiveType extends Type
       return BASE_NODE_SIZE + 1 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

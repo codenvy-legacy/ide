@@ -25,7 +25,7 @@ public class AnnotationBinding
 
    /**
     * Add the standard annotations encoded in the tag bits to the recorded annotations.
-    *
+    * 
     * @param recordedAnnotations existing annotations already created
     * @param annotationTagBits
     * @param env
@@ -35,7 +35,8 @@ public class AnnotationBinding
       long annotationTagBits, LookupEnvironment env)
    {
       // NOTE: expect annotations to be requested just once so there is no need to store the standard annotations
-      // and all of the standard annotations created by this method are fully resolved since the sender is expected to use them immediately
+      // and all of the standard annotations created by this method are fully resolved since the sender is expected to use them
+      // immediately
       int count = 0;
       if ((annotationTagBits & TagBits.AnnotationTargetMASK) != 0)
          count++;
@@ -182,8 +183,8 @@ public class AnnotationBinding
    }
 
    /*
-    * Computes a key that uniquely identifies this binding, using the given recipient's unique key.
-    * recipientKey @ typeKey
+    * Computes a key that uniquely identifies this binding, using the given recipient's unique key. recipientKey @ typeKey
+    * 
     * @MyAnnot void bar() --> Lp/X;.bar()V@Lp/MyAnnot;
     */
    public char[] computeUniqueKey(char[] recipientKey)

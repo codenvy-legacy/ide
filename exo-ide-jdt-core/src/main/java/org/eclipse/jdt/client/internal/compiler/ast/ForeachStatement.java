@@ -161,238 +161,239 @@ public class ForeachStatement extends Statement
             this.indexVariable.useFlag = LocalVariableBinding.USED;
             break;
       }
-      //end of loop
+      // end of loop
       loopingContext.complainOnDeferredNullChecks(currentScope, actionInfo);
 
       FlowInfo mergedInfo =
          FlowInfo.mergedOptimizedBranches((loopingContext.initsOnBreak.tagBits & FlowInfo.UNREACHABLE) != 0
-            ? loopingContext.initsOnBreak : flowInfo.addInitializationsFrom(loopingContext.initsOnBreak), // recover upstream null info
-            false, exitBranch, false, true /*for(;;){}while(true); unreachable(); */);
+            ? loopingContext.initsOnBreak : flowInfo.addInitializationsFrom(loopingContext.initsOnBreak), // recover upstream null
+                                                                                                          // info
+            false, exitBranch, false, true /* for(;;){}while(true); unreachable(); */);
       this.mergedInitStateIndex = currentScope.methodScope().recordInitializationStates(mergedInfo);
       return mergedInfo;
    }
 
-   //   /**
-   //    * For statement code generation
-   //    *
-   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   //    */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-   //   {
+   // /**
+   // * For statement code generation
+   // *
+   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   // {
    //
-   //      if ((this.bits & IsReachable) == 0)
-   //      {
-   //         return;
-   //      }
-   //      int pc = codeStream.position;
-   //      final boolean hasEmptyAction =
-   //         this.action == null || this.action.isEmptyBlock() || ((this.action.bits & IsUsefulEmptyStatement) != 0);
+   // if ((this.bits & IsReachable) == 0)
+   // {
+   // return;
+   // }
+   // int pc = codeStream.position;
+   // final boolean hasEmptyAction =
+   // this.action == null || this.action.isEmptyBlock() || ((this.action.bits & IsUsefulEmptyStatement) != 0);
    //
-   //      if (hasEmptyAction && this.elementVariable.binding.resolvedPosition == -1 && this.kind == ARRAY)
-   //      {
-   //         this.collection.generateCode(this.scope, codeStream, false);
-   //         codeStream.exitUserScope(this.scope);
-   //         if (this.mergedInitStateIndex != -1)
-   //         {
-   //            codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //            codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //         }
-   //         codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //         return;
-   //      }
+   // if (hasEmptyAction && this.elementVariable.binding.resolvedPosition == -1 && this.kind == ARRAY)
+   // {
+   // this.collection.generateCode(this.scope, codeStream, false);
+   // codeStream.exitUserScope(this.scope);
+   // if (this.mergedInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // return;
+   // }
    //
-   //      // generate the initializations
-   //      switch (this.kind)
-   //      {
-   //         case ARRAY :
-   //            this.collection.generateCode(this.scope, codeStream, true);
-   //            codeStream.store(this.collectionVariable, true);
-   //            codeStream.addVariable(this.collectionVariable);
-   //            if (this.continueLabel != null)
-   //            {
-   //               // int length = (collectionVariable = [collection]).length;
-   //               codeStream.arraylength();
-   //               codeStream.store(this.maxVariable, false);
-   //               codeStream.addVariable(this.maxVariable);
-   //               codeStream.iconst_0();
-   //               codeStream.store(this.indexVariable, false);
-   //               codeStream.addVariable(this.indexVariable);
-   //            }
-   //            else
-   //            {
-   //               // leave collectionVariable on execution stack (will be consumed when swapping condition further down)
-   //            }
-   //            break;
-   //         case RAW_ITERABLE :
-   //         case GENERIC_ITERABLE :
-   //            this.collection.generateCode(this.scope, codeStream, true);
-   //            // declaringClass.iterator();
-   //            codeStream.invokeIterableIterator(this.iteratorReceiverType);
-   //            codeStream.store(this.indexVariable, false);
-   //            codeStream.addVariable(this.indexVariable);
-   //            break;
-   //      }
-   //      // label management
-   //      BranchLabel actionLabel = new BranchLabel(codeStream);
-   //      actionLabel.tagBits |= BranchLabel.USED;
-   //      BranchLabel conditionLabel = new BranchLabel(codeStream);
-   //      conditionLabel.tagBits |= BranchLabel.USED;
-   //      this.breakLabel.initialize(codeStream);
-   //      if (this.continueLabel == null)
-   //      {
-   //         // generate the condition (swapped for optimizing)
-   //         conditionLabel.place();
-   //         int conditionPC = codeStream.position;
-   //         switch (this.kind)
-   //         {
-   //            case ARRAY :
-   //               // inline the arraylength call
-   //               // collectionVariable is already on execution stack
-   //               codeStream.arraylength();
-   //               codeStream.ifeq(this.breakLabel);
-   //               break;
-   //            case RAW_ITERABLE :
-   //            case GENERIC_ITERABLE :
-   //               codeStream.load(this.indexVariable);
-   //               codeStream.invokeJavaUtilIteratorHasNext();
-   //               codeStream.ifeq(this.breakLabel);
-   //               break;
-   //         }
-   //         codeStream.recordPositionsFrom(conditionPC, this.elementVariable.sourceStart);
-   //      }
-   //      else
-   //      {
-   //         this.continueLabel.initialize(codeStream);
-   //         this.continueLabel.tagBits |= BranchLabel.USED;
-   //         // jump over the actionBlock
-   //         codeStream.goto_(conditionLabel);
-   //      }
+   // // generate the initializations
+   // switch (this.kind)
+   // {
+   // case ARRAY :
+   // this.collection.generateCode(this.scope, codeStream, true);
+   // codeStream.store(this.collectionVariable, true);
+   // codeStream.addVariable(this.collectionVariable);
+   // if (this.continueLabel != null)
+   // {
+   // // int length = (collectionVariable = [collection]).length;
+   // codeStream.arraylength();
+   // codeStream.store(this.maxVariable, false);
+   // codeStream.addVariable(this.maxVariable);
+   // codeStream.iconst_0();
+   // codeStream.store(this.indexVariable, false);
+   // codeStream.addVariable(this.indexVariable);
+   // }
+   // else
+   // {
+   // // leave collectionVariable on execution stack (will be consumed when swapping condition further down)
+   // }
+   // break;
+   // case RAW_ITERABLE :
+   // case GENERIC_ITERABLE :
+   // this.collection.generateCode(this.scope, codeStream, true);
+   // // declaringClass.iterator();
+   // codeStream.invokeIterableIterator(this.iteratorReceiverType);
+   // codeStream.store(this.indexVariable, false);
+   // codeStream.addVariable(this.indexVariable);
+   // break;
+   // }
+   // // label management
+   // BranchLabel actionLabel = new BranchLabel(codeStream);
+   // actionLabel.tagBits |= BranchLabel.USED;
+   // BranchLabel conditionLabel = new BranchLabel(codeStream);
+   // conditionLabel.tagBits |= BranchLabel.USED;
+   // this.breakLabel.initialize(codeStream);
+   // if (this.continueLabel == null)
+   // {
+   // // generate the condition (swapped for optimizing)
+   // conditionLabel.place();
+   // int conditionPC = codeStream.position;
+   // switch (this.kind)
+   // {
+   // case ARRAY :
+   // // inline the arraylength call
+   // // collectionVariable is already on execution stack
+   // codeStream.arraylength();
+   // codeStream.ifeq(this.breakLabel);
+   // break;
+   // case RAW_ITERABLE :
+   // case GENERIC_ITERABLE :
+   // codeStream.load(this.indexVariable);
+   // codeStream.invokeJavaUtilIteratorHasNext();
+   // codeStream.ifeq(this.breakLabel);
+   // break;
+   // }
+   // codeStream.recordPositionsFrom(conditionPC, this.elementVariable.sourceStart);
+   // }
+   // else
+   // {
+   // this.continueLabel.initialize(codeStream);
+   // this.continueLabel.tagBits |= BranchLabel.USED;
+   // // jump over the actionBlock
+   // codeStream.goto_(conditionLabel);
+   // }
    //
-   //      // generate the loop action
-   //      actionLabel.place();
+   // // generate the loop action
+   // actionLabel.place();
    //
-   //      // generate the loop action
-   //      switch (this.kind)
-   //      {
-   //         case ARRAY :
-   //            if (this.elementVariable.binding.resolvedPosition != -1)
-   //            {
-   //               codeStream.load(this.collectionVariable);
-   //               if (this.continueLabel == null)
-   //               {
-   //                  codeStream.iconst_0(); // no continue, thus simply hardcode offset 0
-   //               }
-   //               else
-   //               {
-   //                  codeStream.load(this.indexVariable);
-   //               }
-   //               codeStream.arrayAt(this.collectionElementType.id);
-   //               if (this.elementVariableImplicitWidening != -1)
-   //               {
-   //                  codeStream.generateImplicitConversion(this.elementVariableImplicitWidening);
-   //               }
-   //               codeStream.store(this.elementVariable.binding, false);
-   //               codeStream.addVisibleLocalVariable(this.elementVariable.binding);
-   //               if (this.postCollectionInitStateIndex != -1)
-   //               {
-   //                  codeStream.addDefinitelyAssignedVariables(currentScope, this.postCollectionInitStateIndex);
-   //               }
-   //            }
-   //            break;
-   //         case RAW_ITERABLE :
-   //         case GENERIC_ITERABLE :
-   //            codeStream.load(this.indexVariable);
-   //            codeStream.invokeJavaUtilIteratorNext();
-   //            if (this.elementVariable.binding.type.id != T_JavaLangObject)
-   //            {
-   //               if (this.elementVariableImplicitWidening != -1)
-   //               {
-   //                  codeStream.checkcast(this.collectionElementType);
-   //                  codeStream.generateImplicitConversion(this.elementVariableImplicitWidening);
-   //               }
-   //               else
-   //               {
-   //                  codeStream.checkcast(this.elementVariable.binding.type);
-   //               }
-   //            }
-   //            if (this.elementVariable.binding.resolvedPosition == -1)
-   //            {
-   //               codeStream.pop();
-   //            }
-   //            else
-   //            {
-   //               codeStream.store(this.elementVariable.binding, false);
-   //               codeStream.addVisibleLocalVariable(this.elementVariable.binding);
-   //               if (this.postCollectionInitStateIndex != -1)
-   //               {
-   //                  codeStream.addDefinitelyAssignedVariables(currentScope, this.postCollectionInitStateIndex);
-   //               }
-   //            }
-   //            break;
-   //      }
+   // // generate the loop action
+   // switch (this.kind)
+   // {
+   // case ARRAY :
+   // if (this.elementVariable.binding.resolvedPosition != -1)
+   // {
+   // codeStream.load(this.collectionVariable);
+   // if (this.continueLabel == null)
+   // {
+   // codeStream.iconst_0(); // no continue, thus simply hardcode offset 0
+   // }
+   // else
+   // {
+   // codeStream.load(this.indexVariable);
+   // }
+   // codeStream.arrayAt(this.collectionElementType.id);
+   // if (this.elementVariableImplicitWidening != -1)
+   // {
+   // codeStream.generateImplicitConversion(this.elementVariableImplicitWidening);
+   // }
+   // codeStream.store(this.elementVariable.binding, false);
+   // codeStream.addVisibleLocalVariable(this.elementVariable.binding);
+   // if (this.postCollectionInitStateIndex != -1)
+   // {
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.postCollectionInitStateIndex);
+   // }
+   // }
+   // break;
+   // case RAW_ITERABLE :
+   // case GENERIC_ITERABLE :
+   // codeStream.load(this.indexVariable);
+   // codeStream.invokeJavaUtilIteratorNext();
+   // if (this.elementVariable.binding.type.id != T_JavaLangObject)
+   // {
+   // if (this.elementVariableImplicitWidening != -1)
+   // {
+   // codeStream.checkcast(this.collectionElementType);
+   // codeStream.generateImplicitConversion(this.elementVariableImplicitWidening);
+   // }
+   // else
+   // {
+   // codeStream.checkcast(this.elementVariable.binding.type);
+   // }
+   // }
+   // if (this.elementVariable.binding.resolvedPosition == -1)
+   // {
+   // codeStream.pop();
+   // }
+   // else
+   // {
+   // codeStream.store(this.elementVariable.binding, false);
+   // codeStream.addVisibleLocalVariable(this.elementVariable.binding);
+   // if (this.postCollectionInitStateIndex != -1)
+   // {
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.postCollectionInitStateIndex);
+   // }
+   // }
+   // break;
+   // }
    //
-   //      if (!hasEmptyAction)
-   //      {
-   //         this.action.generateCode(this.scope, codeStream);
-   //      }
-   //      codeStream.removeVariable(this.elementVariable.binding);
-   //      if (this.postCollectionInitStateIndex != -1)
-   //      {
-   //         codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.postCollectionInitStateIndex);
-   //      }
-   //      // continuation point
-   //      if (this.continueLabel != null)
-   //      {
-   //         this.continueLabel.place();
-   //         int continuationPC = codeStream.position;
-   //         // generate the increments for next iteration
-   //         switch (this.kind)
-   //         {
-   //            case ARRAY :
-   //               if (!hasEmptyAction || this.elementVariable.binding.resolvedPosition >= 0)
-   //               {
-   //                  codeStream.iinc(this.indexVariable.resolvedPosition, 1);
-   //               }
-   //               // generate the condition
-   //               conditionLabel.place();
-   //               codeStream.load(this.indexVariable);
-   //               codeStream.load(this.maxVariable);
-   //               codeStream.if_icmplt(actionLabel);
-   //               break;
-   //            case RAW_ITERABLE :
-   //            case GENERIC_ITERABLE :
-   //               // generate the condition
-   //               conditionLabel.place();
-   //               codeStream.load(this.indexVariable);
-   //               codeStream.invokeJavaUtilIteratorHasNext();
-   //               codeStream.ifne(actionLabel);
-   //               break;
-   //         }
-   //         codeStream.recordPositionsFrom(continuationPC, this.elementVariable.sourceStart);
-   //      }
-   //      switch (this.kind)
-   //      {
-   //         case ARRAY :
-   //            codeStream.removeVariable(this.indexVariable);
-   //            codeStream.removeVariable(this.maxVariable);
-   //            codeStream.removeVariable(this.collectionVariable);
-   //            break;
-   //         case RAW_ITERABLE :
-   //         case GENERIC_ITERABLE :
-   //            // generate the condition
-   //            codeStream.removeVariable(this.indexVariable);
-   //            break;
-   //      }
-   //      codeStream.exitUserScope(this.scope);
-   //      if (this.mergedInitStateIndex != -1)
-   //      {
-   //         codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //         codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //      }
-   //      this.breakLabel.place();
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // if (!hasEmptyAction)
+   // {
+   // this.action.generateCode(this.scope, codeStream);
+   // }
+   // codeStream.removeVariable(this.elementVariable.binding);
+   // if (this.postCollectionInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.postCollectionInitStateIndex);
+   // }
+   // // continuation point
+   // if (this.continueLabel != null)
+   // {
+   // this.continueLabel.place();
+   // int continuationPC = codeStream.position;
+   // // generate the increments for next iteration
+   // switch (this.kind)
+   // {
+   // case ARRAY :
+   // if (!hasEmptyAction || this.elementVariable.binding.resolvedPosition >= 0)
+   // {
+   // codeStream.iinc(this.indexVariable.resolvedPosition, 1);
+   // }
+   // // generate the condition
+   // conditionLabel.place();
+   // codeStream.load(this.indexVariable);
+   // codeStream.load(this.maxVariable);
+   // codeStream.if_icmplt(actionLabel);
+   // break;
+   // case RAW_ITERABLE :
+   // case GENERIC_ITERABLE :
+   // // generate the condition
+   // conditionLabel.place();
+   // codeStream.load(this.indexVariable);
+   // codeStream.invokeJavaUtilIteratorHasNext();
+   // codeStream.ifne(actionLabel);
+   // break;
+   // }
+   // codeStream.recordPositionsFrom(continuationPC, this.elementVariable.sourceStart);
+   // }
+   // switch (this.kind)
+   // {
+   // case ARRAY :
+   // codeStream.removeVariable(this.indexVariable);
+   // codeStream.removeVariable(this.maxVariable);
+   // codeStream.removeVariable(this.collectionVariable);
+   // break;
+   // case RAW_ITERABLE :
+   // case GENERIC_ITERABLE :
+   // // generate the condition
+   // codeStream.removeVariable(this.indexVariable);
+   // break;
+   // }
+   // codeStream.exitUserScope(this.scope);
+   // if (this.mergedInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // }
+   // this.breakLabel.place();
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    public StringBuffer printStatement(int indent, StringBuffer output)
    {
@@ -408,7 +409,7 @@ public class ForeachStatement extends Statement
       {
          output.append(')');
       }
-      //block
+      // block
       if (this.action == null)
       {
          output.append(';');
@@ -472,7 +473,9 @@ public class ForeachStatement extends Statement
             {
                this.collection.computeConversion(this.scope, collectionType, collectionType);
                int boxedID = this.scope.environment().computeBoxingType(this.collectionElementType).id;
-               this.elementVariableImplicitWidening = BOXING | (compileTimeTypeID << 4) | compileTimeTypeID; // use primitive type in implicit conversion
+               this.elementVariableImplicitWidening = BOXING | (compileTimeTypeID << 4) | compileTimeTypeID; // use primitive type
+                                                                                                             // in implicit
+                                                                                                             // conversion
                compileTimeTypeID = boxedID;
                this.scope.problemReporter().autoboxing(this.collection, this.collectionElementType, elementType);
             }
@@ -485,13 +488,17 @@ public class ForeachStatement extends Statement
          else if (collectionType instanceof ReferenceBinding)
          {
             ReferenceBinding iterableType =
-               ((ReferenceBinding)collectionType)
-                  .findSuperTypeOriginatingFrom(T_JavaLangIterable, false /*Iterable is not a class*/);
+               ((ReferenceBinding)collectionType).findSuperTypeOriginatingFrom(T_JavaLangIterable, false /*
+                                                                                                          * Iterable is not a
+                                                                                                          * class
+                                                                                                          */);
             if (iterableType == null && isTargetJsr14)
             {
                iterableType =
-                  ((ReferenceBinding)collectionType)
-                     .findSuperTypeOriginatingFrom(T_JavaUtilCollection, false /*Iterable is not a class*/);
+                  ((ReferenceBinding)collectionType).findSuperTypeOriginatingFrom(T_JavaUtilCollection, false /*
+                                                                                                               * Iterable is not a
+                                                                                                               * class
+                                                                                                               */);
             }
             checkIterable :
             {
@@ -583,7 +590,11 @@ public class ForeachStatement extends Statement
                {
                   if (this.collectionElementType.isBaseType())
                   {
-                     this.elementVariableImplicitWidening = BOXING | (compileTimeTypeID << 4) | compileTimeTypeID; // use primitive type in implicit conversion
+                     this.elementVariableImplicitWidening = BOXING | (compileTimeTypeID << 4) | compileTimeTypeID; // use
+                                                                                                                   // primitive
+                                                                                                                   // type in
+                                                                                                                   // implicit
+                                                                                                                   // conversion
                   }
                }
             }

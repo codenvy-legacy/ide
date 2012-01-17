@@ -51,141 +51,141 @@ public class UnaryExpression extends OperatorExpression
       return this.optimizedBooleanConstant == null ? this.constant : this.optimizedBooleanConstant;
    }
 
-   //	/**
-   //	 * Code generation for an unary operation
-   //	 *
-   //	 * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   //	 * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   //	 * @param valueRequired boolean
-   //	 */
-   //	public void generateCode(
-   //		BlockScope currentScope,
-   //		CodeStream codeStream,
-   //		boolean valueRequired) {
+   // /**
+   // * Code generation for an unary operation
+   // *
+   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   // * @param valueRequired boolean
+   // */
+   // public void generateCode(
+   // BlockScope currentScope,
+   // CodeStream codeStream,
+   // boolean valueRequired) {
    //
-   //		int pc = codeStream.position;
-   //		BranchLabel falseLabel, endifLabel;
-   //		if (this.constant != Constant.NotAConstant) {
-   //			// inlined value
-   //			if (valueRequired) {
-   //				codeStream.generateConstant(this.constant, this.implicitConversion);
-   //			}
-   //			codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //			return;
-   //		}
-   //		switch ((this.bits & OperatorMASK) >> OperatorSHIFT) {
-   //			case NOT :
-   //				switch ((this.expression.implicitConversion & IMPLICIT_CONVERSION_MASK) >> 4) /* runtime type */ {
-   //					case T_boolean :
-   //						// ! <boolean>
-   //						// Generate code for the condition
-   //						this.expression.generateOptimizedBoolean(
-   //							currentScope,
-   //							codeStream,
-   //							null,
-   //							(falseLabel = new BranchLabel(codeStream)),
-   //							valueRequired);
-   //						if (valueRequired) {
-   //							codeStream.iconst_0();
-   //							if (falseLabel.forwardReferenceCount() > 0) {
-   //								codeStream.goto_(endifLabel = new BranchLabel(codeStream));
-   //								codeStream.decrStackSize(1);
-   //								falseLabel.place();
-   //								codeStream.iconst_1();
-   //								endifLabel.place();
-   //							}
-   //						} else { // 6596: if (!(a && b)){} - must still place falseLabel
-   //							falseLabel.place();
-   //						}
-   //						break;
-   //				}
-   //				break;
-   //			case TWIDDLE :
-   //				switch ((this.expression.implicitConversion & IMPLICIT_CONVERSION_MASK) >> 4 /* runtime */) {
-   //					case T_int :
-   //						// ~int
-   //						this.expression.generateCode(currentScope, codeStream, valueRequired);
-   //						if (valueRequired) {
-   //							codeStream.iconst_m1();
-   //							codeStream.ixor();
-   //						}
-   //						break;
-   //					case T_long :
-   //						this.expression.generateCode(currentScope, codeStream, valueRequired);
-   //						if (valueRequired) {
-   //							codeStream.ldc2_w(-1L);
-   //							codeStream.lxor();
-   //						}
-   //				}
-   //				break;
-   //			case MINUS :
-   //				// - <num>
-   //				if (this.constant != Constant.NotAConstant) {
-   //					if (valueRequired) {
-   //						switch ((this.expression.implicitConversion & IMPLICIT_CONVERSION_MASK) >> 4){ /* runtime */
-   //							case T_int :
-   //								codeStream.generateInlinedValue(this.constant.intValue() * -1);
-   //								break;
-   //							case T_float :
-   //								codeStream.generateInlinedValue(this.constant.floatValue() * -1.0f);
-   //								break;
-   //							case T_long :
-   //								codeStream.generateInlinedValue(this.constant.longValue() * -1L);
-   //								break;
-   //							case T_double :
-   //								codeStream.generateInlinedValue(this.constant.doubleValue() * -1.0);
-   //						}
-   //					}
-   //				} else {
-   //					this.expression.generateCode(currentScope, codeStream, valueRequired);
-   //					if (valueRequired) {
-   //						switch ((this.expression.implicitConversion & IMPLICIT_CONVERSION_MASK) >> 4){ /* runtime type */
-   //							case T_int :
-   //								codeStream.ineg();
-   //								break;
-   //							case T_float :
-   //								codeStream.fneg();
-   //								break;
-   //							case T_long :
-   //								codeStream.lneg();
-   //								break;
-   //							case T_double :
-   //								codeStream.dneg();
-   //						}
-   //					}
-   //				}
-   //				break;
-   //			case PLUS :
-   //				this.expression.generateCode(currentScope, codeStream, valueRequired);
-   //		}
-   //		if (valueRequired) {
-   //			codeStream.generateImplicitConversion(this.implicitConversion);
-   //		}
-   //		codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //	}
+   // int pc = codeStream.position;
+   // BranchLabel falseLabel, endifLabel;
+   // if (this.constant != Constant.NotAConstant) {
+   // // inlined value
+   // if (valueRequired) {
+   // codeStream.generateConstant(this.constant, this.implicitConversion);
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // return;
+   // }
+   // switch ((this.bits & OperatorMASK) >> OperatorSHIFT) {
+   // case NOT :
+   // switch ((this.expression.implicitConversion & IMPLICIT_CONVERSION_MASK) >> 4) /* runtime type */ {
+   // case T_boolean :
+   // // ! <boolean>
+   // // Generate code for the condition
+   // this.expression.generateOptimizedBoolean(
+   // currentScope,
+   // codeStream,
+   // null,
+   // (falseLabel = new BranchLabel(codeStream)),
+   // valueRequired);
+   // if (valueRequired) {
+   // codeStream.iconst_0();
+   // if (falseLabel.forwardReferenceCount() > 0) {
+   // codeStream.goto_(endifLabel = new BranchLabel(codeStream));
+   // codeStream.decrStackSize(1);
+   // falseLabel.place();
+   // codeStream.iconst_1();
+   // endifLabel.place();
+   // }
+   // } else { // 6596: if (!(a && b)){} - must still place falseLabel
+   // falseLabel.place();
+   // }
+   // break;
+   // }
+   // break;
+   // case TWIDDLE :
+   // switch ((this.expression.implicitConversion & IMPLICIT_CONVERSION_MASK) >> 4 /* runtime */) {
+   // case T_int :
+   // // ~int
+   // this.expression.generateCode(currentScope, codeStream, valueRequired);
+   // if (valueRequired) {
+   // codeStream.iconst_m1();
+   // codeStream.ixor();
+   // }
+   // break;
+   // case T_long :
+   // this.expression.generateCode(currentScope, codeStream, valueRequired);
+   // if (valueRequired) {
+   // codeStream.ldc2_w(-1L);
+   // codeStream.lxor();
+   // }
+   // }
+   // break;
+   // case MINUS :
+   // // - <num>
+   // if (this.constant != Constant.NotAConstant) {
+   // if (valueRequired) {
+   // switch ((this.expression.implicitConversion & IMPLICIT_CONVERSION_MASK) >> 4){ /* runtime */
+   // case T_int :
+   // codeStream.generateInlinedValue(this.constant.intValue() * -1);
+   // break;
+   // case T_float :
+   // codeStream.generateInlinedValue(this.constant.floatValue() * -1.0f);
+   // break;
+   // case T_long :
+   // codeStream.generateInlinedValue(this.constant.longValue() * -1L);
+   // break;
+   // case T_double :
+   // codeStream.generateInlinedValue(this.constant.doubleValue() * -1.0);
+   // }
+   // }
+   // } else {
+   // this.expression.generateCode(currentScope, codeStream, valueRequired);
+   // if (valueRequired) {
+   // switch ((this.expression.implicitConversion & IMPLICIT_CONVERSION_MASK) >> 4){ /* runtime type */
+   // case T_int :
+   // codeStream.ineg();
+   // break;
+   // case T_float :
+   // codeStream.fneg();
+   // break;
+   // case T_long :
+   // codeStream.lneg();
+   // break;
+   // case T_double :
+   // codeStream.dneg();
+   // }
+   // }
+   // }
+   // break;
+   // case PLUS :
+   // this.expression.generateCode(currentScope, codeStream, valueRequired);
+   // }
+   // if (valueRequired) {
+   // codeStream.generateImplicitConversion(this.implicitConversion);
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
-   //   /**
-   //    * Boolean operator code generation
-   //    *	Optimized operations are: &&, ||, <, <=, >, >=, &, |, ^
-   //    */
-   //   public void generateOptimizedBoolean(BlockScope currentScope, CodeStream codeStream, BranchLabel trueLabel,
-   //      BranchLabel falseLabel, boolean valueRequired)
-   //   {
+   // /**
+   // * Boolean operator code generation
+   // * Optimized operations are: &&, ||, <, <=, >, >=, &, |, ^
+   // */
+   // public void generateOptimizedBoolean(BlockScope currentScope, CodeStream codeStream, BranchLabel trueLabel,
+   // BranchLabel falseLabel, boolean valueRequired)
+   // {
    //
-   //      if ((this.constant != Constant.NotAConstant) && (this.constant.typeID() == T_boolean))
-   //      {
-   //         super.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
-   //         return;
-   //      }
-   //      if (((this.bits & OperatorMASK) >> OperatorSHIFT) == NOT)
-   //      {
-   //         this.expression.generateOptimizedBoolean(currentScope, codeStream, falseLabel, trueLabel, valueRequired);
-   //      }
-   //      else
-   //      {
-   //         super.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
-   //      }
-   //   }
+   // if ((this.constant != Constant.NotAConstant) && (this.constant.typeID() == T_boolean))
+   // {
+   // super.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
+   // return;
+   // }
+   // if (((this.bits & OperatorMASK) >> OperatorSHIFT) == NOT)
+   // {
+   // this.expression.generateOptimizedBoolean(currentScope, codeStream, falseLabel, trueLabel, valueRequired);
+   // }
+   // else
+   // {
+   // super.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
+   // }
+   // }
 
    public StringBuffer printExpressionNoParenthesis(int indent, StringBuffer output)
    {
@@ -233,12 +233,12 @@ public class UnaryExpression extends OperatorExpression
             break;
          default :
             tableId = MINUS;
-      } //+ and - cases
+      } // + and - cases
 
       // the code is an int
-      // (cast)  left   Op (cast)  rigth --> result
-      //  0000   0000       0000   0000      0000
-      //  <<16   <<12       <<8    <<4       <<0
+      // (cast) left Op (cast) rigth --> result
+      // 0000 0000 0000 0000 0000
+      // <<16 <<12 <<8 <<4 <<0
       int operatorSignature = OperatorSignatures[tableId][(expressionTypeID << 4) + expressionTypeID];
       this.expression.computeConversion(scope, TypeBinding.wellKnownType(scope, (operatorSignature >>> 16) & 0x0000F),
          expressionType);
@@ -266,7 +266,7 @@ public class UnaryExpression extends OperatorExpression
          case T_long :
             this.resolvedType = TypeBinding.LONG;
             break;
-         default : //error........
+         default : // error........
             this.constant = Constant.NotAConstant;
             if (expressionTypeID != T_undefined)
                scope.problemReporter().invalidOperator(this, expressionType);

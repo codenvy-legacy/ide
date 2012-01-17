@@ -24,7 +24,7 @@ import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 34360 2009-07-22 23:58:59Z evgen $
- *
+ * 
  */
 public class CompilationUnit implements ICompilationUnit
 {
@@ -39,10 +39,10 @@ public class CompilationUnit implements ICompilationUnit
    // a specific destination path for this compilation unit; coding is
    // aligned with Main.destinationPath:
    // == null: unspecified, use whatever value is set by the enclosing
-   //          context, id est Main;
+   // context, id est Main;
    // == Main.NONE: absorbent element, do not output class files;
    // else: use as the path of the directory into which class files must
-   //       be written.
+   // be written.
 
    public CompilationUnit(char[] contents, String fileName, String encoding)
    {

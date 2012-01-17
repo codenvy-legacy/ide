@@ -28,11 +28,11 @@ public class FieldDeclaration extends AbstractVariableDeclaration
 
    public Javadoc javadoc;
 
-   //allows to retrieve both the "type" part of the declaration (part1)
-   //and also the part that decribe the name and the init and optionally
-   //some other dimension ! ....
-   //public int[] a, b[] = X, c ;
-   //for b that would give for
+   // allows to retrieve both the "type" part of the declaration (part1)
+   // and also the part that decribe the name and the init and optionally
+   // some other dimension ! ....
+   // public int[] a, b[] = X, c ;
+   // for b that would give for
    // - part1 : public int[]
    // - part2 : b[] = X,
 
@@ -48,9 +48,9 @@ public class FieldDeclaration extends AbstractVariableDeclaration
    public FieldDeclaration(char[] name, int sourceStart, int sourceEnd)
    {
       this.name = name;
-      //due to some declaration like
+      // due to some declaration like
       // int x, y = 3, z , x ;
-      //the sourceStart and the sourceEnd is ONLY on  the name
+      // the sourceStart and the sourceEnd is ONLY on the name
       this.sourceStart = sourceStart;
       this.sourceEnd = sourceEnd;
    }
@@ -81,43 +81,43 @@ public class FieldDeclaration extends AbstractVariableDeclaration
       return flowInfo;
    }
 
-   //   /**
-   //    * Code generation for a field declaration:
-   //    *	   standard assignment to a field
-   //    *
-   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   //    */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-   //   {
-   //      if ((this.bits & IsReachable) == 0)
-   //      {
-   //         return;
-   //      }
-   //      // do not generate initialization code if final and static (constant is then
-   //      // recorded inside the field itself).
-   //      int pc = codeStream.position;
-   //      boolean isStatic;
-   //      if (this.initialization != null
-   //         && !((isStatic = this.binding.isStatic()) && this.binding.constant() != Constant.NotAConstant))
-   //      {
-   //         // non-static field, need receiver
-   //         if (!isStatic)
-   //            codeStream.aload_0();
-   //         // generate initialization value
-   //         this.initialization.generateCode(currentScope, codeStream, true);
-   //         // store into field
-   //         if (isStatic)
-   //         {
-   //            codeStream.fieldAccess(Opcodes.OPC_putstatic, this.binding, null /* default declaringClass */);
-   //         }
-   //         else
-   //         {
-   //            codeStream.fieldAccess(Opcodes.OPC_putfield, this.binding, null /* default declaringClass */);
-   //         }
-   //      }
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // /**
+   // * Code generation for a field declaration:
+   // * standard assignment to a field
+   // *
+   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   // {
+   // if ((this.bits & IsReachable) == 0)
+   // {
+   // return;
+   // }
+   // // do not generate initialization code if final and static (constant is then
+   // // recorded inside the field itself).
+   // int pc = codeStream.position;
+   // boolean isStatic;
+   // if (this.initialization != null
+   // && !((isStatic = this.binding.isStatic()) && this.binding.constant() != Constant.NotAConstant))
+   // {
+   // // non-static field, need receiver
+   // if (!isStatic)
+   // codeStream.aload_0();
+   // // generate initialization value
+   // this.initialization.generateCode(currentScope, codeStream, true);
+   // // store into field
+   // if (isStatic)
+   // {
+   // codeStream.fieldAccess(Opcodes.OPC_putstatic, this.binding, null /* default declaringClass */);
+   // }
+   // else
+   // {
+   // codeStream.fieldAccess(Opcodes.OPC_putfield, this.binding, null /* default declaringClass */);
+   // }
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    /**
     * @see org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration#getKind()
@@ -149,7 +149,7 @@ public class FieldDeclaration extends AbstractVariableDeclaration
       // a single line but it is clearer to have two lines while the reason of their
       // existence is not at all the same. See comment for the second one.
 
-      //--------------------------------------------------------
+      // --------------------------------------------------------
       if ((this.bits & ASTNode.HasBeenResolved) != 0)
          return;
       if (this.binding == null || !this.binding.isValidBinding())
@@ -175,7 +175,7 @@ public class FieldDeclaration extends AbstractVariableDeclaration
                // protected members from superclasses.
                FieldBinding existingVariable =
                   classScope.findField(declaringType.superclass, this.name, this,
-                     false /*do not resolve hidden field*/, true /* no visibility checks please */);
+                     false /* do not resolve hidden field */, true /* no visibility checks please */);
                if (existingVariable == null)
                   break checkHidingSuperField; // keep checking outer scenario
                if (!existingVariable.isValidBinding())
@@ -188,13 +188,16 @@ public class FieldDeclaration extends AbstractVariableDeclaration
                initializationScope.problemReporter().fieldHiding(this, existingVariable);
                break checkHiding; // already found a matching field
             }
-            // only corner case is: lookup of outer field through static declaringType, which isn't detected by #getBinding as lookup starts
+            // only corner case is: lookup of outer field through static declaringType, which isn't detected by #getBinding as
+            // lookup starts
             // from outer scope. Subsequent static contexts are detected for free.
             Scope outerScope = classScope.parent;
             if (outerScope.kind == Scope.COMPILATION_UNIT_SCOPE)
                break checkHiding;
-            Binding existingVariable =
-               outerScope.getBinding(this.name, Binding.VARIABLE, this, false /*do not resolve hidden field*/);
+            Binding existingVariable = outerScope.getBinding(this.name, Binding.VARIABLE, this, false /*
+                                                                                                       * do not resolve hidden
+                                                                                                       * field
+                                                                                                       */);
             if (existingVariable == null)
                break checkHiding;
             if (!existingVariable.isValidBinding())

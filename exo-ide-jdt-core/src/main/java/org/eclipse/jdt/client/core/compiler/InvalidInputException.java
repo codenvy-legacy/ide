@@ -13,7 +13,7 @@ package org.eclipse.jdt.client.core.compiler;
 
 /**
  * Exception thrown by a scanner when encountering lexical errors.
- *
+ * 
  * @noinstantiate This class is not intended to be instantiated by clients.
  * @noextend This class is not intended to be subclassed by clients.
  */
@@ -32,6 +32,7 @@ public class InvalidInputException extends Exception
 
    /**
     * Creates a new exception with the given detail message.
+    * 
     * @param message the detail message
     */
    public InvalidInputException(String message)

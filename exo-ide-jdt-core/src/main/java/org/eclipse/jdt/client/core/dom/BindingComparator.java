@@ -27,7 +27,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.WildcardBinding;
 
 /**
  * Internal helper class for comparing bindings.
- *
+ * 
  * @since 3.1
  */
 class BindingComparator

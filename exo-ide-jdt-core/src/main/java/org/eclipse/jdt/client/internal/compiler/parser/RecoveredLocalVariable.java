@@ -158,9 +158,8 @@ public class RecoveredLocalVariable extends RecoveredStatement
    }
 
    /*
-    * A closing brace got consumed, might have closed the current element,
-    * in which case both the currentElement is exited.
-    *
+    * A closing brace got consumed, might have closed the current element, in which case both the currentElement is exited.
+    * 
     * Fields have no associated braces, thus if matches, then update parent.
     */
    public RecoveredElement updateOnClosingBrace(int braceStart, int braceEnd)
@@ -180,8 +179,8 @@ public class RecoveredLocalVariable extends RecoveredStatement
    }
 
    /*
-    * An opening brace got consumed, might be the expected opening one of the current element,
-    * in which case the bodyStart is updated.
+    * An opening brace got consumed, might be the expected opening one of the current element, in which case the bodyStart is
+    * updated.
     */
    public RecoveredElement updateOnOpeningBrace(int braceStart, int braceEnd)
    {
@@ -190,7 +189,7 @@ public class RecoveredLocalVariable extends RecoveredStatement
          && !this.alreadyCompletedLocalInitialization)
       {
          this.bracketBalance++;
-         return null; // no update is necessary	(array initializer)
+         return null; // no update is necessary (array initializer)
       }
       // might be an array initializer
       this.updateSourceEndIfNecessary(braceStart - 1, braceEnd - 1);

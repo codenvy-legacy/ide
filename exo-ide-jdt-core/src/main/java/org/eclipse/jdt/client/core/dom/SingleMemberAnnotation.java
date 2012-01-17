@@ -14,17 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Single member annotation node (added in JLS3 API). The single member annotation
- * "@foo(bar)" is equivalent to the normal annotation "@foo(value=bar)".
+ * Single member annotation node (added in JLS3 API). The single member annotation "@foo(bar)" is equivalent to the normal
+ * annotation "@foo(value=bar)".
  * <p>
+ * 
  * <pre>
  * SingleMemberAnnotation:
  *   <b>@</b> TypeName <b>(</b> Expression  <b>)</b>
  * </pre>
- * Within annotations, only certain kinds of expressions are meaningful,
- * including other annotations.
+ * 
+ * Within annotations, only certain kinds of expressions are meaningful, including other annotations.
  * </p>
- *
+ * 
  * @since 3.1
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -44,9 +45,7 @@ public final class SingleMemberAnnotation extends Annotation
       SingleMemberAnnotation.class, "value", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -60,12 +59,10 @@ public final class SingleMemberAnnotation extends Annotation
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
     * @param apiLevel the API level; one of the AST.JLS* constants
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     */
    public static List propertyDescriptors(int apiLevel)
    {
@@ -73,19 +70,17 @@ public final class SingleMemberAnnotation extends Annotation
    }
 
    /**
-    * The value; lazily initialized; defaults to a unspecified, but legal,
-    * expression.
+    * The value; lazily initialized; defaults to a unspecified, but legal, expression.
     */
    private Expression value = null;
 
    /**
-    * Creates a new unparented normal annotation node owned
-    * by the given AST.  By default, the annotation has an
-    * unspecified type name and an unspecified value.
+    * Creates a new unparented normal annotation node owned by the given AST. By default, the annotation has an unspecified type
+    * name and an unspecified value.
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    SingleMemberAnnotation(AST ast)
@@ -94,16 +89,16 @@ public final class SingleMemberAnnotation extends Annotation
       unsupportedIn2();
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -135,24 +130,24 @@ public final class SingleMemberAnnotation extends Annotation
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on BodyDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on BodyDeclaration.
     */
    final ChildPropertyDescriptor internalTypeNameProperty()
    {
       return TYPE_NAME_PROPERTY;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return SINGLE_MEMBER_ANNOTATION;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -163,8 +158,8 @@ public final class SingleMemberAnnotation extends Annotation
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -172,8 +167,8 @@ public final class SingleMemberAnnotation extends Annotation
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -189,7 +184,7 @@ public final class SingleMemberAnnotation extends Annotation
 
    /**
     * Returns the value of this annotation.
-    *
+    * 
     * @return the value node
     */
    public Expression getValue()
@@ -212,14 +207,14 @@ public final class SingleMemberAnnotation extends Annotation
 
    /**
     * Sets the value of this annotation.
-    *
+    * 
     * @param value the new value
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setValue(Expression value)
    {
@@ -233,16 +228,16 @@ public final class SingleMemberAnnotation extends Annotation
       postReplaceChild(oldChild, value, VALUE_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return super.memSize() + 1 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

@@ -19,15 +19,15 @@ import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.util.SimpleLookupTable;
 
 /*
-Not all fields defined by this type (& its subclasses) are initialized when it is created.
-Some are initialized only when needed.
+ Not all fields defined by this type (& its subclasses) are initialized when it is created.
+ Some are initialized only when needed.
 
-Accessors have been provided for some public fields so all TypeBindings have the same API...
-but access public fields directly whenever possible.
-Non-public fields have accessors which should be used everywhere you expect the field to be initialized.
+ Accessors have been provided for some public fields so all TypeBindings have the same API...
+ but access public fields directly whenever possible.
+ Non-public fields have accessors which should be used everywhere you expect the field to be initialized.
 
-null is NOT a valid value for a non-public field... it just means the field is not initialized.
-*/
+ null is NOT a valid value for a non-public field... it just means the field is not initialized.
+ */
 
 abstract public class ReferenceBinding extends TypeBinding
 {
@@ -108,8 +108,8 @@ abstract public class ReferenceBinding extends TypeBinding
    /**
     * Returns a combined range value representing: (start + (end<<32)), where start is the index of the first matching method
     * (remember methods are sorted alphabetically on selectors), and end is the index of last contiguous methods with same
-    * selector.
-    * -1 means no method got found
+    * selector. -1 means no method got found
+    * 
     * @param selector
     * @param sortedMethods
     * @return (start + (end<<32)) or -1 if no method found
@@ -156,15 +156,10 @@ abstract public class ReferenceBinding extends TypeBinding
    }
 
    /**
-    * Compares two strings lexicographically.
-    * The comparison is based on the Unicode value of each character in
-    * the strings.
-    *
-    * @return  the value <code>0</code> if the str1 is equal to str2;
-    *          a value less than <code>0</code> if str1
-    *          is lexicographically less than str2;
-    *          and a value greater than <code>0</code> if str1 is
-    *          lexicographically greater than str2.
+    * Compares two strings lexicographically. The comparison is based on the Unicode value of each character in the strings.
+    * 
+    * @return the value <code>0</code> if the str1 is equal to str2; a value less than <code>0</code> if str1 is lexicographically
+    *         less than str2; and a value greater than <code>0</code> if str1 is lexicographically greater than str2.
     */
    static int compare(char[] str1, char[] str2, int len1, int len2)
    {
@@ -252,9 +247,9 @@ abstract public class ReferenceBinding extends TypeBinding
       {
          // answer true if the invocationType is the declaringClass or they are in the same package
          // OR the invocationType is a subclass of the declaringClass
-         //    AND the invocationType is the invocationType or its subclass
-         //    OR the type is a static method accessed directly through a type
-         //    OR previous assertions are true for one of the enclosing type
+         // AND the invocationType is the invocationType or its subclass
+         // OR the type is a static method accessed directly through a type
+         // OR previous assertions are true for one of the enclosing type
          if (invocationType == this)
             return true;
          if (invocationType.fPackage == this.fPackage)
@@ -266,12 +261,12 @@ abstract public class ReferenceBinding extends TypeBinding
             return true;
          if (declaringClass == null)
             return false; // could be null if incorrect top-level protected type
-         //int depth = 0;
+         // int depth = 0;
          do
          {
             if (currentType.findSuperTypeOriginatingFrom(declaringClass) != null)
                return true;
-            //depth++;
+            // depth++;
             currentType = currentType.enclosingType();
          }
          while (currentType != null);
@@ -286,7 +281,8 @@ abstract public class ReferenceBinding extends TypeBinding
          {
             if (!(receiverType == this || receiverType == enclosingType()))
             {
-               // special tolerance for type variable direct bounds, but only if compliance <= 1.6, see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=334622
+               // special tolerance for type variable direct bounds, but only if compliance <= 1.6, see:
+               // https://bugs.eclipse.org/bugs/show_bug.cgi?id=334622
                if (receiverType.isTypeVariable())
                {
                   TypeVariableBinding typeVariable = (TypeVariableBinding)receiverType;
@@ -368,9 +364,9 @@ abstract public class ReferenceBinding extends TypeBinding
       {
          // answer true if the invocationType is the declaringClass or they are in the same package
          // OR the invocationType is a subclass of the declaringClass
-         //    AND the invocationType is the invocationType or its subclass
-         //    OR the type is a static method accessed directly through a type
-         //    OR previous assertions are true for one of the enclosing type
+         // AND the invocationType is the invocationType or its subclass
+         // OR the type is a static method accessed directly through a type
+         // OR previous assertions are true for one of the enclosing type
          if (invocationType.fPackage == this.fPackage)
             return true;
 
@@ -841,7 +837,7 @@ abstract public class ReferenceBinding extends TypeBinding
 
    /**
     * Answer the receiver's constant pool name.
-    *
+    * 
     * NOTE: This method should only be used during/after code gen.
     */
    public char[] constantPoolName() /* java/lang/Object */
@@ -1033,15 +1029,15 @@ abstract public class ReferenceBinding extends TypeBinding
 
    public int hashCode()
    {
-      // ensure ReferenceBindings hash to the same posiiton as UnresolvedReferenceBindings so they can be replaced without rehashing
+      // ensure ReferenceBindings hash to the same posiiton as UnresolvedReferenceBindings so they can be replaced without
+      // rehashing
       // ALL ReferenceBindings are unique when created so equals() is the same as ==
       return (this.compoundName == null || this.compoundName.length == 0) ? super.hashCode() : CharOperation
          .hashCode(this.compoundName[this.compoundName.length - 1]);
    }
 
    /**
-    * Returns true if the two types have an incompatible common supertype,
-    * e.g. List<String> and List<Integer>
+    * Returns true if the two types have an incompatible common supertype, e.g. List<String> and List<Integer>
     */
    public boolean hasIncompatibleSuperType(ReferenceBinding otherType)
    {
@@ -1125,11 +1121,12 @@ abstract public class ReferenceBinding extends TypeBinding
       return (this.modifiers & ExtraCompilerModifiers.AccRestrictedAccess) != 0;
    }
 
-   /** Answer true if the receiver implements anInterface or is identical to anInterface.
-   * If searchHierarchy is true, then also search the receiver's superclasses.
-   *
-   * NOTE: Assume that anInterface is an interface.
-   */
+   /**
+    * Answer true if the receiver implements anInterface or is identical to anInterface. If searchHierarchy is true, then also
+    * search the receiver's superclasses.
+    * 
+    * NOTE: Assume that anInterface is an interface.
+    */
    public boolean implementsInterface(ReferenceBinding anInterface, boolean searchHierarchy)
    {
       if (this == anInterface)
@@ -1218,7 +1215,7 @@ abstract public class ReferenceBinding extends TypeBinding
 
    /**
     * Answer true if the receiver is an abstract type
-   */
+    */
    public final boolean isAbstract()
    {
       return (this.modifiers & ClassFileConstants.AccAbstract) != 0;
@@ -1240,9 +1237,9 @@ abstract public class ReferenceBinding extends TypeBinding
    }
 
    /**
-    * Answer true if the receiver type can be assigned to the argument type (right)
-    * In addition to improving performance, caching also ensures there is no infinite regression
-    * since per nature, the compatibility check is recursive through parameterized type arguments (122775)
+    * Answer true if the receiver type can be assigned to the argument type (right) In addition to improving performance, caching
+    * also ensures there is no infinite regression since per nature, the compatibility check is recursive through parameterized
+    * type arguments (122775)
     */
    public boolean isCompatibleWith(TypeBinding otherType)
    {
@@ -1369,8 +1366,8 @@ abstract public class ReferenceBinding extends TypeBinding
    }
 
    /**
-    * Returns true if the type hierarchy is being connected "actively" i.e not paused momentatrily, 
-    * while resolving type arguments. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=294057
+    * Returns true if the type hierarchy is being connected "actively" i.e not paused momentatrily, while resolving type
+    * arguments. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=294057
     */
    public boolean isHierarchyBeingActivelyConnected()
    {
@@ -1451,8 +1448,7 @@ abstract public class ReferenceBinding extends TypeBinding
    }
 
    /**
-    * Answer true if the receiver is in the superclass hierarchy of aType
-    * NOTE: Object.isSuperclassOf(Object) -> false
+    * Answer true if the receiver is in the superclass hierarchy of aType NOTE: Object.isSuperclassOf(Object) -> false
     */
    public boolean isSuperclassOf(ReferenceBinding otherType)
    {
@@ -1486,11 +1482,11 @@ abstract public class ReferenceBinding extends TypeBinding
    }
 
    /**
-    * JLS 11.5 ensures that Throwable, Exception, RuntimeException and Error are directly connected.
-    * (Throwable<- Exception <- RumtimeException, Throwable <- Error). Thus no need to check #isCompatibleWith
-    * but rather check in type IDs so as to avoid some eager class loading for JCL writers.
-    * When 'includeSupertype' is true, answers true if the given type can be a supertype of some unchecked exception
-    * type (i.e. Throwable or Exception).
+    * JLS 11.5 ensures that Throwable, Exception, RuntimeException and Error are directly connected. (Throwable<- Exception <-
+    * RumtimeException, Throwable <- Error). Thus no need to check #isCompatibleWith but rather check in type IDs so as to avoid
+    * some eager class loading for JCL writers. When 'includeSupertype' is true, answers true if the given type can be a supertype
+    * of some unchecked exception type (i.e. Throwable or Exception).
+    * 
     * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#isUncheckedException(boolean)
     */
    public boolean isUncheckedException(boolean includeSupertype)
@@ -1559,9 +1555,8 @@ abstract public class ReferenceBinding extends TypeBinding
    }
 
    /**
-    * Answer the source name for the type.
-    * In the case of member types, as the qualified name from its top level type.
-    * For example, for a member type N defined inside M & A: "A.M.N".
+    * Answer the source name for the type. In the case of member types, as the qualified name from its top level type. For
+    * example, for a member type N defined inside M & A: "A.M.N".
     */
    public char[] qualifiedSourceName()
    {
@@ -1572,10 +1567,10 @@ abstract public class ReferenceBinding extends TypeBinding
 
    /**
     * Answer the receiver's signature.
-    *
+    * 
     * NOTE: This method should only be used during/after code gen.
     */
-   public char[] readableName() /*java.lang.Object,  p.X<T> */
+   public char[] readableName() /* java.lang.Object, p.X<T> */
    {
       char[] readableName;
       if (isMemberType())
@@ -1622,7 +1617,7 @@ abstract public class ReferenceBinding extends TypeBinding
       storeAnnotations(this, annotations);
    }
 
-   public char[] shortReadableName() /*Object*/
+   public char[] shortReadableName() /* Object */
    {
       char[] shortReadableName;
       if (isMemberType())

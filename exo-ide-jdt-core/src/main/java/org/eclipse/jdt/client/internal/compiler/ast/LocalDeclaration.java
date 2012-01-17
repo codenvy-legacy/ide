@@ -108,68 +108,68 @@ public class LocalDeclaration extends AbstractVariableDeclaration
    public void checkModifiers()
    {
 
-      //only potential valid modifier is <<final>>
+      // only potential valid modifier is <<final>>
       if (((this.modifiers & ExtraCompilerModifiers.AccJustFlag) & ~ClassFileConstants.AccFinal) != 0)
-         //AccModifierProblem -> other (non-visibility problem)
-         //AccAlternateModifierProblem -> duplicate modifier
-         //AccModifierProblem | AccAlternateModifierProblem -> visibility problem"
+         // AccModifierProblem -> other (non-visibility problem)
+         // AccAlternateModifierProblem -> duplicate modifier
+         // AccModifierProblem | AccAlternateModifierProblem -> visibility problem"
 
          this.modifiers =
             (this.modifiers & ~ExtraCompilerModifiers.AccAlternateModifierProblem)
                | ExtraCompilerModifiers.AccModifierProblem;
    }
 
-   //   /**
-   //    * Code generation for a local declaration:
-   //    *	i.e.&nbsp;normal assignment to a local variable + unused variable handling
-   //    */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-   //   {
+   // /**
+   // * Code generation for a local declaration:
+   // * i.e.&nbsp;normal assignment to a local variable + unused variable handling
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   // {
    //
-   //      // even if not reachable, variable must be added to visible if allocated (28298)
-   //      if (this.binding.resolvedPosition != -1)
-   //      {
-   //         codeStream.addVisibleLocalVariable(this.binding);
-   //      }
-   //      if ((this.bits & IsReachable) == 0)
-   //      {
-   //         return;
-   //      }
-   //      int pc = codeStream.position;
+   // // even if not reachable, variable must be added to visible if allocated (28298)
+   // if (this.binding.resolvedPosition != -1)
+   // {
+   // codeStream.addVisibleLocalVariable(this.binding);
+   // }
+   // if ((this.bits & IsReachable) == 0)
+   // {
+   // return;
+   // }
+   // int pc = codeStream.position;
    //
-   //      // something to initialize?
-   //      generateInit :
-   //      {
-   //         if (this.initialization == null)
-   //            break generateInit;
-   //         // forget initializing unused or final locals set to constant value (final ones are inlined)
-   //         if (this.binding.resolvedPosition < 0)
-   //         {
-   //            if (this.initialization.constant != Constant.NotAConstant)
-   //               break generateInit;
-   //            // if binding unused generate then discard the value
-   //            this.initialization.generateCode(currentScope, codeStream, false);
-   //            break generateInit;
-   //         }
-   //         this.initialization.generateCode(currentScope, codeStream, true);
-   //         // 26903, need extra cast to store null in array local var
-   //         if (this.binding.type.isArrayType() && (this.initialization.resolvedType == TypeBinding.NULL // arrayLoc = null
-   //            || ((this.initialization instanceof CastExpression) // arrayLoc = (type[])null
-   //            && (((CastExpression)this.initialization).innermostCastedExpression().resolvedType == TypeBinding.NULL))))
-   //         {
-   //            codeStream.checkcast(this.binding.type);
-   //         }
-   //         codeStream.store(this.binding, false);
-   //         if ((this.bits & ASTNode.FirstAssignmentToLocal) != 0)
-   //         {
-   //            /* Variable may have been initialized during the code initializing it
-   //            	e.g. int i = (i = 1);
-   //            */
-   //            this.binding.recordInitializationStartPC(codeStream.position);
-   //         }
-   //      }
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // // something to initialize?
+   // generateInit :
+   // {
+   // if (this.initialization == null)
+   // break generateInit;
+   // // forget initializing unused or final locals set to constant value (final ones are inlined)
+   // if (this.binding.resolvedPosition < 0)
+   // {
+   // if (this.initialization.constant != Constant.NotAConstant)
+   // break generateInit;
+   // // if binding unused generate then discard the value
+   // this.initialization.generateCode(currentScope, codeStream, false);
+   // break generateInit;
+   // }
+   // this.initialization.generateCode(currentScope, codeStream, true);
+   // // 26903, need extra cast to store null in array local var
+   // if (this.binding.type.isArrayType() && (this.initialization.resolvedType == TypeBinding.NULL // arrayLoc = null
+   // || ((this.initialization instanceof CastExpression) // arrayLoc = (type[])null
+   // && (((CastExpression)this.initialization).innermostCastedExpression().resolvedType == TypeBinding.NULL))))
+   // {
+   // codeStream.checkcast(this.binding.type);
+   // }
+   // codeStream.store(this.binding, false);
+   // if ((this.bits & ASTNode.FirstAssignmentToLocal) != 0)
+   // {
+   // /* Variable may have been initialized during the code initializing it
+   // e.g. int i = (i = 1);
+   // */
+   // this.binding.recordInitializationStartPC(codeStream.position);
+   // }
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    /**
     * @see org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration#getKind()
@@ -183,7 +183,7 @@ public class LocalDeclaration extends AbstractVariableDeclaration
    {
 
       // create a binding and add it to the scope
-      TypeBinding variableType = this.type.resolveType(scope, true /* check bounds*/);
+      TypeBinding variableType = this.type.resolveType(scope, true /* check bounds */);
 
       checkModifiers();
       if (variableType != null)
@@ -201,7 +201,7 @@ public class LocalDeclaration extends AbstractVariableDeclaration
       }
 
       Binding existingVariable =
-         scope.getBinding(this.name, Binding.VARIABLE, this, false /*do not resolve hidden field*/);
+         scope.getBinding(this.name, Binding.VARIABLE, this, false /* do not resolve hidden field */);
       if (existingVariable != null && existingVariable.isValidBinding())
       {
          if (existingVariable instanceof LocalVariableBinding && this.hiddenVariableDepth == 0)

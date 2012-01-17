@@ -77,8 +77,9 @@ public class RecoveredBlock extends RecoveredStatement implements TerminalTokens
    {
       resetPendingModifiers();
 
-      /* do not consider a nested block starting passed the block end (if set)
-      	it must be belonging to an enclosing block */
+      /*
+       * do not consider a nested block starting passed the block end (if set) it must be belonging to an enclosing block
+       */
       if (this.blockDeclaration.sourceEnd != 0 && nestedBlockDeclaration.sourceStart > this.blockDeclaration.sourceEnd)
       {
          return this.parent.add(nestedBlockDeclaration, bracketBalanceValue);
@@ -118,28 +119,23 @@ public class RecoveredBlock extends RecoveredStatement implements TerminalTokens
 
       /* local variables inside method can only be final and non void */
       /*
-      	char[][] localTypeName;
-      	if ((localDeclaration.modifiers & ~AccFinal) != 0 // local var can only be final
-      		|| (localDeclaration.type == null) // initializer
-      		|| ((localTypeName = localDeclaration.type.getTypeName()).length == 1 // non void
-      			&& CharOperation.equals(localTypeName[0], VoidBinding.sourceName()))){
-
-      		if (delegatedByParent){
-      			return this; //ignore
-      		} else {
-      			this.updateSourceEndIfNecessary(this.previousAvailableLineEnd(localDeclaration.declarationSourceStart - 1));
-      			return this.parent.add(localDeclaration, bracketBalance);
-      		}
-      	}
-      */
-      /* do not consider a local variable starting passed the block end (if set)
-      it must be belonging to an enclosing block */
+       * char[][] localTypeName; if ((localDeclaration.modifiers & ~AccFinal) != 0 // local var can only be final ||
+       * (localDeclaration.type == null) // initializer || ((localTypeName = localDeclaration.type.getTypeName()).length == 1 //
+       * non void && CharOperation.equals(localTypeName[0], VoidBinding.sourceName()))){
+       * 
+       * if (delegatedByParent){ return this; //ignore } else {
+       * this.updateSourceEndIfNecessary(this.previousAvailableLineEnd(localDeclaration.declarationSourceStart - 1)); return
+       * this.parent.add(localDeclaration, bracketBalance); } }
+       */
+      /*
+       * do not consider a local variable starting passed the block end (if set) it must be belonging to an enclosing block
+       */
       if (this.blockDeclaration.sourceEnd != 0
          && localDeclaration.declarationSourceStart > this.blockDeclaration.sourceEnd)
       {
          resetPendingModifiers();
          if (delegatedByParent)
-            return this; //ignore
+            return this; // ignore
          return this.parent.add(localDeclaration, bracketBalanceValue);
       }
 
@@ -179,12 +175,13 @@ public class RecoveredBlock extends RecoveredStatement implements TerminalTokens
    {
       resetPendingModifiers();
 
-      /* do not consider a nested block starting passed the block end (if set)
-      	it must be belonging to an enclosing block */
+      /*
+       * do not consider a nested block starting passed the block end (if set) it must be belonging to an enclosing block
+       */
       if (this.blockDeclaration.sourceEnd != 0 && stmt.sourceStart > this.blockDeclaration.sourceEnd)
       {
          if (delegatedByParent)
-            return this; //ignore
+            return this; // ignore
          return this.parent.add(stmt, bracketBalanceValue);
       }
 
@@ -209,14 +206,15 @@ public class RecoveredBlock extends RecoveredStatement implements TerminalTokens
    public RecoveredElement add(TypeDeclaration typeDeclaration, int bracketBalanceValue, boolean delegatedByParent)
    {
 
-      /* do not consider a type starting passed the block end (if set)
-      	it must be belonging to an enclosing block */
+      /*
+       * do not consider a type starting passed the block end (if set) it must be belonging to an enclosing block
+       */
       if (this.blockDeclaration.sourceEnd != 0
          && typeDeclaration.declarationSourceStart > this.blockDeclaration.sourceEnd)
       {
          resetPendingModifiers();
          if (delegatedByParent)
-            return this; //ignore
+            return this; // ignore
          return this.parent.add(typeDeclaration, bracketBalanceValue);
       }
 
@@ -466,8 +464,7 @@ public class RecoveredBlock extends RecoveredStatement implements TerminalTokens
    }
 
    /*
-    * A closing brace got consumed, might have closed the current element,
-    * in which case both the currentElement is exited
+    * A closing brace got consumed, might have closed the current element, in which case both the currentElement is exited
     */
    public RecoveredElement updateOnClosingBrace(int braceStart, int braceEnd)
    {
@@ -492,8 +489,8 @@ public class RecoveredBlock extends RecoveredStatement implements TerminalTokens
    }
 
    /*
-    * An opening brace got consumed, might be the expected opening one of the current element,
-    * in which case the bodyStart is updated.
+    * An opening brace got consumed, might be the expected opening one of the current element, in which case the bodyStart is
+    * updated.
     */
    public RecoveredElement updateOnOpeningBrace(int braceStart, int braceEnd)
    {
@@ -570,8 +567,9 @@ public class RecoveredBlock extends RecoveredStatement implements TerminalTokens
          return this.parent.add(fieldDeclaration, bracketBalanceValue);
       }
 
-      /* do not consider a local variable starting passed the block end (if set)
-      	it must be belonging to an enclosing block */
+      /*
+       * do not consider a local variable starting passed the block end (if set) it must be belonging to an enclosing block
+       */
       if (this.blockDeclaration.sourceEnd != 0
          && fieldDeclaration.declarationSourceStart > this.blockDeclaration.sourceEnd)
       {

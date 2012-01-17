@@ -43,44 +43,43 @@ public class ProblemReferenceBinding extends ReferenceBinding
       return this.closestMatch;
    }
 
-   /* API
-   * Answer the problem id associated with the receiver.
-   * NoError if the receiver is a valid binding.
-   */
+   /*
+    * API Answer the problem id associated with the receiver. NoError if the receiver is a valid binding.
+    */
    public int problemId()
    {
       return this.problemReason;
    }
 
-   //   public static String problemReasonString(int problemReason)
-   //   {
-   //      
-   //         
-   //         String simpleName =  ProblemReasons.class.getSimpleName();
+   // public static String problemReasonString(int problemReason)
+   // {
    //
-   //         switch (problemReason)
-   //         {
-   //            case ProblemReasons.Ambiguous :
-   //                 return simpleName + '.' + "Ambiguous";
-   //                 
-   //           
-   //             default :
+   //
+   // String simpleName = ProblemReasons.class.getSimpleName();
+   //
+   // switch (problemReason)
+   // {
+   // case ProblemReasons.Ambiguous :
+   // return simpleName + '.' + "Ambiguous";
+   //
+   //
+   // default :
    //             return "unknown"; //$NON-NLS-1$        
-   //         }
-   ////         Field[] fields = reasons.getFields();
-   ////         for (int i = 0, length = fields.length; i < length; i++)
-   ////         {
-   ////            Field field = fields[i];
-   ////            if (!field.getType().equals(int.class))
-   ////               continue;
-   ////            if (field.getInt(reasons) == problemReason)
-   ////            {
-   ////               return simpleName + '.' + field.getName();
-   ////            }
-   ////         }
-   //      
-   //      
-   //   }
+   // }
+   // // Field[] fields = reasons.getFields();
+   // // for (int i = 0, length = fields.length; i < length; i++)
+   // // {
+   // // Field field = fields[i];
+   // // if (!field.getType().equals(int.class))
+   // // continue;
+   // // if (field.getInt(reasons) == problemReason)
+   // // {
+   // // return simpleName + '.' + field.getName();
+   // // }
+   // // }
+   //
+   //
+   // }
 
    /**
     * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#shortReadableName()

@@ -29,6 +29,7 @@ public interface IProblemFactory
 
    /**
     * Answer a new IProblem created according to the parameters values.
+    * 
     * @param originatingFileName the name of the file from which the problem is originated
     * @param problemId the problem id
     * @param problemArguments the fully qualified arguments recorded inside the problem
@@ -47,20 +48,15 @@ public interface IProblemFactory
    String getLocalizedMessage(int problemId, String[] messageArguments);
 
    /**
-    * Inject the supplied message arguments into a localized template
-    * elaborated from the supplied problem id and an optional elaboration id
-    * and return the resulting message. The arguments number should match the
-    * highest placeholder index in the template. When an elaboration id is
-    * used, the template matching that elaboration id replaces '{0}' into the
-    * template matching the problem id before the message arguments are
-    * injected.
-    * @param problemId the problem id taken from
-    *        {@link org.eclipse.jdt.client.core.compiler.IProblem} constants
-    * @param elaborationId 0 if the considered problem has no elaboration, a
-    *        valid elaboration id else
+    * Inject the supplied message arguments into a localized template elaborated from the supplied problem id and an optional
+    * elaboration id and return the resulting message. The arguments number should match the highest placeholder index in the
+    * template. When an elaboration id is used, the template matching that elaboration id replaces '{0}' into the template
+    * matching the problem id before the message arguments are injected.
+    * 
+    * @param problemId the problem id taken from {@link org.eclipse.jdt.client.core.compiler.IProblem} constants
+    * @param elaborationId 0 if the considered problem has no elaboration, a valid elaboration id else
     * @param messageArguments the arguments to inject into the template
-    * @return a localized message elaborated from the supplied problem id,
-    *         elaboration id and message parameters
+    * @return a localized message elaborated from the supplied problem id, elaboration id and message parameters
     */
    String getLocalizedMessage(int problemId, int elaborationId, String[] messageArguments);
 }

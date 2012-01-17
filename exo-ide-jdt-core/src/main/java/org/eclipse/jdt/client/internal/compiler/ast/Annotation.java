@@ -33,7 +33,7 @@ public abstract class Annotation extends Expression
    public TypeReference type;
 
    /**
-    *  The representation of this annotation in the type system.
+    * The representation of this annotation in the type system.
     */
    private AnnotationBinding compilerAnnotation = null;
 
@@ -405,7 +405,7 @@ public abstract class Annotation extends Expression
             pairs[i].resolveTypeExpecting(scope, null); // resilient
          }
       }
-      //		if (scope.compilerOptions().storeAnnotations)
+      // if (scope.compilerOptions().storeAnnotations)
       this.compilerAnnotation =
          scope.environment().createAnnotation((ReferenceBinding)this.resolvedType, computeElementValuePairs());
       // recognize standard annotations ?

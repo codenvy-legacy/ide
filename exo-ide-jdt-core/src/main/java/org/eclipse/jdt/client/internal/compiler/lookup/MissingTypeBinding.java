@@ -21,6 +21,7 @@ public class MissingTypeBinding extends BinaryTypeBinding
 
    /**
     * Special constructor for constructing proxies of missing types (114349)
+    * 
     * @param packageBinding
     * @param compoundName
     * @param environment
@@ -62,6 +63,7 @@ public class MissingTypeBinding extends BinaryTypeBinding
 
    /**
     * Missing binary type will answer <code>false</code> to #isValidBinding()
+    * 
     * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#problemId()
     */
    public int problemId()
@@ -71,6 +73,7 @@ public class MissingTypeBinding extends BinaryTypeBinding
 
    /**
     * Only used to fixup the superclass hierarchy of proxy binary types
+    * 
     * @param missingSuperclass
     * @see LookupEnvironment#createMissingType(PackageBinding, char[][])
     */

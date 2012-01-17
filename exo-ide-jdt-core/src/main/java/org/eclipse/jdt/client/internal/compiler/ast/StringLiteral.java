@@ -45,36 +45,36 @@ public class StringLiteral extends Literal
    public ExtendedStringLiteral extendWith(CharLiteral lit)
    {
 
-      //add the lit source to mine, just as if it was mine
+      // add the lit source to mine, just as if it was mine
       return new ExtendedStringLiteral(this, lit);
    }
 
    public ExtendedStringLiteral extendWith(StringLiteral lit)
    {
 
-      //add the lit source to mine, just as if it was mine
+      // add the lit source to mine, just as if it was mine
       return new ExtendedStringLiteral(this, lit);
    }
 
    /**
-    *  Add the lit source to mine, just as if it was mine
+    * Add the lit source to mine, just as if it was mine
     */
    public StringLiteralConcatenation extendsWith(StringLiteral lit)
    {
       return new StringLiteralConcatenation(this, lit);
    }
 
-   //   /**
-   //    * Code generation for string literal
-   //    */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   //   {
+   // /**
+   // * Code generation for string literal
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   // {
    //
-   //      int pc = codeStream.position;
-   //      if (valueRequired)
-   //         codeStream.ldc(this.constant.stringValue());
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // int pc = codeStream.position;
+   // if (valueRequired)
+   // codeStream.ldc(this.constant.stringValue());
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    public TypeBinding literalType(BlockScope scope)
    {
@@ -112,7 +112,7 @@ public class StringLiteral extends Literal
             case '\'' :
                output.append("\\'"); //$NON-NLS-1$
                break;
-            case '\\' : //take care not to display the escape as a potential real char
+            case '\\' : // take care not to display the escape as a potential real char
                output.append("\\\\"); //$NON-NLS-1$
                break;
             default :

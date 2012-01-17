@@ -24,24 +24,21 @@ public interface ISourceType extends IGenericType
    int getDeclarationSourceStart();
 
    /**
-    * Answer the enclosing type
-    * or null if the receiver is a top level type.
+    * Answer the enclosing type or null if the receiver is a top level type.
     */
    ISourceType getEnclosingType();
 
    /**
     * Answer the receiver's fields.
-    *
+    * 
     * NOTE: Multiple fields with the same name can exist in the result.
     */
    ISourceField[] getFields();
 
    /**
-    * Answer the unresolved names of the receiver's interfaces
-    * or null if the array is empty.
-    *
-    * A name is a simple name or a qualified, dot separated name.
-    * For example, Hashtable or java.util.Hashtable.
+    * Answer the unresolved names of the receiver's interfaces or null if the array is empty.
+    * 
+    * A name is a simple name or a qualified, dot separated name. For example, Hashtable or java.util.Hashtable.
     */
    char[][] getInterfaceNames();
 
@@ -52,7 +49,7 @@ public interface ISourceType extends IGenericType
 
    /**
     * Answer the receiver's methods.
-    *
+    * 
     * NOTE: Multiple methods with the same name & parameter types can exist in the result.
     */
    ISourceMethod[] getMethods();
@@ -73,11 +70,9 @@ public interface ISourceType extends IGenericType
    int getNameSourceStart();
 
    /**
-    * Answer the unresolved name of the receiver's superclass
-    * or null if it does not have one.
-    *
-    * The name is a simple name or a qualified, dot separated name.
-    * For example, Hashtable or java.util.Hashtable.
+    * Answer the unresolved name of the receiver's superclass or null if it does not have one.
+    * 
+    * The name is a simple name or a qualified, dot separated name. For example, Hashtable or java.util.Hashtable.
     */
    char[] getSuperclassName();
 

@@ -143,6 +143,7 @@ class TypeBinding implements ITypeBinding
 
    /*
     * @see ITypeBinding#getBinaryName()
+    * 
     * @since 3.0
     */
    public String getBinaryName()
@@ -184,7 +185,9 @@ class TypeBinding implements ITypeBinding
       return new String(dotSeparated);
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getBound()
     */
    public ITypeBinding getBound()
@@ -203,7 +206,9 @@ class TypeBinding implements ITypeBinding
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getGenericTypeOfWildcardType()
     */
    public ITypeBinding getGenericTypeOfWildcardType()
@@ -221,7 +226,9 @@ class TypeBinding implements ITypeBinding
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getRank()
     */
    public int getRank()
@@ -295,9 +302,9 @@ class TypeBinding implements ITypeBinding
       }
       catch (RuntimeException e)
       {
-         /* in case a method cannot be resolvable due to missing jars on the classpath
-          * see https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871
-          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
+         /*
+          * in case a method cannot be resolvable due to missing jars on the classpath see
+          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871 https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
           * https://bugs.eclipse.org/bugs/show_bug.cgi?id=64299
           */
          org.eclipse.jdt.client.internal.core.util.Util.log(e, "Could not retrieve declared fields"); //$NON-NLS-1$
@@ -355,9 +362,9 @@ class TypeBinding implements ITypeBinding
       }
       catch (RuntimeException e)
       {
-         /* in case a method cannot be resolvable due to missing jars on the classpath
-          * see https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871
-          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
+         /*
+          * in case a method cannot be resolvable due to missing jars on the classpath see
+          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871 https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
           * https://bugs.eclipse.org/bugs/show_bug.cgi?id=64299
           */
          org.eclipse.jdt.client.internal.core.util.Util.log(e, "Could not retrieve declared methods"); //$NON-NLS-1$
@@ -407,9 +414,9 @@ class TypeBinding implements ITypeBinding
       }
       catch (RuntimeException e)
       {
-         /* in case a method cannot be resolvable due to missing jars on the classpath
-          * see https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871
-          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
+         /*
+          * in case a method cannot be resolvable due to missing jars on the classpath see
+          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871 https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
           * https://bugs.eclipse.org/bugs/show_bug.cgi?id=64299
           */
          org.eclipse.jdt.client.internal.core.util.Util.log(e, "Could not retrieve declared methods"); //$NON-NLS-1$
@@ -434,9 +441,9 @@ class TypeBinding implements ITypeBinding
             }
             catch (RuntimeException e)
             {
-               /* in case a method cannot be resolvable due to missing jars on the classpath
-                * see https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871
-                * https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
+               /*
+                * in case a method cannot be resolvable due to missing jars on the classpath see
+                * https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871 https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
                 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=64299
                 */
                org.eclipse.jdt.client.internal.core.util.Util.log(e, "Could not retrieve declaring method"); //$NON-NLS-1$
@@ -455,9 +462,9 @@ class TypeBinding implements ITypeBinding
             }
             catch (RuntimeException e)
             {
-               /* in case a method cannot be resolvable due to missing jars on the classpath
-                * see https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871
-                * https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
+               /*
+                * in case a method cannot be resolvable due to missing jars on the classpath see
+                * https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871 https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
                 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=64299
                 */
                org.eclipse.jdt.client.internal.core.util.Util.log(e, "Could not retrieve declaring method"); //$NON-NLS-1$
@@ -483,9 +490,9 @@ class TypeBinding implements ITypeBinding
             }
             catch (RuntimeException e)
             {
-               /* in case a method cannot be resolvable due to missing jars on the classpath
-                * see https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871
-                * https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
+               /*
+                * in case a method cannot be resolvable due to missing jars on the classpath see
+                * https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871 https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
                 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=64299
                 */
                org.eclipse.jdt.client.internal.core.util.Util.log(e, "Could not retrieve declaring class"); //$NON-NLS-1$
@@ -506,9 +513,9 @@ class TypeBinding implements ITypeBinding
             }
             catch (RuntimeException e)
             {
-               /* in case a method cannot be resolvable due to missing jars on the classpath
-                * see https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871
-                * https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
+               /*
+                * in case a method cannot be resolvable due to missing jars on the classpath see
+                * https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871 https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
                 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=64299
                 */
                org.eclipse.jdt.client.internal.core.util.Util.log(e, "Could not retrieve declaring class"); //$NON-NLS-1$
@@ -544,7 +551,9 @@ class TypeBinding implements ITypeBinding
       return this.resolver.getTypeBinding(arrayBinding.leafComponentType);
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getTypeDeclaration()
     */
    public ITypeBinding getTypeDeclaration()
@@ -554,7 +563,9 @@ class TypeBinding implements ITypeBinding
       return this;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getErasure()
     */
    public ITypeBinding getErasure()
@@ -584,9 +595,9 @@ class TypeBinding implements ITypeBinding
       }
       catch (RuntimeException e)
       {
-         /* in case a method cannot be resolvable due to missing jars on the classpath
-          * see https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871
-          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
+         /*
+          * in case a method cannot be resolvable due to missing jars on the classpath see
+          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871 https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
           * https://bugs.eclipse.org/bugs/show_bug.cgi?id=64299
           */
          org.eclipse.jdt.client.internal.core.util.Util.log(e, "Could not retrieve interfaces"); //$NON-NLS-1$
@@ -615,38 +626,39 @@ class TypeBinding implements ITypeBinding
       return this.interfaces = NO_TYPE_BINDINGS;
    }
 
-   //	public IJavaElement getJavaElement() {
-   //		JavaElement element = getUnresolvedJavaElement();
-   //		if (element != null)
-   //			return element.resolved(this.binding);
-   //		if (isRecovered()) {
-   //			IPackageBinding packageBinding = getPackage();
-   //			if (packageBinding != null) {
-   //				final IJavaElement javaElement = packageBinding.getJavaElement();
-   //				if (javaElement != null && javaElement.getElementType() == IJavaElement.PACKAGE_FRAGMENT) {
-   //					// best effort: we don't know if the recovered binding is a binary or source binding, so go with a simple source type
-   ////				   TODO
-   ////					return ((PackageFragment) javaElement).getCompilationUnit(new String(this.binding.sourceName()) + SuffixConstants.SUFFIX_STRING_java).getType(this.getName());
-   //				}
-   //			}
-   //			return null;
-   //		}
-   //		return null;
-   //	}
+   // public IJavaElement getJavaElement() {
+   // JavaElement element = getUnresolvedJavaElement();
+   // if (element != null)
+   // return element.resolved(this.binding);
+   // if (isRecovered()) {
+   // IPackageBinding packageBinding = getPackage();
+   // if (packageBinding != null) {
+   // final IJavaElement javaElement = packageBinding.getJavaElement();
+   // if (javaElement != null && javaElement.getElementType() == IJavaElement.PACKAGE_FRAGMENT) {
+   // // best effort: we don't know if the recovered binding is a binary or source binding, so go with a simple source type
+   // // TODO
+   // // return ((PackageFragment) javaElement).getCompilationUnit(new String(this.binding.sourceName()) +
+   // SuffixConstants.SUFFIX_STRING_java).getType(this.getName());
+   // }
+   // }
+   // return null;
+   // }
+   // return null;
+   // }
 
-   //	private JavaElement getUnresolvedJavaElement() {
-   //		return getUnresolvedJavaElement(this.binding);
-   //	}
-   //	private JavaElement getUnresolvedJavaElement(org.eclipse.jdt.internal.compiler.lookup.TypeBinding typeBinding ) {
-   //		if (this.resolver instanceof DefaultBindingResolver) {
-   //			DefaultBindingResolver defaultBindingResolver = (DefaultBindingResolver) this.resolver;
-   //			if (!defaultBindingResolver.fromJavaProject) return null;
-   //			return org.eclipse.jdt.internal.core.util.Util.getUnresolvedJavaElement(
-   //					typeBinding,
-   //					defaultBindingResolver.getBindingsToNodesMap());
-   //		}
-   //		return null;
-   //	}
+   // private JavaElement getUnresolvedJavaElement() {
+   // return getUnresolvedJavaElement(this.binding);
+   // }
+   // private JavaElement getUnresolvedJavaElement(org.eclipse.jdt.internal.compiler.lookup.TypeBinding typeBinding ) {
+   // if (this.resolver instanceof DefaultBindingResolver) {
+   // DefaultBindingResolver defaultBindingResolver = (DefaultBindingResolver) this.resolver;
+   // if (!defaultBindingResolver.fromJavaProject) return null;
+   // return org.eclipse.jdt.internal.core.util.Util.getUnresolvedJavaElement(
+   // typeBinding,
+   // defaultBindingResolver.getBindingsToNodesMap());
+   // }
+   // return null;
+   // }
 
    /*
     * @see IBinding#getKey()
@@ -971,9 +983,9 @@ class TypeBinding implements ITypeBinding
       }
       catch (RuntimeException e)
       {
-         /* in case a method cannot be resolvable due to missing jars on the classpath
-          * see https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871
-          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
+         /*
+          * in case a method cannot be resolvable due to missing jars on the classpath see
+          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871 https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
           * https://bugs.eclipse.org/bugs/show_bug.cgi?id=64299
           */
          org.eclipse.jdt.client.internal.core.util.Util.log(e, "Could not retrieve superclass"); //$NON-NLS-1$
@@ -986,7 +998,9 @@ class TypeBinding implements ITypeBinding
       return this.resolver.getTypeBinding(superclass);
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getTypeArguments()
     */
    public ITypeBinding[] getTypeArguments()
@@ -1016,7 +1030,9 @@ class TypeBinding implements ITypeBinding
       return this.typeArguments = NO_TYPE_BINDINGS;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getTypeBounds()
     */
    public ITypeBinding[] getTypeBounds()
@@ -1085,7 +1101,9 @@ class TypeBinding implements ITypeBinding
       return this.bounds = NO_TYPE_BINDINGS;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getTypeParameters()
     */
    public ITypeBinding[] getTypeParameters()
@@ -1119,8 +1137,11 @@ class TypeBinding implements ITypeBinding
       return this.typeParameters = NO_TYPE_BINDINGS;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getWildcard()
+    * 
     * @since 3.1
     */
    public ITypeBinding getWildcard()
@@ -1133,8 +1154,11 @@ class TypeBinding implements ITypeBinding
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isGenericType()
+    * 
     * @since 3.1
     */
    public boolean isGenericType()
@@ -1148,7 +1172,9 @@ class TypeBinding implements ITypeBinding
       return (typeVariableBindings != null && typeVariableBindings.length > 0);
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isAnnotation()
     */
    public boolean isAnnotation()
@@ -1177,7 +1203,9 @@ class TypeBinding implements ITypeBinding
       return this.binding.isArrayType();
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see ITypeBinding#isAssignmentCompatible(ITypeBinding)
     */
    public boolean isAssignmentCompatible(ITypeBinding type)
@@ -1203,7 +1231,9 @@ class TypeBinding implements ITypeBinding
       }
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see ITypeBinding#isCapture()
     */
    public boolean isCapture()
@@ -1211,7 +1241,9 @@ class TypeBinding implements ITypeBinding
       return this.binding.isCapture();
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see ITypeBinding#isCastCompatible(ITypeBinding)
     */
    public boolean isCastCompatible(ITypeBinding type)
@@ -1264,7 +1296,9 @@ class TypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see ITypeBinding#isEnum()
     */
    public boolean isEnum()
@@ -1274,6 +1308,7 @@ class TypeBinding implements ITypeBinding
 
    /*
     * @see IBinding#isEqualTo(Binding)
+    * 
     * @since 3.1
     */
    public boolean isEqualTo(IBinding other)
@@ -1424,7 +1459,9 @@ class TypeBinding implements ITypeBinding
       return this.binding == org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding.NULL;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isParameterizedType()
     */
    public boolean isParameterizedType()
@@ -1440,7 +1477,9 @@ class TypeBinding implements ITypeBinding
       return !isNullType() && this.binding.isBaseType();
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isRawType()
     */
    public boolean isRawType()
@@ -1448,7 +1487,9 @@ class TypeBinding implements ITypeBinding
       return this.binding.isRawType();
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see IBinding#isRecovered()
     */
    public boolean isRecovered()
@@ -1456,7 +1497,9 @@ class TypeBinding implements ITypeBinding
       return (this.binding.tagBits & TagBits.HasMissingType) != 0;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see ITypeBinding#isSubTypeCompatible(ITypeBinding)
     */
    public boolean isSubTypeCompatible(ITypeBinding type)
@@ -1511,7 +1554,9 @@ class TypeBinding implements ITypeBinding
       return this.binding.isTypeVariable() && !this.binding.isCapture();
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isUpperbound()
     */
    public boolean isUpperbound()
@@ -1526,7 +1571,9 @@ class TypeBinding implements ITypeBinding
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isWildcardType()
     */
    public boolean isWildcardType()
@@ -1536,6 +1583,7 @@ class TypeBinding implements ITypeBinding
 
    /*
     * For debugging purpose only.
+    * 
     * @see java.lang.Object#toString()
     */
    public String toString()

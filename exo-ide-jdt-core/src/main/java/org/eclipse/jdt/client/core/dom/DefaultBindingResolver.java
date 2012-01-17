@@ -66,13 +66,11 @@ import org.eclipse.jdt.client.internal.core.util.Util;
 /**
  * Internal class for resolving bindings using old ASTs.
  * <p>
- * IMPORTANT: The methods on this class are synchronized. This is required
- * because there may be multiple clients in separate threads concurrently
- * reading an AST and asking for bindings for its nodes. These requests all
- * end up invoking instance methods on this class. There are various internal
- * tables and caches which are built and maintained in the course of looking
- * up bindings. To ensure that they remain coherent in the presence of multiple
- * threads, the methods are synchronized on the DefaultBindingResolver instance.
+ * IMPORTANT: The methods on this class are synchronized. This is required because there may be multiple clients in separate
+ * threads concurrently reading an AST and asking for bindings for its nodes. These requests all end up invoking instance methods
+ * on this class. There are various internal tables and caches which are built and maintained in the course of looking up
+ * bindings. To ensure that they remain coherent in the presence of multiple threads, the methods are synchronized on the
+ * DefaultBindingResolver instance.
  * </p>
  */
 class DefaultBindingResolver extends BindingResolver
@@ -90,9 +88,9 @@ class DefaultBindingResolver extends BindingResolver
       Map bindingKeysToBindings;
 
       /**
-       * This map is used to keep the correspondance between new bindings and the
-       * compiler bindings as well as new annotation instances to their internal counterpart.
-       * This is an identity map. We should only create one object for one binding or annotation.
+       * This map is used to keep the correspondance between new bindings and the compiler bindings as well as new annotation
+       * instances to their internal counterpart. This is an identity map. We should only create one object for one binding or
+       * annotation.
        */
       Map compilerBindingsToASTBindings;
 
@@ -120,11 +118,10 @@ class DefaultBindingResolver extends BindingResolver
    BindingTables bindingTables;
 
    /**
-    * This map is used to retrieve an old ast node using the new ast node. This is not an
-    * identity map, as several nested DOM nodes may be associated with the same "larger"
-    * compiler AST node.
-    * E.g., an ArrayAllocationExpression "new MyType[1]" will appear as the right-hand value
-    * for the SimpleType "MyType", the ArrayType "MyType[1]", and the ArrayCreation "new MyType[1]".
+    * This map is used to retrieve an old ast node using the new ast node. This is not an identity map, as several nested DOM
+    * nodes may be associated with the same "larger" compiler AST node. E.g., an ArrayAllocationExpression "new MyType[1]" will
+    * appear as the right-hand value for the SimpleType "MyType", the ArrayType "MyType[1]", and the ArrayCreation
+    * "new MyType[1]".
     */
    Map newAstToOldAst;
 
@@ -329,13 +326,11 @@ class DefaultBindingResolver extends BindingResolver
    }
 
    /**
-    * Returns the new type binding corresponding to the given variable declaration.
-    * This is used for recovered binding only.
+    * Returns the new type binding corresponding to the given variable declaration. This is used for recovered binding only.
     * <p>
-    * The default implementation of this method returns <code>null</code>.
-    * Subclasses may reimplement.
+    * The default implementation of this method returns <code>null</code>. Subclasses may reimplement.
     * </p>
-    *
+    * 
     * @param variableDeclaration the given variable declaration
     * @return the new type binding
     */
@@ -352,13 +347,11 @@ class DefaultBindingResolver extends BindingResolver
    }
 
    /**
-    * Returns the new type binding corresponding to the given type.
-    * This is used for recovered binding only.
+    * Returns the new type binding corresponding to the given type. This is used for recovered binding only.
     * <p>
-    * The default implementation of this method returns <code>null</code>.
-    * Subclasses may reimplement.
+    * The default implementation of this method returns <code>null</code>. Subclasses may reimplement.
     * </p>
-    *
+    * 
     * @param type the given type
     * @return the new type binding
     */
@@ -499,7 +492,7 @@ class DefaultBindingResolver extends BindingResolver
                      case ProblemReasons.NonStaticReferenceInConstructorInvocation :
                         ReferenceBinding declaringClass = problemFieldBinding.declaringClass;
                         FieldBinding exactBinding =
-                           declaringClass.getField(problemFieldBinding.name, true /*resolve*/);
+                           declaringClass.getField(problemFieldBinding.name, true /* resolve */);
                         if (exactBinding != null)
                         {
                            IVariableBinding variableBinding2 =
@@ -564,7 +557,7 @@ class DefaultBindingResolver extends BindingResolver
                   case ProblemReasons.NonStaticReferenceInStaticContext :
                   case ProblemReasons.NonStaticReferenceInConstructorInvocation :
                      ReferenceBinding declaringClass = problemFieldBinding.declaringClass;
-                     FieldBinding exactBinding = declaringClass.getField(problemFieldBinding.name, true /*resolve*/);
+                     FieldBinding exactBinding = declaringClass.getField(problemFieldBinding.name, true /* resolve */);
                      if (exactBinding != null)
                      {
                         IVariableBinding variableBinding2 =
@@ -774,7 +767,9 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.BindingResolver#resolveConstructor(org.eclipse.jdt.core.dom.EnumConstantDeclaration)
     */
    IMethodBinding resolveConstructor(EnumConstantDeclaration enumConstantDeclaration)
@@ -1043,7 +1038,9 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.BindingResolver#resolveMember(org.eclipse.jdt.core.dom.AnnotationTypeMemberDeclaration)
     */
    IMethodBinding resolveMember(AnnotationTypeMemberDeclaration declaration)
@@ -1205,8 +1202,8 @@ class DefaultBindingResolver extends BindingResolver
          }
          else
          {
-            /* This is the case for a name which is part of a qualified name that
-             * cannot be resolved. See PR 13063.
+            /*
+             * This is the case for a name which is part of a qualified name that cannot be resolved. See PR 13063.
              */
             if (qualifiedNameReference.otherBindings == null)
                return null;
@@ -1523,7 +1520,7 @@ class DefaultBindingResolver extends BindingResolver
                            if (declaringClass != null)
                            {
                               FieldBinding exactBinding =
-                                 declaringClass.getField(tokens[tokens.length - 1], true /*resolve*/);
+                                 declaringClass.getField(tokens[tokens.length - 1], true /* resolve */);
                               if (exactBinding != null)
                               {
                                  if (exactBinding.type != null)
@@ -1549,8 +1546,8 @@ class DefaultBindingResolver extends BindingResolver
          }
          else
          {
-            /* This is the case for a name which is part of a qualified name that
-             * cannot be resolved. See PR 13063.
+            /*
+             * This is the case for a name which is part of a qualified name that cannot be resolved. See PR 13063.
              */
             if (qualifiedNameReference.otherBindings == null || (index - indexOfFirstFieldBinding - 1) < 0)
             {
@@ -1758,7 +1755,7 @@ class DefaultBindingResolver extends BindingResolver
                         case ProblemReasons.NonStaticReferenceInConstructorInvocation :
                            ReferenceBinding declaringClass = problemFieldBinding.declaringClass;
                            FieldBinding exactBinding =
-                              declaringClass.getField(problemFieldBinding.name, true /*resolve*/);
+                              declaringClass.getField(problemFieldBinding.name, true /* resolve */);
                            if (exactBinding != null)
                            {
                               if (exactBinding.type != null)
@@ -1911,9 +1908,12 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see BindingResolver#resolveReference(MemberRef)
-     * @since 3.0
+    * 
+    * @since 3.0
     */
    synchronized IBinding resolveReference(MemberRef ref)
    {
@@ -1935,9 +1935,12 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see BindingResolver#resolveMemberValuePair(MemberValuePair)
-     * @since 3.2
+    * 
+    * @since 3.2
     */
    synchronized IMemberValuePairBinding resolveMemberValuePair(
       org.eclipse.jdt.client.core.dom.MemberValuePair memberValuePair)
@@ -1950,9 +1953,12 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see BindingResolver#resolveReference(MethodRef)
-     * @since 3.0
+    * 
+    * @since 3.0
     */
    synchronized IBinding resolveReference(MethodRef ref)
    {
@@ -1969,7 +1975,9 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.BindingResolver#resolveType(org.eclipse.jdt.core.dom.AnnotationTypeDeclaration)
     */
    ITypeBinding resolveType(AnnotationTypeDeclaration type)
@@ -2022,7 +2030,9 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.BindingResolver#resolveType(org.eclipse.jdt.core.dom.EnumDeclaration)
     */
    ITypeBinding resolveType(EnumDeclaration type)
@@ -2076,7 +2086,8 @@ class DefaultBindingResolver extends BindingResolver
             }
             if (typeBinding.isArrayType())
             {
-               // 'typeBinding' can still be an array type because 'node' may be "larger" than 'type' (see comment of newAstToOldAst).
+               // 'typeBinding' can still be an array type because 'node' may be "larger" than 'type' (see comment of
+               // newAstToOldAst).
                typeBinding = ((ArrayBinding)typeBinding).leafComponentType;
             }
             int index;
@@ -2149,8 +2160,9 @@ class DefaultBindingResolver extends BindingResolver
       }
       else if (type.isPrimitiveType())
       {
-         /* Handle the void primitive type returned by getReturnType for a method declaration
-          * that is a constructor declaration. It prevents null from being returned
+         /*
+          * Handle the void primitive type returned by getReturnType for a method declaration that is a constructor declaration.
+          * It prevents null from being returned
           */
          if (((PrimitiveType)type).getPrimitiveTypeCode() == PrimitiveType.VOID)
          {
@@ -2209,7 +2221,9 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.BindingResolver#resolveVariable(org.eclipse.jdt.core.dom.EnumConstantDeclaration)
     */
    synchronized IVariableBinding resolveVariable(EnumConstantDeclaration enumConstant)
@@ -2410,22 +2424,20 @@ class DefaultBindingResolver extends BindingResolver
    }
 
    /**
-    * Answer an array type binding with the given type binding and the given
-    * dimensions.
-    *
-    * <p>If the given type binding is an array binding, then the resulting dimensions is the given dimensions
-    * plus the existing dimensions of the array binding. Otherwise the resulting dimensions is the given
-    * dimensions.</p>
-    *
+    * Answer an array type binding with the given type binding and the given dimensions.
+    * 
     * <p>
-    * The default implementation of this method returns <code>null</code>.
-    * Subclasses may reimplement.
+    * If the given type binding is an array binding, then the resulting dimensions is the given dimensions plus the existing
+    * dimensions of the array binding. Otherwise the resulting dimensions is the given dimensions.
     * </p>
-    *
+    * 
+    * <p>
+    * The default implementation of this method returns <code>null</code>. Subclasses may reimplement.
+    * </p>
+    * 
     * @param typeBinding the given type binding
     * @param dimensions the given dimensions
-    * @return an array type binding with the given type binding and the given
-    * dimensions
+    * @return an array type binding with the given type binding and the given dimensions
     * @throws IllegalArgumentException if the type binding represents the <code>void</code> type binding
     */
    ITypeBinding resolveArrayType(ITypeBinding typeBinding, int dimensions)

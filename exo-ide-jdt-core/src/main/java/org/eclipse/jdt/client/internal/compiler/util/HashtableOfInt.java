@@ -11,7 +11,7 @@
 package org.eclipse.jdt.client.internal.compiler.util;
 
 /**
- *	Hashtable for non-zero int keys.
+ * Hashtable for non-zero int keys.
  */
 
 public final class HashtableOfInt

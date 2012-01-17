@@ -11,12 +11,10 @@
 package org.eclipse.jdt.client.core.dom;
 
 /**
- * Descriptor for a simple property of an AST node.
- * A simple property is one whose value is a
- * primitive type (such as <code>int</code> or <code>boolean</code>)
- * or some simple value type (such as <code>String</code> or
+ * Descriptor for a simple property of an AST node. A simple property is one whose value is a primitive type (such as
+ * <code>int</code> or <code>boolean</code>) or some simple value type (such as <code>String</code> or
  * <code>InfixExpression.Operator</code>).
- *
+ * 
  * @see org.eclipse.jdt.client.core.dom.ASTNode#getStructuralProperty(StructuralPropertyDescriptor)
  * @see org.eclipse.jdt.client.core.dom.ASTNode#setStructuralProperty(StructuralPropertyDescriptor, Object)
  * @since 3.0
@@ -26,28 +24,23 @@ public final class SimplePropertyDescriptor extends StructuralPropertyDescriptor
 {
 
    /**
-    * Value type. For example, for a node type like
-    * SingleVariableDeclaration, the modifiers property is int.class
+    * Value type. For example, for a node type like SingleVariableDeclaration, the modifiers property is int.class
     */
    private final Class valueType;
 
    /**
-    * Indicates whether a value is mandatory. A property value is allowed
-    * to be <code>null</code> only if it is not mandatory.
+    * Indicates whether a value is mandatory. A property value is allowed to be <code>null</code> only if it is not mandatory.
     */
    private final boolean mandatory;
 
    /**
-    * Creates a new simple property descriptor with the given property id.
-    * Note that this constructor is declared package-private so that
-    * property descriptors can only be created by the AST
-    * implementation.
-    *
+    * Creates a new simple property descriptor with the given property id. Note that this constructor is declared package-private
+    * so that property descriptors can only be created by the AST implementation.
+    * 
     * @param nodeClass concrete AST node type that owns this property
     * @param propertyId the property id
     * @param valueType the value type of this property
-    * @param mandatory <code>true</code> if the property is mandatory,
-    * and <code>false</code> if it is may be <code>null</code>
+    * @param mandatory <code>true</code> if the property is mandatory, and <code>false</code> if it is may be <code>null</code>
     */
    SimplePropertyDescriptor(Class nodeClass, String propertyId, Class valueType, boolean mandatory)
    {
@@ -63,10 +56,9 @@ public final class SimplePropertyDescriptor extends StructuralPropertyDescriptor
    /**
     * Returns the value type of this property.
     * <p>
-    * For example, for a node type like SingleVariableDeclaration,
-    * the "modifiers" property returns <code>int.class</code>.
+    * For example, for a node type like SingleVariableDeclaration, the "modifiers" property returns <code>int.class</code>.
     * </p>
-    *
+    * 
     * @return the value type of the property
     */
    public Class getValueType()
@@ -75,11 +67,9 @@ public final class SimplePropertyDescriptor extends StructuralPropertyDescriptor
    }
 
    /**
-    * Returns whether this property is mandatory. A property value
-    * is not allowed to be <code>null</code> if it is mandatory.
-    *
-    * @return <code>true</code> if the property is mandatory,
-    * and <code>false</code> if it is may be <code>null</code>
+    * Returns whether this property is mandatory. A property value is not allowed to be <code>null</code> if it is mandatory.
+    * 
+    * @return <code>true</code> if the property is mandatory, and <code>false</code> if it is may be <code>null</code>
     */
    public boolean isMandatory()
    {

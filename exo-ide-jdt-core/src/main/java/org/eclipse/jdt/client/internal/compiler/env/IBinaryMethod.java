@@ -25,50 +25,47 @@ public interface IBinaryMethod extends IGenericMethod
    IBinaryAnnotation[] getAnnotations();
 
    /**
-    * Return {@link ClassSignature} for a Class {@link java.lang.Class}.
-    * Return {@link org.eclipse.jdt.client.internal.compiler.impl.Constant} for compile-time constant of primitive type, as well as String literals.
-    * Return {@link EnumConstantSignature} if value is an enum constant.
-    * Return {@link IBinaryAnnotation} for annotation type.
-    * Return {@link Object}[] for array type.
-    *
+    * Return {@link ClassSignature} for a Class {@link java.lang.Class}. Return
+    * {@link org.eclipse.jdt.client.internal.compiler.impl.Constant} for compile-time constant of primitive type, as well as
+    * String literals. Return {@link EnumConstantSignature} if value is an enum constant. Return {@link IBinaryAnnotation} for
+    * annotation type. Return {@link Object}[] for array type.
+    * 
     * @return default value of this annotation method
     */
    Object getDefaultValue();
 
    /**
-    * Answer the resolved names of the exception types in the
-    * class file format as specified in section 4.2 of the Java 2 VM spec
+    * Answer the resolved names of the exception types in the class file format as specified in section 4.2 of the Java 2 VM spec
     * or null if the array is empty.
-    *
+    * 
     * For example, java.lang.String is java/lang/String.
     */
    char[][] getExceptionTypeNames();
 
    /**
-    * Answer the receiver's signature which describes the parameter &
-    * return types as specified in section 4.4.4 of the Java 2 VM spec.
+    * Answer the receiver's signature which describes the parameter & return types as specified in section 4.4.4 of the Java 2 VM
+    * spec.
     */
    char[] getGenericSignature();
 
    /**
-    * Answer the receiver's method descriptor which describes the parameter &
-    * return types as specified in section 4.4.3 of the Java 2 VM spec.
-    *
-    * For example:
-    *   - int foo(String) is (Ljava/lang/String;)I
-    *   - Object[] foo(int) is (I)[Ljava/lang/Object;
+    * Answer the receiver's method descriptor which describes the parameter & return types as specified in section 4.4.3 of the
+    * Java 2 VM spec.
+    * 
+    * For example: - int foo(String) is (Ljava/lang/String;)I - Object[] foo(int) is (I)[Ljava/lang/Object;
     */
    char[] getMethodDescriptor();
 
    /**
     * Answer the annotations on the <code>index</code>th parameter or null if none
+    * 
     * @param index the index of the parameter of interest
     */
    IBinaryAnnotation[] getParameterAnnotations(int index);
 
    /**
     * Answer the name of the method.
-    *
+    * 
     * For a constructor, answer <init> & <clinit> for a clinit method.
     */
    char[] getSelector();

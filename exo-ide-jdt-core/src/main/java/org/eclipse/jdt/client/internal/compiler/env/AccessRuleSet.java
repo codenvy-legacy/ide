@@ -27,10 +27,10 @@ public class AccessRuleSet
 
    /**
     * Make a new set of access rules.
+    * 
     * @param accessRules the access rules to be contained by the new set
-    * @param classpathEntryType one of {@link AccessRestriction#COMMAND_LINE},
-    *        {@link AccessRestriction#LIBRARY}, {@link AccessRestriction#PROJECT}
-    *        that tells the access restrictions how to render the classpath entry
+    * @param classpathEntryType one of {@link AccessRestriction#COMMAND_LINE}, {@link AccessRestriction#LIBRARY},
+    *           {@link AccessRestriction#PROJECT} that tells the access restrictions how to render the classpath entry
     * @param classpathEntryName a user-readable name for the classpath entry
     */
    public AccessRuleSet(AccessRule[] accessRules, byte classpathEntryType, String classpathEntryName)
@@ -70,10 +70,10 @@ public class AccessRuleSet
    }
 
    /**
-    * Select the first access rule which is violated when accessing a given type,
-    * or null if no 'non accessible' access rule applies.
-    * @param targetTypeFilePath the target type file path, formed as:
-    * "org/eclipse/jdt/core/JavaCore"
+    * Select the first access rule which is violated when accessing a given type, or null if no 'non accessible' access rule
+    * applies.
+    * 
+    * @param targetTypeFilePath the target type file path, formed as: "org/eclipse/jdt/core/JavaCore"
     * @return the first access restriction that applies if any, null else
     */
    public AccessRestriction getViolatedRestriction(char[] targetTypeFilePath)
@@ -81,7 +81,7 @@ public class AccessRuleSet
       for (int i = 0, length = this.accessRules.length; i < length; i++)
       {
          AccessRule accessRule = this.accessRules[i];
-         if (CharOperation.pathMatch(accessRule.pattern, targetTypeFilePath, true/*case sensitive*/, '/'))
+         if (CharOperation.pathMatch(accessRule.pattern, targetTypeFilePath, true/* case sensitive */, '/'))
          {
             switch (accessRule.getProblemId())
             {
@@ -121,7 +121,7 @@ public class AccessRuleSet
 
    public String toString()
    {
-      return toString(true/*wrap lines*/);
+      return toString(true/* wrap lines */);
    }
 
    public String toString(boolean wrap)

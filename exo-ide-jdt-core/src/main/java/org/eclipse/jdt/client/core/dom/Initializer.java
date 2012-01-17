@@ -16,11 +16,12 @@ import java.util.List;
 
 /**
  * Static or instance initializer AST node type.
+ * 
  * <pre>
  * Initializer:
  *     [ <b>static</b> ] Block
  * </pre>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -29,12 +30,14 @@ public class Initializer extends BodyDeclaration
 
    /**
     * The "javadoc" structural property of this node type (child type: {@link Javadoc}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor JAVADOC_PROPERTY = internalJavadocPropertyFactory(Initializer.class);
 
    /**
     * The "modifiers" structural property of this node type (type: {@link Integer}) (JLS2 API only).
+    * 
     * @since 3.0
     */
    public static final SimplePropertyDescriptor MODIFIERS_PROPERTY =
@@ -42,6 +45,7 @@ public class Initializer extends BodyDeclaration
 
    /**
     * The "modifiers" structural property of this node type (element type: {@link IExtendedModifier}) (added in JLS3 API).
+    * 
     * @since 3.1
     */
    public static final ChildListPropertyDescriptor MODIFIERS2_PROPERTY =
@@ -49,23 +53,22 @@ public class Initializer extends BodyDeclaration
 
    /**
     * The "body" structural property of this node type (child type: {@link Block}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(Initializer.class,
       "body", Block.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
+    * 
     * @since 3.0
     */
    private static final List PROPERTY_DESCRIPTORS_2_0;
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
+    * 
     * @since 3.1
     */
    private static final List PROPERTY_DESCRIPTORS_3_0;
@@ -88,14 +91,11 @@ public class Initializer extends BodyDeclaration
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -116,13 +116,12 @@ public class Initializer extends BodyDeclaration
    private Block body = null;
 
    /**
-    * Creates a new AST node for an initializer declaration owned by the given
-    * AST. By default, the initializer has no modifiers and an empty block.
-    * The javadoc comment is not used for initializers.
+    * Creates a new AST node for an initializer declaration owned by the given AST. By default, the initializer has no modifiers
+    * and an empty block. The javadoc comment is not used for initializers.
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    Initializer(AST ast)
@@ -130,8 +129,9 @@ public class Initializer extends BodyDeclaration
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
+    * 
     * @since 3.0
     */
    final List internalStructuralPropertiesForType(int apiLevel)
@@ -139,8 +139,8 @@ public class Initializer extends BodyDeclaration
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value)
    {
@@ -160,8 +160,8 @@ public class Initializer extends BodyDeclaration
       return super.internalGetSetIntProperty(property, get, value);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -193,8 +193,8 @@ public class Initializer extends BodyDeclaration
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
@@ -206,40 +206,40 @@ public class Initializer extends BodyDeclaration
       return super.internalGetChildListProperty(property);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on BodyDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on BodyDeclaration.
     */
    final ChildPropertyDescriptor internalJavadocProperty()
    {
       return JAVADOC_PROPERTY;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on BodyDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on BodyDeclaration.
     */
    final ChildListPropertyDescriptor internalModifiers2Property()
    {
       return MODIFIERS2_PROPERTY;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on BodyDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on BodyDeclaration.
     */
    final SimplePropertyDescriptor internalModifiersProperty()
    {
       return MODIFIERS_PROPERTY;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return INITIALIZER;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -258,8 +258,8 @@ public class Initializer extends BodyDeclaration
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -267,8 +267,8 @@ public class Initializer extends BodyDeclaration
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -287,7 +287,7 @@ public class Initializer extends BodyDeclaration
 
    /**
     * Returns the body of this initializer declaration.
-    *
+    * 
     * @return the initializer body
     */
    public Block getBody()
@@ -310,14 +310,14 @@ public class Initializer extends BodyDeclaration
 
    /**
     * Sets the body of this initializer declaration.
-    *
+    * 
     * @param body the block node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setBody(Block body)
    {
@@ -331,16 +331,16 @@ public class Initializer extends BodyDeclaration
       postReplaceChild(oldChild, body, BODY_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return super.memSize() + 1 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

@@ -112,7 +112,8 @@ public class CompilationUnitScope extends Scope
          {
             if (this.referenceContext.currentPackage != null)
             {
-               problemReporter().packageCollidesWithType(this.referenceContext); // only report when the unit has a package statement
+               problemReporter().packageCollidesWithType(this.referenceContext); // only report when the unit has a package
+                                                                                 // statement
             }
             // ensure fPackage is not null
             this.fPackage = this.environment.defaultPackage;
@@ -153,7 +154,8 @@ public class CompilationUnitScope extends Scope
             if (this.environment.isProcessingAnnotations)
                throw new SourceTypeCollisionException(); // resolved a type ref before APT generated the type
             // if a type exists, check that its a valid type
-            // it can be a NotFound problem type if its a secondary type referenced before its primary type found in additional units
+            // it can be a NotFound problem type if its a secondary type referenced before its primary type found in additional
+            // units
             // and it can be an unresolved type which is now being defined
             problemReporter().duplicateTypes(this.referenceContext, typeDecl);
             continue nextType;
@@ -168,7 +170,8 @@ public class CompilationUnitScope extends Scope
          if ((typeDecl.modifiers & ClassFileConstants.AccPublic) != 0)
          {
             char[] mainTypeName;
-            if ((mainTypeName = this.referenceContext.getMainTypeName()) != null // mainTypeName == null means that implementor of ICompilationUnit decided to return null
+            if ((mainTypeName = this.referenceContext.getMainTypeName()) != null // mainTypeName == null means that implementor of
+                                                                                 // ICompilationUnit decided to return null
                && !CharOperation.equals(mainTypeName, typeDecl.name))
             {
                problemReporter().publicClassMustMatchFileName(this.referenceContext, typeDecl);
@@ -270,9 +273,8 @@ public class CompilationUnitScope extends Scope
    }
 
    /*
-    * INTERNAL USE-ONLY
-    * Innerclasses get their name computed as they are generated, since some may not
-    * be actually outputed if sitting inside unreachable code.
+    * INTERNAL USE-ONLY Innerclasses get their name computed as they are generated, since some may not be actually outputed if
+    * sitting inside unreachable code.
     */
    public char[] computeConstantPoolName(LocalTypeBinding localType)
    {
@@ -471,7 +473,8 @@ public class CompilationUnitScope extends Scope
                if (!conflictingType.isValidBinding() || (importReference.isStatic() && !conflictingType.isStatic()))
                   conflictingType = null;
             }
-            // collisions between an imported static field & a type should be checked according to spec... but currently not by javac
+            // collisions between an imported static field & a type should be checked according to spec... but currently not by
+            // javac
             if (importBinding instanceof ReferenceBinding || conflictingType != null)
             {
                ReferenceBinding referenceBinding =
@@ -640,7 +643,8 @@ public class CompilationUnitScope extends Scope
       {
          type =
             (ReferenceBinding)this.environment
-               .convertToRawType(type, false /*do not force conversion of enclosing types*/); // type imports are necessarily raw for all except last
+               .convertToRawType(type, false /* do not force conversion of enclosing types */); // type imports are necessarily
+                                                                                                // raw for all except last
          if (!type.canBeSeenBy(this.fPackage))
             return new ProblemReferenceBinding(CharOperation.subarray(compoundName, 0, i), type,
                ProblemReasons.NotVisible);
@@ -783,12 +787,12 @@ public class CompilationUnitScope extends Scope
       return this.captureID++;
    }
 
-   /* Answer the problem reporter to use for raising new problems.
-   *
-   * Note that as a side-effect, this updates the current reference context
-   * (unit, type or method) in case the problem handler decides it is necessary
-   * to abort.
-   */
+   /*
+    * Answer the problem reporter to use for raising new problems.
+    * 
+    * Note that as a side-effect, this updates the current reference context (unit, type or method) in case the problem handler
+    * decides it is necessary to abort.
+    */
    public ProblemReporter problemReporter()
    {
       ProblemReporter problemReporter = this.referenceContext.problemReporter;
@@ -797,41 +801,28 @@ public class CompilationUnitScope extends Scope
    }
 
    /*
-   What do we hold onto:
-
-   1. when we resolve 'a.b.c', say we keep only 'a.b.c'
-    & when we fail to resolve 'c' in 'a.b', lets keep 'a.b.c'
-   THEN when we come across a new/changed/removed item named 'a.b.c',
-    we would find all references to 'a.b.c'
-   -> This approach fails because every type is resolved in every onDemand import to
-    detect collision cases... so the references could be 10 times bigger than necessary.
-
-   2. when we resolve 'a.b.c', lets keep 'a.b' & 'c'
-    & when we fail to resolve 'c' in 'a.b', lets keep 'a.b' & 'c'
-   THEN when we come across a new/changed/removed item named 'a.b.c',
-    we would find all references to 'a.b' & 'c'
-   -> This approach does not have a space problem but fails to handle collision cases.
-    What happens if a type is added named 'a.b'? We would search for 'a' & 'b' but
-    would not find a match.
-
-   3. when we resolve 'a.b.c', lets keep 'a', 'a.b' & 'a', 'b', 'c'
-    & when we fail to resolve 'c' in 'a.b', lets keep 'a', 'a.b' & 'a', 'b', 'c'
-   THEN when we come across a new/changed/removed item named 'a.b.c',
-    we would find all references to 'a.b' & 'c'
-   OR 'a.b' -> 'a' & 'b'
-   OR 'a' -> '' & 'a'
-   -> As long as each single char[] is interned, we should not have a space problem
-    and can handle collision cases.
-
-   4. when we resolve 'a.b.c', lets keep 'a.b' & 'a', 'b', 'c'
-    & when we fail to resolve 'c' in 'a.b', lets keep 'a.b' & 'a', 'b', 'c'
-   THEN when we come across a new/changed/removed item named 'a.b.c',
-    we would find all references to 'a.b' & 'c'
-   OR 'a.b' -> 'a' & 'b' in the simple name collection
-   OR 'a' -> 'a' in the simple name collection
-   -> As long as each single char[] is interned, we should not have a space problem
-    and can handle collision cases.
-   */
+    * What do we hold onto:
+    * 
+    * 1. when we resolve 'a.b.c', say we keep only 'a.b.c' & when we fail to resolve 'c' in 'a.b', lets keep 'a.b.c' THEN when we
+    * come across a new/changed/removed item named 'a.b.c', we would find all references to 'a.b.c' -> This approach fails because
+    * every type is resolved in every onDemand import to detect collision cases... so the references could be 10 times bigger than
+    * necessary.
+    * 
+    * 2. when we resolve 'a.b.c', lets keep 'a.b' & 'c' & when we fail to resolve 'c' in 'a.b', lets keep 'a.b' & 'c' THEN when we
+    * come across a new/changed/removed item named 'a.b.c', we would find all references to 'a.b' & 'c' -> This approach does not
+    * have a space problem but fails to handle collision cases. What happens if a type is added named 'a.b'? We would search for
+    * 'a' & 'b' but would not find a match.
+    * 
+    * 3. when we resolve 'a.b.c', lets keep 'a', 'a.b' & 'a', 'b', 'c' & when we fail to resolve 'c' in 'a.b', lets keep 'a',
+    * 'a.b' & 'a', 'b', 'c' THEN when we come across a new/changed/removed item named 'a.b.c', we would find all references to
+    * 'a.b' & 'c' OR 'a.b' -> 'a' & 'b' OR 'a' -> '' & 'a' -> As long as each single char[] is interned, we should not have a
+    * space problem and can handle collision cases.
+    * 
+    * 4. when we resolve 'a.b.c', lets keep 'a.b' & 'a', 'b', 'c' & when we fail to resolve 'c' in 'a.b', lets keep 'a.b' & 'a',
+    * 'b', 'c' THEN when we come across a new/changed/removed item named 'a.b.c', we would find all references to 'a.b' & 'c' OR
+    * 'a.b' -> 'a' & 'b' in the simple name collection OR 'a' -> 'a' in the simple name collection -> As long as each single
+    * char[] is interned, we should not have a space problem and can handle collision cases.
+    */
    void recordQualifiedReference(char[][] qualifiedName)
    {
       if (this.qualifiedReferences == null)

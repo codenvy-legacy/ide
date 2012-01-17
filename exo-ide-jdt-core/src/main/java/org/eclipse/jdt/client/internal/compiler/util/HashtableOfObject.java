@@ -130,9 +130,9 @@ public final class HashtableOfObject implements Cloneable
    /**
     * Put a value at the index of the given using the local hash code computation.
     * <p>
-    * Note that this is an unsafe put as there's no prior verification whether
-    * the given key already exists in the table or not.
+    * Note that this is an unsafe put as there's no prior verification whether the given key already exists in the table or not.
     * </p>
+    * 
     * @param key The key of the table entry
     * @param value The value of the table entry
     */

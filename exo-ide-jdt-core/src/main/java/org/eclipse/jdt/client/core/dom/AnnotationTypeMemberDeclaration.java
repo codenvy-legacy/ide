@@ -15,25 +15,22 @@ import java.util.List;
 
 /**
  * Annotation type member declaration AST node type (added in JLS3 API).
+ * 
  * <pre>
  * AnnotationTypeMemberDeclaration:
  *   [ Javadoc ] { ExtendedModifier }
  *       Type Identifier <b>(</b> <b>)</b> [ <b>default</b> Expression ] <b>;</b>
  * </pre>
  * <p>
- * Note that annotation type member declarations are only meaningful as
- * elements of {@link AnnotationTypeDeclaration#bodyDeclarations()}.
+ * Note that annotation type member declarations are only meaningful as elements of
+ * {@link AnnotationTypeDeclaration#bodyDeclarations()}.
  * </p>
  * <p>
- * When a Javadoc comment is present, the source
- * range begins with the first character of the "/**" comment delimiter.
- * When there is no Javadoc comment, the source range begins with the first
- * character of the first modifier keyword (if modifiers),
- * or the first character of the member type (no modifiers).
- * The source range extends through the last character of the
- * ";" token.
+ * When a Javadoc comment is present, the source range begins with the first character of the "/**" comment delimiter. When there
+ * is no Javadoc comment, the source range begins with the first character of the first modifier keyword (if modifiers), or the
+ * first character of the member type (no modifiers). The source range extends through the last character of the ";" token.
  * </p>
- *
+ * 
  * @since 3.1
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -71,9 +68,7 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
       AnnotationTypeMemberDeclaration.class, "default", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -90,13 +85,10 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     */
    public static List propertyDescriptors(int apiLevel)
    {
@@ -104,8 +96,7 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
    }
 
    /**
-    * The member name; lazily initialized; defaults to an unspecified,
-    * legal Java identifier.
+    * The member name; lazily initialized; defaults to an unspecified, legal Java identifier.
     */
    private SimpleName memberName = null;
 
@@ -120,16 +111,13 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
    private Expression optionalDefaultValue = null;
 
    /**
-    * Creates a new AST node for an annotation type member declaration owned
-    * by the given AST. By default, the declaration is for a member of an
-    * unspecified, but legal, name; no modifiers; no javadoc;
-    * an unspecified value type; and no default value.
+    * Creates a new AST node for an annotation type member declaration owned by the given AST. By default, the declaration is for
+    * a member of an unspecified, but legal, name; no modifiers; no javadoc; an unspecified value type; and no default value.
     * <p>
-    * N.B. This constructor is package-private; all subclasses must be
-    * declared in the same package; clients are unable to declare
+    * N.B. This constructor is package-private; all subclasses must be declared in the same package; clients are unable to declare
     * additional subclasses.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    AnnotationTypeMemberDeclaration(AST ast)
@@ -138,16 +126,16 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
       unsupportedIn2();
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -215,8 +203,8 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
@@ -228,24 +216,24 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
       return super.internalGetChildListProperty(property);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on BodyDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on BodyDeclaration.
     */
    final ChildPropertyDescriptor internalJavadocProperty()
    {
       return JAVADOC_PROPERTY;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on BodyDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on BodyDeclaration.
     */
    final ChildListPropertyDescriptor internalModifiers2Property()
    {
       return MODIFIERS2_PROPERTY;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on BodyDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on BodyDeclaration.
     */
    final SimplePropertyDescriptor internalModifiersProperty()
    {
@@ -253,16 +241,16 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
       return null;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return ANNOTATION_TYPE_MEMBER_DECLARATION;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -276,8 +264,8 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -285,8 +273,8 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -305,7 +293,7 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
 
    /**
     * Returns the name of the annotation type member declared in this declaration.
-    *
+    * 
     * @return the member name node
     */
    public SimpleName getName()
@@ -327,15 +315,14 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
    }
 
    /**
-    * Sets the name of the annotation type member declared in this declaration to the
-    * given name.
-    *
+    * Sets the name of the annotation type member declared in this declaration to the given name.
+    * 
     * @param memberName the new member name
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     */
    public void setName(SimpleName memberName)
    {
@@ -350,9 +337,8 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
    }
 
    /**
-    * Returns the type of the annotation type member declared in this
-    * declaration.
-    *
+    * Returns the type of the annotation type member declared in this declaration.
+    * 
     * @return the type of the member
     */
    public Type getType()
@@ -374,15 +360,14 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
    }
 
    /**
-    * Sets the type of the annotation type member declared in this declaration
-    * to the given type.
-    *
+    * Sets the type of the annotation type member declared in this declaration to the given type.
+    * 
     * @param type the new member type
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     */
    public void setType(Type type)
    {
@@ -397,9 +382,8 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
    }
 
    /**
-    * Returns the default value of this annotation type member, or
-    * <code>null</code> if there is none.
-    *
+    * Returns the default value of this annotation type member, or <code>null</code> if there is none.
+    * 
     * @return the expression node, or <code>null</code> if there is none
     */
    public Expression getDefault()
@@ -409,15 +393,14 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
 
    /**
     * Sets or clears the default value of this annotation type member.
-    *
-    * @param defaultValue the expression node, or <code>null</code> if
-    *    there is none
+    * 
+    * @param defaultValue the expression node, or <code>null</code> if there is none
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setDefault(Expression defaultValue)
    {
@@ -429,31 +412,28 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
    }
 
    /**
-    * Resolves and returns the binding for the annotation type member declared
-    * in this declaration.
+    * Resolves and returns the binding for the annotation type member declared in this declaration.
     * <p>
-    * Note that bindings are generally unavailable unless requested when the
-    * AST is being built.
+    * Note that bindings are generally unavailable unless requested when the AST is being built.
     * </p>
-    *
-    * @return the binding, or <code>null</code> if the binding cannot be
-    *    resolved
+    * 
+    * @return the binding, or <code>null</code> if the binding cannot be resolved
     */
    public IMethodBinding resolveBinding()
    {
       return this.ast.getBindingResolver().resolveMember(this);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return super.memSize() + 3 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

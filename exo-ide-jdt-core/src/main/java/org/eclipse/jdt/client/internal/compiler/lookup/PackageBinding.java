@@ -38,8 +38,9 @@ public class PackageBinding extends Binding implements TypeConstants
       this(new char[][]{topLevelPackageName}, null, environment);
    }
 
-   /* Create the default package.
-   */
+   /*
+    * Create the default package.
+    */
    public PackageBinding(char[][] compoundName, PackageBinding parent, LookupEnvironment environment)
    {
       this.compoundName = compoundName;
@@ -93,8 +94,7 @@ public class PackageBinding extends Binding implements TypeConstants
    }
 
    /*
-    * slash separated name
-    * org.eclipse.jdt.core --> org/eclipse/jdt/core
+    * slash separated name org.eclipse.jdt.core --> org/eclipse/jdt/core
     */
    public char[] computeUniqueKey(boolean isLeaf)
    {
@@ -112,11 +112,12 @@ public class PackageBinding extends Binding implements TypeConstants
       return subPackageBinding;
    }
 
-   /* Answer the subpackage named name; ask the oracle for the package if its not in the cache.
-   * Answer null if it could not be resolved.
-   *
-   * NOTE: This should only be used when we know there is NOT a type with the same name.
-   */
+   /*
+    * Answer the subpackage named name; ask the oracle for the package if its not in the cache. Answer null if it could not be
+    * resolved.
+    * 
+    * NOTE: This should only be used when we know there is NOT a type with the same name.
+    */
    PackageBinding getPackage(char[] name)
    {
       PackageBinding binding = getPackage0(name);
@@ -135,26 +136,24 @@ public class PackageBinding extends Binding implements TypeConstants
       return null;
    }
 
-   /* Answer the subpackage named name if it exists in the cache.
-   * Answer theNotFoundPackage if it could not be resolved the first time
-   * it was looked up, otherwise answer null.
-   *
-   * NOTE: Senders must convert theNotFoundPackage into a real problem
-   * package if its to returned.
-   */
+   /*
+    * Answer the subpackage named name if it exists in the cache. Answer theNotFoundPackage if it could not be resolved the first
+    * time it was looked up, otherwise answer null.
+    * 
+    * NOTE: Senders must convert theNotFoundPackage into a real problem package if its to returned.
+    */
 
    PackageBinding getPackage0(char[] name)
    {
       return this.knownPackages.get(name);
    }
 
-   /* Answer the type named name; ask the oracle for the type if its not in the cache.
-   * Answer a NotVisible problem type if the type is not visible from the invocationPackage.
-   * Answer null if it could not be resolved.
-   *
-   * NOTE: This should only be used by source types/scopes which know there is NOT a
-   * package with the same name.
-   */
+   /*
+    * Answer the type named name; ask the oracle for the type if its not in the cache. Answer a NotVisible problem type if the
+    * type is not visible from the invocationPackage. Answer null if it could not be resolved.
+    * 
+    * NOTE: This should only be used by source types/scopes which know there is NOT a package with the same name.
+    */
 
    ReferenceBinding getType(char[] name)
    {
@@ -172,21 +171,22 @@ public class PackageBinding extends Binding implements TypeConstants
       if (referenceBinding == LookupEnvironment.TheNotFoundType)
          return null;
 
-      referenceBinding =
-         (ReferenceBinding)BinaryTypeBinding
-            .resolveType(referenceBinding, this.environment, false /* no raw conversion for now */);
+      referenceBinding = (ReferenceBinding)BinaryTypeBinding.resolveType(referenceBinding, this.environment, false /*
+                                                                                                                    * no raw
+                                                                                                                    * conversion
+                                                                                                                    * for now
+                                                                                                                    */);
       if (referenceBinding.isNestedType())
          return new ProblemReferenceBinding(new char[][]{name}, referenceBinding, ProblemReasons.InternalNameProvided);
       return referenceBinding;
    }
 
-   /* Answer the type named name if it exists in the cache.
-   * Answer theNotFoundType if it could not be resolved the first time
-   * it was looked up, otherwise answer null.
-   *
-   * NOTE: Senders must convert theNotFoundType into a real problem
-   * reference type if its to returned.
-   */
+   /*
+    * Answer the type named name if it exists in the cache. Answer theNotFoundType if it could not be resolved the first time it
+    * was looked up, otherwise answer null.
+    * 
+    * NOTE: Senders must convert theNotFoundType into a real problem reference type if its to returned.
+    */
 
    ReferenceBinding getType0(char[] name)
    {
@@ -195,15 +195,14 @@ public class PackageBinding extends Binding implements TypeConstants
       return this.knownTypes.get(name);
    }
 
-   /* Answer the package or type named name; ask the oracle if it is not in the cache.
-   * Answer null if it could not be resolved.
-   *
-   * When collisions exist between a type name & a package name, answer the type.
-   * Treat the package as if it does not exist... a problem was already reported when the type was defined.
-   *
-   * NOTE: no visibility checks are performed.
-   * THIS SHOULD ONLY BE USED BY SOURCE TYPES/SCOPES.
-   */
+   /*
+    * Answer the package or type named name; ask the oracle if it is not in the cache. Answer null if it could not be resolved.
+    * 
+    * When collisions exist between a type name & a package name, answer the type. Treat the package as if it does not exist... a
+    * problem was already reported when the type was defined.
+    * 
+    * NOTE: no visibility checks are performed. THIS SHOULD ONLY BE USED BY SOURCE TYPES/SCOPES.
+    */
 
    public Binding getTypeOrPackage(char[] name)
    {
@@ -281,9 +280,9 @@ public class PackageBinding extends Binding implements TypeConstants
       return (this.tagBits & TagBits.AnnotationDeprecated) != 0;
    }
 
-   /* API
-   * Answer the receiver's binding type from Binding.BindingID.
-   */
+   /*
+    * API Answer the receiver's binding type from Binding.BindingID.
+    */
    public final int kind()
    {
       return Binding.PACKAGE;
@@ -296,7 +295,7 @@ public class PackageBinding extends Binding implements TypeConstants
       return ProblemReasons.NoError;
    }
 
-   public char[] readableName() /*java.lang*/
+   public char[] readableName() /* java.lang */
    {
       return CharOperation.concatWith(this.compoundName, '.');
    }

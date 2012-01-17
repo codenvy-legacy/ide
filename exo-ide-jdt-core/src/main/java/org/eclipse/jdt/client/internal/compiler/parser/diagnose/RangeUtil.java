@@ -157,13 +157,13 @@ public class RangeUtil
    {
       for (int j = 0; j < types.length; j++)
       {
-         //members
+         // members
          TypeDeclaration[] memberTypeDeclarations = types[j].memberTypes;
          if (memberTypeDeclarations != null && memberTypeDeclarations.length > 0)
          {
             computeDietRange0(types[j].memberTypes, result);
          }
-         //methods
+         // methods
          AbstractMethodDeclaration[] methods = types[j].methods;
          if (methods != null)
          {
@@ -187,7 +187,7 @@ public class RangeUtil
             }
          }
 
-         //initializers
+         // initializers
          FieldDeclaration[] fields = types[j].fields;
          if (fields != null)
          {

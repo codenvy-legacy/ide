@@ -44,8 +44,7 @@ public class Util
    public interface Comparable
    {
       /**
-       * Returns 0 if this and c are equal, >0 if this is greater than c,
-       * or <0 if this is less than c.
+       * Returns 0 if this and c are equal, >0 if this is greater than c, or <0 if this is less than c.
        */
       int compareTo(Comparable c);
    }
@@ -53,8 +52,7 @@ public class Util
    public interface Comparer
    {
       /**
-       * Returns 0 if a and b are equal, >0 if a is greater than b,
-       * or <0 if a is less than b.
+       * Returns 0 if a and b are equal, >0 if a is greater than b, or <0 if a is less than b.
        */
       int compare(Object a, Object b);
    }
@@ -100,33 +98,40 @@ public class Util
    }
 
    /**
-    * Returns a new array adding the second array at the end of first array.
-    * It answers null if the first and second are null.
-    * If the first array is null or if it is empty, then a new array is created with second.
-    * If the second array is null, then the first array is returned.
-    * <br>
+    * Returns a new array adding the second array at the end of first array. It answers null if the first and second are null. If
+    * the first array is null or if it is empty, then a new array is created with second. If the second array is null, then the
+    * first array is returned. <br>
     * <br>
     * For example:
     * <ol>
-    * <li><pre>
+    * <li>
+    * 
+    * <pre>
     *    first = null
     *    second = "a"
     *    => result = {"a"}
     * </pre>
-    * <li><pre>
+    * 
+    * <li>
+    * 
+    * <pre>
     *    first = {"a"}
     *    second = null
     *    => result = {"a"}
     * </pre>
+    * 
     * </li>
-    * <li><pre>
+    * <li>
+    * 
+    * <pre>
     *    first = {"a"}
     *    second = {"b"}
     *    => result = {"a", "b"}
     * </pre>
+    * 
     * </li>
     * </ol>
-    *
+    * 
     * @param first the first array to concatenate
     * @param second the array to add at the end of the first array
     * @return a new array adding the second array at the end of first array, or null if the two arrays are null.
@@ -151,10 +156,8 @@ public class Util
    }
 
    /**
-    * Checks the type signature in String sig,
-    * starting at start and ending before end (end is not included).
-    * Returns the index of the character immediately after the signature if valid,
-    * or -1 if not valid.
+    * Checks the type signature in String sig, starting at start and ending before end (end is not included). Returns the index of
+    * the character immediately after the signature if valid, or -1 if not valid.
     */
    private static int checkTypeSignature(String sig, int start, int end, boolean allowVoid)
    {
@@ -202,7 +205,8 @@ public class Util
    }
 
    /**
-    * Simple replacement for clone() method for GWT 
+    * Simple replacement for clone() method for GWT
+    * 
     * @param array
     * @return cloned array
     */
@@ -221,10 +225,9 @@ public class Util
    }
 
    /**
-    * Compares two byte arrays.
-    * Returns <0 if a byte in a is less than the corresponding byte in b, or if a is shorter, or if a is null.
-    * Returns >0 if a byte in a is greater than the corresponding byte in b, or if a is longer, or if b is null.
-    * Returns 0 if they are equal or both null.
+    * Compares two byte arrays. Returns <0 if a byte in a is less than the corresponding byte in b, or if a is shorter, or if a is
+    * null. Returns >0 if a byte in a is greater than the corresponding byte in b, or if a is longer, or if b is null. Returns 0
+    * if they are equal or both null.
     */
    public static int compare(byte[] a, byte[] b)
    {
@@ -249,15 +252,10 @@ public class Util
    }
 
    /**
-    * Compares two strings lexicographically.
-    * The comparison is based on the Unicode value of each character in
-    * the strings.
-    *
-    * @return  the value <code>0</code> if the str1 is equal to str2;
-    *          a value less than <code>0</code> if str1
-    *          is lexicographically less than str2;
-    *          and a value greater than <code>0</code> if str1 is
-    *          lexicographically greater than str2.
+    * Compares two strings lexicographically. The comparison is based on the Unicode value of each character in the strings.
+    * 
+    * @return the value <code>0</code> if the str1 is equal to str2; a value less than <code>0</code> if str1 is lexicographically
+    *         less than str2; and a value greater than <code>0</code> if str1 is lexicographically greater than str2.
     */
    public static int compare(char[] str1, char[] str2)
    {
@@ -325,24 +323,30 @@ public class Util
    }
 
    /**
-    * Returns the concatenation of the given array parts using the given separator between each part.
-    * <br>
+    * Returns the concatenation of the given array parts using the given separator between each part. <br>
     * <br>
     * For example:<br>
     * <ol>
-    * <li><pre>
+    * <li>
+    * 
+    * <pre>
     *    array = {"a", "b"}
     *    separator = '.'
     *    => result = "a.b"
     * </pre>
+    * 
     * </li>
-    * <li><pre>
+    * <li>
+    * 
+    * <pre>
     *    array = {}
     *    separator = '.'
     *    => result = ""
-    * </pre></li>
+    * </pre>
+    * 
+    * </li>
     * </ol>
-    *
+    * 
     * @param array the given array
     * @param separator the given separator
     * @return the concatenation of the given array parts using the given separator between each part
@@ -360,38 +364,48 @@ public class Util
    }
 
    /**
-    * Returns the concatenation of the given array parts using the given separator between each
-    * part and appending the given name at the end.
-    * <br>
+    * Returns the concatenation of the given array parts using the given separator between each part and appending the given name
+    * at the end. <br>
     * <br>
     * For example:<br>
     * <ol>
-    * <li><pre>
+    * <li>
+    * 
+    * <pre>
     *    name = "c"
     *    array = { "a", "b" }
     *    separator = '.'
     *    => result = "a.b.c"
     * </pre>
+    * 
     * </li>
-    * <li><pre>
+    * <li>
+    * 
+    * <pre>
     *    name = null
     *    array = { "a", "b" }
     *    separator = '.'
     *    => result = "a.b"
-    * </pre></li>
-    * <li><pre>
+    * </pre>
+    * 
+    * </li>
+    * <li>
+    * 
+    * <pre>
     *    name = " c"
     *    array = null
     *    separator = '.'
     *    => result = "c"
-    * </pre></li>
+    * </pre>
+    * 
+    * </li>
     * </ol>
-    *
+    * 
     * @param array the given array
     * @param name the given name
     * @param separator the given separator
-    * @return the concatenation of the given array parts using the given separator between each
-    * part and appending the given name at the end
+    * @return the concatenation of the given array parts using the given separator between each part and appending the given name
+    *         at the end
     */
    public static final String concatWith(String[] array, String name, char separator)
    {
@@ -420,42 +434,40 @@ public class Util
    }
 
    /*
-    * Returns the default java extension (".java").
-    * To be used when the extension is not known.
+    * Returns the default java extension (".java"). To be used when the extension is not known.
     */
    public static String defaultJavaExtension()
    {
       return SuffixConstants.SUFFIX_STRING_java;
    }
 
-   //	/** TODO
-   //	 * Apply the given edit on the given string and return the updated string.
-   //	 * Return the given string if anything wrong happen while applying the edit.
-   //	 *
-   //	 * @param original the given string
-   //	 * @param edit the given edit
-   //	 *
-   //	 * @return the updated string
-   //	 */
-   //	public final static String editedString(String original, TextEdit edit) {
-   //		if (edit == null) {
-   //			return original;
-   //		}
-   //		SimpleDocument document = new SimpleDocument(original);
-   //		try {
-   //			edit.apply(document, TextEdit.NONE);
-   //			return document.get();
-   //		} catch (MalformedTreeException e) {
-   //			e.printStackTrace();
-   //		} catch (BadLocationException e) {
-   //			e.printStackTrace();
-   //		}
-   //		return original;
-   //	}
+   // /** TODO
+   // * Apply the given edit on the given string and return the updated string.
+   // * Return the given string if anything wrong happen while applying the edit.
+   // *
+   // * @param original the given string
+   // * @param edit the given edit
+   // *
+   // * @return the updated string
+   // */
+   // public final static String editedString(String original, TextEdit edit) {
+   // if (edit == null) {
+   // return original;
+   // }
+   // SimpleDocument document = new SimpleDocument(original);
+   // try {
+   // edit.apply(document, TextEdit.NONE);
+   // return document.get();
+   // } catch (MalformedTreeException e) {
+   // e.printStackTrace();
+   // } catch (BadLocationException e) {
+   // e.printStackTrace();
+   // }
+   // return original;
+   // }
 
    /**
-    * Returns true iff str.toLowerCase().endsWith(end.toLowerCase())
-    * implementation is not creating extra strings.
+    * Returns true iff str.toLowerCase().endsWith(end.toLowerCase()) implementation is not creating extra strings.
     */
    public final static boolean endsWithIgnoreCase(String str, String end)
    {
@@ -480,9 +492,8 @@ public class Util
    }
 
    /**
-    * Compares two arrays using equals() on the elements.
-    * Neither can be null. Only the first len elements are compared.
-    * Return false if either array is shorter than len.
+    * Compares two arrays using equals() on the elements. Neither can be null. Only the first len elements are compared. Return
+    * false if either array is shorter than len.
     */
    public static boolean equalArrays(Object[] a, Object[] b, int len)
    {
@@ -507,12 +518,9 @@ public class Util
    }
 
    /**
-    * Compares two arrays using equals() on the elements.
-    * Either or both arrays may be null.
-    * Returns true if both are null.
-    * Returns false if only one is null.
-    * If both are arrays, returns true iff they have the same length and
-    * all elements are equal.
+    * Compares two arrays using equals() on the elements. Either or both arrays may be null. Returns true if both are null.
+    * Returns false if only one is null. If both are arrays, returns true iff they have the same length and all elements are
+    * equal.
     */
    public static boolean equalArraysOrNull(int[] a, int[] b)
    {
@@ -532,12 +540,9 @@ public class Util
    }
 
    /**
-    * Compares two arrays using equals() on the elements.
-    * Either or both arrays may be null.
-    * Returns true if both are null.
-    * Returns false if only one is null.
-    * If both are arrays, returns true iff they have the same length and
-    * all elements compare true with equals.
+    * Compares two arrays using equals() on the elements. Either or both arrays may be null. Returns true if both are null.
+    * Returns false if only one is null. If both are arrays, returns true iff they have the same length and all elements compare
+    * true with equals.
     */
    public static boolean equalArraysOrNull(Object[] a, Object[] b)
    {
@@ -568,14 +573,9 @@ public class Util
    }
 
    /**
-    * Compares two arrays using equals() on the elements.
-    * The arrays are first sorted.
-    * Either or both arrays may be null.
-    * Returns true if both are null.
-    * Returns false if only one is null.
-    * If both are arrays, returns true iff they have the same length and
-    * iff, after sorting both arrays, all elements compare true with equals.
-    * The original arrays are left untouched.
+    * Compares two arrays using equals() on the elements. The arrays are first sorted. Either or both arrays may be null. Returns
+    * true if both are null. Returns false if only one is null. If both are arrays, returns true iff they have the same length and
+    * iff, after sorting both arrays, all elements compare true with equals. The original arrays are left untouched.
     */
    public static boolean equalArraysOrNullSortFirst(Comparable[] a, Comparable[] b)
    {
@@ -600,14 +600,9 @@ public class Util
    }
 
    /**
-    * Compares two String arrays using equals() on the elements.
-    * The arrays are first sorted.
-    * Either or both arrays may be null.
-    * Returns true if both are null.
-    * Returns false if only one is null.
-    * If both are arrays, returns true iff they have the same length and
-    * iff, after sorting both arrays, all elements compare true with equals.
-    * The original arrays are left untouched.
+    * Compares two String arrays using equals() on the elements. The arrays are first sorted. Either or both arrays may be null.
+    * Returns true if both are null. Returns false if only one is null. If both are arrays, returns true iff they have the same
+    * length and iff, after sorting both arrays, all elements compare true with equals. The original arrays are left untouched.
     */
    public static boolean equalArraysOrNullSortFirst(String[] a, String[] b)
    {
@@ -632,11 +627,8 @@ public class Util
    }
 
    /**
-    * Compares two objects using equals().
-    * Either or both array may be null.
-    * Returns true if both are null.
-    * Returns false if only one is null.
-    * Otherwise, return the result of comparing with equals().
+    * Compares two objects using equals(). Either or both array may be null. Returns true if both are null. Returns false if only
+    * one is null. Otherwise, return the result of comparing with equals().
     */
    public static boolean equalOrNull(Object a, Object b)
    {
@@ -652,9 +644,8 @@ public class Util
    }
 
    /*
-    * Returns whether the given file name equals to the given string ignoring the java like extension
-    * of the file name.
-    * Returns false if it is not a java like file name.
+    * Returns whether the given file name equals to the given string ignoring the java like extension of the file name. Returns
+    * false if it is not a java like file name.
     */
    public static boolean equalsIgnoreJavaLikeExtension(String fileName, String string)
    {
@@ -689,8 +680,7 @@ public class Util
    }
 
    /**
-    * Given a qualified name, extract the last component.
-    * If the input is not qualified, the same string is answered.
+    * Given a qualified name, extract the last component. If the input is not qualified, the same string is answered.
     */
    public static String extractLastName(String qualifiedName)
    {
@@ -751,28 +741,27 @@ public class Util
       return sig.substring(i + 1);
    }
 
-   //	private static IFile findFirstClassFile(IFolder folder) {
-   //		try {
-   //			IResource[] members = folder.members();
-   //			for (int i = 0, max = members.length; i < max; i++) {
-   //				IResource member = members[i];
-   //				if (member.getType() == IResource.FOLDER) {
-   //					return findFirstClassFile((IFolder)member);
-   //				} else if (org.eclipse.jdt.internal.compiler.util.Util.isClassFileName(member.getName())) {
-   //					return (IFile) member;
-   //				}
-   //			}
-   //		} catch (CoreException e) {
-   //			// ignore
-   //		}
-   //		return null;
-   //	}
+   // private static IFile findFirstClassFile(IFolder folder) {
+   // try {
+   // IResource[] members = folder.members();
+   // for (int i = 0, max = members.length; i < max; i++) {
+   // IResource member = members[i];
+   // if (member.getType() == IResource.FOLDER) {
+   // return findFirstClassFile((IFolder)member);
+   // } else if (org.eclipse.jdt.internal.compiler.util.Util.isClassFileName(member.getName())) {
+   // return (IFile) member;
+   // }
+   // }
+   // } catch (CoreException e) {
+   // // ignore
+   // }
+   // return null;
+   // }
 
    /**
     * Finds the first line separator used by the given text.
-    *
-    * @return </code>"\n"</code> or </code>"\r"</code> or  </code>"\r\n"</code>,
-    *			or <code>null</code> if none found
+    * 
+    * @return </code>"\n"</code> or </code>"\r"</code> or </code>"\r\n"</code>, or <code>null</code> if none found
     */
    public static String findLineSeparator(char[] text)
    {
@@ -798,72 +787,74 @@ public class Util
       return null;
    }
 
-   //	public static IClassFileAttribute getAttribute(IClassFileReader classFileReader, char[] attributeName) {
-   //		IClassFileAttribute[] attributes = classFileReader.getAttributes();
-   //		for (int i = 0, max = attributes.length; i < max; i++) {
-   //			if (CharOperation.equals(attributes[i].getAttributeName(), attributeName)) {
-   //				return attributes[i];
-   //			}
-   //		}
-   //		return null;
-   //	}
+   // public static IClassFileAttribute getAttribute(IClassFileReader classFileReader, char[] attributeName) {
+   // IClassFileAttribute[] attributes = classFileReader.getAttributes();
+   // for (int i = 0, max = attributes.length; i < max; i++) {
+   // if (CharOperation.equals(attributes[i].getAttributeName(), attributeName)) {
+   // return attributes[i];
+   // }
+   // }
+   // return null;
+   // }
    //
-   //	public static IClassFileAttribute getAttribute(ICodeAttribute codeAttribute, char[] attributeName) {
-   //		IClassFileAttribute[] attributes = codeAttribute.getAttributes();
-   //		for (int i = 0, max = attributes.length; i < max; i++) {
-   //			if (CharOperation.equals(attributes[i].getAttributeName(), attributeName)) {
-   //				return attributes[i];
-   //			}
-   //		}
-   //		return null;
-   //	}
+   // public static IClassFileAttribute getAttribute(ICodeAttribute codeAttribute, char[] attributeName) {
+   // IClassFileAttribute[] attributes = codeAttribute.getAttributes();
+   // for (int i = 0, max = attributes.length; i < max; i++) {
+   // if (CharOperation.equals(attributes[i].getAttributeName(), attributeName)) {
+   // return attributes[i];
+   // }
+   // }
+   // return null;
+   // }
    //
-   //	public static IClassFileAttribute getAttribute(IFieldInfo fieldInfo, char[] attributeName) {
-   //		IClassFileAttribute[] attributes = fieldInfo.getAttributes();
-   //		for (int i = 0, max = attributes.length; i < max; i++) {
-   //			if (CharOperation.equals(attributes[i].getAttributeName(), attributeName)) {
-   //				return attributes[i];
-   //			}
-   //		}
-   //		return null;
-   //	}
+   // public static IClassFileAttribute getAttribute(IFieldInfo fieldInfo, char[] attributeName) {
+   // IClassFileAttribute[] attributes = fieldInfo.getAttributes();
+   // for (int i = 0, max = attributes.length; i < max; i++) {
+   // if (CharOperation.equals(attributes[i].getAttributeName(), attributeName)) {
+   // return attributes[i];
+   // }
+   // }
+   // return null;
+   // }
    //
-   //	public static IClassFileAttribute getAttribute(IMethodInfo methodInfo, char[] attributeName) {
-   //		IClassFileAttribute[] attributes = methodInfo.getAttributes();
-   //		for (int i = 0, max = attributes.length; i < max; i++) {
-   //			if (CharOperation.equals(attributes[i].getAttributeName(), attributeName)) {
-   //				return attributes[i];
-   //			}
-   //		}
-   //		return null;
-   //	}
+   // public static IClassFileAttribute getAttribute(IMethodInfo methodInfo, char[] attributeName) {
+   // IClassFileAttribute[] attributes = methodInfo.getAttributes();
+   // for (int i = 0, max = attributes.length; i < max; i++) {
+   // if (CharOperation.equals(attributes[i].getAttributeName(), attributeName)) {
+   // return attributes[i];
+   // }
+   // }
+   // return null;
+   // }
 
-   //	private static IClassFile getClassFile(char[] fileName) {
-   //		int jarSeparator = CharOperation.indexOf(IDependent.JAR_FILE_ENTRY_SEPARATOR, fileName);
-   //		int pkgEnd = CharOperation.lastIndexOf('/', fileName); // pkgEnd is exclusive
-   //		if (pkgEnd == -1)
-   //			pkgEnd = CharOperation.lastIndexOf(File.separatorChar, fileName);
-   //		if (jarSeparator != -1 && pkgEnd < jarSeparator) // if in a jar and no slash, it is a default package -> pkgEnd should be equal to jarSeparator
-   //			pkgEnd = jarSeparator;
-   //		if (pkgEnd == -1)
-   //			return null;
-   //		IPackageFragment pkg = getPackageFragment(fileName, pkgEnd, jarSeparator);
-   //		if (pkg == null) return null;
-   //		int start;
-   //		return pkg.getClassFile(new String(fileName, start = pkgEnd + 1, fileName.length - start));
-   //	}
+   // private static IClassFile getClassFile(char[] fileName) {
+   // int jarSeparator = CharOperation.indexOf(IDependent.JAR_FILE_ENTRY_SEPARATOR, fileName);
+   // int pkgEnd = CharOperation.lastIndexOf('/', fileName); // pkgEnd is exclusive
+   // if (pkgEnd == -1)
+   // pkgEnd = CharOperation.lastIndexOf(File.separatorChar, fileName);
+   // if (jarSeparator != -1 && pkgEnd < jarSeparator) // if in a jar and no slash, it is a default package -> pkgEnd should be
+   // equal to jarSeparator
+   // pkgEnd = jarSeparator;
+   // if (pkgEnd == -1)
+   // return null;
+   // IPackageFragment pkg = getPackageFragment(fileName, pkgEnd, jarSeparator);
+   // if (pkg == null) return null;
+   // int start;
+   // return pkg.getClassFile(new String(fileName, start = pkgEnd + 1, fileName.length - start));
+   // }
    //
-   //	private static ICompilationUnit getCompilationUnit(char[] fileName) {
-   //		char[] slashSeparatedFileName = CharOperation.replaceOnCopy(fileName, File.separatorChar, '/');
-   //		int pkgEnd = CharOperation.lastIndexOf('/', slashSeparatedFileName); // pkgEnd is exclusive
-   //		if (pkgEnd == -1)
-   //			return null;
-   //		IPackageFragment pkg = getPackageFragment(slashSeparatedFileName, pkgEnd, -1/*no jar separator for .java files*/);
-   //		if (pkg == null) return null;
-   //		int start;
-   //		ICompilationUnit cu = pkg.getCompilationUnit(new String(slashSeparatedFileName, start =  pkgEnd+1, slashSeparatedFileName.length - start));
-   //		return cu;
-   //	}
+   // private static ICompilationUnit getCompilationUnit(char[] fileName) {
+   // char[] slashSeparatedFileName = CharOperation.replaceOnCopy(fileName, File.separatorChar, '/');
+   // int pkgEnd = CharOperation.lastIndexOf('/', slashSeparatedFileName); // pkgEnd is exclusive
+   // if (pkgEnd == -1)
+   // return null;
+   // IPackageFragment pkg = getPackageFragment(slashSeparatedFileName, pkgEnd, -1/*no jar separator for .java files*/);
+   // if (pkg == null) return null;
+   // int start;
+   // ICompilationUnit cu = pkg.getCompilationUnit(new String(slashSeparatedFileName, start = pkgEnd+1,
+   // slashSeparatedFileName.length - start));
+   // return cu;
+   // }
 
    /**
     * Returns the registered Java like extensions.
@@ -893,69 +884,68 @@ public class Util
       return JAVA_LIKE_EXTENSIONS;
    }
 
-   //	/**
-   //	 * Get the jdk level of this root.
-   //	 * The value can be:
-   //	 * <ul>
-   //	 * <li>major<<16 + minor : see predefined constants on ClassFileConstants </li>
-   //	 * <li><code>0</null> if the root is a source package fragment root or if a Java model exception occured</li>
-   //	 * </ul>
-   //	 * Returns the jdk level
-   //	 */
-   //	public static long getJdkLevel(Object targetLibrary) {
-   //		try {
-   //			ClassFileReader reader = null;
-   //			if (targetLibrary instanceof IFolder) {
-   //				IFile classFile = findFirstClassFile((IFolder) targetLibrary); // only internal classfolders are allowed
-   //				if (classFile != null)
-   //					reader = Util.newClassFileReader(classFile);
-   //			} else {
-   //				// root is a jar file or a zip file
-   //				ZipFile jar = null;
-   //				try {
-   //					IPath path = null;
-   //					if (targetLibrary instanceof IResource) {
-   //						path = ((IResource)targetLibrary).getFullPath();
-   //					} else if (targetLibrary instanceof File){
-   //						File f = (File) targetLibrary;
-   //						if (!f.isDirectory()) {
-   //							path = new Path(((File)targetLibrary).getPath());
-   //						}
-   //					}
-   //					if (path != null) {
-   //						jar = JavaModelManager.getJavaModelManager().getZipFile(path);
-   //						for (Enumeration e= jar.entries(); e.hasMoreElements();) {
-   //							ZipEntry member= (ZipEntry) e.nextElement();
-   //							String entryName= member.getName();
-   //							if (org.eclipse.jdt.internal.compiler.util.Util.isClassFileName(entryName)) {
-   //								reader = ClassFileReader.read(jar, entryName);
-   //								break;
-   //							}
-   //						}
-   //					}
-   //				} catch (CoreException e) {
-   //					// ignore
-   //				} finally {
-   //					JavaModelManager.getJavaModelManager().closeZipFile(jar);
-   //				}
-   //			}
-   //			if (reader != null) {
-   //				return reader.getVersion();
-   //			}
-   //		} catch (CoreException e) {
-   //			// ignore
-   //		} catch(ClassFormatException e) {
-   //			// ignore
-   //		} catch(IOException e) {
-   //			// ignore
-   //		}
-   //		return 0;
-   //	}
+   // /**
+   // * Get the jdk level of this root.
+   // * The value can be:
+   // * <ul>
+   // * <li>major<<16 + minor : see predefined constants on ClassFileConstants </li>
+   // * <li><code>0</null> if the root is a source package fragment root or if a Java model exception occured</li>
+   // * </ul>
+   // * Returns the jdk level
+   // */
+   // public static long getJdkLevel(Object targetLibrary) {
+   // try {
+   // ClassFileReader reader = null;
+   // if (targetLibrary instanceof IFolder) {
+   // IFile classFile = findFirstClassFile((IFolder) targetLibrary); // only internal classfolders are allowed
+   // if (classFile != null)
+   // reader = Util.newClassFileReader(classFile);
+   // } else {
+   // // root is a jar file or a zip file
+   // ZipFile jar = null;
+   // try {
+   // IPath path = null;
+   // if (targetLibrary instanceof IResource) {
+   // path = ((IResource)targetLibrary).getFullPath();
+   // } else if (targetLibrary instanceof File){
+   // File f = (File) targetLibrary;
+   // if (!f.isDirectory()) {
+   // path = new Path(((File)targetLibrary).getPath());
+   // }
+   // }
+   // if (path != null) {
+   // jar = JavaModelManager.getJavaModelManager().getZipFile(path);
+   // for (Enumeration e= jar.entries(); e.hasMoreElements();) {
+   // ZipEntry member= (ZipEntry) e.nextElement();
+   // String entryName= member.getName();
+   // if (org.eclipse.jdt.internal.compiler.util.Util.isClassFileName(entryName)) {
+   // reader = ClassFileReader.read(jar, entryName);
+   // break;
+   // }
+   // }
+   // }
+   // } catch (CoreException e) {
+   // // ignore
+   // } finally {
+   // JavaModelManager.getJavaModelManager().closeZipFile(jar);
+   // }
+   // }
+   // if (reader != null) {
+   // return reader.getVersion();
+   // }
+   // } catch (CoreException e) {
+   // // ignore
+   // } catch(ClassFormatException e) {
+   // // ignore
+   // } catch(IOException e) {
+   // // ignore
+   // }
+   // return 0;
+   // }
 
    /**
-    * Returns the substring of the given file name, ending at the start of a
-    * Java like extension. The entire file name is returned if it doesn't end
-    * with a Java like extension.
+    * Returns the substring of the given file name, ending at the start of a Java like extension. The entire file name is returned
+    * if it doesn't end with a Java like extension.
     */
    public static String getNameWithoutJavaLikeExtension(String fileName)
    {
@@ -965,22 +955,21 @@ public class Util
       return fileName.substring(0, index);
    }
 
-   //	/**
-   //	 * Returns the line separator found in the given text.
-   //	 * If it is null, or not found return the line delimiter for the given project.
-   //	 * If the project is null, returns the line separator for the workspace.
-   //	 * If still null, return the system line separator.
-   //	 */
-   //	public static String getLineSeparator(String text, IJavaProject project) {
-   //		// system line delimiter
-   //		return org.eclipse.jdt.internal.compiler.util.Util.LINE_SEPARATOR;
-   //	}
+   // /**
+   // * Returns the line separator found in the given text.
+   // * If it is null, or not found return the line delimiter for the given project.
+   // * If the project is null, returns the line separator for the workspace.
+   // * If still null, return the system line separator.
+   // */
+   // public static String getLineSeparator(String text, IJavaProject project) {
+   // // system line delimiter
+   // return org.eclipse.jdt.internal.compiler.util.Util.LINE_SEPARATOR;
+   // }
 
    /**
-    * Returns the line separator used by the given buffer.
-    * Uses the given text if none found.
-    *
-    * @return </code>"\n"</code> or </code>"\r"</code> or  </code>"\r\n"</code>
+    * Returns the line separator used by the given buffer. Uses the given text if none found.
+    * 
+    * @return </code>"\n"</code> or </code>"\r"</code> or </code>"\r\n"</code>
     */
    private static String getLineSeparator(char[] text, char[] buffer)
    {
@@ -994,40 +983,41 @@ public class Util
          {
             // default to system line separator
             return org.eclipse.jdt.client.internal.compiler.util.Util.LINE_SEPARATOR;
-            //				return getLineSeparator((String) null, (IJavaProject) null);
+            // return getLineSeparator((String) null, (IJavaProject) null);
          }
       }
       return lineSeparator;
    }
 
-   //	private static IPackageFragment getPackageFragment(char[] fileName, int pkgEnd, int jarSeparator) {
-   //		if (jarSeparator != -1) {
-   //			String jarMemento = new String(fileName, 0, jarSeparator);
-   //			PackageFragmentRoot root = (PackageFragmentRoot) JavaCore.create(jarMemento);
-   //			if (pkgEnd == jarSeparator)
-   //				return root.getPackageFragment(CharOperation.NO_STRINGS);
-   //			char[] pkgName = CharOperation.subarray(fileName, jarSeparator+1, pkgEnd);
-   //			char[][] compoundName = CharOperation.splitOn('/', pkgName);
-   //			return root.getPackageFragment(CharOperation.toStrings(compoundName));
-   //		} else {
-   //			Path path = new Path(new String(fileName, 0, pkgEnd));
-   //			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-   //			IContainer folder = path.segmentCount() == 1 ? workspaceRoot.getProject(path.lastSegment()) : (IContainer) workspaceRoot.getFolder(path);
-   //			IJavaElement element = JavaCore.create(folder);
-   //			if (element == null) return null;
-   //			switch (element.getElementType()) {
-   //				case IJavaElement.PACKAGE_FRAGMENT:
-   //					return (IPackageFragment) element;
-   //				case IJavaElement.PACKAGE_FRAGMENT_ROOT:
-   //					return ((PackageFragmentRoot) element).getPackageFragment(CharOperation.NO_STRINGS);
-   //				case IJavaElement.JAVA_PROJECT:
-   //					PackageFragmentRoot root = (PackageFragmentRoot) ((IJavaProject) element).getPackageFragmentRoot(folder);
-   //					if (root == null) return null;
-   //					return root.getPackageFragment(CharOperation.NO_STRINGS);
-   //			}
-   //			return null;
-   //		}
-   //	}
+   // private static IPackageFragment getPackageFragment(char[] fileName, int pkgEnd, int jarSeparator) {
+   // if (jarSeparator != -1) {
+   // String jarMemento = new String(fileName, 0, jarSeparator);
+   // PackageFragmentRoot root = (PackageFragmentRoot) JavaCore.create(jarMemento);
+   // if (pkgEnd == jarSeparator)
+   // return root.getPackageFragment(CharOperation.NO_STRINGS);
+   // char[] pkgName = CharOperation.subarray(fileName, jarSeparator+1, pkgEnd);
+   // char[][] compoundName = CharOperation.splitOn('/', pkgName);
+   // return root.getPackageFragment(CharOperation.toStrings(compoundName));
+   // } else {
+   // Path path = new Path(new String(fileName, 0, pkgEnd));
+   // IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+   // IContainer folder = path.segmentCount() == 1 ? workspaceRoot.getProject(path.lastSegment()) : (IContainer)
+   // workspaceRoot.getFolder(path);
+   // IJavaElement element = JavaCore.create(folder);
+   // if (element == null) return null;
+   // switch (element.getElementType()) {
+   // case IJavaElement.PACKAGE_FRAGMENT:
+   // return (IPackageFragment) element;
+   // case IJavaElement.PACKAGE_FRAGMENT_ROOT:
+   // return ((PackageFragmentRoot) element).getPackageFragment(CharOperation.NO_STRINGS);
+   // case IJavaElement.JAVA_PROJECT:
+   // PackageFragmentRoot root = (PackageFragmentRoot) ((IJavaProject) element).getPackageFragmentRoot(folder);
+   // if (root == null) return null;
+   // return root.getPackageFragment(CharOperation.NO_STRINGS);
+   // }
+   // return null;
+   // }
+   // }
 
    /**
     * Returns the number of parameter types in a method signature.
@@ -1095,8 +1085,10 @@ public class Util
    /**
     * Encode the argument by doubling the '#' if present into the argument value.
     * 
-    * <p>This stores the encoded argument into the given buffer.</p>
-    *
+    * <p>
+    * This stores the encoded argument into the given buffer.
+    * </p>
+    * 
     * @param argument the given argument
     * @param buffer the buffer in which the encoded argument is stored
     */
@@ -1164,8 +1156,9 @@ public class Util
          switch (current)
          {
             case ARGUMENTS_DELIMITER :
-               /* check the next character. If this is also ARGUMENTS_DELIMITER then only put one into the
-                * decoded argument and proceed with the next character
+               /*
+                * check the next character. If this is also ARGUMENTS_DELIMITER then only put one into the decoded argument and
+                * proceed with the next character
                 */
                if ((i + 1) == max)
                {
@@ -1214,83 +1207,84 @@ public class Util
       return result;
    }
 
-   //	/** TODO
-   //	 * Returns the given file's contents as a byte array.
-   //	 */
-   //	public static byte[] getResourceContentsAsByteArray(IFile file) throws JavaModelException {
-   //		InputStream stream= null;
-   //		try {
-   //			stream = file.getContents(true);
-   //		} catch (CoreException e) {
-   //			throw new JavaModelException(e);
-   //		}
-   //		try {
-   //			return org.eclipse.jdt.internal.compiler.util.Util.getInputStreamAsByteArray(stream, -1);
-   //		} catch (IOException e) {
-   //			throw new JavaModelException(e, IJavaModelStatusConstants.IO_EXCEPTION);
-   //		} finally {
-   //			try {
-   //				stream.close();
-   //			} catch (IOException e) {
-   //				// ignore
-   //			}
-   //		}
-   //	}
+   // /** TODO
+   // * Returns the given file's contents as a byte array.
+   // */
+   // public static byte[] getResourceContentsAsByteArray(IFile file) throws JavaModelException {
+   // InputStream stream= null;
+   // try {
+   // stream = file.getContents(true);
+   // } catch (CoreException e) {
+   // throw new JavaModelException(e);
+   // }
+   // try {
+   // return org.eclipse.jdt.internal.compiler.util.Util.getInputStreamAsByteArray(stream, -1);
+   // } catch (IOException e) {
+   // throw new JavaModelException(e, IJavaModelStatusConstants.IO_EXCEPTION);
+   // } finally {
+   // try {
+   // stream.close();
+   // } catch (IOException e) {
+   // // ignore
+   // }
+   // }
+   // }
 
-   //	/**
-   //	 * Returns the given file's contents as a character array.
-   //	 */
-   //	public static char[] getResourceContentsAsCharArray(IFile file) throws JavaModelException {
-   //		// Get encoding from file
-   //		String encoding;
-   //		try {
-   //			encoding = file.getCharset();
-   //		} catch(CoreException ce) {
-   //			// do not use any encoding
-   //			encoding = null;
-   //		}
-   //		return getResourceContentsAsCharArray(file, encoding);
-   //	}
+   // /**
+   // * Returns the given file's contents as a character array.
+   // */
+   // public static char[] getResourceContentsAsCharArray(IFile file) throws JavaModelException {
+   // // Get encoding from file
+   // String encoding;
+   // try {
+   // encoding = file.getCharset();
+   // } catch(CoreException ce) {
+   // // do not use any encoding
+   // encoding = null;
+   // }
+   // return getResourceContentsAsCharArray(file, encoding);
+   // }
 
-   //	public static char[] getResourceContentsAsCharArray(IFile file, String encoding) throws JavaModelException {
-   //		// Get file length
-   //		// workaround https://bugs.eclipse.org/bugs/show_bug.cgi?id=130736 by using java.io.File if possible
-   //		IPath location = file.getLocation();
-   //		long length;
-   //		if (location == null) {
-   //			// non local file
-   //			try {
-   //				URI locationURI = file.getLocationURI();
-   //				if (locationURI == null)
-   //					throw new CoreException(new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, Messages.bind(Messages.file_notFound, file.getFullPath().toString())));
-   //				length = EFS.getStore(locationURI).fetchInfo().getLength();
-   //			} catch (CoreException e) {
-   //				throw new JavaModelException(e, IJavaModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
-   //			}
-   //		} else {
-   //			// local file
-   //			length = location.toFile().length();
-   //		}
+   // public static char[] getResourceContentsAsCharArray(IFile file, String encoding) throws JavaModelException {
+   // // Get file length
+   // // workaround https://bugs.eclipse.org/bugs/show_bug.cgi?id=130736 by using java.io.File if possible
+   // IPath location = file.getLocation();
+   // long length;
+   // if (location == null) {
+   // // non local file
+   // try {
+   // URI locationURI = file.getLocationURI();
+   // if (locationURI == null)
+   // throw new CoreException(new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, Messages.bind(Messages.file_notFound,
+   // file.getFullPath().toString())));
+   // length = EFS.getStore(locationURI).fetchInfo().getLength();
+   // } catch (CoreException e) {
+   // throw new JavaModelException(e, IJavaModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
+   // }
+   // } else {
+   // // local file
+   // length = location.toFile().length();
+   // }
    //
-   //		// Get resource contents
-   //		InputStream stream= null;
-   //		try {
-   //			stream = file.getContents(true);
-   //		} catch (CoreException e) {
-   //			throw new JavaModelException(e, IJavaModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
-   //		}
-   //		try {
-   //			return org.eclipse.jdt.internal.compiler.util.Util.getInputStreamAsCharArray(stream, (int) length, encoding);
-   //		} catch (IOException e) {
-   //			throw new JavaModelException(e, IJavaModelStatusConstants.IO_EXCEPTION);
-   //		} finally {
-   //			try {
-   //				stream.close();
-   //			} catch (IOException e) {
-   //				// ignore
-   //			}
-   //		}
-   //	}
+   // // Get resource contents
+   // InputStream stream= null;
+   // try {
+   // stream = file.getContents(true);
+   // } catch (CoreException e) {
+   // throw new JavaModelException(e, IJavaModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
+   // }
+   // try {
+   // return org.eclipse.jdt.internal.compiler.util.Util.getInputStreamAsCharArray(stream, (int) length, encoding);
+   // } catch (IOException e) {
+   // throw new JavaModelException(e, IJavaModelStatusConstants.IO_EXCEPTION);
+   // } finally {
+   // try {
+   // stream.close();
+   // } catch (IOException e) {
+   // // ignore
+   // }
+   // }
+   // }
 
    /*
     * Returns the signature of the given type.
@@ -1299,54 +1293,54 @@ public class Util
    {
       StringBuffer buffer = new StringBuffer();
       getFullyQualifiedName(type, buffer);
-      return Signature.createTypeSignature(buffer.toString(), false/*not resolved in source*/);
+      return Signature.createTypeSignature(buffer.toString(), false/* not resolved in source */);
    }
 
-   //	/*
-   //	 * Returns the source attachment property for this package fragment root's path
-   //	 */
-   //	public static String getSourceAttachmentProperty(IPath path) throws JavaModelException {
-   //		Map rootPathToAttachments = JavaModelManager.getJavaModelManager().rootPathToAttachments;
-   //		String property = (String) rootPathToAttachments.get(path);
-   //		if (property == null) {
-   //			try {
-   //				property = ResourcesPlugin.getWorkspace().getRoot().getPersistentProperty(getSourceAttachmentPropertyName(path));
-   //				if (property == null) {
-   //					rootPathToAttachments.put(path, PackageFragmentRoot.NO_SOURCE_ATTACHMENT);
-   //					return null;
-   //				}
-   //				rootPathToAttachments.put(path, property);
-   //				return property;
-   //			} catch (CoreException e)  {
-   //				throw new JavaModelException(e);
-   //			}
-   //		} else if (property.equals(PackageFragmentRoot.NO_SOURCE_ATTACHMENT)) {
-   //			return null;
-   //		} else
-   //			return property;
-   //	}
+   // /*
+   // * Returns the source attachment property for this package fragment root's path
+   // */
+   // public static String getSourceAttachmentProperty(IPath path) throws JavaModelException {
+   // Map rootPathToAttachments = JavaModelManager.getJavaModelManager().rootPathToAttachments;
+   // String property = (String) rootPathToAttachments.get(path);
+   // if (property == null) {
+   // try {
+   // property = ResourcesPlugin.getWorkspace().getRoot().getPersistentProperty(getSourceAttachmentPropertyName(path));
+   // if (property == null) {
+   // rootPathToAttachments.put(path, PackageFragmentRoot.NO_SOURCE_ATTACHMENT);
+   // return null;
+   // }
+   // rootPathToAttachments.put(path, property);
+   // return property;
+   // } catch (CoreException e) {
+   // throw new JavaModelException(e);
+   // }
+   // } else if (property.equals(PackageFragmentRoot.NO_SOURCE_ATTACHMENT)) {
+   // return null;
+   // } else
+   // return property;
+   // }
 
-   //	private static QualifiedName getSourceAttachmentPropertyName(IPath path) {
+   // private static QualifiedName getSourceAttachmentPropertyName(IPath path) {
    //		return new QualifiedName(JavaCore.PLUGIN_ID, "sourceattachment: " + path.toOSString()); //$NON-NLS-1$
-   //	}
+   // }
 
-   //	public static void setSourceAttachmentProperty(IPath path, String property) {
-   //		if (property == null) {
-   //			JavaModelManager.getJavaModelManager().rootPathToAttachments.put(path, PackageFragmentRoot.NO_SOURCE_ATTACHMENT);
-   //		} else {
-   //			JavaModelManager.getJavaModelManager().rootPathToAttachments.put(path, property);
-   //		}
-   //		try {
-   //			ResourcesPlugin.getWorkspace().getRoot().setPersistentProperty(getSourceAttachmentPropertyName(path), property);
-   //		} catch (CoreException e) {
-   //			e.printStackTrace();
-   //		}
-   //	}
+   // public static void setSourceAttachmentProperty(IPath path, String property) {
+   // if (property == null) {
+   // JavaModelManager.getJavaModelManager().rootPathToAttachments.put(path, PackageFragmentRoot.NO_SOURCE_ATTACHMENT);
+   // } else {
+   // JavaModelManager.getJavaModelManager().rootPathToAttachments.put(path, property);
+   // }
+   // try {
+   // ResourcesPlugin.getWorkspace().getRoot().setPersistentProperty(getSourceAttachmentPropertyName(path), property);
+   // } catch (CoreException e) {
+   // e.printStackTrace();
+   // }
+   // }
 
    /*
-    * Returns the declaring type signature of the element represented by the given binding key.
-    * Returns the signature of the element if it is a type.
-    *
+    * Returns the declaring type signature of the element represented by the given binding key. Returns the signature of the
+    * element if it is a type.
+    * 
     * @return the declaring type signature
     */
    public static String getDeclaringTypeSignature(String key)
@@ -1430,249 +1424,252 @@ public class Util
       return result;
    }
 
-   //	/**
-   //	 * Return the java element corresponding to the given compiler binding.
-   //	 */
-   //	public static JavaElement getUnresolvedJavaElement(FieldBinding binding, BindingsToNodesMap bindingsToNodes) {
-   //		if (binding.declaringClass == null) return null; // array length
-   //		JavaElement unresolvedJavaElement = getUnresolvedJavaElement(binding.declaringClass, bindingsToNodes);
-   //		if (unresolvedJavaElement == null || unresolvedJavaElement.getElementType() != IJavaElement.TYPE) {
-   //			return null;
-   //		}
-   //		return (JavaElement) ((IType) unresolvedJavaElement).getField(String.valueOf(binding.name));
-   //	}
+   // /**
+   // * Return the java element corresponding to the given compiler binding.
+   // */
+   // public static JavaElement getUnresolvedJavaElement(FieldBinding binding, BindingsToNodesMap bindingsToNodes) {
+   // if (binding.declaringClass == null) return null; // array length
+   // JavaElement unresolvedJavaElement = getUnresolvedJavaElement(binding.declaringClass, bindingsToNodes);
+   // if (unresolvedJavaElement == null || unresolvedJavaElement.getElementType() != IJavaElement.TYPE) {
+   // return null;
+   // }
+   // return (JavaElement) ((IType) unresolvedJavaElement).getField(String.valueOf(binding.name));
+   // }
 
-   //	/**
-   //	 * Returns the IInitializer that contains the given local variable in the given type
-   //	 */
-   //	public static JavaElement getUnresolvedJavaElement(int localSourceStart, int localSourceEnd, JavaElement type) {
-   //		try {
-   //			if (!(type instanceof IType))
-   //				return null;
-   //			IInitializer[] initializers = ((IType) type).getInitializers();
-   //			for (int i = 0; i < initializers.length; i++) {
-   //				IInitializer initializer = initializers[i];
-   //				ISourceRange sourceRange = initializer.getSourceRange();
-   //				if (sourceRange != null) {
-   //					int initializerStart = sourceRange.getOffset();
-   //					int initializerEnd = initializerStart + sourceRange.getLength();
-   //					if (initializerStart <= localSourceStart && localSourceEnd <= initializerEnd) {
-   //						return (JavaElement) initializer;
-   //					}
-   //				}
-   //			}
-   //			return null;
-   //		} catch (JavaModelException e) {
-   //			return null;
-   //		}
-   //	}
+   // /**
+   // * Returns the IInitializer that contains the given local variable in the given type
+   // */
+   // public static JavaElement getUnresolvedJavaElement(int localSourceStart, int localSourceEnd, JavaElement type) {
+   // try {
+   // if (!(type instanceof IType))
+   // return null;
+   // IInitializer[] initializers = ((IType) type).getInitializers();
+   // for (int i = 0; i < initializers.length; i++) {
+   // IInitializer initializer = initializers[i];
+   // ISourceRange sourceRange = initializer.getSourceRange();
+   // if (sourceRange != null) {
+   // int initializerStart = sourceRange.getOffset();
+   // int initializerEnd = initializerStart + sourceRange.getLength();
+   // if (initializerStart <= localSourceStart && localSourceEnd <= initializerEnd) {
+   // return (JavaElement) initializer;
+   // }
+   // }
+   // }
+   // return null;
+   // } catch (JavaModelException e) {
+   // return null;
+   // }
+   // }
 
-   //	/**
-   //	 * Return the java element corresponding to the given compiler binding.
-   //	 */
-   //	public static JavaElement getUnresolvedJavaElement(MethodBinding methodBinding, BindingsToNodesMap bindingsToNodes) {
-   //		JavaElement unresolvedJavaElement = getUnresolvedJavaElement(methodBinding.declaringClass, bindingsToNodes);
-   //		if (unresolvedJavaElement == null || unresolvedJavaElement.getElementType() != IJavaElement.TYPE) {
-   //			return null;
-   //		}
-   //		IType declaringType = (IType) unresolvedJavaElement;
+   // /**
+   // * Return the java element corresponding to the given compiler binding.
+   // */
+   // public static JavaElement getUnresolvedJavaElement(MethodBinding methodBinding, BindingsToNodesMap bindingsToNodes) {
+   // JavaElement unresolvedJavaElement = getUnresolvedJavaElement(methodBinding.declaringClass, bindingsToNodes);
+   // if (unresolvedJavaElement == null || unresolvedJavaElement.getElementType() != IJavaElement.TYPE) {
+   // return null;
+   // }
+   // IType declaringType = (IType) unresolvedJavaElement;
    //
-   //		org.eclipse.jdt.internal.compiler.ast.ASTNode node = bindingsToNodes == null ? null : bindingsToNodes.get(methodBinding);
-   //		if (node != null && !declaringType.isBinary()) {
-   //			if (node instanceof AnnotationMethodDeclaration) {
-   //				// node is an AnnotationMethodDeclaration
-   //				AnnotationMethodDeclaration typeMemberDeclaration = (AnnotationMethodDeclaration) node;
-   //				return (JavaElement) declaringType.getMethod(String.valueOf(typeMemberDeclaration.selector), CharOperation.NO_STRINGS); // annotation type members don't have parameters
-   //			} else {
-   //				// node is an MethodDeclaration
-   //				MethodDeclaration methodDeclaration = (MethodDeclaration) node;
+   // org.eclipse.jdt.internal.compiler.ast.ASTNode node = bindingsToNodes == null ? null : bindingsToNodes.get(methodBinding);
+   // if (node != null && !declaringType.isBinary()) {
+   // if (node instanceof AnnotationMethodDeclaration) {
+   // // node is an AnnotationMethodDeclaration
+   // AnnotationMethodDeclaration typeMemberDeclaration = (AnnotationMethodDeclaration) node;
+   // return (JavaElement) declaringType.getMethod(String.valueOf(typeMemberDeclaration.selector), CharOperation.NO_STRINGS); //
+   // annotation type members don't have parameters
+   // } else {
+   // // node is an MethodDeclaration
+   // MethodDeclaration methodDeclaration = (MethodDeclaration) node;
    //
-   //				Argument[] arguments = methodDeclaration.arguments;
-   //				String[] parameterSignatures;
-   //				if (arguments != null) {
-   //					parameterSignatures = new String[arguments.length];
-   //					for (int i = 0; i < arguments.length; i++) {
-   //						Argument argument = arguments[i];
-   //						TypeReference typeReference = argument.type;
-   //						int arrayDim = typeReference.dimensions();
+   // Argument[] arguments = methodDeclaration.arguments;
+   // String[] parameterSignatures;
+   // if (arguments != null) {
+   // parameterSignatures = new String[arguments.length];
+   // for (int i = 0; i < arguments.length; i++) {
+   // Argument argument = arguments[i];
+   // TypeReference typeReference = argument.type;
+   // int arrayDim = typeReference.dimensions();
    //
-   //						String typeSig =
-   //							Signature.createTypeSignature(
-   //									CharOperation.concatWith(
-   //											typeReference.getTypeName(), '.'), false);
-   //						if (arrayDim > 0) {
-   //							typeSig = Signature.createArraySignature(typeSig, arrayDim);
-   //						}
-   //						parameterSignatures[i] = typeSig;
+   // String typeSig =
+   // Signature.createTypeSignature(
+   // CharOperation.concatWith(
+   // typeReference.getTypeName(), '.'), false);
+   // if (arrayDim > 0) {
+   // typeSig = Signature.createArraySignature(typeSig, arrayDim);
+   // }
+   // parameterSignatures[i] = typeSig;
    //
-   //					}
-   //				} else {
-   //					parameterSignatures = CharOperation.NO_STRINGS;
-   //				}
-   //				return (JavaElement) declaringType.getMethod(String.valueOf(methodDeclaration.selector), parameterSignatures);
-   //			}
-   //		} else {
-   //			// case of method not in the created AST, or a binary method
-   //			org.eclipse.jdt.internal.compiler.lookup.MethodBinding original = methodBinding.original();
-   //			String selector = original.isConstructor() ? declaringType.getElementName() : new String(original.selector);
-   //			boolean isBinary = declaringType.isBinary();
-   //			ReferenceBinding enclosingType = original.declaringClass.enclosingType();
-   //			boolean isInnerBinaryTypeConstructor = isBinary && original.isConstructor() && enclosingType != null;
-   //			TypeBinding[] parameters = original.parameters;
-   //			int length = parameters == null ? 0 : parameters.length;
-   //			int declaringIndex = isInnerBinaryTypeConstructor ? 1 : 0;
-   //			String[] parameterSignatures = new String[declaringIndex + length];
-   //			if (isInnerBinaryTypeConstructor)
-   //				parameterSignatures[0] = new String(enclosingType.genericTypeSignature()).replace('/', '.');
-   //			for (int i = 0;  i < length; i++) {
-   //				char[] signature = parameters[i].genericTypeSignature();
-   //				if (isBinary) {
-   //					signature = CharOperation.replaceOnCopy(signature, '/', '.');
-   //				} else {
-   //					signature = toUnresolvedTypeSignature(signature);
-   //				}
-   //				parameterSignatures[declaringIndex + i] = new String(signature);
-   //			}
-   //			IMethod result = declaringType.getMethod(selector, parameterSignatures);
-   //			if (isBinary)
-   //				return (JavaElement) result;
-   //			if (result.exists()) // if perfect match (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=249567 )
-   //				return (JavaElement) result;
-   //			IMethod[] methods = null;
-   //			try {
-   //				methods = declaringType.getMethods();
-   //			} catch (JavaModelException e) {
-   //				// declaring type doesn't exist
-   //				return null;
-   //			}
-   //			IMethod[] candidates = Member.findMethods(result, methods);
-   //			if (candidates == null || candidates.length == 0)
-   //				return null;
-   //			return (JavaElement) candidates[0];
-   //		}
-   //	}
+   // }
+   // } else {
+   // parameterSignatures = CharOperation.NO_STRINGS;
+   // }
+   // return (JavaElement) declaringType.getMethod(String.valueOf(methodDeclaration.selector), parameterSignatures);
+   // }
+   // } else {
+   // // case of method not in the created AST, or a binary method
+   // org.eclipse.jdt.internal.compiler.lookup.MethodBinding original = methodBinding.original();
+   // String selector = original.isConstructor() ? declaringType.getElementName() : new String(original.selector);
+   // boolean isBinary = declaringType.isBinary();
+   // ReferenceBinding enclosingType = original.declaringClass.enclosingType();
+   // boolean isInnerBinaryTypeConstructor = isBinary && original.isConstructor() && enclosingType != null;
+   // TypeBinding[] parameters = original.parameters;
+   // int length = parameters == null ? 0 : parameters.length;
+   // int declaringIndex = isInnerBinaryTypeConstructor ? 1 : 0;
+   // String[] parameterSignatures = new String[declaringIndex + length];
+   // if (isInnerBinaryTypeConstructor)
+   // parameterSignatures[0] = new String(enclosingType.genericTypeSignature()).replace('/', '.');
+   // for (int i = 0; i < length; i++) {
+   // char[] signature = parameters[i].genericTypeSignature();
+   // if (isBinary) {
+   // signature = CharOperation.replaceOnCopy(signature, '/', '.');
+   // } else {
+   // signature = toUnresolvedTypeSignature(signature);
+   // }
+   // parameterSignatures[declaringIndex + i] = new String(signature);
+   // }
+   // IMethod result = declaringType.getMethod(selector, parameterSignatures);
+   // if (isBinary)
+   // return (JavaElement) result;
+   // if (result.exists()) // if perfect match (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=249567 )
+   // return (JavaElement) result;
+   // IMethod[] methods = null;
+   // try {
+   // methods = declaringType.getMethods();
+   // } catch (JavaModelException e) {
+   // // declaring type doesn't exist
+   // return null;
+   // }
+   // IMethod[] candidates = Member.findMethods(result, methods);
+   // if (candidates == null || candidates.length == 0)
+   // return null;
+   // return (JavaElement) candidates[0];
+   // }
+   // }
 
-   //	/**
-   //	 * Return the java element corresponding to the given compiler binding.
-   //	 */
-   //	public static JavaElement getUnresolvedJavaElement(TypeBinding typeBinding, BindingsToNodesMap bindingsToNodes) {
-   //		if (typeBinding == null)
-   //			return null;
-   //		switch (typeBinding.kind()) {
-   //			case Binding.ARRAY_TYPE :
-   //				typeBinding = ((org.eclipse.jdt.internal.compiler.lookup.ArrayBinding) typeBinding).leafComponentType();
-   //				return getUnresolvedJavaElement(typeBinding, bindingsToNodes);
-   //			case Binding.BASE_TYPE :
-   //			case Binding.WILDCARD_TYPE :
-   //			case Binding.INTERSECTION_TYPE:
-   //				return null;
-   //			default :
-   //				if (typeBinding.isCapture())
-   //					return null;
-   //		}
-   //		ReferenceBinding referenceBinding;
-   //		if (typeBinding.isParameterizedType() || typeBinding.isRawType())
-   //			referenceBinding = (ReferenceBinding) typeBinding.erasure();
-   //		else
-   //			referenceBinding = (ReferenceBinding) typeBinding;
-   //		char[] fileName = referenceBinding.getFileName();
-   //		if (referenceBinding.isLocalType() || referenceBinding.isAnonymousType()) {
-   //			// local or anonymous type
-   //		   //TODO
-   ////			if (org.eclipse.jdt.internal.compiler.util.Util.isClassFileName(fileName)) {
-   ////				int jarSeparator = CharOperation.indexOf(IDependent.JAR_FILE_ENTRY_SEPARATOR, fileName);
-   ////				int pkgEnd = CharOperation.lastIndexOf('/', fileName); // pkgEnd is exclusive
-   ////				if (pkgEnd == -1)
-   ////					pkgEnd = CharOperation.lastIndexOf(File.separatorChar, fileName);
-   ////				if (jarSeparator != -1 && pkgEnd < jarSeparator) // if in a jar and no slash, it is a default package -> pkgEnd should be equal to jarSeparator
-   ////					pkgEnd = jarSeparator;
-   ////				if (pkgEnd == -1)
-   ////					return null;
-   ////				IPackageFragment pkg = getPackageFragment(fileName, pkgEnd, jarSeparator);
-   ////				char[] constantPoolName = referenceBinding.constantPoolName();
-   ////				if (constantPoolName == null) {
-   ////					ClassFile classFile = (ClassFile) getClassFile(fileName);
-   ////					return classFile == null ? null : (JavaElement) classFile.getType();
-   ////				}
-   ////				pkgEnd = CharOperation.lastIndexOf('/', constantPoolName);
-   ////				char[] classFileName = CharOperation.subarray(constantPoolName, pkgEnd+1, constantPoolName.length);
-   ////				ClassFile classFile = (ClassFile) pkg.getClassFile(new String(classFileName) + SuffixConstants.SUFFIX_STRING_class);
-   ////				return (JavaElement) classFile.getType();
-   ////			}
-   ////			ICompilationUnit cu = getCompilationUnit(fileName);
-   ////			if (cu == null) return null;
-   ////			// must use getElementAt(...) as there is no back pointer to the defining method (scope is null after resolution has ended)
-   ////			try {
-   ////				int sourceStart = ((org.eclipse.jdt.internal.compiler.lookup.LocalTypeBinding) referenceBinding).sourceStart;
-   ////				return (JavaElement) cu.getElementAt(sourceStart);
-   ////			} catch (JavaModelException e) {
-   ////				// does not exist
-   //				return null;
-   ////			}
-   //		} else if (referenceBinding.isTypeVariable()) {
-   //			// type parameter
-   //			final String typeVariableName = new String(referenceBinding.sourceName());
-   //			org.eclipse.jdt.internal.compiler.lookup.Binding declaringElement = ((org.eclipse.jdt.internal.compiler.lookup.TypeVariableBinding) referenceBinding).declaringElement;
-   //			if (declaringElement instanceof MethodBinding) {
-   //				IMethod declaringMethod = (IMethod) getUnresolvedJavaElement((MethodBinding) declaringElement, bindingsToNodes);
-   //				return (JavaElement) declaringMethod.getTypeParameter(typeVariableName);
-   //			} else {
-   //				IType declaringType = (IType) getUnresolvedJavaElement((TypeBinding) declaringElement, bindingsToNodes);
-   //				return (JavaElement) declaringType.getTypeParameter(typeVariableName);
-   //			}
-   //		} else {
-   //			if (fileName == null) return null; // case of a WilCardBinding that doesn't have a corresponding Java element
-   //			// member or top level type
-   //			TypeBinding declaringTypeBinding = typeBinding.enclosingType();
-   //			if (declaringTypeBinding == null) {
-   //				// top level type
-   //			   //TODO
-   ////				if (org.eclipse.jdt.internal.compiler.util.Util.isClassFileName(fileName)) {
-   ////					ClassFile classFile = (ClassFile) getClassFile(fileName);
-   ////					if (classFile == null) return null;
-   ////					return (JavaElement) classFile.getType();
-   ////				}
-   ////				ICompilationUnit cu = getCompilationUnit(fileName);
-   ////				if (cu == null) return null;
-   ////				return (JavaElement) cu.getType(new String(referenceBinding.sourceName()));
-   //			   return null;
-   //			} else {
-   //				// member type
-   //				IType declaringType = (IType) getUnresolvedJavaElement(declaringTypeBinding, bindingsToNodes);
-   //				if (declaringType == null) return null;
-   //				return (JavaElement) declaringType.getType(new String(referenceBinding.sourceName()));
-   //			}
-   //		}
-   //	}
+   // /**
+   // * Return the java element corresponding to the given compiler binding.
+   // */
+   // public static JavaElement getUnresolvedJavaElement(TypeBinding typeBinding, BindingsToNodesMap bindingsToNodes) {
+   // if (typeBinding == null)
+   // return null;
+   // switch (typeBinding.kind()) {
+   // case Binding.ARRAY_TYPE :
+   // typeBinding = ((org.eclipse.jdt.internal.compiler.lookup.ArrayBinding) typeBinding).leafComponentType();
+   // return getUnresolvedJavaElement(typeBinding, bindingsToNodes);
+   // case Binding.BASE_TYPE :
+   // case Binding.WILDCARD_TYPE :
+   // case Binding.INTERSECTION_TYPE:
+   // return null;
+   // default :
+   // if (typeBinding.isCapture())
+   // return null;
+   // }
+   // ReferenceBinding referenceBinding;
+   // if (typeBinding.isParameterizedType() || typeBinding.isRawType())
+   // referenceBinding = (ReferenceBinding) typeBinding.erasure();
+   // else
+   // referenceBinding = (ReferenceBinding) typeBinding;
+   // char[] fileName = referenceBinding.getFileName();
+   // if (referenceBinding.isLocalType() || referenceBinding.isAnonymousType()) {
+   // // local or anonymous type
+   // //TODO
+   // // if (org.eclipse.jdt.internal.compiler.util.Util.isClassFileName(fileName)) {
+   // // int jarSeparator = CharOperation.indexOf(IDependent.JAR_FILE_ENTRY_SEPARATOR, fileName);
+   // // int pkgEnd = CharOperation.lastIndexOf('/', fileName); // pkgEnd is exclusive
+   // // if (pkgEnd == -1)
+   // // pkgEnd = CharOperation.lastIndexOf(File.separatorChar, fileName);
+   // // if (jarSeparator != -1 && pkgEnd < jarSeparator) // if in a jar and no slash, it is a default package -> pkgEnd should be
+   // equal to jarSeparator
+   // // pkgEnd = jarSeparator;
+   // // if (pkgEnd == -1)
+   // // return null;
+   // // IPackageFragment pkg = getPackageFragment(fileName, pkgEnd, jarSeparator);
+   // // char[] constantPoolName = referenceBinding.constantPoolName();
+   // // if (constantPoolName == null) {
+   // // ClassFile classFile = (ClassFile) getClassFile(fileName);
+   // // return classFile == null ? null : (JavaElement) classFile.getType();
+   // // }
+   // // pkgEnd = CharOperation.lastIndexOf('/', constantPoolName);
+   // // char[] classFileName = CharOperation.subarray(constantPoolName, pkgEnd+1, constantPoolName.length);
+   // // ClassFile classFile = (ClassFile) pkg.getClassFile(new String(classFileName) + SuffixConstants.SUFFIX_STRING_class);
+   // // return (JavaElement) classFile.getType();
+   // // }
+   // // ICompilationUnit cu = getCompilationUnit(fileName);
+   // // if (cu == null) return null;
+   // // // must use getElementAt(...) as there is no back pointer to the defining method (scope is null after resolution has
+   // ended)
+   // // try {
+   // // int sourceStart = ((org.eclipse.jdt.internal.compiler.lookup.LocalTypeBinding) referenceBinding).sourceStart;
+   // // return (JavaElement) cu.getElementAt(sourceStart);
+   // // } catch (JavaModelException e) {
+   // // // does not exist
+   // return null;
+   // // }
+   // } else if (referenceBinding.isTypeVariable()) {
+   // // type parameter
+   // final String typeVariableName = new String(referenceBinding.sourceName());
+   // org.eclipse.jdt.internal.compiler.lookup.Binding declaringElement =
+   // ((org.eclipse.jdt.internal.compiler.lookup.TypeVariableBinding) referenceBinding).declaringElement;
+   // if (declaringElement instanceof MethodBinding) {
+   // IMethod declaringMethod = (IMethod) getUnresolvedJavaElement((MethodBinding) declaringElement, bindingsToNodes);
+   // return (JavaElement) declaringMethod.getTypeParameter(typeVariableName);
+   // } else {
+   // IType declaringType = (IType) getUnresolvedJavaElement((TypeBinding) declaringElement, bindingsToNodes);
+   // return (JavaElement) declaringType.getTypeParameter(typeVariableName);
+   // }
+   // } else {
+   // if (fileName == null) return null; // case of a WilCardBinding that doesn't have a corresponding Java element
+   // // member or top level type
+   // TypeBinding declaringTypeBinding = typeBinding.enclosingType();
+   // if (declaringTypeBinding == null) {
+   // // top level type
+   // //TODO
+   // // if (org.eclipse.jdt.internal.compiler.util.Util.isClassFileName(fileName)) {
+   // // ClassFile classFile = (ClassFile) getClassFile(fileName);
+   // // if (classFile == null) return null;
+   // // return (JavaElement) classFile.getType();
+   // // }
+   // // ICompilationUnit cu = getCompilationUnit(fileName);
+   // // if (cu == null) return null;
+   // // return (JavaElement) cu.getType(new String(referenceBinding.sourceName()));
+   // return null;
+   // } else {
+   // // member type
+   // IType declaringType = (IType) getUnresolvedJavaElement(declaringTypeBinding, bindingsToNodes);
+   // if (declaringType == null) return null;
+   // return (JavaElement) declaringType.getType(new String(referenceBinding.sourceName()));
+   // }
+   // }
+   // }
 
-   //   /*
-   //    * Returns the index of the most specific argument paths which is strictly enclosing the path to check
-   //    */
-   //   public static int indexOfEnclosingPath(IPath checkedPath, IPath[] paths, int pathCount)
-   //   {
+   // /*
+   // * Returns the index of the most specific argument paths which is strictly enclosing the path to check
+   // */
+   // public static int indexOfEnclosingPath(IPath checkedPath, IPath[] paths, int pathCount)
+   // {
    //
-   //      int bestMatch = -1, bestLength = -1;
-   //      for (int i = 0; i < pathCount; i++)
-   //      {
-   //         if (paths[i].equals(checkedPath))
-   //            continue;
-   //         if (paths[i].isPrefixOf(checkedPath))
-   //         {
-   //            int currentLength = paths[i].segmentCount();
-   //            if (currentLength > bestLength)
-   //            {
-   //               bestLength = currentLength;
-   //               bestMatch = i;
-   //            }
-   //         }
-   //      }
-   //      return bestMatch;
-   //   }
+   // int bestMatch = -1, bestLength = -1;
+   // for (int i = 0; i < pathCount; i++)
+   // {
+   // if (paths[i].equals(checkedPath))
+   // continue;
+   // if (paths[i].isPrefixOf(checkedPath))
+   // {
+   // int currentLength = paths[i].segmentCount();
+   // if (currentLength > bestLength)
+   // {
+   // bestLength = currentLength;
+   // bestMatch = i;
+   // }
+   // }
+   // }
+   // return bestMatch;
+   // }
 
    /*
-    * Returns the index of the Java like extension of the given file name
-    * or -1 if it doesn't end with a known Java like extension.
-    * Note this is the index of the '.' even if it is not considered part of the extension.
+    * Returns the index of the Java like extension of the given file name or -1 if it doesn't end with a known Java like
+    * extension. Note this is the index of the '.' even if it is not considered part of the extension.
     */
    public static int indexOfJavaLikeExtension(String fileName)
    {
@@ -1698,180 +1695,180 @@ public class Util
       return -1;
    }
 
-   //   /*
-   //    * Returns the index of the first argument paths which is equal to the path to check
-   //    */
-   //   public static int indexOfMatchingPath(IPath checkedPath, IPath[] paths, int pathCount)
-   //   {
+   // /*
+   // * Returns the index of the first argument paths which is equal to the path to check
+   // */
+   // public static int indexOfMatchingPath(IPath checkedPath, IPath[] paths, int pathCount)
+   // {
    //
-   //      for (int i = 0; i < pathCount; i++)
-   //      {
-   //         if (paths[i].equals(checkedPath))
-   //            return i;
-   //      }
-   //      return -1;
-   //   }
+   // for (int i = 0; i < pathCount; i++)
+   // {
+   // if (paths[i].equals(checkedPath))
+   // return i;
+   // }
+   // return -1;
+   // }
 
-   //   /*
-   //    * Returns the index of the first argument paths which is strictly nested inside the path to check
-   //    */
-   //   public static int indexOfNestedPath(IPath checkedPath, IPath[] paths, int pathCount)
-   //   {
+   // /*
+   // * Returns the index of the first argument paths which is strictly nested inside the path to check
+   // */
+   // public static int indexOfNestedPath(IPath checkedPath, IPath[] paths, int pathCount)
+   // {
    //
-   //      for (int i = 0; i < pathCount; i++)
-   //      {
-   //         if (checkedPath.equals(paths[i]))
-   //            continue;
-   //         if (checkedPath.isPrefixOf(paths[i]))
-   //            return i;
-   //      }
-   //      return -1;
-   //   }
+   // for (int i = 0; i < pathCount; i++)
+   // {
+   // if (checkedPath.equals(paths[i]))
+   // continue;
+   // if (checkedPath.isPrefixOf(paths[i]))
+   // return i;
+   // }
+   // return -1;
+   // }
 
-   //	/**
-   //	 * Returns whether the local file system supports accessing and modifying
-   //	 * the given attribute.
-   //	 */
-   //	protected static boolean isAttributeSupported(int attribute) {
-   //		return (EFS.getLocalFileSystem().attributes() & attribute) != 0;
-   //	}
+   // /**
+   // * Returns whether the local file system supports accessing and modifying
+   // * the given attribute.
+   // */
+   // protected static boolean isAttributeSupported(int attribute) {
+   // return (EFS.getLocalFileSystem().attributes() & attribute) != 0;
+   // }
    //
-   //	/**
-   //	 * Returns whether the given resource is read-only or not.
-   //	 * @param resource
-   //	 * @return <code>true</code> if the resource is read-only, <code>false</code> if it is not or
-   //	 * 	if the file system does not support the read-only attribute.
-   //	 */
-   //	public static boolean isReadOnly(IResource resource) {
-   //		if (isReadOnlySupported()) {
-   //			ResourceAttributes resourceAttributes = resource.getResourceAttributes();
-   //			if (resourceAttributes == null) return false; // not supported on this platform for this resource
-   //			return resourceAttributes.isReadOnly();
-   //		}
-   //		return false;
-   //	}
+   // /**
+   // * Returns whether the given resource is read-only or not.
+   // * @param resource
+   // * @return <code>true</code> if the resource is read-only, <code>false</code> if it is not or
+   // * if the file system does not support the read-only attribute.
+   // */
+   // public static boolean isReadOnly(IResource resource) {
+   // if (isReadOnlySupported()) {
+   // ResourceAttributes resourceAttributes = resource.getResourceAttributes();
+   // if (resourceAttributes == null) return false; // not supported on this platform for this resource
+   // return resourceAttributes.isReadOnly();
+   // }
+   // return false;
+   // }
 
-   //	/**
-   //	 * Returns whether the local file system supports accessing and modifying
-   //	 * the read only flag.
-   //	 */
-   //	public static boolean isReadOnlySupported() {
-   //		return isAttributeSupported(EFS.ATTRIBUTE_READ_ONLY);
-   //	}
+   // /**
+   // * Returns whether the local file system supports accessing and modifying
+   // * the read only flag.
+   // */
+   // public static boolean isReadOnlySupported() {
+   // return isAttributeSupported(EFS.ATTRIBUTE_READ_ONLY);
+   // }
 
-   //	/*
-   //	 * Returns whether the given java element is exluded from its root's classpath.
-   //	 * It doesn't check whether the root itself is on the classpath or not
-   //	 */
-   //	public static final boolean isExcluded(IJavaElement element) {
-   //		int elementType = element.getElementType();
-   //		switch (elementType) {
-   //			case IJavaElement.JAVA_MODEL:
-   //			case IJavaElement.JAVA_PROJECT:
-   //			case IJavaElement.PACKAGE_FRAGMENT_ROOT:
-   //				return false;
-   ////TODO
-   ////			case IJavaElement.PACKAGE_FRAGMENT:
-   ////				PackageFragmentRoot root = (PackageFragmentRoot) element.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
-   ////				IResource resource = ((PackageFragment) element).resource();
-   ////				return resource != null && isExcluded(resource, root.fullInclusionPatternChars(), root.fullExclusionPatternChars());
+   // /*
+   // * Returns whether the given java element is exluded from its root's classpath.
+   // * It doesn't check whether the root itself is on the classpath or not
+   // */
+   // public static final boolean isExcluded(IJavaElement element) {
+   // int elementType = element.getElementType();
+   // switch (elementType) {
+   // case IJavaElement.JAVA_MODEL:
+   // case IJavaElement.JAVA_PROJECT:
+   // case IJavaElement.PACKAGE_FRAGMENT_ROOT:
+   // return false;
+   // //TODO
+   // // case IJavaElement.PACKAGE_FRAGMENT:
+   // // PackageFragmentRoot root = (PackageFragmentRoot) element.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
+   // // IResource resource = ((PackageFragment) element).resource();
+   // // return resource != null && isExcluded(resource, root.fullInclusionPatternChars(), root.fullExclusionPatternChars());
    //
-   //			case IJavaElement.COMPILATION_UNIT:
-   ////				root = (PackageFragmentRoot) element.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
-   ////				resource = element.getResource();
-   ////				if (resource == null)
-   ////					return false;
-   ////				if (isExcluded(resource, root.fullInclusionPatternChars(), root.fullExclusionPatternChars()))
-   ////					return true;
-   //				return isExcluded(element.getParent());
+   // case IJavaElement.COMPILATION_UNIT:
+   // // root = (PackageFragmentRoot) element.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
+   // // resource = element.getResource();
+   // // if (resource == null)
+   // // return false;
+   // // if (isExcluded(resource, root.fullInclusionPatternChars(), root.fullExclusionPatternChars()))
+   // // return true;
+   // return isExcluded(element.getParent());
    //
-   //			default:
-   //				IJavaElement cu = element.getAncestor(IJavaElement.COMPILATION_UNIT);
-   //				return cu != null && isExcluded(cu);
-   //		}
-   //	}
-   //   /*
-   //    * Returns whether the given resource path matches one of the inclusion/exclusion
-   //    * patterns.
-   //    * NOTE: should not be asked directly using pkg root pathes
-   //    * @see IClasspathEntry#getInclusionPatterns
-   //    * @see IClasspathEntry#getExclusionPatterns
-   //    */
-   //   public final static boolean isExcluded(IPath resourcePath, char[][] inclusionPatterns, char[][] exclusionPatterns,
-   //      boolean isFolderPath)
-   //   {
-   //      if (inclusionPatterns == null && exclusionPatterns == null)
-   //         return false;
-   //      return org.eclipse.jdt.internal.compiler.util.Util.isExcluded(resourcePath.toString().toCharArray(),
-   //         inclusionPatterns, exclusionPatterns, isFolderPath);
-   //   }
+   // default:
+   // IJavaElement cu = element.getAncestor(IJavaElement.COMPILATION_UNIT);
+   // return cu != null && isExcluded(cu);
+   // }
+   // }
+   // /*
+   // * Returns whether the given resource path matches one of the inclusion/exclusion
+   // * patterns.
+   // * NOTE: should not be asked directly using pkg root pathes
+   // * @see IClasspathEntry#getInclusionPatterns
+   // * @see IClasspathEntry#getExclusionPatterns
+   // */
+   // public final static boolean isExcluded(IPath resourcePath, char[][] inclusionPatterns, char[][] exclusionPatterns,
+   // boolean isFolderPath)
+   // {
+   // if (inclusionPatterns == null && exclusionPatterns == null)
+   // return false;
+   // return org.eclipse.jdt.internal.compiler.util.Util.isExcluded(resourcePath.toString().toCharArray(),
+   // inclusionPatterns, exclusionPatterns, isFolderPath);
+   // }
 
-   //	/*
-   //	 * Returns whether the given resource matches one of the exclusion patterns.
-   //	 * NOTE: should not be asked directly using pkg root pathes
-   //	 * @see IClasspathEntry#getExclusionPatterns
-   //	 */
-   //	public final static boolean isExcluded(IResource resource, char[][] inclusionPatterns, char[][] exclusionPatterns) {
-   //		IPath path = resource.getFullPath();
-   //		// ensure that folders are only excluded if all of their children are excluded
-   //		int resourceType = resource.getType();
-   //		return isExcluded(path, inclusionPatterns, exclusionPatterns, resourceType == IResource.FOLDER || resourceType == IResource.PROJECT);
-   //	}
+   // /*
+   // * Returns whether the given resource matches one of the exclusion patterns.
+   // * NOTE: should not be asked directly using pkg root pathes
+   // * @see IClasspathEntry#getExclusionPatterns
+   // */
+   // public final static boolean isExcluded(IResource resource, char[][] inclusionPatterns, char[][] exclusionPatterns) {
+   // IPath path = resource.getFullPath();
+   // // ensure that folders are only excluded if all of their children are excluded
+   // int resourceType = resource.getType();
+   // return isExcluded(path, inclusionPatterns, exclusionPatterns, resourceType == IResource.FOLDER || resourceType ==
+   // IResource.PROJECT);
+   // }
 
-   //	/**
-   //	 * Validate the given .class file name.
-   //	 * A .class file name must obey the following rules:
-   //	 * <ul>
-   //	 * <li> it must not be null
-   //	 * <li> it must include the <code>".class"</code> suffix
-   //	 * <li> its prefix must be a valid identifier
-   //	 * </ul>
-   //	 * </p>
-   //	 * @param name the name of a .class file
-   //	 * @param sourceLevel the source level
-   //	 * @param complianceLevel the compliance level
-   //	 * @return a status object with code <code>IStatus.OK</code> if
-   //	 *		the given name is valid as a .class file name, otherwise a status
-   //	 *		object indicating what is wrong with the name
-   //	 */
-   //	public static boolean isValidClassFileName(String name, String sourceLevel, String complianceLevel) {
-   //		return JavaConventions.validateClassFileName(name, sourceLevel, complianceLevel).getSeverity() != IStatus.ERROR;
-   //	}
+   // /**
+   // * Validate the given .class file name.
+   // * A .class file name must obey the following rules:
+   // * <ul>
+   // * <li> it must not be null
+   // * <li> it must include the <code>".class"</code> suffix
+   // * <li> its prefix must be a valid identifier
+   // * </ul>
+   // * </p>
+   // * @param name the name of a .class file
+   // * @param sourceLevel the source level
+   // * @param complianceLevel the compliance level
+   // * @return a status object with code <code>IStatus.OK</code> if
+   // * the given name is valid as a .class file name, otherwise a status
+   // * object indicating what is wrong with the name
+   // */
+   // public static boolean isValidClassFileName(String name, String sourceLevel, String complianceLevel) {
+   // return JavaConventions.validateClassFileName(name, sourceLevel, complianceLevel).getSeverity() != IStatus.ERROR;
+   // }
 
-   //	/**
-   //	 * Validate the given compilation unit name.
-   //	 * A compilation unit name must obey the following rules:
-   //	 * <ul>
-   //	 * <li> it must not be null
-   //	 * <li> it must include the <code>".java"</code> suffix
-   //	 * <li> its prefix must be a valid identifier
-   //	 * </ul>
-   //	 * </p>
-   //	 * @param name the name of a compilation unit
-   //	 * @param sourceLevel the source level
-   //	 * @param complianceLevel the compliance level
-   //	 * @return a status object with code <code>IStatus.OK</code> if
-   //	 *		the given name is valid as a compilation unit name, otherwise a status
-   //	 *		object indicating what is wrong with the name
-   //	 */
-   //	public static boolean isValidCompilationUnitName(String name, String sourceLevel, String complianceLevel) {
-   //		return JavaConventions.validateCompilationUnitName(name, sourceLevel, complianceLevel).getSeverity() != IStatus.ERROR;
-   //	}
+   // /**
+   // * Validate the given compilation unit name.
+   // * A compilation unit name must obey the following rules:
+   // * <ul>
+   // * <li> it must not be null
+   // * <li> it must include the <code>".java"</code> suffix
+   // * <li> its prefix must be a valid identifier
+   // * </ul>
+   // * </p>
+   // * @param name the name of a compilation unit
+   // * @param sourceLevel the source level
+   // * @param complianceLevel the compliance level
+   // * @return a status object with code <code>IStatus.OK</code> if
+   // * the given name is valid as a compilation unit name, otherwise a status
+   // * object indicating what is wrong with the name
+   // */
+   // public static boolean isValidCompilationUnitName(String name, String sourceLevel, String complianceLevel) {
+   // return JavaConventions.validateCompilationUnitName(name, sourceLevel, complianceLevel).getSeverity() != IStatus.ERROR;
+   // }
 
-   //	/**
-   //	 * Returns true if the given folder name is valid for a package,
-   //	 * false if it is not.
-   //	 * @param folderName the name of the folder
-   //	 * @param sourceLevel the source level
-   //	 * @param complianceLevel the compliance level
-   //	 */
-   //	public static boolean isValidFolderNameForPackage(String folderName, String sourceLevel, String complianceLevel) {
-   //		return JavaConventions.validateIdentifier(folderName, sourceLevel, complianceLevel).getSeverity() != IStatus.ERROR;
-   //	}
+   // /**
+   // * Returns true if the given folder name is valid for a package,
+   // * false if it is not.
+   // * @param folderName the name of the folder
+   // * @param sourceLevel the source level
+   // * @param complianceLevel the compliance level
+   // */
+   // public static boolean isValidFolderNameForPackage(String folderName, String sourceLevel, String complianceLevel) {
+   // return JavaConventions.validateIdentifier(folderName, sourceLevel, complianceLevel).getSeverity() != IStatus.ERROR;
+   // }
 
    /**
-    * Returns true if the given method signature is valid,
-    * false if it is not.
+    * Returns true if the given method signature is valid, false if it is not.
     */
    public static boolean isValidMethodSignature(String sig)
    {
@@ -1899,8 +1896,7 @@ public class Util
    }
 
    /**
-    * Returns true if the given type signature is valid,
-    * false if it is not.
+    * Returns true if the given type signature is valid, false if it is not.
     */
    public static boolean isValidTypeSignature(String sig, boolean allowVoid)
    {
@@ -1909,8 +1905,8 @@ public class Util
    }
 
    /*
-    * Returns the simple name of a local type from the given binary type name.
-    * The last '$' is at lastDollar. The last character of the type name is at end-1.
+    * Returns the simple name of a local type from the given binary type name. The last '$' is at lastDollar. The last character
+    * of the type name is at end-1.
     */
    public static String localTypeName(String binaryTypeName, int lastDollar, int end)
    {
@@ -1929,26 +1925,27 @@ public class Util
     */
    public static void log(Throwable e, String message)
    {
-      //TODO use logger
-      //		Throwable nestedException;
-      //		if (e instanceof JavaModelException
-      //				&& (nestedException = ((JavaModelException)e).getException()) != null) {
-      //			e = nestedException;
-      //		}
-      //		log(new Status(
-      //				IStatus.ERROR,
-      //				JavaCore.PLUGIN_ID,
-      //				IStatus.ERROR,
-      //				message,
-      //				e));
+      // TODO use logger
+      // Throwable nestedException;
+      // if (e instanceof JavaModelException
+      // && (nestedException = ((JavaModelException)e).getException()) != null) {
+      // e = nestedException;
+      // }
+      // log(new Status(
+      // IStatus.ERROR,
+      // JavaCore.PLUGIN_ID,
+      // IStatus.ERROR,
+      // message,
+      // e));
    }
 
    /**
-    * Log a message that is potentially repeated in the same session.
-    * The first time this method is called with a given exception, the
-    * exception stack trace is written to the log.
-    * <p>Only intended for use in debug statements.</p>
-    *
+    * Log a message that is potentially repeated in the same session. The first time this method is called with a given exception,
+    * the exception stack trace is written to the log.
+    * <p>
+    * Only intended for use in debug statements.
+    * </p>
+    * 
     * @param key the given key
     * @param e the given exception
     * @throws IllegalArgumentException if the given key is null
@@ -1964,145 +1961,146 @@ public class Util
          return;
       }
       fgRepeatedMessages.add(key);
-      //TODO Use logger
-      //		log(e);
+      // TODO Use logger
+      // log(e);
    }
 
    //
-   //	public static void logRepeatedMessage(String key, int statusErrorID, String message) {
-   //		if (key == null) {
+   // public static void logRepeatedMessage(String key, int statusErrorID, String message) {
+   // if (key == null) {
    //			throw new IllegalArgumentException("key cannot be null"); //$NON-NLS-1$
-   //		}
-   //		if (fgRepeatedMessages.contains(key)) {
-   //			return;
-   //		}
-   //		fgRepeatedMessages.add(key);
-   //		log(statusErrorID, message);
-   //	}
+   // }
+   // if (fgRepeatedMessages.contains(key)) {
+   // return;
+   // }
+   // fgRepeatedMessages.add(key);
+   // log(statusErrorID, message);
+   // }
 
-   //	/*
-   //	 * Add a log entry
-   //	 */
-   //	public static void log(int statusErrorID, String message) {
-   //		log(new Status(
-   //				statusErrorID,
-   //				JavaCore.PLUGIN_ID,
-   //				message));
-   //	}
+   // /*
+   // * Add a log entry
+   // */
+   // public static void log(int statusErrorID, String message) {
+   // log(new Status(
+   // statusErrorID,
+   // JavaCore.PLUGIN_ID,
+   // message));
+   // }
 
-   //   /*
-   //    * Add a log entry
-   //    */
-   //   public static void log(IStatus status)
-   //   {
-   //      //TODO 
-   //   }
+   // /*
+   // * Add a log entry
+   // */
+   // public static void log(IStatus status)
+   // {
+   // //TODO
+   // }
 
    //
-   //	public static void log(Throwable e) {
-   //		log(new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, Messages.code_assist_internal_error, e));
-   //	}
+   // public static void log(Throwable e) {
+   // log(new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, Messages.code_assist_internal_error, e));
+   // }
 
-   //	public static ClassFileReader newClassFileReader(IResource resource) throws CoreException, ClassFormatException, IOException {
-   //		InputStream in = null;
-   //		try {
-   //			in = ((IFile) resource).getContents(true);
-   //			return ClassFileReader.read(in, resource.getFullPath().toString());
-   //		} finally {
-   //			if (in != null)
-   //				in.close();
-   //		}
-   //	}
+   // public static ClassFileReader newClassFileReader(IResource resource) throws CoreException, ClassFormatException, IOException
+   // {
+   // InputStream in = null;
+   // try {
+   // in = ((IFile) resource).getContents(true);
+   // return ClassFileReader.read(in, resource.getFullPath().toString());
+   // } finally {
+   // if (in != null)
+   // in.close();
+   // }
+   // }
 
-   //	/**
-   //	 * Normalizes the cariage returns in the given text.
-   //	 * They are all changed  to use the given buffer's line separator.
-   //	 */
-   //	public static char[] normalizeCRs(char[] text, char[] buffer) {
-   //		CharArrayBuffer result = new CharArrayBuffer();
-   //		int lineStart = 0;
-   //		int length = text.length;
-   //		if (length == 0) return text;
-   //		String lineSeparator = getLineSeparator(text, buffer);
-   //		char nextChar = text[0];
-   //		for (int i = 0; i < length; i++) {
-   //			char currentChar = nextChar;
-   //			nextChar = i < length-1 ? text[i+1] : ' ';
-   //			switch (currentChar) {
-   //				case '\n':
-   //					int lineLength = i-lineStart;
-   //					char[] line = new char[lineLength];
-   //					System.arraycopy(text, lineStart, line, 0, lineLength);
-   //					result.append(line);
-   //					result.append(lineSeparator);
-   //					lineStart = i+1;
-   //					break;
-   //				case '\r':
-   //					lineLength = i-lineStart;
-   //					if (lineLength >= 0) {
-   //						line = new char[lineLength];
-   //						System.arraycopy(text, lineStart, line, 0, lineLength);
-   //						result.append(line);
-   //						result.append(lineSeparator);
-   //						if (nextChar == '\n') {
-   //							nextChar = ' ';
-   //							lineStart = i+2;
-   //						} else {
-   //							// when line separator are mixed in the same file
-   //							// \r might not be followed by a \n. If not, we should increment
-   //							// lineStart by one and not by two.
-   //							lineStart = i+1;
-   //						}
-   //					} else {
-   //						// when line separator are mixed in the same file
-   //						// we need to prevent NegativeArraySizeException
-   //						lineStart = i+1;
-   //					}
-   //					break;
-   //			}
-   //		}
-   //		char[] lastLine;
-   //		if (lineStart > 0) {
-   //			int lastLineLength = length-lineStart;
-   //			if (lastLineLength > 0) {
-   //				lastLine = new char[lastLineLength];
-   //				System.arraycopy(text, lineStart, lastLine, 0, lastLineLength);
-   //				result.append(lastLine);
-   //			}
-   //			return result.getContents();
-   //		}
-   //		return text;
-   //	}
+   // /**
+   // * Normalizes the cariage returns in the given text.
+   // * They are all changed to use the given buffer's line separator.
+   // */
+   // public static char[] normalizeCRs(char[] text, char[] buffer) {
+   // CharArrayBuffer result = new CharArrayBuffer();
+   // int lineStart = 0;
+   // int length = text.length;
+   // if (length == 0) return text;
+   // String lineSeparator = getLineSeparator(text, buffer);
+   // char nextChar = text[0];
+   // for (int i = 0; i < length; i++) {
+   // char currentChar = nextChar;
+   // nextChar = i < length-1 ? text[i+1] : ' ';
+   // switch (currentChar) {
+   // case '\n':
+   // int lineLength = i-lineStart;
+   // char[] line = new char[lineLength];
+   // System.arraycopy(text, lineStart, line, 0, lineLength);
+   // result.append(line);
+   // result.append(lineSeparator);
+   // lineStart = i+1;
+   // break;
+   // case '\r':
+   // lineLength = i-lineStart;
+   // if (lineLength >= 0) {
+   // line = new char[lineLength];
+   // System.arraycopy(text, lineStart, line, 0, lineLength);
+   // result.append(line);
+   // result.append(lineSeparator);
+   // if (nextChar == '\n') {
+   // nextChar = ' ';
+   // lineStart = i+2;
+   // } else {
+   // // when line separator are mixed in the same file
+   // // \r might not be followed by a \n. If not, we should increment
+   // // lineStart by one and not by two.
+   // lineStart = i+1;
+   // }
+   // } else {
+   // // when line separator are mixed in the same file
+   // // we need to prevent NegativeArraySizeException
+   // lineStart = i+1;
+   // }
+   // break;
+   // }
+   // }
+   // char[] lastLine;
+   // if (lineStart > 0) {
+   // int lastLineLength = length-lineStart;
+   // if (lastLineLength > 0) {
+   // lastLine = new char[lastLineLength];
+   // System.arraycopy(text, lineStart, lastLine, 0, lastLineLength);
+   // result.append(lastLine);
+   // }
+   // return result.getContents();
+   // }
+   // return text;
+   // }
 
-   //	/**
-   //	 * Normalizes the carriage returns in the given text.
-   //	 * They are all changed to use given buffer's line separator.
-   //	 */
-   //	public static String normalizeCRs(String text, String buffer) {
-   //		return new String(normalizeCRs(text.toCharArray(), buffer.toCharArray()));
-   //	}
+   // /**
+   // * Normalizes the carriage returns in the given text.
+   // * They are all changed to use given buffer's line separator.
+   // */
+   // public static String normalizeCRs(String text, String buffer) {
+   // return new String(normalizeCRs(text.toCharArray(), buffer.toCharArray()));
+   // }
 
-   //	/**
-   //	 * Converts the given relative path into a package name.
-   //	 * Returns null if the path is not a valid package name.
-   //	 * @param pkgPath the package path
-   //	 * @param sourceLevel the source level
-   //	 * @param complianceLevel the compliance level
-   //	 */
-   //	public static String packageName(IPath pkgPath, String sourceLevel, String complianceLevel) {
-   //		StringBuffer pkgName = new StringBuffer(IPackageFragment.DEFAULT_PACKAGE_NAME);
-   //		for (int j = 0, max = pkgPath.segmentCount(); j < max; j++) {
-   //			String segment = pkgPath.segment(j);
-   //			if (!isValidFolderNameForPackage(segment, sourceLevel, complianceLevel)) {
-   //				return null;
-   //			}
-   //			pkgName.append(segment);
-   //			if (j < pkgPath.segmentCount() - 1) {
+   // /**
+   // * Converts the given relative path into a package name.
+   // * Returns null if the path is not a valid package name.
+   // * @param pkgPath the package path
+   // * @param sourceLevel the source level
+   // * @param complianceLevel the compliance level
+   // */
+   // public static String packageName(IPath pkgPath, String sourceLevel, String complianceLevel) {
+   // StringBuffer pkgName = new StringBuffer(IPackageFragment.DEFAULT_PACKAGE_NAME);
+   // for (int j = 0, max = pkgPath.segmentCount(); j < max; j++) {
+   // String segment = pkgPath.segment(j);
+   // if (!isValidFolderNameForPackage(segment, sourceLevel, complianceLevel)) {
+   // return null;
+   // }
+   // pkgName.append(segment);
+   // if (j < pkgPath.segmentCount() - 1) {
    //				pkgName.append("." ); //$NON-NLS-1$
-   //			}
-   //		}
-   //		return pkgName.toString();
-   //	}
+   // }
+   // }
+   // return pkgName.toString();
+   // }
 
    /**
     * Returns the length of the common prefix between s1 and s2.
@@ -2312,52 +2310,52 @@ public class Util
       }
    }
 
-   //   /**
-   //    * Returns the toString() of the given full path minus the first given number of segments.
-   //    * The returned string is always a relative path (it has no leading slash)
-   //    */
-   //   public static String relativePath(IPath fullPath, int skipSegmentCount)
-   //   {
-   //      boolean hasTrailingSeparator = fullPath.hasTrailingSeparator();
-   //      String[] segments = fullPath.segments();
+   // /**
+   // * Returns the toString() of the given full path minus the first given number of segments.
+   // * The returned string is always a relative path (it has no leading slash)
+   // */
+   // public static String relativePath(IPath fullPath, int skipSegmentCount)
+   // {
+   // boolean hasTrailingSeparator = fullPath.hasTrailingSeparator();
+   // String[] segments = fullPath.segments();
    //
-   //      // compute length
-   //      int length = 0;
-   //      int max = segments.length;
-   //      if (max > skipSegmentCount)
-   //      {
-   //         for (int i1 = skipSegmentCount; i1 < max; i1++)
-   //         {
-   //            length += segments[i1].length();
-   //         }
-   //         //add the separator lengths
-   //         length += max - skipSegmentCount - 1;
-   //      }
-   //      if (hasTrailingSeparator)
-   //         length++;
+   // // compute length
+   // int length = 0;
+   // int max = segments.length;
+   // if (max > skipSegmentCount)
+   // {
+   // for (int i1 = skipSegmentCount; i1 < max; i1++)
+   // {
+   // length += segments[i1].length();
+   // }
+   // //add the separator lengths
+   // length += max - skipSegmentCount - 1;
+   // }
+   // if (hasTrailingSeparator)
+   // length++;
    //
-   //      char[] result = new char[length];
-   //      int offset = 0;
-   //      int len = segments.length - 1;
-   //      if (len >= skipSegmentCount)
-   //      {
-   //         //append all but the last segment, with separators
-   //         for (int i = skipSegmentCount; i < len; i++)
-   //         {
-   //            int size = segments[i].length();
-   //            segments[i].getChars(0, size, result, offset);
-   //            offset += size;
-   //            result[offset++] = '/';
-   //         }
-   //         //append the last segment
-   //         int size = segments[len].length();
-   //         segments[len].getChars(0, size, result, offset);
-   //         offset += size;
-   //      }
-   //      if (hasTrailingSeparator)
-   //         result[offset++] = '/';
-   //      return new String(result);
-   //   }
+   // char[] result = new char[length];
+   // int offset = 0;
+   // int len = segments.length - 1;
+   // if (len >= skipSegmentCount)
+   // {
+   // //append all but the last segment, with separators
+   // for (int i = skipSegmentCount; i < len; i++)
+   // {
+   // int size = segments[i].length();
+   // segments[i].getChars(0, size, result, offset);
+   // offset += size;
+   // result[offset++] = '/';
+   // }
+   // //append the last segment
+   // int size = segments[len].length();
+   // segments[len].getChars(0, size, result, offset);
+   // offset += size;
+   // }
+   // if (hasTrailingSeparator)
+   // result[offset++] = '/';
+   // return new String(result);
+   // }
 
    /*
     * Resets the list of Java-like extensions after a change in content-type.
@@ -2368,8 +2366,8 @@ public class Util
    }
 
    /**
-    * Scans the given string for a type signature starting at the given index
-    * and returns the index of the last character.
+    * Scans the given string for a type signature starting at the given index and returns the index of the last character.
+    * 
     * <pre>
     * TypeSignature:
     *  |  BaseTypeSignature
@@ -2377,7 +2375,7 @@ public class Util
     *  |  ClassTypeSignature
     *  |  TypeVariableSignature
     * </pre>
-    *
+    * 
     * @param string the signature string
     * @param start the 0-based character index of the first character
     * @return the 0-based character index of the last character
@@ -2390,22 +2388,24 @@ public class Util
    }
 
    /**
-    * Return a new array which is the split of the given string using the given divider. The given end
-    * is exclusive and the given start is inclusive.
-    * <br>
+    * Return a new array which is the split of the given string using the given divider. The given end is exclusive and the given
+    * start is inclusive. <br>
     * <br>
     * For example:
     * <ol>
-    * <li><pre>
+    * <li>
+    * 
+    * <pre>
     *    divider = 'b'
     *    string = "abbaba"
     *    start = 2
     *    end = 5
     *    result => { "", "a", "" }
     * </pre>
+    * 
     * </li>
     * </ol>
-    *
+    * 
     * @param divider the given divider
     * @param string the given string
     * @param start the given starting index
@@ -2437,26 +2437,26 @@ public class Util
       return split;
    }
 
-   //	/**
-   //	 * Sets or unsets the given resource as read-only in the file system.
-   //	 * It's a no-op if the file system does not support the read-only attribute.
-   //	 *
-   //	 * @param resource The resource to set as read-only
-   //	 * @param readOnly <code>true</code> to set it to read-only,
-   //	 *		<code>false</code> to unset
-   //	 */
-   //	public static void setReadOnly(IResource resource, boolean readOnly) {
-   //		if (isReadOnlySupported()) {
-   //			ResourceAttributes resourceAttributes = resource.getResourceAttributes();
-   //			if (resourceAttributes == null) return; // not supported on this platform for this resource
-   //			resourceAttributes.setReadOnly(readOnly);
-   //			try {
-   //				resource.setResourceAttributes(resourceAttributes);
-   //			} catch (CoreException e) {
-   //				// ignore
-   //			}
-   //		}
-   //	}
+   // /**
+   // * Sets or unsets the given resource as read-only in the file system.
+   // * It's a no-op if the file system does not support the read-only attribute.
+   // *
+   // * @param resource The resource to set as read-only
+   // * @param readOnly <code>true</code> to set it to read-only,
+   // * <code>false</code> to unset
+   // */
+   // public static void setReadOnly(IResource resource, boolean readOnly) {
+   // if (isReadOnlySupported()) {
+   // ResourceAttributes resourceAttributes = resource.getResourceAttributes();
+   // if (resourceAttributes == null) return; // not supported on this platform for this resource
+   // resourceAttributes.setReadOnly(readOnly);
+   // try {
+   // resource.setResourceAttributes(resourceAttributes);
+   // } catch (CoreException e) {
+   // // ignore
+   // }
+   // }
+   // }
    public static void sort(char[][] list)
    {
       if (list.length > 1)
@@ -2479,8 +2479,7 @@ public class Util
    }
 
    /**
-    * Sorts an array of objects in place.
-    * The given comparer compares pairs of items.
+    * Sorts an array of objects in place. The given comparer compares pairs of items.
     */
    public static void sort(Object[] objects, Comparer comparer)
    {
@@ -2498,8 +2497,7 @@ public class Util
    }
 
    /**
-    * Sorts an array of Comparable objects, returning a new array
-    * with the sorted items.  The original array is left untouched.
+    * Sorts an array of Comparable objects, returning a new array with the sorted items. The original array is left untouched.
     */
    public static Comparable[] sortCopy(Comparable[] objects)
    {
@@ -2510,26 +2508,25 @@ public class Util
       return copy;
    }
 
-   //	/** TODO
-   //	 * Sorts an array of Java elements based on their toStringWithAncestors(),
-   //	 * returning a new array with the sorted items.
-   //	 * The original array is left untouched.
-   //	 */
-   //	public static IJavaElement[] sortCopy(IJavaElement[] elements) {
-   //		int len = elements.length;
-   //		IJavaElement[] copy = new IJavaElement[len];
-   //		System.arraycopy(elements, 0, copy, 0, len);
-   //		sort(copy, new Comparer() {
-   //			public int compare(Object a, Object b) {
-   //				return ((JavaElement) a).toStringWithAncestors().compareTo(((JavaElement) b).toStringWithAncestors());
-   //			}
-   //		});
-   //		return copy;
-   //	}
+   // /** TODO
+   // * Sorts an array of Java elements based on their toStringWithAncestors(),
+   // * returning a new array with the sorted items.
+   // * The original array is left untouched.
+   // */
+   // public static IJavaElement[] sortCopy(IJavaElement[] elements) {
+   // int len = elements.length;
+   // IJavaElement[] copy = new IJavaElement[len];
+   // System.arraycopy(elements, 0, copy, 0, len);
+   // sort(copy, new Comparer() {
+   // public int compare(Object a, Object b) {
+   // return ((JavaElement) a).toStringWithAncestors().compareTo(((JavaElement) b).toStringWithAncestors());
+   // }
+   // });
+   // return copy;
+   // }
 
    /**
-    * Sorts an array of Strings, returning a new array
-    * with the sorted items.  The original array is left untouched.
+    * Sorts an array of Strings, returning a new array with the sorted items. The original array is left untouched.
     */
    public static Object[] sortCopy(Object[] objects, Comparer comparer)
    {
@@ -2541,8 +2538,7 @@ public class Util
    }
 
    /**
-    * Sorts an array of Strings, returning a new array
-    * with the sorted items.  The original array is left untouched.
+    * Sorts an array of Strings, returning a new array with the sorted items. The original array is left untouched.
     */
    public static String[] sortCopy(String[] objects)
    {
@@ -2554,9 +2550,8 @@ public class Util
    }
 
    /*
-    * Returns whether the given compound name starts with the given prefix.
-    * Returns true if the n first elements of the prefix are equals and the last element of the
-    * prefix is a prefix of the corresponding element in the compound name.
+    * Returns whether the given compound name starts with the given prefix. Returns true if the n first elements of the prefix are
+    * equals and the last element of the prefix is a prefix of the corresponding element in the compound name.
     */
    public static boolean startsWithIgnoreCase(String[] compoundName, String[] prefix, boolean partialMatch)
    {
@@ -2617,19 +2612,19 @@ public class Util
       return segs;
    }
 
-   //	/*
-   //	 * Converts the given URI to a local file. Use the existing file if the uri is on the local file system.
-   //	 * Otherwise fetch it.
-   //	 * Returns null if unable to fetch it.
-   //	 */
-   //	public static File toLocalFile(URI uri, IProgressMonitor monitor) throws CoreException {
-   //		IFileStore fileStore = EFS.getStore(uri);
-   //		File localFile = fileStore.toLocalFile(EFS.NONE, monitor);
-   //		if (localFile ==null)
-   //			// non local file system
-   //			localFile= fileStore.toLocalFile(EFS.CACHE, monitor);
-   //		return localFile;
-   //	}
+   // /*
+   // * Converts the given URI to a local file. Use the existing file if the uri is on the local file system.
+   // * Otherwise fetch it.
+   // * Returns null if unable to fetch it.
+   // */
+   // public static File toLocalFile(URI uri, IProgressMonitor monitor) throws CoreException {
+   // IFileStore fileStore = EFS.getStore(uri);
+   // File localFile = fileStore.toLocalFile(EFS.NONE, monitor);
+   // if (localFile ==null)
+   // // non local file system
+   // localFile= fileStore.toLocalFile(EFS.CACHE, monitor);
+   // return localFile;
+   // }
    /**
     * Converts a char[][] to String, where segments are separated by '.'.
     */
@@ -2784,10 +2779,8 @@ public class Util
                break;
             case Signature.C_DOLLAR :
                /**
-                * Convert '$' in resolved type signatures into '.'.
-                * NOTE: This assumes that the type signature is an inner type
-                * signature. This is true in most cases, but someone can define a
-                * non-inner type name containing a '$'.
+                * Convert '$' in resolved type signatures into '.'. NOTE: This assumes that the type signature is an inner type
+                * signature. This is true in most cases, but someone can define a non-inner type name containing a '$'.
                 */
                buffer.append('.');
                break;
@@ -2920,8 +2913,7 @@ public class Util
    }
 
    /*
-    * Returns the unresolved type parameter signatures of the given method
-    * e.g. {"QString;", "[int", "[[Qjava.util.Vector;"}
+    * Returns the unresolved type parameter signatures of the given method e.g. {"QString;", "[int", "[[Qjava.util.Vector;"}
     */
    public static String[] typeParameterSignatures(AbstractMethodDeclaration method)
    {
@@ -2941,8 +2933,7 @@ public class Util
    }
 
    /*
-    * Returns the unresolved type signature of the given type reference,
-    * e.g. "QString;", "[int", "[[Qjava.util.Vector;"
+    * Returns the unresolved type signature of the given type reference, e.g. "QString;", "[int", "[[Qjava.util.Vector;"
     */
    public static String typeSignature(TypeReference type)
    {
@@ -2958,7 +2949,7 @@ public class Util
          {
             char[][] compoundName = typeReferences[i].getParameterizedTypeName();
             char[] typeName = CharOperation.concatWith(compoundName, '.');
-            typeSignatures[i] = Signature.createTypeSignature(typeName, false/*don't resolve*/);
+            typeSignatures[i] = Signature.createTypeSignature(typeName, false/* don't resolve */);
          }
          signature = Signature.createIntersectionTypeSignature(typeSignatures);
       }
@@ -2966,7 +2957,7 @@ public class Util
       {
          char[][] compoundName = type.getParameterizedTypeName();
          char[] typeName = CharOperation.concatWith(compoundName, '.');
-         signature = Signature.createTypeSignature(typeName, false/*don't resolve*/);
+         signature = Signature.createTypeSignature(typeName, false/* don't resolve */);
       }
       return signature;
    }
@@ -2987,29 +2978,29 @@ public class Util
       Assert.isTrue(isValidTypeSignature(sig, allowVoid));
    }
 
-   //   public static void verbose(String log)
-   //   {
-   //      verbose(log, System.out);
-   //   }
+   // public static void verbose(String log)
+   // {
+   // verbose(log, System.out);
+   // }
    //
-   //   public static synchronized void verbose(String log, PrintStream printStream)
-   //   {
-   //      int start = 0;
-   //      do
-   //      {
-   //         int end = log.indexOf('\n', start);
-   //         printStream.print(Thread.currentThread());
+   // public static synchronized void verbose(String log, PrintStream printStream)
+   // {
+   // int start = 0;
+   // do
+   // {
+   // int end = log.indexOf('\n', start);
+   // printStream.print(Thread.currentThread());
    //         printStream.print(" "); //$NON-NLS-1$
-   //         printStream.print(log.substring(start, end == -1 ? log.length() : end + 1));
-   //         start = end + 1;
-   //      }
-   //      while (start != 0);
-   //      printStream.println();
-   //   }
+   // printStream.print(log.substring(start, end == -1 ? log.length() : end + 1));
+   // start = end + 1;
+   // }
+   // while (start != 0);
+   // printStream.println();
+   // }
 
    /**
-    * Returns true if the given name ends with one of the known java like extension.
-    * (implementation is not creating extra strings)
+    * Returns true if the given name ends with one of the known java like extension. (implementation is not creating extra
+    * strings)
     */
    public final static boolean isJavaLikeFileName(String name)
    {
@@ -3019,8 +3010,8 @@ public class Util
    }
 
    /**
-    * Returns true if the given name ends with one of the known java like extension.
-    * (implementation is not creating extra strings)
+    * Returns true if the given name ends with one of the known java like extension. (implementation is not creating extra
+    * strings)
     */
    public final static boolean isJavaLikeFileName(char[] fileName)
    {
@@ -3049,26 +3040,14 @@ public class Util
 
    /**
     * Get all type arguments from an array of signatures.
-    *
-    * Example:
-    * 	For following type X<Y<Z>,V<W>,U>.A<B> signatures is:
-    * 	[
-    * 		['L','X','<','L','Y','<','L','Z',';'>',';','L','V','<','L','W',';'>',';','L','U',';',>',';'],
-    * 		['L','A','<','L','B',';','>',';']
-    * 	]
-    * 	@see #splitTypeLevelsSignature(String)
-    * 	Then, this method returns:
-    * 	[
-    * 		[
-    * 			['L','Y','<','L','Z',';'>',';'],
-    * 			['L','V','<','L','W',';'>',';'],
-    * 			['L','U',';']
-    * 		],
-    * 		[
-    * 			['L','B',';']
-    * 		]
-    * 	]
-    *
+    * 
+    * Example: For following type X<Y<Z>,V<W>,U>.A<B> signatures is: [
+    * ['L','X','<','L','Y','<','L','Z',';'>',';','L','V','<','L','W',';'>',';','L','U',';',>',';'],
+    * ['L','A','<','L','B',';','>',';'] ]
+    * 
+    * @see #splitTypeLevelsSignature(String) Then, this method returns: [ [ ['L','Y','<','L','Z',';'>',';'],
+    *      ['L','V','<','L','W',';'>',';'], ['L','U',';'] ], [ ['L','B',';'] ] ]
+    * 
     * @param typeSignatures Array of signatures (one per each type levels)
     * @throws IllegalArgumentException If one of provided signature is malformed
     * @return char[][][] Array of type arguments for each signature
@@ -3086,139 +3065,138 @@ public class Util
       return typeArguments;
    }
 
-   //	public static IAnnotation getAnnotation(JavaElement parent, IBinaryAnnotation binaryAnnotation, String memberValuePairName) {
-   //		char[] typeName = org.eclipse.jdt.core.Signature.toCharArray(CharOperation.replaceOnCopy(binaryAnnotation.getTypeName(), '/', '.'));
-   //		return new Annotation(parent, new String(typeName), memberValuePairName);
-   //	}
-   //	
-   //	public static Object getAnnotationMemberValue(JavaElement parent, MemberValuePair memberValuePair, Object binaryValue) {
-   //		if (binaryValue instanceof Constant) {
-   //			return getAnnotationMemberValue(memberValuePair, (Constant) binaryValue);
-   //		} else if (binaryValue instanceof IBinaryAnnotation) {
-   //			memberValuePair.valueKind = IMemberValuePair.K_ANNOTATION;
-   //			return getAnnotation(parent, (IBinaryAnnotation) binaryValue, memberValuePair.getMemberName());
-   //		} else if (binaryValue instanceof ClassSignature) {
-   //			memberValuePair.valueKind = IMemberValuePair.K_CLASS;
-   //			char[] className = Signature.toCharArray(CharOperation.replaceOnCopy(((ClassSignature) binaryValue).getTypeName(), '/', '.'));
-   //			return new String(className);
-   //		} else if (binaryValue instanceof EnumConstantSignature) {
-   //			memberValuePair.valueKind = IMemberValuePair.K_QUALIFIED_NAME;
-   //			EnumConstantSignature enumConstant = (EnumConstantSignature) binaryValue;
-   //			char[] enumName = Signature.toCharArray(CharOperation.replaceOnCopy(enumConstant.getTypeName(), '/', '.'));
-   //			char[] qualifiedName = CharOperation.concat(enumName, enumConstant.getEnumConstantName(), '.');
-   //			return new String(qualifiedName);
-   //		} else if (binaryValue instanceof Object[]) {
-   //			memberValuePair.valueKind = -1; // modified below by the first call to getMemberValue(...)
-   //			Object[] binaryValues = (Object[]) binaryValue;
-   //			int length = binaryValues.length;
-   //			Object[] values = new Object[length];
-   //			for (int i = 0; i < length; i++) {
-   //				int previousValueKind = memberValuePair.valueKind;
-   //				Object value = getAnnotationMemberValue(parent, memberValuePair, binaryValues[i]);
-   //				if (previousValueKind != -1 && memberValuePair.valueKind != previousValueKind) {
-   //					// values are heterogeneous, value kind is thus unknown
-   //					memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
-   //				}
-   //				if (value instanceof Annotation) {
-   //					Annotation annotation = (Annotation) value;
-   //					for (int j = 0; j < i; j++) {
-   //						if (annotation.equals(values[j])) {
-   //							annotation.occurrenceCount++;
-   //						}
-   //					}
-   //				}
-   //				values[i] = value;
-   //			}
-   //			if (memberValuePair.valueKind == -1)
-   //				memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
-   //			return values;
-   //		} else {
-   //			memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
-   //			return null;
-   //		}
-   //	}
+   // public static IAnnotation getAnnotation(JavaElement parent, IBinaryAnnotation binaryAnnotation, String memberValuePairName)
+   // {
+   // char[] typeName = org.eclipse.jdt.core.Signature.toCharArray(CharOperation.replaceOnCopy(binaryAnnotation.getTypeName(),
+   // '/', '.'));
+   // return new Annotation(parent, new String(typeName), memberValuePairName);
+   // }
+   //
+   // public static Object getAnnotationMemberValue(JavaElement parent, MemberValuePair memberValuePair, Object binaryValue) {
+   // if (binaryValue instanceof Constant) {
+   // return getAnnotationMemberValue(memberValuePair, (Constant) binaryValue);
+   // } else if (binaryValue instanceof IBinaryAnnotation) {
+   // memberValuePair.valueKind = IMemberValuePair.K_ANNOTATION;
+   // return getAnnotation(parent, (IBinaryAnnotation) binaryValue, memberValuePair.getMemberName());
+   // } else if (binaryValue instanceof ClassSignature) {
+   // memberValuePair.valueKind = IMemberValuePair.K_CLASS;
+   // char[] className = Signature.toCharArray(CharOperation.replaceOnCopy(((ClassSignature) binaryValue).getTypeName(), '/',
+   // '.'));
+   // return new String(className);
+   // } else if (binaryValue instanceof EnumConstantSignature) {
+   // memberValuePair.valueKind = IMemberValuePair.K_QUALIFIED_NAME;
+   // EnumConstantSignature enumConstant = (EnumConstantSignature) binaryValue;
+   // char[] enumName = Signature.toCharArray(CharOperation.replaceOnCopy(enumConstant.getTypeName(), '/', '.'));
+   // char[] qualifiedName = CharOperation.concat(enumName, enumConstant.getEnumConstantName(), '.');
+   // return new String(qualifiedName);
+   // } else if (binaryValue instanceof Object[]) {
+   // memberValuePair.valueKind = -1; // modified below by the first call to getMemberValue(...)
+   // Object[] binaryValues = (Object[]) binaryValue;
+   // int length = binaryValues.length;
+   // Object[] values = new Object[length];
+   // for (int i = 0; i < length; i++) {
+   // int previousValueKind = memberValuePair.valueKind;
+   // Object value = getAnnotationMemberValue(parent, memberValuePair, binaryValues[i]);
+   // if (previousValueKind != -1 && memberValuePair.valueKind != previousValueKind) {
+   // // values are heterogeneous, value kind is thus unknown
+   // memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
+   // }
+   // if (value instanceof Annotation) {
+   // Annotation annotation = (Annotation) value;
+   // for (int j = 0; j < i; j++) {
+   // if (annotation.equals(values[j])) {
+   // annotation.occurrenceCount++;
+   // }
+   // }
+   // }
+   // values[i] = value;
+   // }
+   // if (memberValuePair.valueKind == -1)
+   // memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
+   // return values;
+   // } else {
+   // memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
+   // return null;
+   // }
+   // }
 
-   //	/*
-   //	 * Creates a member value from the given constant, and sets the valueKind on the given memberValuePair
-   //	 */
-   //	public static Object getAnnotationMemberValue(MemberValuePair memberValuePair, Constant constant) {
-   //		if (constant == null) {
-   //			memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
-   //			return null;
-   //		}
-   //		switch (constant.typeID()) {
-   //			case TypeIds.T_int :
-   //				memberValuePair.valueKind = IMemberValuePair.K_INT;
-   //				return new Integer(constant.intValue());
-   //			case TypeIds.T_byte :
-   //				memberValuePair.valueKind = IMemberValuePair.K_BYTE;
-   //				return new Byte(constant.byteValue());
-   //			case TypeIds.T_short :
-   //				memberValuePair.valueKind = IMemberValuePair.K_SHORT;
-   //				return new Short(constant.shortValue());
-   //			case TypeIds.T_char :
-   //				memberValuePair.valueKind = IMemberValuePair.K_CHAR;
-   //				return new Character(constant.charValue());
-   //			case TypeIds.T_float :
-   //				memberValuePair.valueKind = IMemberValuePair.K_FLOAT;
-   //				return new Float(constant.floatValue());
-   //			case TypeIds.T_double :
-   //				memberValuePair.valueKind = IMemberValuePair.K_DOUBLE;
-   //				return new Double(constant.doubleValue());
-   //			case TypeIds.T_boolean :
-   //				memberValuePair.valueKind = IMemberValuePair.K_BOOLEAN;
-   //				return Boolean.valueOf(constant.booleanValue());
-   //			case TypeIds.T_long :
-   //				memberValuePair.valueKind = IMemberValuePair.K_LONG;
-   //				return new Long(constant.longValue());
-   //			case TypeIds.T_JavaLangString :
-   //				memberValuePair.valueKind = IMemberValuePair.K_STRING;
-   //				return constant.stringValue();
-   //			default:
-   //				memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
-   //				return null;
-   //		}
-   //	}
-   //	
-   //	/*
-   //	 * Creates a member value from the given constant in case of negative numerals,
-   //	 * and sets the valueKind on the given memberValuePair
-   //	 */
-   //	public static Object getNegativeAnnotationMemberValue(MemberValuePair memberValuePair, Constant constant) {
-   //		if (constant == null) {
-   //			memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
-   //			return null;
-   //		}
-   //		switch (constant.typeID()) {
-   //			case TypeIds.T_int :
-   //				memberValuePair.valueKind = IMemberValuePair.K_INT;
-   //				return new Integer(constant.intValue() * -1);
-   //			case TypeIds.T_float :
-   //				memberValuePair.valueKind = IMemberValuePair.K_FLOAT;
-   //				return new Float(constant.floatValue() * -1.0f);
-   //			case TypeIds.T_double :
-   //				memberValuePair.valueKind = IMemberValuePair.K_DOUBLE;
-   //				return new Double(constant.doubleValue() * -1.0);
-   //			case TypeIds.T_long :
-   //				memberValuePair.valueKind = IMemberValuePair.K_LONG;
-   //				return new Long(constant.longValue() * -1L);
-   //			default:
-   //				memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
-   //				return null;
-   //		}
-   //	}
+   // /*
+   // * Creates a member value from the given constant, and sets the valueKind on the given memberValuePair
+   // */
+   // public static Object getAnnotationMemberValue(MemberValuePair memberValuePair, Constant constant) {
+   // if (constant == null) {
+   // memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
+   // return null;
+   // }
+   // switch (constant.typeID()) {
+   // case TypeIds.T_int :
+   // memberValuePair.valueKind = IMemberValuePair.K_INT;
+   // return new Integer(constant.intValue());
+   // case TypeIds.T_byte :
+   // memberValuePair.valueKind = IMemberValuePair.K_BYTE;
+   // return new Byte(constant.byteValue());
+   // case TypeIds.T_short :
+   // memberValuePair.valueKind = IMemberValuePair.K_SHORT;
+   // return new Short(constant.shortValue());
+   // case TypeIds.T_char :
+   // memberValuePair.valueKind = IMemberValuePair.K_CHAR;
+   // return new Character(constant.charValue());
+   // case TypeIds.T_float :
+   // memberValuePair.valueKind = IMemberValuePair.K_FLOAT;
+   // return new Float(constant.floatValue());
+   // case TypeIds.T_double :
+   // memberValuePair.valueKind = IMemberValuePair.K_DOUBLE;
+   // return new Double(constant.doubleValue());
+   // case TypeIds.T_boolean :
+   // memberValuePair.valueKind = IMemberValuePair.K_BOOLEAN;
+   // return Boolean.valueOf(constant.booleanValue());
+   // case TypeIds.T_long :
+   // memberValuePair.valueKind = IMemberValuePair.K_LONG;
+   // return new Long(constant.longValue());
+   // case TypeIds.T_JavaLangString :
+   // memberValuePair.valueKind = IMemberValuePair.K_STRING;
+   // return constant.stringValue();
+   // default:
+   // memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
+   // return null;
+   // }
+   // }
+   //
+   // /*
+   // * Creates a member value from the given constant in case of negative numerals,
+   // * and sets the valueKind on the given memberValuePair
+   // */
+   // public static Object getNegativeAnnotationMemberValue(MemberValuePair memberValuePair, Constant constant) {
+   // if (constant == null) {
+   // memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
+   // return null;
+   // }
+   // switch (constant.typeID()) {
+   // case TypeIds.T_int :
+   // memberValuePair.valueKind = IMemberValuePair.K_INT;
+   // return new Integer(constant.intValue() * -1);
+   // case TypeIds.T_float :
+   // memberValuePair.valueKind = IMemberValuePair.K_FLOAT;
+   // return new Float(constant.floatValue() * -1.0f);
+   // case TypeIds.T_double :
+   // memberValuePair.valueKind = IMemberValuePair.K_DOUBLE;
+   // return new Double(constant.doubleValue() * -1.0);
+   // case TypeIds.T_long :
+   // memberValuePair.valueKind = IMemberValuePair.K_LONG;
+   // return new Long(constant.longValue() * -1L);
+   // default:
+   // memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
+   // return null;
+   // }
+   // }
    /**
-    * Split signatures of all levels  from a type unique key.
-    *
-    * Example:
-    * 	For following type X<Y<Z>,V<W>,U>.A<B>, unique key is:
-    * 	"LX<LY<LZ;>;LV<LW;>;LU;>.LA<LB;>;"
-    *
-    * 	The return splitted signatures array is:
-    * 	[
-    * 		['L','X','<','L','Y','<','L','Z',';'>',';','L','V','<','L','W',';'>',';','L','U','>',';'],
-    * 		['L','A','<','L','B',';','>',';']
-    *
+    * Split signatures of all levels from a type unique key.
+    * 
+    * Example: For following type X<Y<Z>,V<W>,U>.A<B>, unique key is: "LX<LY<LZ;>;LV<LW;>;LU;>.LA<LB;>;"
+    * 
+    * The return splitted signatures array is: [
+    * ['L','X','<','L','Y','<','L','Z',';'>',';','L','V','<','L','W',';'>',';','L','U','>',';'], ['L','A','<','L','B',';','>',';']
+    * 
     * @param typeSignature ParameterizedSourceType type signature
     * @return char[][] Array of signatures for each level of given unique key
     */
@@ -3231,7 +3209,7 @@ public class Util
       // Init counters and arrays
       char[][] signatures = new char[10][];
       int signaturesCount = 0;
-      //		int[] lengthes = new int [10];
+      // int[] lengthes = new int [10];
       int paramOpening = 0;
 
       // Scan each signature character
@@ -3541,10 +3519,8 @@ public class Util
             case Signature.C_DOLLAR :
                // once we hit "$" there are no more package prefixes
                /**
-                * Convert '$' in resolved type signatures into '.'.
-                * NOTE: This assumes that the type signature is an inner type
-                * signature. This is true in most cases, but someone can define a
-                * non-inner type name containing a '$'.
+                * Convert '$' in resolved type signatures into '.'. NOTE: This assumes that the type signature is an inner type
+                * signature. This is true in most cases, but someone can define a non-inner type name containing a '$'.
                 */
                buffer.append('.');
                break;
@@ -3595,80 +3571,81 @@ public class Util
       return result;
    }
 
-   //	/*
-   //	 * This method adjusts the task tags and task priorities so that they have the same size
-   //	 */
-   //	public static void fixTaskTags(Map defaultOptionsMap) {
-   //		Object taskTagsValue = defaultOptionsMap.get(JavaCore.COMPILER_TASK_TAGS);
-   //		char[][] taskTags = null;
-   //		if (taskTagsValue instanceof String) {
-   //			taskTags = CharOperation.splitAndTrimOn(',', ((String) taskTagsValue).toCharArray());
-   //		}
-   //		Object taskPrioritiesValue = defaultOptionsMap.get(JavaCore.COMPILER_TASK_PRIORITIES);
-   //		char[][] taskPriorities = null;
-   //		if (taskPrioritiesValue instanceof String) {
-   //			taskPriorities = CharOperation.splitAndTrimOn(',', ((String) taskPrioritiesValue).toCharArray());
-   //		}
-   //		if (taskPriorities == null) {
-   //			if (taskTags != null) {
+   // /*
+   // * This method adjusts the task tags and task priorities so that they have the same size
+   // */
+   // public static void fixTaskTags(Map defaultOptionsMap) {
+   // Object taskTagsValue = defaultOptionsMap.get(JavaCore.COMPILER_TASK_TAGS);
+   // char[][] taskTags = null;
+   // if (taskTagsValue instanceof String) {
+   // taskTags = CharOperation.splitAndTrimOn(',', ((String) taskTagsValue).toCharArray());
+   // }
+   // Object taskPrioritiesValue = defaultOptionsMap.get(JavaCore.COMPILER_TASK_PRIORITIES);
+   // char[][] taskPriorities = null;
+   // if (taskPrioritiesValue instanceof String) {
+   // taskPriorities = CharOperation.splitAndTrimOn(',', ((String) taskPrioritiesValue).toCharArray());
+   // }
+   // if (taskPriorities == null) {
+   // if (taskTags != null) {
    //				Util.logRepeatedMessage(TASK_PRIORITIES_PROBLEM, IStatus.ERROR, "Inconsistent values for taskTags (not null) and task priorities (null)"); //$NON-NLS-1$
-   //				defaultOptionsMap.remove(JavaCore.COMPILER_TASK_TAGS);
-   //			}
-   //			return;
-   //		} else if (taskTags == null) {
+   // defaultOptionsMap.remove(JavaCore.COMPILER_TASK_TAGS);
+   // }
+   // return;
+   // } else if (taskTags == null) {
    //			Util.logRepeatedMessage(TASK_PRIORITIES_PROBLEM, IStatus.ERROR, "Inconsistent values for taskTags (null) and task priorities (not null)"); //$NON-NLS-1$
-   //			defaultOptionsMap.remove(JavaCore.COMPILER_TASK_PRIORITIES);
-   //			return;
-   //		}
-   //		int taskTagsLength = taskTags.length;
-   //		int taskPrioritiesLength = taskPriorities.length;
-   //		if (taskTagsLength != taskPrioritiesLength) {
+   // defaultOptionsMap.remove(JavaCore.COMPILER_TASK_PRIORITIES);
+   // return;
+   // }
+   // int taskTagsLength = taskTags.length;
+   // int taskPrioritiesLength = taskPriorities.length;
+   // if (taskTagsLength != taskPrioritiesLength) {
    //			Util.logRepeatedMessage(TASK_PRIORITIES_PROBLEM, IStatus.ERROR, "Inconsistent values for taskTags and task priorities : length is different"); //$NON-NLS-1$
-   //			if (taskTagsLength > taskPrioritiesLength) {
-   //				System.arraycopy(taskTags, 0, (taskTags = new char[taskPrioritiesLength][]), 0, taskPrioritiesLength);
-   //				defaultOptionsMap.put(JavaCore.COMPILER_TASK_TAGS, new String(CharOperation.concatWith(taskTags,',')));
-   //			} else {
-   //				System.arraycopy(taskPriorities, 0, (taskPriorities = new char[taskTagsLength][]), 0, taskTagsLength);
-   //				defaultOptionsMap.put(JavaCore.COMPILER_TASK_PRIORITIES, new String(CharOperation.concatWith(taskPriorities,',')));
-   //			}
-   //		}
-   //	}
-   //	/**
-   //	 * Finds the IMethod element corresponding to the given selector, 
-   //	 * without creating a new dummy instance of a binary method. 
-   //	 * @param type the type in which the method is declared
-   //	 * @param selector the method name
-   //	 * @param paramTypeSignatures the type signatures of the method arguments
-   //	 * @param isConstructor whether we're looking for a constructor
-   //	 * @return an IMethod if found, otherwise null
-   //	 * @throws JavaModelException
-   //	 */
-   //	public static IMethod findMethod(IType type, char[] selector, String[] paramTypeSignatures, boolean isConstructor) throws JavaModelException {
-   //		IMethod method = null;
-   //		int startingIndex = 0;
-   //		String[] args;
-   //		IType enclosingType = type.getDeclaringType();
-   //		// If the method is a constructor of a non-static inner type, add the enclosing type as an 
-   //		// additional parameter to the constructor
-   //		if (enclosingType != null
-   //				&& isConstructor
-   //				&& !Flags.isStatic(type.getFlags())) {
-   //			args = new String[paramTypeSignatures.length+1];
-   //			startingIndex = 1;
-   //			args[0] = Signature.createTypeSignature(enclosingType.getFullyQualifiedName(), true);
-   //		} else {
-   //			args = new String[paramTypeSignatures.length];
-   //		}
-   //		int length = args.length;
-   //		for(int i = startingIndex;	i< length ; i++){
-   //			args[i] = new String(paramTypeSignatures[i-startingIndex]);
-   //		}
-   //		method = type.getMethod(new String(selector), args);
-   //		
-   //		IMethod[] methods = type.findMethods(method);
-   //		if (methods != null && methods.length > 0) {
-   //			method = methods[0];
-   //		}
-   //		return method;
-   //	}
+   // if (taskTagsLength > taskPrioritiesLength) {
+   // System.arraycopy(taskTags, 0, (taskTags = new char[taskPrioritiesLength][]), 0, taskPrioritiesLength);
+   // defaultOptionsMap.put(JavaCore.COMPILER_TASK_TAGS, new String(CharOperation.concatWith(taskTags,',')));
+   // } else {
+   // System.arraycopy(taskPriorities, 0, (taskPriorities = new char[taskTagsLength][]), 0, taskTagsLength);
+   // defaultOptionsMap.put(JavaCore.COMPILER_TASK_PRIORITIES, new String(CharOperation.concatWith(taskPriorities,',')));
+   // }
+   // }
+   // }
+   // /**
+   // * Finds the IMethod element corresponding to the given selector,
+   // * without creating a new dummy instance of a binary method.
+   // * @param type the type in which the method is declared
+   // * @param selector the method name
+   // * @param paramTypeSignatures the type signatures of the method arguments
+   // * @param isConstructor whether we're looking for a constructor
+   // * @return an IMethod if found, otherwise null
+   // * @throws JavaModelException
+   // */
+   // public static IMethod findMethod(IType type, char[] selector, String[] paramTypeSignatures, boolean isConstructor) throws
+   // JavaModelException {
+   // IMethod method = null;
+   // int startingIndex = 0;
+   // String[] args;
+   // IType enclosingType = type.getDeclaringType();
+   // // If the method is a constructor of a non-static inner type, add the enclosing type as an
+   // // additional parameter to the constructor
+   // if (enclosingType != null
+   // && isConstructor
+   // && !Flags.isStatic(type.getFlags())) {
+   // args = new String[paramTypeSignatures.length+1];
+   // startingIndex = 1;
+   // args[0] = Signature.createTypeSignature(enclosingType.getFullyQualifiedName(), true);
+   // } else {
+   // args = new String[paramTypeSignatures.length];
+   // }
+   // int length = args.length;
+   // for(int i = startingIndex; i< length ; i++){
+   // args[i] = new String(paramTypeSignatures[i-startingIndex]);
+   // }
+   // method = type.getMethod(new String(selector), args);
+   //
+   // IMethod[] methods = type.findMethods(method);
+   // if (methods != null && methods.length > 0) {
+   // method = methods[0];
+   // }
+   // return method;
+   // }
 }

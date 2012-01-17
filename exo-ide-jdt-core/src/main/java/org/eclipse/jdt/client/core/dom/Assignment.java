@@ -18,12 +18,12 @@ import java.util.Map;
 
 /**
  * Assignment expression AST node type.
- *
+ * 
  * <pre>
  * Assignment:
  *    Expression AssignmentOperator Expression
  * </pre>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -32,6 +32,7 @@ public class Assignment extends Expression
 
    /**
     * Assignment operators (typesafe enumeration).
+    * 
     * <pre>
     * AssignmentOperator:<code>
     *    <b>=</b> ASSIGN
@@ -59,10 +60,9 @@ public class Assignment extends Expression
       /**
        * Creates a new assignment operator with the given name.
        * <p>
-       * Note: this constructor is private. The only instances
-       * ever created are the ones for the standard operators.
+       * Note: this constructor is private. The only instances ever created are the ones for the standard operators.
        * </p>
-       *
+       * 
        * @param op the character sequence for the operator
        */
       private Operator(String op)
@@ -72,7 +72,7 @@ public class Assignment extends Expression
 
       /**
        * Returns the character sequence for the operator.
-       *
+       * 
        * @return the character sequence for the operator
        */
       public String toString()
@@ -117,14 +117,12 @@ public class Assignment extends Expression
       public static final Operator RIGHT_SHIFT_UNSIGNED_ASSIGN = new Operator(">>>=");//$NON-NLS-1$
 
       /**
-       * Returns the assignment operator corresponding to the given string,
-       * or <code>null</code> if none.
+       * Returns the assignment operator corresponding to the given string, or <code>null</code> if none.
        * <p>
-       * <code>toOperator</code> is the converse of <code>toString</code>:
-       * that is, <code>Operator.toOperator(op.toString()) == op</code> for all
-       * operators <code>op</code>.
+       * <code>toOperator</code> is the converse of <code>toString</code>: that is,
+       * <code>Operator.toOperator(op.toString()) == op</code> for all operators <code>op</code>.
        * </p>
-       *
+       * 
        * @param token the character sequence for the operator
        * @return the assignment operator, or <code>null</code> if none
        */
@@ -134,8 +132,7 @@ public class Assignment extends Expression
       }
 
       /**
-       * Map from token to operator (key type: <code>String</code>;
-       * value type: <code>Operator</code>).
+       * Map from token to operator (key type: <code>String</code>; value type: <code>Operator</code>).
        */
       private static final Map CODES;
       static
@@ -154,6 +151,7 @@ public class Assignment extends Expression
 
    /**
     * The "leftHandSide" structural property of this node type (child type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor LEFT_HAND_SIDE_PROPERTY = new ChildPropertyDescriptor(Assignment.class,
@@ -161,6 +159,7 @@ public class Assignment extends Expression
 
    /**
     * The "operator" structural property of this node type (type: {@link Assignment.Operator}).
+    * 
     * @since 3.0
     */
    public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(Assignment.class,
@@ -168,15 +167,14 @@ public class Assignment extends Expression
 
    /**
     * The "rightHandSide" structural property of this node type (child type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor RIGHT_HAND_SIDE_PROPERTY = new ChildPropertyDescriptor(Assignment.class,
       "rightHandSide", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -191,14 +189,11 @@ public class Assignment extends Expression
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -212,22 +207,19 @@ public class Assignment extends Expression
    private Assignment.Operator assignmentOperator = Assignment.Operator.ASSIGN;
 
    /**
-    * The left hand side; lazily initialized; defaults to an unspecified,
-    * but legal, simple name.
+    * The left hand side; lazily initialized; defaults to an unspecified, but legal, simple name.
     */
    private Expression leftHandSide = null;
 
    /**
-    * The right hand side; lazily initialized; defaults to an unspecified,
-    * but legal, simple name.
+    * The right hand side; lazily initialized; defaults to an unspecified, but legal, simple name.
     */
    private Expression rightHandSide = null;
 
    /**
-    * Creates a new AST node for an assignment expression owned by the given
-    * AST. By default, the node has an assignment operator, and unspecified
-    * left and right hand sides.
-    *
+    * Creates a new AST node for an assignment expression owned by the given AST. By default, the node has an assignment operator,
+    * and unspecified left and right hand sides.
+    * 
     * @param ast the AST that is to own this node
     */
    Assignment(AST ast)
@@ -235,16 +227,16 @@ public class Assignment extends Expression
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value)
    {
@@ -264,8 +256,8 @@ public class Assignment extends Expression
       return super.internalGetSetObjectProperty(property, get, value);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -297,16 +289,16 @@ public class Assignment extends Expression
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return ASSIGNMENT;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -318,8 +310,8 @@ public class Assignment extends Expression
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -327,8 +319,8 @@ public class Assignment extends Expression
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -344,7 +336,7 @@ public class Assignment extends Expression
 
    /**
     * Returns the operator of this assignment expression.
-    *
+    * 
     * @return the assignment operator
     */
    public Assignment.Operator getOperator()
@@ -354,7 +346,7 @@ public class Assignment extends Expression
 
    /**
     * Sets the operator of this assignment expression.
-    *
+    * 
     * @param assignmentOperator the assignment operator
     * @exception IllegalArgumentException if the argument is incorrect
     */
@@ -371,7 +363,7 @@ public class Assignment extends Expression
 
    /**
     * Returns the left hand side of this assignment expression.
-    *
+    * 
     * @return the left hand side node
     */
    public Expression getLeftHandSide()
@@ -394,14 +386,14 @@ public class Assignment extends Expression
 
    /**
     * Sets the left hand side of this assignment expression.
-    *
+    * 
     * @param expression the left hand side node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setLeftHandSide(Expression expression)
    {
@@ -418,7 +410,7 @@ public class Assignment extends Expression
 
    /**
     * Returns the right hand side of this assignment expression.
-    *
+    * 
     * @return the right hand side node
     */
    public Expression getRightHandSide()
@@ -441,14 +433,14 @@ public class Assignment extends Expression
 
    /**
     * Sets the right hand side of this assignment expression.
-    *
+    * 
     * @param expression the right hand side node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setRightHandSide(Expression expression)
    {
@@ -463,8 +455,8 @@ public class Assignment extends Expression
       postReplaceChild(oldChild, expression, RIGHT_HAND_SIDE_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
@@ -472,8 +464,8 @@ public class Assignment extends Expression
       return BASE_NODE_SIZE + 3 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

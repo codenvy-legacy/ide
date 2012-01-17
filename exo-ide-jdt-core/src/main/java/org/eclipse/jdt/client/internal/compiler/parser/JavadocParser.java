@@ -55,11 +55,11 @@ public class JavadocParser extends AbstractCommentParser
       }
    }
 
-   /* (non-Javadoc)
-    * Returns true if tag @deprecated is present in javadoc comment.
-    *
-    * If javadoc checking is enabled, will also construct an Javadoc node, which will be stored into Parser.javadoc
-    * slot for being consumed later on.
+   /*
+    * (non-Javadoc) Returns true if tag @deprecated is present in javadoc comment.
+    * 
+    * If javadoc checking is enabled, will also construct an Javadoc node, which will be stored into Parser.javadoc slot for being
+    * consumed later on.
     */
    public boolean checkDeprecation(int commentPtr)
    {
@@ -138,10 +138,10 @@ public class JavadocParser extends AbstractCommentParser
                   switch (c)
                   {
                      case '*' :
-                     case '\u000c' : /* FORM FEED               */
-                     case ' ' : /* SPACE                   */
-                     case '\t' : /* HORIZONTAL TABULATION   */
-                     case '\n' : /* LINE FEED   */
+                     case '\u000c' : /* FORM FEED */
+                     case ' ' : /* SPACE */
+                     case '\t' : /* HORIZONTAL TABULATION */
+                     case '\n' : /* LINE FEED */
                      case '\r' : /* CR */
                         // do nothing for space or '*' characters
                         continue nextCharacter;
@@ -166,7 +166,9 @@ public class JavadocParser extends AbstractCommentParser
       return this.deprecated;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createArgumentReference(char[], java.lang.Object, int)
     */
    protected Object createArgumentReference(char[] name, int dim, boolean isVarargs, Object typeRef,
@@ -208,7 +210,9 @@ public class JavadocParser extends AbstractCommentParser
       }
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createFieldReference()
     */
    protected Object createFieldReference(Object receiver) throws InvalidInputException
@@ -237,7 +241,9 @@ public class JavadocParser extends AbstractCommentParser
       }
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createMethodReference(java.lang.Object[])
     */
    protected Object createMethodReference(Object receiver, List arguments) throws InvalidInputException
@@ -373,7 +379,9 @@ public class JavadocParser extends AbstractCommentParser
       }
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createReturnStatement()
     */
    protected Object createReturnStatement()
@@ -382,7 +390,9 @@ public class JavadocParser extends AbstractCommentParser
          this.scanner.getCurrentTokenEndPosition());
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#parseTagName()
     */
    protected void createTag()
@@ -390,7 +400,9 @@ public class JavadocParser extends AbstractCommentParser
       this.tagValue = TAG_OTHERS_VALUE;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createTypeReference()
     */
    protected Object createTypeReference(int primitiveToken)
@@ -647,7 +659,8 @@ public class JavadocParser extends AbstractCommentParser
                this.tagValue = TAG_CATEGORY_VALUE;
                if (!this.inlineTagStarted)
                {
-                  valid = parseIdentifierTag(false); // TODO (frederic) reconsider parameter value when @category will be significant in spec
+                  valid = parseIdentifierTag(false); // TODO (frederic) reconsider parameter value when @category will be
+                                                     // significant in spec
                }
             }
             else if (length == TAG_CODE_LENGTH && this.inlineTagStarted
@@ -999,7 +1012,9 @@ public class JavadocParser extends AbstractCommentParser
       return true;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushText(int, int)
     */
    protected void pushText(int start, int end)
@@ -1042,7 +1057,9 @@ public class JavadocParser extends AbstractCommentParser
       return true;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#refreshInlineTagPosition(int)
     */
    protected void refreshInlineTagPosition(int previousPosition)

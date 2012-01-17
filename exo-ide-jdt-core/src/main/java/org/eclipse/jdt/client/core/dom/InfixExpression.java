@@ -18,11 +18,12 @@ import java.util.Map;
 
 /**
  * Infix expression AST node type.
+ * 
  * <pre>
  * InfixExpression:
  *    Expression InfixOperator Expression { InfixOperator Expression }
  * </pre>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -31,6 +32,7 @@ public class InfixExpression extends Expression
 
    /**
     * Infix operators (typesafe enumeration).
+    * 
     * <pre>
     * InfixOperator:<code>
     *    <b>*</b>	TIMES
@@ -65,10 +67,9 @@ public class InfixExpression extends Expression
       /**
        * Creates a new infix operator with the given token.
        * <p>
-       * Note: this constructor is private. The only instances
-       * ever created are the ones for the standard operators.
+       * Note: this constructor is private. The only instances ever created are the ones for the standard operators.
        * </p>
-       *
+       * 
        * @param token the character sequence for the operator
        */
       private Operator(String token)
@@ -78,7 +79,7 @@ public class InfixExpression extends Expression
 
       /**
        * Returns the character sequence for the operator.
-       *
+       * 
        * @return the character sequence for the operator
        */
       public String toString()
@@ -144,8 +145,7 @@ public class InfixExpression extends Expression
       public static final Operator CONDITIONAL_AND = new Operator("&&");//$NON-NLS-1$
 
       /**
-       * Map from token to operator (key type: <code>String</code>;
-       * value type: <code>Operator</code>).
+       * Map from token to operator (key type: <code>String</code>; value type: <code>Operator</code>).
        */
       private static final Map CODES;
       static
@@ -161,14 +161,12 @@ public class InfixExpression extends Expression
       }
 
       /**
-       * Returns the infix operator corresponding to the given string,
-       * or <code>null</code> if none.
+       * Returns the infix operator corresponding to the given string, or <code>null</code> if none.
        * <p>
-       * <code>toOperator</code> is the converse of <code>toString</code>:
-       * that is, <code>Operator.toOperator(op.toString()) == op</code> for
-       * all operators <code>op</code>.
+       * <code>toOperator</code> is the converse of <code>toString</code>: that is,
+       * <code>Operator.toOperator(op.toString()) == op</code> for all operators <code>op</code>.
        * </p>
-       *
+       * 
        * @param token the character sequence for the operator
        * @return the infix operator, or <code>null</code> if none
        */
@@ -181,6 +179,7 @@ public class InfixExpression extends Expression
 
    /**
     * The "leftOperand" structural property of this node type (child type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor LEFT_OPERAND_PROPERTY = new ChildPropertyDescriptor(
@@ -188,6 +187,7 @@ public class InfixExpression extends Expression
 
    /**
     * The "operator" structural property of this node type (type: {@link InfixExpression.Operator}).
+    * 
     * @since 3.0
     */
    public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(InfixExpression.class,
@@ -195,6 +195,7 @@ public class InfixExpression extends Expression
 
    /**
     * The "rightOperand" structural property of this node type (child type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor RIGHT_OPERAND_PROPERTY = new ChildPropertyDescriptor(
@@ -202,15 +203,14 @@ public class InfixExpression extends Expression
 
    /**
     * The "extendedOperands" structural property of this node type (element type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildListPropertyDescriptor EXTENDED_OPERANDS_PROPERTY = new ChildListPropertyDescriptor(
       InfixExpression.class, "extendedOperands", Expression.class, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -226,14 +226,11 @@ public class InfixExpression extends Expression
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -247,28 +244,24 @@ public class InfixExpression extends Expression
    private InfixExpression.Operator operator = InfixExpression.Operator.PLUS;
 
    /**
-    * The left operand; lazily initialized; defaults to an unspecified,
-    * but legal, simple name.
+    * The left operand; lazily initialized; defaults to an unspecified, but legal, simple name.
     */
    private Expression leftOperand = null;
 
    /**
-    * The right operand; lazily initialized; defaults to an unspecified,
-    * but legal, simple name.
+    * The right operand; lazily initialized; defaults to an unspecified, but legal, simple name.
     */
    private Expression rightOperand = null;
 
    /**
-    * The list of extended operand expressions (element type:
-    * {@link Expression}). Lazily initialized; defaults to an empty list.
+    * The list of extended operand expressions (element type: {@link Expression}). Lazily initialized; defaults to an empty list.
     */
    private ASTNode.NodeList extendedOperands = null;
 
    /**
-    * Creates a new AST node for an infix expression owned by the given
-    * AST. By default, the node has unspecified (but legal) operator,
-    * left and right operands, and an empty list of additional operands.
-    *
+    * Creates a new AST node for an infix expression owned by the given AST. By default, the node has unspecified (but legal)
+    * operator, left and right operands, and an empty list of additional operands.
+    * 
     * @param ast the AST that is to own this node
     */
    InfixExpression(AST ast)
@@ -276,16 +269,16 @@ public class InfixExpression extends Expression
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value)
    {
@@ -305,8 +298,8 @@ public class InfixExpression extends Expression
       return super.internalGetSetObjectProperty(property, get, value);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -338,8 +331,8 @@ public class InfixExpression extends Expression
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
@@ -351,16 +344,16 @@ public class InfixExpression extends Expression
       return super.internalGetChildListProperty(property);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return INFIX_EXPRESSION;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -377,8 +370,8 @@ public class InfixExpression extends Expression
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -386,8 +379,8 @@ public class InfixExpression extends Expression
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -408,7 +401,7 @@ public class InfixExpression extends Expression
 
    /**
     * Returns the operator of this infix expression.
-    *
+    * 
     * @return the infix operator
     */
    public InfixExpression.Operator getOperator()
@@ -418,7 +411,7 @@ public class InfixExpression extends Expression
 
    /**
     * Sets the operator of this infix expression.
-    *
+    * 
     * @param operator the infix operator
     * @exception IllegalArgumentException if the argument is incorrect
     */
@@ -435,7 +428,7 @@ public class InfixExpression extends Expression
 
    /**
     * Returns the left operand of this infix expression.
-    *
+    * 
     * @return the left operand node
     */
    public Expression getLeftOperand()
@@ -458,14 +451,14 @@ public class InfixExpression extends Expression
 
    /**
     * Sets the left operand of this infix expression.
-    *
+    * 
     * @param expression the left operand node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setLeftOperand(Expression expression)
    {
@@ -481,7 +474,7 @@ public class InfixExpression extends Expression
 
    /**
     * Returns the right operand of this infix expression.
-    *
+    * 
     * @return the right operand node
     */
    public Expression getRightOperand()
@@ -504,14 +497,14 @@ public class InfixExpression extends Expression
 
    /**
     * Sets the right operand of this infix expression.
-    *
+    * 
     * @param expression the right operand node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setRightOperand(Expression expression)
    {
@@ -527,9 +520,9 @@ public class InfixExpression extends Expression
 
    /**
     * Returns where there are any extended operands.
-    *
-    * @return <code>true</code> if there are one or more extended operands,
-    *    and <code>false</code> if there are no extended operands
+    * 
+    * @return <code>true</code> if there are one or more extended operands, and <code>false</code> if there are no extended
+    *         operands
     */
    public boolean hasExtendedOperands()
    {
@@ -539,22 +532,14 @@ public class InfixExpression extends Expression
    /**
     * Returns the live list of extended operands.
     * <p>
-    * The extended operands is the preferred way of representing deeply nested
-    * expressions of the form <code>L op R op R2 op R3...</code> where
-    * the same operator appears between all the operands (the most
-    * common case being lengthy string concatenation expressions). Using
-    * the extended operands keeps the trees from getting too deep; this
-    * decreases the risk is running out of thread stack space at runtime
-    * when traversing such trees.
-    * ((a + b) + c) + d would be translated to:
-    * 	leftOperand: a
-    * 	rightOperand: b
-    * 	extendedOperands: {c, d}
-    * 	operator: +
+    * The extended operands is the preferred way of representing deeply nested expressions of the form
+    * <code>L op R op R2 op R3...</code> where the same operator appears between all the operands (the most common case being
+    * lengthy string concatenation expressions). Using the extended operands keeps the trees from getting too deep; this decreases
+    * the risk is running out of thread stack space at runtime when traversing such trees. ((a + b) + c) + d would be translated
+    * to: leftOperand: a rightOperand: b extendedOperands: {c, d} operator: +
     * </p>
-    *
-    * @return the live list of extended operands
-    *   (element type: {@link Expression})
+    * 
+    * @return the live list of extended operands (element type: {@link Expression})
     */
    public List extendedOperands()
    {
@@ -566,8 +551,8 @@ public class InfixExpression extends Expression
       return this.extendedOperands;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
@@ -575,8 +560,8 @@ public class InfixExpression extends Expression
       return BASE_NODE_SIZE + 4 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

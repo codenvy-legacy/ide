@@ -14,7 +14,7 @@ import org.eclipse.jdt.client.core.util.MathUtil;
 
 /**
  * Internal utility for declaring with hexadecimal double and float literals.
- *
+ * 
  * @since 3.1
  */
 public class FloatUtil
@@ -49,26 +49,18 @@ public class FloatUtil
    private static final int SINGLE_EXPONENT_SHIFT = 23;
 
    /**
-    * Returns the float value corresponding to the given
-    * hexadecimal floating-point single precision literal.
-    * The literal must be syntactically correct, and must be
-    * a float literal (end in a 'f' or 'F'). It must not
-    * include either leading or trailing whitespace or
-    * a sign.
+    * Returns the float value corresponding to the given hexadecimal floating-point single precision literal. The literal must be
+    * syntactically correct, and must be a float literal (end in a 'f' or 'F'). It must not include either leading or trailing
+    * whitespace or a sign.
     * <p>
-    * This method returns the same answer as
-    * Float.parseFloat(new String(source)) does in JDK 1.5,
-    * except that this method returns Floal.NaN if it
-    * would underflow to 0 (parseFloat just returns 0).
-    * The method handles all the tricky cases, including
+    * This method returns the same answer as Float.parseFloat(new String(source)) does in JDK 1.5, except that this method returns
+    * Floal.NaN if it would underflow to 0 (parseFloat just returns 0). The method handles all the tricky cases, including
     * fraction rounding to 24 bits and gradual underflow.
     * </p>
-    *
-    * @param source source string containing single precision
-    * hexadecimal floating-point literal
-    * @return the float value, including Float.POSITIVE_INFINITY
-    * if the non-zero value is too large to be represented, and
-    * Float.NaN if the non-zero value is too small to be represented
+    * 
+    * @param source source string containing single precision hexadecimal floating-point literal
+    * @return the float value, including Float.POSITIVE_INFINITY if the non-zero value is too large to be represented, and
+    *         Float.NaN if the non-zero value is too small to be represented
     */
    public static float valueOfHexFloatLiteral(char[] source)
    {
@@ -77,47 +69,35 @@ public class FloatUtil
    }
 
    /**
-    * Returns the double value corresponding to the given
-    * hexadecimal floating-point double precision literal.
-    * The literal must be syntactially correct, and must be
-    * a double literal (end in an optional 'd' or 'D').
-    * It must not include either leading or trailing whitespace or
-    * a sign.
+    * Returns the double value corresponding to the given hexadecimal floating-point double precision literal. The literal must be
+    * syntactially correct, and must be a double literal (end in an optional 'd' or 'D'). It must not include either leading or
+    * trailing whitespace or a sign.
     * <p>
-    * This method returns the same answer as
-    * Double.parseDouble(new String(source)) does in JDK 1.5,
-    * except that this method throw NumberFormatException in
-    * the case of overflow to infinity or underflow to 0.
-    * The method handles all the tricky cases, including
-    * fraction rounding to 53 bits and gradual underflow.
+    * This method returns the same answer as Double.parseDouble(new String(source)) does in JDK 1.5, except that this method throw
+    * NumberFormatException in the case of overflow to infinity or underflow to 0. The method handles all the tricky cases,
+    * including fraction rounding to 53 bits and gradual underflow.
     * </p>
-    *
-    * @param source source string containing double precision
-    * hexadecimal floating-point literal
-    * @return the double value, including Double.POSITIVE_INFINITY
-    * if the non-zero value is too large to be represented, and
-    * Double.NaN if the non-zero value is too small to be represented
+    * 
+    * @param source source string containing double precision hexadecimal floating-point literal
+    * @return the double value, including Double.POSITIVE_INFINITY if the non-zero value is too large to be represented, and
+    *         Double.NaN if the non-zero value is too small to be represented
     */
    public static double valueOfHexDoubleLiteral(char[] source)
    {
       return Double.parseDouble(new String(source));
-      //TODO use math library to correct parse double value
-      //      long bits = convertHexFloatingPointLiteralToBits(source);
-      //      return MathUtil.longBitsToDouble(bits);
+      // TODO use math library to correct parse double value
+      // long bits = convertHexFloatingPointLiteralToBits(source);
+      // return MathUtil.longBitsToDouble(bits);
    }
 
    /**
-    * Returns the given hexadecimal floating-point literal as
-    * the bits for a single-precision  (float) or a
-    * double-precision (double) IEEE floating point number.
-    * The literal must be syntactically correct.  It must not
-    * include either leading or trailing whitespace or a sign.
-    *
+    * Returns the given hexadecimal floating-point literal as the bits for a single-precision (float) or a double-precision
+    * (double) IEEE floating point number. The literal must be syntactically correct. It must not include either leading or
+    * trailing whitespace or a sign.
+    * 
     * @param source source string containing hexadecimal floating-point literal
-    * @return for double precision literals, bits suitable
-    * for passing to Double.longBitsToDouble; for single precision literals,
-    * bits suitable for passing to Single.intBitsToDouble in the bottom
-    * 32 bits of the result
+    * @return for double precision literals, bits suitable for passing to Double.longBitsToDouble; for single precision literals,
+    *         bits suitable for passing to Single.intBitsToDouble in the bottom 32 bits of the result
     * @throws NumberFormatException if the number cannot be parsed
     */
    private static long convertHexFloatingPointLiteralToBits(char[] source)

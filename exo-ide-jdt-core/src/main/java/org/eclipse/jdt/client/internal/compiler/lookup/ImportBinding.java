@@ -31,9 +31,9 @@ public class ImportBinding extends Binding
       this.reference = reference;
    }
 
-   /* API
-   * Answer the receiver's binding type from Binding.BindingID.
-   */
+   /*
+    * API Answer the receiver's binding type from Binding.BindingID.
+    */
 
    public final int kind()
    {

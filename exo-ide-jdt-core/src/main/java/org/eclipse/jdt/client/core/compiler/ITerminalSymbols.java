@@ -12,9 +12,9 @@
 package org.eclipse.jdt.client.core.compiler;
 
 /**
- * Maps each terminal symbol in the java-grammar into a unique integer.
- * This integer is used to represent the terminal when computing a parsing action.
- *
+ * Maps each terminal symbol in the java-grammar into a unique integer. This integer is used to represent the terminal when
+ * computing a parsing action.
+ * 
  * @see IScanner
  * @since 2.0
  * @noimplement This interface is not intended to be implemented by clients.
@@ -245,18 +245,21 @@ public interface ITerminalSymbols
 
    /**
     * "enum" keyword (added in J2SE 1.5).
+    * 
     * @since 3.0
     */
    int TokenNameenum = 400;
 
    /**
     * "@" token (added in J2SE 1.5).
+    * 
     * @since 3.0
     */
    int TokenNameAT = 401;
 
    /**
     * "..." token (added in J2SE 1.5).
+    * 
     * @since 3.0
     */
    int TokenNameELLIPSIS = 402;

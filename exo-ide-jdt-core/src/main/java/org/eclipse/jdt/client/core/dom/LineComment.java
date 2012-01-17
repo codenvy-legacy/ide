@@ -16,17 +16,13 @@ import java.util.List;
 /**
  * End-of-line comment AST node type.
  * <p>
- * End-of-line comments begin with "//",
- * must end with a line delimiter (as per JLS 3.7),
- * and must not contain line breaks.
+ * End-of-line comments begin with "//", must end with a line delimiter (as per JLS 3.7), and must not contain line breaks.
  * </p>
  * <p>
- * Note that this node type is a comment placeholder, and is
- * only useful for recording the source range where a comment
- * was found in a source string. It is not useful for creating
- * comments.
+ * Note that this node type is a comment placeholder, and is only useful for recording the source range where a comment was found
+ * in a source string. It is not useful for creating comments.
  * </p>
- *
+ * 
  * @since 3.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -34,9 +30,7 @@ public final class LineComment extends Comment
 {
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -48,14 +42,11 @@ public final class LineComment extends Comment
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -68,7 +59,7 @@ public final class LineComment extends Comment
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    LineComment(AST ast)
@@ -76,24 +67,24 @@ public final class LineComment extends Comment
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return LINE_COMMENT;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -102,8 +93,8 @@ public final class LineComment extends Comment
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -111,8 +102,8 @@ public final class LineComment extends Comment
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -120,16 +111,16 @@ public final class LineComment extends Comment
       visitor.endVisit(this);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return super.memSize();
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

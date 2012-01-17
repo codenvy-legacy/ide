@@ -49,8 +49,7 @@ public class NameEnvironmentAnswer
    }
 
    /**
-    * Answer the resolved binary form for the type or null if the
-    * receiver represents a compilation unit or source type.
+    * Answer the resolved binary form for the type or null if the receiver represents a compilation unit or source type.
     */
    public IBinaryType getBinaryType()
    {
@@ -58,8 +57,7 @@ public class NameEnvironmentAnswer
    }
 
    /**
-    * Answer the compilation unit or null if the
-    * receiver represents a binary or source type.
+    * Answer the compilation unit or null if the receiver represents a binary or source type.
     */
    public ICompilationUnit getCompilationUnit()
    {
@@ -67,11 +65,10 @@ public class NameEnvironmentAnswer
    }
 
    /**
-    * Answer the unresolved source forms for the type or null if the
-    * receiver represents a compilation unit or binary type.
-    *
-    * Multiple source forms can be answered in case the originating compilation unit did contain
-    * several type at once. Then the first type is guaranteed to be the requested type.
+    * Answer the unresolved source forms for the type or null if the receiver represents a compilation unit or binary type.
+    * 
+    * Multiple source forms can be answered in case the originating compilation unit did contain several type at once. Then the
+    * first type is guaranteed to be the requested type.
     */
    public ISourceType[] getSourceTypes()
    {
@@ -108,8 +105,7 @@ public class NameEnvironmentAnswer
    }
 
    /*
-    * Returns whether this answer is better than the other awswer.
-    * (accessible is better than discouraged, which is better than
+    * Returns whether this answer is better than the other awswer. (accessible is better than discouraged, which is better than
     * non-accessible)
     */
    public boolean isBetter(NameEnvironmentAnswer otherAnswer)

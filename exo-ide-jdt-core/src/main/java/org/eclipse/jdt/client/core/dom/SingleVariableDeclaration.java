@@ -16,23 +16,23 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Single variable declaration AST node type. Single variable
- * declaration nodes are used in a limited number of places, including formal
- * parameter lists and catch clauses. They are not used for field declarations
- * and regular variable declaration statements.
+ * Single variable declaration AST node type. Single variable declaration nodes are used in a limited number of places, including
+ * formal parameter lists and catch clauses. They are not used for field declarations and regular variable declaration statements.
  * For JLS2:
+ * 
  * <pre>
  * SingleVariableDeclaration:
  *    { Modifier } Type Identifier { <b>[</b><b>]</b> } [ <b>=</b> Expression ]
  * </pre>
- * For JLS3, the modifier flags were replaced by
- * a list of modifier nodes (intermixed with annotations), and the variable arity
+ * 
+ * For JLS3, the modifier flags were replaced by a list of modifier nodes (intermixed with annotations), and the variable arity
  * indicator was added:
+ * 
  * <pre>
  * SingleVariableDeclaration:
  *    { ExtendedModifier } Type [ <b>...</b> ] Identifier { <b>[</b><b>]</b> } [ <b>=</b> Expression ]
  * </pre>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -41,6 +41,7 @@ public class SingleVariableDeclaration extends VariableDeclaration
 
    /**
     * The "modifiers" structural property of this node type (type: {@link Integer}) (JLS2 API only).
+    * 
     * @since 3.0
     */
    public static final SimplePropertyDescriptor MODIFIERS_PROPERTY = new SimplePropertyDescriptor(
@@ -48,6 +49,7 @@ public class SingleVariableDeclaration extends VariableDeclaration
 
    /**
     * The "modifiers" structural property of this node type (element type: {@link IExtendedModifier}) (added in JLS3 API).
+    * 
     * @since 3.1
     */
    public static final ChildListPropertyDescriptor MODIFIERS2_PROPERTY = new ChildListPropertyDescriptor(
@@ -55,6 +57,7 @@ public class SingleVariableDeclaration extends VariableDeclaration
 
    /**
     * The "name" structural property of this node type (child type: {@link SimpleName}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor NAME_PROPERTY = new ChildPropertyDescriptor(
@@ -62,6 +65,7 @@ public class SingleVariableDeclaration extends VariableDeclaration
 
    /**
     * The "type" structural property of this node type (child type: {@link Type}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor TYPE_PROPERTY = new ChildPropertyDescriptor(
@@ -69,6 +73,7 @@ public class SingleVariableDeclaration extends VariableDeclaration
 
    /**
     * The "varargs" structural property of this node type (type: {@link Boolean}) (added in JLS3 API).
+    * 
     * @since 3.1
     */
    public static final SimplePropertyDescriptor VARARGS_PROPERTY = new SimplePropertyDescriptor(
@@ -76,6 +81,7 @@ public class SingleVariableDeclaration extends VariableDeclaration
 
    /**
     * The "extraDimensions" structural property of this node type (type: {@link Integer}).
+    * 
     * @since 3.0
     */
    public static final SimplePropertyDescriptor EXTRA_DIMENSIONS_PROPERTY = new SimplePropertyDescriptor(
@@ -83,23 +89,22 @@ public class SingleVariableDeclaration extends VariableDeclaration
 
    /**
     * The "initializer" structural property of this node type (child type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor INITIALIZER_PROPERTY = new ChildPropertyDescriptor(
       SingleVariableDeclaration.class, "initializer", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
+    * 
     * @since 3.0
     */
    private static final List PROPERTY_DESCRIPTORS_2_0;
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
+    * 
     * @since 3.1
     */
    private static final List PROPERTY_DESCRIPTORS_3_0;
@@ -127,13 +132,10 @@ public class SingleVariableDeclaration extends VariableDeclaration
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -149,63 +151,55 @@ public class SingleVariableDeclaration extends VariableDeclaration
    }
 
    /**
-    * The extended modifiers (element type: {@link IExtendedModifier}).
-    * Null in JLS2. Added in JLS3; defaults to an empty list
+    * The extended modifiers (element type: {@link IExtendedModifier}). Null in JLS2. Added in JLS3; defaults to an empty list
     * (see constructor).
-    *
+    * 
     * @since 3.1
     */
    private ASTNode.NodeList modifiers = null;
 
    /**
-    * The modifiers; bit-wise or of Modifier flags.
-    * Defaults to none. Not used in 3.0.
+    * The modifiers; bit-wise or of Modifier flags. Defaults to none. Not used in 3.0.
     */
    private int modifierFlags = Modifier.NONE;
 
    /**
-    * The variable name; lazily initialized; defaults to a unspecified,
-    * legal Java identifier.
+    * The variable name; lazily initialized; defaults to a unspecified, legal Java identifier.
     */
    private SimpleName variableName = null;
 
    /**
-    * The type; lazily initialized; defaults to a unspecified,
-    * legal type.
+    * The type; lazily initialized; defaults to a unspecified, legal type.
     */
    private Type type = null;
 
    /**
-    * Indicates the last parameter of a variable arity method;
-    * defaults to false.
-    *
+    * Indicates the last parameter of a variable arity method; defaults to false.
+    * 
     * @since 3.1
     */
    private boolean variableArity = false;
 
    /**
-    * The number of extra array dimensions that appear after the variable;
-    * defaults to 0.
-    *
+    * The number of extra array dimensions that appear after the variable; defaults to 0.
+    * 
     * @since 2.1
     */
    private int extraArrayDimensions = 0;
 
    /**
-    * The initializer expression, or <code>null</code> if none;
-    * defaults to none.
+    * The initializer expression, or <code>null</code> if none; defaults to none.
     */
    private Expression optionalInitializer = null;
 
    /**
-    * Creates a new AST node for a variable declaration owned by the given
-    * AST. By default, the variable declaration has: no modifiers, an
-    * unspecified (but legal) type, an unspecified (but legal) variable name,
-    * 0 dimensions after the variable; no initializer; not variable arity.
+    * Creates a new AST node for a variable declaration owned by the given AST. By default, the variable declaration has: no
+    * modifiers, an unspecified (but legal) type, an unspecified (but legal) variable name, 0 dimensions after the variable; no
+    * initializer; not variable arity.
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    SingleVariableDeclaration(AST ast)
@@ -217,8 +211,9 @@ public class SingleVariableDeclaration extends VariableDeclaration
       }
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on VariableDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on VariableDeclaration.
+    * 
     * @since 3.1
     */
    final SimplePropertyDescriptor internalExtraDimensionsProperty()
@@ -226,8 +221,9 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return EXTRA_DIMENSIONS_PROPERTY;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on VariableDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on VariableDeclaration.
+    * 
     * @since 3.1
     */
    final ChildPropertyDescriptor internalInitializerProperty()
@@ -235,8 +231,9 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return INITIALIZER_PROPERTY;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on VariableDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on VariableDeclaration.
+    * 
     * @since 3.1
     */
    final ChildPropertyDescriptor internalNameProperty()
@@ -244,16 +241,16 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return NAME_PROPERTY;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value)
    {
@@ -285,8 +282,8 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return super.internalGetSetIntProperty(property, get, value);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value)
    {
@@ -306,8 +303,8 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return super.internalGetSetBooleanProperty(property, get, value);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -351,8 +348,8 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
@@ -364,16 +361,16 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return super.internalGetChildListProperty(property);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return SINGLE_VARIABLE_DECLARATION;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -395,8 +392,8 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -404,8 +401,8 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -425,17 +422,13 @@ public class SingleVariableDeclaration extends VariableDeclaration
    }
 
    /**
-    * Returns the live ordered list of modifiers and annotations
-    * of this declaration (added in JLS3 API).
+    * Returns the live ordered list of modifiers and annotations of this declaration (added in JLS3 API).
     * <p>
-    * Note that the final modifier is the only meaningful modifier for local
-    * variable and formal parameter declarations.
+    * Note that the final modifier is the only meaningful modifier for local variable and formal parameter declarations.
     * </p>
-    *
-    * @return the live list of modifiers and annotations
-    *    (element type: {@link IExtendedModifier})
-    * @exception UnsupportedOperationException if this operation is used in
-    * a JLS2 AST
+    * 
+    * @return the live list of modifiers and annotations (element type: {@link IExtendedModifier})
+    * @exception UnsupportedOperationException if this operation is used in a JLS2 AST
     * @since 3.1
     */
    public List modifiers()
@@ -451,10 +444,9 @@ public class SingleVariableDeclaration extends VariableDeclaration
    /**
     * Returns the modifiers explicitly specified on this declaration.
     * <p>
-    * In the JLS3 API, this method is a convenience method that
-    * computes these flags from <code>modifiers()</code>.
+    * In the JLS3 API, this method is a convenience method that computes these flags from <code>modifiers()</code>.
     * </p>
-    *
+    * 
     * @return the bit-wise or of <code>Modifier</code> constants
     * @see Modifier
     */
@@ -487,17 +479,15 @@ public class SingleVariableDeclaration extends VariableDeclaration
    /**
     * Sets the modifiers explicitly specified on this declaration (JLS2 API only).
     * <p>
-    * The following modifiers are meaningful for fields: public, private, protected,
-    * static, final, volatile, and transient. For local variable and formal
-    * parameter declarations, the only meaningful modifier is final.
+    * The following modifiers are meaningful for fields: public, private, protected, static, final, volatile, and transient. For
+    * local variable and formal parameter declarations, the only meaningful modifier is final.
     * </p>
-    *
+    * 
     * @param modifiers the given modifiers (bit-wise or of <code>Modifier</code> constants)
-    * @exception UnsupportedOperationException if this operation is used in
-    * an AST later than JLS2
+    * @exception UnsupportedOperationException if this operation is used in an AST later than JLS2
     * @see Modifier
-    * @deprecated In the JLS3 API, this method is replaced by
-    * {@link  #modifiers()} which contains a list of a <code>Modifier</code> nodes.
+    * @deprecated In the JLS3 API, this method is replaced by {@link #modifiers()} which contains a list of a
+    *             <code>Modifier</code> nodes.
     */
    public void setModifiers(int modifiers)
    {
@@ -505,11 +495,11 @@ public class SingleVariableDeclaration extends VariableDeclaration
    }
 
    /**
-    * Internal synonym for deprecated method. Used to avoid
-    * deprecation warnings.
+    * Internal synonym for deprecated method. Used to avoid deprecation warnings.
+    * 
     * @since 3.1
     */
-   /*package*/final void internalSetModifiers(int pmodifiers)
+   /* package */final void internalSetModifiers(int pmodifiers)
    {
       supportedOnlyIn2();
       preValueChange(MODIFIERS_PROPERTY);
@@ -517,8 +507,8 @@ public class SingleVariableDeclaration extends VariableDeclaration
       postValueChange(MODIFIERS_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on VariableDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on VariableDeclaration.
     */
    public SimpleName getName()
    {
@@ -538,8 +528,8 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return this.variableName;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on VariableDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on VariableDeclaration.
     */
    public void setName(SimpleName variableName)
    {
@@ -554,9 +544,8 @@ public class SingleVariableDeclaration extends VariableDeclaration
    }
 
    /**
-    * Returns the type of the variable declared in this variable declaration,
-    * exclusive of any extra array dimensions.
-    *
+    * Returns the type of the variable declared in this variable declaration, exclusive of any extra array dimensions.
+    * 
     * @return the type
     */
    public Type getType()
@@ -578,15 +567,15 @@ public class SingleVariableDeclaration extends VariableDeclaration
    }
 
    /**
-    * Sets the type of the variable declared in this variable declaration to
-    * the given type, exclusive of any extra array dimensions.
-    *
+    * Sets the type of the variable declared in this variable declaration to the given type, exclusive of any extra array
+    * dimensions.
+    * 
     * @param type the new type
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     */
    public void setType(Type type)
    {
@@ -601,22 +590,16 @@ public class SingleVariableDeclaration extends VariableDeclaration
    }
 
    /**
-    * Returns whether this declaration declares the last parameter of
-    * a variable arity method (added in JLS3 API).
+    * Returns whether this declaration declares the last parameter of a variable arity method (added in JLS3 API).
     * <p>
-    * Note that the binding for the type <code>Foo</code>in the vararg method
-    * declaration <code>void fun(Foo... args)</code> is always for the type as
-    * written; i.e., the type binding for <code>Foo</code>. However, if you
-    * navigate from the method declaration to its method binding to the
-    * type binding for its last parameter, the type binding for the vararg
-    * parameter is always an array type (i.e., <code>Foo[]</code>) reflecting
-    * the way vararg methods get compiled.
+    * Note that the binding for the type <code>Foo</code>in the vararg method declaration <code>void fun(Foo... args)</code> is
+    * always for the type as written; i.e., the type binding for <code>Foo</code>. However, if you navigate from the method
+    * declaration to its method binding to the type binding for its last parameter, the type binding for the vararg parameter is
+    * always an array type (i.e., <code>Foo[]</code>) reflecting the way vararg methods get compiled.
     * </p>
-    *
-    * @return <code>true</code> if this is a variable arity parameter declaration,
-    *    and <code>false</code> otherwise
-    * @exception UnsupportedOperationException if this operation is used in
-    * a JLS2 AST
+    * 
+    * @return <code>true</code> if this is a variable arity parameter declaration, and <code>false</code> otherwise
+    * @exception UnsupportedOperationException if this operation is used in a JLS2 AST
     * @since 3.1
     */
    public boolean isVarargs()
@@ -630,11 +613,9 @@ public class SingleVariableDeclaration extends VariableDeclaration
    }
 
    /**
-    * Sets whether this declaration declares the last parameter of
-    * a variable arity method (added in JLS3 API).
-    *
-    * @param variableArity <code>true</code> if this is a variable arity
-    *    parameter declaration, and <code>false</code> otherwise
+    * Sets whether this declaration declares the last parameter of a variable arity method (added in JLS3 API).
+    * 
+    * @param variableArity <code>true</code> if this is a variable arity parameter declaration, and <code>false</code> otherwise
     * @since 3.1
     */
    public void setVarargs(boolean variableArity)
@@ -649,8 +630,9 @@ public class SingleVariableDeclaration extends VariableDeclaration
       postValueChange(VARARGS_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on VariableDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on VariableDeclaration.
+    * 
     * @since 2.1
     */
    public int getExtraDimensions()
@@ -658,8 +640,9 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return this.extraArrayDimensions;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on VariableDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on VariableDeclaration.
+    * 
     * @since 2.1
     */
    public void setExtraDimensions(int dimensions)
@@ -673,16 +656,16 @@ public class SingleVariableDeclaration extends VariableDeclaration
       postValueChange(EXTRA_DIMENSIONS_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on VariableDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on VariableDeclaration.
     */
    public Expression getInitializer()
    {
       return this.optionalInitializer;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on VariableDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on VariableDeclaration.
     */
    public void setInitializer(Expression initializer)
    {
@@ -694,8 +677,8 @@ public class SingleVariableDeclaration extends VariableDeclaration
       postReplaceChild(oldChild, initializer, INITIALIZER_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
@@ -703,8 +686,8 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return BASE_NODE_SIZE + 7 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

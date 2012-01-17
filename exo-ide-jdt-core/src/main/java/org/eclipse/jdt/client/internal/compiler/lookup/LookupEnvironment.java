@@ -53,7 +53,7 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
 
    public ProblemReporter problemReporter;
 
-   //	public ClassFilePool classFilePool;
+   // public ClassFilePool classFilePool;
    // indicate in which step on the compilation we are.
    // step 1 : build the reference binding
    // step 2 : conect the hierarchy (connect bindings)
@@ -125,13 +125,12 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
       this.uniquePolymorphicMethodBindings = new SimpleLookupTable(3);
       this.missingTypes = null;
       this.accessRestrictions = new HashMap(3);
-      //	this.classFilePool = ClassFilePool.newInstance();
+      // this.classFilePool = ClassFilePool.newInstance();
       this.typesBeingConnected = new HashSet();
    }
 
    /**
-    * Ask the name environment for a type which corresponds to the compoundName.
-    * Answer null if the name cannot be found.
+    * Ask the name environment for a type which corresponds to the compoundName. Answer null if the name cannot be found.
     */
 
    public ReferenceBinding askForType(char[][] compoundName)
@@ -160,9 +159,9 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
       return getCachedType(compoundName);
    }
 
-   /* Ask the oracle for a type named name in the packageBinding.
-   * Answer null if the name cannot be found.
-   */
+   /*
+    * Ask the oracle for a type named name in the packageBinding. Answer null if the name cannot be found.
+    */
 
    ReferenceBinding askForType(PackageBinding packageBinding, char[] name)
    {
@@ -201,12 +200,13 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
       return packageBinding.getType0(name);
    }
 
-   /* Create the initial type bindings for the compilation unit.
-   *
-   * See completeTypeBindings() for a description of the remaining steps
-   *
-   * NOTE: This method can be called multiple times as additional source files are needed
-   */
+   /*
+    * Create the initial type bindings for the compilation unit.
+    * 
+    * See completeTypeBindings() for a description of the remaining steps
+    * 
+    * NOTE: This method can be called multiple times as additional source files are needed
+    */
    public void buildTypeBindings(CompilationUnitDeclaration unit, AccessRestriction accessRestriction)
    {
       CompilationUnitScope scope = new CompilationUnitScope(unit, this);
@@ -217,19 +217,21 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
       this.units[this.lastUnitIndex] = unit;
    }
 
-   /* Cache the binary type since we know it is needed during this compile.
-   *
-   * Answer the created BinaryTypeBinding or null if the type is already in the cache.
-   */
+   /*
+    * Cache the binary type since we know it is needed during this compile.
+    * 
+    * Answer the created BinaryTypeBinding or null if the type is already in the cache.
+    */
    public BinaryTypeBinding cacheBinaryType(IBinaryType binaryType, AccessRestriction accessRestriction)
    {
       return cacheBinaryType(binaryType, true, accessRestriction);
    }
 
-   /* Cache the binary type since we know it is needed during this compile.
-   *
-   * Answer the created BinaryTypeBinding or null if the type is already in the cache.
-   */
+   /*
+    * Cache the binary type since we know it is needed during this compile.
+    * 
+    * Answer the created BinaryTypeBinding or null if the type is already in the cache.
+    */
    public BinaryTypeBinding cacheBinaryType(IBinaryType binaryType, boolean needFieldsAndMethods,
       AccessRestriction accessRestriction)
    {
@@ -272,17 +274,17 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
    }
 
    /*
-   * 1. Connect the type hierarchy for the type bindings created for parsedUnits.
-   * 2. Create the field bindings
-   * 3. Create the method bindings
-   */
+    * 1. Connect the type hierarchy for the type bindings created for parsedUnits. 2. Create the field bindings 3. Create the
+    * method bindings
+    */
 
-   /* We know each known compilationUnit is free of errors at this point...
-   *
-   * Each step will create additional bindings unless a problem is detected, in which
-   * case either the faulty import/superinterface/field/method will be skipped or a
-   * suitable replacement will be substituted (such as Object for a missing superclass)
-   */
+   /*
+    * We know each known compilationUnit is free of errors at this point...
+    * 
+    * Each step will create additional bindings unless a problem is detected, in which case either the faulty
+    * import/superinterface/field/method will be skipped or a suitable replacement will be substituted (such as Object for a
+    * missing superclass)
+    */
    public void completeTypeBindings(CompilationUnitDeclaration parsedUnit)
    {
       if (this.stepCompleted == BUILD_FIELDS_AND_METHODS)
@@ -308,18 +310,17 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
    }
 
    /*
-   * Used by other compiler tools which do not start by calling completeTypeBindings().
-   *
-   * 1. Connect the type hierarchy for the type bindings created for parsedUnits.
-   * 2. Create the field bindings
-   * 3. Create the method bindings
-   */
+    * Used by other compiler tools which do not start by calling completeTypeBindings().
+    * 
+    * 1. Connect the type hierarchy for the type bindings created for parsedUnits. 2. Create the field bindings 3. Create the
+    * method bindings
+    */
 
    /*
-   * Each step will create additional bindings unless a problem is detected, in which
-   * case either the faulty import/superinterface/field/method will be skipped or a
-   * suitable replacement will be substituted (such as Object for a missing superclass)
-   */
+    * Each step will create additional bindings unless a problem is detected, in which case either the faulty
+    * import/superinterface/field/method will be skipped or a suitable replacement will be substituted (such as Object for a
+    * missing superclass)
+    */
    public void completeTypeBindings(CompilationUnitDeclaration parsedUnit, boolean buildFieldsAndMethods)
    {
       if (parsedUnit.scope == null)
@@ -334,13 +335,11 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
    }
 
    /*
-   * Used by other compiler tools which do not start by calling completeTypeBindings()
-   * and have more than 1 unit to complete.
-   *
-   * 1. Connect the type hierarchy for the type bindings created for parsedUnits.
-   * 2. Create the field bindings
-   * 3. Create the method bindings
-   */
+    * Used by other compiler tools which do not start by calling completeTypeBindings() and have more than 1 unit to complete.
+    * 
+    * 1. Connect the type hierarchy for the type bindings created for parsedUnits. 2. Create the field bindings 3. Create the
+    * method bindings
+    */
    public void completeTypeBindings(CompilationUnitDeclaration[] parsedUnits, boolean[] buildFieldsAndMethods,
       int unitCount)
    {
@@ -379,7 +378,8 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
          this.arrayClone =
             new MethodBinding(
                (objectClone.modifiers & ~ClassFileConstants.AccProtected) | ClassFileConstants.AccPublic,
-               TypeConstants.CLONE, objectClone.returnType, Binding.NO_PARAMETERS, Binding.NO_EXCEPTIONS, // no exception for array specific method
+               TypeConstants.CLONE, objectClone.returnType, Binding.NO_PARAMETERS, Binding.NO_EXCEPTIONS, // no exception for
+                                                                                                          // array specific method
                (ReferenceBinding)objectClone.returnType);
       }
       return this.arrayClone;
@@ -448,22 +448,22 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
             if (boxedType != null)
                return boxedType;
             return new ProblemReferenceBinding(JAVA_LANG_BOOLEAN, null, NotFound);
-            //		case TypeIds.T_int :
-            //			return getResolvedType(JAVA_LANG_INTEGER, null);
-            //		case TypeIds.T_byte :
-            //			return getResolvedType(JAVA_LANG_BYTE, null);
-            //		case TypeIds.T_short :
-            //			return getResolvedType(JAVA_LANG_SHORT, null);
-            //		case TypeIds.T_char :
-            //			return getResolvedType(JAVA_LANG_CHARACTER, null);
-            //		case TypeIds.T_long :
-            //			return getResolvedType(JAVA_LANG_LONG, null);
-            //		case TypeIds.T_float :
-            //			return getResolvedType(JAVA_LANG_FLOAT, null);
-            //		case TypeIds.T_double :
-            //			return getResolvedType(JAVA_LANG_DOUBLE, null);
-            //		case TypeIds.T_boolean :
-            //			return getResolvedType(JAVA_LANG_BOOLEAN, null);
+            // case TypeIds.T_int :
+            // return getResolvedType(JAVA_LANG_INTEGER, null);
+            // case TypeIds.T_byte :
+            // return getResolvedType(JAVA_LANG_BYTE, null);
+            // case TypeIds.T_short :
+            // return getResolvedType(JAVA_LANG_SHORT, null);
+            // case TypeIds.T_char :
+            // return getResolvedType(JAVA_LANG_CHARACTER, null);
+            // case TypeIds.T_long :
+            // return getResolvedType(JAVA_LANG_LONG, null);
+            // case TypeIds.T_float :
+            // return getResolvedType(JAVA_LANG_FLOAT, null);
+            // case TypeIds.T_double :
+            // return getResolvedType(JAVA_LANG_DOUBLE, null);
+            // case TypeIds.T_boolean :
+            // return getResolvedType(JAVA_LANG_BOOLEAN, null);
       }
       // allow indirect unboxing conversion for wildcards and type parameters
       switch (type.kind())
@@ -525,8 +525,7 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
    }
 
    /**
-    * Convert a given source type into a parameterized form if generic.
-    * generic X<E> --> param X<E>
+    * Convert a given source type into a parameterized form if generic. generic X<E> --> param X<E>
     */
    public ReferenceBinding convertToParameterizedType(ReferenceBinding originalType)
    {
@@ -539,8 +538,11 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
          if (originalEnclosingType != null)
          {
             convertedEnclosingType =
-               originalType.isStatic()
-                  ? (ReferenceBinding)convertToRawType(originalEnclosingType, false /*do not force conversion of enclosing types*/)
+               originalType.isStatic() ? (ReferenceBinding)convertToRawType(originalEnclosingType, false /*
+                                                                                                          * do not force
+                                                                                                          * conversion of
+                                                                                                          * enclosing types
+                                                                                                          */)
                   : convertToParameterizedType(originalEnclosingType);
             needToConvert |= originalEnclosingType != convertedEnclosingType;
          }
@@ -555,6 +557,7 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
 
    /**
     * Returns the given binding's raw type binding.
+    * 
     * @param type the TypeBinding to raw convert
     * @param forceRawEnclosingType forces recursive raw conversion of enclosing types (used in Javadoc references only)
     * @return TypeBinding the raw converted TypeBinding
@@ -591,7 +594,8 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
             break;
          case Binding.PARAMETERIZED_TYPE :
             ParameterizedTypeBinding paramType = (ParameterizedTypeBinding)originalType;
-            needToConvert = paramType.genericType().isGenericType(); // only recursive call to enclosing type can find parameterizedType with arguments
+            needToConvert = paramType.genericType().isGenericType(); // only recursive call to enclosing type can find
+                                                                     // parameterizedType with arguments
             break;
          default :
             needToConvert = false;
@@ -611,7 +615,7 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
             needToConvert |= !((ReferenceBinding)originalType).isStatic();
             convertedEnclosing = originalEnclosing;
          }
-         else if (forceRawEnclosingType && !needToConvert/*stop recursion when conversion occurs*/)
+         else if (forceRawEnclosingType && !needToConvert/* stop recursion when conversion occurs */)
          {
             convertedEnclosing = (ReferenceBinding)convertToRawType(originalEnclosing, forceRawEnclosingType);
             needToConvert = originalEnclosing != convertedEnclosing; // only convert generic or parameterized types
@@ -645,8 +649,7 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
    }
 
    /**
-    * Convert an array of types in raw forms.
-    * Only allocate an array if anything is different.
+    * Convert an array of types in raw forms. Only allocate an array if anything is different.
     */
    public ReferenceBinding[] convertToRawTypes(ReferenceBinding[] originalTypes, boolean forceErasure,
       boolean forceRawEnclosingType)
@@ -709,7 +712,8 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
             break;
          case Binding.PARAMETERIZED_TYPE :
             ParameterizedTypeBinding paramType = (ParameterizedTypeBinding)originalType;
-            needToConvert = paramType.genericType().isGenericType(); // only recursive call to enclosing type can find parameterizedType with arguments
+            needToConvert = paramType.genericType().isGenericType(); // only recursive call to enclosing type can find
+                                                                     // parameterizedType with arguments
             break;
          default :
             needToConvert = false;
@@ -749,7 +753,7 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
    }
 
    /*
-    *  Used to guarantee annotation identity.
+    * Used to guarantee annotation identity.
     */
    public AnnotationBinding createAnnotation(ReferenceBinding annotationType, ElementValuePair[] pairs)
    {
@@ -761,7 +765,7 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
    }
 
    /*
-    *  Used to guarantee array type identity.
+    * Used to guarantee array type identity.
     */
    public ArrayBinding createArrayType(TypeBinding leafComponentType, int dimensionCount)
    {
@@ -826,8 +830,10 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
          {
             if (cachedType.isBinaryBinding()) // sanity check... at this point the cache should ONLY contain unresolved types
                return (BinaryTypeBinding)cachedType;
-            // it is possible with a large number of source files (exceeding AbstractImageBuilder.MAX_AT_ONCE) that a member type can be in the cache as an UnresolvedType,
-            // but because its enclosingType is resolved while its created (call to BinaryTypeBinding constructor), its replaced with a source type
+            // it is possible with a large number of source files (exceeding AbstractImageBuilder.MAX_AT_ONCE) that a member type
+            // can be in the cache as an UnresolvedType,
+            // but because its enclosingType is resolved while its created (call to BinaryTypeBinding constructor), its replaced
+            // with a source type
             return null;
          }
       }
@@ -838,10 +844,9 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
    }
 
    /*
-    * Used to create types denoting missing types.
-    * If package is given, then reuse the package; if not then infer a package from compound name.
-    * If the package is existing, then install the missing type in type cache
-   */
+    * Used to create types denoting missing types. If package is given, then reuse the package; if not then infer a package from
+    * compound name. If the package is existing, then install the missing type in type cache
+    */
    public MissingTypeBinding createMissingType(PackageBinding packageBinding, char[][] compoundName)
    {
       // create a proxy for the missing BinaryType
@@ -870,10 +875,9 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
    }
 
    /*
-   * 1. Connect the type hierarchy for the type bindings created for parsedUnits.
-   * 2. Create the field bindings
-   * 3. Create the method bindings
-   */
+    * 1. Connect the type hierarchy for the type bindings created for parsedUnits. 2. Create the field bindings 3. Create the
+    * method bindings
+    */
    public PackageBinding createPackage(char[][] compoundName)
    {
       PackageBinding packageBinding = getPackage0(compoundName[0]);
@@ -1235,7 +1239,7 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
    public WildcardBinding createWildcard(ReferenceBinding genericType, int rank, TypeBinding bound,
       TypeBinding[] otherBounds, int boundKind)
    {
-      // cached info is array of already created wildcard  types for this type
+      // cached info is array of already created wildcard types for this type
       if (genericType == null) // pseudo wildcard denoting composite bounds for lub computation
          genericType = ReferenceBinding.LUB_GENERIC;
       WildcardBinding[] cachedInfo = (WildcardBinding[])this.uniqueWildcardBindings.get(genericType);
@@ -1302,12 +1306,11 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
    }
 
    /**
-    *  Answer the type for the compoundName if it exists in the cache.
-    * Answer theNotFoundType if it could not be resolved the first time
-    * it was looked up, otherwise answer null.
-    *
-    * NOTE: Do not use for nested types... the answer is NOT the same for a.b.C or a.b.C.D.E
-    * assuming C is a type in both cases. In the a.b.C.D.E case, null is the answer.
+    * Answer the type for the compoundName if it exists in the cache. Answer theNotFoundType if it could not be resolved the first
+    * time it was looked up, otherwise answer null.
+    * 
+    * NOTE: Do not use for nested types... the answer is NOT the same for a.b.C or a.b.C.D.E assuming C is a type in both cases.
+    * In the a.b.C.D.E case, null is the answer.
     */
    public ReferenceBinding getCachedType(char[][] compoundName)
    {
@@ -1326,22 +1329,21 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
       return packageBinding.getType0(compoundName[compoundName.length - 1]);
    }
 
-   /* Answer the top level package named name if it exists in the cache.
-   * Answer theNotFoundPackage if it could not be resolved the first time
-   * it was looked up, otherwise answer null.
-   *
-   * NOTE: Senders must convert theNotFoundPackage into a real problem
-   * package if its to returned.
-   */
+   /*
+    * Answer the top level package named name if it exists in the cache. Answer theNotFoundPackage if it could not be resolved the
+    * first time it was looked up, otherwise answer null.
+    * 
+    * NOTE: Senders must convert theNotFoundPackage into a real problem package if its to returned.
+    */
    PackageBinding getPackage0(char[] name)
    {
       return this.knownPackages.get(name);
    }
 
-   /* Answer the type corresponding to the compoundName.
-   * Ask the name environment for the type if its not in the cache.
-   * Fail with a classpath error if the type cannot be found.
-   */
+   /*
+    * Answer the type corresponding to the compoundName. Ask the name environment for the type if its not in the cache. Fail with
+    * a classpath error if the type cannot be found.
+    */
    public ReferenceBinding getResolvedType(char[][] compoundName, Scope scope)
    {
       ReferenceBinding type = getType(compoundName);
@@ -1355,10 +1357,10 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
       return createMissingType(null, compoundName);
    }
 
-   /* Answer the top level package named name.
-   * Ask the oracle for the package if its not in the cache.
-   * Answer null if the package cannot be found.
-   */
+   /*
+    * Answer the top level package named name. Ask the oracle for the package if its not in the cache. Answer null if the package
+    * cannot be found.
+    */
    PackageBinding getTopLevelPackage(char[] name)
    {
       PackageBinding packageBinding = getPackage0(name);
@@ -1379,10 +1381,10 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
       return null;
    }
 
-   /* Answer the type corresponding to the compoundName.
-   * Ask the name environment for the type if its not in the cache.
-   * Answer null if the type cannot be found.
-   */
+   /*
+    * Answer the type corresponding to the compoundName. Ask the name environment for the type if its not in the cache. Answer
+    * null if the type cannot be found.
+    */
    public ReferenceBinding getType(char[][] compoundName)
    {
       ReferenceBinding referenceBinding;
@@ -1422,9 +1424,10 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
 
       if (referenceBinding == null || referenceBinding == TheNotFoundType)
          return null;
-      referenceBinding =
-         (ReferenceBinding)BinaryTypeBinding
-            .resolveType(referenceBinding, this, false /* no raw conversion for now */);
+      referenceBinding = (ReferenceBinding)BinaryTypeBinding.resolveType(referenceBinding, this, false /*
+                                                                                                        * no raw conversion for
+                                                                                                        * now
+                                                                                                        */);
 
       // compoundName refers to a nested type incorrectly (for example, package1.A$B)
       if (referenceBinding.isNestedType())
@@ -1449,12 +1452,12 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
       return typeArguments;
    }
 
-   /* Answer the type corresponding to the compound name.
-   * Does not ask the oracle for the type if its not found in the cache... instead an
-   * unresolved type is returned which must be resolved before used.
-   *
-   * NOTE: Does NOT answer base types nor array types!
-   */
+   /*
+    * Answer the type corresponding to the compound name. Does not ask the oracle for the type if its not found in the cache...
+    * instead an unresolved type is returned which must be resolved before used.
+    * 
+    * NOTE: Does NOT answer base types nor array types!
+    */
    private ReferenceBinding getTypeFromCompoundName(char[][] compoundName, boolean isParameterized,
       boolean wasMissingType)
    {
@@ -1474,10 +1477,13 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
          // report the missing class file first
          if (!wasMissingType)
          {
-            /* Since missing types have been already been complained against while producing binaries, there is no class path 
-             * misconfiguration now that did not also exist in some equivalent form while producing the class files which encode 
-             * these missing types. So no need to bark again. Note that wasMissingType == true signals a type referenced in a .class 
-             * file which could not be found when the binary was produced. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=364450 */
+            /*
+             * Since missing types have been already been complained against while producing binaries, there is no class path
+             * misconfiguration now that did not also exist in some equivalent form while producing the class files which encode
+             * these missing types. So no need to bark again. Note that wasMissingType == true signals a type referenced in a
+             * .class file which could not be found when the binary was produced. See
+             * https://bugs.eclipse.org/bugs/show_bug.cgi?id=364450
+             */
             this.problemReporter.isClassPathCorrect(compoundName, this.unitBeingCompleted,
                this.missingClassFileLocation);
          }
@@ -1492,12 +1498,12 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
       return binding;
    }
 
-   /* Answer the type corresponding to the name from the binary file.
-   * Does not ask the oracle for the type if its not found in the cache... instead an
-   * unresolved type is returned which must be resolved before used.
-   *
-   * NOTE: Does NOT answer base types nor array types!
-   */
+   /*
+    * Answer the type corresponding to the name from the binary file. Does not ask the oracle for the type if its not found in the
+    * cache... instead an unresolved type is returned which must be resolved before used.
+    * 
+    * NOTE: Does NOT answer base types nor array types!
+    */
    ReferenceBinding getTypeFromConstantPoolName(char[] signature, int start, int end, boolean isParameterized,
       char[][][] missingTypeNames)
    {
@@ -1519,12 +1525,12 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
       return getTypeFromCompoundName(compoundName, isParameterized, wasMissingType);
    }
 
-   /* Answer the type corresponding to the signature from the binary file.
-   * Does not ask the oracle for the type if its not found in the cache... instead an
-   * unresolved type is returned which must be resolved before used.
-   *
-   * NOTE: Does answer base types & array types.
-   */
+   /*
+    * Answer the type corresponding to the signature from the binary file. Does not ask the oracle for the type if its not found
+    * in the cache... instead an unresolved type is returned which must be resolved before used.
+    * 
+    * NOTE: Does answer base types & array types.
+    */
    TypeBinding getTypeFromSignature(char[] signature, int start, int end, boolean isParameterized,
       TypeBinding enclosingType, char[][][] missingTypeNames)
    {
@@ -1577,7 +1583,8 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
       }
       else
       {
-         binding = getTypeFromConstantPoolName(signature, start + 1, end, isParameterized, missingTypeNames); // skip leading 'L' or 'T'
+         binding = getTypeFromConstantPoolName(signature, start + 1, end, isParameterized, missingTypeNames); // skip leading 'L'
+                                                                                                              // or 'T'
       }
 
       if (dimension == 0)
@@ -1591,7 +1598,7 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
       // TypeVariableSignature = 'T' Identifier ';'
       // ArrayTypeSignature = '[' TypeSignature
       // ClassTypeSignature = 'L' Identifier TypeArgs(optional) ';'
-      //   or ClassTypeSignature '.' 'L' Identifier TypeArgs(optional) ';'
+      // or ClassTypeSignature '.' 'L' Identifier TypeArgs(optional) ';'
       // TypeArgs = '<' VariantTypeSignature VariantTypeSignatures '>'
       int dimension = 0;
       while (wrapper.signature[wrapper.start] == '[')
@@ -1612,7 +1619,8 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
             TypeVariableBinding[] enclosingTypeVariables;
             if (enclosingType instanceof BinaryTypeBinding)
             { // compiler normal case, no eager resolution of binary variables
-               enclosingTypeVariables = ((BinaryTypeBinding)enclosingType).typeVariables; // do not trigger resolution of variables
+               enclosingTypeVariables = ((BinaryTypeBinding)enclosingType).typeVariables; // do not trigger resolution of
+                                                                                          // variables
             }
             else
             { // codepath only use by codeassist for decoding signatures
@@ -1640,12 +1648,16 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
       if (actualType instanceof UnresolvedReferenceBinding)
          if (CharOperation.indexOf('$', actualType.compoundName[actualType.compoundName.length - 1]) > 0)
             actualType =
-               (ReferenceBinding)BinaryTypeBinding.resolveType(actualType, this, false /* no raw conversion */); // must resolve member types before asking for enclosingType
+               (ReferenceBinding)BinaryTypeBinding.resolveType(actualType, this, false /* no raw conversion */); // must resolve
+                                                                                                                 // member types
+                                                                                                                 // before asking
+                                                                                                                 // for
+                                                                                                                 // enclosingType
       ReferenceBinding actualEnclosing = actualType.enclosingType();
       if (actualEnclosing != null)
       { // convert needed if read some static member type
          actualEnclosing =
-            (ReferenceBinding)convertToRawType(actualEnclosing, false /*do not force conversion of enclosing types*/);
+            (ReferenceBinding)convertToRawType(actualEnclosing, false /* do not force conversion of enclosing types */);
       }
       TypeBinding[] typeArguments =
          getTypeArgumentsFromSignature(wrapper, staticVariables, enclosingType, actualType, missingTypeNames);
@@ -1681,25 +1693,25 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
       ReferenceBinding enclosingType, ReferenceBinding genericType, int rank, char[][][] missingTypeNames)
    {
       // VariantTypeSignature = '-' TypeSignature
-      //   or '+' TypeSignature
-      //   or TypeSignature
-      //   or '*'
+      // or '+' TypeSignature
+      // or TypeSignature
+      // or '*'
       switch (wrapper.signature[wrapper.start])
       {
          case '-' :
             // ? super aType
             wrapper.start++;
             TypeBinding bound = getTypeFromTypeSignature(wrapper, staticVariables, enclosingType, missingTypeNames);
-            return createWildcard(genericType, rank, bound, null /*no extra bound*/, Wildcard.SUPER);
+            return createWildcard(genericType, rank, bound, null /* no extra bound */, Wildcard.SUPER);
          case '+' :
             // ? extends aType
             wrapper.start++;
             bound = getTypeFromTypeSignature(wrapper, staticVariables, enclosingType, missingTypeNames);
-            return createWildcard(genericType, rank, bound, null /*no extra bound*/, Wildcard.EXTENDS);
+            return createWildcard(genericType, rank, bound, null /* no extra bound */, Wildcard.EXTENDS);
          case '*' :
             // ?
             wrapper.start++;
-            return createWildcard(genericType, rank, null, null /*no extra bound*/, Wildcard.UNBOUND);
+            return createWildcard(genericType, rank, null, null /* no extra bound */, Wildcard.UNBOUND);
          default :
             return getTypeFromTypeSignature(wrapper, staticVariables, enclosingType, missingTypeNames);
       }
@@ -1716,8 +1728,9 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
       return false;
    }
 
-   /* Ask the oracle if a package exists named name in the package named compoundName.
-   */
+   /*
+    * Ask the oracle if a package exists named name in the package named compoundName.
+    */
    boolean isPackage(char[][] compoundName, char[] name)
    {
       if (compoundName == null || compoundName.length == 0)
@@ -1735,18 +1748,18 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
 
    public MethodVerifier newMethodVerifier()
    {
-      /* Always use MethodVerifier15. Even in a 1.4 project, we must internalize type variables and
-         observe any parameterization of super class and/or super interfaces in order to be able to
-         detect overriding in the presence of generics.
-         See https://bugs.eclipse.org/bugs/show_bug.cgi?id=324850
+      /*
+       * Always use MethodVerifier15. Even in a 1.4 project, we must internalize type variables and observe any parameterization
+       * of super class and/or super interfaces in order to be able to detect overriding in the presence of generics. See
+       * https://bugs.eclipse.org/bugs/show_bug.cgi?id=324850
        */
       return new MethodVerifier15(this);
    }
 
-   //public void releaseClassFiles(org.eclipse.jdt.internal.compiler.ClassFile[] classFiles) {
-   //	for (int i = 0, fileCount = classFiles.length; i < fileCount; i++)
-   //		this.classFilePool.release(classFiles[i]);
-   //}
+   // public void releaseClassFiles(org.eclipse.jdt.internal.compiler.ClassFile[] classFiles) {
+   // for (int i = 0, fileCount = classFiles.length; i < fileCount; i++)
+   // this.classFilePool.release(classFiles[i]);
+   // }
 
    public void reset()
    {
@@ -1779,14 +1792,14 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
       this.lastCompletedUnitIndex = -1;
       this.unitBeingCompleted = null; // in case AbortException occurred
 
-      //	this.classFilePool.reset();
+      // this.classFilePool.reset();
       // name environment has a longer life cycle, and must be reset in
       // the code which created it.
    }
 
    /**
-    * Associate a given type with some access restriction
-    * (did not store the restriction directly into binding, since sparse information)
+    * Associate a given type with some access restriction (did not store the restriction directly into binding, since sparse
+    * information)
     */
    public void setAccessRestriction(ReferenceBinding type, AccessRestriction accessRestriction)
    {
@@ -1807,7 +1820,8 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
          {
             if (keys[i] == unresolvedType)
             {
-               keys[i] = resolvedType; // hashCode is based on compoundName so this works - cannot be raw since type of parameterized type
+               keys[i] = resolvedType; // hashCode is based on compoundName so this works - cannot be raw since type of
+                                       // parameterized type
                break;
             }
          }

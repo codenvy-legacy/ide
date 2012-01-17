@@ -11,21 +11,16 @@
 package org.eclipse.jdt.client.core.dom;
 
 /**
- * Abstract base class for property descriptors of AST nodes.
- * There are three kinds of properties:
+ * Abstract base class for property descriptors of AST nodes. There are three kinds of properties:
  * <ul>
- * <li>simple properties ({@link SimplePropertyDescriptor})
- * - properties where the value is a primitive (int, boolean)
- * or simple (String, InfixExprsssion.Operator) type other than an
- * AST node; for example, the identifier of a {@link SimpleName}</li>
- * <li>child properties ({@link ChildPropertyDescriptor})
- * - properties whose value is another AST node;
- * for example, the name of a {@link MethodDeclaration}</li>
- * <li>child list properties ({@link ChildListPropertyDescriptor})
- * - properties where the value is a list of AST nodes;
- * for example, the statements of a {@link Block}</li>
+ * <li>simple properties ({@link SimplePropertyDescriptor}) - properties where the value is a primitive (int, boolean) or simple
+ * (String, InfixExprsssion.Operator) type other than an AST node; for example, the identifier of a {@link SimpleName}</li>
+ * <li>child properties ({@link ChildPropertyDescriptor}) - properties whose value is another AST node; for example, the name of a
+ * {@link MethodDeclaration}</li>
+ * <li>child list properties ({@link ChildListPropertyDescriptor}) - properties where the value is a list of AST nodes; for
+ * example, the statements of a {@link Block}</li>
  * </ul>
- *
+ * 
  * @since 3.0
  * @noextend This class is not intended to be subclassed by clients.
  */
@@ -43,12 +38,9 @@ public abstract class StructuralPropertyDescriptor
    private final Class nodeClass;
 
    /**
-    * Creates a new property descriptor for the given node type
-    * with the given property id.
-    * Note that this constructor is declared package-private so that
-    * property descriptors can only be created by the AST
-    * implementation.
-    *
+    * Creates a new property descriptor for the given node type with the given property id. Note that this constructor is declared
+    * package-private so that property descriptors can only be created by the AST implementation.
+    * 
     * @param nodeClass concrete AST node type that owns this property
     * @param propertyId the property id
     */
@@ -64,7 +56,7 @@ public abstract class StructuralPropertyDescriptor
 
    /**
     * Returns the id of this property.
-    *
+    * 
     * @return the property id
     */
    public final String getId()
@@ -75,10 +67,9 @@ public abstract class StructuralPropertyDescriptor
    /**
     * Returns the AST node type that owns this property.
     * <p>
-    * For example, for all properties of the node type
-    * TypeDeclaration, this method returns <code>TypeDeclaration.class</code>.
+    * For example, for all properties of the node type TypeDeclaration, this method returns <code>TypeDeclaration.class</code>.
     * </p>
-    *
+    * 
     * @return the node type that owns this property
     */
    public final Class getNodeClass()
@@ -87,11 +78,9 @@ public abstract class StructuralPropertyDescriptor
    }
 
    /**
-    * Returns whether this property is a simple property
-    * (instance of {@link SimplePropertyDescriptor}.
-    *
-    * @return <code>true</code> if this is a simple property, and
-    * <code>false</code> otherwise
+    * Returns whether this property is a simple property (instance of {@link SimplePropertyDescriptor}.
+    * 
+    * @return <code>true</code> if this is a simple property, and <code>false</code> otherwise
     */
    public final boolean isSimpleProperty()
    {
@@ -99,11 +88,9 @@ public abstract class StructuralPropertyDescriptor
    }
 
    /**
-    * Returns whether this property is a child property
-    * (instance of {@link ChildPropertyDescriptor}.
-    *
-    * @return <code>true</code> if this is a child property, and
-    * <code>false</code> otherwise
+    * Returns whether this property is a child property (instance of {@link ChildPropertyDescriptor}.
+    * 
+    * @return <code>true</code> if this is a child property, and <code>false</code> otherwise
     */
    public final boolean isChildProperty()
    {
@@ -111,11 +98,9 @@ public abstract class StructuralPropertyDescriptor
    }
 
    /**
-    * Returns whether this property is a child list property
-    * (instance of {@link ChildListPropertyDescriptor}.
-    *
-    * @return <code>true</code> if this is a child list property, and
-    * <code>false</code> otherwise
+    * Returns whether this property is a child list property (instance of {@link ChildListPropertyDescriptor}.
+    * 
+    * @return <code>true</code> if this is a child list property, and <code>false</code> otherwise
     */
    public final boolean isChildListProperty()
    {
@@ -124,6 +109,7 @@ public abstract class StructuralPropertyDescriptor
 
    /**
     * Returns a string suitable for debug purposes.
+    * 
     * @return {@inheritDoc}
     */
    public String toString()

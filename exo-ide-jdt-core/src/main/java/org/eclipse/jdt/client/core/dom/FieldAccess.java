@@ -16,39 +16,30 @@ import java.util.List;
 
 /**
  * Field access expression AST node type.
- *
+ * 
  * <pre>
  * FieldAccess:
  * 		Expression <b>.</b> Identifier
  * </pre>
- *
+ * 
  * <p>
- * Note that there are several kinds of expressions that resemble field access
- * expressions: qualified names, this expressions, and super field access
- * expressions. The following guidelines help with correct usage:
+ * Note that there are several kinds of expressions that resemble field access expressions: qualified names, this expressions, and
+ * super field access expressions. The following guidelines help with correct usage:
  * <ul>
- *   <li>An expression like "foo.this" can only be represented as a this
- *   expression (<code>ThisExpression</code>) containing a simple name.
- *   "this" is a keyword, and therefore invalid as an identifier.</li>
- *   <li>An expression like "this.foo" can only be represented as a field
- *   access expression (<code>FieldAccess</code>) containing a this expression
- *   and a simple name. Again, this is because "this" is a keyword, and
- *   therefore invalid as an identifier.</li>
- *   <li>An expression with "super" can only be represented as a super field
- *   access expression (<code>SuperFieldAccess</code>). "super" is a also
- *   keyword, and therefore invalid as an identifier.</li>
- *   <li>An expression like "foo.bar" can be represented either as a
- *   qualified name (<code>QualifiedName</code>) or as a field access
- *   expression (<code>FieldAccess</code>) containing simple names. Either
- *   is acceptable, and there is no way to choose between them without
- *   information about what the names resolve to
- *   (<code>ASTParser</code> may return either).</li>
- *   <li>Other expressions ending in an identifier, such as "foo().bar" can
- *   only be represented as field access expressions
- *   (<code>FieldAccess</code>).</li>
+ * <li>An expression like "foo.this" can only be represented as a this expression (<code>ThisExpression</code>) containing a
+ * simple name. "this" is a keyword, and therefore invalid as an identifier.</li>
+ * <li>An expression like "this.foo" can only be represented as a field access expression (<code>FieldAccess</code>) containing a
+ * this expression and a simple name. Again, this is because "this" is a keyword, and therefore invalid as an identifier.</li>
+ * <li>An expression with "super" can only be represented as a super field access expression (<code>SuperFieldAccess</code>).
+ * "super" is a also keyword, and therefore invalid as an identifier.</li>
+ * <li>An expression like "foo.bar" can be represented either as a qualified name (<code>QualifiedName</code>) or as a field
+ * access expression (<code>FieldAccess</code>) containing simple names. Either is acceptable, and there is no way to choose
+ * between them without information about what the names resolve to (<code>ASTParser</code> may return either).</li>
+ * <li>Other expressions ending in an identifier, such as "foo().bar" can only be represented as field access expressions (
+ * <code>FieldAccess</code>).</li>
  * </ul>
  * </p>
- *
+ * 
  * @see QualifiedName
  * @see ThisExpression
  * @see SuperFieldAccess
@@ -60,6 +51,7 @@ public class FieldAccess extends Expression
 
    /**
     * The "expression" structural property of this node type (child type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(FieldAccess.class,
@@ -67,15 +59,14 @@ public class FieldAccess extends Expression
 
    /**
     * The "name" structural property of this node type (child type: {@link SimpleName}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor NAME_PROPERTY = new ChildPropertyDescriptor(FieldAccess.class,
       "name", SimpleName.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -89,14 +80,11 @@ public class FieldAccess extends Expression
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -105,25 +93,22 @@ public class FieldAccess extends Expression
    }
 
    /**
-    * The expression; lazily initialized; defaults to an unspecified,
-    * but legal, simple name.
+    * The expression; lazily initialized; defaults to an unspecified, but legal, simple name.
     */
    private Expression expression = null;
 
    /**
-    * The field; lazily initialized; defaults to an unspecified,
-    * but legal, simple field name.
+    * The field; lazily initialized; defaults to an unspecified, but legal, simple field name.
     */
    private SimpleName fieldName = null;
 
    /**
-    * Creates a new unparented node for a field access expression owned by the
-    * given AST. By default, the expression and field are both unspecified,
-    * but legal, names.
+    * Creates a new unparented node for a field access expression owned by the given AST. By default, the expression and field are
+    * both unspecified, but legal, names.
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    FieldAccess(AST ast)
@@ -131,16 +116,16 @@ public class FieldAccess extends Expression
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -172,16 +157,16 @@ public class FieldAccess extends Expression
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return FIELD_ACCESS;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -192,8 +177,8 @@ public class FieldAccess extends Expression
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -201,8 +186,8 @@ public class FieldAccess extends Expression
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -218,7 +203,7 @@ public class FieldAccess extends Expression
 
    /**
     * Returns the expression of this field access expression.
-    *
+    * 
     * @return the expression node
     */
    public Expression getExpression()
@@ -241,14 +226,14 @@ public class FieldAccess extends Expression
 
    /**
     * Sets the expression of this field access expression.
-    *
+    * 
     * @param expression the new expression
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setExpression(Expression expression)
    {
@@ -264,7 +249,7 @@ public class FieldAccess extends Expression
 
    /**
     * Returns the name of the field accessed in this field access expression.
-    *
+    * 
     * @return the field name
     */
    public SimpleName getName()
@@ -287,13 +272,13 @@ public class FieldAccess extends Expression
 
    /**
     * Sets the name of the field accessed in this field access expression.
-    *
+    * 
     * @param fieldName the field name
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     */
    public void setName(SimpleName fieldName)
    {
@@ -307,8 +292,8 @@ public class FieldAccess extends Expression
       postReplaceChild(oldChild, fieldName, NAME_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
@@ -317,15 +302,12 @@ public class FieldAccess extends Expression
    }
 
    /**
-    * Resolves and returns the binding for the field accessed by this
-    * expression.
+    * Resolves and returns the binding for the field accessed by this expression.
     * <p>
-    * Note that bindings are generally unavailable unless requested when the
-    * AST is being built.
+    * Note that bindings are generally unavailable unless requested when the AST is being built.
     * </p>
-    *
-    * @return the variable binding, or <code>null</code> if the binding cannot
-    * be resolved
+    * 
+    * @return the variable binding, or <code>null</code> if the binding cannot be resolved
     * @since 3.0
     */
    public IVariableBinding resolveFieldBinding()
@@ -333,8 +315,8 @@ public class FieldAccess extends Expression
       return this.ast.getBindingResolver().resolveField(this);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

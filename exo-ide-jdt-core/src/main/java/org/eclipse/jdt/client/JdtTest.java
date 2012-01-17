@@ -60,8 +60,8 @@ import com.google.gwt.core.client.EntryPoint;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Jan 5, 2012 5:15:04 PM evgen $
- *
+ * @version ${Id}: Jan 5, 2012 5:15:04 PM evgen $
+ * 
  */
 public class JdtTest implements EntryPoint
 {
@@ -83,9 +83,9 @@ public class JdtTest implements EntryPoint
    {
       rootPanel = new DockLayoutPanel(Unit.PX);
       RootLayoutPanel.get().add(rootPanel);
-      rootPanel.addNorth(new Button(new SafeHtmlBuilder().appendEscaped("Create AST").toSafeHtml(),  new ClickHandler()
+      rootPanel.addNorth(new Button(new SafeHtmlBuilder().appendEscaped("Create AST").toSafeHtml(), new ClickHandler()
       {
-         
+
          @Override
          public void onClick(ClickEvent event)
          {
@@ -111,10 +111,8 @@ public class JdtTest implements EntryPoint
       CellTree.Resources res = GWT.create(CellTree.BasicResources.class);
       CellTree cellTree = new CellTree(new ASTTreeViewModel(unit), null, res);
       rootPanel.add(new ScrollPanel(cellTree));
-//      for(IProblem problem : unit.getProblems())
-//         System.out.println(problem.getMessage());
+      // for(IProblem problem : unit.getProblems())
+      // System.out.println(problem.getMessage());
    }
-   
-   
 
 }

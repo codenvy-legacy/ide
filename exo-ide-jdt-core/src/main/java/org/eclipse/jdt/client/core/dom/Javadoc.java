@@ -20,11 +20,12 @@ import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 
 /**
  * AST node for a Javadoc-style doc comment.
+ * 
  * <pre>
  * Javadoc:
  *   <b>/** </b> { TagElement } <b>*</b><b>/</b>
  * </pre>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -33,6 +34,7 @@ public class Javadoc extends Comment
 
    /**
     * The "comment" structural property of this node type (type: {@link String}) (JLS2 API only).
+    * 
     * @since 3.0
     * @deprecated Replaced by {@link #TAGS_PROPERTY} in the JLS3 API.
     */
@@ -41,23 +43,22 @@ public class Javadoc extends Comment
 
    /**
     * The "tags" structural property of this node type (element type: {@link TagElement}).
+    * 
     * @since 3.1
     */
    public static final ChildListPropertyDescriptor TAGS_PROPERTY = new ChildListPropertyDescriptor(Javadoc.class,
       "tags", TagElement.class, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
+    * 
     * @since 3.0
     */
    private static final List PROPERTY_DESCRIPTORS_2_0;
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
+    * 
     * @since 3.1
     */
    private static final List PROPERTY_DESCRIPTORS_3_0;
@@ -77,13 +78,10 @@ public class Javadoc extends Comment
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -100,36 +98,34 @@ public class Javadoc extends Comment
 
    /**
     * Canonical minimal doc comment.
-     * @since 3.0
+    * 
+    * @since 3.0
     */
    private static final String MINIMAL_DOC_COMMENT = "/** */";//$NON-NLS-1$
 
    /**
-    * The doc comment string, including opening and closing comment
-    * delimiters; defaults to a minimal Javadoc comment.
-    * @deprecated The comment string was replaced in the 3.0 release
-    * by a representation of the structure of the doc comment.
-    * For backwards compatibility, it is still funcational as before.
+    * The doc comment string, including opening and closing comment delimiters; defaults to a minimal Javadoc comment.
+    * 
+    * @deprecated The comment string was replaced in the 3.0 release by a representation of the structure of the doc comment. For
+    *             backwards compatibility, it is still funcational as before.
     */
    private String comment = MINIMAL_DOC_COMMENT;
 
    /**
-    * The list of tag elements (element type: {@link TagElement}).
-    * Defaults to an empty list.
+    * The list of tag elements (element type: {@link TagElement}). Defaults to an empty list.
+    * 
     * @since 3.0
     */
    private ASTNode.NodeList tags = new ASTNode.NodeList(TAGS_PROPERTY);
 
    /**
-    * Creates a new AST node for a doc comment owned by the given AST.
-    * The new node has an empty list of tag elements (and, for backwards
-    * compatability, an unspecified, but legal, doc comment string).
+    * Creates a new AST node for a doc comment owned by the given AST. The new node has an empty list of tag elements (and, for
+    * backwards compatability, an unspecified, but legal, doc comment string).
     * <p>
-    * N.B. This constructor is package-private; all subclasses must be
-    * declared in the same package; clients are unable to declare
+    * N.B. This constructor is package-private; all subclasses must be declared in the same package; clients are unable to declare
     * additional subclasses.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    Javadoc(AST ast)
@@ -137,16 +133,16 @@ public class Javadoc extends Comment
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value)
    {
@@ -166,8 +162,8 @@ public class Javadoc extends Comment
       return super.internalGetSetObjectProperty(property, get, value);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
@@ -179,16 +175,16 @@ public class Javadoc extends Comment
       return super.internalGetChildListProperty(property);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return JAVADOC;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -202,8 +198,8 @@ public class Javadoc extends Comment
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -211,8 +207,8 @@ public class Javadoc extends Comment
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -226,15 +222,12 @@ public class Javadoc extends Comment
    }
 
    /**
-    * Returns the doc comment string, including the starting
-    * and ending comment delimiters, and any embedded line breaks.
-    *
+    * Returns the doc comment string, including the starting and ending comment delimiters, and any embedded line breaks.
+    * 
     * @return the doc comment string
-    * @exception UnsupportedOperationException if this operation is used in
-    * an AST later than JLS2
-    * @deprecated The comment string was replaced in the 3.0 release
-    * by a representation of the structure of the doc comment.
-    * See {@link #tags() tags}.
+    * @exception UnsupportedOperationException if this operation is used in an AST later than JLS2
+    * @deprecated The comment string was replaced in the 3.0 release by a representation of the structure of the doc comment. See
+    *             {@link #tags() tags}.
     */
    public String getComment()
    {
@@ -243,17 +236,14 @@ public class Javadoc extends Comment
    }
 
    /**
-    * Sets or clears the doc comment string. The documentation
-    * string must include the starting and ending comment delimiters,
-    * and any embedded line breaks.
-    *
+    * Sets or clears the doc comment string. The documentation string must include the starting and ending comment delimiters, and
+    * any embedded line breaks.
+    * 
     * @param docComment the doc comment string
     * @exception IllegalArgumentException if the Java comment string is invalid
-    * @exception UnsupportedOperationException if this operation is used in
-    * an AST later than JLS2
-    * @deprecated The comment string was replaced in the 3.0 release
-    * by a representation of the structure of the doc comment.
-    * See {@link #tags() tags}.
+    * @exception UnsupportedOperationException if this operation is used in an AST later than JLS2
+    * @deprecated The comment string was replaced in the 3.0 release by a representation of the structure of the doc comment. See
+    *             {@link #tags() tags}.
     */
    public void setComment(String docComment)
    {
@@ -300,28 +290,19 @@ public class Javadoc extends Comment
    }
 
    /**
-    * Returns the live list of tag elements that make up this doc
-    * comment.
+    * Returns the live list of tag elements that make up this doc comment.
     * <p>
-    * The tag elements cover everything except the starting and ending
-    * comment delimiters, and generally omit leading whitespace
-    * (including a leading "*") and embedded line breaks.
-    * The first tag element of a typical doc comment represents
-    * all the material before the first explicit doc tag; this
-    * first tag element has a <code>null</code> tag name and
-    * generally contains 1 or more {@link TextElement}s,
-    * and possibly interspersed with tag elements for nested tags
-    * like "{@link String String}".
-    * Subsequent tag elements represent successive top-level doc
-    * tag (e.g., "@param", "@return", "@see").
+    * The tag elements cover everything except the starting and ending comment delimiters, and generally omit leading whitespace
+    * (including a leading "*") and embedded line breaks. The first tag element of a typical doc comment represents all the
+    * material before the first explicit doc tag; this first tag element has a <code>null</code> tag name and generally contains 1
+    * or more {@link TextElement}s, and possibly interspersed with tag elements for nested tags like "{@link String String}".
+    * Subsequent tag elements represent successive top-level doc tag (e.g., "@param", "@return", "@see").
     * </p>
     * <p>
-    * Adding and removing nodes from this list affects this node
-    * dynamically.
+    * Adding and removing nodes from this list affects this node dynamically.
     * </p>
-    *
-    * @return the live list of tag elements in this doc comment
-    * (element type: {@link TagElement})
+    * 
+    * @return the live list of tag elements in this doc comment (element type: {@link TagElement})
     * @since 3.0
     */
    public List tags()
@@ -329,8 +310,8 @@ public class Javadoc extends Comment
       return this.tags;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
@@ -343,8 +324,8 @@ public class Javadoc extends Comment
       return size;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

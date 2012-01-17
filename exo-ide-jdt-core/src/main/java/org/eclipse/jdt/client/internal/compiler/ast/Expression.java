@@ -46,10 +46,10 @@ public abstract class Expression extends Statement
 
    public int statementEnd = -1;
 
-   //Some expression may not be used - from a java semantic point
-   //of view only - as statements. Other may. In order to avoid the creation
-   //of wrappers around expression in order to tune them as expression
-   //Expression is a subclass of Statement. See the message isValidJavaStatement()
+   // Some expression may not be used - from a java semantic point
+   // of view only - as statements. Other may. In order to avoid the creation
+   // of wrappers around expression in order to tune them as expression
+   // Expression is a subclass of Statement. See the message isValidJavaStatement()
 
    public int implicitConversion;
 
@@ -57,7 +57,7 @@ public abstract class Expression extends Statement
 
    public static final boolean isConstantValueRepresentable(Constant constant, int constantTypeID, int targetTypeID)
    {
-      //true if there is no loss of precision while casting.
+      // true if there is no loss of precision while casting.
       // constantTypeID == constant.typeID
       if (targetTypeID == constantTypeID)
          return true;
@@ -81,7 +81,7 @@ public abstract class Expression extends Statement
                case T_long :
                   return constant.longValue() == constant.charValue();
                default :
-                  return false;//boolean
+                  return false;// boolean
             }
 
          case T_float :
@@ -102,7 +102,7 @@ public abstract class Expression extends Statement
                case T_long :
                   return constant.longValue() == constant.floatValue();
                default :
-                  return false;//boolean
+                  return false;// boolean
             }
 
          case T_double :
@@ -123,7 +123,7 @@ public abstract class Expression extends Statement
                case T_long :
                   return constant.longValue() == constant.doubleValue();
                default :
-                  return false; //boolean
+                  return false; // boolean
             }
 
          case T_byte :
@@ -144,7 +144,7 @@ public abstract class Expression extends Statement
                case T_long :
                   return constant.longValue() == constant.byteValue();
                default :
-                  return false; //boolean
+                  return false; // boolean
             }
 
          case T_short :
@@ -165,7 +165,7 @@ public abstract class Expression extends Statement
                case T_long :
                   return constant.longValue() == constant.shortValue();
                default :
-                  return false; //boolean
+                  return false; // boolean
             }
 
          case T_int :
@@ -186,7 +186,7 @@ public abstract class Expression extends Statement
                case T_long :
                   return constant.longValue() == constant.intValue();
                default :
-                  return false; //boolean
+                  return false; // boolean
             }
 
          case T_long :
@@ -207,11 +207,11 @@ public abstract class Expression extends Statement
                case T_long :
                   return true;
                default :
-                  return false; //boolean
+                  return false; // boolean
             }
 
          default :
-            return false; //boolean
+            return false; // boolean
       }
    }
 
@@ -226,9 +226,9 @@ public abstract class Expression extends Statement
    }
 
    /**
-    * More sophisticated for of the flow analysis used for analyzing expressions, and be able to optimize out
-    * portions of expressions where no actual value is required.
-    *
+    * More sophisticated for of the flow analysis used for analyzing expressions, and be able to optimize out portions of
+    * expressions where no actual value is required.
+    * 
     * @param currentScope
     * @param flowContext
     * @param flowInfo
@@ -269,7 +269,7 @@ public abstract class Expression extends Statement
             {
                if (expression != null)
                {
-                  this.constant = expression.constant; //use the same constant
+                  this.constant = expression.constant; // use the same constant
                }
                tagAsUnnecessaryCast(scope, castType);
                return true;
@@ -314,11 +314,11 @@ public abstract class Expression extends Statement
       switch (expressionType.kind())
       {
          case Binding.BASE_TYPE :
-            //-----------cast to something which is NOT a base type--------------------------
+            // -----------cast to something which is NOT a base type--------------------------
             if (expressionType == TypeBinding.NULL)
             {
                tagAsUnnecessaryCast(scope, castType);
-               return true; //null is compatible with every thing
+               return true; // null is compatible with every thing
             }
             return false;
 
@@ -351,7 +351,7 @@ public abstract class Expression extends Statement
                   TypeBinding match = expressionType.findSuperTypeOriginatingFrom(castType);
                   if (match == null)
                   {
-                     checkUnsafeCast(scope, castType, expressionType, null /*no match*/, true);
+                     checkUnsafeCast(scope, castType, expressionType, null /* no match */, true);
                   }
                   // recurse on the type variable upper bound
                   return checkCastTypesCompatibility(scope, ((TypeVariableBinding)castType).upperBound(),
@@ -415,7 +415,7 @@ public abstract class Expression extends Statement
                      match = expressionType.findSuperTypeOriginatingFrom(castType);
                      if (match == null)
                      {
-                        checkUnsafeCast(scope, castType, expressionType, null /*no match*/, true);
+                        checkUnsafeCast(scope, castType, expressionType, null /* no match */, true);
                      }
                      // recurse on the type variable upper bound
                      return checkCastTypesCompatibility(scope, ((TypeVariableBinding)castType).upperBound(),
@@ -439,8 +439,9 @@ public abstract class Expression extends Statement
                         }
                         if (use15specifics)
                         {
-                           checkUnsafeCast(scope, castType, expressionType, null /*no match*/, true);
-                           // ensure there is no collision between both interfaces: i.e. I1 extends List<String>, I2 extends List<Object>
+                           checkUnsafeCast(scope, castType, expressionType, null /* no match */, true);
+                           // ensure there is no collision between both interfaces: i.e. I1 extends List<String>, I2 extends
+                           // List<Object>
                            if (scope.compilerOptions().complianceLevel < ClassFileConstants.JDK1_7)
                            {
                               if (interfaceType.hasIncompatibleSuperType((ReferenceBinding)castType))
@@ -459,7 +460,8 @@ public abstract class Expression extends Statement
                            // pre1.5 semantics - no covariance allowed (even if 1.5 compliant, but 1.4 source)
                            // look at original methods rather than the parameterized variants at 1.4 to detect
                            // covariance. Otherwise when confronted with one raw type and one parameterized type,
-                           // we could mistakenly detect covariance and scream foul. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=332744
+                           // we could mistakenly detect covariance and scream foul. See
+                           // https://bugs.eclipse.org/bugs/show_bug.cgi?id=332744
                            MethodBinding[] castTypeMethods = getAllOriginalInheritedMethods((ReferenceBinding)castType);
                            MethodBinding[] expressionTypeMethods =
                               getAllOriginalInheritedMethods((ReferenceBinding)expressionType);
@@ -503,8 +505,9 @@ public abstract class Expression extends Statement
                         }
                         if (use15specifics)
                         {
-                           checkUnsafeCast(scope, castType, expressionType, null /*no match*/, true);
-                           // ensure there is no collision between both interfaces: i.e. I1 extends List<String>, I2 extends List<Object>
+                           checkUnsafeCast(scope, castType, expressionType, null /* no match */, true);
+                           // ensure there is no collision between both interfaces: i.e. I1 extends List<String>, I2 extends
+                           // List<Object>
                            if (scope.compilerOptions().complianceLevel < ClassFileConstants.JDK1_7)
                            {
                               if (((ReferenceBinding)castType)
@@ -573,8 +576,9 @@ public abstract class Expression extends Statement
                         }
                         if (use15specifics)
                         {
-                           checkUnsafeCast(scope, castType, expressionType, null /*no match*/, true);
-                           // ensure there is no collision between both interfaces: i.e. I1 extends List<String>, I2 extends List<Object>
+                           checkUnsafeCast(scope, castType, expressionType, null /* no match */, true);
+                           // ensure there is no collision between both interfaces: i.e. I1 extends List<String>, I2 extends
+                           // List<Object>
                            if (scope.compilerOptions().complianceLevel < ClassFileConstants.JDK1_7)
                            {
                               if (refExprType.hasIncompatibleSuperType((ReferenceBinding)castType))
@@ -614,9 +618,9 @@ public abstract class Expression extends Statement
    }
 
    /**
-    * Check the local variable of this expression, if any, against potential NPEs
-    * given a flow context and an upstream flow info. If so, report the risk to
-    * the context. Marks the local as checked, which affects the flow info.
+    * Check the local variable of this expression, if any, against potential NPEs given a flow context and an upstream flow info.
+    * If so, report the risk to the context. Marks the local as checked, which affects the flow info.
+    * 
     * @param scope the scope of the analysis
     * @param flowContext the current flow context
     * @param flowInfo the upstream flow info; caveat: may get modified
@@ -669,8 +673,8 @@ public abstract class Expression extends Statement
    }
 
    /**
-    * Base types need that the widening is explicitly done by the compiler using some bytecode like i2f.
-    * Also check unsafe type operations.
+    * Base types need that the widening is explicitly done by the compiler using some bytecode like i2f. Also check unsafe type
+    * operations.
     */
    public void computeConversion(Scope scope, TypeBinding runtimeType, TypeBinding compileTimeType)
    {
@@ -708,7 +712,7 @@ public abstract class Expression extends Statement
       }
       int compileTimeTypeID, runtimeTypeID;
       if ((compileTimeTypeID = compileTimeType.id) == TypeIds.NoId)
-      { // e.g. ? extends String  ==> String (103227)
+      { // e.g. ? extends String ==> String (103227)
          compileTimeTypeID =
             compileTimeType.erasure().id == TypeIds.T_JavaLangString ? TypeIds.T_JavaLangString
                : TypeIds.T_JavaLangObject;
@@ -731,195 +735,196 @@ public abstract class Expression extends Statement
          case T_float :
          case T_boolean :
          case T_double :
-         case T_int : //implicitConversion may result in i2i which will result in NO code gen
+         case T_int : // implicitConversion may result in i2i which will result in NO code gen
          case T_long :
             this.implicitConversion |= (runtimeTypeID << 4) + compileTimeTypeID;
             break;
          default : // regular object ref
-            //				if (compileTimeType.isRawType() && runtimeTimeType.isBoundParameterizedType()) {
-            //				    scope.problemReporter().unsafeRawExpression(this, compileTimeType, runtimeTimeType);
-            //				}
+            // if (compileTimeType.isRawType() && runtimeTimeType.isBoundParameterizedType()) {
+            // scope.problemReporter().unsafeRawExpression(this, compileTimeType, runtimeTimeType);
+            // }
       }
    }
 
-   //   /**
-   //    * Expression statements are plain expressions, however they generate like
-   //    * normal expressions with no value required.
-   //    *
-   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   //    */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-   //   {
-   //      if ((this.bits & ASTNode.IsReachable) == 0)
-   //      {
-   //         return;
-   //      }
-   //      generateCode(currentScope, codeStream, false);
-   //   }
+   // /**
+   // * Expression statements are plain expressions, however they generate like
+   // * normal expressions with no value required.
+   // *
+   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   // {
+   // if ((this.bits & ASTNode.IsReachable) == 0)
+   // {
+   // return;
+   // }
+   // generateCode(currentScope, codeStream, false);
+   // }
    //
-   //   /**
-   //    * Every expression is responsible for generating its implicit conversion when necessary.
-   //    *
-   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   //    * @param valueRequired boolean
-   //    */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   //   {
-   //      if (this.constant != Constant.NotAConstant)
-   //      {
-   //         // generate a constant expression
-   //         int pc = codeStream.position;
-   //         codeStream.generateConstant(this.constant, this.implicitConversion);
-   //         codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //      }
-   //      else
-   //      {
-   //         // actual non-constant code generation
-   //         throw new ShouldNotImplement(Messages.ast_missingCode);
-   //      }
-   //   }
+   // /**
+   // * Every expression is responsible for generating its implicit conversion when necessary.
+   // *
+   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   // * @param valueRequired boolean
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   // {
+   // if (this.constant != Constant.NotAConstant)
+   // {
+   // // generate a constant expression
+   // int pc = codeStream.position;
+   // codeStream.generateConstant(this.constant, this.implicitConversion);
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
+   // else
+   // {
+   // // actual non-constant code generation
+   // throw new ShouldNotImplement(Messages.ast_missingCode);
+   // }
+   // }
    //
-   //   /**
-   //    * Default generation of a boolean value
-   //    * @param currentScope
-   //    * @param codeStream
-   //    * @param trueLabel
-   //    * @param falseLabel
-   //    * @param valueRequired
-   //    */
-   //   public void generateOptimizedBoolean(BlockScope currentScope, CodeStream codeStream, BranchLabel trueLabel,
-   //      BranchLabel falseLabel, boolean valueRequired)
-   //   {
-   //      // a label valued to nil means: by default we fall through the case...
-   //      // both nil means we leave the value on the stack
+   // /**
+   // * Default generation of a boolean value
+   // * @param currentScope
+   // * @param codeStream
+   // * @param trueLabel
+   // * @param falseLabel
+   // * @param valueRequired
+   // */
+   // public void generateOptimizedBoolean(BlockScope currentScope, CodeStream codeStream, BranchLabel trueLabel,
+   // BranchLabel falseLabel, boolean valueRequired)
+   // {
+   // // a label valued to nil means: by default we fall through the case...
+   // // both nil means we leave the value on the stack
    //
-   //      Constant cst = optimizedBooleanConstant();
-   //      generateCode(currentScope, codeStream, valueRequired && cst == Constant.NotAConstant);
-   //      if ((cst != Constant.NotAConstant) && (cst.typeID() == TypeIds.T_boolean))
-   //      {
-   //         int pc = codeStream.position;
-   //         if (cst.booleanValue() == true)
-   //         {
-   //            // constant == true
-   //            if (valueRequired)
-   //            {
-   //               if (falseLabel == null)
-   //               {
-   //                  // implicit falling through the FALSE case
-   //                  if (trueLabel != null)
-   //                  {
-   //                     codeStream.goto_(trueLabel);
-   //                  }
-   //               }
-   //            }
-   //         }
-   //         else
-   //         {
-   //            if (valueRequired)
-   //            {
-   //               if (falseLabel != null)
-   //               {
-   //                  // implicit falling through the TRUE case
-   //                  if (trueLabel == null)
-   //                  {
-   //                     codeStream.goto_(falseLabel);
-   //                  }
-   //               }
-   //            }
-   //         }
-   //         codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //         return;
-   //      }
-   //      // branching
-   //      int position = codeStream.position;
-   //      if (valueRequired)
-   //      {
-   //         if (falseLabel == null)
-   //         {
-   //            if (trueLabel != null)
-   //            {
-   //               // Implicit falling through the FALSE case
-   //               codeStream.ifne(trueLabel);
-   //            }
-   //         }
-   //         else
-   //         {
-   //            if (trueLabel == null)
-   //            {
-   //               // Implicit falling through the TRUE case
-   //               codeStream.ifeq(falseLabel);
-   //            }
-   //            else
-   //            {
-   //               // No implicit fall through TRUE/FALSE --> should never occur
-   //            }
-   //         }
-   //      }
-   //      // reposition the endPC
-   //      codeStream.updateLastRecordedEndPC(currentScope, position);
-   //   }
+   // Constant cst = optimizedBooleanConstant();
+   // generateCode(currentScope, codeStream, valueRequired && cst == Constant.NotAConstant);
+   // if ((cst != Constant.NotAConstant) && (cst.typeID() == TypeIds.T_boolean))
+   // {
+   // int pc = codeStream.position;
+   // if (cst.booleanValue() == true)
+   // {
+   // // constant == true
+   // if (valueRequired)
+   // {
+   // if (falseLabel == null)
+   // {
+   // // implicit falling through the FALSE case
+   // if (trueLabel != null)
+   // {
+   // codeStream.goto_(trueLabel);
+   // }
+   // }
+   // }
+   // }
+   // else
+   // {
+   // if (valueRequired)
+   // {
+   // if (falseLabel != null)
+   // {
+   // // implicit falling through the TRUE case
+   // if (trueLabel == null)
+   // {
+   // codeStream.goto_(falseLabel);
+   // }
+   // }
+   // }
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // return;
+   // }
+   // // branching
+   // int position = codeStream.position;
+   // if (valueRequired)
+   // {
+   // if (falseLabel == null)
+   // {
+   // if (trueLabel != null)
+   // {
+   // // Implicit falling through the FALSE case
+   // codeStream.ifne(trueLabel);
+   // }
+   // }
+   // else
+   // {
+   // if (trueLabel == null)
+   // {
+   // // Implicit falling through the TRUE case
+   // codeStream.ifeq(falseLabel);
+   // }
+   // else
+   // {
+   // // No implicit fall through TRUE/FALSE --> should never occur
+   // }
+   // }
+   // }
+   // // reposition the endPC
+   // codeStream.updateLastRecordedEndPC(currentScope, position);
+   // }
    //
-   //   /* Optimized (java) code generation for string concatenations that involve StringBuffer
-   //    * creation: going through this path means that there is no need for a new StringBuffer
-   //    * creation, further operands should rather be only appended to the current one.
-   //    * By default: no optimization.
-   //    */
-   //   public void generateOptimizedStringConcatenation(BlockScope blockScope, CodeStream codeStream, int typeID)
-   //   {
-   //      if (typeID == TypeIds.T_JavaLangString && this.constant != Constant.NotAConstant
-   //         && this.constant.stringValue().length() == 0)
-   //      {
-   //         return; // optimize str + ""
-   //      }
-   //      generateCode(blockScope, codeStream, true);
-   //      codeStream.invokeStringConcatenationAppendForType(typeID);
-   //   }
+   // /* Optimized (java) code generation for string concatenations that involve StringBuffer
+   // * creation: going through this path means that there is no need for a new StringBuffer
+   // * creation, further operands should rather be only appended to the current one.
+   // * By default: no optimization.
+   // */
+   // public void generateOptimizedStringConcatenation(BlockScope blockScope, CodeStream codeStream, int typeID)
+   // {
+   // if (typeID == TypeIds.T_JavaLangString && this.constant != Constant.NotAConstant
+   // && this.constant.stringValue().length() == 0)
+   // {
+   // return; // optimize str + ""
+   // }
+   // generateCode(blockScope, codeStream, true);
+   // codeStream.invokeStringConcatenationAppendForType(typeID);
+   // }
    //
-   //   /* Optimized (java) code generation for string concatenations that involve StringBuffer
-   //    * creation: going through this path means that there is no need for a new StringBuffer
-   //    * creation, further operands should rather be only appended to the current one.
-   //    */
-   //   public void generateOptimizedStringConcatenationCreation(BlockScope blockScope, CodeStream codeStream, int typeID)
-   //   {
-   //      codeStream.newStringContatenation();
-   //      codeStream.dup();
-   //      switch (typeID)
-   //      {
-   //         case T_JavaLangObject :
-   //         case T_undefined :
-   //            // in the case the runtime value of valueOf(Object) returns null, we have to use append(Object) instead of directly valueOf(Object)
-   //            // append(Object) returns append(valueOf(Object)), which means that the null case is handled by the next case.
-   //            codeStream.invokeStringConcatenationDefaultConstructor();
-   //            generateCode(blockScope, codeStream, true);
-   //            codeStream.invokeStringConcatenationAppendForType(TypeIds.T_JavaLangObject);
-   //            return;
-   //         case T_JavaLangString :
-   //         case T_null :
-   //            if (this.constant != Constant.NotAConstant)
-   //            {
-   //               String stringValue = this.constant.stringValue();
-   //               if (stringValue.length() == 0)
-   //               { // optimize ""+<str>
-   //                  codeStream.invokeStringConcatenationDefaultConstructor();
-   //                  return;
-   //               }
-   //               codeStream.ldc(stringValue);
-   //            }
-   //            else
-   //            {
-   //               // null case is not a constant
-   //               generateCode(blockScope, codeStream, true);
-   //               codeStream.invokeStringValueOf(TypeIds.T_JavaLangObject);
-   //            }
-   //            break;
-   //         default :
-   //            generateCode(blockScope, codeStream, true);
-   //            codeStream.invokeStringValueOf(typeID);
-   //      }
-   //      codeStream.invokeStringConcatenationStringConstructor();
-   //   }
+   // /* Optimized (java) code generation for string concatenations that involve StringBuffer
+   // * creation: going through this path means that there is no need for a new StringBuffer
+   // * creation, further operands should rather be only appended to the current one.
+   // */
+   // public void generateOptimizedStringConcatenationCreation(BlockScope blockScope, CodeStream codeStream, int typeID)
+   // {
+   // codeStream.newStringContatenation();
+   // codeStream.dup();
+   // switch (typeID)
+   // {
+   // case T_JavaLangObject :
+   // case T_undefined :
+   // // in the case the runtime value of valueOf(Object) returns null, we have to use append(Object) instead of directly
+   // valueOf(Object)
+   // // append(Object) returns append(valueOf(Object)), which means that the null case is handled by the next case.
+   // codeStream.invokeStringConcatenationDefaultConstructor();
+   // generateCode(blockScope, codeStream, true);
+   // codeStream.invokeStringConcatenationAppendForType(TypeIds.T_JavaLangObject);
+   // return;
+   // case T_JavaLangString :
+   // case T_null :
+   // if (this.constant != Constant.NotAConstant)
+   // {
+   // String stringValue = this.constant.stringValue();
+   // if (stringValue.length() == 0)
+   // { // optimize ""+<str>
+   // codeStream.invokeStringConcatenationDefaultConstructor();
+   // return;
+   // }
+   // codeStream.ldc(stringValue);
+   // }
+   // else
+   // {
+   // // null case is not a constant
+   // generateCode(blockScope, codeStream, true);
+   // codeStream.invokeStringValueOf(TypeIds.T_JavaLangObject);
+   // }
+   // break;
+   // default :
+   // generateCode(blockScope, codeStream, true);
+   // codeStream.invokeStringValueOf(typeID);
+   // }
+   // codeStream.invokeStringConcatenationStringConstructor();
+   // }
 
    private MethodBinding[] getAllOriginalInheritedMethods(ReferenceBinding binding)
    {
@@ -993,9 +998,9 @@ public abstract class Expression extends Statement
       { // https://bugs.eclipse.org/bugs/show_bug.cgi?id=276741
          return someExpression.resolvedType;
       }
-      //		} else if (someExpression instanceof PostfixExpression) { // recurse for postfix: i++ --> i
-      //			// note: "b = b++" is equivalent to doing nothing, not to "b++"
-      //			return getDirectBinding(((PostfixExpression) someExpression).lhs);
+      // } else if (someExpression instanceof PostfixExpression) { // recurse for postfix: i++ --> i
+      // // note: "b = b++" is equivalent to doing nothing, not to "b++"
+      // return getDirectBinding(((PostfixExpression) someExpression).lhs);
       return null;
    }
 
@@ -1004,10 +1009,10 @@ public abstract class Expression extends Statement
       return false;
    }
 
-   //Return true if the conversion is done AUTOMATICALLY by the vm
-   //while the javaVM is an int based-machine, thus for example pushing
-   //a byte onto the stack , will automatically create an int on the stack
-   //(this request some work d be done by the VM on signed numbers)
+   // Return true if the conversion is done AUTOMATICALLY by the vm
+   // while the javaVM is an int based-machine, thus for example pushing
+   // a byte onto the stack , will automatically create an int on the stack
+   // (this request some work d be done by the VM on signed numbers)
    public boolean isConstantValueOfTypeAssignableToType(TypeBinding constantType, TypeBinding targetType)
    {
 
@@ -1015,11 +1020,11 @@ public abstract class Expression extends Statement
          return false;
       if (constantType == targetType)
          return true;
-      //No free assignment conversion from anything but to integral ones.
+      // No free assignment conversion from anything but to integral ones.
       if (BaseTypeBinding.isWidening(TypeIds.T_int, constantType.id)
          && (BaseTypeBinding.isNarrowing(targetType.id, TypeIds.T_int)))
       {
-         //use current explicit conversion in order to get some new value to compare with current one
+         // use current explicit conversion in order to get some new value to compare with current one
          return isConstantValueRepresentable(this.constant, constantType.id, targetType.id);
       }
       return false;
@@ -1031,8 +1036,8 @@ public abstract class Expression extends Statement
    }
 
    /**
-    * Returns the local variable referenced by this node. Can be a direct reference (SingleNameReference)
-    * or thru a cast expression etc...
+    * Returns the local variable referenced by this node. Can be a direct reference (SingleNameReference) or thru a cast
+    * expression etc...
     */
    public LocalVariableBinding localVariableBinding()
    {
@@ -1040,8 +1045,7 @@ public abstract class Expression extends Statement
    }
 
    /**
-    * Mark this expression as being non null, per a specific tag in the
-    * source code.
+    * Mark this expression as being non null, per a specific tag in the source code.
     */
    // this is no more called for now, waiting for inter procedural null reference analysis
    public void markAsNonNull()
@@ -1063,10 +1067,9 @@ public abstract class Expression extends Statement
    }
 
    /**
-    * Constant usable for bytecode pattern optimizations, but cannot be inlined
-    * since it is not strictly equivalent to the definition of constant expressions.
-    * In particular, some side-effects may be required to occur (only the end value
-    * is known).
+    * Constant usable for bytecode pattern optimizations, but cannot be inlined since it is not strictly equivalent to the
+    * definition of constant expressions. In particular, some side-effects may be required to occur (only the end value is known).
+    * 
     * @return Constant known to be of boolean type
     */
    public Constant optimizedBooleanConstant()
@@ -1075,9 +1078,9 @@ public abstract class Expression extends Statement
    }
 
    /**
-    * Returns the type of the expression after required implicit conversions. When expression type gets promoted
-    * or inserted a generic cast, the converted type will differ from the resolved type (surface side-effects from
-    * #computeConversion(...)).
+    * Returns the type of the expression after required implicit conversions. When expression type gets promoted or inserted a
+    * generic cast, the converted type will differ from the resolved type (surface side-effects from #computeConversion(...)).
+    * 
     * @return the type after implicit conversion
     */
    public TypeBinding postConversionType(Scope scope)
@@ -1141,10 +1144,9 @@ public abstract class Expression extends Statement
 
    /**
     * Resolve the type of this expression in the context of a blockScope
-    *
+    * 
     * @param scope
-    * @return
-    * 	Return the actual type of this expression after resolution
+    * @return Return the actual type of this expression after resolution
     */
    public TypeBinding resolveType(BlockScope scope)
    {
@@ -1154,10 +1156,9 @@ public abstract class Expression extends Statement
 
    /**
     * Resolve the type of this expression in the context of a classScope
-    *
+    * 
     * @param scope
-    * @return
-    * 	Return the actual type of this expression after resolution
+    * @return Return the actual type of this expression after resolution
     */
    public TypeBinding resolveType(ClassScope scope)
    {
@@ -1190,9 +1191,8 @@ public abstract class Expression extends Statement
    }
 
    /**
-    * Returns true if the receiver is forced to be of raw type either to satisfy the contract imposed
-    * by a super type or because it *is* raw and the current type has no control over it (i.e the rawness
-    * originates from some other file.)
+    * Returns true if the receiver is forced to be of raw type either to satisfy the contract imposed by a super type or because
+    * it *is* raw and the current type has no control over it (i.e the rawness originates from some other file.)
     */
    public boolean forcedToBeRaw(ReferenceContext referenceContext)
    {
@@ -1277,9 +1277,8 @@ public abstract class Expression extends Statement
    }
 
    /**
-    * Returns an object which can be used to identify identical JSR sequence targets
-    * (see TryStatement subroutine codegen)
-    * or <code>null</null> if not reusable
+    * Returns an object which can be used to identify identical JSR sequence targets (see TryStatement subroutine codegen) or
+    * <code>null</null> if not reusable
     */
    public Object reusableJSRTarget()
    {
@@ -1289,12 +1288,10 @@ public abstract class Expression extends Statement
    }
 
    /**
-    * Record the type expectation before this expression is typechecked.
-    * e.g. String s = foo();, foo() will be tagged as being expected of type String
-    * Used to trigger proper inference of generic method invocations.
-    *
-    * @param expectedType
-    * 	The type denoting an expectation in the context of an assignment conversion
+    * Record the type expectation before this expression is typechecked. e.g. String s = foo();, foo() will be tagged as being
+    * expected of type String Used to trigger proper inference of generic method invocations.
+    * 
+    * @param expectedType The type denoting an expectation in the context of an assignment conversion
     */
    public void setExpectedType(TypeBinding expectedType)
    {
@@ -1308,7 +1305,7 @@ public abstract class Expression extends Statement
 
    /**
     * Record the fact a cast expression got detected as being unnecessary.
-    *
+    * 
     * @param scope
     * @param castType
     */
@@ -1319,18 +1316,19 @@ public abstract class Expression extends Statement
 
    public Expression toTypeReference()
    {
-      //by default undefined
+      // by default undefined
 
-      //this method is meanly used by the parser in order to transform
-      //an expression that is used as a type reference in a cast ....
-      //--appreciate the fact that castExpression and ExpressionWithParenthesis
-      //--starts with the same pattern.....
+      // this method is meanly used by the parser in order to transform
+      // an expression that is used as a type reference in a cast ....
+      // --appreciate the fact that castExpression and ExpressionWithParenthesis
+      // --starts with the same pattern.....
 
       return this;
    }
 
    /**
     * Traverse an expression in the context of a blockScope
+    * 
     * @param visitor
     * @param scope
     */
@@ -1341,6 +1339,7 @@ public abstract class Expression extends Statement
 
    /**
     * Traverse an expression in the context of a classScope
+    * 
     * @param visitor
     * @param scope
     */

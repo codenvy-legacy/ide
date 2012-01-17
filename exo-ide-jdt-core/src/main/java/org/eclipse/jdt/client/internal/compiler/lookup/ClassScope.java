@@ -175,7 +175,8 @@ public class ClassScope extends Scope
       // remove duplicate fields
       if (count != fieldBindings.length)
          System.arraycopy(fieldBindings, 0, fieldBindings = new FieldBinding[count], 0, count);
-      sourceType.tagBits &= ~(TagBits.AreFieldsSorted | TagBits.AreFieldsComplete); // in case some static imports reached already into this type
+      sourceType.tagBits &= ~(TagBits.AreFieldsSorted | TagBits.AreFieldsComplete); // in case some static imports reached already
+                                                                                    // into this type
       sourceType.setFields(fieldBindings);
    }
 
@@ -406,7 +407,8 @@ public class ClassScope extends Scope
       }
       if (count != methodBindings.length)
          System.arraycopy(methodBindings, 0, methodBindings = new MethodBinding[count], 0, count);
-      sourceType.tagBits &= ~(TagBits.AreMethodsSorted | TagBits.AreMethodsComplete); // in case some static imports reached already into this type
+      sourceType.tagBits &= ~(TagBits.AreMethodsSorted | TagBits.AreMethodsComplete); // in case some static imports reached
+                                                                                      // already into this type
       sourceType.setMethods(methodBindings);
       // https://bugs.eclipse.org/bugs/show_bug.cgi?id=243917, conservatively tag all methods and fields as
       // being in use if there is a native method in the class.
@@ -473,7 +475,8 @@ public class ClassScope extends Scope
 
       SourceTypeBinding sourceType = this.referenceContext.binding;
       TypeParameter[] typeParameters = this.referenceContext.typeParameters;
-      // https://bugs.eclipse.org/bugs/show_bug.cgi?id=324850, If they exist at all, process type parameters irrespective of source level.
+      // https://bugs.eclipse.org/bugs/show_bug.cgi?id=324850, If they exist at all, process type parameters irrespective of
+      // source level.
       if (typeParameters == null || typeParameters.length == 0)
       {
          sourceType.typeVariables = Binding.NO_TYPE_VARIABLES;
@@ -584,7 +587,7 @@ public class ClassScope extends Scope
 
       if ((realModifiers & ClassFileConstants.AccInterface) != 0)
       { // interface and annotation type
-         // detect abnormal cases for interfaces
+        // detect abnormal cases for interfaces
          if (isMemberType)
          {
             final int UNEXPECTED_MODIFIERS =
@@ -599,11 +602,10 @@ public class ClassScope extends Scope
                   problemReporter().illegalModifierForMemberInterface(sourceType);
             }
             /*
-            } else if (sourceType.isLocalType()) { //interfaces cannot be defined inside a method
-            	int unexpectedModifiers = ~(AccAbstract | AccInterface | AccStrictfp);
-            	if ((realModifiers & unexpectedModifiers) != 0)
-            		problemReporter().illegalModifierForLocalInterface(sourceType);
-            */
+             * } else if (sourceType.isLocalType()) { //interfaces cannot be defined inside a method int unexpectedModifiers =
+             * ~(AccAbstract | AccInterface | AccStrictfp); if ((realModifiers & unexpectedModifiers) != 0)
+             * problemReporter().illegalModifierForLocalInterface(sourceType);
+             */
          }
          else
          {
@@ -641,8 +643,8 @@ public class ClassScope extends Scope
                problemReporter().illegalModifierForMemberEnum(sourceType);
                modifiers &= ~ClassFileConstants.AccAbstract; // avoid leaking abstract modifier
                realModifiers &= ~ClassFileConstants.AccAbstract;
-               //					modifiers &= ~(realModifiers & UNEXPECTED_MODIFIERS);
-               //					realModifiers = modifiers & ExtraCompilerModifiers.AccJustFlag;
+               // modifiers &= ~(realModifiers & UNEXPECTED_MODIFIERS);
+               // realModifiers = modifiers & ExtraCompilerModifiers.AccJustFlag;
             }
          }
          else if (sourceType.isLocalType())
@@ -697,8 +699,10 @@ public class ClassScope extends Scope
                      }
                   }
                }
-               // tag this enum as abstract since an abstract method must be implemented AND all enum constants define an anonymous body
-               // as a result, each of its anonymous constants will see it as abstract and must implement each inherited abstract method
+               // tag this enum as abstract since an abstract method must be implemented AND all enum constants define an
+               // anonymous body
+               // as a result, each of its anonymous constants will see it as abstract and must implement each inherited abstract
+               // method
                if (needAbstractBit)
                {
                   modifiers |= ClassFileConstants.AccAbstract;
@@ -815,13 +819,13 @@ public class ClassScope extends Scope
       sourceType.modifiers = modifiers;
    }
 
-   /* This method checks the modifiers of a field.
-   *
-   * 9.3 & 8.3
-   * Need to integrate the check for the final modifiers for nested types
-   *
-   * Note : A scope is accessible by : fieldBinding.declaringClass.scope
-   */
+   /*
+    * This method checks the modifiers of a field.
+    * 
+    * 9.3 & 8.3 Need to integrate the check for the final modifiers for nested types
+    * 
+    * Note : A scope is accessible by : fieldBinding.declaringClass.scope
+    */
    private void checkAndSetModifiersForField(FieldBinding fieldBinding, FieldDeclaration fieldDecl)
    {
       int modifiers = fieldBinding.modifiers;
@@ -856,7 +860,7 @@ public class ClassScope extends Scope
          // set the modifiers
          // https://bugs.eclipse.org/bugs/show_bug.cgi?id=267670. Force all enumerators to be marked
          // as used locally. We are unable to track the usage of these reliably as they could be used
-         // in non obvious ways via the synthesized methods values() and valueOf(String) or by using 
+         // in non obvious ways via the synthesized methods values() and valueOf(String) or by using
          // Enum.valueOf(Class<T>, String).
          final int IMPLICIT_MODIFIERS =
             ClassFileConstants.AccPublic | ClassFileConstants.AccStatic | ClassFileConstants.AccFinal
@@ -1084,16 +1088,13 @@ public class ClassScope extends Scope
    }
 
    /*
-   	Our current belief based on available JCK tests is:
-   		inherited member types are visible as a potential superclass.
-   		inherited interfaces are not visible when defining a superinterface.
-
-   	Error recovery story:
-   		ensure the superclass is set to java.lang.Object if a problem is detected
-   		resolving the superclass.
-
-   	Answer false if an error was reported against the sourceType.
-   */
+    * Our current belief based on available JCK tests is: inherited member types are visible as a potential superclass. inherited
+    * interfaces are not visible when defining a superinterface.
+    * 
+    * Error recovery story: ensure the superclass is set to java.lang.Object if a problem is detected resolving the superclass.
+    * 
+    * Answer false if an error was reported against the sourceType.
+    */
    private boolean connectSuperclass()
    {
       SourceTypeBinding sourceType = this.referenceContext.binding;
@@ -1110,7 +1111,9 @@ public class ClassScope extends Scope
       }
       if (this.referenceContext.superclass == null)
       {
-         if (sourceType.isEnum() && compilerOptions().sourceLevel >= ClassFileConstants.JDK1_5) // do not connect if source < 1.5 as enum already got flagged as syntax error
+         if (sourceType.isEnum() && compilerOptions().sourceLevel >= ClassFileConstants.JDK1_5) // do not connect if source < 1.5
+                                                                                                // as enum already got flagged as
+                                                                                                // syntax error
             return connectEnumSuperclass();
          sourceType.superclass = getJavaLangObject();
          return !detectHierarchyCycle(sourceType, sourceType.superclass, null);
@@ -1157,7 +1160,7 @@ public class ClassScope extends Scope
    }
 
    /**
-    *  enum X (implicitly) extends Enum<X>
+    * enum X (implicitly) extends Enum<X>
     */
    private boolean connectEnumSuperclass()
    {
@@ -1187,7 +1190,7 @@ public class ClassScope extends Scope
          environment().createParameterizedType(
             rootEnumType,
             new TypeBinding[]{environment()
-               .convertToRawType(sourceType, false /*do not force conversion of enclosing types*/),}, null);
+               .convertToRawType(sourceType, false /* do not force conversion of enclosing types */),}, null);
       sourceType.tagBits |= (superType.tagBits & TagBits.HierarchyHasProblems); // propagate if missing supertpye
       sourceType.superclass = superType;
       // bound check (in case of bogus definition of Enum type)
@@ -1199,15 +1202,13 @@ public class ClassScope extends Scope
    }
 
    /*
-   	Our current belief based on available JCK 1.3 tests is:
-   		inherited member types are visible as a potential superclass.
-   		inherited interfaces are visible when defining a superinterface.
-
-   	Error recovery story:
-   		ensure the superinterfaces contain only valid visible interfaces.
-
-   	Answer false if an error was reported against the sourceType.
-   */
+    * Our current belief based on available JCK 1.3 tests is: inherited member types are visible as a potential superclass.
+    * inherited interfaces are visible when defining a superinterface.
+    * 
+    * Error recovery story: ensure the superinterfaces contain only valid visible interfaces.
+    * 
+    * Answer false if an error was reported against the sourceType.
+    */
    private boolean connectSuperInterfaces()
    {
       SourceTypeBinding sourceType = this.referenceContext.binding;
@@ -1365,14 +1366,14 @@ public class ClassScope extends Scope
          if (superType.isTypeVariable())
             return false; // error case caught in resolveSuperType()
          // abstract class X<K,V> implements java.util.Map<K,V>
-         //    static abstract class M<K,V> implements Entry<K,V>
+         // static abstract class M<K,V> implements Entry<K,V>
          if (superType.isParameterizedType())
             superType = ((ParameterizedTypeBinding)superType).genericType();
          compilationUnitScope().recordSuperTypeReference(superType); // to record supertypes
          return detectHierarchyCycle(this.referenceContext.binding, (ReferenceBinding)superType, reference);
       }
       // Reinstate the code deleted by the fix for https://bugs.eclipse.org/bugs/show_bug.cgi?id=205235
-      // For details, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=294057. 
+      // For details, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=294057.
       if ((superType.tagBits & TagBits.BeginHierarchyCheck) == 0 && superType instanceof SourceTypeBinding)
          // ensure if this is a source superclass that it has already been checked
          ((SourceTypeBinding)superType).scope.connectTypeHierarchyWithoutMembers();
@@ -1413,9 +1414,10 @@ public class ClassScope extends Scope
 
       if (superType.isBinaryBinding())
       {
-         // force its superclass & superinterfaces to be found... 2 possibilities exist - the source type is included in the hierarchy of:
-         //		- a binary type... this case MUST be caught & reported here
-         //		- another source type... this case is reported against the other source type
+         // force its superclass & superinterfaces to be found... 2 possibilities exist - the source type is included in the
+         // hierarchy of:
+         // - a binary type... this case MUST be caught & reported here
+         // - another source type... this case is reported against the other source type
          boolean hasCycle = false;
          ReferenceBinding parentType = superType.superclass();
          if (parentType != null)
@@ -1531,12 +1533,12 @@ public class ClassScope extends Scope
       }
    }
 
-   /* Answer the problem reporter to use for raising new problems.
-   *
-   * Note that as a side-effect, this updates the current reference context
-   * (unit, type or method) in case the problem handler decides it is necessary
-   * to abort.
-   */
+   /*
+    * Answer the problem reporter to use for raising new problems.
+    * 
+    * Note that as a side-effect, this updates the current reference context (unit, type or method) in case the problem handler
+    * decides it is necessary to abort.
+    */
    public ProblemReporter problemReporter()
    {
       MethodScope outerMethodScope;
@@ -1549,9 +1551,9 @@ public class ClassScope extends Scope
       return outerMethodScope.problemReporter();
    }
 
-   /* Answer the reference type of this scope.
-   * It is the nearest enclosing type of this scope.
-   */
+   /*
+    * Answer the reference type of this scope. It is the nearest enclosing type of this scope.
+    */
    public TypeDeclaration referenceType()
    {
       return this.referenceContext;

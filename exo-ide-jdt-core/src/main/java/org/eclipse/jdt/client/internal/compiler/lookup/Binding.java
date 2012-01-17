@@ -76,22 +76,22 @@ public abstract class Binding
    public static final ReferenceBinding[] UNINITIALIZED_REFERENCE_TYPES = new ReferenceBinding[0];
 
    /*
-   * Answer the receiver's binding type from Binding.BindingID.
-   */
+    * Answer the receiver's binding type from Binding.BindingID.
+    */
    public abstract int kind();
 
    /*
-    * Computes a key that uniquely identifies this binding.
-    * Returns null if binding is not a TypeBinding, a MethodBinding, a FieldBinding or a PackageBinding.
+    * Computes a key that uniquely identifies this binding. Returns null if binding is not a TypeBinding, a MethodBinding, a
+    * FieldBinding or a PackageBinding.
     */
    public char[] computeUniqueKey()
    {
-      return computeUniqueKey(true/*leaf*/);
+      return computeUniqueKey(true/* leaf */);
    }
 
    /*
-    * Computes a key that uniquely identifies this binding. Optionally include access flags.
-    * Returns null if binding is not a TypeBinding, a MethodBinding, a FieldBinding or a PackageBinding.
+    * Computes a key that uniquely identifies this binding. Optionally include access flags. Returns null if binding is not a
+    * TypeBinding, a MethodBinding, a FieldBinding or a PackageBinding.
     */
    public char[] computeUniqueKey(boolean isLeaf)
    {
@@ -99,8 +99,9 @@ public abstract class Binding
    }
 
    /**
-    * Compute the tagbits for standard annotations. For source types, these could require
-    * lazily resolving corresponding annotation nodes, in case of forward references.
+    * Compute the tagbits for standard annotations. For source types, these could require lazily resolving corresponding
+    * annotation nodes, in case of forward references.
+    * 
     * @see org.eclipse.jdt.client.internal.compiler.lookup.SourceTypeBinding#getAnnotationTagBits()
     */
    public long getAnnotationTagBits()
@@ -109,8 +110,8 @@ public abstract class Binding
    }
 
    /**
-    * Compute the tag bits for @Deprecated annotations, avoiding resolving
-    * entire annotation if not necessary.
+    * Compute the tag bits for @Deprecated annotations, avoiding resolving entire annotation if not necessary.
+    * 
     * @see org.eclipse.jdt.client.internal.compiler.lookup.SourceTypeBinding#initializeDeprecatedAnnotationTagBits()
     */
    public void initializeDeprecatedAnnotationTagBits()
@@ -118,9 +119,9 @@ public abstract class Binding
       // empty block
    }
 
-   /* API
-   * Answer true if the receiver is not a problem binding
-   */
+   /*
+    * API Answer true if the receiver is not a problem binding
+    */
    public final boolean isValidBinding()
    {
       return problemId() == ProblemReasons.NoError;
@@ -136,22 +137,23 @@ public abstract class Binding
       return false;
    }
 
-   /* API
-   * Answer the problem id associated with the receiver.
-   * NoError if the receiver is a valid binding.
-   * Note: a parameterized type or an array type are always valid, but may be formed of invalid pieces.
-   */
+   /*
+    * API Answer the problem id associated with the receiver. NoError if the receiver is a valid binding. Note: a parameterized
+    * type or an array type are always valid, but may be formed of invalid pieces.
+    */
    // TODO (philippe) should rename into problemReason()
    public int problemId()
    {
       return ProblemReasons.NoError;
    }
 
-   /* Answer a printable representation of the receiver.
-   */
+   /*
+    * Answer a printable representation of the receiver.
+    */
    public abstract char[] readableName();
 
-   /* Shorter printable representation of the receiver (no qualified type)
+   /*
+    * Shorter printable representation of the receiver (no qualified type)
     */
    public char[] shortReadableName()
    {

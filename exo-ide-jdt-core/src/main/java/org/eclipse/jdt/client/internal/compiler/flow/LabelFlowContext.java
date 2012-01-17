@@ -16,8 +16,7 @@ import org.eclipse.jdt.client.internal.compiler.codegen.BranchLabel;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 
 /**
- * Reflects the context of code analysis, keeping track of enclosing
- *	try statements, exception handlers, etc...
+ * Reflects the context of code analysis, keeping track of enclosing try statements, exception handlers, etc...
  */
 public class LabelFlowContext extends SwitchFlowContext
 {

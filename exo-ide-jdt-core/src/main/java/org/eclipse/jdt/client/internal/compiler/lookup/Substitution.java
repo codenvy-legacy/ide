@@ -17,8 +17,7 @@ public interface Substitution
 {
 
    /**
-    * Returns the type substitute for a given type variable, or itself
-    * if no substitution got performed.
+    * Returns the type substitute for a given type variable, or itself if no substitution got performed.
     */
    TypeBinding substitute(TypeVariableBinding typeVariable);
 

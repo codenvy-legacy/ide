@@ -11,9 +11,8 @@
 package org.eclipse.jdt.client.internal.compiler.util;
 
 /**
- * A simple lookup table is a non-synchronized Hashtable, whose keys
- * and values are Objects. It also uses linear probing to resolve collisions
- * rather than a linked list of hash table entries.
+ * A simple lookup table is a non-synchronized Hashtable, whose keys and values are Objects. It also uses linear probing to
+ * resolve collisions rather than a linked list of hash table entries.
  */
 public final class SimpleLookupTable implements Cloneable
 {

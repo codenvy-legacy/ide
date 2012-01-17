@@ -40,20 +40,19 @@ public class CaptureBinding extends TypeVariableBinding
    }
 
    /*
-    * sourceTypeKey ! wildcardKey position semi-colon
-    * p.X { capture of ? } --> !*123; (Lp/X; in declaring type except if leaf)
-    * p.X { capture of ? extends p.Y } --> !+Lp/Y;123; (Lp/X; in declaring type except if leaf)
+    * sourceTypeKey ! wildcardKey position semi-colon p.X { capture of ? } --> !*123; (Lp/X; in declaring type except if leaf) p.X
+    * { capture of ? extends p.Y } --> !+Lp/Y;123; (Lp/X; in declaring type except if leaf)
     */
    public char[] computeUniqueKey(boolean isLeaf)
    {
       StringBuffer buffer = new StringBuffer();
       if (isLeaf)
       {
-         buffer.append(this.sourceType.computeUniqueKey(false/*not a leaf*/));
+         buffer.append(this.sourceType.computeUniqueKey(false/* not a leaf */));
          buffer.append('&');
       }
       buffer.append(TypeConstants.WILDCARD_CAPTURE);
-      buffer.append(this.wildcard.computeUniqueKey(false/*not a leaf*/));
+      buffer.append(this.wildcard.computeUniqueKey(false/* not a leaf */));
       buffer.append(this.position);
       buffer.append(';');
       int length = buffer.length();
@@ -86,8 +85,8 @@ public class CaptureBinding extends TypeVariableBinding
    }
 
    /**
-    * Initialize capture bounds using substituted supertypes
-    * e.g. given X<U, V extends X<U, V>>,     capture(X<E,?>) = X<E,capture>, where capture extends X<E,capture>
+    * Initialize capture bounds using substituted supertypes e.g. given X<U, V extends X<U, V>>, capture(X<E,?>) = X<E,capture>,
+    * where capture extends X<E,capture>
     */
    public void initializeBounds(Scope scope, ParameterizedTypeBinding capturedParameterizedType)
    {

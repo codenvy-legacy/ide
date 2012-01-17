@@ -58,7 +58,7 @@ public class RecoveredElement
    }
 
    /*
-    *	Record a method declaration
+    * Record a method declaration
     */
    public RecoveredElement add(AbstractMethodDeclaration methodDeclaration, int bracketBalanceValue)
    {
@@ -100,7 +100,7 @@ public class RecoveredElement
    }
 
    /*
-    *	Record an import reference
+    * Record an import reference
     */
    public RecoveredElement add(ImportReference importReference, int bracketBalanceValue)
    {
@@ -142,7 +142,7 @@ public class RecoveredElement
    }
 
    /*
-    *	Record a type declaration
+    * Record a type declaration
     */
    public RecoveredElement add(TypeDeclaration typeDeclaration, int bracketBalanceValue)
    {
@@ -288,9 +288,8 @@ public class RecoveredElement
    }
 
    /*
-    * Answer the position of the previous line end if
-    * there is nothing but spaces in between it and the
-    * line end. Used to trim spaces on unclosed elements.
+    * Answer the position of the previous line end if there is nothing but spaces in between it and the line end. Used to trim
+    * spaces on unclosed elements.
     */
    public int previousAvailableLineEnd(int position)
    {
@@ -384,8 +383,7 @@ public class RecoveredElement
    }
 
    /*
-    * Update the corresponding parse node from parser state which
-    * is about to disappear because of restarting recovery
+    * Update the corresponding parse node from parser state which is about to disappear because of restarting recovery
     */
    public void updateFromParserState()
    {
@@ -393,8 +391,7 @@ public class RecoveredElement
    }
 
    /*
-    * A closing brace got consumed, might have closed the current element,
-    * in which case both the currentElement is exited
+    * A closing brace got consumed, might have closed the current element, in which case both the currentElement is exited
     */
    public RecoveredElement updateOnClosingBrace(int braceStart, int braceEnd)
    {
@@ -407,10 +404,10 @@ public class RecoveredElement
    }
 
    /*
-    * An opening brace got consumed, might be the expected opening one of the current element,
-    * in which case the bodyStart is updated.
+    * An opening brace got consumed, might be the expected opening one of the current element, in which case the bodyStart is
+    * updated.
     */
-   /*public RecoveredElement updateOnOpeningBrace(int braceEnd){return null;}*/
+   /* public RecoveredElement updateOnOpeningBrace(int braceEnd){return null;} */
    public RecoveredElement updateOnOpeningBrace(int braceStart, int braceEnd)
    {
 

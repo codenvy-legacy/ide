@@ -21,7 +21,7 @@ public interface InvocationSite
 
    // in case the receiver type does not match the actual receiver type
    // e.g. pkg.Type.C (receiver type of C is type of source context,
-   //		but actual receiver type is pkg.Type)
+   // but actual receiver type is pkg.Type)
    // e.g2. in presence of implicit access to enclosing type
    void setActualReceiverType(ReferenceBinding receiverType);
 

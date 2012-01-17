@@ -129,7 +129,7 @@ public class IntConstant extends Constant
 
    public String stringValue()
    {
-      //spec 15.17.11
+      // spec 15.17.11
       return String.valueOf(this.value);
    }
 

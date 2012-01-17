@@ -20,13 +20,14 @@ import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 
 /**
- * AST node for a simple name. A simple name is an identifier other than
- * a keyword, boolean literal ("true", "false") or null literal ("null").
+ * AST node for a simple name. A simple name is an identifier other than a keyword, boolean literal ("true", "false") or null
+ * literal ("null").
+ * 
  * <pre>
  * SimpleName:
  *     Identifier
  * </pre>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -35,16 +36,15 @@ public class SimpleName extends Name
 
    /**
     * The "identifier" structural property of this node type (type: {@link String}).
-    *
+    * 
     * @since 3.0
     */
    public static final SimplePropertyDescriptor IDENTIFIER_PROPERTY = new SimplePropertyDescriptor(SimpleName.class,
       "identifier", String.class, MANDATORY); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
+    * 
     * @since 3.0
     */
    private static final List PROPERTY_DESCRIPTORS;
@@ -58,12 +58,10 @@ public class SimpleName extends Name
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
     * @param apiLevel the API level; one of the AST.JLS* constants
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -82,14 +80,12 @@ public class SimpleName extends Name
    private String identifier = MISSING_IDENTIFIER;
 
    /**
-    * Creates a new AST node for a simple name owned by the given AST.
-    * The new node has an unspecified, legal Java identifier.
+    * Creates a new AST node for a simple name owned by the given AST. The new node has an unspecified, legal Java identifier.
     * <p>
-    * N.B. This constructor is package-private; all subclasses must be
-    * declared in the same package; clients are unable to declare
+    * N.B. This constructor is package-private; all subclasses must be declared in the same package; clients are unable to declare
     * additional subclasses.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    SimpleName(AST ast)
@@ -97,8 +93,9 @@ public class SimpleName extends Name
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
+    * 
     * @since 3.0
     */
    final List internalStructuralPropertiesForType(int apiLevel)
@@ -106,8 +103,8 @@ public class SimpleName extends Name
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value)
    {
@@ -127,16 +124,16 @@ public class SimpleName extends Name
       return super.internalGetSetObjectProperty(property, get, value);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return SIMPLE_NAME;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -146,8 +143,8 @@ public class SimpleName extends Name
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -155,8 +152,8 @@ public class SimpleName extends Name
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -166,7 +163,7 @@ public class SimpleName extends Name
 
    /**
     * Returns this node's identifier.
-    *
+    * 
     * @return the identifier of this node
     */
    public String getIdentifier()
@@ -175,15 +172,12 @@ public class SimpleName extends Name
    }
 
    /**
-    * Sets the identifier of this node to the given value.
-    * The identifier should be legal according to the rules
-    * of the Java language. Note that keywords are not legal
-    * identifiers.
+    * Sets the identifier of this node to the given value. The identifier should be legal according to the rules of the Java
+    * language. Note that keywords are not legal identifiers.
     * <p>
-    * Note that the list of keywords may depend on the version of the
-    * language (determined when the AST object was created).
+    * Note that the list of keywords may depend on the version of the language (determined when the AST object was created).
     * </p>
-    *
+    * 
     * @param identifier the identifier of this node
     * @exception IllegalArgumentException if the identifier is invalid
     */
@@ -234,8 +228,8 @@ public class SimpleName extends Name
       postValueChange(IDENTIFIER_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * This method is a copy of setIdentifier(String) that doesn't do any validation.
+   /*
+    * (omit javadoc for this method) This method is a copy of setIdentifier(String) that doesn't do any validation.
     */
    void internalSetIdentifier(String ident)
    {
@@ -245,33 +239,25 @@ public class SimpleName extends Name
    }
 
    /**
-    * Returns whether this simple name represents a name that is being defined,
-    * as opposed to one being referenced. The following positions are considered
-    * ones where a name is defined:
+    * Returns whether this simple name represents a name that is being defined, as opposed to one being referenced. The following
+    * positions are considered ones where a name is defined:
     * <ul>
     * <li>The type name in a <code>TypeDeclaration</code> node.</li>
-    * <li>The method name in a <code>MethodDeclaration</code> node
-    * providing <code>isConstructor</code> is <code>false</code>.</li>
-    * <li>The variable name in any type of <code>VariableDeclaration</code>
-    * node.</li>
+    * <li>The method name in a <code>MethodDeclaration</code> node providing <code>isConstructor</code> is <code>false</code>.</li>
+    * <li>The variable name in any type of <code>VariableDeclaration</code> node.</li>
     * <li>The enum type name in a <code>EnumDeclaration</code> node.</li>
-    * <li>The enum constant name in an <code>EnumConstantDeclaration</code>
-    * node.</li>
-    * <li>The variable name in an <code>EnhancedForStatement</code>
-    * node.</li>
-    * <li>The type variable name in a <code>TypeParameter</code>
-    * node.</li>
+    * <li>The enum constant name in an <code>EnumConstantDeclaration</code> node.</li>
+    * <li>The variable name in an <code>EnhancedForStatement</code> node.</li>
+    * <li>The type variable name in a <code>TypeParameter</code> node.</li>
     * <li>The type name in an <code>AnnotationTypeDeclaration</code> node.</li>
     * <li>The member name in an <code>AnnotationTypeMemberDeclaration</code> node.</li>
     * </ul>
     * <p>
-    * Note that this is a convenience method that simply checks whether
-    * this node appears in the declaration position relative to its parent.
-    * It always returns <code>false</code> if this node is unparented.
+    * Note that this is a convenience method that simply checks whether this node appears in the declaration position relative to
+    * its parent. It always returns <code>false</code> if this node is unparented.
     * </p>
-    *
-    * @return <code>true</code> if this node declares a name, and
-    *    <code>false</code> otherwise
+    * 
+    * @return <code>true</code> if this node declares a name, and <code>false</code> otherwise
     */
    public boolean isDeclaration()
    {
@@ -323,16 +309,16 @@ public class SimpleName extends Name
       return false;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on Name.
+   /*
+    * (omit javadoc for this method) Method declared on Name.
     */
    void appendName(StringBuffer buffer)
    {
       buffer.append(getIdentifier());
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
@@ -345,8 +331,8 @@ public class SimpleName extends Name
       return size;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

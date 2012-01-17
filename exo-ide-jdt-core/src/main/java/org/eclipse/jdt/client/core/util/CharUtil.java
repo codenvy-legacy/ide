@@ -20,8 +20,8 @@ package org.eclipse.jdt.client.core.util;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Jan 10, 2012 5:55:02 PM evgen $
- *
+ * @version ${Id}: Jan 10, 2012 5:55:02 PM evgen $
+ * 
  */
 public class CharUtil
 {

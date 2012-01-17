@@ -363,8 +363,8 @@ public class CompilerOptions
    public static final String ALL_STANDARD_TAGS = "all_standard_tags"; //$NON-NLS-1$
 
    /**
-    * Bit mask for configurable problems (error/warning threshold)
-    * Note: bitmask assumes 3 highest bits to denote irritant group (to allow storing 8 groups of 29 bits each
+    * Bit mask for configurable problems (error/warning threshold) Note: bitmask assumes 3 highest bits to denote irritant group
+    * (to allow storing 8 groups of 29 bits each
     */
    // group 0
    public static final int MethodWithConstructorName = IrritantSet.GROUP0 | ASTNode.Bit1;
@@ -500,14 +500,16 @@ public class CompilerOptions
    public static final int RedundantSpecificationOfTypeArguments = IrritantSet.GROUP2 | ASTNode.Bit7;
 
    // Severity level for handlers
-   /** 
-    * Defaults defined at {@link IrritantSet#COMPILER_DEFAULT_ERRORS} 
+   /**
+    * Defaults defined at {@link IrritantSet#COMPILER_DEFAULT_ERRORS}
+    * 
     * @see #resetDefaults()
     */
    protected IrritantSet errorThreshold;
 
-   /** 
+   /**
     * Defaults defined at {@link IrritantSet#COMPILER_DEFAULT_WARNINGS}
+    * 
     * @see #resetDefaults()
     */
    protected IrritantSet warningThreshold;
@@ -522,18 +524,20 @@ public class CompilerOptions
    /** Compliance level for the compiler, refers to a JDK version, e.g. {@link ClassFileConstants#JDK1_4} */
    public long complianceLevel;
 
-   /** Original compliance level for the compiler, refers to a JDK version, e.g. {@link ClassFileConstants#JDK1_4},
-    *  Usually same as the field complianceLevel, though the latter could deviate to create temporary sandbox
-    *  modes during reconcile operations. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=323633
+   /**
+    * Original compliance level for the compiler, refers to a JDK version, e.g. {@link ClassFileConstants#JDK1_4}, Usually same as
+    * the field complianceLevel, though the latter could deviate to create temporary sandbox modes during reconcile operations.
+    * See https://bugs.eclipse.org/bugs/show_bug.cgi?id=323633
     */
    public long originalComplianceLevel;
 
    /** Java source level, refers to a JDK version, e.g. {@link ClassFileConstants#JDK1_4} */
    public long sourceLevel;
 
-   /** Original Java source level, refers to a JDK version, e.g. {@link ClassFileConstants#JDK1_4} 
-    *  Usually same as the field sourceLevel, though the latter could deviate to create temporary sandbox
-    *  modes during reconcile operations. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=323633
+   /**
+    * Original Java source level, refers to a JDK version, e.g. {@link ClassFileConstants#JDK1_4} Usually same as the field
+    * sourceLevel, though the latter could deviate to create temporary sandbox modes during reconcile operations. See
+    * https://bugs.eclipse.org/bugs/show_bug.cgi?id=323633
     * */
    public long originalSourceLevel;
 
@@ -621,7 +625,7 @@ public class CompilerOptions
    /** Specify if need to flag missing javadoc tags for overriding method */
    public boolean reportMissingJavadocTagsOverriding;
 
-   /** Specify if need to flag missing javadoc tags for method type parameters (java 1.5 and above)*/
+   /** Specify if need to flag missing javadoc tags for method type parameters (java 1.5 and above) */
    public boolean reportMissingJavadocTagsMethodTypeParameters;
 
    /** Only report missing javadoc comment above a given level of visibility of associated construct */
@@ -654,7 +658,7 @@ public class CompilerOptions
    /** Store annotations */
    public boolean storeAnnotations;
 
-   /** Specify if need to report missing override annotation for a method implementing an interface method (java 1.6 and above)*/
+   /** Specify if need to report missing override annotation for a method implementing an interface method (java 1.6 and above) */
    public boolean reportMissingOverrideAnnotationForInterfaceMethodImplementation;
 
    /** Indicate if annotation processing generates classfiles */
@@ -663,15 +667,15 @@ public class CompilerOptions
    /** Indicate if method bodies should be ignored */
    public boolean ignoreMethodBodies;
 
-   /** Raise null related warnings for variables tainted inside an assert statement (java 1.4 and above)*/
+   /** Raise null related warnings for variables tainted inside an assert statement (java 1.4 and above) */
    public boolean includeNullInfoFromAsserts;
 
-   /** Controls whether forced generic type problems get reported  */
+   /** Controls whether forced generic type problems get reported */
    public boolean reportUnavoidableGenericTypeProblems;
 
    // keep in sync with warningTokenToIrritant and warningTokenFromIrritant
    // TODO Remove unused code found by UCDetector
-   // 	public final static String[] warningTokens = {
+   // public final static String[] warningTokens = {
    // 		"all", //$NON-NLS-1$
    // 		"boxing", //$NON-NLS-1$
    // 		"cast", //$NON-NLS-1$
@@ -694,7 +698,7 @@ public class CompilerOptions
    // 		"unchecked", //$NON-NLS-1$
    // 		"unqualified-field-access", //$NON-NLS-1$
    // 		"unused", //$NON-NLS-1$
-   // 	};
+   // };
 
    /**
     * Initializing the compiler options with defaults
@@ -706,6 +710,7 @@ public class CompilerOptions
 
    /**
     * Initializing the compiler options with external settings
+    * 
     * @param settings
     */
    public CompilerOptions(Map settings)
@@ -727,9 +732,9 @@ public class CompilerOptions
    }
 
    /**
-    * Return the most specific option key controlling this irritant. Note that in some case, some irritant is controlled by
-    * other master options (e.g. javadoc, deprecation, etc.).
-    * This information is intended for grouping purpose (several problems governed by a rule)
+    * Return the most specific option key controlling this irritant. Note that in some case, some irritant is controlled by other
+    * master options (e.g. javadoc, deprecation, etc.). This information is intended for grouping purpose (several problems
+    * governed by a rule)
     */
    public static String optionKeyFromIrritant(int irritant)
    {
@@ -947,6 +952,7 @@ public class CompilerOptions
 
    /**
     * Return all warning option names for use as keys in compiler options maps.
+    * 
     * @return all warning option names
     */
    public static String[] warningOptionNames()
@@ -1352,7 +1358,7 @@ public class CompilerOptions
       // by default only lines and source attributes are generated.
       this.produceDebugAttributes = ClassFileConstants.ATTR_SOURCE | ClassFileConstants.ATTR_LINES;
       this.complianceLevel = this.originalComplianceLevel = ClassFileConstants.JDK1_4; // by default be compliant with 1.4
-      this.sourceLevel = this.originalSourceLevel = ClassFileConstants.JDK1_3; //1.3 source behavior by default
+      this.sourceLevel = this.originalSourceLevel = ClassFileConstants.JDK1_3; // 1.3 source behavior by default
       this.targetJDK = ClassFileConstants.JDK1_2; // default generates for JVM1.2
 
       this.defaultEncoding = null; // will use the platform default encoding

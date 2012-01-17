@@ -20,7 +20,7 @@ import org.eclipse.jdt.client.internal.compiler.problem.ProblemSeverities;
 
 /**
  * Internal parser used for parsing source to create DOM AST nodes.
- *
+ * 
  * @since 3.0
  */
 public class CommentRecorderParser extends Parser
@@ -58,10 +58,10 @@ public class CommentRecorderParser extends Parser
       boolean checkDeprecated = false;
       int lastCommentIndex = -1;
 
-      //since jdk1.2 look only in the last java doc comment...
+      // since jdk1.2 look only in the last java doc comment...
       nextComment : for (lastCommentIndex = this.scanner.commentPtr; lastCommentIndex >= 0; lastCommentIndex--)
       {
-         //look for @deprecated into the first javadoc comment preceeding the declaration
+         // look for @deprecated into the first javadoc comment preceeding the declaration
          int commentSourceStart = this.scanner.commentStarts[lastCommentIndex];
          // javadoc only (non javadoc comment have negative start and/or end positions.)
          if ((commentSourceStart < 0)
@@ -71,7 +71,7 @@ public class CommentRecorderParser extends Parser
             continue nextComment;
          }
          checkDeprecated = true;
-         int commentSourceEnd = this.scanner.commentStops[lastCommentIndex] - 1; //stop is one over
+         int commentSourceEnd = this.scanner.commentStops[lastCommentIndex] - 1; // stop is one over
          // do not report problem before last parsed comment while recovering code...
          if (this.javadocParser.shouldReportProblems)
          {
@@ -102,7 +102,9 @@ public class CommentRecorderParser extends Parser
       }
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.Parser#consumeClassHeader()
     */
    protected void consumeClassHeader()
@@ -111,7 +113,9 @@ public class CommentRecorderParser extends Parser
       super.consumeClassHeader();
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.Parser#consumeEmptyTypeDeclaration()
     */
    protected void consumeEmptyTypeDeclaration()
@@ -120,7 +124,9 @@ public class CommentRecorderParser extends Parser
       super.consumeEmptyTypeDeclaration();
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.Parser#consumeInterfaceHeader()
     */
    protected void consumeInterfaceHeader()
@@ -129,7 +135,9 @@ public class CommentRecorderParser extends Parser
       super.consumeInterfaceHeader();
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.Parser#endParse(int)
     */
    protected CompilationUnitDeclaration endParse(int act)
@@ -143,8 +151,9 @@ public class CommentRecorderParser extends Parser
       return unit;
    }
 
-   /* (non-Javadoc)
-    * Save all source comments currently stored before flushing them.
+   /*
+    * (non-Javadoc) Save all source comments currently stored before flushing them.
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.Parser#flushCommentsDefinedPriorTo(int)
     */
    public int flushCommentsDefinedPriorTo(int position)
@@ -176,7 +185,7 @@ public class CommentRecorderParser extends Parser
          int immediateCommentEnd = 0;
          while (index < lastCommentIndex && (immediateCommentEnd = -this.scanner.commentStops[index + 1]) > 0)
          { // only tolerating non-javadoc comments (non-javadoc comment end positions are negative)
-            // is there any line break until the end of the immediate comment ? (thus only tolerating line comment)
+           // is there any line break until the end of the immediate comment ? (thus only tolerating line comment)
             immediateCommentEnd--; // comment end in one char too far
             if (org.eclipse.jdt.client.internal.compiler.util.Util.getLineNumber(position, this.scanner.lineEnds, 0,
                this.scanner.linePtr) != org.eclipse.jdt.client.internal.compiler.util.Util.getLineNumber(
@@ -221,8 +230,7 @@ public class CommentRecorderParser extends Parser
    }
 
    /*
-    * Build a n*2 matrix of comments positions.
-    * For each position, 0 is for start position and 1 for end position of the comment.
+    * Build a n*2 matrix of comments positions. For each position, 0 is for start position and 1 for end position of the comment.
     */
    public int[][] getCommentsPositions()
    {
@@ -235,7 +243,9 @@ public class CommentRecorderParser extends Parser
       return positions;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.Parser#initialize()
     */
    public void initialize(boolean initializeNLS)
@@ -244,7 +254,9 @@ public class CommentRecorderParser extends Parser
       this.commentPtr = -1;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.Parser#initialize()
     */
    public void initialize()
@@ -253,17 +265,18 @@ public class CommentRecorderParser extends Parser
       this.commentPtr = -1;
    }
 
-   /* (non-Javadoc)
-    * Create and store a specific comment recorder scanner.
+   /*
+    * (non-Javadoc) Create and store a specific comment recorder scanner.
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.Parser#initializeScanner()
     */
    public void initializeScanner()
    {
       this.scanner =
-         new Scanner(false /*comment*/, false /*whitespace*/,
-            this.options.getSeverity(CompilerOptions.NonExternalizedString) != ProblemSeverities.Ignore /*nls*/,
-            this.options.sourceLevel /*sourceLevel*/, this.options.taskTags/*taskTags*/,
-            this.options.taskPriorities/*taskPriorities*/, this.options.isTaskCaseSensitive/*taskCaseSensitive*/);
+         new Scanner(false /* comment */, false /* whitespace */,
+            this.options.getSeverity(CompilerOptions.NonExternalizedString) != ProblemSeverities.Ignore /* nls */,
+            this.options.sourceLevel /* sourceLevel */, this.options.taskTags/* taskTags */,
+            this.options.taskPriorities/* taskPriorities */, this.options.isTaskCaseSensitive/* taskCaseSensitive */);
    }
 
    /*
@@ -296,8 +309,9 @@ public class CommentRecorderParser extends Parser
       }
    }
 
-   /* (non-Javadoc)
-    * Save all source comments currently stored before flushing them.
+   /*
+    * (non-Javadoc) Save all source comments currently stored before flushing them.
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.Parser#resetModifiers()
     */
    protected void resetModifiers()

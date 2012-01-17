@@ -31,7 +31,9 @@ public class UnionTypeReference extends TypeReference
       this.sourceEnd = typeReferences[length - 1].sourceEnd;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.ast.TypeReference#copyDims(int)
     */
    public TypeReference copyDims(int dim)
@@ -39,7 +41,9 @@ public class UnionTypeReference extends TypeReference
       return this;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.ast.TypeReference#getLastToken()
     */
    public char[] getLastToken()
@@ -55,12 +59,14 @@ public class UnionTypeReference extends TypeReference
       return null; // not supported here - combined with resolveType(...)
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.ast.TypeReference#getTypeBinding(org.eclipse.jdt.internal.compiler.lookup.Scope)
     */
    public TypeBinding resolveType(BlockScope scope, boolean checkBounds)
    {
-      // return the lub (least upper bound of all type binding) 
+      // return the lub (least upper bound of all type binding)
       int length = this.typeReferences.length;
       TypeBinding[] allExceptionTypes = new TypeBinding[length];
       boolean hasError = false;
@@ -119,7 +125,9 @@ public class UnionTypeReference extends TypeReference
       return (this.resolvedType = scope.lowerUpperBound(allExceptionTypes));
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.ast.TypeReference#getTypeName()
     */
    public char[][] getTypeName()
@@ -128,8 +136,11 @@ public class UnionTypeReference extends TypeReference
       return this.typeReferences[0].getTypeName();
    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.ast.TypeReference#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+   /*
+    * (non-Javadoc)
+    * 
+    * @see org.eclipse.jdt.internal.compiler.ast.TypeReference#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor,
+    * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, BlockScope scope)
    {
@@ -144,8 +155,11 @@ public class UnionTypeReference extends TypeReference
       visitor.endVisit(this, scope);
    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.ast.TypeReference#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor, org.eclipse.jdt.internal.compiler.lookup.ClassScope)
+   /*
+    * (non-Javadoc)
+    * 
+    * @see org.eclipse.jdt.internal.compiler.ast.TypeReference#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor,
+    * org.eclipse.jdt.internal.compiler.lookup.ClassScope)
     */
    public void traverse(ASTVisitor visitor, ClassScope scope)
    {
@@ -160,7 +174,9 @@ public class UnionTypeReference extends TypeReference
       visitor.endVisit(this, scope);
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.ast.Expression#printExpression(int, java.lang.StringBuffer)
     */
    public StringBuffer printExpression(int indent, StringBuffer output)

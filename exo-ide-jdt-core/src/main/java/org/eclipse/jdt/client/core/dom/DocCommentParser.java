@@ -23,7 +23,7 @@ import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 
 /**
  * Internal parser used for decoding doc comments.
- *
+ * 
  * @since 3.0
  */
 class DocCommentParser extends AbstractCommentParser
@@ -54,11 +54,11 @@ class DocCommentParser extends AbstractCommentParser
       this.kind = DOM_PARSER | TEXT_PARSE;
    }
 
-   /* (non-Javadoc)
-    * Returns true if tag @deprecated is present in annotation.
-    *
-    * If annotation checking is enabled, will also construct an Annotation node, which will be stored into Parser.annotation
-    * slot for being consumed later on.
+   /*
+    * (non-Javadoc) Returns true if tag @deprecated is present in annotation.
+    * 
+    * If annotation checking is enabled, will also construct an Annotation node, which will be stored into Parser.annotation slot
+    * for being consumed later on.
     */
    public Javadoc parse(int[] positions)
    {
@@ -93,6 +93,7 @@ class DocCommentParser extends AbstractCommentParser
     * Sets the comment starting at the given position and with the given length.
     * <p>
     * Note the only purpose of this method is to hide deprecated warnings.
+    * 
     * @deprecated mark deprecated to hide deprecated usage
     */
    private void setComment(int start, int length)
@@ -108,7 +109,9 @@ class DocCommentParser extends AbstractCommentParser
       return buffer.toString();
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createArgumentReference(char[], java.lang.Object, int)
     */
    protected Object createArgumentReference(char[] name, int dim, boolean isVarargs, Object typeRef,
@@ -136,10 +139,10 @@ class DocCommentParser extends AbstractCommentParser
          if (node.getNodeType() == ASTNode.PRIMITIVE_TYPE)
          {
             argType = (PrimitiveType)node;
-            //				if (dim > 0) {
-            //					argType = this.ast.newArrayType(argType, dim);
-            //					argType.setSourceRange(argStart, ((int) dimPositions[dim-1])-argStart+1);
-            //				}
+            // if (dim > 0) {
+            // argType = this.ast.newArrayType(argType, dim);
+            // argType.setSourceRange(argStart, ((int) dimPositions[dim-1])-argStart+1);
+            // }
          }
          else
          {
@@ -165,9 +168,11 @@ class DocCommentParser extends AbstractCommentParser
       }
    }
 
-   /* (non-Javadoc)
-   	 * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createFieldReference()
-   	 */
+   /*
+    * (non-Javadoc)
+    * 
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createFieldReference()
+    */
    protected Object createFieldReference(Object receiver) throws InvalidInputException
    {
       try
@@ -200,7 +205,9 @@ class DocCommentParser extends AbstractCommentParser
       }
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createMethodReference(java.lang.Object[])
     */
    protected Object createMethodReference(Object receiver, List arguments) throws InvalidInputException
@@ -247,7 +254,9 @@ class DocCommentParser extends AbstractCommentParser
       }
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createTag()
     */
    protected void createTag()
@@ -290,7 +299,9 @@ class DocCommentParser extends AbstractCommentParser
       this.scanner.resetTo(position, this.javadocEnd);
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createTypeReference()
     */
    protected Object createTypeReference(int primitiveToken)
@@ -345,8 +356,8 @@ class DocCommentParser extends AbstractCommentParser
       }
       // Update ref for whole name
       int start = (int)(this.identifierPositionStack[pos] >>> 32);
-      //		int end = (int) this.identifierPositionStack[this.identifierPtr];
-      //		typeRef.setSourceRange(start, end-start+1);
+      // int end = (int) this.identifierPositionStack[this.identifierPtr];
+      // typeRef.setSourceRange(start, end-start+1);
       // Update references of each simple name
       if (size > 1)
       {
@@ -375,7 +386,9 @@ class DocCommentParser extends AbstractCommentParser
       return typeRef;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#parseIdentifierTag(boolean)
     */
    protected boolean parseIdentifierTag(boolean report)
@@ -399,7 +412,9 @@ class DocCommentParser extends AbstractCommentParser
       return true;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#parseTag(int)
     */
    protected boolean parseTag(int previousPosition) throws InvalidInputException
@@ -485,7 +500,8 @@ class DocCommentParser extends AbstractCommentParser
                   if (length == TAG_CATEGORY_LENGTH && CharOperation.equals(TAG_CATEGORY, tagName))
                   {
                      this.tagValue = TAG_CATEGORY_VALUE;
-                     valid = parseIdentifierTag(false); // TODO (frederic) reconsider parameter value when @category will be significant in spec
+                     valid = parseIdentifierTag(false); // TODO (frederic) reconsider parameter value when @category will be
+                                                        // significant in spec
                   }
                   else
                   {
@@ -685,7 +701,9 @@ class DocCommentParser extends AbstractCommentParser
       return valid;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushParamName(java.lang.Object)
     */
    protected boolean pushParamName(boolean isTypeParam)
@@ -728,7 +746,9 @@ class DocCommentParser extends AbstractCommentParser
       return true;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushSeeRef(java.lang.Object)
     */
    protected boolean pushSeeRef(Object statement)
@@ -776,7 +796,9 @@ class DocCommentParser extends AbstractCommentParser
       return true;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushText(int, int)
     */
    protected void pushText(int start, int end)
@@ -832,7 +854,9 @@ class DocCommentParser extends AbstractCommentParser
       this.textStart = -1;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushThrowName(java.lang.Object)
     */
    protected boolean pushThrowName(Object typeRef)
@@ -854,7 +878,9 @@ class DocCommentParser extends AbstractCommentParser
       return true;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#refreshInlineTagPosition(int)
     */
    protected void refreshInlineTagPosition(int previousPosition)

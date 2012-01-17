@@ -117,55 +117,55 @@ public class AssertStatement extends Statement
       }
    }
 
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-   //   {
-   //      if ((this.bits & IsReachable) == 0)
-   //      {
-   //         return;
-   //      }
-   //      int pc = codeStream.position;
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   // {
+   // if ((this.bits & IsReachable) == 0)
+   // {
+   // return;
+   // }
+   // int pc = codeStream.position;
    //
-   //      if (this.assertionSyntheticFieldBinding != null)
-   //      {
-   //         BranchLabel assertionActivationLabel = new BranchLabel(codeStream);
-   //         codeStream
-   //            .fieldAccess(Opcodes.OPC_getstatic, this.assertionSyntheticFieldBinding, null /* default declaringClass */);
-   //         codeStream.ifne(assertionActivationLabel);
+   // if (this.assertionSyntheticFieldBinding != null)
+   // {
+   // BranchLabel assertionActivationLabel = new BranchLabel(codeStream);
+   // codeStream
+   // .fieldAccess(Opcodes.OPC_getstatic, this.assertionSyntheticFieldBinding, null /* default declaringClass */);
+   // codeStream.ifne(assertionActivationLabel);
    //
-   //         BranchLabel falseLabel;
-   //         this.assertExpression.generateOptimizedBoolean(currentScope, codeStream, (falseLabel =
-   //            new BranchLabel(codeStream)), null, true);
-   //         codeStream.newJavaLangAssertionError();
-   //         codeStream.dup();
-   //         if (this.exceptionArgument != null)
-   //         {
-   //            this.exceptionArgument.generateCode(currentScope, codeStream, true);
-   //            codeStream.invokeJavaLangAssertionErrorConstructor(this.exceptionArgument.implicitConversion & 0xF);
-   //         }
-   //         else
-   //         {
-   //            codeStream.invokeJavaLangAssertionErrorDefaultConstructor();
-   //         }
-   //         codeStream.athrow();
+   // BranchLabel falseLabel;
+   // this.assertExpression.generateOptimizedBoolean(currentScope, codeStream, (falseLabel =
+   // new BranchLabel(codeStream)), null, true);
+   // codeStream.newJavaLangAssertionError();
+   // codeStream.dup();
+   // if (this.exceptionArgument != null)
+   // {
+   // this.exceptionArgument.generateCode(currentScope, codeStream, true);
+   // codeStream.invokeJavaLangAssertionErrorConstructor(this.exceptionArgument.implicitConversion & 0xF);
+   // }
+   // else
+   // {
+   // codeStream.invokeJavaLangAssertionErrorDefaultConstructor();
+   // }
+   // codeStream.athrow();
    //
-   //         // May loose some local variable initializations : affecting the local variable attributes
-   //         if (this.preAssertInitStateIndex != -1)
-   //         {
-   //            codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.preAssertInitStateIndex);
-   //         }
-   //         falseLabel.place();
-   //         assertionActivationLabel.place();
-   //      }
-   //      else
-   //      {
-   //         // May loose some local variable initializations : affecting the local variable attributes
-   //         if (this.preAssertInitStateIndex != -1)
-   //         {
-   //            codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.preAssertInitStateIndex);
-   //         }
-   //      }
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // // May loose some local variable initializations : affecting the local variable attributes
+   // if (this.preAssertInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.preAssertInitStateIndex);
+   // }
+   // falseLabel.place();
+   // assertionActivationLabel.place();
+   // }
+   // else
+   // {
+   // // May loose some local variable initializations : affecting the local variable attributes
+   // if (this.preAssertInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.preAssertInitStateIndex);
+   // }
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    public void resolve(BlockScope scope)
    {

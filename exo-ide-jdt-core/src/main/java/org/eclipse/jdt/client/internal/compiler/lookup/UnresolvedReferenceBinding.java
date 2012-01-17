@@ -32,7 +32,8 @@ public class UnresolvedReferenceBinding extends ReferenceBinding
       if (this.resolvedType != null)
       {
          // the type reference B<B<T>.M> means a signature of <T:Ljava/lang/Object;>LB<LB<TT;>.M;>;
-         // when the ParameterizedType for Unresolved B is created with args B<T>.M, the Unresolved B is resolved before the wrapper is added
+         // when the ParameterizedType for Unresolved B is created with args B<T>.M, the Unresolved B is resolved before the
+         // wrapper is added
          wrapper.swapUnresolved(this, this.resolvedType, environment);
          return;
       }
@@ -65,7 +66,7 @@ public class UnresolvedReferenceBinding extends ReferenceBinding
          }
          if (targetType == null || targetType == this)
          { // could not resolve any better, error was already reported against it
-            // report the missing class file first - only if not resolving a previously missing type
+           // report the missing class file first - only if not resolving a previously missing type
             if ((this.tagBits & TagBits.HasMissingType) == 0)
             {
                environment.problemReporter.isClassPathCorrect(this.compoundName, environment.unitBeingCompleted,

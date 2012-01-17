@@ -37,7 +37,7 @@ public class Argument extends LocalDeclaration
 
       // record the resolved type into the type reference
       Binding existingVariable =
-         scope.getBinding(this.name, Binding.VARIABLE, this, false /*do not resolve hidden field*/);
+         scope.getBinding(this.name, Binding.VARIABLE, this, false /* do not resolve hidden field */);
       if (existingVariable != null && existingVariable.isValidBinding())
       {
          if (existingVariable instanceof LocalVariableBinding && this.hiddenVariableDepth == 0)
@@ -84,7 +84,7 @@ public class Argument extends LocalDeclaration
       }
       scope.addLocalVariable(this.binding);
       resolveAnnotations(scope, this.annotations, this.binding);
-      //true stand for argument instead of just local
+      // true stand for argument instead of just local
       this.binding.declaration = this;
       this.binding.useFlag = used ? LocalVariableBinding.USED : LocalVariableBinding.UNUSED;
    }
@@ -133,7 +133,7 @@ public class Argument extends LocalDeclaration
       // provide the scope with a side effect : insertion of a LOCAL
       // that represents the argument. The type must be from JavaThrowable
 
-      TypeBinding exceptionType = this.type.resolveType(scope, true /* check bounds*/);
+      TypeBinding exceptionType = this.type.resolveType(scope, true /* check bounds */);
       boolean hasError;
       if (exceptionType == null)
       {
@@ -167,7 +167,7 @@ public class Argument extends LocalDeclaration
          }
       }
       Binding existingVariable =
-         scope.getBinding(this.name, Binding.VARIABLE, this, false /*do not resolve hidden field*/);
+         scope.getBinding(this.name, Binding.VARIABLE, this, false /* do not resolve hidden field */);
       if (existingVariable != null && existingVariable.isValidBinding())
       {
          if (existingVariable instanceof LocalVariableBinding && this.hiddenVariableDepth == 0)
@@ -183,12 +183,17 @@ public class Argument extends LocalDeclaration
       if ((this.type.bits & ASTNode.IsUnionType) != 0)
       {
          this.binding =
-            new CatchParameterBinding(this, exceptionType, this.modifiers | ClassFileConstants.AccFinal, false); // argument decl, but local var  (where isArgument = false)
+            new CatchParameterBinding(this, exceptionType, this.modifiers | ClassFileConstants.AccFinal, false); // argument decl,
+                                                                                                                 // but local var
+                                                                                                                 // (where
+                                                                                                                 // isArgument =
+                                                                                                                 // false)
          this.binding.tagBits |= TagBits.MultiCatchParameter;
       }
       else
       {
-         this.binding = new CatchParameterBinding(this, exceptionType, this.modifiers, false); // argument decl, but local var  (where isArgument = false)
+         this.binding = new CatchParameterBinding(this, exceptionType, this.modifiers, false); // argument decl, but local var
+                                                                                               // (where isArgument = false)
       }
       resolveAnnotations(scope, this.annotations, this.binding);
 

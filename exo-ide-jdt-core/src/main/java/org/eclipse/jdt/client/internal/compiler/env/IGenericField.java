@@ -13,8 +13,7 @@ package org.eclipse.jdt.client.internal.compiler.env;
 public interface IGenericField
 {
    /**
-    * Answer an int whose bits are set according the access constants
-    * defined by the VM spec.
+    * Answer an int whose bits are set according the access constants defined by the VM spec.
     */
 
    // We have added AccDeprecated & AccSynthetic.

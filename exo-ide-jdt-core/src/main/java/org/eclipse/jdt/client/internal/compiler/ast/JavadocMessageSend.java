@@ -98,9 +98,10 @@ public class JavadocMessageSend extends MessageSend
       {
          return null;
       }
-      this.actualReceiverType =
-         scope.environment()
-            .convertToRawType(this.receiver.resolvedType, true /*force the conversion of enclosing types*/);
+      this.actualReceiverType = scope.environment().convertToRawType(this.receiver.resolvedType, true /*
+                                                                                                       * force the conversion of
+                                                                                                       * enclosing types
+                                                                                                       */);
       ReferenceBinding enclosingType = scope.enclosingReceiverType();
       if (enclosingType == null ? false : enclosingType.isCompatibleWith(this.actualReceiverType))
       {
@@ -234,7 +235,9 @@ public class JavadocMessageSend extends MessageSend
       return this.resolvedType = this.binding.returnType;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.InvocationSite#isSuperAccess()
     */
    public boolean isSuperAccess()
@@ -272,9 +275,11 @@ public class JavadocMessageSend extends MessageSend
       return internalResolveType(scope);
    }
 
-   /* (non-Javadoc)
-    * Redefine to capture javadoc specific signatures
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+   /*
+    * (non-Javadoc) Redefine to capture javadoc specific signatures
+    * 
+    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor,
+    * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, BlockScope blockScope)
    {
@@ -294,9 +299,11 @@ public class JavadocMessageSend extends MessageSend
       visitor.endVisit(this, blockScope);
    }
 
-   /* (non-Javadoc)
-    * Redefine to capture javadoc specific signatures
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+   /*
+    * (non-Javadoc) Redefine to capture javadoc specific signatures
+    * 
+    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor,
+    * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, ClassScope scope)
    {

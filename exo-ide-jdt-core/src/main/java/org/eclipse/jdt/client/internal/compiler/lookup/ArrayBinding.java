@@ -74,13 +74,11 @@ public final class ArrayBinding extends TypeBinding
    }
 
    /**
-    * Collect the substitutes into a map for certain type variables inside the receiver type
-    * e.g.   Collection<T>.collectSubstitutes(Collection<List<X>>, Map), will populate Map with: T --> List<X>
-    * Constraints:
-    *   A << F   corresponds to:   F.collectSubstitutes(..., A, ..., CONSTRAINT_EXTENDS (1))
-    *   A = F   corresponds to:      F.collectSubstitutes(..., A, ..., CONSTRAINT_EQUAL (0))
-    *   A >> F   corresponds to:   F.collectSubstitutes(..., A, ..., CONSTRAINT_SUPER (2))
-   */
+    * Collect the substitutes into a map for certain type variables inside the receiver type e.g.
+    * Collection<T>.collectSubstitutes(Collection<List<X>>, Map), will populate Map with: T --> List<X> Constraints: A << F
+    * corresponds to: F.collectSubstitutes(..., A, ..., CONSTRAINT_EXTENDS (1)) A = F corresponds to: F.collectSubstitutes(..., A,
+    * ..., CONSTRAINT_EQUAL (0)) A >> F corresponds to: F.collectSubstitutes(..., A, ..., CONSTRAINT_SUPER (2))
+    */
    public void collectSubstitutes(Scope scope, TypeBinding actualType, InferenceContext inferenceContext, int constraint)
    {
 
@@ -106,15 +104,14 @@ public final class ArrayBinding extends TypeBinding
             }
             break;
          case Binding.TYPE_PARAMETER :
-            //TypeVariableBinding variable = (TypeVariableBinding) otherType;
+            // TypeVariableBinding variable = (TypeVariableBinding) otherType;
             // TODO (philippe) should consider array bounds, and recurse
             break;
       }
    }
 
    /*
-    * brakets leafUniqueKey
-    * p.X[][] --> [[Lp/X;
+    * brakets leafUniqueKey p.X[][] --> [[Lp/X;
     */
    public char[] computeUniqueKey(boolean isLeaf)
    {
@@ -125,9 +122,8 @@ public final class ArrayBinding extends TypeBinding
    }
 
    /**
-    * Answer the receiver's constant pool name.
-    * NOTE: This method should only be used during/after code gen.
-    * e.g. '[Ljava/lang/Object;'
+    * Answer the receiver's constant pool name. NOTE: This method should only be used during/after code gen. e.g.
+    * '[Ljava/lang/Object;'
     */
    public char[] constantPoolName()
    {
@@ -153,10 +149,11 @@ public final class ArrayBinding extends TypeBinding
       return this.dimensions;
    }
 
-   /* Answer an array whose dimension size is one less than the receiver.
-   *
-   * When the receiver's dimension size is one then answer the leaf component type.
-   */
+   /*
+    * Answer an array whose dimension size is one less than the receiver.
+    * 
+    * When the receiver's dimension size is one then answer the leaf component type.
+    */
 
    public TypeBinding elementsType()
    {
@@ -204,8 +201,9 @@ public final class ArrayBinding extends TypeBinding
       return this.leafComponentType == null ? super.hashCode() : this.leafComponentType.hashCode();
    }
 
-   /* Answer true if the receiver type can be assigned to the argument type (right)
-   */
+   /*
+    * Answer true if the receiver type can be assigned to the argument type (right)
+    */
    public boolean isCompatibleWith(TypeBinding otherType)
    {
       if (this == otherType)
@@ -244,8 +242,8 @@ public final class ArrayBinding extends TypeBinding
             return false;
 
       }
-      //Check dimensions - Java does not support explicitly sized dimensions for types.
-      //However, if it did, the type checking support would go here.
+      // Check dimensions - Java does not support explicitly sized dimensions for types.
+      // However, if it did, the type checking support would go here.
       switch (otherType.leafComponentType().id)
       {
          case TypeIds.T_JavaLangObject :
@@ -266,20 +264,18 @@ public final class ArrayBinding extends TypeBinding
       return this.leafComponentType;
    }
 
-   /* API
-   * Answer the problem id associated with the receiver.
-   * NoError if the receiver is a valid binding.
-   */
+   /*
+    * API Answer the problem id associated with the receiver. NoError if the receiver is a valid binding.
+    */
    public int problemId()
    {
       return this.leafComponentType.problemId();
    }
 
    /**
-   * Answer the source name for the type.
-   * In the case of member types, as the qualified name from its top level type.
-   * For example, for a member type N defined inside M & A: "A.M.N".
-   */
+    * Answer the source name for the type. In the case of member types, as the qualified name from its top level type. For
+    * example, for a member type N defined inside M & A: "A.M.N".
+    */
 
    public char[] qualifiedSourceName()
    {

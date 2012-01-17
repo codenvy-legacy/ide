@@ -273,7 +273,9 @@ public class LexStream implements TerminalTokens
       }
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see java.lang.Object#toString()
     */
    public String toString()

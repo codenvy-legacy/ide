@@ -30,7 +30,8 @@ public class WildcardBinding extends ReferenceBinding
 
    public TypeBinding bound; // when unbound denotes the corresponding type variable (so as to retrieve its bound lazily)
 
-   public TypeBinding[] otherBounds; // only positionned by lub computations (if so, #bound is also set) and associated to EXTENDS mode
+   public TypeBinding[] otherBounds; // only positionned by lub computations (if so, #bound is also set) and associated to EXTENDS
+                                     // mode
 
    char[] genericSignature;
 
@@ -56,11 +57,11 @@ public class WildcardBinding extends ReferenceBinding
       this.environment = environment;
       initialize(genericType, bound, otherBounds);
 
-      //		if (!genericType.isGenericType() && !(genericType instanceof UnresolvedReferenceBinding)) {
-      //			RuntimeException e = new RuntimeException("WILDCARD with NON GENERIC");
-      //			e.printStackTrace();
-      //			throw e;
-      //		}
+      // if (!genericType.isGenericType() && !(genericType instanceof UnresolvedReferenceBinding)) {
+      // RuntimeException e = new RuntimeException("WILDCARD with NON GENERIC");
+      // e.printStackTrace();
+      // throw e;
+      // }
       if (genericType instanceof UnresolvedReferenceBinding)
          ((UnresolvedReferenceBinding)genericType).addWrapper(this, environment);
       if (bound instanceof UnresolvedReferenceBinding)
@@ -93,7 +94,7 @@ public class WildcardBinding extends ReferenceBinding
             }
             return true;
          default : // SUPER
-            // ? super Exception   ok for:  IOException, since it would be ok for (Exception)ioException
+            // ? super Exception ok for: IOException, since it would be ok for (Exception)ioException
             return argumentType.isCompatibleWith(this.bound);
       }
    }
@@ -120,12 +121,10 @@ public class WildcardBinding extends ReferenceBinding
    }
 
    /**
-    * Collect the substitutes into a map for certain type variables inside the receiver type
-    * e.g.   Collection<T>.collectSubstitutes(Collection<List<X>>, Map), will populate Map with: T --> List<X>
-    * Constraints:
-    *   A << F   corresponds to:   F.collectSubstitutes(..., A, ..., CONSTRAINT_EXTENDS (1))
-    *   A = F   corresponds to:      F.collectSubstitutes(..., A, ..., CONSTRAINT_EQUAL (0))
-    *   A >> F   corresponds to:   F.collectSubstitutes(..., A, ..., CONSTRAINT_SUPER (2))
+    * Collect the substitutes into a map for certain type variables inside the receiver type e.g.
+    * Collection<T>.collectSubstitutes(Collection<List<X>>, Map), will populate Map with: T --> List<X> Constraints: A << F
+    * corresponds to: F.collectSubstitutes(..., A, ..., CONSTRAINT_EXTENDS (1)) A = F corresponds to: F.collectSubstitutes(..., A,
+    * ..., CONSTRAINT_EQUAL (0)) A >> F corresponds to: F.collectSubstitutes(..., A, ..., CONSTRAINT_SUPER (2))
     */
    public void collectSubstitutes(Scope scope, TypeBinding actualType, InferenceContext inferenceContext, int constraint)
    {
@@ -147,23 +146,23 @@ public class WildcardBinding extends ReferenceBinding
             switch (this.boundKind)
             {
                case Wildcard.UNBOUND : // F={?}
-                  //						switch (actualType.kind()) {
-                  //						case Binding.WILDCARD_TYPE :
-                  //							WildcardBinding actualWildcard = (WildcardBinding) actualType;
-                  //							switch(actualWildcard.kind) {
-                  //								case Wildcard.UNBOUND: // A={?} << F={?}  --> 0
-                  //									break;
-                  //								case Wildcard.EXTENDS: // A={? extends V} << F={?} ---> 0
-                  //									break;
-                  //								case Wildcard.SUPER: // A={? super V} << F={?} ---> 0
-                  //									break;
-                  //							}
-                  //							break;
-                  //						case Binding.INTERSECTION_TYPE :// A={? extends V1&...&Vn} << F={?} ---> 0
-                  //							break;
-                  //						default :// A=V << F={?} ---> 0
-                  //							break;
-                  //						}
+                  // switch (actualType.kind()) {
+                  // case Binding.WILDCARD_TYPE :
+                  // WildcardBinding actualWildcard = (WildcardBinding) actualType;
+                  // switch(actualWildcard.kind) {
+                  // case Wildcard.UNBOUND: // A={?} << F={?} --> 0
+                  // break;
+                  // case Wildcard.EXTENDS: // A={? extends V} << F={?} ---> 0
+                  // break;
+                  // case Wildcard.SUPER: // A={? super V} << F={?} ---> 0
+                  // break;
+                  // }
+                  // break;
+                  // case Binding.INTERSECTION_TYPE :// A={? extends V1&...&Vn} << F={?} ---> 0
+                  // break;
+                  // default :// A=V << F={?} ---> 0
+                  // break;
+                  // }
                   break;
                case Wildcard.EXTENDS : // F={? extends U}
                   switch (actualType.kind())
@@ -172,7 +171,7 @@ public class WildcardBinding extends ReferenceBinding
                         WildcardBinding actualWildcard = (WildcardBinding)actualType;
                         switch (actualWildcard.boundKind)
                         {
-                           case Wildcard.UNBOUND : // A={?} << F={? extends U}  --> 0
+                           case Wildcard.UNBOUND : // A={?} << F={? extends U} --> 0
                               break;
                            case Wildcard.EXTENDS : // A={? extends V} << F={? extends U} ---> V << U
                               this.bound.collectSubstitutes(scope, actualWildcard.bound, inferenceContext,
@@ -205,7 +204,7 @@ public class WildcardBinding extends ReferenceBinding
                         WildcardBinding actualWildcard = (WildcardBinding)actualType;
                         switch (actualWildcard.boundKind)
                         {
-                           case Wildcard.UNBOUND : // A={?} << F={? super U}  --> 0
+                           case Wildcard.UNBOUND : // A={?} << F={? super U} --> 0
                               break;
                            case Wildcard.EXTENDS : // A={? extends V} << F={? super U} ---> 0
                               break;
@@ -235,23 +234,23 @@ public class WildcardBinding extends ReferenceBinding
             switch (this.boundKind)
             {
                case Wildcard.UNBOUND : // F={?}
-                  //						switch (actualType.kind()) {
-                  //						case Binding.WILDCARD_TYPE :
-                  //							WildcardBinding actualWildcard = (WildcardBinding) actualType;
-                  //							switch(actualWildcard.kind) {
-                  //								case Wildcard.UNBOUND: // A={?} == F={?}  --> 0
-                  //									break;
-                  //								case Wildcard.EXTENDS: // A={? extends V} == F={?} ---> 0
-                  //									break;
-                  //								case Wildcard.SUPER: // A={? super V} == F={?} ---> 0
-                  //									break;
-                  //							}
-                  //							break;
-                  //						case Binding.INTERSECTION_TYPE :// A={? extends V1&...&Vn} == F={?} ---> 0
-                  //							break;
-                  //						default :// A=V == F={?} ---> 0
-                  //							break;
-                  //						}
+                  // switch (actualType.kind()) {
+                  // case Binding.WILDCARD_TYPE :
+                  // WildcardBinding actualWildcard = (WildcardBinding) actualType;
+                  // switch(actualWildcard.kind) {
+                  // case Wildcard.UNBOUND: // A={?} == F={?} --> 0
+                  // break;
+                  // case Wildcard.EXTENDS: // A={? extends V} == F={?} ---> 0
+                  // break;
+                  // case Wildcard.SUPER: // A={? super V} == F={?} ---> 0
+                  // break;
+                  // }
+                  // break;
+                  // case Binding.INTERSECTION_TYPE :// A={? extends V1&...&Vn} == F={?} ---> 0
+                  // break;
+                  // default :// A=V == F={?} ---> 0
+                  // break;
+                  // }
                   break;
                case Wildcard.EXTENDS : // F={? extends U}
                   switch (actualType.kind())
@@ -260,7 +259,7 @@ public class WildcardBinding extends ReferenceBinding
                         WildcardBinding actualWildcard = (WildcardBinding)actualType;
                         switch (actualWildcard.boundKind)
                         {
-                           case Wildcard.UNBOUND : // A={?} == F={? extends U}  --> 0
+                           case Wildcard.UNBOUND : // A={?} == F={? extends U} --> 0
                               break;
                            case Wildcard.EXTENDS : // A={? extends V} == F={? extends U} ---> V == U
                               this.bound.collectSubstitutes(scope, actualWildcard.bound, inferenceContext,
@@ -298,7 +297,7 @@ public class WildcardBinding extends ReferenceBinding
                         WildcardBinding actualWildcard = (WildcardBinding)actualType;
                         switch (actualWildcard.boundKind)
                         {
-                           case Wildcard.UNBOUND : // A={?} == F={? super U}  --> 0
+                           case Wildcard.UNBOUND : // A={?} == F={? super U} --> 0
                               break;
                            case Wildcard.EXTENDS : // A={? extends V} == F={? super U} ---> 0
                               break;
@@ -326,23 +325,23 @@ public class WildcardBinding extends ReferenceBinding
             switch (this.boundKind)
             {
                case Wildcard.UNBOUND : // F={?}
-                  //						switch (actualType.kind()) {
-                  //						case Binding.WILDCARD_TYPE :
-                  //							WildcardBinding actualWildcard = (WildcardBinding) actualType;
-                  //							switch(actualWildcard.kind) {
-                  //								case Wildcard.UNBOUND: // A={?} >> F={?}  --> 0
-                  //									break;
-                  //								case Wildcard.EXTENDS: // A={? extends V} >> F={?} ---> 0
-                  //									break;
-                  //								case Wildcard.SUPER: // A={? super V} >> F={?} ---> 0
-                  //									break;
-                  //							}
-                  //							break;
-                  //						case Binding.INTERSECTION_TYPE :// A={? extends V1&...&Vn} >> F={?} ---> 0
-                  //							break;
-                  //						default :// A=V >> F={?} ---> 0
-                  //							break;
-                  //						}
+                  // switch (actualType.kind()) {
+                  // case Binding.WILDCARD_TYPE :
+                  // WildcardBinding actualWildcard = (WildcardBinding) actualType;
+                  // switch(actualWildcard.kind) {
+                  // case Wildcard.UNBOUND: // A={?} >> F={?} --> 0
+                  // break;
+                  // case Wildcard.EXTENDS: // A={? extends V} >> F={?} ---> 0
+                  // break;
+                  // case Wildcard.SUPER: // A={? super V} >> F={?} ---> 0
+                  // break;
+                  // }
+                  // break;
+                  // case Binding.INTERSECTION_TYPE :// A={? extends V1&...&Vn} >> F={?} ---> 0
+                  // break;
+                  // default :// A=V >> F={?} ---> 0
+                  // break;
+                  // }
                   break;
                case Wildcard.EXTENDS : // F={? extends U}
                   switch (actualType.kind())
@@ -351,7 +350,7 @@ public class WildcardBinding extends ReferenceBinding
                         WildcardBinding actualWildcard = (WildcardBinding)actualType;
                         switch (actualWildcard.boundKind)
                         {
-                           case Wildcard.UNBOUND : // A={?} >> F={? extends U}  --> 0
+                           case Wildcard.UNBOUND : // A={?} >> F={? extends U} --> 0
                               break;
                            case Wildcard.EXTENDS : // A={? extends V} >> F={? extends U} ---> V >> U
                               this.bound.collectSubstitutes(scope, actualWildcard.bound, inferenceContext,
@@ -389,7 +388,7 @@ public class WildcardBinding extends ReferenceBinding
                         WildcardBinding actualWildcard = (WildcardBinding)actualType;
                         switch (actualWildcard.boundKind)
                         {
-                           case Wildcard.UNBOUND : // A={?} >> F={? super U}  --> 0
+                           case Wildcard.UNBOUND : // A={?} >> F={? super U} --> 0
                               break;
                            case Wildcard.EXTENDS : // A={? extends V} >> F={? super U} ---> 0
                               break;
@@ -417,12 +416,11 @@ public class WildcardBinding extends ReferenceBinding
    }
 
    /*
-    * genericTypeKey {rank}*|+|- [boundKey]
-    * p.X<T> { X<?> ... } --> Lp/X<TT;>;{0}*
+    * genericTypeKey {rank}*|+|- [boundKey] p.X<T> { X<?> ... } --> Lp/X<TT;>;{0}*
     */
    public char[] computeUniqueKey(boolean isLeaf)
    {
-      char[] genericTypeKey = this.genericType.computeUniqueKey(false/*not a leaf*/);
+      char[] genericTypeKey = this.genericType.computeUniqueKey(false/* not a leaf */);
       char[] wildCardKey;
       // We now encode the rank also in the binding key - https://bugs.eclipse.org/bugs/show_bug.cgi?id=234609
       char[] rankComponent = ('{' + String.valueOf(this.rank) + '}').toCharArray();
@@ -433,11 +431,11 @@ public class WildcardBinding extends ReferenceBinding
             break;
          case Wildcard.EXTENDS :
             wildCardKey =
-               CharOperation.concat(TypeConstants.WILDCARD_PLUS, this.bound.computeUniqueKey(false/*not a leaf*/));
+               CharOperation.concat(TypeConstants.WILDCARD_PLUS, this.bound.computeUniqueKey(false/* not a leaf */));
             break;
          default : // SUPER
             wildCardKey =
-               CharOperation.concat(TypeConstants.WILDCARD_MINUS, this.bound.computeUniqueKey(false/*not a leaf*/));
+               CharOperation.concat(TypeConstants.WILDCARD_MINUS, this.bound.computeUniqueKey(false/* not a leaf */));
             break;
       }
       return CharOperation.concat(genericTypeKey, rankComponent, wildCardKey);
@@ -459,7 +457,9 @@ public class WildcardBinding extends ReferenceBinding
       return toString();
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#erasure()
     */
    public TypeBinding erasure()
@@ -474,11 +474,14 @@ public class WildcardBinding extends ReferenceBinding
          return this.genericType; // if typeVariable() == null, then its inconsistent & return this.genericType to avoid NPE case
       }
       // intersection type
-      return this.bound.id == TypeIds.T_JavaLangObject ? this.otherBounds[0].erasure() // use first explicit bound to improve stackmap
+      return this.bound.id == TypeIds.T_JavaLangObject ? this.otherBounds[0].erasure() // use first explicit bound to improve
+                                                                                       // stackmap
          : this.bound.erasure();
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#signature()
     */
    public char[] genericTypeSignature()
@@ -533,8 +536,8 @@ public class WildcardBinding extends ReferenceBinding
    }
 
    /**
-     * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#isSuperclassOf(org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding)
-     */
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#isSuperclassOf(org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding)
+    */
    public boolean isSuperclassOf(ReferenceBinding otherType)
    {
       if (this.boundKind == Wildcard.SUPER)
@@ -565,22 +568,24 @@ public class WildcardBinding extends ReferenceBinding
    }
 
    /**
-   * Returns true if the type is a wildcard
-   */
+    * Returns true if the type is a wildcard
+    */
    public boolean isUnboundWildcard()
    {
       return this.boundKind == Wildcard.UNBOUND;
    }
 
    /**
-   * Returns true if the type is a wildcard
-   */
+    * Returns true if the type is a wildcard
+    */
    public boolean isWildcard()
    {
       return true;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.Binding#readableName()
     */
    public char[] readableName()
@@ -641,7 +646,9 @@ public class WildcardBinding extends ReferenceBinding
       return this;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.Binding#shortReadableName()
     */
    public char[] shortReadableName()
@@ -690,7 +697,9 @@ public class WildcardBinding extends ReferenceBinding
       return this.signature;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding#sourceName()
     */
    public char[] sourceName()
@@ -708,7 +717,9 @@ public class WildcardBinding extends ReferenceBinding
       }
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.TypeVariableBinding#superclass()
     */
    public ReferenceBinding superclass()
@@ -734,7 +745,9 @@ public class WildcardBinding extends ReferenceBinding
       return this.superclass;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding#superInterfaces()
     */
    public ReferenceBinding[] superInterfaces()

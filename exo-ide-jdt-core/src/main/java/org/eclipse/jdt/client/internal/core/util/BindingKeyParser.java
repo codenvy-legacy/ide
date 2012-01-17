@@ -675,7 +675,7 @@ public class BindingKeyParser
 
    public void parse()
    {
-      parse(false/*don't pause after fully qualified name*/);
+      parse(false/* don't pause after fully qualified name */);
    }
 
    public void parse(boolean pauseAfterFullyQualifiedName)
@@ -713,7 +713,7 @@ public class BindingKeyParser
          }
          else if (this.scanner.isAtTypeArgumentStart())
             // parameterized type
-            parseParameterizedType(null/*top level type or member type with raw enclosing type*/, false/*no raw*/);
+            parseParameterizedType(null/* top level type or member type with raw enclosing type */, false/* no raw */);
          else if (this.scanner.isAtRawTypeEnd())
             // raw type
             parseRawType();
@@ -928,8 +928,7 @@ public class BindingKeyParser
    private void parseAnnotation()
    {
       /*
-       * The call parser.parse() might have a side-effect on the current token type
-       * See bug 264443
+       * The call parser.parse() might have a side-effect on the current token type See bug 264443
        */
       int token = this.scanner.token;
       BindingKeyParser parser = newParser();
@@ -959,8 +958,7 @@ public class BindingKeyParser
    private void parseCaptureWildcard()
    {
       /*
-       * The call parser.parse() might have a side-effect on the current token type
-       * See bug 264443
+       * The call parser.parse() might have a side-effect on the current token type See bug 264443
        */
       int token = this.scanner.token;
       BindingKeyParser parser = newParser();
@@ -980,8 +978,7 @@ public class BindingKeyParser
    private void parseThrownExceptions()
    {
       /*
-       * The call parser.parse() might have a side-effect on the current token type
-       * See bug 264443
+       * The call parser.parse() might have a side-effect on the current token type See bug 264443
        */
       int token = this.scanner.token;
       while (this.scanner.isAtThrownStart() && !this.isMalformed)
@@ -1019,7 +1016,7 @@ public class BindingKeyParser
             parseParameterizedType(typeName, this.scanner.isAtRawTypeEnd());
          }
          else
-            consumeParameterizedType(typeName, true/*raw*/);
+            consumeParameterizedType(typeName, true/* raw */);
       }
    }
 
@@ -1037,7 +1034,7 @@ public class BindingKeyParser
             parseParameterizedType(typeName, this.scanner.isAtRawTypeEnd());
          }
          else
-            consumeParameterizedType(typeName, true/*raw*/);
+            consumeParameterizedType(typeName, true/* raw */);
       }
    }
 
@@ -1045,8 +1042,7 @@ public class BindingKeyParser
    {
       this.scanner.index++; // skip ')'
       /*
-       * The call parser.parse() might have a side-effect on the current token type
-       * See bug 264443
+       * The call parser.parse() might have a side-effect on the current token type See bug 264443
        */
       int token = this.scanner.token;
       BindingKeyParser parser = newParser();
@@ -1066,8 +1062,7 @@ public class BindingKeyParser
    private void parseTypeArgument()
    {
       /*
-       * The call parser.parse() might have a side-effect on the current token type
-       * See bug 264443
+       * The call parser.parse() might have a side-effect on the current token type See bug 264443
        */
       int token = this.scanner.token;
       BindingKeyParser parser = newParser();
@@ -1082,8 +1077,7 @@ public class BindingKeyParser
       if (this.scanner.nextToken() != Scanner.CAPTURE)
          return;
       /*
-       * The call parser.parse() might have a side-effect on the current token type
-       * See bug 264443
+       * The call parser.parse() might have a side-effect on the current token type See bug 264443
        */
       int token = this.scanner.token;
       BindingKeyParser parser = newParser();
@@ -1164,8 +1158,7 @@ public class BindingKeyParser
    private void parseWildcardBound()
    {
       /*
-       * The call parser.parse() might have a side-effect on the current token type
-       * See bug 264443
+       * The call parser.parse() might have a side-effect on the current token type See bug 264443
        */
       int token = this.scanner.token;
       BindingKeyParser parser = newParser();

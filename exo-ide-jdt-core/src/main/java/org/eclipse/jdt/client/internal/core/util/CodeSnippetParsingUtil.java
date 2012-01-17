@@ -135,8 +135,8 @@ public class CodeSnippetParsingUtil
          return compilationUnitDeclaration;
       }
 
-      //fill the methods bodies in order for the code to be generated
-      //real parse of the method....
+      // fill the methods bodies in order for the code to be generated
+      // real parse of the method....
       parser.scanner.setSource(compilationResult);
       org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration[] types = compilationUnitDeclaration.types;
       if (types != null)

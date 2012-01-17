@@ -32,8 +32,8 @@ public final class BaseTypeBinding extends TypeBinding
 
    public static final int[] initializeConversions()
    {
-      // fromType   destType --> conversion
-      //  0000   0000       				0000
+      // fromType destType --> conversion
+      // 0000 0000 0000
 
       int[] table = new int[MAX_CONVERSIONS];
 
@@ -99,8 +99,8 @@ public final class BaseTypeBinding extends TypeBinding
    }
 
    /**
-    * Predicate telling whether "left" can store a "right" using some narrowing conversion
-    *(is left smaller than right)
+    * Predicate telling whether "left" can store a "right" using some narrowing conversion (is left smaller than right)
+    * 
     * @param left - the target type to convert to
     * @param right - the actual type
     * @return true if legal narrowing conversion
@@ -112,8 +112,8 @@ public final class BaseTypeBinding extends TypeBinding
    }
 
    /**
-    * Predicate telling whether "left" can store a "right" using some widening conversion
-    *(is left bigger than right)
+    * Predicate telling whether "left" can store a "right" using some widening conversion (is left bigger than right)
+    * 
     * @param left - the target type to convert to
     * @param right - the actual type
     * @return true if legal widening conversion
@@ -144,8 +144,9 @@ public final class BaseTypeBinding extends TypeBinding
       return constantPoolName();
    }
 
-   /* Answer the receiver's constant pool name.
-   */
+   /*
+    * Answer the receiver's constant pool name.
+    */
    public char[] constantPoolName()
    {
 
@@ -158,8 +159,9 @@ public final class BaseTypeBinding extends TypeBinding
       return null;
    }
 
-   /* Answer true if the receiver type can be assigned to the argument type (right)
-   */
+   /*
+    * Answer true if the receiver type can be assigned to the argument type (right)
+    */
    public final boolean isCompatibleWith(TypeBinding left)
    {
       if (this == left)
@@ -172,6 +174,7 @@ public final class BaseTypeBinding extends TypeBinding
 
    /**
     * T_null is acting as an unchecked exception
+    * 
     * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#isUncheckedException(boolean)
     */
    public boolean isUncheckedException(boolean includeSupertype)

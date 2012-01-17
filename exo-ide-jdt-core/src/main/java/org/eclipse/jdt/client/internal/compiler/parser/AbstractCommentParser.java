@@ -145,7 +145,7 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
    {
       this.sourceParser = sourceParser;
       this.scanner =
-         new Scanner(false, false, false, ClassFileConstants.JDK1_3, null, null, true/*taskCaseSensitive*/);
+         new Scanner(false, false, false, ClassFileConstants.JDK1_3, null, null, true/* taskCaseSensitive */);
       this.identifierStack = new char[20][];
       this.identifierPositionStack = new long[20];
       this.identifierLengthStack = new int[10];
@@ -161,11 +161,11 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
       }
    }
 
-   /* (non-Javadoc)
-    * Returns true if tag @deprecated is present in javadoc comment.
-    *
-    * If javadoc checking is enabled, will also construct an Javadoc node,
-    * which will be stored into Parser.javadoc slot for being consumed later on.
+   /*
+    * (non-Javadoc) Returns true if tag @deprecated is present in javadoc comment.
+    * 
+    * If javadoc checking is enabled, will also construct an Javadoc node, which will be stored into Parser.javadoc slot for being
+    * consumed later on.
     */
    protected boolean commentParse()
    {
@@ -451,9 +451,9 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
                      }
                   }
                   break;
-               case '\u000c' : /* FORM FEED               */
-               case ' ' : /* SPACE                   */
-               case '\t' : /* HORIZONTAL TABULATION   */
+               case '\u000c' : /* FORM FEED */
+               case ' ' : /* SPACE */
+               case '\t' : /* HORIZONTAL TABULATION */
                   // Do not include trailing spaces in text while formatting
                   if (isFormatterParser)
                   {
@@ -582,10 +582,9 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
    }
 
    /**
-    * Search the line number corresponding to a specific position.
-    * Warning: returned position is 1-based index!
-    * @see Scanner#getLineNumber(int) We cannot directly use this method
-    * when linePtr field is not initialized.
+    * Search the line number corresponding to a specific position. Warning: returned position is 1-based index!
+    * 
+    * @see Scanner#getLineNumber(int) We cannot directly use this method when linePtr field is not initialized.
     */
    private int getLineNumber(int position)
    {
@@ -798,7 +797,7 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
       throw new InvalidInputException();
    }
 
-   /**
+/**
     * Parse a possible HTML tag like:
     * <ul>
     * 	<li>&lt;code&gt;
@@ -847,7 +846,7 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
                         consumeToken();
                         while (this.index < this.javadocEnd)
                         { // main loop to search for the </a> pattern
-                           // Skip all characters after string literal until closing '>' (see bug 68726)
+                          // Skip all characters after string literal until closing '>' (see bug 68726)
                            while (readToken() != TerminalTokens.TokenNameGREATER)
                            {
                               if (this.scanner.currentPosition >= this.scanner.eofPosition
@@ -1628,7 +1627,8 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
          char ch = readChar();
          switch (ch)
          {
-         // Verify that line end does not start with an open parenthese (which could be a constructor reference wrongly written...)
+         // Verify that line end does not start with an open parenthese (which could be a constructor reference wrongly
+         // written...)
          // See bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=47215
             case '(' :
                if (this.reportProblems)
@@ -1775,8 +1775,7 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
    }
 
    /*
-    * Add a new obj on top of the ast stack.
-    * If new length is required, then add also a new length in length stack.
+    * Add a new obj on top of the ast stack. If new length is required, then add also a new length in length stack.
     */
    protected void pushOnAstStack(Object node, boolean newLength)
    {
@@ -1842,8 +1841,7 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
    protected abstract boolean pushThrowName(Object typeRef);
 
    /*
-    * Read current character and move index position.
-    * Warning: scanner position is unchanged using this method!
+    * Read current character and move index position. Warning: scanner position is unchanged using this method!
     */
    protected char readChar()
    {
@@ -1903,8 +1901,7 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
    }
 
    /*
-    * Read token without throwing any InvalidInputException exception.
-    * Returns TerminalTokens.TokenNameERROR instead.
+    * Read token without throwing any InvalidInputException exception. Returns TerminalTokens.TokenNameERROR instead.
     */
    protected int readTokenSafely()
    {
@@ -2048,8 +2045,8 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
    }
 
    /*
-    * Verify that end of the line only contains space characters or end of comment.
-    * Note that end of comment may be preceding by several contiguous '*' chars.
+    * Verify that end of the line only contains space characters or end of comment. Note that end of comment may be preceding by
+    * several contiguous '*' chars.
     */
    protected boolean verifyEndLine(int textPosition)
    {
@@ -2087,9 +2084,9 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
                }
                this.index = previousPosition;
                return true;
-            case '\u000c' : /* FORM FEED               */
-            case ' ' : /* SPACE                   */
-            case '\t' : /* HORIZONTAL TABULATION   */
+            case '\u000c' : /* FORM FEED */
+            case ' ' : /* SPACE */
+            case '\t' : /* HORIZONTAL TABULATION */
                if (this.starPosition >= 0)
                   break nextChar;
                break;
@@ -2120,11 +2117,9 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
    }
 
    /*
-    * Verify characters after a name matches one of following conditions:
-    * 	1- first character is a white space
-    * 	2- first character is a closing brace *and* we're currently parsing an inline tag
-    * 	3- are the end of comment (several contiguous star ('*') characters may be
-    * 	    found before the last slash ('/') character).
+    * Verify characters after a name matches one of following conditions: 1- first character is a white space 2- first character
+    * is a closing brace *and* we're currently parsing an inline tag 3- are the end of comment (several contiguous star ('*')
+    * characters may be found before the last slash ('/') character).
     */
    protected boolean verifySpaceOrEndComment()
    {

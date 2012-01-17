@@ -2,7 +2,8 @@ package org.eclipse.jdt.client.internal.compiler.problem;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * 	'/home/evgen/exo/exo-int/ide/trunk/exo-ide-jdt-core/locale/src/org/eclipse/jdt/client/internal/compiler/problem/Messages.properties'.
+ * '/home/evgen/exo/exo-int/ide/trunk/exo-ide-jdt-core/locale/src/org/eclipse/jdt/client/internal/compiler/problem/Messages.properties'
+ * .
  */
 public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
 {
@@ -325,16 +326,19 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    /**
     * Translated "Implicit super constructor {0}({1}) is undefined for default constructor. Must define an explicit constructor".
     * 
-    * @return translated "Implicit super constructor {0}({1}) is undefined for default constructor. Must define an explicit constructor"
+    * @return translated
+    *         "Implicit super constructor {0}({1}) is undefined for default constructor. Must define an explicit constructor"
     */
    @DefaultStringValue("Implicit super constructor {0}({1}) is undefined for default constructor. Must define an explicit constructor")
    @Key("140")
    String $140();
 
    /**
-    * Translated "Implicit super constructor {0}({1}) is not visible for default constructor. Must define an explicit constructor".
+    * Translated
+    * "Implicit super constructor {0}({1}) is not visible for default constructor. Must define an explicit constructor".
     * 
-    * @return translated "Implicit super constructor {0}({1}) is not visible for default constructor. Must define an explicit constructor"
+    * @return translated
+    *         "Implicit super constructor {0}({1}) is not visible for default constructor. Must define an explicit constructor"
     */
    @DefaultStringValue("Implicit super constructor {0}({1}) is not visible for default constructor. Must define an explicit constructor")
    @Key("141")
@@ -343,7 +347,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    /**
     * Translated "Implicit super constructor {0}({1}) is ambiguous for default constructor. Must define an explicit constructor".
     * 
-    * @return translated "Implicit super constructor {0}({1}) is ambiguous for default constructor. Must define an explicit constructor"
+    * @return translated
+    *         "Implicit super constructor {0}({1}) is ambiguous for default constructor. Must define an explicit constructor"
     */
    @DefaultStringValue("Implicit super constructor {0}({1}) is ambiguous for default constructor. Must define an explicit constructor")
    @Key("142")
@@ -377,9 +382,12 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $145();
 
    /**
-    * Translated "Default constructor cannot handle exception type {0} thrown by implicit super constructor. Must define an explicit constructor".
+    * Translated
+    * "Default constructor cannot handle exception type {0} thrown by implicit super constructor. Must define an explicit constructor"
+    * .
     * 
-    * @return translated "Default constructor cannot handle exception type {0} thrown by implicit super constructor. Must define an explicit constructor"
+    * @return translated
+    *         "Default constructor cannot handle exception type {0} thrown by implicit super constructor. Must define an explicit constructor"
     */
    @DefaultStringValue("Default constructor cannot handle exception type {0} thrown by implicit super constructor. Must define an explicit constructor")
    @Key("146")
@@ -557,9 +565,11 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $164();
 
    /**
-    * Translated "Unreachable catch block for {0}. Only more specific exceptions are thrown and handled by previous catch block(s).".
+    * Translated
+    * "Unreachable catch block for {0}. Only more specific exceptions are thrown and handled by previous catch block(s).".
     * 
-    * @return translated "Unreachable catch block for {0}. Only more specific exceptions are thrown and handled by previous catch block(s)."
+    * @return translated
+    *         "Unreachable catch block for {0}. Only more specific exceptions are thrown and handled by previous catch block(s)."
     */
    @DefaultStringValue("Unreachable catch block for {0}. Only more specific exceptions are thrown and handled by previous catch block(s).")
    @Key("165")
@@ -692,9 +702,11 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $178();
 
    /**
-    * Translated "Possible accidental assignment in place of a comparison. A condition expression should not be reduced to an assignment".
+    * Translated
+    * "Possible accidental assignment in place of a comparison. A condition expression should not be reduced to an assignment".
     * 
-    * @return translated "Possible accidental assignment in place of a comparison. A condition expression should not be reduced to an assignment"
+    * @return translated
+    *         "Possible accidental assignment in place of a comparison. A condition expression should not be reduced to an assignment"
     */
    @DefaultStringValue("Possible accidental assignment in place of a comparison. A condition expression should not be reduced to an assignment")
    @Key("179")
@@ -793,7 +805,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    /**
     * Translated "Statement unnecessarily nested within else clause. The corresponding then clause does not complete normally".
     * 
-    * @return translated "Statement unnecessarily nested within else clause. The corresponding then clause does not complete normally"
+    * @return translated
+    *         "Statement unnecessarily nested within else clause. The corresponding then clause does not complete normally"
     */
    @DefaultStringValue("Statement unnecessarily nested within else clause. The corresponding then clause does not complete normally")
    @Key("189")
@@ -836,9 +849,12 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $193();
 
    /**
-    * Translated "Switch case may be entered by falling through previous case. If intended, add a new comment //$FALL-THROUGH$ on the line above".
+    * Translated
+    * "Switch case may be entered by falling through previous case. If intended, add a new comment //$FALL-THROUGH$ on the line above"
+    * .
     * 
-    * @return translated "Switch case may be entered by falling through previous case. If intended, add a new comment //$FALL-THROUGH$ on the line above"
+    * @return translated
+    *         "Switch case may be entered by falling through previous case. If intended, add a new comment //$FALL-THROUGH$ on the line above"
     */
    @DefaultStringValue("Switch case may be entered by falling through previous case. If intended, add a new comment //$FALL-THROUGH$ on the line above")
    @Key("194")
@@ -872,9 +888,12 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $197();
 
    /**
-    * Translated "Cannot allocate the member type {0} using its compound name when qualified by an enclosing instance. The member type name is resolved relatively to the qualifying instance type".
+    * Translated
+    * "Cannot allocate the member type {0} using its compound name when qualified by an enclosing instance. The member type name is resolved relatively to the qualifying instance type"
+    * .
     * 
-    * @return translated "Cannot allocate the member type {0} using its compound name when qualified by an enclosing instance. The member type name is resolved relatively to the qualifying instance type"
+    * @return translated
+    *         "Cannot allocate the member type {0} using its compound name when qualified by an enclosing instance. The member type name is resolved relatively to the qualifying instance type"
     */
    @DefaultStringValue("Cannot allocate the member type {0} using its compound name when qualified by an enclosing instance. The member type name is resolved relatively to the qualifying instance type")
    @Key("198")
@@ -899,9 +918,12 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $2();
 
    /**
-    * Translated "No enclosing instance of type {0} is accessible to invoke the super constructor. Must define a constructor and explicitly qualify its super constructor invocation with an instance of {0} (e.g. x.super() where x is an instance of {0}).".
+    * Translated
+    * "No enclosing instance of type {0} is accessible to invoke the super constructor. Must define a constructor and explicitly qualify its super constructor invocation with an instance of {0} (e.g. x.super() where x is an instance of {0})."
+    * .
     * 
-    * @return translated "No enclosing instance of type {0} is accessible to invoke the super constructor. Must define a constructor and explicitly qualify its super constructor invocation with an instance of {0} (e.g. x.super() where x is an instance of {0})."
+    * @return translated
+    *         "No enclosing instance of type {0} is accessible to invoke the super constructor. Must define a constructor and explicitly qualify its super constructor invocation with an instance of {0} (e.g. x.super() where x is an instance of {0})."
     */
    @DefaultStringValue("No enclosing instance of type {0} is accessible to invoke the super constructor. Must define a constructor and explicitly qualify its super constructor invocation with an instance of {0} (e.g. x.super() where x is an instance of {0}).")
    @Key("20")
@@ -989,9 +1011,12 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $209();
 
    /**
-    * Translated "No enclosing instance of type {0} is accessible. Must qualify the allocation with an enclosing instance of type {0} (e.g. x.new A() where x is an instance of {0}).".
+    * Translated
+    * "No enclosing instance of type {0} is accessible. Must qualify the allocation with an enclosing instance of type {0} (e.g. x.new A() where x is an instance of {0})."
+    * .
     * 
-    * @return translated "No enclosing instance of type {0} is accessible. Must qualify the allocation with an enclosing instance of type {0} (e.g. x.new A() where x is an instance of {0})."
+    * @return translated
+    *         "No enclosing instance of type {0} is accessible. Must qualify the allocation with an enclosing instance of type {0} (e.g. x.new A() where x is an instance of {0})."
     */
    @DefaultStringValue("No enclosing instance of type {0} is accessible. Must qualify the allocation with an enclosing instance of type {0} (e.g. x.new A() where x is an instance of {0}).")
    @Key("21")
@@ -1259,9 +1284,9 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $253();
 
    /**
-    * Translated "Invalid escape sequence (valid ones are  \b  \t  \n  \f  \r  \\"  \&#39;  \\ )".
+    * Translated "Invalid escape sequence (valid ones are  \b  \t  \n  \f  \r  \\" \&#39; \\ )".
     * 
-    * @return translated "Invalid escape sequence (valid ones are  \b  \t  \n  \f  \r  \\"  \&#39;  \\ )"
+    * @return translated "Invalid escape sequence (valid ones are  \b  \t  \n  \f  \r  \\" \&#39; \\ )"
     */
    @DefaultStringValue("Invalid escape sequence (valid ones are  \b  \t  \n  \f  \r  \"  &#39;  \\ )")
    @Key("254")
@@ -1502,18 +1527,22 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $303();
 
    /**
-    * Translated "Illegal modifier for the member class {0}; only public, protected, private, static, abstract & final are permitted".
+    * Translated
+    * "Illegal modifier for the member class {0}; only public, protected, private, static, abstract & final are permitted".
     * 
-    * @return translated "Illegal modifier for the member class {0}; only public, protected, private, static, abstract & final are permitted"
+    * @return translated
+    *         "Illegal modifier for the member class {0}; only public, protected, private, static, abstract & final are permitted"
     */
    @DefaultStringValue("Illegal modifier for the member class {0}; only public, protected, private, static, abstract & final are permitted")
    @Key("304")
    String $304();
 
    /**
-    * Translated "Illegal modifier for the member interface {0}; only public, protected, private, static & abstract are permitted".
+    * Translated
+    * "Illegal modifier for the member interface {0}; only public, protected, private, static & abstract are permitted".
     * 
-    * @return translated "Illegal modifier for the member interface {0}; only public, protected, private, static & abstract are permitted"
+    * @return translated
+    *         "Illegal modifier for the member interface {0}; only public, protected, private, static & abstract are permitted"
     */
    @DefaultStringValue("Illegal modifier for the member interface {0}; only public, protected, private, static & abstract are permitted")
    @Key("305")
@@ -1576,7 +1605,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    /**
     * Translated "The member type {0} cannot be declared static; static types can only be declared in static or top level types".
     * 
-    * @return translated "The member type {0} cannot be declared static; static types can only be declared in static or top level types"
+    * @return translated
+    *         "The member type {0} cannot be declared static; static types can only be declared in static or top level types"
     */
    @DefaultStringValue("The member type {0} cannot be declared static; static types can only be declared in static or top level types")
    @Key("311")
@@ -1808,9 +1838,11 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $341();
 
    /**
-    * Translated "Illegal modifier for the field {0}; only public, protected, private, static, final, transient & volatile are permitted".
+    * Translated
+    * "Illegal modifier for the field {0}; only public, protected, private, static, final, transient & volatile are permitted".
     * 
-    * @return translated "Illegal modifier for the field {0}; only public, protected, private, static, final, transient & volatile are permitted"
+    * @return translated
+    *         "Illegal modifier for the field {0}; only public, protected, private, static, final, transient & volatile are permitted"
     */
    @DefaultStringValue("Illegal modifier for the field {0}; only public, protected, private, static, final, transient & volatile are permitted")
    @Key("342")
@@ -1846,7 +1878,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    /**
     * Translated "The field {0} cannot be declared static; static fields can only be declared in static or top level types".
     * 
-    * @return translated "The field {0} cannot be declared static; static fields can only be declared in static or top level types"
+    * @return translated
+    *         "The field {0} cannot be declared static; static fields can only be declared in static or top level types"
     */
    @DefaultStringValue("The field {0} cannot be declared static; static fields can only be declared in static or top level types")
    @Key("346")
@@ -1880,9 +1913,12 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $357();
 
    /**
-    * Translated "Illegal modifier for the method {0}; only public, protected, private, static, final, abstract, synchronized & native are permitted".
+    * Translated
+    * "Illegal modifier for the method {0}; only public, protected, private, static, final, abstract, synchronized & native are permitted"
+    * .
     * 
-    * @return translated "Illegal modifier for the method {0}; only public, protected, private, static, final, abstract, synchronized & native are permitted"
+    * @return translated
+    *         "Illegal modifier for the method {0}; only public, protected, private, static, final, abstract, synchronized & native are permitted"
     */
    @DefaultStringValue("Illegal modifier for the method {0}; only public, protected, private, static, final, abstract, synchronized & native are permitted")
    @Key("358")
@@ -1909,7 +1945,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    /**
     * Translated "The method {1} cannot be declared static; static methods can only be declared in a static or top level type".
     * 
-    * @return translated "The method {1} cannot be declared static; static methods can only be declared in a static or top level type"
+    * @return translated
+    *         "The method {1} cannot be declared static; static methods can only be declared in a static or top level type"
     */
    @DefaultStringValue("The method {1} cannot be declared static; static methods can only be declared in a static or top level type")
    @Key("361")
@@ -2143,16 +2180,20 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    /**
     * Translated "The method {0} does not override the inherited method from {1} since it is private to a different package".
     * 
-    * @return translated "The method {0} does not override the inherited method from {1} since it is private to a different package"
+    * @return translated
+    *         "The method {0} does not override the inherited method from {1} since it is private to a different package"
     */
    @DefaultStringValue("The method {0} does not override the inherited method from {1} since it is private to a different package")
    @Key("410")
    String $410();
 
    /**
-    * Translated "This class must implement the inherited abstract method {1}, but cannot override it since it is not visible from {0}. Either make the type abstract or make the inherited method visible".
+    * Translated
+    * "This class must implement the inherited abstract method {1}, but cannot override it since it is not visible from {0}. Either make the type abstract or make the inherited method visible"
+    * .
     * 
-    * @return translated "This class must implement the inherited abstract method {1}, but cannot override it since it is not visible from {0}. Either make the type abstract or make the inherited method visible"
+    * @return translated
+    *         "This class must implement the inherited abstract method {1}, but cannot override it since it is not visible from {0}. Either make the type abstract or make the inherited method visible"
     */
    @DefaultStringValue("This class must implement the inherited abstract method {1}, but cannot override it since it is not visible from {0}. Either make the type abstract or make the inherited method visible")
    @Key("411")
@@ -2269,7 +2310,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    /**
     * Translated "The type generates a string that requires more than 65535 bytes to encode in Utf8 format in the constant pool".
     * 
-    * @return translated "The type generates a string that requires more than 65535 bytes to encode in Utf8 format in the constant pool"
+    * @return translated
+    *         "The type generates a string that requires more than 65535 bytes to encode in Utf8 format in the constant pool"
     */
    @DefaultStringValue("The type generates a string that requires more than 65535 bytes to encode in Utf8 format in the constant pool")
    @Key("431")
@@ -3032,9 +3074,11 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $525();
 
    /**
-    * Translated "Bound mismatch: The type {0} is not a valid substitute for the bounded parameter <{2} extends {3}> of the type {1}".
+    * Translated
+    * "Bound mismatch: The type {0} is not a valid substitute for the bounded parameter <{2} extends {3}> of the type {1}".
     * 
-    * @return translated "Bound mismatch: The type {0} is not a valid substitute for the bounded parameter <{2} extends {3}> of the type {1}"
+    * @return translated
+    *         "Bound mismatch: The type {0} is not a valid substitute for the bounded parameter <{2} extends {3}> of the type {1}"
     */
    @DefaultStringValue("Bound mismatch: The type {0} is not a valid substitute for the bounded parameter <{2} extends {3}> of the type {1}")
    @Key("526")
@@ -3068,18 +3112,22 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $529();
 
    /**
-    * Translated "Type safety: The constructor {0}({1}) belongs to the raw type {0}. References to generic type {2} should be parameterized".
+    * Translated
+    * "Type safety: The constructor {0}({1}) belongs to the raw type {0}. References to generic type {2} should be parameterized".
     * 
-    * @return translated "Type safety: The constructor {0}({1}) belongs to the raw type {0}. References to generic type {2} should be parameterized"
+    * @return translated
+    *         "Type safety: The constructor {0}({1}) belongs to the raw type {0}. References to generic type {2} should be parameterized"
     */
    @DefaultStringValue("Type safety: The constructor {0}({1}) belongs to the raw type {0}. References to generic type {2} should be parameterized")
    @Key("530")
    String $530();
 
    /**
-    * Translated "Type safety: The method {0}({1}) belongs to the raw type {2}. References to generic type {3} should be parameterized".
+    * Translated
+    * "Type safety: The method {0}({1}) belongs to the raw type {2}. References to generic type {3} should be parameterized".
     * 
-    * @return translated "Type safety: The method {0}({1}) belongs to the raw type {2}. References to generic type {3} should be parameterized"
+    * @return translated
+    *         "Type safety: The method {0}({1}) belongs to the raw type {2}. References to generic type {3} should be parameterized"
     */
    @DefaultStringValue("Type safety: The method {0}({1}) belongs to the raw type {2}. References to generic type {3} should be parameterized")
    @Key("531")
@@ -3122,9 +3170,12 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $535();
 
    /**
-    * Translated "Type safety: The field {1} from the raw type {2} is assigned a value of type {0}. References to generic type {3} should be parameterized".
+    * Translated
+    * "Type safety: The field {1} from the raw type {2} is assigned a value of type {0}. References to generic type {3} should be parameterized"
+    * .
     * 
-    * @return translated "Type safety: The field {1} from the raw type {2} is assigned a value of type {0}. References to generic type {3} should be parameterized"
+    * @return translated
+    *         "Type safety: The field {1} from the raw type {2} is assigned a value of type {0}. References to generic type {3} should be parameterized"
     */
    @DefaultStringValue("Type safety: The field {1} from the raw type {2} is assigned a value of type {0}. References to generic type {3} should be parameterized")
    @Key("536")
@@ -3133,7 +3184,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    /**
     * Translated "The type parameter {0} should not be bounded by the final type {1}. Final types cannot be further extended".
     * 
-    * @return translated "The type parameter {0} should not be bounded by the final type {1}. Final types cannot be further extended"
+    * @return translated
+    *         "The type parameter {0} should not be bounded by the final type {1}. Final types cannot be further extended"
     */
    @DefaultStringValue("The type parameter {0} should not be bounded by the final type {1}. Final types cannot be further extended")
    @Key("537")
@@ -3167,45 +3219,60 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $54();
 
    /**
-    * Translated "Bound mismatch: The constructor {0}({1}) of type {2} is not applicable for the arguments ({3}). The wildcard parameter {5} has no lower bound, and may actually be more restrictive than argument {4}".
+    * Translated
+    * "Bound mismatch: The constructor {0}({1}) of type {2} is not applicable for the arguments ({3}). The wildcard parameter {5} has no lower bound, and may actually be more restrictive than argument {4}"
+    * .
     * 
-    * @return translated "Bound mismatch: The constructor {0}({1}) of type {2} is not applicable for the arguments ({3}). The wildcard parameter {5} has no lower bound, and may actually be more restrictive than argument {4}"
+    * @return translated
+    *         "Bound mismatch: The constructor {0}({1}) of type {2} is not applicable for the arguments ({3}). The wildcard parameter {5} has no lower bound, and may actually be more restrictive than argument {4}"
     */
    @DefaultStringValue("Bound mismatch: The constructor {0}({1}) of type {2} is not applicable for the arguments ({3}). The wildcard parameter {5} has no lower bound, and may actually be more restrictive than argument {4}")
    @Key("540")
    String $540();
 
    /**
-    * Translated "Bound mismatch: The method {0}({1}) of type {2} is not applicable for the arguments ({3}). The wildcard parameter {5} has no lower bound, and may actually be more restrictive than argument {4}".
+    * Translated
+    * "Bound mismatch: The method {0}({1}) of type {2} is not applicable for the arguments ({3}). The wildcard parameter {5} has no lower bound, and may actually be more restrictive than argument {4}"
+    * .
     * 
-    * @return translated "Bound mismatch: The method {0}({1}) of type {2} is not applicable for the arguments ({3}). The wildcard parameter {5} has no lower bound, and may actually be more restrictive than argument {4}"
+    * @return translated
+    *         "Bound mismatch: The method {0}({1}) of type {2} is not applicable for the arguments ({3}). The wildcard parameter {5} has no lower bound, and may actually be more restrictive than argument {4}"
     */
    @DefaultStringValue("Bound mismatch: The method {0}({1}) of type {2} is not applicable for the arguments ({3}). The wildcard parameter {5} has no lower bound, and may actually be more restrictive than argument {4}")
    @Key("541")
    String $541();
 
    /**
-    * Translated "Bound mismatch: Cannot assign expression of type {0} to wildcard type {1}. The wildcard type has no lower bound, and may actually be more restrictive than expression type".
+    * Translated
+    * "Bound mismatch: Cannot assign expression of type {0} to wildcard type {1}. The wildcard type has no lower bound, and may actually be more restrictive than expression type"
+    * .
     * 
-    * @return translated "Bound mismatch: Cannot assign expression of type {0} to wildcard type {1}. The wildcard type has no lower bound, and may actually be more restrictive than expression type"
+    * @return translated
+    *         "Bound mismatch: Cannot assign expression of type {0} to wildcard type {1}. The wildcard type has no lower bound, and may actually be more restrictive than expression type"
     */
    @DefaultStringValue("Bound mismatch: Cannot assign expression of type {0} to wildcard type {1}. The wildcard type has no lower bound, and may actually be more restrictive than expression type")
    @Key("542")
    String $542();
 
    /**
-    * Translated "Bound mismatch: The generic method {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>".
+    * Translated
+    * "Bound mismatch: The generic method {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>"
+    * .
     * 
-    * @return translated "Bound mismatch: The generic method {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>"
+    * @return translated
+    *         "Bound mismatch: The generic method {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>"
     */
    @DefaultStringValue("Bound mismatch: The generic method {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>")
    @Key("543")
    String $543();
 
    /**
-    * Translated "Bound mismatch: The generic constructor {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>".
+    * Translated
+    * "Bound mismatch: The generic constructor {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>"
+    * .
     * 
-    * @return translated "Bound mismatch: The generic constructor {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>"
+    * @return translated
+    *         "Bound mismatch: The generic constructor {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>"
     */
    @DefaultStringValue("Bound mismatch: The generic constructor {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>")
    @Key("544")
@@ -3221,18 +3288,24 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $545();
 
    /**
-    * Translated "Cannot perform instanceof check against parameterized type {0}. Use the form {1} instead since further generic type information will be erased at runtime".
+    * Translated
+    * "Cannot perform instanceof check against parameterized type {0}. Use the form {1} instead since further generic type information will be erased at runtime"
+    * .
     * 
-    * @return translated "Cannot perform instanceof check against parameterized type {0}. Use the form {1} instead since further generic type information will be erased at runtime"
+    * @return translated
+    *         "Cannot perform instanceof check against parameterized type {0}. Use the form {1} instead since further generic type information will be erased at runtime"
     */
    @DefaultStringValue("Cannot perform instanceof check against parameterized type {0}. Use the form {1} instead since further generic type information will be erased at runtime")
    @Key("546")
    String $546();
 
    /**
-    * Translated "Cannot perform instanceof check against type parameter {0}. Use instead its erasure {1} instead since further generic type information will be erased at runtime".
+    * Translated
+    * "Cannot perform instanceof check against type parameter {0}. Use instead its erasure {1} instead since further generic type information will be erased at runtime"
+    * .
     * 
-    * @return translated "Cannot perform instanceof check against type parameter {0}. Use instead its erasure {1} instead since further generic type information will be erased at runtime"
+    * @return translated
+    *         "Cannot perform instanceof check against type parameter {0}. Use instead its erasure {1} instead since further generic type information will be erased at runtime"
     */
    @DefaultStringValue("Cannot perform instanceof check against type parameter {0}. Use instead its erasure {1} instead since further generic type information will be erased at runtime")
    @Key("547")
@@ -3248,9 +3321,12 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $548();
 
    /**
-    * Translated "Incorrect number of type arguments for generic method <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>".
+    * Translated
+    * "Incorrect number of type arguments for generic method <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>"
+    * .
     * 
-    * @return translated "Incorrect number of type arguments for generic method <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>"
+    * @return translated
+    *         "Incorrect number of type arguments for generic method <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>"
     */
    @DefaultStringValue("Incorrect number of type arguments for generic method <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>")
    @Key("549")
@@ -3284,9 +3360,12 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $551();
 
    /**
-    * Translated "Incorrect number of type arguments for generic constructor <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>".
+    * Translated
+    * "Incorrect number of type arguments for generic constructor <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>"
+    * .
     * 
-    * @return translated "Incorrect number of type arguments for generic constructor <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>"
+    * @return translated
+    *         "Incorrect number of type arguments for generic constructor <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>"
     */
    @DefaultStringValue("Incorrect number of type arguments for generic constructor <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>")
    @Key("552")
@@ -3304,7 +3383,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    /**
     * Translated "The method {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>".
     * 
-    * @return translated "The method {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>"
+    * @return translated
+    *         "The method {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>"
     */
    @DefaultStringValue("The method {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>")
    @Key("554")
@@ -3313,7 +3393,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    /**
     * Translated "The constructor {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>".
     * 
-    * @return translated "The constructor {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>"
+    * @return translated
+    *         "The constructor {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>"
     */
    @DefaultStringValue("The constructor {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>")
    @Key("555")
@@ -3347,9 +3428,12 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $558();
 
    /**
-    * Translated "Type safety: The return type {0} for {1}({2}) from the type {3} needs unchecked conversion to conform to {4} from the type {5}".
+    * Translated
+    * "Type safety: The return type {0} for {1}({2}) from the type {3} needs unchecked conversion to conform to {4} from the type {5}"
+    * .
     * 
-    * @return translated "Type safety: The return type {0} for {1}({2}) from the type {3} needs unchecked conversion to conform to {4} from the type {5}"
+    * @return translated
+    *         "Type safety: The return type {0} for {1}({2}) from the type {3} needs unchecked conversion to conform to {4} from the type {5}"
     */
    @DefaultStringValue("Type safety: The return type {0} for {1}({2}) from the type {3} needs unchecked conversion to conform to {4} from the type {5}")
    @Key("559")
@@ -3365,9 +3449,11 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $56();
 
    /**
-    * Translated "Name clash: The method {0}({1}) of type {2} has the same erasure as {0}({3}) of type {4} but does not override it".
+    * Translated
+    * "Name clash: The method {0}({1}) of type {2} has the same erasure as {0}({3}) of type {4} but does not override it".
     * 
-    * @return translated "Name clash: The method {0}({1}) of type {2} has the same erasure as {0}({3}) of type {4} but does not override it"
+    * @return translated
+    *         "Name clash: The method {0}({1}) of type {2} has the same erasure as {0}({3}) of type {4} but does not override it"
     */
    @DefaultStringValue("Name clash: The method {0}({1}) of type {2} has the same erasure as {0}({3}) of type {4} but does not override it")
    @Key("560")
@@ -3392,9 +3478,12 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $562();
 
    /**
-    * Translated "The member type {0} cannot be qualified with a parameterized type, since it is static. Remove arguments from qualifying type {1}".
+    * Translated
+    * "The member type {0} cannot be qualified with a parameterized type, since it is static. Remove arguments from qualifying type {1}"
+    * .
     * 
-    * @return translated "The member type {0} cannot be qualified with a parameterized type, since it is static. Remove arguments from qualifying type {1}"
+    * @return translated
+    *         "The member type {0} cannot be qualified with a parameterized type, since it is static. Remove arguments from qualifying type {1}"
     */
    @DefaultStringValue("The member type {0} cannot be qualified with a parameterized type, since it is static. Remove arguments from qualifying type {1}")
    @Key("563")
@@ -3410,9 +3499,12 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $565();
 
    /**
-    * Translated "Cannot allocate the member type {0} using a parameterized compound name; use its simple name and an enclosing instance of type {1}".
+    * Translated
+    * "Cannot allocate the member type {0} using a parameterized compound name; use its simple name and an enclosing instance of type {1}"
+    * .
     * 
-    * @return translated "Cannot allocate the member type {0} using a parameterized compound name; use its simple name and an enclosing instance of type {1}"
+    * @return translated
+    *         "Cannot allocate the member type {0} using a parameterized compound name; use its simple name and an enclosing instance of type {1}"
     */
    @DefaultStringValue("Cannot allocate the member type {0} using a parameterized compound name; use its simple name and an enclosing instance of type {1}")
    @Key("566")
@@ -3536,9 +3628,12 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $578();
 
    /**
-    * Translated "Unused type arguments for the non generic method {0}({1}) of type {2}; it should not be parameterized with arguments <{3}>".
+    * Translated
+    * "Unused type arguments for the non generic method {0}({1}) of type {2}; it should not be parameterized with arguments <{3}>"
+    * .
     * 
-    * @return translated "Unused type arguments for the non generic method {0}({1}) of type {2}; it should not be parameterized with arguments <{3}>"
+    * @return translated
+    *         "Unused type arguments for the non generic method {0}({1}) of type {2}; it should not be parameterized with arguments <{3}>"
     */
    @DefaultStringValue("Unused type arguments for the non generic method {0}({1}) of type {2}; it should not be parameterized with arguments <{3}>")
    @Key("579")
@@ -3583,7 +3678,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    /**
     * Translated "Duplicate methods named {0} with the parameters ({1}) and ({2}) are inherited from the types {3} and {4}".
     * 
-    * @return translated "Duplicate methods named {0} with the parameters ({1}) and ({2}) are inherited from the types {3} and {4}"
+    * @return translated
+    *         "Duplicate methods named {0} with the parameters ({1}) and ({2}) are inherited from the types {3} and {4}"
     */
    @DefaultStringValue("Duplicate methods named {0} with the parameters ({1}) and ({2}) are inherited from the types {3} and {4}")
    @Key("583")
@@ -3743,18 +3839,23 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $603();
 
    /**
-    * Translated "Illegal modifier for the member annotation type {0}; only public, protected, private, static & abstract are permitted".
+    * Translated
+    * "Illegal modifier for the member annotation type {0}; only public, protected, private, static & abstract are permitted".
     * 
-    * @return translated "Illegal modifier for the member annotation type {0}; only public, protected, private, static & abstract are permitted"
+    * @return translated
+    *         "Illegal modifier for the member annotation type {0}; only public, protected, private, static & abstract are permitted"
     */
    @DefaultStringValue("Illegal modifier for the member annotation type {0}; only public, protected, private, static & abstract are permitted")
    @Key("604")
    String $604();
 
    /**
-    * Translated "Invalid type {0} for the annotation attribute {2}.{1}; only primitive type, String, Class, annotation, enumeration are permitted or 1-dimensional arrays thereof".
+    * Translated
+    * "Invalid type {0} for the annotation attribute {2}.{1}; only primitive type, String, Class, annotation, enumeration are permitted or 1-dimensional arrays thereof"
+    * .
     * 
-    * @return translated "Invalid type {0} for the annotation attribute {2}.{1}; only primitive type, String, Class, annotation, enumeration are permitted or 1-dimensional arrays thereof"
+    * @return translated
+    *         "Invalid type {0} for the annotation attribute {2}.{1}; only primitive type, String, Class, annotation, enumeration are permitted or 1-dimensional arrays thereof"
     */
    @DefaultStringValue("Invalid type {0} for the annotation attribute {2}.{1}; only primitive type, String, Class, annotation, enumeration are permitted or 1-dimensional arrays thereof")
    @Key("605")
@@ -3959,9 +4060,11 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $626();
 
    /**
-    * Translated "The method {0}({1}) of type {2} should be tagged with @Override since it actually overrides a superclass method".
+    * Translated
+    * "The method {0}({1}) of type {2} should be tagged with @Override since it actually overrides a superclass method".
     * 
-    * @return translated "The method {0}({1}) of type {2} should be tagged with @Override since it actually overrides a superclass method"
+    * @return translated
+    *         "The method {0}({1}) of type {2} should be tagged with @Override since it actually overrides a superclass method"
     */
    @DefaultStringValue("The method {0}({1}) of type {2} should be tagged with @Override since it actually overrides a superclass method")
    @Key("627")
@@ -4049,9 +4152,11 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $635();
 
    /**
-    * Translated "The method {0}({1}) of type {2} should be tagged with @Override since it actually overrides a superinterface method".
+    * Translated
+    * "The method {0}({1}) of type {2} should be tagged with @Override since it actually overrides a superinterface method".
     * 
-    * @return translated "The method {0}({1}) of type {2} should be tagged with @Override since it actually overrides a superinterface method"
+    * @return translated
+    *         "The method {0}({1}) of type {2} should be tagged with @Override since it actually overrides a superinterface method"
     */
    @DefaultStringValue("The method {0}({1}) of type {2} should be tagged with @Override since it actually overrides a superinterface method")
    @Key("636")
@@ -4076,27 +4181,34 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $65();
 
    /**
-    * Translated "Too many local variables, local variable {0} is exceeding the limit of 65535 words eligible for method local variables".
+    * Translated
+    * "Too many local variables, local variable {0} is exceeding the limit of 65535 words eligible for method local variables".
     * 
-    * @return translated "Too many local variables, local variable {0} is exceeding the limit of 65535 words eligible for method local variables"
+    * @return translated
+    *         "Too many local variables, local variable {0} is exceeding the limit of 65535 words eligible for method local variables"
     */
    @DefaultStringValue("Too many local variables, local variable {0} is exceeding the limit of 65535 words eligible for method local variables")
    @Key("66")
    String $66();
 
    /**
-    * Translated "Unused type arguments for the non generic constructor {0}({1}) of type {2}; it should not be parameterized with arguments <{3}>".
+    * Translated
+    * "Unused type arguments for the non generic constructor {0}({1}) of type {2}; it should not be parameterized with arguments <{3}>"
+    * .
     * 
-    * @return translated "Unused type arguments for the non generic constructor {0}({1}) of type {2}; it should not be parameterized with arguments <{3}>"
+    * @return translated
+    *         "Unused type arguments for the non generic constructor {0}({1}) of type {2}; it should not be parameterized with arguments <{3}>"
     */
    @DefaultStringValue("Unused type arguments for the non generic constructor {0}({1}) of type {2}; it should not be parameterized with arguments <{3}>")
    @Key("660")
    String $660();
 
    /**
-    * Translated "Too many synthetic parameters, emulated parameter {0} is exceeding the limit of 255 words eligible for method parameters".
+    * Translated
+    * "Too many synthetic parameters, emulated parameter {0} is exceeding the limit of 255 words eligible for method parameters".
     * 
-    * @return translated "Too many synthetic parameters, emulated parameter {0} is exceeding the limit of 255 words eligible for method parameters"
+    * @return translated
+    *         "Too many synthetic parameters, emulated parameter {0} is exceeding the limit of 255 words eligible for method parameters"
     */
    @DefaultStringValue("Too many synthetic parameters, emulated parameter {0} is exceeding the limit of 255 words eligible for method parameters")
    @Key("67")
@@ -4292,9 +4404,12 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $757();
 
    /**
-    * Translated "The enum {2} can only define the abstract method {0}({1}) if it also defines enum constants with corresponding implementations".
+    * Translated
+    * "The enum {2} can only define the abstract method {0}({1}) if it also defines enum constants with corresponding implementations"
+    * .
     * 
-    * @return translated "The enum {2} can only define the abstract method {0}({1}) if it also defines enum constants with corresponding implementations"
+    * @return translated
+    *         "The enum {2} can only define the abstract method {0}({1}) if it also defines enum constants with corresponding implementations"
     */
    @DefaultStringValue("The enum {2} can only define the abstract method {0}({1}) if it also defines enum constants with corresponding implementations")
    @Key("758")
@@ -4303,7 +4418,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    /**
     * Translated "The field {0}.{1} cannot be referenced from an enum case label; only enum constants can be used in enum switch".
     * 
-    * @return translated "The field {0}.{1} cannot be referenced from an enum case label; only enum constants can be used in enum switch"
+    * @return translated
+    *         "The field {0}.{1} cannot be referenced from an enum case label; only enum constants can be used in enum switch"
     */
    @DefaultStringValue("The field {0}.{1} cannot be referenced from an enum case label; only enum constants can be used in enum switch")
    @Key("759")
@@ -4526,27 +4642,35 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $800();
 
    /**
-    * Translated "The argument of type {0} should explicitly be cast to {1} for the invocation of the varargs method {2}({3}) from type {4}. It could alternatively be cast to {5} for a varargs invocation".
+    * Translated
+    * "The argument of type {0} should explicitly be cast to {1} for the invocation of the varargs method {2}({3}) from type {4}. It could alternatively be cast to {5} for a varargs invocation"
+    * .
     * 
-    * @return translated "The argument of type {0} should explicitly be cast to {1} for the invocation of the varargs method {2}({3}) from type {4}. It could alternatively be cast to {5} for a varargs invocation"
+    * @return translated
+    *         "The argument of type {0} should explicitly be cast to {1} for the invocation of the varargs method {2}({3}) from type {4}. It could alternatively be cast to {5} for a varargs invocation"
     */
    @DefaultStringValue("The argument of type {0} should explicitly be cast to {1} for the invocation of the varargs method {2}({3}) from type {4}. It could alternatively be cast to {5} for a varargs invocation")
    @Key("801")
    String $801();
 
    /**
-    * Translated "The argument of type {0} should explicitly be cast to {1} for the invocation of the varargs constructor {2}({3}). It could alternatively be cast to {4} for a varargs invocation".
+    * Translated
+    * "The argument of type {0} should explicitly be cast to {1} for the invocation of the varargs constructor {2}({3}). It could alternatively be cast to {4} for a varargs invocation"
+    * .
     * 
-    * @return translated "The argument of type {0} should explicitly be cast to {1} for the invocation of the varargs constructor {2}({3}). It could alternatively be cast to {4} for a varargs invocation"
+    * @return translated
+    *         "The argument of type {0} should explicitly be cast to {1} for the invocation of the varargs constructor {2}({3}). It could alternatively be cast to {4} for a varargs invocation"
     */
    @DefaultStringValue("The argument of type {0} should explicitly be cast to {1} for the invocation of the varargs constructor {2}({3}). It could alternatively be cast to {4} for a varargs invocation")
    @Key("802")
    String $802();
 
    /**
-    * Translated "Varargs methods should only override or be overridden by other varargs methods unlike {2}.{0}({1}) and {4}.{0}({3})".
+    * Translated
+    * "Varargs methods should only override or be overridden by other varargs methods unlike {2}.{0}({1}) and {4}.{0}({3})".
     * 
-    * @return translated "Varargs methods should only override or be overridden by other varargs methods unlike {2}.{0}({1}) and {4}.{0}({3})"
+    * @return translated
+    *         "Varargs methods should only override or be overridden by other varargs methods unlike {2}.{0}({1}) and {4}.{0}({3})"
     */
    @DefaultStringValue("Varargs methods should only override or be overridden by other varargs methods unlike {2}.{0}({1}) and {4}.{0}({3})")
    @Key("803")
@@ -4607,9 +4731,12 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $83();
 
    /**
-    * Translated "Bound mismatch: The generic method {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>".
+    * Translated
+    * "Bound mismatch: The generic method {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>"
+    * .
     * 
-    * @return translated "Bound mismatch: The generic method {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>"
+    * @return translated
+    *         "Bound mismatch: The generic method {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>"
     */
    @DefaultStringValue("Bound mismatch: The generic method {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>")
    @Key("850")
@@ -4625,9 +4752,12 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $851();
 
    /**
-    * Translated "Incorrect number of type arguments for generic method <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>".
+    * Translated
+    * "Incorrect number of type arguments for generic method <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>"
+    * .
     * 
-    * @return translated "Incorrect number of type arguments for generic method <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>"
+    * @return translated
+    *         "Incorrect number of type arguments for generic method <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>"
     */
    @DefaultStringValue("Incorrect number of type arguments for generic method <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>")
    @Key("852")
@@ -4645,16 +4775,20 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    /**
     * Translated "The method {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>".
     * 
-    * @return translated "The method {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>"
+    * @return translated
+    *         "The method {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>"
     */
    @DefaultStringValue("The method {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>")
    @Key("854")
    String $854();
 
    /**
-    * Translated "Bound mismatch: The generic constructor {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>".
+    * Translated
+    * "Bound mismatch: The generic constructor {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>"
+    * .
     * 
-    * @return translated "Bound mismatch: The generic constructor {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>"
+    * @return translated
+    *         "Bound mismatch: The generic constructor {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>"
     */
    @DefaultStringValue("Bound mismatch: The generic constructor {0}({1}) of type {2} is not applicable for the arguments ({3}). The inferred type {4} is not a valid substitute for the bounded parameter <{5} extends {6}>")
    @Key("855")
@@ -4670,9 +4804,12 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $856();
 
    /**
-    * Translated "Incorrect number of type arguments for generic constructor <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>".
+    * Translated
+    * "Incorrect number of type arguments for generic constructor <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>"
+    * .
     * 
-    * @return translated "Incorrect number of type arguments for generic constructor <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>"
+    * @return translated
+    *         "Incorrect number of type arguments for generic constructor <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>"
     */
    @DefaultStringValue("Incorrect number of type arguments for generic constructor <{3}>{0}({1}) of type {2}; it cannot be parameterized with arguments <{4}>")
    @Key("857")
@@ -4690,7 +4827,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    /**
     * Translated "The constructor {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>".
     * 
-    * @return translated "The constructor {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>"
+    * @return translated
+    *         "The constructor {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>"
     */
    @DefaultStringValue("The constructor {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>")
    @Key("859")
@@ -4762,7 +4900,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    /**
     * Translated "Cannot switch on a value of type {0}. Only convertible int values, strings or enum constants are permitted".
     * 
-    * @return translated "Cannot switch on a value of type {0}. Only convertible int values, strings or enum constants are permitted"
+    * @return translated
+    *         "Cannot switch on a value of type {0}. Only convertible int values, strings or enum constants are permitted"
     */
    @DefaultStringValue("Cannot switch on a value of type {0}. Only convertible int values, strings or enum constants are permitted")
    @Key("877")
@@ -4796,9 +4935,12 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $880();
 
    /**
-    * Translated "Cannot switch on a value of type String for source level below 1.7. Only convertible int values or enum constants are permitted".
+    * Translated
+    * "Cannot switch on a value of type String for source level below 1.7. Only convertible int values or enum constants are permitted"
+    * .
     * 
-    * @return translated "Cannot switch on a value of type String for source level below 1.7. Only convertible int values or enum constants are permitted"
+    * @return translated
+    *         "Cannot switch on a value of type String for source level below 1.7. Only convertible int values or enum constants are permitted"
     */
    @DefaultStringValue("Cannot switch on a value of type String for source level below 1.7. Only convertible int values or enum constants are permitted")
    @Key("881")

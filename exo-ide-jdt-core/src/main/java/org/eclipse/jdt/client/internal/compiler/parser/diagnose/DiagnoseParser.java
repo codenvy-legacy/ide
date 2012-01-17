@@ -28,7 +28,7 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
 
    private static final int STACK_INCREMENT = 256;
 
-   //	private static final int ERROR_CODE = 1;
+   // private static final int ERROR_CODE = 1;
    private static final int BEFORE_CODE = 2;
 
    private static final int INSERTION_CODE = 3;
@@ -276,7 +276,7 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
          this.locationStartStack[this.stateStackTop] = this.lexStream.start(this.currentToken);
 
          boolean forceRecoveryAfterLBracketMissing = false;
-         //		int forceRecoveryToken = -1;
+         // int forceRecoveryToken = -1;
 
          //
          // Process a terminal
@@ -326,10 +326,10 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
 
             //
             // At this point, we have a shift, shift-reduce, accept or error
-            // action.  STACK contains the configuration of the state stack
+            // action. STACK contains the configuration of the state stack
             // prior to executing any action on curtok. next_stack contains
             // the configuration of the state stack after executing all
-            // reduce actions induced by curtok.  The variable pos indicates
+            // reduce actions induced by curtok. The variable pos indicates
             // the highest position in STACK that is still useful after the
             // reductions are executed.
             //
@@ -409,15 +409,16 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
                   act = Parser.tAction(act, tok);
                }
 
-               //				if((tok != TokenNameRBRACE || (forceRecoveryToken != currentToken && (lexStream.flags(currentToken) & LexStream.LBRACE_MISSING) != 0))
-               //					&& (lexStream.flags(currentToken) & LexStream.IS_AFTER_JUMP) !=0) {
-               //					act = ERROR_ACTION;
-               //					if(forceRecoveryToken != currentToken
-               //						&& (lexStream.flags(currentToken) & LexStream.LBRACE_MISSING) != 0) {
-               //						forceRecoveryAfterLBracketMissing = true;
-               //						forceRecoveryToken = currentToken;
-               //					}
-               //				}
+               // if((tok != TokenNameRBRACE || (forceRecoveryToken != currentToken && (lexStream.flags(currentToken) &
+               // LexStream.LBRACE_MISSING) != 0))
+               // && (lexStream.flags(currentToken) & LexStream.IS_AFTER_JUMP) !=0) {
+               // act = ERROR_ACTION;
+               // if(forceRecoveryToken != currentToken
+               // && (lexStream.flags(currentToken) & LexStream.LBRACE_MISSING) != 0) {
+               // forceRecoveryAfterLBracketMissing = true;
+               // forceRecoveryToken = currentToken;
+               // }
+               // }
 
                //
                // No error was detected, Read next token into
@@ -563,20 +564,20 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
    }
 
    //
-   //		This routine is invoked when an error is encountered.  It
-   //	   tries to diagnose the error and recover from it.  If it is
-   //	   successful, the state stack, the current token and the buffer
-   //	   are readjusted; i.e., after a successful recovery,
-   //	   state_stack_top points to the location in the state stack
-   //	   that contains the state on which to recover; curtok
-   //	   identifies the symbol on which to recover.
+   // This routine is invoked when an error is encountered. It
+   // tries to diagnose the error and recover from it. If it is
+   // successful, the state stack, the current token and the buffer
+   // are readjusted; i.e., after a successful recovery,
+   // state_stack_top points to the location in the state stack
+   // that contains the state on which to recover; curtok
+   // identifies the symbol on which to recover.
    //
-   //	   Up to three configurations may be available when this routine
-   //	   is invoked. PREV_STACK may contain the sequence of states
-   //	   preceding any action on prevtok, STACK always contains the
-   //	   sequence of states preceding any action on curtok, and
-   //	   NEXT_STACK may contain the sequence of states preceding any
-   //	   action on the successor of curtok.
+   // Up to three configurations may be available when this routine
+   // is invoked. PREV_STACK may contain the sequence of states
+   // preceding any action on prevtok, STACK always contains the
+   // sequence of states preceding any action on curtok, and
+   // NEXT_STACK may contain the sequence of states preceding any
+   // action on the successor of curtok.
    //
    private RepairCandidate errorRecovery(int error_token, boolean forcedError)
    {
@@ -610,7 +611,7 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
 
       //
       // Try primary phase recoveries. If not successful, try secondary
-      // phase recoveries.  If not successful and we are at end of the
+      // phase recoveries. If not successful and we are at end of the
       // file, we issue the end-of-file error and quit. Otherwise, ...
       //
       RepairCandidate candidate = primaryPhase(error_token);
@@ -635,7 +636,7 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
 
       //
       // At this point, primary and (initial attempt at) secondary
-      // recovery did not work.  We will now get into "panic mode" and
+      // recovery did not work. We will now get into "panic mode" and
       // keep trying secondary phase recoveries until we either find
       // a successful recovery or have consumed the remaining input
       // tokens.
@@ -655,10 +656,10 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
       //
       int i;
       for (i = BUFF_UBOUND; this.lexStream.kind(this.buffer[i]) == EOFT_SYMBOL; i--)
-      {/*empty*/
+      {/* empty */
       }
 
-      reportError(DELETION_CODE, Parser.terminal_index[prevtokKind],//Parser.terminal_index[lexStream.kind(prevtok)],
+      reportError(DELETION_CODE, Parser.terminal_index[prevtokKind],// Parser.terminal_index[lexStream.kind(prevtok)],
          error_token, this.buffer[i]);
 
       candidate.symbol = 0;
@@ -668,11 +669,11 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
    }
 
    //
-   //	   This function tries primary and scope recovery on each
-   //	   available configuration.  If a successful recovery is found
-   //	   and no secondary phase recovery can do better, a diagnosis is
-   //	   issued, the configuration is updated and the function returns
-   //	   "true".  Otherwise, it returns "false".
+   // This function tries primary and scope recovery on each
+   // available configuration. If a successful recovery is found
+   // and no secondary phase recovery can do better, a diagnosis is
+   // issued, the configuration is updated and the function returns
+   // "true". Otherwise, it returns "false".
    //
    private RepairCandidate primaryPhase(int error_token)
    {
@@ -769,7 +770,7 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
 
       //
       // ... After adjustment, check if the most successful primary
-      // recovery can be applied.  If not, continue with more radical
+      // recovery can be applied. If not, continue with more radical
       // recoveries...
       //
       if (repair.distance < MIN_DISTANCE)
@@ -819,11 +820,11 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
    }
 
    //
-   //		   This function checks whether or not a given state has a
-   //	   candidate, whose string representaion is a merging of the two
-   //	   tokens at positions buffer_position and buffer_position+1 in
-   //	   the buffer.  If so, it returns the candidate in question;
-   //	   otherwise it returns 0.
+   // This function checks whether or not a given state has a
+   // candidate, whose string representaion is a merging of the two
+   // tokens at positions buffer_position and buffer_position+1 in
+   // the buffer. If so, it returns the candidate in question;
+   // otherwise it returns 0.
    //
    private int mergeCandidate(int state, int buffer_position)
    {
@@ -853,35 +854,35 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
    }
 
    //
-   //	   This procedure takes as arguments a parsing configuration
-   //	   consisting of a state stack (stack and stack_top) and a fixed
-   //	   number of input tokens (starting at buffer_position) in the
-   //	   input BUFFER; and some reference arguments: repair_code,
-   //	   distance, misspell_index, candidate, and stack_position
-   //	   which it sets based on the best possible recovery that it
-   //	   finds in the given configuration.  The effectiveness of a
-   //	   a repair is judged based on two criteria:
+   // This procedure takes as arguments a parsing configuration
+   // consisting of a state stack (stack and stack_top) and a fixed
+   // number of input tokens (starting at buffer_position) in the
+   // input BUFFER; and some reference arguments: repair_code,
+   // distance, misspell_index, candidate, and stack_position
+   // which it sets based on the best possible recovery that it
+   // finds in the given configuration. The effectiveness of a
+   // a repair is judged based on two criteria:
    //
-   //		 1) the number of tokens that can be parsed after the repair
-   //			is applied: distance.
-   //		 2) how close to perfection is the candidate that is chosen:
-   //			misspell_index.
-   //	   When this procedure is entered, distance, misspell_index and
-   //	   repair_code are assumed to be initialized.
+   // 1) the number of tokens that can be parsed after the repair
+   // is applied: distance.
+   // 2) how close to perfection is the candidate that is chosen:
+   // misspell_index.
+   // When this procedure is entered, distance, misspell_index and
+   // repair_code are assumed to be initialized.
    //
    private PrimaryRepairInfo checkPrimaryDistance(int stck[], int stack_top, PrimaryRepairInfo repair)
    {
       int i, j, k, next_state, max_pos, act, root, symbol, tok;
 
       //
-      //  First, try scope and manual recovery.
+      // First, try scope and manual recovery.
       //
       PrimaryRepairInfo scope_repair = scopeTrial(stck, stack_top, repair.copy());
       if (scope_repair.distance > repair.distance)
          repair = scope_repair;
 
       //
-      //  Next, try merging the error token with its successor.
+      // Next, try merging the error token with its successor.
       //
       if (this.buffer[repair.bufferPosition] != 0 && this.buffer[repair.bufferPosition + 1] != 0)
       {// do not merge the first token
@@ -950,7 +951,7 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
       }
 
       //
-      //  Next, place the list of candidates in proper order.
+      // Next, place the list of candidates in proper order.
       //
       root = 0;
       for (i = Parser.asi(next_state); Parser.asr[i] != 0; i++)
@@ -997,7 +998,7 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
       root = i;
 
       //
-      //  Next, try insertion for each possible candidate available in
+      // Next, try insertion for each possible candidate available in
       // the current state, except EOFT and ERROR_SYMBOL.
       //
       symbol = root;
@@ -1031,7 +1032,7 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
       }
 
       //
-      //  Next, Try substitution for each possible candidate available
+      // Next, Try substitution for each possible candidate available
       // in the current state, except EOFT and ERROR_SYMBOL.
       //
       symbol = root;
@@ -1099,19 +1100,19 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
    }
 
    //
-   //	   This procedure is invoked to issue a diagnostic message and
-   //	   adjust the input buffer.  The recovery in question is either
-   //	   the insertion of one or more scopes, the merging of the error
-   //	   token with its successor, the deletion of the error token,
-   //	   the insertion of a single token in front of the error token
-   //	   or the substitution of another token for the error token.
+   // This procedure is invoked to issue a diagnostic message and
+   // adjust the input buffer. The recovery in question is either
+   // the insertion of one or more scopes, the merging of the error
+   // token with its successor, the deletion of the error token,
+   // the insertion of a single token in front of the error token
+   // or the substitution of another token for the error token.
    //
    private RepairCandidate primaryDiagnosis(PrimaryRepairInfo repair)
    {
       int name_index;
 
       //
-      //  Issue diagnostic.
+      // Issue diagnostic.
       //
       int prevtok = this.buffer[repair.bufferPosition - 1];
       int curtok = this.buffer[repair.bufferPosition];
@@ -1170,7 +1171,7 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
       }
 
       //
-      //  Update buffer.
+      // Update buffer.
       //
       RepairCandidate candidate = new RepairCandidate();
       switch (repair.code)
@@ -1208,15 +1209,15 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
    }
 
    //
-   //	   This function takes as parameter an integer STACK_TOP that
-   //	   points to a STACK element containing the state on which a
-   //	   primary recovery will be made; the terminal candidate on which
-   //	   to recover; and an integer: buffer_position, which points to
-   //	   the position of the next input token in the BUFFER.  The
-   //	   parser is simulated until a shift (or shift-reduce) action
-   //	   is computed on the candidate.  Then we proceed to compute the
-   //	   the name index of the highest level nonterminal that can
-   //	   directly or indirectly produce the candidate.
+   // This function takes as parameter an integer STACK_TOP that
+   // points to a STACK element containing the state on which a
+   // primary recovery will be made; the terminal candidate on which
+   // to recover; and an integer: buffer_position, which points to
+   // the position of the next input token in the BUFFER. The
+   // parser is simulated until a shift (or shift-reduce) action
+   // is computed on the candidate. Then we proceed to compute the
+   // the name index of the highest level nonterminal that can
+   // directly or indirectly produce the candidate.
    //
    private int getTermIndex(int stck[], int stack_top, int tok, int buffer_position)
    {
@@ -1270,7 +1271,7 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
       // action. Next, simulate all actions possible on the next input
       // token until we either have to shift it or are about to reduce
       // below the initial starting point in the stack (indicated by
-      // max_pos as computed in the previous loop).  At that point,
+      // max_pos as computed in the previous loop). At that point,
       // return the highest_symbol computed.
       //
       this.tempStackTop++; // adjust top of stack to reflect last goto
@@ -1323,14 +1324,14 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
    }
 
    //
-   //	   This function takes as parameter a starting state number:
-   //	   start, a nonterminal symbol, A (candidate), and an integer,
-   //	   buffer_position,  which points to the position of the next
-   //	   input token in the BUFFER.
-   //	   It returns the highest level non-terminal B such that
-   //	   B =>*rm A.  I.e., there does not exists a nonterminal C such
-   //	   that C =>+rm B. (Recall that for an LALR(k) grammar if
-   //	   C =>+rm B, it cannot be the case that B =>+rm C)
+   // This function takes as parameter a starting state number:
+   // start, a nonterminal symbol, A (candidate), and an integer,
+   // buffer_position, which points to the position of the next
+   // input token in the BUFFER.
+   // It returns the highest level non-terminal B such that
+   // B =>*rm A. I.e., there does not exists a nonterminal C such
+   // that C =>+rm B. (Recall that for an LALR(k) grammar if
+   // C =>+rm B, it cannot be the case that B =>+rm C)
    //
    private int getNtermIndex(int start, int sym, int buffer_position)
    {
@@ -1375,10 +1376,10 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
    }
 
    //
-   //		   Check whether or not there is a high probability that a
-   //	   given string is a misspelling of another.
-   //	   Certain singleton symbols (such as ":" and ";") are also
-   //	   considered to be misspelling of each other.
+   // Check whether or not there is a high probability that a
+   // given string is a misspelling of another.
+   // Certain singleton symbols (such as ":" and ";") are also
+   // considered to be misspelling of each other.
    //
    private int misspell(int sym, int tok)
    {
@@ -1411,15 +1412,15 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
       s2[m] = '\0';
 
       //
-      //  Singleton mispellings:
+      // Singleton mispellings:
       //
-      //  ;      <---->     ,
+      // ; <----> ,
       //
-      //  ;      <---->     :
+      // ; <----> :
       //
-      //  .      <---->     ,
+      // . <----> ,
       //
-      //  '      <---->     "
+      // ' <----> "
       //
       //
       if (n == 1 && m == 1)
@@ -1614,7 +1615,7 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
                int stack_position = j;
                for (j = Parser.scope_state_set[i]; stck[stack_position] != Parser.scope_state[j]
                   && Parser.scope_state[j] != 0; j++)
-               {/*empty*/
+               {/* empty */
                }
                //
                // If the top state is valid for scope recovery,
@@ -1638,7 +1639,7 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
                   // initial SCOPE_DISTANCE, we update
                   // SCOPE_DISTANCE and set scope_stack_top to INDX
                   // to indicate the number of scopes that are
-                  // to be applied for a succesful  recovery.
+                  // to be applied for a succesful recovery.
                   // NOTE that this procedure cannot get into
                   // an infinite loop, since each prefix match
                   // is guaranteed to take us to a lower point
@@ -1699,14 +1700,14 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
    }
 
    //
-   //	   This function computes the ParseCheck distance for the best
-   //	   possible secondary recovery for a given configuration that
-   //	   either deletes none or only one symbol in the forward context.
-   //	   If the recovery found is more effective than the best primary
-   //	   recovery previously computed, then the function returns true.
-   //	   Only misplacement, scope and manual recoveries are attempted;
-   //	   simple insertion or substitution of a nonterminal are tried
-   //	   in CHECK_PRIMARY_DISTANCE as part of primary recovery.
+   // This function computes the ParseCheck distance for the best
+   // possible secondary recovery for a given configuration that
+   // either deletes none or only one symbol in the forward context.
+   // If the recovery found is more effective than the best primary
+   // recovery previously computed, then the function returns true.
+   // Only misplacement, scope and manual recoveries are attempted;
+   // simple insertion or substitution of a nonterminal are tried
+   // in CHECK_PRIMARY_DISTANCE as part of primary recovery.
    //
    private boolean secondaryCheck(int stck[], int stack_top, int buffer_position, int distance)
    {
@@ -1729,14 +1730,14 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
    }
 
    //
-   //	   Secondary_phase is a boolean function that checks whether or
-   //	   not some form of secondary recovery is applicable to one of
-   //	   the error configurations. First, if "next_stack" is available,
-   //	   misplacement and secondary recoveries are attempted on it.
-   //	   Then, in any case, these recoveries are attempted on "stack".
-   //	   If a successful recovery is found, a diagnosis is issued, the
-   //	   configuration is updated and the function returns "true".
-   //	   Otherwise, the function returns false.
+   // Secondary_phase is a boolean function that checks whether or
+   // not some form of secondary recovery is applicable to one of
+   // the error configurations. First, if "next_stack" is available,
+   // misplacement and secondary recoveries are attempted on it.
+   // Then, in any case, these recoveries are attempted on "stack".
+   // If a successful recovery is found, a diagnosis is issued, the
+   // configuration is updated and the function returns "true".
+   // Otherwise, the function returns false.
    //
    private RepairCandidate secondaryPhase(int error_token)
    {
@@ -1782,7 +1783,7 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
          //
          for (next_last_index = MAX_DISTANCE - 1; next_last_index >= 1
             && this.lexStream.kind(this.buffer[next_last_index]) == EOFT_SYMBOL; next_last_index--)
-         {/*empty*/
+         {/* empty */
          }
          next_last_index = next_last_index + 1;
 
@@ -1823,7 +1824,7 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
 
       for (last_index = MAX_DISTANCE - 1; last_index >= 1
          && this.lexStream.kind(this.buffer[last_index]) == EOFT_SYMBOL; last_index--)
-      {/*empty*/
+      {/* empty */
       }
       last_index++;
 
@@ -1833,7 +1834,7 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
 
       //
       // If a successful misplaced recovery was found, compare it with
-      // the most successful secondary recovery.  If the misplaced
+      // the most successful secondary recovery. If the misplaced
       // recovery either deletes fewer symbols or parse-checks further
       // then it is chosen.
       //
@@ -1928,7 +1929,7 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
       }
 
       //
-      // If a successful repair was not found, quit!  Otherwise, issue
+      // If a successful repair was not found, quit! Otherwise, issue
       // diagnosis and adjust configuration...
       //
       if (repair.code == 0)
@@ -1967,9 +1968,9 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
    }
 
    //
-   //	   This boolean function checks whether or not a given
-   //	   configuration yields a better misplacement recovery than
-   //	   the best misplacement recovery computed previously.
+   // This boolean function checks whether or not a given
+   // configuration yields a better misplacement recovery than
+   // the best misplacement recovery computed previously.
    //
    private SecondaryRepairInfo misplacementRecovery(int stck[], int stack_top, int last_index,
       SecondaryRepairInfo repair, boolean stack_flag)
@@ -2003,9 +2004,9 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
    }
 
    //
-   //	   This boolean function checks whether or not a given
-   //	   configuration yields a better secondary recovery than the
-   //	   best misplacement recovery computed previously.
+   // This boolean function checks whether or not a given
+   // configuration yields a better secondary recovery than the
+   // best misplacement recovery computed previously.
    //
    private SecondaryRepairInfo secondaryRecovery(int stck[], int stack_top, int last_index, SecondaryRepairInfo repair,
       boolean stack_flag)
@@ -2075,10 +2076,10 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
    }
 
    //
-   //	   This procedure is invoked to issue a secondary diagnosis and
-   //	   adjust the input buffer.  The recovery in question is either
-   //	   an automatic scope recovery, a manual scope recovery, a
-   //	   secondary substitution or a secondary deletion.
+   // This procedure is invoked to issue a secondary diagnosis and
+   // adjust the input buffer. The recovery in question is either
+   // an automatic scope recovery, a manual scope recovery, a
+   // secondary substitution or a secondary deletion.
    //
    private void secondaryDiagnosis(SecondaryRepairInfo repair)
    {
@@ -2115,9 +2116,9 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
    }
 
    //
-   //	   Try to parse until first_token and all tokens in BUFFER have
-   //	   been consumed, or an error is encountered. Return the number
-   //	   of tokens that were expended before the parse blocked.
+   // Try to parse until first_token and all tokens in BUFFER have
+   // been consumed, or an error is encountered. Return the number
+   // of tokens that were expended before the parse blocked.
    //
    private int parseCheck(int stck[], int stack_top, int first_token, int buffer_position)
    {

@@ -23,7 +23,7 @@ public class ArrayInitializer extends Expression
 
    public Expression[] expressions;
 
-   public ArrayBinding binding; //the type of the { , , , }
+   public ArrayBinding binding; // the type of the { , , , }
 
    /**
     * ArrayInitializer constructor comment.
@@ -47,76 +47,76 @@ public class ArrayInitializer extends Expression
       return flowInfo;
    }
 
-   //	/**
-   //	 * Code generation for a array initializer
-   //	 */
-   //	public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired) {
+   // /**
+   // * Code generation for a array initializer
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired) {
    //
-   //		// Flatten the values and compute the dimensions, by iterating in depth into nested array initializers
-   //		int pc = codeStream.position;
-   //		int expressionLength = (this.expressions == null) ? 0: this.expressions.length;
-   //		codeStream.generateInlinedValue(expressionLength);
-   //		codeStream.newArray(this.binding);
-   //		if (this.expressions != null) {
-   //			// binding is an ArrayType, so I can just deal with the dimension
-   //			int elementsTypeID = this.binding.dimensions > 1 ? -1 : this.binding.leafComponentType.id;
-   //			for (int i = 0; i < expressionLength; i++) {
-   //				Expression expr;
-   //				if ((expr = this.expressions[i]).constant != Constant.NotAConstant) {
-   //					switch (elementsTypeID) { // filter out initializations to default values
-   //						case T_int :
-   //						case T_short :
-   //						case T_byte :
-   //						case T_char :
-   //						case T_long :
-   //							if (expr.constant.longValue() != 0) {
-   //								codeStream.dup();
-   //								codeStream.generateInlinedValue(i);
-   //								expr.generateCode(currentScope, codeStream, true);
-   //								codeStream.arrayAtPut(elementsTypeID, false);
-   //							}
-   //							break;
-   //						case T_float :
-   //						case T_double :
-   //							double constantValue = expr.constant.doubleValue();
-   //							if (constantValue == -0.0 || constantValue != 0) {
-   //								codeStream.dup();
-   //								codeStream.generateInlinedValue(i);
-   //								expr.generateCode(currentScope, codeStream, true);
-   //								codeStream.arrayAtPut(elementsTypeID, false);
-   //							}
-   //							break;
-   //						case T_boolean :
-   //							if (expr.constant.booleanValue() != false) {
-   //								codeStream.dup();
-   //								codeStream.generateInlinedValue(i);
-   //								expr.generateCode(currentScope, codeStream, true);
-   //								codeStream.arrayAtPut(elementsTypeID, false);
-   //							}
-   //							break;
-   //						default :
-   //							if (!(expr instanceof NullLiteral)) {
-   //								codeStream.dup();
-   //								codeStream.generateInlinedValue(i);
-   //								expr.generateCode(currentScope, codeStream, true);
-   //								codeStream.arrayAtPut(elementsTypeID, false);
-   //							}
-   //					}
-   //				} else if (!(expr instanceof NullLiteral)) {
-   //					codeStream.dup();
-   //					codeStream.generateInlinedValue(i);
-   //					expr.generateCode(currentScope, codeStream, true);
-   //					codeStream.arrayAtPut(elementsTypeID, false);
-   //				}
-   //			}
-   //		}
-   //		if (valueRequired) {
-   //			codeStream.generateImplicitConversion(this.implicitConversion);
-   //		} else {
-   //			codeStream.pop();
-   //		}
-   //		codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //	}
+   // // Flatten the values and compute the dimensions, by iterating in depth into nested array initializers
+   // int pc = codeStream.position;
+   // int expressionLength = (this.expressions == null) ? 0: this.expressions.length;
+   // codeStream.generateInlinedValue(expressionLength);
+   // codeStream.newArray(this.binding);
+   // if (this.expressions != null) {
+   // // binding is an ArrayType, so I can just deal with the dimension
+   // int elementsTypeID = this.binding.dimensions > 1 ? -1 : this.binding.leafComponentType.id;
+   // for (int i = 0; i < expressionLength; i++) {
+   // Expression expr;
+   // if ((expr = this.expressions[i]).constant != Constant.NotAConstant) {
+   // switch (elementsTypeID) { // filter out initializations to default values
+   // case T_int :
+   // case T_short :
+   // case T_byte :
+   // case T_char :
+   // case T_long :
+   // if (expr.constant.longValue() != 0) {
+   // codeStream.dup();
+   // codeStream.generateInlinedValue(i);
+   // expr.generateCode(currentScope, codeStream, true);
+   // codeStream.arrayAtPut(elementsTypeID, false);
+   // }
+   // break;
+   // case T_float :
+   // case T_double :
+   // double constantValue = expr.constant.doubleValue();
+   // if (constantValue == -0.0 || constantValue != 0) {
+   // codeStream.dup();
+   // codeStream.generateInlinedValue(i);
+   // expr.generateCode(currentScope, codeStream, true);
+   // codeStream.arrayAtPut(elementsTypeID, false);
+   // }
+   // break;
+   // case T_boolean :
+   // if (expr.constant.booleanValue() != false) {
+   // codeStream.dup();
+   // codeStream.generateInlinedValue(i);
+   // expr.generateCode(currentScope, codeStream, true);
+   // codeStream.arrayAtPut(elementsTypeID, false);
+   // }
+   // break;
+   // default :
+   // if (!(expr instanceof NullLiteral)) {
+   // codeStream.dup();
+   // codeStream.generateInlinedValue(i);
+   // expr.generateCode(currentScope, codeStream, true);
+   // codeStream.arrayAtPut(elementsTypeID, false);
+   // }
+   // }
+   // } else if (!(expr instanceof NullLiteral)) {
+   // codeStream.dup();
+   // codeStream.generateInlinedValue(i);
+   // expr.generateCode(currentScope, codeStream, true);
+   // codeStream.arrayAtPut(elementsTypeID, false);
+   // }
+   // }
+   // }
+   // if (valueRequired) {
+   // codeStream.generateImplicitConversion(this.implicitConversion);
+   // } else {
+   // codeStream.pop();
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    public StringBuffer printExpression(int indent, StringBuffer output)
    {
@@ -157,7 +157,8 @@ public class ArrayInitializer extends Expression
          // allow new List<?>[5]
          if ((this.bits & IsAnnotationDefaultValue) == 0)
          { // annotation default value need only to be commensurate JLS9.7
-            // allow new List<?>[5] - only check for generic array when no initializer, since also checked inside initializer resolution
+           // allow new List<?>[5] - only check for generic array when no initializer, since also checked inside initializer
+           // resolution
             TypeBinding leafComponentType = expectedType.leafComponentType();
             if (!leafComponentType.isReifiable())
             {

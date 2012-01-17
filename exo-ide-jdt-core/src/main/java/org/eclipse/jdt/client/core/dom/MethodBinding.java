@@ -515,6 +515,7 @@ class MethodBinding implements IMethodBinding
 
    /**
     * For debugging purpose only.
+    * 
     * @see java.lang.Object#toString()
     */
    public String toString()

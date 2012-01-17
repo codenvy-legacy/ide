@@ -14,8 +14,7 @@ import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.client.internal.compiler.CompilationResult;
 
 /**
- * Use to keep track of recorded information during the parsing like comment positions,
- * line ends or problems.
+ * Use to keep track of recorded information during the parsing like comment positions, line ends or problems.
  */
 public class RecordedParsingInformation
 {

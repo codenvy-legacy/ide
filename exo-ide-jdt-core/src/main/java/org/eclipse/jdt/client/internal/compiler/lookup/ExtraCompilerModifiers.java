@@ -17,7 +17,7 @@ import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 // TODO (philippe) these should be moved to tagbits
 public interface ExtraCompilerModifiers
 { // modifier constant
-   // those constants are depending upon ClassFileConstants (relying that classfiles only use the 16 lower bits)
+  // those constants are depending upon ClassFileConstants (relying that classfiles only use the 16 lower bits)
    final int AccJustFlag = 0xFFFF;// 16 lower bits
 
    // bit17 - free
@@ -43,17 +43,20 @@ public interface ExtraCompilerModifiers
 
    final int AccIsDefaultConstructor = ASTNode.Bit27; // for default constructor
 
-   final int AccLocallyUsed = ASTNode.Bit28; // used to diagnose unused (a) private/local members or (b) members of private classes
+   final int AccLocallyUsed = ASTNode.Bit28; // used to diagnose unused (a) private/local members or (b) members of private
+                                             // classes
 
-   // generally set when actual usage has been detected 
+   // generally set when actual usage has been detected
    // or, (b) when member of a private class is exposed via a non-private subclass
-   //     see https://bugs.eclipse.org/bugs/show_bug.cgi?id=328281
+   // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=328281
    final int AccVisibilityMASK = ClassFileConstants.AccPublic | ClassFileConstants.AccProtected
       | ClassFileConstants.AccPrivate;
 
    final int AccOverriding = ASTNode.Bit29; // record fact a method overrides another one
 
-   final int AccImplementing = ASTNode.Bit30; // record fact a method implements another one (it is concrete and overrides an abstract one)
+   final int AccImplementing = ASTNode.Bit30; // record fact a method implements another one (it is concrete and overrides an
+                                              // abstract one)
 
-   final int AccGenericSignature = ASTNode.Bit31; // record fact a type/method/field involves generics in its signature (and need special signature attr)
+   final int AccGenericSignature = ASTNode.Bit31; // record fact a type/method/field involves generics in its signature (and need
+                                                  // special signature attr)
 }

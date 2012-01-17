@@ -73,7 +73,7 @@ public class Wildcard extends SingleTypeReference
       {
          boundType =
             scope.kind == Scope.CLASS_SCOPE ? this.bound.resolveType((ClassScope)scope) : this.bound.resolveType(
-               (BlockScope)scope, true /* check bounds*/);
+               (BlockScope)scope, true /* check bounds */);
 
          if (boundType == null)
          {
@@ -81,7 +81,7 @@ public class Wildcard extends SingleTypeReference
          }
       }
       WildcardBinding wildcard =
-         scope.environment().createWildcard(genericType, rank, boundType, null /*no extra bound*/, this.kind);
+         scope.environment().createWildcard(genericType, rank, boundType, null /* no extra bound */, this.kind);
       return this.resolvedType = wildcard;
    }
 

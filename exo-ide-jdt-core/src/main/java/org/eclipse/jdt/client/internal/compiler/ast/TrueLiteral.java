@@ -30,44 +30,44 @@ public class TrueLiteral extends MagicLiteral
       this.constant = BooleanConstant.fromValue(true);
    }
 
-   //   /**
-   //    * Code generation for the true literal
-   //    *
-   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   //    * @param valueRequired boolean
-   //    */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   //   {
-   //      int pc = codeStream.position;
-   //      if (valueRequired)
-   //      {
-   //         codeStream.generateConstant(this.constant, this.implicitConversion);
-   //      }
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // /**
+   // * Code generation for the true literal
+   // *
+   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   // * @param valueRequired boolean
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   // {
+   // int pc = codeStream.position;
+   // if (valueRequired)
+   // {
+   // codeStream.generateConstant(this.constant, this.implicitConversion);
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
    //
-   //   public void generateOptimizedBoolean(BlockScope currentScope, CodeStream codeStream, BranchLabel trueLabel,
-   //      BranchLabel falseLabel, boolean valueRequired)
-   //   {
+   // public void generateOptimizedBoolean(BlockScope currentScope, CodeStream codeStream, BranchLabel trueLabel,
+   // BranchLabel falseLabel, boolean valueRequired)
+   // {
    //
-   //      // trueLabel being not nil means that we will not fall through into the TRUE case
+   // // trueLabel being not nil means that we will not fall through into the TRUE case
    //
-   //      int pc = codeStream.position;
-   //      // constant == true
-   //      if (valueRequired)
-   //      {
-   //         if (falseLabel == null)
-   //         {
-   //            // implicit falling through the FALSE case
-   //            if (trueLabel != null)
-   //            {
-   //               codeStream.goto_(trueLabel);
-   //            }
-   //         }
-   //      }
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // int pc = codeStream.position;
+   // // constant == true
+   // if (valueRequired)
+   // {
+   // if (falseLabel == null)
+   // {
+   // // implicit falling through the FALSE case
+   // if (trueLabel != null)
+   // {
+   // codeStream.goto_(trueLabel);
+   // }
+   // }
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    public TypeBinding literalType(BlockScope scope)
    {

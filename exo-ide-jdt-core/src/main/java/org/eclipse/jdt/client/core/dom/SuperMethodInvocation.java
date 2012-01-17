@@ -15,21 +15,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Simple or qualified "super" method invocation expression AST node type.
- * For JLS2:
+ * Simple or qualified "super" method invocation expression AST node type. For JLS2:
+ * 
  * <pre>
  * SuperMethodInvocation:
  *     [ ClassName <b>.</b> ] <b>super</b> <b>.</b> Identifier
  *         <b>(</b> [ Expression { <b>,</b> Expression } ] <b>)</b>
  * </pre>
+ * 
  * For JLS3, type arguments are added:
+ * 
  * <pre>
  * SuperMethodInvocation:
  *     [ ClassName <b>.</b> ] <b>super</b> <b>.</b>
  *         [ <b>&lt;</b> Type { <b>,</b> Type } <b>&gt;</b> ]
  *         Identifier <b>(</b> [ Expression { <b>,</b> Expression } ] <b>)</b>
  * </pre>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -38,6 +40,7 @@ public class SuperMethodInvocation extends Expression
 
    /**
     * The "qualifier" structural property of this node type (child type: {@link Name}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor QUALIFIER_PROPERTY = new ChildPropertyDescriptor(
@@ -45,6 +48,7 @@ public class SuperMethodInvocation extends Expression
 
    /**
     * The "typeArguments" structural property of this node type (element type: {@link Type}) (added in JLS3 API).
+    * 
     * @since 3.1
     */
    public static final ChildListPropertyDescriptor TYPE_ARGUMENTS_PROPERTY = new ChildListPropertyDescriptor(
@@ -52,6 +56,7 @@ public class SuperMethodInvocation extends Expression
 
    /**
     * The "name" structural property of this node type (child type: {@link SimpleName}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor NAME_PROPERTY = new ChildPropertyDescriptor(SuperMethodInvocation.class,
@@ -59,23 +64,22 @@ public class SuperMethodInvocation extends Expression
 
    /**
     * The "arguments" structural property of this node type (element type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildListPropertyDescriptor ARGUMENTS_PROPERTY = new ChildListPropertyDescriptor(
       SuperMethodInvocation.class, "arguments", Expression.class, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
+    * 
     * @since 3.0
     */
    private static final List PROPERTY_DESCRIPTORS_2_0;
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
+    * 
     * @since 3.1
     */
    private static final List PROPERTY_DESCRIPTORS_3_0;
@@ -99,14 +103,11 @@ public class SuperMethodInvocation extends Expression
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -127,30 +128,26 @@ public class SuperMethodInvocation extends Expression
    private Name optionalQualifier = null;
 
    /**
-    * The type arguments (element type: {@link Type}).
-    * Null in JLS2. Added in JLS3; defaults to an empty list
-    * (see constructor).
+    * The type arguments (element type: {@link Type}). Null in JLS2. Added in JLS3; defaults to an empty list (see constructor).
+    * 
     * @since 3.1
     */
    private ASTNode.NodeList typeArguments = null;
 
    /**
-    * The method name; lazily initialized; defaults to a unspecified,
-    * legal Java method name.
+    * The method name; lazily initialized; defaults to a unspecified, legal Java method name.
     */
    private SimpleName methodName = null;
 
    /**
-    * The list of argument expressions (element type:
-    * {@link Expression}). Defaults to an empty list.
+    * The list of argument expressions (element type: {@link Expression}). Defaults to an empty list.
     */
    private ASTNode.NodeList arguments = new ASTNode.NodeList(ARGUMENTS_PROPERTY);
 
    /**
-    * Creates a new AST node for a "super" method invocation expression owned
-    * by the given AST. By default, no qualifier, no type arguments,
-    * an unspecified, but legal, method name, and an empty list of arguments.
-    *
+    * Creates a new AST node for a "super" method invocation expression owned by the given AST. By default, no qualifier, no type
+    * arguments, an unspecified, but legal, method name, and an empty list of arguments.
+    * 
     * @param ast the AST that is to own this node
     */
    SuperMethodInvocation(AST ast)
@@ -162,16 +159,16 @@ public class SuperMethodInvocation extends Expression
       }
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -203,8 +200,8 @@ public class SuperMethodInvocation extends Expression
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
@@ -220,16 +217,16 @@ public class SuperMethodInvocation extends Expression
       return super.internalGetChildListProperty(property);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return SUPER_METHOD_INVOCATION;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -245,8 +242,8 @@ public class SuperMethodInvocation extends Expression
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -254,8 +251,8 @@ public class SuperMethodInvocation extends Expression
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -275,9 +272,8 @@ public class SuperMethodInvocation extends Expression
    }
 
    /**
-    * Returns the qualifier of this "super" method invocation expression, or
-    * <code>null</code> if there is none.
-    *
+    * Returns the qualifier of this "super" method invocation expression, or <code>null</code> if there is none.
+    * 
     * @return the qualifier name node, or <code>null</code> if there is none
     */
    public Name getQualifier()
@@ -289,8 +285,9 @@ public class SuperMethodInvocation extends Expression
     * Returns true if the resolved return type has been inferred from the assignment context (JLS3 15.12.2.8), false otherwise.
     * <p>
     * This information is available only when bindings are requested when the AST is being built
-    * </p>.
-    *
+    * </p>
+    * .
+    * 
     * @return true if the resolved return type has been inferred from the assignment context (JLS3 15.12.2.8), false otherwise
     * @since 3.3
     */
@@ -301,14 +298,13 @@ public class SuperMethodInvocation extends Expression
 
    /**
     * Sets or clears the qualifier of this "super" method invocation expression.
-    *
-    * @param name the qualifier name node, or <code>null</code> if
-    *    there is none
+    * 
+    * @param name the qualifier name node, or <code>null</code> if there is none
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     */
    public void setQualifier(Name name)
    {
@@ -319,13 +315,10 @@ public class SuperMethodInvocation extends Expression
    }
 
    /**
-    * Returns the live ordered list of type arguments of this method
-    * invocation (added in JLS3 API).
-    *
-    * @return the live list of type arguments
-    *    (element type: {@link Type})
-    * @exception UnsupportedOperationException if this operation is used in
-    * a JLS2 AST
+    * Returns the live ordered list of type arguments of this method invocation (added in JLS3 API).
+    * 
+    * @return the live list of type arguments (element type: {@link Type})
+    * @exception UnsupportedOperationException if this operation is used in a JLS2 AST
     * @since 3.1
     */
    public List typeArguments()
@@ -340,7 +333,7 @@ public class SuperMethodInvocation extends Expression
 
    /**
     * Returns the name of the method invoked in this expression.
-    *
+    * 
     * @return the method name node
     */
    public SimpleName getName()
@@ -362,15 +355,14 @@ public class SuperMethodInvocation extends Expression
    }
 
    /**
-    * Sets the name of the method invoked in this expression to the
-    * given name.
-    *
+    * Sets the name of the method invoked in this expression to the given name.
+    * 
     * @param name the new method name
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     */
    public void setName(SimpleName name)
    {
@@ -385,11 +377,9 @@ public class SuperMethodInvocation extends Expression
    }
 
    /**
-    * Returns the live ordered list of argument expressions in this
-    * "super" method invocation expression.
-    *
-    * @return the live list of argument expressions
-    *    (element type: {@link Expression})
+    * Returns the live ordered list of argument expressions in this "super" method invocation expression.
+    * 
+    * @return the live list of argument expressions (element type: {@link Expression})
     */
    public List arguments()
    {
@@ -397,15 +387,12 @@ public class SuperMethodInvocation extends Expression
    }
 
    /**
-    * Resolves and returns the binding for the method invoked by this
-    * expression.
+    * Resolves and returns the binding for the method invoked by this expression.
     * <p>
-    * Note that bindings are generally unavailable unless requested when the
-    * AST is being built.
+    * Note that bindings are generally unavailable unless requested when the AST is being built.
     * </p>
-    *
-    * @return the method binding, or <code>null</code> if the binding cannot
-    * be resolved
+    * 
+    * @return the method binding, or <code>null</code> if the binding cannot be resolved
     * @since 2.1
     */
    public IMethodBinding resolveMethodBinding()
@@ -413,8 +400,8 @@ public class SuperMethodInvocation extends Expression
       return this.ast.getBindingResolver().resolveMethod(this);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
@@ -422,8 +409,8 @@ public class SuperMethodInvocation extends Expression
       return BASE_NODE_SIZE + 4 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

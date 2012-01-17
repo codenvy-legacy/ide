@@ -13,10 +13,9 @@ package org.eclipse.jdt.client.internal.compiler.lookup;
 import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
 
 /**
- * Binding denoting a method after type parameter substitutions got performed.
- * On parameterized type bindings, all methods got substituted, regardless whether
- * their signature did involve generics or not, so as to get the proper declaringClass for
- * these methods.
+ * Binding denoting a method after type parameter substitutions got performed. On parameterized type bindings, all methods got
+ * substituted, regardless whether their signature did involve generics or not, so as to get the proper declaringClass for these
+ * methods.
  */
 public class ParameterizedMethodBinding extends MethodBinding
 {
@@ -32,8 +31,9 @@ public class ParameterizedMethodBinding extends MethodBinding
       super(originalMethod.modifiers, originalMethod.selector, originalMethod.returnType, originalMethod.parameters,
          originalMethod.thrownExceptions, parameterizedDeclaringClass);
       this.originalMethod = originalMethod;
-      /* missing type bit cannot be copied as is it might come from the return type or a parameter type that
-       * is substituted by a raw type.
+      /*
+       * missing type bit cannot be copied as is it might come from the return type or a parameter type that is substituted by a
+       * raw type.
        */
       this.tagBits = originalMethod.tagBits & ~TagBits.HasMissingType;
 
@@ -96,7 +96,8 @@ public class ParameterizedMethodBinding extends MethodBinding
             if (originalVariable.firstBound != null)
             {
                substitutedVariable.firstBound =
-                  originalVariable.firstBound == originalVariable.superclass ? substitutedSuperclass // could be array type or interface
+                  originalVariable.firstBound == originalVariable.superclass ? substitutedSuperclass // could be array type or
+                                                                                                     // interface
                      : substitutedInterfaces[0];
             }
             switch (substitutedSuperclass.kind())
@@ -119,7 +120,9 @@ public class ParameterizedMethodBinding extends MethodBinding
                   }
                   else
                   {
-                     substitutedVariable.superclass = (ReferenceBinding)substitutedSuperclass; // typeVar was extending other typeVar which got substituted with interface
+                     substitutedVariable.superclass = (ReferenceBinding)substitutedSuperclass; // typeVar was extending other
+                                                                                               // typeVar which got substituted
+                                                                                               // with interface
                      substitutedVariable.superInterfaces = substitutedInterfaces;
                   }
             }
@@ -163,8 +166,8 @@ public class ParameterizedMethodBinding extends MethodBinding
    }
 
    /**
-    * Create method of parameterized type, substituting original parameters/exception/return type with type arguments.
-    * This is a CODE ASSIST method ONLY.
+    * Create method of parameterized type, substituting original parameters/exception/return type with type arguments. This is a
+    * CODE ASSIST method ONLY.
     */
    public ParameterizedMethodBinding(final ReferenceBinding declaringClass, MethodBinding originalMethod,
       char[][] alternateParamaterNames, final LookupEnvironment environment)
@@ -172,8 +175,9 @@ public class ParameterizedMethodBinding extends MethodBinding
       super(originalMethod.modifiers, originalMethod.selector, originalMethod.returnType, originalMethod.parameters,
          originalMethod.thrownExceptions, declaringClass);
       this.originalMethod = originalMethod;
-      /* missing type bit cannot be copied as is it might come from the return type or a parameter type that
-       * is substituted by a raw type.
+      /*
+       * missing type bit cannot be copied as is it might come from the return type or a parameter type that is substituted by a
+       * raw type.
        */
       this.tagBits = originalMethod.tagBits & ~TagBits.HasMissingType;
 
@@ -231,7 +235,8 @@ public class ParameterizedMethodBinding extends MethodBinding
             if (originalVariable.firstBound != null)
             {
                substitutedVariable.firstBound =
-                  originalVariable.firstBound == originalVariable.superclass ? substitutedSuperclass // could be array type or interface
+                  originalVariable.firstBound == originalVariable.superclass ? substitutedSuperclass // could be array type or
+                                                                                                     // interface
                      : substitutedInterfaces[0];
             }
             switch (substitutedSuperclass.kind())
@@ -252,7 +257,9 @@ public class ParameterizedMethodBinding extends MethodBinding
                   }
                   else
                   {
-                     substitutedVariable.superclass = (ReferenceBinding)substitutedSuperclass; // typeVar was extending other typeVar which got substituted with interface
+                     substitutedVariable.superclass = (ReferenceBinding)substitutedSuperclass; // typeVar was extending other
+                                                                                               // typeVar which got substituted
+                                                                                               // with interface
                      substitutedVariable.superInterfaces = substitutedInterfaces;
                   }
             }
@@ -317,11 +324,13 @@ public class ParameterizedMethodBinding extends MethodBinding
       method.tagBits = originalMethod.tagBits;
       ReferenceBinding genericClassType = scope.getJavaLangClass();
       LookupEnvironment environment = scope.environment();
-      TypeBinding rawType =
-         environment.convertToRawType(receiverType.erasure(), false /*do not force conversion of enclosing types*/);
+      TypeBinding rawType = environment.convertToRawType(receiverType.erasure(), false /*
+                                                                                        * do not force conversion of enclosing
+                                                                                        * types
+                                                                                        */);
       method.returnType =
          environment.createParameterizedType(genericClassType, new TypeBinding[]{environment.createWildcard(
-            genericClassType, 0, rawType, null /*no extra bound*/, Wildcard.EXTENDS)}, null);
+            genericClassType, 0, rawType, null /* no extra bound */, Wildcard.EXTENDS)}, null);
       if ((method.returnType.tagBits & TagBits.HasMissingType) != 0)
       {
          method.tagBits |= TagBits.HasMissingType;

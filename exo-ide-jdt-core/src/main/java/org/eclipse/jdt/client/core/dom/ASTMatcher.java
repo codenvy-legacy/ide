@@ -16,30 +16,24 @@ import java.util.List;
 /**
  * Concrete superclass and default implementation of an AST subtree matcher.
  * <p>
- * For example, to compute whether two ASTs subtrees are structurally
- * isomorphic, use <code>n1.subtreeMatch(new ASTMatcher(), n2)</code> where
- * <code>n1</code> and <code>n2</code> are the AST root nodes of the subtrees.
+ * For example, to compute whether two ASTs subtrees are structurally isomorphic, use
+ * <code>n1.subtreeMatch(new ASTMatcher(), n2)</code> where <code>n1</code> and <code>n2</code> are the AST root nodes of the
+ * subtrees.
  * </p>
  * <p>
- * For each different concrete AST node type <i>T</i> there is a
- * <code>public boolean match(<i>T</i> node, Object other)</code> method
- * that matches the given node against another object (typically another
- * AST node, although this is not essential). The default implementations
- * provided by this class tests whether the other object is a node of the
- * same type with structurally isomorphic child subtrees. For nodes with
- * list-valued properties, the child nodes within the list are compared in
- * order. For nodes with multiple properties, the child nodes are compared
- * in the order that most closely corresponds to the lexical reading order
- * of the source program. For instance, for a type declaration node, the
- * child ordering is: name, superclass, superinterfaces, and body
- * declarations.
+ * For each different concrete AST node type <i>T</i> there is a <code>public boolean match(<i>T</i> node, Object other)</code>
+ * method that matches the given node against another object (typically another AST node, although this is not essential). The
+ * default implementations provided by this class tests whether the other object is a node of the same type with structurally
+ * isomorphic child subtrees. For nodes with list-valued properties, the child nodes within the list are compared in order. For
+ * nodes with multiple properties, the child nodes are compared in the order that most closely corresponds to the lexical reading
+ * order of the source program. For instance, for a type declaration node, the child ordering is: name, superclass,
+ * superinterfaces, and body declarations.
  * </p>
  * <p>
- * Subclasses may override (extend or reimplement) some or all of the
- * <code>match</code> methods in order to define more specialized subtree
- * matchers.
+ * Subclasses may override (extend or reimplement) some or all of the <code>match</code> methods in order to define more
+ * specialized subtree matchers.
  * </p>
- *
+ * 
  * @see org.eclipse.jdt.client.core.dom.ASTNode#subtreeMatch(ASTMatcher, Object)
  * @since 2.0
  */
@@ -48,6 +42,7 @@ public class ASTMatcher
 
    /**
     * Indicates whether doc tags should be matched.
+    * 
     * @since 3.0
     */
    private boolean matchDocTags;
@@ -55,10 +50,8 @@ public class ASTMatcher
    /**
     * Creates a new AST matcher instance.
     * <p>
-    * For backwards compatibility, the matcher ignores tag
-    * elements below doc comments by default. Use
-    * {@link #ASTMatcher(boolean) ASTMatcher(true)}
-    * for a matcher that compares doc tags by default.
+    * For backwards compatibility, the matcher ignores tag elements below doc comments by default. Use
+    * {@link #ASTMatcher(boolean) ASTMatcher(true)} for a matcher that compares doc tags by default.
     * </p>
     */
    public ASTMatcher()
@@ -68,9 +61,8 @@ public class ASTMatcher
 
    /**
     * Creates a new AST matcher instance.
-    *
-    * @param matchDocTags <code>true</code> if doc comment tags are
-    * to be compared by default, and <code>false</code> otherwise
+    * 
+    * @param matchDocTags <code>true</code> if doc comment tags are to be compared by default, and <code>false</code> otherwise
     * @see #match(Javadoc,Object)
     * @since 3.0
     */
@@ -80,19 +72,15 @@ public class ASTMatcher
    }
 
    /**
-    * Returns whether the given lists of AST nodes match pair wise according
-    * to <code>ASTNode.subtreeMatch</code>.
+    * Returns whether the given lists of AST nodes match pair wise according to <code>ASTNode.subtreeMatch</code>.
     * <p>
-    * Note that this is a convenience method, useful for writing recursive
-    * subtree matchers.
+    * Note that this is a convenience method, useful for writing recursive subtree matchers.
     * </p>
-    *
-    * @param list1 the first list of AST nodes
-    *    (element type: {@link ASTNode})
-    * @param list2 the second list of AST nodes
-    *    (element type: {@link ASTNode})
-    * @return <code>true</code> if the lists have the same number of elements
-    *    and match pair-wise according to {@link ASTNode#subtreeMatch(ASTMatcher, Object) ASTNode.subtreeMatch}
+    * 
+    * @param list1 the first list of AST nodes (element type: {@link ASTNode})
+    * @param list2 the second list of AST nodes (element type: {@link ASTNode})
+    * @return <code>true</code> if the lists have the same number of elements and match pair-wise according to
+    *         {@link ASTNode#subtreeMatch(ASTMatcher, Object) ASTNode.subtreeMatch}
     * @see ASTNode#subtreeMatch(ASTMatcher matcher, Object other)
     */
    public final boolean safeSubtreeListMatch(List list1, List list2)
@@ -116,22 +104,16 @@ public class ASTMatcher
    }
 
    /**
-    * Returns whether the given nodes match according to
-    * <code>AST.subtreeMatch</code>. Returns <code>false</code> if one or
-    * the other of the nodes are <code>null</code>. Returns <code>true</code>
-    * if both nodes are <code>null</code>.
+    * Returns whether the given nodes match according to <code>AST.subtreeMatch</code>. Returns <code>false</code> if one or the
+    * other of the nodes are <code>null</code>. Returns <code>true</code> if both nodes are <code>null</code>.
     * <p>
-    * Note that this is a convenience method, useful for writing recursive
-    * subtree matchers.
+    * Note that this is a convenience method, useful for writing recursive subtree matchers.
     * </p>
-    *
-    * @param node1 the first AST node, or <code>null</code>; must be an
-    *    instance of <code>ASTNode</code>
-    * @param node2 the second AST node, or <code>null</code>; must be an
-    *    instance of <code>ASTNode</code>
-    * @return <code>true</code> if the nodes match according
-    *    to <code>AST.subtreeMatch</code> or both are <code>null</code>, and
-    *    <code>false</code> otherwise
+    * 
+    * @param node1 the first AST node, or <code>null</code>; must be an instance of <code>ASTNode</code>
+    * @param node2 the second AST node, or <code>null</code>; must be an instance of <code>ASTNode</code>
+    * @return <code>true</code> if the nodes match according to <code>AST.subtreeMatch</code> or both are <code>null</code>, and
+    *         <code>false</code> otherwise
     * @see ASTNode#subtreeMatch(ASTMatcher, Object)
     */
    public final boolean safeSubtreeMatch(Object node1, Object node2)
@@ -149,15 +131,13 @@ public class ASTMatcher
    }
 
    /**
-    * Returns whether the given objects are equal according to
-    * <code>equals</code>. Returns <code>false</code> if either
-    * node is <code>null</code>.
-    *
+    * Returns whether the given objects are equal according to <code>equals</code>. Returns <code>false</code> if either node is
+    * <code>null</code>.
+    * 
     * @param o1 the first object, or <code>null</code>
     * @param o2 the second object, or <code>null</code>
-    * @return <code>true</code> if the nodes are equal according to
-    *    <code>equals</code> or both <code>null</code>, and
-    *    <code>false</code> otherwise
+    * @return <code>true</code> if the nodes are equal according to <code>equals</code> or both <code>null</code>, and
+    *         <code>false</code> otherwise
     */
    public static boolean safeEquals(Object o1, Object o2)
    {
@@ -175,16 +155,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.1
     */
    public boolean match(AnnotationTypeDeclaration node, Object other)
@@ -203,16 +181,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.1
     */
    public boolean match(AnnotationTypeMemberDeclaration node, Object other)
@@ -231,16 +207,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(AnonymousClassDeclaration node, Object other)
    {
@@ -255,16 +229,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(ArrayAccess node, Object other)
    {
@@ -279,16 +251,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(ArrayCreation node, Object other)
    {
@@ -304,16 +274,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(ArrayInitializer node, Object other)
    {
@@ -328,16 +296,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(ArrayType node, Object other)
    {
@@ -352,16 +318,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(AssertStatement node, Object other)
    {
@@ -377,16 +341,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(Assignment node, Object other)
    {
@@ -403,16 +365,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(Block node, Object other)
    {
@@ -427,21 +387,18 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type. Subclasses may override
-    * this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type. Subclasses may
+    * override this method as needed.
     * </p>
-    * <p>Note: {@link LineComment} and {@link BlockComment} nodes are
-    * not considered part of main structure of the AST. This method will
-    * only be called if a client goes out of their way to visit this
-    * kind of node explicitly.
+    * <p>
+    * Note: {@link LineComment} and {@link BlockComment} nodes are not considered part of main structure of the AST. This method
+    * will only be called if a client goes out of their way to visit this kind of node explicitly.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.0
     */
    public boolean match(BlockComment node, Object other)
@@ -456,16 +413,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(BooleanLiteral node, Object other)
    {
@@ -480,16 +435,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(BreakStatement node, Object other)
    {
@@ -504,16 +457,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(CastExpression node, Object other)
    {
@@ -528,16 +479,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(CatchClause node, Object other)
    {
@@ -552,16 +501,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(CharacterLiteral node, Object other)
    {
@@ -576,16 +523,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(ClassInstanceCreation node, Object other)
    {
@@ -621,16 +566,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(CompilationUnit node, Object other)
    {
@@ -646,16 +589,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(ConditionalExpression node, Object other)
    {
@@ -672,16 +613,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(ConstructorInvocation node, Object other)
    {
@@ -703,16 +642,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(ContinueStatement node, Object other)
    {
@@ -727,16 +664,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.7.1
     */
    public boolean match(UnionType node, Object other)
@@ -752,16 +687,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(DoStatement node, Object other)
    {
@@ -776,16 +709,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(EmptyStatement node, Object other)
    {
@@ -799,16 +730,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.1
     */
    public boolean match(EnhancedForStatement node, Object other)
@@ -825,16 +754,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.1
     */
    public boolean match(EnumConstantDeclaration node, Object other)
@@ -853,16 +780,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.1
     */
    public boolean match(EnumDeclaration node, Object other)
@@ -882,16 +807,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(ExpressionStatement node, Object other)
    {
@@ -906,16 +829,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(FieldAccess node, Object other)
    {
@@ -930,16 +851,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(FieldDeclaration node, Object other)
    {
@@ -970,16 +889,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(ForStatement node, Object other)
    {
@@ -996,16 +913,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(IfStatement node, Object other)
    {
@@ -1022,16 +937,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(ImportDeclaration node, Object other)
    {
@@ -1053,16 +966,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(InfixExpression node, Object other)
    {
@@ -1090,16 +1001,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(InstanceofExpression node, Object other)
    {
@@ -1115,16 +1024,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(Initializer node, Object other)
    {
@@ -1154,26 +1061,18 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * Unlike other node types, the behavior of the default
-    * implementation is controlled by a constructor-supplied
-    * parameter  {@link #ASTMatcher(boolean) ASTMatcher(boolean)}
-    * which is <code>false</code> if not specified.
-    * When this parameter is <code>true</code>, the implementation
-    * tests whether the other object is also a <code>Javadoc</code>
-    * with structurally isomorphic child subtrees; the comment string
-    * (<code>Javadoc.getComment()</code>) is ignored.
-    * Conversely, when the parameter is <code>false</code>, the
-    * implementation tests whether the other object is also a
-    * <code>Javadoc</code> with exactly the same comment string;
-    * the tag elements ({@link Javadoc#tags() Javadoc.tags} are
-    * ignored. Subclasses may reimplement.
+    * Unlike other node types, the behavior of the default implementation is controlled by a constructor-supplied parameter
+    * {@link #ASTMatcher(boolean) ASTMatcher(boolean)} which is <code>false</code> if not specified. When this parameter is
+    * <code>true</code>, the implementation tests whether the other object is also a <code>Javadoc</code> with structurally
+    * isomorphic child subtrees; the comment string (<code>Javadoc.getComment()</code>) is ignored. Conversely, when the parameter
+    * is <code>false</code>, the implementation tests whether the other object is also a <code>Javadoc</code> with exactly the
+    * same comment string; the tag elements ({@link Javadoc#tags() Javadoc.tags} are ignored. Subclasses may reimplement.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @see #ASTMatcher()
     * @see #ASTMatcher(boolean)
     */
@@ -1198,6 +1097,7 @@ public class ASTMatcher
     * Return whether the deprecated comment strings of the given java doc are equals.
     * <p>
     * Note the only purpose of this method is to hide deprecated warnings.
+    * 
     * @deprecated mark deprecated to hide deprecated usage
     */
    private boolean compareDeprecatedComment(Javadoc first, Javadoc second)
@@ -1215,16 +1115,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(LabeledStatement node, Object other)
    {
@@ -1239,21 +1137,18 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type. Subclasses may override
-    * this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type. Subclasses may
+    * override this method as needed.
     * </p>
-    * <p>Note: {@link LineComment} and {@link BlockComment} nodes are
-    * not considered part of main structure of the AST. This method will
-    * only be called if a client goes out of their way to visit this
-    * kind of node explicitly.
+    * <p>
+    * Note: {@link LineComment} and {@link BlockComment} nodes are not considered part of main structure of the AST. This method
+    * will only be called if a client goes out of their way to visit this kind of node explicitly.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.0
     */
    public boolean match(LineComment node, Object other)
@@ -1268,16 +1163,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.1
     */
    public boolean match(MarkerAnnotation node, Object other)
@@ -1293,16 +1186,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.0
     */
    public boolean match(MemberRef node, Object other)
@@ -1318,16 +1209,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.1
     */
    public boolean match(MemberValuePair node, Object other)
@@ -1343,16 +1232,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.0
     */
    public boolean match(MethodRef node, Object other)
@@ -1369,16 +1256,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.0
     */
    public boolean match(MethodRefParameter node, Object other)
@@ -1402,24 +1287,20 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
     * <p>
-    * Note that extra array dimensions are compared since they are an
-    * important part of the method declaration.
+    * Note that extra array dimensions are compared since they are an important part of the method declaration.
     * </p>
     * <p>
-    * Note that the method return types are compared even for constructor
-    * declarations.
+    * Note that the method return types are compared even for constructor declarations.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(MethodDeclaration node, Object other)
    {
@@ -1469,16 +1350,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(MethodInvocation node, Object other)
    {
@@ -1501,16 +1380,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.1
     */
    public boolean match(Modifier node, Object other)
@@ -1526,16 +1403,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.1
     */
    public boolean match(NormalAnnotation node, Object other)
@@ -1551,16 +1426,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(NullLiteral node, Object other)
    {
@@ -1574,16 +1447,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(NumberLiteral node, Object other)
    {
@@ -1598,16 +1469,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(PackageDeclaration node, Object other)
    {
@@ -1633,16 +1502,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.1
     */
    public boolean match(ParameterizedType node, Object other)
@@ -1659,16 +1526,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(ParenthesizedExpression node, Object other)
    {
@@ -1683,16 +1548,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(PostfixExpression node, Object other)
    {
@@ -1707,16 +1570,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(PrefixExpression node, Object other)
    {
@@ -1731,16 +1592,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(PrimitiveType node, Object other)
    {
@@ -1755,16 +1614,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(QualifiedName node, Object other)
    {
@@ -1779,16 +1636,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.1
     */
    public boolean match(QualifiedType node, Object other)
@@ -1804,16 +1659,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(ReturnStatement node, Object other)
    {
@@ -1828,16 +1681,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(SimpleName node, Object other)
    {
@@ -1852,16 +1703,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(SimpleType node, Object other)
    {
@@ -1876,16 +1725,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.1
     */
    public boolean match(SingleMemberAnnotation node, Object other)
@@ -1901,20 +1748,18 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
     * <p>
-    * Note that extra array dimensions and the variable arity flag
-    * are compared since they are both important parts of the declaration.
+    * Note that extra array dimensions and the variable arity flag are compared since they are both important parts of the
+    * declaration.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(SingleVariableDeclaration node, Object other)
    {
@@ -1950,16 +1795,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(StringLiteral node, Object other)
    {
@@ -1974,16 +1817,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(SuperConstructorInvocation node, Object other)
    {
@@ -2006,16 +1847,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(SuperFieldAccess node, Object other)
    {
@@ -2030,16 +1869,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(SuperMethodInvocation node, Object other)
    {
@@ -2062,16 +1899,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(SwitchCase node, Object other)
    {
@@ -2086,16 +1921,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(SwitchStatement node, Object other)
    {
@@ -2111,16 +1944,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(SynchronizedStatement node, Object other)
    {
@@ -2135,16 +1966,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.0
     */
    public boolean match(TagElement node, Object other)
@@ -2160,16 +1989,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.0
     */
    public boolean match(TextElement node, Object other)
@@ -2185,16 +2012,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(ThisExpression node, Object other)
    {
@@ -2209,16 +2034,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(ThrowStatement node, Object other)
    {
@@ -2233,16 +2056,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(TryStatement node, Object other)
    {
@@ -2267,16 +2088,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(TypeDeclaration node, Object other)
    {
@@ -2328,16 +2147,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(TypeDeclarationStatement node, Object other)
    {
@@ -2352,16 +2169,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(TypeLiteral node, Object other)
    {
@@ -2376,16 +2191,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.1
     */
    public boolean match(TypeParameter node, Object other)
@@ -2401,16 +2214,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(VariableDeclarationExpression node, Object other)
    {
@@ -2440,20 +2251,17 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
     * <p>
-    * Note that extra array dimensions are compared since they are an
-    * important part of the type of the variable.
+    * Note that extra array dimensions are compared since they are an important part of the type of the variable.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(VariableDeclarationFragment node, Object other)
    {
@@ -2469,16 +2277,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(VariableDeclarationStatement node, Object other)
    {
@@ -2508,16 +2314,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     */
    public boolean match(WhileStatement node, Object other)
    {
@@ -2532,16 +2336,14 @@ public class ASTMatcher
    /**
     * Returns whether the given node and the other object match.
     * <p>
-    * The default implementation provided by this class tests whether the
-    * other object is a node of the same type with structurally isomorphic
-    * child subtrees. Subclasses may override this method as needed.
+    * The default implementation provided by this class tests whether the other object is a node of the same type with
+    * structurally isomorphic child subtrees. Subclasses may override this method as needed.
     * </p>
-    *
+    * 
     * @param node the node
     * @param other the other object, or <code>null</code>
-    * @return <code>true</code> if the subtree matches, or
-    *   <code>false</code> if they do not match or the other object has a
-    *   different node type or is <code>null</code>
+    * @return <code>true</code> if the subtree matches, or <code>false</code> if they do not match or the other object has a
+    *         different node type or is <code>null</code>
     * @since 3.1
     */
    public boolean match(WildcardType node, Object other)

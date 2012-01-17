@@ -59,13 +59,13 @@ public class DefaultProblem extends CategorizedProblem
 
    public String errorReportSource(char[] unitSource)
    {
-      //extra from the source the innacurate     token
-      //and "highlight" it using some underneath ^^^^^
-      //put some context around too.
+      // extra from the source the innacurate token
+      // and "highlight" it using some underneath ^^^^^
+      // put some context around too.
 
-      //this code assumes that the font used in the console is fixed size
+      // this code assumes that the font used in the console is fixed size
 
-      //sanity .....
+      // sanity .....
       if ((this.startPosition > this.endPosition) || ((this.startPosition < 0) && (this.endPosition < 0))
          || unitSource.length == 0)
          return Messages.instance.problem_noSourceInformation();
@@ -79,10 +79,10 @@ public class DefaultProblem extends CategorizedProblem
       final char SPACE = '\u0020';
       final char MARK = '^';
       final char TAB = '\t';
-      //the next code tries to underline the token.....
-      //it assumes (for a good display) that token source does not
-      //contain any \r \n. This is false on statements !
-      //(the code still works but the display is not optimal !)
+      // the next code tries to underline the token.....
+      // it assumes (for a good display) that token source does not
+      // contain any \r \n. This is false on statements !
+      // (the code still works but the display is not optimal !)
 
       // expand to line limits
       int length = unitSource.length, begin, end;
@@ -100,7 +100,8 @@ public class DefaultProblem extends CategorizedProblem
       // trim left and right spaces/tabs
       while ((c = unitSource[begin]) == ' ' || c == '\t')
          begin++;
-      //while ((c = unitSource[end]) == ' ' || c == '\t') end--; TODO (philippe) should also trim right, but all tests are to be updated
+      // while ((c = unitSource[end]) == ' ' || c == '\t') end--; TODO (philippe) should also trim right, but all tests are to be
+      // updated
 
       // copy source
       errorBuffer.append(unitSource, begin, end - begin + 1);
@@ -120,6 +121,7 @@ public class DefaultProblem extends CategorizedProblem
 
    /**
     * Answer back the original arguments recorded into the problem.
+    * 
     * @return java.lang.String[]
     */
    public String[] getArguments()
@@ -137,6 +139,7 @@ public class DefaultProblem extends CategorizedProblem
 
    /**
     * Answer the type of problem.
+    * 
     * @see org.eclipse.jdt.client.core.compiler.IProblem#getID()
     * @return int
     */
@@ -146,9 +149,8 @@ public class DefaultProblem extends CategorizedProblem
    }
 
    /**
-    * Answers a readable name for the category which this problem belongs to,
-    * or null if none could be found.
-    * FOR TESTING PURPOSE
+    * Answers a readable name for the category which this problem belongs to, or null if none could be found. FOR TESTING PURPOSE
+    * 
     * @return java.lang.String
     */
    public String getInternalCategoryMessage()
@@ -193,6 +195,7 @@ public class DefaultProblem extends CategorizedProblem
 
    /**
     * Returns the marker type associated to this problem.
+    * 
     * @see org.eclipse.jdt.client.core.compiler.CategorizedProblem#getMarkerType()
     */
    public String getMarkerType()
@@ -202,6 +205,7 @@ public class DefaultProblem extends CategorizedProblem
 
    /**
     * Answer a localized, human-readable message string which describes the problem.
+    * 
     * @return java.lang.String
     */
    public String getMessage()
@@ -211,6 +215,7 @@ public class DefaultProblem extends CategorizedProblem
 
    /**
     * Answer the file name in which the problem was found.
+    * 
     * @return char[]
     */
    public char[] getOriginatingFileName()
@@ -220,6 +225,7 @@ public class DefaultProblem extends CategorizedProblem
 
    /**
     * Answer the end position of the problem (inclusive), or -1 if unknown.
+    * 
     * @return int
     */
    public int getSourceEnd()
@@ -229,6 +235,7 @@ public class DefaultProblem extends CategorizedProblem
 
    /**
     * Answer the line number in source where the problem begins.
+    * 
     * @return int
     */
    public int getSourceColumnNumber()
@@ -238,6 +245,7 @@ public class DefaultProblem extends CategorizedProblem
 
    /**
     * Answer the line number in source where the problem begins.
+    * 
     * @return int
     */
    public int getSourceLineNumber()
@@ -247,6 +255,7 @@ public class DefaultProblem extends CategorizedProblem
 
    /**
     * Answer the start position of the problem (inclusive), or -1 if unknown.
+    * 
     * @return int
     */
    public int getSourceStart()
@@ -256,6 +265,7 @@ public class DefaultProblem extends CategorizedProblem
 
    /*
     * Helper method: checks the severity to see if the Error bit is set.
+    * 
     * @return boolean
     */
    public boolean isError()
@@ -265,6 +275,7 @@ public class DefaultProblem extends CategorizedProblem
 
    /*
     * Helper method: checks the severity to see if the Error bit is not set.
+    * 
     * @return boolean
     */
    public boolean isWarning()
@@ -279,8 +290,9 @@ public class DefaultProblem extends CategorizedProblem
 
    /**
     * Set the end position of the problem (inclusive), or -1 if unknown.
-    *
+    * 
     * Used for shifting problem positions.
+    * 
     * @param sourceEnd the new value of the sourceEnd of the receiver
     */
    public void setSourceEnd(int sourceEnd)
@@ -290,6 +302,7 @@ public class DefaultProblem extends CategorizedProblem
 
    /**
     * Set the line number in source where the problem begins.
+    * 
     * @param lineNumber the new value of the line number of the receiver
     */
    public void setSourceLineNumber(int lineNumber)
@@ -300,8 +313,9 @@ public class DefaultProblem extends CategorizedProblem
 
    /**
     * Set the start position of the problem (inclusive), or -1 if unknown.
-    *
+    * 
     * Used for shifting problem positions.
+    * 
     * @param sourceStart the new value of the source start position of the receiver
     */
    public void setSourceStart(int sourceStart)

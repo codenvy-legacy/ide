@@ -16,12 +16,12 @@ import java.util.List;
 
 /**
  * Conditional expression AST node type.
- *
+ * 
  * <pre>
  * ConditionalExpression:
  *    Expression <b>?</b> Expression <b>:</b> Expression
  * </pre>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -30,6 +30,7 @@ public class ConditionalExpression extends Expression
 
    /**
     * The "expression" structural property of this node type (child type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(
@@ -37,6 +38,7 @@ public class ConditionalExpression extends Expression
 
    /**
     * The "thenExpression" structural property of this node type (child type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor THEN_EXPRESSION_PROPERTY = new ChildPropertyDescriptor(
@@ -44,15 +46,14 @@ public class ConditionalExpression extends Expression
 
    /**
     * The "elseExpression" structural property of this node type (child type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor ELSE_EXPRESSION_PROPERTY = new ChildPropertyDescriptor(
       ConditionalExpression.class, "elseExpression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -67,14 +68,11 @@ public class ConditionalExpression extends Expression
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -83,31 +81,27 @@ public class ConditionalExpression extends Expression
    }
 
    /**
-    * The condition expression; lazily initialized; defaults to an unspecified,
-    * but legal, expression.
+    * The condition expression; lazily initialized; defaults to an unspecified, but legal, expression.
     */
    private Expression conditionExpression = null;
 
    /**
-    * The "then" expression; lazily initialized; defaults to an unspecified,
-    * but legal, expression.
+    * The "then" expression; lazily initialized; defaults to an unspecified, but legal, expression.
     */
    private Expression thenExpression = null;
 
    /**
-    * The "else" expression; lazily initialized; defaults to an unspecified,
-    * but legal, expression.
+    * The "else" expression; lazily initialized; defaults to an unspecified, but legal, expression.
     */
    private Expression elseExpression = null;
 
    /**
-    * Creates a new unparented conditional expression node owned by the given
-    * AST. By default, the condition, "then", and "else" expresssions are
-    * unspecified, but legal.
+    * Creates a new unparented conditional expression node owned by the given AST. By default, the condition, "then", and "else"
+    * expresssions are unspecified, but legal.
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    ConditionalExpression(AST ast)
@@ -115,16 +109,16 @@ public class ConditionalExpression extends Expression
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -168,16 +162,16 @@ public class ConditionalExpression extends Expression
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return CONDITIONAL_EXPRESSION;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -189,8 +183,8 @@ public class ConditionalExpression extends Expression
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -198,8 +192,8 @@ public class ConditionalExpression extends Expression
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -216,7 +210,7 @@ public class ConditionalExpression extends Expression
 
    /**
     * Returns the condition of this conditional expression.
-    *
+    * 
     * @return the condition node
     */
    public Expression getExpression()
@@ -239,14 +233,14 @@ public class ConditionalExpression extends Expression
 
    /**
     * Sets the condition of this conditional expression.
-    *
+    * 
     * @param expression the condition node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setExpression(Expression expression)
    {
@@ -262,7 +256,7 @@ public class ConditionalExpression extends Expression
 
    /**
     * Returns the "then" part of this conditional expression.
-    *
+    * 
     * @return the "then" expression node
     */
    public Expression getThenExpression()
@@ -285,14 +279,14 @@ public class ConditionalExpression extends Expression
 
    /**
     * Sets the "then" part of this conditional expression.
-    *
+    * 
     * @param expression the "then" expression node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setThenExpression(Expression expression)
    {
@@ -308,7 +302,7 @@ public class ConditionalExpression extends Expression
 
    /**
     * Returns the "else" part of this conditional expression.
-    *
+    * 
     * @return the "else" expression node
     */
    public Expression getElseExpression()
@@ -331,14 +325,14 @@ public class ConditionalExpression extends Expression
 
    /**
     * Sets the "else" part of this conditional expression.
-    *
+    * 
     * @param expression the "else" expression node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setElseExpression(Expression expression)
    {
@@ -352,8 +346,8 @@ public class ConditionalExpression extends Expression
       postReplaceChild(oldChild, expression, ELSE_EXPRESSION_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
@@ -361,8 +355,8 @@ public class ConditionalExpression extends Expression
       return BASE_NODE_SIZE + 3 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

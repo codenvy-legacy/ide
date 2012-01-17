@@ -18,12 +18,11 @@ package org.eclipse.jdt.client.internal.compiler.parser;
  * which constant values reflect the latest parser generation state.
  */
 /**
- * Maps each terminal symbol in the java-grammar into a unique integer.
- * This integer is used to represent the terminal when computing a parsing action.
- *
- * Disclaimer : These constant values are generated automatically using a Java
- * grammar, therefore their actual values are subject to change if new keywords
- * were added to the language (for instance, 'assert' is a keyword in 1.4).
+ * Maps each terminal symbol in the java-grammar into a unique integer. This integer is used to represent the terminal when
+ * computing a parsing action.
+ * 
+ * Disclaimer : These constant values are generated automatically using a Java grammar, therefore their actual values are subject
+ * to change if new keywords were added to the language (for instance, 'assert' is a keyword in 1.4).
  */
 public interface TerminalTokens
 {

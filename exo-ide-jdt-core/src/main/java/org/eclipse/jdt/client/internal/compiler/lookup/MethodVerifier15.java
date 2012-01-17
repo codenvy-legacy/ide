@@ -94,7 +94,8 @@ class MethodVerifier15 extends MethodVerifier
          }
          else if (oneArgs[i].leafComponentType().isParameterizedTypeWithActualArguments())
          {
-            return false; // no remaining parameter can be a Parameterized type (if one has been converted then all RAW types must be converted)
+            return false; // no remaining parameter can be a Parameterized type (if one has been converted then all RAW types must
+                          // be converted)
          }
       }
       return true;
@@ -145,10 +146,10 @@ class MethodVerifier15 extends MethodVerifier
          return one.isEquivalentTo(two) && two.isEquivalentTo(one);
 
       // Can skip this since we resolved each method before comparing it, see computeSubstituteMethod()
-      //	if (one instanceof UnresolvedReferenceBinding)
-      //		return ((UnresolvedReferenceBinding) one).resolvedType == two;
-      //	if (two instanceof UnresolvedReferenceBinding)
-      //		return ((UnresolvedReferenceBinding) two).resolvedType == one;
+      // if (one instanceof UnresolvedReferenceBinding)
+      // return ((UnresolvedReferenceBinding) one).resolvedType == two;
+      // if (two instanceof UnresolvedReferenceBinding)
+      // return ((UnresolvedReferenceBinding) two).resolvedType == one;
       return false; // all other type bindings are identical
    }
 
@@ -254,34 +255,34 @@ class MethodVerifier15 extends MethodVerifier
       // sent from checkMethods() to compare a current method and an inherited method that are not 'equal'
 
       // error cases:
-      //		abstract class AA<E extends Comparable> { abstract void test(E element); }
-      //		class A extends AA<Integer> { public void test(Integer i) {} }
-      //		public class B extends A { public void test(Comparable i) {} }
-      //		interface I<E extends Comparable> { void test(E element); }
-      //		class A implements I<Integer> { public void test(Integer i) {} }
-      //		public class B extends A { public void test(Comparable i) {} }
+      // abstract class AA<E extends Comparable> { abstract void test(E element); }
+      // class A extends AA<Integer> { public void test(Integer i) {} }
+      // public class B extends A { public void test(Comparable i) {} }
+      // interface I<E extends Comparable> { void test(E element); }
+      // class A implements I<Integer> { public void test(Integer i) {} }
+      // public class B extends A { public void test(Comparable i) {} }
 
-      //		abstract class Y implements EqualityComparable<Integer>, Equivalent<String> {
-      //			public boolean equalTo(Integer other) { return true; }
-      //		}
-      //		interface Equivalent<T> { boolean equalTo(T other); }
-      //		interface EqualityComparable<T> { boolean equalTo(T other); }
+      // abstract class Y implements EqualityComparable<Integer>, Equivalent<String> {
+      // public boolean equalTo(Integer other) { return true; }
+      // }
+      // interface Equivalent<T> { boolean equalTo(T other); }
+      // interface EqualityComparable<T> { boolean equalTo(T other); }
 
-      //		class Y implements EqualityComparable, Equivalent<String>{
-      //			public boolean equalTo(String other) { return true; }
-      //			public boolean equalTo(Object other) { return true; }
-      //		}
-      //		interface Equivalent<T> { boolean equalTo(T other); }
-      //		interface EqualityComparable { boolean equalTo(Object other); }
+      // class Y implements EqualityComparable, Equivalent<String>{
+      // public boolean equalTo(String other) { return true; }
+      // public boolean equalTo(Object other) { return true; }
+      // }
+      // interface Equivalent<T> { boolean equalTo(T other); }
+      // interface EqualityComparable { boolean equalTo(Object other); }
 
-      //		class A<T extends Number> { void m(T t) {} }
-      //		class B<S extends Integer> extends A<S> { void m(S t) {}}
-      //		class D extends B<Integer> { void m(Number t) {}    void m(Integer t) {} }
+      // class A<T extends Number> { void m(T t) {} }
+      // class B<S extends Integer> extends A<S> { void m(S t) {}}
+      // class D extends B<Integer> { void m(Number t) {} void m(Integer t) {} }
 
-      //		inheritedMethods does not include I.test since A has a valid implementation
-      //		interface I<E extends Comparable<E>> { void test(E element); }
-      //		class A implements I<Integer> { public void test(Integer i) {} }
-      //		class B extends A { public void test(Comparable i) {} }
+      // inheritedMethods does not include I.test since A has a valid implementation
+      // interface I<E extends Comparable<E>> { void test(E element); }
+      // class A implements I<Integer> { public void test(Integer i) {} }
+      // class B extends A { public void test(Comparable i) {} }
 
       if (inheritedMethod.isStatic())
          return;
@@ -383,14 +384,14 @@ class MethodVerifier15 extends MethodVerifier
    {
 
       // the 2 inherited methods clash because of a parameterized type overrides a raw type
-      //		interface I { void foo(A a); }
-      //		class Y { void foo(A<String> a) {} }
-      //		abstract class X extends Y implements I { }
-      //		class A<T> {}
+      // interface I { void foo(A a); }
+      // class Y { void foo(A<String> a) {} }
+      // abstract class X extends Y implements I { }
+      // class A<T> {}
       // in this case the 2 inherited methods clash because of type variables
-      //		interface I { <T, S> void foo(T t); }
-      //		class Y { <T> void foo(T t) {} }
-      //		abstract class X extends Y implements I {}
+      // interface I { <T, S> void foo(T t); }
+      // class Y { <T> void foo(T t) {} }
+      // abstract class X extends Y implements I {}
 
       if (inheritedMethod.declaringClass.isInterface() || inheritedMethod.isStatic())
          return;
@@ -426,11 +427,12 @@ class MethodVerifier15 extends MethodVerifier
       if (areReturnTypesCompatible(method, otherMethod))
          return true;
 
-      /* We used to have some checks here to see if we would have already blamed the super type and if so avoid blaming
-         the current type again. I have gotten rid of them as they in fact short circuit error reporting in cases where
-         they should not. This means that occasionally we would report the error twice - the diagnostics is valid however,
-         albeit arguably redundant. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=334313. For an example of a test
-         where we do this extra reporting see org.eclipse.jdt.core.tests.compiler.regression.MethodVerifyTest.test159()
+      /*
+       * We used to have some checks here to see if we would have already blamed the super type and if so avoid blaming the
+       * current type again. I have gotten rid of them as they in fact short circuit error reporting in cases where they should
+       * not. This means that occasionally we would report the error twice - the diagnostics is valid however, albeit arguably
+       * redundant. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=334313. For an example of a test where we do this extra
+       * reporting see org.eclipse.jdt.core.tests.compiler.regression.MethodVerifyTest.test159()
        */
       // check to see if this is just a warning, if so report it & skip to next method
       if (isUnsafeReturnTypeOverride(method, otherMethod))
@@ -448,12 +450,13 @@ class MethodVerifier15 extends MethodVerifier
       CompilerOptions compilerOptions = this.type.scope.compilerOptions();
       if (compilerOptions.sourceLevel < ClassFileConstants.JDK1_5 // shouldn't whine at all
          || compilerOptions.reportUnavoidableGenericTypeProblems)
-      { // must have already whined 
+      { // must have already whined
          return;
       }
-      /* Code below is only for a method that does not override/implement a super type method. If it were to,
-         it would have been handled in checkAgainstInheritedMethods.
-      */
+      /*
+       * Code below is only for a method that does not override/implement a super type method. If it were to, it would have been
+       * handled in checkAgainstInheritedMethods.
+       */
       Object[] methodArray = this.currentMethods.valueTable;
       for (int s = methodArray.length; --s >= 0;)
       {
@@ -505,7 +508,7 @@ class MethodVerifier15 extends MethodVerifier
       CompilerOptions compilerOptions = this.type.scope.compilerOptions();
       if (compilerOptions.sourceLevel < ClassFileConstants.JDK1_5 // shouldn't whine at all
          || compilerOptions.reportUnavoidableGenericTypeProblems)
-      { // must have already whined 
+      { // must have already whined
          return;
       }
       AbstractMethodDeclaration methodDecl = currentMethod.sourceMethod();
@@ -545,7 +548,7 @@ class MethodVerifier15 extends MethodVerifier
          {
             if (inheritedMethodType.leafComponentType().isRawType())
             {
-               // 
+               //
             }
             else
             {
@@ -562,7 +565,9 @@ class MethodVerifier15 extends MethodVerifier
    void checkMethods()
    {
       boolean mustImplementAbstractMethods = mustImplementAbstractMethods();
-      boolean skipInheritedMethods = mustImplementAbstractMethods && canSkipInheritedMethods(); // have a single concrete superclass so only check overridden methods
+      boolean skipInheritedMethods = mustImplementAbstractMethods && canSkipInheritedMethods(); // have a single concrete
+                                                                                                // superclass so only check
+                                                                                                // overridden methods
       boolean isOrEnclosedByPrivateType = this.type.isOrEnclosedByPrivateType();
       char[][] methodSelectors = this.inheritedMethods.keyTable;
       nextSelector : for (int s = methodSelectors.length; --s >= 0;)
@@ -609,7 +614,8 @@ class MethodVerifier15 extends MethodVerifier
          int index = -1;
          int inheritedLength = inherited.length;
          MethodBinding[] matchingInherited = new MethodBinding[inheritedLength];
-         MethodBinding[] foundMatch = new MethodBinding[inheritedLength]; // null is no match, otherwise value is matching currentMethod
+         MethodBinding[] foundMatch = new MethodBinding[inheritedLength]; // null is no match, otherwise value is matching
+                                                                          // currentMethod
          if (current != null)
          {
             for (int i = 0, length1 = current.length; i < length1; i++)
@@ -642,9 +648,12 @@ class MethodVerifier15 extends MethodVerifier
                if (index >= 0)
                {
                   // see addtional comments in https://bugs.eclipse.org/bugs/show_bug.cgi?id=122881
-                  // if (index > 0 && currentMethod.declaringClass.isInterface()) // only check when inherited methods are from interfaces
-                  //	checkInheritedReturnTypes(matchingInherited, index + 1);
-                  checkAgainstInheritedMethods(currentMethod, matchingInherited, index + 1, nonMatchingInherited); // pass in the length of matching
+                  // if (index > 0 && currentMethod.declaringClass.isInterface()) // only check when inherited methods are from
+                  // interfaces
+                  // checkInheritedReturnTypes(matchingInherited, index + 1);
+                  checkAgainstInheritedMethods(currentMethod, matchingInherited, index + 1, nonMatchingInherited); // pass in the
+                                                                                                                   // length of
+                                                                                                                   // matching
                   while (index >= 0)
                      matchingInherited[index--] = null; // clear the contents of the matching methods
                }
@@ -898,7 +907,7 @@ class MethodVerifier15 extends MethodVerifier
       // https://bugs.eclipse.org/bugs/show_bug.cgi?id=322001
       // https://bugs.eclipse.org/bugs/show_bug.cgi?id=323693
       // When reporting a name clash between two inherited methods, we should not look for a
-      // signature clash, but instead should be looking for method descriptor clash. 
+      // signature clash, but instead should be looking for method descriptor clash.
       if (inherited.returnType.erasure() != otherInherited.returnType.erasure())
          return false;
       // skip it if otherInherited is defined by a subtype of inherited's declaringClass or vice versa.
@@ -937,7 +946,7 @@ class MethodVerifier15 extends MethodVerifier
 
          // https://bugs.eclipse.org/bugs/show_bug.cgi?id=315978 : we now defer this rather expensive
          // check to just before reporting (the incorrect) name clash. In the event there is no name
-         // clash to report to begin with (the common case), no penalty needs to be paid.  
+         // clash to report to begin with (the common case), no penalty needs to be paid.
          MethodBinding[] currentNamesakes = (MethodBinding[])this.currentMethods.get(inherited.selector);
          if (currentNamesakes.length > 1)
          { // we know it ought to at least one and that current is NOT the override
@@ -1096,7 +1105,8 @@ class MethodVerifier15 extends MethodVerifier
       MethodBinding originalInherited = inheritedMethod.original();
       TypeBinding originalInheritedReturnType = originalInherited.returnType.leafComponentType();
       if (originalInheritedReturnType.isParameterizedTypeWithActualArguments())
-         return !currentMethod.returnType.leafComponentType().isRawType(); // raw types issue a warning if inherited is parameterized
+         return !currentMethod.returnType.leafComponentType().isRawType(); // raw types issue a warning if inherited is
+                                                                           // parameterized
 
       TypeBinding currentReturnType = currentMethod.returnType.leafComponentType();
       switch (currentReturnType.kind())
@@ -1121,7 +1131,8 @@ class MethodVerifier15 extends MethodVerifier
          return false; // must hold onto ParameterizedMethod to see if a bridge method is necessary
 
       inheritedMethod = computeSubstituteMethod(inheritedMethod, existingMethod);
-      return inheritedMethod != null && inheritedMethod.returnType == existingMethod.returnType // keep around to produce bridge methods
+      return inheritedMethod != null && inheritedMethod.returnType == existingMethod.returnType // keep around to produce bridge
+                                                                                                // methods
          && doesMethodOverride(existingMethod, inheritedMethod);
    }
 
@@ -1169,7 +1180,8 @@ class MethodVerifier15 extends MethodVerifier
       {
          if (method.typeVariables != Binding.NO_TYPE_VARIABLES)
             return !((ParameterizedGenericMethodBinding)substituteMethod).isRaw;
-         // since substituteMethod has substituted type variables, method cannot have a generic signature AND no variables -> its a name clash if it does
+         // since substituteMethod has substituted type variables, method cannot have a generic signature AND no variables -> its
+         // a name clash if it does
          return !hasGenericParameter(method);
       }
 

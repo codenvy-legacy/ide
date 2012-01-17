@@ -19,11 +19,12 @@ import java.util.List;
  * <p>
  * Array types are expressed in a recursive manner, one dimension at a time.
  * </p>
+ * 
  * <pre>
  * ArrayType:
  *    Type <b>[</b> <b>]</b>
  * </pre>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -32,15 +33,14 @@ public class ArrayType extends Type
 
    /**
     * The "componentType" structural property of this node type (child type: {@link Type}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor COMPONENT_TYPE_PROPERTY = new ChildPropertyDescriptor(ArrayType.class,
       "componentType", Type.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -53,14 +53,11 @@ public class ArrayType extends Type
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -69,18 +66,17 @@ public class ArrayType extends Type
    }
 
    /**
-    * The component type; lazily initialized; defaults to a simple type with
-    * an unspecfied, but legal, name.
+    * The component type; lazily initialized; defaults to a simple type with an unspecfied, but legal, name.
     */
    private Type componentType = null;
 
    /**
-    * Creates a new unparented node for an array type owned by the given AST.
-    * By default, a 1-dimensional array of an unspecified simple type.
+    * Creates a new unparented node for an array type owned by the given AST. By default, a 1-dimensional array of an unspecified
+    * simple type.
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    ArrayType(AST ast)
@@ -88,16 +84,16 @@ public class ArrayType extends Type
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -117,16 +113,16 @@ public class ArrayType extends Type
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return ARRAY_TYPE;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -136,8 +132,8 @@ public class ArrayType extends Type
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -145,8 +141,8 @@ public class ArrayType extends Type
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -159,9 +155,8 @@ public class ArrayType extends Type
    }
 
    /**
-    * Returns the component type of this array type. The component type
-    * may be another array type.
-    *
+    * Returns the component type of this array type. The component type may be another array type.
+    * 
     * @return the component type node
     */
    public Type getComponentType()
@@ -183,16 +178,15 @@ public class ArrayType extends Type
    }
 
    /**
-    * Sets the component type of this array type. The component type
-    * may be another array type.
-    *
+    * Sets the component type of this array type. The component type may be another array type.
+    * 
     * @param componentType the component type
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setComponentType(Type componentType)
    {
@@ -207,13 +201,11 @@ public class ArrayType extends Type
    }
 
    /**
-    * Returns the element type of this array type. The element type is
-    * never an array type.
+    * Returns the element type of this array type. The element type is never an array type.
     * <p>
-    * This is a convenience method that descends a chain of nested array types
-    * until it reaches a non-array type.
+    * This is a convenience method that descends a chain of nested array types until it reaches a non-array type.
     * </p>
-    *
+    * 
     * @return the component type node
     */
    public Type getElementType()
@@ -229,10 +221,9 @@ public class ArrayType extends Type
    /**
     * Returns the number of dimensions in this array type.
     * <p>
-    * This is a convenience method that descends a chain of nested array types
-    * until it reaches a non-array type.
+    * This is a convenience method that descends a chain of nested array types until it reaches a non-array type.
     * </p>
-    *
+    * 
     * @return the number of dimensions (always positive)
     */
    public int getDimensions()
@@ -247,16 +238,16 @@ public class ArrayType extends Type
       return dimensions;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return BASE_NODE_SIZE + 1 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

@@ -16,6 +16,7 @@ import java.util.List;
 
 /**
  * Type node for an union type (added in JLS4 API).
+ * 
  * <pre>
  * UnionType:
  *    Type <b>|</b> Type { <b>|</b> Type }
@@ -23,7 +24,7 @@ import java.util.List;
  * <p>
  * This kind of node is used inside a catch clause's formal parameter type.
  * </p>
- *
+ * 
  * @since 3.7.1
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -37,9 +38,7 @@ public class UnionType extends Type
       "types", Type.class, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -52,13 +51,10 @@ public class UnionType extends Type
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     */
    public static List propertyDescriptors(int apiLevel)
    {
@@ -66,17 +62,17 @@ public class UnionType extends Type
    }
 
    /**
-    * The list of types (element type: {@link Type}).  Defaults to an empty list.
+    * The list of types (element type: {@link Type}). Defaults to an empty list.
     */
    private ASTNode.NodeList types = new ASTNode.NodeList(TYPES_PROPERTY);
 
    /**
-    * Creates a new unparented node for an union type owned by the given AST.
-    * By default, it has no types.<p>
+    * Creates a new unparented node for an union type owned by the given AST. By default, it has no types.
+    * <p>
     * 
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    UnionType(AST ast)
@@ -85,16 +81,16 @@ public class UnionType extends Type
       unsupportedIn2_3();
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
@@ -106,16 +102,16 @@ public class UnionType extends Type
       return super.internalGetChildListProperty(property);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return UNION_TYPE;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -125,8 +121,8 @@ public class UnionType extends Type
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -134,8 +130,8 @@ public class UnionType extends Type
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -149,12 +145,10 @@ public class UnionType extends Type
    }
 
    /**
-    * Returns the live ordered list of types in this union type.
-    * Adding and removing nodes from this list affects this node
-    * dynamically. All nodes in this list must be
-    * <code>Type</code>s; attempts to add any other
-    * type of node will trigger an exception.
-    *
+    * Returns the live ordered list of types in this union type. Adding and removing nodes from this list affects this node
+    * dynamically. All nodes in this list must be <code>Type</code>s; attempts to add any other type of node will trigger an
+    * exception.
+    * 
     * @return the live list of types in this union type (element type: {@link Type})
     */
    public List types()
@@ -162,16 +156,16 @@ public class UnionType extends Type
       return this.types;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return BASE_NODE_SIZE + 1 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

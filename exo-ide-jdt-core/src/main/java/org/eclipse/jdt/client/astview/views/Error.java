@@ -13,69 +13,82 @@ package org.eclipse.jdt.client.astview.views;
 
 import com.google.gwt.user.client.ui.Image;
 
+public class Error extends ExceptionAttribute
+{
 
+   private final Object fParent;
 
-public class Error extends ExceptionAttribute {
-	
-	private final Object fParent;
-	private final String fLabel;
-	
-	public Error(Object parent, String label, Throwable thrownException) {
-		fParent= parent;
-		fLabel= label;
-		fException= thrownException;
-	}
+   private final String fLabel;
 
-	public Object[] getChildren() {
-		return EMPTY;
-	}
+   public Error(Object parent, String label, Throwable thrownException)
+   {
+      fParent = parent;
+      fLabel = label;
+      fException = thrownException;
+   }
 
-	public Image getImage() {
-		return null;
-	}
+   public Object[] getChildren()
+   {
+      return EMPTY;
+   }
 
-	public String getLabel() {
-		return fLabel;
-	}
+   public Image getImage()
+   {
+      return null;
+   }
 
-	public Object getParent() {
-		return fParent;
-	}
-	
-	/*
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null || !obj.getClass().equals(getClass())) {
-			return false;
-		}
-		
-		Error other= (Error) obj;
-		if (fParent == null) {
-			if (other.fParent != null)
-				return false;
-		} else if (! fParent.equals(other.fParent)) {
-			return false;
-		}
-		
-		if (fLabel == null) {
-			if (other.fLabel != null)
-				return false;
-		} else if (! fLabel.equals(other.fLabel)) {
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/*
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode() {
-		return (fParent != null ? fParent.hashCode() : 0)
-				+ (fLabel != null ? fLabel.hashCode() : 0);
-	}
+   public String getLabel()
+   {
+      return fLabel;
+   }
+
+   public Object getParent()
+   {
+      return fParent;
+   }
+
+   /*
+    * @see java.lang.Object#equals(java.lang.Object)
+    */
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+         return true;
+      if (obj == null || !obj.getClass().equals(getClass()))
+      {
+         return false;
+      }
+
+      Error other = (Error)obj;
+      if (fParent == null)
+      {
+         if (other.fParent != null)
+            return false;
+      }
+      else if (!fParent.equals(other.fParent))
+      {
+         return false;
+      }
+
+      if (fLabel == null)
+      {
+         if (other.fLabel != null)
+            return false;
+      }
+      else if (!fLabel.equals(other.fLabel))
+      {
+         return false;
+      }
+
+      return true;
+   }
+
+   /*
+    * @see java.lang.Object#hashCode()
+    */
+   public int hashCode()
+   {
+      return (fParent != null ? fParent.hashCode() : 0) + (fLabel != null ? fLabel.hashCode() : 0);
+   }
 
 }

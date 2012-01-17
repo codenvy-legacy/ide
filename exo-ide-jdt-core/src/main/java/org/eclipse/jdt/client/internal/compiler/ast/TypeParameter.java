@@ -54,7 +54,7 @@ public class TypeParameter extends AbstractVariableDeclaration
       if (this.binding != null)
       {
          Binding existingType =
-            scope.parent.getBinding(this.name, Binding.TYPE, this, false/*do not resolve hidden field*/);
+            scope.parent.getBinding(this.name, Binding.TYPE, this, false/* do not resolve hidden field */);
          if (existingType != null && this.binding != existingType && existingType.isValidBinding()
             && (existingType.kind() != Binding.TYPE_PARAMETER || !staticContext))
          {
@@ -73,7 +73,9 @@ public class TypeParameter extends AbstractVariableDeclaration
       internalResolve(scope, scope.enclosingSourceType().isStatic());
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.internal.compiler.ast.AstNode#print(int, java.lang.StringBuffer)
     */
    public StringBuffer printStatement(int indent, StringBuffer output)
@@ -95,10 +97,10 @@ public class TypeParameter extends AbstractVariableDeclaration
       return output;
    }
 
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream)
-   //   {
-   //      // nothing to do
-   //   }
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   // {
+   // // nothing to do
+   // }
 
    public void traverse(ASTVisitor visitor, BlockScope scope)
    {

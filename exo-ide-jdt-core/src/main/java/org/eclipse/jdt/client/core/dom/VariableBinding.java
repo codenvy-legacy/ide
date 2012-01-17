@@ -90,8 +90,11 @@ class VariableBinding implements IVariableBinding
       return this.annotations = AnnotationBinding.NoAnnotations;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see IVariableBinding#getConstantValue()
+    * 
     * @since 3.0
     */
    public Object getConstantValue()
@@ -249,97 +252,98 @@ class VariableBinding implements IVariableBinding
       return this.type;
    }
 
-   //	private JavaElement getUnresolvedJavaElement() {
-   //		
-   //		if (isField()) {
-   //			if (this.resolver instanceof DefaultBindingResolver) {
-   //				DefaultBindingResolver defaultBindingResolver = (DefaultBindingResolver) this.resolver;
-   //				if (!defaultBindingResolver.fromJavaProject) return null;
-   //				return Util.getUnresolvedJavaElement(
-   //						(FieldBinding) this.binding,
-   //						defaultBindingResolver.getBindingsToNodesMap());
-   //			}
-   //			return null;
-   //		}
-   //		// local variable
-   //		if (!(this.resolver instanceof DefaultBindingResolver)) return null;
-   //		DefaultBindingResolver defaultBindingResolver = (DefaultBindingResolver) this.resolver;
-   //		if (!defaultBindingResolver.fromJavaProject) return null;
-   //		VariableDeclaration localVar = (VariableDeclaration) defaultBindingResolver.bindingsToAstNodes.get(this);
-   //		if (localVar == null) return null;
-   //		int nameStart;
-   //		int nameLength;
-   //		int sourceStart;
-   //		int sourceLength;
-   //		int modifiers = 0;
-   //		if (localVar instanceof SingleVariableDeclaration) {
-   //			sourceStart = localVar.getStartPosition();
-   //			sourceLength = localVar.getLength();
-   //			final SingleVariableDeclaration singleVariableDeclaration = (SingleVariableDeclaration) localVar;
-   //			SimpleName simpleName = singleVariableDeclaration.getName();
-   //			nameStart = simpleName.getStartPosition();
-   //			nameLength = simpleName.getLength();
-   //			modifiers = singleVariableDeclaration.getModifiers();
-   //		} else {
-   //			nameStart =  localVar.getStartPosition();
-   //			nameLength = localVar.getLength();
-   //			ASTNode node = localVar.getParent();
-   //			sourceStart = node.getStartPosition();
-   //			sourceLength = node.getLength();
-   //			VariableDeclarationFragment fragment = (VariableDeclarationFragment) localVar;
-   //			final ASTNode parent = fragment.getParent();
-   //			switch (parent.getNodeType()) {
-   //				case ASTNode.VARIABLE_DECLARATION_EXPRESSION :
-   //					VariableDeclarationExpression expression = (VariableDeclarationExpression) parent;
-   //					modifiers = expression.getModifiers();
-   //					break;
-   //				case ASTNode.VARIABLE_DECLARATION_STATEMENT :
-   //					VariableDeclarationStatement statement = (VariableDeclarationStatement) parent;
-   //					modifiers = statement.getModifiers();
-   //					break;
-   //				case ASTNode.FIELD_DECLARATION :
-   //					FieldDeclaration fieldDeclaration = (FieldDeclaration) parent;
-   //					modifiers = fieldDeclaration.getModifiers();
-   //					break;
-   //			}
-   //		}
-   //		int sourceEnd = sourceStart+sourceLength-1;
-   //		char[] typeSig = this.binding.type.genericTypeSignature();
-   //		JavaElement parent = null;
-   //		IMethodBinding declaringMethod = getDeclaringMethod();
-   //		final LocalVariableBinding localVariableBinding = (LocalVariableBinding) this.binding;
-   //		if (declaringMethod == null) {
-   //			ReferenceContext referenceContext = localVariableBinding.declaringScope.referenceContext();
-   //			if (referenceContext instanceof TypeDeclaration){
-   //				// Local variable is declared inside an initializer
-   //				TypeDeclaration typeDeclaration = (TypeDeclaration) referenceContext;
-   //				JavaElement typeHandle = null;
-   //				typeHandle = Util.getUnresolvedJavaElement(
-   //					typeDeclaration.binding,
-   //					defaultBindingResolver.getBindingsToNodesMap());
-   //				parent = Util.getUnresolvedJavaElement(sourceStart, sourceEnd, typeHandle);
-   //			} else {
-   //				return null;
-   //			}
-   //		} else {
-   //			parent = (JavaElement) declaringMethod.getJavaElement();
-   //		}
-   //		if (parent == null) return null;
-   //		return new LocalVariable(
-   //				parent,
-   //				localVar.getName().getIdentifier(),
-   //				sourceStart,
-   //				sourceEnd,
-   //				nameStart,
-   //				nameStart+nameLength-1,
-   //				new String(typeSig),
-   //				localVariableBinding.declaration.annotations,
-   //				modifiers,
-   //				(localVariableBinding.tagBits & TagBits.IsArgument) != 0);
-   //	}
+   // private JavaElement getUnresolvedJavaElement() {
+   //
+   // if (isField()) {
+   // if (this.resolver instanceof DefaultBindingResolver) {
+   // DefaultBindingResolver defaultBindingResolver = (DefaultBindingResolver) this.resolver;
+   // if (!defaultBindingResolver.fromJavaProject) return null;
+   // return Util.getUnresolvedJavaElement(
+   // (FieldBinding) this.binding,
+   // defaultBindingResolver.getBindingsToNodesMap());
+   // }
+   // return null;
+   // }
+   // // local variable
+   // if (!(this.resolver instanceof DefaultBindingResolver)) return null;
+   // DefaultBindingResolver defaultBindingResolver = (DefaultBindingResolver) this.resolver;
+   // if (!defaultBindingResolver.fromJavaProject) return null;
+   // VariableDeclaration localVar = (VariableDeclaration) defaultBindingResolver.bindingsToAstNodes.get(this);
+   // if (localVar == null) return null;
+   // int nameStart;
+   // int nameLength;
+   // int sourceStart;
+   // int sourceLength;
+   // int modifiers = 0;
+   // if (localVar instanceof SingleVariableDeclaration) {
+   // sourceStart = localVar.getStartPosition();
+   // sourceLength = localVar.getLength();
+   // final SingleVariableDeclaration singleVariableDeclaration = (SingleVariableDeclaration) localVar;
+   // SimpleName simpleName = singleVariableDeclaration.getName();
+   // nameStart = simpleName.getStartPosition();
+   // nameLength = simpleName.getLength();
+   // modifiers = singleVariableDeclaration.getModifiers();
+   // } else {
+   // nameStart = localVar.getStartPosition();
+   // nameLength = localVar.getLength();
+   // ASTNode node = localVar.getParent();
+   // sourceStart = node.getStartPosition();
+   // sourceLength = node.getLength();
+   // VariableDeclarationFragment fragment = (VariableDeclarationFragment) localVar;
+   // final ASTNode parent = fragment.getParent();
+   // switch (parent.getNodeType()) {
+   // case ASTNode.VARIABLE_DECLARATION_EXPRESSION :
+   // VariableDeclarationExpression expression = (VariableDeclarationExpression) parent;
+   // modifiers = expression.getModifiers();
+   // break;
+   // case ASTNode.VARIABLE_DECLARATION_STATEMENT :
+   // VariableDeclarationStatement statement = (VariableDeclarationStatement) parent;
+   // modifiers = statement.getModifiers();
+   // break;
+   // case ASTNode.FIELD_DECLARATION :
+   // FieldDeclaration fieldDeclaration = (FieldDeclaration) parent;
+   // modifiers = fieldDeclaration.getModifiers();
+   // break;
+   // }
+   // }
+   // int sourceEnd = sourceStart+sourceLength-1;
+   // char[] typeSig = this.binding.type.genericTypeSignature();
+   // JavaElement parent = null;
+   // IMethodBinding declaringMethod = getDeclaringMethod();
+   // final LocalVariableBinding localVariableBinding = (LocalVariableBinding) this.binding;
+   // if (declaringMethod == null) {
+   // ReferenceContext referenceContext = localVariableBinding.declaringScope.referenceContext();
+   // if (referenceContext instanceof TypeDeclaration){
+   // // Local variable is declared inside an initializer
+   // TypeDeclaration typeDeclaration = (TypeDeclaration) referenceContext;
+   // JavaElement typeHandle = null;
+   // typeHandle = Util.getUnresolvedJavaElement(
+   // typeDeclaration.binding,
+   // defaultBindingResolver.getBindingsToNodesMap());
+   // parent = Util.getUnresolvedJavaElement(sourceStart, sourceEnd, typeHandle);
+   // } else {
+   // return null;
+   // }
+   // } else {
+   // parent = (JavaElement) declaringMethod.getJavaElement();
+   // }
+   // if (parent == null) return null;
+   // return new LocalVariable(
+   // parent,
+   // localVar.getName().getIdentifier(),
+   // sourceStart,
+   // sourceEnd,
+   // nameStart,
+   // nameStart+nameLength-1,
+   // new String(typeSig),
+   // localVariableBinding.declaration.annotations,
+   // modifiers,
+   // (localVariableBinding.tagBits & TagBits.IsArgument) != 0);
+   // }
 
    /*
     * @see IVariableBinding#getVariableDeclaration()
+    * 
     * @since 3.1
     */
    public IVariableBinding getVariableDeclaration()
@@ -382,6 +386,7 @@ class VariableBinding implements IVariableBinding
 
    /*
     * @see IVariableBinding#isEnumConstant()
+    * 
     * @since 3.1
     */
    public boolean isEnumConstant()
@@ -391,6 +396,7 @@ class VariableBinding implements IVariableBinding
 
    /*
     * @see IBinding#isEqualTo(Binding)
+    * 
     * @since 3.1
     */
    public boolean isEqualTo(IBinding other)
@@ -463,6 +469,7 @@ class VariableBinding implements IVariableBinding
 
    /*
     * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.core.dom.IBinding#isRecovered()
     */
    public boolean isRecovered()
@@ -472,6 +479,7 @@ class VariableBinding implements IVariableBinding
 
    /*
     * For debugging purpose only.
+    * 
     * @see java.lang.Object#toString()
     */
    public String toString()

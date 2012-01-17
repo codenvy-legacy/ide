@@ -66,45 +66,45 @@ public class ThisReference extends Reference
       return true;
    }
 
-   //   /*
-   //    * @see Reference#generateAssignment(...)
-   //    */
-   //   public void generateAssignment(BlockScope currentScope, CodeStream codeStream, Assignment assignment,
-   //      boolean valueRequired)
-   //   {
+   // /*
+   // * @see Reference#generateAssignment(...)
+   // */
+   // public void generateAssignment(BlockScope currentScope, CodeStream codeStream, Assignment assignment,
+   // boolean valueRequired)
+   // {
    //
-   //      // this cannot be assigned
-   //   }
+   // // this cannot be assigned
+   // }
    //
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   //   {
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   // {
    //
-   //      int pc = codeStream.position;
-   //      if (valueRequired)
-   //         codeStream.aload_0();
-   //      if ((this.bits & IsImplicitThis) == 0)
-   //         codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // int pc = codeStream.position;
+   // if (valueRequired)
+   // codeStream.aload_0();
+   // if ((this.bits & IsImplicitThis) == 0)
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
    //
-   //   /*
-   //    * @see Reference#generateCompoundAssignment(...)
-   //    */
-   //   public void generateCompoundAssignment(BlockScope currentScope, CodeStream codeStream, Expression expression,
-   //      int operator, int assignmentImplicitConversion, boolean valueRequired)
-   //   {
+   // /*
+   // * @see Reference#generateCompoundAssignment(...)
+   // */
+   // public void generateCompoundAssignment(BlockScope currentScope, CodeStream codeStream, Expression expression,
+   // int operator, int assignmentImplicitConversion, boolean valueRequired)
+   // {
    //
-   //      // this cannot be assigned
-   //   }
+   // // this cannot be assigned
+   // }
 
-   //   /*
-   //    * @see org.eclipse.jdt.internal.compiler.ast.Reference#generatePostIncrement()
-   //    */
-   //   public void generatePostIncrement(BlockScope currentScope, CodeStream codeStream, CompoundAssignment postIncrement,
-   //      boolean valueRequired)
-   //   {
+   // /*
+   // * @see org.eclipse.jdt.internal.compiler.ast.Reference#generatePostIncrement()
+   // */
+   // public void generatePostIncrement(BlockScope currentScope, CodeStream codeStream, CompoundAssignment postIncrement,
+   // boolean valueRequired)
+   // {
    //
-   //      // this cannot be assigned
-   //   }
+   // // this cannot be assigned
+   // }
 
    public boolean isImplicitThis()
    {

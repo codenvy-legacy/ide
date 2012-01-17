@@ -265,8 +265,8 @@ public class SourceElementNotifier
    }
 
    /*
-    * Checks whether one of the annotations is the @Deprecated annotation
-    * (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=89807)
+    * Checks whether one of the annotations is the @Deprecated annotation (see
+    * https://bugs.eclipse.org/bugs/show_bug.cgi?id=89807)
     */
    private boolean hasDeprecatedAnnotation(Annotation[] annotations)
    {
@@ -560,8 +560,8 @@ public class SourceElementNotifier
    }
 
    /*
-   * Update the bodyStart of the corresponding parse node
-   */
+    * Update the bodyStart of the corresponding parse node
+    */
    protected void notifySourceElementRequestor(FieldDeclaration fieldDeclaration, TypeDeclaration declaringType)
    {
 

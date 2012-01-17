@@ -95,8 +95,8 @@ class ASTConverter
          sourceLevel = ClassFileConstants.JDK1_3;
       }
       this.scanner =
-         new Scanner(true /*comment*/, false /*whitespace*/, false /*nls*/, sourceLevel /*sourceLevel*/,
-            null /*taskTags*/, null/*taskPriorities*/, true/*taskCaseSensitive*/);
+         new Scanner(true /* comment */, false /* whitespace */, false /* nls */, sourceLevel /* sourceLevel */,
+            null /* taskTags */, null/* taskPriorities */, true/* taskCaseSensitive */);
       this.monitor = monitor;
       this.insideComments = JavaCore.ENABLED.equals(options.get(JavaCore.COMPILER_DOC_COMMENT_SUPPORT));
    }
@@ -406,7 +406,7 @@ class ASTConverter
             this.commentsTable[nbr++] = comment;
          }
       }
-      // Resize table if  necessary
+      // Resize table if necessary
       if (nbr < comments.length)
       {
          Comment[] newCommentsTable = new Comment[nbr];
@@ -954,8 +954,7 @@ class ASTConverter
       int typeEnd = type.getStartPosition() + type.getLength() - 1;
       int rightEnd = Math.max(typeEnd, argument.declarationSourceEnd);
       /*
-       * There is extra work to do to set the proper type positions
-       * See PR http://bugs.eclipse.org/bugs/show_bug.cgi?id=23284
+       * There is extra work to do to set the proper type positions See PR http://bugs.eclipse.org/bugs/show_bug.cgi?id=23284
        */
       if (isVarArgs)
       {
@@ -1155,8 +1154,7 @@ class ASTConverter
    }
 
    /*
-    * Internal use only
-    * Used to convert class body declarations
+    * Internal use only Used to convert class body declarations
     */
    public TypeDeclaration convert(org.eclipse.jdt.client.internal.compiler.ast.ASTNode[] nodes)
    {
@@ -1175,8 +1173,8 @@ class ASTConverter
             setModifiers(initializer, oldInitializer);
             initializer.setSourceRange(oldInitializer.declarationSourceStart, oldInitializer.sourceEnd
                - oldInitializer.declarationSourceStart + 1);
-            //				setJavaDocComment(initializer);
-            //				initializer.setJavadoc(convert(oldInitializer.javadoc));
+            // setJavaDocComment(initializer);
+            // initializer.setJavadoc(convert(oldInitializer.javadoc));
             convert(oldInitializer.javadoc, initializer);
             typeDecl.bodyDeclarations().add(initializer);
          }
@@ -3624,8 +3622,7 @@ class ASTConverter
       int typeEnd = type.getStartPosition() + type.getLength() - 1;
       int rightEnd = Math.max(typeEnd, localDeclaration.declarationSourceEnd);
       /*
-       * There is extra work to do to set the proper type positions
-       * See PR http://bugs.eclipse.org/bugs/show_bug.cgi?id=23284
+       * There is extra work to do to set the proper type positions See PR http://bugs.eclipse.org/bugs/show_bug.cgi?id=23284
        */
       setTypeForSingleVariableDeclaration(variableDecl, type, extraDimensions);
       variableDecl.setSourceRange(localDeclaration.declarationSourceStart, rightEnd
@@ -4738,9 +4735,8 @@ class ASTConverter
                   return;
                default :
                   /*
-                   * if we find something else than a whitespace or a comment,
-                   * then we reset the trimRigthPosition to the expression
-                   * source end.
+                   * if we find something else than a whitespace or a comment, then we reset the trimRigthPosition to the
+                   * expression source end.
                    */
                   trimRightPosition = removeBlankScanner.currentPosition - 1;
                   first = false;
@@ -4828,6 +4824,7 @@ class ASTConverter
 
    /**
     * This method is used to retrieve the end position of the block.
+    * 
     * @return the dimension found, -1 if none
     */
    protected int retrieveClosingAngleBracketPosition(int start)
@@ -4860,9 +4857,8 @@ class ASTConverter
    }
 
    /**
-    * This method is used to set the right end position for expression
-    * statement. The actual AST nodes don't include the trailing semicolon.
-    * This method fixes the length of the corresponding node.
+    * This method is used to set the right end position for expression statement. The actual AST nodes don't include the trailing
+    * semicolon. This method fixes the length of the corresponding node.
     */
    protected void retrieveColonPosition(ASTNode node)
    {
@@ -4917,6 +4913,7 @@ class ASTConverter
 
    /**
     * This method is used to retrieve the end position of the block.
+    * 
     * @return int the dimension found, -1 if none
     */
    protected int retrieveEndBlockPosition(int start, int end)
@@ -4930,10 +4927,10 @@ class ASTConverter
          {
             switch (token)
             {
-               case TerminalTokens.TokenNameLBRACE ://110
+               case TerminalTokens.TokenNameLBRACE :// 110
                   count++;
                   break;
-               case TerminalTokens.TokenNameRBRACE ://95
+               case TerminalTokens.TokenNameRBRACE :// 95
                   count--;
                   if (count == 0)
                   {
@@ -4975,10 +4972,9 @@ class ASTConverter
    }
 
    /**
-    * This method is used to retrieve the ending position for a type declaration when the dimension is right after the type
-    * name.
-    * For example:
-    *    int[] i; => return 5, but int i[] => return -1;
+    * This method is used to retrieve the ending position for a type declaration when the dimension is right after the type name.
+    * For example: int[] i; => return 5, but int i[] => return -1;
+    * 
     * @return int the dimension found
     */
    protected int retrieveEndOfDimensionsPosition(int start, int end)
@@ -4997,7 +4993,7 @@ class ASTConverter
                case TerminalTokens.TokenNameCOMMENT_JAVADOC :
                case TerminalTokens.TokenNameCOMMENT_LINE :
                   break;
-               case TerminalTokens.TokenNameRBRACKET ://166
+               case TerminalTokens.TokenNameRBRACKET :// 166
                   foundPosition = this.scanner.currentPosition - 1;
                   break;
                default :
@@ -5014,6 +5010,7 @@ class ASTConverter
 
    /**
     * This method is used to retrieve the position just before the left bracket.
+    * 
     * @return int the dimension found, -1 if none
     */
    protected int retrieveEndOfElementTypeNamePosition(int start, int end)
@@ -5048,6 +5045,7 @@ class ASTConverter
 
    /**
     * This method is used to retrieve the position after the right parenthesis.
+    * 
     * @return int the position found
     */
    protected int retrieveEndOfRightParenthesisPosition(int start, int end)
@@ -5073,11 +5071,9 @@ class ASTConverter
    }
 
    /**
-    * This method is used to retrieve the array dimension declared after the
-    * name of a local or a field declaration.
-    * For example:
-    *    int i, j[] = null, k[][] = {{}};
-    *    It should return 0 for i, 1 for j and 2 for k.
+    * This method is used to retrieve the array dimension declared after the name of a local or a field declaration. For example:
+    * int i, j[] = null, k[][] = {{}}; It should return 0 for i, 1 for j and 2 for k.
+    * 
     * @return int the dimension found
     */
    protected int retrieveExtraDimension(int start, int end)
@@ -5096,7 +5092,7 @@ class ASTConverter
                case TerminalTokens.TokenNameCOMMENT_JAVADOC :
                case TerminalTokens.TokenNameCOMMENT_LINE :
                   break;
-               case TerminalTokens.TokenNameRBRACKET ://166
+               case TerminalTokens.TokenNameRBRACKET :// 166
                   dimensions++;
                   break;
                default :
@@ -5136,6 +5132,7 @@ class ASTConverter
 
    /**
     * This method is used to retrieve the start position of the block.
+    * 
     * @return int the dimension found, -1 if none
     */
    protected int retrieveIdentifierEndPosition(int start, int end)
@@ -5148,7 +5145,7 @@ class ASTConverter
          {
             switch (token)
             {
-               case TerminalTokens.TokenNameIdentifier ://110
+               case TerminalTokens.TokenNameIdentifier :// 110
                   return this.scanner.getCurrentTokenEndPosition();
             }
          }
@@ -5162,6 +5159,7 @@ class ASTConverter
 
    /**
     * This method is used to retrieve position before the next comma or semi-colon.
+    * 
     * @param initializerEnd the given initializer end exclusive
     * @return int the position found.
     */
@@ -5237,6 +5235,7 @@ class ASTConverter
 
    /**
     * This method is used to retrieve position before the next right brace or semi-colon.
+    * 
     * @return int the position found.
     */
    protected int retrieveRightBraceOrSemiColonPosition(int start, int end)
@@ -5265,6 +5264,7 @@ class ASTConverter
 
    /**
     * This method is used to retrieve position before the next right brace or semi-colon.
+    * 
     * @return int the position found.
     */
    protected int retrieveRightBrace(int start, int end)
@@ -5291,6 +5291,7 @@ class ASTConverter
 
    /**
     * This method is used to retrieve the position of the right bracket.
+    * 
     * @return int the dimension found, -1 if none
     */
    protected int retrieveRightBracketPosition(int start, int end)
@@ -5324,6 +5325,7 @@ class ASTConverter
 
    /**
     * This method is used to retrieve the start position of the block.
+    * 
     * @return int the dimension found, -1 if none
     */
    protected int retrieveStartBlockPosition(int start, int end)
@@ -5336,7 +5338,7 @@ class ASTConverter
          {
             switch (token)
             {
-               case TerminalTokens.TokenNameLBRACE ://110
+               case TerminalTokens.TokenNameLBRACE :// 110
                   return this.scanner.startPosition;
             }
          }
@@ -5350,6 +5352,7 @@ class ASTConverter
 
    /**
     * This method is used to retrieve the starting position of the catch keyword.
+    * 
     * @return int the dimension found, -1 if none
     */
    protected int retrieveStartingCatchPosition(int start, int end)
@@ -5362,7 +5365,7 @@ class ASTConverter
          {
             switch (token)
             {
-               case TerminalTokens.TokenNamecatch ://225
+               case TerminalTokens.TokenNamecatch :// 225
                   return this.scanner.startPosition;
             }
          }

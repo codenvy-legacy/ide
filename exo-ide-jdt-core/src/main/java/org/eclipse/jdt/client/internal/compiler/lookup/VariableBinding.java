@@ -53,8 +53,9 @@ public abstract class VariableBinding extends Binding
       return (this.modifiers & ExtraCompilerModifiers.AccBlankFinal) != 0;
    }
 
-   /* Answer true if the receiver is final and cannot be changed
-   */
+   /*
+    * Answer true if the receiver is final and cannot be changed
+    */
 
    public final boolean isFinal()
    {

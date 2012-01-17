@@ -20,15 +20,15 @@ import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilation;
 import org.eclipse.jdt.client.internal.compiler.util.SimpleLookupTable;
 
 /*
-Not all fields defined by this type are initialized when it is created.
-Some are initialized only when needed.
+ Not all fields defined by this type are initialized when it is created.
+ Some are initialized only when needed.
 
-Accessors have been provided for some public fields so all TypeBindings have the same API...
-but access public fields directly whenever possible.
-Non-public fields have accessors which should be used everywhere you expect the field to be initialized.
+ Accessors have been provided for some public fields so all TypeBindings have the same API...
+ but access public fields directly whenever possible.
+ Non-public fields have accessors which should be used everywhere you expect the field to be initialized.
 
-null is NOT a valid value for a non-public field... it just means the field is not initialized.
-*/
+ null is NOT a valid value for a non-public field... it just means the field is not initialized.
+ */
 
 public class BinaryTypeBinding extends ReferenceBinding
 {
@@ -51,7 +51,8 @@ public class BinaryTypeBinding extends ReferenceBinding
    // For the link with the principle structure
    protected LookupEnvironment environment;
 
-   protected SimpleLookupTable storedAnnotations = null; // keys are this ReferenceBinding & its fields and methods, value is an AnnotationHolder
+   protected SimpleLookupTable storedAnnotations = null; // keys are this ReferenceBinding & its fields and methods, value is an
+                                                         // AnnotationHolder
 
    static Object convertMemberValue(Object binaryValue, LookupEnvironment env, char[][][] missingTypeNames)
    {
@@ -161,6 +162,7 @@ public class BinaryTypeBinding extends ReferenceBinding
 
    /**
     * Standard constructor for creating binary type bindings from binary models (classfiles)
+    * 
     * @param packageBinding
     * @param binaryType
     * @param environment
@@ -175,13 +177,21 @@ public class BinaryTypeBinding extends ReferenceBinding
       this.fPackage = packageBinding;
       this.fileName = binaryType.getFileName();
 
-      /* https://bugs.eclipse.org/bugs/show_bug.cgi?id=324850, even in a 1.4 project, we
-         must internalize type variables and observe any parameterization of super class
-         and/or super interfaces in order to be able to detect overriding in the presence
-         of generics.
+      /*
+       * https://bugs.eclipse.org/bugs/show_bug.cgi?id=324850, even in a 1.4 project, we must internalize type variables and
+       * observe any parameterization of super class and/or super interfaces in order to be able to detect overriding in the
+       * presence of generics.
        */
       char[] typeSignature = binaryType.getGenericSignature();
-      this.typeVariables = typeSignature != null && typeSignature.length > 0 && typeSignature[0] == '<' ? null // is initialized in cachePartsFrom (called from LookupEnvironment.createBinaryTypeFrom())... must set to null so isGenericType() answers true
+      this.typeVariables = typeSignature != null && typeSignature.length > 0 && typeSignature[0] == '<' ? null // is initialized
+                                                                                                               // in
+                                                                                                               // cachePartsFrom
+                                                                                                               // (called from
+                                                                                                               // LookupEnvironment.createBinaryTypeFrom())...
+                                                                                                               // must set to null
+                                                                                                               // so
+                                                                                                               // isGenericType()
+                                                                                                               // answers true
          : Binding.NO_TYPE_VARIABLES;
 
       this.sourceName = binaryType.getSourceName();
@@ -208,7 +218,10 @@ public class BinaryTypeBinding extends ReferenceBinding
       {
          // attempt to find the enclosing type if it exists in the cache (otherwise - resolve it when requested)
          this.enclosingType =
-            environment.getTypeFromConstantPoolName(enclosingTypeName, 0, -1, true, null /* could not be missing */); // pretend parameterized to avoid raw
+            environment.getTypeFromConstantPoolName(enclosingTypeName, 0, -1, true, null /* could not be missing */); // pretend
+                                                                                                                      // parameterized
+                                                                                                                      // to avoid
+                                                                                                                      // raw
          this.tagBits |= TagBits.MemberTypeMask; // must be a member type not a top-level or local type
          this.tagBits |= TagBits.HasUnresolvedEnclosingType;
          if (enclosingType().isStrictfp())
@@ -347,10 +360,10 @@ public class BinaryTypeBinding extends ReferenceBinding
          }
 
          long sourceLevel = this.environment.globalOptions.originalSourceLevel;
-         /* https://bugs.eclipse.org/bugs/show_bug.cgi?id=324850, even in a 1.4 project, we
-            must internalize type variables and observe any parameterization of super class
-            and/or super interfaces in order to be able to detect overriding in the presence
-            of generics.
+         /*
+          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=324850, even in a 1.4 project, we must internalize type variables and
+          * observe any parameterization of super class and/or super interfaces in order to be able to detect overriding in the
+          * presence of generics.
           */
          char[] typeSignature = binaryType.getGenericSignature(); // use generic signature even in 1.4
          this.tagBits |= binaryType.getTagBits();
@@ -533,10 +546,10 @@ public class BinaryTypeBinding extends ReferenceBinding
       TypeBinding returnType = null;
 
       final boolean use15specifics = sourceLevel >= ClassFileConstants.JDK1_5;
-      /* https://bugs.eclipse.org/bugs/show_bug.cgi?id=324850, Since a 1.4 project can have a 1.5
-         type as a super type and the 1.5 type could be generic, we must internalize usages of type
-         variables properly in order to be able to apply substitutions and thus be able to detect
-         overriding in the presence of generics. Seeing the erased form is not good enough.
+      /*
+       * https://bugs.eclipse.org/bugs/show_bug.cgi?id=324850, Since a 1.4 project can have a 1.5 type as a super type and the 1.5
+       * type could be generic, we must internalize usages of type variables properly in order to be able to apply substitutions
+       * and thus be able to detect overriding in the presence of generics. Seeing the erased form is not good enough.
        */
       char[] methodSignature = method.getGenericSignature(); // always use generic signature, even in 1.4
       if (methodSignature == null)
@@ -552,7 +565,7 @@ public class BinaryTypeBinding extends ReferenceBinding
                numOfParams++;
                if (nextChar == 'L')
                   while ((nextChar = methodDescriptor[++index]) != ';')
-                  {/*empty*/
+                  {/* empty */
                   }
             }
          }
@@ -583,11 +596,11 @@ public class BinaryTypeBinding extends ReferenceBinding
             for (int i = 0; i < numOfParams; i++)
             {
                while ((nextChar = methodDescriptor[++end]) == '[')
-               {/*empty*/
+               {/* empty */
                }
                if (nextChar == 'L')
                   while ((nextChar = methodDescriptor[++end]) != ';')
-                  {/*empty*/
+                  {/* empty */
                   }
 
                if (i >= startIndex)
@@ -620,12 +633,17 @@ public class BinaryTypeBinding extends ReferenceBinding
 
          if (!method.isConstructor())
             returnType =
-               this.environment.getTypeFromSignature(methodDescriptor, index + 1, -1, false, this, missingTypeNames); // index is currently pointing at the ')'
+               this.environment.getTypeFromSignature(methodDescriptor, index + 1, -1, false, this, missingTypeNames); // index is
+                                                                                                                      // currently
+                                                                                                                      // pointing
+                                                                                                                      // at the
+                                                                                                                      // ')'
       }
       else
       {
          methodModifiers |= ExtraCompilerModifiers.AccGenericSignature;
-         // MethodTypeSignature = ParameterPart(optional) '(' TypeSignatures ')' return_typeSignature ['^' TypeSignature (optional)]
+         // MethodTypeSignature = ParameterPart(optional) '(' TypeSignatures ')' return_typeSignature ['^' TypeSignature
+         // (optional)]
          SignatureWrapper wrapper = new SignatureWrapper(methodSignature, use15specifics);
          if (wrapper.signature[wrapper.start] == '<')
          {
@@ -834,10 +852,11 @@ public class BinaryTypeBinding extends ReferenceBinding
       return result;
    }
 
-   /* Answer the receiver's enclosing type... null if the receiver is a top level type.
-   *
-   * NOTE: enclosingType of a binary type is resolved when needed
-   */
+   /*
+    * Answer the receiver's enclosing type... null if the receiver is a top level type.
+    * 
+    * NOTE: enclosingType of a binary type is resolved when needed
+    */
    public ReferenceBinding enclosingType()
    {
       if ((this.tagBits & TagBits.HasUnresolvedEnclosingType) == 0)
@@ -890,7 +909,7 @@ public class BinaryTypeBinding extends ReferenceBinding
             numOfParams++;
             if (nextChar == 'L')
                while ((nextChar = methodDescriptor[++index]) != ';')
-               {/*empty*/
+               {/* empty */
                }
          }
       }
@@ -902,11 +921,11 @@ public class BinaryTypeBinding extends ReferenceBinding
          for (int i = 0; i < numOfParams; i++)
          {
             while ((nextChar = methodDescriptor[++end]) == '[')
-            {/*empty*/
+            {/* empty */
             }
             if (nextChar == 'L')
                while ((nextChar = methodDescriptor[++end]) != ';')
-               {/*empty*/
+               {/* empty */
                }
 
             TypeBinding param =
@@ -951,7 +970,7 @@ public class BinaryTypeBinding extends ReferenceBinding
       return computeGenericTypeSignature(this.typeVariables);
    }
 
-   //NOTE: the return type, arg & exception types of each method of a binary type are resolved when needed
+   // NOTE: the return type, arg & exception types of each method of a binary type are resolved when needed
    public MethodBinding getExactConstructor(TypeBinding[] argumentTypes)
    {
 
@@ -984,8 +1003,8 @@ public class BinaryTypeBinding extends ReferenceBinding
       return null;
    }
 
-   //NOTE: the return type, arg & exception types of each method of a binary type are resolved when needed
-   //searches up the hierarchy as long as no potential (but not exact) match was found.
+   // NOTE: the return type, arg & exception types of each method of a binary type are resolved when needed
+   // searches up the hierarchy as long as no potential (but not exact) match was found.
    public MethodBinding getExactMethod(char[] selector, TypeBinding[] argumentTypes, CompilationUnitScope refScope)
    {
       // sender from refScope calls recordTypeReference(this)
@@ -1041,7 +1060,7 @@ public class BinaryTypeBinding extends ReferenceBinding
       return null;
    }
 
-   //NOTE: the type of a field of a binary type is resolved when needed
+   // NOTE: the type of a field of a binary type is resolved when needed
    public FieldBinding getField(char[] fieldName, boolean needResolve)
    {
       // lazily sort fields
@@ -1057,7 +1076,7 @@ public class BinaryTypeBinding extends ReferenceBinding
    }
 
    /**
-    *  Rewrite of default getMemberType to avoid resolving eagerly all member types when one is requested
+    * Rewrite of default getMemberType to avoid resolving eagerly all member types when one is requested
     */
    public ReferenceBinding getMemberType(char[] typeName)
    {
@@ -1070,8 +1089,11 @@ public class BinaryTypeBinding extends ReferenceBinding
             int prefixLength = this.compoundName[this.compoundName.length - 1].length + 1; // enclosing$
             if (name.length == (prefixLength + typeName.length)) // enclosing $ typeName
                if (CharOperation.fragmentEquals(typeName, name, prefixLength, true)) // only check trailing portion
-                  return this.memberTypes[i] =
-                     (ReferenceBinding)resolveType(memberType, this.environment, false /* no raw conversion for now */);
+                  return this.memberTypes[i] = (ReferenceBinding)resolveType(memberType, this.environment, false /*
+                                                                                                                  * no raw
+                                                                                                                  * conversion for
+                                                                                                                  * now
+                                                                                                                  */);
          }
          else if (CharOperation.equals(typeName, memberType.sourceName))
          {
@@ -1191,7 +1213,7 @@ public class BinaryTypeBinding extends ReferenceBinding
       SignatureWrapper wrapper, char[][][] missingTypeNames)
    {
       // ParameterSignature = Identifier ':' TypeSignature
-      //   or Identifier ':' TypeSignature(optional) InterfaceBound(s)
+      // or Identifier ':' TypeSignature(optional) InterfaceBound(s)
       // InterfaceBound = ':' TypeSignature
       int colon = CharOperation.indexOf(':', wrapper.signature, wrapper.start);
       wrapper.start = colon + 1; // skip name + ':'
@@ -1243,8 +1265,7 @@ public class BinaryTypeBinding extends ReferenceBinding
    }
 
    /**
-    * Returns true if a type is identical to another one,
-    * or for generic types, true if compared to its raw type.
+    * Returns true if a type is identical to another one, or for generic types, true if compared to its raw type.
     */
    public boolean isEquivalentTo(TypeBinding otherType)
    {
@@ -1258,13 +1279,14 @@ public class BinaryTypeBinding extends ReferenceBinding
          case Binding.INTERSECTION_TYPE :
             return ((WildcardBinding)otherType).boundCheck(this);
          case Binding.PARAMETERIZED_TYPE :
-            /* With the hybrid 1.4/1.5+ projects modes, while establishing type equivalence, we need to
-                be prepared for a type such as Map appearing in one of three forms: As (a) a ParameterizedTypeBinding 
-                e.g Map<String, String>, (b) as RawTypeBinding Map#RAW and finally (c) as a BinaryTypeBinding 
-                When the usage of a type lacks type parameters, whether we land up with the raw form or not depends
-                on whether the underlying type was "seen to be" a generic type in the particular build environment or
-                not. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=186565 && https://bugs.eclipse.org/bugs/show_bug.cgi?id=328827 
-            */
+            /*
+             * With the hybrid 1.4/1.5+ projects modes, while establishing type equivalence, we need to be prepared for a type
+             * such as Map appearing in one of three forms: As (a) a ParameterizedTypeBinding e.g Map<String, String>, (b) as
+             * RawTypeBinding Map#RAW and finally (c) as a BinaryTypeBinding When the usage of a type lacks type parameters,
+             * whether we land up with the raw form or not depends on whether the underlying type was "seen to be" a generic type
+             * in the particular build environment or not. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=186565 &&
+             * https://bugs.eclipse.org/bugs/show_bug.cgi?id=328827
+             */
          case Binding.RAW_TYPE :
             return otherType.erasure() == this;
       }
@@ -1295,8 +1317,10 @@ public class BinaryTypeBinding extends ReferenceBinding
          return this.memberTypes;
 
       for (int i = this.memberTypes.length; --i >= 0;)
-         this.memberTypes[i] =
-            (ReferenceBinding)resolveType(this.memberTypes[i], this.environment, false /* no raw conversion for now */);
+         this.memberTypes[i] = (ReferenceBinding)resolveType(this.memberTypes[i], this.environment, false /*
+                                                                                                           * no raw conversion for
+                                                                                                           * now
+                                                                                                           */);
       this.tagBits &= ~TagBits.HasUnresolvedMemberTypes;
       return this.memberTypes;
    }
@@ -1394,10 +1418,11 @@ public class BinaryTypeBinding extends ReferenceBinding
       return this.storedAnnotations;
    }
 
-   /* Answer the receiver's superclass... null if the receiver is Object or an interface.
-   *
-   * NOTE: superclass of a binary type is resolved when needed
-   */
+   /*
+    * Answer the receiver's superclass... null if the receiver is Object or an interface.
+    * 
+    * NOTE: superclass of a binary type is resolved when needed
+    */
    public ReferenceBinding superclass()
    {
       if ((this.tagBits & TagBits.HasUnresolvedSuperclass) == 0)

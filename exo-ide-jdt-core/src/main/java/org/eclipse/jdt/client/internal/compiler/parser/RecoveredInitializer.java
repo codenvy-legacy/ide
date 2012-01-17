@@ -58,10 +58,10 @@ public class RecoveredInitializer extends RecoveredField implements TerminalToke
    public RecoveredElement add(Block nestedBlockDeclaration, int bracketBalanceValue)
    {
 
-      /* default behavior is to delegate recording to parent if any,
-      do not consider elements passed the known end (if set)
-      it must be belonging to an enclosing element
-      */
+      /*
+       * default behavior is to delegate recording to parent if any, do not consider elements passed the known end (if set) it
+       * must be belonging to an enclosing element
+       */
       if (this.fieldDeclaration.declarationSourceEnd > 0
          && nestedBlockDeclaration.sourceStart > this.fieldDeclaration.declarationSourceEnd)
       {
@@ -102,10 +102,10 @@ public class RecoveredInitializer extends RecoveredField implements TerminalToke
          return this.parent.add(newFieldDeclaration, bracketBalanceValue);
       }
 
-      /* default behavior is to delegate recording to parent if any,
-      do not consider elements passed the known end (if set)
-      it must be belonging to an enclosing element
-      */
+      /*
+       * default behavior is to delegate recording to parent if any, do not consider elements passed the known end (if set) it
+       * must be belonging to an enclosing element
+       */
       if (this.fieldDeclaration.declarationSourceEnd > 0
          && newFieldDeclaration.declarationSourceStart > this.fieldDeclaration.declarationSourceEnd)
       {
@@ -123,8 +123,9 @@ public class RecoveredInitializer extends RecoveredField implements TerminalToke
    public RecoveredElement add(LocalDeclaration localDeclaration, int bracketBalanceValue)
    {
 
-      /* do not consider a type starting passed the type end (if set)
-      	it must be belonging to an enclosing type */
+      /*
+       * do not consider a type starting passed the type end (if set) it must be belonging to an enclosing type
+       */
       if (this.fieldDeclaration.declarationSourceEnd != 0
          && localDeclaration.declarationSourceStart > this.fieldDeclaration.declarationSourceEnd)
       {
@@ -152,8 +153,9 @@ public class RecoveredInitializer extends RecoveredField implements TerminalToke
    public RecoveredElement add(Statement statement, int bracketBalanceValue)
    {
 
-      /* do not consider a statement starting passed the initializer end (if set)
-      	it must be belonging to an enclosing type */
+      /*
+       * do not consider a statement starting passed the initializer end (if set) it must be belonging to an enclosing type
+       */
       if (this.fieldDeclaration.declarationSourceEnd != 0
          && statement.sourceStart > this.fieldDeclaration.declarationSourceEnd)
       {
@@ -180,8 +182,9 @@ public class RecoveredInitializer extends RecoveredField implements TerminalToke
    public RecoveredElement add(TypeDeclaration typeDeclaration, int bracketBalanceValue)
    {
 
-      /* do not consider a type starting passed the type end (if set)
-      	it must be belonging to an enclosing type */
+      /*
+       * do not consider a type starting passed the type end (if set) it must be belonging to an enclosing type
+       */
       if (this.fieldDeclaration.declarationSourceEnd != 0
          && typeDeclaration.declarationSourceStart > this.fieldDeclaration.declarationSourceEnd)
       {
@@ -330,8 +333,7 @@ public class RecoveredInitializer extends RecoveredField implements TerminalToke
    }
 
    /*
-    * A closing brace got consumed, might have closed the current element,
-    * in which case both the currentElement is exited
+    * A closing brace got consumed, might have closed the current element, in which case both the currentElement is exited
     */
    public RecoveredElement updateOnClosingBrace(int braceStart, int braceEnd)
    {
@@ -344,8 +346,8 @@ public class RecoveredInitializer extends RecoveredField implements TerminalToke
    }
 
    /*
-    * An opening brace got consumed, might be the expected opening one of the current element,
-    * in which case the bodyStart is updated.
+    * An opening brace got consumed, might be the expected opening one of the current element, in which case the bodyStart is
+    * updated.
     */
    public RecoveredElement updateOnOpeningBrace(int braceStart, int braceEnd)
    {

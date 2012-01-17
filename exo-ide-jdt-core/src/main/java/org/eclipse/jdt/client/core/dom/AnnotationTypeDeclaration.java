@@ -15,10 +15,11 @@ import java.util.List;
 
 /**
  * Annotation type declaration AST node type (added in JLS3 API).
+ * 
  * <pre>
  * AnnotationTypeDeclaration:
  *   [ Javadoc ] { ExtendedModifier } <b>@</b> <b>interface</b> Identifier
- *		<b>{</b> { AnnotationTypeBodyDeclaration | <b>;</b> } <b>}</b>
+ * 	<b>{</b> { AnnotationTypeBodyDeclaration | <b>;</b> } <b>}</b>
  * AnnotationTypeBodyDeclaration:
  *   AnnotationTypeMemberDeclaration
  *   FieldDeclaration
@@ -27,19 +28,15 @@ import java.util.List;
  *   AnnotationTypeDeclaration
  * </pre>
  * <p>
- * The thing to note is that method declaration are replaced
- * by annotation type member declarations in this context.
+ * The thing to note is that method declaration are replaced by annotation type member declarations in this context.
  * </p>
  * <p>
- * When a Javadoc comment is present, the source
- * range begins with the first character of the "/**" comment delimiter.
- * When there is no Javadoc comment, the source range begins with the first
- * character of the first modifier keyword (if modifiers), or the
- * first character of the "@interface" (if no
- * modifiers). The source range extends through the last character of the "}"
- * token following the body declarations.
+ * When a Javadoc comment is present, the source range begins with the first character of the "/**" comment delimiter. When there
+ * is no Javadoc comment, the source range begins with the first character of the first modifier keyword (if modifiers), or the
+ * first character of the "@interface" (if no modifiers). The source range extends through the last character of the "}" token
+ * following the body declarations.
  * </p>
- *
+ * 
  * @since 3.1
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -71,9 +68,7 @@ public class AnnotationTypeDeclaration extends AbstractTypeDeclaration
       internalBodyDeclarationPropertyFactory(AnnotationTypeDeclaration.class);
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -89,14 +84,11 @@ public class AnnotationTypeDeclaration extends AbstractTypeDeclaration
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     */
    public static List propertyDescriptors(int apiLevel)
    {
@@ -104,16 +96,13 @@ public class AnnotationTypeDeclaration extends AbstractTypeDeclaration
    }
 
    /**
-    * Creates a new AST node for an annotation type declaration owned by the given
-    * AST. By default, the type declaration is for an annotation
-    * type of an unspecified, but legal, name; no modifiers; no javadoc;
-    * and an empty list of body declarations.
+    * Creates a new AST node for an annotation type declaration owned by the given AST. By default, the type declaration is for an
+    * annotation type of an unspecified, but legal, name; no modifiers; no javadoc; and an empty list of body declarations.
     * <p>
-    * N.B. This constructor is package-private; all subclasses must be
-    * declared in the same package; clients are unable to declare
+    * N.B. This constructor is package-private; all subclasses must be declared in the same package; clients are unable to declare
     * additional subclasses.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    AnnotationTypeDeclaration(AST ast)
@@ -122,16 +111,16 @@ public class AnnotationTypeDeclaration extends AbstractTypeDeclaration
       unsupportedIn2();
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -163,8 +152,8 @@ public class AnnotationTypeDeclaration extends AbstractTypeDeclaration
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
@@ -180,24 +169,24 @@ public class AnnotationTypeDeclaration extends AbstractTypeDeclaration
       return super.internalGetChildListProperty(property);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on BodyDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on BodyDeclaration.
     */
    final ChildPropertyDescriptor internalJavadocProperty()
    {
       return JAVADOC_PROPERTY;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on BodyDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on BodyDeclaration.
     */
    final ChildListPropertyDescriptor internalModifiers2Property()
    {
       return MODIFIERS2_PROPERTY;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on BodyDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on BodyDeclaration.
     */
    final SimplePropertyDescriptor internalModifiersProperty()
    {
@@ -205,32 +194,32 @@ public class AnnotationTypeDeclaration extends AbstractTypeDeclaration
       return null;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on AbstractTypeDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on AbstractTypeDeclaration.
     */
    final ChildPropertyDescriptor internalNameProperty()
    {
       return NAME_PROPERTY;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on AbstractTypeDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on AbstractTypeDeclaration.
     */
    final ChildListPropertyDescriptor internalBodyDeclarationsProperty()
    {
       return BODY_DECLARATIONS_PROPERTY;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return ANNOTATION_TYPE_DECLARATION;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -243,8 +232,8 @@ public class AnnotationTypeDeclaration extends AbstractTypeDeclaration
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -252,8 +241,8 @@ public class AnnotationTypeDeclaration extends AbstractTypeDeclaration
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -269,24 +258,24 @@ public class AnnotationTypeDeclaration extends AbstractTypeDeclaration
       visitor.endVisit(this);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on AsbtractTypeDeclaration.
+   /*
+    * (omit javadoc for this method) Method declared on AsbtractTypeDeclaration.
     */
    ITypeBinding internalResolveBinding()
    {
       return this.ast.getBindingResolver().resolveType(this);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return super.memSize();
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

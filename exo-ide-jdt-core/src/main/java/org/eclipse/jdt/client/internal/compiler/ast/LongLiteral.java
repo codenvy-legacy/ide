@@ -119,7 +119,7 @@ public class LongLiteral extends NumberLiteral
          case 2 :
             if ((length - 2) > 64)
             { // remove 0b or 0B
-               return; /*constant stays null*/
+               return; /* constant stays null */
             }
             computeValue(token, length, radix, j);
             break;
@@ -139,7 +139,7 @@ public class LongLiteral extends NumberLiteral
                || (tokenLength == DECIMAL_MAX_VALUE.length && CharOperation.compareTo(token, DECIMAL_MAX_VALUE, 0,
                   length) > 0))
             {
-               return; /*constant stays null*/
+               return; /* constant stays null */
             }
             computeValue(token, length, radix, j);
             break;
@@ -148,7 +148,7 @@ public class LongLiteral extends NumberLiteral
             {
                if (tokenLength == 24 && token[j] > '1')
                {
-                  return; /*constant stays null*/
+                  return; /* constant stays null */
                }
                if (CharOperation.equals(token, OCTAL_MINUS_ONE_VALUE))
                {
@@ -169,29 +169,29 @@ public class LongLiteral extends NumberLiteral
       {
          if ((digitValue = ScannerHelper.digit(token[j++], radix)) < 0)
          {
-            return; /*constant stays null*/
+            return; /* constant stays null */
          }
          computedValue = (computedValue * radix) + digitValue;
       }
       this.constant = LongConstant.fromValue(computedValue);
    }
 
-   //   /**
-   //    * Code generation for long literal
-   //    *
-   //    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   //    * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   //    * @param valueRequired boolean
-   //    */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   //   {
-   //      int pc = codeStream.position;
-   //      if (valueRequired)
-   //      {
-   //         codeStream.generateConstant(this.constant, this.implicitConversion);
-   //      }
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // /**
+   // * Code generation for long literal
+   // *
+   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+   // * @param valueRequired boolean
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   // {
+   // int pc = codeStream.position;
+   // if (valueRequired)
+   // {
+   // codeStream.generateConstant(this.constant, this.implicitConversion);
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    public TypeBinding literalType(BlockScope scope)
    {

@@ -41,7 +41,7 @@ public class AND_AND_Expression extends BinaryExpression
       {
          // TRUE && anything
          // need to be careful of scenario:
-         //  (x && y) && !z, if passing the left info to the right, it would
+         // (x && y) && !z, if passing the left info to the right, it would
          // be swapped by the !
          FlowInfo mergedInfo = this.left.analyseCode(currentScope, flowContext, flowInfo).unconditionalInits();
          mergedInfo = this.right.analyseCode(currentScope, flowContext, mergedInfo);
@@ -51,7 +51,7 @@ public class AND_AND_Expression extends BinaryExpression
 
       FlowInfo leftInfo = this.left.analyseCode(currentScope, flowContext, flowInfo);
       // need to be careful of scenario:
-      //  (x && y) && !z, if passing the left info to the right, it would be
+      // (x && y) && !z, if passing the left info to the right, it would be
       // swapped by the !
       FlowInfo rightInfo = leftInfo.initsWhenTrue().unconditionalCopy();
       this.rightInitStateIndex = currentScope.methodScope().recordInitializationStates(rightInfo);
@@ -84,243 +84,243 @@ public class AND_AND_Expression extends BinaryExpression
       return mergedInfo;
    }
 
-   //   /**
-   //    * Code generation for a binary operation
-   //    */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   //   {
+   // /**
+   // * Code generation for a binary operation
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   // {
    //
-   //      int pc = codeStream.position;
-   //      if (this.constant != Constant.NotAConstant)
-   //      {
-   //         // inlined value
-   //         if (valueRequired)
-   //            codeStream.generateConstant(this.constant, this.implicitConversion);
-   //         codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //         return;
-   //      }
-   //      Constant cst = this.right.constant;
-   //      if (cst != Constant.NotAConstant)
-   //      {
-   //         // <expr> && true --> <expr>
-   //         if (cst.booleanValue() == true)
-   //         {
-   //            this.left.generateCode(currentScope, codeStream, valueRequired);
-   //         }
-   //         else
-   //         {
-   //            // <expr> && false --> false
-   //            this.left.generateCode(currentScope, codeStream, false);
-   //            if (valueRequired)
-   //               codeStream.iconst_0();
-   //         }
-   //         if (this.mergedInitStateIndex != -1)
-   //         {
-   //            codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //         }
-   //         codeStream.generateImplicitConversion(this.implicitConversion);
-   //         codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
-   //         codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //         return;
-   //      }
+   // int pc = codeStream.position;
+   // if (this.constant != Constant.NotAConstant)
+   // {
+   // // inlined value
+   // if (valueRequired)
+   // codeStream.generateConstant(this.constant, this.implicitConversion);
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // return;
+   // }
+   // Constant cst = this.right.constant;
+   // if (cst != Constant.NotAConstant)
+   // {
+   // // <expr> && true --> <expr>
+   // if (cst.booleanValue() == true)
+   // {
+   // this.left.generateCode(currentScope, codeStream, valueRequired);
+   // }
+   // else
+   // {
+   // // <expr> && false --> false
+   // this.left.generateCode(currentScope, codeStream, false);
+   // if (valueRequired)
+   // codeStream.iconst_0();
+   // }
+   // if (this.mergedInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // }
+   // codeStream.generateImplicitConversion(this.implicitConversion);
+   // codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // return;
+   // }
    //
-   //      BranchLabel falseLabel = new BranchLabel(codeStream), endLabel;
-   //      cst = this.left.optimizedBooleanConstant();
-   //      boolean leftIsConst = cst != Constant.NotAConstant;
-   //      boolean leftIsTrue = leftIsConst && cst.booleanValue() == true;
+   // BranchLabel falseLabel = new BranchLabel(codeStream), endLabel;
+   // cst = this.left.optimizedBooleanConstant();
+   // boolean leftIsConst = cst != Constant.NotAConstant;
+   // boolean leftIsTrue = leftIsConst && cst.booleanValue() == true;
    //
-   //      cst = this.right.optimizedBooleanConstant();
-   //      boolean rightIsConst = cst != Constant.NotAConstant;
-   //      boolean rightIsTrue = rightIsConst && cst.booleanValue() == true;
+   // cst = this.right.optimizedBooleanConstant();
+   // boolean rightIsConst = cst != Constant.NotAConstant;
+   // boolean rightIsTrue = rightIsConst && cst.booleanValue() == true;
    //
-   //      generateOperands :
-   //      {
-   //         if (leftIsConst)
-   //         {
-   //            this.left.generateCode(currentScope, codeStream, false);
-   //            if (!leftIsTrue)
-   //            {
-   //               break generateOperands; // no need to generate right operand
-   //            }
-   //         }
-   //         else
-   //         {
-   //            this.left.generateOptimizedBoolean(currentScope, codeStream, null, falseLabel, true);
-   //            // need value, e.g. if (a == 1 && ((b = 2) > 0)) {} -> shouldn't initialize 'b' if a!=1
-   //         }
-   //         if (this.rightInitStateIndex != -1)
-   //         {
-   //            codeStream.addDefinitelyAssignedVariables(currentScope, this.rightInitStateIndex);
-   //         }
-   //         if (rightIsConst)
-   //         {
-   //            this.right.generateCode(currentScope, codeStream, false);
-   //         }
-   //         else
-   //         {
-   //            this.right.generateOptimizedBoolean(currentScope, codeStream, null, falseLabel, valueRequired);
-   //         }
-   //      }
-   //      if (this.mergedInitStateIndex != -1)
-   //      {
-   //         codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //      }
-   //      /*
-   //       * improving code gen for such a case: boolean b = i < 0 && false since
-   //       * the label has never been used, we have the inlined value on the
-   //       * stack.
-   //       */
-   //      if (valueRequired)
-   //      {
-   //         if (leftIsConst && !leftIsTrue)
-   //         {
-   //            codeStream.iconst_0();
-   //            codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
-   //         }
-   //         else
-   //         {
-   //            if (rightIsConst && !rightIsTrue)
-   //            {
-   //               codeStream.iconst_0();
-   //               codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
-   //            }
-   //            else
-   //            {
-   //               codeStream.iconst_1();
-   //            }
-   //            if (falseLabel.forwardReferenceCount() > 0)
-   //            {
-   //               if ((this.bits & IsReturnedValue) != 0)
-   //               {
-   //                  codeStream.generateImplicitConversion(this.implicitConversion);
-   //                  codeStream.generateReturnBytecode(this);
-   //                  falseLabel.place();
-   //                  codeStream.iconst_0();
-   //               }
-   //               else
-   //               {
-   //                  codeStream.goto_(endLabel = new BranchLabel(codeStream));
-   //                  codeStream.decrStackSize(1);
-   //                  falseLabel.place();
-   //                  codeStream.iconst_0();
-   //                  endLabel.place();
-   //               }
-   //            }
-   //            else
-   //            {
-   //               falseLabel.place();
-   //            }
-   //         }
-   //         codeStream.generateImplicitConversion(this.implicitConversion);
-   //         codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
-   //      }
-   //      else
-   //      {
-   //         falseLabel.place();
-   //      }
-   //   }
+   // generateOperands :
+   // {
+   // if (leftIsConst)
+   // {
+   // this.left.generateCode(currentScope, codeStream, false);
+   // if (!leftIsTrue)
+   // {
+   // break generateOperands; // no need to generate right operand
+   // }
+   // }
+   // else
+   // {
+   // this.left.generateOptimizedBoolean(currentScope, codeStream, null, falseLabel, true);
+   // // need value, e.g. if (a == 1 && ((b = 2) > 0)) {} -> shouldn't initialize 'b' if a!=1
+   // }
+   // if (this.rightInitStateIndex != -1)
+   // {
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.rightInitStateIndex);
+   // }
+   // if (rightIsConst)
+   // {
+   // this.right.generateCode(currentScope, codeStream, false);
+   // }
+   // else
+   // {
+   // this.right.generateOptimizedBoolean(currentScope, codeStream, null, falseLabel, valueRequired);
+   // }
+   // }
+   // if (this.mergedInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // }
+   // /*
+   // * improving code gen for such a case: boolean b = i < 0 && false since
+   // * the label has never been used, we have the inlined value on the
+   // * stack.
+   // */
+   // if (valueRequired)
+   // {
+   // if (leftIsConst && !leftIsTrue)
+   // {
+   // codeStream.iconst_0();
+   // codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
+   // }
+   // else
+   // {
+   // if (rightIsConst && !rightIsTrue)
+   // {
+   // codeStream.iconst_0();
+   // codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
+   // }
+   // else
+   // {
+   // codeStream.iconst_1();
+   // }
+   // if (falseLabel.forwardReferenceCount() > 0)
+   // {
+   // if ((this.bits & IsReturnedValue) != 0)
+   // {
+   // codeStream.generateImplicitConversion(this.implicitConversion);
+   // codeStream.generateReturnBytecode(this);
+   // falseLabel.place();
+   // codeStream.iconst_0();
+   // }
+   // else
+   // {
+   // codeStream.goto_(endLabel = new BranchLabel(codeStream));
+   // codeStream.decrStackSize(1);
+   // falseLabel.place();
+   // codeStream.iconst_0();
+   // endLabel.place();
+   // }
+   // }
+   // else
+   // {
+   // falseLabel.place();
+   // }
+   // }
+   // codeStream.generateImplicitConversion(this.implicitConversion);
+   // codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
+   // }
+   // else
+   // {
+   // falseLabel.place();
+   // }
+   // }
 
-   //   /**
-   //    * Boolean operator code generation Optimized operations are: &&
-   //    */
-   //   public void generateOptimizedBoolean(BlockScope currentScope, CodeStream codeStream, BranchLabel trueLabel,
-   //      BranchLabel falseLabel, boolean valueRequired)
-   //   {
+   // /**
+   // * Boolean operator code generation Optimized operations are: &&
+   // */
+   // public void generateOptimizedBoolean(BlockScope currentScope, CodeStream codeStream, BranchLabel trueLabel,
+   // BranchLabel falseLabel, boolean valueRequired)
+   // {
    //
-   //      if (this.constant != Constant.NotAConstant)
-   //      {
-   //         super.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
-   //         return;
-   //      }
+   // if (this.constant != Constant.NotAConstant)
+   // {
+   // super.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
+   // return;
+   // }
    //
-   //      // <expr> && true --> <expr>
-   //      Constant cst = this.right.constant;
-   //      if (cst != Constant.NotAConstant && cst.booleanValue() == true)
-   //      {
-   //         int pc = codeStream.position;
-   //         this.left.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
-   //         if (this.mergedInitStateIndex != -1)
-   //         {
-   //            codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //         }
-   //         codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //         return;
-   //      }
-   //      cst = this.left.optimizedBooleanConstant();
-   //      boolean leftIsConst = cst != Constant.NotAConstant;
-   //      boolean leftIsTrue = leftIsConst && cst.booleanValue() == true;
+   // // <expr> && true --> <expr>
+   // Constant cst = this.right.constant;
+   // if (cst != Constant.NotAConstant && cst.booleanValue() == true)
+   // {
+   // int pc = codeStream.position;
+   // this.left.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
+   // if (this.mergedInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // return;
+   // }
+   // cst = this.left.optimizedBooleanConstant();
+   // boolean leftIsConst = cst != Constant.NotAConstant;
+   // boolean leftIsTrue = leftIsConst && cst.booleanValue() == true;
    //
-   //      cst = this.right.optimizedBooleanConstant();
-   //      boolean rightIsConst = cst != Constant.NotAConstant;
-   //      boolean rightIsTrue = rightIsConst && cst.booleanValue() == true;
+   // cst = this.right.optimizedBooleanConstant();
+   // boolean rightIsConst = cst != Constant.NotAConstant;
+   // boolean rightIsTrue = rightIsConst && cst.booleanValue() == true;
    //
-   //      // default case
-   //      generateOperands :
-   //      {
-   //         if (falseLabel == null)
-   //         {
-   //            if (trueLabel != null)
-   //            {
-   //               // implicit falling through the FALSE case
-   //               BranchLabel internalFalseLabel = new BranchLabel(codeStream);
-   //               this.left.generateOptimizedBoolean(currentScope, codeStream, null, internalFalseLabel, !leftIsConst);
-   //               // need value, e.g. if (a == 1 && ((b = 2) > 0)) {} -> shouldn't initialize 'b' if a!=1
-   //               if (leftIsConst && !leftIsTrue)
-   //               {
-   //                  internalFalseLabel.place();
-   //                  break generateOperands; // no need to generate right operand
-   //               }
-   //               if (this.rightInitStateIndex != -1)
-   //               {
-   //                  codeStream.addDefinitelyAssignedVariables(currentScope, this.rightInitStateIndex);
-   //               }
-   //               this.right.generateOptimizedBoolean(currentScope, codeStream, trueLabel, null, valueRequired
-   //                  && !rightIsConst);
-   //               if (valueRequired && rightIsConst && rightIsTrue)
-   //               {
-   //                  codeStream.goto_(trueLabel);
-   //                  codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
-   //               }
-   //               internalFalseLabel.place();
-   //            }
-   //         }
-   //         else
-   //         {
-   //            // implicit falling through the TRUE case
-   //            if (trueLabel == null)
-   //            {
-   //               this.left.generateOptimizedBoolean(currentScope, codeStream, null, falseLabel, !leftIsConst);
-   //               // need value, e.g. if (a == 1 && ((b = 2) > 0)) {} -> shouldn't initialize 'b' if a!=1
-   //               if (leftIsConst && !leftIsTrue)
-   //               {
-   //                  if (valueRequired)
-   //                     codeStream.goto_(falseLabel);
-   //                  codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
-   //                  break generateOperands; // no need to generate right operand
-   //               }
-   //               if (this.rightInitStateIndex != -1)
-   //               {
-   //                  codeStream.addDefinitelyAssignedVariables(currentScope, this.rightInitStateIndex);
-   //               }
-   //               this.right.generateOptimizedBoolean(currentScope, codeStream, null, falseLabel, valueRequired
-   //                  && !rightIsConst);
-   //               if (valueRequired && rightIsConst && !rightIsTrue)
-   //               {
-   //                  codeStream.goto_(falseLabel);
-   //                  codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
-   //               }
-   //            }
-   //            else
-   //            {
-   //               // no implicit fall through TRUE/FALSE --> should never occur
-   //            }
-   //         }
-   //      }
-   //      if (this.mergedInitStateIndex != -1)
-   //      {
-   //         codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-   //      }
-   //   }
+   // // default case
+   // generateOperands :
+   // {
+   // if (falseLabel == null)
+   // {
+   // if (trueLabel != null)
+   // {
+   // // implicit falling through the FALSE case
+   // BranchLabel internalFalseLabel = new BranchLabel(codeStream);
+   // this.left.generateOptimizedBoolean(currentScope, codeStream, null, internalFalseLabel, !leftIsConst);
+   // // need value, e.g. if (a == 1 && ((b = 2) > 0)) {} -> shouldn't initialize 'b' if a!=1
+   // if (leftIsConst && !leftIsTrue)
+   // {
+   // internalFalseLabel.place();
+   // break generateOperands; // no need to generate right operand
+   // }
+   // if (this.rightInitStateIndex != -1)
+   // {
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.rightInitStateIndex);
+   // }
+   // this.right.generateOptimizedBoolean(currentScope, codeStream, trueLabel, null, valueRequired
+   // && !rightIsConst);
+   // if (valueRequired && rightIsConst && rightIsTrue)
+   // {
+   // codeStream.goto_(trueLabel);
+   // codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
+   // }
+   // internalFalseLabel.place();
+   // }
+   // }
+   // else
+   // {
+   // // implicit falling through the TRUE case
+   // if (trueLabel == null)
+   // {
+   // this.left.generateOptimizedBoolean(currentScope, codeStream, null, falseLabel, !leftIsConst);
+   // // need value, e.g. if (a == 1 && ((b = 2) > 0)) {} -> shouldn't initialize 'b' if a!=1
+   // if (leftIsConst && !leftIsTrue)
+   // {
+   // if (valueRequired)
+   // codeStream.goto_(falseLabel);
+   // codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
+   // break generateOperands; // no need to generate right operand
+   // }
+   // if (this.rightInitStateIndex != -1)
+   // {
+   // codeStream.addDefinitelyAssignedVariables(currentScope, this.rightInitStateIndex);
+   // }
+   // this.right.generateOptimizedBoolean(currentScope, codeStream, null, falseLabel, valueRequired
+   // && !rightIsConst);
+   // if (valueRequired && rightIsConst && !rightIsTrue)
+   // {
+   // codeStream.goto_(falseLabel);
+   // codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
+   // }
+   // }
+   // else
+   // {
+   // // no implicit fall through TRUE/FALSE --> should never occur
+   // }
+   // }
+   // }
+   // if (this.mergedInitStateIndex != -1)
+   // {
+   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+   // }
+   // }
 
    public boolean isCompactableOperation()
    {

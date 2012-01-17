@@ -16,8 +16,8 @@ import java.util.Arrays;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 
 /**
- * Represents a class reference in the class file.
- * One of the possible results for the default value of an annotation method or an element value pair.
+ * Represents a class reference in the class file. One of the possible results for the default value of an annotation method or an
+ * element value pair.
  */
 public class ClassSignature
 {

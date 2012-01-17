@@ -16,17 +16,16 @@ import java.util.List;
 
 /**
  * Simple or qualified "super" field access expression AST node type.
- *
+ * 
  * <pre>
  * SuperFieldAccess:
  *     [ ClassName <b>.</b> ] <b>super</b> <b>.</b> Identifier
  * </pre>
- *
+ * 
  * <p>
- * See <code>FieldAccess</code> for guidelines on handling other expressions
- * that resemble qualified names.
+ * See <code>FieldAccess</code> for guidelines on handling other expressions that resemble qualified names.
  * </p>
- *
+ * 
  * @see FieldAccess
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
@@ -36,6 +35,7 @@ public class SuperFieldAccess extends Expression
 
    /**
     * The "qualifier" structural property of this node type (child type: {@link Name}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor QUALIFIER_PROPERTY = new ChildPropertyDescriptor(SuperFieldAccess.class,
@@ -43,15 +43,14 @@ public class SuperFieldAccess extends Expression
 
    /**
     * The "name" structural property of this node type (child type: {@link SimpleName}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor NAME_PROPERTY = new ChildPropertyDescriptor(SuperFieldAccess.class,
       "name", SimpleName.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -65,13 +64,10 @@ public class SuperFieldAccess extends Expression
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -85,19 +81,17 @@ public class SuperFieldAccess extends Expression
    private Name optionalQualifier = null;
 
    /**
-    * The field; lazily initialized; defaults to an unspecified,
-    * but legal, simple field name.
+    * The field; lazily initialized; defaults to an unspecified, but legal, simple field name.
     */
    private SimpleName fieldName = null;
 
    /**
-    * Creates a new unparented node for a super field access expression owned
-    * by the given AST. By default, field name is an unspecified, but legal,
-    * name, and there is no qualifier.
+    * Creates a new unparented node for a super field access expression owned by the given AST. By default, field name is an
+    * unspecified, but legal, name, and there is no qualifier.
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    SuperFieldAccess(AST ast)
@@ -105,16 +99,16 @@ public class SuperFieldAccess extends Expression
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -146,16 +140,16 @@ public class SuperFieldAccess extends Expression
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return SUPER_FIELD_ACCESS;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -166,8 +160,8 @@ public class SuperFieldAccess extends Expression
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -175,8 +169,8 @@ public class SuperFieldAccess extends Expression
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -191,9 +185,8 @@ public class SuperFieldAccess extends Expression
    }
 
    /**
-    * Returns the qualifier of this "super" field access expression, or
-    * <code>null</code> if there is none.
-    *
+    * Returns the qualifier of this "super" field access expression, or <code>null</code> if there is none.
+    * 
     * @return the qualifier name node, or <code>null</code> if there is none
     */
    public Name getQualifier()
@@ -203,14 +196,13 @@ public class SuperFieldAccess extends Expression
 
    /**
     * Sets or clears the qualifier of this "super" field access expression.
-    *
-    * @param name the qualifier name node, or <code>null</code> if
-    *    there is none
+    * 
+    * @param name the qualifier name node, or <code>null</code> if there is none
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     */
    public void setQualifier(Name name)
    {
@@ -221,9 +213,8 @@ public class SuperFieldAccess extends Expression
    }
 
    /**
-    * Returns the name of the field accessed in this "super" field access
-    * expression.
-    *
+    * Returns the name of the field accessed in this "super" field access expression.
+    * 
     * @return the field name
     */
    public SimpleName getName()
@@ -245,15 +236,12 @@ public class SuperFieldAccess extends Expression
    }
 
    /**
-    * Resolves and returns the binding for the field accessed by this
-    * expression.
+    * Resolves and returns the binding for the field accessed by this expression.
     * <p>
-    * Note that bindings are generally unavailable unless requested when the
-    * AST is being built.
+    * Note that bindings are generally unavailable unless requested when the AST is being built.
     * </p>
-    *
-    * @return the variable binding, or <code>null</code> if the binding cannot
-    * be resolved
+    * 
+    * @return the variable binding, or <code>null</code> if the binding cannot be resolved
     * @since 3.0
     */
    public IVariableBinding resolveFieldBinding()
@@ -262,15 +250,14 @@ public class SuperFieldAccess extends Expression
    }
 
    /**
-    * Sets the name of the field accessed in this "super" field access
-    * expression.
-    *
+    * Sets the name of the field accessed in this "super" field access expression.
+    * 
     * @param fieldName the field name
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     */
    public void setName(SimpleName fieldName)
    {
@@ -284,8 +271,8 @@ public class SuperFieldAccess extends Expression
       postReplaceChild(oldChild, fieldName, NAME_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
@@ -293,8 +280,8 @@ public class SuperFieldAccess extends Expression
       return BASE_NODE_SIZE + 2 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

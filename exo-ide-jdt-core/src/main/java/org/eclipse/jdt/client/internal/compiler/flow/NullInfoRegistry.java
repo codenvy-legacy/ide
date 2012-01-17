@@ -14,15 +14,11 @@ package org.eclipse.jdt.client.internal.compiler.flow;
 import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
 
 /**
- * A degenerate form of UnconditionalFlowInfo explicitly meant to capture
- * the effects of null related operations within try blocks. Given the fact
- * that a try block might exit at any time, a null related operation that
- * occurs within such a block mitigates whatever we know about the previous
- * null status of involved variables. NullInfoRegistry handles that
- * by negating upstream definite information that clashes with what a given
- * statement contends about the same variable. It also implements
- * {@link #mitigateNullInfoOf(FlowInfo) mitigateNullInfo} so as to elaborate the
- * flow info presented in input of finally blocks.
+ * A degenerate form of UnconditionalFlowInfo explicitly meant to capture the effects of null related operations within try
+ * blocks. Given the fact that a try block might exit at any time, a null related operation that occurs within such a block
+ * mitigates whatever we know about the previous null status of involved variables. NullInfoRegistry handles that by negating
+ * upstream definite information that clashes with what a given statement contends about the same variable. It also implements
+ * {@link #mitigateNullInfoOf(FlowInfo) mitigateNullInfo} so as to elaborate the flow info presented in input of finally blocks.
  */
 public class NullInfoRegistry extends UnconditionalFlowInfo
 {
@@ -32,12 +28,11 @@ public class NullInfoRegistry extends UnconditionalFlowInfo
    // PREMATURE implement coverage and low level tests
 
    /**
-    * Make a new null info registry, using an upstream flow info. All definite
-    * assignments of the upstream are carried forward, since a try block may
-    * exit before its first statement.
-    * @param upstream - UnconditionalFlowInfo: the flow info before we enter the
-    * 		try block; only definite assignments are considered; this parameter is
-    *  	not modified by this constructor
+    * Make a new null info registry, using an upstream flow info. All definite assignments of the upstream are carried forward,
+    * since a try block may exit before its first statement.
+    * 
+    * @param upstream - UnconditionalFlowInfo: the flow info before we enter the try block; only definite assignments are
+    *           considered; this parameter is not modified by this constructor
     */
    public NullInfoRegistry(UnconditionalFlowInfo upstream)
    {
@@ -79,8 +74,8 @@ public class NullInfoRegistry extends UnconditionalFlowInfo
    }
 
    /**
-    * Add the information held by another NullInfoRegistry instance to this,
-    * then return this.
+    * Add the information held by another NullInfoRegistry instance to this, then return this.
+    * 
     * @param other - NullInfoRegistry: the information to add to this
     * @return this, modified to carry the information held by other
     */
@@ -142,7 +137,7 @@ public class NullInfoRegistry extends UnconditionalFlowInfo
          // position is zero-based
          if ((position = local.id + this.maxFieldCount) < BitCacheSize)
          { // use bits
-            // set protected non null
+           // set protected non null
             this.nullBit1 |= (1L << position);
             if (COVERAGE_TEST_FLAG)
             {
@@ -198,7 +193,7 @@ public class NullInfoRegistry extends UnconditionalFlowInfo
          // position is zero-based
          if ((position = local.id + this.maxFieldCount) < BitCacheSize)
          { // use bits
-            // set assigned non null
+           // set assigned non null
             this.nullBit3 |= (1L << position);
             if (COVERAGE_TEST_FLAG)
             {
@@ -256,7 +251,7 @@ public class NullInfoRegistry extends UnconditionalFlowInfo
          // position is zero-based
          if ((position = local.id + this.maxFieldCount) < BitCacheSize)
          { // use bits
-            // set assigned null
+           // set assigned null
             this.nullBit2 |= (1L << position);
             if (COVERAGE_TEST_FLAG)
             {
@@ -312,7 +307,7 @@ public class NullInfoRegistry extends UnconditionalFlowInfo
          // position is zero-based
          if ((position = local.id + this.maxFieldCount) < BitCacheSize)
          { // use bits
-            // set assigned unknown
+           // set assigned unknown
             this.nullBit4 |= (1L << position);
             if (COVERAGE_TEST_FLAG)
             {
@@ -359,14 +354,11 @@ public class NullInfoRegistry extends UnconditionalFlowInfo
    }
 
    /**
-    * Mitigate the definite and protected info of flowInfo, depending on what
-    * this null info registry knows about potential assignments and messages
-    * sends involving locals. May return flowInfo unchanged, or a modified,
-    * fresh copy of flowInfo.
-    * @param flowInfo - FlowInfo: the flow information that this null info
-    * 		registry may mitigate
-    * @return a copy of flowInfo carrying mitigated information, or else
-    * 		flowInfo unchanged
+    * Mitigate the definite and protected info of flowInfo, depending on what this null info registry knows about potential
+    * assignments and messages sends involving locals. May return flowInfo unchanged, or a modified, fresh copy of flowInfo.
+    * 
+    * @param flowInfo - FlowInfo: the flow information that this null info registry may mitigate
+    * @return a copy of flowInfo carrying mitigated information, or else flowInfo unchanged
     */
    public UnconditionalFlowInfo mitigateNullInfoOf(FlowInfo flowInfo)
    {
@@ -403,7 +395,7 @@ public class NullInfoRegistry extends UnconditionalFlowInfo
          source.nullBit4 &= nm1 & nm2;
          // any variable that is (pot n, pot nn, pot un) at end of try (as captured by *this* NullInfoRegistry)
          // has the same uncertainty also for the mitigated case (function result)
-         // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=320170 -  [compiler] [null] Whitebox issues in null analysis
+         // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=320170 - [compiler] [null] Whitebox issues in null analysis
          // and org.eclipse.jdt.core.tests.compiler.regression.NullReferenceTest.test0536_try_finally()
          long x = ~this.nullBit1 & a2 & a3 & a4; // x is set for all variable ids that have state 0111 (pot n, pot nn, pot un)
          if (x != 0)
@@ -476,6 +468,7 @@ public class NullInfoRegistry extends UnconditionalFlowInfo
 
    /**
     * Mark a local as potentially having been assigned to an unknown value.
+    * 
     * @param local the local to mark
     */
    public void markPotentiallyUnknownBit(LocalVariableBinding local)

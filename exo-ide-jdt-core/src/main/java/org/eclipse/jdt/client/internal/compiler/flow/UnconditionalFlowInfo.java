@@ -25,7 +25,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
 
 /**
  * Record initialization status during definite assignment analysis
- *
+ * 
  * No caching of pre-allocated instances.
  */
 public class UnconditionalFlowInfo extends FlowInfo
@@ -60,23 +60,9 @@ public class UnconditionalFlowInfo extends FlowInfo
    public long nullBit1, nullBit2, nullBit3, nullBit4;
 
    /*
-   		nullBit1
-   		 nullBit2...
-   		0000	start
-   		0001	pot. unknown
-   		0010	pot. non null
-   		0011	pot. nn & pot. un
-   		0100	pot. null
-   		0101	pot. n & pot. un
-   		0110	pot. n & pot. nn
-   		0111    pot. n & pot. nn & pot. un
-   		1001	def. unknown
-   		1010	def. non null
-   		1011	pot. nn & prot. nn
-   		1100	def. null
-   		1101	pot. n & prot. n
-   		1110	prot. null
-   		1111	prot. non null
+    * nullBit1 nullBit2... 0000 start 0001 pot. unknown 0010 pot. non null 0011 pot. nn & pot. un 0100 pot. null 0101 pot. n &
+    * pot. un 0110 pot. n & pot. nn 0111 pot. n & pot. nn & pot. un 1001 def. unknown 1010 def. non null 1011 pot. nn & prot. nn
+    * 1100 def. null 1101 pot. n & prot. n 1110 prot. null 1111 prot. non null
     */
 
    // extra segments
@@ -390,13 +376,11 @@ public class UnconditionalFlowInfo extends FlowInfo
    }
 
    /**
-    * Compose other inits over this flow info, then return this. The operation
-    * semantics are to wave into this flow info the consequences upon null
-    * information of a possible path into the operations that resulted into
-    * otherInits. The fact that this path may be left unexecuted under peculiar
-    * conditions results into less specific results than
-    * {@link #addInitializationsFrom(FlowInfo) addInitializationsFrom}; moreover,
-    * only the null information is affected.
+    * Compose other inits over this flow info, then return this. The operation semantics are to wave into this flow info the
+    * consequences upon null information of a possible path into the operations that resulted into otherInits. The fact that this
+    * path may be left unexecuted under peculiar conditions results into less specific results than
+    * {@link #addInitializationsFrom(FlowInfo) addInitializationsFrom}; moreover, only the null information is affected.
+    * 
     * @param otherInits other null inits to compose over this
     * @return this, modified according to otherInits information
     */
@@ -435,7 +419,7 @@ public class UnconditionalFlowInfo extends FlowInfo
             }
          }
          if ((this.nullBit2 | this.nullBit3 | this.nullBit4) != 0)
-         { //  bit1 is redundant
+         { // bit1 is redundant
             thisHasNulls = true;
          }
       }
@@ -454,7 +438,7 @@ public class UnconditionalFlowInfo extends FlowInfo
             }
          }
          if ((this.nullBit2 | this.nullBit3 | this.nullBit4) != 0)
-         { //  bit1 is redundant
+         { // bit1 is redundant
             thisHasNulls = true;
          }
       }
@@ -523,7 +507,7 @@ public class UnconditionalFlowInfo extends FlowInfo
                   & (na3 & b1 & nb3 | na2 & (nb1 & b4 | b1 & nb3 | a4)) | a3
                   & (a4 & (nb2 | b1 & b3) | a1 & a2 & (nb1 & b4 | na4 & (b2 | b1) & nb3));
             if ((this.extra[2 + 1][i] | this.extra[3 + 1][i] | this.extra[4 + 1][i]) != 0)
-            { //  bit1 is redundant
+            { // bit1 is redundant
                thisHasNulls = true;
             }
             if (COVERAGE_TEST_FLAG)
@@ -543,7 +527,7 @@ public class UnconditionalFlowInfo extends FlowInfo
             this.extra[3 + 1][i] = b3 & (nb1 | (nb2 = ~b2));
             this.extra[4 + 1][i] = ~b1 & ~b3 & (b4 = otherInits.extra[4 + 1][i]) | ~b2 & (b1 & ~b3 | ~b1 & b4);
             if ((this.extra[2 + 1][i] | this.extra[3 + 1][i] | this.extra[4 + 1][i]) != 0)
-            { //  bit1 is redundant
+            { // bit1 is redundant
                thisHasNulls = true;
             }
             if (COVERAGE_TEST_FLAG)
@@ -695,8 +679,9 @@ public class UnconditionalFlowInfo extends FlowInfo
    }
 
    /**
-    * Discard definite inits and potential inits from this, then return this.
-    * The returned flow info only holds null related information.
+    * Discard definite inits and potential inits from this, then return this. The returned flow info only holds null related
+    * information.
+    * 
     * @return this flow info, minus definite inits and potential inits
     */
    public UnconditionalFlowInfo discardInitializationInfo()
@@ -718,6 +703,7 @@ public class UnconditionalFlowInfo extends FlowInfo
 
    /**
     * Remove local variables information from this flow info and return this.
+    * 
     * @return this, deprived from any local variable information
     */
    public UnconditionalFlowInfo discardNonFieldInitializations()
@@ -773,8 +759,7 @@ public class UnconditionalFlowInfo extends FlowInfo
    }
 
    /**
-    * Check status of definite assignment at a given position.
-    * It deals with the dual representation of the InitializationInfo2:
+    * Check status of definite assignment at a given position. It deals with the dual representation of the InitializationInfo2:
     * bits for the first 64 entries, then an array of booleans.
     */
    final private boolean isDefinitelyAssigned(int position)
@@ -1065,14 +1050,13 @@ public class UnconditionalFlowInfo extends FlowInfo
          & (this.extra[4][vectorIndex] ^ this.extra[5][vectorIndex]) & (1L << (position % BitCacheSize))) != 0;
    }
 
-   /** Asserts that the given boolean is <code>true</code>. If this
-    * is not the case, some kind of unchecked exception is thrown.
+   /**
+    * Asserts that the given boolean is <code>true</code>. If this is not the case, some kind of unchecked exception is thrown.
     * The given message is included in that exception, to aid debugging.
-    *
+    * 
     * @param expression the outcome of the check
     * @param message the message to include in the exception
-    * @return <code>true</code> if the check passes (does not return
-    *    if the check fails)
+    * @return <code>true</code> if the check passes (does not return if the check fails)
     */
    protected static boolean isTrue(boolean expression, String message)
    {
@@ -1382,7 +1366,7 @@ public class UnconditionalFlowInfo extends FlowInfo
          // position is zero-based
          if ((position = local.id + this.maxFieldCount) < BitCacheSize)
          { // use bits
-            // set assigned non null
+           // set assigned non null
             this.nullBit1 |= (mask = 1L << position);
             this.nullBit3 |= mask;
             // clear others
@@ -1446,7 +1430,7 @@ public class UnconditionalFlowInfo extends FlowInfo
          // position is zero-based
          if ((position = local.id + this.maxFieldCount) < BitCacheSize)
          { // use bits
-            // mark assigned null
+           // mark assigned null
             this.nullBit1 |= (mask = 1L << position);
             this.nullBit2 |= mask;
             // clear others
@@ -1501,10 +1485,11 @@ public class UnconditionalFlowInfo extends FlowInfo
 
    /**
     * Mark a local as having been assigned to an unknown value.
+    * 
     * @param local the local to mark
     */
    // PREMATURE may try to get closer to markAsDefinitelyAssigned, but not
-   //			 obvious
+   // obvious
    public void markAsDefinitelyUnknown(LocalVariableBinding local)
    {
       // protected from non-object locals in calling methods
@@ -1605,6 +1590,7 @@ public class UnconditionalFlowInfo extends FlowInfo
 
    /**
     * Mark a local as potentially having been assigned to an unknown value.
+    * 
     * @param local the local to mark
     */
    public void markPotentiallyUnknownBit(LocalVariableBinding local)
@@ -2381,6 +2367,7 @@ public class UnconditionalFlowInfo extends FlowInfo
 
    /**
     * Combine the null status changes in assert expressions info
+    * 
     * @param otherInits
     */
    // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=303448

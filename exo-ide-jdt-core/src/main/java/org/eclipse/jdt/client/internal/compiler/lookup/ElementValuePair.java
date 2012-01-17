@@ -93,11 +93,11 @@ public class ElementValuePair
    }
 
    /**
-    * Return {@link TypeBinding} for member value of type {@link java.lang.Class}
-    * Return {@link org.eclipse.jdt.client.internal.compiler.impl.Constant} for member of primitive type or String
-    * Return {@link FieldBinding} for enum constant
-    * Return {@link AnnotationBinding} for annotation instance
-    * Return <code>Object[]</code> for member value of array type.
+    * Return {@link TypeBinding} for member value of type {@link java.lang.Class} Return
+    * {@link org.eclipse.jdt.client.internal.compiler.impl.Constant} for member of primitive type or String Return
+    * {@link FieldBinding} for enum constant Return {@link AnnotationBinding} for annotation instance Return <code>Object[]</code>
+    * for member value of array type.
+    * 
     * @return the value of this member value pair or null if the value is missing or is not a compile-time constant
     */
    public Object getValue()

@@ -14,8 +14,8 @@ package org.eclipse.jdt.client.internal.compiler.impl;
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 
 /**
- * Represent a set of irritant flags. Irritants are organized in up to 8 group
- * of 29, allowing for a maximum of 232 distinct irritants.
+ * Represent a set of irritant flags. Irritants are organized in up to 8 group of 29, allowing for a maximum of 232 distinct
+ * irritants.
  */
 public class IrritantSet
 {
@@ -86,7 +86,7 @@ public class IrritantSet
 
    public static final IrritantSet JAVADOC = new IrritantSet(CompilerOptions.InvalidJavadoc);
 
-   public static final IrritantSet COMPILER_DEFAULT_ERRORS = new IrritantSet(0); // no optional error by default	
+   public static final IrritantSet COMPILER_DEFAULT_ERRORS = new IrritantSet(0); // no optional error by default
 
    public static final IrritantSet COMPILER_DEFAULT_WARNINGS = new IrritantSet(0); // see static initializer below
    static
@@ -199,6 +199,7 @@ public class IrritantSet
 
    /**
     * Returns true if any of the irritants in given other set is positionned in receiver
+    * 
     * @param other
     */
    public boolean isAnySet(IrritantSet other)
@@ -215,6 +216,7 @@ public class IrritantSet
 
    /**
     * Returns true if all of the irritants in the given irritant set are set in receiver
+    * 
     * @param irritantSet the given irritant set
     */
    public boolean hasSameIrritants(IrritantSet irritantSet)

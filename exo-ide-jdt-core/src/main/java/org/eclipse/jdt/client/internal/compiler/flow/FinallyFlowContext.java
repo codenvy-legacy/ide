@@ -21,8 +21,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 import org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding;
 
 /**
- * Reflects the context of code analysis, keeping track of enclosing
- *	try statements, exception handlers, etc...
+ * Reflects the context of code analysis, keeping track of enclosing try statements, exception handlers, etc...
  */
 public class FinallyFlowContext extends FlowContext
 {
@@ -47,9 +46,8 @@ public class FinallyFlowContext extends FlowContext
    }
 
    /**
-    * Given some contextual initialization info (derived from a try block or a catch block), this
-    * code will check that the subroutine context does not also initialize a final variable potentially set
-    * redundantly.
+    * Given some contextual initialization info (derived from a try block or a catch block), this code will check that the
+    * subroutine context does not also initialize a final variable potentially set redundantly.
     */
    public void complainOnDeferredChecks(FlowInfo flowInfo, BlockScope scope)
    {
@@ -89,9 +87,9 @@ public class FinallyFlowContext extends FlowContext
             FlowContext currentContext = this.parent;
             while (currentContext != null)
             {
-               //if (currentContext.isSubRoutine()) {
+               // if (currentContext.isSubRoutine()) {
                currentContext.removeFinalAssignmentIfAny(this.finalAssignments[i]);
-               //}
+               // }
                currentContext = currentContext.parent;
             }
          }

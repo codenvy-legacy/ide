@@ -11,8 +11,8 @@
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
 /**
- * Pseudo method binding used to wrapper a real method, and expose less exceptions than original.
- * For other protocols, it should delegate to original method
+ * Pseudo method binding used to wrapper a real method, and expose less exceptions than original. For other protocols, it should
+ * delegate to original method
  */
 public class MostSpecificExceptionMethodBinding extends MethodBinding
 {

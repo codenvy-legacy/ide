@@ -15,17 +15,17 @@ import org.eclipse.jdt.client.internal.compiler.lookup.*;
 public abstract class NameReference extends Reference implements InvocationSite
 {
 
-   public Binding binding; //may be aTypeBinding-aFieldBinding-aLocalVariableBinding
+   public Binding binding; // may be aTypeBinding-aFieldBinding-aLocalVariableBinding
 
    public TypeBinding actualReceiverType; // modified receiver type - actual one according to namelookup
 
-   //the error printing
-   //some name reference are build as name reference but
-   //only used as type reference. When it happens, instead of
-   //creating a new objet (aTypeReference) we just flag a boolean
-   //This concesion is valuable while their are cases when the NameReference
-   //will be a TypeReference (static message sends.....) and there is
-   //no changeClass in java.
+   // the error printing
+   // some name reference are build as name reference but
+   // only used as type reference. When it happens, instead of
+   // creating a new objet (aTypeReference) we just flag a boolean
+   // This concesion is valuable while their are cases when the NameReference
+   // will be a TypeReference (static message sends.....) and there is
+   // no changeClass in java.
    public NameReference()
    {
       this.bits |= Binding.TYPE | Binding.VARIABLE; // restrictiveFlag
@@ -33,8 +33,8 @@ public abstract class NameReference extends Reference implements InvocationSite
 
    public FieldBinding fieldBinding()
    {
-      //this method should be sent ONLY after a check against isFieldReference()
-      //check its use doing senders.........
+      // this method should be sent ONLY after a check against isFieldReference()
+      // check its use doing senders.........
       return (FieldBinding)this.binding;
    }
 

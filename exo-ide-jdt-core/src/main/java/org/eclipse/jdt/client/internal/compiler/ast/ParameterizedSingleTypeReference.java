@@ -18,8 +18,7 @@ import org.eclipse.jdt.client.internal.compiler.impl.Constant;
 import org.eclipse.jdt.client.internal.compiler.lookup.*;
 
 /**
- * Syntactic representation of a reference to a generic type.
- * Note that it might also have a dimension.
+ * Syntactic representation of a reference to a generic type. Note that it might also have a dimension.
  */
 public class ParameterizedSingleTypeReference extends ArrayTypeReference
 {
@@ -93,8 +92,8 @@ public class ParameterizedSingleTypeReference extends ArrayTypeReference
    }
 
    /**
-     * @see org.eclipse.jdt.client.internal.compiler.ast.ArrayQualifiedTypeReference#getTypeBinding(org.eclipse.jdt.client.internal.compiler.lookup.Scope)
-     */
+    * @see org.eclipse.jdt.client.internal.compiler.ast.ArrayQualifiedTypeReference#getTypeBinding(org.eclipse.jdt.client.internal.compiler.lookup.Scope)
+    */
    protected TypeBinding getTypeBinding(Scope scope)
    {
       return null; // not supported here - combined with resolveType(...)
@@ -197,7 +196,7 @@ public class ParameterizedSingleTypeReference extends ArrayTypeReference
          {
             enclosingType =
                currentType.isStatic() ? (ReferenceBinding)scope.environment()
-                  .convertToRawType(enclosingType, false /*do not force conversion of enclosing types*/) : scope
+                  .convertToRawType(enclosingType, false /* do not force conversion of enclosing types */) : scope
                   .environment().convertToParameterizedType(enclosingType);
             currentType =
                scope.environment().createParameterizedType((ReferenceBinding)currentType.erasure(), null /* no arg */,
@@ -303,7 +302,8 @@ public class ParameterizedSingleTypeReference extends ArrayTypeReference
 
       ParameterizedTypeBinding parameterizedType =
          scope.environment().createParameterizedType(currentOriginal, argTypes, enclosingType);
-      // check argument type compatibility for non <> cases - <> case needs no bounds check, we will scream foul if needed during inference.
+      // check argument type compatibility for non <> cases - <> case needs no bounds check, we will scream foul if needed during
+      // inference.
       if (!isDiamond)
       {
          if (checkBounds) // otherwise will do it in Scope.connectTypeVariables() or generic method resolution
@@ -373,12 +373,12 @@ public class ParameterizedSingleTypeReference extends ArrayTypeReference
 
    public TypeBinding resolveType(ClassScope scope)
    {
-      return internalResolveType(scope, null, false /*no bounds check in classScope*/);
+      return internalResolveType(scope, null, false /* no bounds check in classScope */);
    }
 
    public TypeBinding resolveTypeEnclosing(BlockScope scope, ReferenceBinding enclosingType)
    {
-      return internalResolveType(scope, enclosingType, true/*check bounds*/);
+      return internalResolveType(scope, enclosingType, true/* check bounds */);
    }
 
    public void traverse(ASTVisitor visitor, BlockScope scope)

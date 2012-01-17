@@ -674,7 +674,7 @@ public final class Messages
 
    /**
     * Bind the given message's substitution locations with the given string values.
-    *
+    * 
     * @param message the message to be manipulated
     * @return the manipulated String
     */
@@ -685,7 +685,7 @@ public final class Messages
 
    /**
     * Bind the given message's substitution locations with the given string values.
-    *
+    * 
     * @param message the message to be manipulated
     * @param binding the object to be inserted into the message
     * @return the manipulated String
@@ -697,7 +697,7 @@ public final class Messages
 
    /**
     * Bind the given message's substitution locations with the given string values.
-    *
+    * 
     * @param message the message to be manipulated
     * @param binding1 An object to be inserted into the message
     * @param binding2 A second object to be inserted into the message
@@ -710,7 +710,7 @@ public final class Messages
 
    /**
     * Bind the given message's substitution locations with the given string values.
-    *
+    * 
     * @param message the message to be manipulated
     * @param bindings An array of objects to be inserted into the message
     * @return the manipulated String

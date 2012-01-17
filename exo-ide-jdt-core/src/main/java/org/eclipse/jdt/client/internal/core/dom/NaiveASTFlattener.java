@@ -109,39 +109,33 @@ import org.eclipse.jdt.client.core.dom.WhileStatement;
 import org.eclipse.jdt.client.core.dom.WildcardType;
 
 /**
- * Internal AST visitor for serializing an AST in a quick and dirty fashion.
- * For various reasons the resulting string is not necessarily legal
- * Java code; and even if it is legal Java code, it is not necessarily the string
- * that corresponds to the given AST. Although useless for most purposes, it's
- * fine for generating debug print strings.
+ * Internal AST visitor for serializing an AST in a quick and dirty fashion. For various reasons the resulting string is not
+ * necessarily legal Java code; and even if it is legal Java code, it is not necessarily the string that corresponds to the given
+ * AST. Although useless for most purposes, it's fine for generating debug print strings.
  * <p>
- * Example usage:
- * <code>
+ * Example usage: <code>
  * <pre>
  *    NaiveASTFlattener p = new NaiveASTFlattener();
  *    node.accept(p);
  *    String result = p.getResult();
  * </pre>
- * </code>
- * Call the <code>reset</code> method to clear the previous result before reusing an
- * existing instance.
+ * </code> Call the <code>reset</code> method to clear the previous result before reusing an existing instance.
  * </p>
- *
+ * 
  * @since 2.0
  */
 public class NaiveASTFlattener extends ASTVisitor
 {
    /**
-    * Internal synonym for {@link AST#JLS2}. Use to alleviate
-    * deprecation warnings.
+    * Internal synonym for {@link AST#JLS2}. Use to alleviate deprecation warnings.
+    * 
     * @deprecated
     * @since 3.4
     */
    private static final int JLS2 = AST.JLS2;
 
    /**
-    * The string buffer into which the serialized representation of the AST is
-    * written.
+    * The string buffer into which the serialized representation of the AST is written.
     */
    protected StringBuffer buffer;
 
@@ -156,8 +150,8 @@ public class NaiveASTFlattener extends ASTVisitor
    }
 
    /**
-    * Internal synonym for {@link ClassInstanceCreation#getName()}. Use to alleviate
-    * deprecation warnings.
+    * Internal synonym for {@link ClassInstanceCreation#getName()}. Use to alleviate deprecation warnings.
+    * 
     * @deprecated
     * @since 3.4
     */
@@ -168,7 +162,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /**
     * Returns the string accumulated in the visit.
-    *
+    * 
     * @return the serialized
     */
    public String getResult()
@@ -177,8 +171,8 @@ public class NaiveASTFlattener extends ASTVisitor
    }
 
    /**
-    * Internal synonym for {@link MethodDeclaration#getReturnType()}. Use to alleviate
-    * deprecation warnings.
+    * Internal synonym for {@link MethodDeclaration#getReturnType()}. Use to alleviate deprecation warnings.
+    * 
     * @deprecated
     * @since 3.4
     */
@@ -188,8 +182,8 @@ public class NaiveASTFlattener extends ASTVisitor
    }
 
    /**
-    * Internal synonym for {@link TypeDeclaration#getSuperclass()}. Use to alleviate
-    * deprecation warnings.
+    * Internal synonym for {@link TypeDeclaration#getSuperclass()}. Use to alleviate deprecation warnings.
+    * 
     * @deprecated
     * @since 3.4
     */
@@ -199,8 +193,8 @@ public class NaiveASTFlattener extends ASTVisitor
    }
 
    /**
-    * Internal synonym for {@link TypeDeclarationStatement#getTypeDeclaration()}. Use to alleviate
-    * deprecation warnings.
+    * Internal synonym for {@link TypeDeclarationStatement#getTypeDeclaration()}. Use to alleviate deprecation warnings.
+    * 
     * @deprecated
     * @since 3.4
     */
@@ -216,9 +210,8 @@ public class NaiveASTFlattener extends ASTVisitor
    }
 
    /**
-    * Appends the text representation of the given modifier flags, followed by a single space.
-    * Used for JLS2 modifiers.
-    *
+    * Appends the text representation of the given modifier flags, followed by a single space. Used for JLS2 modifiers.
+    * 
     * @param modifiers the modifier flags
     */
    void printModifiers(int modifiers)
@@ -270,11 +263,10 @@ public class NaiveASTFlattener extends ASTVisitor
    }
 
    /**
-    * Appends the text representation of the given modifier flags, followed by a single space.
-    * Used for 3.0 modifiers and annotations.
-    *
-    * @param ext the list of modifier and annotation nodes
-    * (element type: <code>IExtendedModifiers</code>)
+    * Appends the text representation of the given modifier flags, followed by a single space. Used for 3.0 modifiers and
+    * annotations.
+    * 
+    * @param ext the list of modifier and annotation nodes (element type: <code>IExtendedModifiers</code>)
     */
    void printModifiers(List ext)
    {
@@ -295,8 +287,8 @@ public class NaiveASTFlattener extends ASTVisitor
    }
 
    /**
-    * Internal synonym for {@link TypeDeclaration#superInterfaces()}. Use to alleviate
-    * deprecation warnings.
+    * Internal synonym for {@link TypeDeclaration#superInterfaces()}. Use to alleviate deprecation warnings.
+    * 
     * @deprecated
     * @since 3.4
     */
@@ -307,6 +299,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(AnnotationTypeDeclaration)
+    * 
     * @since 3.1
     */
    public boolean visit(AnnotationTypeDeclaration node)
@@ -331,6 +324,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(AnnotationTypeMemberDeclaration)
+    * 
     * @since 3.1
     */
    public boolean visit(AnnotationTypeMemberDeclaration node)
@@ -491,6 +485,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(BlockComment)
+    * 
     * @since 3.0
     */
    public boolean visit(BlockComment node)
@@ -730,6 +725,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(EnhancedForStatement)
+    * 
     * @since 3.1
     */
    public boolean visit(EnhancedForStatement node)
@@ -746,6 +742,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(EnumConstantDeclaration)
+    * 
     * @since 3.1
     */
    public boolean visit(EnumConstantDeclaration node)
@@ -780,6 +777,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(EnumDeclaration)
+    * 
     * @since 3.1
     */
    public boolean visit(EnumDeclaration node)
@@ -1047,6 +1045,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(LineComment)
+    * 
     * @since 3.0
     */
    public boolean visit(LineComment node)
@@ -1057,6 +1056,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(MarkerAnnotation)
+    * 
     * @since 3.1
     */
    public boolean visit(MarkerAnnotation node)
@@ -1068,6 +1068,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(MemberRef)
+    * 
     * @since 3.0
     */
    public boolean visit(MemberRef node)
@@ -1083,6 +1084,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(MemberValuePair)
+    * 
     * @since 3.1
     */
    public boolean visit(MemberValuePair node)
@@ -1230,6 +1232,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(MethodRef)
+    * 
     * @since 3.0
     */
    public boolean visit(MethodRef node)
@@ -1256,6 +1259,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(MethodRefParameter)
+    * 
     * @since 3.0
     */
    public boolean visit(MethodRefParameter node)
@@ -1278,6 +1282,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(Modifier)
+    * 
     * @since 3.1
     */
    public boolean visit(Modifier node)
@@ -1288,6 +1293,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(NormalAnnotation)
+    * 
     * @since 3.1
     */
    public boolean visit(NormalAnnotation node)
@@ -1353,6 +1359,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(ParameterizedType)
+    * 
     * @since 3.1
     */
    public boolean visit(ParameterizedType node)
@@ -1425,6 +1432,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(QualifiedType)
+    * 
     * @since 3.1
     */
    public boolean visit(QualifiedType node)
@@ -1470,6 +1478,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(SingleMemberAnnotation)
+    * 
     * @since 3.1
     */
    public boolean visit(SingleMemberAnnotation node)
@@ -1642,7 +1651,7 @@ public class NaiveASTFlattener extends ASTVisitor
          node.getExpression().accept(this);
          this.buffer.append(":\n");//$NON-NLS-1$
       }
-      this.indent++; //decremented in visit(SwitchStatement)
+      this.indent++; // decremented in visit(SwitchStatement)
       return false;
    }
 
@@ -1682,6 +1691,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(TagElement)
+    * 
     * @since 3.0
     */
    public boolean visit(TagElement node)
@@ -1731,6 +1741,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(TextElement)
+    * 
     * @since 3.0
     */
    public boolean visit(TextElement node)
@@ -1929,6 +1940,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(TypeParameter)
+    * 
     * @since 3.1
     */
    public boolean visit(TypeParameter node)
@@ -1952,6 +1964,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(UnionType)
+    * 
     * @since 3.7
     */
    public boolean visit(UnionType node)
@@ -2057,6 +2070,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(WildcardType)
+    * 
     * @since 3.1
     */
    public boolean visit(WildcardType node)

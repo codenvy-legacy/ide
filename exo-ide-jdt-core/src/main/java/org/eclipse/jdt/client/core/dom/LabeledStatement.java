@@ -16,12 +16,12 @@ import java.util.List;
 
 /**
  * Labeled statement AST node type.
- *
+ * 
  * <pre>
  * LabeledStatement:
  *    Identifier <b>:</b> Statement
  * </pre>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -30,6 +30,7 @@ public class LabeledStatement extends Statement
 
    /**
     * The "label" structural property of this node type (child type: {@link SimpleName}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor LABEL_PROPERTY = new ChildPropertyDescriptor(LabeledStatement.class,
@@ -37,15 +38,14 @@ public class LabeledStatement extends Statement
 
    /**
     * The "body" structural property of this node type (child type: {@link Statement}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(LabeledStatement.class,
       "body", Statement.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -59,14 +59,11 @@ public class LabeledStatement extends Statement
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -75,25 +72,22 @@ public class LabeledStatement extends Statement
    }
 
    /**
-    * The label; lazily initialized; defaults to a unspecified,
-    * legal Java identifier.
+    * The label; lazily initialized; defaults to a unspecified, legal Java identifier.
     */
    private SimpleName labelName = null;
 
    /**
-    * The body statement; lazily initialized; defaults to an unspecified, but
-    * legal, statement.
+    * The body statement; lazily initialized; defaults to an unspecified, but legal, statement.
     */
    private Statement body = null;
 
    /**
-    * Creates a new AST node for a labeled statement owned by the given
-    * AST. By default, the statement has an unspecified (but legal) label
-    * and an unspecified (but legal) statement.
+    * Creates a new AST node for a labeled statement owned by the given AST. By default, the statement has an unspecified (but
+    * legal) label and an unspecified (but legal) statement.
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    LabeledStatement(AST ast)
@@ -101,16 +95,16 @@ public class LabeledStatement extends Statement
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -142,16 +136,16 @@ public class LabeledStatement extends Statement
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return LABELED_STATEMENT;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -162,8 +156,8 @@ public class LabeledStatement extends Statement
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -171,8 +165,8 @@ public class LabeledStatement extends Statement
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -188,7 +182,7 @@ public class LabeledStatement extends Statement
 
    /**
     * Returns the label of this labeled statement.
-    *
+    * 
     * @return the variable name node
     */
    public SimpleName getLabel()
@@ -211,13 +205,13 @@ public class LabeledStatement extends Statement
 
    /**
     * Sets the label of this labeled statement.
-    *
+    * 
     * @param label the new label
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     */
    public void setLabel(SimpleName label)
    {
@@ -233,7 +227,7 @@ public class LabeledStatement extends Statement
 
    /**
     * Returns the body of this labeled statement.
-    *
+    * 
     * @return the body statement node
     */
    public Statement getBody()
@@ -257,21 +251,19 @@ public class LabeledStatement extends Statement
    /**
     * Sets the body of this labeled statement.
     * <p>
-    * Special note: The Java language does not allow a local variable declaration
-    * to appear as the body of a labeled statement (they may only appear within a
-    * block). However, the AST will allow a <code>VariableDeclarationStatement</code>
-    * as the body of a <code>LabeledStatement</code>. To get something that will
-    * compile, be sure to embed the <code>VariableDeclarationStatement</code>
-    * inside a <code>Block</code>.
+    * Special note: The Java language does not allow a local variable declaration to appear as the body of a labeled statement
+    * (they may only appear within a block). However, the AST will allow a <code>VariableDeclarationStatement</code> as the body
+    * of a <code>LabeledStatement</code>. To get something that will compile, be sure to embed the
+    * <code>VariableDeclarationStatement</code> inside a <code>Block</code>.
     * </p>
-    *
+    * 
     * @param statement the body statement node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setBody(Statement statement)
    {
@@ -285,16 +277,16 @@ public class LabeledStatement extends Statement
       postReplaceChild(oldChild, statement, BODY_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return super.memSize() + 2 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

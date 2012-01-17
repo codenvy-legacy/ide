@@ -25,6 +25,7 @@ public class ArrayTypeReference extends SingleTypeReference
 
    /**
     * ArrayTypeReference constructor comment.
+    * 
     * @param source char[]
     * @param dimensions int
     * @param pos int

@@ -13,46 +13,46 @@ package org.eclipse.jdt.client.core.dom;
 import java.util.List;
 
 /**
- * Abstract subclass for type declaration, enum declaration,
- * and annotation type declaration AST node types.
+ * Abstract subclass for type declaration, enum declaration, and annotation type declaration AST node types.
+ * 
  * <pre>
  * AbstractTypeDeclaration:
  * 		TypeDeclaration
  * 		EnumDeclaration
  * 		AnnotationTypeDeclaration
  * </pre>
- *
+ * 
  * @since 3.0
  */
 public abstract class AbstractTypeDeclaration extends BodyDeclaration
 {
 
    /**
-    * The type name; lazily initialized; defaults to a unspecified,
-    * legal Java class identifier.
+    * The type name; lazily initialized; defaults to a unspecified, legal Java class identifier.
+    * 
     * @since 2.0 (originally declared on {@link TypeDeclaration})
     */
    SimpleName typeName = null;
 
    /**
-    * The body declarations (element type: {@link BodyDeclaration}).
-    * Defaults to an empty list.
+    * The body declarations (element type: {@link BodyDeclaration}). Defaults to an empty list.
+    * 
     * @since 2.0 (originally declared on {@link TypeDeclaration})
     */
    ASTNode.NodeList bodyDeclarations;
 
    /**
-    * Returns structural property descriptor for the "bodyDeclarations" property
-    * of this node (element type: {@link BodyDeclaration}).
-    *
+    * Returns structural property descriptor for the "bodyDeclarations" property of this node (element type:
+    * {@link BodyDeclaration}).
+    * 
     * @return the property descriptor
     */
    abstract ChildListPropertyDescriptor internalBodyDeclarationsProperty();
 
    /**
-    * Returns structural property descriptor for the "bodyDeclarations" property
-    * of this node (element type: {@link BodyDeclaration}).
-    *
+    * Returns structural property descriptor for the "bodyDeclarations" property of this node (element type:
+    * {@link BodyDeclaration}).
+    * 
     * @return the property descriptor
     * @since 3.1
     */
@@ -62,17 +62,15 @@ public abstract class AbstractTypeDeclaration extends BodyDeclaration
    }
 
    /**
-    * Returns structural property descriptor for the "name" property
-    * of this node (child type: {@link SimpleName}).
-    *
+    * Returns structural property descriptor for the "name" property of this node (child type: {@link SimpleName}).
+    * 
     * @return the property descriptor
     */
    abstract ChildPropertyDescriptor internalNameProperty();
 
    /**
-    * Returns structural property descriptor for the "name" property
-    * of this node (child type: {@link SimpleName}).
-    *
+    * Returns structural property descriptor for the "name" property of this node (child type: {@link SimpleName}).
+    * 
     * @return the property descriptor
     * @since 3.1
     */
@@ -82,9 +80,9 @@ public abstract class AbstractTypeDeclaration extends BodyDeclaration
    }
 
    /**
-    * Creates and returns a structural property descriptor for the
-    * "bodyDeclaration" property declared on the given concrete node type (element type: {@link BodyDeclaration}).
-    *
+    * Creates and returns a structural property descriptor for the "bodyDeclaration" property declared on the given concrete node
+    * type (element type: {@link BodyDeclaration}).
+    * 
     * @return the property descriptor
     */
    static final ChildListPropertyDescriptor internalBodyDeclarationPropertyFactory(Class nodeClass)
@@ -93,9 +91,9 @@ public abstract class AbstractTypeDeclaration extends BodyDeclaration
    }
 
    /**
-    * Creates and returns a structural property descriptor for the
-    * "name" property declared on the given concrete node type (child type: {@link SimpleName}).
-    *
+    * Creates and returns a structural property descriptor for the "name" property declared on the given concrete node type (child
+    * type: {@link SimpleName}).
+    * 
     * @return the property descriptor
     */
    static final ChildPropertyDescriptor internalNamePropertyFactory(Class nodeClass)
@@ -104,14 +102,12 @@ public abstract class AbstractTypeDeclaration extends BodyDeclaration
    }
 
    /**
-    * Creates a new AST node for an abstract type declaration owned by the given
-    * AST.
+    * Creates a new AST node for an abstract type declaration owned by the given AST.
     * <p>
-    * N.B. This constructor is package-private; all subclasses must be
-    * declared in the same package; clients are unable to declare
+    * N.B. This constructor is package-private; all subclasses must be declared in the same package; clients are unable to declare
     * additional subclasses.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    AbstractTypeDeclaration(AST ast)
@@ -122,7 +118,7 @@ public abstract class AbstractTypeDeclaration extends BodyDeclaration
 
    /**
     * Returns the name of the type declared in this type declaration.
-    *
+    * 
     * @return the type name node
     * @since 2.0 (originally declared on {@link TypeDeclaration})
     */
@@ -145,15 +141,14 @@ public abstract class AbstractTypeDeclaration extends BodyDeclaration
    }
 
    /**
-    * Sets the name of the type declared in this type declaration to the
-    * given name.
-    *
+    * Sets the name of the type declared in this type declaration to the given name.
+    * 
     * @param typeName the new type name
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               </ul>
     * @since 2.0 (originally declared on {@link TypeDeclaration})
     */
    public void setName(SimpleName typeName)
@@ -170,11 +165,9 @@ public abstract class AbstractTypeDeclaration extends BodyDeclaration
    }
 
    /**
-    * Returns the live ordered list of body declarations of this type
-    * declaration.
-    *
-    * @return the live list of body declarations
-    *    (element type: {@link BodyDeclaration})
+    * Returns the live ordered list of body declarations of this type declaration.
+    * 
+    * @return the live list of body declarations (element type: {@link BodyDeclaration})
     * @since 2.0 (originally declared on {@link TypeDeclaration})
     */
    public List bodyDeclarations()
@@ -183,15 +176,12 @@ public abstract class AbstractTypeDeclaration extends BodyDeclaration
    }
 
    /**
-    * Returns whether this type declaration is a package member (that is,
-    * a top-level type).
+    * Returns whether this type declaration is a package member (that is, a top-level type).
     * <p>
-    * Note that this is a convenience method that simply checks whether
-    * this node's parent is a compilation unit node.
+    * Note that this is a convenience method that simply checks whether this node's parent is a compilation unit node.
     * </p>
-    *
-    * @return <code>true</code> if this type declaration is a child of
-    *   a compilation unit node, and <code>false</code> otherwise
+    * 
+    * @return <code>true</code> if this type declaration is a child of a compilation unit node, and <code>false</code> otherwise
     * @since 2.0 (originally declared on {@link TypeDeclaration})
     */
    public boolean isPackageMemberTypeDeclaration()
@@ -203,14 +193,12 @@ public abstract class AbstractTypeDeclaration extends BodyDeclaration
    /**
     * Returns whether this type declaration is a type member.
     * <p>
-    * Note that this is a convenience method that simply checks whether
-    * this node's parent is a type declaration node or an anonymous
-    * class declaration.
+    * Note that this is a convenience method that simply checks whether this node's parent is a type declaration node or an
+    * anonymous class declaration.
     * </p>
-    *
-    * @return <code>true</code> if this type declaration is a child of
-    *   a type declaration node or an anonymous class declaration node,
-    *   and <code>false</code> otherwise
+    * 
+    * @return <code>true</code> if this type declaration is a child of a type declaration node or an anonymous class declaration
+    *         node, and <code>false</code> otherwise
     * @since 2.0 (originally declared on {@link TypeDeclaration})
     */
    public boolean isMemberTypeDeclaration()
@@ -222,12 +210,11 @@ public abstract class AbstractTypeDeclaration extends BodyDeclaration
    /**
     * Returns whether this type declaration is a local type.
     * <p>
-    * Note that this is a convenience method that simply checks whether
-    * this node's parent is a type declaration statement node.
+    * Note that this is a convenience method that simply checks whether this node's parent is a type declaration statement node.
     * </p>
-    *
-    * @return <code>true</code> if this type declaration is a child of
-    *   a type declaration statement node, and <code>false</code> otherwise
+    * 
+    * @return <code>true</code> if this type declaration is a child of a type declaration statement node, and <code>false</code>
+    *         otherwise
     * @since 2.0 (originally declared on <code>TypeDeclaration</code>)
     */
    public boolean isLocalTypeDeclaration()
@@ -237,15 +224,12 @@ public abstract class AbstractTypeDeclaration extends BodyDeclaration
    }
 
    /**
-    * Resolves and returns the binding for the type declared in this type
-    * declaration.
+    * Resolves and returns the binding for the type declared in this type declaration.
     * <p>
-    * Note that bindings are generally unavailable unless requested when the
-    * AST is being built.
+    * Note that bindings are generally unavailable unless requested when the AST is being built.
     * </p>
-    *
-    * @return the binding, or <code>null</code> if the binding cannot be
-    *    resolved
+    * 
+    * @return the binding, or <code>null</code> if the binding cannot be resolved
     * @since 3.1 Declared in 3.0 on the individual subclasses.
     */
    public final ITypeBinding resolveBinding()
@@ -254,16 +238,15 @@ public abstract class AbstractTypeDeclaration extends BodyDeclaration
    }
 
    /**
-    * Resolves and returns the binding for the type declared in this type
-    * declaration. This method must be implemented by subclasses.
-    *
-    * @return the binding, or <code>null</code> if the binding cannot be
-    *    resolved
+    * Resolves and returns the binding for the type declared in this type declaration. This method must be implemented by
+    * subclasses.
+    * 
+    * @return the binding, or <code>null</code> if the binding cannot be resolved
     */
    abstract ITypeBinding internalResolveBinding();
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {

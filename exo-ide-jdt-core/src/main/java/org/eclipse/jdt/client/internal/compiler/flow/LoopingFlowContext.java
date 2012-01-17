@@ -26,8 +26,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 import org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding;
 
 /**
- * Reflects the context of code analysis, keeping track of enclosing
- *	try statements, exception handlers, etc...
+ * Reflects the context of code analysis, keeping track of enclosing try statements, exception handlers, etc...
  */
 public class LoopingFlowContext extends SwitchFlowContext
 {
@@ -77,7 +76,10 @@ public class LoopingFlowContext extends SwitchFlowContext
 
       void simulateThrowAfterLoopBack(FlowInfo flowInfo)
       {
-         this.catchingContext.recordHandlingException(this.caughtException, flowInfo.unconditionalInits(), null, // raised exception, irrelevant here,
+         this.catchingContext.recordHandlingException(this.caughtException, flowInfo.unconditionalInits(), null, // raised
+                                                                                                                 // exception,
+                                                                                                                 // irrelevant
+                                                                                                                 // here,
             null, null, /* invocation site, irrelevant here */true // we have no business altering the needed status.
             );
       }
@@ -99,8 +101,8 @@ public class LoopingFlowContext extends SwitchFlowContext
    }
 
    /**
-    * Perform deferred checks relative to final variables duplicate initialization
-    * of lack of initialization.
+    * Perform deferred checks relative to final variables duplicate initialization of lack of initialization.
+    * 
     * @param scope the scope to which this context is associated
     * @param flowInfo the flow info against which checks must be performed
     */
@@ -147,6 +149,7 @@ public class LoopingFlowContext extends SwitchFlowContext
 
    /**
     * Perform deferred checks relative to the null status of local variables.
+    * 
     * @param scope the scope to which this context is associated
     * @param callerFlowInfo the flow info against which checks must be performed
     */
@@ -657,7 +660,7 @@ public class LoopingFlowContext extends SwitchFlowContext
                   // note: pot non-null & pot null is already captured by cannotBeDefinitelyNullOrNonNull()
                   if (flowInfo.isPotentiallyNonNull(local))
                   {
-                     // knowing 'local' can be non-null, we're only interested in seeing whether it can *only* be non-null 
+                     // knowing 'local' can be non-null, we're only interested in seeing whether it can *only* be non-null
                      recordNullReference(local, reference, CAN_ONLY_NON_NULL | checkType & CONTEXT_MASK);
                   }
                   else if (flowInfo.isPotentiallyNull(local))
@@ -793,8 +796,9 @@ public class LoopingFlowContext extends SwitchFlowContext
       }
    }
 
-   /* Simulate a throw of an exception from inside a loop in its second or subsequent iteration.
-      See https://bugs.eclipse.org/bugs/show_bug.cgi?id=321926
+   /*
+    * Simulate a throw of an exception from inside a loop in its second or subsequent iteration. See
+    * https://bugs.eclipse.org/bugs/show_bug.cgi?id=321926
     */
    public void simulateThrowAfterLoopBack(FlowInfo flowInfo)
    {
@@ -808,9 +812,9 @@ public class LoopingFlowContext extends SwitchFlowContext
       }
    }
 
-   /* Record the fact that some exception thrown by code within this loop
-      is caught by an outer catch block. This is used to propagate data flow
-      along the edge back to the next iteration. See simulateThrowAfterLoopBack
+   /*
+    * Record the fact that some exception thrown by code within this loop is caught by an outer catch block. This is used to
+    * propagate data flow along the edge back to the next iteration. See simulateThrowAfterLoopBack
     */
    public void recordCatchContextOfEscapingException(ExceptionHandlingFlowContext catchingContext,
       ReferenceBinding caughtException)

@@ -41,85 +41,86 @@ public abstract class Reference extends Expression
 
    public FieldBinding fieldBinding()
    {
-      //this method should be sent one FIELD-tagged references
-      //  (ref.bits & BindingIds.FIELD != 0)()
+      // this method should be sent one FIELD-tagged references
+      // (ref.bits & BindingIds.FIELD != 0)()
       return null;
    }
 
-   //   public void fieldStore(Scope currentScope, CodeStream codeStream, FieldBinding fieldBinding,
-   //      MethodBinding syntheticWriteAccessor, TypeBinding receiverType, boolean isImplicitThisReceiver,
-   //      boolean valueRequired)
-   //   {
-   //      int pc = codeStream.position;
-   //      if (fieldBinding.isStatic())
-   //      {
-   //         if (valueRequired)
-   //         {
-   //            switch (fieldBinding.type.id)
-   //            {
-   //               case TypeIds.T_long :
-   //               case TypeIds.T_double :
-   //                  codeStream.dup2();
-   //                  break;
-   //               default :
-   //                  codeStream.dup();
-   //                  break;
-   //            }
-   //         }
-   //         if (syntheticWriteAccessor == null)
-   //         {
-   //            TypeBinding constantPoolDeclaringClass =
-   //               CodeStream.getConstantPoolDeclaringClass(currentScope, fieldBinding, receiverType,
-   //                  isImplicitThisReceiver);
-   //            codeStream.fieldAccess(Opcodes.OPC_putstatic, fieldBinding, constantPoolDeclaringClass);
-   //         }
-   //         else
-   //         {
-   //            codeStream.invoke(Opcodes.OPC_invokestatic, syntheticWriteAccessor, null /* default declaringClass */);
-   //         }
-   //      }
-   //      else
-   //      { // Stack:  [owner][new field value]  ---> [new field value][owner][new field value]
-   //         if (valueRequired)
-   //         {
-   //            switch (fieldBinding.type.id)
-   //            {
-   //               case TypeIds.T_long :
-   //               case TypeIds.T_double :
-   //                  codeStream.dup2_x1();
-   //                  break;
-   //               default :
-   //                  codeStream.dup_x1();
-   //                  break;
-   //            }
-   //         }
-   //         if (syntheticWriteAccessor == null)
-   //         {
-   //            TypeBinding constantPoolDeclaringClass =
-   //               CodeStream.getConstantPoolDeclaringClass(currentScope, fieldBinding, receiverType,
-   //                  isImplicitThisReceiver);
-   //            codeStream.fieldAccess(Opcodes.OPC_putfield, fieldBinding, constantPoolDeclaringClass);
-   //         }
-   //         else
-   //         {
-   //            codeStream.invoke(Opcodes.OPC_invokestatic, syntheticWriteAccessor, null /* default declaringClass */);
-   //         }
-   //      }
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // public void fieldStore(Scope currentScope, CodeStream codeStream, FieldBinding fieldBinding,
+   // MethodBinding syntheticWriteAccessor, TypeBinding receiverType, boolean isImplicitThisReceiver,
+   // boolean valueRequired)
+   // {
+   // int pc = codeStream.position;
+   // if (fieldBinding.isStatic())
+   // {
+   // if (valueRequired)
+   // {
+   // switch (fieldBinding.type.id)
+   // {
+   // case TypeIds.T_long :
+   // case TypeIds.T_double :
+   // codeStream.dup2();
+   // break;
+   // default :
+   // codeStream.dup();
+   // break;
+   // }
+   // }
+   // if (syntheticWriteAccessor == null)
+   // {
+   // TypeBinding constantPoolDeclaringClass =
+   // CodeStream.getConstantPoolDeclaringClass(currentScope, fieldBinding, receiverType,
+   // isImplicitThisReceiver);
+   // codeStream.fieldAccess(Opcodes.OPC_putstatic, fieldBinding, constantPoolDeclaringClass);
+   // }
+   // else
+   // {
+   // codeStream.invoke(Opcodes.OPC_invokestatic, syntheticWriteAccessor, null /* default declaringClass */);
+   // }
+   // }
+   // else
+   // { // Stack: [owner][new field value] ---> [new field value][owner][new field value]
+   // if (valueRequired)
+   // {
+   // switch (fieldBinding.type.id)
+   // {
+   // case TypeIds.T_long :
+   // case TypeIds.T_double :
+   // codeStream.dup2_x1();
+   // break;
+   // default :
+   // codeStream.dup_x1();
+   // break;
+   // }
+   // }
+   // if (syntheticWriteAccessor == null)
+   // {
+   // TypeBinding constantPoolDeclaringClass =
+   // CodeStream.getConstantPoolDeclaringClass(currentScope, fieldBinding, receiverType,
+   // isImplicitThisReceiver);
+   // codeStream.fieldAccess(Opcodes.OPC_putfield, fieldBinding, constantPoolDeclaringClass);
+   // }
+   // else
+   // {
+   // codeStream.invoke(Opcodes.OPC_invokestatic, syntheticWriteAccessor, null /* default declaringClass */);
+   // }
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
    //
-   //   public abstract void generateAssignment(BlockScope currentScope, CodeStream codeStream, Assignment assignment,
-   //      boolean valueRequired);
+   // public abstract void generateAssignment(BlockScope currentScope, CodeStream codeStream, Assignment assignment,
+   // boolean valueRequired);
    //
-   //   public abstract void generateCompoundAssignment(BlockScope currentScope, CodeStream codeStream,
-   //      Expression expression, int operator, int assignmentImplicitConversion, boolean valueRequired);
+   // public abstract void generateCompoundAssignment(BlockScope currentScope, CodeStream codeStream,
+   // Expression expression, int operator, int assignmentImplicitConversion, boolean valueRequired);
    //
-   //   public abstract void generatePostIncrement(BlockScope currentScope, CodeStream codeStream,
-   //      CompoundAssignment postIncrement, boolean valueRequired);
+   // public abstract void generatePostIncrement(BlockScope currentScope, CodeStream codeStream,
+   // CompoundAssignment postIncrement, boolean valueRequired);
 
-   /* report if a private field is only read from a 'special operator',
-    * i.e., in a postIncrement expression or a compound assignment,
-    * where the information is never flowing out off the field. */
+   /*
+    * report if a private field is only read from a 'special operator', i.e., in a postIncrement expression or a compound
+    * assignment, where the information is never flowing out off the field.
+    */
    void reportOnlyUselesslyReadPrivateField(BlockScope currentScope, FieldBinding fieldBinding, boolean valueRequired)
    {
       if (valueRequired)
@@ -134,7 +135,11 @@ public abstract class Reference extends Expression
          {
             fieldBinding.compoundUseFlag--; // consume one
             if (fieldBinding.compoundUseFlag == 0 // report only the last usage
-               && fieldBinding.isOrEnclosedByPrivateType() && (this.implicitConversion & TypeIds.UNBOXING) == 0) // don't report if unboxing is involved (might cause NPE)
+               && fieldBinding.isOrEnclosedByPrivateType() && (this.implicitConversion & TypeIds.UNBOXING) == 0) // don't report
+                                                                                                                 // if unboxing is
+                                                                                                                 // involved
+                                                                                                                 // (might cause
+                                                                                                                 // NPE)
             {
                // compoundAssignment/postIncrement is the only usage of this field
                currentScope.problemReporter().unusedPrivateField(fieldBinding.sourceField());
@@ -144,9 +149,10 @@ public abstract class Reference extends Expression
       }
    }
 
-   /* report a local/arg that is only read from a 'special operator',
-    * i.e., in a postIncrement expression or a compound assignment,
-    * where the information is never flowing out off the local/arg. */
+   /*
+    * report a local/arg that is only read from a 'special operator', i.e., in a postIncrement expression or a compound
+    * assignment, where the information is never flowing out off the local/arg.
+    */
    static void reportOnlyUselesslyReadLocal(BlockScope currentScope, LocalVariableBinding localBinding,
       boolean valueRequired)
    {

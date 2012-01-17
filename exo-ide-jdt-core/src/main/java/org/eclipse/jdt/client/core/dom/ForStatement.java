@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * For statement AST node type.
- *
+ * 
  * <pre>
  * ForStatement:
  *    <b>for</b> <b>(</b>
@@ -30,14 +30,11 @@ import java.util.List;
  * 		Expression { <b>,</b> Expression }
  * </pre>
  * <p>
- * Note: When variables are declared in the initializer
- * of a for statement such as "<code>for (int a=1, b=2;;);</code>",
- * they should be represented as a single
- * <code>VariableDeclarationExpression</code>
- * with two fragments, rather than being split up into a pair
- * of expressions.
+ * Note: When variables are declared in the initializer of a for statement such as "<code>for (int a=1, b=2;;);</code>", they
+ * should be represented as a single <code>VariableDeclarationExpression</code> with two fragments, rather than being split up
+ * into a pair of expressions.
  * </p>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -46,6 +43,7 @@ public class ForStatement extends Statement
 
    /**
     * The "initializers" structural property of this node type (element type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildListPropertyDescriptor INITIALIZERS_PROPERTY = new ChildListPropertyDescriptor(
@@ -53,6 +51,7 @@ public class ForStatement extends Statement
 
    /**
     * The "expression" structural property of this node type (child type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(ForStatement.class,
@@ -60,6 +59,7 @@ public class ForStatement extends Statement
 
    /**
     * The "updaters" structural property of this node type (element type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildListPropertyDescriptor UPDATERS_PROPERTY = new ChildListPropertyDescriptor(
@@ -67,15 +67,14 @@ public class ForStatement extends Statement
 
    /**
     * The "body" structural property of this node type (child type: {@link Statement}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(ForStatement.class,
       "body", Statement.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -91,14 +90,11 @@ public class ForStatement extends Statement
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -107,8 +103,7 @@ public class ForStatement extends Statement
    }
 
    /**
-    * The list of initializer expressions (element type:
-    * {@link Expression}). Defaults to an empty list.
+    * The list of initializer expressions (element type: {@link Expression}). Defaults to an empty list.
     */
    private ASTNode.NodeList initializers = new ASTNode.NodeList(INITIALIZERS_PROPERTY);
 
@@ -118,22 +113,19 @@ public class ForStatement extends Statement
    private Expression optionalConditionExpression = null;
 
    /**
-    * The list of update expressions (element type:
-    * {@link Expression}). Defaults to an empty list.
+    * The list of update expressions (element type: {@link Expression}). Defaults to an empty list.
     */
    private ASTNode.NodeList updaters = new ASTNode.NodeList(UPDATERS_PROPERTY);
 
    /**
-    * The body statement; lazily initialized; defaults to an empty block
-    * statement.
+    * The body statement; lazily initialized; defaults to an empty block statement.
     */
    private Statement body = null;
 
    /**
-    * Creates a new AST node for a for statement owned by the given AST.
-    * By default, there are no initializers, no condition expression,
-    * no updaters, and the body is an empty block.
-    *
+    * Creates a new AST node for a for statement owned by the given AST. By default, there are no initializers, no condition
+    * expression, no updaters, and the body is an empty block.
+    * 
     * @param ast the AST that is to own this node
     */
    ForStatement(AST ast)
@@ -141,16 +133,16 @@ public class ForStatement extends Statement
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -182,8 +174,8 @@ public class ForStatement extends Statement
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
@@ -199,16 +191,16 @@ public class ForStatement extends Statement
       return super.internalGetChildListProperty(property);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return FOR_STATEMENT;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -222,8 +214,8 @@ public class ForStatement extends Statement
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -231,8 +223,8 @@ public class ForStatement extends Statement
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -249,16 +241,13 @@ public class ForStatement extends Statement
    }
 
    /**
-    * Returns the live ordered list of initializer expressions in this for
-    * statement.
+    * Returns the live ordered list of initializer expressions in this for statement.
     * <p>
-    * The list should consist of either a list of so called statement
-    * expressions (JLS2, 14.8), or a single <code>VariableDeclarationExpression</code>.
-    * Otherwise, the for statement would have no Java source equivalent.
+    * The list should consist of either a list of so called statement expressions (JLS2, 14.8), or a single
+    * <code>VariableDeclarationExpression</code>. Otherwise, the for statement would have no Java source equivalent.
     * </p>
-    *
-    * @return the live list of initializer expressions
-    *    (element type: {@link Expression})
+    * 
+    * @return the live list of initializer expressions (element type: {@link Expression})
     */
    public List initializers()
    {
@@ -266,11 +255,9 @@ public class ForStatement extends Statement
    }
 
    /**
-    * Returns the condition expression of this for statement, or
-    * <code>null</code> if there is none.
-    *
-    * @return the condition expression node, or <code>null</code> if
-    *     there is none
+    * Returns the condition expression of this for statement, or <code>null</code> if there is none.
+    * 
+    * @return the condition expression node, or <code>null</code> if there is none
     */
    public Expression getExpression()
    {
@@ -279,15 +266,14 @@ public class ForStatement extends Statement
 
    /**
     * Sets or clears the condition expression of this return statement.
-    *
-    * @param expression the condition expression node, or <code>null</code>
-    *    if there is none
+    * 
+    * @param expression the condition expression node, or <code>null</code> if there is none
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setExpression(Expression expression)
    {
@@ -298,15 +284,13 @@ public class ForStatement extends Statement
    }
 
    /**
-    * Returns the live ordered list of update expressions in this for
-    * statement.
+    * Returns the live ordered list of update expressions in this for statement.
     * <p>
-    * The list should consist of so called statement expressions. Otherwise,
-    * the for statement would have no Java source equivalent.
+    * The list should consist of so called statement expressions. Otherwise, the for statement would have no Java source
+    * equivalent.
     * </p>
-    *
-    * @return the live list of update expressions
-    *    (element type: {@link Expression})
+    * 
+    * @return the live list of update expressions (element type: {@link Expression})
     */
    public List updaters()
    {
@@ -315,7 +299,7 @@ public class ForStatement extends Statement
 
    /**
     * Returns the body of this for statement.
-    *
+    * 
     * @return the body statement node
     */
    public Statement getBody()
@@ -339,21 +323,19 @@ public class ForStatement extends Statement
    /**
     * Sets the body of this for statement.
     * <p>
-    * Special note: The Java language does not allow a local variable declaration
-    * to appear as the body of a for statement (they may only appear within a
-    * block). However, the AST will allow a <code>VariableDeclarationStatement</code>
-    * as the body of a <code>ForStatement</code>. To get something that will
-    * compile, be sure to embed the <code>VariableDeclarationStatement</code>
-    * inside a <code>Block</code>.
+    * Special note: The Java language does not allow a local variable declaration to appear as the body of a for statement (they
+    * may only appear within a block). However, the AST will allow a <code>VariableDeclarationStatement</code> as the body of a
+    * <code>ForStatement</code>. To get something that will compile, be sure to embed the
+    * <code>VariableDeclarationStatement</code> inside a <code>Block</code>.
     * </p>
-    *
+    * 
     * @param statement the body statement node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setBody(Statement statement)
    {
@@ -367,16 +349,16 @@ public class ForStatement extends Statement
       postReplaceChild(oldChild, statement, BODY_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return super.memSize() + 4 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

@@ -20,7 +20,7 @@ import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 
 /**
  * String literal nodes.
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -29,15 +29,14 @@ public class StringLiteral extends Expression
 
    /**
     * The "escapedValue" structural property of this node type (type: {@link String}).
+    * 
     * @since 3.0
     */
    public static final SimplePropertyDescriptor ESCAPED_VALUE_PROPERTY = new SimplePropertyDescriptor(
       StringLiteral.class, "escapedValue", String.class, MANDATORY); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -50,14 +49,11 @@ public class StringLiteral extends Expression
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -66,18 +62,17 @@ public class StringLiteral extends Expression
    }
 
    /**
-    * The literal string, including quotes and escapes; defaults to the
-    * literal for the empty string.
+    * The literal string, including quotes and escapes; defaults to the literal for the empty string.
     */
    private String escapedValue = "\"\"";//$NON-NLS-1$
 
    /**
-    * Creates a new unparented string literal node owned by the given AST.
-    * By default, the string literal denotes the empty string.
+    * Creates a new unparented string literal node owned by the given AST. By default, the string literal denotes the empty
+    * string.
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    StringLiteral(AST ast)
@@ -85,16 +80,16 @@ public class StringLiteral extends Expression
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value)
    {
@@ -114,16 +109,16 @@ public class StringLiteral extends Expression
       return super.internalGetSetObjectProperty(property, get, value);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return STRING_LITERAL;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -133,8 +128,8 @@ public class StringLiteral extends Expression
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -142,8 +137,8 @@ public class StringLiteral extends Expression
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -152,13 +147,10 @@ public class StringLiteral extends Expression
    }
 
    /**
-    * Returns the string value of this literal node to the given string
-    * literal token. The token is the sequence of characters that would appear
-    * in the source program, including enclosing double quotes and embedded
-    * escapes.
-    *
-    * @return the string literal token, including enclosing double
-    *    quotes and embedded escapes
+    * Returns the string value of this literal node to the given string literal token. The token is the sequence of characters
+    * that would appear in the source program, including enclosing double quotes and embedded escapes.
+    * 
+    * @return the string literal token, including enclosing double quotes and embedded escapes
     */
    public String getEscapedValue()
    {
@@ -166,18 +158,15 @@ public class StringLiteral extends Expression
    }
 
    /**
-    * Sets the string value of this literal node to the given string literal
-    * token. The token is the sequence of characters that would appear in the
-    * source program, including enclosing double quotes and embedded escapes.
-    * For example,
+    * Sets the string value of this literal node to the given string literal token. The token is the sequence of characters that
+    * would appear in the source program, including enclosing double quotes and embedded escapes. For example,
     * <ul>
     * <li><code>""</code> <code>setLiteral("\"\"")</code></li>
     * <li><code>"hello world"</code> <code>setLiteral("\"hello world\"")</code></li>
     * <li><code>"boo\nhoo"</code> <code>setLiteral("\"boo\\nhoo\"")</code></li>
     * </ul>
-    *
-    * @param token the string literal token, including enclosing double
-    *    quotes and embedded escapes
+    * 
+    * @param token the string literal token, including enclosing double quotes and embedded escapes
     * @exception IllegalArgumentException if the argument is incorrect
     */
    public void setEscapedValue(String token)
@@ -211,8 +200,8 @@ public class StringLiteral extends Expression
       postValueChange(ESCAPED_VALUE_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * This method is a copy of setEscapedValue(String) that doesn't do any validation.
+   /*
+    * (omit javadoc for this method) This method is a copy of setEscapedValue(String) that doesn't do any validation.
     */
    void internalSetEscapedValue(String token)
    {
@@ -225,19 +214,20 @@ public class StringLiteral extends Expression
     * Returns the value of this literal node.
     * <p>
     * For example,
+    * 
     * <pre>
     * StringLiteral s;
-    * s.setEscapedValue("\"hello\\nworld\"");
-    * assert s.getLiteralValue().equals("hello\nworld");
+    * s.setEscapedValue(&quot;\&quot;hello\\nworld\&quot;&quot;);
+    * assert s.getLiteralValue().equals(&quot;hello\nworld&quot;);
     * </pre>
+    * 
     * </p>
     * <p>
-    * Note that this is a convenience method that converts from the stored
-    * string literal token returned by <code>getEscapedLiteral</code>.
+    * Note that this is a convenience method that converts from the stored string literal token returned by
+    * <code>getEscapedLiteral</code>.
     * </p>
-    *
-    * @return the string value without enclosing double quotes and embedded
-    *    escapes
+    * 
+    * @return the string value without enclosing double quotes and embedded escapes
     * @exception IllegalArgumentException if the literal value cannot be converted
     */
    public String getLiteralValue()
@@ -274,20 +264,21 @@ public class StringLiteral extends Expression
     * Sets the value of this literal node.
     * <p>
     * For example,
+    * 
     * <pre>
     * StringLiteral s;
-    * s.setLiteralValue("hello\nworld");
-    * assert s.getEscapedValue().equals("\"hello\\nworld\"");
-    * assert s.getLiteralValue().equals("hello\nworld");
+    * s.setLiteralValue(&quot;hello\nworld&quot;);
+    * assert s.getEscapedValue().equals(&quot;\&quot;hello\\nworld\&quot;&quot;);
+    * assert s.getLiteralValue().equals(&quot;hello\nworld&quot;);
     * </pre>
+    * 
     * </p>
     * <p>
-    * Note that this is a convenience method that converts to the stored
-    * string literal token acceptable to <code>setEscapedLiteral</code>.
+    * Note that this is a convenience method that converts to the stored string literal token acceptable to
+    * <code>setEscapedLiteral</code>.
     * </p>
-    *
-    * @param value the string value without enclosing double quotes and
-    *    embedded escapes
+    * 
+    * @param value the string value without enclosing double quotes and embedded escapes
     * @exception IllegalArgumentException if the argument is incorrect
     */
    public void setLiteralValue(String value)
@@ -358,8 +349,8 @@ public class StringLiteral extends Expression
       setEscapedValue(b.toString());
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
@@ -367,8 +358,8 @@ public class StringLiteral extends Expression
       return size;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

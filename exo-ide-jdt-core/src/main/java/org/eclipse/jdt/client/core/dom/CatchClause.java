@@ -16,13 +16,16 @@ import java.util.List;
 
 /**
  * Catch clause AST node type.
- *
+ * 
  * <pre>
  * CatchClause:
  *    <b>catch</b> <b>(</b> FormalParameter <b>)</b> Block
  * </pre>
- *
- * <p>The FormalParameter is represented by a {@link SingleVariableDeclaration}.</p>
+ * 
+ * <p>
+ * The FormalParameter is represented by a {@link SingleVariableDeclaration}.
+ * </p>
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -31,6 +34,7 @@ public class CatchClause extends ASTNode
 
    /**
     * The "exception" structural property of this node type (child type: {@link SingleVariableDeclaration}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor EXCEPTION_PROPERTY = new ChildPropertyDescriptor(CatchClause.class,
@@ -38,15 +42,14 @@ public class CatchClause extends ASTNode
 
    /**
     * The "body" structural property of this node type (child type: {@link Block}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(CatchClause.class,
       "body", Block.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -60,14 +63,11 @@ public class CatchClause extends ASTNode
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -81,19 +81,17 @@ public class CatchClause extends ASTNode
    private Block body = null;
 
    /**
-    * The exception variable declaration; lazily initialized; defaults to a
-    * unspecified, but legal, variable declaration.
+    * The exception variable declaration; lazily initialized; defaults to a unspecified, but legal, variable declaration.
     */
    private SingleVariableDeclaration exceptionDecl = null;
 
    /**
-    * Creates a new AST node for a catch clause owned by the given
-    * AST. By default, the catch clause declares an unspecified, but legal,
-    * exception declaration and has an empty block.
+    * Creates a new AST node for a catch clause owned by the given AST. By default, the catch clause declares an unspecified, but
+    * legal, exception declaration and has an empty block.
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    CatchClause(AST ast)
@@ -101,16 +99,16 @@ public class CatchClause extends ASTNode
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -142,16 +140,16 @@ public class CatchClause extends ASTNode
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return CATCH_CLAUSE;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -162,8 +160,8 @@ public class CatchClause extends ASTNode
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -171,8 +169,8 @@ public class CatchClause extends ASTNode
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -188,7 +186,7 @@ public class CatchClause extends ASTNode
 
    /**
     * Returns the exception variable declaration of this catch clause.
-    *
+    * 
     * @return the exception variable declaration node
     */
    public SingleVariableDeclaration getException()
@@ -211,14 +209,14 @@ public class CatchClause extends ASTNode
 
    /**
     * Sets the variable declaration of this catch clause.
-    *
+    * 
     * @param exception the exception variable declaration node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setException(SingleVariableDeclaration exception)
    {
@@ -234,7 +232,7 @@ public class CatchClause extends ASTNode
 
    /**
     * Returns the body of this catch clause.
-    *
+    * 
     * @return the catch clause body
     */
    public Block getBody()
@@ -257,14 +255,14 @@ public class CatchClause extends ASTNode
 
    /**
     * Sets the body of this catch clause.
-    *
+    * 
     * @param body the catch clause block node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setBody(Block body)
    {
@@ -278,8 +276,8 @@ public class CatchClause extends ASTNode
       postReplaceChild(oldChild, body, BODY_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
@@ -287,8 +285,8 @@ public class CatchClause extends ASTNode
       return BASE_NODE_SIZE + 2 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {

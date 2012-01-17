@@ -13,8 +13,8 @@ package org.eclipse.jdt.client.internal.compiler.lookup;
 public interface TypeIds
 {
 
-   //base type void null undefined Object String
-   //should have an id that is 0<= id <= 15
+   // base type void null undefined Object String
+   // should have an id that is 0<= id <= 15
    // The IDs below must be representable using 4 bits so as to fit in operator signatures.
    final int T_undefined = 0; // should not be changed
 
@@ -42,7 +42,7 @@ public interface TypeIds
 
    final int T_null = 12;
 
-   //=========end of 4 bits constraint===========
+   // =========end of 4 bits constraint===========
 
    // well-known exception types
    final int T_JavaLangClass = 16;
@@ -151,7 +151,7 @@ public interface TypeIds
 
    public static final int COMPILE_TYPE_MASK = 0xF;
 
-   // implicit conversions: <compileType> to <runtimeType>  (note: booleans are integers at runtime)
+   // implicit conversions: <compileType> to <runtimeType> (note: booleans are integers at runtime)
    final int Boolean2Int = T_boolean + (T_int << 4);
 
    final int Boolean2String = T_boolean + (T_JavaLangString << 4);

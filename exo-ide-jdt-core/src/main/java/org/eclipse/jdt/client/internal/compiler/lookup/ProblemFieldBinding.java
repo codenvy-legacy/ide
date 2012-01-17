@@ -31,10 +31,9 @@ public class ProblemFieldBinding extends FieldBinding
       this.problemId = problemId;
    }
 
-   /* API
-   * Answer the problem id associated with the receiver.
-   * NoError if the receiver is a valid binding.
-   */
+   /*
+    * API Answer the problem id associated with the receiver. NoError if the receiver is a valid binding.
+    */
 
    public final int problemId()
    {

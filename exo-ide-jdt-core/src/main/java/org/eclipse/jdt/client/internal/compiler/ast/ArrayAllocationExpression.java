@@ -22,7 +22,7 @@ public class ArrayAllocationExpression extends Expression
 
    public TypeReference type;
 
-   //dimensions.length gives the number of dimensions, but the
+   // dimensions.length gives the number of dimensions, but the
    // last ones may be nulled as in new int[4][5][][]
    public Expression[] dimensions;
 
@@ -49,51 +49,51 @@ public class ArrayAllocationExpression extends Expression
       return flowInfo;
    }
 
-   //   /**
-   //    * Code generation for a array allocation expression
-   //    */
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   //   {
+   // /**
+   // * Code generation for a array allocation expression
+   // */
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   // {
    //
-   //      int pc = codeStream.position;
+   // int pc = codeStream.position;
    //
-   //      if (this.initializer != null)
-   //      {
-   //         this.initializer.generateCode(currentScope, codeStream, valueRequired);
-   //         return;
-   //      }
+   // if (this.initializer != null)
+   // {
+   // this.initializer.generateCode(currentScope, codeStream, valueRequired);
+   // return;
+   // }
    //
-   //      int explicitDimCount = 0;
-   //      for (int i = 0, max = this.dimensions.length; i < max; i++)
-   //      {
-   //         Expression dimExpression;
-   //         if ((dimExpression = this.dimensions[i]) == null)
-   //            break; // implicit dim, no further explict after this point
-   //         dimExpression.generateCode(currentScope, codeStream, true);
-   //         explicitDimCount++;
-   //      }
+   // int explicitDimCount = 0;
+   // for (int i = 0, max = this.dimensions.length; i < max; i++)
+   // {
+   // Expression dimExpression;
+   // if ((dimExpression = this.dimensions[i]) == null)
+   // break; // implicit dim, no further explict after this point
+   // dimExpression.generateCode(currentScope, codeStream, true);
+   // explicitDimCount++;
+   // }
    //
-   //      // array allocation
-   //      if (explicitDimCount == 1)
-   //      {
-   //         // Mono-dimensional array
-   //         codeStream.newArray((ArrayBinding)this.resolvedType);
-   //      }
-   //      else
-   //      {
-   //         // Multi-dimensional array
-   //         codeStream.multianewarray(this.resolvedType, explicitDimCount);
-   //      }
-   //      if (valueRequired)
-   //      {
-   //         codeStream.generateImplicitConversion(this.implicitConversion);
-   //      }
-   //      else
-   //      {
-   //         codeStream.pop();
-   //      }
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // // array allocation
+   // if (explicitDimCount == 1)
+   // {
+   // // Mono-dimensional array
+   // codeStream.newArray((ArrayBinding)this.resolvedType);
+   // }
+   // else
+   // {
+   // // Multi-dimensional array
+   // codeStream.multianewarray(this.resolvedType, explicitDimCount);
+   // }
+   // if (valueRequired)
+   // {
+   // codeStream.generateImplicitConversion(this.implicitConversion);
+   // }
+   // else
+   // {
+   // codeStream.pop();
+   // }
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    public StringBuffer printExpression(int indent, StringBuffer output)
    {
@@ -122,7 +122,7 @@ public class ArrayAllocationExpression extends Expression
       // only at the -end- like new int [4][][]. The parser allows new int[][4][]
       // so this must be checked here......(this comes from a reduction to LL1 grammar)
 
-      TypeBinding referenceType = this.type.resolveType(scope, true /* check bounds*/);
+      TypeBinding referenceType = this.type.resolveType(scope, true /* check bounds */);
 
       // will check for null after dimensions are checked
       this.constant = Constant.NotAConstant;
@@ -157,7 +157,8 @@ public class ArrayAllocationExpression extends Expression
          {
             scope.problemReporter().mustDefineDimensionsOrInitializer(this);
          }
-         // allow new List<?>[5] - only check for generic array when no initializer, since also checked inside initializer resolution
+         // allow new List<?>[5] - only check for generic array when no initializer, since also checked inside initializer
+         // resolution
          if (referenceType != null && !referenceType.isReifiable())
          {
             scope.problemReporter().illegalGenericArray(referenceType, this);

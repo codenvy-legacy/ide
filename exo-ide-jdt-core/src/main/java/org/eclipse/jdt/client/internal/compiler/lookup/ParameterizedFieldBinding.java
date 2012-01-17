@@ -14,10 +14,8 @@ import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
 
 /**
- * Binding denoting a field after type substitution got performed.
- * On parameterized type bindings, all fields got substituted, regardless whether
- * their signature did involve generics or not, so as to get the proper declaringClass for
- * these fields.
+ * Binding denoting a field after type substitution got performed. On parameterized type bindings, all fields got substituted,
+ * regardless whether their signature did involve generics or not, so as to get the proper declaringClass for these fields.
  */
 public class ParameterizedFieldBinding extends FieldBinding
 {

@@ -170,8 +170,7 @@ public class KeyToSignature extends BindingKeyParser
 
    /*
     * Substitutes the type variables referenced in the given parameter (a parameterized type signature) with the corresponding
-    * type argument.
-    * Appends the given parameter if it is not a parameterized type signature.
+    * type argument. Appends the given parameter if it is not a parameterized type signature.
     */
    private void substitute(char[] parameter, char[][] typeParameterSigs, int typeParametersLength)
    {
@@ -398,7 +397,9 @@ public class KeyToSignature extends BindingKeyParser
       return new KeyToSignature(this);
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see java.lang.Object#toString()
     */
    public String toString()

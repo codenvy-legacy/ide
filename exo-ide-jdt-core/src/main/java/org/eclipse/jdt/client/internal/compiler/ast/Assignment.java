@@ -37,8 +37,8 @@ public class Assignment extends Expression
 
    public Assignment(Expression lhs, Expression expression, int sourceEnd)
    {
-      //lhs is always a reference by construction ,
-      //but is build as an expression ==> the checkcast cannot fail
+      // lhs is always a reference by construction ,
+      // but is build as an expression ==> the checkcast cannot fail
       this.lhs = lhs;
       lhs.bits |= IsStrictlyAssigned; // tag lhs as assigned
       this.expression = expression;
@@ -85,7 +85,7 @@ public class Assignment extends Expression
       {
          scope.problemReporter().wildcardAssignment(lhsType, rhsType, this.expression);
       }
-      else if (leftField != null && !leftField.isStatic() && leftField.declaringClass != null /*length pseudo field*/
+      else if (leftField != null && !leftField.isStatic() && leftField.declaringClass != null /* length pseudo field */
          && leftField.declaringClass.isRawType())
       {
          scope.problemReporter().unsafeRawFieldAssignment(leftField, rhsType, this.lhs);
@@ -96,18 +96,19 @@ public class Assignment extends Expression
       }
    }
 
-   //   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   //   {
-   //      // various scenarii are possible, setting an array reference,
-   //      // a field reference, a blank final field reference, a field of an enclosing instance or
-   //      // just a local variable.
+   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   // {
+   // // various scenarii are possible, setting an array reference,
+   // // a field reference, a blank final field reference, a field of an enclosing instance or
+   // // just a local variable.
    //
-   //      int pc = codeStream.position;
-   //      ((Reference)this.lhs).generateAssignment(currentScope, codeStream, this, valueRequired);
-   //      // variable may have been optimized out
-   //      // the lhs is responsible to perform the implicitConversion generation for the assignment since optimized for unused local assignment.
-   //      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   //   }
+   // int pc = codeStream.position;
+   // ((Reference)this.lhs).generateAssignment(currentScope, codeStream, this, valueRequired);
+   // // variable may have been optimized out
+   // // the lhs is responsible to perform the implicitConversion generation for the assignment since optimized for unused local
+   // assignment.
+   // codeStream.recordPositionsFrom(pc, this.sourceStart);
+   // }
 
    FieldBinding getLastField(Expression someExpression)
    {
@@ -147,14 +148,14 @@ public class Assignment extends Expression
 
    public StringBuffer print(int indent, StringBuffer output)
    {
-      //no () when used as a statement
+      // no () when used as a statement
       printIndent(indent, output);
       return printExpressionNoParenthesis(indent, output);
    }
 
    public StringBuffer printExpression(int indent, StringBuffer output)
    {
-      //subclass redefine printExpressionNoParenthesis()
+      // subclass redefine printExpressionNoParenthesis()
       output.append('(');
       return printExpressionNoParenthesis(0, output).append(')');
    }
@@ -167,7 +168,7 @@ public class Assignment extends Expression
 
    public StringBuffer printStatement(int indent, StringBuffer output)
    {
-      //no () when used as a statement
+      // no () when used as a statement
       return print(indent, output).append(';');
    }
 
@@ -233,7 +234,8 @@ public class Assignment extends Expression
    }
 
    /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#resolveTypeExpecting(org.eclipse.jdt.client.internal.compiler.lookup.BlockScope, org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding)
+    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#resolveTypeExpecting(org.eclipse.jdt.client.internal.compiler.lookup.BlockScope,
+    *      org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding)
     */
    public TypeBinding resolveTypeExpecting(BlockScope scope, TypeBinding expectedType)
    {

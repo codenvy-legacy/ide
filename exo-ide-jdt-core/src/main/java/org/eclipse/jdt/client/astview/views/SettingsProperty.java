@@ -25,7 +25,9 @@ public class SettingsProperty extends ASTAttribute
       fRoot = root;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getParent()
     */
    public Object getParent()
@@ -33,7 +35,9 @@ public class SettingsProperty extends ASTAttribute
       return fRoot;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getChildren()
     */
    public Object[] getChildren()
@@ -47,7 +51,9 @@ public class SettingsProperty extends ASTAttribute
       return res;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getLabel()
     */
    public String getLabel()
@@ -55,7 +61,9 @@ public class SettingsProperty extends ASTAttribute
       return "> AST settings"; //$NON-NLS-1$
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
+    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getImage()
     */
    public Image getImage()

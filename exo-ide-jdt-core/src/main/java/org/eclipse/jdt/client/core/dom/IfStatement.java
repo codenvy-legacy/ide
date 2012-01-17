@@ -16,11 +16,12 @@ import java.util.List;
 
 /**
  * If statement AST node type.
+ * 
  * <pre>
  * IfStatement:
  *    <b>if</b> <b>(</b> Expression <b>)</b> Statement [ <b>else</b> Statement]
  * </pre>
- *
+ * 
  * @since 2.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -29,6 +30,7 @@ public class IfStatement extends Statement
 
    /**
     * The "expression" structural property of this node type (child type: {@link Expression}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(IfStatement.class,
@@ -36,6 +38,7 @@ public class IfStatement extends Statement
 
    /**
     * The "thenStatement" structural property of this node type (child type: {@link Statement}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor THEN_STATEMENT_PROPERTY = new ChildPropertyDescriptor(IfStatement.class,
@@ -43,15 +46,14 @@ public class IfStatement extends Statement
 
    /**
     * The "elseStatement" structural property of this node type (child type: {@link Statement}).
+    * 
     * @since 3.0
     */
    public static final ChildPropertyDescriptor ELSE_STATEMENT_PROPERTY = new ChildPropertyDescriptor(IfStatement.class,
       "elseStatement", Statement.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * A list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor}),
-    * or null if uninitialized.
+    * A list of property descriptors (element type: {@link StructuralPropertyDescriptor}), or null if uninitialized.
     */
    private static final List PROPERTY_DESCRIPTORS;
 
@@ -66,14 +68,11 @@ public class IfStatement extends Statement
    }
 
    /**
-    * Returns a list of structural property descriptors for this node type.
-    * Clients must not modify the result.
-    *
-    * @param apiLevel the API level; one of the
-    * <code>AST.JLS*</code> constants
-
-    * @return a list of property descriptors (element type:
-    * {@link StructuralPropertyDescriptor})
+    * Returns a list of structural property descriptors for this node type. Clients must not modify the result.
+    * 
+    * @param apiLevel the API level; one of the <code>AST.JLS*</code> constants
+    * 
+    * @return a list of property descriptors (element type: {@link StructuralPropertyDescriptor})
     * @since 3.0
     */
    public static List propertyDescriptors(int apiLevel)
@@ -82,14 +81,12 @@ public class IfStatement extends Statement
    }
 
    /**
-    * The expression; lazily initialized; defaults to an unspecified, but
-    * legal, expression.
+    * The expression; lazily initialized; defaults to an unspecified, but legal, expression.
     */
    private Expression expression = null;
 
    /**
-    * The then statement; lazily initialized; defaults to an unspecified, but
-    * legal, statement.
+    * The then statement; lazily initialized; defaults to an unspecified, but legal, statement.
     */
    private Statement thenStatement = null;
 
@@ -99,14 +96,12 @@ public class IfStatement extends Statement
    private Statement optionalElseStatement = null;
 
    /**
-    * Creates a new unparented if statement node owned by the given
-    * AST. By default, the expresssion is unspecified,
-    * but legal, the then statement is an empty block, and there is no else
-    * statement.
+    * Creates a new unparented if statement node owned by the given AST. By default, the expresssion is unspecified, but legal,
+    * the then statement is an empty block, and there is no else statement.
     * <p>
     * N.B. This constructor is package-private.
     * </p>
-    *
+    * 
     * @param ast the AST that is to own this node
     */
    IfStatement(AST ast)
@@ -114,16 +109,16 @@ public class IfStatement extends Statement
       super(ast);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
@@ -167,16 +162,16 @@ public class IfStatement extends Statement
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final int getNodeType0()
    {
       return IF_STATEMENT;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    ASTNode clone0(AST target)
    {
@@ -189,8 +184,8 @@ public class IfStatement extends Statement
       return result;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
@@ -198,8 +193,8 @@ public class IfStatement extends Statement
       return matcher.match(this, other);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    void accept0(ASTVisitor visitor)
    {
@@ -216,7 +211,7 @@ public class IfStatement extends Statement
 
    /**
     * Returns the expression of this if statement.
-    *
+    * 
     * @return the expression node
     */
    public Expression getExpression()
@@ -239,14 +234,14 @@ public class IfStatement extends Statement
 
    /**
     * Sets the condition of this if statement.
-    *
+    * 
     * @param expression the expression node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setExpression(Expression expression)
    {
@@ -262,7 +257,7 @@ public class IfStatement extends Statement
 
    /**
     * Returns the "then" part of this if statement.
-    *
+    * 
     * @return the "then" statement node
     */
    public Statement getThenStatement()
@@ -286,21 +281,19 @@ public class IfStatement extends Statement
    /**
     * Sets the "then" part of this if statement.
     * <p>
-    * Special note: The Java language does not allow a local variable declaration
-    * to appear as the "then" part of an if statement (they may only appear within a
-    * block). However, the AST will allow a <code>VariableDeclarationStatement</code>
-    * as the thenStatement of a <code>IfStatement</code>. To get something that will
-    * compile, be sure to embed the <code>VariableDeclarationStatement</code>
-    * inside a <code>Block</code>.
+    * Special note: The Java language does not allow a local variable declaration to appear as the "then" part of an if statement
+    * (they may only appear within a block). However, the AST will allow a <code>VariableDeclarationStatement</code> as the
+    * thenStatement of a <code>IfStatement</code>. To get something that will compile, be sure to embed the
+    * <code>VariableDeclarationStatement</code> inside a <code>Block</code>.
     * </p>
-    *
+    * 
     * @param statement the "then" statement node
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setThenStatement(Statement statement)
    {
@@ -315,13 +308,12 @@ public class IfStatement extends Statement
    }
 
    /**
-    * Returns the "else" part of this if statement, or <code>null</code> if
-    * this if statement has <b>no</b> "else" part.
+    * Returns the "else" part of this if statement, or <code>null</code> if this if statement has <b>no</b> "else" part.
     * <p>
-    * Note that there is a subtle difference between having no else
-    * statement and having an empty statement ("{}") or null statement (";").
+    * Note that there is a subtle difference between having no else statement and having an empty statement ("{}") or null
+    * statement (";").
     * </p>
-    *
+    * 
     * @return the "else" statement node, or <code>null</code> if none
     */
    public Statement getElseStatement()
@@ -332,27 +324,23 @@ public class IfStatement extends Statement
    /**
     * Sets or clears the "else" part of this if statement.
     * <p>
-    * Note that there is a subtle difference between having no else part
-    * (as in <code>"if(true){}"</code>) and having an empty block (as in
-    * "if(true){}else{}") or null statement (as in "if(true){}else;").
+    * Note that there is a subtle difference between having no else part (as in <code>"if(true){}"</code>) and having an empty
+    * block (as in "if(true){}else{}") or null statement (as in "if(true){}else;").
     * </p>
     * <p>
-    * Special note: The Java language does not allow a local variable declaration
-    * to appear as the "else" part of an if statement (they may only appear within a
-    * block). However, the AST will allow a <code>VariableDeclarationStatement</code>
-    * as the elseStatement of a <code>IfStatement</code>. To get something that will
-    * compile, be sure to embed the <code>VariableDeclarationStatement</code>
-    * inside a <code>Block</code>.
+    * Special note: The Java language does not allow a local variable declaration to appear as the "else" part of an if statement
+    * (they may only appear within a block). However, the AST will allow a <code>VariableDeclarationStatement</code> as the
+    * elseStatement of a <code>IfStatement</code>. To get something that will compile, be sure to embed the
+    * <code>VariableDeclarationStatement</code> inside a <code>Block</code>.
     * </p>
-    *
-    * @param statement the "else" statement node, or <code>null</code> if
-    *    there is none
+    * 
+    * @param statement the "else" statement node, or <code>null</code> if there is none
     * @exception IllegalArgumentException if:
-    * <ul>
-    * <li>the node belongs to a different AST</li>
-    * <li>the node already has a parent</li>
-    * <li>a cycle in would be created</li>
-    * </ul>
+    *               <ul>
+    *               <li>the node belongs to a different AST</li>
+    *               <li>the node already has a parent</li>
+    *               <li>a cycle in would be created</li>
+    *               </ul>
     */
    public void setElseStatement(Statement statement)
    {
@@ -362,16 +350,16 @@ public class IfStatement extends Statement
       postReplaceChild(oldChild, statement, ELSE_STATEMENT_PROPERTY);
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int memSize()
    {
       return super.memSize() + 3 * 4;
    }
 
-   /* (omit javadoc for this method)
-    * Method declared on ASTNode.
+   /*
+    * (omit javadoc for this method) Method declared on ASTNode.
     */
    int treeSize()
    {
