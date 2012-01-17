@@ -400,8 +400,8 @@
            <version>${project.version}</version>
          </dependency>
         <dependency>
-          <groupId>org.exoplatform.ide.codeassistant</groupId>
-          <artifactId>codeassistant-lucene-index</artifactId>
+          <groupId>org.exoplatform.ide</groupId>
+          <artifactId>ide-codeassistant-lucene-index</artifactId>
           <version>${ide.codeassistant.lucene.index.version}</version>
           <type>zip</type>
         </dependency>
