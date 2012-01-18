@@ -22,6 +22,9 @@ import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.util.List;
@@ -149,5 +152,28 @@ public class RestCodeAssistantGroovy
       }
       return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
          + codeAssistant.getMemberJavaDoc(fqn, projectId, vfsId) + "</body></html>";
+   }
+   
+   /**
+    * Find all classes in package
+    * 
+    * @param uriInfo
+    * @param location
+    * @return set of FQNs matched to project at file location
+    * @throws CodeAssistantException
+    * @throws VirtualFileSystemException
+    * @throws PermissionDeniedException
+    * @throws ItemNotFoundException
+    */
+   @GET
+   @Path("/find-in-package")
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<ShortTypeInfo> findClassesInPackage(@QueryParam("fileid") String fileId,
+      @QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId) throws CodeAssistantException,
+      VirtualFileSystemException
+   {
+      if (projectId == null)
+         throw new InvalidArgumentException("'projectid' parameter is null.");
+      return codeAssistant.getClassesFromProject(fileId, projectId, vfsId);
    }
 }

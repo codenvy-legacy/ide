@@ -29,6 +29,7 @@ import org.exoplatform.ide.extension.groovy.server.Base;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ExtendedSession;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
@@ -230,6 +231,21 @@ public class CodeAssistantTest extends Base
       ContainerResponse response = launcher.service("GET", path, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
       Assert.assertNotNull(response.getEntity());
+   }
+   
+   @Test
+   @SuppressWarnings("unchecked")
+   public void findClassesInOnePackage() throws Exception
+   {
+      Item file =
+         virtualFileSystem.getItemByPath(project.getPath() + "/data/Pojo.groovy", null, PropertyFilter.NONE_FILTER);
+      String fileId = file.getId();
+      ContainerResponse response =
+         launcher.service("GET", "/ide/code-assistant/groovy/find-in-package" + "?projectid=" + project.getId()
+            + "&vfsid=" + vfs_id + "&fileid=" + fileId, "", null, null, null, null);
+      Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+      List<ShortTypeInfo> types = (List<ShortTypeInfo>)response.getEntity();
+      Assert.assertEquals(2, types.size());
    }
 
    private void putClass(ClassLoader classLoader, String fqn) throws Exception

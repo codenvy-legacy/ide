@@ -23,12 +23,20 @@ import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPath;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistant;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
+import org.exoplatform.ide.codeassistant.jvm.bean.ShortTypeInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import java.net.MalformedURLException;
@@ -161,7 +169,23 @@ public class GroovyCodeAssistant extends CodeAssistant
    public List<ShortTypeInfo> getClassesFromProject(String fileId, String projectId, String vfsId)
       throws VirtualFileSystemException, CodeAssistantException
    {
-      return null;
+      List<ShortTypeInfo> classNames = null;
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      Item item = vfs.getItem(fileId, PropertyFilter.ALL_FILTER);
+      if (item.getItemType() != ItemType.FILE)
+         throw new InvalidArgumentException("Unable find Classes. Item " + item.getName() + " is not a file. ");
+
+      Item p = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+
+      Project project = null;
+      if (p instanceof Project)
+         project = (Project)p;
+      else
+         throw new InvalidArgumentException("Unable find Classes. Item " + p.getName() + " is not a project. ");
+
+      classNames = findClassesInPackage((File)item, project, vfs);
+
+      return classNames;
    }
 
    /**
@@ -173,5 +197,45 @@ public class GroovyCodeAssistant extends CodeAssistant
    {
       //we don't support this feature now
       throw new CodeAssistantException(404, "Not found");
+   }
+   
+   /**
+    * Find classes in package
+    * 
+    * @param fileId
+    * @param vfsId
+    * @return
+    * @throws CodeAssistantException
+    * @throws VirtualFileSystemException
+    */
+   private List<ShortTypeInfo> findClassesInPackage(File file, Project project, VirtualFileSystem vfs)
+      throws CodeAssistantException, VirtualFileSystemException
+   {
+      List<ShortTypeInfo> classes = new ArrayList<ShortTypeInfo>();
+      ItemList<Item> children = vfs.getChildren(file.getParentId(), -1, 0, PropertyFilter.ALL_FILTER);
+      for (Item i : children.getItems())
+      {
+         if (i.getName().endsWith(".grs") || i.getName().endsWith(".groovy") || i.getName().endsWith(".cmtc"))
+         {
+            if (file.getId().equals(i.getId()) || ItemType.FILE != i.getItemType())
+               continue;
+            classes.add(new ShortTypeInfoBean(getClassNameOnFileName(i.getName()), 0, "CLASS"));
+         }
+      }
+      return classes;
+   }
+   
+   /**
+    * Return word until first point like "ClassName" on file name "ClassName.java"
+    * 
+    * @param fileName
+    * @return
+    */
+   private String getClassNameOnFileName(String fileName)
+   {
+      if (fileName != null)
+         return fileName.substring(0, fileName.indexOf("."));
+
+      return null;
    }
 }

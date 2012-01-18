@@ -23,8 +23,8 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.ide.editor.api.codeassitant.NumericProperty;
 import org.exoplatform.ide.editor.api.codeassitant.StringProperty;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
@@ -41,7 +41,7 @@ import java.util.List;
  * @version $Id: Nov 17, 2010 4:51:03 PM evgen $
  * 
  */
-public class FindClassesUnmarshaller implements Unmarshallable
+public class FindClassesUnmarshaller implements Unmarshallable<List<Token>>
 {
 
    private static final String NAME = "name";
@@ -94,5 +94,14 @@ public class FindClassesUnmarshaller implements Unmarshallable
             tokens.add(token);
          }
       }
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<Token> getPayload()
+   {
+      return tokens;
    }
 }

@@ -20,7 +20,8 @@ package org.exoplatform.ide.editor.groovy.client;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.rest.copy.MimeType;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
@@ -34,6 +35,8 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.groovy.client.codeassistant.GroovyCodeAssistant;
@@ -45,7 +48,12 @@ import org.exoplatform.ide.editor.groovy.client.codemirror.GroovyParser;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistant;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaTokenWidgetFactory;
+import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.FindClassesUnmarshaller;
+import org.exoplatform.ide.editor.java.client.codemirror.JavaCodeValidator;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -61,6 +69,10 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
    private JavaTokenWidgetFactory factory;
 
    private ProjectModel currentProject;
+   
+   private JavaCodeValidator groovyCodeValidator;
+   
+   private GroovyCodeAssistantService service;
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
@@ -87,7 +99,6 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      GroovyCodeAssistantService service;
       if (GroovyCodeAssistantService.get() == null)
          service = new GroovyCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
       else
@@ -97,19 +108,20 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
          new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
             + "/ide/code-assistant/groovy/class-doc?fqn=");
       groovyCodeAssistant = new GroovyCodeAssistant(service, factory, this);
+      groovyCodeValidator = new GroovyCodeValidator();
       IDE.getInstance().addEditor(
          new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO editor", "groovy", Images.INSTANCE
             .groovy(), true, new CodeMirrorConfiguration().setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
             .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
             .setParser(new GroovyParser()).setCanBeOutlined(true).setAutocompleteHelper(new GroovyAutocompleteHelper())
-            .setCodeAssistant(groovyCodeAssistant).setCodeValidator(new GroovyCodeValidator())));
+            .setCodeAssistant(groovyCodeAssistant).setCodeValidator(groovyCodeValidator)));
 
       IDE.getInstance().addEditor(
          new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs", Images.INSTANCE
             .groovy(), true, new CodeMirrorConfiguration().setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
             .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
             .setParser(new GroovyParser()).setCanBeOutlined(true).setAutocompleteHelper(new GroovyAutocompleteHelper())
-            .setCodeAssistant(groovyCodeAssistant).setCodeValidator(new GroovyCodeValidator())));
+            .setCodeAssistant(groovyCodeAssistant).setCodeValidator(groovyCodeValidator)));
 
       GroovyOutlineItemCreator groovyOutlineItemCreator = new GroovyOutlineItemCreator();
       IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_GROOVY, groovyOutlineItemCreator);
@@ -146,15 +158,40 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
     */
    @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   public void onEditorActiveFileChanged(final EditorActiveFileChangedEvent event)
    {
       if (event.getFile() != null)
       {
-         ProjectModel project = event.getFile().getProject() != null ? event.getFile().getProject() : currentProject;
+         final ProjectModel project = event.getFile().getProject() != null ? event.getFile().getProject() : currentProject;
          if (project != null)
          {
             groovyCodeAssistant.setActiveProjectId(project.getId());
             factory.setProjectId(project.getId());
+         }
+         
+         if (event.getFile().getMimeType().equals(MimeType.APPLICATION_GROOVY) || event.getFile().getMimeType()
+                  .equals(MimeType.GROOVY_SERVICE)
+                  || event.getFile().getMimeType().equals(MimeType.CHROMATTIC_DATA_OBJECT))
+         {
+            List<Token> classes = new ArrayList<Token>();
+            FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(classes);
+            service.findClassesByProject(event.getFile().getId(), project.getId(),
+               new AsyncRequestCallback<List<Token>>(unmarshaller)
+               {
+
+                  @Override
+                  protected void onSuccess(List<Token> result)
+                  {
+                     groovyCodeValidator.setClassesFromProject(result);
+                     ((CodeMirror)event.getEditor()).validateCode();
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     handleError(exception);
+                  }
+               });
          }
       }
    }

@@ -18,8 +18,17 @@
  */
 package org.exoplatform.ide.editor.groovy.client.codeassistant.service;
 
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.CodeAssistantService;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -30,6 +39,8 @@ public class GroovyCodeAssistantService extends CodeAssistantService
 {
 
    private static GroovyCodeAssistantService instance;
+   
+   private static final String FIND_BY_PROJECT = "/ide/code-assistant/groovy/find-in-package";
 
    /**
     * @param eventBus
@@ -48,5 +59,30 @@ public class GroovyCodeAssistantService extends CodeAssistantService
    public static GroovyCodeAssistantService get()
    {
       return instance;
+   }
+   
+   /**
+    * Find all classes from project with file.
+    * 
+    * @param fileRelPath for who autocompletion called (Need for find classpath)
+    * @param callback - the callback which client has to implement
+    */
+   public void findClassesByProject(String fileId, String projectId, AsyncRequestCallback<List<Token>> callback)
+   {
+      if (fileId != null)
+      {
+         String url = restServiceContext + FIND_BY_PROJECT;
+         url +=
+            "?fileid=" + fileId + "&projectid=" + projectId + "&vfsid="
+               + VirtualFileSystem.getInstance().getInfo().getId();
+         try
+         {
+            AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+         }
+         catch (RequestException e)
+         {
+            e.printStackTrace();
+         }
+      }
    }
 }
