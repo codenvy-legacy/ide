@@ -18,9 +18,11 @@
  */
 package org.exoplatform.ide.extension.groovy.client.handlers;
 
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -84,21 +86,28 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
          return;
       }
 
-      GroovyService.getInstance().deploy(activeFile.getId(), VirtualFileSystem.getInstance().getInfo().getId(),
-         currentProject.getId(), new AsyncRequestCallback<String>()
-         {
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         GroovyService.getInstance().deploy(activeFile.getId(), VirtualFileSystem.getInstance().getInfo().getId(),
+            currentProject.getId(), new AsyncRequestCallback<String>()
             {
-               deploySuccess(activeFile.getPath());
-            }
+               @Override
+               protected void onSuccess(String result)
+               {
+                  deploySuccess(activeFile.getPath());
+               }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               deployFailure(activeFile.getPath(), exception);
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  deployFailure(activeFile.getPath(), exception);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         deployFailure(activeFile.getPath(), e);
+      }
    }
 
    private void deploySuccess(String href)
@@ -146,21 +155,29 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
          return;
       }
 
-      GroovyService.getInstance().deploySandbox(activeFile.getId(), VirtualFileSystem.getInstance().getInfo().getId(),
-         currentProject.getId(), new AsyncRequestCallback<String>()
-         {
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         GroovyService.getInstance().deploySandbox(activeFile.getId(),
+            VirtualFileSystem.getInstance().getInfo().getId(), currentProject.getId(),
+            new AsyncRequestCallback<String>()
             {
-               deploySuccess(activeFile.getPath());
-            }
+               @Override
+               protected void onSuccess(String result)
+               {
+                  deploySuccess(activeFile.getPath());
+               }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               deployFailure(activeFile.getPath(), exception);
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  deployFailure(activeFile.getPath(), exception);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         deployFailure(activeFile.getPath(), e);
+      }
    }
 
    @Override

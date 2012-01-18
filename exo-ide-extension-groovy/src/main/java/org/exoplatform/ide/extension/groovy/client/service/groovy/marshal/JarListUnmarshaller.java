@@ -18,17 +18,17 @@
  */
 package org.exoplatform.ide.extension.groovy.client.service.groovy.marshal;
 
-import java.util.List;
-
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.extension.groovy.shared.Attribute;
-import org.exoplatform.ide.extension.groovy.shared.Jar;
-
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.ide.extension.groovy.shared.Attribute;
+import org.exoplatform.ide.extension.groovy.shared.Jar;
+
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -37,7 +37,7 @@ import com.google.gwt.json.client.JSONObject;
  * @version $
  */
 
-public class JarListUnmarshaller implements Unmarshallable
+public class JarListUnmarshaller implements Unmarshallable<List<Jar>>
 {
 
    private List<Jar> jarList;
@@ -50,8 +50,11 @@ public class JarListUnmarshaller implements Unmarshallable
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      JavaScriptObject json = build(response.getText());
-      JSONArray jsonArray = new JSONArray(json);
+      JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
+      if (jsonArray == null)
+      {
+         return;
+      }
 
       for (int i = 0; i < jsonArray.size(); i++)
       {
@@ -74,8 +77,13 @@ public class JarListUnmarshaller implements Unmarshallable
       }
    }
 
-   private static native JavaScriptObject build(String json) /*-{
-                                                             return eval('(' + json + ')');      
-                                                             }-*/;
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<Jar> getPayload()
+   {
+      return jarList;
+   }
 
 }

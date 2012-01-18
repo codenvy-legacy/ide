@@ -23,7 +23,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Image;
 
-import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -149,8 +149,8 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    public void onInitializeServices(InitializeServicesEvent event)
    {
       configuration = event.getApplicationConfiguration();
-      new GroovyServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(), event.getLoader());
-      new WadlServiceImpl(IDE.eventBus(), event.getLoader());
+      new GroovyServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
+      new WadlServiceImpl(event.getLoader());
    }
 
    /**
@@ -161,9 +161,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       if (event.getException() == null)
       {
          String response = event.getOutput().getResponseAsHtmlString();
-
-         OutputEvent outputEvent = new OutputEvent(response, OutputMessage.Type.OUTPUT);
-         IDE.fireEvent(outputEvent);
+         IDE.fireEvent(new OutputEvent(response, OutputMessage.Type.OUTPUT));
       }
       else
       {
@@ -175,8 +173,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
                "<b>" + event.getOutput().getUrl() + "</b>&nbsp;" + exception.getHTTPStatus() + "&nbsp;"
                   + exception.getStatusText() + "<hr>" + exception.getMessage();
 
-            OutputEvent errorEvent = new OutputEvent(message, OutputMessage.Type.ERROR);
-            IDE.fireEvent(errorEvent);
+            IDE.fireEvent(new OutputEvent(message, OutputMessage.Type.ERROR));
          }
          else
          {

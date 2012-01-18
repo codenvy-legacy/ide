@@ -18,16 +18,15 @@
  */
 package org.exoplatform.ide.extension.groovy.client.service.wadl;
 
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.copy.HTTPMethod;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
-import org.exoplatform.ide.extension.groovy.client.service.wadl.marshal.WadlServiceOutputUnmarshaller;
 
 /**
  * Created by The eXo Platform SAS.
@@ -37,13 +36,10 @@ import org.exoplatform.ide.extension.groovy.client.service.wadl.marshal.WadlServ
  */
 public class WadlServiceImpl extends WadlService
 {
-   private HandlerManager eventBus;
-
    private Loader loader;
 
-   public WadlServiceImpl(HandlerManager eventBus, Loader loader)
+   public WadlServiceImpl(Loader loader)
    {
-      this.eventBus = eventBus;
       this.loader = loader;
    }
 
@@ -51,17 +47,9 @@ public class WadlServiceImpl extends WadlService
     * @see org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService#getWadl(java.lang.String,
     *      org.exoplatform.ide.extension.groovy.client.service.wadl.WadlCallback)
     */
-   public void getWadl(String url, AsyncRequestCallback<WadlApplication> callback)
+   public void getWadl(String url, AsyncRequestCallback<WadlApplication> callback) throws RequestException
    {
-      WadlApplication application = new WadlApplication();
-      WadlServiceOutputUnmarshaller unmarshaller = new WadlServiceOutputUnmarshaller(eventBus, application);
-
-      callback.setEventBus(eventBus);
-      callback.setResult(application);
-      callback.setPayload(unmarshaller);
-
-      AsyncRequest request = AsyncRequest.build(RequestBuilder.POST, url, loader);
-
+      AsyncRequest request = AsyncRequest.build(RequestBuilder.POST, url).loader(loader);
       request.header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.OPTIONS);
       request.send(callback);
    }

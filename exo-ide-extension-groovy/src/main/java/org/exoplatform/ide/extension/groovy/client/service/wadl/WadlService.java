@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.extension.groovy.client.service.wadl;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 
 /**
@@ -48,6 +50,6 @@ public abstract class WadlService
     * @param url - the url
     * @param callback - callback which client has to implement
     */
-   public abstract void getWadl(String url, AsyncRequestCallback<WadlApplication> callback);
+   public abstract void getWadl(String url, AsyncRequestCallback<WadlApplication> callback) throws RequestException;
 
 }

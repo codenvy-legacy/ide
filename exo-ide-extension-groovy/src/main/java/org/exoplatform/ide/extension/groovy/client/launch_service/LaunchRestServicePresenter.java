@@ -18,19 +18,21 @@
  */
 package org.exoplatform.ide.extension.groovy.client.launch_service;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Vector;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.wadl.Method;
 import org.exoplatform.gwtframework.commons.wadl.Param;
 import org.exoplatform.gwtframework.commons.wadl.ParamStyle;
@@ -52,16 +54,16 @@ import org.exoplatform.ide.extension.groovy.client.service.RestServiceOutput;
 import org.exoplatform.ide.extension.groovy.client.service.SimpleParameterEntry;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedEvent;
+import org.exoplatform.ide.extension.groovy.client.service.groovy.marshal.RestServiceOutputUnmarshaller;
 import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService;
+import org.exoplatform.ide.extension.groovy.client.service.wadl.marshal.WadlServiceOutputUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * Created by The eXo Platform SAS.
@@ -219,25 +221,35 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
       }
 
       String url = configuration.getContext() + path;
-      WadlService.getInstance().getWadl(url, new AsyncRequestCallback<WadlApplication>()
+      try
       {
-         @Override
-         protected void onSuccess(WadlApplication result)
-         {
-            wadlApplication = result;
-            display = GWT.create(Display.class);
-            IDE.getInstance().openView(display.asView());
-            bindDisplay();
-         }
+         WadlService.getInstance().getWadl(
+            url,
+            new AsyncRequestCallback<WadlApplication>(new WadlServiceOutputUnmarshaller(IDE.eventBus(),
+               new WadlApplication()))
+            {
+               @Override
+               protected void onSuccess(WadlApplication result)
+               {
+                  wadlApplication = result;
+                  display = GWT.create(Display.class);
+                  IDE.getInstance().openView(display.asView());
+                  bindDisplay();
+               }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            ExceptionThrownEvent exc = new ExceptionThrownEvent(exception, "Service is not deployed.");
-            exc.setException(exception);
-            IDE.fireEvent(exc);
-         }
-      });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  ExceptionThrownEvent exc = new ExceptionThrownEvent(exception, "Service is not deployed.");
+                  exc.setException(exception);
+                  IDE.fireEvent(exc);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed."));
+      }
    }
 
    public void bindDisplay()
@@ -538,29 +550,42 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
 
          String fullPath = (base.endsWith("/")) ? base + encodedPath : base + "/" + encodedPath;
 
-         GroovyService.getInstance().getOutput(fullPath, display.getMethodField().getValue(), headers, queryParams,
-            display.getRequestBody().getValue(), new AsyncRequestCallback<RestServiceOutput>()
-            {
-               @Override
-               protected void onSuccess(RestServiceOutput result)
+         try
+         {
+            GroovyService.getInstance().getOutput(
+               fullPath,
+               display.getMethodField().getValue(),
+               headers,
+               queryParams,
+               display.getRequestBody().getValue(),
+               new AsyncRequestCallback<RestServiceOutput>(new RestServiceOutputUnmarshaller(new RestServiceOutput(
+                  fullPath, display.getMethodField().getValue())))
                {
-                  IDE.fireEvent(new RestServiceOutputReceivedEvent(result));
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  if (exception instanceof ServerException)
+                  @Override
+                  protected void onSuccess(RestServiceOutput result)
                   {
-                     RestServiceOutputReceivedEvent event = new RestServiceOutputReceivedEvent(this.getResult());
-                     event.setException(exception);
-                     IDE.fireEvent(event);
-                     return;
+                     IDE.fireEvent(new RestServiceOutputReceivedEvent(result));
                   }
 
-                  super.onFailure(exception);
-               }
-            });
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     if (exception instanceof ServerException)
+                     {
+                        RestServiceOutputReceivedEvent event = new RestServiceOutputReceivedEvent(this.getPayload());
+                        event.setException(exception);
+                        IDE.fireEvent(event);
+                        return;
+                     }
+
+                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+         }
 
          IDE.getInstance().closeView(display.asView().getId());
       }

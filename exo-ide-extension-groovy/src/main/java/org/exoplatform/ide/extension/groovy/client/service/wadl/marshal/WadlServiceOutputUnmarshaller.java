@@ -19,8 +19,8 @@
 package org.exoplatform.ide.extension.groovy.client.service.wadl.marshal;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.gwtframework.commons.wadl.IllegalWADLException;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.gwtframework.commons.wadl.WadlProcessor;
@@ -34,9 +34,8 @@ import com.google.gwt.http.client.Response;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-public class WadlServiceOutputUnmarshaller implements Unmarshallable
+public class WadlServiceOutputUnmarshaller implements Unmarshallable<WadlApplication>
 {
-
    private WadlApplication application;
 
    private HandlerManager eventBus;
@@ -64,4 +63,12 @@ public class WadlServiceOutputUnmarshaller implements Unmarshallable
       }
    }
 
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public WadlApplication getPayload()
+   {
+      return application;
+   }
 }

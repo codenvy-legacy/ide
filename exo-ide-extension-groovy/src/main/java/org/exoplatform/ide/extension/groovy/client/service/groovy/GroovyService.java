@@ -18,14 +18,16 @@
  */
 package org.exoplatform.ide.extension.groovy.client.service.groovy;
 
-import java.util.List;
+import com.google.gwt.http.client.RequestException;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.extension.groovy.client.service.RestServiceOutput;
 import org.exoplatform.ide.extension.groovy.client.service.SimpleParameterEntry;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.marshal.ClassPath;
 import org.exoplatform.ide.extension.groovy.shared.Jar;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -57,7 +59,7 @@ public abstract class GroovyService
     * @param fileContent - file content
     * @param groovyCallback - callback to handler response from server
     */
-   public abstract void validate(FileModel file, String vfsid, AsyncRequestCallback<FileModel> callback);
+   public abstract void validate(FileModel file, String vfsid, AsyncRequestCallback<Object> callback) throws RequestException;
 
    /**
     * Deploy Groovy script.
@@ -65,7 +67,7 @@ public abstract class GroovyService
     * @param itemId - id of source file to deploy
     * @param callback - the callback code which the user has to implement
     */
-   public abstract void deploy(String itemId, String vfsId, String projectId, AsyncRequestCallback<String> callback);
+   public abstract void deploy(String itemId, String vfsId, String projectId, AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Deploy Groovy script.
@@ -74,7 +76,7 @@ public abstract class GroovyService
     * @param callback - the callback code which the user has to implement
     */
    public abstract void deploySandbox(String itemId, String vfsId, String projectId,
-      AsyncRequestCallback<String> callback);
+      AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Undeploy deployed Groovy script.
@@ -83,7 +85,7 @@ public abstract class GroovyService
     * @param callback - the callback code which the user has to implement
     */
    public abstract void undeploySandbox(String itemId, String vfsId, String projectId,
-      AsyncRequestCallback<String> callback);
+      AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Undeploy deployed Groovy script.
@@ -91,7 +93,7 @@ public abstract class GroovyService
     * @param href - href of source to undeploy (encoded)
     * @param callback - the callback code which the user has to implement
     */
-   public abstract void undeploy(String itemId, String vfsId, String projectId, AsyncRequestCallback<String> callback);
+   public abstract void undeploy(String itemId, String vfsId, String projectId, AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Get location of the groovy classpath file if exists. Return status: 200 - groovy classpath location in the response body 404
@@ -101,7 +103,7 @@ public abstract class GroovyService
     * @param callback - handle the results when they are returned from the server
     */
    @Deprecated
-   public abstract void getClassPathLocation(String href, AsyncRequestCallback<ClassPath> callback);
+   public abstract void getClassPathLocation(String href, AsyncRequestCallback<ClassPath> callback) throws RequestException;
 
    /**
     * Get Groovy script output.
@@ -114,13 +116,13 @@ public abstract class GroovyService
     * @param callback - handle the results when they are returned from the server
     */
    public abstract void getOutput(String url, String method, List<SimpleParameterEntry> headers,
-      List<SimpleParameterEntry> params, String body, AsyncRequestCallback<RestServiceOutput> callback);
+      List<SimpleParameterEntry> params, String body, AsyncRequestCallback<RestServiceOutput> callback) throws RequestException;
 
    /**
     * Get list of available JAR libraries.
     * 
     * @param callback - handle the results from the server
     */
-   public abstract void getAvailableJarLibraries(AsyncRequestCallback<List<Jar>> callback);
+   public abstract void getAvailableJarLibraries(AsyncRequestCallback<List<Jar>> callback) throws RequestException;
 
 }

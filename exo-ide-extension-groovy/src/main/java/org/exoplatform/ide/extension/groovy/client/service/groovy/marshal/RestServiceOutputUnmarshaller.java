@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.extension.groovy.client.service.groovy.marshal;
 
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.ide.extension.groovy.client.service.RestServiceOutput;
 
 import com.google.gwt.http.client.Response;
@@ -30,7 +30,7 @@ import com.google.gwt.http.client.Response;
  * @version $
  */
 
-public class RestServiceOutputUnmarshaller implements Unmarshallable
+public class RestServiceOutputUnmarshaller implements Unmarshallable<RestServiceOutput>
 {
 
    private RestServiceOutput output;
@@ -45,4 +45,12 @@ public class RestServiceOutputUnmarshaller implements Unmarshallable
       output.setResponse(response);
    }
 
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public RestServiceOutput getPayload()
+   {
+      return output;
+   }
 }

@@ -18,19 +18,22 @@
  */
 package org.exoplatform.ide.extension.groovy.client.jar;
 
+import com.google.gwt.http.client.RequestException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
+import org.exoplatform.ide.extension.groovy.client.service.groovy.marshal.JarListUnmarshaller;
 import org.exoplatform.ide.extension.groovy.shared.Attribute;
 import org.exoplatform.ide.extension.groovy.shared.Jar;
 
@@ -148,25 +151,32 @@ public class AvailableDependenciesPresenter implements ShowAvailableDependencies
     */
    private void refreshListOfJARs()
    {
-      GroovyService.getInstance().getAvailableJarLibraries(new AsyncRequestCallback<List<Jar>>()
+      try
       {
-         @Override
-         protected void onSuccess(List<Jar> result)
+         GroovyService.getInstance().getAvailableJarLibraries(new AsyncRequestCallback<List<Jar>>(new JarListUnmarshaller(new ArrayList<Jar>()))
          {
-            jars = result;
-            Collections.sort(jars, jarsComparator);
+            @Override
+            protected void onSuccess(List<Jar> result)
+            {
+               jars = result;
+               Collections.sort(jars, jarsComparator);
 
-            display.getJarsListGrid().setValue(jars);
-            display.getAttributesGrid().setValue(new ArrayList<Attribute>());
-         }
+               display.getJarsListGrid().setValue(jars);
+               display.getAttributesGrid().setValue(new ArrayList<Attribute>());
+            }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            String message = "Can't get list of JAR packages.";
-            fireEvent(new ExceptionThrownEvent(message));
-         }
-      });
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               String message = "Can't get list of JAR packages.";
+               IDE.fireEvent(new ExceptionThrownEvent(message));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

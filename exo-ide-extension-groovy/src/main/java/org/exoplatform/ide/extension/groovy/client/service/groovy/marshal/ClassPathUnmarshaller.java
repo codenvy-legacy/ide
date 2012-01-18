@@ -20,15 +20,15 @@ package org.exoplatform.ide.extension.groovy.client.service.groovy.marshal;
 
 import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 6, 2011 $
  * 
  */
-public class ClassPathUnmarshaller implements Unmarshallable
+public class ClassPathUnmarshaller implements Unmarshallable<ClassPath>
 {
    /**
     * Classpath info.
@@ -52,4 +52,12 @@ public class ClassPathUnmarshaller implements Unmarshallable
       classPath.setLocation(response.getText());
    }
 
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public ClassPath getPayload()
+   {
+      return classPath;
+   }
 }

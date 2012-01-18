@@ -18,13 +18,15 @@
  */
 package org.exoplatform.ide.extension.groovy.client.handlers;
 
+import com.google.gwt.http.client.RequestException;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -144,57 +146,66 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
 
    public void onValidateGroovyScript(ValidateGroovyScriptEvent event)
    {
-      GroovyService.getInstance().validate(activeFile, VirtualFileSystem.getInstance().getInfo().getId(),
-         new AsyncRequestCallback<FileModel>()
-         {
-
-            @Override
-            protected void onSuccess(FileModel result)
+      try
+      {
+         GroovyService.getInstance().validate(activeFile, VirtualFileSystem.getInstance().getInfo().getId(),
+            new AsyncRequestCallback<Object>()
             {
-               String outputContent = "<b>" + result.getName() + "</b> validated successfully.";
-               IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
-               IDE.fireEvent(new GroovyValidateResultReceivedEvent(result.getName(), result.getId()));
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               if (exception instanceof ServerException)
+               @Override
+               protected void onSuccess(Object result)
                {
-                  ServerException serverException = (ServerException)exception;
+                  String outputContent = "<b>" + activeFile.getName() + "</b> validated successfully.";
+                  IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
+                  IDE.fireEvent(new GroovyValidateResultReceivedEvent(activeFile.getName(), activeFile.getId()));
+               }
 
-                  String outputContent = "<b>" + this.getResult().getName() + "</b> validation failed.&nbsp;";
-                  outputContent +=
-                     "Error (<i>" + serverException.getHTTPStatus() + "</i>: <i>" + serverException.getStatusText()
-                        + "</i>)";
-
-                  if (!serverException.getMessage().equals(""))
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  if (exception instanceof ServerException)
                   {
-                     outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols
-                                                                                                 // on "<br />"
+                     ServerException serverException = (ServerException)exception;
+
+                     String outputContent = "<b>" + activeFile.getName() + "</b> validation failed.&nbsp;";
+                     outputContent +=
+                        "Error (<i>" + serverException.getHTTPStatus() + "</i>: <i>" + serverException.getStatusText()
+                           + "</i>)";
+
+                     if (!serverException.getMessage().equals(""))
+                     {
+                        outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols
+                                                                                                    // on "<br />"
+                     }
+
+                     findLineNumberAndColNumberOfError(exception.getMessage());
+
+                     outputContent =
+                        "<span title=\"Go to error\" onClick=\"window.groovyGoToErrorFunction("
+                           + String.valueOf(errLineNumber) + "," + String.valueOf(errColumnNumber) + ", '"
+                           + activeFile.getId() + "', '" + "');\" style=\"cursor:pointer;\">" + outputContent
+                           + "</span>";
+
+                     IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
                   }
-
-                  findLineNumberAndColNumberOfError(exception.getMessage());
-
-                  outputContent =
-                     "<span title=\"Go to error\" onClick=\"window.groovyGoToErrorFunction("
-                        + String.valueOf(errLineNumber) + "," + String.valueOf(errColumnNumber) + ", '"
-                        + this.getResult().getId() + "', '" + "');\" style=\"cursor:pointer;\">" + outputContent
-                        + "</span>";
-
-                  IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+                  else
+                  {
+                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  }
+                  GroovyValidateResultReceivedEvent event =
+                     new GroovyValidateResultReceivedEvent(activeFile.getName(), activeFile.getId());
+                  event.setException(exception);
+                  IDE.fireEvent(event);
                }
-               else
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-               GroovyValidateResultReceivedEvent event =
-                  new GroovyValidateResultReceivedEvent(this.getResult().getName(), this.getResult().getId());
-               event.setException(exception);
-               IDE.fireEvent(event);
-            }
-         });
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
+   
+   
 
    private native void initGoToErrorFunction() /*-{
                                                var instance = this;       
