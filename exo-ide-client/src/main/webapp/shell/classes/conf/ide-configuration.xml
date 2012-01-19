@@ -16,6 +16,14 @@
    <component>
       <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
    </component>
+   
+   <component>
+      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyCompiler</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyClassLoaderProvider</type>
+   </component>
 
    <component>
       <type>org.chromattic.dataobject.runtime.ChromatticSessionProvider</type>
@@ -247,4 +255,8 @@
     <component>                                                                                                                                                                                                
       <type>org.exoplatform.ide.extension.java.server.JavaCodeAssistant</type>                                                                                                                                 
    </component>   
+   
+   <component>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyCodeAssistant</type>
+   </component>
 </configuration>
