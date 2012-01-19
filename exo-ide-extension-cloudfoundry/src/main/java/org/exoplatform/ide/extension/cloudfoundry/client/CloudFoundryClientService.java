@@ -21,7 +21,7 @@ package org.exoplatform.ide.extension.cloudfoundry.client;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
-import org.exoplatform.ide.extension.cloudfoundry.shared.ISystemInfo;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 
 import java.util.List;
 
@@ -255,7 +255,7 @@ public abstract class CloudFoundryClientService
     * @param server location of Cloud Foundry instance
     * @param callback callback, that client has to implement to handle response from server
     */
-   public abstract void getSystemInfo(String server, AsyncRequestCallback<ISystemInfo> callback);
+   public abstract void getSystemInfo(String server, AsyncRequestCallback<SystemInfo> callback);
 
    /**
     * Get the list of available targets for user.

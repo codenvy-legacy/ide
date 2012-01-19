@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
-
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -35,14 +31,17 @@ import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.SystemInfoUn
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.SystemInfoUnmarshaller.MyFactory;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
-import org.exoplatform.ide.extension.cloudfoundry.server.SystemInfo;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
-import org.exoplatform.ide.extension.cloudfoundry.shared.ISystemInfo;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
 
 /**
  * Implementation for {@link CloudFoundryClientService}.
@@ -492,14 +491,14 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getSystemInfo(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getSystemInfo(String server, AsyncRequestCallback<ISystemInfo> callback)
+   public void getSystemInfo(String server, AsyncRequestCallback<SystemInfo> callback)
    {
       final String url = restServiceContext + SYSTEM_INFO_URL;
 
       String params = (server == null) ? "" : "?server=" + server;
 
       MyFactory factory = GWT.create(SystemInfoUnmarshaller.MyFactory.class);
-      ISystemInfo systemInfo = factory.systemInfo().as(); 
+      SystemInfo systemInfo = factory.systemInfo().as(); 
       SystemInfoUnmarshaller unmarshaller = new SystemInfoUnmarshaller(systemInfo);
       callback.setResult(systemInfo);
       callback.setPayload(unmarshaller);

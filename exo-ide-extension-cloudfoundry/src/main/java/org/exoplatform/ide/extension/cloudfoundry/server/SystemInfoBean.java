@@ -18,17 +18,17 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
-import org.exoplatform.ide.extension.cloudfoundry.shared.ISystemInfo;
-import org.exoplatform.ide.extension.cloudfoundry.shared.ISystemResources;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class SystemInfo implements ISystemInfo 
+public class SystemInfoBean implements SystemInfo 
 {
-   private ISystemResources limits;
-   private ISystemResources usage;
+   private SystemResources limits;
+   private SystemResources usage;
    /** Cloud platform description. */
    private String description;
    /** User email. */
@@ -44,7 +44,7 @@ public class SystemInfo implements ISystemInfo
     * {@inheritDoc}
     */
    @Override
-   public ISystemResources getUsage()
+   public SystemResources getUsage()
    {
       return usage;
    }
@@ -53,7 +53,7 @@ public class SystemInfo implements ISystemInfo
     * {@inheritDoc}
     */
    @Override
-   public void setUsage(ISystemResources usage)
+   public void setUsage(SystemResources usage)
    {
       this.usage = usage;
    }
@@ -62,7 +62,7 @@ public class SystemInfo implements ISystemInfo
     * {@inheritDoc}
     */
    @Override
-   public ISystemResources getLimits()
+   public SystemResources getLimits()
    {
       return limits;
    }
@@ -71,7 +71,7 @@ public class SystemInfo implements ISystemInfo
     * {@inheritDoc}
     */
    @Override
-   public void setLimits(ISystemResources limits)
+   public void setLimits(SystemResources limits)
    {
       this.limits = limits;
    }

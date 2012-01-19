@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
-import org.exoplatform.ide.extension.cloudfoundry.shared.ISystemResources;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class SystemResources implements ISystemResources
+public class SystemResourcesBean implements SystemResources
 {
    private int services;
    /** Number of application deployed under account. */

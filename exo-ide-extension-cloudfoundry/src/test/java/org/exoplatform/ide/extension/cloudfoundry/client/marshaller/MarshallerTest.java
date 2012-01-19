@@ -18,27 +18,16 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.marshaller;
 
-import static org.junit.Assert.*;
-
-import org.exoplatform.ide.extension.cloudfoundry.server.SystemInfo;
-import org.exoplatform.ide.extension.cloudfoundry.server.SystemResources;
-import org.exoplatform.ide.extension.cloudfoundry.shared.ISystemInfo;
-import org.exoplatform.ide.extension.cloudfoundry.shared.ISystemResources;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanFactory;
-import com.google.web.bindery.autobean.shared.AutoBeanFactory.Category;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
-import com.google.web.bindery.autobean.shared.AutoBeanVisitor;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanVisitor.ParameterizationVisitor;
+import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
 
 /**

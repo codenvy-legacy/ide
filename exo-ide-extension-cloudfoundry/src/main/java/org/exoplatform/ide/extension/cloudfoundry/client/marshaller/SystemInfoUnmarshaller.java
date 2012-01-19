@@ -21,12 +21,11 @@ package org.exoplatform.ide.extension.cloudfoundry.client.marshaller;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-import org.exoplatform.ide.extension.cloudfoundry.shared.ISystemInfo;
-import org.exoplatform.ide.extension.cloudfoundry.shared.ISystemResources;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONObject;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
@@ -43,20 +42,20 @@ public class SystemInfoUnmarshaller implements Unmarshallable, Constants
    
    public interface MyFactory extends AutoBeanFactory
    {
-      AutoBean<ISystemInfo> systemInfo();
-      AutoBean<ISystemResources> systemResources();
+      AutoBean<SystemInfo> systemInfo();
+      AutoBean<SystemResources> systemResources();
    }
    
    /**
     * System information.
     */
-   private ISystemInfo systemInfo;
+   private SystemInfo systemInfo;
 
    /**
     * @param systemInfo system information
       
     */
-   public SystemInfoUnmarshaller(ISystemInfo systemInfo)
+   public SystemInfoUnmarshaller(SystemInfo systemInfo)
    {
       this.systemInfo = systemInfo;
    }
@@ -71,7 +70,7 @@ public class SystemInfoUnmarshaller implements Unmarshallable, Constants
       {
          MyFactory factory = GWT.create(MyFactory.class);
          
-         AutoBean<ISystemInfo> isi = AutoBeanCodex.decode(factory,ISystemInfo.class, response.getText());
+         AutoBean<SystemInfo> isi = AutoBeanCodex.decode(factory,SystemInfo.class, response.getText());
          systemInfo = isi.as();   
          
 //         JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();

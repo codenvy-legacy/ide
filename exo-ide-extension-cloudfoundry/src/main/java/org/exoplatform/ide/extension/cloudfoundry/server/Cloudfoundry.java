@@ -32,6 +32,8 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
 import org.exoplatform.ide.helper.JsonHelper;
 import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
@@ -180,7 +182,7 @@ public class Cloudfoundry
    private SystemInfo systemInfo(Credential credential) throws CloudfoundryException, IOException,
       ParsingResponseException
    {
-      return JsonHelper.fromJson(getJson(credential.target + "/info", credential.token, 200), SystemInfo.class, null);
+      return JsonHelper.fromJson(getJson(credential.target + "/info", credential.token, 200), SystemInfoBean.class, null);
    }
 
    /**

@@ -19,44 +19,23 @@
 package org.exoplatform.ide.extension.cloudfoundry.shared;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
- */
-public class SystemResources
+*/
+public interface SystemResources
 {
-   private int services;
-   /** Number of application deployed under account. */
-   private int apps;
-   /** Memory available for all applications under account (in MB). */
-   private int memory;
 
-   public int getServices()
-   {
-      return services;
-   }
+   int getServices();
 
-   public void setServices(int services)
-   {
-      this.services = services;
-   }
+   void setServices(int services);
 
-   public int getApps()
-   {
-      return apps;
-   }
+   int getApps();
 
-   public void setApps(int apps)
-   {
-      this.apps = apps;
-   }
+   void setApps(int apps);
 
-   public int getMemory()
-   {
-      return memory;
-   }
+   int getMemory();
 
-   public void setMemory(int memory)
-   {
-      this.memory = memory;
-   }
+   void setMemory(int memory);
+
 }

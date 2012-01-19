@@ -19,91 +19,39 @@
 package org.exoplatform.ide.extension.cloudfoundry.shared;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
- */
-public class SystemInfo
+*/
+public interface SystemInfo
 {
-   private SystemResources limits;
-   private SystemResources usage;
-   /** Cloud platform description. */
-   private String description;
-   /** User email. */
-   private String user;
-   /** Cloud platform version. */
-   private String version;
-   /** Cloud platform name. */
-   private String name;
-   /** Support email address. */
-   private String support;
 
-   public SystemResources getUsage()
-   {
-      return usage;
-   }
+   SystemResources getUsage();
 
-   public void setUsage(SystemResources usage)
-   {
-      this.usage = usage;
-   }
+   void setUsage(SystemResources usage);
 
-   public SystemResources getLimits()
-   {
-      return limits;
-   }
+   SystemResources getLimits();
 
-   public void setLimits(SystemResources limits)
-   {
-      this.limits = limits;
-   }
+   void setLimits(SystemResources limits);
 
-   public String getDescription()
-   {
-      return description;
-   }
+   String getDescription();
 
-   public void setDescription(String description)
-   {
-      this.description = description;
-   }
+   void setDescription(String description);
 
-   public String getUser()
-   {
-      return user;
-   }
+   String getUser();
 
-   public void setUser(String user)
-   {
-      this.user = user;
-   }
+   void setUser(String user);
 
-   public String getVersion()
-   {
-      return version;
-   }
+   String getVersion();
 
-   public void setVersion(String version)
-   {
-      this.version = version;
-   }
+   void setVersion(String version);
 
-   public String getName()
-   {
-      return name;
-   }
+   String getName();
 
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+   void setName(String name);
 
-   public String getSupport()
-   {
-      return support;
-   }
+   String getSupport();
 
-   public void setSupport(String support)
-   {
-      this.support = support;
-   }
+   void setSupport(String support);
+
 }

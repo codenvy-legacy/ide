@@ -122,6 +122,10 @@
                      <name>gwt.args</name>
                      <value>-out ${project.build.directory}</value>
                   </property>
+                   <property>
+                     <name>gwt.persistentunitcache</name>
+                     <value>false</value>
+                  </property>
                </systemProperties>
             </configuration>
          </plugin>

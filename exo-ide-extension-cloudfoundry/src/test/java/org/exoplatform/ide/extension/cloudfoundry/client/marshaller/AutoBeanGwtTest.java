@@ -20,8 +20,8 @@ package org.exoplatform.ide.extension.cloudfoundry.client.marshaller;
 
 import static org.junit.Assert.*;
 
-import org.exoplatform.ide.extension.cloudfoundry.shared.ISystemInfo;
-import org.exoplatform.ide.extension.cloudfoundry.shared.ISystemResources;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
@@ -40,8 +40,8 @@ public class AutoBeanGwtTest extends GWTTestCase
 
    interface MyFactory extends AutoBeanFactory
    {
-      AutoBean<ISystemInfo> systemInfo();
-      AutoBean<ISystemResources> systemResources();
+      AutoBean<SystemInfo> systemInfo();
+      AutoBean<SystemResources> systemResources();
    }
 
    @Override
@@ -56,8 +56,8 @@ public class AutoBeanGwtTest extends GWTTestCase
       String json =
          "{\"limits\":null,\"support\":\"http://support.cloudfoundry.com\",\"description\":\"VMware's Cloud Application Platform\",\"name\":\"vcap\",\"usage\":null,\"user\":null,\"version\":\"0.999\"}";
       MyFactory myFactory = GWT.create(MyFactory.class);
-      AutoBean<ISystemInfo> bean = AutoBeanCodex.decode(myFactory, ISystemInfo.class, json);
-      ISystemInfo info = bean.as();
+      AutoBean<SystemInfo> bean = AutoBeanCodex.decode(myFactory, SystemInfo.class, json);
+      SystemInfo info = bean.as();
       System.out.println(info.getClass().getName());
       assertEquals("http://support.cloudfoundry.com", info.getSupport());
    }
@@ -65,7 +65,7 @@ public class AutoBeanGwtTest extends GWTTestCase
    public void testName2() throws Exception
    {
       MyFactory myFactory = GWT.create(MyFactory.class);
-      ISystemInfo info = myFactory.systemInfo().as();
+      SystemInfo info = myFactory.systemInfo().as();
 //      ISystemInfo> bean = AutoBeanCodex.decode(myFactory, ISystemInfo.class, json);
 //      ISystemInfo info = bean.as();
 //      assertEquals("http://support.cloudfoundry.com", info.getSupport());
