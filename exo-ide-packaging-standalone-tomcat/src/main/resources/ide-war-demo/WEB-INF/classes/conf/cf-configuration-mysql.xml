@@ -8,39 +8,6 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-<!--    <component>
-      <key>org.exoplatform.services.log.LogConfigurationInitializer</key>
-      <type>org.exoplatform.services.log.LogConfigurationInitializer</type>
-      <init-params>
-         <value-param>
-            <name>logger</name>
-            <value>org.exoplatform.services.log.impl.BufferedLog4JLogger</value>
-         </value-param>
-         <value-param>
-            <name>configurator</name>
-            <value>org.exoplatform.services.log.impl.Log4JConfigurator</value>
-         </value-param>
-         <properties-param>
-            <name>properties</name>
-            <description>Log4J properties</description>
-            <property name="log4j.rootLogger" value="INFO, stdout, file" />
-
-            <property name="log4j.appender.stdout" value="org.apache.log4j.ConsoleAppender" />
-            <property name="log4j.appender.stdout.threshold" value="INFO" />
-
-            <property name="log4j.appender.stdout.layout" value="org.apache.log4j.PatternLayout" />
-            <property name="log4j.appender.stdout.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n" />
-
-            <property name="log4j.appender.file" value="org.apache.log4j.FileAppender" />
-            <property name="log4j.appender.file.File" value="../logs/ide.log" />
-
-            <property name="log4j.appender.file.layout" value="org.apache.log4j.PatternLayout" />
-            <property name="log4j.appender.file.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n" />
-
-         </properties-param>
-      </init-params>
-   </component> -->
-   
    <component>
       <type>org.exoplatform.services.rest.ext.provider.HierarchicalPropertyEntityProvider</type>
    </component>
@@ -57,6 +24,16 @@
 
    <component>
       <type>org.everrest.exoplatform.ExoRequestDispatcher</type>
+   </component>
+
+   <component>
+      <key>RestfulContainerProvider</key>
+      <type>org.everrest.exoplatform.container.RestfulContainerProvider</type>
+   </component>
+
+   <component>
+      <key>everrest</key>
+      <type>org.everrest.exoplatform.container.RestfulContainer</type>
    </component>
 
    <component>
@@ -224,6 +201,7 @@
                <value>war:/conf/ext-nodetypes-config.xml</value>
                <value>jar:/conf/organization-nodetypes.xml</value>
                <value>jar:/conf/code-assitant-nodetypes.xml</value>
+               <value>jar:/conf/vfs-node-types.xml</value>
             </values-param>
          </init-params>
       </component-plugin>
@@ -243,7 +221,7 @@
                <property name="wsrp" value="http://www.gatein.org/jcr/wsrp/1.0/" />
                <property name="pc" value="http://www.gatein.org/jcr/pc/1.0/" />
                <property name="jos" value="http://www.exoplatform.com/jcr-services/organization-service/1.0/" />
-               <property name="exoide" value="http://exoplatform.org/ide/1.1.x/" />
+               <property name="exoide" value="http://exoplatform.org/ide/1.2.x/" />
                <property name="vfs" value="http://exoplatform.org/vfs"/>
             </properties-param>
          </init-params>
