@@ -23,7 +23,10 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.MemberNode;
 
 /**
+ * Member based on org.objectweb.asm.tree.MemberNode created during class file
+ * parsing.
  * 
+ * @see org.objectweb.asm.tree.MemberNode
  */
 public class AsmMember implements Member
 {

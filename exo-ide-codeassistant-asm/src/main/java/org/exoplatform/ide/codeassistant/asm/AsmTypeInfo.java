@@ -30,7 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * AsmTypeInfo based on org.objectweb.asm.tree.AsmMember created during class
+ * file parsing.
+ * 
+ * @see org.objectweb.asm.tree.AsmMember
  */
 public class AsmTypeInfo extends AsmMember implements TypeInfo
 {
@@ -93,7 +96,7 @@ public class AsmTypeInfo extends AsmMember implements TypeInfo
          AsmMethodInfo methodInfo = new AsmMethodInfo((MethodNode)node, this);
          if ((methodInfo.getModifiers() & SYNTHETIC) == 0)
          {
-         result.add(methodInfo);
+            result.add(methodInfo);
          }
       }
       return result;

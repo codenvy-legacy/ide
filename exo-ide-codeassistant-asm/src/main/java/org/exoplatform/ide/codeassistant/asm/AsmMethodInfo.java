@@ -30,7 +30,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
+ * AsmMethodInfo based on org.objectweb.asm.tree.AsmMember created during class
+ * file parsing.
+ * 
+ * @see org.objectweb.asm.tree.AsmMember
  */
 public class AsmMethodInfo extends AsmMember implements MethodInfo
 {

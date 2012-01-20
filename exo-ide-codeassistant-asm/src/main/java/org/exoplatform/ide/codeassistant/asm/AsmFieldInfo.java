@@ -23,7 +23,10 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.FieldNode;
 
 /**
- *
+ * AsmFieldInfo based on org.objectweb.asm.tree.AsmTypeInfo created during class
+ * file parsing.
+ * 
+ * @see org.objectweb.asm.tree.AsmTypeInfo
  */
 public class AsmFieldInfo extends AsmMember implements FieldInfo
 {
