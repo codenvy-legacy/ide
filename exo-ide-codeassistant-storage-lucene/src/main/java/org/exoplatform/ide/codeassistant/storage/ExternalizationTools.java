@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.storage.externalization;
+package org.exoplatform.ide.codeassistant.storage;
 
 import org.exoplatform.ide.codeassistant.jvm.bean.FieldInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.MethodInfoBean;
@@ -50,12 +50,32 @@ public class ExternalizationTools
 
    private static final String DEFAULT_ENCODING = "UTF-8";
 
+   /**
+    * Creates ObjectInputStream from array of bytes. Used for initialization of
+    * deserialization.
+    * 
+    * @param data
+    *           - serialized object
+    * @return - ObjectInputStream
+    * @throws IOException
+    */
    public static ObjectInputStream createObjectInputStream(byte[] data) throws IOException
    {
       ByteArrayInputStream io = new ByteArrayInputStream(data);
       return new ObjectInputStream(io);
    }
 
+   /**
+    * 
+    * Read list of serialized FieldInfo from ObjectInput. First int in the
+    * stream expected as a length of the List.
+    * 
+    * @see ExternalizationTools#readStringUTF(ObjectInput)
+    * @param in
+    *           - input
+    * @return - List of FieldInfo
+    * @throws IOException
+    */
    public static List<FieldInfo> readFields(ObjectInput in) throws IOException
    {
       int size = in.readInt();
@@ -82,6 +102,16 @@ public class ExternalizationTools
       return result;
    }
 
+   /**
+    * Read list of serialized MethodInfo from ObjectInput. First int in the
+    * stream expected as a length of the List.
+    * 
+    * @see ExternalizationTools#readStringUTF(ObjectInput)
+    * @param in
+    *           - input
+    * @return - list of MethodInfo.
+    * @throws IOException
+    */
    public static List<MethodInfo> readMethods(ObjectInput in) throws IOException
    {
       int size = in.readInt();
@@ -99,7 +129,7 @@ public class ExternalizationTools
             // Member
             method.setModifiers(in.readInt());
             method.setName(readStringUTF(in));
-            
+
             //Field
             method.setDeclaringClass(readStringUTF(in));
             method.setExceptionTypes(readStringUTFList(in));
@@ -114,6 +144,18 @@ public class ExternalizationTools
       return result;
    }
 
+   /**
+    * Read UTF-8 string from ObjectInput. Reading will be made in the same order
+    * as writing. At the first time - length of the string, then array of bytes
+    * (content of the string). The most important to keep the same encoding
+    * during serialization and deserialization.
+    * 
+    * 
+    * @param in
+    *           - input
+    * @return - deserealized string.
+    * @throws IOException
+    */
    public static String readStringUTF(ObjectInput in) throws IOException
    {
       int length = in.readInt();
@@ -132,6 +174,19 @@ public class ExternalizationTools
       return result;
    }
 
+   /**
+    * Read list of strings in UTF-8 encoding from ObjectInput
+    * 
+    * First int in the stream expected as a length of the array then string will
+    * be read one by one with help if readStringUTF method
+    * 
+    * @see ExternalizationTools#readStringUTF(ObjectInput)
+    * @param in
+    *           - input
+    * @return - List of strings
+    * @throws IOException
+    * 
+    */
    public static List<String> readStringUTFList(ObjectInput in) throws IOException
    {
       int size = in.readInt();
@@ -153,6 +208,18 @@ public class ExternalizationTools
       return result;
    }
 
+   /**
+    * Write list of Member to the ObjectOutput.
+    * 
+    * At the first time the length of the list will be written to the output.
+    * 
+    * @see ExternalizationTools#writeStringUTF(String, ObjectOutput)
+    * @param list
+    *           - list of Member objects
+    * @param out
+    *           - serealized output.
+    * @throws IOException
+    */
    public static void writeObjectList(List<? extends Member> list, ObjectOutput out) throws IOException
    {
       if (list == null)
@@ -191,6 +258,18 @@ public class ExternalizationTools
       }
    }
 
+   /**
+    * Write UTF-8 string to ObjectOutput. At the first time - length of the
+    * string, then array of bytes (content of the string) will be writtento
+    * output. The most important to keep the same encoding during serialization
+    * and deserialization.
+    * 
+    * 
+    * @param in
+    *           - input
+    * @return - deserealized string.
+    * @throws IOException
+    */
    public static void writeStringUTF(String string, ObjectOutput out) throws UnsupportedEncodingException, IOException
    {
       if (string == null)
@@ -206,11 +285,15 @@ public class ExternalizationTools
 
    }
 
-   public static String getSimpleName(String fqn)
-   {
-      return fqn.substring(fqn.lastIndexOf(".") + 1);
-   }
-
+   /**
+    * Write list of UTF-8 strings to object output.
+    * 
+    * @param list
+    *           - list of strings
+    * @param out
+    *           - serialized output
+    * @throws IOException
+    */
    public static void writeStringUTFList(List<String> list, ObjectOutput out) throws IOException
    {
 
@@ -230,6 +313,14 @@ public class ExternalizationTools
       }
    }
 
+   /**
+    * Read TypeInfo from serialized state.
+    * 
+    * @param content
+    *           - Serialized TypeInfo
+    * @return - deserialized TypeInfo object.
+    * @throws IOException
+    */
    public static TypeInfo readExternal(InputStream content) throws IOException
    {
       TypeInfoBean result = new TypeInfoBean();
@@ -247,6 +338,14 @@ public class ExternalizationTools
       return result;
    }
 
+   /**
+    * Serialize TypeInfo to the array of bytes.
+    * 
+    * @param typeInfo
+    *           - initial object
+    * @return - serialized object
+    * @throws IOException
+    */
    public static byte[] externalize(TypeInfo typeInfo) throws IOException
    {
       ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -265,6 +364,9 @@ public class ExternalizationTools
       return bos.toByteArray();
    }
 
+   /**
+    * Protect utill class from creation.
+    */
    private ExternalizationTools()
    {
    }

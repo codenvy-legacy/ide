@@ -16,8 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.storage.extractors;
+package org.exoplatform.ide.codeassistant.storage;
 
+import org.exoplatform.ide.codeassistant.storage.QDoxJavaDocExtractor;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

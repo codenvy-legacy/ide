@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.storage.externalization;
+package org.exoplatform.ide.codeassistant.storage;
 
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonGenerator;
@@ -29,7 +29,7 @@ import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
-import org.junit.Ignore;
+import org.exoplatform.ide.codeassistant.storage.ExternalizationTools;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -40,7 +40,6 @@ import java.util.Arrays;
 /**
  * This is a perf test
  */
-@Ignore
 public class JsonParserAndExternatializationComparing
 {
    private final TypeInfoBean[] typeInfos = generateTypeInfos();

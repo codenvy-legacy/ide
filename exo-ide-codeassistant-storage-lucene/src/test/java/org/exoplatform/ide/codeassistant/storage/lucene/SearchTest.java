@@ -28,7 +28,7 @@ import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
-import org.exoplatform.ide.codeassistant.storage.externalization.ExternalizationTools;
+import org.exoplatform.ide.codeassistant.storage.lucene.writer.DataIndexer;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneDataWriter;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -108,8 +108,8 @@ public class SearchTest
 
       ShortTypeInfo info1 = typeInfos.get(0);
       ShortTypeInfo info2 = typeInfos.get(1);
-      assertTrue(ExternalizationTools.getSimpleName(info1.getName()).startsWith("ATest"));
-      assertTrue(ExternalizationTools.getSimpleName(info2.getName()).startsWith("ATest"));
+      assertTrue(DataIndexer.simpleName(info1.getName()).startsWith("ATest"));
+      assertTrue(DataIndexer.simpleName(info2.getName()).startsWith("ATest"));
    }
 
    @Test
@@ -120,11 +120,11 @@ public class SearchTest
       assertEquals(2, typeInfos.size());
 
       ShortTypeInfo info1 = typeInfos.get(0);
-      assertTrue(ExternalizationTools.getSimpleName(info1.getName()).startsWith("A"));
+      assertTrue(DataIndexer.simpleName(info1.getName()).startsWith("A"));
       assertEquals(info1.getType(), "CLASS");
 
       ShortTypeInfo info2 = typeInfos.get(1);
-      assertTrue(ExternalizationTools.getSimpleName(info2.getName()).startsWith("A"));
+      assertTrue(DataIndexer.simpleName(info2.getName()).startsWith("A"));
       assertEquals(info2.getType(), "CLASS");
    }
 
@@ -136,7 +136,7 @@ public class SearchTest
       assertEquals(1, typeInfos.size());
 
       ShortTypeInfo info = typeInfos.get(0);
-      assertTrue(ExternalizationTools.getSimpleName(info.getName()).startsWith("B"));
+      assertTrue(DataIndexer.simpleName(info.getName()).startsWith("B"));
    }
 
    @Test

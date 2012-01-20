@@ -23,7 +23,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
-import org.exoplatform.ide.codeassistant.storage.externalization.ExternalizationTools;
+import org.exoplatform.ide.codeassistant.storage.ExternalizationTools;
 import org.exoplatform.ide.codeassistant.storage.lucene.DataIndexFields;
 import org.exoplatform.ide.codeassistant.storage.lucene.IndexType;
 
@@ -31,6 +31,17 @@ import java.io.IOException;
 
 public class DataIndexer
 {
+   /**
+    * Create simple name from "Fully qualified name"
+    * 
+    * @param fqn
+    *           - Fully qualified name of the class
+    * @return - name of the class without package.
+    */
+   public static String simpleName(String fqn)
+   {
+      return fqn.substring(fqn.lastIndexOf(".") + 1);
+   }
 
    /**
     * Creates lucene document for member's javaDoc.
@@ -69,16 +80,15 @@ public class DataIndexer
 
       String fqn = typeInfo.getName();
 
-      typeInfoDocument.add(new Field(DataIndexFields.CLASS_NAME, ExternalizationTools.getSimpleName(fqn), Store.YES,
-         Index.NOT_ANALYZED));
+      typeInfoDocument.add(new Field(DataIndexFields.CLASS_NAME, simpleName(fqn), Store.YES, Index.NOT_ANALYZED));
 
       typeInfoDocument.add(new Field(DataIndexFields.MODIFIERS, Integer.toString(typeInfo.getModifiers()), Store.YES,
          Index.NOT_ANALYZED));
 
       typeInfoDocument.add(new Field(DataIndexFields.FQN, fqn, Store.YES, Index.NOT_ANALYZED));
       typeInfoDocument.add(new Field(DataIndexFields.ENTITY_TYPE, typeInfo.getType(), Store.YES, Index.NOT_ANALYZED));
-      typeInfoDocument
-         .add(new Field(DataIndexFields.SUPERCLASS, typeInfo.getSuperClass(), Store.YES, Index.NOT_ANALYZED));
+      typeInfoDocument.add(new Field(DataIndexFields.SUPERCLASS, typeInfo.getSuperClass(), Store.YES,
+         Index.NOT_ANALYZED));
 
       for (String string : typeInfo.getInterfaces())
       {

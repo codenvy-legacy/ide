@@ -32,7 +32,7 @@ import test.interfaces.ETestInterface2;
 
 import org.exoplatform.ide.codeassistant.asm.ClassParser;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
-import org.exoplatform.ide.codeassistant.storage.extractors.QDoxJavaDocExtractor;
+import org.exoplatform.ide.codeassistant.storage.QDoxJavaDocExtractor;
 import org.exoplatform.ide.codeassistant.storage.lucene.SaveDataIndexException;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneDataWriter;
 

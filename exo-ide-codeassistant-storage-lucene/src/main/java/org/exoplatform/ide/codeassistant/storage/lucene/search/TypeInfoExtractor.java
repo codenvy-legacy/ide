@@ -25,7 +25,7 @@ import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
-import org.exoplatform.ide.codeassistant.storage.externalization.ExternalizationTools;
+import org.exoplatform.ide.codeassistant.storage.ExternalizationTools;
 import org.exoplatform.ide.codeassistant.storage.lucene.DataIndexFields;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
 

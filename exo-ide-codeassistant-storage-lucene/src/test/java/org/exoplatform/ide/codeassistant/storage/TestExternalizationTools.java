@@ -16,9 +16,8 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.storage.externalization;
+package org.exoplatform.ide.codeassistant.storage;
 
-import static org.exoplatform.ide.codeassistant.storage.externalization.ExternalizationTools.createObjectInputStream;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -31,6 +30,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.exoplatform.ide.codeassistant.storage.ExternalizationTools;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -75,32 +75,11 @@ public class TestExternalizationTools
       ExternalizationTools.writeStringUTF(string, oos);
       oos.flush();
 
-      ObjectInputStream in = createObjectInputStream(out.toByteArray());
+      ObjectInputStream in = ExternalizationTools.createObjectInputStream(out.toByteArray());
       String deserializedString = readString(in);
 
       assertEquals(string, deserializedString);
    }
-
-   //   @Test
-   //   public void shouldSerializeObjectArray() throws IOException, ClassNotFoundException
-   //   {
-   //      ByteArrayOutputStream out = new ByteArrayOutputStream();
-   //      ObjectOutputStream oos = new ObjectOutputStream(out);
-   //      Integer[] serializedArray = new Integer[]{1, 2, 3};
-   //
-   //      ExternalizationTools.writeObjectList(Integer.class, Arrays.asList(serializedArray), oos);
-   //      oos.flush();
-   //
-   //      ObjectInputStream in = createObjectInputStream(out.toByteArray());
-   //      int arrayLength = in.readInt();
-   //      Integer[] deserializedArray = new Integer[arrayLength];
-   //      for (int i = 0; i < arrayLength; i++)
-   //      {
-   //         deserializedArray[i] = (Integer)in.readObject();
-   //      }
-   //
-   //      assertArrayEquals(serializedArray, deserializedArray);
-   //   }
 
    @Test
    public void shouldSerializeStringArray() throws IOException, ClassNotFoundException
@@ -112,7 +91,7 @@ public class TestExternalizationTools
       ExternalizationTools.writeStringUTFList(Arrays.asList(strings), oos);
       oos.flush();
 
-      ObjectInputStream in = createObjectInputStream(out.toByteArray());
+      ObjectInputStream in = ExternalizationTools.createObjectInputStream(out.toByteArray());
       int arrayLength = in.readInt();
       String[] deserializedArray = new String[arrayLength];
       for (int i = 0; i < arrayLength; i++)
@@ -169,7 +148,7 @@ public class TestExternalizationTools
       oos.write(bytes);
       oos.flush();
 
-      ObjectInputStream io = createObjectInputStream(out.toByteArray());
+      ObjectInputStream io = ExternalizationTools.createObjectInputStream(out.toByteArray());
 
       String deserializedString = ExternalizationTools.readStringUTF(io);
 
@@ -193,7 +172,7 @@ public class TestExternalizationTools
       }
       oos.flush();
 
-      ObjectInputStream io = createObjectInputStream(out.toByteArray());
+      ObjectInputStream io = ExternalizationTools.createObjectInputStream(out.toByteArray());
       List<String> deserializedArray = ExternalizationTools.readStringUTFList(io);
 
       assertArrayEquals(serializedArray, deserializedArray.toArray());
