@@ -134,7 +134,6 @@ public class ClassInfoExtractorTest
             Assert.assertEquals(method.getParameterNames().size(), 1);
             Assert.assertEquals(method.getParameterNames().get(0), "map");
             Assert.assertEquals(method.getParameterTypes().size(), 1);
-            //System.out.println(method.getParameterTypes().get(0));
             Assert.assertEquals(method.getParameterTypes().get(0),
                "java.util.Map<java.util.Map<java.util.Map<K, ? extends "
                   + "java.util.Map<? super java.util.List<java.lang.Number>, V>>, java.lang.Number>, V>");
