@@ -54,31 +54,21 @@ public class CursorPositionStatusBarTest extends BaseTest
          VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, "text/html",
             "src/test/resources/org/exoplatform/ide/miscellaneous/CursorPositionStatusBar.html");
       }
-
-      //         VirtualFileSystemUtils.createDefaultProject(PROJECT);
-      //         VirtualFileSystemUtils.put(
-      //            "src/test/resources/org/exoplatform/ide/miscellaneous/CursorPositionStatusBar.html", MimeType.TEXT_HTML,
-      //            WS_URL + PROJECT + "/" + FILE_NAME);
-
       catch (IOException e)
       {
       }
    }
 
-   //IDE-154
    @Test
    public void testCursorPositionInStatusBar() throws Exception
    {
-
       //step 1 (open project and file, check first cursor position in statusbar)
       IDE.PROJECT.EXPLORER.waitOpened();
-      //Thread.sleep(10000);
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.PROJECT.EXPLORER.openItem(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitTabPresent(1);
       IDE.LOADER.waitClosed();
       IDE.STATUSBAR.waitCursorPositionControl();
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
@@ -101,8 +91,7 @@ public class CursorPositionStatusBarTest extends BaseTest
       assertEquals("7 : 7", IDE.STATUSBAR.getCursorPosition());
 
       //step 5 refresh browser and check reset cursor position
-
-      //      //TODO after fix issue IDE-1392 should be uncomment
+      //TODO after fix issue IDE-1392 should be uncomment
       //      driver.navigate().refresh();
       //      IDE.STATUSBAR.wait();
       //      
