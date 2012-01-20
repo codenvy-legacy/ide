@@ -40,10 +40,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Contains set of operations for more efficient object Externalization. String
- * objects will be saved as array of bytes in UTF-8 format. For serialization
- * and deserialization of objects where it's possible will be used they own
- * Externalization mechanism.
+ * This class contains set of operations for efficient object Externalization.
+ * For example, String objects will be saved as array of bytes in UTF-8 format.
+ * For serialization and deserialization of objects where it's possible will be
+ * used they own Externalization mechanism.
  */
 public class ExternalizationTools
 {
@@ -51,12 +51,12 @@ public class ExternalizationTools
    private static final String DEFAULT_ENCODING = "UTF-8";
 
    /**
-    * Creates ObjectInputStream from array of bytes. Used for initialization of
-    * deserialization.
+    * Creates ObjectInputStream from array of bytes. Use this method for
+    * initialization of deserialization.
     * 
     * @param data
-    *           - serialized object
-    * @return - ObjectInputStream
+    *           - serialized object in array of bytes representation
+    * @return - ObjectInputStream with received sequence of bytes
     * @throws IOException
     */
    public static ObjectInputStream createObjectInputStream(byte[] data) throws IOException
@@ -72,8 +72,8 @@ public class ExternalizationTools
     * 
     * @see ExternalizationTools#readStringUTF(ObjectInput)
     * @param in
-    *           - input
-    * @return - List of FieldInfo
+    *           - input stream with serialized FieldInfo objects
+    * @return - List of deserialized FieldInfo objects
     * @throws IOException
     */
    public static List<FieldInfo> readFields(ObjectInput in) throws IOException
@@ -108,8 +108,8 @@ public class ExternalizationTools
     * 
     * @see ExternalizationTools#readStringUTF(ObjectInput)
     * @param in
-    *           - input
-    * @return - list of MethodInfo.
+    *           - input stream with serialized objects
+    * @return - List of deserialized MethodInfo objects
     * @throws IOException
     */
    public static List<MethodInfo> readMethods(ObjectInput in) throws IOException
@@ -145,15 +145,15 @@ public class ExternalizationTools
    }
 
    /**
-    * Read UTF-8 string from ObjectInput. Reading will be made in the same order
-    * as writing. At the first time - length of the string, then array of bytes
-    * (content of the string). The most important to keep the same encoding
-    * during serialization and deserialization.
+    * Read UTF-8 string from ObjectInput. Reading have to be made in the same
+    * order as writing. At the first time - length of the string, then array of
+    * bytes (content of the string). The most important to keep the same
+    * encoding during serialization and deserialization.
     * 
     * 
     * @param in
-    *           - input
-    * @return - deserealized string.
+    *           - input stream with serialized String object
+    * @return - deserealized String object
     * @throws IOException
     */
    public static String readStringUTF(ObjectInput in) throws IOException
@@ -175,15 +175,15 @@ public class ExternalizationTools
    }
 
    /**
-    * Read list of strings in UTF-8 encoding from ObjectInput
+    * Read list of strings in UTF encoding from ObjectInput
     * 
-    * First int in the stream expected as a length of the array then string will
-    * be read one by one with help if readStringUTF method
+    * First int in the stream expected as a length of the array, then string
+    * will be read one by one with help if readStringUTF method
     * 
     * @see ExternalizationTools#readStringUTF(ObjectInput)
     * @param in
-    *           - input
-    * @return - List of strings
+    *           - input stream with serialized array of String objects
+    * @return - List of deserialized strings
     * @throws IOException
     * 
     */
@@ -211,13 +211,13 @@ public class ExternalizationTools
    /**
     * Write list of Member to the ObjectOutput.
     * 
-    * At the first time the length of the list will be written to the output.
+    * At first the length of the list will be written to the output.
     * 
     * @see ExternalizationTools#writeStringUTF(String, ObjectOutput)
     * @param list
-    *           - list of Member objects
+    *           - list of Member objects for serialization
     * @param out
-    *           - serealized output.
+    *           - output stream for objects content writing.
     * @throws IOException
     */
    public static void writeObjectList(List<? extends Member> list, ObjectOutput out) throws IOException
@@ -259,15 +259,16 @@ public class ExternalizationTools
    }
 
    /**
-    * Write UTF-8 string to ObjectOutput. At the first time - length of the
-    * string, then array of bytes (content of the string) will be writtento
-    * output. The most important to keep the same encoding during serialization
-    * and deserialization.
+    * Write UTF string to ObjectOutput. At first - length of the string, then
+    * array of bytes (content of the string) will be written to output. The most
+    * important to keep the same encoding during serialization and
+    * deserialization.
     * 
-    * 
-    * @param in
-    *           - input
-    * @return - deserealized string.
+    * @param string
+    *           - object for serialization
+    * @param out
+    *           - output stream for objects content writing.
+    * @throws UnsupportedEncodingException
     * @throws IOException
     */
    public static void writeStringUTF(String string, ObjectOutput out) throws UnsupportedEncodingException, IOException
@@ -286,12 +287,12 @@ public class ExternalizationTools
    }
 
    /**
-    * Write list of UTF-8 strings to object output.
+    * Write list of UTF strings to object output.
     * 
     * @param list
-    *           - list of strings
+    *           - list of strings for serialization
     * @param out
-    *           - serialized output
+    *           - output stream for objects content writing.
     * @throws IOException
     */
    public static void writeStringUTFList(List<String> list, ObjectOutput out) throws IOException
@@ -317,7 +318,7 @@ public class ExternalizationTools
     * Read TypeInfo from serialized state.
     * 
     * @param content
-    *           - Serialized TypeInfo
+    *           - serialized TypeInfo
     * @return - deserialized TypeInfo object.
     * @throws IOException
     */
