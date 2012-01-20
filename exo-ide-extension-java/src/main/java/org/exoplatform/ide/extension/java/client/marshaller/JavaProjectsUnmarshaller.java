@@ -19,16 +19,15 @@
 
 package org.exoplatform.ide.extension.java.client.marshaller;
 
-import java.util.List;
-
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.extension.java.shared.ast.JavaProject;
-
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
+
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.ide.extension.java.shared.ast.JavaProject;
+
+import java.util.List;
 
 /**
  * 
@@ -38,7 +37,7 @@ import com.google.gwt.json.client.JSONValue;
  * @version $
  */
 
-public class JavaProjectsUnmarshaller implements Unmarshallable
+public class JavaProjectsUnmarshaller implements Unmarshallable<List<JavaProject>>
 {
 
    private List<JavaProject> javaProjects;
@@ -55,8 +54,11 @@ public class JavaProjectsUnmarshaller implements Unmarshallable
 
       try
       {
-         JSONValue jsonValue = JSONParser.parseLenient(response.getText());
-         JSONArray itemsArray = jsonValue.isArray();
+         JSONArray itemsArray = JSONParser.parseLenient(response.getText()).isArray();
+         if (itemsArray == null)
+         {
+            return;
+         }
          for (int i = 0; i < itemsArray.size(); i++)
          {
             JavaProject javaProject = new JavaProject(itemsArray.get(i).isObject());
@@ -68,6 +70,15 @@ public class JavaProjectsUnmarshaller implements Unmarshallable
          String message = "Can't parse item " + response.getText();
          throw new UnmarshallerException(message);
       }
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<JavaProject> getPayload()
+   {
+      return javaProjects;
    }
 
 }

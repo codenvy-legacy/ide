@@ -21,8 +21,8 @@ package org.exoplatform.ide.extension.java.client.marshaller;
 
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.ide.extension.java.shared.ast.RootPackage;
 
 import com.google.gwt.http.client.Response;
@@ -38,7 +38,7 @@ import com.google.gwt.json.client.JSONValue;
  * @version $
  */
 
-public class RootPackagesUnmarshaller implements Unmarshallable
+public class RootPackagesUnmarshaller implements Unmarshallable<List<RootPackage>>
 {
 
    private List<RootPackage> rootPackages;
@@ -70,4 +70,12 @@ public class RootPackagesUnmarshaller implements Unmarshallable
       }
    }
 
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<RootPackage> getPayload()
+   {
+      return rootPackages;
+   }
 }

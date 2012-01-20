@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.extension.java.client.marshaller;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.extension.java.shared.MavenResponse;
 
 import java.util.HashMap;
@@ -37,7 +37,7 @@ import java.util.Map;
  * @version $Id: CreateJavaProjectUnmarshaller.java Jun 22, 2011 5:06:40 PM vereshchaka $
  * 
  */
-public class MavenResponseUnmarshaller implements Unmarshallable
+public class MavenResponseUnmarshaller implements Unmarshallable<MavenResponse>
 {
    public interface Constants
    {
@@ -61,10 +61,12 @@ public class MavenResponseUnmarshaller implements Unmarshallable
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      JavaScriptObject json = build(response.getText());
-      if (json == null)
+      if (response.getText() == null || response.getText().isEmpty())
+      {
          return;
-      JSONObject jsonObject = new JSONObject(json).isObject();
+      }
+
+      JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
       if (jsonObject == null)
          return;
 
@@ -124,18 +126,11 @@ public class MavenResponseUnmarshaller implements Unmarshallable
    }
 
    /**
-    * Build {@link JavaScriptObject} from string.
-    * 
-    * @param json string that contains object
-    * @return {@link JavaScriptObject}
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
     */
-   protected static native JavaScriptObject build(String json) /*-{
-                                                               try {
-                                                               var object = eval('(' + json + ')');
-                                                               return object;
-                                                               } catch (e) {
-                                                               return null;
-                                                               }
-                                                               }-*/;
-
+   @Override
+   public MavenResponse getPayload()
+   {
+      return mavenResponse;
+   }
 }

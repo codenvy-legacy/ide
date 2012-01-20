@@ -18,27 +18,20 @@
  */
 package org.exoplatform.ide.extension.java.client;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.extension.java.client.marshaller.JavaProjectsUnmarshaller;
-import org.exoplatform.ide.extension.java.client.marshaller.MavenResponseUnmarshaller;
-import org.exoplatform.ide.extension.java.client.marshaller.PackageEntriesUnmarshaller;
-import org.exoplatform.ide.extension.java.client.marshaller.PackagesUnmarshaller;
-import org.exoplatform.ide.extension.java.client.marshaller.RootPackagesUnmarshaller;
-import org.exoplatform.ide.extension.java.shared.MavenResponse;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.extension.java.shared.ast.AstItem;
 import org.exoplatform.ide.extension.java.shared.ast.JavaProject;
 import org.exoplatform.ide.extension.java.shared.ast.Package;
 import org.exoplatform.ide.extension.java.shared.ast.RootPackage;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
+import java.util.List;
 
 /**
  * Implementation of {@link JavaClientService} service.
@@ -67,11 +60,6 @@ public class JavaClientService
    private static final String PACKAGE = BASE_URL + "/project/package";
 
    /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
     * REST service context.
     */
    private String restServiceContext;
@@ -91,16 +79,15 @@ public class JavaClientService
       return instance;
    }
 
-   public JavaClientService(HandlerManager eventBus, String restContext, Loader loader)
+   public JavaClientService(String restContext, Loader loader)
    {
       this.loader = loader;
-      this.eventBus = eventBus;
       this.restServiceContext = restContext;
       instance = this;
    }
 
    public void createProject(String projectName, String projectType, String groupId, String artifactId, String version,
-      String workDir, MavenResponseCallback callback)
+      String workDir, MavenResponseCallback callback) throws RequestException
    {
       final String url = restServiceContext + CREATE_PROJECT;
       String params = "projectName=" + projectName;
@@ -111,54 +98,35 @@ public class JavaClientService
       params += "&parentId=" + workDir;
       params += "&vfsId=" + "dev-monit"; // TODO: need remove hardcode
 
-      MavenResponse mavenResponse = new MavenResponse();
-      callback.setResult(mavenResponse);
-      callback.setEventBus(eventBus);
-
-      MavenResponseUnmarshaller unmarshaller = new MavenResponseUnmarshaller(mavenResponse);
-      callback.setPayload(unmarshaller);
-
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**
+    * @throws RequestException 
     * @see org.exoplatform.ide.extension.java.client.JavaClientService#packageProject(java.lang.String,
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
-   public void packageProject(String baseDir, MavenResponseCallback callback)
+   public void packageProject(String baseDir, MavenResponseCallback callback) throws RequestException
    {
       final String url = restServiceContext + PACKAGE_PROJECT;
       String params = "workdir=" + baseDir;
 
-      MavenResponse mavenResponse = new MavenResponse();
-      callback.setResult(mavenResponse);
-      callback.setEventBus(eventBus);
-
-      MavenResponseUnmarshaller unmarshaller = new MavenResponseUnmarshaller(mavenResponse);
-      callback.setPayload(unmarshaller);
-
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**
+    * @throws RequestException 
     * @see org.exoplatform.ide.extension.java.client.JavaClientService#cleanProject(java.lang.String,
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
-   public void cleanProject(String baseDir, MavenResponseCallback callback)
+   public void cleanProject(String baseDir, MavenResponseCallback callback) throws RequestException
    {
       final String url = restServiceContext + CLEAN_PROJECT;
       String params = "workdir=" + baseDir;
 
-      MavenResponse mavenResponse = new MavenResponse();
-      callback.setResult(mavenResponse);
-      callback.setEventBus(eventBus);
-
-      MavenResponseUnmarshaller unmarshaller = new MavenResponseUnmarshaller(mavenResponse);
-      callback.setPayload(unmarshaller);
-
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
@@ -167,19 +135,13 @@ public class JavaClientService
     * 
     * @param vfsId
     * @param callback
+    * @throws RequestException 
     */
-   public void getProjects(String vfsId, AsyncRequestCallback<List<JavaProject>> callback)
+   public void getProjects(String vfsId, AsyncRequestCallback<List<JavaProject>> callback) throws RequestException
    {
       final String url = restServiceContext + PROJECTS + "?vfsId=" + vfsId;
 
-      List<JavaProject> javaProjects = new ArrayList<JavaProject>();
-      callback.setResult(javaProjects);
-      callback.setEventBus(eventBus);
-
-      JavaProjectsUnmarshaller unmarshaller = new JavaProjectsUnmarshaller(javaProjects);
-      callback.setPayload(unmarshaller);
-
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
 
    /**
@@ -188,19 +150,13 @@ public class JavaClientService
     * @param vfsId
     * @param projectId
     * @param callback
+    * @throws RequestException 
     */
-   public void getRootPackages(String vfsId, String projectId, AsyncRequestCallback<List<RootPackage>> callback)
+   public void getRootPackages(String vfsId, String projectId, AsyncRequestCallback<List<RootPackage>> callback) throws RequestException
    {
       final String url = restServiceContext + ROOT_PACKAGES + "?vfsId=" + vfsId + "&projectId=" + projectId;
 
-      List<RootPackage> rootPackages = new ArrayList<RootPackage>();
-      callback.setResult(rootPackages);
-      callback.setEventBus(eventBus);
-
-      RootPackagesUnmarshaller unmarshaller = new RootPackagesUnmarshaller(rootPackages);
-      callback.setPayload(unmarshaller);
-
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
 
    /**
@@ -210,36 +166,23 @@ public class JavaClientService
     * @param projectId
     * @param source
     * @param callback
+    * @throws RequestException 
     */
-   public void getPackages(String vfsId, String projectId, String source, AsyncRequestCallback<List<Package>> callback)
+   public void getPackages(String vfsId, String projectId, String source, AsyncRequestCallback<List<Package>> callback) throws RequestException
    {
       String url = restServiceContext + PACKAGES + "?vfsId=" + vfsId + "&projectId=" + projectId + "&source=" + source;
 
-      List<Package> packages = new ArrayList<Package>();
-      callback.setResult(packages);
-      callback.setEventBus(eventBus);
-
-      PackagesUnmarshaller unmarshaller = new PackagesUnmarshaller(packages);
-      callback.setPayload(unmarshaller);
-
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
 
    public void getPackageEntries(String vfsId, String projectId, String packageSource, String packageName,
-      AsyncRequestCallback<List<AstItem>> callback)
+      AsyncRequestCallback<List<AstItem>> callback) throws RequestException
    {
       String url =
          restServiceContext + PACKAGE + "?vfsId=" + vfsId + "&projectId=" + projectId + "&packageName=" + packageName
             + "&packageSource=" + packageSource;
 
-      List<AstItem> entries = new ArrayList<AstItem>();
-      callback.setResult(entries);
-      callback.setEventBus(eventBus);
-
-      PackageEntriesUnmarshaller unmarshaller = new PackageEntriesUnmarshaller(entries);
-      callback.setPayload(unmarshaller);
-
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
 
 }

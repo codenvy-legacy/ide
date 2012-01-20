@@ -23,8 +23,10 @@ import com.google.gwt.json.client.JSONException;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.java.client.marshaller.MavenResponseUnmarshaller.Constants;
@@ -54,13 +56,13 @@ public abstract class MavenResponseCallback extends AsyncRequestCallback<MavenRe
    {
       if (!(exception instanceof ServerException))
       {
-         super.onFailure(exception);
+         IDE.fireEvent(new ExceptionThrownEvent(exception));
          return;
       }
 
       if (exception.getMessage() == null || exception.getMessage().isEmpty())
       {
-         super.onFailure(exception);
+         IDE.fireEvent(new ExceptionThrownEvent(exception));
       }
       else
       {
@@ -72,7 +74,7 @@ public abstract class MavenResponseCallback extends AsyncRequestCallback<MavenRe
          }
          catch (JSONException e)
          {
-            super.onFailure(exception);
+            IDE.fireEvent(new ExceptionThrownEvent(exception));
             return;
          }
 
@@ -85,7 +87,7 @@ public abstract class MavenResponseCallback extends AsyncRequestCallback<MavenRe
          }
          else
          {
-            super.onFailure(exception);
+            IDE.fireEvent(new ExceptionThrownEvent(exception));
          }
       }
    }

@@ -21,8 +21,8 @@ package org.exoplatform.ide.extension.java.client.marshaller;
 
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.ide.extension.java.shared.ast.Package;
 
 import com.google.gwt.http.client.Response;
@@ -38,7 +38,7 @@ import com.google.gwt.json.client.JSONValue;
  * @version $
  */
 
-public class PackagesUnmarshaller implements Unmarshallable
+public class PackagesUnmarshaller implements Unmarshallable<List<Package>>
 {
 
    private List<Package> packages;
@@ -68,6 +68,15 @@ public class PackagesUnmarshaller implements Unmarshallable
          String message = "Can't parse item " + response.getText();
          throw new UnmarshallerException(message);
       }
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<Package> getPayload()
+   {
+      return packages;
    }
 
 }
