@@ -24,7 +24,7 @@
    <component>
       <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyClassLoaderProvider</type>
    </component>
-
+   
    <component>
       <type>org.chromattic.dataobject.runtime.ChromatticSessionProvider</type>
       <init-params>
@@ -41,6 +41,18 @@
             <value>nt:unstructured</value>
          </value-param>
       </init-params>
+   </component>
+   
+   <component>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
+   </component>
+
+    <component>
+      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyCompiler</type>
+   </component>
+   
+   <component>
+      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyClassLoaderProvider</type>
    </component>
 
    <component>
@@ -73,6 +85,14 @@
       <type>org.exoplatform.ide.extension.jenkins.server.rest.JenkinsApplication</type>
    </component>
 
+    <component>
+      <type>org.exoplatform.ide.shell.server.rest.ShellApplication</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.shell.server.CLIResourceFactory</type>
+   </component>
+
    <component>
       <key>org.exoplatform.ide.extension.jenkins.server.JenkinsClient</key>
       <type>org.exoplatform.ide.extension.cloudbees.server.CloudBeesJenkinsClient</type>
@@ -87,9 +107,14 @@
          </value-param>
       </init-params>
    </component>
-
+   
    <component>
       <type>org.exoplatform.logreader.LogReaderServiceApplication</type>
+   </component>
+
+    <component>
+      <key>org.exoplatform.logreader.LogPathProvider</key>
+      <type>org.exoplatform.logreader.SystemLogPathProvider</type>
    </component>
 
    <component>
@@ -108,10 +133,6 @@
             <value>eXoIDE</value>
          </value-param>
       </init-params>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.cloudbees.server.CloudBees</type>
    </component>
 
    <component>
@@ -214,9 +235,8 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.gadget.server.rest.RestSecurityTokenGenerator</type>
+      <type>org.exoplatform.ide.extension.gadget.server.rest.GadgetExtenshionApplication</type>
    </component>
-
 
    <component>
       <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication</type>
@@ -255,8 +275,4 @@
     <component>                                                                                                                                                                                                
       <type>org.exoplatform.ide.extension.java.server.JavaCodeAssistant</type>                                                                                                                                 
    </component>   
-   
-   <component>
-      <type>org.exoplatform.ide.extension.groovy.server.GroovyCodeAssistant</type>
-   </component>
 </configuration>

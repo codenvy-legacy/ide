@@ -63,6 +63,16 @@
    </component>
 
    <component>
+      <key>RestfulContainerProvider</key>
+      <type>org.everrest.exoplatform.container.RestfulContainerProvider</type>
+   </component>
+
+   <component>
+      <key>everrest</key>
+      <type>org.everrest.exoplatform.container.RestfulContainer</type>
+   </component>
+
+   <component>
       <key>org.everrest.core.RequestHandler</key>
       <type>org.everrest.exoplatform.ExoRequestHandler</type>
       <init-params>
@@ -122,19 +132,6 @@
    </component>
 
    <component>
-      <type>org.exoplatform.services.jcr.ext.registry.RegistryService</type>
-      <init-params>
-         <properties-param>
-            <name>locations</name>
-         </properties-param>
-      </init-params>
-   </component>
-
-   <component>
-      <type>org.exoplatform.services.jcr.ext.registry.RESTRegistryService</type>
-   </component>
-
-   <component>
       <key>org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator</key>
       <type>org.exoplatform.services.jcr.ext.hierarchy.impl.NodeHierarchyCreatorImpl</type>
    </component>
@@ -161,10 +158,6 @@
             <value>production</value>
          </value-param>
       </init-params>
-   </component>
-
-   <component>
-      <type>org.chromattic.dataobject.DataObjectService</type>
    </component>
 
    <component>
