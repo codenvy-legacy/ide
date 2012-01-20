@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.init;
 
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -136,7 +137,7 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
       try
       {
          GitClientService.getInstance().init(vfs.getId(), projectId, bare,
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
+            new AsyncRequestCallback<String>()
             {
 
                @Override

@@ -27,6 +27,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -227,7 +228,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       try
       {
          GitClientService.getInstance().push(vfs.getId(), project, new String[]{localBranch + ":" + remoteBranch},
-            remote, false, new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
+            remote, false, new AsyncRequestCallback<String>()
             {
 
                @Override

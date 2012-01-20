@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.git.client.delete;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -91,18 +94,31 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
       final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       if (projectId == null || projectId.isEmpty())
          return;
-      GitClientService.getInstance().deleteWorkDir(vfs.getId(), projectId, new AsyncRequestCallback<String>()
+      try
       {
-         @Override
-         protected void onSuccess(String result)
+         GitClientService.getInstance().deleteWorkDir(vfs.getId(), projectId, new AsyncRequestCallback<String>()
          {
-            IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.deleteGitRepositorySuccess(), Type.INFO));
-            String href = URL.decode(projectId);
-            // TODO to fix this with encoding symbol "@"
-            href = href.replaceAll("@", "%40");
-            IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
-         }
-      });
+            @Override
+            protected void onSuccess(String result)
+            {
+               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.deleteGitRepositorySuccess(), Type.INFO));
+               String href = URL.decode(projectId);
+               // TODO to fix this with encoding symbol "@"
+               href = href.replaceAll("@", "%40");
+               IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    public String getParentFolder(String child)

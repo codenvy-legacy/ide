@@ -54,6 +54,11 @@ public class RevisionUnmarshaller implements Unmarshallable<Revision>, Constants
    @Override
    public void unmarshal(Response response)
    {
+      if (response.getText() == null || response.getText().isEmpty())
+      {
+         return;
+      }
+      
       JSONValue json = JSONParser.parseStrict(response.getText());
       if (json == null)
          return;

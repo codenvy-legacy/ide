@@ -20,11 +20,9 @@ package org.exoplatform.ide.git.client;
 
 import com.google.gwt.http.client.RequestException;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.git.client.marshaller.DiffResponse;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
-import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
 import org.exoplatform.ide.git.shared.MergeResult;
@@ -77,7 +75,7 @@ public abstract class GitClientService
     * @throws RequestException
     */
    public abstract void add(String vfsId, ProjectModel project, boolean update, String[] filePattern,
-      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback) throws RequestException;
+      AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Fetch changes from remote repository to local one.
@@ -99,7 +97,7 @@ public abstract class GitClientService
     * @throws RequestException
     */
    public abstract void fetch(String vfsId, ProjectModel project, String remote, String[] refspec,
-      boolean removeDeletedRefs, org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback)
+      boolean removeDeletedRefs, AsyncRequestCallback<String> callback)
       throws RequestException;
 
    /**
@@ -112,7 +110,7 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void branchList(String vfsId, String projectid, boolean remote,
-      AsyncRequestCallback<List<Branch>> callback);
+      AsyncRequestCallback<List<Branch>> callback) throws RequestException;
 
    /**
     * Delete branch.
@@ -124,7 +122,7 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void branchDelete(String vfsId, String projectid, String name, boolean force,
-      AsyncRequestCallback<String> callback);
+      AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Create new branch with pointed name.
@@ -136,7 +134,7 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void branchCreate(String vfsId, String projectid, String name, String startPoint,
-      AsyncRequestCallback<Branch> callback);
+      AsyncRequestCallback<Branch> callback) throws RequestException;
 
    /**
     * Checkout the branch with pointed name.
@@ -149,7 +147,7 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void branchCheckout(String vfsId, String projectid, String name, String startPoint,
-      boolean createNew, AsyncRequestCallback<String> callback);
+      boolean createNew, AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Get the list of remote repositories for pointed by <code>workDir</code> parameter one.
@@ -161,7 +159,7 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void remoteList(String vfsId, String projectid, String remoteName, boolean verbose,
-      AsyncRequestCallback<List<Remote>> callback);
+      AsyncRequestCallback<List<Remote>> callback) throws RequestException;
 
    /**
     * Adds remote repository to the list of remote repositories.
@@ -173,7 +171,7 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void remoteAdd(String vfsId, String projectid, String name, String url,
-      AsyncRequestCallback<String> callback);
+      AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Deletes the pointed(by name) remote repository from the list of repositories.
@@ -183,7 +181,8 @@ public abstract class GitClientService
     * @param name remote repository name to delete
     * @param callback callback
     */
-   public abstract void remoteDelete(String vfsId, String projectid, String name, AsyncRequestCallback<String> callback);
+   public abstract void remoteDelete(String vfsId, String projectid, String name, AsyncRequestCallback<String> callback)
+      throws RequestException;
 
    /**
     * Remove files from the working tree and the index.
@@ -193,7 +192,8 @@ public abstract class GitClientService
     * @param files files to remove
     * @param callback callback
     */
-   public abstract void remove(String vfsId, String projectid, String[] files, AsyncRequestCallback<String> callback);
+   public abstract void remove(String vfsId, String projectid, String[] files, AsyncRequestCallback<String> callback)
+      throws RequestException;
 
    /**
     * Reset current HEAD to the specified state. There two types of the reset: <br>
@@ -209,7 +209,7 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void reset(String vfsId, String projectid, String[] paths, String commit,
-      ResetRequest.ResetType resetType, AsyncRequestCallback<String> callback);
+      ResetRequest.ResetType resetType, AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Initializes new Git repository.
@@ -219,8 +219,8 @@ public abstract class GitClientService
     * @param bare to create bare repository or not
     * @param callback callback
     */
-   public abstract void init(String vfsId, String projectid, boolean bare,
-      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback) throws RequestException;
+   public abstract void init(String vfsId, String projectid, boolean bare, AsyncRequestCallback<String> callback)
+      throws RequestException;
 
    /**
     * Pull(fetch and merge) changes from remote repository to local one.
@@ -241,7 +241,7 @@ public abstract class GitClientService
     * @throws RequestException
     */
    public abstract void pull(String vfsId, ProjectModel project, String refSpec, String remote,
-      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback) throws RequestException;
+      AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Push changes from local repository to remote one.
@@ -256,7 +256,7 @@ public abstract class GitClientService
     * @throws RequestException
     */
    public abstract void push(String vfsId, ProjectModel project, String[] refSpec, String remote, boolean force,
-      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback) throws RequestException;
+      AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Clones one remote repository to local one.
@@ -269,7 +269,7 @@ public abstract class GitClientService
     * @throws RequestException
     */
    public abstract void cloneRepository(String vfsId, ProjectModel project, String remoteUri, String remoteName,
-      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback) throws RequestException;
+      AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Performs commit changes from index to repository. The result of the commit is represented by {@link Revision}, which is
@@ -283,7 +283,7 @@ public abstract class GitClientService
     * @throws RequestException
     */
    public abstract void commit(String vfsId, ProjectModel project, String message, boolean all,
-      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<Revision> callback) throws RequestException;
+      AsyncRequestCallback<Revision> callback) throws RequestException;
 
    /**
     * Compare two commits, get the diff for pointed file(s) or for the whole project in text format.
@@ -299,7 +299,8 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void diff(String vfsId, String projectid, String[] fileFilter, DiffType type, boolean noRenames,
-      int renameLimit, String commitA, String commitB, AsyncRequestCallback<DiffResponse> callback);
+      int renameLimit, String commitA, String commitB, AsyncRequestCallback<StringBuilder> callback)
+      throws RequestException;
 
    /**
     * Compare commit with index or working tree (depends on {@link #cached}), get the diff for pointed file(s) or for the whole
@@ -316,7 +317,8 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void diff(String vfsId, String projectid, String[] fileFilter, DiffType type, boolean noRenames,
-      int renameLimit, String commitA, boolean cached, AsyncRequestCallback<DiffResponse> callback);
+      int renameLimit, String commitA, boolean cached, AsyncRequestCallback<StringBuilder> callback)
+      throws RequestException;
 
    /**
     * Get log of commits. The result is the list of {@link Revision}, which is returned by callback in
@@ -328,7 +330,7 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void log(String vfsId, String projectid, boolean isTextFormat,
-      AsyncRequestCallback<LogResponse> callback);
+      AsyncRequestCallback<LogResponse> callback) throws RequestException;
 
    /**
     * Merge the pointed commit with current HEAD.
@@ -338,7 +340,8 @@ public abstract class GitClientService
     * @param commit commit's reference to merge with
     * @param callback callback
     */
-   public abstract void merge(String vfsId, String projectid, String commit, AsyncRequestCallback<MergeResult> callback);
+   public abstract void merge(String vfsId, String projectid, String commit, AsyncRequestCallback<MergeResult> callback)
+      throws RequestException;
 
    /**
     * Gets the working tree status. The status of added, modified or deleted files is shown is written in {@link String}. The
@@ -368,7 +371,7 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void statusText(String vfsId, String projectid, boolean shortFormat, String[] fileFilter,
-      AsyncRequestCallback<StatusResponse> callback);
+      AsyncRequestCallback<StatusResponse> callback) throws RequestException;
 
    /**
     * Gets the working tree status : list of untracked, changed not commited and changed not updated.
@@ -377,17 +380,8 @@ public abstract class GitClientService
     * @param projectid project's id (root of GIT repository)
     * @param callback callback
     */
-   public abstract void status(String vfsId, String projectid, AsyncRequestCallback<StatusResponse> callback);
-
-   /**
-    * Get the Git work directory (where ".git" folder is located) for the pointed item's location.
-    * 
-    * @param vfsId virtual file system's id
-    * @param projectid project's id (root of GIT repository)
-    * @param callback
-    */
-   @Deprecated
-   public abstract void getWorkDir(String vfsId, String projectid, AsyncRequestCallback<WorkDirResponse> callback);
+   public abstract void status(String vfsId, String projectid, AsyncRequestCallback<StatusResponse> callback)
+      throws RequestException;
 
    /**
     * Get the Git ReadOnly Url for the pointed item's location.
@@ -397,8 +391,7 @@ public abstract class GitClientService
     * @param callback
     * @throws RequestException
     */
-   public abstract void getGitReadOnlyUrl(String vfsId, String projectid,
-      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<StringBuilder> callback)
+   public abstract void getGitReadOnlyUrl(String vfsId, String projectid, AsyncRequestCallback<StringBuilder> callback)
       throws RequestException;
 
    /**
@@ -408,5 +401,6 @@ public abstract class GitClientService
     * @param projectid project's id (root of GIT repository)
     * @param callback callback
     */
-   public abstract void deleteWorkDir(String vfsId, String projectid, AsyncRequestCallback<String> callback);
+   public abstract void deleteWorkDir(String vfsId, String projectid, AsyncRequestCallback<String> callback)
+      throws RequestException;
 }

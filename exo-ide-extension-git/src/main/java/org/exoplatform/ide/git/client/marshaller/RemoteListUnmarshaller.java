@@ -18,12 +18,13 @@
  */
 package org.exoplatform.ide.git.client.marshaller;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.git.shared.Remote;
 
 import java.util.List;
@@ -35,7 +36,7 @@ import java.util.List;
  * @version $Id: Apr 4, 2011 12:45:37 PM anya $
  * 
  */
-public class RemoteListUnmarshaller extends JSONUmarshaller
+public class RemoteListUnmarshaller implements Unmarshallable<List<Remote>>, Constants
 {
    /**
     * Remote repositories.
@@ -56,10 +57,12 @@ public class RemoteListUnmarshaller extends JSONUmarshaller
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      JavaScriptObject json = build(response.getText());
-      if (json == null)
+      if (response.getText() == null || response.getText().isEmpty())
+      {
          return;
-      JSONArray array = new JSONArray(json);
+      }
+      
+      JSONArray array = JSONParser.parseStrict(response.getText()).isArray();
       if (array == null || array.size() <= 0)
          return;
 
@@ -80,5 +83,14 @@ public class RemoteListUnmarshaller extends JSONUmarshaller
          }
          remotes.add(new Remote(name, url));
       }
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<Remote> getPayload()
+   {
+      return remotes;
    }
 }

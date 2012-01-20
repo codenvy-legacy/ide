@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.git.client.reset;
 
+import com.google.gwt.http.client.RequestException;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -33,6 +35,7 @@ import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
+import org.exoplatform.ide.git.client.marshaller.StatusResponseUnmarshaller;
 import org.exoplatform.ide.git.client.remove.IndexFile;
 import org.exoplatform.ide.git.shared.GitFile;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -140,39 +143,48 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
     */
    private void getStatus(final String projectId)
    {
-      GitClientService.getInstance().status(vfs.getId(), projectId, new AsyncRequestCallback<StatusResponse>()
+      try
       {
-
-         @Override
-         protected void onSuccess(StatusResponse result)
-         {
-            if (result.getChangedNotCommited() == null || result.getChangedNotCommited().size() <= 0)
+         GitClientService.getInstance().status(vfs.getId(), projectId,
+            new AsyncRequestCallback<StatusResponse>(new StatusResponseUnmarshaller(new StatusResponse(), false))
             {
-               Dialogs.getInstance().showInfo(GitExtension.MESSAGES.nothingToCommit());
-               return;
-            }
 
-            Display d = GWT.create(Display.class);
-            IDE.getInstance().openView(d.asView());
-            bindDisplay(d);
+               @Override
+               protected void onSuccess(StatusResponse result)
+               {
+                  if (result.getChangedNotCommited() == null || result.getChangedNotCommited().size() <= 0)
+                  {
+                     Dialogs.getInstance().showInfo(GitExtension.MESSAGES.nothingToCommit());
+                     return;
+                  }
 
-            List<IndexFile> values = new ArrayList<IndexFile>();
-            for (GitFile file : result.getChangedNotCommited())
-            {
-               values.add(new IndexFile(file, true));
-            }
+                  Display d = GWT.create(Display.class);
+                  IDE.getInstance().openView(d.asView());
+                  bindDisplay(d);
 
-            display.getIndexFilesGrid().setValue(values);
-         }
+                  List<IndexFile> values = new ArrayList<IndexFile>();
+                  for (GitFile file : result.getChangedNotCommited())
+                  {
+                     values.add(new IndexFile(file, true));
+                  }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            String errorMassage =
-               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.statusFailed();
-            IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
-         }
-      });
+                  display.getIndexFilesGrid().setValue(values);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String errorMassage =
+                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.statusFailed();
+                  IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         String errorMassage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.statusFailed();
+         IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+      }
    }
 
    /**
@@ -189,25 +201,34 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
          }
       }
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      GitClientService.getInstance().reset(vfs.getId(), projectId, files.toArray(new String[files.size()]), "HEAD",
-         null, new AsyncRequestCallback<String>()
-         {
-
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         GitClientService.getInstance().reset(vfs.getId(), projectId, files.toArray(new String[files.size()]), "HEAD",
+            null, new AsyncRequestCallback<String>()
             {
-               IDE.getInstance().closeView(display.asView().getId());
-               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetFilesSuccessfully(), Type.INFO));
-               IDE.fireEvent(new RefreshBrowserEvent());
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               String errorMassage =
-                  (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.resetFilesFailed();
-               IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
-            }
-         });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  IDE.getInstance().closeView(display.asView().getId());
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetFilesSuccessfully(), Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String errorMassage =
+                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES
+                        .resetFilesFailed();
+                  IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         String errorMassage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.resetFilesFailed();
+         IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+      }
    }
 }

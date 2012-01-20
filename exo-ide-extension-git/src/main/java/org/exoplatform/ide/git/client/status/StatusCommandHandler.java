@@ -18,12 +18,14 @@
  */
 package org.exoplatform.ide.git.client.status;
 
+import com.google.gwt.http.client.RequestException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconEvent;
@@ -36,6 +38,7 @@ import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
+import org.exoplatform.ide.git.client.marshaller.StatusResponseUnmarshaller;
 import org.exoplatform.ide.git.shared.GitFile;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -103,28 +106,36 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
             fileFilter = new String[]{path};
          }
       }
-      GitClientService.getInstance().statusText(vfs.getId(), project.getId(), false, fileFilter,
-         new AsyncRequestCallback<StatusResponse>()
-         {
-
-            @Override
-            protected void onSuccess(StatusResponse result)
+      try
+      {
+         GitClientService.getInstance().statusText(vfs.getId(), project.getId(), false, fileFilter,
+            new AsyncRequestCallback<StatusResponse>(new StatusResponseUnmarshaller(new StatusResponse(), true))
             {
-               if (result.getWorkTreeStatus() == null)
-                  return;
-               String status = result.getWorkTreeStatus();
-               status = status.replace("\n", "<br>");
-               IDE.fireEvent(new OutputEvent(status, OutputMessage.Type.INFO));
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               String errorMessage =
-                  (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.statusFailed();
-               IDE.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.ERROR));
-            }
-         });
+               @Override
+               protected void onSuccess(StatusResponse result)
+               {
+                  if (result.getWorkTreeStatus() == null)
+                     return;
+                  String status = result.getWorkTreeStatus();
+                  status = status.replace("\n", "<br>");
+                  IDE.fireEvent(new OutputEvent(status, OutputMessage.Type.INFO));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String errorMessage =
+                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.statusFailed();
+                  IDE.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.ERROR));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.statusFailed();
+         IDE.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.ERROR));
+      }
    }
 
    /**
@@ -163,59 +174,65 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
     */
    private void getStatus(final ProjectModel project, final Folder folder)
    {
-      GitClientService.getInstance().status(vfs.getId(), project.getId(), new AsyncRequestCallback<StatusResponse>()
+      try
       {
-         @Override
-         protected void onSuccess(StatusResponse result)
+         GitClientService.getInstance().status(vfs.getId(), project.getId(), new AsyncRequestCallback<StatusResponse>(new StatusResponseUnmarshaller(new StatusResponse(), false))
          {
-            Map<Item, Map<TreeIconPosition, ImageResource>> treeNodesToUpdate =
-               new HashMap<Item, Map<TreeIconPosition, ImageResource>>();
-
-            List<Item> itemsToCheck = new ArrayList<Item>();
-            ItemList<Item> children =
-               (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren() : ((FolderModel)folder)
-                  .getChildren();
-            itemsToCheck.addAll(children.getItems());
-            itemsToCheck.add(folder);
-            for (Item item : itemsToCheck)
+            @Override
+            protected void onSuccess(StatusResponse result)
             {
-               String path = URL.decodePathSegment(item.getPath());
-               String pattern = path.replaceFirst(project.getPath(), "");
-               pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
-               Map<TreeIconPosition, ImageResource> map = new HashMap<TreeIconPosition, ImageResource>();
-               if (pattern.length() == 0 || "/".equals(pattern))
-               {
-                  map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.repositoryRoot());
-               }
-               else if (contains(result.getChangedNotCommited(), pattern))
-               {
-                  map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemNotCommited());
-               }
-               else if (contains(result.getChangedNotUpdated(), pattern))
-               {
-                  map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemChanged());
-               }
-               else if (contains(result.getUntracked(), pattern))
-               {
-                  map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemNew());
-               }
-               else
-               {
-                  if (item instanceof File)
-                  {
-                     map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemInRepository());
-                  }
-               }
-               treeNodesToUpdate.put(item, map);
-            }
-            IDE.fireEvent(new AddItemTreeIconEvent(treeNodesToUpdate));
-         }
+               Map<Item, Map<TreeIconPosition, ImageResource>> treeNodesToUpdate =
+                  new HashMap<Item, Map<TreeIconPosition, ImageResource>>();
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-         }
-      });
+               List<Item> itemsToCheck = new ArrayList<Item>();
+               ItemList<Item> children =
+                  (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren() : ((FolderModel)folder)
+                     .getChildren();
+               itemsToCheck.addAll(children.getItems());
+               itemsToCheck.add(folder);
+               for (Item item : itemsToCheck)
+               {
+                  String path = URL.decodePathSegment(item.getPath());
+                  String pattern = path.replaceFirst(project.getPath(), "");
+                  pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
+                  Map<TreeIconPosition, ImageResource> map = new HashMap<TreeIconPosition, ImageResource>();
+                  if (pattern.length() == 0 || "/".equals(pattern))
+                  {
+                     map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.repositoryRoot());
+                  }
+                  else if (contains(result.getChangedNotCommited(), pattern))
+                  {
+                     map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemNotCommited());
+                  }
+                  else if (contains(result.getChangedNotUpdated(), pattern))
+                  {
+                     map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemChanged());
+                  }
+                  else if (contains(result.getUntracked(), pattern))
+                  {
+                     map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemNew());
+                  }
+                  else
+                  {
+                     if (item instanceof File)
+                     {
+                        map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemInRepository());
+                     }
+                  }
+                  treeNodesToUpdate.put(item, map);
+               }
+               IDE.fireEvent(new AddItemTreeIconEvent(treeNodesToUpdate));
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+      }
    }
 
    /**

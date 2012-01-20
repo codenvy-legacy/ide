@@ -18,13 +18,12 @@
  */
 package org.exoplatform.ide.git.client.marshaller;
 
-import com.google.gwt.json.client.JSONObject;
-
-import com.google.gwt.core.client.JavaScriptObject;
-
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.git.shared.Branch;
 
 /**
@@ -34,7 +33,7 @@ import org.exoplatform.ide.git.shared.Branch;
  * @version $Id: Apr 11, 2011 12:29:46 PM anya $
  * 
  */
-public class BranchUnmarshaller extends JSONUmarshaller
+public class BranchUnmarshaller implements Unmarshallable<Branch>, Constants
 {
    /**
     * Branch.
@@ -55,11 +54,12 @@ public class BranchUnmarshaller extends JSONUmarshaller
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      JavaScriptObject json = build(response.getText());
-      if (json == null)
+      if (response.getText() == null || response.getText().isEmpty())
+      {
          return;
-
-      JSONObject object = new JSONObject(json).isObject();
+      }
+      
+      JSONObject object = JSONParser.parseStrict(response.getText()).isObject();
       if (object == null)
          return;
       if (object.containsKey(ACTIVE))
@@ -79,5 +79,14 @@ public class BranchUnmarshaller extends JSONUmarshaller
             (object.get(DISPLAY_NAME).isString() != null) ? object.get(DISPLAY_NAME).isString().stringValue() : "";
          branch.setDisplayName(displayName);
       }
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public Branch getPayload()
+   {
+      return branch;
    }
 }

@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.git.client;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.git.client.marshaller.RemoteListUnmarshaller;
 import org.exoplatform.ide.git.shared.Remote;
 

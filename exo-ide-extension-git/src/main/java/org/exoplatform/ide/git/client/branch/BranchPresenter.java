@@ -18,9 +18,12 @@
  */
 package org.exoplatform.ide.git.client.branch;
 
+import com.google.gwt.http.client.RequestException;
+
+import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -33,6 +36,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.git.client.marshaller.BranchListUnmarshaller;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
@@ -195,23 +199,33 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
     */
    public void getBranches(String projectId)
    {
-      GitClientService.getInstance().branchList(vfs.getId(), projectId, false, new AsyncRequestCallback<List<Branch>>()
+      try
       {
+         GitClientService.getInstance().branchList(vfs.getId(), projectId, false,
+            new AsyncRequestCallback<List<Branch>>(new BranchListUnmarshaller(new ArrayList<Branch>()))
+            {
 
-         @Override
-         protected void onSuccess(List<Branch> result)
-         {
-            display.getBranchesGrid().setValue(result);
-         }
+               @Override
+               protected void onSuccess(List<Branch> result)
+               {
+                  display.getBranchesGrid().setValue(result);
+               }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            String errorMessage =
-               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.branchesListFailed();
-            IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-         }
-      });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String errorMessage =
+                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES
+                        .branchesListFailed();
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.branchesListFailed();
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      }
    }
 
    /**
@@ -259,25 +273,33 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
    {
       final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
 
-      GitClientService.getInstance().branchCreate(vfs.getId(), projectId, name, null,
-         new AsyncRequestCallback<Branch>()
-         {
-
-            @Override
-            protected void onSuccess(Branch result)
+      try
+      {
+         GitClientService.getInstance().branchCreate(vfs.getId(), projectId, name, null,
+            new AsyncRequestCallback<Branch>()
             {
-               getBranches(projectId);
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               String errorMessage =
-                  (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES
-                     .branchCreateFailed();
-               IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-            }
-         });
+               @Override
+               protected void onSuccess(Branch result)
+               {
+                  getBranches(projectId);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String errorMessage =
+                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES
+                        .branchCreateFailed();
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.branchCreateFailed();
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      }
    }
 
    /**
@@ -292,25 +314,33 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
          return;
       }
 
-      GitClientService.getInstance().branchCheckout(vfs.getId(), projectId, name, null, false,
-         new AsyncRequestCallback<String>()
-         {
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         GitClientService.getInstance().branchCheckout(vfs.getId(), projectId, name, null, false,
+            new AsyncRequestCallback<String>()
             {
-               getBranches(projectId);
-               IDE.fireEvent(new RefreshBrowserEvent());
-            }
+               @Override
+               protected void onSuccess(String result)
+               {
+                  getBranches(projectId);
+                  IDE.fireEvent(new RefreshBrowserEvent());
+               }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               String errorMessage =
-                  (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES
-                     .branchCheckoutFailed();
-               IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String errorMessage =
+                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES
+                        .branchCheckoutFailed();
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.branchCheckoutFailed();
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      }
 
    }
 
@@ -344,23 +374,31 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
    private void doDeleteBranch(String name)
    {
       final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      GitClientService.getInstance().branchDelete(vfs.getId(), projectId, name, true,
-         new AsyncRequestCallback<String>()
-         {
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         GitClientService.getInstance().branchDelete(vfs.getId(), projectId, name, true,
+            new AsyncRequestCallback<String>()
             {
-               getBranches(projectId);
-            }
+               @Override
+               protected void onSuccess(String result)
+               {
+                  getBranches(projectId);
+               }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               String errorMessage =
-                  (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES
-                     .branchDeleteFailed();
-               IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String errorMessage =
+                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES
+                        .branchDeleteFailed();
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.branchDeleteFailed();
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      }
    }
 }

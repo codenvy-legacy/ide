@@ -23,9 +23,10 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.git.shared.MergeResult;
 import org.exoplatform.ide.git.shared.MergeResult.MergeStatus;
 
 /**
@@ -35,7 +36,7 @@ import org.exoplatform.ide.git.shared.MergeResult.MergeStatus;
  * @version $Id: Jul 20, 2011 12:01:03 PM anya $
  * 
  */
-public class MergeUnmarshaller implements Unmarshallable, Constants
+public class MergeUnmarshaller implements Unmarshallable<MergeResult>, Constants
 {
    /**
     * Result of merge operation.
@@ -58,7 +59,18 @@ public class MergeUnmarshaller implements Unmarshallable, Constants
    {
       try
       {
+         if (response.getText() == null || response.getText().isEmpty())
+         {
+            return;
+         }
+         
          JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
+         
+         if (jsonObject == null) 
+         {
+            return;
+         }
+         
          if (jsonObject.containsKey(CONFLICTS) && jsonObject.get(CONFLICTS).isArray() != null)
          {
             JSONArray array = jsonObject.get(CONFLICTS).isArray();
@@ -102,5 +114,14 @@ public class MergeUnmarshaller implements Unmarshallable, Constants
          array[i] = jsonArray.get(i).isString().stringValue();
       }
       return array;
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public Merge getPayload()
+   {
+      return merge;
    }
 }

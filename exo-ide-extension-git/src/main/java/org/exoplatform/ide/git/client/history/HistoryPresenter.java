@@ -18,9 +18,17 @@
  */
 package org.exoplatform.ide.git.client.history;
 
-import java.util.List;
+import com.google.gwt.http.client.RequestException;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.ui.HasValue;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -31,20 +39,15 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.git.client.marshaller.DiffResponse;
+import org.exoplatform.ide.git.client.marshaller.DiffResponseUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
+import org.exoplatform.ide.git.client.marshaller.LogResponseUnmarshaller;
 import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.List;
 
 /**
  * Presenter for history view. The view must be pointed in Views.gwt.xml.
@@ -295,35 +298,45 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
    private void getCommitsLog()
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      GitClientService.getInstance().log(vfs.getId(), projectId, false, new AsyncRequestCallback<LogResponse>()
+      try
       {
-
-         @Override
-         protected void onSuccess(LogResponse result)
-         {
-            if (display == null)
+         GitClientService.getInstance().log(vfs.getId(), projectId, false,
+            new AsyncRequestCallback<LogResponse>(new LogResponseUnmarshaller(new LogResponse(), false))
             {
-               display = GWT.create(Display.class);
 
-               IDE.getInstance().openView(display.asView());
-               bindDisplay();
-               display.selectProjectChangesButton(true);
-               showChangesInProject = true;
-               display.selectDiffWithPrevVersionButton(true);
-               diffType = DiffWith.DIFF_WITH_PREV_VERSION;
-            }
-            display.getRevisionGrid().setValue(result.getCommits());
-         }
+               @Override
+               protected void onSuccess(LogResponse result)
+               {
+                  if (display == null)
+                  {
+                     display = GWT.create(Display.class);
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            nothingToDisplay(null);
-            String errorMessage =
-               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.logFailed();
-            IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-         }
-      });
+                     IDE.getInstance().openView(display.asView());
+                     bindDisplay();
+                     display.selectProjectChangesButton(true);
+                     showChangesInProject = true;
+                     display.selectDiffWithPrevVersionButton(true);
+                     diffType = DiffWith.DIFF_WITH_PREV_VERSION;
+                  }
+                  display.getRevisionGrid().setValue(result.getCommits());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  nothingToDisplay(null);
+                  String errorMessage =
+                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.logFailed();
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         nothingToDisplay(null);
+         String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.logFailed();
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      }
    }
 
    /**
@@ -379,29 +392,39 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
    protected void doDiffWithNotCommited(String[] filePatterns, final Revision revision, final boolean isCached)
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      GitClientService.getInstance().diff(vfs.getId(), projectId, filePatterns, DiffType.RAW, false, 0,
-         revision.getId(), isCached, new AsyncRequestCallback<DiffResponse>()
-         {
-
-            @Override
-            protected void onSuccess(DiffResponse result)
+      try
+      {
+         GitClientService.getInstance().diff(vfs.getId(), projectId, filePatterns, DiffType.RAW, false, 0,
+            revision.getId(), isCached,
+            new AsyncRequestCallback<StringBuilder>(new DiffResponseUnmarshaller(new StringBuilder()))
             {
-               display.displayDiffContent(result.getDiffText());
-               String text =
-                  (isCached) ? GitExtension.MESSAGES.historyDiffIndexState() : GitExtension.MESSAGES
-                     .historyDiffTreeState();
-               display.displayCompareText(revision, text);
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               nothingToDisplay(revision);
-               String errorMessage =
-                  (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.diffFailed();
-               IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-            }
-         });
+               @Override
+               protected void onSuccess(StringBuilder result)
+               {
+                  display.displayDiffContent(result.toString());
+                  String text =
+                     (isCached) ? GitExtension.MESSAGES.historyDiffIndexState() : GitExtension.MESSAGES
+                        .historyDiffTreeState();
+                  display.displayCompareText(revision, text);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  nothingToDisplay(revision);
+                  String errorMessage =
+                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.diffFailed();
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         nothingToDisplay(revision);
+         String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.diffFailed();
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      }
    }
 
    /**
@@ -418,26 +441,36 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
       {
          final Revision revisionB = revisions.get(index + 1);
          String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-         GitClientService.getInstance().diff(vfs.getId(), projectId, filePatterns, DiffType.RAW, false, 0,
-            revision.getId(), revisionB.getId(), new AsyncRequestCallback<DiffResponse>()
-            {
-
-               @Override
-               protected void onSuccess(DiffResponse result)
+         try
+         {
+            GitClientService.getInstance().diff(vfs.getId(), projectId, filePatterns, DiffType.RAW, false, 0,
+               revision.getId(), revisionB.getId(),
+               new AsyncRequestCallback<StringBuilder>(new DiffResponseUnmarshaller(new StringBuilder()))
                {
-                  display.displayDiffContent(result.getDiffText());
-                  display.displayCompareVersion(revision, revisionB);
-               }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  nothingToDisplay(revision);
-                  String errorMessage =
-                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.diffFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-               }
-            });
+                  @Override
+                  protected void onSuccess(StringBuilder result)
+                  {
+                     display.displayDiffContent(result.toString());
+                     display.displayCompareVersion(revision, revisionB);
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     nothingToDisplay(revision);
+                     String errorMessage =
+                        (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.diffFailed();
+                     IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            nothingToDisplay(revision);
+            String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.diffFailed();
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         }
       }
       else
       {

@@ -20,8 +20,8 @@ package org.exoplatform.ide.git.client.marshaller;
 
 import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 
 /**
  * Unmarshaller to get {@link DiffResponse} from response.
@@ -30,28 +30,36 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
  * @version $Id: May 4, 2011 11:11:03 AM anya $
  * 
  */
-public class DiffResponseUnmarshaller implements Unmarshallable
+public class DiffResponseUnmarshaller implements Unmarshallable<StringBuilder>
 {
    /**
     * Diff response.
     */
-   private DiffResponse diffResponse;
+   private StringBuilder diffResponse;
 
    /**
     * @param diffResponse diff response
     */
-   public DiffResponseUnmarshaller(DiffResponse diffResponse)
+   public DiffResponseUnmarshaller(StringBuilder diffResponse)
    {
       this.diffResponse = diffResponse;
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
     */
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      diffResponse.setDiffText(response.getText());
+      diffResponse.append(response.getText());
    }
 
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public StringBuilder getPayload()
+   {
+      return diffResponse;
+   }
 }

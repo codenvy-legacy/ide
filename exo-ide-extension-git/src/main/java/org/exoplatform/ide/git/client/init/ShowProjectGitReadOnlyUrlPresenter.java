@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client.init;
 
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -99,7 +101,7 @@ public class ShowProjectGitReadOnlyUrlPresenter extends GitPresenter implements 
          GitClientService.getInstance().getGitReadOnlyUrl(
             vfs.getId(),
             projectId,
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<StringBuilder>(
+            new AsyncRequestCallback<StringBuilder>(
                new StringUnmarshaller(new StringBuilder()))
             {
 
@@ -129,7 +131,7 @@ public class ShowProjectGitReadOnlyUrlPresenter extends GitPresenter implements 
    }
 
    private class StringUnmarshaller implements
-      org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable<StringBuilder>
+      Unmarshallable<StringBuilder>
    {
 
       protected StringBuilder builder;

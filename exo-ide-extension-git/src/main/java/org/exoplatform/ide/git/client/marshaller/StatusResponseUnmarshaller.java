@@ -18,12 +18,13 @@
  */
 package org.exoplatform.ide.git.client.marshaller;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.git.shared.GitFile;
 import org.exoplatform.ide.git.shared.GitFile.FileStatus;
 
@@ -37,7 +38,7 @@ import java.util.List;
  * @version $Id: Mar 29, 2011 11:11:27 AM anya $
  * 
  */
-public class StatusResponseUnmarshaller extends JSONUmarshaller
+public class StatusResponseUnmarshaller implements Unmarshallable<StatusResponse>, Constants
 {
    /**
     * The status response.
@@ -65,16 +66,18 @@ public class StatusResponseUnmarshaller extends JSONUmarshaller
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
+      if (response.getText() == null || response.getText().isEmpty())
+      {
+         return;
+      }
+
       if (textFormat)
       {
          statusResponse.setWorkTreeStatus(response.getText());
          return;
       }
 
-      JavaScriptObject json = build(response.getText());
-      if (json == null)
-         return;
-      JSONObject statusObject = new JSONObject(json).isObject();
+      JSONObject statusObject = JSONParser.parseStrict(response.getText()).isObject();
       if (statusObject == null)
          return;
 
@@ -116,5 +119,14 @@ public class StatusResponseUnmarshaller extends JSONUmarshaller
          }
       }
       return values;
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public StatusResponse getPayload()
+   {
+      return statusResponse;
    }
 }

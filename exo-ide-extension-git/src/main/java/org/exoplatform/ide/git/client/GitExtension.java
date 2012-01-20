@@ -130,7 +130,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new GitClientServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(), event.getLoader());
+      new GitClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
 }

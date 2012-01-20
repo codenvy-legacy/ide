@@ -18,9 +18,16 @@
  */
 package org.exoplatform.ide.git.client.merge;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.RequestException;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -32,17 +39,16 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.git.client.marshaller.BranchListUnmarshaller;
+import org.exoplatform.ide.git.client.marshaller.Merge;
+import org.exoplatform.ide.git.client.marshaller.MergeUnmarshaller;
 import org.exoplatform.ide.git.client.merge.Reference.RefType;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.MergeResult;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Presenter to perform merge reference with current HEAD commit.
@@ -130,31 +136,57 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
             display.enableMergeButton(false);
          }
 
-         GitClientService.getInstance().branchList(vfs.getId(), projectId, false,
-            new AsyncRequestCallback<List<Branch>>()
-            {
-
-               @Override
-               protected void onSuccess(List<Branch> result)
+         try
+         {
+            GitClientService.getInstance().branchList(vfs.getId(), projectId, false,
+               new AsyncRequestCallback<List<Branch>>(new BranchListUnmarshaller(new ArrayList<Branch>()))
                {
-                  if (result == null || result.size() == 0)
-                     return;
-                  setReferences(result, true);
-               }
-            });
 
-         GitClientService.getInstance().branchList(vfs.getId(), projectId, true,
-            new AsyncRequestCallback<List<Branch>>()
-            {
+                  @Override
+                  protected void onSuccess(List<Branch> result)
+                  {
+                     if (result == null || result.size() == 0)
+                        return;
+                     setReferences(result, true);
+                  }
 
-               @Override
-               protected void onSuccess(List<Branch> result)
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+         }
+
+         try
+         {
+            GitClientService.getInstance().branchList(vfs.getId(), projectId, true,
+               new AsyncRequestCallback<List<Branch>>(new BranchListUnmarshaller(new ArrayList<Branch>()))
                {
-                  if (result == null || result.size() == 0)
-                     return;
-                  setReferences(result, false);
-               }
-            });
+
+                  @Override
+                  protected void onSuccess(List<Branch> result)
+                  {
+                     if (result == null || result.size() == 0)
+                        return;
+                     setReferences(result, false);
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+         }
       }
    }
 
@@ -208,18 +240,31 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
       }
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
 
-      GitClientService.getInstance().merge(vfs.getId(), projectId, reference.getDisplayName(),
-         new AsyncRequestCallback<MergeResult>()
-         {
-
-            @Override
-            protected void onSuccess(MergeResult result)
+      try
+      {
+         GitClientService.getInstance().merge(vfs.getId(), projectId, reference.getDisplayName(),
+            new AsyncRequestCallback<MergeResult>(new MergeUnmarshaller(new Merge()))
             {
-               IDE.fireEvent(new OutputEvent(formMergeMessage(result), Type.INFO));
-               IDE.getInstance().closeView(display.asView().getId());
-               IDE.fireEvent(new RefreshBrowserEvent());
-            }
-         });
+
+               @Override
+               protected void onSuccess(MergeResult result)
+               {
+                  IDE.fireEvent(new OutputEvent(formMergeMessage(result), Type.INFO));
+                  IDE.getInstance().closeView(display.asView().getId());
+                  IDE.fireEvent(new RefreshBrowserEvent());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.clone;
 
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -176,7 +177,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       try
       {
          GitClientService.getInstance().cloneRepository(vfs.getId(), project, remoteUri, remoteName,
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
+            new AsyncRequestCallback<String>()
             {
 
                @Override

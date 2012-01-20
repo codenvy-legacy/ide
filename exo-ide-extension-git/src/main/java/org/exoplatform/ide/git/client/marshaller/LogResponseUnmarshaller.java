@@ -18,12 +18,13 @@
  */
 package org.exoplatform.ide.git.client.marshaller;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.Revision;
 
@@ -37,7 +38,7 @@ import java.util.List;
  * @version $Id: Apr 14, 2011 4:10:34 PM anya $
  * 
  */
-public class LogResponseUnmarshaller extends JSONUmarshaller
+public class LogResponseUnmarshaller implements Unmarshallable<LogResponse>, Constants
 {
    /**
     * Log response.
@@ -65,6 +66,11 @@ public class LogResponseUnmarshaller extends JSONUmarshaller
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
+      if (response.getText() == null || response.getText().isEmpty())
+      {
+         return;
+      }
+      
       if (isText)
       {
          logResponse.setTextLog(response.getText());
@@ -72,10 +78,7 @@ public class LogResponseUnmarshaller extends JSONUmarshaller
       }
 
       List<Revision> revisions = new ArrayList<Revision>();
-      JavaScriptObject json = build(response.getText());
-      if (json == null)
-         return;
-      JSONObject logObject = new JSONObject(json).isObject();
+      JSONObject logObject = JSONParser.parseStrict(response.getText()).isObject();
       if (logObject == null)
          return;
 
@@ -113,5 +116,14 @@ public class LogResponseUnmarshaller extends JSONUmarshaller
          revisions.add(revision);
       }
       logResponse.setCommits(revisions);
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public LogResponse getPayload()
+   {
+      return logResponse;
    }
 }

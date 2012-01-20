@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.git.client.reset;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -29,6 +31,7 @@ import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
+import org.exoplatform.ide.git.client.marshaller.LogResponseUnmarshaller;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -174,28 +177,37 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
 
-      GitClientService.getInstance().log(vfs.getId(), projectId, false, new AsyncRequestCallback<LogResponse>()
+      try
       {
+         GitClientService.getInstance().log(vfs.getId(), projectId, false,
+            new AsyncRequestCallback<LogResponse>(new LogResponseUnmarshaller(new LogResponse(), false))
+            {
 
-         @Override
-         protected void onSuccess(LogResponse result)
-         {
-            Display d = GWT.create(Display.class);
-            IDE.getInstance().openView(d.asView());
-            bindDisplay(d);
+               @Override
+               protected void onSuccess(LogResponse result)
+               {
+                  Display d = GWT.create(Display.class);
+                  IDE.getInstance().openView(d.asView());
+                  bindDisplay(d);
 
-            display.getRevisionGrid().setValue(result.getCommits());
-            display.getMixMode().setValue(true);
-         }
+                  display.getRevisionGrid().setValue(result.getCommits());
+                  display.getMixMode().setValue(true);
+               }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            String errorMessage =
-               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.logFailed();
-            IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-         }
-      });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String errorMessage =
+                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.logFailed();
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.logFailed();
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      }
    }
 
    /**
@@ -208,24 +220,32 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
       type = (type == null && display.getSoftMode().getValue()) ? ResetType.SOFT : type;
       type = (type == null && display.getHardMode().getValue()) ? ResetType.HARD : type;
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      GitClientService.getInstance().reset(vfs.getId(), projectId, null, revision.getId(), type,
-         new AsyncRequestCallback<String>()
-         {
-
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         GitClientService.getInstance().reset(vfs.getId(), projectId, null, revision.getId(), type,
+            new AsyncRequestCallback<String>()
             {
-               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetSuccessfully(), Type.INFO));
-               IDE.getInstance().closeView(display.asView().getId());
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               String errorMessage =
-                  (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.resetFail();
-               IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-            }
-         });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetSuccessfully(), Type.INFO));
+                  IDE.getInstance().closeView(display.asView().getId());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String errorMessage =
+                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.resetFail();
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.resetFail();
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      }
    }
 }
