@@ -20,7 +20,6 @@ package org.exoplatform.ide.codeassistant.storage.lucene.search;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.MapFieldSelector;
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.exoplatform.ide.codeassistant.jvm.bean.ShortTypeInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
@@ -36,8 +35,7 @@ public class ShortTypeInfoExtractor implements ContentExtractor<ShortTypeInfo>
 {
 
    /**
-    * @throws IOException
-    * @throws CorruptIndexException
+    * 
     * @see org.exoplatform.ide.codeassistant.storage.lucene.search.ContentExtractor#getValue(org.apache.lucene.index.IndexReader,
     *      int)
     */

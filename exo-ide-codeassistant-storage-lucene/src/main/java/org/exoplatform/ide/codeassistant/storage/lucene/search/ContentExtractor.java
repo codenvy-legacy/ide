@@ -23,9 +23,18 @@ import org.apache.lucene.index.IndexReader;
 import java.io.IOException;
 
 /**
- *
+ * Extract content from index by lucene document identificator.
  */
 public interface ContentExtractor<T>
 {
+   /**
+    * 
+    * @param reader
+    *           - current lucene Index read.
+    * @param doc
+    *           - id of lucene document
+    * @return - content of the document
+    * @throws IOException
+    */
    T getValue(IndexReader reader, int doc) throws IOException;
 }

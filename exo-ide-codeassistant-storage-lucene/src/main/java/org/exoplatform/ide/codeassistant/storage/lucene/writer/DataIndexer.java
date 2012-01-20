@@ -29,6 +29,10 @@ import org.exoplatform.ide.codeassistant.storage.lucene.IndexType;
 
 import java.io.IOException;
 
+/**
+ * Create Lucene Document for JavaDoc or TypeInfo.
+ * 
+ */
 public class DataIndexer
 {
    /**

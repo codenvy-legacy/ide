@@ -106,7 +106,13 @@ public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
       return result;
    }
 
-   public void mergeType(TypeInfo recipient, TypeInfo ancestor)
+   /**
+    * Merge fields and methods of two TypeInfo
+    * 
+    * @param recipient
+    * @param ancestor
+    */
+   private void mergeType(TypeInfo recipient, TypeInfo ancestor)
    {
       if (ancestor != null)
       {

@@ -26,7 +26,7 @@ import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
 import org.exoplatform.ide.codeassistant.storage.lucene.DataIndexFields;
 
 /**
- * 
+ * Constrain where field match specific value.
  */
 public class SearchByFieldConstraint implements LuceneSearchConstraint
 {
@@ -52,11 +52,24 @@ public class SearchByFieldConstraint implements LuceneSearchConstraint
       return new TermQuery(new Term(filedName, value));
    }
 
+   /**
+    * Create SearchByFieldConstraint where fieldName = value.
+    * 
+    * @param fieldName
+    * @param value
+    * @return
+    */
    public static SearchByFieldConstraint eq(String fieldName, String value)
    {
       return new SearchByFieldConstraint(fieldName, value);
    }
 
+   /**
+    * Create SearchByFieldConstraint where DataIndexFields.ENTITY_TYPE = value.
+    * 
+    * @param type
+    * @return
+    */
    public static LuceneSearchConstraint eqJavaType(JavaType type)
    {
       return new SearchByFieldConstraint(DataIndexFields.ENTITY_TYPE, type.toString());

@@ -30,8 +30,16 @@ import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
  */
 public interface LuceneSearchConstraint
 {
-
+   /**
+    * 
+    * @return - lucene query
+    * @throws CodeAssistantException
+    */
    public Query getQuery() throws CodeAssistantException;
 
+   /**
+    * 
+    * @return - true if this constraint match all documents.
+    */
    public boolean matchAll();
 }

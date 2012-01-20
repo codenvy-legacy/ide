@@ -32,6 +32,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+/**
+ * Add javadoc or TypeInfo information to Lucene index.
+ * 
+ */
 public class LuceneDataWriter
 {
 
@@ -75,6 +79,10 @@ public class LuceneDataWriter
    }
 
    /**
+    * Add List of TypeInfo to index.
+    * 
+    * @param typeInfos
+    * @throws SaveDataIndexException
     */
    public void addTypeInfo(List<TypeInfo> typeInfos) throws SaveDataIndexException
    {

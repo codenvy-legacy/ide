@@ -26,20 +26,16 @@ import org.apache.lucene.search.TopDocs;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.storage.lucene.IndexType;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Execute queries against lucene index.
  */
 public class LuceneQueryExecutor
 {
-   private static final Logger LOG = LoggerFactory.getLogger(LuceneQueryExecutor.class);
-
    private final LuceneInfoStorage infoStorage;
 
    public LuceneQueryExecutor(LuceneInfoStorage infoStorage)
@@ -48,13 +44,20 @@ public class LuceneQueryExecutor
    }
 
    /**
+    * Execute query
     * 
     * @param select
+    *           - extractor of results.
     * @param from
+    *           - type of index to search (java code ,jvadoc)
     * @param where
+    *           - constrain of search
     * @param limit
+    *           - limit number of results.
     * @param offset
-    * @return
+    *           - offset in results.
+    * @return - List of values depends on select extractor
+    * 
     * @throws CodeAssistantException
     */
    public <T> List<T> executeQuery(ContentExtractor<T> select, IndexType from, LuceneSearchConstraint where, int limit,

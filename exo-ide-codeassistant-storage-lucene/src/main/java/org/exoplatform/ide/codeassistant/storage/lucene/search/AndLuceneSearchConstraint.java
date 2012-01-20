@@ -24,7 +24,7 @@ import org.apache.lucene.search.Query;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 
 /**
- * 
+ * Combine with logical AND two constrains.
  */
 public class AndLuceneSearchConstraint implements LuceneSearchConstraint
 {
@@ -52,6 +52,13 @@ public class AndLuceneSearchConstraint implements LuceneSearchConstraint
       return booleanQuery;
    }
 
+   /**
+    * Combine with logical AND two constrains.
+    * 
+    * @param leftConstraint
+    * @param rightConstraint
+    * @return
+    */
    public static LuceneSearchConstraint and(LuceneSearchConstraint leftConstraint,
       LuceneSearchConstraint rightConstraint)
    {
