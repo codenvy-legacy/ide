@@ -20,27 +20,25 @@ package org.exoplatform.ide.extension.ssh.client.marshaller;
 
 import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: SshPublicKeyUnmarshaller May 19, 2011 2:28:26 PM evgen $
  * 
  */
-public class SshPublicKeyUnmarshaller implements Unmarshallable
+public class SshPublicKeyUnmarshaller implements Unmarshallable<StringBuilder>
 {
-
-   private AsyncRequestCallback<String> callback;
-
+   
+   private StringBuilder publicKey;
+   
    /**
     * @param callback
     */
-   public SshPublicKeyUnmarshaller(AsyncRequestCallback<String> callback)
+   public SshPublicKeyUnmarshaller(StringBuilder publicKey)
    {
-      super();
-      this.callback = callback;
+      this.publicKey = publicKey;
    }
 
    /**
@@ -49,8 +47,15 @@ public class SshPublicKeyUnmarshaller implements Unmarshallable
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      callback.setResult(response.getText());
-      callback = null;
+      publicKey.append(response.getText());
    }
-
+   
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public StringBuilder getPayload()
+   {
+      return publicKey;
+   }
 }

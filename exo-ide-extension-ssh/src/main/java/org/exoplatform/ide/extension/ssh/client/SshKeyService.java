@@ -20,14 +20,14 @@ package org.exoplatform.ide.extension.ssh.client;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.extension.ssh.client.marshaller.GenerateSshKeysMarshaller;
 import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
@@ -88,15 +88,14 @@ public class SshKeyService
     * 
     * @param host for ssh key
     * @param callback
+    * @throws RequestException 
     */
-   public void generateKey(GenKeyRequest genKey, AsyncRequestCallback<GenKeyRequest> callback)
+   public void generateKey(GenKeyRequest genKey, AsyncRequestCallback<GenKeyRequest> callback) throws RequestException
    {
-      callback.setEventBus(IDE.eventBus());
-      callback.setResult(genKey);
       String url = restContext + "/ide/ssh-keys/gen";
       GenerateSshKeysMarshaller marshaller = new GenerateSshKeysMarshaller(genKey);
       loader.setMessage("Generate keys for " + genKey.getHost());
-      AsyncRequest.build(RequestBuilder.POST, url, loader).data(marshaller)
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(marshaller.marshal())
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 

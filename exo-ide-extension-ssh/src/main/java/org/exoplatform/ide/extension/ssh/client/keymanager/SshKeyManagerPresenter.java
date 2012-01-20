@@ -18,9 +18,11 @@
  */
 package org.exoplatform.ide.extension.ssh.client.keymanager;
 
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
@@ -247,20 +249,27 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
 
    private void generateKey(String host)
    {
-      SshKeyService.get().generateKey(new GenKeyRequest(host, null, null), new AsyncRequestCallback<GenKeyRequest>()
+      try
       {
-         @Override
-         protected void onSuccess(GenKeyRequest result)
+         SshKeyService.get().generateKey(new GenKeyRequest(host, null, null), new AsyncRequestCallback<GenKeyRequest>()
          {
-            refreshKeys();
-         }
+            @Override
+            protected void onSuccess(GenKeyRequest result)
+            {
+               refreshKeys();
+            }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            IDE.fireEvent(new ExceptionThrownEvent(exception));
-         }
-      });
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
