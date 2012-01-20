@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.extension.openshift.client;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 
@@ -58,7 +60,7 @@ public abstract class OpenShiftClientService
     * @param password user's password
     * @param callback callback
     */
-   public abstract void login(String login, String password, AsyncRequestCallback<String> callback);
+   public abstract void login(String login, String password, AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Creates new domain name. A domain name is a requirement for each new application that you create in the cloud and is part of
@@ -68,7 +70,7 @@ public abstract class OpenShiftClientService
     * @param alter alter namespace (will change urls) and/or ssh key
     * @param callback callback
     */
-   public abstract void createDomain(String name, boolean alter, AsyncRequestCallback<String> callback);
+   public abstract void createDomain(String name, boolean alter, AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Creates OpenShift application.
@@ -81,7 +83,7 @@ public abstract class OpenShiftClientService
     * @param callback callback
     */
    public abstract void createApplication(String name, String vfsId, String projectId, String type,
-      AsyncRequestCallback<AppInfo> callback);
+      AsyncRequestCallback<AppInfo> callback) throws RequestException;
 
    /**
     * Destroys application with pointed name from OpenShift.
@@ -92,7 +94,7 @@ public abstract class OpenShiftClientService
     * @param callback callback
     */
    public abstract void destroyApplication(String name, String vfsId, String projectId,
-      AsyncRequestCallback<String> callback);
+      AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Get user's information. You can view the Framework Type, Creation Date, GitURL and PublicURL details for each application.
@@ -100,7 +102,7 @@ public abstract class OpenShiftClientService
     * @param appsInfo if <code>true</code>, then list applications
     * @param callback callback
     */
-   public abstract void getUserInfo(boolean appsInfo, AsyncRequestCallback<RHUserInfo> callback);
+   public abstract void getUserInfo(boolean appsInfo, AsyncRequestCallback<RHUserInfo> callback) throws RequestException;
 
    /**
     * Get application's information.
@@ -111,12 +113,12 @@ public abstract class OpenShiftClientService
     * @param callback callback
     */
    public abstract void getApplicationInfo(String applicationName, String vfsId, String projectId,
-      AsyncRequestCallback<AppInfo> callback);
+      AsyncRequestCallback<AppInfo> callback) throws RequestException;
 
    /**
     * Get types of allowed applications.
     * 
     * @param callback callback
     */
-   public abstract void getApplicationTypes(AsyncRequestCallback<List<String>> callback);
+   public abstract void getApplicationTypes(AsyncRequestCallback<List<String>> callback) throws RequestException;
 }

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.openshift.client.user;
 
+import com.google.gwt.http.client.RequestException;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -30,8 +32,8 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -50,6 +52,7 @@ import org.exoplatform.ide.extension.openshift.client.info.Property;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
+import org.exoplatform.ide.extension.openshift.client.marshaller.RHUserInfoUnmarshaller;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
@@ -208,45 +211,52 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
     */
    protected void getUserInfo()
    {
-      OpenShiftClientService.getInstance().getUserInfo(true, new AsyncRequestCallback<RHUserInfo>()
+      try
       {
-
-         @Override
-         protected void onSuccess(RHUserInfo result)
-         {
-            if (display == null)
+         OpenShiftClientService.getInstance().getUserInfo(true,
+            new AsyncRequestCallback<RHUserInfo>(new RHUserInfoUnmarshaller(new RHUserInfo()))
             {
-               display = GWT.create(Display.class);
-               bindDisplay();
-               IDE.getInstance().openView(display.asView());
-            }
-            display.getLoginField().setValue(result.getRhlogin());
-            display.getDomainField().setValue(result.getNamespace());
-            display.getApplicationGrid().setValue(result.getApps());
-         }
 
-         /**
-          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-          */
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            if (exception instanceof ServerException)
-            {
-               ServerException serverException = (ServerException)exception;
-               if (HTTPStatus.OK == serverException.getHTTPStatus()
-                  && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
+               @Override
+               protected void onSuccess(RHUserInfo result)
                {
-                  addLoggedInHandler();
-                  IDE.fireEvent(new LoginEvent());
-                  return;
+                  if (display == null)
+                  {
+                     display = GWT.create(Display.class);
+                     bindDisplay();
+                     IDE.getInstance().openView(display.asView());
+                  }
+                  display.getLoginField().setValue(result.getRhlogin());
+                  display.getDomainField().setValue(result.getNamespace());
+                  display.getApplicationGrid().setValue(result.getApps());
                }
-            }
-            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-               .getUserInfoFail()));
-         }
-      });
 
+               /**
+                * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                */
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  if (exception instanceof ServerException)
+                  {
+                     ServerException serverException = (ServerException)exception;
+                     if (HTTPStatus.OK == serverException.getHTTPStatus()
+                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
+                     {
+                        addLoggedInHandler();
+                        IDE.fireEvent(new LoginEvent());
+                        return;
+                     }
+                  }
+                  IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+                     .getUserInfoFail()));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT.getUserInfoFail()));
+      }
    }
 
    /**
@@ -318,26 +328,34 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
     */
    protected void doDeleteApplication(final String name)
    {
-      OpenShiftClientService.getInstance().destroyApplication(name, null, null, new AsyncRequestCallback<String>()
+      try
       {
-
-         @Override
-         protected void onSuccess(String result)
+         OpenShiftClientService.getInstance().destroyApplication(name, null, null, new AsyncRequestCallback<String>()
          {
-            IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(name),
-               Type.INFO));
-            getUserInfo();
-         }
 
-         /**
-          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-          */
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-               .deleteApplicationFail(name)));
-         }
-      });
+            @Override
+            protected void onSuccess(String result)
+            {
+               IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(name),
+                  Type.INFO));
+               getUserInfo();
+            }
+
+            /**
+             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+             */
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+                  .deleteApplicationFail(name)));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
+            .deleteApplicationFail(name)));
+      }
    }
 }

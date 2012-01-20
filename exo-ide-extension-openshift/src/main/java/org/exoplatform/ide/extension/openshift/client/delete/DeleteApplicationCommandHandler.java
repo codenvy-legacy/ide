@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.extension.openshift.client.delete;
 
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -34,6 +36,7 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
+import org.exoplatform.ide.extension.openshift.client.marshaller.AppInfoUmarshaller;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -80,37 +83,43 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
    protected void getApplicationsInfo()
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      OpenShiftClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
-         new AsyncRequestCallback<AppInfo>()
-         {
-
-            @Override
-            protected void onSuccess(AppInfo result)
+      try
+      {
+         OpenShiftClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
+            new AsyncRequestCallback<AppInfo>(new AppInfoUmarshaller(new AppInfo()))
             {
-               askDeleteApplication(result.getName());
-            }
 
-            /**
-             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-             */
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               if (exception instanceof ServerException)
+               @Override
+               protected void onSuccess(AppInfo result)
                {
-                  ServerException serverException = (ServerException)exception;
-                  if (HTTPStatus.OK == serverException.getHTTPStatus()
-                     && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
-                  {
-                     addLoggedInHandler();
-                     IDE.fireEvent(new LoginEvent());
-                     return;
-                  }
+                  askDeleteApplication(result.getName());
                }
-               IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-                  .getApplicationInfoFail()));
-            }
-         });
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  if (exception instanceof ServerException)
+                  {
+                     ServerException serverException = (ServerException)exception;
+                     if (HTTPStatus.OK == serverException.getHTTPStatus()
+                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
+                     {
+                        addLoggedInHandler();
+                        IDE.fireEvent(new LoginEvent());
+                        return;
+                     }
+                  }
+                  IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+                     .getApplicationInfoFail()));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
+            .getApplicationInfoFail()));
+      }
+
    }
 
    /**
@@ -164,28 +173,36 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
    protected void doDeleteApplication(final String name)
    {
       final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      OpenShiftClientService.getInstance().destroyApplication(name, vfs.getId(), projectId,
-         new AsyncRequestCallback<String>()
-         {
-
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         OpenShiftClientService.getInstance().destroyApplication(name, vfs.getId(), projectId,
+            new AsyncRequestCallback<String>()
             {
-               IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(name),
-                  Type.INFO));
-               IDE.fireEvent(new ApplicationDeletedEvent(vfs.getId(), projectId));
-               IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
-            }
 
-            /**
-             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-             */
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-                  .deleteApplicationFail(name)));
-            }
-         });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  IDE.fireEvent(new OutputEvent(
+                     OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(name), Type.INFO));
+                  IDE.fireEvent(new ApplicationDeletedEvent(vfs.getId(), projectId));
+                  IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+               }
+
+               /**
+                * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                */
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+                     .deleteApplicationFail(name)));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
+            .deleteApplicationFail(name)));
+      }
    }
 }

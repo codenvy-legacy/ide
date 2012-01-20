@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.extension.openshift.client;
 
-import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 

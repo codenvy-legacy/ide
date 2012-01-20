@@ -18,8 +18,10 @@
  */
 package org.exoplatform.ide.extension.openshift.client.key;
 
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -31,6 +33,7 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
+import org.exoplatform.ide.extension.openshift.client.marshaller.RHUserInfoUnmarshaller;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 
 /**
@@ -66,36 +69,45 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
     */
    public void getUserInfo()
    {
-      OpenShiftClientService.getInstance().getUserInfo(false, new AsyncRequestCallback<RHUserInfo>()
+      try
       {
-
-         @Override
-         protected void onSuccess(RHUserInfo result)
-         {
-            doUpdatePublicKey(result.getNamespace());
-         }
-
-         /**
-          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-          */
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            if (exception instanceof ServerException)
+         OpenShiftClientService.getInstance().getUserInfo(false,
+            new AsyncRequestCallback<RHUserInfo>(new RHUserInfoUnmarshaller(new RHUserInfo()))
             {
-               ServerException serverException = (ServerException)exception;
-               if (HTTPStatus.OK == serverException.getHTTPStatus()
-                  && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
+
+               @Override
+               protected void onSuccess(RHUserInfo result)
                {
-                  addLoggedInHandler();
-                  IDE.fireEvent(new LoginEvent());
-                  return;
+                  doUpdatePublicKey(result.getNamespace());
                }
-            }
-            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-               .getUserInfoFail()));
-         }
-      });
+
+               /**
+                * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                */
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  if (exception instanceof ServerException)
+                  {
+                     ServerException serverException = (ServerException)exception;
+                     if (HTTPStatus.OK == serverException.getHTTPStatus()
+                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
+                     {
+                        addLoggedInHandler();
+                        IDE.fireEvent(new LoginEvent());
+                        return;
+                     }
+                  }
+                  IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+                     .getUserInfoFail()));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
+            .getUserInfoFail()));
+      }
    }
 
    /**
@@ -126,35 +138,43 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
     */
    public void doUpdatePublicKey(String namespace)
    {
-      OpenShiftClientService.getInstance().createDomain(namespace, true, new AsyncRequestCallback<String>()
+      try
       {
-
-         @Override
-         protected void onSuccess(String result)
+         OpenShiftClientService.getInstance().createDomain(namespace, true, new AsyncRequestCallback<String>()
          {
-            IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.updatePublicKeySuccess(), Type.INFO));
-         }
 
-         /**
-          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-          */
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            if (exception instanceof ServerException)
+            @Override
+            protected void onSuccess(String result)
             {
-               ServerException serverException = (ServerException)exception;
-               if (HTTPStatus.OK == serverException.getHTTPStatus()
-                  && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
-               {
-                  addLoggedInHandler();
-                  IDE.fireEvent(new LoginEvent());
-                  return;
-               }
+               IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.updatePublicKeySuccess(), Type.INFO));
             }
-            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-               .updatePublicKeyFailed()));
-         }
-      });
+
+            /**
+             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+             */
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               if (exception instanceof ServerException)
+               {
+                  ServerException serverException = (ServerException)exception;
+                  if (HTTPStatus.OK == serverException.getHTTPStatus()
+                     && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
+                  {
+                     addLoggedInHandler();
+                     IDE.fireEvent(new LoginEvent());
+                     return;
+                  }
+               }
+               IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+                  .updatePublicKeyFailed()));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
+            .updatePublicKeyFailed()));
+      }
    }
 }

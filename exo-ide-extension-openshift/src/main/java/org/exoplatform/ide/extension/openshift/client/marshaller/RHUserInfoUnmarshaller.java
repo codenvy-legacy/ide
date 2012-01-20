@@ -23,8 +23,8 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 
@@ -38,7 +38,7 @@ import java.util.List;
  * @version $Id: Jun 7, 2011 11:54:18 AM anya $
  * 
  */
-public class RHUserInfoUnmarshaller implements Unmarshallable, Constants
+public class RHUserInfoUnmarshaller implements Unmarshallable<RHUserInfo>, Constants
 {
    /**
     * User information.
@@ -59,6 +59,11 @@ public class RHUserInfoUnmarshaller implements Unmarshallable, Constants
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
+      if (response.getText() == null || response.getText().isEmpty())
+      {
+         return;
+      }
+      
       JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
       if (jsonObject == null)
          return;
@@ -133,5 +138,15 @@ public class RHUserInfoUnmarshaller implements Unmarshallable, Constants
          apps.add(appInfo);
       }
       return apps;
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public RHUserInfo getPayload()
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 }

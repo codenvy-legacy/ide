@@ -18,10 +18,14 @@
  */
 package org.exoplatform.ide.extension.openshift.client.create;
 
+import com.google.gwt.http.client.RequestException;
+
+import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -37,6 +41,8 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
+import org.exoplatform.ide.extension.openshift.client.marshaller.AppInfoUmarshaller;
+import org.exoplatform.ide.extension.openshift.client.marshaller.ApplicationTypesUnmarshaller;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -182,23 +188,37 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       {
          final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
 
-         OpenShiftClientService.getInstance().getApplicationTypes(new AsyncRequestCallback<List<String>>()
+         try
          {
-            @Override
-            protected void onSuccess(List<String> result)
-            {
-               if (display == null)
+            OpenShiftClientService.getInstance().getApplicationTypes(
+               new AsyncRequestCallback<List<String>>(new ApplicationTypesUnmarshaller(new ArrayList<String>()))
                {
-                  display = GWT.create(Display.class);
-                  bindDisplay();
-                  IDE.getInstance().openView(display.asView());
-                  display.setApplicationTypeValues(result.toArray(new String[result.size()]));
-                  display.focusInApplicationNameField();
-                  display.getWorkDirLocationField().setValue(projectModel.getPath());
-                  display.enableCreateButton(false);
-               }
-            }
-         });
+                  @Override
+                  protected void onSuccess(List<String> result)
+                  {
+                     if (display == null)
+                     {
+                        display = GWT.create(Display.class);
+                        bindDisplay();
+                        IDE.getInstance().openView(display.asView());
+                        display.setApplicationTypeValues(result.toArray(new String[result.size()]));
+                        display.focusInApplicationNameField();
+                        display.getWorkDirLocationField().setValue(projectModel.getPath());
+                        display.enableCreateButton(false);
+                     }
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+         }
       }
    }
 
@@ -210,39 +230,47 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       final String applicationName = display.getApplicationNameField().getValue();
       String type = display.getTypeField().getValue();
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), projectId, type,
-         new AsyncRequestCallback<AppInfo>()
-         {
-
-            @Override
-            protected void onSuccess(AppInfo result)
+      try
+      {
+         OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), projectId, type,
+            new AsyncRequestCallback<AppInfo>(new AppInfoUmarshaller(new AppInfo()))
             {
-               IDE.getInstance().closeView(display.asView().getId());
-               IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(result), Type.INFO));
-               IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
-            }
 
-            /**
-             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-             */
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               if (exception instanceof ServerException)
+               @Override
+               protected void onSuccess(AppInfo result)
                {
-                  ServerException serverException = (ServerException)exception;
-                  if (HTTPStatus.OK == serverException.getHTTPStatus()
-                     && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
-                  {
-                     addLoggedInHandler();
-                     IDE.fireEvent(new LoginEvent());
-                     return;
-                  }
+                  IDE.getInstance().closeView(display.asView().getId());
+                  IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(result), Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
                }
-               IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-                  .createApplicationFail(applicationName)));
-            }
-         });
+
+               /**
+                * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                */
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  if (exception instanceof ServerException)
+                  {
+                     ServerException serverException = (ServerException)exception;
+                     if (HTTPStatus.OK == serverException.getHTTPStatus()
+                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
+                     {
+                        addLoggedInHandler();
+                        IDE.fireEvent(new LoginEvent());
+                        return;
+                     }
+                  }
+                  IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+                     .createApplicationFail(applicationName)));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
+            .createApplicationFail(applicationName)));
+      }
    }
 
    /**

@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.extension.openshift.client.login;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -195,31 +197,39 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
       String email = display.getEmailField().getValue();
       String password = display.getPasswordField().getValue();
 
-      OpenShiftClientService.getInstance().login(email, password, new AsyncRequestCallback<String>()
+      try
       {
-
-         /**
-          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onSuccess(java.lang.Object)
-          */
-         @Override
-         protected void onSuccess(String result)
+         OpenShiftClientService.getInstance().login(email, password, new AsyncRequestCallback<String>()
          {
-            IDE.getInstance().closeView(display.asView().getId());
-            IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
-            IDE.fireEvent(new LoggedInEvent(false));
-         }
 
-         /**
-          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-          */
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            IDE.fireEvent(new LoggedInEvent(true));
-            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-               .loginFailed()));
-         }
-      });
+            /**
+             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onSuccess(java.lang.Object)
+             */
+            @Override
+            protected void onSuccess(String result)
+            {
+               IDE.getInstance().closeView(display.asView().getId());
+               IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
+               IDE.fireEvent(new LoggedInEvent(false));
+            }
+
+            /**
+             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+             */
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new LoggedInEvent(true));
+               IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+                  .loginFailed()));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new LoggedInEvent(true));
+         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT.loginFailed()));
+      }
    }
 
    /**
