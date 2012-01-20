@@ -19,14 +19,11 @@
 package org.exoplatform.ide.extension.jenkins.client;
 
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.extension.jenkins.client.marshal.JenkinsJobStatusUnmarshaller;
-import org.exoplatform.ide.extension.jenkins.client.marshal.JenkinsJobUnmarshaller;
-import org.exoplatform.ide.extension.jenkins.client.marshal.StringContentUnmarshaller;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.extension.jenkins.shared.Job;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 
@@ -79,19 +76,15 @@ public class JenkinsService
     * @param mail User e-mail
     * @param workDir Git working directory
     * @param callback
+    * @throws RequestException 
     */
    public void createJenkinsJob(String name, String user, String mail, String vfsId, String projectId,
-      AsyncRequestCallback<Job> callback)
+      AsyncRequestCallback<Job> callback) throws RequestException
    {
       String url =
          restContext + JENKINS + "/job/create?name=" + name + "&user=" + user + "&email=" + mail + "&vfsid=" + vfsId
             + "&projectid=" + projectId;
-      Job job = new Job();
-      JenkinsJobUnmarshaller unmarshaller = new JenkinsJobUnmarshaller(job);
-      callback.setEventBus(IDE.eventBus());
-      callback.setPayload(unmarshaller);
-      callback.setResult(job);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
 
    /**
@@ -99,12 +92,12 @@ public class JenkinsService
     * 
     * @param jobName Name of Job
     * @param callback
+    * @throws RequestException 
     */
-   public void buildJob(String vfsId, String projectId, String jobName, AsyncRequestCallback<String> callback)
+   public void buildJob(String vfsId, String projectId, String jobName, AsyncRequestCallback<Object> callback) throws RequestException
    {
       String url = restContext + JENKINS + "/job/build?name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;
-      callback.setEventBus(IDE.eventBus());
-      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
 
    /**
@@ -112,24 +105,19 @@ public class JenkinsService
     * 
     * @param jobName Name of Job
     * @param callback
+    * @throws RequestException 
     */
-   public void jobStatus(String vfsId, String projectId, String jobName, AsyncRequestCallback<JobStatus> callback)
+   public void jobStatus(String vfsId, String projectId, String jobName, AsyncRequestCallback<JobStatus> callback) throws RequestException
    {
       String url =
          restContext + JENKINS + "/job/status?name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;
-      JobStatus jobStatus = new JobStatus();
-      callback.setEventBus(IDE.eventBus());
-      callback.setResult(jobStatus);
-      callback.setPayload(new JenkinsJobStatusUnmarshaller(jobStatus));
-      AsyncRequest.build(RequestBuilder.GET, url, null).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url).send(callback);
    }
 
-   public void getJenkinsOutput(String vfsId, String projectId, String jobName, AsyncRequestCallback<String> callback)
+   public void getJenkinsOutput(String vfsId, String projectId, String jobName, AsyncRequestCallback<StringBuilder> callback) throws RequestException
    {
       String url =
          restContext + JENKINS + "/job/console-output?name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;
-      callback.setEventBus(IDE.eventBus());
-      callback.setPayload(new StringContentUnmarshaller(callback));
-      AsyncRequest.build(RequestBuilder.GET, url, null).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url).send(callback);
    }
 }

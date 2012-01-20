@@ -18,13 +18,14 @@
  */
 package org.exoplatform.ide.extension.jenkins.client.marshal;
 
+import com.google.gwt.json.client.JSONValue;
+
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus.Status;
 
@@ -35,7 +36,7 @@ import org.exoplatform.ide.extension.jenkins.shared.JobStatus.Status;
  * @version $Id: $
  * 
  */
-public class JenkinsJobStatusUnmarshaller implements Unmarshallable
+public class JenkinsJobStatusUnmarshaller implements Unmarshallable<JobStatus>
 {
 
    private JobStatus jobStatus;
@@ -57,8 +58,17 @@ public class JenkinsJobStatusUnmarshaller implements Unmarshallable
    {
       try
       {
-         JSONValue value = JSONParser.parseLenient(response.getText());
-         JSONObject object = value.isObject();
+         if (response.getText() == null || response.getText().isEmpty())
+         {
+            return;
+         }
+
+         JSONObject object = JSONParser.parseLenient(response.getText()).isObject();
+         if (object == null)
+         {
+            return;
+         }
+
          JSONValue lastBuild = object.get("lastBuildResult");
          if (lastBuild.isString() != null)
          {
@@ -79,6 +89,15 @@ public class JenkinsJobStatusUnmarshaller implements Unmarshallable
       {
          throw new UnmarshallerException("Can't parse Jenkins job status");
       }
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public JobStatus getPayload()
+   {
+      return jobStatus;
    }
 
 }

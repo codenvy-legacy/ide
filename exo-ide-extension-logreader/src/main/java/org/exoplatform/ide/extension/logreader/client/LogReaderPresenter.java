@@ -18,12 +18,15 @@
  */
 package org.exoplatform.ide.extension.logreader.client;
 
+import com.google.gwt.http.client.RequestException;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -32,6 +35,7 @@ import org.exoplatform.ide.extension.logreader.client.event.ShowLogReaderEvent;
 import org.exoplatform.ide.extension.logreader.client.event.ShowLogReaderHandler;
 import org.exoplatform.ide.extension.logreader.client.model.LogEntry;
 import org.exoplatform.ide.extension.logreader.client.model.LogReaderService;
+import org.exoplatform.ide.extension.logreader.client.model.marshal.LogReaderUnmarshaller;
 import org.exoplatform.ide.extension.logreader.client.ui.LogReaderView;
 
 /**
@@ -141,16 +145,30 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
          getLogs();
          return;
       }
-      LogReaderService.get().getLog(currentToken, new AsyncRequestCallback<LogEntry>()
+      try
       {
+         LogReaderService.get().getLog(currentToken,
+            new AsyncRequestCallback<LogEntry>(new LogReaderUnmarshaller(new LogEntry()))
+            {
 
-         @Override
-         protected void onSuccess(LogEntry result)
-         {
-            display.addLog(result.getContent());
-            updateButtonState(result);
-         }
-      });
+               @Override
+               protected void onSuccess(LogEntry result)
+               {
+                  display.addLog(result.getContent());
+                  updateButtonState(result);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -158,18 +176,32 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
     */
    private void prevLog()
    {
-      LogReaderService.get().getPrevLog(currentToken, new AsyncRequestCallback<LogEntry>()
+      try
       {
+         LogReaderService.get().getPrevLog(currentToken,
+            new AsyncRequestCallback<LogEntry>(new LogReaderUnmarshaller(new LogEntry()))
+            {
 
-         @Override
-         protected void onSuccess(LogEntry result)
-         {
-            currentToken = result.getToken();
-            display.addLog(result.getContent());
-            updateButtonState(result);
-         }
+               @Override
+               protected void onSuccess(LogEntry result)
+               {
+                  currentToken = result.getToken();
+                  display.addLog(result.getContent());
+                  updateButtonState(result);
+               }
 
-      });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -188,18 +220,32 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
     */
    private void getLogs()
    {
-      LogReaderService.get().getLastLog(new AsyncRequestCallback<LogEntry>()
+      try
       {
+         LogReaderService.get().getLastLog(
+            new AsyncRequestCallback<LogEntry>(new LogReaderUnmarshaller(new LogEntry()))
+            {
 
-         @Override
-         protected void onSuccess(LogEntry result)
-         {
-            display.addLog(result.getContent());
-            currentToken = result.getToken();
-            updateButtonState(result);
-         }
+               @Override
+               protected void onSuccess(LogEntry result)
+               {
+                  display.addLog(result.getContent());
+                  currentToken = result.getToken();
+                  updateButtonState(result);
+               }
 
-      });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -207,17 +253,31 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
     */
    private void getNextLog()
    {
-      LogReaderService.get().getNextLog(currentToken, new AsyncRequestCallback<LogEntry>()
+      try
       {
+         LogReaderService.get().getNextLog(currentToken,
+            new AsyncRequestCallback<LogEntry>(new LogReaderUnmarshaller(new LogEntry()))
+            {
 
-         @Override
-         protected void onSuccess(LogEntry result)
-         {
-            currentToken = result.getToken();
-            display.addLog(result.getContent());
-            updateButtonState(result);
-         }
-      });
+               @Override
+               protected void onSuccess(LogEntry result)
+               {
+                  currentToken = result.getToken();
+                  display.addLog(result.getContent());
+                  updateButtonState(result);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

@@ -95,7 +95,7 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
    public void onInitializeServices(InitializeServicesEvent event)
    {
       configuration = event.getApplicationConfiguration();
-      new DeployWidgetServiceImpl(IDE.eventBus(), configuration.getContext(), event.getLoader());
+      new DeployWidgetServiceImpl(configuration.getContext(), event.getLoader());
    }
 
    /**

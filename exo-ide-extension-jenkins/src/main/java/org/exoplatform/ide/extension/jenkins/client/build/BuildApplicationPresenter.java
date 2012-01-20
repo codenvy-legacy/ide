@@ -24,7 +24,8 @@ import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -42,6 +43,9 @@ import org.exoplatform.ide.extension.jenkins.client.JobResult;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationHandler;
+import org.exoplatform.ide.extension.jenkins.client.marshal.JenkinsJobStatusUnmarshaller;
+import org.exoplatform.ide.extension.jenkins.client.marshal.JenkinsJobUnmarshaller;
+import org.exoplatform.ide.extension.jenkins.client.marshal.StringContentUnmarshaller;
 import org.exoplatform.ide.extension.jenkins.shared.Job;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus.Status;
@@ -144,7 +148,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       {
          VirtualFileSystem.getInstance().getChildren(
             project,
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
+            new AsyncRequestCallback<List<Item>>(
                new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
 
@@ -201,16 +205,30 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       // Jenkins create git tag on build. Marks user as author of tag.
       String mail = userInfo.getName().contains("@") ? userInfo.getName() : userInfo.getName() + "@exoplatform.local";
       String uName = userInfo.getName().split("@")[0];// Jenkins don't alow in job name '@' character
-      JenkinsService.get().createJenkinsJob(uName + "-" + getProjectName() + "-" + Random.nextInt(Integer.MAX_VALUE),
-         uName, mail, vfs.getId(), project.getId(), new AsyncRequestCallback<Job>()
-         {
-            @Override
-            protected void onSuccess(Job result)
+      try
+      {
+         JenkinsService.get().createJenkinsJob(
+            uName + "-" + getProjectName() + "-" + Random.nextInt(Integer.MAX_VALUE), uName, mail, vfs.getId(),
+            project.getId(), new AsyncRequestCallback<Job>(new JenkinsJobUnmarshaller(new Job()))
             {
-               build(result.getName());
-               jobName = result.getName();
-            }
-         });
+               @Override
+               protected void onSuccess(Job result)
+               {
+                  build(result.getName());
+                  jobName = result.getName();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -237,22 +255,35 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    private void build(String jobName)
    {
       String projectId = "";
-      JenkinsService.get().buildJob(vfs.getId(), projectId, jobName, new AsyncRequestCallback<String>()
+      try
       {
-         @Override
-         protected void onSuccess(String result)
+         JenkinsService.get().buildJob(vfs.getId(), projectId, jobName, new AsyncRequestCallback<Object>()
          {
-            buildInProgress = true;
+            @Override
+            protected void onSuccess(Object result)
+            {
+               buildInProgress = true;
 
-            showBuildMessage("Building project <b>" + project.getPath() + "</b>");
+               showBuildMessage("Building project <b>" + project.getPath() + "</b>");
 
-            display.startAnimation();
-            display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.grey()), true);
+               display.startAnimation();
+               display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.grey()), true);
 
-            prevStatus = null;
-            refreshJobStatusTimer.schedule(delay);
-         }
-      });
+               prevStatus = null;
+               refreshJobStatusTimer.schedule(delay);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -363,40 +394,60 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       @Override
       public void run()
       {
-         JenkinsService.get().jobStatus(vfs.getId(), project.getId(), jobName, new AsyncRequestCallback<JobStatus>()
+         try
          {
-            @Override
-            protected void onSuccess(JobStatus status)
+            JenkinsService.get().jobStatus(vfs.getId(), project.getId(), jobName, new AsyncRequestCallback<JobStatus>(new JenkinsJobStatusUnmarshaller(new JobStatus()))
             {
-               updateJobStatus(status);
-
-               if (status.getStatus() == Status.END)
+               @Override
+               protected void onSuccess(JobStatus status)
                {
-                  IDE.fireEvent(new ApplicationBuiltEvent(status));
+                  updateJobStatus(status);
 
-                  JenkinsService.get().getJenkinsOutput(vfs.getId(), project.getId(), jobName,
-                     new AsyncRequestCallback<String>()
+                  if (status.getStatus() == Status.END)
+                  {
+                     IDE.fireEvent(new ApplicationBuiltEvent(status));
+
+                     try
                      {
-                        @Override
-                        protected void onSuccess(String result)
-                        {
-                           showBuildMessage(result);
-                        }
-                     });
+                        JenkinsService.get().getJenkinsOutput(vfs.getId(), project.getId(), jobName,
+                           new AsyncRequestCallback<StringBuilder>(new StringContentUnmarshaller(new StringBuilder()))
+                           {
+                              @Override
+                              protected void onSuccess(StringBuilder result)
+                              {
+                                 showBuildMessage(result.toString());
+                              }
+
+                              @Override
+                              protected void onFailure(Throwable exception)
+                              {
+                                 IDE.fireEvent(new ExceptionThrownEvent(exception));
+                              }
+                           });
+                     }
+                     catch (RequestException e)
+                     {
+                        IDE.fireEvent(new ExceptionThrownEvent(e));
+                     }
+                  }
+                  else
+                  {
+                     schedule(delay);
+                  }
                }
-               else
+
+               protected void onFailure(Throwable exception)
                {
-                  schedule(delay);
-               }
-            }
+                  buildInProgress = false;
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               };
 
-            protected void onFailure(Throwable exception)
-            {
-               buildInProgress = false;
-               super.onFailure(exception);
-            };
-
-         });
+            });
+         }
+         catch (RequestException e)
+         {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+         }
       }
    };
 

@@ -21,10 +21,9 @@ package org.exoplatform.ide.extension.jenkins.client.marshal;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.extension.jenkins.shared.Job;
 
 /**
@@ -34,7 +33,7 @@ import org.exoplatform.ide.extension.jenkins.shared.Job;
  * @version $Id: $
  * 
  */
-public class JenkinsJobUnmarshaller implements Unmarshallable
+public class JenkinsJobUnmarshaller implements Unmarshallable<Job>
 {
 
    private Job job;
@@ -55,8 +54,16 @@ public class JenkinsJobUnmarshaller implements Unmarshallable
    {
       try
       {
-         JSONValue val = JSONParser.parseLenient(response.getText());
-         JSONObject jo = val.isObject();
+         if (response.getText() == null || response.getText().isEmpty())
+         {
+            return;
+         }
+
+         JSONObject jo = JSONParser.parseLenient(response.getText()).isObject();
+         if (jo == null)
+         {
+            return;
+         }
          job.setName(jo.get("name").isString().stringValue());
          job.setBuildUrl(jo.get("buildUrl").isString().stringValue());
          job.setStatusUrl(jo.get("statusUrl").isString().stringValue());
@@ -65,6 +72,15 @@ public class JenkinsJobUnmarshaller implements Unmarshallable
       {
          throw new UnmarshallerException("Can't parse Jenkins Job");
       }
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public Job getPayload()
+   {
+      return job;
    }
 
 }

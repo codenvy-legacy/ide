@@ -23,9 +23,9 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.extension.logreader.client.model.LogEntry;
 
 /**
@@ -33,7 +33,7 @@ import org.exoplatform.ide.extension.logreader.client.model.LogEntry;
  * @version $Id: $
  * 
  */
-public class LogReaderUnmarshaller implements Unmarshallable
+public class LogReaderUnmarshaller implements Unmarshallable<LogEntry>
 {
 
    private LogEntry logEntry;
@@ -68,6 +68,15 @@ public class LogReaderUnmarshaller implements Unmarshallable
       {
          throw new UnmarshallerException("Can't parse log.");
       }
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public LogEntry getPayload()
+   {
+      return logEntry;
    }
 
 }

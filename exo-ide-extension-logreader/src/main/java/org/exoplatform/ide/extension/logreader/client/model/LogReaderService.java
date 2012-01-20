@@ -19,12 +19,11 @@
 package org.exoplatform.ide.extension.logreader.client.model;
 
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.extension.logreader.client.model.marshal.LogReaderUnmarshaller;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 
 /**
  * This service provides access to information stored in the logs created on current tenant.
@@ -63,8 +62,9 @@ public class LogReaderService
     * Get last log file
     * 
     * @param callback
+    * @throws RequestException 
     */
-   public void getLastLog(AsyncRequestCallback<LogEntry> callback)
+   public void getLastLog(AsyncRequestCallback<LogEntry> callback) throws RequestException
    {
       String url = restContext + "/log-reader-service/last-log";
       sendRequest(url, callback);
@@ -75,8 +75,9 @@ public class LogReaderService
     * 
     * @param token of current log
     * @param callback
+    * @throws RequestException 
     */
-   public void getPrevLog(String token, AsyncRequestCallback<LogEntry> callback)
+   public void getPrevLog(String token, AsyncRequestCallback<LogEntry> callback) throws RequestException
    {
       String url = restContext + "/log-reader-service/prev-log?token=" + token;
       sendRequest(url, callback);
@@ -87,8 +88,9 @@ public class LogReaderService
     * 
     * @param token of current log
     * @param callback
+    * @throws RequestException 
     */
-   public void getNextLog(String token, AsyncRequestCallback<LogEntry> callback)
+   public void getNextLog(String token, AsyncRequestCallback<LogEntry> callback) throws RequestException
    {
       String url = restContext + "/log-reader-service/next-log?token=" + token;
       sendRequest(url, callback);
@@ -99,21 +101,17 @@ public class LogReaderService
     * 
     * @param token of log
     * @param callback
+    * @throws RequestException 
     */
-   public void getLog(String token, AsyncRequestCallback<LogEntry> callback)
+   public void getLog(String token, AsyncRequestCallback<LogEntry> callback) throws RequestException
    {
       String url = restContext + "/log-reader-service/log?token=" + token;
       sendRequest(url, callback);
    }
 
-   private void sendRequest(String url, AsyncRequestCallback<LogEntry> callback)
+   private void sendRequest(String url, AsyncRequestCallback<LogEntry> callback) throws RequestException
    {
-      LogEntry logEntry = new LogEntry();
-      LogReaderUnmarshaller unmarshaller = new LogReaderUnmarshaller(logEntry);
-      callback.setPayload(unmarshaller);
-      callback.setResult(logEntry);
-      callback.setEventBus(IDE.eventBus());
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
 
 }

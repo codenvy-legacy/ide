@@ -27,8 +27,8 @@ import com.google.gwt.xml.client.XMLParser;
 
 import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.ide.extension.netvibes.client.model.Categories;
 
 /**
@@ -38,7 +38,7 @@ import org.exoplatform.ide.extension.netvibes.client.model.Categories;
  * @version $Id: Nov 30, 2010 $
  * 
  */
-public class CategoriesUnmarshaller implements Unmarshallable
+public class CategoriesUnmarshaller implements Unmarshallable<Categories>
 {
 
    /**
@@ -102,4 +102,12 @@ public class CategoriesUnmarshaller implements Unmarshallable
       }
    }
 
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public Categories getPayload()
+   {
+      return categories;
+   }
 }

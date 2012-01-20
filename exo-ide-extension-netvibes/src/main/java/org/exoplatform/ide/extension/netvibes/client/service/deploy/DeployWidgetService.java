@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.extension.netvibes.client.service.deploy;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.extension.netvibes.client.model.Categories;
+import org.exoplatform.ide.extension.netvibes.client.model.DeployResult;
 import org.exoplatform.ide.extension.netvibes.client.model.DeployWidget;
-import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.WidgetDeployCallback;
 
 /**
  * Service, contains operations for deploying UWA widget to Netvibes Ecosystem.
@@ -59,7 +61,7 @@ public abstract class DeployWidgetService
     * 
     * @param callback - the callback code which the user has to implement
     */
-   public abstract void getCategories(AsyncRequestCallback<Categories> callback);
+   public abstract void getCategories(AsyncRequestCallback<Categories> callback) throws RequestException;
 
    /**
     * Deploys widget to Netvibes Ecosystem.
@@ -69,5 +71,6 @@ public abstract class DeployWidgetService
     * @param password user's pasword in Netvibes Ecosystem
     * @param callback - the callback code which the user has to implement
     */
-   public abstract void deploy(DeployWidget deployWidget, String login, String password, WidgetDeployCallback callback);
+   public abstract void deploy(DeployWidget deployWidget, String login, String password, AsyncRequestCallback<DeployResult>callback)
+      throws RequestException;
 }

@@ -18,10 +18,17 @@
  */
 package org.exoplatform.ide.extension.netvibes.client.ui;
 
-import java.util.LinkedHashMap;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -33,20 +40,15 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.netvibes.client.event.DeployUwaWidgetEvent;
 import org.exoplatform.ide.extension.netvibes.client.event.DeployUwaWidgetHandler;
 import org.exoplatform.ide.extension.netvibes.client.model.Categories;
+import org.exoplatform.ide.extension.netvibes.client.model.DeployResult;
 import org.exoplatform.ide.extension.netvibes.client.model.DeployWidget;
 import org.exoplatform.ide.extension.netvibes.client.model.Languages;
 import org.exoplatform.ide.extension.netvibes.client.model.Regions;
 import org.exoplatform.ide.extension.netvibes.client.service.deploy.DeployWidgetService;
-import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.WidgetDeployCallback;
+import org.exoplatform.ide.extension.netvibes.client.service.deploy.marshaller.CategoriesUnmarshaller;
+import org.exoplatform.ide.extension.netvibes.client.service.deploy.marshaller.DeployResultUnmarshaller;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.LinkedHashMap;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -515,31 +517,40 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler, ViewClo
    {
       if (categories == null || categories.getCategoryMap().size() < 0)
       {
-         DeployWidgetService.getInstance().getCategories(new AsyncRequestCallback<Categories>()
+         try
          {
-            @Override
-            protected void onSuccess(Categories result)
-            {
-               categories = result;
-               int categoriesSize = result.getCategoryMap().size();
-               display.setCategoryValues(result.getCategoryMap().values().toArray(new String[categoriesSize]));
-               if (categoriesSize > 0)
+            DeployWidgetService.getInstance().getCategories(
+               new AsyncRequestCallback<Categories>(new CategoriesUnmarshaller(new Categories()))
                {
-                  display.getCategory().setValue(result.getCategoryMap().values().iterator().next(), true);
-               }
-            }
+                  @Override
+                  protected void onSuccess(Categories result)
+                  {
+                     categories = result;
+                     int categoriesSize = result.getCategoryMap().size();
+                     display.setCategoryValues(result.getCategoryMap().values().toArray(new String[categoriesSize]));
+                     if (categoriesSize > 0)
+                     {
+                        display.getCategory().setValue(result.getCategoryMap().values().iterator().next(), true);
+                     }
+                  }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               String message = "Can not get widget's categories.";
-               message +=
-                  (exception == null || exception.getMessage() == null) ? "" : "Possible reason: <br>"
-                     + exception.getMessage();
-               Window.alert(message);
-               Dialogs.getInstance().showError(message);
-            }
-         });
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     String message = "Can not get widget's categories.";
+                     message +=
+                        (exception == null || exception.getMessage() == null) ? "" : "Possible reason: <br>"
+                           + exception.getMessage();
+                     Dialogs.getInstance().showError(message);
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            String message = "Can not get widget's categories.";
+            message += (e.getMessage() == null) ? "" : "Possible reason: <br>" + e.getMessage();
+            Dialogs.getInstance().showError(message);
+         }
       }
       else
       {
@@ -557,7 +568,7 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler, ViewClo
     */
    private void doDeploy()
    {
-      DeployWidget widget = new DeployWidget();
+      final DeployWidget widget = new DeployWidget();
       widget.setApiKey(display.getApiKey().getValue());
       widget.setCategoryId(getKeyByValue(categories.getCategoryMap(), display.getCategory().getValue()));
       widget.setCategoryName(display.getCategory().getValue());
@@ -571,29 +582,36 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler, ViewClo
       widget.setVersion(display.getVersion().getValue());
       widget.setTitle(display.getWigdetTitle().getValue());
 
-      DeployWidgetService.getInstance().deploy(widget, display.getLogin().getValue(), display.getPassword().getValue(),
-         new WidgetDeployCallback()
-         {
-
-            @Override
-            protected void onSuccess(WidgetDeployData result)
+      try
+      {
+         DeployWidgetService.getInstance().deploy(widget, display.getLogin().getValue(),
+            display.getPassword().getValue(),
+            new AsyncRequestCallback<DeployResult>(new DeployResultUnmarshaller(new DeployResult()))
             {
-               IDE.getInstance().closeView(display.asView().getId());
+               @Override
+               protected void onSuccess(DeployResult result)
+               {
+                  IDE.getInstance().closeView(display.asView().getId());
 
-               OutputMessage.Type responseType =
-                  result.getDeployResult().isSuccess() ? OutputMessage.Type.INFO : OutputMessage.Type.ERROR;
-               String message =
-                  result.getDeployResult().isSuccess() ? "<b>" + result.getDeployWidget().getUrl() + "</b>"
-                     + " deployed successfully." : result.getDeployResult().getMessage();
-               IDE.fireEvent(new OutputEvent(message, responseType));
-            }
+                  OutputMessage.Type responseType =
+                     result.isSuccess() ? OutputMessage.Type.INFO : OutputMessage.Type.ERROR;
+                  String message =
+                     result.isSuccess() ? "<b>" + widget.getUrl() + "</b>" + " deployed successfully." : result
+                        .getMessage();
+                  IDE.fireEvent(new OutputEvent(message, responseType));
+               }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent("Can't deploy widget"));
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent("Can't deploy widget"));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent("Can't deploy widget"));
+      }
    }
 
    /**

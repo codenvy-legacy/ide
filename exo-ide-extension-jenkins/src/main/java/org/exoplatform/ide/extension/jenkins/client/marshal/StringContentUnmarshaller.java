@@ -20,27 +20,25 @@ package org.exoplatform.ide.extension.jenkins.client.marshal;
 
 import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
  * 
  */
-public class StringContentUnmarshaller implements Unmarshallable
+public class StringContentUnmarshaller implements Unmarshallable<StringBuilder>
 {
 
-   private AsyncRequestCallback<String> callback;
+   private StringBuilder content;
 
    /**
     * @param callback
     */
-   public StringContentUnmarshaller(AsyncRequestCallback<String> callback)
+   public StringContentUnmarshaller(StringBuilder content)
    {
-      super();
-      this.callback = callback;
+      this.content = content;
    }
 
    /**
@@ -49,7 +47,15 @@ public class StringContentUnmarshaller implements Unmarshallable
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      callback.setResult(response.getText());
+      content.append(response.getText());
    }
 
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public StringBuilder getPayload()
+   {
+      return content;
+   }
 }

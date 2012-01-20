@@ -18,18 +18,15 @@
  */
 package org.exoplatform.ide.extension.netvibes.client.service.deploy;
 
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.extension.netvibes.client.model.Categories;
 import org.exoplatform.ide.extension.netvibes.client.model.DeployResult;
 import org.exoplatform.ide.extension.netvibes.client.model.DeployWidget;
-import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.WidgetDeployCallback;
-import org.exoplatform.ide.extension.netvibes.client.service.deploy.marshaller.CategoriesUnmarshaller;
-import org.exoplatform.ide.extension.netvibes.client.service.deploy.marshaller.DeployResultUnmarshaller;
 import org.exoplatform.ide.extension.netvibes.client.service.deploy.marshaller.DeployWidgetMarshaller;
 
 /**
@@ -65,11 +62,6 @@ public class DeployWidgetServiceImpl extends DeployWidgetService
    public static final String DEPLOY = "/deploy";
 
    /**
-    * Application's event bus.
-    */
-   private HandlerManager eventBus;
-
-   /**
     * Loader to display.
     */
    private Loader loader;
@@ -86,27 +78,20 @@ public class DeployWidgetServiceImpl extends DeployWidgetService
     * @param restContext REST context
     * @param loader loader to display
     */
-   public DeployWidgetServiceImpl(HandlerManager eventBus, String restContext, Loader loader)
+   public DeployWidgetServiceImpl(String restContext, Loader loader)
    {
-      this.eventBus = eventBus;
       this.loader = loader;
       this.restContext = restContext;
    }
 
    /**
+    * @throws RequestException 
     * @see org.exoplatform.ide.client.module.netvibes.service.deploy.DeployWidgetService#getCategories(org.exoplatform.ide.client.module.netvibes.service.deploy.callback.WidgetCategoryCallback)
     */
    @Override
-   public void getCategories(AsyncRequestCallback<Categories> callback)
+   public void getCategories(AsyncRequestCallback<Categories> callback) throws RequestException
    {
-      Categories categories = new Categories();
-      callback.setResult(categories);
-      CategoriesUnmarshaller unmarshaller = new CategoriesUnmarshaller(categories);
-
-      callback.setEventBus(eventBus);
-      callback.setPayload(unmarshaller);
-
-      AsyncRequest.build(RequestBuilder.GET, CATEGORIES_URL, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, CATEGORIES_URL).loader(loader).send(callback);
    }
 
    /**
@@ -115,7 +100,7 @@ public class DeployWidgetServiceImpl extends DeployWidgetService
     *      org.exoplatform.ide.client.module.netvibes.service.deploy.callback.WidgetDeployCallback)
     */
    @Override
-   public void deploy(DeployWidget deployWidget, String login, String password, WidgetDeployCallback callback)
+   public void deploy(DeployWidget deployWidget, String login, String password, AsyncRequestCallback<DeployResult> callback) throws RequestException
    {
       String url = restContext + SERVICE_PATH + DEPLOY;
       String params = PASSWORD + "=" + password + "&";
@@ -123,15 +108,9 @@ public class DeployWidgetServiceImpl extends DeployWidgetService
       params += APIKEY + "=" + deployWidget.getApiKey() + "&";
       params += SECRET_KEY + "=" + deployWidget.getSecretKey();
 
-      DeployResult deployResult = new DeployResult();
-      callback.setResult(callback.new WidgetDeployData(deployWidget, deployResult));
-
       DeployWidgetMarshaller marshaller = new DeployWidgetMarshaller(deployWidget);
-      DeployResultUnmarshaller unmarshaller = new DeployResultUnmarshaller(deployResult);
-      callback.setEventBus(eventBus);
-      callback.setPayload(unmarshaller);
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).header(LOGIN, login)
-         .header(PASSWORD, password).data(marshaller).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).header(LOGIN, login)
+         .header(PASSWORD, password).data(marshaller.marshal()).send(callback);
    }
 
 }
