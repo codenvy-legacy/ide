@@ -617,7 +617,7 @@ public abstract class BaseTest
    /**
     * remove all cookies which can be stored by IDE
     */
-   protected void deleteCookies()
+   protected static void deleteCookies()
    {
       if (selenium().isCookiePresent("eXo-IDE-" + USER_NAME + "-line-numbers_bool"))
       {
