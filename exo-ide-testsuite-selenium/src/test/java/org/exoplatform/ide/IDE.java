@@ -62,7 +62,7 @@ import org.exoplatform.ide.core.Upload;
 import org.exoplatform.ide.core.Versions;
 import org.exoplatform.ide.core.WarningDialog;
 import org.exoplatform.ide.core.Workspace;
-import org.exoplatform.ide.paas.heroku.core.Heroku;
+
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
@@ -156,7 +156,7 @@ public class IDE
 
    public org.exoplatform.ide.git.core.GIT GIT;
 
-   public Heroku HEROKU = new Heroku();
+   
 
    public Project PROJECT;
 
