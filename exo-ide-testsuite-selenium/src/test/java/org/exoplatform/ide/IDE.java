@@ -63,7 +63,7 @@ import org.exoplatform.ide.core.Versions;
 import org.exoplatform.ide.core.WarningDialog;
 import org.exoplatform.ide.core.Workspace;
 import org.exoplatform.ide.paas.heroku.core.Heroku;
-import org.exoplatform.ide.paas.openshift.core.OpenShift;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
@@ -158,8 +158,6 @@ public class IDE
 
    public Heroku HEROKU = new Heroku();
 
-   public OpenShift OPENSHIFT = new OpenShift();
-
    public Project PROJECT;
 
    public Input INPUT;
@@ -167,17 +165,17 @@ public class IDE
    public Button BUTTON;
 
    public Delete DELETE;
-   
+
    public Login LOGIN;
-   
+
    public LogReader LOG_READER;
-   
+
    public CustomizeToolbar CUSTOMIZE_TOOLBAR = new CustomizeToolbar();
-   
+
    public RESTServiceDiscovery REST_SERVICE_DISCOVERY;
-   
+
    public ProgressBar PROGRESS_BAR;
-   
+
    public CustomizeHotkeys CUSTOMIZE_HOTKEYS;
 
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
@@ -221,7 +219,7 @@ public class IDE
       REST_SERVICE = PageFactory.initElements(driver, RESTService.class);
       LOGIN = PageFactory.initElements(driver, Login.class);
       LOG_READER = PageFactory.initElements(driver, LogReader.class);
-      CUSTOMIZE_TOOLBAR= PageFactory.initElements(driver, CustomizeToolbar.class);
+      CUSTOMIZE_TOOLBAR = PageFactory.initElements(driver, CustomizeToolbar.class);
       REST_SERVICE_DISCOVERY = PageFactory.initElements(driver, RESTServiceDiscovery.class);
       PROGRESS_BAR = PageFactory.initElements(driver, ProgressBar.class);
       CUSTOMIZE_HOTKEYS = PageFactory.initElements(driver, CustomizeHotkeys.class);
