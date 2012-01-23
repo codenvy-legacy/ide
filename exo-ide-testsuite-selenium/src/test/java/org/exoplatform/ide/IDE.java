@@ -156,8 +156,6 @@ public class IDE
 
    public org.exoplatform.ide.git.core.GIT GIT;
 
-   
-
    public Project PROJECT;
 
    public Input INPUT;
