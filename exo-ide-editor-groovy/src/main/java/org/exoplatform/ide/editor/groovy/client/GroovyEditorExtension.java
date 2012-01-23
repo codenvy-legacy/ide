@@ -50,6 +50,7 @@ import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErr
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.FindClassesUnmarshaller;
 import org.exoplatform.ide.editor.java.client.codemirror.JavaCodeValidator;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.ArrayList;
@@ -160,22 +161,28 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
    @Override
    public void onEditorActiveFileChanged(final EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() != null)
+      FileModel file = event.getFile();
+      if (file != null)
       {
-         final ProjectModel project = event.getFile().getProject() != null ? event.getFile().getProject() : currentProject;
+         final ProjectModel project = file.getProject() != null ? file.getProject() : currentProject;
          if (project != null)
          {
             groovyCodeAssistant.setActiveProjectId(project.getId());
             factory.setProjectId(project.getId());
          }
          
-         if (event.getFile().getMimeType().equals(MimeType.APPLICATION_GROOVY) || event.getFile().getMimeType()
-                  .equals(MimeType.GROOVY_SERVICE)
-                  || event.getFile().getMimeType().equals(MimeType.CHROMATTIC_DATA_OBJECT))
+         if (!file.isPersisted())
+         {
+            return;
+         }
+         
+         if (file.getMimeType().equals(MimeType.APPLICATION_GROOVY)
+            || file.getMimeType().equals(MimeType.GROOVY_SERVICE)
+            || file.getMimeType().equals(MimeType.CHROMATTIC_DATA_OBJECT))
          {
             List<Token> classes = new ArrayList<Token>();
             FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(classes);
-            service.findClassesByProject(event.getFile().getId(), project.getId(),
+            service.findClassesByProject(file.getId(), project.getId(),
                new AsyncRequestCallback<List<Token>>(unmarshaller)
                {
 

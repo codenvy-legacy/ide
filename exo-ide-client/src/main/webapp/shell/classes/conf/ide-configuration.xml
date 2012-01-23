@@ -274,5 +274,9 @@
                                                                                                                                                                                                                
     <component>                                                                                                                                                                                                
       <type>org.exoplatform.ide.extension.java.server.JavaCodeAssistant</type>                                                                                                                                 
-   </component>   
+   </component>
+   
+   <component>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyCodeAssistant</type>
+   </component>
 </configuration>
