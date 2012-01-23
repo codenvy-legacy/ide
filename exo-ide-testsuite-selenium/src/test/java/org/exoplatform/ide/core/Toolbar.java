@@ -75,6 +75,7 @@ public class Toolbar extends AbstractTestModule
     */
    public void runCommand(String buttonTitle) throws Exception
    {
+      waitButtonPresentAtLeft(buttonTitle);
       WebElement button = toolbar.findElement(By.cssSelector(String.format(Locators.BUTTON_SELECTOR, buttonTitle)));
       button.click();
    }
@@ -115,7 +116,7 @@ public class Toolbar extends AbstractTestModule
     */
    protected void waitMenuPopUp()
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver driver)
