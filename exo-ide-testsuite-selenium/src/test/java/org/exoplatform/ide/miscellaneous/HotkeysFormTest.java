@@ -19,16 +19,18 @@
 package org.exoplatform.ide.miscellaneous;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
-import junit.framework.Assert;
-
+import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.miscellaneous.AbstractHotkeysTest.Commands;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
-import java.awt.Robot;
-import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 /**
  * IDE-156:HotKeys customization.
@@ -40,397 +42,228 @@ import java.awt.event.KeyEvent;
  * @version $Id:   ${date} ${time}
  *
  */
-public class HotkeysFormTest extends AbstractHotkeysTest
+public class HotkeysFormTest extends BaseTest
 {
+
+   private final static String PROJECT = HotkeysFormTest.class.getSimpleName();
+
+   @AfterClass
+   public static void tearDown()
+   {
+      deleteCookies();
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      }
+      catch (IOException e)
+      {
+      }
+   }
+
+   @Before
+   public void setUp() throws Exception
+   {
+      try
+      {
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+      }
+      catch (IOException e)
+      {
+      }
+   }
 
    @Test
    public void testFormAndButtons() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      //----- 1 ------------
-      //Call "Customize Hotkeys" window
+      //step 1 create new project, open Customize Hotkey form
+      //select CSS file and checks status of buttons 
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.EDITOR.waitTabPresent(0);
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      //      Thread.sleep(TestConstants.SLEEP);
+      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
+      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
+      IDE.CUSTOMIZE_HOTKEYS.isBindDisabled();
+      IDE.CUSTOMIZE_HOTKEYS.isUnBindEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.isCancelEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.isKeyFieldActive(true);
 
-      checkCustomizeHotkeyDialogWindow();
+      //step2 deselect row and check elements state
+      //function (Ctrl+click) At the moment, does not work. See issue IDE-1412
+      // Workaround: Restart HotkeyCustomization form, after restart all elements not selected
+      IDE.CUSTOMIZE_HOTKEYS.closeClick();
+      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
+      IDE.CUSTOMIZE_HOTKEYS.isBindDisabled();
+      IDE.CUSTOMIZE_HOTKEYS.isUnBindDisabled();
+      IDE.CUSTOMIZE_HOTKEYS.isOkDisabled();
+      IDE.CUSTOMIZE_HOTKEYS.isCancelEnabled();
 
-      //----- 2 ------------
-      //select row
-      selectRow(Commands.NEW_CSS_FILE);
+      //step3 select 'Save' raw and check state buttons and hotkey field  
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(ToolbarCommands.File.SAVE);
+      IDE.CUSTOMIZE_HOTKEYS.isBindDisabled();
+      IDE.CUSTOMIZE_HOTKEYS.isUnBindEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.isCancelEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.isKeyFieldActive(true);
+      assertEquals("Ctrl+S", IDE.CUSTOMIZE_HOTKEYS.getTextTypeKeys());
 
-      checkBindButtonEnabled(false);
-      checkUnbindButtonEnabled(true);
-      checkSaveButtonEnabled(false);
-      checkCancelButtonEnabled(true);
-      checkTextFieldEnabled(true);
+      //step4 set new hotkey value for selected (ctrl+K) row and check elements state
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "k");
+      IDE.CUSTOMIZE_HOTKEYS.isBindEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.isUnBindEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.isOkDisabled();
+      IDE.CUSTOMIZE_HOTKEYS.isCancelEnabled();
+      assertEquals("Ctrl+K", IDE.CUSTOMIZE_HOTKEYS.getTextTypeKeys());
 
-      //----- 3 ------------
-      //deselect row
-      deselectRow(Commands.NEW_CSS_FILE);
-
-      checkBindButtonEnabled(false);
-      //TODO bug
-      checkUnbindButtonEnabled(true);
-      checkSaveButtonEnabled(false);
-      checkCancelButtonEnabled(true);
-
-      //----- 4 ------------
-      //select row with binded hotkey
-      selectRow(Commands.CREATE_FILE_FROM_TEMPLATE);
-
-      checkBindButtonEnabled(false);
-      checkUnbindButtonEnabled(true);
-      checkSaveButtonEnabled(false);
-      checkCancelButtonEnabled(true);
-      checkTextFieldEnabled(true);
-      assertEquals("Ctrl+N", getTextFromTextField());
-
-      //----- 5 ------------
-      //set another hotkey
-      selenium().controlKeyDown();
-      selenium().keyDown(TEXT_FIELD_LOCATOR, "" + java.awt.event.KeyEvent.VK_K);
-      selenium().keyUp(TEXT_FIELD_LOCATOR, "" + java.awt.event.KeyEvent.VK_K);
-      selenium().controlKeyUp();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      checkBindButtonEnabled(true);
-      checkUnbindButtonEnabled(true);
-      checkSaveButtonEnabled(false);
-      checkCancelButtonEnabled(true);
-      assertEquals("Ctrl+K", getTextFromTextField());
-
-      //----- 6 ------------
-      //click Bind button
-      clickButton(BIND_BUTTON_LOCATOR);
-
-      checkBindButtonEnabled(false);
-      checkUnbindButtonEnabled(true);
-      checkSaveButtonEnabled(true);
-      checkCancelButtonEnabled(true);
-      //      assertEquals("Ctrl+K", getTextFromTextField());
-
-      //close
-      closeHotkeysWindow();
-
+      //step5 click on bind button and checked changes elements state 
+      IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.isBindDisabled();
+      IDE.CUSTOMIZE_HOTKEYS.isUnBindEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.isOkEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.isCancelEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(ToolbarCommands.File.SAVE);
+      assertEquals("", IDE.CUSTOMIZE_HOTKEYS.getTextTypeKeys());
+      IDE.CUSTOMIZE_HOTKEYS.cancelButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
    }
 
-   /**
-    * IDE-156:HotKeys customization
-    * ----- 26-31 ------------
-    * @throws Exception
-    */
    @Test
    public void testBindingAndUnbindingNewHotkey() throws Exception
    {
-      refresh();
-      //TODO 1 step not work, shold be fix call hotkey form; see issue 729
-      //----- 1 ------------
-      //call customize hotkeys form
+      //step 1 bind for CSS command new value, check state elements, save changes
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
+      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "m");
+      IDE.CUSTOMIZE_HOTKEYS.isAlredyNotView();
+      IDE.CUSTOMIZE_HOTKEYS.isBindEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.waitOkEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
 
-      //----- 2 ------------
-      //select row with css file
-      selectRow(Commands.NEW_CSS_FILE);
-
-      //----- 3 ------------
-      //Press Ctrl+M, press Bind button, press Save button
-      selenium().controlKeyDown();
-      selenium().keyDown(TEXT_FIELD_LOCATOR, "M");
-      selenium().keyUp(TEXT_FIELD_LOCATOR, "M");
-      selenium().controlKeyUp();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      //check no message
-      checkNoMessage();
-      //check Bind button is enabled
-      checkBindButtonEnabled(true);
-      //click Bind button
-      clickButton(BIND_BUTTON_LOCATOR);
-      //click Save button
-      clickButton(SAVE_BUTTON_LOCATOR);
-
-      //----- 4 ------------
-      //Press Ctrl+M
-      selenium().controlKeyDown();
-      selenium().keyDown("//", "M");
-      selenium().keyUp("//", "M");
-      selenium().controlKeyUp();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      //check new Css file is createed
-      assertEquals("Untitled file.css *", IDE.EDITOR.getTabTitle(0));
-
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-      //Thread.sleep(TestConstants.SLEEP);
-
-      //----- 5 ------------
-      //Call "Customize Hotkeys" window and select "New CSS file". Press Unbind button
+      //step 2 check 
+      driver.switchTo().activeElement().sendKeys(Keys.CONTROL.toString() + "m");
+      IDE.EDITOR.waitTabPresent(1);
+      IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.css *");
+      IDE.EDITOR.closeTabIgnoringChanges(1);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      selectRow(Commands.NEW_CSS_FILE);
-
-      //check, Ctrl+M text appears near New CSS File in list grid
-      assertEquals("Ctrl+M", getTextFromBindColumn(Commands.NEW_CSS_FILE));
-
-      clickButton(UNBIND_BUTTON_LOCATOR);
-
-      assertEquals("", getTextFromBindColumn(Commands.NEW_CSS_FILE));
-      //Press Cancel button.
-      clickButton(CANCEL_BUTTON_LOCATOR);
-
-      //----- 6 ------------
-      //Press Ctrl+M
-      selenium().controlKeyDown();
-      selenium().keyDown("//", "M");
-      selenium().keyUp("//", "M");
-      selenium().controlKeyUp();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      //check new Css file is createed
-      assertEquals("Untitled file.css *", IDE.EDITOR.getTabTitle(0));
-
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-      //Thread.sleep(TestConstants.SLEEP);
-
-      //----- 7 ------------
-      //Call "Customize Hotkeys" window and select "New CSS file". 
-      //Press Unbind button and then press Save button.
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-
-      selectRow(Commands.NEW_CSS_FILE);
-
-      //check, Ctrl+P appears near New CSS File in list grid
-      assertEquals("Ctrl+M", getTextFromBindColumn(Commands.NEW_CSS_FILE));
-
-      clickButton(UNBIND_BUTTON_LOCATOR);
-
-      assertEquals("", getTextFromBindColumn(Commands.NEW_CSS_FILE));
-
-      //click Save button
-      clickButton(SAVE_BUTTON_LOCATOR);
-
-      //----- 31 ------------
-      //Press Ctrl+M
-      selenium().controlKeyDown();
-      selenium().keyDown("//", "M");
-      selenium().keyUp("//", "M");
-      selenium().controlKeyUp();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      //Nothing or default browser event works out
-      Assert.assertFalse(IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.css"));
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
+      assertEquals("Ctrl+M", IDE.CUSTOMIZE_HOTKEYS.getTextTypeKeys());
+      IDE.CUSTOMIZE_HOTKEYS.unbindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.waitOkEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+      driver.switchTo().activeElement().sendKeys(Keys.CONTROL.toString() + "m");
+      IDE.EDITOR.waitTabNotPresent("Untitled file.css *");
    }
-
-   /**
-    * IDE-156:HotKeys customization
-    * ----- 21-25 ------------
-    * @throws Exception
-    */
 
    @Test
    public void testTryToBindForbiddenHotkeys() throws Exception
    {
-      refresh();
-      //----- 1 ------------
-      //TODO 1 step not work, shold be fix call hotkey form; see issue 729
-      //Call "Customize Hotkeys" window
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      waitForElementPresent(CUSTOMIZE_HOTKEYS_FORM_LOCATOR);
-
-      //----- 2 ------------
-      //Binding forbidden hotkeys
       //Select "New Text file" command and try to bind Shift+N. 
       //Then try to bind ordinal keys Y, 8, PrintScreen and simmilar ordinal keys
+      driver.navigate().refresh();
 
-      //After pressing forbidden keys (Shift, alphabet, digital, PrintScreen) 
-      //Bind button is disabled and under text field appears error message 
-      //(remember, that you can't bind ordinal keys such as N, Y, 8, PrintScreen, and keys, 
-      //that start with Shift, but Ctrl+<digital> and Alt+<digital> will work)
+      //step 1trying bind incorrect values for text files
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
+      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_TEXT_FILE);
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.SHIFT.toString() + "Y");
+      IDE.CUSTOMIZE_HOTKEYS.isFirstKeyMessageView();
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys("8");
+      IDE.CUSTOMIZE_HOTKEYS.isFirstKeyMessageView();
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.SHIFT.toString() + "n");
+      IDE.CUSTOMIZE_HOTKEYS.isFirstKeyMessageView();
 
-      //click "New TEXT File" row
-      selectRow(Commands.NEW_TEXT_FILE);
+      //step 2 Presses Ctrl and Alt and check states buttons and messages on the form
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString());
+      IDE.CUSTOMIZE_HOTKEYS.isHoltMessageView();
+      assertEquals("Ctrl+", IDE.CUSTOMIZE_HOTKEYS.getTextTypeKeys());
+      IDE.CUSTOMIZE_HOTKEYS.isBindDisabled();
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.ALT.toString());
+      assertEquals("Alt+", IDE.CUSTOMIZE_HOTKEYS.getTextTypeKeys());
+      IDE.CUSTOMIZE_HOTKEYS.isBindDisabled();
+      IDE.CUSTOMIZE_HOTKEYS.isOkDisabled();
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.SHIFT.toString() + "n");
 
-      //Double set focus to TEXT_FIELD_LOCATOR to test work :(
-      selenium().focus(TEXT_FIELD_LOCATOR);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium().focus(TEXT_FIELD_LOCATOR);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium().click(TEXT_FIELD_LOCATOR);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium().click(TEXT_FIELD_LOCATOR);
+      //step 3 checking forbidden values, that are reserved by editors
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "c");
+      IDE.CUSTOMIZE_HOTKEYS.isHotKeyUsedMessageView();
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "p");
+      IDE.CUSTOMIZE_HOTKEYS.isAlredyNotView();
+      IDE.CUSTOMIZE_HOTKEYS.isBindEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.isOkDisabled();
+      IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.waitOkEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.isOkEnabled();
 
-      //press Shift+N
-      Robot bot = new Robot();
-      bot.keyPress(KeyEvent.VK_SHIFT);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_N);
-      bot.keyRelease(KeyEvent.VK_SHIFT);
-
-      checkMessage(ERROR_MESSAGE_STYLE, "First key should be Ctrl or Alt", true);
-
-      //press Y
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      checkMessage(ERROR_MESSAGE_STYLE, "First key should be Ctrl or Alt", true);
-
-      //press 8
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_8);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      checkMessage(ERROR_MESSAGE_STYLE, "First key should be Ctrl or Alt", true);
-
-      //----- 3 ------------
-      //check, that after pressing Ctrl or Alt info message is displayed:
-      //Holt Ctrl or Alt, then press key
-
-      //select row with Css file
-      selectRow(Commands.NEW_CSS_FILE);
-      //press Ctrl
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      //check message
-      checkMessage(INFO_MESSAGE_STYLE, "Holt Ctrl or Alt, then press key", true);
-      //get text from text field
-      assertEquals("Ctrl+", getTextFromTextField());
-      //check Bind button is disabled
-      checkBindButtonEnabled(false);
-
-      //press alt
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ALT);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      //check message
-      checkMessage(INFO_MESSAGE_STYLE, "Holt Ctrl or Alt, then press key", true);
-      //get text from text field
-      assertEquals("Alt+", getTextFromTextField());
-      //check Bind button is disabled
-      checkBindButtonEnabled(false);
-      checkSaveButtonEnabled(false);
-
-      //----- 4 ------------
-      //Binding of hotkeys, that are reserved by editors
-
-      //Try to bind Ctrl+C
-      //select row with Css file
-      selectRow(Commands.NEW_CSS_FILE);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      //Press Ctrl+C
-      selenium().controlKeyDown();
-      selenium().keyDown("//", "C");
-      selenium().keyUp("//", "C");
-      selenium().controlKeyUp();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      //check text in text field
-      assertEquals("Ctrl+C", getTextFromTextField());
-      //check message
-      checkMessage(ERROR_MESSAGE_STYLE, "This hotkey is used by Code or WYSIWYG Editors", true);
-      //check Bind button is disabled
-      checkBindButtonEnabled(false);
-      checkSaveButtonEnabled(false);
-
-      //----- 5 ------------
-      //Binding hotkeys, that are bound to another commands
-
-      //Press Ctrl+D
-      selenium().controlKeyDown();
-      selenium().keyDown("//", "D");
-      selenium().keyUp("//", "D");
-      selenium().controlKeyUp();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      //check text in text field
-      Thread.sleep(2000);
-      assertEquals("Ctrl+D", getTextFromTextField());
-      //check message
-      checkMessage(ERROR_MESSAGE_STYLE, "Such hotkey already bound to another command", true);
-      //check Bind button is disabled
-      checkBindButtonEnabled(false);
-      checkSaveButtonEnabled(false);
-
-      //Press Ctrl+P, check Bind button is enabled and no error message
-      selenium().controlKeyDown();
-      selenium().keyDown("//", "P");
-      selenium().keyUp("//", "P");
-      selenium().controlKeyUp();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      //check no message
-      checkNoMessage();
-      //check Bind button is enabled
-      checkBindButtonEnabled(true);
-      checkSaveButtonEnabled(false);
-
-      //press bind button
-      clickButton(BIND_BUTTON_LOCATOR);
-      checkSaveButtonEnabled(true);
-
-      //Try to bind the same hotkeys
-      //      selectRow(Commands.NEW_CSS_FILE);
-      //press Ctrl+P
-      selenium().controlKeyDown();
-      selenium().keyDown("//", "P");
-      selenium().keyUp("//", "P");
-      selenium().controlKeyUp();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      //check hotkeys in text field
-      assertEquals("Ctrl+P", getTextFromTextField());
-      checkBindButtonEnabled(false);
-      checkMessage(ERROR_MESSAGE_STYLE, "Such hotkey already bound to this command", true);
-
-      //close
-      closeHotkeysWindow();
-
+      //after fix issue IDE 1420 string 213 should be remove
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_HTML_FILE);
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "p");
+      IDE.CUSTOMIZE_HOTKEYS.isAlreadyToThisCommandMessView();
+      IDE.CUSTOMIZE_HOTKEYS.cancelButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
    }
 
    @Test
+   //TODO If will be fix problem with impossible selecting elements after 
+   //scroll of form "Customize Hotkeys..." in FF 4.0 and higher, test should be reworked.
    public void testUnbindingDefaultHotkey() throws Exception
    {
-      refresh();
-      //----- 1 ------------
-      //TODO 1 step not work, shold be fix call hotkey form; see issue 729
-      //check Ctrl+N calls Create File From Template window
-      //press Ctrl+N
-      selenium().controlKeyDown();
-      selenium().keyDown("//", "N");
-      selenium().keyUp("//", "N");
-      selenium().controlKeyUp();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      driver.navigate().refresh();
+      //step 1: checking default hotkey
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      driver.switchTo().activeElement().sendKeys(Keys.CONTROL.toString() + "n");
+      IDE.TEMPLATES.waitOpened();
+      IDE.TEMPLATES.clickCancelButton();
+      IDE.TEMPLATES.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      checkCreateFileFromTemplateFormAndClose();
-
-      //----- 2 ------------
-      //Call "Customize Hotkeys" window
+      //step 2: preconditioning: Select XML file, set new key bind and
+      // check this work hotkey in IDE
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
+      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "m");
+      IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.waitOkEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      driver.switchTo().activeElement().sendKeys(Keys.CONTROL.toString() + "m");
+      IDE.EDITOR.waitTabPresent(1);
+      IDE.EDITOR.isEditorTabSelected("Untitled file.css *");
+      IDE.EDITOR.closeTabIgnoringChanges(1);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      //----- 3 ------------
-      //select row with Create File From Template... command
-      selectRow(Commands.CREATE_FILE_FROM_TEMPLATE);
-      //unbind
-      clickButton(UNBIND_BUTTON_LOCATOR);
-      clickButton(SAVE_BUTTON_LOCATOR);
-
-      //----- 4 ------------
-      //press Ctrl+N
-      selenium().controlKeyDown();
-      selenium().keyDown("//", "N");
-      selenium().keyUp("//", "N");
-      selenium().controlKeyUp();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      //check no Create File From Template form
-      assertFalse(IDE.TEMPLATES.isOpened());
-
-      //----- 5 ------------
-      //Call "Customize Hotkeys" window
+      //step 3: unbind new hotkey and check this in IDE
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      Thread.sleep(TestConstants.SLEEP);
-
-      selectRow(Commands.CREATE_FILE_FROM_TEMPLATE);
-      assertEquals("", getTextFromBindColumn(Commands.CREATE_FILE_FROM_TEMPLATE));
-
-      //close
-      closeHotkeysWindow();
+      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
+      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
+      IDE.CUSTOMIZE_HOTKEYS.waitUnBindEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.unbindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.waitOkEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      driver.switchTo().activeElement().sendKeys(Keys.CONTROL.toString() + "m");
+      IDE.EDITOR.waitTabNotPresent("Untitled file.css *");
 
    }
-
 }

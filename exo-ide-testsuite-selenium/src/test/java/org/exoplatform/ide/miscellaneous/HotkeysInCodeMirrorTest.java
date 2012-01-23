@@ -139,10 +139,10 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "c");
       IDE.EDITOR.typeTextIntoEditor(0, Keys.ARROW_DOWN.toString());
 
-      IDE.EDITOR.typeTextIntoEditor(0, "\n");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
 
       //paste text by pressing Ctrl+V
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "V");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "v");
 
       //check text
       assertEquals(textToEdit + "\n" + textToEdit, IDE.EDITOR.getTextFromCodeEditor(0));
@@ -166,7 +166,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       Thread.sleep(500);
       IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "x");
       Thread.sleep(500);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "V");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "v");
       Thread.sleep(500);
       assertEquals(textToCut, IDE.EDITOR.getTextFromCodeEditor(0));
 

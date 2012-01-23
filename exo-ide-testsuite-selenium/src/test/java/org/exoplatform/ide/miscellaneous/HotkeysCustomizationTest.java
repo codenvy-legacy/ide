@@ -18,16 +18,10 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
-import static org.junit.Assert.assertEquals;
-
-import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.MenuCommands.File;
-import org.exoplatform.ide.SaveFileUtils;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
@@ -44,7 +38,7 @@ import java.io.IOException;
  * @version $Id:   ${date} ${time}
  *
  */
-public class HotkeysCustomizationTest extends AbstractHotkeysTest
+public class HotkeysCustomizationTest extends BaseTest
 {
    private final static String PROJECT = HotkeysCustomizationTest.class.getSimpleName();
 
@@ -60,8 +54,8 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       }
    }
 
-   @After
-   public void tearDown()
+   @AfterClass
+   public static void tearDown()
    {
       deleteCookies();
       try
@@ -103,7 +97,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
-  @Test
+   @Test
    public void testHotkeysInSeveralTabs() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
@@ -138,7 +132,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
 
       //A temporary solution for problem switching between tabs in FF 4.0 and higher
       if ("CHROME".equals(IDE_SETTINGS.getString("selenium.browser.commad"))
-         || "GOOGLE_CHROME".equals(IDE_SETTINGS.getString("selenium.browser.commad")))
+         || "FIREFOX_CHROME".equals(IDE_SETTINGS.getString("selenium.browser.commad")))
       {
          IDE.EDITOR.closeTabIgnoringChanges(2);
          IDE.EDITOR.closeTabIgnoringChanges(1);
@@ -147,11 +141,9 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       else
       {
          IDE.EDITOR.typeTextIntoEditor(1, Keys.CONTROL.toString() + "h");
-
          // TODO After opening third tab, all next steps test cases  don't work in FF v.4.0 and higher.
          //Maybe this problem switch between iframes with WebDriver. Maybe this problem will resolved after 
          //refresh browser and fix issue IDE-1392
-
          IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.html *");
          IDE.selectMainFrame();
          IDE.EDITOR.selectTab(2);
@@ -176,8 +168,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       }
    }
 
-   //TODO after fix issue IDE-1392 should be uncomment
-    @Test
+   @Test
    public void testHotkeysAfterRefresh() throws Exception
    {
       //step 1 opening 2 files and checking restore commands in 2 tabs after refresh. 
