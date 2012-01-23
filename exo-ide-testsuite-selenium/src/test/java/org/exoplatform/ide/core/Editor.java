@@ -56,7 +56,10 @@ public class Editor extends AbstractTestModule
        * XPATH CK editor locator.
        */
       String CK_EDITOR = "//table[@class='cke_editor']";
-
+      
+     
+      String CK_EDITOR_IFRAME ="td.cke_contents>iframe";
+      
       String EDITOR_TABSET_LOCATOR = "//div[@id='editor']";
 
       String TAB_LOCATOR = "//div[@tab-bar-index='%s']";
@@ -96,7 +99,7 @@ public class Editor extends AbstractTestModule
    }
 
    private WebElement editor;
-
+   
    @FindBy(className = Locators.LINE_HIGHLIGHTER_CLASS)
    private WebElement highlighter;
 
@@ -578,7 +581,6 @@ public class Editor extends AbstractTestModule
       WebElement editorFrame = driver().findElement(By.xpath(iFrameWithEditorLocator));
       driver().switchTo().frame(editorFrame);
    }
-
    /**
     * Mouse click on editor.
     * 
@@ -605,10 +607,12 @@ public class Editor extends AbstractTestModule
    }
 
    public String getTextFromCKEditor(int tabIndex) throws Exception
-   {
+  {
       selectIFrameWithEditor(tabIndex);
+      WebElement ckEditorIframe = driver().findElement(By.cssSelector(Locators.CK_EDITOR_IFRAME)); 
+      driver().switchTo().frame(ckEditorIframe);
       String text = driver().switchTo().activeElement().getText();
-      IDE().selectMainFrame();
+//      IDE().selectMainFrame();
       return text;
    }
 
@@ -779,7 +783,7 @@ public class Editor extends AbstractTestModule
    {
       editor.findElement(By.id(Locators.DESIGN_BUTTON_ID)).click();
    }
-
+   
    public void selectCkEditorIframe(int tabIndex)
    {
       //TODO
