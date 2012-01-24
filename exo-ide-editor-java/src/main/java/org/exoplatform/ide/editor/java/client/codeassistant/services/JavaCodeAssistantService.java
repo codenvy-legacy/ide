@@ -18,9 +18,11 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.services;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
 import org.exoplatform.ide.editor.java.client.model.Types;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
@@ -29,13 +31,12 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 
 /**
- * Implementation of {@link CodeAssistantService}
- * <br>
+ * Implementation of {@link CodeAssistantService} <br>
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 17, 2010 4:44:53 PM evgen $
- *
+ * 
  */
 public class JavaCodeAssistantService extends CodeAssistantService
 {
@@ -46,8 +47,8 @@ public class JavaCodeAssistantService extends CodeAssistantService
 
    public JavaCodeAssistantService(String restServiceContext, Loader loader)
    {
-      super(restServiceContext, loader, "/ide/code-assistant/java/class-description?fqn=", //GET_CLASS_URL
-         "/ide/code-assistant/java/find-by-prefix/", //  FIND_CLASS_BY_PREFIX
+      super(restServiceContext, loader, "/ide/code-assistant/java/class-description?fqn=", // GET_CLASS_URL
+         "/ide/code-assistant/java/find-by-prefix/", // FIND_CLASS_BY_PREFIX
          "/ide/code-assistant/java/find-by-type/");
       instance = this;
    }
@@ -59,7 +60,7 @@ public class JavaCodeAssistantService extends CodeAssistantService
 
    /**
     * Find all classes from project with file.
-    *   
+    * 
     * @param fileRelPath for who autocompletion called (Need for find classpath)
     * @param callback - the callback which client has to implement
     */
@@ -77,13 +78,12 @@ public class JavaCodeAssistantService extends CodeAssistantService
          }
          catch (RequestException e)
          {
-            e.printStackTrace();
+            IDE.fireEvent(new ExceptionThrownEvent(e));
          }
       }
    }
 
-   public void findTypeByPrefix(String prefix, Types type, String projectId,
-      AsyncRequestCallback<TypesList> callback)
+   public void findTypeByPrefix(String prefix, Types type, String projectId, AsyncRequestCallback<TypesList> callback)
    {
       String url = restServiceContext + FIND_TYPE + type.toString();
       url += "?projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
@@ -97,7 +97,7 @@ public class JavaCodeAssistantService extends CodeAssistantService
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 

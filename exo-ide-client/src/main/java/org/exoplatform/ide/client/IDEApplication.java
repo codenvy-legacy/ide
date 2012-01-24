@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client;
 
+import org.exoplatform.gwtframework.commons.util.Log;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
@@ -42,7 +44,7 @@ public class IDEApplication implements EntryPoint
 
       public void onUncaughtException(Throwable e)
       {
-         e.printStackTrace();
+         Log.info(e.getMessage());
       }
 
    }

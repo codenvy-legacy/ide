@@ -344,7 +344,6 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
          @Override
          protected void onFailure(Throwable exception)
          {
-            exception.printStackTrace();
             errorHandler.handleError(exception);
          }
       });

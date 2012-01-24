@@ -18,18 +18,19 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.services;
 
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
-import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.JavaClass;
 import org.exoplatform.ide.editor.java.client.model.Types;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestException;
+import javax.ws.rs.WebApplicationException;
 
 /**
  * This service for auto-complete feature. Service need for retrieve information about Groovy classes. <br>
@@ -83,7 +84,7 @@ public abstract class CodeAssistantService
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         throw new WebApplicationException(e);
       }
    }
 
@@ -105,7 +106,7 @@ public abstract class CodeAssistantService
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         throw new WebApplicationException(e);
       }
    }
 
@@ -130,7 +131,7 @@ public abstract class CodeAssistantService
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         throw new WebApplicationException(e);
       }
    }
 

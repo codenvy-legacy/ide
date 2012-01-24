@@ -30,6 +30,8 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 import java.util.List;
 
+import javax.ws.rs.WebApplicationException;
+
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyCodeAssistant Apr 6, 2011 2:53:10 PM evgen $
@@ -81,7 +83,7 @@ public class GroovyCodeAssistantService extends CodeAssistantService
          }
          catch (RequestException e)
          {
-            e.printStackTrace();
+            throw new WebApplicationException(e);
          }
       }
    }

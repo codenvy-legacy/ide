@@ -410,15 +410,13 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
                @Override
                protected void onFailure(Throwable exception)
                {
-                  // TODO Auto-generated method stub
-
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }
       catch (RequestException e)
       {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
 
    }
