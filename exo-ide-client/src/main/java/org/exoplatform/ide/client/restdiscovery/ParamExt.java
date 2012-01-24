@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.restdiscovery;
 
 import org.exoplatform.gwtframework.commons.wadl.Param;
+import org.exoplatform.ide.client.restdiscovery.ui.RestServiceParameterListGrid;
 
 /**
  * Represents extended parameter for {@link RestServiceParameterListGrid}.

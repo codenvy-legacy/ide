@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
@@ -32,7 +31,8 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
 
-import com.google.gwt.http.client.RequestException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>

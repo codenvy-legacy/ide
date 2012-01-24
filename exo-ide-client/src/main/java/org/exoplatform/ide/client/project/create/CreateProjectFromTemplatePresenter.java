@@ -32,7 +32,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -423,13 +423,9 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
             String parentId = vfsInfo.getRoot().getId();
 
             loader.show();
-            TemplateService.getInstance().createProjectFromTemplate(
-               vfsInfo.getId(),
-               parentId,
-               projectName,
+            TemplateService.getInstance().createProjectFromTemplate(vfsInfo.getId(), parentId, projectName,
                selectedTemplate.getName(),
-               new AsyncRequestCallback<ProjectModel>(
-                  new ProjectUnmarshaller(new ProjectModel()))
+               new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel()))
                {
                   @Override
                   protected void onSuccess(ProjectModel result)

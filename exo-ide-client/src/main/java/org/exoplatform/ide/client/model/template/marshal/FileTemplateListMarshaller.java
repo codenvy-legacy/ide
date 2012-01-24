@@ -19,7 +19,6 @@
 package org.exoplatform.ide.client.model.template.marshal;
 
 import com.google.gwt.json.client.JSONArray;
-
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 

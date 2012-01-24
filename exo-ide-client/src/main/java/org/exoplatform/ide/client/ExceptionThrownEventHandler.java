@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client;
 
+import com.google.gwt.http.client.RequestException;
+
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
@@ -26,7 +28,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.exception.ServerDisconnectedException;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -132,12 +134,18 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler, Enab
                if (exception.getAsyncRequest() != null)
                {
                   Log.info("call  < asyncRequest.sendRequest(); > from ServerDisconnectedDialog ");
-                  exception.getAsyncRequest().sendRequest();
+                  try
+                  {
+                     exception.getAsyncRequest().send(exception.getAsyncRequest().getCallback());
+                  }
+                  catch (RequestException e)
+                  {
+                  }
                }
-               else if (exception.getRequest() != null)
+               else if (exception.getAsyncRequest() != null)
                {
                   Log.info("call  < asyncRequest.sendRequest(); > from ServerDisconnectedDialog ");
-                  sendAgain(exception.getRequest());
+                  sendAgain(exception.getAsyncRequest());
                }
             }
          }

@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.client.model.configuration;
 
-import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
-import org.exoplatform.ide.client.framework.userinfo.UserInfo;
-
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 
 /**
  * Created by The eXo Platform SAS .

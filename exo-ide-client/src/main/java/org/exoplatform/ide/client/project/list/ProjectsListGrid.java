@@ -19,14 +19,14 @@
 
 package org.exoplatform.ide.client.project.list;
 
-import org.exoplatform.gwtframework.ui.client.component.ListGrid;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-
 import com.google.gwt.cell.client.ImageResourceCell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.cellview.client.Column;
+
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * 

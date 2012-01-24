@@ -24,12 +24,12 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Random;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.copy.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.copy.HTTPMethod;
-import org.exoplatform.gwtframework.commons.rest.copy.HTTPStatus;
-import org.exoplatform.gwtframework.commons.rest.copy.MimeType;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.model.template.marshal.FileTemplateListMarshaller;
 import org.exoplatform.ide.client.model.template.marshal.FileTemplateMarshaller;
@@ -337,7 +337,7 @@ public class TemplateServiceImpl extends TemplateService
     */
    @Override
    public void createProjectFromTemplate(String vfsId, String parentId, String name, String templateName,
-      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel> callback)
+      AsyncRequestCallback<ProjectModel> callback)
       throws RequestException
    {
       String url = restContext + "/ide/templates/project/create";

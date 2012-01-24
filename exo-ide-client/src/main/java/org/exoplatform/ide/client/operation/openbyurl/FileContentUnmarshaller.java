@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.client.operation.openbyurl;
 
-import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
-import org.exoplatform.ide.vfs.client.model.FileModel;
-
 import com.google.gwt.http.client.Response;
+
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Unmarshaller for Get remote file content response.

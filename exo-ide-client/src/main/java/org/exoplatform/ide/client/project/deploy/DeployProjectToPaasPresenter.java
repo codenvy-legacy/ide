@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -209,13 +209,8 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
          String parentId = vfsInfo.getRoot().getId();
 
          loader.show();
-         TemplateService.getInstance().createProjectFromTemplate(
-            vfsInfo.getId(),
-            parentId,
-            projectName,
-            templateName,
-            new AsyncRequestCallback<ProjectModel>(
-               new ProjectUnmarshaller(new ProjectModel()))
+         TemplateService.getInstance().createProjectFromTemplate(vfsInfo.getId(), parentId, projectName, templateName,
+            new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel()))
             {
                @Override
                protected void onSuccess(final ProjectModel result)

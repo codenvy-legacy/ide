@@ -19,13 +19,12 @@
 package org.exoplatform.ide.client.model.template.marshal;
 
 import com.google.gwt.json.client.JSONArray;
-
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
-import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 

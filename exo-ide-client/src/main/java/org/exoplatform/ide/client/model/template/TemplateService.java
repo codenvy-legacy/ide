@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.model.template;
 
 import com.google.gwt.http.client.RequestException;
 
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
@@ -53,17 +53,22 @@ public abstract class TemplateService
 
    public abstract void deleteTemplate(Template template, TemplateDeletedCallback callback) throws RequestException;
 
-   public abstract void addFileTemplate(FileTemplate template, AsyncRequestCallback<FileTemplate> callback) throws RequestException;
+   public abstract void addFileTemplate(FileTemplate template, AsyncRequestCallback<FileTemplate> callback)
+      throws RequestException;
 
    public abstract void getFileTemplateList(AsyncRequestCallback<List<FileTemplate>> callback) throws RequestException;
 
-   public abstract void deleteFileTemplate(String templateName, AsyncRequestCallback<String> callback) throws RequestException;
+   public abstract void deleteFileTemplate(String templateName, AsyncRequestCallback<String> callback)
+      throws RequestException;
 
-   public abstract void getProjectTemplateList(AsyncRequestCallback<List<ProjectTemplate>> callback) throws RequestException;
+   public abstract void getProjectTemplateList(AsyncRequestCallback<List<ProjectTemplate>> callback)
+      throws RequestException;
 
-   public abstract void deleteProjectTemplate(String templateName, AsyncRequestCallback<String> callback) throws RequestException;
+   public abstract void deleteProjectTemplate(String templateName, AsyncRequestCallback<String> callback)
+      throws RequestException;
 
-   public abstract void addProjectTemplate(ProjectTemplate projectTemplate, AsyncRequestCallback<String> callback) throws RequestException;
+   public abstract void addProjectTemplate(ProjectTemplate projectTemplate, AsyncRequestCallback<String> callback)
+      throws RequestException;
 
    /**
     * Create new project
@@ -75,13 +80,14 @@ public abstract class TemplateService
     * @throws RequestException
     */
    public abstract void createProjectFromTemplate(String vfsId, String parentId, String name, String templateName,
-      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel> callback)
+      AsyncRequestCallback<ProjectModel> callback)
       throws RequestException;
 
    /*
     * Methods, used for templates transfer from registry to settings file.
     */
-   public abstract void addFileTemplateList(List<FileTemplate> fileTemplates, AsyncRequestCallback<String> callback) throws RequestException;
+   public abstract void addFileTemplateList(List<FileTemplate> fileTemplates, AsyncRequestCallback<String> callback)
+      throws RequestException;
 
    public abstract void addProjectTemplateList(List<ProjectTemplate> projectTemplates,
       AsyncRequestCallback<String> callback) throws RequestException;
