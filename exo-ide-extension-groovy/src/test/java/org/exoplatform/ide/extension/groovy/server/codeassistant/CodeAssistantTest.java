@@ -23,8 +23,8 @@ import org.everrest.core.impl.MultivaluedMapImpl;
 import org.everrest.core.impl.provider.json.JsonGenerator;
 import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
-import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
 import org.exoplatform.ide.extension.groovy.server.Base;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -45,7 +45,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
-import java.util.List;
+
 
 import javax.jcr.Node;
 import javax.jcr.Session;
@@ -138,8 +138,9 @@ public class CodeAssistantTest extends Base
          launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + className + "?where=className"
             + "&projectid=" + project.getId() + "&vfsid=" + vfs_id, "", headers, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-      List<ShortTypeInfo> types = (List<ShortTypeInfo>)response.getEntity();
-      Assert.assertEquals(1, types.size());
+      TypesList types = (TypesList)response.getEntity();
+      Assert.assertNotNull(types);
+      Assert.assertEquals(1, types.getTypes().size());
    }
 
    @SuppressWarnings("unchecked")
@@ -152,8 +153,9 @@ public class CodeAssistantTest extends Base
          launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + pkg + "?where=fqn" + "&projectid="
             + project.getId() + "&vfsid=" + vfs_id, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-      List<ShortTypeInfo> types = (List<ShortTypeInfo>)response.getEntity();
-      Assert.assertEquals(4, types.size());
+      TypesList types = (TypesList)response.getEntity();
+      Assert.assertNotNull(types);
+      Assert.assertEquals(4, types.getTypes().size());
 
    }
 
@@ -166,8 +168,9 @@ public class CodeAssistantTest extends Base
             + "&projectid=" + project.getId() + "&vfsid=" + vfs_id, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
       @SuppressWarnings("unchecked")
-      List<ShortTypeInfo> types = (List<ShortTypeInfo>)response.getEntity();
-      Assert.assertEquals(2, types.size());
+      TypesList types = (TypesList)response.getEntity();
+      Assert.assertNotNull(types);
+      Assert.assertEquals(2, types.getTypes().size());
    }
 
    @Test
@@ -179,8 +182,9 @@ public class CodeAssistantTest extends Base
          launcher.service("GET", "/ide/code-assistant/groovy/find-by-prefix/" + name + "?where=className"
             + "&projectid=" + project.getId() + "&vfsid=" + vfs_id, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-      List<ShortTypeInfo> types = (List<ShortTypeInfo>)response.getEntity();
-      Assert.assertEquals(1, types.size());
+      TypesList types = (TypesList)response.getEntity();
+      Assert.assertNotNull(types);
+      Assert.assertEquals(1, types.getTypes().size());
    }
 
    @Test
@@ -192,8 +196,9 @@ public class CodeAssistantTest extends Base
          launcher.service("GET", "/ide/code-assistant/groovy/find-by-type/" + type + "?projectid=" + project.getId()
             + "&vfsid=" + vfs_id, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-      List<ShortTypeInfo> types = (List<ShortTypeInfo>)response.getEntity();
-      Assert.assertEquals(2, types.size());
+      TypesList types = (TypesList)response.getEntity();
+      Assert.assertNotNull(types);
+      Assert.assertEquals(2, types.getTypes().size());
    }
 
    @Test
@@ -206,8 +211,9 @@ public class CodeAssistantTest extends Base
          launcher.service("GET", "/ide/code-assistant/groovy/find-by-type/" + type + "?prefix=Fo" + "&projectid="
             + project.getId() + "&vfsid=" + vfs_id, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-      List<ShortTypeInfo> types = (List<ShortTypeInfo>)response.getEntity();
-      Assert.assertEquals(1, types.size());
+      TypesList types = (TypesList)response.getEntity();
+      Assert.assertNotNull(types);
+      Assert.assertEquals(1, types.getTypes().size());
    }
 
    @Test
@@ -246,8 +252,9 @@ public class CodeAssistantTest extends Base
          launcher.service("GET", "/ide/code-assistant/groovy/find-in-package" + "?projectid=" + project.getId()
             + "&vfsid=" + vfs_id + "&fileid=" + fileId, "", null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-      List<ShortTypeInfo> types = (List<ShortTypeInfo>)response.getEntity();
-      Assert.assertEquals(2, types.size());
+      TypesList types = (TypesList)response.getEntity();
+      Assert.assertNotNull(types);
+      Assert.assertEquals(2, types.getTypes().size());
    }
 
    private void putClass(ClassLoader classLoader, String fqn) throws Exception
