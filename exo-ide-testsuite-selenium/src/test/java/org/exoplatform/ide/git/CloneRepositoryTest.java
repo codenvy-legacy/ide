@@ -44,7 +44,7 @@ public class CloneRepositoryTest extends BaseTest
 {
    private static final String PROJECT = CloneRepositoryTest.class.getSimpleName();
 
-   private static final String REPOSITORY = "clone_repository";
+   private static final String REPOSITORY = "clonerepository";
 
    private static final String TEST_FILE1 = "File1.txt";
 
@@ -60,7 +60,9 @@ public class CloneRepositoryTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.importZipProject(REPOSITORY, ZIP_PATH);
+         Thread.sleep(1000);
          VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Thread.sleep(1000);
       }
       catch (Exception e)
       {
@@ -73,7 +75,9 @@ public class CloneRepositoryTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         Thread.sleep(1000);
          VirtualFileSystemUtils.delete(WS_URL + REPOSITORY);
+         Thread.sleep(1000);
       }
       catch (Exception e)
       {
@@ -140,10 +144,11 @@ public class CloneRepositoryTest extends BaseTest
 
       //Check Clone button is disabled, when remote URI field is empty:
       IDE.GIT.CLONE_REPOSITORY.setRemoteUri(GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + REPOSITORY);
+      Thread.sleep(6000);
       IDE.GIT.CLONE_REPOSITORY.clickCloneButton();
       IDE.GIT.CLONE_REPOSITORY.waitClosed();
 
-      IDE.OUTPUT.waitForMessageShow(1, 15);
+      IDE.OUTPUT.waitForMessageShow(1, 20);
       String message = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(message.endsWith(GIT.Messages.CLONE_SUCCESS));
 
@@ -151,6 +156,8 @@ public class CloneRepositoryTest extends BaseTest
       Thread.sleep(3000);
 
       driver.navigate().to(WS_URL + PROJECT);
+      
+      Thread.sleep(10000);
       new WebDriverWait(driver, 10).until(new ExpectedCondition<Boolean>()
       {
          @Override

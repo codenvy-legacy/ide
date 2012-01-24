@@ -81,7 +81,7 @@ public class ResetToCommitTest extends BaseTest
     * Test command is not available for reseting commit in not Git repository.
     * @throws Exception 
     */
-   @Test
+    @Test
    public void testResetCommitCommand() throws Exception
    {
       driver.navigate().refresh();
@@ -90,12 +90,13 @@ public class ResetToCommitTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
       IDE.LOADER.waitClosed();
-      
+
       //Check Reset commit is available:
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.RESET));
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET);
 
+      IDE.GIT.RESET_TO_COMMIT.waitOpened();
       IDE.GIT.RESET_TO_COMMIT.clickCancelButton();
       IDE.GIT.RESET_TO_COMMIT.waitClosed();
    }
@@ -115,7 +116,7 @@ public class ResetToCommitTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
       IDE.LOADER.waitClosed();
-      
+
       //Open Reset files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET);
       IDE.GIT.RESET_TO_COMMIT.waitOpened();
@@ -141,7 +142,7 @@ public class ResetToCommitTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
       IDE.LOADER.waitClosed();
-      
+
       //Open Reset files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET);
       IDE.GIT.RESET_TO_COMMIT.waitOpened();
@@ -161,6 +162,8 @@ public class ResetToCommitTest extends BaseTest
       IDE.LOADER.waitClosed();
 
       //Check file in tree:
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_FILE1);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
@@ -196,7 +199,7 @@ public class ResetToCommitTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
       IDE.LOADER.waitClosed();
-      
+
       //Create new file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.txt");
@@ -227,6 +230,7 @@ public class ResetToCommitTest extends BaseTest
       IDE.GIT.RESET_TO_COMMIT.selectRevisionByComment(FIRST_COMMIT);
       IDE.GIT.RESET_TO_COMMIT.clickRevertButton();
 
+      IDE.LOADER.waitClosed();
       IDE.GIT.RESET_TO_COMMIT.waitClosed();
 
       //Check successfully reverted message:
@@ -235,11 +239,14 @@ public class ResetToCommitTest extends BaseTest
       assertEquals(GIT.Messages.RESET_COMMIT_SUCCESS, message);
 
       //Check file in tree:
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_FILE1);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE2);
       IDE.LOADER.waitClosed();
-      
+
       //Check status:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
       IDE.OUTPUT.waitForMessageShow(4, 10);
@@ -270,7 +277,7 @@ public class ResetToCommitTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
       IDE.LOADER.waitClosed();
-      
+
       //Open Reset files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET);
       IDE.GIT.RESET_TO_COMMIT.waitOpened();
@@ -289,6 +296,9 @@ public class ResetToCommitTest extends BaseTest
       assertEquals(GIT.Messages.RESET_COMMIT_SUCCESS, message);
 
       //Check file in tree:
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_FILE1);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE1);

@@ -85,7 +85,7 @@ public class DeleteRepositoryTest extends BaseTest
       IDE.GIT.INIT_REPOSITORY.clickInitButton();
       IDE.GIT.INIT_REPOSITORY.waitClosed();
 
-      IDE.OUTPUT.waitForMessageShow(1, 10);
+      IDE.OUTPUT.waitForMessageShow(1, 15);
       IDE.LOADER.waitClosed();
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.DELETE));
       
@@ -96,13 +96,13 @@ public class DeleteRepositoryTest extends BaseTest
       IDE.ASK_DIALOG.clickYes();
       IDE.ASK_DIALOG.waitClosed();
 
-      IDE.OUTPUT.waitForMessageShow(2, 10);
+      IDE.OUTPUT.waitForMessageShow(2, 15);
       String message = IDE.OUTPUT.getOutputMessage(2);
       assertTrue(message.endsWith(GIT.Messages.DELETE_SUCCESS));
 
       driver.navigate().to(WS_URL + PROJECT);
 
-      new WebDriverWait(driver, 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver, 15).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver driver)
