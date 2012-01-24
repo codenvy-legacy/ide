@@ -214,6 +214,8 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
       if (event.getLoginUrl() != null)
       {
          server = event.getLoginUrl();
+         if (server != null && !server.startsWith("http"))
+            server = "http://" + server;
       }
       if (display == null)
       {
