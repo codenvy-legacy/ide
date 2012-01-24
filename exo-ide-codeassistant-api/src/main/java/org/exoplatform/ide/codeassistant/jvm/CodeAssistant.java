@@ -23,6 +23,7 @@ import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.util.ArrayList;
@@ -92,10 +93,17 @@ public abstract class CodeAssistant
          default :
             break;
       }
-      List<ShortTypeInfo> tmp = getByTypeFromProject(type, prefix, projectId, vfsId);
-      if (tmp != null)
+      try
       {
-         result.addAll(tmp);
+         List<ShortTypeInfo> tmp = getByTypeFromProject(type, prefix, projectId, vfsId);
+         if (tmp != null)
+         {
+            result.addAll(tmp);
+         }
+      }
+      catch (ItemNotFoundException e)
+      {
+         //nothing to do 
       }
       return result;
    }
@@ -123,7 +131,17 @@ public abstract class CodeAssistant
       }
       else
       {
-         return getClassByFqnFromProject(fqn, projectId, vfsId);
+         try
+         {
+            return getClassByFqnFromProject(fqn, projectId, vfsId);
+         }
+         catch (ItemNotFoundException e)
+         {
+            //Return null because we don't found source folder 
+            // by default it's src/main/java
+            // or it's not project
+            return null;
+         }
       }
    }
 
@@ -161,7 +179,17 @@ public abstract class CodeAssistant
       catch (CodeAssistantException e)
       {
          //java doc not found, try search in project
-         return getClassJavaDocFromProject(fqn, projectId, vfsId);
+         try
+         {
+            return getClassJavaDocFromProject(fqn, projectId, vfsId);
+         }
+         catch (ItemNotFoundException itemNotFoundException)
+         {
+            //Return null because we don't found source folder 
+            // by default it's src/main/java
+            // or it's not project
+            return null;
+         }
       }
    }
 
@@ -183,7 +211,17 @@ public abstract class CodeAssistant
       catch (CodeAssistantException e)
       {
          //java doc not found, try search in project
-         return getMemberJavaDocFromProject(fqn, projectId, vfsId);
+         try
+         {
+            return getMemberJavaDocFromProject(fqn, projectId, vfsId);
+         }
+         catch (ItemNotFoundException notFoundException)
+         {
+            //Return null because we don't found source folder 
+            // by default it's src/main/java
+            // or it's not project
+            return null;
+         }
       }
    }
 
@@ -229,11 +267,20 @@ public abstract class CodeAssistant
          result.addAll(list);
       }
 
-      list = getTypesByFqnPrefixInProject(prefix, projectId, vfsId);
-      if (list != null)
+      try
       {
-         result.addAll(list);
+         list = getTypesByFqnPrefixInProject(prefix, projectId, vfsId);
+
+         if (list != null)
+         {
+            result.addAll(list);
+         }
       }
+      catch (ItemNotFoundException e)
+      {
+         //Nothing to do
+      }
+
       return result;
    }
 
@@ -261,10 +308,17 @@ public abstract class CodeAssistant
          result.addAll(list);
       }
 
-      list = getTypesByNamePrefixFromProject(className, projectId, vfsId);
-      if (list != null)
+      try
       {
-         result.addAll(list);
+         list = getTypesByNamePrefixFromProject(className, projectId, vfsId);
+         if (list != null)
+         {
+            result.addAll(list);
+         }
+      }
+      catch (ItemNotFoundException e)
+      {
+         //Nothing to do
       }
       return result;
    }
