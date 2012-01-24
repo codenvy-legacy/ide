@@ -466,6 +466,13 @@ public class Editor extends AbstractTestModule
       }
    }
 
+  
+   
+   
+   
+   
+   
+   
    /**
     *  Delete all file content via Ctrl+a, Delete
     */
@@ -474,6 +481,18 @@ public class Editor extends AbstractTestModule
       typeTextIntoEditor(tabIndex, Keys.CONTROL.toString() + "a" + Keys.DELETE.toString());
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
+   
+   
+   /**
+    *  Delete all file content via Ctrl+a, Delete
+    */
+   public void deleteFileContentInCKEditor(int tabIndex) throws Exception
+   {
+      
+      typeTextIntoCkEditor(tabIndex, Keys.CONTROL.toString() + "a" + Keys.DELETE.toString());
+      
+   }
+   
 
    /**
     * Type text to file, opened in tab.
@@ -495,6 +514,33 @@ public class Editor extends AbstractTestModule
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE().selectMainFrame();
    }
+   
+   
+   
+   /**
+    * Type text to file, opened in tab.
+    * 
+    * Index of tabs begins from 0.
+    * 
+    * Sometimes, if you can't type text to editor,
+    * try before to click on editor:
+    * 
+    * selenium().clickAt("//body[@class='editbox']", "5,5");
+    * 
+    * @param tabIndex begins from 0
+    * @param text (can be used '\n' as line break)
+    */
+   public void typeTextIntoCkEditor(int tabIndex, String text) throws Exception
+   {
+      selectIFrameWithEditor(tabIndex);
+      IDE().selectMainFrame();
+      WebElement ckEditorIframe = driver().findElement(By.cssSelector(Locators.CK_EDITOR_IFRAME)); 
+      driver().switchTo().frame(ckEditorIframe);
+      driver().switchTo().activeElement().sendKeys(text);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      IDE().selectMainFrame();
+   }
+   
 
    /**
     * Move cursor in editor down to pointed number of lines.
@@ -606,13 +652,22 @@ public class Editor extends AbstractTestModule
       return text;
    }
 
+   /**
+    * select tab star with 1
+    * switch to iframe with ck_editor
+    * and return text into ck_editor
+    * @param tabIndex
+    * @return
+    * @throws Exception
+    */
    public String getTextFromCKEditor(int tabIndex) throws Exception
   {
       selectIFrameWithEditor(tabIndex);
+      IDE().selectMainFrame();
       WebElement ckEditorIframe = driver().findElement(By.cssSelector(Locators.CK_EDITOR_IFRAME)); 
       driver().switchTo().frame(ckEditorIframe);
       String text = driver().switchTo().activeElement().getText();
-//      IDE().selectMainFrame();
+      IDE().selectMainFrame();
       return text;
    }
 
