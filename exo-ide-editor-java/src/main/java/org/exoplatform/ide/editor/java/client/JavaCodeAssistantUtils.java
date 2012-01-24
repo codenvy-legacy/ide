@@ -24,7 +24,6 @@ import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
 import org.exoplatform.ide.editor.api.codeassitant.NumericProperty;
-import org.exoplatform.ide.editor.api.codeassitant.ObjectProperty;
 import org.exoplatform.ide.editor.api.codeassitant.StringProperty;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenImpl;
@@ -48,7 +47,7 @@ import java.util.Map;
 */
 public class JavaCodeAssistantUtils
 {
-   
+
    /**
     * Convert TypesList object to List<Token> 
     * 
@@ -56,9 +55,9 @@ public class JavaCodeAssistantUtils
     * @param types
     * @return
     */
-    // TODO this methods need temporary and maybe 
+   // TODO this methods need temporary and maybe 
    //removed in future after rewriting codeAssitant API
-   public static List<Token> types2tokens(TypesList types) 
+   public static List<Token> types2tokens(TypesList types)
    {
       if (types != null)
       {
@@ -78,8 +77,7 @@ public class JavaCodeAssistantUtils
       }
       return Collections.emptyList();
    }
-   
-   
+
    /**
     * Convert Type object to JavaClass 
     * 
@@ -87,9 +85,9 @@ public class JavaCodeAssistantUtils
     * @param types
     * @return
     */
-    // TODO this methods need temporary and maybe 
+   // TODO this methods need temporary and maybe 
    //removed in future after rewriting codeAssitant API
-   public static JavaClass type2javaClass(TypeInfo type) 
+   public static JavaClass type2javaClass(TypeInfo type)
    {
       JavaClass classInfo = new JavaClass();
       classInfo.getPublicFields().addAll(getPublicFields(type.getFields()));
@@ -98,8 +96,6 @@ public class JavaCodeAssistantUtils
       classInfo.getPublicConstructors().addAll(getPublicConstructors(type.getMethods()));
       return classInfo;
    }
-   
-   
 
    /**
     * @param list
@@ -109,20 +105,23 @@ public class JavaCodeAssistantUtils
    {
       //TODO filter same methods
       Map<String, Token> methods = new HashMap<String, Token>();
-      for (MethodInfo mi : list)
-      {
-         int modifier = mi.getModifiers();
-         if (ModifierHelper.isAbstract(modifier))
+      if (list != null)
+         for (MethodInfo mi : list)
          {
-            Token token = new TokenImpl(mi.getName(), TokenType.METHOD);
-            token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
-            token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(mi.getDeclaringClass()));
-            token.setProperty(TokenProperties.GENERIC_RETURN_TYPE, new StringProperty(mi.getReturnType()));
-            token.setProperty(TokenProperties.PARAMETER_TYPES, new StringProperty(array2string(mi.getParameterTypes())));
-            token.setProperty(TokenProperties.GENERIC_EXCEPTIONTYPES, new StringProperty(array2string(mi.getExceptionTypes())));
-            methods.put(mi.getName() + mi.getParameterTypes().toArray().toString(), token);
+            int modifier = mi.getModifiers();
+            if (ModifierHelper.isAbstract(modifier))
+            {
+               Token token = new TokenImpl(mi.getName(), TokenType.METHOD);
+               token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
+               token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(mi.getDeclaringClass()));
+               token.setProperty(TokenProperties.GENERIC_RETURN_TYPE, new StringProperty(mi.getReturnType()));
+               token.setProperty(TokenProperties.PARAMETER_TYPES,
+                  new StringProperty(array2string(mi.getParameterTypes())));
+               token.setProperty(TokenProperties.GENERIC_EXCEPTIONTYPES,
+                  new StringProperty(array2string(mi.getExceptionTypes())));
+               methods.put(mi.getName() + mi.getParameterTypes().toArray().toString(), token);
+            }
          }
-      }
       return methods.values();
    }
 
@@ -134,20 +133,23 @@ public class JavaCodeAssistantUtils
    private static List<? extends Token> getPublicMethods(List<MethodInfo> list)
    {
       List<Token> methods = new ArrayList<Token>();
-      for (MethodInfo mi : list)
-      {
-         int modifier = (int)mi.getModifiers();
-         if (ModifierHelper.isPublic(modifier))
+      if (list != null)
+         for (MethodInfo mi : list)
          {
-            Token token = new TokenImpl(mi.getName(), TokenType.METHOD);
-            token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
-            token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(mi.getDeclaringClass()));
-            token.setProperty(TokenProperties.RETURN_TYPE, new StringProperty(mi.getReturnType()));
-            token.setProperty(TokenProperties.PARAMETER_TYPES, new StringProperty(array2string(mi.getParameterTypes())));
-            token.setProperty(TokenProperties.GENERIC_EXCEPTIONTYPES, new StringProperty(array2string(mi.getExceptionTypes())));
-            methods.add(token);
+            int modifier = (int)mi.getModifiers();
+            if (ModifierHelper.isPublic(modifier))
+            {
+               Token token = new TokenImpl(mi.getName(), TokenType.METHOD);
+               token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
+               token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(mi.getDeclaringClass()));
+               token.setProperty(TokenProperties.RETURN_TYPE, new StringProperty(mi.getReturnType()));
+               token.setProperty(TokenProperties.PARAMETER_TYPES,
+                  new StringProperty(array2string(mi.getParameterTypes())));
+               token.setProperty(TokenProperties.GENERIC_EXCEPTIONTYPES,
+                  new StringProperty(array2string(mi.getExceptionTypes())));
+               methods.add(token);
+            }
          }
-      }
       return methods;
    }
 
@@ -159,18 +161,19 @@ public class JavaCodeAssistantUtils
    private static List<? extends Token> getPublicFields(List<FieldInfo> list)
    {
       List<Token> fields = new ArrayList<Token>();
-      for (FieldInfo fi : list)
-      {
-         int modifier = fi.getModifiers();
-         if (ModifierHelper.isPublic(modifier))
+      if (list != null)
+         for (FieldInfo fi : list)
          {
-            Token token = new TokenImpl(fi.getName(), TokenType.FIELD);
-            token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
-            token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(fi.getDeclaringClass()));
-            token.setProperty(TokenProperties.ELEMENT_TYPE, new StringProperty(fi.getType()));
-            fields.add(token);
+            int modifier = fi.getModifiers();
+            if (ModifierHelper.isPublic(modifier))
+            {
+               Token token = new TokenImpl(fi.getName(), TokenType.FIELD);
+               token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
+               token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(fi.getDeclaringClass()));
+               token.setProperty(TokenProperties.ELEMENT_TYPE, new StringProperty(fi.getType()));
+               fields.add(token);
+            }
          }
-      }
       return fields;
    }
 
@@ -182,43 +185,44 @@ public class JavaCodeAssistantUtils
    private static List<? extends Token> getPublicConstructors(List<MethodInfo> list)
    {
       List<Token> constructors = new ArrayList<Token>();
-      for (MethodInfo mi : list)
-      {
-         int modifier = mi.getModifiers();
-         if (!ModifierHelper.isInterface(modifier))
+      if (list != null)
+         for (MethodInfo mi : list)
          {
-            String name = mi.getName();
-            name = name.substring(name.lastIndexOf('.') + 1);
-            Token token = new TokenImpl(name, TokenType.CONSTRUCTOR);
-            token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
-            token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(mi.getDeclaringClass()));
-            token.setProperty(TokenProperties.PARAMETER_TYPES,  new StringProperty(array2string(mi.getParameterTypes())));
-            token.setProperty(TokenProperties.GENERIC_EXCEPTIONTYPES, new StringProperty(array2string(mi.getExceptionTypes())));
-            constructors.add(token);
+            int modifier = mi.getModifiers();
+            if (!ModifierHelper.isInterface(modifier))
+            {
+               String name = mi.getName();
+               name = name.substring(name.lastIndexOf('.') + 1);
+               Token token = new TokenImpl(name, TokenType.CONSTRUCTOR);
+               token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifier));
+               token.setProperty(TokenProperties.DECLARING_CLASS, new StringProperty(mi.getDeclaringClass()));
+               token.setProperty(TokenProperties.PARAMETER_TYPES,
+                  new StringProperty(array2string(mi.getParameterTypes())));
+               token.setProperty(TokenProperties.GENERIC_EXCEPTIONTYPES,
+                  new StringProperty(array2string(mi.getExceptionTypes())));
+               constructors.add(token);
+            }
          }
-      }
       return constructors;
    }
-   
-   
-   
-   private static String array2string(List<String> a)                                                                                                                                                              
-   {                                                                                                                                                                                                           
-      if (a == null)                                                                                                                                                                                           
-         return "null";                                                                                                                                                                                        
-      int iMax = a.size() - 1;                                                                                                                                                                                 
-      if (iMax == -1)                                                                                                                                                                                          
-         return "()";                                                                                                                                                                                          
-                                                                                                                                                                                                               
-      StringBuilder b = new StringBuilder();                                                                                                                                                                   
-      b.append('(');                                                                                                                                                                                           
-      for (int i = 0;; i++)                                                                                                                                                                                    
-      {                                                                                                                                                                                                        
-         b.append(String.valueOf(a.get(i)));                                                                                                                                                                       
-         if (i == iMax)                                                                                                                                                                                        
-            return b.append(')').toString();                                                                                                                                                                   
-         b.append(", ");                                                                                                                                                                                       
-      }                                                                                                                                                                                                        
-   }               
+
+   private static String array2string(List<String> a)
+   {
+      if (a == null)
+         return "null";
+      int iMax = a.size() - 1;
+      if (iMax == -1)
+         return "()";
+
+      StringBuilder b = new StringBuilder();
+      b.append('(');
+      for (int i = 0;; i++)
+      {
+         b.append(String.valueOf(a.get(i)));
+         if (i == iMax)
+            return b.append(')').toString();
+         b.append(", ");
+      }
+   }
 
 }
