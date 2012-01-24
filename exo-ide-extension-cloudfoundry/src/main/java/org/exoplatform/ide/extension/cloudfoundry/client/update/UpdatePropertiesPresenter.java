@@ -19,8 +19,7 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.update;
 
 import com.google.gwt.http.client.RequestException;
-
-import java.util.List;
+import com.google.gwt.http.client.URL;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -38,7 +37,7 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
-import com.google.gwt.http.client.URL;
+import java.util.List;
 
 /**
  * Presenter updating memory and number of instances of application.

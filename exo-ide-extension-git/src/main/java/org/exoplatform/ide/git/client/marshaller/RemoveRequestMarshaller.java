@@ -18,11 +18,9 @@
  */
 package org.exoplatform.ide.git.client.marshaller;
 
-import com.google.gwt.json.client.JSONString;
-
 import com.google.gwt.json.client.JSONArray;
-
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.ide.git.shared.RmRequest;

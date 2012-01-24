@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client;
 
+import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -34,7 +36,6 @@ import org.exoplatform.ide.git.client.control.DeleteRepositoryControl;
 import org.exoplatform.ide.git.client.control.FetchControl;
 import org.exoplatform.ide.git.client.control.InitRepositoryControl;
 import org.exoplatform.ide.git.client.control.MergeControl;
-import org.exoplatform.ide.git.client.control.ShowProjectGitReadOnlyUrl;
 import org.exoplatform.ide.git.client.control.PullControl;
 import org.exoplatform.ide.git.client.control.PushToRemoteControl;
 import org.exoplatform.ide.git.client.control.RemoteControl;
@@ -43,6 +44,7 @@ import org.exoplatform.ide.git.client.control.RemoveFilesControl;
 import org.exoplatform.ide.git.client.control.ResetFilesControl;
 import org.exoplatform.ide.git.client.control.ResetToCommitControl;
 import org.exoplatform.ide.git.client.control.ShowHistoryControl;
+import org.exoplatform.ide.git.client.control.ShowProjectGitReadOnlyUrl;
 import org.exoplatform.ide.git.client.control.ShowStatusControl;
 import org.exoplatform.ide.git.client.delete.DeleteRepositoryCommandHandler;
 import org.exoplatform.ide.git.client.fetch.FetchPresenter;
@@ -57,8 +59,6 @@ import org.exoplatform.ide.git.client.remove.RemoveFilesPresenter;
 import org.exoplatform.ide.git.client.reset.ResetFilesPresenter;
 import org.exoplatform.ide.git.client.reset.ResetToCommitPresenter;
 import org.exoplatform.ide.git.client.status.StatusCommandHandler;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * Git extension to be added to IDE application.

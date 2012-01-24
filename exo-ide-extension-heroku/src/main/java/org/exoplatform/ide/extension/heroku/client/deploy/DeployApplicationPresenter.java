@@ -25,7 +25,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -293,7 +293,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
       try
       {
          GitClientService.getInstance().init(vfs.getId(), projectId, false,
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
+            new AsyncRequestCallback<String>()
             {
                @Override
                protected void onSuccess(String result)

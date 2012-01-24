@@ -20,9 +20,6 @@ package org.exoplatform.ide.extension.cloudbees.client.update;
 
 import com.google.gwt.http.client.RequestException;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
@@ -40,6 +37,9 @@ import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandle
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Presenter for updating application on CloudBees.

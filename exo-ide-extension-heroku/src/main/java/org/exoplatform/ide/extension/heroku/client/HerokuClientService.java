@@ -20,7 +20,7 @@ package org.exoplatform.ide.extension.heroku.client;
 
 import com.google.gwt.http.client.RequestException;
 
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 
 /**
  * Heroku client service.

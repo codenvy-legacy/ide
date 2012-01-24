@@ -19,7 +19,6 @@
 package org.exoplatform.ide.git.client;
 
 import com.google.gwt.core.client.JavaScriptObject;
-
 import com.google.gwt.junit.client.GWTTestCase;
 
 /**

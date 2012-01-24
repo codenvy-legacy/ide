@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.update;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -42,7 +41,8 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.http.client.RequestException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Presenter for update application operation.

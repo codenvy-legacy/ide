@@ -19,9 +19,9 @@
 package org.exoplatform.ide.git.client.push;
 
 import org.exoplatform.ide.client.framework.job.Job;
+import org.exoplatform.ide.client.framework.job.Job.JobStatus;
 import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.job.RequestStatusHandlerBase;
-import org.exoplatform.ide.client.framework.job.Job.JobStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.git.client.GitExtension;
 

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client;
 
+import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -36,8 +38,6 @@ import org.exoplatform.ide.extension.cloudbees.client.list.ApplicationListPresen
 import org.exoplatform.ide.extension.cloudbees.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.update.UpdateApplicationPresenter;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * CloudBees extention for IDE.

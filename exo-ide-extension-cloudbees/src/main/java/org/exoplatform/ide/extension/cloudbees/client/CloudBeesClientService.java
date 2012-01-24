@@ -20,7 +20,7 @@ package org.exoplatform.ide.extension.cloudbees.client;
 
 import com.google.gwt.http.client.RequestException;
 
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfo;
 
 import java.util.List;

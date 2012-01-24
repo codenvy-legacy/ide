@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.git.client.init;
 
-import org.exoplatform.ide.git.client.remote.ShowRemotesEvent;
-
 import com.google.gwt.event.shared.EventHandler;
+
+import org.exoplatform.ide.git.client.remote.ShowRemotesEvent;
 
 /**
  * Handler for {@link ShowRemotesEvent} event.

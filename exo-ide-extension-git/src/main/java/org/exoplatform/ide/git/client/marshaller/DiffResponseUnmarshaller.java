@@ -20,8 +20,8 @@ package org.exoplatform.ide.git.client.marshaller;
 
 import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 
 /**
  * Unmarshaller to get {@link DiffResponse} from response.
