@@ -189,7 +189,7 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
                protected void onSuccess(List<Token> result)
                {
                   groovyCodeValidator.setClassesFromProject(result);
-                  ((CodeMirror)event.getEditor()).validateCode();
+                  ((CodeMirror)event.getEditor()).forceValidateCode();
                }
 
                @Override

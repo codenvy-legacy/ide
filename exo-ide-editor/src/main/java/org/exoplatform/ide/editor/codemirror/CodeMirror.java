@@ -641,6 +641,22 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
          configuration.getParser().getTokenListInBackground(this.editorId, editorObject, eventBus);
       }
    }
+   
+   public void forceValidateCode()
+   {
+      if (!showLineNumbers)
+         return;
+      
+      if (needUpdateTokenList)
+      {
+         needValidateCode = true;
+         configuration.getParser().getTokenListInBackground(this.editorId, editorObject, eventBus);
+      }
+      else
+      {
+         validateCode(this.tokenList);
+      }
+   }
 
    private void validateCode(List<? extends Token> tokenList)
    {
@@ -679,6 +695,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
          lineCodeErrorList = CodeValidator.getCodeErrorList(newCodeError.getLineNumber(), newCodeErrorList);
          setErrorMark(newCodeError.getLineNumber(), CodeValidator.getErrorSummary(lineCodeErrorList));
       }
+      configuration.getParser().getTokenListInBackground(this.editorId, editorObject, eventBus);
 
       codeErrorList = newCodeErrorList;
    }

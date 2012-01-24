@@ -190,7 +190,7 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
                   protected void onSuccess(List<Token> result)
                   {
                      groovyCodeValidator.setClassesFromProject(result);
-                     ((CodeMirror)event.getEditor()).validateCode();
+                     ((CodeMirror)event.getEditor()).forceValidateCode();
                   }
 
                   @Override
