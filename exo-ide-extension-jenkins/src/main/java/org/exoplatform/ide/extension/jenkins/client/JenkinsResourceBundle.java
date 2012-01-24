@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.extension.jenkins.client;
 
-import com.google.gwt.resources.client.ImageResource;
-
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

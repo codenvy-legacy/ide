@@ -20,7 +20,7 @@ package org.exoplatform.ide.extension.gadget.client.service;
 
 import com.google.gwt.http.client.RequestException;
 
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 
 /**
  * Created by The eXo Platform SAS .

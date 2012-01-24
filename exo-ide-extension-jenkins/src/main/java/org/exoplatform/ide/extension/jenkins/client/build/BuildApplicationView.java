@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.extension.jenkins.client.build;
 
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -32,6 +28,10 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
 
 /**
  * Created by The eXo Platform SAS .

@@ -23,8 +23,8 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 
 /**
  * Created by The eXo Platform SAS.

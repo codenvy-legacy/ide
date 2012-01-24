@@ -25,7 +25,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -470,7 +470,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       try
       {
          GitClientService.getInstance().init(vfs.getId(), projectId, false,
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
+            new AsyncRequestCallback<String>()
             {
                @Override
                protected void onSuccess(String result)

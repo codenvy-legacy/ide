@@ -18,15 +18,14 @@
  */
 package org.exoplatform.ide.extension.logreader.client;
 
-import com.google.gwt.http.client.RequestException;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;

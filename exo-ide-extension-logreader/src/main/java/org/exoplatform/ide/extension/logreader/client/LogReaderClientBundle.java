@@ -19,10 +19,8 @@
 package org.exoplatform.ide.extension.logreader.client;
 
 import com.google.gwt.core.client.GWT;
-
-import com.google.gwt.resources.client.ImageResource;
-
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
