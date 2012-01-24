@@ -29,10 +29,10 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.wadl.Method;
 import org.exoplatform.gwtframework.commons.wadl.Param;
 import org.exoplatform.gwtframework.commons.wadl.ParamStyle;

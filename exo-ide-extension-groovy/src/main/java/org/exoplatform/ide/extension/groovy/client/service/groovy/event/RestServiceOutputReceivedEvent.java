@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.extension.groovy.client.service.groovy.event;
 
+import com.google.gwt.event.shared.GwtEvent;
+
 import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
 import org.exoplatform.ide.extension.groovy.client.service.RestServiceOutput;
-
-import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .

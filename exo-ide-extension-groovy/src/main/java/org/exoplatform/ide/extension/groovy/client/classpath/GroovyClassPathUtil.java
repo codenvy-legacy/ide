@@ -18,14 +18,11 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.URL;
-
-import com.google.gwt.json.client.JSONValue;
-
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
-
-import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONValue;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -18,15 +18,15 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
-import org.codehaus.groovy.control.CompilationFailedException;
-import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-
 import groovy.servlet.ServletBinding;
 import groovy.text.SimpleTemplateEngine;
 import groovy.text.Template;
 import groovy.text.TemplateEngine;
+
+import org.codehaus.groovy.control.CompilationFailedException;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.IOException;
 import java.io.InputStream;

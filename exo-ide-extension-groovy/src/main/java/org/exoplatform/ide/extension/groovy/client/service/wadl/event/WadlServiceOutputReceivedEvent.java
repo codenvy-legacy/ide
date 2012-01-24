@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.extension.groovy.client.service.wadl.event;
 
+import com.google.gwt.event.shared.GwtEvent;
+
 import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
-
-import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.

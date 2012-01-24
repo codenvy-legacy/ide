@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui.event;
 
+import com.google.gwt.event.shared.GwtEvent;
+
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
 
 import java.util.List;
-
-import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event is fired for adding new sources (dir or file) to build class path of the current project.

@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client.handlers;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
@@ -43,8 +43,8 @@ import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServ
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .

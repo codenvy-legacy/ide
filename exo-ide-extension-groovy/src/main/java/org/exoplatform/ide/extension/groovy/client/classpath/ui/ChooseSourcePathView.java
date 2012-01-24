@@ -18,21 +18,21 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
-import java.util.List;
-
-import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.ide.client.framework.ui.ItemTree;
-import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.extension.groovy.client.GroovyExtension;
-import org.exoplatform.ide.vfs.shared.Item;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.ide.client.framework.ui.ItemTree;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.extension.groovy.client.GroovyExtension;
+import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.List;
 
 /**
  * Form for choosing sources for class path.

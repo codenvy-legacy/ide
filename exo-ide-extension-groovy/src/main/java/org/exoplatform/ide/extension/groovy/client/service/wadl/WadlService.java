@@ -20,7 +20,7 @@ package org.exoplatform.ide.extension.groovy.client.service.wadl;
 
 import com.google.gwt.http.client.RequestException;
 
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 
 /**

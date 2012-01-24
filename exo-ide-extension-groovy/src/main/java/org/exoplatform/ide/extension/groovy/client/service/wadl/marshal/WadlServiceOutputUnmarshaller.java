@@ -18,15 +18,15 @@
  */
 package org.exoplatform.ide.extension.groovy.client.service.wadl.marshal;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Response;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.gwtframework.commons.wadl.IllegalWADLException;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.gwtframework.commons.wadl.WadlProcessor;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.Response;
 
 /**
  * Created by The eXo Platform SAS.

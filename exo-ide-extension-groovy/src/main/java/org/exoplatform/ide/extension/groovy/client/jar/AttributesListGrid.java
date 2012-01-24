@@ -18,12 +18,12 @@
  */
 package org.exoplatform.ide.extension.groovy.client.jar;
 
-import org.exoplatform.gwtframework.ui.client.component.ListGrid;
-import org.exoplatform.ide.extension.groovy.shared.Attribute;
-
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
+
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.extension.groovy.shared.Attribute;
 
 /**
  * Created by The eXo Platform SAS .

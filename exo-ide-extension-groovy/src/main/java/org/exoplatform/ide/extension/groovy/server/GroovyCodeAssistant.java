@@ -39,6 +39,7 @@ import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;

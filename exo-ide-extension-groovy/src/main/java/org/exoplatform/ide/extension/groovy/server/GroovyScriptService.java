@@ -30,9 +30,11 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.services.security.ConversationState;
 import org.picocontainer.ComponentAdapter;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.inject.Named;

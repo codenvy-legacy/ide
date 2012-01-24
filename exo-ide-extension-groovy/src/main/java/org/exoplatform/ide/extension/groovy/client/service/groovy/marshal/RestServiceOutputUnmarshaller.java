@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.extension.groovy.client.service.groovy.marshal;
 
-import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
-import org.exoplatform.ide.extension.groovy.client.service.RestServiceOutput;
-
 import com.google.gwt.http.client.Response;
+
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.extension.groovy.client.service.RestServiceOutput;
 
 /**
  * Created by The eXo Platform SAS .

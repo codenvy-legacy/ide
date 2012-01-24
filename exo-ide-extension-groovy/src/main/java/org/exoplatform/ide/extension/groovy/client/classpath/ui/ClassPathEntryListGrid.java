@@ -18,17 +18,16 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
+import com.google.gwt.cell.client.SafeHtmlCell;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.client.ui.Image;
+
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 import org.exoplatform.ide.extension.groovy.client.Images;
 import org.exoplatform.ide.extension.groovy.client.classpath.EnumSourceType;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
-
-import com.google.gwt.cell.client.SafeHtmlCell;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.client.ui.Image;
 
 /**
  * Grid to display classpath sources.

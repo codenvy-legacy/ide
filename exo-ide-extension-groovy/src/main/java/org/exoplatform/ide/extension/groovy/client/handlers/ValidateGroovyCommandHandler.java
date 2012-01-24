@@ -19,14 +19,12 @@
 package org.exoplatform.ide.extension.groovy.client.handlers;
 
 import com.google.gwt.http.client.RequestException;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -47,7 +45,8 @@ import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyVa
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.user.client.Timer;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 

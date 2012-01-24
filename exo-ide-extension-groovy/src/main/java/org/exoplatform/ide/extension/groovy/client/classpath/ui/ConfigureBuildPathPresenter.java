@@ -27,6 +27,7 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -361,10 +362,8 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
       }
       try
       {
-         VirtualFileSystem.getInstance().getChildren(
-            project,
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
-               new ChildrenUnmarshaller(new ArrayList<Item>()))
+         VirtualFileSystem.getInstance().getChildren(project,
+            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
 
                @Override
@@ -403,10 +402,8 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
       final FileModel classpath = createClasspathFile(projectModel);
       try
       {
-         VirtualFileSystem.getInstance().createFile(
-            projectModel,
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<FileModel>(new FileUnmarshaller(
-               classpath))
+         VirtualFileSystem.getInstance().createFile(projectModel,
+            new AsyncRequestCallback<FileModel>(new FileUnmarshaller(classpath))
             {
 
                @Override
@@ -433,8 +430,7 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
       try
       {
          VirtualFileSystem.getInstance().getContent(
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<FileModel>(
-               new FileContentUnmarshaller(file))
+            new AsyncRequestCallback<FileModel>(new FileContentUnmarshaller(file))
             {
 
                @Override
@@ -473,22 +469,21 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
       classPathFile.setContent(content);
       try
       {
-         VirtualFileSystem.getInstance().updateContent(classPathFile,
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<FileModel>()
+         VirtualFileSystem.getInstance().updateContent(classPathFile, new AsyncRequestCallback<FileModel>()
+         {
+
+            @Override
+            protected void onSuccess(FileModel result)
             {
+               closeView();
+            }
 
-               @Override
-               protected void onSuccess(FileModel result)
-               {
-                  closeView();
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+         });
       }
       catch (RequestException e)
       {

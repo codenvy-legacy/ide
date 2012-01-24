@@ -20,7 +20,7 @@ package org.exoplatform.ide.extension.groovy.client.service.groovy;
 
 import com.google.gwt.http.client.RequestException;
 
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.groovy.client.service.RestServiceOutput;
 import org.exoplatform.ide.extension.groovy.client.service.SimpleParameterEntry;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.marshal.ClassPath;
