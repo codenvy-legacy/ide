@@ -146,7 +146,6 @@ public class RHUserInfoUnmarshaller implements Unmarshallable<RHUserInfo>, Const
    @Override
    public RHUserInfo getPayload()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return userInfo;
    }
 }

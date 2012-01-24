@@ -330,7 +330,7 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
    {
       try
       {
-         OpenShiftClientService.getInstance().destroyApplication(name, null, null, new AsyncRequestCallback<String>()
+         OpenShiftClientService.getInstance().destroyApplication(name, vfs.getId(), null, new AsyncRequestCallback<String>()
          {
 
             @Override

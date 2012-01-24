@@ -55,14 +55,19 @@ public class ExpressService
 {
    @Inject
    private Express express;
+
    @Inject
    private LocalPathResolver localPathResolver;
+
    @Inject
    private VirtualFileSystemRegistry vfsRegistry;
+
    @QueryParam("vfsid")
    private String vfsId;
+
    @QueryParam("projectid")
    private String projectId;
+
    @QueryParam("name")
    private String appName;
 
@@ -100,7 +105,7 @@ public class ExpressService
          express.createApplication(appName, type,
             (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
 
-      // Update VFS properties. Need it to uniform client.   
+      // Update VFS properties. Need it to uniform client.
       ConvertibleProperty p = new ConvertibleProperty("openshift-express-application", application.getName());
       List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
       properties.add(p);
@@ -137,12 +142,15 @@ public class ExpressService
       express.destroyApplication(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
          : null);
 
-      // Update VFS properties. Need it to uniform client.   
-      ConvertibleProperty p =
-         new ConvertibleProperty("openshift-express-application", Collections.<String> emptyList());
-      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
-      properties.add(p);
-      vfs.updateItem(projectId, properties, null);
+      if (projectId != null)
+      {
+         // Update VFS properties. Need it to uniform client.
+         ConvertibleProperty p =
+            new ConvertibleProperty("openshift-express-application", Collections.<String> emptyList());
+         List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+         properties.add(p);
+         vfs.updateItem(projectId, properties, null);
+      }
    }
 
    @GET
