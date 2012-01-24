@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.services.marshal;
 
+import org.exoplatform.ide.editor.api.codeassitant.Token;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.exoplatform.ide.editor.api.codeassitant.Token;
 
 /**
  * Created by The eXo Platform SAS.

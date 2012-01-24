@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.services.marshal;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.Response;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanFactory;
+
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
@@ -39,12 +45,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.Response;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanFactory;
-
 /**
  * @see Unmarshallable Created by The eXo Platform SAS.
  * 
@@ -52,7 +52,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanFactory;
  * @version $Id: Nov 17, 2010 5:00:56 PM evgen $
  * 
  */
-public class ClassDescriptionUnmarshaller implements Unmarshallable
+public class ClassDescriptionUnmarshaller implements Unmarshallable<JavaClass>
 {
 
    private JavaClass classInfo;
@@ -205,6 +205,15 @@ public class ClassDescriptionUnmarshaller implements Unmarshallable
          }
       }
       return constructors;
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload()
+    */
+   @Override
+   public JavaClass getPayload()
+   {
+      return classInfo;
    }
 
 }

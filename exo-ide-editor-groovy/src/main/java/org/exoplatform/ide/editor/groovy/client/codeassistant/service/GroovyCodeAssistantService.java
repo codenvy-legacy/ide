@@ -21,16 +21,16 @@ package org.exoplatform.ide.editor.groovy.client.codeassistant.service;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.CodeAssistantService;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 import java.util.List;
-
-import javax.ws.rs.WebApplicationException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -83,7 +83,7 @@ public class GroovyCodeAssistantService extends CodeAssistantService
          }
          catch (RequestException e)
          {
-            throw new WebApplicationException(e);
+            IDE.fireEvent(new ExceptionThrownEvent(e));
          }
       }
    }

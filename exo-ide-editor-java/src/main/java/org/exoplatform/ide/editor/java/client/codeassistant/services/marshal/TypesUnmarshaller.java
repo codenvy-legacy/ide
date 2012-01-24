@@ -35,7 +35,7 @@ import java.util.List;
  * @version ${Id}: Dec 5, 2011 12:06:38 PM evgen $
  * 
  */
-public class TypesUnmarshaller implements Unmarshallable
+public class TypesUnmarshaller implements Unmarshallable<List<ShortTypeInfo>>
 {
 
    private static final String NAME = "name";
@@ -51,7 +51,6 @@ public class TypesUnmarshaller implements Unmarshallable
     */
    public TypesUnmarshaller(List<ShortTypeInfo> types)
    {
-      super();
       this.types = types;
    }
 
@@ -74,6 +73,10 @@ public class TypesUnmarshaller implements Unmarshallable
    private void doParse(String body)
    {
       JSONArray jArray = JSONParser.parseLenient(body).isArray();
+      if (jArray == null)
+      {
+         return;
+      }
 
       for (int i = 0; i < jArray.size(); i++)
       {
@@ -98,5 +101,14 @@ public class TypesUnmarshaller implements Unmarshallable
          }
          types.add(info);
       }
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<ShortTypeInfo> getPayload()
+   {
+      return types;
    }
 }

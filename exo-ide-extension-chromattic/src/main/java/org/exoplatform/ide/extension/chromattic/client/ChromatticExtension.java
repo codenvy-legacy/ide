@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.chromattic.client;
 
+import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.Docking;
@@ -28,8 +30,6 @@ import org.exoplatform.ide.extension.chromattic.client.controls.GenerateNodeType
 import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticServiceImpl;
 import org.exoplatform.ide.extension.chromattic.client.ui.DeployNodeTypePresenter;
 import org.exoplatform.ide.extension.chromattic.client.ui.GenerateNodeTypePresenter;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * Created by The eXo Platform SAS .

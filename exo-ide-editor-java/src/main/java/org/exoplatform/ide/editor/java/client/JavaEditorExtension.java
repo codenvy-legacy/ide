@@ -18,11 +18,14 @@
  */
 package org.exoplatform.ide.editor.java.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.copy.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -47,9 +50,6 @@ import org.exoplatform.ide.editor.java.client.codemirror.JavaOutlineItemCreator;
 import org.exoplatform.ide.editor.java.client.codemirror.JavaParser;
 import org.exoplatform.ide.editor.java.client.create.CreateJavaClassPresenter;
 import org.exoplatform.ide.editor.java.client.create.NewJavaClassControl;
-
-import com.google.gwt.core.client.GWT;
-import com.google.web.bindery.autobean.shared.AutoBean;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
