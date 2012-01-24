@@ -138,6 +138,20 @@
    <component>
       <type>org.exoplatform.ide.extension.cloudbees.server.rest.CloudBeesApplication</type>
    </component>
+   
+   <component>
+      <type>org.exoplatform.ide.extension.cloudbees.server.CloudBees</type>
+      <init-params>
+         <value-param>
+            <name>workspace</name>
+            <value>production</value>
+         </value-param>
+         <value-param>
+            <name>user-config</name>
+            <value>/ide-home/users/</value>
+         </value-param>
+      </init-params>
+   </component>
 
    <component>
       <type>org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator</type>
