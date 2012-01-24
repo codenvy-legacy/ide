@@ -48,7 +48,7 @@ public class Push extends AbstractTestModule
 
       String LOCAL_BRANCHES_FIELD_ID = "idePushToRemoteViewLocalBranchesField";
 
-      String REMOTE_BRANCHES_FIELD_ID = "idePushToRemoteViewRemoteBranchesField";
+      String REMOTE_BRANCHES_FIELD_ID = "idePushToRemoteViewRemoteBranchesField"; 
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
