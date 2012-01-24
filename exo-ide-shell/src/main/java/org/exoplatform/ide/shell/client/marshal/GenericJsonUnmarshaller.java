@@ -25,7 +25,7 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.ide.shell.client.commands.Utils;
 
 /**

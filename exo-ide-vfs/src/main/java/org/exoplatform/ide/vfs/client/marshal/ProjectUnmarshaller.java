@@ -21,8 +21,8 @@ package org.exoplatform.ide.vfs.client.marshal;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONParser;
 
-import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
-import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**

@@ -309,5 +309,32 @@
     "path": "/ide/cloudfoundry/apps",
     "method": "GET",
     "description" : "List deployed applications on Cloud Foundry"
+},
+{
+    "command": ["vmc targets"],
+    "path": "/ide/cloudfoundry/target/all",
+    "method": "GET",
+    "description" : "List known targets and associated authorization tokens"
+},
+{
+    "command": ["vmc set-target"],
+    "path": "/ide/cloudfoundry/target",
+    "method": "POST",
+    "description" : "Sets a new target",
+     "params": [
+      {
+	  "name": "target",
+	  "type": "QUERY",
+	  "options":[],
+	  "hasArg": true,
+	  "mandatory": true
+      }
+    ]
+},
+{
+    "command": ["vmc target"],
+    "path": "/ide/cloudfoundry/target",
+    "method": "GET",
+    "description" : "Reports current target"
 }
 ]

@@ -33,7 +33,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
 
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.shell.client.commands.Utils;

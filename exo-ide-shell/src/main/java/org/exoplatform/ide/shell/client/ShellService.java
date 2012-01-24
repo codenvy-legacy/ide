@@ -25,11 +25,11 @@ import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.copy.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.copy.HTTPMethod;
-import org.exoplatform.gwtframework.commons.rest.copy.MimeType;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.shell.client.cli.CommandLine;
 import org.exoplatform.ide.shell.client.cli.GnuParser;
 import org.exoplatform.ide.shell.client.cli.Parser;

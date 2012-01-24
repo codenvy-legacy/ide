@@ -20,8 +20,8 @@ package org.exoplatform.ide.vfs.client.marshal;
 
 import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
-import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

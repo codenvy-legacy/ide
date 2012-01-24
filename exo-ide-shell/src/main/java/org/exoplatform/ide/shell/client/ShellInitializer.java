@@ -22,7 +22,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window.Location;
 
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.shell.client.ShellPresenter.Display;
 import org.exoplatform.ide.shell.client.commands.CatCommand;
 import org.exoplatform.ide.shell.client.commands.CdCommand;

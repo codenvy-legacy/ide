@@ -23,8 +23,8 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
-import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.shell.shared.CLIResource;
 import org.exoplatform.ide.shell.shared.CLIResourceParameter;
 import org.exoplatform.ide.shell.shared.CLIResourceParameter.Type;
@@ -51,7 +51,7 @@ public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>
     * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
     */
    @Override
-   public void unmarshal(Response response) throws org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException
+   public void unmarshal(Response response) throws UnmarshallerException
    {
       try
       {

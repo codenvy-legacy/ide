@@ -22,8 +22,8 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.Random;
 
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.copy.MimeType;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
