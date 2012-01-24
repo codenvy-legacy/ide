@@ -29,6 +29,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -282,12 +283,14 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
             protected void onFailure(Throwable exception)
             {
                IDE.fireEvent(new LoggedInEvent(true));
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
             }
          });
       }
       catch (RequestException e)
       {
          IDE.fireEvent(new LoggedInEvent(true));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
