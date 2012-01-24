@@ -18,17 +18,14 @@
  */
 package org.exoplatform.ide.extension.netvibes.client.service.deploy.marshaller;
 
-import com.google.gwt.xml.client.Node;
-
-import com.google.gwt.xml.client.NodeList;
-
+import com.google.gwt.http.client.Response;
 import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.Node;
+import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
 
-import com.google.gwt.http.client.Response;
-
-import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.extension.netvibes.client.model.Categories;
 
 /**

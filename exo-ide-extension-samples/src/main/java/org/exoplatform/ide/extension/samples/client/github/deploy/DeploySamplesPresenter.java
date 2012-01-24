@@ -28,7 +28,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -617,7 +617,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       {
          VirtualFileSystem.getInstance().createProject(
             parent,
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel>(
+            new AsyncRequestCallback<ProjectModel>(
                new ProjectUnmarshaller(model))
             {
 
@@ -683,7 +683,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       try
       {
          GitClientService.getInstance().cloneRepository(vfs.getId(), project, remoteUri, null,
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
+            new AsyncRequestCallback<String>()
             {
 
                @Override
@@ -733,7 +733,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       {
          VirtualFileSystem.getInstance().getChildren(
             project,
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
+            new AsyncRequestCallback<List<Item>>(
                new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
 

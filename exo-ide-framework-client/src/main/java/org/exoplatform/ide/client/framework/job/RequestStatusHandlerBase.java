@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.framework.job;
 
-import org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler;
+import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.ide.client.framework.job.Job.JobStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
 

@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.extension.samples.client.paas.login;
 
-import org.exoplatform.ide.extension.samples.client.SamplesClientService;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 
 /**
  * Event occurs, when user tries to log in OpenShift. Implement {@link LoginHandler} to handle event.
