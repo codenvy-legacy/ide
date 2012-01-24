@@ -18,12 +18,13 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client;
 
-import com.google.gwt.event.shared.HandlerManager;
-
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
@@ -38,35 +39,29 @@ import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
  */
 public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCallback<T>
 {
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventbus;
-   
    private LoggedInHandler loggedIn;
    
    private LoginCanceledHandler loginCanceled;
 
    private String loginUrl;
 
-   public CloudFoundryAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedIn,
+   public CloudFoundryAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
       LoginCanceledHandler loginCanceled)
    {
-      this(eventBus, loggedIn, loginCanceled, null);
+      this(unmarshaller, loggedIn, loginCanceled, null);
    }
 
-   public CloudFoundryAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedIn,
+   public CloudFoundryAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
       LoginCanceledHandler loginCanceled, String loginUrl)
    {
-      this.eventbus = eventBus;
+      super(unmarshaller);
       this.loggedIn = loggedIn;
       this.loginCanceled = loginCanceled;
       this.loginUrl = loginUrl;
-      setEventBus(eventBus);
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+    * @see org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback#onFailure(java.lang.Throwable)
     */
    @Override
    protected void onFailure(Throwable exception)
@@ -77,7 +72,7 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
          if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
                   && serverException.getMessage().contains("Authentication required."))
          {
-            eventbus.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
+            IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
             return;
          }
          else
@@ -95,7 +90,7 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
             return;
          }
       }
-      super.onFailure(exception);
+      IDE.fireEvent(new ExceptionThrownEvent(exception));
    }
 
 }

@@ -18,14 +18,14 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.marshaller;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 
 import java.util.List;
@@ -35,9 +35,9 @@ import java.util.List;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: FrameworksUnmarshaller.java Jul 8, 2011 11:12:16 AM vereshchaka $
- *
+ * 
  */
-public class FrameworksUnmarshaller implements Unmarshallable, Constants
+public class FrameworksUnmarshaller implements Unmarshallable<List<Framework>>, Constants
 {
    private List<Framework> frameworks;
 
@@ -52,8 +52,12 @@ public class FrameworksUnmarshaller implements Unmarshallable, Constants
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      JavaScriptObject json = build(response.getText());
-      JSONArray jsonArray = new JSONArray(json);
+      JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
+
+      if (jsonArray == null)
+      {
+         return;
+      }
 
       for (int i = 0; i < jsonArray.size(); i++)
       {
@@ -100,8 +104,12 @@ public class FrameworksUnmarshaller implements Unmarshallable, Constants
       }
    }
 
-   public static native JavaScriptObject build(String json) /*-{
-                                                            return eval('(' + json + ')');      
-                                                            }-*/;
-
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<Framework> getPayload()
+   {
+      return frameworks;
+   }
 }

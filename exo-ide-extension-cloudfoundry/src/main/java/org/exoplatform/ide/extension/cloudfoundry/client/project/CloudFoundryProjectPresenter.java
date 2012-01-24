@@ -18,12 +18,15 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.project;
 
+import com.google.gwt.http.client.RequestException;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -40,6 +43,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDelet
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CloudfoundryApplicationUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StopApplicationEvent;
@@ -55,8 +59,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * Presenter for managing project, deployed on CloudFoundry.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 2, 2011 5:54:50 PM anya $
- *
+ * @version $Id: Dec 2, 2011 5:54:50 PM anya $
+ * 
  */
 public class CloudFoundryProjectPresenter extends GitPresenter implements ProjectOpenedHandler, ProjectClosedHandler,
    ManageCloudFoundryProjectHandler, ViewClosedHandler, ApplicationDeletedHandler, ApplicationInfoChangedHandler
@@ -277,22 +281,34 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
     */
    protected void getApplicationInfo(final ProjectModel project)
    {
-      CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), project.getId(), null, null,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), new LoggedInHandler()
-         {
-            @Override
-            public void onLoggedIn()
+      try
+      {
+         CloudFoundryClientService.getInstance().getApplicationInfo(
+            vfs.getId(),
+            project.getId(),
+            null,
+            null,
+            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
+               new CloudfoundryApplication()), new LoggedInHandler()
             {
-               getApplicationInfo(project);
-            }
-         }, null)
-         {
-            @Override
-            protected void onSuccess(CloudfoundryApplication result)
+               @Override
+               public void onLoggedIn()
+               {
+                  getApplicationInfo(project);
+               }
+            }, null)
             {
-               displayApplicationProperties(result);
-            }
-         });
+               @Override
+               protected void onSuccess(CloudfoundryApplication result)
+               {
+                  displayApplicationProperties(result);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.info;
 
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -27,6 +30,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CloudfoundryApplicationUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -113,38 +117,50 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
 
    private void showApplicationInfo(final String projectId)
    {
-      CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), new LoggedInHandler()
-         {
-            @Override
-            public void onLoggedIn()
+      try
+      {
+         CloudFoundryClientService.getInstance().getApplicationInfo(
+            vfs.getId(),
+            projectId,
+            null,
+            null,
+            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
+               new CloudfoundryApplication()), new LoggedInHandler()
             {
-               showApplicationInfo(projectId);
-            }
-         }, null)
-         {
-            @Override
-            protected void onSuccess(CloudfoundryApplication result)
-            {
-               if (display == null)
+               @Override
+               public void onLoggedIn()
                {
-                  display = GWT.create(Display.class);
-                  bindDisplay();
-                  display.setName(result.getName());
-                  display.setState(result.getState());
-                  display.setInstances(String.valueOf(result.getInstances()));
-                  display.setVersion(result.getVersion());
-                  display.setDisk(String.valueOf(result.getResources().getDisk()));
-                  display.setMemory(String.valueOf(result.getResources().getMemory()) + "MB");
-                  display.setModel(String.valueOf(result.getStaging().getModel()));
-                  display.setStack(String.valueOf(result.getStaging().getStack()));
-                  display.getApplicationUrisGrid().setValue(result.getUris());
-                  display.getApplicationServicesGrid().setValue(result.getServices());
-                  display.getApplicationEnvironmentsGrid().setValue(result.getEnv());
-                  IDE.getInstance().openView(display.asView());
+                  showApplicationInfo(projectId);
                }
-            }
-         });
+            }, null)
+            {
+               @Override
+               protected void onSuccess(CloudfoundryApplication result)
+               {
+                  if (display == null)
+                  {
+                     display = GWT.create(Display.class);
+                     bindDisplay();
+                     display.setName(result.getName());
+                     display.setState(result.getState());
+                     display.setInstances(String.valueOf(result.getInstances()));
+                     display.setVersion(result.getVersion());
+                     display.setDisk(String.valueOf(result.getResources().getDisk()));
+                     display.setMemory(String.valueOf(result.getResources().getMemory()) + "MB");
+                     display.setModel(String.valueOf(result.getStaging().getModel()));
+                     display.setStack(String.valueOf(result.getStaging().getStack()));
+                     display.getApplicationUrisGrid().setValue(result.getUris());
+                     display.getApplicationServicesGrid().setValue(result.getServices());
+                     display.getApplicationEnvironmentsGrid().setValue(result.getEnv());
+                     IDE.getInstance().openView(display.asView());
+                  }
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

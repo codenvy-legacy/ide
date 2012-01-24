@@ -18,14 +18,16 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.start;
 
-import java.util.List;
+import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CloudfoundryApplicationUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
@@ -33,12 +35,14 @@ import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
+import java.util.List;
+
 /**
  * Presenter for start and stop application commands.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: StartApplicationPresenter.java Jul 12, 2011 3:58:22 PM vereshchaka $
- *
+ * 
  */
 public class StartApplicationPresenter extends GitPresenter implements StartApplicationHandler, StopApplicationHandler,
    RestartApplicationHandler
@@ -131,79 +135,121 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
    {
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
 
-      CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), project.getId(), null, null,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), checkIsStartedLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(CloudfoundryApplication result)
+      try
+      {
+         CloudFoundryClientService.getInstance().getApplicationInfo(
+            vfs.getId(),
+            project.getId(),
+            null,
+            null,
+            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
+               new CloudfoundryApplication()), checkIsStartedLoggedInHandler, null)
             {
-               if ("STARTED".equals(result.getState()))
+               @Override
+               protected void onSuccess(CloudfoundryApplication result)
                {
-                  String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationAlreadyStarted(result.getName());
-                  IDE.fireEvent(new OutputEvent(msg));
+                  if ("STARTED".equals(result.getState()))
+                  {
+                     String msg =
+                        CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationAlreadyStarted(result.getName());
+                     IDE.fireEvent(new OutputEvent(msg));
+                  }
+                  else
+                  {
+                     startApplication(null);
+                  }
                }
-               else
-               {
-                  startApplication(null);
-               }
-            }
-         });
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void checkIsStopped()
    {
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
 
-      CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), project.getId(), null, null,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), checkIsStoppedLoggedInHandler, null)
-         {
-
-            @Override
-            protected void onSuccess(CloudfoundryApplication result)
+      try
+      {
+         CloudFoundryClientService.getInstance().getApplicationInfo(
+            vfs.getId(),
+            project.getId(),
+            null,
+            null,
+            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
+               new CloudfoundryApplication()), checkIsStoppedLoggedInHandler, null)
             {
-               if ("STOPPED".equals(result.getState()))
+
+               @Override
+               protected void onSuccess(CloudfoundryApplication result)
                {
-                  String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationAlreadyStopped(result.getName());
-                  IDE.fireEvent(new OutputEvent(msg));
+                  if ("STOPPED".equals(result.getState()))
+                  {
+                     String msg =
+                        CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationAlreadyStopped(result.getName());
+                     IDE.fireEvent(new OutputEvent(msg));
+                  }
+                  else
+                  {
+                     stopApplication(null);
+                  }
                }
-               else
-               {
-                  stopApplication(null);
-               }
-            }
-         });
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void startApplication(String name)
    {
-      final String projectId = (((ItemContext)selectedItems.get(0)).getProject() != null) ?  ((ItemContext)selectedItems.get(0)).getProject().getId() : null;
-      
-      CloudFoundryClientService.getInstance().startApplication(vfs.getId(), projectId, name, null,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), startLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(CloudfoundryApplication result)
+      final String projectId =
+         (((ItemContext)selectedItems.get(0)).getProject() != null) ? ((ItemContext)selectedItems.get(0)).getProject()
+            .getId() : null;
+
+      try
+      {
+         CloudFoundryClientService.getInstance().startApplication(
+            vfs.getId(),
+            projectId,
+            name,
+            null,
+            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
+               new CloudfoundryApplication()), startLoggedInHandler, null)
             {
-               if (!"STARTED".equals(result.getState()))
+               @Override
+               protected void onSuccess(CloudfoundryApplication result)
                {
-                  String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationWasNotStarted(result.getName());
+                  if (!"STARTED".equals(result.getState()))
+                  {
+                     String msg =
+                        CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationWasNotStarted(result.getName());
+                     IDE.fireEvent(new OutputEvent(msg));
+                     return;
+                  }
+                  final String appUris = getAppUrisAsString(result);
+                  String msg = "";
+                  if (appUris.isEmpty())
+                  {
+                     msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStarted(result.getName());
+                  }
+                  else
+                  {
+                     msg =
+                        CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(result.getName(), appUris);
+                  }
                   IDE.fireEvent(new OutputEvent(msg));
-                  return;
+                  IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
                }
-               final String appUris = getAppUrisAsString(result);
-               String msg = "";
-               if (appUris.isEmpty())
-               {
-                  msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStarted(result.getName());
-               }
-               else
-               {
-                  msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(result.getName(), appUris);
-               }
-               IDE.fireEvent(new OutputEvent(msg));
-               IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
-            }
-         });
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private String getAppUrisAsString(CloudfoundryApplication application)
@@ -219,7 +265,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
       }
       if (!appUris.isEmpty())
       {
-         //crop unnecessary symbols
+         // crop unnecessary symbols
          appUris = appUris.substring(2);
       }
       return appUris;
@@ -230,27 +276,46 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
       final String projectId =
          (((ItemContext)selectedItems.get(0)).getProject() != null) ? ((ItemContext)selectedItems.get(0)).getProject()
             .getId() : null;
-      
-      CloudFoundryClientService.getInstance().stopApplication(vfs.getId(), projectId, name, null,
-         new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), stopLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(String result)
+
+      try
+      {
+         CloudFoundryClientService.getInstance().stopApplication(vfs.getId(), projectId, name, null,
+            new CloudFoundryAsyncRequestCallback<String>(null, stopLoggedInHandler, null)
             {
-               CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, name, null,
-                  new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), null, null)
+               @Override
+               protected void onSuccess(String result)
+               {
+                  try
                   {
-                     @Override
-                     protected void onSuccess(CloudfoundryApplication result)
-                     {
-                        final String msg =
-                           CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStopped(result.getName());
-                        IDE.fireEvent(new OutputEvent(msg));
-                        IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
-                     }
-                  });
-            }
-         });
+                     CloudFoundryClientService.getInstance().getApplicationInfo(
+                        vfs.getId(),
+                        projectId,
+                        name,
+                        null,
+                        new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(
+                           new CloudfoundryApplicationUnmarshaller(new CloudfoundryApplication()), null, null)
+                        {
+                           @Override
+                           protected void onSuccess(CloudfoundryApplication result)
+                           {
+                              final String msg =
+                                 CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStopped(result.getName());
+                              IDE.fireEvent(new OutputEvent(msg));
+                              IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
+                           }
+                        });
+                  }
+                  catch (RequestException e)
+                  {
+                     IDE.fireEvent(new ExceptionThrownEvent(e));
+                  }
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -275,28 +340,37 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void restartApplication(String name)
    {
-      final String projectId = (((ItemContext)selectedItems.get(0)).getProject() != null) ?  ((ItemContext)selectedItems.get(0)).getProject().getId() : null;
+      final String projectId =
+         (((ItemContext)selectedItems.get(0)).getProject() != null) ? ((ItemContext)selectedItems.get(0)).getProject()
+            .getId() : null;
 
-      CloudFoundryClientService.getInstance().restartApplication(vfs.getId(), projectId, name, null,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), restartLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(CloudfoundryApplication result)
+      try
+      {
+         CloudFoundryClientService.getInstance().restartApplication(vfs.getId(), projectId, name, null,
+            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(new CloudfoundryApplication()), restartLoggedInHandler, null)
             {
-               final String appUris = getAppUrisAsString(result);
-               String msg = "";
-               if (appUris.isEmpty())
+               @Override
+               protected void onSuccess(CloudfoundryApplication result)
                {
-                  msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationRestarted(result.getName());
+                  final String appUris = getAppUrisAsString(result);
+                  String msg = "";
+                  if (appUris.isEmpty())
+                  {
+                     msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationRestarted(result.getName());
+                  }
+                  else
+                  {
+                     msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationRestartedUris(result.getName(), appUris);
+                  }
+                  IDE.fireEvent(new OutputEvent(msg));
+                  IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
                }
-               else
-               {
-                  msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationRestartedUris(result.getName(), appUris);
-               }
-               IDE.fireEvent(new OutputEvent(msg));
-               IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
-            }
-         });
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
 }

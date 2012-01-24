@@ -18,34 +18,35 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.marshaller;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
-import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Response;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
+
 /**
  * Unmarshaller for system information response on JSON format.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Aug 18, 2011 10:45:14 AM anya $
- *
+ * @version $Id: Aug 18, 2011 10:45:14 AM anya $
+ * 
  */
-public class SystemInfoUnmarshaller implements Unmarshallable, Constants
+public class SystemInfoUnmarshaller implements Unmarshallable<SystemInfo>, Constants
 {
-   
+
    public interface MyFactory extends AutoBeanFactory
    {
       AutoBean<SystemInfo> systemInfo();
+
       AutoBean<SystemResources> systemResources();
    }
-   
+
    /**
     * System information.
     */
@@ -53,7 +54,6 @@ public class SystemInfoUnmarshaller implements Unmarshallable, Constants
 
    /**
     * @param systemInfo system information
-      
     */
    public SystemInfoUnmarshaller(SystemInfo systemInfo)
    {
@@ -69,20 +69,20 @@ public class SystemInfoUnmarshaller implements Unmarshallable, Constants
       try
       {
          MyFactory factory = GWT.create(MyFactory.class);
-         
-         AutoBean<SystemInfo> isi = AutoBeanCodex.decode(factory,SystemInfo.class, response.getText());
-         systemInfo = isi.as();   
-         
-//         JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
-//         if (jsonObject == null)
-//            return;
-//         systemInfo.setDescription(jsonObject.get(DESCRIPTION).isString().stringValue());
-//         systemInfo.setName(jsonObject.get(NAME).isString().stringValue());
-//         systemInfo.setSupport(jsonObject.get(SUPPORT).isString().stringValue());
-//         systemInfo.setUser(jsonObject.get(USER).isString().stringValue());
-//         systemInfo.setVersion(jsonObject.get(VERSION).isString().stringValue());
-//         systemInfo.setLimits(parseSystemResources(jsonObject.get(LIMITS).isObject()));
-//         systemInfo.setUsage(parseSystemResources(jsonObject.get(USAGE).isObject()));
+
+         AutoBean<SystemInfo> isi = AutoBeanCodex.decode(factory, SystemInfo.class, response.getText());
+         systemInfo = isi.as();
+
+         // JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
+         // if (jsonObject == null)
+         // return;
+         // systemInfo.setDescription(jsonObject.get(DESCRIPTION).isString().stringValue());
+         // systemInfo.setName(jsonObject.get(NAME).isString().stringValue());
+         // systemInfo.setSupport(jsonObject.get(SUPPORT).isString().stringValue());
+         // systemInfo.setUser(jsonObject.get(USER).isString().stringValue());
+         // systemInfo.setVersion(jsonObject.get(VERSION).isString().stringValue());
+         // systemInfo.setLimits(parseSystemResources(jsonObject.get(LIMITS).isObject()));
+         // systemInfo.setUsage(parseSystemResources(jsonObject.get(USAGE).isObject()));
       }
       catch (Exception e)
       {
@@ -91,18 +91,11 @@ public class SystemInfoUnmarshaller implements Unmarshallable, Constants
    }
 
    /**
-    * Parse JSON object to {@link SystemResources} bean.
-    * 
-    * @param jsonObject 
-    * @return {@link SystemResources} system resources
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
     */
-//   protected ISystemResources parseSystemResources(JSONObject jsonObject)
-//   {
-//      ISystemResources systemResources = new SystemResources();
-//      systemResources.setApps((int)jsonObject.get(APPS).isNumber().doubleValue());
-//      systemResources.setMemory((int)jsonObject.get(MEMORY).isNumber().doubleValue());
-//      systemResources.setServices((int)jsonObject.get(SERVICES).isNumber().doubleValue());
-//      return systemResources;
-//   }
-
+   @Override
+   public SystemInfo getPayload()
+   {
+      return systemInfo;
+   }
 }

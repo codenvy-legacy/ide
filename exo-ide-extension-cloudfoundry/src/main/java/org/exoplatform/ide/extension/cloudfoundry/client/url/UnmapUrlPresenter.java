@@ -18,8 +18,16 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.url;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -34,17 +42,12 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientServi
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CloudfoundryApplicationUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.List;
 
 /**
  * Presenter for unmaping (unregistering) URLs from application.
@@ -168,25 +171,32 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
 
-      CloudFoundryClientService.getInstance().mapUrl(vfs.getId(), projectId, null, null, url,
-         new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), mapUrlLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         CloudFoundryClientService.getInstance().mapUrl(vfs.getId(), projectId, null, null, url,
+            new CloudFoundryAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null)
             {
-               String registeredUrl = url;
-               if (!url.startsWith("http"))
+               @Override
+               protected void onSuccess(String result)
                {
-                  registeredUrl = "http://" + url;
+                  String registeredUrl = url;
+                  if (!url.startsWith("http"))
+                  {
+                     registeredUrl = "http://" + url;
+                  }
+                  registeredUrl = "<a href=\"" + registeredUrl + "\" target=\"_blank\">" + registeredUrl + "</a>";
+                  String msg = localeBundle.mapUrlRegisteredSuccess(registeredUrl);
+                  IDE.fireEvent(new OutputEvent(msg));
+                  registeredUrls.add(url);
+                  display.getRegisteredUrlsGrid().setValue(registeredUrls);
+                  display.getMapUrlField().setValue("");
                }
-               registeredUrl = "<a href=\"" + registeredUrl + "\" target=\"_blank\">" + registeredUrl + "</a>";
-               String msg = localeBundle.mapUrlRegisteredSuccess(registeredUrl);
-               IDE.fireEvent(new OutputEvent(msg));
-               registeredUrls.add(url);
-               display.getRegisteredUrlsGrid().setValue(registeredUrls);
-               display.getMapUrlField().setValue("");
-            }
-         });
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void askForUnmapUrl(final String url)
@@ -218,23 +228,30 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
    private void unregisterUrl(String url)
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      CloudFoundryClientService.getInstance().unmapUrl(vfs.getId(), projectId, null, null, url,
-         new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), unregisterUrlLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         CloudFoundryClientService.getInstance().unmapUrl(vfs.getId(), projectId, null, null, url,
+            new CloudFoundryAsyncRequestCallback<String>(null, unregisterUrlLoggedInHandler, null)
             {
-               registeredUrls.remove(result);
-               display.getRegisteredUrlsGrid().setValue(registeredUrls);
-               String unmappedUrl = result;
-               if (!unmappedUrl.startsWith("http"))
+               @Override
+               protected void onSuccess(String result)
                {
-                  unmappedUrl = "http://" + unmappedUrl;
+                  registeredUrls.remove(result);
+                  display.getRegisteredUrlsGrid().setValue(registeredUrls);
+                  String unmappedUrl = result;
+                  if (!unmappedUrl.startsWith("http"))
+                  {
+                     unmappedUrl = "http://" + unmappedUrl;
+                  }
+                  String msg = localeBundle.unmapUrlSuccess(unmappedUrl);
+                  IDE.fireEvent(new OutputEvent(msg));
                }
-               String msg = localeBundle.unmapUrlSuccess(unmappedUrl);
-               IDE.fireEvent(new OutputEvent(msg));
-            }
-         });
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -271,15 +288,22 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
 
-      CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), null, null)
-         {
-            @Override
-            protected void onSuccess(CloudfoundryApplication result)
+      try
+      {
+         CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
+            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(new CloudfoundryApplication()), null, null)
             {
-               openView(result.getUris());
-            }
-         });
+               @Override
+               protected void onSuccess(CloudfoundryApplication result)
+               {
+                  openView(result.getUris());
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

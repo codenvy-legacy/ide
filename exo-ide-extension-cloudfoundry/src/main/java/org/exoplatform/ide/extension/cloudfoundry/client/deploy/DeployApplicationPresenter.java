@@ -26,7 +26,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -42,6 +42,8 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientServi
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CloudfoundryApplicationUnmarshaller;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
@@ -95,7 +97,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
    private String url;
 
    /**
-    * Public url to war file of application. 
+    * Public url to war file of application.
     */
    private String warUrl;
 
@@ -143,7 +145,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
          public void onValueChange(ValueChangeEvent<String> event)
          {
             server = display.getServerField().getValue();
-            //if url set automatically, than try to create url using server and name
+            // if url set automatically, than try to create url using server and name
             String target = display.getServerField().getValue();
             String sufix = target.substring(target.indexOf("."));
             String oldUrl = display.getUrlField().getValue();
@@ -173,7 +175,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
       }
    }
 
-   //----Implementation------------------------
+   // ----Implementation------------------------
 
    private void buildApplication()
    {
@@ -192,25 +194,42 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
          }
       };
 
-      CloudFoundryClientService.getInstance().create(server, name, null, url, 0, 0, true, vfs.getId(), project.getId(),
-         warUrl,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), createAppHandler, null, server)
-         {
-            @Override
-            protected void onSuccess(CloudfoundryApplication result)
+      try
+      {
+         CloudFoundryClientService.getInstance().create(
+            server,
+            name,
+            null,
+            url,
+            0,
+            0,
+            true,
+            vfs.getId(),
+            project.getId(),
+            warUrl,
+            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
+               new CloudfoundryApplication()), createAppHandler, null, server)
             {
-               String msg = lb.applicationCreatedSuccessfully(result.getName());
-               IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-               IDE.fireEvent(new RefreshBrowserEvent(project));
-            }
+               @Override
+               protected void onSuccess(CloudfoundryApplication result)
+               {
+                  String msg = lb.applicationCreatedSuccessfully(result.getName());
+                  IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
+               }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
-               super.onFailure(exception);
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+                  super.onFailure(exception);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -218,34 +237,48 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
     */
    private void getServers()
    {
-      CloudFoundryClientService.getInstance().getTargets(new AsyncRequestCallback<List<String>>()
+      try
       {
-         @Override
-         protected void onSuccess(List<String> result)
-         {
-            if (result.isEmpty())
+         CloudFoundryClientService.getInstance().getTargets(
+            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
             {
-               display.setServerValues(new String[]{CloudFoundryExtension.DEFAULT_SERVER});
-               display.getServerField().setValue(CloudFoundryExtension.DEFAULT_SERVER);
-            }
-            else
-            {
-               String[] servers = result.toArray(new String[result.size()]);
-               display.setServerValues(servers);
-               display.getServerField().setValue(servers[0]);
-            }
-            display.getNameField().setValue(projectName);
-            //don't forget to init values, that are stored, when 
-            //values in form fields are changed.
-            name = projectName;
-            server = display.getServerField().getValue();
-            String urlSufix = server.substring(server.indexOf("."));
-            display.getUrlField().setValue(name + urlSufix);
-            url = display.getUrlField().getValue();
+               @Override
+               protected void onSuccess(List<String> result)
+               {
+                  if (result.isEmpty())
+                  {
+                     display.setServerValues(new String[]{CloudFoundryExtension.DEFAULT_SERVER});
+                     display.getServerField().setValue(CloudFoundryExtension.DEFAULT_SERVER);
+                  }
+                  else
+                  {
+                     String[] servers = result.toArray(new String[result.size()]);
+                     display.setServerValues(servers);
+                     display.getServerField().setValue(servers[0]);
+                  }
+                  display.getNameField().setValue(projectName);
+                  // don't forget to init values, that are stored, when
+                  // values in form fields are changed.
+                  name = projectName;
+                  server = display.getServerField().getValue();
+                  String urlSufix = server.substring(server.indexOf("."));
+                  display.getUrlField().setValue(name + urlSufix);
+                  url = display.getUrlField().getValue();
 
-            paasCallback.onViewReceived(display.getView());
-         }
-      });
+                  paasCallback.onViewReceived(display.getView());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -279,15 +312,22 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
          }
       };
 
-      CloudFoundryClientService.getInstance().validateAction("create", server, name, null, url, vfs.getId(), null, 0,
-         0, true, new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), validateHandler, null, server)
-         {
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         CloudFoundryClientService.getInstance().validateAction("create", server, name, null, url, vfs.getId(), null,
+            0, 0, true, new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, server)
             {
-               paasCallback.onValidate(true);
-            }
-         });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  paasCallback.onValidate(true);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

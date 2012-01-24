@@ -18,16 +18,12 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.marshaller;
 
+import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
-
-import com.google.gwt.json.client.JSONValue;
-
 import com.google.gwt.json.client.JSONParser;
 
-import com.google.gwt.http.client.Response;
-
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 
 import java.util.List;
@@ -37,7 +33,7 @@ import java.util.List;
  * @version $Id:  Aug 18, 2011 evgen $
  *
  */
-public class ApplicationListUnmarshaller implements Unmarshallable
+public class ApplicationListUnmarshaller implements Unmarshallable<List<CloudfoundryApplication>>
 {
 
    private List<CloudfoundryApplication> apps;
@@ -47,7 +43,6 @@ public class ApplicationListUnmarshaller implements Unmarshallable
     */
    public ApplicationListUnmarshaller(List<CloudfoundryApplication> apps)
    {
-      super();
       this.apps = apps;
    }
 
@@ -59,8 +54,12 @@ public class ApplicationListUnmarshaller implements Unmarshallable
    {
       try
       {
-         JSONValue value = JSONParser.parseLenient(response.getText());
-         JSONArray array = value.isArray();
+         JSONArray array = JSONParser.parseLenient(response.getText()).isArray();
+         if (array == null)
+         {
+            return;
+         }
+         
          for(int i = 0; i<array.size(); i++)
          {
             CloudfoundryApplication app = new CloudfoundryApplication();
@@ -71,6 +70,15 @@ public class ApplicationListUnmarshaller implements Unmarshallable
       catch (Exception e) {
          throw new UnmarshallerException("Can't parse applications information.");
       }
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<CloudfoundryApplication> getPayload()
+   {
+      return apps;
    }
 
 }

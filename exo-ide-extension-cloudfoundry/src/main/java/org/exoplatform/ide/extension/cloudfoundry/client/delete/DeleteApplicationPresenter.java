@@ -18,12 +18,15 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.delete;
 
+import com.google.gwt.http.client.RequestException;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -35,6 +38,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncReques
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CloudfoundryApplicationUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -73,6 +77,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
 
       /**
        * Set the ask message to delete application.
+       * 
        * @param message
        */
       void setAskMessage(String message);
@@ -142,16 +147,28 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
    private void getApplicationInfo()
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), appInfoLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(CloudfoundryApplication result)
+      try
+      {
+         CloudFoundryClientService.getInstance().getApplicationInfo(
+            vfs.getId(),
+            projectId,
+            null,
+            null,
+            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
+               new CloudfoundryApplication()), appInfoLoggedInHandler, null)
             {
-               appName = result.getName();
-               showDeleteDialog(appName);
-            }
-         });
+               @Override
+               protected void onSuccess(CloudfoundryApplication result)
+               {
+                  appName = result.getName();
+                  showDeleteDialog(appName);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private LoggedInHandler deleteAppLoggedInHandler = new LoggedInHandler()
@@ -177,18 +194,25 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
          }
       }
 
-      CloudFoundryClientService.getInstance().deleteApplication(vfs.getId(), projectId, appName, null,
-         isDeleteServices, new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), deleteAppLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         CloudFoundryClientService.getInstance().deleteApplication(vfs.getId(), projectId, appName, null,
+            isDeleteServices, new CloudFoundryAsyncRequestCallback<String>(null, deleteAppLoggedInHandler, null)
             {
-               closeView();
-               IDE.fireEvent(new OutputEvent(
-                  CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationDeletedMsg(appName), Type.INFO));
-               IDE.fireEvent(new ApplicationDeletedEvent(appName));
-            }
-         });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  closeView();
+                  IDE.fireEvent(new OutputEvent(
+                     CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationDeletedMsg(appName), Type.INFO));
+                  IDE.fireEvent(new ApplicationDeletedEvent(appName));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void showDeleteDialog(String appName)

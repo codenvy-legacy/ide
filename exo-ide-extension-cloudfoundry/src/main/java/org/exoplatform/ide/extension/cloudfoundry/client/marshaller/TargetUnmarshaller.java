@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.marshaller;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 
 /**
  * Unmarshaller for the current target.
@@ -30,7 +29,7 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TargetUnmarshaller.java Sep 21, 2011 5:34:51 PM vereshchaka $
  */
-public class TargetUnmarshaller implements Unmarshallable
+public class TargetUnmarshaller implements Unmarshallable<StringBuilder>
 {
    private StringBuilder target;
 
@@ -40,16 +39,20 @@ public class TargetUnmarshaller implements Unmarshallable
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
     */
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
       target.append(response.getText());
    }
-   
-   public static native JavaScriptObject build(String json) /*-{
-                                                            return eval('(' + json + ')');      
-                                                            }-*/;
 
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public StringBuilder getPayload()
+   {
+      return target;
+   }
 }

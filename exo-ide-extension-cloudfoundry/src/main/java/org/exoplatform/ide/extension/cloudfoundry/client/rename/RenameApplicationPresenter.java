@@ -18,6 +18,17 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.rename;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -28,25 +39,17 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncReques
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CloudfoundryApplicationUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
 /**
  * Presenter for rename operation with application.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: RenameApplicationPresenter.java Jul 15, 2011 11:32:02 AM vereshchaka $
- *
+ * 
  */
 public class RenameApplicationPresenter extends GitPresenter implements RenameApplicationHandler, ViewClosedHandler
 {
@@ -162,16 +165,28 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
 
-      CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), appInfoLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(CloudfoundryApplication result)
+      try
+      {
+         CloudFoundryClientService.getInstance().getApplicationInfo(
+            vfs.getId(),
+            projectId,
+            null,
+            null,
+            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
+               new CloudfoundryApplication()), appInfoLoggedInHandler, null)
             {
-               applicationName = result.getName();
-               showRenameDialog();
-            }
-         });
+               @Override
+               protected void onSuccess(CloudfoundryApplication result)
+               {
+                  applicationName = result.getName();
+                  showRenameDialog();
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void showRenameDialog()
@@ -200,17 +215,24 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
    {
       final String newName = display.getRenameField().getValue();
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      CloudFoundryClientService.getInstance().renameApplication(vfs.getId(), projectId, applicationName, null, newName,
-         new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), renameAppLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         CloudFoundryClientService.getInstance().renameApplication(vfs.getId(), projectId, applicationName, null,
+            newName, new CloudFoundryAsyncRequestCallback<String>(null, renameAppLoggedInHandler, null)
             {
-               closeView();
-               IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.renameApplicationSuccess(
-                  applicationName, newName)));
-            }
-         });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  closeView();
+                  IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.renameApplicationSuccess(
+                     applicationName, newName)));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

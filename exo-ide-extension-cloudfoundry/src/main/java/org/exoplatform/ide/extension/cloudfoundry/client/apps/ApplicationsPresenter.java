@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.apps;
 
+import com.google.gwt.http.client.RequestException;
+
 import com.google.gwt.user.client.ui.HasValue;
 
 import com.google.gwt.core.client.GWT;
@@ -27,7 +29,8 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -40,6 +43,8 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientServi
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.ApplicationListUnmarshaller;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StopApplicationEvent;
@@ -50,8 +55,8 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 18, 2011 evgen $
- *
+ * @version $Id: Aug 18, 2011 evgen $
+ * 
  */
 public class ApplicationsPresenter implements ViewClosedHandler, ShowApplicationsHandler, OutputHandler
 {
@@ -60,19 +65,20 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
       String ID = "ideCloudFoundryApplicationsView";
 
       HasClickHandlers getCloseButton();
-      
+
       HasClickHandlers getShowButton();
 
       ListGridItem<CloudfoundryApplication> getAppsGrid();
 
       HasApplicationsActions getActions();
-      
+
       /**
        * Get server select field.
+       * 
        * @return
        */
       HasValue<String> getServerSelectField();
-      
+
       /**
        * Set the list of servers to ServerSelectField.
        * 
@@ -82,7 +88,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
    }
 
    private Display display;
-   
+
    private List<String> servers = new ArrayList<String>();
 
    /**
@@ -108,7 +114,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
-      
+
       display.getShowButton().addClickHandler(new ClickHandler()
       {
          @Override
@@ -189,80 +195,116 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
       if (display != null)
          onShowApplications(null);
    }
-   
+
    private void checkLogginedToServer()
    {
-      CloudFoundryClientService.getInstance().getTargets(new AsyncRequestCallback<List<String>>()
-         {
-            @Override
-            protected void onSuccess(List<String> result)
-            {
-               if (result.isEmpty())
-               {
-                  servers = new ArrayList<String>();
-                  servers.add(CloudFoundryExtension.DEFAULT_SERVER);
-               }
-               else
-               {
-                  servers = result;
-               }
-               //open view
-               if (display == null)
-               {
-                  display = GWT.create(Display.class);
-                  bindDisplay();
-                  IDE.getInstance().openView(display.asView());
-               }
-               //fill the list of applications
-               getApplicationList(servers.get(0));
-            }
-         });
-   }
-   
-   private void getApplicationList(final String server)
-   {
-      CloudFoundryClientService.getInstance().getApplicationList(server,
-         new CloudFoundryAsyncRequestCallback<List<CloudfoundryApplication>>(IDE.eventBus(), //
-            new LoggedInHandler()//
+      try
+      {
+         CloudFoundryClientService.getInstance().getTargets(
+            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
             {
                @Override
-               public void onLoggedIn()
+               protected void onSuccess(List<String> result)
                {
-                  getApplicationList(server);
+                  if (result.isEmpty())
+                  {
+                     servers = new ArrayList<String>();
+                     servers.add(CloudFoundryExtension.DEFAULT_SERVER);
+                  }
+                  else
+                  {
+                     servers = result;
+                  }
+                  // open view
+                  if (display == null)
+                  {
+                     display = GWT.create(Display.class);
+                     bindDisplay();
+                     IDE.getInstance().openView(display.asView());
+                  }
+                  // fill the list of applications
+                  getApplicationList(servers.get(0));
                }
-            }, null, server)
-         {
 
-            @Override
-            protected void onSuccess(List<CloudfoundryApplication> result)
-            {
-               display.getAppsGrid().setValue(result);
-               display.getServerSelectField().setValue(server);
-               
-               //update the list of servers, if was enter value, that doesn't present in list
-               if (!servers.contains(server))
+               @Override
+               protected void onFailure(Throwable exception)
                {
-                  getServers();
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
-               else
-               {
-                  display.setServerValues(servers.toArray(new String[servers.size()]));
-               }
-            }
-         });
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
-   
+
+   private void getApplicationList(final String server)
+   {
+      try
+      {
+         CloudFoundryClientService.getInstance().getApplicationList(
+            server,
+            new CloudFoundryAsyncRequestCallback<List<CloudfoundryApplication>>(new ApplicationListUnmarshaller(
+               new ArrayList<CloudfoundryApplication>()), new LoggedInHandler()//
+               {
+                  @Override
+                  public void onLoggedIn()
+                  {
+                     getApplicationList(server);
+                  }
+               }, null, server)
+            {
+
+               @Override
+               protected void onSuccess(List<CloudfoundryApplication> result)
+               {
+                  display.getAppsGrid().setValue(result);
+                  display.getServerSelectField().setValue(server);
+
+                  // update the list of servers, if was enter value, that doesn't present in list
+                  if (!servers.contains(server))
+                  {
+                     getServers();
+                  }
+                  else
+                  {
+                     display.setServerValues(servers.toArray(new String[servers.size()]));
+                  }
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
    private void getServers()
    {
-      CloudFoundryClientService.getInstance().getTargets(new AsyncRequestCallback<List<String>>()
+      try
       {
-         @Override
-         protected void onSuccess(List<String> result)
-         {
-            servers = result;
-            display.setServerValues(result.toArray(new String[result.size()]));
-         }
-      });
+         CloudFoundryClientService.getInstance().getTargets(
+            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
+            {
+               @Override
+               protected void onSuccess(List<String> result)
+               {
+                  servers = result;
+                  display.setServerValues(result.toArray(new String[result.size()]));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
-   
+
 }

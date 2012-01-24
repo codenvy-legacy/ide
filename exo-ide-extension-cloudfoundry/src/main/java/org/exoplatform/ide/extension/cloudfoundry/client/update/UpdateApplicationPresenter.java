@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -29,6 +30,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncReques
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CloudfoundryApplicationUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
@@ -86,25 +88,44 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
    private void updateApplication()
    {
       final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      CloudFoundryClientService.getInstance().updateApplication(vfs.getId(), projectId, null, null, warUrl,
-         new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), loggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         CloudFoundryClientService.getInstance().updateApplication(vfs.getId(), projectId, null, null, warUrl,
+            new CloudFoundryAsyncRequestCallback<String>(null, loggedInHandler, null)
             {
-               CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-                  new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), null, null)
+               @Override
+               protected void onSuccess(String result)
+               {
+                  try
                   {
+                     CloudFoundryClientService.getInstance().getApplicationInfo(
+                        vfs.getId(),
+                        projectId,
+                        null,
+                        null,
+                        new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(
+                           new CloudfoundryApplicationUnmarshaller(new CloudfoundryApplication()), null, null)
+                        {
 
-                     @Override
-                     protected void onSuccess(CloudfoundryApplication result)
-                     {
-                        IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
-                           .updateApplicationSuccess(result.getName()), Type.INFO));
-                     }
-                  });
-            }
-         });
+                           @Override
+                           protected void onSuccess(CloudfoundryApplication result)
+                           {
+                              IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
+                                 .updateApplicationSuccess(result.getName()), Type.INFO));
+                           }
+                        });
+                  }
+                  catch (RequestException e)
+                  {
+                     IDE.fireEvent(new ExceptionThrownEvent(e));
+                  }
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -134,15 +155,22 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
    {
       final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
 
-      CloudFoundryClientService.getInstance().validateAction("update", null, null, null, null, vfs.getId(), projectId,
-         0, 0, false, new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), validateHandler, null)
-         {
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         CloudFoundryClientService.getInstance().validateAction("update", null, null, null, null, vfs.getId(),
+            projectId, 0, 0, false, new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null)
             {
-               isBuildApplication();
-            }
-         });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  isBuildApplication();
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -158,7 +186,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
       {
          VirtualFileSystem.getInstance().getChildren(
             project,
-            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
+            new AsyncRequestCallback<List<Item>>(
                new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
 

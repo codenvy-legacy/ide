@@ -18,15 +18,14 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.marshaller;
 
-import com.google.gwt.json.client.JSONArray;
-
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplicationResources;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Staging;
@@ -34,23 +33,21 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.Staging;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Unmarshaller for response from server, when {@link CloudfoundryApplication} is returned.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudfoundryApplicationUnmarshaller Jun 22, 2011 5:06:40 PM vereshchaka $
- *
+ * 
  */
-public class CloudfoundryApplicationUnmarshaller implements Unmarshallable, Constants
+public class CloudfoundryApplicationUnmarshaller implements Unmarshallable<CloudfoundryApplication>, Constants
 {
    private CloudfoundryApplication cloudfoundryApplication;
-   
+
    public CloudfoundryApplicationUnmarshaller(CloudfoundryApplication application)
    {
       cloudfoundryApplication = application;
    }
-
 
    /**
     * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
@@ -58,16 +55,14 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable, Cons
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      JavaScriptObject json = build(response.getText());
-      if (json == null)
-         return;
-      JSONObject jsonObject = new JSONObject(json).isObject();
+      JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
+
       if (jsonObject == null)
          return;
 
       parseObject(jsonObject);
    }
-   
+
    private void parseArray(JSONArray jsonArray, List<String> list)
    {
       for (int i = 0; i < jsonArray.size(); i++)
@@ -76,7 +71,7 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable, Cons
          list.add(value.isString().stringValue());
       }
    }
-   
+
    void parseObject(JSONObject jsonObject)
    {
       for (String key : jsonObject.keySet())
@@ -88,7 +83,7 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable, Cons
             {
                cloudfoundryApplication.setName(jsonValue.isString().stringValue());
             }
-            
+
          }
          else if (key.equals(URIS))
          {
@@ -104,16 +99,16 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable, Cons
          else if (key.equals(INSTANCES))
          {
             if (jsonValue.isNumber() != null)
-             {
-                cloudfoundryApplication.setInstances((int)jsonValue.isNumber().doubleValue());
-             }
+            {
+               cloudfoundryApplication.setInstances((int)jsonValue.isNumber().doubleValue());
+            }
          }
          else if (key.equals(RUNNING_INSTANCES))
          {
             if (jsonValue.isNumber() != null)
-             {
-                cloudfoundryApplication.setRunningInstances((int)jsonValue.isNumber().doubleValue());
-             }
+            {
+               cloudfoundryApplication.setRunningInstances((int)jsonValue.isNumber().doubleValue());
+            }
          }
          else if (key.equals(STATE))
          {
@@ -174,7 +169,7 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable, Cons
          }
       }
    }
-   
+
    private void parseStaging(JSONObject jsonObject, Staging staging)
    {
       for (String key : jsonObject.keySet())
@@ -183,20 +178,20 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable, Cons
          if (key.equals(MODEL))
          {
             if (jsonValue.isString() != null)
-             {
+            {
                staging.setModel(jsonValue.isString().stringValue());
-             }
+            }
          }
          else if (key.equals(STACK))
          {
             if (jsonValue.isString() != null)
-             {
+            {
                staging.setStack(jsonValue.isString().stringValue());
-             }
+            }
          }
       }
    }
-   
+
    private void parseCloudfoundryApplicationResources(JSONObject jsonObject, CloudfoundryApplicationResources resources)
    {
       for (String key : jsonObject.keySet())
@@ -205,33 +200,27 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable, Cons
          if (key.equals(DISK))
          {
             if (jsonValue.isNumber() != null)
-             {
+            {
                resources.setDisk((int)jsonValue.isNumber().doubleValue());
-             }
+            }
          }
          else if (key.equals(MEMORY))
          {
             if (jsonValue.isNumber() != null)
-             {
+            {
                resources.setMemory((int)jsonValue.isNumber().doubleValue());
-             }
+            }
          }
       }
    }
 
    /**
-    * Build {@link JavaScriptObject} from string.
-    * 
-    * @param json string that contains object
-    * @return {@link JavaScriptObject}
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
     */
-   protected static native JavaScriptObject build(String json) /*-{
-      try {
-         var object = eval('(' + json + ')');
-         return object;
-      } catch (e) {
-         return null;
-      }
-   }-*/;
+   @Override
+   public CloudfoundryApplication getPayload()
+   {
+      return cloudfoundryApplication;
+   }
 
 }

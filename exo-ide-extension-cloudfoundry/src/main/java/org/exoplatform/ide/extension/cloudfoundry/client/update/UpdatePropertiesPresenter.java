@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.update;
 
+import com.google.gwt.http.client.RequestException;
+
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -29,6 +31,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncReques
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CloudfoundryApplicationUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
@@ -42,7 +45,7 @@ import com.google.gwt.http.client.URL;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: MapUnmapUrlPresenter.java Jul 18, 2011 9:22:02 AM vereshchaka $
- *
+ * 
  */
 public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMemoryHandler, UpdateInstancesHandler
 {
@@ -87,20 +90,27 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
    private void getOldMemoryValue()
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      CloudFoundryClientService.getInstance().getApplicationInfo(
-         vfs.getId(),
-         projectId,
-         null,
-         null,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(),
-            getOldMemoryValueLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(CloudfoundryApplication result)
+      try
+      {
+         CloudFoundryClientService.getInstance().getApplicationInfo(
+            vfs.getId(),
+            projectId,
+            null,
+            null,
+            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
+               new CloudfoundryApplication()), getOldMemoryValueLoggedInHandler, null)
             {
-               askForNewMemoryValue(result.getResources().getMemory());
-            }
-         });
+               @Override
+               protected void onSuccess(CloudfoundryApplication result)
+               {
+                  askForNewMemoryValue(result.getResources().getMemory());
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void askForNewMemoryValue(int oldMemoryValue)
@@ -149,17 +159,24 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
    {
       final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
 
-      CloudFoundryClientService.getInstance().updateMemory(vfs.getId(), projectId, null, null, memory,
-         new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), updateMemoryLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         CloudFoundryClientService.getInstance().updateMemory(vfs.getId(), projectId, null, null, memory,
+            new CloudFoundryAsyncRequestCallback<String>(null, updateMemoryLoggedInHandler, null)
             {
-               String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemorySuccess(String.valueOf(memory));
-               IDE.fireEvent(new OutputEvent(msg));
-               IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
-            }
-         });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemorySuccess(String.valueOf(memory));
+                  IDE.fireEvent(new OutputEvent(msg));
+                  IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -187,20 +204,27 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
 
-      CloudFoundryClientService.getInstance().getApplicationInfo(
-         vfs.getId(),
-         projectId,
-         null,
-         null,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(),
-            getOldInstancesValueLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(CloudfoundryApplication result)
+      try
+      {
+         CloudFoundryClientService.getInstance().getApplicationInfo(
+            vfs.getId(),
+            projectId,
+            null,
+            null,
+            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
+               new CloudfoundryApplication()), getOldInstancesValueLoggedInHandler, null)
             {
-               askForInstancesNumber(result.getInstances());
-            }
-         });
+               @Override
+               protected void onSuccess(CloudfoundryApplication result)
+               {
+                  askForInstancesNumber(result.getInstances());
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void askForInstancesNumber(int oldInstancesValue)
@@ -222,7 +246,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
                   instances = value;
                   try
                   {
-                     //check, is instances contains only numbers
+                     // check, is instances contains only numbers
                      Integer.parseInt(instances);
                      updateInstances(instances);
                   }
@@ -259,27 +283,46 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
 
       String encodedExp = URL.encodePathSegment(instancesExpression);
 
-      CloudFoundryClientService.getInstance().updateInstances(vfs.getId(), projectId, null, null, encodedExp,
-         new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), updateInstancesLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         CloudFoundryClientService.getInstance().updateInstances(vfs.getId(), projectId, null, null, encodedExp,
+            new CloudFoundryAsyncRequestCallback<String>(null, updateInstancesLoggedInHandler, null)
             {
-               CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-                  new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), null, null)
+               @Override
+               protected void onSuccess(String result)
+               {
+                  try
                   {
-                     @Override
-                     protected void onSuccess(CloudfoundryApplication result)
-                     {
-                        String msg =
-                           CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesSuccess(String.valueOf(result
-                              .getInstances()));
-                        IDE.fireEvent(new OutputEvent(msg));
-                        IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
-                     }
-                  });
-            }
-         });
+                     CloudFoundryClientService.getInstance().getApplicationInfo(
+                        vfs.getId(),
+                        projectId,
+                        null,
+                        null,
+                        new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(
+                           new CloudfoundryApplicationUnmarshaller(new CloudfoundryApplication()), null, null)
+                        {
+                           @Override
+                           protected void onSuccess(CloudfoundryApplication result)
+                           {
+                              String msg =
+                                 CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesSuccess(String
+                                    .valueOf(result.getInstances()));
+                              IDE.fireEvent(new OutputEvent(msg));
+                              IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
+                           }
+                        });
+                  }
+                  catch (RequestException e)
+                  {
+                     IDE.fireEvent(new ExceptionThrownEvent(e));
+                  }
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
 }

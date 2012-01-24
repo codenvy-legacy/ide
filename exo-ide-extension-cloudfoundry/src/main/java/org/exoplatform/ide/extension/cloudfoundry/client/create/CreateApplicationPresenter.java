@@ -18,11 +18,17 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.create;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -37,6 +43,9 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientServi
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CloudfoundryApplicationUnmarshaller;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.FrameworksUnmarshaller;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
@@ -51,14 +60,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Presenter for creating application on CloudFoundry.
@@ -85,6 +88,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
       /**
        * Get the checkbox, that indicates is user want to enter custom URL.
+       * 
        * @return
        */
       HasValue<Boolean> getUrlCheckItem();
@@ -137,12 +141,12 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       int memory;
 
       boolean nostart;
-      
-      
-      //TODO workdir 
+
+      // TODO workdir
       String workDir;
 
-      public AppData(String server, String name, String type, String url, int instances, int memory, boolean nostart, String workDir)
+      public AppData(String server, String name, String type, String url, int instances, int memory, boolean nostart,
+         String workDir)
       {
          this.server = server;
          this.name = name;
@@ -162,16 +166,15 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
    private List<Framework> frameworks;
 
    /**
-    * Public url to war file of application. 
+    * Public url to war file of application.
     */
    private String warUrl;
 
    /**
-    * Store application data in format,
-    * that convenient to send to server.
+    * Store application data in format, that convenient to send to server.
     */
    private AppData appData;
-   
+
    /**
     * 
     */
@@ -265,7 +268,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            //if url set automatically, than try to create url using server and name
+            // if url set automatically, than try to create url using server and name
             if (!display.getUrlCheckItem().getValue())
             {
                updateUrlField();
@@ -278,7 +281,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            //if url set automatically, than try to create url using server and name
+            // if url set automatically, than try to create url using server and name
             if (!display.getUrlCheckItem().getValue())
             {
                updateUrlField();
@@ -286,13 +289,13 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          }
       });
 
-      //set the state of fields
+      // set the state of fields
       display.enableTypeField(false);
       display.enableUrlField(false);
       display.enableMemoryField(false);
       display.focusInNameField();
 
-      //set default values to fields
+      // set default values to fields
       display.setTypeValues(new String[]{""});
       display.getInstancesField().setValue("1");
       display.getAutodetectTypeCheckItem().setValue(true);
@@ -363,7 +366,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       }
    }
 
-   //----Implementation------------------------
+   // ----Implementation------------------------
 
    private String getUrlByServerAndName(String serverUrl, String name)
    {
@@ -398,20 +401,27 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
 
-      CloudFoundryClientService.getInstance().validateAction("create", app.server, app.name, app.type, app.url,
-         vfs.getId(), project.getId(), app.instances, app.memory, app.nostart,
-         new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), validateHandler, null, app.server)
-         {
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         CloudFoundryClientService.getInstance().validateAction("create", app.server, app.name, app.type, app.url,
+            vfs.getId(), project.getId(), app.instances, app.memory, app.nostart,
+            new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, app.server)
             {
-               if (isMavenProject)
-                  buildApplication();
-               else
-                  createApplication(appData);
-               closeView();
-            }
-         });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  if (isMavenProject)
+                     buildApplication();
+                  else
+                     createApplication(appData);
+                  closeView();
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void getFrameworks()
@@ -425,15 +435,23 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          }
       };
 
-      CloudFoundryClientService.getInstance().getFrameworks(
-         new CloudFoundryAsyncRequestCallback<List<Framework>>(IDE.eventBus(), getFrameworksLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(List<Framework> result)
+      try
+      {
+         CloudFoundryClientService.getInstance().getFrameworks(
+            new CloudFoundryAsyncRequestCallback<List<Framework>>(
+               new FrameworksUnmarshaller(new ArrayList<Framework>()), getFrameworksLoggedInHandler, null)
             {
-               openView(result);
-            }
-         });
+               @Override
+               protected void onSuccess(List<Framework> result)
+               {
+                  openView(result);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void buildApplication()
@@ -454,36 +472,53 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       };
 
       final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-      CloudFoundryClientService.getInstance().create(app.server, app.name, app.type, app.url, app.instances,
-         app.memory, app.nostart, vfs.getId(), project.getId(), warUrl,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(), createAppHandler, null, app.server)
-         {
-            @Override
-            protected void onSuccess(CloudfoundryApplication result)
+      try
+      {
+         CloudFoundryClientService.getInstance().create(
+            app.server,
+            app.name,
+            app.type,
+            app.url,
+            app.instances,
+            app.memory,
+            app.nostart,
+            vfs.getId(),
+            project.getId(),
+            warUrl,
+            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
+               new CloudfoundryApplication()), createAppHandler, null, app.server)
             {
-               String msg = lb.applicationCreatedSuccessfully(result.getName());
-               if ("STARTED".equals(result.getState()))
+               @Override
+               protected void onSuccess(CloudfoundryApplication result)
                {
-                  if (result.getUris().isEmpty())
+                  String msg = lb.applicationCreatedSuccessfully(result.getName());
+                  if ("STARTED".equals(result.getState()))
                   {
-                     msg += "<br>" + lb.applicationStartedWithNoUrls();
+                     if (result.getUris().isEmpty())
+                     {
+                        msg += "<br>" + lb.applicationStartedWithNoUrls();
+                     }
+                     else
+                     {
+                        msg += "<br>" + lb.applicationStartedOnUrls(result.getName(), getAppUrlsAsString(result));
+                     }
                   }
-                  else
-                  {
-                     msg += "<br>" + lb.applicationStartedOnUrls(result.getName(), getAppUrlsAsString(result));
-                  }
+                  IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
                }
-               IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-               IDE.fireEvent(new RefreshBrowserEvent(project));
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
-               super.onFailure(exception);
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+                  super.onFailure(exception);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+      }
    }
 
    /**
@@ -505,6 +540,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
    /**
     * Find framework from list by name.
+    * 
     * @param frameworkName
     * @return
     */
@@ -555,16 +591,14 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       }
       if (!appUris.isEmpty())
       {
-         //crop unnecessary symbols
+         // crop unnecessary symbols
          appUris = appUris.substring(2);
       }
       return appUris;
    }
 
    /**
-    * Process values from application create form,
-    * and store data in bean in format,
-    * that is convenient to send to server
+    * Process values from application create form, and store data in bean in format, that is convenient to send to server
     * 
     * @return {@link AppData}
     */
@@ -573,9 +607,9 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       String server = display.getServerField().getValue();
       if (server == null || server.isEmpty())
       {
-         //is server is empty, set value to null
-         //it is need for client service
-         //if null, than service will not send this parameter
+         // is server is empty, set value to null
+         // it is need for client service
+         // if null, than service will not send this parameter
          server = null;
       }
       else if (server.endsWith("/"))
@@ -600,8 +634,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          }
          catch (NumberFormatException e)
          {
-            IDE
-               .fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorMemoryFormat()));
+            IDE.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorMemoryFormat()));
          }
       }
 
@@ -627,11 +660,10 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       }
       catch (NumberFormatException e)
       {
-         IDE
-            .fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorInstancesFormat()));
+         IDE.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorInstancesFormat()));
       }
       boolean nostart = !display.getIsStartAfterCreationCheckItem().getValue();
-      //TODO
+      // TODO
       return new AppData(server, name, type, url, instances, memory, nostart, selectedItems.get(0).getId());
    }
 
@@ -682,26 +714,40 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
     */
    private void getServers()
    {
-      CloudFoundryClientService.getInstance().getTargets(new AsyncRequestCallback<List<String>>()
+      try
       {
-         @Override
-         protected void onSuccess(List<String> result)
-         {
-            if (result.isEmpty())
+         CloudFoundryClientService.getInstance().getTargets(
+            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
             {
-               display.setServerValues(new String[]{CloudFoundryExtension.DEFAULT_SERVER});
-               display.getServerField().setValue(CloudFoundryExtension.DEFAULT_SERVER);
-            }
-            else
-            {
-               String[] servers = result.toArray(new String[result.size()]);
-               display.setServerValues(servers);
-               display.getServerField().setValue(servers[0]);
-            }
-            display.getNameField().setValue(((ItemContext)selectedItems.get(0)).getProject().getName());
-            updateUrlField();
-         }
-      });
+               @Override
+               protected void onSuccess(List<String> result)
+               {
+                  if (result.isEmpty())
+                  {
+                     display.setServerValues(new String[]{CloudFoundryExtension.DEFAULT_SERVER});
+                     display.getServerField().setValue(CloudFoundryExtension.DEFAULT_SERVER);
+                  }
+                  else
+                  {
+                     String[] servers = result.toArray(new String[result.size()]);
+                     display.setServerValues(servers);
+                     display.getServerField().setValue(servers[0]);
+                  }
+                  display.getNameField().setValue(((ItemContext)selectedItems.get(0)).getProject().getName());
+                  updateUrlField();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
 }

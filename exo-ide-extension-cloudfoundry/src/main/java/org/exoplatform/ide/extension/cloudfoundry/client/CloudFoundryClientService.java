@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
@@ -30,7 +32,7 @@ import java.util.List;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryClientService.java Jul 12, 2011 10:24:53 AM vereshchaka $
- *
+ * 
  */
 public abstract class CloudFoundryClientService
 {
@@ -52,18 +54,18 @@ public abstract class CloudFoundryClientService
     * 
     * @param callback - callback, that client has to implement to receive response
     */
-   public abstract void getFrameworks(AsyncRequestCallback<List<Framework>> callback);
+   public abstract void getFrameworks(AsyncRequestCallback<List<Framework>> callback) throws RequestException;
 
    /**
     * Create application on CloudFoundry.
-    * @param server location of Cloud Foundry instance where application must be created, e.g.
-    *           http://api.cloudfoundry.com
+    * 
+    * @param server location of Cloud Foundry instance where application must be created, e.g. http://api.cloudfoundry.com
     * @param name application name. This parameter is mandatory.
     * @param type the type of application (name of framework). Can be <code>null</code> (will try to detect automatically)
     * @param url the url (can be null - than will use default)
     * @param instances the number of instanses of application
-    * @param memory memory (in MB) allocated for application (optional). If less of equals zero then use default value
-    *           which is dependents to framework type
+    * @param memory memory (in MB) allocated for application (optional). If less of equals zero then use default value which is
+    *           dependents to framework type
     * @param nostart is start application after creationg
     * @param vfsId current virtual file system id
     * @param projectId id of the project with the source code or compiled and packed java web application
@@ -72,7 +74,7 @@ public abstract class CloudFoundryClientService
     */
    public abstract void create(String server, String name, String type, String url, int instances, int memory,
       boolean nostart, String vfsId, String projectId, String war,
-      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback);
+      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback) throws RequestException;
 
    /**
     * Log in CloudFoundry account.
@@ -82,15 +84,16 @@ public abstract class CloudFoundryClientService
     * @param password user's password
     * @param callback callback, that client has to implement to receive response
     */
-   public abstract void login(String server, String email, String password, AsyncRequestCallback<String> callback);
+   public abstract void login(String server, String email, String password, AsyncRequestCallback<String> callback)
+      throws RequestException;
 
    /**
     * Log out CloudFoundry account.
-    *
+    * 
     * @param server location of Cloud Foundry instance from which to log out
     * @param callback callback, that client has to implement to receive response
     */
-   public abstract void logout(String server, AsyncRequestCallback<String> callback);
+   public abstract void logout(String server, AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Get the application's information.
@@ -102,7 +105,7 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement
     */
    public abstract void getApplicationInfo(String vfsId, String projectId, String appId, String server,
-      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback);
+      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback) throws RequestException;
 
    /**
     * Delete application from CloudFoundry.
@@ -115,7 +118,7 @@ public abstract class CloudFoundryClientService
     * @param callback - callback, that client has to implement
     */
    public abstract void deleteApplication(String vfsId, String projectId, String appId, String server,
-      boolean deleteServices, CloudFoundryAsyncRequestCallback<String> callback);
+      boolean deleteServices, CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Start application.
@@ -127,7 +130,7 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to receive response from server.
     */
    public abstract void startApplication(String vfsId, String projectId, String name, String server,
-      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback);
+      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback) throws RequestException;
 
    /**
     * Stop application.
@@ -139,7 +142,7 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to receive response from server.
     */
    public abstract void stopApplication(String vfsId, String projectId, String name, String server,
-      CloudFoundryAsyncRequestCallback<String> callback);
+      CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Restart application.
@@ -151,7 +154,7 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to receive response from server.
     */
    public abstract void restartApplication(String vfsId, String projectId, String name, String server,
-      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback);
+      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback) throws RequestException;
 
    /**
     * Update existing application.
@@ -164,10 +167,10 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to handle response from server
     */
    public abstract void updateApplication(String vfsId, String projectId, String name, String server, String war,
-      CloudFoundryAsyncRequestCallback<String> callback);
+      CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
    public abstract void renameApplication(String vfsId, String projectId, String name, String server, String newName,
-      CloudFoundryAsyncRequestCallback<String> callback);
+      CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Map new URL of the application.
@@ -180,7 +183,7 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to handle response from server.
     */
    public abstract void mapUrl(String vfsId, String projectId, String name, String server, String url,
-      CloudFoundryAsyncRequestCallback<String> callback);
+      CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Unmap URL from the application.
@@ -193,7 +196,7 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to handle response from server
     */
    public abstract void unmapUrl(String vfsId, String projectId, String name, String server, String url,
-      CloudFoundryAsyncRequestCallback<String> callback);
+      CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Update the memory size.
@@ -206,7 +209,7 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to handle response from server
     */
    public abstract void updateMemory(String vfsId, String projectId, String name, String server, int mem,
-      CloudFoundryAsyncRequestCallback<String> callback);
+      CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Update the number of instances for the application.
@@ -214,31 +217,31 @@ public abstract class CloudFoundryClientService
     * @param vfsId current virtual file system id
     * @param projectId id of the project with the source code or compiled and packed java web application
     * @param name application's name
-    * @param server location of Cloud Foundry instance, where to update instances 
+    * @param server location of Cloud Foundry instance, where to update instances
     * @param expression expression for instances updating
     * @param callback callback, that client has to implement to handle response from server
     */
    public abstract void updateInstances(String vfsId, String projectId, String name, String server, String expression,
-      CloudFoundryAsyncRequestCallback<String> callback);
+      CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Validate action before building project.
     * 
     * @param action he name of action (create, update)
-    * @param server location of Cloud Foundry instance, where to validate action, e.g.
-    *           http://api.cloudfoundry.com 
-    * @param appName  the name of application (if create - than required, if update - <code>null</code>)
+    * @param server location of Cloud Foundry instance, where to validate action, e.g. http://api.cloudfoundry.com
+    * @param appName the name of application (if create - than required, if update - <code>null</code>)
     * @param framework he name of application framework (can be <code>null</code>)
     * @param url application's URL
     * @param vfsId current virtual file system id
     * @param projectId id of the project with the source code or compiled and packed java web application
     * @param instances number of instances
     * @param memory memory size
-    * @param nostart 
+    * @param nostart
     * @param callback callback, that client has to implement to handle response from server.
     */
    public abstract void validateAction(String action, String server, String appName, String framework, String url,
-      String vfsId, String projectId, int instances, int memory, boolean nostart, CloudFoundryAsyncRequestCallback<String> callback);
+      String vfsId, String projectId, int instances, int memory, boolean nostart,
+      CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Get list of deployed applications.
@@ -247,26 +250,26 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to handle response from server.
     */
    public abstract void getApplicationList(String server,
-      CloudFoundryAsyncRequestCallback<List<CloudfoundryApplication>> callback);
+      CloudFoundryAsyncRequestCallback<List<CloudfoundryApplication>> callback) throws RequestException;
 
    /**
     * Get Cloud Foundry system information.
-    *
+    * 
     * @param server location of Cloud Foundry instance
     * @param callback callback, that client has to implement to handle response from server
     */
-   public abstract void getSystemInfo(String server, AsyncRequestCallback<SystemInfo> callback);
+   public abstract void getSystemInfo(String server, AsyncRequestCallback<SystemInfo> callback) throws RequestException;
 
    /**
     * Get the list of available targets for user.
     * 
     * @param callback callback, that client has to implement to handle response from server
     */
-   public abstract void getTargets(AsyncRequestCallback<List<String>> callback);
+   public abstract void getTargets(AsyncRequestCallback<List<String>> callback) throws RequestException;
 
    /**
     * @param callback callback, that client has to implement to handle response from server
     */
-   public abstract void getTarget(AsyncRequestCallback<StringBuilder> callback);
+   public abstract void getTarget(AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
 }
