@@ -92,7 +92,9 @@ public class HotkeysInFCKEditorTest extends BaseTest
    public void testSpecifiedHotkeysForFCKEditor() throws Exception
    {
 
-      //goto ide, open project, folder in project and test-file
+      //step one open test file, switch to ck_editor,
+      //delete content (hotkey ctrl+a, press del), checking
+      // press short key ctrl+z and check restore
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER);
@@ -100,34 +102,14 @@ public class HotkeysInFCKEditorTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FOLDER + "/" + FILE_NAME);
       IDE.EDITOR.waitTabPresent(1);
-      
       IDE.EDITOR.clickDesignButton();
-     // IDE.EDITOR.deleteFileContent(0);
+      IDE.EDITOR.deleteFileContentInCKEditor(0);
       IDE.EDITOR.getTextFromCKEditor(0);
-      
-      
-      Thread.sleep(1000);
-     // assertEquals ("", IDE.EDITOR.getTextFromCKEditor(0));
-      
-      
+      assertEquals("", IDE.EDITOR.getTextFromCKEditor(0));
+      IDE.EDITOR.typeTextIntoCkEditor(0, Keys.CONTROL.toString()+"z");
+      IDE.EDITOR.typeTextIntoCkEditor(0, Keys.CONTROL.toString()+"b");
+      Thread.sleep(3000);
       //----- old section ------------
-      // Select editors option in "Open File With" form Don't work see issue 732
-      //open Google Gadget file with CK editor
-      //and check Ctrl+B, Ctrl+I, Ctrl+U
-      // IDE.WORKSPACE.waitForRootItem();
-      //  IDE.WORKSPACE.doubleClickOnFolder(WS_URL +  private static final String PROJECT = HotkeysInCodeMirrorTest.class.getSimpleName(); + "/");
-      //  IDE.WORKSPACE.doubleClickOnFile(URL +  private static final String PROJECT = HotkeysInCodeMirrorTest.class.getSimpleName(); + "/" + GOOGLE_GADGET_FILE);
-      //     
-       //     IDE.EDITOR.clickDesignButton();
-      //
-      //      IDE.EDITOR.selectIFrameWithEditor(0);
-      //      selenium().click("//body");
-      //      Thread.sleep(TestConstants.SLEEP);
-      //      //press Ctrl+A to select all text
-      //      selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      //      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_A);
-      //      selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      //      Thread.sleep(TestConstants.SLEEP_SHORT);
       //      //Press Ctrl+B
       //      selenium().controlKeyDown();
       //      selenium().keyDown("//", "B");
