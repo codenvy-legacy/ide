@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.extension.samples.client.paas.cloudbees;
 
-import com.google.gwt.event.shared.HandlerManager;
-
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.ServerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoggedInHandler;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoginCanceledHandler;
@@ -39,27 +40,21 @@ import org.exoplatform.ide.extension.samples.client.paas.login.LoginEvent;
  */
 public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallback<T>
 {
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventbus;
-
    private LoggedInHandler loggedIn;
 
    private LoginCanceledHandler loginCanceled;
 
-   public CloudBeesAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedIn)
+   public CloudBeesAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn)
    {
-      this(eventBus, loggedIn, null);
+      this(unmarshaller, loggedIn, null);
    }
 
-   public CloudBeesAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedIn,
+   public CloudBeesAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
       LoginCanceledHandler loginCanceled)
    {
-      this.eventbus = eventBus;
+      super(unmarshaller);
       this.loggedIn = loggedIn;
       this.loginCanceled = loginCanceled;
-      setEventBus(eventBus);
    }
 
    /**
@@ -78,11 +73,11 @@ public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallb
          if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() && serverException.getMessage() != null
             && exceptionMsg.contains("AuthFailure"))
          {
-            eventbus.fireEvent(new LoginEvent(SamplesClientService.Paas.CLOUDBEES, loggedIn, loginCanceled));
+            IDE.fireEvent(new LoginEvent(SamplesClientService.Paas.CLOUDBEES, loggedIn, loginCanceled));
             return;
          }
       }
-      super.onFailure(exception);
+      IDE.fireEvent(new ExceptionThrownEvent(exception));
    }
 
 }

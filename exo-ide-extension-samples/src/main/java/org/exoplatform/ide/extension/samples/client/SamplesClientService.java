@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.extension.samples.client;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.client.paas.cloudbees.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudfoundryApplication;
@@ -58,7 +60,7 @@ public abstract class SamplesClientService
     * 
     * @param callback the callback client has to implement
     */
-   public abstract void getRepositoriesList(AsyncRequestCallback<List<Repository>> callback);
+   public abstract void getRepositoriesList(AsyncRequestCallback<List<Repository>> callback) throws RequestException;
 
    /**
     * Get the list of available public repositories from GitHub user.
@@ -66,7 +68,8 @@ public abstract class SamplesClientService
     * @param userName Name of GitHub User
     * @param callback the callback client has to implement
     */
-   public abstract void getRepositoriesList(String userName, AsyncRequestCallback<List<Repository>> callback);
+   public abstract void getRepositoriesList(String userName, AsyncRequestCallback<List<Repository>> callback)
+      throws RequestException;
 
    /************ CloudBees operations ************/
 
@@ -79,16 +82,17 @@ public abstract class SamplesClientService
     * @param callback
     */
    public abstract void createCloudBeesApplication(String appId, String vfsId, String projectId, String warFile,
-      String message, CloudBeesAsyncRequestCallback<Map<String, String>> callback);
+      String message, CloudBeesAsyncRequestCallback<Map<String, String>> callback) throws RequestException;
 
    /**
     * Get the domains.
     * 
     * @param callback - callback that client has to implement
     */
-   public abstract void getDomains(CloudBeesAsyncRequestCallback<List<String>> callback);
+   public abstract void getDomains(CloudBeesAsyncRequestCallback<List<String>> callback) throws RequestException;
 
-   public abstract void loginToCloudBees(String email, String password, AsyncRequestCallback<String> callback);
+   public abstract void loginToCloudBees(String email, String password, AsyncRequestCallback<String> callback)
+      throws RequestException;
 
    /**
     * Login to paas.
@@ -98,7 +102,8 @@ public abstract class SamplesClientService
     * @param password password
     * @param callback callback that client has to implement
     */
-   public abstract void login(Paas paas, String email, String password, AsyncRequestCallback<String> callback);
+   public abstract void login(Paas paas, String email, String password, AsyncRequestCallback<String> callback)
+      throws RequestException;
 
    /**
     * Validates <code>create</code> CloudFoundry action before building project.
@@ -109,7 +114,7 @@ public abstract class SamplesClientService
     * @param callback callback, that client has to implement to handle response from server.
     */
    public abstract void validateCloudfoundryAction(String server, String appName, String workDir,
-      CloudFoundryAsyncRequestCallback<String> callback);
+      CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Create application on CloudFoundry.
@@ -122,26 +127,27 @@ public abstract class SamplesClientService
     * @param callback - callback, that client has to implement to receive response
     */
    public abstract void createCloudFoundryApplication(String vfsId, String server, String name, String url,
-      String workDir, String projectId, String war, CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback);
+      String workDir, String projectId, String war, CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback)
+      throws RequestException;
 
    /**
     * Get the list of CloudFoundry targets.
     * 
     * @param callback
     */
-   public abstract void getCloudFoundryTargets(AsyncRequestCallback<List<String>> callback);
+   public abstract void getCloudFoundryTargets(AsyncRequestCallback<List<String>> callback) throws RequestException;
 
    /**
     * Get the types of application on OpenShift.
     * 
     * @param callback
     */
-   public abstract void getOpenShiftTypes(AsyncRequestCallback<List<String>> callback);
+   public abstract void getOpenShiftTypes(AsyncRequestCallback<List<String>> callback) throws RequestException;
 
    public abstract void createOpenShitfApplication(String name, String vfsId, String projectId, String type,
-      AsyncRequestCallback<String> callback);
+      AsyncRequestCallback<String> callback) throws RequestException;
 
    public abstract void createHerokuApplication(String applicationName, String vfsId, String projectid,
-      String remoteName, HerokuAsyncRequestCallback<String> callback);
+      String remoteName, HerokuAsyncRequestCallback<String> callback) throws RequestException;
 
 }

@@ -28,15 +28,11 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
@@ -53,13 +49,8 @@ import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
 import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
+import org.exoplatform.ide.extension.samples.client.marshal.RepositoriesUnmarshaller;
 import org.exoplatform.ide.extension.samples.shared.Repository;
-import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.GitExtension;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
@@ -196,20 +187,33 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
     */
    private void getUsersRepos()
    {
-      SamplesClientService.getInstance().getRepositoriesList(display.getGitHubName().getValue(),
-         new AsyncRequestCallback<List<Repository>>()
-         {
-            @Override
-            protected void onSuccess(List<Repository> result)
+      try
+      {
+         SamplesClientService.getInstance().getRepositoriesList(display.getGitHubName().getValue(),
+            new AsyncRequestCallback<List<Repository>>(new RepositoriesUnmarshaller(new ArrayList<Repository>()))
             {
-               List<ProjectData> projectDataList = new ArrayList<ProjectData>();
-               for (Repository repo : result)
+               @Override
+               protected void onSuccess(List<Repository> result)
                {
-                  projectDataList.add(new ProjectData(repo.getName(), repo.getDescription(), null, repo.getUrl()));
+                  List<ProjectData> projectDataList = new ArrayList<ProjectData>();
+                  for (Repository repo : result)
+                  {
+                     projectDataList.add(new ProjectData(repo.getName(), repo.getDescription(), null, repo.getUrl()));
+                  }
+                  display.getSamplesListGrid().setValue(projectDataList);
                }
-               display.getSamplesListGrid().setValue(projectDataList);
-            }
-         });
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    // /**

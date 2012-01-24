@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.extension.samples.client.paas.login;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -225,60 +228,70 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
       final String email = display.getEmailField().getValue();
       final String password = display.getPasswordField().getValue();
 
-      SamplesClientService.getInstance().login(paas, email, password, new AsyncRequestCallback<String>()
+      try
       {
-         @Override
-         protected void onSuccess(String result)
+         SamplesClientService.getInstance().login(paas, email, password, new AsyncRequestCallback<String>()
          {
-            if (paas == SamplesClientService.Paas.CLOUDBEES)
+            @Override
+            protected void onSuccess(String result)
             {
-               IDE.fireEvent(new OutputEvent(lb.loginSuccess("CloudBees"), Type.INFO));
+               if (paas == SamplesClientService.Paas.CLOUDBEES)
+               {
+                  IDE.fireEvent(new OutputEvent(lb.loginSuccess("CloudBees"), Type.INFO));
+               }
+               else if (paas == SamplesClientService.Paas.CLOUDFOUNDRY)
+               {
+                  IDE.fireEvent(new OutputEvent(lb.loginSuccess("CloudFoundry"), Type.INFO));
+               }
+               else if (paas == SamplesClientService.Paas.HEROKU)
+               {
+                  IDE.fireEvent(new OutputEvent(lb.loginSuccess("Heroku"), Type.INFO));
+               }
+               else if (paas == SamplesClientService.Paas.OPENSHIFT)
+               {
+                  IDE.fireEvent(new OutputEvent(lb.loginSuccess("OpenShift"), Type.INFO));
+               }
+               else
+               {
+                  IDE.fireEvent(new OutputEvent(lb.loginSuccess(String.valueOf(paas)), Type.INFO));
+               }
+               if (loggedIn != null)
+               {
+                  loggedIn.onLoggedIn();
+               }
+               IDE.getInstance().closeView(display.asView().getId());
             }
-            else if (paas == SamplesClientService.Paas.CLOUDFOUNDRY)
-            {
-               IDE.fireEvent(new OutputEvent(lb.loginSuccess("CloudFoundry"), Type.INFO));
-            }
-            else if (paas == SamplesClientService.Paas.HEROKU)
-            {
-               IDE.fireEvent(new OutputEvent(lb.loginSuccess("Heroku"), Type.INFO));
-            }
-            else if (paas == SamplesClientService.Paas.OPENSHIFT)
-            {
-               IDE.fireEvent(new OutputEvent(lb.loginSuccess("OpenShift"), Type.INFO));
-            }
-            else
-            {
-               IDE.fireEvent(new OutputEvent(lb.loginSuccess(String.valueOf(paas)), Type.INFO));
-            }
-            if (loggedIn != null)
-            {
-               loggedIn.onLoggedIn();
-            }
-            IDE.getInstance().closeView(display.asView().getId());
-         }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            if (paas == SamplesClientService.Paas.CLOUDBEES)
+            @Override
+            protected void onFailure(Throwable exception)
             {
-               IDE.fireEvent(new OutputEvent(lb.loginFail("CloudBees"), Type.INFO));
+               if (paas == SamplesClientService.Paas.CLOUDBEES)
+               {
+                  IDE.fireEvent(new OutputEvent(lb.loginFail("CloudBees"), Type.INFO));
+               }
+               else if (paas == SamplesClientService.Paas.CLOUDFOUNDRY)
+               {
+                  IDE.fireEvent(new OutputEvent(lb.loginFail("CloudFoundry"), Type.INFO));
+               }
+               else if (paas == SamplesClientService.Paas.HEROKU)
+               {
+                  IDE.fireEvent(new OutputEvent(lb.loginFail("Heroku"), Type.INFO));
+               }
+               else if (paas == SamplesClientService.Paas.OPENSHIFT)
+               {
+                  IDE.fireEvent(new OutputEvent(lb.loginFail("OpenShift"), Type.INFO));
+               }
+               else
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
             }
-            else if (paas == SamplesClientService.Paas.CLOUDFOUNDRY)
-            {
-               IDE.fireEvent(new OutputEvent(lb.loginFail("CloudFoundry"), Type.INFO));
-            }
-            else if (paas == SamplesClientService.Paas.HEROKU)
-            {
-               IDE.fireEvent(new OutputEvent(lb.loginFail("Heroku"), Type.INFO));
-            }
-            else if (paas == SamplesClientService.Paas.OPENSHIFT)
-            {
-               IDE.fireEvent(new OutputEvent(lb.loginFail("OpenShift"), Type.INFO));
-            }
-            super.onFailure(exception);
-         }
-      });
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

@@ -18,15 +18,17 @@
  */
 package org.exoplatform.ide.extension.samples.client.paas.cloudfoundry;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoggedInHandler;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoginEvent;
@@ -40,18 +42,12 @@ import org.exoplatform.ide.extension.samples.client.paas.login.LoginEvent;
  */
 public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCallback<T>
 {
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventbus;
-
    private LoggedInHandler loggedIn;
 
-   public CloudFoundryAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedIn)
+   public CloudFoundryAsyncRequestCallback(Unmarshallable<T> unmarshallable, LoggedInHandler loggedIn)
    {
-      this.eventbus = eventBus;
+      super(unmarshallable);
       this.loggedIn = loggedIn;
-      setEventBus(eventBus);
    }
 
    /**
@@ -66,7 +62,7 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
          if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
             && serverException.getMessage().contains("Authentication required."))
          {
-            eventbus.fireEvent(new LoginEvent(SamplesClientService.Paas.CLOUDFOUNDRY, loggedIn));
+            IDE.fireEvent(new LoginEvent(SamplesClientService.Paas.CLOUDFOUNDRY, loggedIn));
             return;
          }
          else
@@ -89,15 +85,12 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
             return;
          }
       }
-      super.onFailure(exception);
+      IDE.fireEvent(new ExceptionThrownEvent(exception));
    }
 
    private static String fromJson(String jsonMsg)
    {
-      JavaScriptObject json = build(jsonMsg);
-      if (json == null)
-         return jsonMsg;
-      JSONObject jsonObject = new JSONObject(json).isObject();
+      JSONObject jsonObject = JSONParser.parseStrict(jsonMsg).isObject();
       if (jsonObject == null)
          return jsonMsg;
 
@@ -118,20 +111,4 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
 
       return result;
    }
-
-   /**
-    * Build {@link JavaScriptObject} from string.
-    * 
-    * @param json string that contains object
-    * @return {@link JavaScriptObject}
-    */
-   protected static native JavaScriptObject build(String json) /*-{
-                                                               try {
-                                                               var object = eval('(' + json + ')');
-                                                               return object;
-                                                               } catch (e) {
-                                                               return null;
-                                                               }
-                                                               }-*/;
-
 }

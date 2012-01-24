@@ -18,29 +18,23 @@
  */
 package org.exoplatform.ide.extension.samples.client;
 
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.extension.samples.client.marshal.RepositoriesUnmarshaller;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.paas.cloudbees.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudfoundryApplication;
 import org.exoplatform.ide.extension.samples.client.paas.heroku.HerokuAsyncRequestCallback;
-import org.exoplatform.ide.extension.samples.client.paas.marshal.CloudfoundryApplicationUnmarshaller;
 import org.exoplatform.ide.extension.samples.client.paas.marshal.CredentailsMarshaller;
-import org.exoplatform.ide.extension.samples.client.paas.marshal.DeployWarUnmarshaller;
-import org.exoplatform.ide.extension.samples.client.paas.marshal.DomainsUnmarshaller;
-import org.exoplatform.ide.extension.samples.client.paas.marshal.OpenShiftTypesUnmarshaller;
-import org.exoplatform.ide.extension.samples.client.paas.marshal.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,11 +86,6 @@ public class SamplesClientServiceImpl extends SamplesClientService
    private static final String HEROKU_LOGIN = "/ide/heroku/login";
 
    /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
     * REST service context.
     */
    private String restServiceContext;
@@ -108,50 +97,45 @@ public class SamplesClientServiceImpl extends SamplesClientService
 
    public static final String SUPPORT = "support";
 
-   public SamplesClientServiceImpl(HandlerManager eventBus, String restContext, Loader loader)
+   public SamplesClientServiceImpl(String restContext, Loader loader)
    {
       this.loader = loader;
-      this.eventBus = eventBus;
       this.restServiceContext = restContext;
    }
 
    /**
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#getRepositoriesList(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getRepositoriesList(AsyncRequestCallback<List<Repository>> callback)
+   public void getRepositoriesList(AsyncRequestCallback<List<Repository>> callback) throws RequestException
    {
       String url = restServiceContext + LIST;
-      callback.setEventBus(eventBus);
-      List<Repository> repos = new ArrayList<Repository>();
-      callback.setPayload(new RepositoriesUnmarshaller(repos));
-      callback.setResult(repos);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
 
    /**
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#getRepositoriesList(java.lang.String,
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void getRepositoriesList(String userName, AsyncRequestCallback<List<Repository>> callback)
+      throws RequestException
    {
       String url = restServiceContext + LIST_USER + "?username=" + userName;
-      callback.setEventBus(eventBus);
-      List<Repository> repos = new ArrayList<Repository>();
-      callback.setPayload(new RepositoriesUnmarshaller(repos));
-      callback.setResult(repos);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
 
    /**
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createCloudBeesApplication(java.lang.String,
     *      java.lang.String, java.lang.String, java.lang.String,
     *      org.exoplatform.ide.extension.samples.client.paas.cloudbees.CloudBeesAsyncRequestCallback)
     */
    @Override
    public void createCloudBeesApplication(String appId, String vfsId, String projectId, String warFile, String message,
-      CloudBeesAsyncRequestCallback<Map<String, String>> callback)
+      CloudBeesAsyncRequestCallback<Map<String, String>> callback) throws RequestException
    {
       final String url = restServiceContext + CLOUDBEES_CREATE;
 
@@ -161,42 +145,31 @@ public class SamplesClientServiceImpl extends SamplesClientService
       if (message != null && !message.isEmpty())
          params += "&message=" + message;
 
-      Map<String, String> responseMap = new HashMap<String, String>();
-      callback.setResult(responseMap);
-      callback.setEventBus(eventBus);
-
-      DeployWarUnmarshaller unmarshaller = new DeployWarUnmarshaller(responseMap);
-      callback.setPayload(unmarshaller);
-
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#getDomains(org.exoplatform.ide.extension.samples.client.paas.cloudbees.CloudBeesAsyncRequestCallback)
     */
    @Override
-   public void getDomains(CloudBeesAsyncRequestCallback<List<String>> callback)
+   public void getDomains(CloudBeesAsyncRequestCallback<List<String>> callback) throws RequestException
    {
       final String url = restServiceContext + CLOUDBEES_DOMAINS;
 
-      List<String> domains = new ArrayList<String>();
-      callback.setResult(domains);
-      callback.setEventBus(eventBus);
-
-      DomainsUnmarshaller unmarshaller = new DomainsUnmarshaller(domains);
-      callback.setPayload(unmarshaller);
-
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#loginToCloudBees(java.lang.String, java.lang.String,
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void loginToCloudBees(String email, String password, AsyncRequestCallback<String> callback)
+      throws RequestException
    {
       String url = restServiceContext + CLOUDBEES_LOGIN;
 
@@ -205,19 +178,19 @@ public class SamplesClientServiceImpl extends SamplesClientService
       credentials.put("password", password);
       CredentailsMarshaller marshaller = new CredentailsMarshaller(credentials);
 
-      callback.setEventBus(eventBus);
-
-      AsyncRequest.build(RequestBuilder.POST, url, loader).data(marshaller)
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(marshaller.marshal())
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#login(java.lang.String, java.lang.String,
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void login(Paas paas, String email, String password, AsyncRequestCallback<String> callback)
+      throws RequestException
    {
       String url = restServiceContext;
 
@@ -239,7 +212,7 @@ public class SamplesClientServiceImpl extends SamplesClientService
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Unknown PaaS: " + paas + ". Can't login."));
+         IDE.fireEvent(new ExceptionThrownEvent("Unknown PaaS: " + paas + ". Can't login."));
          return;
       }
 
@@ -256,21 +229,20 @@ public class SamplesClientServiceImpl extends SamplesClientService
       }
       CredentailsMarshaller marshaller = new CredentailsMarshaller(credentials);
 
-      callback.setEventBus(eventBus);
-
-      AsyncRequest.build(RequestBuilder.POST, url, loader).data(marshaller)
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(marshaller.marshal())
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#validateCloudfoundryAction(java.lang.String,
     *      java.lang.String, boolean,
     *      org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback)
     */
    @Override
    public void validateCloudfoundryAction(String server, String appName, String workDir,
-      CloudFoundryAsyncRequestCallback<String> callback)
+      CloudFoundryAsyncRequestCallback<String> callback) throws RequestException
    {
       final String postUrl = restServiceContext + VALIDATE_ACTION;
 
@@ -279,12 +251,11 @@ public class SamplesClientServiceImpl extends SamplesClientService
       params += (appName == null) ? "" : "&name=" + appName;
       params += (workDir == null) ? "" : "&workdir=" + workDir;
 
-      callback.setEventBus(eventBus);
-
-      AsyncRequest.build(RequestBuilder.POST, postUrl + "?" + params, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, postUrl + "?" + params).loader(loader).send(callback);
    }
 
    /**
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createCloudFoundryApplication(String,
     *      java.lang.String, boolean, java.lang.String, java.lang.String,
     *      org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback)
@@ -292,17 +263,9 @@ public class SamplesClientServiceImpl extends SamplesClientService
    @Override
    public void createCloudFoundryApplication(String vfsId, String server, String name, String url, String workDir,
       String projectId, String war, CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback)
+      throws RequestException
    {
       final String requestUrl = restServiceContext + CLOUDFOUNDRY_CREATE;
-
-      callback.setEventBus(eventBus);
-
-      CloudfoundryApplication cloudfoundryApplication = new CloudfoundryApplication();
-
-      CloudfoundryApplicationUnmarshaller unmarshaller =
-         new CloudfoundryApplicationUnmarshaller(cloudfoundryApplication);
-      callback.setPayload(unmarshaller);
-      callback.setResult(cloudfoundryApplication);
 
       String params = "name=" + name;
       params += "&workdir=" + workDir;
@@ -313,68 +276,60 @@ public class SamplesClientServiceImpl extends SamplesClientService
       params += (projectId != null) ? "&projectid=" + projectId : "";
       params += "&nostart=true";
 
-      AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params, loader)
+      AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params).loader(loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#getCloudFoundryTargets(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getCloudFoundryTargets(AsyncRequestCallback<List<String>> callback)
+   public void getCloudFoundryTargets(AsyncRequestCallback<List<String>> callback) throws RequestException
    {
       String url = restServiceContext + CF_TARGETS;
-      callback.setEventBus(eventBus);
-      List<String> targes = new ArrayList<String>();
-      callback.setResult(targes);
-      TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(targes);
-      callback.setPayload(unmarshaller);
 
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);
    }
 
    /**
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#getOpenShiftTypes(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getOpenShiftTypes(AsyncRequestCallback<List<String>> callback)
+   public void getOpenShiftTypes(AsyncRequestCallback<List<String>> callback) throws RequestException
    {
       String url = restServiceContext + OPENSHIFT_TYPES;
 
-      List<String> types = new ArrayList<String>();
-      OpenShiftTypesUnmarshaller unmarshaller = new OpenShiftTypesUnmarshaller(types);
-      callback.setResult(types);
-      callback.setPayload(unmarshaller);
-      callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);
    }
 
    /**
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createOpenShitfApplication(java.lang.String,
     *      java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void createOpenShitfApplication(String name, String vfsId, String projectId, String type,
-      AsyncRequestCallback<String> callback)
+      AsyncRequestCallback<String> callback) throws RequestException
    {
       String url = restServiceContext + OPENSHIFT_CREATE;
 
-      callback.setResult(name);
-      callback.setEventBus(eventBus);
       String params = "?name=" + name + "&type=" + type + "&vfsid=" + vfsId + "&projectid=" + projectId;
-      AsyncRequest.build(RequestBuilder.POST, url + params, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader).send(callback);
    }
 
    /**
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createHerokuApplication(java.lang.String,
     *      java.lang.String, java.lang.String, java.lang.String,
     *      org.exoplatform.ide.extension.samples.client.paas.heroku.HerokuAsyncRequestCallback)
     */
    @Override
    public void createHerokuApplication(String applicationName, String vfsId, String projectid, String remoteName,
-      HerokuAsyncRequestCallback<String> callback)
+      HerokuAsyncRequestCallback<String> callback) throws RequestException
    {
       String url = restServiceContext + HEROKU_CREATE;
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
@@ -382,9 +337,7 @@ public class SamplesClientServiceImpl extends SamplesClientService
       params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
       params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
 
-      callback.setResult(applicationName);
-
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }

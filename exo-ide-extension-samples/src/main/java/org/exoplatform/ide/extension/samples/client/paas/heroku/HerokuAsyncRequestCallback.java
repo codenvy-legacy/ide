@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.extension.samples.client.paas.heroku;
 
-import com.google.gwt.event.shared.HandlerManager;
-
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoggedInHandler;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoginEvent;
@@ -33,18 +34,12 @@ import org.exoplatform.ide.extension.samples.client.paas.login.LoginEvent;
  */
 public abstract class HerokuAsyncRequestCallback<T> extends AsyncRequestCallback<T>
 {
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventbus;
-
    private LoggedInHandler loggedIn;
 
-   public HerokuAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedIn)
+   public HerokuAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn)
    {
-      this.eventbus = eventBus;
+      super(unmarshaller);
       this.loggedIn = loggedIn;
-      setEventBus(eventBus);
    }
 
    /**
@@ -59,11 +54,11 @@ public abstract class HerokuAsyncRequestCallback<T> extends AsyncRequestCallback
          if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
             && serverException.getMessage().contains("Authentication required"))
          {
-            eventbus.fireEvent(new LoginEvent(SamplesClientService.Paas.HEROKU, loggedIn));
+            IDE.fireEvent(new LoginEvent(SamplesClientService.Paas.HEROKU, loggedIn));
             return;
          }
       }
-      super.onFailure(exception);
+      IDE.fireEvent(new ExceptionThrownEvent(exception));
    }
 
 }

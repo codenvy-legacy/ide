@@ -28,7 +28,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -56,6 +56,10 @@ import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.Cloudfound
 import org.exoplatform.ide.extension.samples.client.paas.heroku.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoggedInHandler;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoginCanceledHandler;
+import org.exoplatform.ide.extension.samples.client.paas.marshal.CloudfoundryApplicationUnmarshaller;
+import org.exoplatform.ide.extension.samples.client.paas.marshal.DeployWarUnmarshaller;
+import org.exoplatform.ide.extension.samples.client.paas.marshal.DomainsUnmarshaller;
+import org.exoplatform.ide.extension.samples.client.paas.marshal.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.samples.client.paas.openshift.OpenShiftAsyncRequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -69,6 +73,7 @@ import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -455,31 +460,45 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
     */
    private void getCloudFoundryTargets()
    {
-      SamplesClientService.getInstance().getCloudFoundryTargets(new AsyncRequestCallback<List<String>>()
+      try
       {
-         @Override
-         protected void onSuccess(List<String> result)
-         {
-            if (result.isEmpty())
+         SamplesClientService.getInstance().getCloudFoundryTargets(
+            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
             {
-               display.setCloudFoundryAvailableTargets(new String[]{DEFAULT_CLOUDFOUNDRY_TARGET});
-               if (display.getCloudFoundryTargetField().getValue().isEmpty())
+               @Override
+               protected void onSuccess(List<String> result)
                {
-                  display.getCloudFoundryTargetField().setValue(DEFAULT_CLOUDFOUNDRY_TARGET);
+                  if (result.isEmpty())
+                  {
+                     display.setCloudFoundryAvailableTargets(new String[]{DEFAULT_CLOUDFOUNDRY_TARGET});
+                     if (display.getCloudFoundryTargetField().getValue().isEmpty())
+                     {
+                        display.getCloudFoundryTargetField().setValue(DEFAULT_CLOUDFOUNDRY_TARGET);
+                     }
+                  }
+                  else
+                  {
+                     String[] servers = result.toArray(new String[result.size()]);
+                     display.setCloudFoundryAvailableTargets(servers);
+                     if (display.getCloudFoundryTargetField().getValue().isEmpty())
+                     {
+                        display.getCloudFoundryTargetField().setValue(servers[0]);
+                     }
+                  }
+                  fillCloudFoundryFields();
                }
-            }
-            else
-            {
-               String[] servers = result.toArray(new String[result.size()]);
-               display.setCloudFoundryAvailableTargets(servers);
-               if (display.getCloudFoundryTargetField().getValue().isEmpty())
+
+               @Override
+               protected void onFailure(Throwable exception)
                {
-                  display.getCloudFoundryTargetField().setValue(servers[0]);
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
-            }
-            fillCloudFoundryFields();
-         }
-      });
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -516,24 +535,31 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
     */
    private void getCloudBeesDomains()
    {
-      SamplesClientService.getInstance().getDomains(
-         new CloudBeesAsyncRequestCallback<List<String>>(IDE.eventBus(), domainsLoggedInHandler,
-            domainsLoginCanceledHandler)
-         {
-            @Override
-            protected void onSuccess(List<String> result)
+      try
+      {
+         SamplesClientService.getInstance().getDomains(
+            new CloudBeesAsyncRequestCallback<List<String>>(new DomainsUnmarshaller(new ArrayList<String>()),
+               domainsLoggedInHandler, domainsLoginCanceledHandler)
             {
-               display.setVisibleCloudFoundryPanel(false);
-               display.setVisibleHerokuPanel(false);
-               display.setVisibleOpenShiftPanel(false);
-               display.setVisibleCloudBeesPanel(true);
+               @Override
+               protected void onSuccess(List<String> result)
+               {
+                  display.setVisibleCloudFoundryPanel(false);
+                  display.setVisibleHerokuPanel(false);
+                  display.setVisibleOpenShiftPanel(false);
+                  display.setVisibleCloudBeesPanel(true);
 
-               String[] domains = new String[result.size()];
-               result.toArray(domains);
-               display.setCloudBeesDomainsValueMap(domains);
-               fillCloudBeesFields();
-            }
-         });
+                  String[] domains = new String[result.size()];
+                  result.toArray(domains);
+                  display.setCloudBeesDomainsValueMap(domains);
+                  fillCloudBeesFields();
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private LoginCanceledHandler domainsLoginCanceledHandler = new LoginCanceledHandler()
@@ -772,16 +798,23 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
     */
    private void validateCloudFoundryParams()
    {
-      SamplesClientService.getInstance().validateCloudfoundryAction(display.getCloudFoundryTargetField().getValue(),
-         display.getCloudFoundryNameField().getValue(), null,
-         new CloudFoundryAsyncRequestCallback<String>(IDE.eventBus(), validationLoggedInHandler)
-         {
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         SamplesClientService.getInstance().validateCloudfoundryAction(display.getCloudFoundryTargetField().getValue(),
+            display.getCloudFoundryNameField().getValue(), null,
+            new CloudFoundryAsyncRequestCallback<String>(null, validationLoggedInHandler)
             {
-               createEmptyProject();
-            }
-         });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  createEmptyProject();
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private LoggedInHandler validationLoggedInHandler = new LoggedInHandler()
@@ -818,37 +851,49 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    {
       final String applicationId = cloudBeesDomain + "/" + cloudBeesName;
 
-      SamplesClientService.getInstance().createCloudBeesApplication(applicationId, vfs.getId(), project.getId(),
-         warUrl, null,
-         new CloudBeesAsyncRequestCallback<Map<String, String>>(IDE.eventBus(), deployToCloudBeesLoggedInHandler)
-         {
-            @Override
-            protected void onSuccess(final Map<String, String> deployResult)
+      try
+      {
+         SamplesClientService.getInstance().createCloudBeesApplication(
+            applicationId,
+            vfs.getId(),
+            project.getId(),
+            warUrl,
+            null,
+            new CloudBeesAsyncRequestCallback<Map<String, String>>(new DeployWarUnmarshaller(
+               new HashMap<String, String>()), deployToCloudBeesLoggedInHandler)
             {
-               String output = lb.cloudBessDeploySuccess() + "<br>";
-               output += lb.cloudBeesDeployApplicationInfo() + "<br>";
-
-               Iterator<Entry<String, String>> it = deployResult.entrySet().iterator();
-               while (it.hasNext())
+               @Override
+               protected void onSuccess(final Map<String, String> deployResult)
                {
-                  Entry<String, String> entry = (Entry<String, String>)it.next();
-                  output += entry.getKey() + " : " + entry.getValue() + "<br>";
+                  String output = lb.cloudBessDeploySuccess() + "<br>";
+                  output += lb.cloudBeesDeployApplicationInfo() + "<br>";
+
+                  Iterator<Entry<String, String>> it = deployResult.entrySet().iterator();
+                  while (it.hasNext())
+                  {
+                     Entry<String, String> entry = (Entry<String, String>)it.next();
+                     output += entry.getKey() + " : " + entry.getValue() + "<br>";
+                  }
+                  IDE.fireEvent(new OutputEvent(output, Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
                }
-               IDE.fireEvent(new OutputEvent(output, Type.INFO));
-               IDE.fireEvent(new RefreshBrowserEvent(project));
-            }
 
-            /**
-             * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback#onFailure(java.lang.Throwable)
-             */
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new OutputEvent(lb.cloudBeesDeployFailure(), Type.INFO));
-               super.onFailure(exception);
-            }
+               /**
+                * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback#onFailure(java.lang.Throwable)
+                */
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new OutputEvent(lb.cloudBeesDeployFailure(), Type.INFO));
+                  super.onFailure(exception);
+               }
 
-         });
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private LoggedInHandler deployToCloudFoundryLoggedInHandler = new LoggedInHandler()
@@ -862,44 +907,52 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
    private void deployToCloudFoundry()
    {
-      SamplesClientService.getInstance().createCloudFoundryApplication(
-         vfs.getId(),
-         cloudFoundryTarget,
-         cloudFoundryName,
-         cloudFoundryUrl,
-         project.getPath(),
-         project.getId(),
-         warUrl,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(IDE.eventBus(),
-            deployToCloudFoundryLoggedInHandler)
-         {
-            @Override
-            protected void onSuccess(CloudfoundryApplication result)
+      try
+      {
+         SamplesClientService.getInstance().createCloudFoundryApplication(
+            vfs.getId(),
+            cloudFoundryTarget,
+            cloudFoundryName,
+            cloudFoundryUrl,
+            project.getPath(),
+            project.getId(),
+            warUrl,
+            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
+               new CloudfoundryApplication()), deployToCloudFoundryLoggedInHandler)
             {
-               String msg = lb.cloudFoundryDeploySuccess(result.getName());
-               if ("STARTED".equals(result.getState()))
+               @Override
+               protected void onSuccess(CloudfoundryApplication result)
                {
-                  if (result.getUris().isEmpty())
+                  String msg = lb.cloudFoundryDeploySuccess(result.getName());
+                  if ("STARTED".equals(result.getState()))
                   {
-                     msg += "<br>" + lb.cloudFoundryApplicationStartedWithNoUrls();
+                     if (result.getUris().isEmpty())
+                     {
+                        msg += "<br>" + lb.cloudFoundryApplicationStartedWithNoUrls();
+                     }
+                     else
+                     {
+                        msg +=
+                           "<br>"
+                              + lb.cloudFoundryApplicationStartedOnUrls(result.getName(), getAppUrlsAsString(result));
+                     }
                   }
-                  else
-                  {
-                     msg +=
-                        "<br>" + lb.cloudFoundryApplicationStartedOnUrls(result.getName(), getAppUrlsAsString(result));
-                  }
+                  IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
                }
-               IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-               IDE.fireEvent(new RefreshBrowserEvent(project));
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new OutputEvent(lb.cloudFoundryDeployFailure(), Type.INFO));
-               super.onFailure(exception);
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new OutputEvent(lb.cloudFoundryDeployFailure(), Type.INFO));
+                  super.onFailure(exception);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -980,16 +1033,23 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
    private void deployToHeroku()
    {
-      SamplesClientService.getInstance().createHerokuApplication(herokuAppName, vfs.getId(), project.getId(),
-         herokuRemoveService, new HerokuAsyncRequestCallback<String>(IDE.eventBus(), herokuLoggedInHandler)
-         {
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         SamplesClientService.getInstance().createHerokuApplication(herokuAppName, vfs.getId(), project.getId(),
+            herokuRemoveService, new HerokuAsyncRequestCallback<String>(null, herokuLoggedInHandler)
             {
-               IDE.fireEvent(new OutputEvent("Application deployed to Heroku successfully", OutputMessage.Type.INFO));
-               IDE.fireEvent(new RefreshBrowserEvent(project));
-            }
-         });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  IDE.fireEvent(new OutputEvent("Application deployed to Heroku successfully", OutputMessage.Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private LoggedInHandler openShiftLoggedInHandler = new LoggedInHandler()
@@ -1003,46 +1063,61 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
    private void deployToOpenShift()
    {
-      SamplesClientService.getInstance().createOpenShitfApplication(openShiftName, vfs.getId(), project.getId(),
-         openShitfType, new OpenShiftAsyncRequestCallback<String>(IDE.eventBus(), openShiftLoggedInHandler)
-         {
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         SamplesClientService.getInstance().createOpenShitfApplication(openShiftName, vfs.getId(), project.getId(),
+            openShitfType, new OpenShiftAsyncRequestCallback<String>(null, openShiftLoggedInHandler)
             {
-               IDE.fireEvent(new OutputEvent("Application deployed to OpenShift successfully", OutputMessage.Type.INFO));
-               IDE.fireEvent(new RefreshBrowserEvent(project));
-            }
-         });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  IDE.fireEvent(new OutputEvent("Application deployed to OpenShift successfully",
+                     OutputMessage.Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void getOpenShiftTypes()
    {
-      SamplesClientService.getInstance().getOpenShiftTypes(new AsyncRequestCallback<List<String>>()
+      try
       {
-         @Override
-         protected void onSuccess(List<String> result)
+         SamplesClientService.getInstance().getOpenShiftTypes(new AsyncRequestCallback<List<String>>()
          {
-            display.setOpenShitfTypesValueMap(result.toArray(new String[result.size()]));
-            display.setVisibleCloudBeesPanel(false);
-            display.setVisibleCloudFoundryPanel(false);
-            display.setVisibleHerokuPanel(false);
-            display.setVisibleOpenShiftPanel(true);
-            display.enableFinishButton(false);
-         }
+            @Override
+            protected void onSuccess(List<String> result)
+            {
+               display.setOpenShitfTypesValueMap(result.toArray(new String[result.size()]));
+               display.setVisibleCloudBeesPanel(false);
+               display.setVisibleCloudFoundryPanel(false);
+               display.setVisibleHerokuPanel(false);
+               display.setVisibleOpenShiftPanel(true);
+               display.enableFinishButton(false);
+            }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            super.onFailure(exception);
-            display.getSelectPaasField().setValue(ProjectProperties.Paas.NONE);
-            display.setVisibleCloudBeesPanel(false);
-            display.setVisibleCloudFoundryPanel(false);
-            display.setVisibleHerokuPanel(false);
-            display.setVisibleOpenShiftPanel(false);
-            display.enableFinishButton(true);
-         }
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               display.getSelectPaasField().setValue(ProjectProperties.Paas.NONE);
+               display.setVisibleCloudBeesPanel(false);
+               display.setVisibleCloudFoundryPanel(false);
+               display.setVisibleHerokuPanel(false);
+               display.setVisibleOpenShiftPanel(false);
+               display.enableFinishButton(true);
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
 
-      });
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
 }

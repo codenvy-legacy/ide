@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.samples.client.github.load;
 
+import com.google.gwt.http.client.RequestException;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -27,7 +29,7 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -42,6 +44,7 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
 import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
+import org.exoplatform.ide.extension.samples.client.marshal.RepositoriesUnmarshaller;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -166,22 +169,36 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    @Override
    public void onShowSamples(ShowSamplesEvent event)
    {
-      SamplesClientService.getInstance().getRepositoriesList(new AsyncRequestCallback<List<Repository>>()
+      try
       {
-         @Override
-         protected void onSuccess(List<Repository> result)
-         {
-            openView();
-            List<ProjectData> projectDataList = new ArrayList<ProjectData>();
-            for (Repository repo : result)
+         SamplesClientService.getInstance().getRepositoriesList(
+            new AsyncRequestCallback<List<Repository>>(new RepositoriesUnmarshaller(new ArrayList<Repository>()))
             {
-               String[] arr = parseDescription(repo.getDescription());
-               projectDataList.add(new ProjectData(repo.getName(), arr[1], arr[0], repo.getUrl()));
-            }
-            display.getSamplesListGrid().setValue(projectDataList);
-            display.enableNextButton(false);
-         }
-      });
+               @Override
+               protected void onSuccess(List<Repository> result)
+               {
+                  openView();
+                  List<ProjectData> projectDataList = new ArrayList<ProjectData>();
+                  for (Repository repo : result)
+                  {
+                     String[] arr = parseDescription(repo.getDescription());
+                     projectDataList.add(new ProjectData(repo.getName(), arr[1], arr[0], repo.getUrl()));
+                  }
+                  display.getSamplesListGrid().setValue(projectDataList);
+                  display.enableNextButton(false);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void openView()
@@ -259,22 +276,35 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    @Override
    public void onReturn()
    {
-      SamplesClientService.getInstance().getRepositoriesList(new AsyncRequestCallback<List<Repository>>()
+      try
       {
-         @Override
-         protected void onSuccess(List<Repository> result)
+         SamplesClientService.getInstance().getRepositoriesList(new AsyncRequestCallback<List<Repository>>(new RepositoriesUnmarshaller(new ArrayList<Repository>()))
          {
-            openView();
-            List<ProjectData> projectDataList = new ArrayList<ProjectData>();
-            for (Repository repo : result)
+            @Override
+            protected void onSuccess(List<Repository> result)
             {
-               String[] arr = parseDescription(repo.getDescription());
-               projectDataList.add(new ProjectData(repo.getName(), arr[1], arr[0], repo.getUrl()));
+               openView();
+               List<ProjectData> projectDataList = new ArrayList<ProjectData>();
+               for (Repository repo : result)
+               {
+                  String[] arr = parseDescription(repo.getDescription());
+                  projectDataList.add(new ProjectData(repo.getName(), arr[1], arr[0], repo.getUrl()));
+               }
+               display.getSamplesListGrid().setValue(projectDataList);
+               display.enableNextButton(false);
             }
-            display.getSamplesListGrid().setValue(projectDataList);
-            display.enableNextButton(false);
-         }
-      });
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

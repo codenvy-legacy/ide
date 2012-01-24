@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.extension.samples.client.paas.openshift;
 
-import com.google.gwt.event.shared.HandlerManager;
-
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoggedInHandler;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoginEvent;
@@ -35,18 +36,18 @@ import org.exoplatform.ide.extension.samples.client.paas.login.LoginEvent;
  */
 public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallback<T>
 {
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventbus;
 
    private LoggedInHandler loggedIn;
 
-   public OpenShiftAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedIn)
+   public OpenShiftAsyncRequestCallback(Unmarshallable<T> unmarshallable, LoggedInHandler loggedIn)
    {
-      this.eventbus = eventBus;
+      super(unmarshallable);
       this.loggedIn = loggedIn;
-      setEventBus(eventBus);
+   }
+
+   public OpenShiftAsyncRequestCallback(LoggedInHandler loggedIn)
+   {
+      this.loggedIn = loggedIn;
    }
 
    /**
@@ -61,11 +62,12 @@ public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallb
          if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
             && serverException.getMessage().contains("Authentication required"))
          {
-            eventbus.fireEvent(new LoginEvent(SamplesClientService.Paas.OPENSHIFT, loggedIn));
+            IDE.fireEvent(new LoginEvent(SamplesClientService.Paas.OPENSHIFT, loggedIn));
             return;
          }
       }
-      super.onFailure(exception);
+
+      IDE.fireEvent(new ExceptionThrownEvent(exception));
    }
 
 }

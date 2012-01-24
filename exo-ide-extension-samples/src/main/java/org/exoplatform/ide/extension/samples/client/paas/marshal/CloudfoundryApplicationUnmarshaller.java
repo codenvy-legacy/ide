@@ -18,14 +18,14 @@
  */
 package org.exoplatform.ide.extension.samples.client.paas.marshal;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudfoundryApplication;
 
 import java.util.ArrayList;
@@ -38,9 +38,9 @@ import java.util.List;
  * @version $Id: CloudfoundryApplicationUnmarshaller Jun 22, 2011 5:06:40 PM vereshchaka $
  * 
  */
-public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
+public class CloudfoundryApplicationUnmarshaller implements Unmarshallable<CloudfoundryApplication>
 {
-   interface Constants
+   private final class Constants
    {
       /* String */
       public static final String NAME = "name";
@@ -71,18 +71,6 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
 
       /* {@link Staging} */
       public static final String STAGING = "staging";
-
-      // CloudfoundryApplicationResource
-      /* int */
-      public static final String MEMORY = "memory";
-
-      /* int */
-      public static final String DISK = "dist";
-
-      // Staging
-      public static final String MODEL = "model";
-
-      public static final String STACK = "stack";
    }
 
    private CloudfoundryApplication cloudfoundryApplication;
@@ -98,10 +86,7 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      JavaScriptObject json = build(response.getText());
-      if (json == null)
-         return;
-      JSONObject jsonObject = new JSONObject(json).isObject();
+      JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
       if (jsonObject == null)
          return;
 
@@ -205,18 +190,11 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
    }
 
    /**
-    * Build {@link JavaScriptObject} from string.
-    * 
-    * @param json string that contains object
-    * @return {@link JavaScriptObject}
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
     */
-   protected static native JavaScriptObject build(String json) /*-{
-                                                               try {
-                                                               var object = eval('(' + json + ')');
-                                                               return object;
-                                                               } catch (e) {
-                                                               return null;
-                                                               }
-                                                               }-*/;
-
+   @Override
+   public CloudfoundryApplication getPayload()
+   {
+      return cloudfoundryApplication;
+   }
 }

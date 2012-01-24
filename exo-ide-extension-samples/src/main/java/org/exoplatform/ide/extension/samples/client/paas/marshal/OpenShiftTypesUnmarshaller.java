@@ -23,8 +23,8 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ import java.util.List;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: OpenShiftTypesUnmarshaller.java Nov 23, 2011 3:30:08 PM vereshchaka $
  */
-public class OpenShiftTypesUnmarshaller implements Unmarshallable
+public class OpenShiftTypesUnmarshaller implements Unmarshallable<List<String>>
 {
    /**
     * List of application types.
@@ -71,6 +71,15 @@ public class OpenShiftTypesUnmarshaller implements Unmarshallable
       {
          throw new UnmarshallerException("Can't parse application types on OpenShitf.");
       }
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<String> getPayload()
+   {
+      return applicationTypes;
    }
 
 }

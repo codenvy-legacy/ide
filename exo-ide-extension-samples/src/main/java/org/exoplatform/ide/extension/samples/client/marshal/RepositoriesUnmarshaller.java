@@ -18,15 +18,15 @@
  */
 package org.exoplatform.ide.extension.samples.client.marshal;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 
 import java.text.ParseException;
@@ -37,13 +37,13 @@ import java.util.List;
  * @version $Id: RepositoriesUnmarshaller.java Aug 29, 2011 4:56:02 PM vereshchaka $
  * 
  */
-public class RepositoriesUnmarshaller implements Unmarshallable
+public class RepositoriesUnmarshaller implements Unmarshallable<List<Repository>>
 {
-   private List<Repository> repos;
+   private List<Repository> repositories;
 
    public RepositoriesUnmarshaller(List<Repository> repositories)
    {
-      repos = repositories;
+      this.repositories = repositories;
    }
 
    /**
@@ -52,8 +52,12 @@ public class RepositoriesUnmarshaller implements Unmarshallable
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      JavaScriptObject json = build(response.getText());
-      JSONArray jsonArray = new JSONArray(json);
+      JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
+
+      if (jsonArray == null)
+      {
+         return;
+      }
 
       for (int i = 0; i < jsonArray.size(); i++)
       {
@@ -63,7 +67,7 @@ public class RepositoriesUnmarshaller implements Unmarshallable
          try
          {
             repository = parseObject(value.isObject());
-            repos.add(repository);
+            repositories.add(repository);
          }
          catch (ParseException e)
          {
@@ -147,8 +151,12 @@ public class RepositoriesUnmarshaller implements Unmarshallable
       return repo;
    }
 
-   public static native JavaScriptObject build(String json) /*-{
-                                                            return eval('(' + json + ')');      
-                                                            }-*/;
-
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<Repository> getPayload()
+   {
+      return repositories;
+   }
 }

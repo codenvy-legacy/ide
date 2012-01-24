@@ -54,9 +54,9 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
     */
    @Override
-   public void onInitializeServices(InitializeServicesEvent event)
+   public void onInitializeServices(InitializeServicesEvent event) 
    {
-      new SamplesClientServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(), event.getLoader());
+      new SamplesClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
       IDE.fireEvent(new OpenStartPageEvent());
    }
 
