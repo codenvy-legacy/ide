@@ -24,17 +24,28 @@ import java.io.Reader;
 import java.io.StringReader;
 
 /**
+ * Implementation of TaskLogger that appends logs in StringBuffer.
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-class SimpleTaskLogger implements TaskLogger
+public final class SimpleTaskLogger implements TaskLogger
 {
-   private StringBuilder logBuf;
-   private InvocationOutputHandler delegate;
+   /** Logs buffer. */
+   private final StringBuffer logBuf;
+   /**
+    * InvocationOutputHandler for proxying log messages.
+    * It may be useful if need store log messages in this TaskLogger and at the same time print them to stdout.
+    */
+   private final InvocationOutputHandler delegate;
 
+   /**
+    * @param delegate instance of InvocationOutputHandler for proxying of logs. This parameter may be <code>null</code>
+    * if not need to proxying of log messages
+    */
    public SimpleTaskLogger(InvocationOutputHandler delegate)
    {
-      this.logBuf = new StringBuilder();
+      this.logBuf = new StringBuffer();
       this.delegate = delegate;
    }
 
@@ -43,43 +54,38 @@ class SimpleTaskLogger implements TaskLogger
       this(null);
    }
 
-   /**
-    * @see org.codehaus.plexus.util.cli.StreamConsumer#consumeLine(java.lang.String)
-    */
+   /** @see org.codehaus.plexus.util.cli.StreamConsumer#consumeLine(java.lang.String) */
    public void consumeLine(String line)
    {
-      synchronized (logBuf)
+      if (line != null)
       {
-         if (line == null)
-            logBuf.append('\n');
-         else
-            logBuf.append('\n').append(line);
+         logBuf.append(line);
       }
+      logBuf.append('\n');
+
       if (delegate != null)
+      {
          delegate.consumeLine(line);
+      }
    }
 
-   /**
-    * @see org.exoplatform.ide.maven.TaskLogger#getLogReader()
-    */
+   /** @see org.exoplatform.ide.maven.TaskLogger#getLogReader() */
    @Override
    public Reader getLogReader()
    {
       return new StringReader(getLogAsString());
    }
 
-   /**
-    * @see org.exoplatform.ide.maven.TaskLogger#getLogAsString()
-    */
+   /** @see org.exoplatform.ide.maven.TaskLogger#getLogAsString() */
    @Override
    public String getLogAsString()
    {
-      String log;
-      synchronized (logBuf)
-      {
-         log = logBuf.toString();
-         logBuf.setLength(0);
-      }
-      return log;
+      return logBuf.toString();
+   }
+
+   /** @see org.exoplatform.ide.maven.TaskLogger#close() */
+   @Override
+   public void close()
+   {
    }
 }

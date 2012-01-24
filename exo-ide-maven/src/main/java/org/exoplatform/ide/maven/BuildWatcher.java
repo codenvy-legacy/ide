@@ -18,44 +18,36 @@
  */
 package org.exoplatform.ide.maven;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Watch for build process and terminate it if timeout of build process is reached.
- * 
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: TaskWatcher.java 16504 2011-02-16 09:27:51Z andrew00x $
+ * @version $Id: BuildWatcher.java 16504 2011-02-16 09:27:51Z andrew00x $
  */
-public final class TaskWatcher implements Runnable
+public final class BuildWatcher implements Runnable
 {
-   private final TaskDestroyer destroyer;
    private final long timeout;
 
    private Process process;
    private boolean stopFlag;
    private boolean stopped;
 
-   public TaskWatcher(TaskDestroyer destroyer, long timeout)
-   {
-      if (destroyer == null)
-         throw new NullPointerException("TaskDestroyer argument may not be null. ");
-      if (timeout < 1)
-         throw new IllegalArgumentException("Timeout must be greater than 1. ");
-      this.destroyer = destroyer;
-      this.timeout = timeout;
-   }
-
    /**
-    * Build watcher that use {@link TaskDestroyer#DEFAULT_DESTROYER} for termination process.
-    * 
     * @param timeout timeout after which process will be terminated
+    * @param unit the TimeUnit for <code>timeout</code> value
     */
-   public TaskWatcher(long timeout)
+   public BuildWatcher(long timeout, TimeUnit unit)
    {
-      this(TaskDestroyer.DEFAULT_DESTROYER, timeout);
+      if (timeout < 1)
+      {
+         throw new IllegalArgumentException("Timeout must be greater than 1. ");
+      }
+      this.timeout = unit.toMillis(timeout);
    }
 
-   /**
-    * @see java.lang.Runnable#run()
-    */
+   /** @see java.lang.Runnable#run() */
    @Override
    public synchronized void run()
    {
@@ -74,7 +66,9 @@ public final class TaskWatcher implements Runnable
       if (!stopped)
       {
          if (isProcessAlive())
-            destroyer.destroy(process);
+         {
+            process.destroy();
+         }
          stopped = true;
       }
    }
@@ -82,32 +76,30 @@ public final class TaskWatcher implements Runnable
    public synchronized boolean isProcessAlive()
    {
       if (process == null)
+      {
          throw new IllegalStateException("Process is not initialized yet. ");
+      }
       try
       {
-         process.exitValue();
          return false;
       }
       catch (IllegalThreadStateException e)
       {
+         return true;
       }
-      return true;
-   }
-
-   public synchronized boolean isProcessStopped()
-   {
-      return stopped;
    }
 
    /**
     * Start watching for Process.
-    * 
+    *
     * @param process Process
     */
    public synchronized void start(Process process)
    {
       if (process == null)
-         throw new NullPointerException("Watched process may not be null. ");
+      {
+         throw new IllegalArgumentException("Watched process may not be null. ");
+      }
       this.process = process;
       this.stopped = false;
       this.stopFlag = false;
@@ -116,9 +108,7 @@ public final class TaskWatcher implements Runnable
       t.start();
    }
 
-   /**
-    * Stop build process.
-    */
+   /** Stop build process. */
    public synchronized void stop()
    {
       stopFlag = true;

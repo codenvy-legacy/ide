@@ -21,39 +21,46 @@ package org.exoplatform.ide.maven;
 import org.apache.maven.shared.invoker.InvocationResult;
 import org.codehaus.plexus.util.cli.CommandLineException;
 
+import java.io.File;
+
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: InvocationResultImpl.java 16504 2011-02-16 09:27:51Z andrew00x $
  */
-public final class InvocationResultImpl implements InvocationResult
+public class InvocationResultImpl implements InvocationResult
 {
    private final int exitCode;
    private final CommandLineException cle;
+   private final File[] artifacts;
 
-   public InvocationResultImpl(CommandLineException cle, int exitCode)
+   public InvocationResultImpl(int exitCode, CommandLineException cle, File... artifacts)
    {
-      this.cle = cle;
       this.exitCode = exitCode;
+      this.cle = cle;
+      this.artifacts = artifacts;
    }
 
-   public InvocationResultImpl(int exitCode)
+   /** @see org.apache.maven.shared.invoker.InvocationResult#getExitCode() */
+   public int getExitCode()
    {
-      this(null, exitCode);
+      return exitCode;
    }
 
-   /**
-    * @see org.apache.maven.shared.invoker.InvocationResult#getExecutionException()
-    */
+   /** @see org.apache.maven.shared.invoker.InvocationResult#getExecutionException() */
    public CommandLineException getExecutionException()
    {
       return cle;
    }
 
    /**
-    * @see org.apache.maven.shared.invoker.InvocationResult#getExitCode()
+    * Result of maven build.
+    *
+    * @return maven build result. Typically array has just one artifact. May be <code>null</code> or empty if build is
+    *         failed. If build is successful (<code>exitCode == 0</code>) then array may not be <code>null</code> or
+    *         empty.
     */
-   public int getExitCode()
+   public File[] getArtifacts()
    {
-      return exitCode;
+      return artifacts;
    }
 }

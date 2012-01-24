@@ -725,7 +725,6 @@
       <module>exo-ide-codeassistant-storage-lucene</module>
 
       <module>exo-ide-maven</module>
-      <module>exo-ide-maven-webapp-archetype</module>
 
       <module>exo-ide-editor</module>
       <module>exo-ide-editor-javascript</module>

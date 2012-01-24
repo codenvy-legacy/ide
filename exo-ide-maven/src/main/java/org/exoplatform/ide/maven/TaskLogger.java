@@ -20,15 +20,33 @@ package org.exoplatform.ide.maven;
 
 import org.apache.maven.shared.invoker.InvocationOutputHandler;
 
+import java.io.IOException;
 import java.io.Reader;
 
 /**
+ * Maven build logger.
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public interface TaskLogger extends InvocationOutputHandler
 {
-   Reader getLogReader();
+   /**
+    * Get Reader of build log.
+    *
+    * @return reader
+    * @throws java.io.IOException if any i/o errors occur
+    */
+   Reader getLogReader() throws IOException;
 
-   String getLogAsString();
+   /**
+    * Get build log as String.
+    *
+    * @return build log as String
+    * @throws java.io.IOException if any i/o errors occur
+    */
+   String getLogAsString() throws IOException;
+
+   /** Close current TaskLogger. It should release any resources allocated by the TaskLogger such as file, etc. */
+   void close();
 }

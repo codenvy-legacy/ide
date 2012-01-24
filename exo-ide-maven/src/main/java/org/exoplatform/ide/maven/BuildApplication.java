@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,19 +18,23 @@
  */
 package org.exoplatform.ide.maven;
 
-/**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: BuildDestroyer.java 16425 2011-02-14 12:08:46Z andrew00x $
- */
-public interface TaskDestroyer
-{
-   public static final TaskDestroyer DEFAULT_DESTROYER = new TaskDestroyer() {
-      @Override
-      public void destroy(Process process)
-      {
-         process.destroy();
-      }
-   };
+import java.util.Collections;
+import java.util.Set;
 
-   void destroy(Process process);
+import javax.ws.rs.core.Application;
+
+/**
+ * Builder application deployer.
+ *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
+ */
+public class BuildApplication extends Application
+{
+   /** @see javax.ws.rs.core.Application#getClasses() */
+   @Override
+   public Set<Class<?>> getClasses()
+   {
+      return Collections.<Class<?>>singleton(Builder.class);
+   }
 }

@@ -89,10 +89,6 @@
    </component>
    
    <component>
-     <type>org.exoplatform.ide.maven.TaskService</type>
-   </component>
-
-   <component>
       <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
    </component>
 
