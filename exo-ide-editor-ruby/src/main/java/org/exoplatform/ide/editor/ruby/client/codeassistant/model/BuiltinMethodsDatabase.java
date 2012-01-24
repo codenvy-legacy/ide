@@ -3475,7 +3475,7 @@ public class BuiltinMethodsDatabase
    }
 
    public static String[] objectMethods = {"methods", "instance_eval", "dup", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      "instance_variables", "include?", "private_instance_methods", "instance_of?", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      "instance_variables", "include?", "private_instance_methods", "instance_of?", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
       "protected_method_defined?", "ext	end", "const_defined?", "eql?", "name", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
       "public_class_method", "autoload", "method_dump", "new", "hash", "id", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
       "singleton_methods", "instance_method", "taint", "constants", "frozen?", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
