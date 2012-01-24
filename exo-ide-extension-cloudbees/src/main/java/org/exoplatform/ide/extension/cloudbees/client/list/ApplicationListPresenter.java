@@ -18,8 +18,12 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.list;
 
+import com.google.gwt.http.client.RequestException;
+
+import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputHandler;
@@ -32,6 +36,7 @@ import org.exoplatform.ide.extension.cloudbees.client.delete.DeleteApplicationEv
 import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfo;
 import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoEvent;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudbees.client.marshaller.ApplicationListUnmarshaller;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -124,24 +129,32 @@ public class ApplicationListPresenter implements ViewClosedHandler, ShowApplicat
     */
    private void getOrUpdateAppList()
    {
-      CloudBeesClientService.getInstance().applicationList(
-         new CloudBeesAsyncRequestCallback<List<ApplicationInfo>>(IDE.eventBus(), new LoggedInHandler()
-         {
-
-            @Override
-            public void onLoggedIn()
+      try
+      {
+         CloudBeesClientService.getInstance().applicationList(
+            new CloudBeesAsyncRequestCallback<List<ApplicationInfo>>(new ApplicationListUnmarshaller(
+               new ArrayList<ApplicationInfo>()), new LoggedInHandler()
             {
-               getOrUpdateAppList();
-            }
-         }, null)
-         {
 
-            @Override
-            protected void onSuccess(List<ApplicationInfo> result)
+               @Override
+               public void onLoggedIn()
+               {
+                  getOrUpdateAppList();
+               }
+            }, null)
             {
-               display.getAppListGrid().setValue(result);
-            }
-         });
+
+               @Override
+               protected void onSuccess(List<ApplicationInfo> result)
+               {
+                  display.getAppListGrid().setValue(result);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

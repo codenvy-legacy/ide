@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.delete;
 
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -27,10 +30,12 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallb
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudbees.client.marshaller.DeployWarUnmarshaller;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -78,25 +83,36 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
    protected void getApplicationInfo()
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      CloudBeesClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
-         new CloudBeesAsyncRequestCallback<Map<String, String>>(IDE.eventBus(), new LoggedInHandler()
-         {
-            @Override
-            public void onLoggedIn()
+      try
+      {
+         CloudBeesClientService.getInstance().getApplicationInfo(
+            null,
+            vfs.getId(),
+            projectId,
+            new CloudBeesAsyncRequestCallback<Map<String, String>>(new DeployWarUnmarshaller(
+               new HashMap<String, String>()), new LoggedInHandler()
             {
-               getApplicationInfo();
-            }
-         }, null)
-         {
+               @Override
+               public void onLoggedIn()
+               {
+                  getApplicationInfo();
+               }
+            }, null)
+            {
 
-            @Override
-            protected void onSuccess(Map<String, String> result)
-            {
-               String appId = result.get("id");
-               String appTitle = result.get("title");
-               askForDelete(appId, appTitle);
-            }
-         });
+               @Override
+               protected void onSuccess(Map<String, String> result)
+               {
+                  String appId = result.get("id");
+                  String appTitle = result.get("title");
+                  askForDelete(appId, appTitle);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -135,23 +151,32 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
          }
       }
 
-      CloudBeesClientService.getInstance().deleteApplication(appId, vfs.getId(), projectId,
-         new CloudBeesAsyncRequestCallback<String>(IDE.eventBus(), new LoggedInHandler()
-         {
-            @Override
-            public void onLoggedIn()
+      try
+      {
+         CloudBeesClientService.getInstance().deleteApplication(appId, vfs.getId(), projectId,
+            new CloudBeesAsyncRequestCallback<String>(new LoggedInHandler()
             {
-               doDelete(appId, appTitle);
-            }
-         }, null)
-         {
-            @Override
-            protected void onSuccess(String result)
+               @Override
+               public void onLoggedIn()
+               {
+                  doDelete(appId, appTitle);
+               }
+            }, null)
             {
-               IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationDeletedMsg(appTitle),
-                  Type.INFO));
-               IDE.fireEvent(new ApplicationDeletedEvent(appId));
-            }
-         });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
+                     .applicationDeletedMsg(appTitle), Type.INFO));
+                  IDE.fireEvent(new ApplicationDeletedEvent(appId));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationDeletedMsg(appTitle),
+            Type.INFO));
+         IDE.fireEvent(new ApplicationDeletedEvent(appId));
+      }
    }
 }

@@ -18,12 +18,15 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.project;
 
+import com.google.gwt.http.client.RequestException;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -40,11 +43,13 @@ import org.exoplatform.ide.extension.cloudbees.client.delete.ApplicationDeletedH
 import org.exoplatform.ide.extension.cloudbees.client.delete.DeleteApplicationEvent;
 import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoEvent;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudbees.client.marshaller.DeployWarUnmarshaller;
 import org.exoplatform.ide.extension.cloudbees.client.update.UpdateApplicationEvent;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -185,22 +190,33 @@ public class CloudBeesProjectPresenter extends GitPresenter implements ProjectOp
     */
    private void getApplicationInfo(final ProjectModel project)
    {
-      CloudBeesClientService.getInstance().getApplicationInfo(null, vfs.getId(), project.getId(),
-         new CloudBeesAsyncRequestCallback<Map<String, String>>(IDE.eventBus(), new LoggedInHandler()
-         {
-            @Override
-            public void onLoggedIn()
+      try
+      {
+         CloudBeesClientService.getInstance().getApplicationInfo(
+            null,
+            vfs.getId(),
+            project.getId(),
+            new CloudBeesAsyncRequestCallback<Map<String, String>>(new DeployWarUnmarshaller(
+               new HashMap<String, String>()), new LoggedInHandler()
             {
-               getApplicationInfo(project);
-            }
-         }, null)
-         {
-            @Override
-            protected void onSuccess(Map<String, String> result)
+               @Override
+               public void onLoggedIn()
+               {
+                  getApplicationInfo(project);
+               }
+            }, null)
             {
-               showAppInfo(result);
-            }
-         });
+               @Override
+               protected void onSuccess(Map<String, String> result)
+               {
+                  showAppInfo(result);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

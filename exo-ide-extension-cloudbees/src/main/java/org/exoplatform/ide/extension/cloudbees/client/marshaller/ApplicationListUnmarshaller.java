@@ -23,8 +23,8 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfo;
 
 import java.util.List;
@@ -34,7 +34,7 @@ import java.util.List;
  * @version $Id: Sep 21, 2011 evgen $
  * 
  */
-public class ApplicationListUnmarshaller implements Unmarshallable
+public class ApplicationListUnmarshaller implements Unmarshallable<List<ApplicationInfo>>
 {
 
    private List<ApplicationInfo> apps;
@@ -44,7 +44,6 @@ public class ApplicationListUnmarshaller implements Unmarshallable
     */
    public ApplicationListUnmarshaller(List<ApplicationInfo> apps)
    {
-      super();
       this.apps = apps;
    }
 
@@ -55,6 +54,11 @@ public class ApplicationListUnmarshaller implements Unmarshallable
    public void unmarshal(Response response) throws UnmarshallerException
    {
       JSONArray value = JSONParser.parseLenient(response.getText()).isArray();
+
+      if (value == null)
+      {
+         return;
+      }
 
       for (int i = 0; i < value.size(); i++)
       {
@@ -67,5 +71,14 @@ public class ApplicationListUnmarshaller implements Unmarshallable
       ApplicationInfo appInfo = new ApplicationInfo();
       appInfo.init(obj);
       return appInfo;
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<ApplicationInfo> getPayload()
+   {
+      return apps;
    }
 }

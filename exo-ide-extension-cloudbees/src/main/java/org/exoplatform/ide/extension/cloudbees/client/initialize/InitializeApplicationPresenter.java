@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.initialize;
 
+import com.google.gwt.http.client.RequestException;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -26,6 +28,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -37,6 +40,8 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallb
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudbees.client.marshaller.DeployWarUnmarshaller;
+import org.exoplatform.ide.extension.cloudbees.client.marshaller.DomainsUnmarshaller;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
@@ -44,6 +49,8 @@ import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -159,22 +166,30 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
 
    private void getDomains()
    {
-      CloudBeesClientService.getInstance().getDomains(
-         new CloudBeesAsyncRequestCallback<List<String>>(IDE.eventBus(), new LoggedInHandler()
-         {
-            @Override
-            public void onLoggedIn()
+      try
+      {
+         CloudBeesClientService.getInstance().getDomains(
+            new CloudBeesAsyncRequestCallback<List<String>>(new DomainsUnmarshaller(new ArrayList<String>()),
+               new LoggedInHandler()
+               {
+                  @Override
+                  public void onLoggedIn()
+                  {
+                     getDomains();
+                  }
+               }, null)
             {
-               getDomains();
-            }
-         }, null)
-         {
-            @Override
-            protected void onSuccess(List<String> result)
-            {
-               showView(result);
-            }
-         });
+               @Override
+               protected void onSuccess(List<String> result)
+               {
+                  showView(result);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void buildApplication()
@@ -198,37 +213,50 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
    private void doDeployApplication()
    {
       final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-      CloudBeesClientService.getInstance().initializeApplication(applicationId, vfs.getId(), project.getId(), warUrl,
-         null, new CloudBeesAsyncRequestCallback<Map<String, String>>(IDE.eventBus(), deployWarLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(final Map<String, String> deployResult)
+      try
+      {
+         CloudBeesClientService.getInstance().initializeApplication(
+            applicationId,
+            vfs.getId(),
+            project.getId(),
+            warUrl,
+            null,
+            new CloudBeesAsyncRequestCallback<Map<String, String>>(new DeployWarUnmarshaller(
+               new HashMap<String, String>()), deployWarLoggedInHandler, null)
             {
-               String output = CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationSuccess() + "<br>";
-               output += CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationInfo() + "<br>";
-
-               Iterator<Entry<String, String>> it = deployResult.entrySet().iterator();
-               while (it.hasNext())
+               @Override
+               protected void onSuccess(final Map<String, String> deployResult)
                {
-                  Entry<String, String> entry = (Entry<String, String>)it.next();
-                  output += entry.getKey() + " : " + entry.getValue() + "<br>";
+                  String output = CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationSuccess() + "<br>";
+                  output += CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationInfo() + "<br>";
+
+                  Iterator<Entry<String, String>> it = deployResult.entrySet().iterator();
+                  while (it.hasNext())
+                  {
+                     Entry<String, String> entry = (Entry<String, String>)it.next();
+                     output += entry.getKey() + " : " + entry.getValue() + "<br>";
+                  }
+                  IDE.fireEvent(new OutputEvent(output, Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
                }
-               IDE.fireEvent(new OutputEvent(output, Type.INFO));
-               IDE.fireEvent(new RefreshBrowserEvent(project));
-            }
 
-            /**
-             * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback#onFailure(java.lang.Throwable)
-             */
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new OutputEvent(
-                  CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationFailureMessage(), Type.INFO));
-               super.onFailure(exception);
-            }
+               /**
+                * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback#onFailure(java.lang.Throwable)
+                */
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
+                     .deployApplicationFailureMessage(), Type.INFO));
+                  super.onFailure(exception);
+               }
 
-         });
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

@@ -21,9 +21,11 @@ package org.exoplatform.ide.extension.cloudbees.client.deploy;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -41,13 +43,17 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesLocalizationConstant;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoginCanceledHandler;
+import org.exoplatform.ide.extension.cloudbees.client.marshaller.DeployWarUnmarshaller;
+import org.exoplatform.ide.extension.cloudbees.client.marshaller.DomainsUnmarshaller;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -157,34 +163,42 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
 
    private void getDomains()
    {
-      CloudBeesClientService.getInstance().getDomains(
-         new CloudBeesAsyncRequestCallback<List<String>>(IDE.eventBus(), new LoggedInHandler()
-         {
-            @Override
-            public void onLoggedIn()
+      try
+      {
+         CloudBeesClientService.getInstance().getDomains(
+            new CloudBeesAsyncRequestCallback<List<String>>(new DomainsUnmarshaller(new ArrayList<String>()),
+               new LoggedInHandler()
+               {
+                  @Override
+                  public void onLoggedIn()
+                  {
+                     getDomains();
+                  }
+               }, new LoginCanceledHandler()
+               {
+                  @Override
+                  public void onLoginCanceled()
+                  {
+                     paasCallback.onViewReceived(null);
+                  }
+               })
             {
-               getDomains();
-            }
-         }, new LoginCanceledHandler()
-         {
-            @Override
-            public void onLoginCanceled()
-            {
-               paasCallback.onViewReceived(null);
-            }
-         })
-         {
-            @Override
-            protected void onSuccess(List<String> result)
-            {
-               display.setDomainValues(result.toArray(new String[result.size()]));
-               domain = display.getDomainsField().getValue();
-               display.getNameField().setValue(projectName);
-               name = display.getNameField().getValue();
-               display.getUrlField().setValue(domain + "/" + name);
-               paasCallback.onViewReceived(display.getView());
-            }
-         });
+               @Override
+               protected void onSuccess(List<String> result)
+               {
+                  display.setDomainValues(result.toArray(new String[result.size()]));
+                  domain = display.getDomainsField().getValue();
+                  display.getNameField().setValue(projectName);
+                  name = display.getNameField().getValue();
+                  display.getUrlField().setValue(domain + "/" + name);
+                  paasCallback.onViewReceived(display.getView());
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void createApplication()
@@ -198,34 +212,47 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
          }
       };
 
-      CloudBeesClientService.getInstance().initializeApplication(domain + "/" + name, vfs.getId(), project.getId(),
-         warUrl, null, new CloudBeesAsyncRequestCallback<Map<String, String>>(IDE.eventBus(), createAppHandler, null)
-         {
-
-            @Override
-            protected void onSuccess(Map<String, String> result)
+      try
+      {
+         CloudBeesClientService.getInstance().initializeApplication(
+            domain + "/" + name,
+            vfs.getId(),
+            project.getId(),
+            warUrl,
+            null,
+            new CloudBeesAsyncRequestCallback<Map<String, String>>(new DeployWarUnmarshaller(
+               new HashMap<String, String>()), createAppHandler, null)
             {
-               String output = CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationSuccess() + "<br>";
-               output += CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationInfo() + "<br>";
-
-               Iterator<Entry<String, String>> it = result.entrySet().iterator();
-               while (it.hasNext())
+               @Override
+               protected void onSuccess(Map<String, String> result)
                {
-                  Entry<String, String> entry = (Entry<String, String>)it.next();
-                  output += entry.getKey() + " : " + entry.getValue() + "<br>";
-               }
-               IDE.fireEvent(new OutputEvent(output, Type.INFO));
-               IDE.fireEvent(new RefreshBrowserEvent(project));
-            }
+                  String output = CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationSuccess() + "<br>";
+                  output += CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationInfo() + "<br>";
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new OutputEvent(
-                  CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationFailureMessage(), Type.INFO));
-               super.onFailure(exception);
-            }
-         });
+                  Iterator<Entry<String, String>> it = result.entrySet().iterator();
+                  while (it.hasNext())
+                  {
+                     Entry<String, String> entry = (Entry<String, String>)it.next();
+                     output += entry.getKey() + " : " + entry.getValue() + "<br>";
+                  }
+                  IDE.fireEvent(new OutputEvent(output, Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
+                     .deployApplicationFailureMessage(), Type.INFO));
+                  super.onFailure(exception);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationFailureMessage(),
+            Type.INFO));
+      }
    }
 
    /**

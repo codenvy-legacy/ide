@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.login;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -187,32 +190,38 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
       final String email = display.getEmailField().getValue();
       final String password = display.getPasswordField().getValue();
 
-      CloudBeesClientService.getInstance().login(email, password, new AsyncRequestCallback<String>()
+      try
       {
-         /**
-          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onSuccess(java.lang.Object)
-          */
-         @Override
-         protected void onSuccess(String result)
+         CloudBeesClientService.getInstance().login(email, password, new AsyncRequestCallback<String>()
          {
-            IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
-            if (loggedIn != null)
+            /**
+             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onSuccess(java.lang.Object)
+             */
+            @Override
+            protected void onSuccess(String result)
             {
-               loggedIn.onLoggedIn();
+               IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
+               if (loggedIn != null)
+               {
+                  loggedIn.onLoggedIn();
+               }
+               IDE.getInstance().closeView(display.asView().getId());
             }
-            IDE.getInstance().closeView(display.asView().getId());
-         }
 
-         /**
-          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-          */
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.loginFailed(), Type.INFO));
-            super.onFailure(exception);
-         }
-      });
+            /**
+             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+             */
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.loginFailed(), Type.INFO));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

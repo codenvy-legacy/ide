@@ -18,12 +18,16 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.info;
 
+import com.google.gwt.http.client.RequestException;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -33,6 +37,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudbees.client.marshaller.DeployWarUnmarshaller;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
@@ -103,22 +108,33 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
 
    private void showApplicationInfo(final String projectId)
    {
-      CloudBeesClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
-         new CloudBeesAsyncRequestCallback<Map<String, String>>(IDE.eventBus(), new LoggedInHandler()
-         {
-            @Override
-            public void onLoggedIn()
+      try
+      {
+         CloudBeesClientService.getInstance().getApplicationInfo(
+            null,
+            vfs.getId(),
+            projectId,
+            new CloudBeesAsyncRequestCallback<Map<String, String>>(new DeployWarUnmarshaller(
+               new HashMap<String, String>()), new LoggedInHandler()
             {
-               showApplicationInfo(projectId);
-            }
-         }, null)
-         {
-            @Override
-            protected void onSuccess(Map<String, String> result)
+               @Override
+               public void onLoggedIn()
+               {
+                  showApplicationInfo(projectId);
+               }
+            }, null)
             {
-               showAppInfo(result);
-            }
-         });
+               @Override
+               protected void onSuccess(Map<String, String> result)
+               {
+                  showAppInfo(result);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void showAppInfo(Map<String, String> map)
@@ -159,5 +175,4 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
          display = null;
       }
    }
-
 }

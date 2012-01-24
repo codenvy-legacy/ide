@@ -58,7 +58,7 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new CloudBeesClientServiceImpl(IDE.eventBus(), event.getApplicationConfiguration().getContext(),
+      new CloudBeesClientServiceImpl(event.getApplicationConfiguration().getContext(),
          event.getLoader());
    }
 

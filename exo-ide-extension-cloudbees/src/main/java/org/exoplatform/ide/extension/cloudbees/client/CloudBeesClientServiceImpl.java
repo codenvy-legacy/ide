@@ -18,20 +18,16 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client;
 
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfo;
-import org.exoplatform.ide.extension.cloudbees.client.marshaller.ApplicationListUnmarshaller;
 import org.exoplatform.ide.extension.cloudbees.client.marshaller.CredentailsMarshaller;
-import org.exoplatform.ide.extension.cloudbees.client.marshaller.DeployWarUnmarshaller;
-import org.exoplatform.ide.extension.cloudbees.client.marshaller.DomainsUnmarshaller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,11 +63,6 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    private static final String APP_LIST = BASE_URL + "/apps/all";
 
    /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
     * REST service context.
     */
    private String restServiceContext;
@@ -81,20 +72,20 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
     */
    private Loader loader;
 
-   public CloudBeesClientServiceImpl(HandlerManager eventBus, String restContext, Loader loader)
+   public CloudBeesClientServiceImpl(String restContext, Loader loader)
    {
       this.loader = loader;
-      this.eventBus = eventBus;
       this.restServiceContext = restContext;
    }
 
    /**
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#deployWar(java.lang.String, java.lang.String,
     *      java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void deployWar(String appId, String warFile, String message,
-      CloudBeesAsyncRequestCallback<Map<String, String>> callback)
+      CloudBeesAsyncRequestCallback<Map<String, String>> callback) throws RequestException
    {
       final String url = restServiceContext + DEPLOY_WAR;
 
@@ -103,41 +94,29 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
       if (message != null && !message.isEmpty())
          params += "&message=" + message;
 
-      Map<String, String> responseMap = new HashMap<String, String>();
-      callback.setResult(responseMap);
-      callback.setEventBus(eventBus);
-
-      DeployWarUnmarshaller unmarshaller = new DeployWarUnmarshaller(responseMap);
-      callback.setPayload(unmarshaller);
-
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**
+    * @throws RequestException 
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#getDomains(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getDomains(CloudBeesAsyncRequestCallback<List<String>> callback)
+   public void getDomains(CloudBeesAsyncRequestCallback<List<String>> callback) throws RequestException
    {
       final String url = restServiceContext + DOMAINS;
 
-      List<String> domains = new ArrayList<String>();
-      callback.setResult(domains);
-      callback.setEventBus(eventBus);
-
-      DomainsUnmarshaller unmarshaller = new DomainsUnmarshaller(domains);
-      callback.setPayload(unmarshaller);
-
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .send(callback);
    }
 
    /**
+    * @throws RequestException 
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#login(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void login(String email, String password, AsyncRequestCallback<String> callback)
+   public void login(String email, String password, AsyncRequestCallback<String> callback) throws RequestException
    {
       String url = restServiceContext + LOGIN;
 
@@ -146,32 +125,31 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
       credentials.put("password", password);
       CredentailsMarshaller marshaller = new CredentailsMarshaller(credentials);
 
-      callback.setEventBus(eventBus);
-
-      AsyncRequest.build(RequestBuilder.POST, url, loader).data(marshaller)
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(marshaller.marshal())
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**
+    * @throws RequestException 
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#logout(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void logout(AsyncRequestCallback<String> callback)
+   public void logout(AsyncRequestCallback<String> callback) throws RequestException
    {
       String url = restServiceContext + LOGOUT;
-      callback.setEventBus(eventBus);
 
-      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
 
    /**
+    * @throws RequestException 
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#getApplicationInfo(java.lang.String,
     *      java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
     */
    @Override
    public void getApplicationInfo(String appId, String vfsId, String projectId,
-      CloudBeesAsyncRequestCallback<Map<String, String>> callback)
+      CloudBeesAsyncRequestCallback<Map<String, String>> callback) throws RequestException
    {
       final String url = restServiceContext + APPS_INFO;
 
@@ -179,24 +157,18 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
       params += "vfsid=" + vfsId;
       params += (projectId != null) ? "&projectid=" + projectId : "";
 
-      Map<String, String> responseMap = new HashMap<String, String>();
-      callback.setResult(responseMap);
-      callback.setEventBus(eventBus);
-
-      DeployWarUnmarshaller unmarshaller = new DeployWarUnmarshaller(responseMap);
-      callback.setPayload(unmarshaller);
-
-      AsyncRequest.build(RequestBuilder.GET, url + "?" + params, loader)
+      AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**
+    * @throws RequestException 
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#deleteApplication(java.lang.String,
     *      java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
     */
    @Override
    public void deleteApplication(String appId, String vfsId, String projectId,
-      CloudBeesAsyncRequestCallback<String> callback)
+      CloudBeesAsyncRequestCallback<String> callback) throws RequestException
    {
       final String url = restServiceContext + APPS_DELETE;
 
@@ -226,19 +198,17 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
          }
       }
 
-      callback.setResult(null);
-      callback.setEventBus(eventBus);
-
-      AsyncRequest.build(RequestBuilder.POST, url + params, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader).send(callback);
    }
 
    /**
+    * @throws RequestException 
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#initializeApplication(java.lang.String,
     *      java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
     */
    @Override
    public void initializeApplication(String appId, String vfsId, String projectId, String warFile, String message,
-      CloudBeesAsyncRequestCallback<Map<String, String>> callback)
+      CloudBeesAsyncRequestCallback<Map<String, String>> callback) throws RequestException
    {
       final String url = restServiceContext + INITIALIZE;
 
@@ -249,40 +219,31 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
       if (message != null && !message.isEmpty())
          params += "&message=" + message;
 
-      Map<String, String> responseMap = new HashMap<String, String>();
-      callback.setResult(responseMap);
-      callback.setEventBus(eventBus);
-
-      DeployWarUnmarshaller unmarshaller = new DeployWarUnmarshaller(responseMap);
-      callback.setPayload(unmarshaller);
-
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**
+    * @throws RequestException 
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#applicationList(org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
     */
    @Override
-   public void applicationList(CloudBeesAsyncRequestCallback<List<ApplicationInfo>> callback)
+   public void applicationList(CloudBeesAsyncRequestCallback<List<ApplicationInfo>> callback) throws RequestException
    {
       final String url = restServiceContext + APP_LIST;
-      List<ApplicationInfo> result = new ArrayList<ApplicationInfo>();
-      Unmarshallable unmarshaler = new ApplicationListUnmarshaller(result);
-      callback.setEventBus(eventBus);
-      callback.setPayload(unmarshaler);
-      callback.setResult(result);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
 
    /**
+    * @throws RequestException 
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#updateApplication(java.lang.String,
     *      java.lang.String, java.lang.String, java.lang.String, java.lang.String,
     *      org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
     */
    @Override
    public void updateApplication(String appId, String vfsId, String projectId, String warFile, String message,
-      CloudBeesAsyncRequestCallback<Map<String, String>> callback)
+      CloudBeesAsyncRequestCallback<Map<String, String>> callback) throws RequestException
    {
       final String url = restServiceContext + APPS_UPDATE;
 
@@ -293,14 +254,7 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
       if (message != null && !message.isEmpty())
          params += "&message=" + message;
 
-      Map<String, String> responseMap = new HashMap<String, String>();
-      callback.setResult(responseMap);
-      callback.setEventBus(eventBus);
-
-      DeployWarUnmarshaller unmarshaller = new DeployWarUnmarshaller(responseMap);
-      callback.setPayload(unmarshaller);
-
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 

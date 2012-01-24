@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfo;
 
 import java.util.List;
@@ -57,14 +59,14 @@ public abstract class CloudBeesClientService
     * @param callback callback
     */
    public abstract void initializeApplication(String appId, String vfsId, String projectId, String warFile,
-      String message, CloudBeesAsyncRequestCallback<Map<String, String>> callback);
+      String message, CloudBeesAsyncRequestCallback<Map<String, String>> callback) throws RequestException;
 
    /**
     * Get the available domains.
     * 
     * @param callback - callback that client has to implement
     */
-   public abstract void getDomains(CloudBeesAsyncRequestCallback<List<String>> callback);
+   public abstract void getDomains(CloudBeesAsyncRequestCallback<List<String>> callback) throws RequestException;
 
    /**
     * Login CloudBees.
@@ -73,14 +75,14 @@ public abstract class CloudBeesClientService
     * @param password user's password
     * @param callback callback
     */
-   public abstract void login(String email, String password, AsyncRequestCallback<String> callback);
+   public abstract void login(String email, String password, AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Logout CloudBees.
     * 
     * @param callback callback
     */
-   public abstract void logout(AsyncRequestCallback<String> callback);
+   public abstract void logout(AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Get the application info.
@@ -91,7 +93,7 @@ public abstract class CloudBeesClientService
     * @param callback callback
     */
    public abstract void getApplicationInfo(String appId, String vfsId, String projectId,
-      CloudBeesAsyncRequestCallback<Map<String, String>> callback);
+      CloudBeesAsyncRequestCallback<Map<String, String>> callback) throws RequestException;
 
    /**
     * Delete application from CloudBees.
@@ -102,7 +104,7 @@ public abstract class CloudBeesClientService
     * @param callback callback
     */
    public abstract void deleteApplication(String appId, String vfsId, String projectId,
-      CloudBeesAsyncRequestCallback<String> callback);
+      CloudBeesAsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Update application on CloudBees.
@@ -115,7 +117,7 @@ public abstract class CloudBeesClientService
     * @param callback callback
     */
    public abstract void updateApplication(String appId, String vfsId, String projectId, String warFile, String message,
-      CloudBeesAsyncRequestCallback<Map<String, String>> callback);
+      CloudBeesAsyncRequestCallback<Map<String, String>> callback) throws RequestException;
 
    /**
     * Deploy war with the application.
@@ -126,11 +128,11 @@ public abstract class CloudBeesClientService
     * @param callback callback
     */
    public abstract void deployWar(String appId, String warFile, String message,
-      CloudBeesAsyncRequestCallback<Map<String, String>> callback);
+      CloudBeesAsyncRequestCallback<Map<String, String>> callback) throws RequestException;
 
    /**
     * Receive all CB applications for this account.
     */
-   public abstract void applicationList(CloudBeesAsyncRequestCallback<List<ApplicationInfo>> callback);
+   public abstract void applicationList(CloudBeesAsyncRequestCallback<List<ApplicationInfo>> callback) throws RequestException;
 
 }

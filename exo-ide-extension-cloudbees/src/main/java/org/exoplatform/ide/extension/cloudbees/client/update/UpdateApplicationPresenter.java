@@ -18,8 +18,12 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.update;
 
+import com.google.gwt.http.client.RequestException;
+
+import java.util.HashMap;
 import java.util.Map;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -30,6 +34,7 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesLocalizationConstant;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudbees.client.marshaller.DeployWarUnmarshaller;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
@@ -120,25 +125,36 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
    protected void getApplicationInfo()
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      CloudBeesClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
-         new CloudBeesAsyncRequestCallback<Map<String, String>>(IDE.eventBus(), new LoggedInHandler()
-         {
-            @Override
-            public void onLoggedIn()
+      try
+      {
+         CloudBeesClientService.getInstance().getApplicationInfo(
+            null,
+            vfs.getId(),
+            projectId,
+            new CloudBeesAsyncRequestCallback<Map<String, String>>(new DeployWarUnmarshaller(
+               new HashMap<String, String>()), new LoggedInHandler()
             {
-               getApplicationInfo();
-            }
-         }, null)
-         {
+               @Override
+               public void onLoggedIn()
+               {
+                  getApplicationInfo();
+               }
+            }, null)
+            {
 
-            @Override
-            protected void onSuccess(Map<String, String> result)
-            {
-               appId = result.get("id");
-               appTitle = result.get("title");
-               askForMessage();
-            }
-         });
+               @Override
+               protected void onSuccess(Map<String, String> result)
+               {
+                  appId = result.get("id");
+                  appTitle = result.get("title");
+                  askForMessage();
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void doUpdate()
@@ -149,25 +165,38 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
          projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       }
 
-      CloudBeesClientService.getInstance().updateApplication(appId, vfs.getId(), projectId, warUrl, updateMessage,
-         new CloudBeesAsyncRequestCallback<Map<String, String>>(IDE.eventBus(), new LoggedInHandler()
-         {
-
-            @Override
-            public void onLoggedIn()
+      try
+      {
+         CloudBeesClientService.getInstance().updateApplication(
+            appId,
+            vfs.getId(),
+            projectId,
+            warUrl,
+            updateMessage,
+            new CloudBeesAsyncRequestCallback<Map<String, String>>(new DeployWarUnmarshaller(
+               new HashMap<String, String>()), new LoggedInHandler()
             {
-               doUpdate();
-            }
-         }, null)
-         {
 
-            @Override
-            protected void onSuccess(Map<String, String> result)
+               @Override
+               public void onLoggedIn()
+               {
+                  doUpdate();
+               }
+            }, null)
             {
-               IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationUpdatedMsg(appTitle),
-                  Type.INFO));
-            }
-         });
+
+               @Override
+               protected void onSuccess(Map<String, String> result)
+               {
+                  IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
+                     .applicationUpdatedMsg(appTitle), Type.INFO));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
