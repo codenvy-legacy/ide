@@ -102,6 +102,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
          sourcePath = DEFAULT_SOURCE_FOLDER;
 
       Item sourceFolder = vfs.getItemByPath(project.getPath() + "/" + sourcePath, null, PropertyFilter.NONE_FILTER);
+
       if (sourceFolder.getItemType() != ItemType.FOLDER)
          throw new CodeAssistantException(500, "Can't find project source, in " + sourcePath);
 
@@ -119,10 +120,12 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    protected String getClassJavaDocFromProject(String fqn, String projectId, String vfsId)
       throws CodeAssistantException, VirtualFileSystemException
    {
+
       JavaDocBuilderVfs project = parseProject(projectId, vfsId);
       JavaClass clazz = project.getClassByName(fqn);
       if (clazz == null)
          throw new CodeAssistantException(404, "Not found");
+
       return getJavaDoc(clazz);
    }
 
@@ -198,7 +201,6 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
       throws VirtualFileSystemException, CodeAssistantException
    {
       JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
-
       JavaClass clazz = builder.getClassByName(fqn);
 
       if (clazz == null)
