@@ -22,8 +22,8 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.ide.extension.gadget.client.service.TokenResponse;
 
 /**
@@ -32,7 +32,7 @@ import org.exoplatform.ide.extension.gadget.client.service.TokenResponse;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class TokenResponseUnmarshal implements Unmarshallable
+public class TokenResponseUnmarshal implements Unmarshallable<TokenResponse>
 {
    private TokenResponse tokenResponse;
 
@@ -71,5 +71,14 @@ public class TokenResponseUnmarshal implements Unmarshallable
       else
          tokenResponse.setModuleId(0L);
 
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public TokenResponse getPayload()
+   {
+      return tokenResponse;
    }
 }

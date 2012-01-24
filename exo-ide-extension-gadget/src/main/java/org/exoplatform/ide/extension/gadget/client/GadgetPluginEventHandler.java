@@ -18,8 +18,10 @@
  */
 package org.exoplatform.ide.extension.gadget.client;
 
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -34,6 +36,8 @@ import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetService;
 import org.exoplatform.ide.extension.gadget.client.service.TokenRequest;
 import org.exoplatform.ide.extension.gadget.client.service.TokenResponse;
+import org.exoplatform.ide.extension.gadget.client.service.marshal.GadgetMetadataUnmarshaler;
+import org.exoplatform.ide.extension.gadget.client.service.marshal.TokenResponseUnmarshal;
 import org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -92,21 +96,29 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
       href = href.replace(applicationConfiguration.getContext(), applicationConfiguration.getPublicContext());
 
       TokenRequest tokenRequest = new TokenRequest(href, owner, viewer, moduleId, container, domain);
-      GadgetService.getInstance().getSecurityToken(tokenRequest, new AsyncRequestCallback<TokenResponse>()
+      try
       {
+         GadgetService.getInstance().getSecurityToken(tokenRequest,
+            new AsyncRequestCallback<TokenResponse>(new TokenResponseUnmarshal(new TokenResponse()))
+            {
 
-         @Override
-         protected void onSuccess(TokenResponse result)
-         {
-            getGadgetMetadata(result);
-         }
+               @Override
+               protected void onSuccess(TokenResponse result)
+               {
+                  getGadgetMetadata(result);
+               }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            IDE.fireEvent(new ExceptionThrownEvent(exception));
-         }
-      });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -114,39 +126,49 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
     */
    private void getGadgetMetadata(TokenResponse tokenResponse)
    {
-      GadgetService.getInstance().getGadgetMetadata(tokenResponse, new AsyncRequestCallback<GadgetMetadata>()
+      GadgetMetadata metadata = new GadgetMetadata();
+      metadata.setSecurityToken(tokenResponse.getSecurityToken());
+      try
       {
+         GadgetService.getInstance().getGadgetMetadata(tokenResponse,
+            new AsyncRequestCallback<GadgetMetadata>(new GadgetMetadataUnmarshaler(metadata))
+            {
 
-         @Override
-         protected void onSuccess(GadgetMetadata result)
-         {
-            if (gadgetPreviewPane == null)
-            {
-               gadgetPreviewPane = new GadgetPreviewPane();
-               gadgetPreviewPane.setIcon(new Image(GadgetClientBundle.INSTANCE.preview()));
-               IDE.getInstance().openView(gadgetPreviewPane);
-            }
-            else
-            {
-               if (!gadgetPreviewPane.isViewVisible())
+               @Override
+               protected void onSuccess(GadgetMetadata result)
                {
-                  gadgetPreviewPane.setViewVisible();
+                  if (gadgetPreviewPane == null)
+                  {
+                     gadgetPreviewPane = new GadgetPreviewPane();
+                     gadgetPreviewPane.setIcon(new Image(GadgetClientBundle.INSTANCE.preview()));
+                     IDE.getInstance().openView(gadgetPreviewPane);
+                  }
+                  else
+                  {
+                     if (!gadgetPreviewPane.isViewVisible())
+                     {
+                        gadgetPreviewPane.setViewVisible();
+                     }
+                  }
+
+                  gadgetPreviewPane.setConfiguration(applicationConfiguration);
+                  gadgetPreviewPane.setMetadata(result);
+                  gadgetPreviewPane.showGadget();
+
+                  previewOpened = true;
                }
-            }
 
-            gadgetPreviewPane.setConfiguration(applicationConfiguration);
-            gadgetPreviewPane.setMetadata(result);
-            gadgetPreviewPane.showGadget();
-
-            previewOpened = true;
-         }
-
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            IDE.fireEvent(new ExceptionThrownEvent(exception));
-         }
-      });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

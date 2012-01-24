@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.extension.gadget.client.service;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 
 /**
  * Created by The eXo Platform SAS .
@@ -46,12 +48,14 @@ public abstract class GadgetService
     * @param tokenResponse
     * @param callback
     */
-   public abstract void getGadgetMetadata(TokenResponse tokenResponse, AsyncRequestCallback<GadgetMetadata> callback);
+   public abstract void getGadgetMetadata(TokenResponse tokenResponse, AsyncRequestCallback<GadgetMetadata> callback)
+      throws RequestException;
 
    /**
     * @param request
     * @param callback
     */
-   public abstract void getSecurityToken(TokenRequest request, AsyncRequestCallback<TokenResponse> callback);
+   public abstract void getSecurityToken(TokenRequest request, AsyncRequestCallback<TokenResponse> callback)
+      throws RequestException;
 
 }

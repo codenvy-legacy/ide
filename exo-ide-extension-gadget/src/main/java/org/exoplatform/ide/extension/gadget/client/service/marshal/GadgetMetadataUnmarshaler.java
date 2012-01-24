@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.extension.gadget.client.service.marshal;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
 
 /**
@@ -33,7 +33,7 @@ import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class GadgetMetadataUnmarshaler implements Unmarshallable
+public class GadgetMetadataUnmarshaler implements Unmarshallable<GadgetMetadata>
 {
 
    private GadgetMetadata metadata;
@@ -58,7 +58,11 @@ public class GadgetMetadataUnmarshaler implements Unmarshallable
 
    private void parseGadgetMetadata(String body)
    {
-      JSONObject jsonObj = new JSONObject(toJsonObject(body));
+      JSONObject jsonObj = JSONParser.parseStrict(body).isObject();
+      if (jsonObj == null)
+      {
+         return;
+      }
 
       JSONObject gm = jsonObj.get(GadgetMetadata.GADGETS).isArray().get(0).isObject();
 
@@ -154,8 +158,12 @@ public class GadgetMetadataUnmarshaler implements Unmarshallable
       return strings;
    }
 
-   private static native JavaScriptObject toJsonObject(String jsonString) /*-{
-                                                                          return eval('(' + jsonString + ')');
-                                                                          }-*/;
-
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public GadgetMetadata getPayload()
+   {
+      return metadata;
+   }
 }

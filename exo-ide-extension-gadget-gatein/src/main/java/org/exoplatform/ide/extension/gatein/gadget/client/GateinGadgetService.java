@@ -18,19 +18,20 @@
  */
 package org.exoplatform.ide.extension.gatein.gadget.client;
 
-import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
+
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class GateinGadgetService
 {
 
@@ -39,8 +40,6 @@ public class GateinGadgetService
    private static final String DEPLOY = "/deploy";
 
    private static final String UNDEPLOY = "/undeploy";
-
-   private HandlerManager eventBus;
 
    private Loader loader;
 
@@ -54,37 +53,30 @@ public class GateinGadgetService
 
    public static final String PRIVATE_CONTEXT = "privateContext";
 
-   public GateinGadgetService(HandlerManager eventBus, Loader loader, String restServiceContext, String gadgetServer,
-      String publicContext)
+   public GateinGadgetService(Loader loader, String restServiceContext, String gadgetServer, String publicContext)
    {
-      this.eventBus = eventBus;
       this.loader = loader;
       this.restServiceContext = restServiceContext;
       this.publicContext = publicContext;
    }
 
-   public void deployGadget(String href, AsyncRequestCallback<String> callback)
+   public void deployGadget(String href, AsyncRequestCallback<String> callback) throws RequestException
    {
       String url =
          restServiceContext +
-         /*Configuration.getInstance().getContext() + */CONTEXT + DEPLOY + "?" + GADGET_URL + "="
+         /* Configuration.getInstance().getContext() + */CONTEXT + DEPLOY + "?" + GADGET_URL + "="
             + URL.encodeQueryString(href) + "&" + PRIVATE_CONTEXT + "=" + URL.encodeQueryString(restServiceContext)
             + "&" + PUBLIC_CONTEXT + "=" + URL.encodeQueryString(publicContext);
-      callback.setResult(url);
-      callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
 
-   public void undeployGadget(String href, AsyncRequestCallback<String> callback)
+   public void undeployGadget(String href, AsyncRequestCallback<String> callback) throws RequestException
    {
       String url =
-         restServiceContext + /*Configuration.getInstance().getContext() + */CONTEXT + UNDEPLOY + "?" + GADGET_URL
+         restServiceContext + /* Configuration.getInstance().getContext() + */CONTEXT + UNDEPLOY + "?" + GADGET_URL
             + "=" + URL.encodeQueryString(href) + "&" + PRIVATE_CONTEXT + "="
             + URL.encodeQueryString(restServiceContext) + "&" + PUBLIC_CONTEXT + "="
             + URL.encodeQueryString(publicContext);
-      callback.setResult(url);
-      callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
-
 }

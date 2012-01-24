@@ -18,9 +18,11 @@
  */
 package org.exoplatform.ide.extension.gatein.gadget.client;
 
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.Docking;
@@ -41,10 +43,10 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
-public class GateinGadgetExtension extends Extension implements InitializeServicesHandler,DeployGadgetHadndler, UndeployGadgetHandler,
-EditorActiveFileChangedHandler
+public class GateinGadgetExtension extends Extension implements InitializeServicesHandler, DeployGadgetHadndler,
+   UndeployGadgetHandler, EditorActiveFileChangedHandler
 {
 
    private FileModel activeFile;
@@ -64,41 +66,49 @@ EditorActiveFileChangedHandler
 
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      gateinGadgetService = new GateinGadgetService(IDE.eventBus(), event.getLoader(), event.getApplicationConfiguration().getContext(), event
-         .getApplicationConfiguration().getGadgetServer(), event.getApplicationConfiguration().getPublicContext());
+      gateinGadgetService =
+         new GateinGadgetService(event.getLoader(), event.getApplicationConfiguration().getContext(), event
+            .getApplicationConfiguration().getGadgetServer(), event.getApplicationConfiguration().getPublicContext());
    }
-   
+
    /**
     * @see org.exoplatform.ideall.plugin.gadget.event.DeployGadgetHadndler#onDeployGadget(org.exoplatform.ideall.plugin.gadget.event.DeployGadgetEvent)
     */
    @Override
    public void onDeployGadget(DeployGadgetEvent event)
    {
-      gateinGadgetService.deployGadget(activeFile.getId(), new AsyncRequestCallback<String>()
+      try
       {
-         
-         @Override
-         protected void onSuccess(String result)
+         gateinGadgetService.deployGadget(activeFile.getId(), new AsyncRequestCallback<String>()
          {
-            String outputContent = "<b>" + result + "</b> deployed successfully.";
-            IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));      
-         }
-         
-         @Override
-         protected void onFailure(Throwable exc)
-         {
-            if (exc instanceof ServerException)
+
+            @Override
+            protected void onSuccess(String result)
             {
-               ServerException exception = (ServerException)exc;
-               String outputContent = "<b>" + this.getResult() + "</b> deploy failed.&nbsp;";
-               sendExceptionEvent(exception, outputContent);
+               String outputContent = "<b>" + activeFile.getPath() + "</b> deployed successfully.";
+               IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
             }
-            else
+
+            @Override
+            protected void onFailure(Throwable exc)
             {
-               IDE.fireEvent(new ExceptionThrownEvent(exc));
-            }  
-         }
-      });
+               if (exc instanceof ServerException)
+               {
+                  ServerException exception = (ServerException)exc;
+                  String outputContent = "<b>" + activeFile.getPath() + "</b> deploy failed.&nbsp;";
+                  sendExceptionEvent(exception, outputContent);
+               }
+               else
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exc));
+               }
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -107,31 +117,38 @@ EditorActiveFileChangedHandler
    @Override
    public void onUndeployGadget(UndeployGadgetEvent event)
    {
-      gateinGadgetService.undeployGadget(activeFile.getId(), new AsyncRequestCallback<String>()
+      try
       {
-         
-         @Override
-         protected void onSuccess(String result)
+         gateinGadgetService.undeployGadget(activeFile.getId(), new AsyncRequestCallback<String>()
          {
-            String outputContent = "<b>" + result + "</b> undeployed successfully.";
-            IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
-         }
-         
-         @Override
-         protected void onFailure(Throwable exc)
-         {
-            if (exc instanceof ServerException)
+
+            @Override
+            protected void onSuccess(String result)
             {
-               ServerException exception = (ServerException)exc;
-               String outputContent = "<b>" + this.getResult() + "</b> undeploy failed.&nbsp;";
-               sendExceptionEvent(exception, outputContent);
+               String outputContent = "<b>" + activeFile.getPath() + "</b> undeployed successfully.";
+               IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
             }
-            else
+
+            @Override
+            protected void onFailure(Throwable exc)
             {
-               IDE.fireEvent(new ExceptionThrownEvent(exc));
+               if (exc instanceof ServerException)
+               {
+                  ServerException exception = (ServerException)exc;
+                  String outputContent = "<b>" + activeFile.getPath() + "</b> undeploy failed.&nbsp;";
+                  sendExceptionEvent(exception, outputContent);
+               }
+               else
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exc));
+               }
             }
-         }
-      }); 
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -145,7 +162,7 @@ EditorActiveFileChangedHandler
       {
          message += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
       }
-      
+
       IDE.fireEvent(new OutputEvent(message, OutputMessage.Type.ERROR));
    }
 
