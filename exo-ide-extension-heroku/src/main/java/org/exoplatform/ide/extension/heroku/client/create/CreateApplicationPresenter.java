@@ -221,14 +221,23 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
       {
          return HerokuExtension.LOCALIZATION_CONSTANT.createApplicationSuccess("");
       }
-      String message = "<br> [";
+      StringBuilder message = new StringBuilder("<br> [");
       for (Property property : properties)
       {
-         message += "<b>" + property.getName() + "</b>" + " : " + property.getValue() + "<br>";
+         if ("webUrl".equals(property.getName()))
+         {
+            message.append("<b>").append(property.getName()).append("</b>").append(" : ").append("<a href='")
+               .append(property.getValue()).append("' target='_blank'>").append(property.getValue()).append("</a>")
+               .append("<br>");
+         }
+         else
+         {
+            message.append("<b>").append(property.getName()).append("</b>").append(" : ").append(property.getValue())
+               .append("<br>");
+         }
       }
-      message += "] ";
-
-      return HerokuExtension.LOCALIZATION_CONSTANT.createApplicationSuccess(message);
+      message.append("] ");
+      return HerokuExtension.LOCALIZATION_CONSTANT.createApplicationSuccess(message.toString());
    }
 
    /**
