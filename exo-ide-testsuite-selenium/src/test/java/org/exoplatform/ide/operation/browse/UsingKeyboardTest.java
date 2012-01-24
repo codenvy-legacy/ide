@@ -21,7 +21,7 @@ package org.exoplatform.ide.operation.browse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.gwtframework.commons.rest.copy.MimeType;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;

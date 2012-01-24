@@ -32,7 +32,7 @@ import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.copy.HTTPMethod;
+import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.ide.core.Response;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
