@@ -18,17 +18,17 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.services.marshal;
 
-import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.editor.java.client.model.ShortTypeInfo;
 import org.exoplatform.ide.editor.java.client.model.Types;
 
 import java.util.List;
+
+import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -81,25 +81,28 @@ public class TypesUnmarshaller implements Unmarshallable<List<ShortTypeInfo>>
       for (int i = 0; i < jArray.size(); i++)
       {
          JSONObject jObject = jArray.get(i).isObject();
-         ShortTypeInfo info = new ShortTypeInfo();
-         info.setName(jObject.get(NAME).isString().stringValue());
-         info.setType(Types.valueOf(jObject.get(TYPE).isString().stringValue()));
-
-         for (String key : jObject.keySet())
+         if (jObject.containsKey(NAME) && !jObject.get(NAME).isString().stringValue().contains("$"))
          {
-            if (key.equals("name"))
-            {
-               String fqn = jObject.get(key).isString().stringValue();
-               info.setQualifiedName(fqn);
-               info.setName(fqn.substring(fqn.lastIndexOf(".") + 1));
-            }
-            if (key.equals(MODIFIERS))
-            {
-               info.setModifiers(new Integer((int)jObject.get(key).isNumber().doubleValue()));
-            }
+            ShortTypeInfo info = new ShortTypeInfo();
+            info.setName(jObject.get(NAME).isString().stringValue());
+            info.setType(Types.valueOf(jObject.get(TYPE).isString().stringValue()));
 
+            for (String key : jObject.keySet())
+            {
+               if (key.equals("name"))
+               {
+                  String fqn = jObject.get(key).isString().stringValue();
+                  info.setQualifiedName(fqn);
+                  info.setName(fqn.substring(fqn.lastIndexOf(".") + 1));
+               }
+               if (key.equals(MODIFIERS))
+               {
+                  info.setModifiers(new Integer((int)jObject.get(key).isNumber().doubleValue()));
+               }
+
+            }
+            types.add(info);
          }
-         types.add(info);
       }
    }
 

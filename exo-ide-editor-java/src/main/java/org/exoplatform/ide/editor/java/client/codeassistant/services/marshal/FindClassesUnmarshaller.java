@@ -82,7 +82,8 @@ public class FindClassesUnmarshaller implements Unmarshallable<List<Token>>
       for (int i = 0; i < jArray.size(); i++)
       {
          JSONObject jObject = jArray.get(i).isObject();
-         if (jObject.containsKey(NAME) && jObject.containsKey(MODIFIERS) && jObject.containsKey(TYPE))
+         if (jObject.containsKey(NAME) && jObject.containsKey(MODIFIERS) && jObject.containsKey(TYPE)
+            && !jObject.get(NAME).isString().stringValue().contains("$"))
          {
             String fqn = jObject.get(NAME).isString().stringValue();
             String name = fqn.substring(fqn.lastIndexOf(".") + 1);

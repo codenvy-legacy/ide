@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.ui;
 
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -133,7 +134,7 @@ public abstract class JavaTokenWidgetBase extends TokenWidget
    public Widget getTokenDecription()
    {
       return new Frame(docContext + token.getProperty(TokenProperties.DECLARING_CLASS).isStringProperty().stringValue()
-         + "." + getTokenValue() + "&projectid=" + projectId + "&vfsid="
+         + URL.encodeQueryString("#") + getTokenValue() + "&projectid=" + projectId + "&vfsid="
          + VirtualFileSystem.getInstance().getInfo().getId() + "&isclass=false");
    }
 

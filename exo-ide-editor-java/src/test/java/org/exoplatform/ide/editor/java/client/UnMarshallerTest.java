@@ -43,19 +43,32 @@ import com.google.gwt.user.client.Random;
 public class UnMarshallerTest extends GWTTestCase
 {
    private String classes =
-      "[{\"name\":\"java.lang.String$1\",\"modifiers\":4104,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringCoding$1\",\"modifiers\":4104,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringValue\",\"modifiers\":0,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringIndexOutOfBoundsException\",\"modifiers\":1,\"type\":\"CLASS\"},{\"name\":\"java.lang.StackTraceElement\",\"modifiers\":17,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringBuffer\",\"modifiers\":17,\"type\":\"CLASS\"},{\"name\":\"java.lang.StackOverflowError\",\"modifiers\":1,\"type\":\"CLASS\"},{\"name\":\"java.lang.StrictMath\",\"modifiers\":17,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringCoding$StringEncoder\",\"modifiers\":10,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringBuilder\",\"modifiers\":17,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringCoding$StringDecoder\",\"modifiers\":10,\"type\":\"CLASS\"},{\"name\":\"java.lang.StringCoding\",\"modifiers\":0,\"type\":\"CLASS\"},{\"name\":\"java.lang.String\",\"modifiers\":17,\"type\":\"CLASS\"},{\"name\":\"java.lang.String$CaseInsensitiveComparator\",\"modifiers\":10,\"type\":\"CLASS\"},{\"name\":\"java.util.logging.StreamHandler\",\"modifiers\":1,\"type\":\"CLASS\"},{\"name\":\"java.util.StringTokenizer\",\"modifiers\":1,\"type\":\"CLASS\"},{\"name\":\"java.util.Stack\",\"modifiers\":1,\"type\":\"CLASS\"}]";
+      "[{\"name\":\"java.lang.String$1\",\"modifiers\":4104,\"type\":\"CLASS\"}," + //
+      "{\"name\":\"java.lang.StringCoding$1\",\"modifiers\":4104,\"type\":\"CLASS\"}," + //
+      "{\"name\":\"java.lang.StringValue\",\"modifiers\":0,\"type\":\"CLASS\"}," + //
+      "{\"name\":\"java.lang.StringIndexOutOfBoundsException\",\"modifiers\":1,\"type\":\"CLASS\"}," + //
+      "{\"name\":\"java.lang.StackTraceElement\",\"modifiers\":17,\"type\":\"CLASS\"}," + //
+      "{\"name\":\"java.lang.StringBuffer\",\"modifiers\":17,\"type\":\"CLASS\"}," + //
+      "{\"name\":\"java.lang.StackOverflowError\",\"modifiers\":1,\"type\":\"CLASS\"}," + //
+      "{\"name\":\"java.lang.StrictMath\",\"modifiers\":17,\"type\":\"CLASS\"}," + //
+      "{\"name\":\"java.lang.StringCoding$StringEncoder\",\"modifiers\":10,\"type\":\"CLASS\"}," + //
+      "{\"name\":\"java.lang.StringBuilder\",\"modifiers\":17,\"type\":\"CLASS\"}," + //
+      "{\"name\":\"java.lang.StringCoding$StringDecoder\",\"modifiers\":10,\"type\":\"CLASS\"}," + //
+      "{\"name\":\"java.lang.StringCoding\",\"modifiers\":0,\"type\":\"CLASS\"}," + //
+      "{\"name\":\"java.lang.String\",\"modifiers\":17,\"type\":\"CLASS\"}," + //
+      "{\"name\":\"java.lang.String$CaseInsensitiveComparator\",\"modifiers\":10,\"type\":\"CLASS\"}," + //
+      "{\"name\":\"java.util.logging.StreamHandler\",\"modifiers\":1,\"type\":\"CLASS\"}," + //
+      "{\"name\":\"java.util.StringTokenizer\",\"modifiers\":1,\"type\":\"CLASS\"}," + //
+      "{\"name\":\"java.util.Stack\",\"modifiers\":1,\"type\":\"CLASS\"}]";
 
-   private final String[] expFqn = {"java.lang.String$1", "java.lang.StringCoding$1", "java.lang.StringValue",
-      "java.lang.StringIndexOutOfBoundsException", "java.lang.StackTraceElement", "java.lang.StringBuffer",
-      "java.lang.StackOverflowError", "java.lang.StrictMath", "java.lang.StringCoding$StringEncoder",
-      "java.lang.StringBuilder", "java.lang.StringCoding$StringDecoder", "java.lang.StringCoding", "java.lang.String",
-      "java.lang.String$CaseInsensitiveComparator", "java.util.logging.StreamHandler", "java.util.StringTokenizer",
-      "java.util.Stack"};
+   private final String[] expFqn = {"java.lang.StringValue", "java.lang.StringIndexOutOfBoundsException",
+      "java.lang.StackTraceElement", "java.lang.StringBuffer", "java.lang.StackOverflowError", "java.lang.StrictMath",
+      "java.lang.StringBuilder", "java.lang.StringCoding", "java.lang.String", "java.util.logging.StreamHandler",
+      "java.util.StringTokenizer", "java.util.Stack"};
 
-   private final String[] expName = {"String$1", "StringCoding$1", "StringValue", "StringIndexOutOfBoundsException",
-      "StackTraceElement", "StringBuffer", "StackOverflowError", "StrictMath", "StringCoding$StringEncoder",
-      "StringBuilder", "StringCoding$StringDecoder", "StringCoding", "String", "String$CaseInsensitiveComparator",
-      "StreamHandler", "StringTokenizer", "Stack"};
+   private final String[] expName = {"StringValue", "StringIndexOutOfBoundsException", "StackTraceElement",
+      "StringBuffer", "StackOverflowError", "StrictMath", "StringBuilder", "StringCoding", "String", "StreamHandler",
+      "StringTokenizer", "Stack"};
 
    private final String classdesc =
       "{\"methods\":[{\"genericExceptionTypes\":[],\"declaringClass\":\"java.lang.String\","
@@ -75,11 +88,10 @@ public class UnMarshallerTest extends GWTTestCase
       TypesUnmarshaller unmarshaller = new TypesUnmarshaller(types);
       MockResponse response = new MockResponse(classes);
       unmarshaller.unmarshal(response);
-      assertEquals(17, types.size());
-      int i = Random.nextInt(16);
+      assertEquals(12, types.size());
+      int i = Random.nextInt(11);
       assertEquals(expFqn[i], types.get(i).getQualifiedName());
       assertEquals(expName[i], types.get(i).getName());
-      assertEquals("StringBuffer", types.get(5).getName());
    }
 
    @Test
@@ -89,7 +101,7 @@ public class UnMarshallerTest extends GWTTestCase
       FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(tokens);
       MockResponse response = new MockResponse(classes);
       unmarshaller.unmarshal(response);
-      assertEquals(17, tokens.size());
+      assertEquals(12, tokens.size());
 
       for (int i = 0; i < expName.length; i++)
       {
