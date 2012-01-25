@@ -22,8 +22,6 @@ import org.everrest.groovy.ExtendedGroovyClassLoader;
 import org.everrest.groovy.GroovyClassLoaderProvider;
 import org.everrest.groovy.SourceFile;
 import org.everrest.groovy.SourceFolder;
-import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
-import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPath;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;

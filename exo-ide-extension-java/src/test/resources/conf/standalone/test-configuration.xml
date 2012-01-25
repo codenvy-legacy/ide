@@ -116,11 +116,6 @@
 
 
    <component>
-      <key>org.exoplatform.ide.codeassistant.api.CodeAssistantStorage</key>
-      <type>org.exoplatform.ide.codeassistant.framework.server.impl.CodeAssistantJcrImpl</type>
-   </component>
-   
-   <component>
       <type>org.exoplatform.ide.extension.java.server.JavaCodeAssistant</type>
    </component>
    
@@ -128,78 +123,6 @@
       <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>
    </component>
 
-   <component>
-      <type>org.exoplatform.ide.codeassistant.framework.server.impl.storage.ClassInfoStorage
-      </type>
-      <init-params>
-         <object-param>
-            <name>classinfostrorage.configuration</name>
-            <object type="org.exoplatform.ide.codeassistant.framework.server.extractors.CodeAssistantConfig">
-               <field name="wsName">
-                  <string>ws</string>
-               </field>
-               <field name="runInThread">
-                  <boolean>false</boolean>
-               </field>
-               <field name="jars">
-                  <collection type="java.util.ArrayList">
-                     <value>
-                        <object type="org.exoplatform.ide.codeassistant.framework.server.extractors.JarEntry">
-                           <field name="jarPath">
-                              <string>${jre.lib}${file.separator}rt.jar
-                              </string>
-                           </field>
-                           <field name="includePkg">
-                              <collection type="java.util.ArrayList">
-                                 <value>
-                                    <string>java.math</string>
-                                 </value>
-                              </collection>
-                           </field>
-                        </object>
-                     </value>
-                  </collection>
-               </field>
-            </object>
-         </object-param>
-      </init-params>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.codeassistant.framework.server.impl.storage.DocStorage
-      </type>
-      <init-params>
-         <object-param>
-            <name>docstrorage.configuration</name>
-            <object type="org.exoplatform.ide.codeassistant.framework.server.extractors.CodeAssistantConfig">
-               <field name="wsName">
-                  <string>ws</string>
-               </field>
-               <field name="runInThread">
-                  <boolean>false</boolean>
-               </field>
-               <field name="jars">
-                  <collection type="java.util.ArrayList">
-                     <value>
-                        <object type="org.exoplatform.ide.codeassistant.framework.server.extractors.JarEntry">
-                           <field name="jarPath">
-                              <string>${java.src}</string>
-                           </field>
-                           <field name="includePkg">
-                              <collection type="java.util.ArrayList">
-                                 <value>
-                                    <string>java.math</string>
-                                 </value>
-                              </collection>
-                           </field>
-                        </object>
-                     </value>
-                  </collection>
-               </field>
-            </object>
-         </object-param>
-      </init-params>
-   </component>
 
    <component>
       <key>org.exoplatform.services.jcr.RepositoryService</key>
@@ -217,7 +140,6 @@
                   <description>Node types configuration file
                   </description>
                   <value>jar:/conf/ext-nodetypes-config.xml</value>
-                  <value>jar:/conf/code-assitant-nodetypes.xml</value>
                   <value>jar:/conf/vfs-node-types.xml</value>
                </values-param>
             </init-params>

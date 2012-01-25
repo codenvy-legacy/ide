@@ -19,7 +19,6 @@
 package org.exoplatform.ide.extension.groovy.server;
 
 import org.everrest.core.impl.provider.json.JsonException;
-import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPath;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistant;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;

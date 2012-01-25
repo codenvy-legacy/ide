@@ -23,7 +23,6 @@ import org.everrest.groovy.ExtendedGroovyClassLoader;
 import org.everrest.groovy.GroovyClassLoaderProvider;
 import org.everrest.groovy.SourceFile;
 import org.exoplatform.container.ConcurrentPicoContainer;
-import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPath;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;

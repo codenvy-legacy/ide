@@ -24,8 +24,6 @@ import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.everrest.groovy.SourceFile;
 import org.everrest.groovy.SourceFolder;
-import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPath;
-import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPathEntry;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;

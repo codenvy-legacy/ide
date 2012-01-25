@@ -22,7 +22,7 @@ import org.chromattic.dataobject.NodeTypeFormat;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.groovy.SourceFile;
 import org.everrest.groovy.SourceFolder;
-import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPath;
+import org.exoplatform.ide.extension.groovy.server.GroovyClassPath;
 import org.exoplatform.ide.extension.groovy.server.GroovyClassPathHelper;
 import org.exoplatform.ide.extension.groovy.server.IDEGroovyCompiler;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;

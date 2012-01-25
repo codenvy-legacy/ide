@@ -12,20 +12,6 @@
    <name>eXo IDE :: Extension : Groovy</name>
    <dependencies>
       <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-codeassistant-framework</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>org.exoplatform.ws</groupId>
-               <artifactId>exo.ws.frameworks.json</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.ws</groupId>
-               <artifactId>exo.ws.rest.ext</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.commons</artifactId>
       </dependency>
@@ -175,6 +161,10 @@
          <scope>provided</scope>
       </dependency>
 
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-codeassistant-api</artifactId>
+      </dependency>  
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>

@@ -124,6 +124,7 @@
                <mode>htmlunit</mode>
                <htmlunit>FF3</htmlunit>
                <extraJvmArgs>-Xmx1048m -XX:MaxPermSize=256m -Xss35m</extraJvmArgs>
+               <out>${project.build.directory}/www-test</out>
             </configuration>
             <executions>
                <execution>
