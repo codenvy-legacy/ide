@@ -73,10 +73,12 @@ public interface HerokuLocalizationConstant extends Messages
    @Key("logsButton")
    String logsButton();
 
-   // Controls:
    @DefaultMessage("Logged in Heroku successfully.")
    @Key("loginSuccess")
    String loginSuccess();
+   
+   @Key("loginFailed")
+   String loginFailed();
 
    @DefaultMessage("Public keys are successfully deployed on Heroku.")
    @Key("addKeysSuccess")
@@ -85,10 +87,6 @@ public interface HerokuLocalizationConstant extends Messages
    @DefaultMessage("Keys are successfully removed from Heroku.")
    @Key("clearKeysSuccess")
    String clearKeysSuccess();
-
-   @DefaultMessage("Log in Heroku failed")
-   @Key("loginFailed")
-   String loginFailed();
 
    @Key("deleteApplicationSuccess")
    String deleteApplicationSuccess();

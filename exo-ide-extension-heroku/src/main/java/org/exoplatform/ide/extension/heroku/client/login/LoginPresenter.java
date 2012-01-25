@@ -81,6 +81,13 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
       HasValue<String> getEmailField();
 
       /**
+       * Get login result label.
+       * 
+       * @return {@link HasValue}
+       */
+      HasValue<String> getLoginResult();
+
+      /**
        * Get password field.
        * 
        * @return {@link TextFieldItem}
@@ -283,7 +290,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
             protected void onFailure(Throwable exception)
             {
                IDE.fireEvent(new LoggedInEvent(true));
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
+               display.getLoginResult().setValue(HerokuExtension.LOCALIZATION_CONSTANT.loginFailed());
             }
          });
       }
@@ -328,5 +335,6 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
       IDE.getInstance().openView(display.asView());
       display.enableLoginButton(false);
       display.focusInEmailField();
+      display.getLoginResult().setValue("");
    }
 }

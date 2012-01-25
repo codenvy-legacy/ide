@@ -26,26 +26,35 @@
       .left-float {
       	float: left;
       }
+      
+      .login-label {
+      	margin-top: 5px;
+      	font-size: 11px;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	float: left;
+      	color: #D21A1A;
+      }
    </ui:style>
 
-   <f:Border margin="7" borderColor="transparent">
-      <f:layer>
-         <g:FlowPanel>
+   <f:Border margin="15" borderColor="transparent">
+      <f:layer top="0" bottom="40">
+         <g:FlowPanel >
             <g:Label addStyleNames="{style.label}" text="{locale.loginViewEmailField}" height="22" width="100%"></g:Label>
-            <f:TextInput ui:field="emailField" title="" height="22" width="100%"></f:TextInput>
+            <f:TextInput ui:field="emailField" title="" height="22px" width="100%"></f:TextInput>
             <g:Label addStyleNames="{style.label} {style.spacing}" text="{locale.loginViewPasswordField}" height="22" width="100%"></g:Label>
-            <f:PasswordTextInput ui:field="passwordField" height="22" width="100%"></f:PasswordTextInput>
+            <f:PasswordTextInput ui:field="passwordField" height="22px" width="100%"></f:PasswordTextInput>
+            <f:Label ui:field="loginResult" styleName="{style.login-label}"></f:Label>
          </g:FlowPanel>
       </f:layer>
-      <f:layer height="40px" bottom="0">
-         <g:FlowPanel width="273px" addStyleNames="{style.center} {style.spacing}">
-            <f:ImageButton ui:field="loginButton" width="90" height="22" text="{locale.loginButton}" imageResource="{resource.okButton}"
+      <f:layer height="30px" bottom="0">
+         <g:FlowPanel width="310px" addStyleNames="{style.center}">
+            <f:ImageButton ui:field="loginButton" width="90px" height="22" text="{locale.loginButton}" imageResource="{resource.okButton}"
                disabledImageResource="{resource.okButtonDisabled}" styleName="{style.left-float}"></f:ImageButton>
-            <g:FlowPanel width="10px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
-            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageResource="{resource.cancelButton}"
+            <g:FlowPanel width="5px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
+            <f:ImageButton ui:field="cancelButton" width="90px" height="22" text="{locale.cancelButton}" imageResource="{resource.cancelButton}"
                disabledImageResource="{resource.cancelButtonDisabled}" styleName="{style.left-float}"></f:ImageButton>
-            <g:FlowPanel width="10px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
-            <f:ImageButton ui:field="loginDemoButton" width="110" height="22" text="{locale.loginDemoButton}" styleName="{style.left-float}"></f:ImageButton>
+            <g:FlowPanel width="5px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
+            <f:ImageButton ui:field="loginDemoButton" width="110px" height="22" text="{locale.loginDemoButton}" styleName="{style.left-float}"></f:ImageButton>
          </g:FlowPanel>
       </f:layer>
    </f:Border>
