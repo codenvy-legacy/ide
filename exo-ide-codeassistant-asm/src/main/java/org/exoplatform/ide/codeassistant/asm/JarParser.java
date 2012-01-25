@@ -82,9 +82,28 @@ public class JarParser
       return classes;
    }
 
+   /**
+    * Parse content of the jar file
+    * 
+    * @param jarFile
+    *           - input jar file.
+    * @return - list of the TypeInfo parsed from classes in jar file
+    * @throws IOException
+    */
    public static List<TypeInfo> parse(File jarFile) throws IOException
    {
-      return parse(new FileInputStream(jarFile));
+      FileInputStream jarStream = new FileInputStream(jarFile);
+      try
+      {
+         return parse(jarStream);
+      }
+      finally
+      {
+         if (jarStream != null)
+         {
+            jarStream.close();
+         }
+      }
    }
 
 }
