@@ -163,7 +163,7 @@ public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
    {
       StringBuilder builder = new StringBuilder();
       builder.append(method.getName());
-      builder.append("(");
+      builder.append('(');
       boolean isFirst = true;
       for (String parameter : method.getParameterTypes())
       {
@@ -174,7 +174,7 @@ public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
          builder.append(parameter);
          isFirst = false;
       }
-      builder.append(")");
+      builder.append(')');
       return builder.toString();
    }
 

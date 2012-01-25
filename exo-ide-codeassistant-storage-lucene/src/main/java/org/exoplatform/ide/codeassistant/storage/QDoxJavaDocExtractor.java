@@ -25,8 +25,7 @@ import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -63,19 +62,7 @@ public class QDoxJavaDocExtractor
       {
          if (entry.getName().endsWith(".java"))
          {
-            // method extractSource closes stream!
-            // ZipInputStream must not be closed, so, copy stream
-            ByteArrayOutputStream bout = new ByteArrayOutputStream();
-            int length = 0;
-            byte[] buf = new byte[1024];
-            while (length >= 0)
-            {
-               bout.write(buf, 0, length);
-               length = zip.read(buf);
-            }
-
-            // extract sources with closing stream
-            result.putAll(extractSource(new ByteArrayInputStream(bout.toByteArray())));
+            result.putAll(extractSource(zip));
          }
          entry = zip.getNextEntry();
       }
@@ -135,9 +122,6 @@ public class QDoxJavaDocExtractor
     * </ul>
     * </p>
     * 
-    * <p>
-    * 
-    * </p>
     * Examples:
     * <ul>
     * <li>java.lang.Integer</li>
@@ -155,9 +139,6 @@ public class QDoxJavaDocExtractor
     * fqn.
     * </p>
     * 
-    * WARNING: This method closes input stream!!! You may use method
-    * {@link #extractZip} if you need to extract java docs from zip file
-    * 
     * @param sourceZipStream
     *           stream of <code>.java</code> file
     * @return map with key - member's fqn, and value - javaDoc comment
@@ -167,8 +148,14 @@ public class QDoxJavaDocExtractor
       Map<String, String> javaDocs = new HashMap<String, String>();
 
       JavaDocBuilder javaDocBuilder = new JavaDocBuilder();
-      // here will be closed sourceStream
-      javaDocBuilder.addSource(new InputStreamReader(sourceStream));
+      InputStreamReader reader = new InputStreamReader(new FilterInputStream(sourceStream)
+      {
+         @Override
+         public void close()
+         {
+         }
+      });
+      javaDocBuilder.addSource(reader);
 
       for (JavaClass currentClass : javaDocBuilder.getClasses())
       {
@@ -226,7 +213,7 @@ public class QDoxJavaDocExtractor
       StringBuilder fqnBuilder = new StringBuilder();
       String prefix = javaField.getParentClass().getFullyQualifiedName();
       fqnBuilder.append(prefix);
-      fqnBuilder.append("#");
+      fqnBuilder.append('#');
 
       fqnBuilder.append(javaField.getName());
       return fqnBuilder.toString();
@@ -247,22 +234,22 @@ public class QDoxJavaDocExtractor
 
       if (!javaMethod.isConstructor())
       {
-         fqnBuilder.append("#");
+         fqnBuilder.append('#');
          fqnBuilder.append(javaMethod.getName());
       }
 
-      fqnBuilder.append("(");
+      fqnBuilder.append('(');
       boolean isFirst = true;
       for (JavaParameter parameter : javaMethod.getParameters())
       {
          if (!isFirst)
          {
-            fqnBuilder.append(",");
+            fqnBuilder.append(',');
          }
          fqnBuilder.append(parameter.getType().getGenericValue());
          isFirst = false;
       }
-      fqnBuilder.append(")");
+      fqnBuilder.append(')');
       return fqnBuilder.toString();
    }
 
@@ -283,10 +270,10 @@ public class QDoxJavaDocExtractor
       commentBuilder.append(comment);
       for (DocletTag tag : tags)
       {
-         commentBuilder.append("\n");
-         commentBuilder.append("@");
+         commentBuilder.append('\n');
+         commentBuilder.append('@');
          commentBuilder.append(tag.getName());
-         commentBuilder.append(" ");
+         commentBuilder.append(' ');
          commentBuilder.append(tag.getValue());
       }
       return commentBuilder.toString().trim();

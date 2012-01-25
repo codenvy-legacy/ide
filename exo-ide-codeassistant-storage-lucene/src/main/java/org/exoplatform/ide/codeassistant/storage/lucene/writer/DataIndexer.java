@@ -44,7 +44,7 @@ public class DataIndexer
     */
    public static String simpleName(String fqn)
    {
-      return fqn.substring(fqn.lastIndexOf(".") + 1);
+      return fqn.substring(fqn.lastIndexOf('.') + 1);
    }
 
    /**
