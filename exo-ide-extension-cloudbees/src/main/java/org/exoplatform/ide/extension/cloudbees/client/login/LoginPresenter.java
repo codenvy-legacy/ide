@@ -76,6 +76,13 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
        * @return {@link HasValue}
        */
       HasValue<String> getPasswordField();
+      
+      /**
+       * Login result label.
+       * 
+       * @return {@link String}
+       */
+      HasValue<String> getLoginResult();
 
       /**
        * Change the enable state of the login button.
@@ -88,6 +95,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
        * Give focus to login field.
        */
       void focusInEmailField();
+      
    }
 
    private Display display;
@@ -178,6 +186,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          IDE.getInstance().openView(display.asView());
          display.enableLoginButton(false);
          display.focusInEmailField();
+         display.getLoginResult().setValue("");
       }
    }
 
@@ -213,7 +222,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
             @Override
             protected void onFailure(Throwable exception)
             {
-               IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.loginFailed(), Type.INFO));
+               display.getLoginResult().setValue(CloudBeesExtension.LOCALIZATION_CONSTANT.loginFailed());
             }
          });
       }

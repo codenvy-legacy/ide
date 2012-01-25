@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.component.PasswordTextInput;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -43,11 +44,13 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
 {
    private static final String ID = "ideLoginView";
 
-   private static final int WIDTH = 400;
+   private static final int WIDTH = 410;
 
-   private static final int HEIGHT = 190;
+   private static final int HEIGHT = 205;
 
    private static final String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
+   
+   private static final String LOGIN_RESULT_ID = "ideLoginViewLoginResult";
 
    private static final String CANCEL_BUTTON_ID = "ideLoginViewCancelButton";
 
@@ -87,6 +90,9 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     */
    @UiField
    ImageButton cancelButton;
+   
+   @UiField
+   Label loginResult;
 
    public LoginView()
    {
@@ -97,6 +103,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
       passwordField.setName(PASSWORD_FIELD_ID);
       loginButton.setButtonId(LOGIN_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
+      loginResult.setID(LOGIN_RESULT_ID);
    }
 
    /**
@@ -151,5 +158,14 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    public void focusInEmailField()
    {
       emailField.focus();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudbees.client.login.LoginPresenter.Display#getLoginResult()
+    */
+   @Override
+   public HasValue<String> getLoginResult()
+   {
+      return loginResult;
    }
 }
