@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.codeassistant.asm;
 
-import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
 
@@ -49,34 +49,86 @@ public class ClassParser
 
    /**
     * 
-    * @param class2Find
+    * Find content of the class file.
+    * 
+    * @param classObject
     *           - class to find
-    * @return - content of the 'class2Find.class' file
+    * @return - content of the 'classObject.class' file
     */
-   public static InputStream getClassFile(Class<?> class2Find)
+   public static InputStream getClassFile(Class<?> classObject)
    {
       ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-      String classResource = class2Find.getName().replace('.', '/') + ".class";
+      String classResource = classObject.getName().replace('.', '/') + ".class";
       return contextClassLoader.getResourceAsStream(classResource);
    }
 
-   public static TypeInfo parse(Class<?> class2Find) throws IOException
+   /**
+    * Read class information from 'classObject.class' file
+    * 
+    * @param classObject
+    *           - class TypeInfo we looking for.
+    * @return - empty TypeInfoBean if class file not found.
+    * @throws IOException
+    */
+   public static TypeInfo parse(Class<?> classObject) throws IOException
    {
-      return parse(getClassFile(class2Find));
+      InputStream classStream = getClassFile(classObject);
+      if (classStream == null)
+      {
+         return new TypeInfoBean();
+      }
+      try
+      {
+         return parse(classStream);
+      }
+      finally
+      {
+         classStream.close();
+      }
    }
 
-   public static TypeInfo parse(String class2Find) throws IOException
+   /**
+    * Read class information from 'classObject.class' file
+    * 
+    * @param classObject
+    *           - class TypeInfo we looking for.
+    * @return - empty TypeInfoBean if class file not found.
+    * @throws IOException
+    */
+   public static TypeInfo parse(String classObject) throws IOException
    {
       ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-      String classResource = class2Find.replace('.', '/') + ".class";
-      return parse(contextClassLoader.getResourceAsStream(classResource));
+      String classResource = classObject.replace('.', '/') + ".class";
+      InputStream classStream = contextClassLoader.getResourceAsStream(classResource);
+      if (classStream == null)
+      {
+         return new TypeInfoBean();
+      }
+      try
+      {
+         return parse(classStream);
+      }
+      finally
+      {
+         classStream.close();
+      }
    }
 
-   public static TypeInfo parseQuietly(Class<?> class2Find)
+   /**
+    * Read class information from 'classObject.class' file without throwing
+    * exception in the case of problems
+    * 
+    * @param classObject
+    *           - class TypeInfo we looking for.
+    * @return - empty TypeInfoBean if class file not found or exception will
+    *         occure.
+    * @throws IOException
+    */
+   public static TypeInfo parseQuietly(Class<?> classObject)
    {
       try
       {
-         return parse(getClassFile(class2Find));
+         return parse(getClassFile(classObject));
       }
       catch (IOException e)
       {
@@ -84,6 +136,14 @@ public class ClassParser
       }
    }
 
+   /**
+    * Parse TypeInfo from class stream
+    * 
+    * @param classStream
+    *           - stream from class file.
+    * @return TypeInfo of the class file information.
+    * @throws IOException
+    */
    public static TypeInfo parse(InputStream classStream) throws IOException
    {
       ClassReader cr = new ClassReader(classStream);
