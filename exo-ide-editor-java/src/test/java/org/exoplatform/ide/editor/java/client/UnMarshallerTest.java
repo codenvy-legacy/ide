@@ -43,7 +43,7 @@ import com.google.gwt.user.client.Random;
 public class UnMarshallerTest extends GWTTestCase
 {
    private String classes =
-      "[{\"name\":\"java.lang.String$1\",\"modifiers\":4104,\"type\":\"CLASS\"}," + //
+      "{\"types\" : [{\"name\":\"java.lang.String$1\",\"modifiers\":4104,\"type\":\"CLASS\"}," + //
       "{\"name\":\"java.lang.StringCoding$1\",\"modifiers\":4104,\"type\":\"CLASS\"}," + //
       "{\"name\":\"java.lang.StringValue\",\"modifiers\":0,\"type\":\"CLASS\"}," + //
       "{\"name\":\"java.lang.StringIndexOutOfBoundsException\",\"modifiers\":1,\"type\":\"CLASS\"}," + //
@@ -59,7 +59,7 @@ public class UnMarshallerTest extends GWTTestCase
       "{\"name\":\"java.lang.String$CaseInsensitiveComparator\",\"modifiers\":10,\"type\":\"CLASS\"}," + //
       "{\"name\":\"java.util.logging.StreamHandler\",\"modifiers\":1,\"type\":\"CLASS\"}," + //
       "{\"name\":\"java.util.StringTokenizer\",\"modifiers\":1,\"type\":\"CLASS\"}," + //
-      "{\"name\":\"java.util.Stack\",\"modifiers\":1,\"type\":\"CLASS\"}]";
+      "{\"name\":\"java.util.Stack\",\"modifiers\":1,\"type\":\"CLASS\"}]}";
 
    private final String[] expFqn = {"java.lang.StringValue", "java.lang.StringIndexOutOfBoundsException",
       "java.lang.StackTraceElement", "java.lang.StringBuffer", "java.lang.StackOverflowError", "java.lang.StrictMath",

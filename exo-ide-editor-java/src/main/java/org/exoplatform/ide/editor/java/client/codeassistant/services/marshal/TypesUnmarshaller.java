@@ -72,36 +72,41 @@ public class TypesUnmarshaller implements Unmarshallable<List<ShortTypeInfo>>
 
    private void doParse(String body)
    {
-      JSONArray jArray = JSONParser.parseLenient(body).isArray();
-      if (jArray == null)
+      JSONObject object = JSONParser.parseLenient(body).isObject();
+      if (object.containsKey("types"))
       {
-         return;
-      }
+         JSONArray jArray = object.get("types").isArray();
 
-      for (int i = 0; i < jArray.size(); i++)
-      {
-         JSONObject jObject = jArray.get(i).isObject();
-         if (jObject.containsKey(NAME) && !jObject.get(NAME).isString().stringValue().contains("$"))
+         if (jArray == null)
          {
-            ShortTypeInfo info = new ShortTypeInfo();
-            info.setName(jObject.get(NAME).isString().stringValue());
-            info.setType(Types.valueOf(jObject.get(TYPE).isString().stringValue()));
+            return;
+         }
 
-            for (String key : jObject.keySet())
+         for (int i = 0; i < jArray.size(); i++)
+         {
+            JSONObject jObject = jArray.get(i).isObject();
+            if (jObject.containsKey(NAME) && !jObject.get(NAME).isString().stringValue().contains("$"))
             {
-               if (key.equals("name"))
-               {
-                  String fqn = jObject.get(key).isString().stringValue();
-                  info.setQualifiedName(fqn);
-                  info.setName(fqn.substring(fqn.lastIndexOf(".") + 1));
-               }
-               if (key.equals(MODIFIERS))
-               {
-                  info.setModifiers(new Integer((int)jObject.get(key).isNumber().doubleValue()));
-               }
+               ShortTypeInfo info = new ShortTypeInfo();
+               info.setName(jObject.get(NAME).isString().stringValue());
+               info.setType(Types.valueOf(jObject.get(TYPE).isString().stringValue()));
 
+               for (String key : jObject.keySet())
+               {
+                  if (key.equals("name"))
+                  {
+                     String fqn = jObject.get(key).isString().stringValue();
+                     info.setQualifiedName(fqn);
+                     info.setName(fqn.substring(fqn.lastIndexOf(".") + 1));
+                  }
+                  if (key.equals(MODIFIERS))
+                  {
+                     info.setModifiers(new Integer((int)jObject.get(key).isNumber().doubleValue()));
+                  }
+
+               }
+               types.add(info);
             }
-            types.add(info);
          }
       }
    }

@@ -18,11 +18,6 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.services.marshal;
 
-import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.editor.api.codeassitant.NumericProperty;
@@ -33,6 +28,11 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 
 import java.util.List;
+
+import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 
 /**
  * Created by The eXo Platform SAS.
@@ -78,21 +78,25 @@ public class FindClassesUnmarshaller implements Unmarshallable<List<Token>>
 
    private void parseClassesName(String body)
    {
-      JSONArray jArray = JSONParser.parseLenient(body).isArray();
-      for (int i = 0; i < jArray.size(); i++)
+      JSONObject object = JSONParser.parseLenient(body).isObject();
+      if (object.containsKey("types"))
       {
-         JSONObject jObject = jArray.get(i).isObject();
-         if (jObject.containsKey(NAME) && jObject.containsKey(MODIFIERS) && jObject.containsKey(TYPE)
-            && !jObject.get(NAME).isString().stringValue().contains("$"))
+         JSONArray jArray = object.get("types").isArray();
+         for (int i = 0; i < jArray.size(); i++)
          {
-            String fqn = jObject.get(NAME).isString().stringValue();
-            String name = fqn.substring(fqn.lastIndexOf(".") + 1);
-            String type = jObject.get(TYPE).isString().stringValue();
-            double modifiers = (int)jObject.get(MODIFIERS).isNumber().doubleValue();
-            Token token = new TokenImpl(name, TokenType.valueOf(type));
-            token.setProperty(TokenProperties.FQN, new StringProperty(fqn));
-            token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifiers));
-            tokens.add(token);
+            JSONObject jObject = jArray.get(i).isObject();
+            if (jObject.containsKey(NAME) && jObject.containsKey(MODIFIERS) && jObject.containsKey(TYPE)
+               && !jObject.get(NAME).isString().stringValue().contains("$"))
+            {
+               String fqn = jObject.get(NAME).isString().stringValue();
+               String name = fqn.substring(fqn.lastIndexOf(".") + 1);
+               String type = jObject.get(TYPE).isString().stringValue();
+               double modifiers = (int)jObject.get(MODIFIERS).isNumber().doubleValue();
+               Token token = new TokenImpl(name, TokenType.valueOf(type));
+               token.setProperty(TokenProperties.FQN, new StringProperty(fqn));
+               token.setProperty(TokenProperties.MODIFIERS, new NumericProperty(modifiers));
+               tokens.add(token);
+            }
          }
       }
    }
