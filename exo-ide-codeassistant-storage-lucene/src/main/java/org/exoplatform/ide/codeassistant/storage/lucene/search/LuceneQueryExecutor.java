@@ -72,7 +72,6 @@ public class LuceneQueryExecutor
       {
          throw new CodeAssistantException(500, "Negative offset " + offset + " is not allowed");
       }
-      // long start = System.currentTimeMillis();
       try
       {
          IndexSearcher searcher = infoStorage.getTypeInfoIndexSearcher();
@@ -100,10 +99,6 @@ public class LuceneQueryExecutor
       catch (IOException e)
       {
          throw new CodeAssistantException(404, e.getLocalizedMessage());
-      }
-      finally
-      {
-         //LOG.debug("Quey execution time {}", System.currentTimeMillis() - start);
       }
 
    }

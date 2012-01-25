@@ -65,12 +65,18 @@ public class LuceneDataWriter
       {
          IndexWriter writer =
             new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
-         for (Entry<String, String> javaDoc : javaDocs.entrySet())
+         try
          {
-            writer.addDocument(indexer.createJavaDocDocument(javaDoc.getKey(), javaDoc.getValue()));
+            for (Entry<String, String> javaDoc : javaDocs.entrySet())
+            {
+               writer.addDocument(indexer.createJavaDocDocument(javaDoc.getKey(), javaDoc.getValue()));
+            }
+            writer.commit();
          }
-         writer.commit();
-         writer.close();
+         finally
+         {
+            writer.close();
+         }
       }
       catch (IOException e)
       {
@@ -91,12 +97,18 @@ public class LuceneDataWriter
       {
          IndexWriter writer =
             new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
-         for (TypeInfo typeInfo : typeInfos)
+         try
          {
-            writer.addDocument(indexer.createTypeInfoDocument(typeInfo));
+            for (TypeInfo typeInfo : typeInfos)
+            {
+               writer.addDocument(indexer.createTypeInfoDocument(typeInfo));
+            }
+            writer.commit();
          }
-         writer.commit();
-         writer.close();
+         finally
+         {
+            writer.close();
+         }
       }
       catch (IOException e)
       {

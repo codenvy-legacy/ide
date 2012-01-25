@@ -35,6 +35,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Create TypeInfo from lucene document.
@@ -44,13 +45,11 @@ public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
 
    private final LuceneCodeAssistantStorage luceneCodeAssistantStorage;
 
-   private final static String OBJECT_NAME = "java.lang.Object";
-
    /**
-    * This constant used for caching TypeInfo of java.lang.Object class. It will
+    * This variable used for caching TypeInfo of java.lang.Object class. It will
     * be initialized in first query
     */
-   private static TypeInfo OBJECT_TYPE = null;
+   private static AtomicReference<TypeInfo> objectTypeHolder = new AtomicReference<TypeInfo>();
 
    /**
     * @param luceneCodeAssistantStorage
@@ -80,13 +79,14 @@ public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
          {
             if (!result.getSuperClass().isEmpty())
             {
-               if (OBJECT_NAME.equals(result.getSuperClass()))
+               if ("java.lang.Object".equals(result.getSuperClass()))
                {
-                  if (OBJECT_TYPE == null)
+                  if (objectTypeHolder.get() == null)
                   {
-                     OBJECT_TYPE = luceneCodeAssistantStorage.getTypeByFqn(result.getSuperClass());
+                     objectTypeHolder.compareAndSet(null,
+                        luceneCodeAssistantStorage.getTypeByFqn(result.getSuperClass()));
                   }
-                  mergeType(result, OBJECT_TYPE);
+                  mergeType(result, objectTypeHolder.get());
                }
                else
                {
@@ -148,10 +148,11 @@ public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
          }
          for (MethodInfo method : ancestor.getMethods())
          {
-            if (Modifier.isPublic(method.getModifiers()) && !existedMethods.contains(getMethodDeclaration(method))
-               && !method.isConstructor())
+            String methodDeclaration;
+            if (Modifier.isPublic(method.getModifiers()) && !method.isConstructor()
+               && !existedMethods.contains(methodDeclaration = getMethodDeclaration(method)) && !method.isConstructor())
             {
-               existedMethods.add(getMethodDeclaration(method));
+               existedMethods.add(methodDeclaration);
                methods.add(method);
             }
          }

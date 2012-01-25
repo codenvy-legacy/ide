@@ -66,6 +66,6 @@ public class FieldPrefixSearchConstraint implements LuceneSearchConstraint
    @Override
    public boolean matchAll()
    {
-      return prefix == null || prefix.length() < 1;
+      return prefix == null || prefix.isEmpty();
    }
 }
