@@ -406,11 +406,6 @@
           <type>zip</type>
         </dependency>
       
-	 		<dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-maven-webapp-archetype</artifactId>
-            <version>${project.version}</version>
-         </dependency>
          <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
