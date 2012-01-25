@@ -26,6 +26,7 @@ import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneDataWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -92,8 +93,16 @@ public class DataStorageWriter
          for (String jar : sourceJars)
          {
             File jarFile = new File(jar);
-            Map<String, String> javaDocs = javaDocExtractor.extractZip(new FileInputStream(jarFile));
-            writer.addJavaDocs(javaDocs);
+            InputStream zipStream = new FileInputStream(jarFile);
+            try
+            {
+               Map<String, String> javaDocs = javaDocExtractor.extractZip(zipStream);
+               writer.addJavaDocs(javaDocs);
+            }
+            finally
+            {
+               zipStream.close();
+            }
          }
       }
       finally
@@ -104,5 +113,4 @@ public class DataStorageWriter
          }
       }
    }
-
 }

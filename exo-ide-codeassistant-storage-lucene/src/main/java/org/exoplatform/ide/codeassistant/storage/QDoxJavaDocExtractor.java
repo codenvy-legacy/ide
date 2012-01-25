@@ -36,7 +36,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
- * Class which extract java docs from sources.
+ * Class that extracts java docs from sources.
  */
 public class QDoxJavaDocExtractor
 {
@@ -63,8 +63,19 @@ public class QDoxJavaDocExtractor
       {
          if (entry.getName().endsWith(".java"))
          {
-            // extract sources without closing stream
-            result.putAll(extractSource(zip, false));
+            // method extractSource closes stream!
+            // ZipInputStream must not be closed, so, copy stream
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            int length = 0;
+            byte[] buf = new byte[1024];
+            while (length >= 0)
+            {
+               bout.write(buf, 0, length);
+               length = zip.read(buf);
+            }
+
+            // extract sources with closing stream
+            result.putAll(extractSource(new ByteArrayInputStream(bout.toByteArray())));
          }
          entry = zip.getNextEntry();
       }
@@ -144,8 +155,8 @@ public class QDoxJavaDocExtractor
     * fqn.
     * </p>
     * 
-    * WARNING: This method closes input stream!!! If you need no close stream,
-    * use method {@link #extractSource(InputStream, boolean)}
+    * WARNING: This method closes input stream!!! You may use method
+    * {@link #extractZip} if you need to extract java docs from zip file
     * 
     * @param sourceZipStream
     *           stream of <code>.java</code> file
@@ -189,41 +200,6 @@ public class QDoxJavaDocExtractor
       }
 
       return javaDocs;
-   }
-
-   /**
-    * <p>
-    * This method useful if you didn't want to close stream after parsing,
-    * because original {@link #extractSource(InputStream)} method closes stream.
-    * </p>
-    * 
-    * @param stream
-    * @param isCloseStream
-    *           to close or not to close stream
-    * @return
-    * @throws IOException
-    */
-   public Map<String, String> extractSource(InputStream stream, boolean isCloseStream) throws IOException
-   {
-      InputStream sourceStream;
-      if (isCloseStream)
-      {
-         sourceStream = stream;
-      }
-      else
-      {
-         // copy stream
-         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-         int length = 0;
-         byte[] buf = new byte[1024];
-         while (length >= 0)
-         {
-            bout.write(buf, 0, length);
-            length = stream.read(buf);
-         }
-         sourceStream = new ByteArrayInputStream(bout.toByteArray());
-      }
-      return extractSource(sourceStream);
    }
 
    /**
