@@ -199,7 +199,7 @@ public class CodeAssistantStorageVfsImpl implements CodeAssistantStorage
    }
 
    @Override
-   public List<ShortTypeInfo> getIntefaces(String prefix) throws CodeAssistantException
+   public List<ShortTypeInfo> getInterfaces(String prefix) throws CodeAssistantException
    {
       return null;
    }

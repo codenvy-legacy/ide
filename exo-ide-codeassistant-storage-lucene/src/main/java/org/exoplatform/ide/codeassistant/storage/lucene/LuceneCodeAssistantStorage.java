@@ -90,10 +90,10 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
 
    /**
     * 
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getIntefaces(java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getInterfaces(java.lang.String)
     */
    @Override
-   public List<ShortTypeInfo> getIntefaces(String prefix) throws CodeAssistantException
+   public List<ShortTypeInfo> getInterfaces(String prefix) throws CodeAssistantException
    {
       return queryExecutor.executeQuery(new ShortTypeInfoExtractor(), IndexType.JAVA,
          and(eqJavaType(JavaType.INTERFACE), prefix(DataIndexFields.CLASS_NAME, prefix)), DEFAULT_RESULT_LIMIT, 0);

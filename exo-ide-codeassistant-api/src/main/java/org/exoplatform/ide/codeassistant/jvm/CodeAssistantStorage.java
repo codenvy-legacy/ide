@@ -70,7 +70,7 @@ public interface CodeAssistantStorage
     * @return {@link List<ShortTypeInfo>}
     * @throws CodeAssistantException
     */
-   List<ShortTypeInfo> getIntefaces(String prefix) throws CodeAssistantException;
+   List<ShortTypeInfo> getInterfaces(String prefix) throws CodeAssistantException;
 
    /**
     * Find JavaDoc for Java Class member FQN

@@ -272,7 +272,7 @@ public class CodeAssistantJcrImpl implements CodeAssistantStorage
    }
 
    @Override
-   public List<ShortTypeInfo> getIntefaces(String prefix) throws CodeAssistantException
+   public List<ShortTypeInfo> getInterfaces(String prefix) throws CodeAssistantException
    {
       return findByType(JavaType.INTERFACE, prefix);
    }

@@ -69,7 +69,7 @@ public abstract class CodeAssistant
       switch (type)
       {
          case INTERFACE :
-            List<ShortTypeInfo> intefaces = storage.getIntefaces(prefix);
+            List<ShortTypeInfo> intefaces = storage.getInterfaces(prefix);
             if (intefaces != null)
             {
                result.addAll(intefaces);

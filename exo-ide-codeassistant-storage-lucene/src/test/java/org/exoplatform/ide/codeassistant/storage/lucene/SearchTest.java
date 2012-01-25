@@ -74,7 +74,7 @@ public class SearchTest
    @Test
    public void testSearchAllInterfaces() throws Exception
    {
-      List<ShortTypeInfo> typeInfos = storage.getIntefaces("");
+      List<ShortTypeInfo> typeInfos = storage.getInterfaces("");
 
       assertEquals(3, typeInfos.size());
    }
