@@ -16,18 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-  package org.exoplatform.ide.codeassistant.asm.test;
+package org.exoplatform.ide.codeassistant.asm.test;
+
 /**
  * Created by The eXo Platform SAS.
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @version $Id: $
-*/
+ * 
+ */
 public class Address
 {
    public String address;
-   private String city;
+
+   private final String city = "city";
+
    public String state;
 
-   public String getCity(){return city;};
+   public String getCity()
+   {
+      return city;
+   };
 
 }

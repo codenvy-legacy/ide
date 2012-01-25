@@ -96,7 +96,7 @@ public abstract class A
       super();
       this.string = string;
       this.integer = integer;
-      this.l = l;
+      this.l = 10;
    }
 
 }
