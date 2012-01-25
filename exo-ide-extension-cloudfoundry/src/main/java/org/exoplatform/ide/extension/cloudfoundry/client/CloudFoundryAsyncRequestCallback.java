@@ -30,9 +30,8 @@ import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginCanceledHand
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
 
 /**
- * Asynchronous CloudFoundry request.
- * The {{@link #onFailure(Throwable)}} method contains the check for 
- * user not authorized exception, in this case - the {@link LoginEvent} is fired.
+ * Asynchronous CloudFoundry request. The {{@link #onFailure(Throwable)} method contains the check for user not authorized
+ * exception, in this case - the {@link LoginEvent} is fired.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryAsyncRequestCallback.java Jul 8, 2011 3:36:01 PM vereshchaka $
@@ -40,10 +39,12 @@ import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
 public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCallback<T>
 {
    private LoggedInHandler loggedIn;
-   
+
    private LoginCanceledHandler loginCanceled;
 
    private String loginUrl;
+
+   private final static String CLOUDFOUNDRY_EXIT_CODE = "Cloudfoundry-Exit-Code";
 
    public CloudFoundryAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
       LoginCanceledHandler loginCanceled)
@@ -70,7 +71,14 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
       {
          ServerException serverException = (ServerException)exception;
          if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
-                  && serverException.getMessage().contains("Authentication required."))
+            && serverException.getMessage().contains("Authentication required."))
+         {
+            IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
+            return;
+         }
+         else if (HTTPStatus.FORBIDDEN == serverException.getHTTPStatus()
+            && serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE) != null
+            && "200".equals(serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE)))
          {
             IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
             return;
