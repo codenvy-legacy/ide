@@ -50,6 +50,8 @@ public class OpenFileByURLView extends ViewImpl implements
     */
    public static final String ID = "ide.openFileByURL.view";
 
+   private static final String URL_FIELD_ID = "ide.openFileByURL.view.URL";
+
    /**
     * Initial width of this view
     */
@@ -94,6 +96,7 @@ public class OpenFileByURLView extends ViewImpl implements
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.url()), WIDTH, HEIGHT);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
+      urlField.setName(URL_FIELD_ID);
    }
 
    /**
