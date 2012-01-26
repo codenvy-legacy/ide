@@ -108,11 +108,6 @@ public class LuceneInfoStorage
          {
             typeInfoIndexReader.close();
             typeInfoIndexSearcher = new IndexSearcher(newReader);
-            System.out.println("true");
-         }
-         else
-         {
-            System.out.println("false");
          }
          typeInfoIndexReader = newReader;
       }
