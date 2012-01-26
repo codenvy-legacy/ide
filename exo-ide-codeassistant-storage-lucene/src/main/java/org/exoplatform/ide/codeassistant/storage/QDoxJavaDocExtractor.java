@@ -148,6 +148,7 @@ public class QDoxJavaDocExtractor
       Map<String, String> javaDocs = new HashMap<String, String>();
 
       JavaDocBuilder javaDocBuilder = new JavaDocBuilder();
+      // close method has been overridden to protect closing sourcesStream in javaDocBuilder#addSource method
       InputStreamReader reader = new InputStreamReader(new FilterInputStream(sourceStream)
       {
          @Override
@@ -267,14 +268,20 @@ public class QDoxJavaDocExtractor
          return null;
       }
       StringBuilder commentBuilder = new StringBuilder();
-      commentBuilder.append(comment);
-      for (DocletTag tag : tags)
+      if (comment != null)
       {
-         commentBuilder.append('\n');
-         commentBuilder.append('@');
-         commentBuilder.append(tag.getName());
-         commentBuilder.append(' ');
-         commentBuilder.append(tag.getValue());
+         commentBuilder.append(comment);
+      }
+      if (tags != null)
+      {
+         for (DocletTag tag : tags)
+         {
+            commentBuilder.append('\n');
+            commentBuilder.append('@');
+            commentBuilder.append(tag.getName());
+            commentBuilder.append(' ');
+            commentBuilder.append(tag.getValue());
+         }
       }
       return commentBuilder.toString().trim();
    }

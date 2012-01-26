@@ -170,7 +170,7 @@ public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
       {
          if (!isFirst)
          {
-            builder.append(", ");
+            builder.append(',');
          }
          builder.append(parameter);
          isFirst = false;

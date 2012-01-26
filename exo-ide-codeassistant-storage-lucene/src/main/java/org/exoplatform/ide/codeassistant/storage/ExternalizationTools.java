@@ -79,14 +79,9 @@ public class ExternalizationTools
    public static List<FieldInfo> readFields(ObjectInput in) throws IOException
    {
       int size = in.readInt();
-      List<FieldInfo> result = null;
-      if (size == 0)
+      if (size > 0)
       {
-         result = Collections.emptyList();
-      }
-      else
-      {
-         result = new ArrayList<FieldInfo>(size);
+         List<FieldInfo> result = new ArrayList<FieldInfo>(size);
          for (int i = 0; i < size; i++)
          {
             FieldInfo field = new FieldInfoBean();
@@ -98,8 +93,9 @@ public class ExternalizationTools
             field.setDeclaringClass(readStringUTF(in));
             result.add(field);
          }
+         return result;
       }
-      return result;
+      return Collections.emptyList();
    }
 
    /**
@@ -115,14 +111,9 @@ public class ExternalizationTools
    public static List<MethodInfo> readMethods(ObjectInput in) throws IOException
    {
       int size = in.readInt();
-      List<MethodInfo> result = null;
-      if (size == 0)
+      if (size > 0)
       {
-         result = Collections.emptyList();
-      }
-      else
-      {
-         result = new ArrayList<MethodInfo>(size);
+         List<MethodInfo> result = new ArrayList<MethodInfo>(size);
          for (int i = 0; i < size; i++)
          {
             MethodInfo method = new MethodInfoBean();
@@ -141,7 +132,7 @@ public class ExternalizationTools
 
          }
       }
-      return result;
+      return Collections.emptyList();
    }
 
    /**
@@ -159,19 +150,14 @@ public class ExternalizationTools
    public static String readStringUTF(ObjectInput in) throws IOException
    {
       int length = in.readInt();
-      String result = null;
-      if (length == 0)
-      {
-         result = "";
-      }
-      else
+      if (length > 0)
       {
          byte[] bytes = new byte[length];
          in.readFully(bytes);
 
-         result = new String(bytes, DEFAULT_ENCODING);
+         return new String(bytes, DEFAULT_ENCODING);
       }
-      return result;
+      return "";
    }
 
    /**
@@ -190,22 +176,16 @@ public class ExternalizationTools
    public static List<String> readStringUTFList(ObjectInput in) throws IOException
    {
       int size = in.readInt();
-      List<String> result = null;
-      if (size == 0)
+      if (size > 0)
       {
-         result = Collections.emptyList();
-      }
-      else
-      {
-         result = new ArrayList<String>(size);
+         List<String> result = new ArrayList<String>(size);
 
          for (int i = 0; i < size; i++)
          {
             result.add(readStringUTF(in));
          }
-
       }
-      return result;
+      return Collections.emptyList();
    }
 
    /**

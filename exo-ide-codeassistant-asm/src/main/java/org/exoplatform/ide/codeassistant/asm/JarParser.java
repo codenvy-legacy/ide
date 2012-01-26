@@ -99,10 +99,7 @@ public class JarParser
       }
       finally
       {
-         if (jarStream != null)
-         {
-            jarStream.close();
-         }
+         jarStream.close();
       }
    }
 

@@ -140,10 +140,7 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
          reader.accept(v);
          return v.getReturnType();
       }
-      else
-      {
-         return Type.getReturnType(methodNode.desc).getClassName();
-      }
+      return Type.getReturnType(methodNode.desc).getClassName();
    }
 
    /**

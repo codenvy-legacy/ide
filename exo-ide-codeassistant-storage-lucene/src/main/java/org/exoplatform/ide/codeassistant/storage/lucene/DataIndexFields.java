@@ -38,4 +38,9 @@ public final class DataIndexFields
    public static final String TYPE_INFO = "type-info";
 
    public static final String JAVA_DOC = "doc";
+
+   private DataIndexFields()
+   {
+   }
+
 }

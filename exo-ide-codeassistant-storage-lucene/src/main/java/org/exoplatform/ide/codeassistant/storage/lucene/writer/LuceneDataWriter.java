@@ -24,8 +24,6 @@ import org.apache.lucene.store.Directory;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.SaveDataIndexException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,8 +36,6 @@ import java.util.Map.Entry;
  */
 public class LuceneDataWriter
 {
-
-   private static final Logger LOG = LoggerFactory.getLogger(LuceneDataWriter.class);
 
    private final Directory indexDirectory;
 
@@ -61,26 +57,30 @@ public class LuceneDataWriter
    public void addJavaDocs(Map<String, String> javaDocs) throws SaveDataIndexException
    {
 
+      IndexWriter writer = null;
       try
       {
-         IndexWriter writer =
-            new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
-         try
+         writer = new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
+         for (Entry<String, String> javaDoc : javaDocs.entrySet())
          {
-            for (Entry<String, String> javaDoc : javaDocs.entrySet())
-            {
-               writer.addDocument(indexer.createJavaDocDocument(javaDoc.getKey(), javaDoc.getValue()));
-            }
-            writer.commit();
+            writer.addDocument(indexer.createJavaDocDocument(javaDoc.getKey(), javaDoc.getValue()));
          }
-         finally
-         {
-            writer.close();
-         }
+         writer.commit();
       }
       catch (IOException e)
       {
          throw new SaveDataIndexException(e.getLocalizedMessage(), e);
+      }
+      finally
+      {
+         try
+         {
+            writer.close();
+         }
+         catch (IOException e)
+         {
+            throw new SaveDataIndexException(e.getLocalizedMessage(), e);
+         }
       }
    }
 
@@ -93,26 +93,30 @@ public class LuceneDataWriter
    public void addTypeInfo(List<TypeInfo> typeInfos) throws SaveDataIndexException
    {
 
+      IndexWriter writer = null;
       try
       {
-         IndexWriter writer =
-            new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
-         try
+         writer = new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
+         for (TypeInfo typeInfo : typeInfos)
          {
-            for (TypeInfo typeInfo : typeInfos)
-            {
-               writer.addDocument(indexer.createTypeInfoDocument(typeInfo));
-            }
-            writer.commit();
+            writer.addDocument(indexer.createTypeInfoDocument(typeInfo));
          }
-         finally
-         {
-            writer.close();
-         }
+         writer.commit();
       }
       catch (IOException e)
       {
          throw new SaveDataIndexException(e.getLocalizedMessage(), e);
+      }
+      finally
+      {
+         try
+         {
+            writer.close();
+         }
+         catch (IOException e)
+         {
+            throw new SaveDataIndexException(e.getLocalizedMessage(), e);
+         }
       }
    }
 

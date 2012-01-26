@@ -113,10 +113,7 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
       {
          throw new CodeAssistantException(404, "Not found");
       }
-      else
-      {
-         return searchResult.get(0);
-      }
+      return searchResult.get(0);
    }
 
    /**

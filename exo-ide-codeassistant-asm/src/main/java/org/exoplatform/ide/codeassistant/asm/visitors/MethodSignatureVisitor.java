@@ -210,10 +210,7 @@ public class MethodSignatureVisitor implements SignatureVisitor
       {
          return null;
       }
-      else
-      {
-         return returnType.getParameters().get(0);
-      }
+      return returnType.getParameters().get(0);
    }
 
 }

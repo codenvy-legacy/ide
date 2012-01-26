@@ -126,13 +126,24 @@ public class ClassParser
     */
    public static TypeInfo parseQuietly(Class<?> classObject)
    {
+      InputStream classStream = getClassFile(classObject);
       try
       {
-         return parse(getClassFile(classObject));
+         return parse(classStream);
       }
       catch (IOException e)
       {
          return new TypeInfoBean();
+      }
+      finally
+      {
+         try
+         {
+            classStream.close();
+         }
+         catch (IOException ignored)
+         {
+         }
       }
    }
 
