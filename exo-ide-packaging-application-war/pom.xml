@@ -85,6 +85,12 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-gadget</artifactId>
       </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-jdt-core</artifactId>
+      </dependency>
+
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -307,7 +313,7 @@
                <runTarget>org.exoplatform.ide.Application/Application.html</runTarget>
                <logLevel>INFO</logLevel>
                <skipTests>${gwt.test.skip}</skipTests>
-               <extraJvmArgs>-Xmx1024m</extraJvmArgs>
+               <extraJvmArgs>-Xmx4g</extraJvmArgs>
             </configuration>
             <executions>
                <execution>
