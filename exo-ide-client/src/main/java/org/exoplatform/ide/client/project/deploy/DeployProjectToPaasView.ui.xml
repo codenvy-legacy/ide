@@ -20,6 +20,7 @@
       position: absolute;
       right: 200px;
       }
+      
       .buttonsBox {
       display: block;
       margin: 0 8px;

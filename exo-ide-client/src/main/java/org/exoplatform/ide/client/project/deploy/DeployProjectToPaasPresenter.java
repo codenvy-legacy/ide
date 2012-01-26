@@ -220,7 +220,7 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
                   {
                      // FIXME
                      // timer for allowing project to create fully
-                     // find better sollution!!!!!!!!!
+                     // find better solution!!!!!!!!!
                      new Timer()
                      {
                         @Override

@@ -34,14 +34,8 @@ public interface SamplesLocalizationConstant extends Messages
    /*
     * Buttons
     */
-   @Key("button.import")
-   String importButton();
-
    @Key("button.cancel")
    String cancelButton();
-
-   @Key("button.create")
-   String createButton();
 
    @Key("button.next")
    String nextButton();
@@ -116,21 +110,6 @@ public interface SamplesLocalizationConstant extends Messages
    String surverText();
 
    /*
-    * SelectLocationView
-    */
-   @Key("location.title")
-   String selectLocationTitle();
-
-   @Key("location.error.folderNameEmpty")
-   String selectLocationErrorFolderNameEmpty();
-
-   @Key("location.error.parentFolderNotSelected")
-   String selectLocationErrorParentFolderNotSelected();
-
-   @Key("location.error.cantCreateFolder")
-   String selectLocationErrorCantCreateFolder();
-
-   /*
     * SamplesListGrid
     */
    @Key("samplesListGrid.column.name")
@@ -143,50 +122,14 @@ public interface SamplesLocalizationConstant extends Messages
    String samplesListTypeColumn();
 
    /*
-    * ShowSamplesView
-    */
-   @Key("showSamples.dialog.title")
-   String showSamplesTitle();
-
-   @Key("showSamples.title")
-   String showSamplesSelectProjectTitle();
-
-   @Key("showSamples.text")
-   String showSamplesSelectProjectText();
-
-   @Key("showSamples.label.projectName")
-   String showSamplesProjectNameLabel();
-
-   /*
     * ShowSamplesPresenter
     */
    @Key("showSamples.error.selectRepo")
    String showSamplesErrorSelectRepository();
 
    /*
-    * WizardDefinitionStepView
-    */
-   @Key("wizard.definition.dialog.title")
-   String wizardDefinitionDialogTitle();
-
-   @Key("wizard.definition.title")
-   String wizardDefinitionTitle();
-
-   @Key("wizard.definition.text")
-   String wizardDefinitionText();
-
-   @Key("wizard.definition.name")
-   String wizardDefinitionName();
-
-   @Key("wizard.definition.type")
-   String wizardDefinitionType();
-
-   /*
     * WizardDeploymentStepView
     */
-   @Key("wizard.deployment.dialog.title")
-   String wizardDeploymentDialogTitle();
-
    @Key("wizard.deployment.title")
    String wizardDeploymentTitle();
 
@@ -195,84 +138,6 @@ public interface SamplesLocalizationConstant extends Messages
 
    @Key("wizard.deployment.paas")
    String wizardDeploymentPaas();
-
-   @Key("wizard.deployment.paas.settings")
-   String paasDeploySettings();
-
-   @Key("wizard.deployment.cloudfoundry.url")
-   String cloudFoundryAppUrlField();
-
-   @Key("wizard.deployment.cloudfoundry.target")
-   String cloudFoundryAppTargetField();
-
-   /*
-    * WizardFinishStepView
-    */
-   @Key("wizard.finish.dialog.title")
-   String wizardFinishDialogTitle();
-
-   @Key("wizard.finish.title")
-   String wizardFinishTitle();
-
-   @Key("wizard.finish.text")
-   String wizardFinishText();
-
-   @Key("wizard.finish.name")
-   String wizardFinishName();
-
-   @Key("wizard.finish.type")
-   String wizardFinishType();
-
-   @Key("wizard.finish.error.projectPropertiesAreNull")
-   String wizardFinishErrorProjectPropertiesAreNull();
-
-   @Key("wizard.finish.error.noFolderSelected")
-   String wizardFinishErrorNoFolderSelected();
-
-   @Key("wizard.finish.error.cantCreateProject")
-   String wizardFinishErrorCantCreateProject();
-
-   @Key("wizard.finish.deployment")
-   String wizardFinishDeployment();
-
-   @Key("wizard.finish.deployment.none")
-   String wizardFinishDeploymentNone();
-
-   @Key("wizard.finish.deployment.cloudbees")
-   String wizardFinishDeploymentCloudBees();
-
-   @Key("wizard.finish.deployment.cloudfoundry")
-   String wizardFinishDeploymentCloudFoundry();
-
-   /*
-    * WizardLocationStepView
-    */
-   @Key("wizard.location.newFolder")
-   String wizardLocationNewFolder();
-
-   /*
-    * WizardSourceStepView
-    */
-   @Key("wizard.source.dialog.title")
-   String wizardSourceDialogTitle();
-
-   @Key("wizard.source.title")
-   String wizardSourceTitle();
-
-   @Key("wizard.source.text")
-   String wizardSourceText();
-
-   @Key("wizard.source.source")
-   String wizardSourceLable();
-
-   /*
-    * WizardLocationStepView
-    */
-   @Key("wizard.location.title")
-   String wizardLocationTitle();
-
-   @Key("wizard.location.text")
-   String wizardLocationText();
 
    /*
     * Convert to project view
@@ -299,51 +164,6 @@ public interface SamplesLocalizationConstant extends Messages
    String convertNameExists(String name);
 
    /*
-    * CreateApplicationPresenter
-    */
-   @Key("cloudfoundry.application.created")
-   String cloudFoundryDeploySuccess(String name);
-
-   @Key("cloudfoundry.application.startedNoUrls")
-   String cloudFoundryApplicationStartedWithNoUrls();
-
-   @Key("cloudfoundry.application.appStarted.uris")
-   String cloudFoundryApplicationStartedOnUrls(String name, String uris);
-
-   @Key("cloudfoundry.application.nameField")
-   String cloudFoundryAppNameField();
-
-   @Key("cloudfoundry.application.deploy.title")
-   String cloudFoundryDeployTitle();
-
-   @Key("cloudfoundry.application.deploy.text")
-   String cloudFoundryDeployText();
-
-   @Key("cloudfoundry.application.deploy.failure")
-   String cloudFoundryDeployFailure();
-
-   /*
-    * CloudBees
-    */
-   @Key("cloudbees.label.domain")
-   String cloudBeesDomainLabel();
-
-   @Key("cloudbees.label.name")
-   String cloudBeesNameLabel();
-
-   @Key("cloudbees.label.id")
-   String cloudBeesIdLabel();
-
-   @Key("cloudbees.deploy.success")
-   String cloudBessDeploySuccess();
-
-   @Key("cloudbees.deploy.application.info")
-   String cloudBeesDeployApplicationInfo();
-
-   @Key("cloudbees.deploy.failure")
-   String cloudBeesDeployFailure();
-
-   /*
     * Login
     */
    @Key("login.title")
@@ -363,21 +183,6 @@ public interface SamplesLocalizationConstant extends Messages
 
    @Key("login.fail")
    String loginFail(String paas);
-
-   /*
-    * SelectTypeView.
-    */
-   @Key("selectType.dialog.title")
-   String selectTypeTitle();
-
-   @Key("selectType.title")
-   String samplesSelectTypeTitle();
-
-   @Key("selectType.text")
-   String samplesSelectTypeText();
-
-   @Key("selectType.lable")
-   String samplesProjectTypeLable();
 
    /*
     * Controls
@@ -424,22 +229,13 @@ public interface SamplesLocalizationConstant extends Messages
    /*
     * ImportFromGitHub
     */
-   @Key("import.github.dialog.title")
-   String importFromGithubDialogTitle();
-
    @Key("import.github.title")
    String importFromGithubTitle();
 
    @Key("import.github.text")
    String importFromGithubText();
 
-   @Key("import.github.enterUrl")
-   String importFromGithubEnterUrl();
-
    @Key("import.github.selectProjectType")
    String importFromGithubSelectProjectType();
-
-   @Key("import.github.error.urlNotPublic")
-   String importFromGithubUrlNotPublicError();
 
 }

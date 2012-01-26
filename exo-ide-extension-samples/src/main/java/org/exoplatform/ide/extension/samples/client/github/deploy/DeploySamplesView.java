@@ -18,19 +18,18 @@
  */
 package org.exoplatform.ide.extension.samples.client.github.deploy;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
-import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
@@ -71,50 +70,9 @@ public class DeploySamplesView extends ViewImpl implements DeploySamplesPresente
 
    @UiField
    ImageButton backButton;
-
+   
    @UiField
-   FlowPanel cloudFoundryPanel;
-
-   @UiField
-   FlowPanel cloudBeesPanel;
-
-   @UiField
-   ComboBoxField cloudFoundryTargetField;
-
-   @UiField
-   TextInput cloudFoundryNameField;
-
-   @UiField
-   TextInput cloudFoundryUrlField;
-
-   @UiField
-   SelectItem selectDomainField;
-
-   @UiField
-   TextInput cloudBeesNameField;
-
-   @UiField
-   TextInput cloudBeesIdField;
-
-   // heroku
-   @UiField
-   FlowPanel herokuPanel;
-
-   @UiField
-   TextInput herokuNameField;
-
-   @UiField
-   TextInput herokuRepositoryNameField;
-
-   // openShift
-   @UiField
-   FlowPanel openShiftPanel;
-
-   @UiField
-   TextInput openShiftNameField;
-
-   @UiField
-   SelectItem openShiftTypeField;
+   FlowPanel paasPanel;
 
    public DeploySamplesView()
    {
@@ -159,34 +117,6 @@ public class DeploySamplesView extends ViewImpl implements DeploySamplesPresente
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#setPaasValueMap(java.lang.String[],
-    *      java.lang.String)
-    */
-   @Override
-   public void setPaasValueMap(String[] values, String selected)
-   {
-      selectPaasField.setValueMap(values, selected);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#setVisibleCloudBeesPanel(boolean)
-    */
-   @Override
-   public void setVisibleCloudBeesPanel(boolean visible)
-   {
-      cloudBeesPanel.setVisible(visible);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#setVisibleCloudFoundryPanel(boolean)
-    */
-   @Override
-   public void setVisibleCloudFoundryPanel(boolean visible)
-   {
-      cloudFoundryPanel.setVisible(visible);
-   }
-
-   /**
     * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#enableFinishButton(boolean)
     */
    @Override
@@ -196,137 +126,36 @@ public class DeploySamplesView extends ViewImpl implements DeploySamplesPresente
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#getSelectCloudBeesDomainField()
+    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#setPaasValueMap(java.lang.String[])
     */
    @Override
-   public HasValue<String> getSelectCloudBeesDomainField()
+   public void setPaasValueMap(String[] values)
    {
-      return selectDomainField;
+      selectPaasField.setValueMap(values);
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#getCloudBeesNameField()
+    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#setPaas(com.google.gwt.user.client.ui.Composite)
     */
    @Override
-   public HasValue<String> getCloudBeesNameField()
+   public void setPaas(Composite composite)
    {
-      return cloudBeesNameField;
+      if (paasPanel.getWidgetCount() > 0)
+      {
+         paasPanel.remove(0);
+      }
+      paasPanel.add(composite);
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#getCloudBeesIdField()
+    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#hidePaas()
     */
    @Override
-   public HasValue<String> getCloudBeesIdField()
+   public void hidePaas()
    {
-      return cloudBeesIdField;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#setCloudBeesDomainsValueMap(java.lang.String[])
-    */
-   @Override
-   public void setCloudBeesDomainsValueMap(String[] values)
-   {
-      selectDomainField.setValueMap(values);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#getCloudFoundryNameField()
-    */
-   @Override
-   public HasValue<String> getCloudFoundryNameField()
-   {
-      return cloudFoundryNameField;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#getCloudFoundryUrlField()
-    */
-   @Override
-   public HasValue<String> getCloudFoundryUrlField()
-   {
-      return cloudFoundryUrlField;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#getCloudFoundryTargetField()
-    */
-   @Override
-   public HasValue<String> getCloudFoundryTargetField()
-   {
-      return cloudFoundryTargetField;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#setCloudFoundryAvailableTargets(java.lang.String[])
-    */
-   @Override
-   public void setCloudFoundryAvailableTargets(String[] targets)
-   {
-      cloudFoundryTargetField.setValueMap(targets);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#setVisibleHerokuPanel(boolean)
-    */
-   @Override
-   public void setVisibleHerokuPanel(boolean visible)
-   {
-      herokuPanel.setVisible(visible);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#setVisibleOpenShiftPanel(boolean)
-    */
-   @Override
-   public void setVisibleOpenShiftPanel(boolean visible)
-   {
-      openShiftPanel.setVisible(visible);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#setOpenShitfTypesValueMap(java.lang.String[])
-    */
-   @Override
-   public void setOpenShitfTypesValueMap(String[] values)
-   {
-      openShiftTypeField.setValueMap(values);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#getHerokuApplicationNameField()
-    */
-   @Override
-   public HasValue<String> getHerokuApplicationNameField()
-   {
-      return herokuNameField;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#getHerokuRepositoryNameField()
-    */
-   @Override
-   public HasValue<String> getHerokuRepositoryNameField()
-   {
-      return herokuRepositoryNameField;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#getOpenShiftNameField()
-    */
-   @Override
-   public HasValue<String> getOpenShiftNameField()
-   {
-      return openShiftNameField;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#getOpenShitfTypeSelectionField()
-    */
-   @Override
-   public HasValue<String> getOpenShitfTypeSelectionField()
-   {
-      return openShiftTypeField;
+      if (paasPanel.getWidgetCount() > 0)
+      {
+         paasPanel.remove(0);
+      }
    }
 }

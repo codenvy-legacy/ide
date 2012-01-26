@@ -20,6 +20,77 @@
       position: absolute;
       right: 200px;
       }
+      
+      .buttonsBox {
+      display: block;
+      margin: 0 8px;
+      }
+
+      .rightButton {
+      position: absolute;
+      right: 0;
+      }
+
+      .formLine {
+      margin-top:
+      8px;
+      }
+
+      .topBox {
+      background-color: #eef6ff;
+      vertical-align: middle;
+      border-bottom: 1px solid #A6ABAF;
+      width: 100%;
+      height: 60px;
+      }
+
+      .labelValue {
+      font-weight: bold;
+      }
+
+      .labelSubtitle {
+      font-weight: bold;
+      font-align: center;
+      }
+
+      .middle {
+      position: absolute;
+      right: 100px;
+      }
+
+      .labelTitle {
+      font-size: medium;
+      font-weight: bold;
+      vertical-align: middle;
+      padding-left: 10px;
+      padding-top: 10px;
+      }
+
+      .labelDescription {
+      font-style: italic;
+      vertical-align: middle;
+      padding-left: 10px;
+      padding-top: 5px;
+      }
+
+      .innerBox {
+      display: block;
+      margin: 0 8px;
+      }
+
+      .leftFloat {
+      float: left;
+      }
+
+      .right {
+      position: absolute;
+      right: 0;
+      }
+
+      .middle {
+      position: absolute;
+      right: 100px;
+      }
    </ui:style>
    <g:LayoutPanel>
       <g:layer>
@@ -39,104 +110,14 @@
             </g:SimplePanel>
          </g:FlowPanel>
       </g:layer>
+      
+      <g:layer top="110px" height="150px">
+         <!-- Panel to show selected PaaS -->
+         <g:FlowPanel ui:field="paasPanel">
 
-      <g:layer top="110px" height="100px">
-         <!-- CloudFoudry deployment form: show only when CloudFoundry selected from list -->
-         <g:FlowPanel>
-            <g:FlowPanel ui:field="cloudFoundryPanel" stylePrimaryName="{resource.css.innerBox}">
-               <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
-                  <g:west size="90">
-                     <g:Label text="{locale.cloudFoundryAppTargetField}" height="18px"></g:Label>
-                  </g:west>
-                  <g:center>
-                     <f:ComboBoxField ui:field="cloudFoundryTargetField" width="100%" height="22px"></f:ComboBoxField>
-                  </g:center>
-               </g:DockLayoutPanel>
-               <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
-                  <g:west size="90">
-                     <g:Label text="{locale.cloudFoundryAppNameField}" height="18px"></g:Label>
-                  </g:west>
-                  <g:center>
-                     <f:TextInput ui:field="cloudFoundryNameField" width="100%" height="22px"></f:TextInput>
-                  </g:center>
-               </g:DockLayoutPanel>
-               <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
-                  <g:west size="90">
-                     <g:Label text="{locale.cloudFoundryAppUrlField}" height="18px"></g:Label>
-                  </g:west>
-                  <g:center>
-                     <f:TextInput ui:field="cloudFoundryUrlField" width="100%" height="22px"></f:TextInput>
-                  </g:center>
-               </g:DockLayoutPanel>
-            </g:FlowPanel>
-         <!-- CloudBees deployment form: show only when CloudBees selected from list -->
-            <g:FlowPanel ui:field="cloudBeesPanel" stylePrimaryName="{resource.css.innerBox}">
-               <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
-                  <g:west size="90">
-                     <g:Label text="{locale.cloudBeesDomainLabel}" height="18px"></g:Label>
-                  </g:west>
-                  <g:center>
-                     <f:SelectItem ui:field="selectDomainField" width="100%" height="22px"></f:SelectItem>
-                  </g:center>
-               </g:DockLayoutPanel>
-               <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
-                  <g:west size="90">
-                     <g:Label text="{locale.cloudBeesNameLabel}" height="18px"></g:Label>
-                  </g:west>
-                  <g:center>
-                     <f:TextInput ui:field="cloudBeesNameField" width="100%" height="22px"></f:TextInput>
-                  </g:center>
-               </g:DockLayoutPanel>
-               <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
-                  <g:west size="90">
-                     <g:Label text="{locale.cloudBeesIdLabel}" height="18px"></g:Label>
-                  </g:west>
-                  <g:center>
-                     <f:TextInput ui:field="cloudBeesIdField" width="100%" height="22px" enabled="false"></f:TextInput>
-                  </g:center>
-               </g:DockLayoutPanel>
-            </g:FlowPanel>
-         <!-- Heroku deployment form: show only when CloudBees selected from list -->
-            <g:FlowPanel ui:field="herokuPanel" stylePrimaryName="{resource.css.innerBox}">
-               <g:DockLayoutPanel width="100%" unit="PX" height="34px" stylePrimaryName="{style.formLine}">
-                  <g:west size="120">
-                     <g:Label text="Application name (optional):" height="34px"></g:Label>
-                  </g:west>
-                  <g:center>
-                     <f:TextInput ui:field="herokuNameField" width="100%" height="22px"></f:TextInput>
-                  </g:center>
-               </g:DockLayoutPanel>
-               <g:DockLayoutPanel width="100%" unit="PX" height="34px" stylePrimaryName="{style.formLine}">
-                  <g:west size="120">
-                     <g:Label text="Remote repository name (optional):" height="34px"></g:Label>
-                  </g:west>
-                  <g:center>
-                     <f:TextInput ui:field="herokuRepositoryNameField" width="100%" height="22px"></f:TextInput>
-                  </g:center>
-               </g:DockLayoutPanel>
-            </g:FlowPanel>
-            <!-- OpenShift deployment form: show only when CloudBees selected from list -->
-            <g:FlowPanel ui:field="openShiftPanel" stylePrimaryName="{resource.css.innerBox}">
-               <g:DockLayoutPanel width="100%" unit="PX" height="34px" stylePrimaryName="{style.formLine}">
-                  <g:west size="120">
-                     <g:Label text="Application name:" height="34px"></g:Label>
-                  </g:west>
-                  <g:center>
-                     <f:TextInput ui:field="openShiftNameField" width="100%" height="22px"></f:TextInput>
-                  </g:center>
-               </g:DockLayoutPanel>
-               <g:DockLayoutPanel width="100%" unit="PX" height="34px" stylePrimaryName="{style.formLine}">
-                  <g:west size="120">
-                     <g:Label text="Application type:" height="34px"></g:Label>
-                  </g:west>
-                  <g:center>
-                     <f:SelectItem ui:field="openShiftTypeField" width="100%" height="22px"></f:SelectItem>
-                  </g:center>
-               </g:DockLayoutPanel>
-            </g:FlowPanel>
          </g:FlowPanel>
       </g:layer>
-      
+
       <!-- Buttons -->
       <g:layer height="33px" bottom="0">
          <g:FlowPanel width="auto" styleName="{resource.css.innerBox}">

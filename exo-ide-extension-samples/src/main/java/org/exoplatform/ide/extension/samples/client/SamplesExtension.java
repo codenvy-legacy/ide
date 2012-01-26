@@ -33,7 +33,6 @@ import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesPresenter;
 import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter;
-import org.exoplatform.ide.extension.samples.client.paas.login.LoginPresenter;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter;
 
@@ -80,8 +79,6 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       GithubStep<ProjectData> secondStep = new DeploySamplesPresenter();
       firstStep.setNextStep(secondStep);
       secondStep.setPreviousStep(firstStep);
-
-      new LoginPresenter();
 
       GithubStep<ProjectData> secondStepUser = new DeploySamplesPresenter();
       GithubStep<ProjectData> firstStepUser = new ImportFromGithubPresenter();

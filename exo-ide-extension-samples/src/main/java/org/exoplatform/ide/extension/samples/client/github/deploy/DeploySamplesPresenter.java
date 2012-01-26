@@ -25,59 +25,35 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.paas.Paas;
+import org.exoplatform.ide.client.framework.paas.PaasCallback;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
-import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
-import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
-import org.exoplatform.ide.extension.samples.client.ProjectProperties;
-import org.exoplatform.ide.extension.samples.client.SamplesClientService;
-import org.exoplatform.ide.extension.samples.client.SamplesExtension;
-import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
-import org.exoplatform.ide.extension.samples.client.paas.cloudbees.CloudBeesAsyncRequestCallback;
-import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback;
-import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudfoundryApplication;
-import org.exoplatform.ide.extension.samples.client.paas.heroku.HerokuAsyncRequestCallback;
-import org.exoplatform.ide.extension.samples.client.paas.login.LoggedInHandler;
-import org.exoplatform.ide.extension.samples.client.paas.login.LoginCanceledHandler;
-import org.exoplatform.ide.extension.samples.client.paas.marshal.CloudfoundryApplicationUnmarshaller;
-import org.exoplatform.ide.extension.samples.client.paas.marshal.DeployWarUnmarshaller;
-import org.exoplatform.ide.extension.samples.client.paas.marshal.DomainsUnmarshaller;
-import org.exoplatform.ide.extension.samples.client.paas.marshal.TargetsUnmarshaller;
-import org.exoplatform.ide.extension.samples.client.paas.openshift.OpenShiftAsyncRequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * Presenter for deploying samples imported from GitHub.
@@ -86,8 +62,7 @@ import java.util.Map.Entry;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeploySamplesPresenter.java Nov 22, 2011 10:35:16 AM vereshchaka $
  */
-public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<ProjectData>, VfsChangedHandler,
-   ApplicationBuiltHandler
+public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<ProjectData>, VfsChangedHandler
 {
 
    public interface Display extends IsView
@@ -100,51 +75,15 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
       HasValue<String> getSelectPaasField();
 
-      void setPaasValueMap(String[] values, String selected);
-
       void enableFinishButton(boolean enable);
 
-      // CloudBees
-      HasValue<String> getSelectCloudBeesDomainField();
+      void setPaasValueMap(String[] values);
 
-      HasValue<String> getCloudBeesNameField();
+      void setPaas(Composite composite);
 
-      HasValue<String> getCloudBeesIdField();
-
-      void setVisibleCloudBeesPanel(boolean visible);
-
-      void setCloudBeesDomainsValueMap(String[] values);
-
-      // CloudFoundry
-      HasValue<String> getCloudFoundryNameField();
-
-      HasValue<String> getCloudFoundryUrlField();
-
-      HasValue<String> getCloudFoundryTargetField();
-
-      void setVisibleCloudFoundryPanel(boolean visible);
-
-      void setCloudFoundryAvailableTargets(String[] targets);
-
-      // Heroku
-      void setVisibleHerokuPanel(boolean visible);
-
-      HasValue<String> getHerokuApplicationNameField();
-
-      HasValue<String> getHerokuRepositoryNameField();
-
-      // OpenShift
-      void setVisibleOpenShiftPanel(boolean visible);
-
-      HasValue<String> getOpenShiftNameField();
-
-      HasValue<String> getOpenShitfTypeSelectionField();
-
-      void setOpenShitfTypesValueMap(String[] values);
+      void hidePaas();
 
    }
-
-   private static final SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
 
    /**
     * Default CloudFoundry target.
@@ -157,40 +96,55 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
    private GithubStep<ProjectData> prevStep;
 
+   /**
+    * project data received from previous step
+    */
    private ProjectData data;
-
-   private String selectedPaaS;
 
    private VirtualFileSystemInfo vfs;
 
-   private ProjectModel project;
+   //-----new----------------
+   private Paas paas;
+   
+   private List<String> paases;
 
-   private String warUrl;
+   private List<Paas> paasList;
+   
+   private PaasCallback paasCallback = new PaasCallback()
+   {
+      @Override
+      public void onViewReceived(Composite composite)
+      {
+         if (composite != null)
+         {
+            display.setPaas(composite);
+         }
+         else
+         {
+            paas = null;
+            display.hidePaas();
+            display.getSelectPaasField().setValue("None");
+         }
+      }
 
-   // variables to store paas parameters
-   // TODO: more convenience store for this params
+      @Override
+      public void onValidate(boolean result)
+      {
+         if (result)
+         {
+            createEmptyProject();
+         }
+         // if form isn't valid, then do nothing
+         // all validation messages must be shown by paases
+      }
 
-   // heroku
-   private String herokuAppName;
-
-   private String herokuRemoveService;
-
-   // openShift
-   private String openShiftName;
-
-   private String openShitfType;
-
-   // cloudBees
-   private String cloudBeesName;
-
-   private String cloudBeesDomain;
-
-   // cloudFoudnry
-   private String cloudFoundryName;
-
-   private String cloudFoundryTarget;
-
-   private String cloudFoundryUrl;
+      @Override
+      public void onDeploy(boolean result)
+      {
+         //when project deployed
+         //all messages must be shown by paases
+      }
+   };
 
    public DeploySamplesPresenter()
    {
@@ -214,15 +168,15 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          @Override
          public void onClick(ClickEvent event)
          {
-            // if one of field are changed, the new value must be saved in projectProperties.
-            // That's why, when Next button is clicked, the actual state are send to next step.
-            if (selectedPaaS.equals(ProjectProperties.Paas.CLOUDFOUNDRY))
+            if (paas != null)
             {
-               validateCloudFoundryParams();
-               return;
+               paas.validate();
             }
-
-            createEmptyProject();
+            else
+            {
+               createEmptyProject();
+            }
+            
          }
       });
 
@@ -241,151 +195,28 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            selectedPaaS = display.getSelectPaasField().getValue();
-            if (ProjectProperties.Paas.CLOUDFOUNDRY.equals(selectedPaaS))
+            
+            String value = event.getValue();
+            if ("None".equals(value))
             {
-               display.setVisibleCloudBeesPanel(false);
-               display.setVisibleHerokuPanel(false);
-               display.setVisibleOpenShiftPanel(false);
-               display.setVisibleCloudFoundryPanel(true);
-               getCloudFoundryTargets();
-            }
-            else if (ProjectProperties.Paas.CLOUDBEES.equals(selectedPaaS))
-            {
-               getCloudBeesDomains();
-            }
-            else if (ProjectProperties.Paas.HEROKU.equals(selectedPaaS))
-            {
-               display.setVisibleCloudBeesPanel(false);
-               display.setVisibleCloudFoundryPanel(false);
-               display.setVisibleOpenShiftPanel(false);
-               display.setVisibleHerokuPanel(true);
-               display.enableFinishButton(true);
-            }
-            // else if (ProjectProperties.Paas.OPENSHIFT.equals(selectedPaaS))
-            // {
-            // getOpenShiftTypes();
-            // }
-            else
-            {
-               display.setVisibleCloudFoundryPanel(false);
-               display.setVisibleCloudBeesPanel(false);
-               display.setVisibleHerokuPanel(false);
-               display.setVisibleOpenShiftPanel(false);
-               display.enableFinishButton(true);
-            }
-         }
-      });
-
-      display.getCloudBeesNameField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            if (ProjectProperties.Paas.CLOUDBEES.equals(display.getSelectPaasField().getValue()))
-            {
-               String name = display.getCloudBeesNameField().getValue();
-               String cloudBeesId = display.getSelectCloudBeesDomainField().getValue() + "/" + name;
-               display.getCloudBeesIdField().setValue(cloudBeesId);
-               display.enableFinishButton(name != null && !name.isEmpty());
-            }
-         }
-      });
-
-      display.getSelectCloudBeesDomainField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            if (ProjectProperties.Paas.CLOUDBEES.equals(display.getSelectPaasField().getValue()))
-            {
-               String name = display.getCloudBeesNameField().getValue();
-               String cloudBeesId = display.getSelectCloudBeesDomainField().getValue() + "/" + name;
-               display.getCloudBeesIdField().setValue(cloudBeesId);
-            }
-         }
-      });
-
-      display.getCloudFoundryTargetField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            if (ProjectProperties.Paas.CLOUDFOUNDRY.equals(display.getSelectPaasField().getValue()))
-            {
-               String target = display.getCloudFoundryTargetField().getValue();
-               String sufix = target.substring(target.indexOf("."));
-               String oldUrl = display.getCloudFoundryUrlField().getValue();
-               String prefix = "<name>";
-               if (!oldUrl.isEmpty() && oldUrl.contains("."))
-               {
-                  prefix = oldUrl.substring(0, oldUrl.indexOf("."));
-               }
-               String url = prefix + sufix;
-               display.getCloudFoundryUrlField().setValue(url);
-            }
-         }
-      });
-
-      display.getCloudFoundryNameField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            if (ProjectProperties.Paas.CLOUDFOUNDRY.equals(display.getSelectPaasField().getValue()))
-            {
-               String name = display.getCloudFoundryNameField().getValue();
-               String url = display.getCloudFoundryUrlField().getValue();
-               if (name == null || name.isEmpty() || url == null || url.isEmpty())
-               {
-                  display.enableFinishButton(false);
-               }
-               else
-               {
-                  display.enableFinishButton(true);
-               }
-            }
-         }
-      });
-
-      display.getCloudFoundryUrlField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            if (ProjectProperties.Paas.CLOUDFOUNDRY.equals(display.getSelectPaasField().getValue()))
-            {
-               String name = display.getCloudFoundryNameField().getValue();
-               String url = display.getCloudFoundryUrlField().getValue();
-               if (name == null || name.isEmpty() || url == null || url.isEmpty())
-               {
-                  display.enableFinishButton(false);
-               }
-               else
-               {
-                  display.enableFinishButton(true);
-               }
-            }
-         }
-      });
-
-      display.getOpenShiftNameField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            String name = display.getOpenShiftNameField().getValue();
-            if (name == null || name.isEmpty())
-            {
-               display.enableFinishButton(false);
+               display.hidePaas();
+               paas = null;
             }
             else
             {
-               display.enableFinishButton(true);
+               for (Paas cpaas : paasList)
+               {
+                  if (cpaas.getName().equals(value))
+                  {
+                     paas = cpaas;
+                     paas.getView(data.getName(), paasCallback);
+                  }
+               }
             }
+            
          }
       });
+
    }
 
    /**
@@ -409,18 +240,36 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       this.data = value;
       if (display == null)
       {
-         Display d = GWT.create(Display.class);
-         IDE.getInstance().openView((View)d);
-         display = d;
+         display = GWT.create(Display.class);
+         IDE.getInstance().openView(display.asView());
          bindDisplay();
-         String[] paasArray = getPaases(data.getType());
-         display.setPaasValueMap(paasArray, paasArray[0]);
+         paases = new ArrayList<String>();
+         paases.add("None");
+         paases.addAll(getPaasValues());
+         display.setPaasValueMap(paases.toArray(new String[paases.size()]));
+         paas = null;
+         display.getSelectPaasField().setValue("None");
          return;
       }
       else
       {
          IDE.fireEvent(new ExceptionThrownEvent("Show Deployment Wizard View must be null"));
       }
+   }
+   
+   private List<String> getPaasValues()
+   {
+      List<String> paases = new ArrayList<String>();
+      this.paasList = IDE.getInstance().getPaases();
+      for (Paas paas : this.paasList)
+      {
+         if (paas.getSupportedProjectTypes().contains(data.getType()))
+         {
+            paases.add(paas.getName());
+         }
+
+      }
+      return paases;
    }
 
    /**
@@ -455,155 +304,6 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       IDE.getInstance().closeView(display.asView().getId());
    }
 
-   /**
-    * Get the list of targes and put them to select field.
-    */
-   private void getCloudFoundryTargets()
-   {
-      try
-      {
-         SamplesClientService.getInstance().getCloudFoundryTargets(
-            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
-            {
-               @Override
-               protected void onSuccess(List<String> result)
-               {
-                  if (result.isEmpty())
-                  {
-                     display.setCloudFoundryAvailableTargets(new String[]{DEFAULT_CLOUDFOUNDRY_TARGET});
-                     if (display.getCloudFoundryTargetField().getValue().isEmpty())
-                     {
-                        display.getCloudFoundryTargetField().setValue(DEFAULT_CLOUDFOUNDRY_TARGET);
-                     }
-                  }
-                  else
-                  {
-                     String[] servers = result.toArray(new String[result.size()]);
-                     display.setCloudFoundryAvailableTargets(servers);
-                     if (display.getCloudFoundryTargetField().getValue().isEmpty())
-                     {
-                        display.getCloudFoundryTargetField().setValue(servers[0]);
-                     }
-                  }
-                  fillCloudFoundryFields();
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * Fill cloudfoundry fields by values stored in project properties variable or by default values.
-    */
-   private void fillCloudFoundryFields()
-   {
-      String name = data.getName();
-      display.getCloudFoundryNameField().setValue(name);
-
-      final String target = display.getCloudFoundryTargetField().getValue();
-      String urlSufix = target.substring(target.indexOf("."));
-      final String oldUrl = display.getCloudFoundryUrlField().getValue();
-      String prefix = "<name>";
-      if (!oldUrl.isEmpty() && oldUrl.contains("."))
-      {
-         prefix = oldUrl.substring(0, oldUrl.indexOf("."));
-      }
-      if (urlSufix.isEmpty())
-      {
-         urlSufix = DEFAULT_CLOUDFOUNDRY_TARGET.substring(DEFAULT_CLOUDFOUNDRY_TARGET.indexOf("."));
-      }
-      String url = prefix + urlSufix;
-      display.getCloudFoundryUrlField().setValue(url);
-
-   }
-
-   /**
-    * Get the list of domains of CloudBees from server.
-    * <p/>
-    * Put the received values to domains select field.
-    * <p/>
-    * Fill other fields, if we have values (may be user entered them before)
-    */
-   private void getCloudBeesDomains()
-   {
-      try
-      {
-         SamplesClientService.getInstance().getDomains(
-            new CloudBeesAsyncRequestCallback<List<String>>(new DomainsUnmarshaller(new ArrayList<String>()),
-               domainsLoggedInHandler, domainsLoginCanceledHandler)
-            {
-               @Override
-               protected void onSuccess(List<String> result)
-               {
-                  display.setVisibleCloudFoundryPanel(false);
-                  display.setVisibleHerokuPanel(false);
-                  display.setVisibleOpenShiftPanel(false);
-                  display.setVisibleCloudBeesPanel(true);
-
-                  String[] domains = new String[result.size()];
-                  result.toArray(domains);
-                  display.setCloudBeesDomainsValueMap(domains);
-                  fillCloudBeesFields();
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   private LoginCanceledHandler domainsLoginCanceledHandler = new LoginCanceledHandler()
-   {
-
-      @Override
-      public void onCancelLogin()
-      {
-         // if while receiving domains from cloudbees was clicked Cancel button in login dialog
-         // than select in paas field NONE and hide all paases.
-         display.setVisibleCloudFoundryPanel(false);
-         display.setVisibleHerokuPanel(false);
-         display.setVisibleOpenShiftPanel(false);
-         display.setVisibleCloudBeesPanel(false);
-         display.getSelectPaasField().setValue(ProjectProperties.Paas.NONE);
-      }
-   };
-
-   private LoggedInHandler domainsLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         getCloudBeesDomains();
-      }
-   };
-
-   /**
-    * Fill cloudbees name and domain fields with values, that user entered before (they are stored in Map in projectProperties
-    * variable).
-    * <p/>
-    * If no values are stored, than get the deploy name from the name of project and do nothing with domain field.
-    */
-   private void fillCloudBeesFields()
-   {
-      final String deployName = data.getName();
-      display.getCloudBeesNameField().setValue(deployName);
-
-      String id = deployName + "/" + display.getSelectCloudBeesDomainField().getValue();
-      display.getCloudBeesIdField().setValue(id);
-
-      display.enableFinishButton(deployName != null && !deployName.isEmpty());
-   }
-
    // ---------------projects creation------------------------
 
    private void createEmptyProject()
@@ -624,9 +324,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                @Override
                protected void onSuccess(ProjectModel result)
                {
-                  project = result;
                   cloneRepository(data, result);
-                  storePaasValues();
                   closeView();
                }
 
@@ -640,35 +338,6 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       catch (RequestException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e, "Exception during creating project"));
-      }
-   }
-
-   private void storePaasValues()
-   {
-      if (ProjectProperties.Paas.NONE.equals(selectedPaaS))
-      {
-         return;
-      }
-      else if (ProjectProperties.Paas.CLOUDBEES.equals(selectedPaaS))
-      {
-         cloudBeesName = display.getCloudBeesNameField().getValue();
-         cloudBeesDomain = display.getSelectCloudBeesDomainField().getValue();
-      }
-      else if (ProjectProperties.Paas.CLOUDFOUNDRY.equals(selectedPaaS))
-      {
-         cloudFoundryName = display.getCloudFoundryNameField().getValue();
-         cloudFoundryTarget = display.getCloudFoundryTargetField().getValue();
-         cloudFoundryUrl = display.getCloudFoundryUrlField().getValue();
-      }
-      else if (ProjectProperties.Paas.HEROKU.equals(selectedPaaS))
-      {
-         herokuAppName = display.getHerokuApplicationNameField().getValue();
-         herokuRemoveService = display.getHerokuRepositoryNameField().getValue();
-      }
-      else if (ProjectProperties.Paas.OPENSHIFT.equals(selectedPaaS))
-      {
-         openShiftName = display.getOpenShiftNameField().getValue();
-         openShitfType = display.getOpenShitfTypeSelectionField().getValue();
       }
    }
 
@@ -693,22 +362,21 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                   IDE.fireEvent(new ProjectCreatedEvent(project));
                   IDE.fireEvent(new RefreshBrowserEvent(project.getParent()));
 
-                  if (ProjectProperties.Paas.NONE.equals(selectedPaaS))
+                  if (paas != null)
                   {
-                     return;
+                     // FIXME
+                     // timer for allowing project to create fully
+                     // find better solution!!!!!!!!!
+                     new Timer()
+                     {
+                        @Override
+                        public void run()
+                        {
+                           paas.deploy(project);
+                        }
+                     }.schedule(2000);
                   }
-                  else if (ProjectProperties.Paas.HEROKU.equals(selectedPaaS))
-                  {
-                     deployToHeroku();
-                  }
-                  // else if (ProjectProperties.Paas.OPENSHIFT.equals(selectedPaaS))
-                  // {
-                  // deployToOpenShift();
-                  // }
-                  else
-                  {
-                     checkIsMavenProject(project);
-                  }
+                  
                }
 
                @Override
@@ -721,59 +389,6 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       catch (RequestException e)
       {
          handleError(e);
-      }
-   }
-
-   /**
-    * Check is selected item project and can be built.
-    */
-   private void checkIsMavenProject(final ProjectModel project)
-   {
-      try
-      {
-         VirtualFileSystem.getInstance().getChildren(
-            project,
-            new AsyncRequestCallback<List<Item>>(
-               new ChildrenUnmarshaller(new ArrayList<Item>()))
-            {
-
-               @Override
-               protected void onSuccess(List<Item> result)
-               {
-                  project.getChildren().setItems(result);
-                  for (Item i : result)
-                  {
-                     if (i.getItemType() == ItemType.FILE && "pom.xml".equals(i.getName()))
-                     {
-                        buildApplication(project);
-                        return;
-                     }
-                  }
-
-                  if (ProjectProperties.Paas.CLOUDBEES.equals(selectedPaaS))
-                  {
-
-                     Dialogs.getInstance().showError(
-                        "Newly created project is not maven project. You can't deploy it to CloudBees");
-                  }
-                  else if (ProjectProperties.Paas.CLOUDFOUNDRY.equals(selectedPaaS))
-                  {
-                     deployToPaas();
-                  }
-
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception,
-                     "Service is not deployed.<br>Parent folder not found."));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -791,333 +406,6 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    public void onVfsChanged(VfsChangedEvent event)
    {
       this.vfs = event.getVfsInfo();
-   }
-
-   /**
-    * Call the server validation of CloudFoundry params (name of application).
-    */
-   private void validateCloudFoundryParams()
-   {
-      try
-      {
-         SamplesClientService.getInstance().validateCloudfoundryAction(display.getCloudFoundryTargetField().getValue(),
-            display.getCloudFoundryNameField().getValue(), null,
-            new CloudFoundryAsyncRequestCallback<String>(null, validationLoggedInHandler)
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  createEmptyProject();
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   private LoggedInHandler validationLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         validateCloudFoundryParams();
-      }
-   };
-
-   private void deployToPaas()
-   {
-      if (ProjectProperties.Paas.CLOUDBEES.equals(selectedPaaS))
-      {
-         deployToCloudBees();
-      }
-      else if (ProjectProperties.Paas.CLOUDFOUNDRY.equals(selectedPaaS))
-      {
-         deployToCloudFoundry();
-      }
-   }
-
-   private LoggedInHandler deployToCloudBeesLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         deployToCloudBees();
-      }
-   };
-
-   private void deployToCloudBees()
-   {
-      final String applicationId = cloudBeesDomain + "/" + cloudBeesName;
-
-      try
-      {
-         SamplesClientService.getInstance().createCloudBeesApplication(
-            applicationId,
-            vfs.getId(),
-            project.getId(),
-            warUrl,
-            null,
-            new CloudBeesAsyncRequestCallback<Map<String, String>>(new DeployWarUnmarshaller(
-               new HashMap<String, String>()), deployToCloudBeesLoggedInHandler)
-            {
-               @Override
-               protected void onSuccess(final Map<String, String> deployResult)
-               {
-                  String output = lb.cloudBessDeploySuccess() + "<br>";
-                  output += lb.cloudBeesDeployApplicationInfo() + "<br>";
-
-                  Iterator<Entry<String, String>> it = deployResult.entrySet().iterator();
-                  while (it.hasNext())
-                  {
-                     Entry<String, String> entry = (Entry<String, String>)it.next();
-                     output += entry.getKey() + " : " + entry.getValue() + "<br>";
-                  }
-                  IDE.fireEvent(new OutputEvent(output, Type.INFO));
-                  IDE.fireEvent(new RefreshBrowserEvent(project));
-               }
-
-               /**
-                * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback#onFailure(java.lang.Throwable)
-                */
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new OutputEvent(lb.cloudBeesDeployFailure(), Type.INFO));
-                  super.onFailure(exception);
-               }
-
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   private LoggedInHandler deployToCloudFoundryLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         deployToCloudBees();
-      }
-   };
-
-   private void deployToCloudFoundry()
-   {
-      try
-      {
-         SamplesClientService.getInstance().createCloudFoundryApplication(
-            vfs.getId(),
-            cloudFoundryTarget,
-            cloudFoundryName,
-            cloudFoundryUrl,
-            project.getPath(),
-            project.getId(),
-            warUrl,
-            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
-               new CloudfoundryApplication()), deployToCloudFoundryLoggedInHandler)
-            {
-               @Override
-               protected void onSuccess(CloudfoundryApplication result)
-               {
-                  String msg = lb.cloudFoundryDeploySuccess(result.getName());
-                  if ("STARTED".equals(result.getState()))
-                  {
-                     if (result.getUris().isEmpty())
-                     {
-                        msg += "<br>" + lb.cloudFoundryApplicationStartedWithNoUrls();
-                     }
-                     else
-                     {
-                        msg +=
-                           "<br>"
-                              + lb.cloudFoundryApplicationStartedOnUrls(result.getName(), getAppUrlsAsString(result));
-                     }
-                  }
-                  IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-                  IDE.fireEvent(new RefreshBrowserEvent(project));
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new OutputEvent(lb.cloudFoundryDeployFailure(), Type.INFO));
-                  super.onFailure(exception);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler#onApplicationBuilt(org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent)
-    */
-   @Override
-   public void onApplicationBuilt(ApplicationBuiltEvent event)
-   {
-      IDE.removeHandler(event.getAssociatedType(), this);
-      if (event.getJobStatus().getArtifactUrl() != null)
-      {
-         warUrl = event.getJobStatus().getArtifactUrl();
-         deployToPaas();
-      }
-   }
-
-   private void buildApplication(ProjectModel projectModel)
-   {
-      IDE.addHandler(ApplicationBuiltEvent.TYPE, this);
-      IDE.fireEvent(new BuildApplicationEvent(projectModel));
-   }
-
-   private String getAppUrlsAsString(CloudfoundryApplication application)
-   {
-      String appUris = "";
-      for (String uri : application.getUris())
-      {
-         if (!uri.startsWith("http"))
-         {
-            uri = "http://" + uri;
-         }
-         appUris += ", " + "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>";
-      }
-      if (!appUris.isEmpty())
-      {
-         // crop unnecessary symbols
-         appUris = appUris.substring(2);
-      }
-      return appUris;
-   }
-
-   private String[] getPaases(String type)
-   {
-      List<String> paas = new ArrayList<String>();
-      paas.add(ProjectProperties.Paas.NONE);
-      // can be deployed to CloudBees
-      if ("Java Web".equals(type) || "Servlet/JSP".equals(type))
-      {
-         paas.add(ProjectProperties.Paas.CLOUDBEES);
-      }
-      // can be deployed to CloudFoundry
-      if ("Rails".equals(type) || "Spring".equals(type) || "Java Web".equals(type) || "Servlet/JSP".equals(type))
-      {
-         paas.add(ProjectProperties.Paas.CLOUDFOUNDRY);
-      }
-      // can be deployed to Heroku
-      if ("Rails".equals(type))
-      {
-         paas.add(ProjectProperties.Paas.HEROKU);
-      }
-
-      // //can be deployed to OpenShift
-      // if ("Rails".equals(type))
-      // {
-      // paas.add(ProjectProperties.Paas.OPENSHIFT);
-      // }
-      return paas.toArray(new String[paas.size()]);
-   }
-
-   private LoggedInHandler herokuLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         deployToHeroku();
-      }
-   };
-
-   private void deployToHeroku()
-   {
-      try
-      {
-         SamplesClientService.getInstance().createHerokuApplication(herokuAppName, vfs.getId(), project.getId(),
-            herokuRemoveService, new HerokuAsyncRequestCallback<String>(null, herokuLoggedInHandler)
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  IDE.fireEvent(new OutputEvent("Application deployed to Heroku successfully", OutputMessage.Type.INFO));
-                  IDE.fireEvent(new RefreshBrowserEvent(project));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   private LoggedInHandler openShiftLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         deployToOpenShift();
-      }
-   };
-
-   private void deployToOpenShift()
-   {
-      try
-      {
-         SamplesClientService.getInstance().createOpenShitfApplication(openShiftName, vfs.getId(), project.getId(),
-            openShitfType, new OpenShiftAsyncRequestCallback<String>(null, openShiftLoggedInHandler)
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  IDE.fireEvent(new OutputEvent("Application deployed to OpenShift successfully",
-                     OutputMessage.Type.INFO));
-                  IDE.fireEvent(new RefreshBrowserEvent(project));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   private void getOpenShiftTypes()
-   {
-      try
-      {
-         SamplesClientService.getInstance().getOpenShiftTypes(new AsyncRequestCallback<List<String>>()
-         {
-            @Override
-            protected void onSuccess(List<String> result)
-            {
-               display.setOpenShitfTypesValueMap(result.toArray(new String[result.size()]));
-               display.setVisibleCloudBeesPanel(false);
-               display.setVisibleCloudFoundryPanel(false);
-               display.setVisibleHerokuPanel(false);
-               display.setVisibleOpenShiftPanel(true);
-               display.enableFinishButton(false);
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               display.getSelectPaasField().setValue(ProjectProperties.Paas.NONE);
-               display.setVisibleCloudBeesPanel(false);
-               display.setVisibleCloudFoundryPanel(false);
-               display.setVisibleHerokuPanel(false);
-               display.setVisibleOpenShiftPanel(false);
-               display.enableFinishButton(true);
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
    }
 
 }

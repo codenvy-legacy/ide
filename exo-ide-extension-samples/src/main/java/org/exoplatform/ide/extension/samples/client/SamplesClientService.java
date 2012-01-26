@@ -21,14 +21,9 @@ package org.exoplatform.ide.extension.samples.client;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.extension.samples.client.paas.cloudbees.CloudBeesAsyncRequestCallback;
-import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback;
-import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudfoundryApplication;
-import org.exoplatform.ide.extension.samples.client.paas.heroku.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Client service for Samples.
@@ -70,84 +65,5 @@ public abstract class SamplesClientService
     */
    public abstract void getRepositoriesList(String userName, AsyncRequestCallback<List<Repository>> callback)
       throws RequestException;
-
-   /************ CloudBees operations ************/
-
-   /**
-    * Initialize application.
-    * 
-    * @param appId
-    * @param warFile
-    * @param message
-    * @param callback
-    */
-   public abstract void createCloudBeesApplication(String appId, String vfsId, String projectId, String warFile,
-      String message, CloudBeesAsyncRequestCallback<Map<String, String>> callback) throws RequestException;
-
-   /**
-    * Get the domains.
-    * 
-    * @param callback - callback that client has to implement
-    */
-   public abstract void getDomains(CloudBeesAsyncRequestCallback<List<String>> callback) throws RequestException;
-
-   public abstract void loginToCloudBees(String email, String password, AsyncRequestCallback<String> callback)
-      throws RequestException;
-
-   /**
-    * Login to paas.
-    * 
-    * @param paas <code>cloudbees</code> or <code>cloudfoundry</code> - where to login
-    * @param email email to login
-    * @param password password
-    * @param callback callback that client has to implement
-    */
-   public abstract void login(Paas paas, String email, String password, AsyncRequestCallback<String> callback)
-      throws RequestException;
-
-   /**
-    * Validates <code>create</code> CloudFoundry action before building project.
-    * 
-    * @param server server
-    * @param appName the name of application (if create - than required, if update - <code>null</code>)
-    * @param workDir the work dir of application
-    * @param callback callback, that client has to implement to handle response from server.
-    */
-   public abstract void validateCloudfoundryAction(String server, String appName, String workDir,
-      CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
-
-   /**
-    * Create application on CloudFoundry.
-    * 
-    * @param server server
-    * @param name - application name. This parameter is mandatory.
-    * @param url - application URL.
-    * @param workDir - directory that contains source code of java web application
-    * @param war - URL to pre-builded war file. May be present for java (spring, grails, java-web) applications ONLY
-    * @param callback - callback, that client has to implement to receive response
-    */
-   public abstract void createCloudFoundryApplication(String vfsId, String server, String name, String url,
-      String workDir, String projectId, String war, CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback)
-      throws RequestException;
-
-   /**
-    * Get the list of CloudFoundry targets.
-    * 
-    * @param callback
-    */
-   public abstract void getCloudFoundryTargets(AsyncRequestCallback<List<String>> callback) throws RequestException;
-
-   /**
-    * Get the types of application on OpenShift.
-    * 
-    * @param callback
-    */
-   public abstract void getOpenShiftTypes(AsyncRequestCallback<List<String>> callback) throws RequestException;
-
-   public abstract void createOpenShitfApplication(String name, String vfsId, String projectId, String type,
-      AsyncRequestCallback<String> callback) throws RequestException;
-
-   public abstract void createHerokuApplication(String applicationName, String vfsId, String projectid,
-      String remoteName, HerokuAsyncRequestCallback<String> callback) throws RequestException;
 
 }
