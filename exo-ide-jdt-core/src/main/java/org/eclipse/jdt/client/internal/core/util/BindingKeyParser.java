@@ -20,7 +20,7 @@ public class BindingKeyParser
 
    static final char C_THROWN = '|';
 
-   static class Scanner
+   public static class Scanner
    {
       static final int PACKAGE = 0;
 

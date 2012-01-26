@@ -12340,7 +12340,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
    {
       if (this.noCacheNameEnvironment == null)
       {
-         this.noCacheNameEnvironment = new DummyNameEnvirement();
+         this.noCacheNameEnvironment = nameEnvironment;
       }
       return this.noCacheNameEnvironment;
    }

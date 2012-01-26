@@ -165,6 +165,126 @@ public class BindingKeyResolver extends BindingKeyParser
          this.typeBinding = baseTypeBinding;
       }
    }
+   
+  public class CaptureFinder extends ASTVisitor
+   {
+      CaptureBinding capture;
+
+      private int position;
+      
+      private Binding wildcardBinding;
+      /**
+       * @param position
+       * @param wildcardBinding
+       */
+      public CaptureFinder(int position, Binding wildcardBinding)
+      {
+         this.position = position;
+         this.wildcardBinding = wildcardBinding;
+      }
+
+      boolean checkType(TypeBinding binding)
+      {
+         if (binding == null)
+            return false;
+         switch (binding.kind())
+         {
+            case Binding.PARAMETERIZED_TYPE :
+               TypeBinding[] arguments = ((ParameterizedTypeBinding)binding).arguments;
+               if (arguments == null)
+                  return false;
+               for (int i = 0, length = arguments.length; i < length; i++)
+               {
+                  if (checkType(arguments[i]))
+                     return true;
+               }
+               break;
+            case Binding.WILDCARD_TYPE :
+               return checkType(((WildcardBinding)binding).bound);
+            case Binding.INTERSECTION_TYPE :
+               if (checkType(((WildcardBinding)binding).bound))
+                  return true;
+               TypeBinding[] otherBounds = ((WildcardBinding)binding).otherBounds;
+               // per construction, otherBounds is never null
+               for (int i = 0, length = otherBounds.length; i < length; i++)
+               {
+                  if (checkType(otherBounds[i]))
+                     return true;
+               }
+               break;
+            case Binding.ARRAY_TYPE :
+               return checkType(((ArrayBinding)binding).leafComponentType);
+            case Binding.TYPE_PARAMETER :
+               if (binding.isCapture())
+               {
+                  CaptureBinding captureBinding = (CaptureBinding)binding;
+                  if (captureBinding.position == position && captureBinding.wildcard == wildcardBinding)
+                  {
+                     this.capture = captureBinding;
+                     return true;
+                  }
+               }
+               break;
+         }
+         return false;
+      }
+
+      public boolean visit(SingleNameReference singleNameReference, BlockScope blockScope)
+      {
+         if (checkType(singleNameReference.resolvedType))
+            return false;
+         return super.visit(singleNameReference, blockScope);
+      }
+
+      public boolean visit(QualifiedNameReference qualifiedNameReference, BlockScope blockScope)
+      {
+         if (checkType(qualifiedNameReference.resolvedType))
+            return false;
+         return super.visit(qualifiedNameReference, blockScope);
+      }
+
+      public boolean visit(MessageSend messageSend, BlockScope blockScope)
+      {
+         if (checkType(messageSend.resolvedType))
+            return false;
+         return super.visit(messageSend, blockScope);
+      }
+
+      public boolean visit(FieldReference fieldReference, BlockScope blockScope)
+      {
+         if (checkType(fieldReference.resolvedType))
+            return false;
+         return super.visit(fieldReference, blockScope);
+      }
+
+      public boolean visit(ConditionalExpression conditionalExpression, BlockScope blockScope)
+      {
+         if (checkType(conditionalExpression.resolvedType))
+            return false;
+         return super.visit(conditionalExpression, blockScope);
+      }
+
+      public boolean visit(CastExpression castExpression, BlockScope blockScope)
+      {
+         if (checkType(castExpression.resolvedType))
+            return false;
+         return super.visit(castExpression, blockScope);
+      }
+
+      public boolean visit(Assignment assignment, BlockScope blockScope)
+      {
+         if (checkType(assignment.resolvedType))
+            return false;
+         return super.visit(assignment, blockScope);
+      }
+
+      public boolean visit(ArrayReference arrayReference, BlockScope blockScope)
+      {
+         if (checkType(arrayReference.resolvedType))
+            return false;
+         return super.visit(arrayReference, blockScope);
+      }
+   }
 
    public void consumeCapture(final int position)
    {
@@ -173,113 +293,8 @@ public class BindingKeyResolver extends BindingKeyParser
       if (outerParsedUnit == null)
          return;
       final Binding wildcardBinding = ((BindingKeyResolver)this.types.get(0)).compilerBinding;
-      class CaptureFinder extends ASTVisitor
-      {
-         CaptureBinding capture;
-
-         boolean checkType(TypeBinding binding)
-         {
-            if (binding == null)
-               return false;
-            switch (binding.kind())
-            {
-               case Binding.PARAMETERIZED_TYPE :
-                  TypeBinding[] arguments = ((ParameterizedTypeBinding)binding).arguments;
-                  if (arguments == null)
-                     return false;
-                  for (int i = 0, length = arguments.length; i < length; i++)
-                  {
-                     if (checkType(arguments[i]))
-                        return true;
-                  }
-                  break;
-               case Binding.WILDCARD_TYPE :
-                  return checkType(((WildcardBinding)binding).bound);
-               case Binding.INTERSECTION_TYPE :
-                  if (checkType(((WildcardBinding)binding).bound))
-                     return true;
-                  TypeBinding[] otherBounds = ((WildcardBinding)binding).otherBounds;
-                  // per construction, otherBounds is never null
-                  for (int i = 0, length = otherBounds.length; i < length; i++)
-                  {
-                     if (checkType(otherBounds[i]))
-                        return true;
-                  }
-                  break;
-               case Binding.ARRAY_TYPE :
-                  return checkType(((ArrayBinding)binding).leafComponentType);
-               case Binding.TYPE_PARAMETER :
-                  if (binding.isCapture())
-                  {
-                     CaptureBinding captureBinding = (CaptureBinding)binding;
-                     if (captureBinding.position == position && captureBinding.wildcard == wildcardBinding)
-                     {
-                        this.capture = captureBinding;
-                        return true;
-                     }
-                  }
-                  break;
-            }
-            return false;
-         }
-
-         public boolean visit(SingleNameReference singleNameReference, BlockScope blockScope)
-         {
-            if (checkType(singleNameReference.resolvedType))
-               return false;
-            return super.visit(singleNameReference, blockScope);
-         }
-
-         public boolean visit(QualifiedNameReference qualifiedNameReference, BlockScope blockScope)
-         {
-            if (checkType(qualifiedNameReference.resolvedType))
-               return false;
-            return super.visit(qualifiedNameReference, blockScope);
-         }
-
-         public boolean visit(MessageSend messageSend, BlockScope blockScope)
-         {
-            if (checkType(messageSend.resolvedType))
-               return false;
-            return super.visit(messageSend, blockScope);
-         }
-
-         public boolean visit(FieldReference fieldReference, BlockScope blockScope)
-         {
-            if (checkType(fieldReference.resolvedType))
-               return false;
-            return super.visit(fieldReference, blockScope);
-         }
-
-         public boolean visit(ConditionalExpression conditionalExpression, BlockScope blockScope)
-         {
-            if (checkType(conditionalExpression.resolvedType))
-               return false;
-            return super.visit(conditionalExpression, blockScope);
-         }
-
-         public boolean visit(CastExpression castExpression, BlockScope blockScope)
-         {
-            if (checkType(castExpression.resolvedType))
-               return false;
-            return super.visit(castExpression, blockScope);
-         }
-
-         public boolean visit(Assignment assignment, BlockScope blockScope)
-         {
-            if (checkType(assignment.resolvedType))
-               return false;
-            return super.visit(assignment, blockScope);
-         }
-
-         public boolean visit(ArrayReference arrayReference, BlockScope blockScope)
-         {
-            if (checkType(arrayReference.resolvedType))
-               return false;
-            return super.visit(arrayReference, blockScope);
-         }
-      }
-      CaptureFinder captureFinder = new CaptureFinder();
+      
+      CaptureFinder captureFinder = new CaptureFinder(position, wildcardBinding);
       outerParsedUnit.traverse(captureFinder, outerParsedUnit.scope);
       this.typeBinding = captureFinder.capture;
    }

@@ -27,7 +27,7 @@ public class RangeUtil
 
    public static final int IGNORE = 2;
 
-   static class RangeResult
+   public static class RangeResult
    {
       private static final int INITIAL_SIZE = 10;
 

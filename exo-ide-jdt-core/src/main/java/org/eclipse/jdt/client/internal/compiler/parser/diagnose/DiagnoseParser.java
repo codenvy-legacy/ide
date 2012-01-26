@@ -160,7 +160,7 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
       }
    }
 
-   static class SecondaryRepairInfo
+   public static class SecondaryRepairInfo
    {
       public int code;
 

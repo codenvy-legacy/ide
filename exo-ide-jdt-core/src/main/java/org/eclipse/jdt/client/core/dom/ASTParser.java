@@ -15,6 +15,7 @@ import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration;
 import org.eclipse.jdt.client.internal.compiler.ast.ConstructorDeclaration;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
+import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.client.internal.compiler.parser.RecoveryScanner;
 import org.eclipse.jdt.client.internal.compiler.parser.RecoveryScannerData;
 import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
@@ -163,6 +164,8 @@ public class ASTParser
     * Bits used to set the different values from CompilationUnitResolver values.
     */
    private int bits;
+   
+   private INameEnvironment nameEnvironment;
 
    /**
     * Creates a new AST parser for the given API level.
@@ -324,6 +327,15 @@ public class ASTParser
       {
          this.bits |= CompilationUnitResolver.INCLUDE_RUNNING_VM_BOOTCLASSPATH;
       }
+   }
+   
+
+   /**
+    * @param nameEnvironment the nameEnvironment to set
+    */
+   public void setNameEnvironment(INameEnvironment nameEnvironment)
+   {
+      this.nameEnvironment = nameEnvironment;
    }
 
    /**
@@ -1152,7 +1164,7 @@ public class ASTParser
                      // parse and resolve
                      compilationUnitDeclaration =
                         CompilationUnitResolver.resolve(sourceUnit, getClasspath(), searcher, this.compilerOptions,
-                           flags, monitor);
+                           flags, monitor, nameEnvironment);
                   }
                   catch (Exception e)
                   {

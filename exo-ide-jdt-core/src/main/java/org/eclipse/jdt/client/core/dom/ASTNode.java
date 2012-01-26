@@ -1067,7 +1067,7 @@ public abstract class ASTNode
    /**
     * A specialized implementation of a list of ASTNodes. The implementation is based on an ArrayList.
     */
-   class NodeList extends AbstractList
+   public class NodeList extends AbstractList
    {
 
       /**
@@ -1091,7 +1091,7 @@ public abstract class ASTNode
        * A cursor for iterating over the elements of the list. Does not lose its position if the list is changed during the
        * iteration.
        */
-      class Cursor implements Iterator
+      public class Cursor implements Iterator
       {
          /**
           * The position of the cursor between elements. If the value is N, then the cursor sits between the element at positions

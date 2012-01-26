@@ -23,10 +23,13 @@ import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 
+import org.eclipse.jdt.client.DummyNameEnvirement;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
+import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -63,10 +66,13 @@ public abstract class ParserBaseTestGwt extends GWTTestCase
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
       parser.setUnitName("CreateJavaClassPresenter");
       parser.setSource(javaFiles);
-
+      parser.setNameEnvironment(new DummyNameEnvirement(null));
       parser.setEnvironment(null, new String[]{"/my/path"}, new String[]{"UTF-8"}, true);
       ASTNode ast = parser.createAST(null);
       unit = (CompilationUnit)ast;
+      
+      new JavaCodeAssistantService(null, null);
+      CompletionEngine.DEBUG = true;
    }
 
    /**

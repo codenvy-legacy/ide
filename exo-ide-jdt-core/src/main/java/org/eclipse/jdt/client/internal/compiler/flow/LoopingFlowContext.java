@@ -62,7 +62,7 @@ public class LoopingFlowContext extends SwitchFlowContext
    int nullCount;
 
    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=321926
-   static private class EscapingExceptionCatchSite
+   static public class EscapingExceptionCatchSite
    {
       final ReferenceBinding caughtException;
 

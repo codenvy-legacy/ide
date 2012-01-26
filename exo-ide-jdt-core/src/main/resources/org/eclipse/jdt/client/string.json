@@ -1,0 +1,1450 @@
+{
+  "methods": [
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "java.lang.String",
+      "modifiers": 1,
+      "returnType": "void",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": true,
+      "parameterTypes": [
+        
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "java.lang.String",
+      "modifiers": 1,
+      "returnType": "void",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": true,
+      "parameterTypes": [
+        "java.lang.String"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "java.lang.String",
+      "modifiers": 1,
+      "returnType": "void",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": true,
+      "parameterTypes": [
+        "char[]"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "java.lang.String",
+      "modifiers": 1,
+      "returnType": "void",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": true,
+      "parameterTypes": [
+        "char[]",
+        "int",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "java.lang.String",
+      "modifiers": 1,
+      "returnType": "void",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": true,
+      "parameterTypes": [
+        "int[]",
+        "int",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "java.lang.String",
+      "modifiers": 131073,
+      "returnType": "void",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": true,
+      "parameterTypes": [
+        "byte[]",
+        "int",
+        "int",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "java.lang.String",
+      "modifiers": 131073,
+      "returnType": "void",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": true,
+      "parameterTypes": [
+        "byte[]",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "java.lang.String",
+      "modifiers": 1,
+      "returnType": "void",
+      "exceptionTypes": [
+        "java.io.UnsupportedEncodingException"
+      ],
+      "constructor": true,
+      "parameterTypes": [
+        "byte[]",
+        "int",
+        "int",
+        "java.lang.String"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "java.lang.String",
+      "modifiers": 1,
+      "returnType": "void",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": true,
+      "parameterTypes": [
+        "byte[]",
+        "int",
+        "int",
+        "java.nio.charset.Charset"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "java.lang.String",
+      "modifiers": 1,
+      "returnType": "void",
+      "exceptionTypes": [
+        "java.io.UnsupportedEncodingException"
+      ],
+      "constructor": true,
+      "parameterTypes": [
+        "byte[]",
+        "java.lang.String"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "java.lang.String",
+      "modifiers": 1,
+      "returnType": "void",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": true,
+      "parameterTypes": [
+        "byte[]",
+        "java.nio.charset.Charset"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "java.lang.String",
+      "modifiers": 1,
+      "returnType": "void",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": true,
+      "parameterTypes": [
+        "byte[]",
+        "int",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "java.lang.String",
+      "modifiers": 1,
+      "returnType": "void",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": true,
+      "parameterTypes": [
+        "byte[]"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "java.lang.String",
+      "modifiers": 1,
+      "returnType": "void",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": true,
+      "parameterTypes": [
+        "java.lang.StringBuffer"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "java.lang.String",
+      "modifiers": 1,
+      "returnType": "void",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": true,
+      "parameterTypes": [
+        "java.lang.StringBuilder"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "length",
+      "modifiers": 1,
+      "returnType": "int",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "isEmpty",
+      "modifiers": 1,
+      "returnType": "boolean",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "charAt",
+      "modifiers": 1,
+      "returnType": "char",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "codePointAt",
+      "modifiers": 1,
+      "returnType": "int",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "codePointBefore",
+      "modifiers": 1,
+      "returnType": "int",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "codePointCount",
+      "modifiers": 1,
+      "returnType": "int",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "int",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "offsetByCodePoints",
+      "modifiers": 1,
+      "returnType": "int",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "int",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "getChars",
+      "modifiers": 1,
+      "returnType": "void",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "int",
+        "int",
+        "char[]",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "getBytes",
+      "modifiers": 131073,
+      "returnType": "void",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "int",
+        "int",
+        "byte[]",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "getBytes",
+      "modifiers": 1,
+      "returnType": "byte[]",
+      "exceptionTypes": [
+        "java.io.UnsupportedEncodingException"
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.String"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "getBytes",
+      "modifiers": 1,
+      "returnType": "byte[]",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.nio.charset.Charset"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "getBytes",
+      "modifiers": 1,
+      "returnType": "byte[]",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "equals",
+      "modifiers": 1,
+      "returnType": "boolean",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.Object"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "contentEquals",
+      "modifiers": 1,
+      "returnType": "boolean",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.StringBuffer"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "contentEquals",
+      "modifiers": 1,
+      "returnType": "boolean",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.CharSequence"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "equalsIgnoreCase",
+      "modifiers": 1,
+      "returnType": "boolean",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.String"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "compareTo",
+      "modifiers": 1,
+      "returnType": "int",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.String"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "compareToIgnoreCase",
+      "modifiers": 1,
+      "returnType": "int",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.String"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "regionMatches",
+      "modifiers": 1,
+      "returnType": "boolean",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "int",
+        "java.lang.String",
+        "int",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "regionMatches",
+      "modifiers": 1,
+      "returnType": "boolean",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "boolean",
+        "int",
+        "java.lang.String",
+        "int",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "startsWith",
+      "modifiers": 1,
+      "returnType": "boolean",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.String",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "startsWith",
+      "modifiers": 1,
+      "returnType": "boolean",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.String"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "endsWith",
+      "modifiers": 1,
+      "returnType": "boolean",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.String"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "hashCode",
+      "modifiers": 1,
+      "returnType": "int",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "indexOf",
+      "modifiers": 1,
+      "returnType": "int",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "indexOf",
+      "modifiers": 1,
+      "returnType": "int",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "int",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "lastIndexOf",
+      "modifiers": 1,
+      "returnType": "int",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "lastIndexOf",
+      "modifiers": 1,
+      "returnType": "int",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "int",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "indexOf",
+      "modifiers": 1,
+      "returnType": "int",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.String"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "indexOf",
+      "modifiers": 1,
+      "returnType": "int",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.String",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "lastIndexOf",
+      "modifiers": 1,
+      "returnType": "int",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.String"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "lastIndexOf",
+      "modifiers": 1,
+      "returnType": "int",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.String",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "substring",
+      "modifiers": 1,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "substring",
+      "modifiers": 1,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "int",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "subSequence",
+      "modifiers": 1,
+      "returnType": "java.lang.CharSequence",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "int",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "concat",
+      "modifiers": 1,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.String"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "replace",
+      "modifiers": 1,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "char",
+        "char"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "matches",
+      "modifiers": 1,
+      "returnType": "boolean",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.String"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "contains",
+      "modifiers": 1,
+      "returnType": "boolean",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.CharSequence"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "replaceFirst",
+      "modifiers": 1,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.String",
+        "java.lang.String"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "replaceAll",
+      "modifiers": 1,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.String",
+        "java.lang.String"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "replace",
+      "modifiers": 1,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.CharSequence",
+        "java.lang.CharSequence"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "split",
+      "modifiers": 1,
+      "returnType": "java.lang.String[]",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.String",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "split",
+      "modifiers": 1,
+      "returnType": "java.lang.String[]",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.String"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "toLowerCase",
+      "modifiers": 1,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.util.Locale"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "toLowerCase",
+      "modifiers": 1,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "toUpperCase",
+      "modifiers": 1,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.util.Locale"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "toUpperCase",
+      "modifiers": 1,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "trim",
+      "modifiers": 1,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "toString",
+      "modifiers": 1,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "toCharArray",
+      "modifiers": 1,
+      "returnType": "char[]",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "format",
+      "modifiers": 137,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.String",
+        "java.lang.Object[]"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "format",
+      "modifiers": 137,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.util.Locale",
+        "java.lang.String",
+        "java.lang.Object[]"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "valueOf",
+      "modifiers": 9,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "java.lang.Object"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "valueOf",
+      "modifiers": 9,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "char[]"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "valueOf",
+      "modifiers": 9,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "char[]",
+        "int",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "copyValueOf",
+      "modifiers": 9,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "char[]",
+        "int",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "copyValueOf",
+      "modifiers": 9,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "char[]"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "valueOf",
+      "modifiers": 9,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "boolean"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "valueOf",
+      "modifiers": 9,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "char"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "valueOf",
+      "modifiers": 9,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "valueOf",
+      "modifiers": 9,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "long"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "valueOf",
+      "modifiers": 9,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "float"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "valueOf",
+      "modifiers": 9,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "double"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.String",
+      "name": "intern",
+      "modifiers": 257,
+      "returnType": "java.lang.String",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.Object",
+      "name": "getClass",
+      "modifiers": 273,
+      "returnType": "java.lang.Class<?>",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.Object",
+      "name": "notify",
+      "modifiers": 273,
+      "returnType": "void",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.Object",
+      "name": "notifyAll",
+      "modifiers": 273,
+      "returnType": "void",
+      "exceptionTypes": [
+        
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.Object",
+      "name": "wait",
+      "modifiers": 273,
+      "returnType": "void",
+      "exceptionTypes": [
+        "java.lang.InterruptedException"
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "long"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.Object",
+      "name": "wait",
+      "modifiers": 17,
+      "returnType": "void",
+      "exceptionTypes": [
+        "java.lang.InterruptedException"
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        "long",
+        "int"
+      ]
+    },
+    {
+      "parameterNames": [
+        
+      ],
+      "declaringClass": "java.lang.Object",
+      "name": "wait",
+      "modifiers": 17,
+      "returnType": "void",
+      "exceptionTypes": [
+        "java.lang.InterruptedException"
+      ],
+      "constructor": false,
+      "parameterTypes": [
+        
+      ]
+    }
+  ],
+  "superClass": "java.lang.Object",
+  "name": "java.lang.String",
+  "interfaces": [
+    "java.io.Serializable",
+    "java.lang.Comparable",
+    "java.lang.CharSequence"
+  ],
+  "modifiers": 49,
+  "type": "CLASS",
+  "fields": [
+    {
+      "declaringClass": "java.lang.String",
+      "name": "CASE_INSENSITIVE_ORDER",
+      "modifiers": 25,
+      "type": "java.util.Comparator"
+    }
+  ]
+}

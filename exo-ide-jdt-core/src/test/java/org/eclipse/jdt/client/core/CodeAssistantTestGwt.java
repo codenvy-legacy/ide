@@ -20,6 +20,7 @@ package org.eclipse.jdt.client.core;
 
 import org.eclipse.jdt.client.DummyNameEnvirement;
 import org.eclipse.jdt.client.compiler.batch.CompilationUnit;
+import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
 
 import java.util.ArrayList;
@@ -36,7 +37,8 @@ public class CodeAssistantTestGwt extends ParserBaseTestGwt
    public void testCodeAssistantOnInnerInterface()
    {
       CARequestor requestor = new CARequestor();
-      CompletionEngine e = new CompletionEngine(new DummyNameEnvirement(), requestor, JavaCore.getOptions(), null);
+      CompletionEngine e = new CompletionEngine(new DummyNameEnvirement(null), requestor, JavaCore.getOptions(), null);
+      
       e.complete(new CompilationUnit(javaFiles, "CreateJavaClassPresenter", "UTF-8"),
          getCompletionPosition(javaFiles, 452, 19), 0);
       assertEquals(2, requestor.proposals.size());
@@ -45,7 +47,7 @@ public class CodeAssistantTestGwt extends ParserBaseTestGwt
    public void testLocalVariables()
    {
       CARequestor requestor = new CARequestor();
-      CompletionEngine e = new CompletionEngine(new DummyNameEnvirement(), requestor, JavaCore.getOptions(), null);
+      CompletionEngine e = new CompletionEngine(new DummyNameEnvirement(null), requestor, JavaCore.getOptions(), null);
       e.complete(new CompilationUnit(javaFiles, "CreateJavaClassPresenter", "UTF-8"),
          getCompletionPosition(javaFiles, 481, 7), 0);
       for (CompletionProposal p : requestor.proposals)
@@ -67,6 +69,15 @@ public class CodeAssistantTestGwt extends ParserBaseTestGwt
       public void accept(CompletionProposal proposal)
       {
          proposals.add(proposal);
+      }
+      /**
+       * @see org.eclipse.jdt.client.core.CompletionRequestor#completionFailure(org.eclipse.jdt.client.core.compiler.IProblem)
+       */
+      @Override
+      public void completionFailure(IProblem problem)
+      {
+         System.out.println(problem.getMessage());
+         super.completionFailure(problem);
       }
    }
 

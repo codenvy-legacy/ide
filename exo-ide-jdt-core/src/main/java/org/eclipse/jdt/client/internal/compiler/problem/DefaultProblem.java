@@ -338,4 +338,20 @@ public class DefaultProblem extends CategorizedProblem
       }
       return s;
    }
+
+   /**
+    * @see java.lang.Object#equals(java.lang.Object)
+    */
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (obj instanceof DefaultProblem)
+      {
+         DefaultProblem p = (DefaultProblem)obj;
+         return (p.getID() == this.getID() && p.getMessage().equals(this.getMessage()) && p.getSourceLineNumber() == this
+            .getSourceLineNumber());
+      }
+      else
+         return super.equals(obj);
+   }
 }

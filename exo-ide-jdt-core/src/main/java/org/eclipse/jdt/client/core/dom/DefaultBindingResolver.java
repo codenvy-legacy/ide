@@ -79,7 +79,7 @@ class DefaultBindingResolver extends BindingResolver
    /*
     * Holds on binding tables that can be shared by several ASTs.
     */
-   static class BindingTables
+   public static class BindingTables
    {
 
       /**

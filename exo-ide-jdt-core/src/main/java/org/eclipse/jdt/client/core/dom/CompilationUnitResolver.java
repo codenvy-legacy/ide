@@ -31,6 +31,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
 import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
 import org.eclipse.jdt.client.internal.compiler.lookup.PackageBinding;
 import org.eclipse.jdt.client.internal.compiler.parser.Parser;
+import org.eclipse.jdt.client.internal.compiler.parser.SourceTypeConverter;
 import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilation;
 import org.eclipse.jdt.client.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
@@ -77,7 +78,7 @@ class CompilationUnitResolver extends Compiler
    public static final int ENABLE_STATEMENTS_RECOVERY = 0x02;
 
    /* A list of int */
-   static class IntArrayList
+   public static class IntArrayList
    {
       public int[] list = new int[5];
 
@@ -163,7 +164,7 @@ class CompilationUnitResolver extends Compiler
       // (case of processing a source that was not known by beginToCompile (e.g. when asking to createBinding))
       // TODO
       // SourceTypeElementInfo sourceType = (SourceTypeElementInfo)sourceTypes[0];
-      // accept((org.eclipse.jdt.internal.compiler.env.ICompilationUnit)sourceType.getHandle().getCompilationUnit(),
+      // accept((org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit)sourceType.getHandle().getCompilationUnit(),
       // accessRestriction);
    }
 
@@ -694,33 +695,19 @@ class CompilationUnitResolver extends Compiler
    // TODO
    public static CompilationUnitDeclaration resolve(
       org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit sourceUnit, List classpaths,
-      NodeSearcher nodeSearcher, Map options, int flags, IProgressMonitor monitor)
+      NodeSearcher nodeSearcher, Map options, int flags, IProgressMonitor monitor, INameEnvironment nameEnvironment)
    {
-      System.out.println("CompilationUnitResolver.resolve()");
       CompilationUnitDeclaration unit = null;
-      INameEnvironmentWithProgress environment = null;
       CancelableProblemFactory problemFactory = null;
       CompilationUnitResolver resolver = null;
       try
       {
-         // if (javaProject == null)
-         // {
-         // //TODO use own implementation of INameEnvironmentWithProgress
-         // // Classpath[] allEntries = new Classpath[classpaths.size()];
-         // // classpaths.toArray(allEntries);
-         // // environment = new NameEnvironmentWithProgress(allEntries, null, monitor);
-         // }
-         // else
-         // {
-         // //TODO
-         // // environment = new CancelableNameEnvironment((JavaProject) javaProject, owner, monitor);
-         // }
          problemFactory = new CancelableProblemFactory(monitor);
          CompilerOptions compilerOptions = getCompilerOptions(options, (flags & ENABLE_STATEMENTS_RECOVERY) != 0);
          boolean ignoreMethodBodies = (flags & IGNORE_METHOD_BODIES) != 0;
          compilerOptions.ignoreMethodBodies = ignoreMethodBodies;
          resolver =
-            new CompilationUnitResolver(new DummyNameEnvirement(), getHandlingPolicy(), compilerOptions,
+            new CompilationUnitResolver(nameEnvironment, getHandlingPolicy(), compilerOptions,
                getRequestor(), problemFactory, monitor, false);
          boolean analyzeAndGenerateCode = !ignoreMethodBodies;
          unit = resolver.resolve(null, // no existing compilation unit declaration
@@ -749,13 +736,12 @@ class CompilationUnitResolver extends Compiler
          // }
          return unit;
       }
+      catch (Exception e) {
+         e.printStackTrace();
+         return null;
+      }
       finally
       {
-         if (environment != null)
-         {
-            // don't hold a reference to this external object
-            environment.setMonitor(null);
-         }
          if (problemFactory != null)
          {
             problemFactory.monitor = null; // don't hold a reference to this external object

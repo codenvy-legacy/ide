@@ -3,9 +3,14 @@
 <module>
    <inherits name="com.google.gwt.user.User" />
    <inherits name="com.google.gwt.http.HTTP" />
+   <inherits name="com.google.gwt.i18n.I18N"/>
+   <inherits name="com.google.gwt.json.JSON" />
       <!-- IDE Client Framework -->
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
-   
+   <inherits name='org.exoplatform.ide.editor.java.JavaEditorExtension' />
+    <replace-with class="org.eclipse.jdt.client.AstView">
+      <when-type-is class="org.eclipse.jdt.client.AstPesenter.Display" />
+   </replace-with>
    <source path="client" />
-   <entry-point class="org.eclipse.jdt.client.JdtTest" />
+   <entry-point class="org.eclipse.jdt.client.JdtExtension" />
 </module>

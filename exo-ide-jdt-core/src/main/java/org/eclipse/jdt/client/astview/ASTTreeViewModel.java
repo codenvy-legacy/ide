@@ -79,7 +79,7 @@ import java.util.List;
 public class ASTTreeViewModel implements TreeViewModel
 {
 
-   private static class AstCell extends AbstractCell<Object>
+   public static class AstCell extends AbstractCell<Object>
    {
 
       /**

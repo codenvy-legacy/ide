@@ -45,7 +45,7 @@ public class SourceTypeConverter extends TypeConverter
     * Exception thrown while converting an anonymous type of a member type in this case, we must parse the source as the enclosing
     * instance cannot be recreated from the model
     */
-   static class AnonymousMemberFound extends RuntimeException
+   public static class AnonymousMemberFound extends RuntimeException
    {
       private static final long serialVersionUID = 1L;
    }

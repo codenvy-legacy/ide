@@ -89,16 +89,17 @@ public class BinaryTypeBinding extends ReferenceBinding
       throw new IllegalStateException();
    }
 
-   static AnnotationBinding createAnnotation(IBinaryAnnotation annotationInfo, LookupEnvironment env,
+   public static AnnotationBinding createAnnotation(IBinaryAnnotation annotationInfo, LookupEnvironment env,
       char[][][] missingTypeNames)
    {
       IBinaryElementValuePair[] binaryPairs = annotationInfo.getElementValuePairs();
       int length = binaryPairs == null ? 0 : binaryPairs.length;
       ElementValuePair[] pairs = length == 0 ? Binding.NO_ELEMENT_VALUE_PAIRS : new ElementValuePair[length];
       for (int i = 0; i < length; i++)
-         pairs[i] =
-            new ElementValuePair(binaryPairs[i].getName(), convertMemberValue(binaryPairs[i].getValue(), env,
-               missingTypeNames), null);
+      {
+         Object memberValue = convertMemberValue(binaryPairs[i].getValue(), env, missingTypeNames);
+         pairs[i] = new ElementValuePair(binaryPairs[i].getName(), memberValue, null);
+      }
 
       char[] typeName = annotationInfo.getTypeName();
       ReferenceBinding annotationType =
@@ -112,7 +113,9 @@ public class BinaryTypeBinding extends ReferenceBinding
       int length = annotationInfos == null ? 0 : annotationInfos.length;
       AnnotationBinding[] result = length == 0 ? Binding.NO_ANNOTATIONS : new AnnotationBinding[length];
       for (int i = 0; i < length; i++)
+      {
          result[i] = createAnnotation(annotationInfos[i], env, missingTypeNames);
+      }
       return result;
    }
 

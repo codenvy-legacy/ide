@@ -119,7 +119,7 @@ public class ConstantPool implements ClassFileConstants, TypeIds
    //	public static final char[] GetMessageSignature = "()Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
    //	public static final char[] HasNext = "hasNext".toCharArray();//$NON-NLS-1$
    //	public static final char[] HasNextSignature = "()Z".toCharArray();//$NON-NLS-1$
-   //	public static final char[] Init = "<init>".toCharArray(); //$NON-NLS-1$
+   	public static final char[] Init = "<init>".toCharArray(); //$NON-NLS-1$
    //	public static final char[] IntConstrSignature = "(I)V".toCharArray(); //$NON-NLS-1$
    //	public static final char[] ITERATOR_NAME = "iterator".toCharArray(); //$NON-NLS-1$
    //	public static final char[] ITERATOR_SIGNATURE = "()Ljava/util/Iterator;".toCharArray(); //$NON-NLS-1$

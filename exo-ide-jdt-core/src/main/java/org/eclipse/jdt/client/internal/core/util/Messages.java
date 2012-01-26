@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.core.util;
 
-import java.text.MessageFormat;
-
 public final class Messages
 {
 
@@ -672,51 +670,51 @@ public final class Messages
 
    public static String code_assist_internal_error;
 
-   /**
-    * Bind the given message's substitution locations with the given string values.
-    * 
-    * @param message the message to be manipulated
-    * @return the manipulated String
-    */
-   public static String bind(String message)
-   {
-      return bind(message, null);
-   }
+//   /**
+//    * Bind the given message's substitution locations with the given string values.
+//    * 
+//    * @param message the message to be manipulated
+//    * @return the manipulated String
+//    */
+//   public static String bind(String message)
+//   {
+//      return bind(message, null);
+//   }
 
-   /**
-    * Bind the given message's substitution locations with the given string values.
-    * 
-    * @param message the message to be manipulated
-    * @param binding the object to be inserted into the message
-    * @return the manipulated String
-    */
-   public static String bind(String message, Object binding)
-   {
-      return bind(message, new Object[]{binding});
-   }
+//   /**
+//    * Bind the given message's substitution locations with the given string values.
+//    * 
+//    * @param message the message to be manipulated
+//    * @param binding the object to be inserted into the message
+//    * @return the manipulated String
+//    */
+//   public static String bind(String message, Object binding)
+//   {
+//      return bind(message, new Object[]{binding});
+//   }
 
-   /**
-    * Bind the given message's substitution locations with the given string values.
-    * 
-    * @param message the message to be manipulated
-    * @param binding1 An object to be inserted into the message
-    * @param binding2 A second object to be inserted into the message
-    * @return the manipulated String
-    */
-   public static String bind(String message, Object binding1, Object binding2)
-   {
-      return bind(message, new Object[]{binding1, binding2});
-   }
+//   /**
+//    * Bind the given message's substitution locations with the given string values.
+//    * 
+//    * @param message the message to be manipulated
+//    * @param binding1 An object to be inserted into the message
+//    * @param binding2 A second object to be inserted into the message
+//    * @return the manipulated String
+//    */
+//   public static String bind(String message, Object binding1, Object binding2)
+//   {
+//      return bind(message, new Object[]{binding1, binding2});
+//   }
 
-   /**
-    * Bind the given message's substitution locations with the given string values.
-    * 
-    * @param message the message to be manipulated
-    * @param bindings An array of objects to be inserted into the message
-    * @return the manipulated String
-    */
-   public static String bind(String message, Object[] bindings)
-   {
-      return MessageFormat.format(message, bindings);
-   }
+//   /**
+//    * Bind the given message's substitution locations with the given string values.
+//    * 
+//    * @param message the message to be manipulated
+//    * @param bindings An array of objects to be inserted into the message
+//    * @return the manipulated String
+//    */
+//   public static String bind(String message, Object[] bindings)
+//   {
+//      return MessageFormat.format(message, bindings);
+//   }
 }

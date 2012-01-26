@@ -54,6 +54,112 @@ public abstract class OperatorExpression extends Expression implements OperatorI
       OperatorSignatures[XOR] = get_XOR();
    }
 
+   public static class Decode
+   {
+      public final String constant(int code)
+      {
+         switch (code)
+         {
+            case T_boolean :
+               return "true"; //$NON-NLS-1$
+            case T_byte :
+               return "((byte) 3)"; //$NON-NLS-1$
+            case T_char :
+               return "'A'"; //$NON-NLS-1$
+            case T_double :
+               return "300.0d"; //$NON-NLS-1$
+            case T_float :
+               return "100.0f"; //$NON-NLS-1$
+            case T_int :
+               return "1"; //$NON-NLS-1$
+            case T_long :
+               return "7L"; //$NON-NLS-1$
+            case T_JavaLangString :
+               return "\"hello-world\""; //$NON-NLS-1$
+            case T_null :
+               return "null"; //$NON-NLS-1$
+            case T_short :
+               return "((short) 5)"; //$NON-NLS-1$
+            case T_JavaLangObject :
+               return "null";} //$NON-NLS-1$
+         return Util.EMPTY_STRING;
+      }
+
+      public final String type(int code)
+      {
+         switch (code)
+         {
+            case T_boolean :
+               return "z"; //$NON-NLS-1$
+            case T_byte :
+               return "b"; //$NON-NLS-1$
+            case T_char :
+               return "c"; //$NON-NLS-1$
+            case T_double :
+               return "d"; //$NON-NLS-1$
+            case T_float :
+               return "f"; //$NON-NLS-1$
+            case T_int :
+               return "i"; //$NON-NLS-1$
+            case T_long :
+               return "l"; //$NON-NLS-1$
+            case T_JavaLangString :
+               return "str"; //$NON-NLS-1$
+            case T_null :
+               return "null"; //$NON-NLS-1$
+            case T_short :
+               return "s"; //$NON-NLS-1$
+            case T_JavaLangObject :
+               return "obj";} //$NON-NLS-1$
+         return "xxx";} //$NON-NLS-1$
+
+      public final String operator(int operator)
+      {
+         switch (operator)
+         {
+            case EQUAL_EQUAL :
+               return "=="; //$NON-NLS-1$
+            case LESS_EQUAL :
+               return "<="; //$NON-NLS-1$
+            case GREATER_EQUAL :
+               return ">="; //$NON-NLS-1$
+            case LEFT_SHIFT :
+               return "<<"; //$NON-NLS-1$
+            case RIGHT_SHIFT :
+               return ">>"; //$NON-NLS-1$
+            case UNSIGNED_RIGHT_SHIFT :
+               return ">>>"; //$NON-NLS-1$
+            case OR_OR :
+               return "||"; //$NON-NLS-1$
+            case AND_AND :
+               return "&&"; //$NON-NLS-1$
+            case PLUS :
+               return "+"; //$NON-NLS-1$
+            case MINUS :
+               return "-"; //$NON-NLS-1$
+            case NOT :
+               return "!"; //$NON-NLS-1$
+            case REMAINDER :
+               return "%"; //$NON-NLS-1$
+            case XOR :
+               return "^"; //$NON-NLS-1$
+            case AND :
+               return "&"; //$NON-NLS-1$
+            case MULTIPLY :
+               return "*"; //$NON-NLS-1$
+            case OR :
+               return "|"; //$NON-NLS-1$
+            case TWIDDLE :
+               return "~"; //$NON-NLS-1$
+            case DIVIDE :
+               return "/"; //$NON-NLS-1$
+            case GREATER :
+               return ">"; //$NON-NLS-1$
+            case LESS :
+               return "<";} //$NON-NLS-1$
+         return "????";} //$NON-NLS-1$
+   }
+
    public static final String generateTableTestCase()
    {
       // return a String which is a java method allowing to test
@@ -66,112 +172,6 @@ public abstract class OperatorExpression extends Expression implements OperatorI
       int[] operators =
          new int[]{AND, AND_AND, DIVIDE, GREATER, GREATER_EQUAL, LEFT_SHIFT, LESS, LESS_EQUAL, MINUS, MULTIPLY, OR,
             OR_OR, PLUS, REMAINDER, RIGHT_SHIFT, UNSIGNED_RIGHT_SHIFT, XOR};
-
-      class Decode
-      {
-         public final String constant(int code)
-         {
-            switch (code)
-            {
-               case T_boolean :
-                  return "true"; //$NON-NLS-1$
-               case T_byte :
-                  return "((byte) 3)"; //$NON-NLS-1$
-               case T_char :
-                  return "'A'"; //$NON-NLS-1$
-               case T_double :
-                  return "300.0d"; //$NON-NLS-1$
-               case T_float :
-                  return "100.0f"; //$NON-NLS-1$
-               case T_int :
-                  return "1"; //$NON-NLS-1$
-               case T_long :
-                  return "7L"; //$NON-NLS-1$
-               case T_JavaLangString :
-                  return "\"hello-world\""; //$NON-NLS-1$
-               case T_null :
-                  return "null"; //$NON-NLS-1$
-               case T_short :
-                  return "((short) 5)"; //$NON-NLS-1$
-               case T_JavaLangObject :
-                  return "null";} //$NON-NLS-1$
-            return Util.EMPTY_STRING;
-         }
-
-         public final String type(int code)
-         {
-            switch (code)
-            {
-               case T_boolean :
-                  return "z"; //$NON-NLS-1$
-               case T_byte :
-                  return "b"; //$NON-NLS-1$
-               case T_char :
-                  return "c"; //$NON-NLS-1$
-               case T_double :
-                  return "d"; //$NON-NLS-1$
-               case T_float :
-                  return "f"; //$NON-NLS-1$
-               case T_int :
-                  return "i"; //$NON-NLS-1$
-               case T_long :
-                  return "l"; //$NON-NLS-1$
-               case T_JavaLangString :
-                  return "str"; //$NON-NLS-1$
-               case T_null :
-                  return "null"; //$NON-NLS-1$
-               case T_short :
-                  return "s"; //$NON-NLS-1$
-               case T_JavaLangObject :
-                  return "obj";} //$NON-NLS-1$
-            return "xxx";} //$NON-NLS-1$
-
-         public final String operator(int operator)
-         {
-            switch (operator)
-            {
-               case EQUAL_EQUAL :
-                  return "=="; //$NON-NLS-1$
-               case LESS_EQUAL :
-                  return "<="; //$NON-NLS-1$
-               case GREATER_EQUAL :
-                  return ">="; //$NON-NLS-1$
-               case LEFT_SHIFT :
-                  return "<<"; //$NON-NLS-1$
-               case RIGHT_SHIFT :
-                  return ">>"; //$NON-NLS-1$
-               case UNSIGNED_RIGHT_SHIFT :
-                  return ">>>"; //$NON-NLS-1$
-               case OR_OR :
-                  return "||"; //$NON-NLS-1$
-               case AND_AND :
-                  return "&&"; //$NON-NLS-1$
-               case PLUS :
-                  return "+"; //$NON-NLS-1$
-               case MINUS :
-                  return "-"; //$NON-NLS-1$
-               case NOT :
-                  return "!"; //$NON-NLS-1$
-               case REMAINDER :
-                  return "%"; //$NON-NLS-1$
-               case XOR :
-                  return "^"; //$NON-NLS-1$
-               case AND :
-                  return "&"; //$NON-NLS-1$
-               case MULTIPLY :
-                  return "*"; //$NON-NLS-1$
-               case OR :
-                  return "|"; //$NON-NLS-1$
-               case TWIDDLE :
-                  return "~"; //$NON-NLS-1$
-               case DIVIDE :
-                  return "/"; //$NON-NLS-1$
-               case GREATER :
-                  return ">"; //$NON-NLS-1$
-               case LESS :
-                  return "<";} //$NON-NLS-1$
-            return "????";} //$NON-NLS-1$
-      }
 
       Decode decode = new Decode();
       String s;

@@ -42,9 +42,9 @@ public final class HashtableOfObjectToInt implements Cloneable
       this.valueTable = new int[extraRoom];
    }
 
-   public Object clone() throws CloneNotSupportedException
+   public Object clone()
    {
-      HashtableOfObjectToInt result = (HashtableOfObjectToInt)super.clone();
+      HashtableOfObjectToInt result = new HashtableOfObjectToInt();
       result.elementSize = this.elementSize;
       result.threshold = this.threshold;
 

@@ -656,7 +656,7 @@ class DefaultCommentMapper
       return extended;
    }
 
-   class CommentMapperVisitor extends DefaultASTVisitor
+   public class CommentMapperVisitor extends DefaultASTVisitor
    {
 
       ASTNode topSiblingParent = null;
