@@ -22,11 +22,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
@@ -59,37 +57,33 @@ public class GroovyObjectCompletionTest extends CodeAssistantBaseTest
       }
    }
 
-   @Before
-   public void openFile() throws Exception
-   {
-      IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
-      IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
-   }
-
    @Test
    public void testGroovyObjectCompletion() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      //open file
+      IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
+      
       IDE.EDITOR.moveCursorDown(0, 10);
+      
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + ".");
 
       IDE.CODEASSISTANT.openForm();
 
       IDE.CODEASSISTANT.typeToInput("con");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      Thread.sleep(2000);
 
-      IDE.CODEASSISTANT.checkElementPresent("concat(String):String");
-      IDE.CODEASSISTANT.checkElementPresent("contains(CharSequence):boolean");
-      IDE.CODEASSISTANT.checkElementPresent("contentEquals(StringBuffer):boolean");
-      IDE.CODEASSISTANT.checkElementPresent("contentEquals(CharSequence):boolean");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("concat(java.lang.String):java.lang.String"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("contains(java.lang.CharSequence):boolean"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("contentEquals(java.lang.StringBuffer):boolean"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("contentEquals(java.lang.CharSequence):boolean"));
 
       IDE.CODEASSISTANT.moveCursorDown(2);
 
       IDE.CODEASSISTANT.insertSelectedItem();
-
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains(".contentEquals(StringBuffer)"));
-
+      
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains(".contentEquals(java.lang.StringBuffer)"));
    }
 
 }
