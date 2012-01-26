@@ -20,6 +20,7 @@
 <module>
    <inherits name='com.google.gwt.user.User' />
 
+   <inherits name="org.eclipse.jdt.IdeJdt" />
    <!-- EDITOR EXTENSIONS -->
    <inherits name="org.exoplatform.ide.editor.gadget.GadgetEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.groovy.GroovyEditorExtension" />

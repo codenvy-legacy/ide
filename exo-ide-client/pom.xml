@@ -163,6 +163,11 @@
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-vfs-jcr</artifactId>
             </dependency>
+            
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-jdt-core</artifactId>
+            </dependency>
 
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
@@ -314,7 +319,7 @@
             <dependency>
                <groupId>org.exoplatform.log-reader</groupId>
                <artifactId>log-reader-service</artifactId>
-               <version>1.0-M2</version>
+               <version>1.0-M5-SNAPSHOT</version>
             </dependency>
 
             <dependency>
@@ -632,8 +637,7 @@
                   <version>${gwt.maven.plugin.version}</version>
                   <configuration>
                      <runTarget>org.exoplatform.ide.Shell/Shell.html</runTarget>
-                     <!-- <logLevel>INFO</logLevel> -->
-                     <logLevel>INFO' -bindAddress 0.0.0.0 -logLevel 'INFO</logLevel>
+                     <logLevel>INFO</logLevel>
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <skipTests>${gwt.test.skip}</skipTests>
                      <!-- <port>${gwt.port}</port> -->
