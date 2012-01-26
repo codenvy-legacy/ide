@@ -18,6 +18,11 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.gwt.user.client.Window;
+
+import org.eclipse.jdt.client.codeassistant.ui.CodeAssitantForm;
+import org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler;
+import org.eclipse.jdt.client.codeassistant.ui.ProposalWidget;
 import org.eclipse.jdt.client.compiler.batch.CompilationUnit;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.CompletionRequestor;
@@ -31,10 +36,12 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -42,12 +49,21 @@ import java.util.List;
  * @version ${Id}: Jan 24, 2012 5:11:46 PM evgen $
  * 
  */
-public class CodeAssistantController implements RunCodeAssistantHandler, EditorActiveFileChangedHandler
+public class CodeAssistantController implements RunCodeAssistantHandler, EditorActiveFileChangedHandler,
+   ProposalSelectedHandler
 {
 
    private FileModel currentFile;
 
-   private Editor currentEditor;
+   private CodeMirror currentEditor;
+
+   private String afterToken;
+
+   private String tokenToComplete;
+
+   private String beforeToken;
+
+   private int currentLineNumber;
 
    /**
     * 
@@ -64,7 +80,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
    @Override
    public void onRunCodeAssistant(RunCodeAssistantEvent event)
    {
-      if (currentFile == null)
+      if (currentFile == null || currentEditor == null)
          return;
       CodeAssistantRequestor requestor = new CodeAssistantRequestor();
 
@@ -77,24 +93,54 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
             "UTF-8"),
          getCompletionPosition(currentFile.getContent(), currentEditor.getCursorRow(), currentEditor.getCursorCol()), 0);
 
-      StringBuilder b = new StringBuilder("CodeAssistant proposals: <br/><pre>");
+      currentLineNumber = currentEditor.getCursorRow();
+      String lineContent = currentEditor.getLineContent(currentLineNumber);
+      String subToken = lineContent.substring(0, currentEditor.getCursorCol() - 1);
+      afterToken = lineContent.substring(currentEditor.getCursorCol() - 1);
 
-      for (CompletionProposal proposal : requestor.proposals)
+      String token = "";
+      if (!subToken.endsWith(" "))
       {
-         b.append(proposal.getCompletion());
-         if (proposal.getRequiredProposals() != null)
+         String[] split = subToken.split("[ /+=!<>(){}\\[\\]?|&:\",'\\-;]+");
+
+         if (split.length != 0)
          {
-            b.append(" required -- ");
-            for (CompletionProposal req : proposal.getRequiredProposals())
-            {
-               b.append(req.getCompletion());
-            }
+            token = split[split.length - 1];
          }
-         b.append("<br>");
       }
-      b.append("</pre>");
-      IDE.fireEvent(new OutputEvent(b.toString()));
+      if (token.contains("."))
+      {
+         String varToken = token.substring(0, token.lastIndexOf('.'));
+         tokenToComplete = token.substring(token.lastIndexOf('.') + 1);
+         beforeToken = subToken.substring(0, subToken.lastIndexOf(varToken) + varToken.length() + 1);
+      }
+      else
+      {
+         beforeToken = subToken.substring(0, subToken.lastIndexOf(token));
+         tokenToComplete = token;
+      }
+
+      int posX = currentEditor.getCursorOffsetX() - tokenToComplete.length() * 8 + 8;
+      int posY = currentEditor.getCursorOffsetY() + 4;
+      Collections.sort(requestor.proposals, comparator);
+      new CodeAssitantForm(posX, posY, tokenToComplete, requestor.proposals, this);
    }
+
+   private Comparator<CompletionProposal> comparator = new Comparator<CompletionProposal>()
+   {
+
+      @Override
+      public int compare(CompletionProposal o1, CompletionProposal o2)
+      {
+
+         if (o1.getRelevance() > o2.getRelevance())
+            return -1;
+         else if (o1.getRelevance() < o2.getRelevance())
+            return 1;
+         else
+            return 0;
+      }
+   };
 
    public static class CodeAssistantRequestor extends CompletionRequestor
    {
@@ -128,7 +174,10 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       currentFile = event.getFile();
-      currentEditor = event.getEditor();
+      if (event.getEditor() instanceof CodeMirror)
+         currentEditor = (CodeMirror)event.getEditor();
+      else
+         currentEditor = null;
    }
 
    private int getCompletionPosition(String content, int row, int col)
@@ -143,6 +192,39 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
          pos += strings[i].length() + 1;
       }
       return pos + col - 1;
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onStringSelected(java.lang.String)
+    */
+   @Override
+   public void onStringSelected(String value)
+   {
+      currentEditor.replaceTextAtCurrentLine(beforeToken + value + afterToken, (beforeToken + value).length());
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onTokenSelected(org.eclipse.jdt.client.codeassistant.ui.ProposalWidget)
+    */
+   @Override
+   public void onTokenSelected(ProposalWidget value)
+   {
+      String beforeCursor = beforeToken + String.valueOf(value.getProposal().getCompletion());
+      int cursorPosition = 1;
+      if (beforeCursor.contains("("))
+         cursorPosition = beforeCursor.lastIndexOf('(');
+      else
+         cursorPosition = beforeCursor.length();
+      currentEditor.replaceTextAtCurrentLine(beforeCursor + afterToken, cursorPosition);
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onCancelAutoComplete()
+    */
+   @Override
+   public void onCancelAutoComplete()
+   {
+      currentEditor.setFocus();
    }
 
 }

@@ -31,7 +31,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
  * @version $Id: Nov 25, 2010 4:31:06 PM evgen $
  * 
  */
-public class AutoCompleteScrollPanel extends ScrollPanel implements HasMouseOutHandlers
+public class CodeAssistantScrollPanel extends ScrollPanel implements HasMouseOutHandlers
 {
 
    /**

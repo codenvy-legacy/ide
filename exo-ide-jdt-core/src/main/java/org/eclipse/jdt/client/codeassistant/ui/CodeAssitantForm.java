@@ -18,15 +18,6 @@
  */
 package org.eclipse.jdt.client.codeassistant.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.jdt.client.core.CompletionProposal;
-import org.exoplatform.gwtframework.commons.util.BrowserResolver;
-import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
-import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NativeEvent;
@@ -59,6 +50,15 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.eclipse.jdt.client.core.CompletionProposal;
+import org.exoplatform.gwtframework.commons.util.BrowserResolver;
+import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
+import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
+import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class is UI component that represent autocompletion form. This form works with any bean, but also required implementation
  * of {@link TokenWidgetFactory} to build {@link ProposalWidget}
@@ -69,7 +69,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $Id: Nov 25, 2010 4:18:55 PM evgen $
  * 
  */
-public class AutocompletionForm extends Composite implements ChangeHandler, ResizeHandler
+public class CodeAssitantForm extends Composite implements ChangeHandler, ResizeHandler
 {
    private static final String PANEL_ID = "exo-ide-autocomplete-panel";
 
@@ -85,7 +85,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
 
    private LockLayer blockMouseEventsPanel;
 
-   private AutoCompleteScrollPanel scrollPanel;
+   private CodeAssistantScrollPanel scrollPanel;
 
    private FlowPanel flowPanel;
 
@@ -111,7 +111,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
 
    private boolean isTextBoxHasFocus = true;
 
-   public AutocompletionForm(int left, int top, String prefix, List<CompletionProposal> items,
+   public CodeAssitantForm(int left, int top, String prefix, List<CompletionProposal> items,
       ProposalSelectedHandler handler)
    {
       this.handler = handler;
@@ -162,7 +162,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
 
       flowPanel = new FlowPanel();
 
-      scrollPanel = new AutoCompleteScrollPanel();
+      scrollPanel = new CodeAssistantScrollPanel();
       scrollPanel.setAlwaysShowScrollBars(true);
       scrollPanel.add(flowPanel);
 
@@ -202,12 +202,10 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
       allWidgets = new ArrayList<ProposalWidget>();
       for (CompletionProposal t : items)
       {
-         //TODO
-//         ProposalWidget w = widgetFactory.buildTokenWidget(t);
-//         w.addClickHandler(mousHandler);
-//         // w.addMouseOverHandler(mousHandler);
-//         w.addDoubleClickHandler(mousHandler);
-//         allWidgets.add(w);
+         ProposalWidget w = new SimpleProposalWidget(t);
+         w.addClickHandler(mousHandler);
+         w.addDoubleClickHandler(mousHandler);
+         allWidgets.add(w);
       }
       flowPanel.add(new Label("No Proposals"));
 
@@ -238,7 +236,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
       flowPanel.clear();
       for (ProposalWidget w : allWidgets)
       {
-         if (w.getProposalName().toLowerCase().startsWith(editText.toLowerCase()))
+         if (w.getName().toLowerCase().startsWith(editText.toLowerCase()))
          {
             widgets.add(w);
             flowPanel.add(w);
@@ -266,7 +264,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
    {
       if (widgets.size() > 0)
       {
-         textBox.setValue(selectedWidget.getProposalName());
+         textBox.setValue(selectedWidget.getName());
       }
    }
 
@@ -308,8 +306,8 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
    }
 
    private native void scroll(Element scroll, int pos)/*-{
-                                                      scroll.scrollTop = scroll.scrollTop + pos;
-                                                      }-*/;
+       scroll.scrollTop = scroll.scrollTop + pos;
+   }-*/;
 
    private void selectWidget(int i)
    {
@@ -357,7 +355,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
          descriptionPanel.removeFromParent();
          descriptionPanel = null;
       }
-      if (selectedWidget != null && selectedWidget.getTokenDecription() != null)
+      if (selectedWidget != null && selectedWidget.getDecription() != null)
       {
          timer.schedule(1000);
       }
@@ -376,7 +374,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
          }
          if (selectedWidget != null)
          {
-            descriptionPanel = selectedWidget.getTokenDecription();
+            descriptionPanel = selectedWidget.getDecription();
             if (descriptionPanel == null)
             {
                return;

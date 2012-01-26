@@ -57,7 +57,7 @@ public abstract class ProposalWidget extends Composite implements HasClickHandle
    /**
     * @return the token
     */
-   public CompletionProposal getToken()
+   public CompletionProposal getProposal()
    {
       return proposal;
    }
@@ -65,14 +65,14 @@ public abstract class ProposalWidget extends Composite implements HasClickHandle
    /**
     * @return name of token
     */
-   public abstract String getProposalName();
+   public abstract String getName();
 
    /**
     * Get token description. It's may be javadoc, template content etc.
     * 
     * @return {@link Widget} with description
     */
-   public abstract Widget getTokenDecription();
+   public abstract Widget getDecription();
 
    /**
     * Calls when user select this {@link Widget}
