@@ -164,6 +164,11 @@
             <artifactId>exo-ide-codeassistant-asm</artifactId>
             <version>${project.version}</version>
          </dependency>
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-jdt-core</artifactId>
+            <version>${project.version}</version>
+         </dependency>
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
