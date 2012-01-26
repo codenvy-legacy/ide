@@ -475,16 +475,12 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       int cursorRow = cursorPositionRow;
 
       // calculate cursorOffsetY
-      int cursorOffsetY = getAbsoluteTop() + getCursorOffsetY(0);
+      int cursorOffsetY = getCursorOffsetY();
 
       // calculate cursorOffsetX
-      int cursorCol = cursorPositionCol;
-      int cursorOffsetX = (cursorCol - 2) * characterWidth + getAbsoluteLeft() + firstCharacterOffsetLeft; // 8px per symbol
+      int cursorOffsetX = getCursorOffsetX(); 
 
-      if (this.showLineNumbers)
-      {
-         cursorOffsetX += this.lineNumberFieldWidth;
-      }
+     
 
       if (needUpdateTokenList)
       {
@@ -499,7 +495,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
          }
       }
 
-      Token tokenBeforeCursor = getTokenBeforeCursor(this.tokenList, currentNode, cursorRow, cursorCol);
+      Token tokenBeforeCursor = getTokenBeforeCursor(this.tokenList, currentNode, cursorRow, cursorPositionCol);
 
       List<? extends Token> selectedTokenList = this.tokenList;
 
@@ -514,6 +510,28 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
       codeAssistant.autocompleteCalled(this, cursorOffsetX, cursorOffsetY, (List<Token>)selectedTokenList,
          currentLineMimeType, tokenBeforeCursor);
+   }
+
+   /**
+    * @param cursorCol
+    * @return
+    */
+   public int getCursorOffsetX()
+   {
+      int cursorOffsetX = (cursorPositionCol - 2) * characterWidth + getAbsoluteLeft() + firstCharacterOffsetLeft; // 8px per symbol
+      if (this.showLineNumbers)
+      {
+         cursorOffsetX += this.lineNumberFieldWidth;
+      }
+      return cursorOffsetX;
+   }
+
+   /**
+    * @return
+    */
+   public int getCursorOffsetY()
+   {
+      return getAbsoluteTop() + getCursorOffsetY(0);
    }
 
    private native void addScrollAndResizeListener(CodeMirror instance) /*-{
