@@ -18,20 +18,23 @@
  */
 package org.exoplatform.ide.operation.autocompletion.groovy;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
- * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 15, 2010 11:11:29 AM evgen $
- *
  */
 // http://jira.exoplatform.org/browse/IDE-478
 public class GroovyLocalVariableTest extends CodeAssistantBaseTest
@@ -49,112 +52,110 @@ public class GroovyLocalVariableTest extends CodeAssistantBaseTest
             MimeType.GROOVY_SERVICE,
             "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/groovyLocalVar.groovy");
       }
-      catch (Exception e)
+      catch (IOException e)
       {
+         fail("Can't create project structure");
       }
-   }
-
-   @Before
-   public void openFile() throws Exception
-   {
-      IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
-      IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
    }
 
    @Test
    public void testLocalVariable() throws Exception
    {
+      //open file
+      IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
+      
       IDE.EDITOR.moveCursorDown(0, 15);
 
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("getInt(Double):Integer");
-      IDE.CODEASSISTANT.checkElementPresent("hello(String):List<Item>");
-      IDE.CODEASSISTANT.checkElementPresent("hello():Object");
-      IDE.CODEASSISTANT.checkElementPresent("printClosureOuter():Object");
-      IDE.CODEASSISTANT.checkElementPresent("HelloWorld");
-      IDE.CODEASSISTANT.checkElementNotPresent("s:String");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("getInt(Double):Integer"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("hello(String):List<Item>"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("hello():Object"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("printClosureOuter():Object"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("HelloWorld"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("s:String"));
       IDE.CODEASSISTANT.closeForm();
 
       IDE.EDITOR.moveCursorDown(0, 5);
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("e:Exception");
-      IDE.CODEASSISTANT.checkElementPresent("name:String");
-      IDE.CODEASSISTANT.checkElementPresent("s:String");
-      IDE.CODEASSISTANT.checkElementPresent("getInt(Double):Integer");
-      IDE.CODEASSISTANT.checkElementPresent("hello(String):List<Item>");
-      IDE.CODEASSISTANT.checkElementPresent("hello():Object");
-      IDE.CODEASSISTANT.checkElementPresent("printClosureOuter():Object");
-      IDE.CODEASSISTANT.checkElementPresent("HelloWorld");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("e:Exception"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("name:String"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("s:String"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("getInt(Double):Integer"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("hello(String):List<Item>"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("hello():Object"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("printClosureOuter():Object"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("HelloWorld"));
 
-      IDE.CODEASSISTANT.checkElementNotPresent("col:Object");
-      IDE.CODEASSISTANT.checkElementNotPresent("stream:PrintStream");
-      IDE.CODEASSISTANT.checkElementNotPresent("d");
-      IDE.CODEASSISTANT.checkElementNotPresent("ii");
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("col:Object"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("stream:PrintStream"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("d"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("ii"));
       IDE.CODEASSISTANT.closeForm();
 
       IDE.EDITOR.moveCursorDown(0, 3);
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("col:Object");
-      IDE.CODEASSISTANT.checkElementPresent("e:Exception");
-      IDE.CODEASSISTANT.checkElementPresent("name:String");
-      IDE.CODEASSISTANT.checkElementPresent("stream:PrintStream");
-      IDE.CODEASSISTANT.checkElementPresent("s:String");
-      IDE.CODEASSISTANT.checkElementPresent("getInt(Double):Integer");
-      IDE.CODEASSISTANT.checkElementPresent("hello(String):List<Item>");
-      IDE.CODEASSISTANT.checkElementPresent("hello():Object");
-      IDE.CODEASSISTANT.checkElementPresent("printClosureOuter():Object");
-      IDE.CODEASSISTANT.checkElementPresent("HelloWorld");
-      IDE.CODEASSISTANT.checkElementNotPresent("d:Double");
-      IDE.CODEASSISTANT.checkElementNotPresent("ii:Integer");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("col:Object"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("e:Exception"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("name:String"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("stream:PrintStream"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("s:String"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("getInt(Double):Integer"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("hello(String):List<Item>"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("hello():Object"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("printClosureOuter():Object"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("HelloWorld"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("d:Double"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("ii:Integer"));
       IDE.CODEASSISTANT.closeForm();
 
       IDE.EDITOR.moveCursorDown(0, 6);
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("s:String");
-      IDE.CODEASSISTANT.checkElementPresent("getInt(Double):Integer");
-      IDE.CODEASSISTANT.checkElementPresent("hello(String):List<Item>");
-      IDE.CODEASSISTANT.checkElementPresent("hello():Object");
-      IDE.CODEASSISTANT.checkElementPresent("printClosureOuter():Object");
-      IDE.CODEASSISTANT.checkElementPresent("HelloWorld");
-      IDE.CODEASSISTANT.checkElementNotPresent("col:Object");
-      IDE.CODEASSISTANT.checkElementNotPresent("name:String");
-      IDE.CODEASSISTANT.checkElementNotPresent("e:Exception");
-      IDE.CODEASSISTANT.checkElementNotPresent("stream:PrintStream");
-      IDE.CODEASSISTANT.checkElementPresent("d:Double");
-      IDE.CODEASSISTANT.checkElementPresent("ii:Integer");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("s:String"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("getInt(Double):Integer"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("hello(String):List<Item>"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("hello():Object"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("printClosureOuter():Object"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("HelloWorld"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("col:Object"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("name:String"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("e:Exception"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("stream:PrintStream"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("d:Double"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("ii:Integer"));
       IDE.CODEASSISTANT.closeForm();
 
       IDE.EDITOR.moveCursorDown(0, 8);
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("getInt(Double):Integer");
-      IDE.CODEASSISTANT.checkElementPresent("hello(String):List<Item>");
-      IDE.CODEASSISTANT.checkElementPresent("hello():Object");
-      IDE.CODEASSISTANT.checkElementPresent("printClosureOuter():Object");
-      IDE.CODEASSISTANT.checkElementNotPresent("s:String");
-      IDE.CODEASSISTANT.checkElementNotPresent("name:String");
-      IDE.CODEASSISTANT.checkElementNotPresent("e:Exception");
-      IDE.CODEASSISTANT.checkElementNotPresent("stream:PrintStream");
-      IDE.CODEASSISTANT.checkElementNotPresent("d:Double");
-      IDE.CODEASSISTANT.checkElementNotPresent("ii:Integer");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("getInt(Double):Integer"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("hello(String):List<Item>"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("hello():Object"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("printClosureOuter():Object"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("s:String"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("name:String"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("e:Exception"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("stream:PrintStream"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("d:Double"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("ii:Integer"));
       IDE.CODEASSISTANT.closeForm();
       IDE.EDITOR.moveCursorDown(0, 1);
       IDE.EDITOR.typeTextIntoEditor(0, "\n");
 
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementNotPresent("getInt(Double):Integer");
-      IDE.CODEASSISTANT.checkElementNotPresent("hello(String):List<Item>");
-      IDE.CODEASSISTANT.checkElementNotPresent("hello():Object");
-      IDE.CODEASSISTANT.checkElementNotPresent("printClosureOuter():Object");
-      IDE.CODEASSISTANT.checkElementNotPresent("s:String");
-      IDE.CODEASSISTANT.checkElementNotPresent("col:Object");
-      IDE.CODEASSISTANT.checkElementNotPresent("name:String");
-      IDE.CODEASSISTANT.checkElementNotPresent("e:Exception");
-      IDE.CODEASSISTANT.checkElementNotPresent("stream:PrintStream");
-      IDE.CODEASSISTANT.checkElementNotPresent("d:Double");
-      IDE.CODEASSISTANT.checkElementNotPresent("ii:Integer");
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("getInt(Double):Integer"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("hello(String):List<Item>"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("hello():Object"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("printClosureOuter():Object"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("s:String"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("col:Object"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("name:String"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("e:Exception"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("stream:PrintStream"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("d:Double"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("ii:Integer"));
       IDE.CODEASSISTANT.closeForm();
    }
 
