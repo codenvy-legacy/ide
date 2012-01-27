@@ -33,14 +33,12 @@ import java.util.concurrent.FutureTask;
 public class MavenBuildTask extends FutureTask<InvocationResultImpl>
 {
    private final String id;
-   private final MavenInvoker invoker;
    private final TaskLogger logger;
 
-   MavenBuildTask(String id, InvocationRequest request, MavenInvoker invoker, TaskLogger logger)
+   public MavenBuildTask(String id, InvocationRequest request, MavenInvoker invoker, TaskLogger logger)
    {
       super(callable(request, invoker));
       this.id = id;
-      this.invoker = invoker;
       this.logger = logger;
    }
 
@@ -64,10 +62,5 @@ public class MavenBuildTask extends FutureTask<InvocationResultImpl>
    public TaskLogger getLogger()
    {
       return logger;
-   }
-
-   MavenInvoker getInvoker()
-   {
-      return invoker;
    }
 }

@@ -85,9 +85,9 @@ public class BuildService
    protected final ExecutorService pool;
    protected final ConcurrentMap<String, MavenBuildTask> tasks;
 
-   protected final String buildRepository;
+   protected final String repository;
    protected final String[] goals;
-   protected final Integer mavenBuildTimeOut;
+   protected final Integer timeout;
 
    public BuildService(Map<String, Object> config)
    {
@@ -95,9 +95,9 @@ public class BuildService
       {
          throw new IllegalArgumentException("Configuration may not be null. ");
       }
-      this.buildRepository = (String)getOption(config, BUILD_REPOSITORY, System.getProperty("java.io.tmpdir"));
+      this.repository = (String)getOption(config, BUILD_REPOSITORY, System.getProperty("java.io.tmpdir"));
       this.goals = (String[])getOption(config, BUILD_MAVEN_GOALS, new String[]{"test", "package"});
-      this.mavenBuildTimeOut = (Integer)getOption(config, BUILD_MAVEN_TIMEOUT, 2);
+      this.timeout = (Integer)getOption(config, BUILD_MAVEN_TIMEOUT, 120);
       this.tasks = new ConcurrentHashMap<String, MavenBuildTask>();
       final int poolSize = Runtime.getRuntime().availableProcessors();
       this.pool = new ThreadPoolExecutor(
@@ -130,9 +130,9 @@ public class BuildService
       List<String> g = new ArrayList<String>(goals.length);
       Collections.addAll(g, goals);
 
-      final File projectDirectory = BuildHelper.makeProjectDirectory(buildRepository);
+      final File projectDirectory = BuildHelper.makeProjectDirectory(repository);
 
-      MavenInvoker invoker = new MavenInvoker(new BuildWatcher(mavenBuildTimeOut, TimeUnit.MINUTES))
+      MavenInvoker invoker = new MavenInvoker()
          .addPreBuildTask(
             new Runnable()
             {
@@ -143,7 +143,8 @@ public class BuildService
                      .setURI(remoteURI)
                      .call();
                }
-            });
+            }
+         ).setTimeout(timeout);
 
       TaskLogger taskLogger =
          new FileTaskLogger(new File(projectDirectory.getParentFile(), projectDirectory.getName() + ".log"),
@@ -185,7 +186,6 @@ public class BuildService
       MavenBuildTask task = tasks.remove(id);
       if (task != null)
       {
-         task.getInvoker().stop();
          task.cancel(true);
       }
       return task;

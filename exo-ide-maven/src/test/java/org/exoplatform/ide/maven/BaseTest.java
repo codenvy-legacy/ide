@@ -29,6 +29,7 @@ import org.everrest.core.tools.DependencySupplierImpl;
 import org.everrest.core.tools.ResourceLauncher;
 
 import java.io.File;
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,29 +52,36 @@ public abstract class BaseTest extends TestCase
    public void setUp() throws Exception
    {
       super.setUp();
-      URL url = Thread.currentThread().getContextClassLoader().getResource(".");
-      File target = new File(url.toURI()).getParentFile();
-      repository = new File(target, "repository");
-      repository.mkdir();
+
+      tasks = new BuildService(getConfig());
 
       resources = new ResourceBinderImpl();
+      resources.addResource(Builder.class, null);
+
       dependencies = new DependencySupplierImpl();
+      dependencies.addComponent(BuildService.class, tasks);
+
       RequestHandler handler =
          new RequestHandlerImpl(new RequestDispatcher(resources), dependencies, new EverrestConfiguration());
       launcher = new ResourceLauncher(handler);
+   }
 
-      Map<String,Object> config = new HashMap<String, Object>();
+   Map<String, Object> getConfig()
+   {
+      URL url = Thread.currentThread().getContextClassLoader().getResource(".");
+      File target = new File(URI.create(url.toString())).getParentFile();
+      repository = new File(target, "repository");
+      repository.mkdir();
+      Map<String, Object> config = new HashMap<String, Object>();
       config.put("build.repository", repository.getAbsolutePath());
-      tasks = new BuildService(config);
-      dependencies.addComponent(BuildService.class, tasks);
-
-      resources.addResource(Builder.class, null);
+      return config;
    }
 
    @Override
    public void tearDown() throws Exception
    {
-      tasks.pool.awaitTermination(5, TimeUnit.SECONDS);
+     tasks.pool.shutdown();
+      tasks.pool.awaitTermination(30, TimeUnit.SECONDS);
       super.tearDown();
    }
 }

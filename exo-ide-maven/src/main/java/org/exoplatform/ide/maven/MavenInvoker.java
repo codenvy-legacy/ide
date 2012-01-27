@@ -34,23 +34,41 @@ import java.io.FilenameFilter;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import static org.codehaus.plexus.util.cli.CommandLineUtils.isAlive;
+
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: MavenInvoker.java 16504 2011-02-16 09:27:51Z andrew00x $
  */
 public class MavenInvoker extends DefaultInvoker
 {
-   private final BuildWatcher watcher;
+   public enum Status
+   {
+      QUEUE("In queue..."),
+      BUILD("Building..."),
+      END("End");
+
+      private final String value;
+
+      private Status(String value)
+      {
+         this.value = value;
+      }
+
+      @Override
+      public String toString()
+      {
+         return value;
+      }
+   }
+
    private final Queue<Runnable> preBuildTasks;
    private final Queue<Runnable> postBuildTasks;
 
-   public MavenInvoker(BuildWatcher watcher)
+   private long timeout;
+
+   public MavenInvoker()
    {
-      if (watcher == null)
-      {
-         throw new IllegalArgumentException("Parameter 'watcher' may not be null. ");
-      }
-      this.watcher = watcher;
       this.preBuildTasks = new LinkedList<Runnable>();
       this.postBuildTasks = new LinkedList<Runnable>();
    }
@@ -60,22 +78,18 @@ public class MavenInvoker extends DefaultInvoker
    public InvocationResultImpl execute(InvocationRequest request) throws MavenInvocationException
    {
       MavenCommandLineBuilder clBuilder = new MavenCommandLineBuilder();
-
       if (getLogger() != null)
       {
          clBuilder.setLogger(getLogger());
       }
-
       if (getLocalRepositoryDirectory() != null)
       {
          clBuilder.setLocalRepositoryDirectory(getLocalRepositoryDirectory());
       }
-
       if (getMavenHome() != null)
       {
          clBuilder.setMavenHome(getMavenHome());
       }
-
       if (getWorkingDirectory() != null)
       {
          clBuilder.setWorkingDirectory(getWorkingDirectory());
@@ -91,8 +105,6 @@ public class MavenInvoker extends DefaultInvoker
          throw new MavenInvocationException("Error configuring command-line. Reason: " + e.getMessage(), e);
       }
 
-      CommandLineException cle = null;
-      int exitCode = Integer.MIN_VALUE;
       InvocationOutputHandler out = request.getOutputHandler(null);
       InvocationOutputHandler err = request.getErrorHandler(null);
 
@@ -101,6 +113,8 @@ public class MavenInvoker extends DefaultInvoker
          preBuildTasks.poll().run();
       }
 
+      int exitCode = Integer.MIN_VALUE;
+      CommandLineException cle = null;
       try
       {
          exitCode = executeCommandLine(cl, out, err);
@@ -135,7 +149,12 @@ public class MavenInvoker extends DefaultInvoker
    {
       Process process = cl.execute();
 
-      watcher.start(process);
+      Watcher watcher = null;
+      if (timeout > 0)
+      {
+         watcher = new Watcher(timeout);
+         watcher.start(process);
+      }
 
       StreamPumper outPipe = new StreamPumper(process.getInputStream(), out);
       StreamPumper errPipe = new StreamPumper(process.getErrorStream(), err);
@@ -150,7 +169,6 @@ public class MavenInvoker extends DefaultInvoker
          try
          {
             exitCode = process.waitFor();
-
             synchronized (outPipe)
             {
                while (!outPipe.isDone())
@@ -166,14 +184,12 @@ public class MavenInvoker extends DefaultInvoker
                   errPipe.wait();
                }
             }
+
          }
          catch (InterruptedException e)
          {
-            process.destroy();
-         }
-         finally
-         {
             Thread.interrupted();
+            kill(process);
          }
       }
       finally
@@ -191,27 +207,114 @@ public class MavenInvoker extends DefaultInvoker
             ((TaskLogger)err).close();
          }
 
-         watcher.stop();
+         if (watcher != null)
+         {
+            watcher.stop();
+         }
       }
 
       return exitCode;
    }
 
-   /** Stop underlying maven build. */
-   public void stop()
-   {
-      watcher.stop();
-   }
-
+   /**
+    * Add task that should be invoked before start the maven build. All tasks should be added before call method {@link
+    * #execute(org.apache.maven.shared.invoker.InvocationRequest)}.
+    *
+    * @param task the pre build task
+    * @return this instance
+    */
    public MavenInvoker addPreBuildTask(Runnable task)
    {
       preBuildTasks.add(task);
       return this;
    }
 
+   /**
+    * Add task that should be invoked after the maven build. All tasks should be added before call method {@link
+    * #execute(org.apache.maven.shared.invoker.InvocationRequest)}.
+    *
+    * @param task the post build task
+    * @return this instance
+    */
    public MavenInvoker addPostBuildTask(Runnable task)
    {
       postBuildTasks.add(task);
       return this;
+   }
+
+   /**
+    * Set build timeout in seconds.
+    *
+    * @param timeout the timeout in seconds
+    * @return this instance
+    */
+   public MavenInvoker setTimeout(long timeout)
+   {
+      this.timeout = timeout;
+      return this;
+   }
+
+   private static void kill(Process process)
+   {
+      if (isAlive(process))
+      {
+         process.destroy();
+         try
+         {
+            process.waitFor(); // wait for process death
+         }
+         catch (InterruptedException e)
+         {
+            Thread.interrupted();
+         }
+      }
+   }
+
+   private static final class Watcher implements Runnable
+   {
+      private final long timeout;
+
+      private boolean watch;
+      private Process process;
+
+      private Watcher(long timeout) // timeout in seconds
+      {
+         this.timeout = (timeout * 1000); // in milliseconds
+      }
+
+      public synchronized void run()
+      {
+         final long end = System.currentTimeMillis() + timeout;
+         long now;
+         while (watch && (end > (now = System.currentTimeMillis())))
+         {
+            try
+            {
+               wait(end - now);
+            }
+            catch (InterruptedException ignored)
+            {
+            }
+         }
+         if (watch) // If Watcher not stopped but timeout reached.
+         {
+            kill(process);
+         }
+      }
+
+      public synchronized void start(Process process)
+      {
+         this.process = process;
+         this.watch = true;
+         Thread t = new Thread(this);
+         t.setDaemon(true);
+         t.start();
+      }
+
+      public synchronized void stop()
+      {
+         watch = false;
+         notify();
+      }
    }
 }

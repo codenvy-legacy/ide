@@ -48,7 +48,7 @@ public class Builder
 
    @GET
    @Path("build")
-   public Response build(@QueryParam("remoteuri") String remoteURI, @Context UriInfo uriInfo) throws Exception
+   public Response build(@QueryParam("remoteuri") String remoteURI, @Context UriInfo uriInfo)
    {
       MavenBuildTask task = tasks.add(remoteURI);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
@@ -68,13 +68,35 @@ public class Builder
       {
          if (task.isDone())
          {
-            // Sent location to get result of build.
-            final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "download").build(buildID);
-            return Response
-               .status(200)
-               .location(location)
-               .entity(location.toString())
-               .type(MediaType.TEXT_PLAIN).build();
+            try
+            {
+               InvocationResultImpl result = task.get();
+               if (0 == result.getExitCode())
+               {
+                  return Response
+                     .status(200)
+                     .entity("{\"status\":\"SUCCESS\",\"download\":\""
+                        + uriInfo.getBaseUriBuilder().path(getClass(), "download").build(buildID).toString()
+                        + "\"}")
+                     .type(MediaType.APPLICATION_JSON).build();
+               }
+               else
+               {
+                  return Response
+                     .status(200)
+                     .entity("{\"status\":\"FAILED\",\"exitCode\":" + result.getExitCode() + "}")
+                     .type(MediaType.APPLICATION_JSON).build();
+               }
+            }
+            catch (InterruptedException e)
+            {
+               // Should not happen since we check before is task done or not.
+               Thread.currentThread().interrupt();
+            }
+            catch (ExecutionException e)
+            {
+               throw new WebApplicationException(e.getCause());
+            }
          }
          // If not done yet then send status 202 with the same location info.
          URI location = uriInfo.getAbsolutePath();
@@ -140,8 +162,11 @@ public class Builder
                   return Response.ok(artifact, "application/zip").build();
                }
 
-               // Build is failed.
-               throw new WebApplicationException(result.getExecutionException());
+               // Build is failed - nothing for download.
+               throw new WebApplicationException(Response
+                  .status(404)
+                  .entity("Build failed. There is no artifact for download. ")
+                  .type(MediaType.TEXT_PLAIN).build());
             }
             catch (InterruptedException e)
             {
