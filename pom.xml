@@ -319,6 +319,12 @@
             <artifactId>exo-ide-maven</artifactId>
             <version>${project.version}</version>
          </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-maven</artifactId>
+            <version>${project.version}</version>
+         </dependency>
          
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -718,8 +724,6 @@
       <module>exo-ide-codeassistant-asm</module>      
       <module>exo-ide-codeassistant-storage-lucene</module>
 
-      <module>exo-ide-maven</module>
-
       <module>exo-ide-editor</module>
       <module>exo-ide-editor-javascript</module>
       <module>exo-ide-editor-css</module>
@@ -769,6 +773,9 @@
       <module>exo-ide-testsuite-selenium</module>
       <module>exo-ide-shell-testsuite-selenium</module>
       <module>exo-ide-packaging-standalone-tomcat</module>
+
+      <module>exo-ide-maven</module>
+      <module>exo-ide-extension-maven</module>
       
    </modules>
 </project>
