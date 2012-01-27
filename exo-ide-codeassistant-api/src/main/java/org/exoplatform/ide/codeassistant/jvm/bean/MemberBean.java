@@ -98,53 +98,53 @@ public abstract class MemberBean implements Member
       StringBuffer sb = new StringBuffer();
       int len;
 
-      if ((modifiers & Modifier.PUBLIC) != 0)
+      if (Modifier.isPublic(modifiers))
       {
          sb.append("public ");
       }
-      if ((modifiers & Modifier.PROTECTED) != 0)
+      if (Modifier.isProtected(modifiers))
       {
          sb.append("protected ");
       }
-      if ((modifiers & Modifier.PRIVATE) != 0)
+      if (Modifier.isPrivate(modifiers))
       {
          sb.append("private ");
       }
 
       /* Canonical order */
-      if ((modifiers & Modifier.ABSTRACT) != 0)
+      if (Modifier.isAbstract(modifiers))
       {
          sb.append("abstract ");
       }
-      if ((modifiers & Modifier.STATIC) != 0)
+      if (Modifier.isStatic(modifiers))
       {
          sb.append("static ");
       }
-      if ((modifiers & Modifier.FINAL) != 0)
+      if (Modifier.isFinal(modifiers))
       {
          sb.append("final ");
       }
-      if ((modifiers & Modifier.TRANSIENT) != 0)
+      if (Modifier.isTransient(modifiers))
       {
          sb.append("transient ");
       }
-      if ((modifiers & Modifier.VOLATILE) != 0)
+      if (Modifier.isVolatile(modifiers))
       {
          sb.append("volatile ");
       }
-      if ((modifiers & Modifier.SYNCHRONIZED) != 0)
+      if (Modifier.isSynchronized(modifiers))
       {
          sb.append("synchronized ");
       }
-      if ((modifiers & Modifier.NATIVE) != 0)
+      if (Modifier.isNative(modifiers))
       {
          sb.append("native ");
       }
-      if ((modifiers & Modifier.STRICT) != 0)
+      if (Modifier.isStrict(modifiers))
       {
          sb.append("strictfp ");
       }
-      if ((modifiers & Modifier.INTERFACE) != 0)
+      if (Modifier.isInterface(modifiers))
       {
          sb.append("interface ");
       }

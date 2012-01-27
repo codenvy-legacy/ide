@@ -64,9 +64,9 @@ public class ShortTypeInfoBean extends MemberBean implements ShortTypeInfo
    {
       StringBuilder builder = new StringBuilder();
       builder.append(modifierToString());
-      builder.append(" ");
+      builder.append(' ');
       builder.append(type);
-      builder.append(" ");
+      builder.append(' ');
       builder.append(getName());
 
       return builder.toString();

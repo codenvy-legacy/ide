@@ -224,7 +224,7 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
       StringBuilder buildString = new StringBuilder();
 
       buildString.append(modifierToString());
-      buildString.append(" ");
+      buildString.append(' ');
       if (!isConstructor)
       {
          if (returnType == null || returnType.length() < 1)
@@ -234,16 +234,16 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
          else
          {
             buildString.append(returnType);
-            buildString.append(" ");
+            buildString.append(' ');
          }
       }
       if (declaringClass != null && declaringClass.length() > 0 && !isConstructor)
       {
          buildString.append(declaringClass);
-         buildString.append(".");
+         buildString.append('.');
       }
       buildString.append(getName());
-      buildString.append("(");
+      buildString.append('(');
 
       if (parameterTypes != null)
       {
@@ -251,13 +251,13 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
          {
             if (i > 0)
             {
-               buildString.append(",");
+               buildString.append(',');
             }
             buildString.append(parameterTypes.get(i));
 
          }
       }
-      buildString.append(")");
+      buildString.append(')');
 
       if (exceptionTypes != null && exceptionTypes.size() > 0)
       {
@@ -266,7 +266,7 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
          {
             if (i > 0)
             {
-               buildString.append(",");
+               buildString.append(',');
             }
             buildString.append(exceptionTypes.get(i));
 

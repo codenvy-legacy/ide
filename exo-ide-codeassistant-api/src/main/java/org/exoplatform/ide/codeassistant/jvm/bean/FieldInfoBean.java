@@ -87,7 +87,7 @@ public class FieldInfoBean extends MemberBean implements FieldInfo
    @Override
    public String toString()
    {
-      return modifierToString() + " " + type + " " + declaringClass + "." + getName();
+      return modifierToString() + ' ' + type + ' ' + declaringClass + '.' + getName();
    }
 
    /**
