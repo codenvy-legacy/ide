@@ -242,9 +242,9 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
 
    private void doOpenLocalFile()
    {
-      String mimeType = display.getMimeTypeField().getValue();
+      fileMimeType = display.getMimeTypeField().getValue();
 
-      if (mimeType == null || "".equals(mimeType))
+      if (fileMimeType == null || "".equals(fileMimeType))
       {
          return;
       }
@@ -252,7 +252,7 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
       // FIXME
       // String contentNodeType = NodeTypeUtil.getContentNodeType(mimeType);
       String contentNodeType = "nt:resource";
-      display.setHiddenFields("", mimeType, "", contentNodeType);
+      display.setHiddenFields("", fileMimeType, "", contentNodeType);
       display.getUploadForm().submit();
    }
 
