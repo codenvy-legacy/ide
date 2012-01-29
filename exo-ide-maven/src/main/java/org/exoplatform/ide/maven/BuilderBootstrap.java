@@ -36,28 +36,38 @@ public class BuilderBootstrap implements ServletContextListener
    {
       Map<String, Object> config = new HashMap<String, Object>();
       ServletContext ctx = sce.getServletContext();
-      String tmp = ctx.getInitParameter(BuildService.BUILD_MAVEN_GOALS);
-      if (tmp != null)
+
+      String goals = ctx.getInitParameter(BuildService.BUILD_MAVEN_GOALS);
+      if (goals != null)
       {
-         config.put(BuildService.BUILD_MAVEN_GOALS, tmp.split(","));
+         config.put(BuildService.BUILD_MAVEN_GOALS, goals.split(","));
       }
 
-      tmp = ctx.getInitParameter(BuildService.BUILD_MAVEN_TIMEOUT);
-      if (tmp != null)
+      config.put(BuildService.BUILD_REPOSITORY, ctx.getInitParameter(BuildService.BUILD_REPOSITORY));
+
+      config.put(BuildService.BUILD_TIMEOUT, getNumber(ctx.getInitParameter(BuildService.BUILD_TIMEOUT)));
+
+      config.put(BuildService.BUILD_WORKERS_NUMBER, getNumber(ctx.getInitParameter(BuildService.BUILD_WORKERS_NUMBER)));
+
+      config.put(BuildService.BUILD_QUEUE_SIZE, getNumber(ctx.getInitParameter(BuildService.BUILD_QUEUE_SIZE)));
+
+      BuildService buildService = new BuildService(config);
+      ctx.setAttribute(BuildService.class.getName(), buildService);
+   }
+
+   private Integer getNumber(String value)
+   {
+      if (value != null)
       {
          try
          {
-            config.put(BuildService.BUILD_MAVEN_TIMEOUT, Integer.valueOf(tmp));
+            return Integer.valueOf(value);
          }
          catch (NumberFormatException ignored)
          {
          }
       }
-
-      config.put(BuildService.BUILD_REPOSITORY, ctx.getInitParameter(BuildService.BUILD_REPOSITORY));
-
-      BuildService buildService = new BuildService(config);
-      ctx.setAttribute(BuildService.class.getName(), buildService);
+      return null;
    }
 
    @Override

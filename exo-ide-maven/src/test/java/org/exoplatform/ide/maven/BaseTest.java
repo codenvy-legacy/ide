@@ -35,7 +35,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
@@ -73,14 +72,14 @@ public abstract class BaseTest extends TestCase
       repository = new File(target, "repository");
       repository.mkdir();
       Map<String, Object> config = new HashMap<String, Object>();
-      config.put("build.repository", repository.getAbsolutePath());
+      config.put(BuildService.BUILD_REPOSITORY, repository.getAbsolutePath());
       return config;
    }
 
    @Override
    public void tearDown() throws Exception
    {
-     tasks.pool.shutdown();
+      tasks.pool.shutdown();
       tasks.pool.awaitTermination(30, TimeUnit.SECONDS);
       super.tearDown();
    }

@@ -20,6 +20,7 @@ package org.exoplatform.ide.maven;
 
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.InvocationRequest;
+import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.apache.maven.shared.invoker.SystemOutHandler;
 import org.eclipse.jgit.api.Git;
 
@@ -28,9 +29,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.RejectedExecutionHandler;
@@ -46,15 +49,49 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class BuildService
 {
-   /** Name of configuration parameter that points to the directory where all builds stored. */
+   /**
+    * Name of configuration parameter that points to the directory where all builds stored.
+    * Is such parameter is not specified then 'java.io.tmpdir' used.
+    */
    public static final String BUILD_REPOSITORY = "build.repository";
 
-   /** Name of configuration parameter that provides maven build goals. */
+   /**
+    * Name of configuration parameter that provides maven build goals.
+    * @see #DEFAULT_BUILD_MAVEN_GOALS
+    */
    public static final String BUILD_MAVEN_GOALS = "build.maven.goals";
 
-   /** Name of configuration parameter that provides maven build timeout. After this time build may be terminated. */
-   public static final String BUILD_MAVEN_TIMEOUT = "build.maven.timeout";
+   /**
+    * Name of configuration parameter that provides build timeout is seconds. After this time build may be terminated.
+    * @see #DEFAULT_TIMEOUT
+    */
+   public static final String BUILD_TIMEOUT = "build.timeout";
 
+   /**
+    * Name of configuration parameter that set number of build workers in other words it set the number of build process
+    * that can be run at the same time. If this parameter is not set then the number of available processors used, e.g.
+    * <code>Runtime.getRuntime().availableProcessors();</code>
+    */
+   public static final String BUILD_WORKERS_NUMBER = "build.workers.number";
+
+   /**
+    * Name of parameter that set the max size of build queue. The number of build task in queue may not be greater than
+    * provided by this parameter.
+    * @see #DEFAULT_BUILD_QUEUE_SIZE
+    */
+   public static final String BUILD_QUEUE_SIZE = "build.queue.size";
+
+   /** Default build timeout in seconds (120). After this time build may be terminated. */
+   public static final int DEFAULT_TIMEOUT = 120;
+
+   /** Default max size of build queue (100). */
+   public static final int DEFAULT_BUILD_QUEUE_SIZE = 100;
+
+   /** Default maven build goals 'test package'. */
+   public static final String[] DEFAULT_BUILD_MAVEN_GOALS = new String[]{"test", "package"};
+
+
+   //
    protected static class ManyTasksPolicy implements RejectedExecutionHandler
    {
       private final RejectedExecutionHandler delegate;
@@ -80,7 +117,8 @@ public class BuildService
    }
 
 
-   private static final AtomicLong counter = new AtomicLong(1);
+   /** Build task ID generator. */
+   private static final AtomicLong idGenerator = new AtomicLong(1);
 
    protected final ExecutorService pool;
    protected final ConcurrentMap<String, MavenBuildTask> tasks;
@@ -91,28 +129,57 @@ public class BuildService
 
    public BuildService(Map<String, Object> config)
    {
-      if (config == null)
+      this(
+         (String)getOption(config, BUILD_REPOSITORY, System.getProperty("java.io.tmpdir")),
+         (String[])getOption(config, BUILD_MAVEN_GOALS, DEFAULT_BUILD_MAVEN_GOALS),
+         (Integer)getOption(config, BUILD_TIMEOUT, DEFAULT_TIMEOUT),
+         (Integer)getOption(config, BUILD_WORKERS_NUMBER, Runtime.getRuntime().availableProcessors()),
+         (Integer)getOption(config, BUILD_QUEUE_SIZE, DEFAULT_BUILD_QUEUE_SIZE)
+      );
+   }
+
+   protected BuildService(String repository, String[] goals, int timeout, int workerNumber, int queueSize)
+   {
+      if (repository == null || repository.isEmpty())
       {
-         throw new IllegalArgumentException("Configuration may not be null. ");
+         throw new IllegalArgumentException("Build repository may not be null or empty string. ");
       }
-      this.repository = (String)getOption(config, BUILD_REPOSITORY, System.getProperty("java.io.tmpdir"));
-      this.goals = (String[])getOption(config, BUILD_MAVEN_GOALS, new String[]{"test", "package"});
-      this.timeout = (Integer)getOption(config, BUILD_MAVEN_TIMEOUT, 120);
+      if (goals == null || goals.length == 0)
+      {
+         throw new IllegalArgumentException("Maven build goals may not be null or empty. ");
+      }
+      if (workerNumber <= 0)
+      {
+         throw new IllegalArgumentException("Number of build workers may not be equals or less than 0. ");
+      }
+      if (queueSize <= 0)
+      {
+         throw new IllegalArgumentException("Size of build queue may not be equals or less than 0. ");
+      }
+
+      this.repository = repository;
+      this.goals = goals;
+      this.timeout = timeout;
       this.tasks = new ConcurrentHashMap<String, MavenBuildTask>();
-      final int poolSize = Runtime.getRuntime().availableProcessors();
+
+      //
       this.pool = new ThreadPoolExecutor(
-         poolSize,
-         poolSize,
+         workerNumber,
+         workerNumber,
          0L,
          TimeUnit.MILLISECONDS,
-         new LinkedBlockingQueue<Runnable>(100),
+         new LinkedBlockingQueue<Runnable>(queueSize),
          new ManyTasksPolicy(new ThreadPoolExecutor.AbortPolicy()));
    }
 
    private static Object getOption(Map<String, Object> config, String option, Object defaultValue)
    {
-      Object value = config.get(option);
-      return value != null ? value : defaultValue;
+      if (config != null)
+      {
+         Object value = config.get(option);
+         return value != null ? value : defaultValue;
+      }
+      return defaultValue;
    }
 
    /**
@@ -127,12 +194,13 @@ public class BuildService
       {
          throw new IllegalArgumentException("Parameter 'remoteURI' may not be null or empty. ");
       }
+
       List<String> g = new ArrayList<String>(goals.length);
       Collections.addAll(g, goals);
 
       final File projectDirectory = BuildHelper.makeProjectDirectory(repository);
 
-      MavenInvoker invoker = new MavenInvoker()
+      final MavenInvoker invoker = new MavenInvoker()
          .addPreBuildTask(
             new Runnable()
             {
@@ -150,15 +218,23 @@ public class BuildService
          new FileTaskLogger(new File(projectDirectory.getParentFile(), projectDirectory.getName() + ".log"),
             new SystemOutHandler());
 
-      InvocationRequest request = new DefaultInvocationRequest()
+      final InvocationRequest request = new DefaultInvocationRequest()
          .setBaseDirectory(projectDirectory)
          .setGoals(g)
          .setOutputHandler(taskLogger)
          .setErrorHandler(taskLogger);
 
-      String id = Long.toString(counter.getAndIncrement());
-      MavenBuildTask task = new MavenBuildTask(id, request, invoker, taskLogger);
-      pool.execute(task);
+      Future<InvocationResultImpl> f = pool.submit(new Callable<InvocationResultImpl>()
+      {
+         @Override
+         public InvocationResultImpl call() throws MavenInvocationException
+         {
+            return invoker.execute(request);
+         }
+      });
+
+      final String id = Long.toString(idGenerator.getAndIncrement());
+      MavenBuildTask task = new MavenBuildTask(id, f, taskLogger);
       tasks.put(id, task);
 
       return task;
@@ -186,7 +262,7 @@ public class BuildService
       MavenBuildTask task = tasks.remove(id);
       if (task != null)
       {
-         task.cancel(true);
+         task.cancel();
       }
       return task;
    }

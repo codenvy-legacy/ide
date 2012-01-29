@@ -42,26 +42,6 @@ import static org.codehaus.plexus.util.cli.CommandLineUtils.isAlive;
  */
 public class MavenInvoker extends DefaultInvoker
 {
-   public enum Status
-   {
-      QUEUE("In queue..."),
-      BUILD("Building..."),
-      END("End");
-
-      private final String value;
-
-      private Status(String value)
-      {
-         this.value = value;
-      }
-
-      @Override
-      public String toString()
-      {
-         return value;
-      }
-   }
-
    private final Queue<Runnable> preBuildTasks;
    private final Queue<Runnable> postBuildTasks;
 
@@ -243,7 +223,8 @@ public class MavenInvoker extends DefaultInvoker
    }
 
    /**
-    * Set build timeout in seconds.
+    * Set build timeout in seconds.  It should be setup before call method {@link
+    * #execute(org.apache.maven.shared.invoker.InvocationRequest)}.
     *
     * @param timeout the timeout in seconds
     * @return this instance
@@ -270,6 +251,12 @@ public class MavenInvoker extends DefaultInvoker
       }
    }
 
+   /**
+    * Maven build watcher. It controls the time of build and if time if greater than timeout
+    * (see {@link MavenInvoker#setTimeout(long)}) Watcher terminate such build. Watcher should not be used for terminate
+    * tasks that runs separate java processes, e.g. <code>mvn jetty:run</code>. Process that runs Jetty server may not be terminated
+    * by this Watcher. Such process must be terminated by correspond command, e.g. <code>mvn jetty:stop</code>
+    */
    private static final class Watcher implements Runnable
    {
       private final long timeout;

@@ -18,10 +18,11 @@
  */
 package org.exoplatform.ide.maven;
 
+import org.apache.maven.shared.invoker.MavenInvocationException;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -70,7 +71,7 @@ public class Builder
          {
             try
             {
-               InvocationResultImpl result = task.get();
+               InvocationResultImpl result = task.getResult();
                if (0 == result.getExitCode())
                {
                   return Response
@@ -88,14 +89,9 @@ public class Builder
                      .type(MediaType.APPLICATION_JSON).build();
                }
             }
-            catch (InterruptedException e)
+            catch (MavenInvocationException e)
             {
-               // Should not happen since we check before is task done or not.
-               Thread.currentThread().interrupt();
-            }
-            catch (ExecutionException e)
-            {
-               throw new WebApplicationException(e.getCause());
+               throw new WebApplicationException(e);
             }
          }
          // If not done yet then send status 202 with the same location info.
@@ -155,7 +151,7 @@ public class Builder
          {
             try
             {
-               InvocationResultImpl result = task.get();
+               InvocationResultImpl result = task.getResult();
                if (0 == result.getExitCode())
                {
                   File artifact = result.getArtifacts()[0];
@@ -168,14 +164,9 @@ public class Builder
                   .entity("Build failed. There is no artifact for download. ")
                   .type(MediaType.TEXT_PLAIN).build());
             }
-            catch (InterruptedException e)
+            catch (MavenInvocationException e)
             {
-               // Should not happen since we check before is task done or not.
-               Thread.currentThread().interrupt();
-            }
-            catch (ExecutionException e)
-            {
-               throw new WebApplicationException(e.getCause());
+               throw new WebApplicationException(e);
             }
          }
          // Sent location to check status method.

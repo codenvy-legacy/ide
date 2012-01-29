@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.maven;
 
-import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.MavenInvocationException;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.FutureTask;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * Maven build task.
@@ -30,37 +29,90 @@ import java.util.concurrent.FutureTask;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class MavenBuildTask extends FutureTask<InvocationResultImpl>
+public class MavenBuildTask
 {
    private final String id;
+   private final Future<InvocationResultImpl> f;
    private final TaskLogger logger;
 
-   public MavenBuildTask(String id, InvocationRequest request, MavenInvoker invoker, TaskLogger logger)
+   public MavenBuildTask(String id, Future<InvocationResultImpl> f, TaskLogger logger)
    {
-      super(callable(request, invoker));
       this.id = id;
+      this.f = f;
       this.logger = logger;
    }
 
-   private static Callable<InvocationResultImpl> callable(final InvocationRequest request, final MavenInvoker invoker)
-   {
-      return new Callable<InvocationResultImpl>()
-      {
-         @Override
-         public InvocationResultImpl call() throws MavenInvocationException
-         {
-            return invoker.execute(request);
-         }
-      };
-   }
-
+   /**
+    * Get build unique ID.
+    *
+    * @return build ID
+    */
    public String getId()
    {
       return id;
    }
 
+   /**
+    * Get build logger.
+    *
+    * @return build logger
+    */
    public TaskLogger getLogger()
    {
       return logger;
+   }
+
+   /**
+    * Check is build done or not.
+    *
+    * @return <code>true</code> if build is done and <code>false</code> otherwise
+    */
+   public boolean isDone()
+   {
+      return f.isDone();
+   }
+
+   /**
+    * Cancel maven build.
+    */
+   public void cancel()
+   {
+      f.cancel(true);
+   }
+
+   /**
+    * Get result of maven build.
+    *
+    * @return result of maven build. <b>NOTE</b> If build is not finished yet this method returns <code>null</code>
+    * @throws MavenInvocationException if maven task cannot be run because to incorrect input parameters
+    */
+   public InvocationResultImpl getResult() throws MavenInvocationException
+   {
+      if (f.isDone())
+      {
+         try
+         {
+            return f.get();
+         }
+         catch (InterruptedException e)
+         {
+            // Should not happen since we checked is task done or not.
+            Thread.currentThread().interrupt();
+         }
+         catch (ExecutionException e)
+         {
+            final Throwable cause = e.getCause();
+            if (cause instanceof Error)
+            {
+               throw (Error)cause;
+            }
+            if (cause instanceof RuntimeException)
+            {
+               throw (RuntimeException)cause;
+            }
+            throw (MavenInvocationException)cause;
+         }
+      }
+      return null;
    }
 }
