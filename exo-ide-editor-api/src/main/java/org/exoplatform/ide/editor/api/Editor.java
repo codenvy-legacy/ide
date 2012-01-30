@@ -138,9 +138,9 @@ public interface Editor extends IsWidget
    /**
     * Shows or hides line numbers.
     * 
-    * @param showLineNumbers
+    * @param lineNumbers
     */
-   void showLineNumbers(boolean isShowLineNumbers);
+   void showLineNumbers(boolean lineNumbers);
    
    /**
     * Format text according to type of the content.
