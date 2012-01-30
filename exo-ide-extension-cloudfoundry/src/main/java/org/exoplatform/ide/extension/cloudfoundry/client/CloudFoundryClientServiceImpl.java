@@ -378,7 +378,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     */
    @Override
    public void unmapUrl(String vfsId, String projectId, String name, String server, String url,
-      CloudFoundryAsyncRequestCallback<String> callback) throws RequestException
+      CloudFoundryAsyncRequestCallback<Object> callback) throws RequestException
    {
       final String requestUrl = restServiceContext + UNMAP_URL;
 

@@ -54,7 +54,7 @@ import java.util.List;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: UnmapUrlPresenter.java Jul 19, 2011 2:31:19 PM vereshchaka $
- *
+ * 
  */
 public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, ViewClosedHandler
 {
@@ -225,20 +225,20 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
       }
    };
 
-   private void unregisterUrl(String url)
+   private void unregisterUrl(final String url)
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       try
       {
          CloudFoundryClientService.getInstance().unmapUrl(vfs.getId(), projectId, null, null, url,
-            new CloudFoundryAsyncRequestCallback<String>(null, unregisterUrlLoggedInHandler, null)
+            new CloudFoundryAsyncRequestCallback<Object>(null, unregisterUrlLoggedInHandler, null)
             {
                @Override
-               protected void onSuccess(String result)
+               protected void onSuccess(Object result)
                {
-                  registeredUrls.remove(result);
+                  registeredUrls.remove(url);
                   display.getRegisteredUrlsGrid().setValue(registeredUrls);
-                  String unmappedUrl = result;
+                  String unmappedUrl = url;
                   if (!unmappedUrl.startsWith("http"))
                   {
                      unmappedUrl = "http://" + unmappedUrl;
@@ -290,8 +290,13 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
 
       try
       {
-         CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(new CloudfoundryApplication()), null, null)
+         CloudFoundryClientService.getInstance().getApplicationInfo(
+            vfs.getId(),
+            projectId,
+            null,
+            null,
+            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
+               new CloudfoundryApplication()), null, null)
             {
                @Override
                protected void onSuccess(CloudfoundryApplication result)

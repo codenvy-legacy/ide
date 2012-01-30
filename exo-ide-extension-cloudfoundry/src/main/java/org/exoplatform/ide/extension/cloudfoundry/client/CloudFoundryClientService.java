@@ -196,7 +196,7 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to handle response from server
     */
    public abstract void unmapUrl(String vfsId, String projectId, String name, String server, String url,
-      CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
+      CloudFoundryAsyncRequestCallback<Object> callback) throws RequestException;
 
    /**
     * Update the memory size.
