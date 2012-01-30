@@ -17,32 +17,42 @@
 
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.exoplatform.ide</groupId>
-   <artifactId>exo-ide-editor-api</artifactId>
+   <artifactId>exo-ide-editor-codemirror2</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor : API</name>
+   <name>eXo IDE :: Editor : Codemirror</name>
 
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
       </dependency>
+      
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-ui</artifactId>
       </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-api</artifactId>
+      </dependency>      
+      
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
       </dependency>
+      
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-servlet</artifactId>
       </dependency>
+      
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-dev</artifactId>
          <scope>test</scope>
       </dependency>
+      
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
