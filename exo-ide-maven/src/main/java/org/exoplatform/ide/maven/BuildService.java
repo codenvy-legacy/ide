@@ -113,7 +113,6 @@ public class BuildService
          {
             remove(old.id);
          }
-System.err.println(map.size() + " : " + queue.size());
       }
 
       private MavenBuildTask remove(String id)
