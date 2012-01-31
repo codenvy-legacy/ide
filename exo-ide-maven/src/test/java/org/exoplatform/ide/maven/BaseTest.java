@@ -33,7 +33,6 @@ import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -79,8 +78,7 @@ public abstract class BaseTest extends TestCase
    @Override
    public void tearDown() throws Exception
    {
-      tasks.pool.shutdown();
-      tasks.pool.awaitTermination(30, TimeUnit.SECONDS);
+      tasks.shutdown();
       super.tearDown();
    }
 }

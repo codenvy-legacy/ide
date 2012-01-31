@@ -41,7 +41,7 @@ public final class BuildHelper
       {
          throw new IllegalArgumentException("Parent may not be null or empty string. ");
       }
-      File dir = new File(parent, "builder" + Long.toString(Math.abs(gen.nextLong())));
+      File dir = new File(parent, "build-" + Long.toString(Math.abs(gen.nextLong())));
       if (!dir.mkdirs())
       {
          throw new RuntimeException("Unable create project directory. ");

@@ -51,6 +51,9 @@ public class BuilderBootstrap implements ServletContextListener
 
       config.put(BuildService.BUILD_QUEUE_SIZE, getNumber(ctx.getInitParameter(BuildService.BUILD_QUEUE_SIZE)));
 
+      config.put(BuildService.BUILD_RESULT_EXPIRATION_TIME,
+         getNumber(ctx.getInitParameter(BuildService.BUILD_RESULT_EXPIRATION_TIME)));
+
       BuildService buildService = new BuildService(config);
       ctx.setAttribute(BuildService.class.getName(), buildService);
    }

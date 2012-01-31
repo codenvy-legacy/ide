@@ -93,7 +93,7 @@ public class MavenInvoker extends DefaultInvoker
          preBuildTasks.poll().run();
       }
 
-      int exitCode = Integer.MIN_VALUE;
+      int exitCode = -1;
       CommandLineException cle = null;
       try
       {
@@ -139,7 +139,7 @@ public class MavenInvoker extends DefaultInvoker
       StreamPumper outPipe = new StreamPumper(process.getInputStream(), out);
       StreamPumper errPipe = new StreamPumper(process.getErrorStream(), err);
 
-      int exitCode = Integer.MIN_VALUE;
+      int exitCode = -1;
 
       try
       {
@@ -223,10 +223,10 @@ public class MavenInvoker extends DefaultInvoker
    }
 
    /**
-    * Set build timeout in seconds.  It should be setup before call method {@link
+    * Set build timeout in milliseconds.  It should be setup before call method {@link
     * #execute(org.apache.maven.shared.invoker.InvocationRequest)}.
     *
-    * @param timeout the timeout in seconds
+    * @param timeout the timeout in milliseconds
     * @return this instance
     */
    public MavenInvoker setTimeout(long timeout)
@@ -264,9 +264,9 @@ public class MavenInvoker extends DefaultInvoker
       private boolean watch;
       private Process process;
 
-      private Watcher(long timeout) // timeout in seconds
+      private Watcher(long timeout)
       {
-         this.timeout = (timeout * 1000); // in milliseconds
+         this.timeout = timeout;
       }
 
       public synchronized void run()

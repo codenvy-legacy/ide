@@ -19,6 +19,7 @@
 package org.exoplatform.ide.maven;
 
 import org.apache.maven.shared.invoker.MavenInvocationException;
+import org.codehaus.plexus.util.cli.CommandLineException;
 
 import java.io.File;
 import java.io.IOException;
@@ -76,13 +77,21 @@ public class Builder
                {
                   return Response
                      .status(200)
-                     .entity("{\"status\":\"SUCCESS\",\"download\":\""
+                     .entity("{\"status\":\"SUCCESSFUL\",\"downloadUrl\":\""
                         + uriInfo.getBaseUriBuilder().path(getClass(), "download").build(buildID).toString()
                         + "\"}")
                      .type(MediaType.APPLICATION_JSON).build();
                }
                else
                {
+                  CommandLineException cle = result.getExecutionException();
+                  if (cle != null)
+                  {
+                     return Response
+                        .status(200)
+                        .entity("{\"status\":\"FAILED\",\"error\":\"" + cle.getMessage() + "\"}")
+                        .type(MediaType.APPLICATION_JSON).build();
+                  }
                   return Response
                      .status(200)
                      .entity("{\"status\":\"FAILED\",\"exitCode\":" + result.getExitCode() + "}")
@@ -94,13 +103,10 @@ public class Builder
                throw new WebApplicationException(e);
             }
          }
-         // If not done yet then send status 202 with the same location info.
-         URI location = uriInfo.getAbsolutePath();
          return Response
-            .status(202)
-            .location(location)
-            .entity(location.toString())
-            .type(MediaType.TEXT_PLAIN).build();
+            .status(200)
+            .entity("{\"status\":\"IN_PROGRESS\"}")
+            .type(MediaType.APPLICATION_JSON).build();
       }
       // Incorrect task ID.
       throw new WebApplicationException(Response

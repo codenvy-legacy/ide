@@ -20,6 +20,8 @@ package org.exoplatform.ide.maven;
 
 import org.apache.maven.shared.invoker.MavenInvocationException;
 
+import java.io.File;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -33,12 +35,14 @@ public class MavenBuildTask
 {
    private final String id;
    private final Future<InvocationResultImpl> f;
+   private final File projectDirectory;
    private final TaskLogger logger;
 
-   public MavenBuildTask(String id, Future<InvocationResultImpl> f, TaskLogger logger)
+   public MavenBuildTask(String id, Future<InvocationResultImpl> f, File projectDirectory, TaskLogger logger)
    {
       this.id = id;
       this.f = f;
+      this.projectDirectory = projectDirectory;
       this.logger = logger;
    }
 
@@ -72,9 +76,7 @@ public class MavenBuildTask
       return f.isDone();
    }
 
-   /**
-    * Cancel maven build.
-    */
+   /** Cancel maven build. */
    public void cancel()
    {
       f.cancel(true);
@@ -112,7 +114,21 @@ public class MavenBuildTask
             }
             throw (MavenInvocationException)cause;
          }
+         catch (CancellationException ce)
+         {
+            throw new MavenInvocationException("Build " + id + " was cancelled. ");
+         }
       }
       return null;
+   }
+
+   /**
+    * Get the maven project directory.
+    *
+    * @return the maven project directory
+    */
+   public File getProjectDirectory()
+   {
+      return projectDirectory;
    }
 }
