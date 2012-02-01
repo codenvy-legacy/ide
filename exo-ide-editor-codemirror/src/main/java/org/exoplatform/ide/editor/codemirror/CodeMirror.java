@@ -86,7 +86,7 @@ public class CodeMirror extends AbsolutePanel implements Editor
 
    private ClientCodeAssistant codeAssistant;
 
-   private String genericMimeType; // type of document itself
+   private String mimeType; // type of document itself
 
    private int cursorRow = 1;
 
@@ -102,17 +102,21 @@ public class CodeMirror extends AbsolutePanel implements Editor
    
    private HashMap<String, Object> params;
    
+   public CodeMirror(HashMap<String, Object> params) {
+   }
+   
    /**
     * @param file
     * @param params
     * @param eventBus
     */
-   public CodeMirror(String content, HashMap<String, Object> params)
+   public CodeMirror(String mimeType, String content, HashMap<String, Object> params)
    {
-      editorId = "CodeMirror - " + String.valueOf(this.hashCode());
-      
+      this.mimeType = mimeType;
       this.content = content;
 
+      editorId = "CodeMirror - " + String.valueOf(this.hashCode());
+      
       if (params == null)
       {
          params = new HashMap<String, Object>();
@@ -138,8 +142,6 @@ public class CodeMirror extends AbsolutePanel implements Editor
          configuration = (CodeMirrorConfiguration)params.get(EditorParameters.CONFIGURATION);
       else
          configuration = new CodeMirrorConfiguration();
-
-      genericMimeType = (String)params.get(EditorParameters.MIME_TYPE);
 
       codeAssistant = configuration.getCodeAssistant();
 

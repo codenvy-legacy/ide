@@ -18,10 +18,14 @@
  */
 package org.exoplatform.ide.editor.ckeditor;
 
-import com.google.gwt.user.client.Window;
-
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Label;
 
@@ -47,6 +51,7 @@ import java.util.Map;
 
 public class CKEditor extends AbsolutePanel implements Editor
 {
+   
    protected String editorId;
 
    private Label label;
@@ -66,25 +71,24 @@ public class CKEditor extends AbsolutePanel implements Editor
    protected String content;
 
    protected Map<String, Object> params;
+   
+   private String mimeType;
 
-   public CKEditor(String content, Map<String, Object> params)
+   public CKEditor(String mimeType, String content, Map<String, Object> params)
    {
+      this.mimeType = mimeType;
       this.content = content;
       this.params = params;
 
       this.editorId = "CKEditor - " + String.valueOf(this.hashCode());
-
       if (params == null)
       {
          params = new HashMap<String, Object>();
       }
 
-      // to show scrollbars
-      // and to display on the
-      // full tab
       label = new Label();
       DOM.setElementAttribute(label.getElement(), "id", getId());
-      DOM.setElementAttribute(label.getElement(), "style", "overflow: auto; width: 100%; height: 100%;");
+      DOM.setElementAttribute(label.getElement(), "style", "overflow: hidden; position:absolute; left:0px; top:0px; width: 100%; height: 100%;");
       add(label);
 
       if (params.get(EditorParameters.CONFIGURATION) != null) {
@@ -111,8 +115,10 @@ public class CKEditor extends AbsolutePanel implements Editor
          initCKEditor(getId(),
             CKEditorConfiguration.BASE_PATH,
             CKEditorConfiguration.TOOLBAR.toString(), // aditional default configuration can be found in config.js
-            CKEditorConfiguration.THEME.toString(), CKEditorConfiguration.SKIN.toString(),
-            CKEditorConfiguration.LANGUAGE.toString(), CKEditorConfiguration.CONTINUOUS_SCANNING,
+            CKEditorConfiguration.THEME.toString(),
+            CKEditorConfiguration.SKIN.toString(),
+            CKEditorConfiguration.LANGUAGE.toString(),
+            CKEditorConfiguration.CONTINUOUS_SCANNING,
             CKEditorConfiguration.isFullPage());
    }
 
@@ -128,7 +134,9 @@ public class CKEditor extends AbsolutePanel implements Editor
                                                                  
       if (language !== undefined) {
          $wnd.CKEDITOR.config.language = language;
-      }              
+      }
+      
+      $wnd.CKEDITOR.config.resize_dir = 'both';
                                                                  
       if (basePath !== undefined) {
          $wnd.CKEDITOR.basePath = basePath;
@@ -206,7 +214,7 @@ public class CKEditor extends AbsolutePanel implements Editor
   
       return editor;
    }-*/;
-
+   
    private void onContentChanged()
    {
       fireEvent(new EditorContentChangedEvent(getId()));
@@ -214,7 +222,6 @@ public class CKEditor extends AbsolutePanel implements Editor
 
    private void onSaveContent()
    {
-      Window.alert("CKEditor:onSaveContent()");
       //eventBus.fireEvent(new EditorSaveContentEvent(getId()));
    }
 
@@ -227,13 +234,83 @@ public class CKEditor extends AbsolutePanel implements Editor
    {
       fireEvent(new EditorFocusReceivedEvent(getId()));
    }
+   
+   private boolean initialized = false;
 
    private void onInitialized()
    {
-      System.out.println("\r\n\r\n\r\n\r\n" + " --- INITIALIZED --- " + "\r\n\r\n\r\n\r\n");
+      initialized = true;
       
+      updateDimensions();
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            updateDimensions();
+         }
+      });
+
       fireEvent(new EditorInitializedEvent(getId()));
       setText(content);
+   }
+   
+   /**
+    * This hack method is needs to automatically update size of CKEditor toolbar and frame.
+    */
+   private void updateDimensions() {
+      Element spanElement = label.getElement().getFirstChild().cast();
+      tuneElement(spanElement, false);
+
+      Element span1Element = spanElement.getFirstChildElement().cast();
+      tuneElement(span1Element, false);
+      
+      Element span2Element = span1Element.getFirstChildElement().cast();
+      tuneElement(span2Element, false);
+      
+      Element tableElement = span2Element.getFirstChildElement().cast();
+      tuneElement(tableElement, true);
+      
+      Element tBodyElement = tableElement.getFirstChildElement().cast();
+      
+      Element tr1Element = tBodyElement.getChild(0).cast();
+      Element tr1TDElement = tr1Element.getFirstChildElement().cast();
+      tr1TDElement.getStyle().setPosition(Position.RELATIVE);
+      
+      Element tr2Element = tBodyElement.getChild(1).cast();
+      tr2Element.getStyle().setHeight(100, Unit.PCT);
+      
+      Element tr2TDElement = tr2Element.getFirstChildElement().cast();
+      tr2TDElement.getStyle().setPosition(Position.RELATIVE);
+      tr2TDElement.getStyle().setWidth(100, Unit.PCT);
+      
+      Element iFrameElement = tr2TDElement.getFirstChildElement().cast();
+      if ("cke_browser_gecko".equals(span1Element.getClassName()))
+      {
+         iFrameElement.getStyle().setPosition(Position.RELATIVE);
+      }
+      else
+      {
+         iFrameElement.getStyle().setPosition(Position.ABSOLUTE);
+      }
+   }
+   
+   private void tuneElement(Element e, boolean absolutePosition)
+   {
+      if (absolutePosition)
+      {
+         e.getStyle().setPosition(Position.ABSOLUTE);
+      }
+      else
+      {
+         e.getStyle().setPosition(Position.RELATIVE);
+      }
+
+      e.getStyle().setLeft(0, Unit.PX);
+      e.getStyle().setTop(0, Unit.PX);
+      e.getStyle().setWidth(100, Unit.PCT);
+      e.getStyle().setHeight(100, Unit.PCT);
+      e.getStyle().setOverflow(Overflow.HIDDEN);
    }
 
    public String getText()
@@ -356,23 +433,6 @@ public class CKEditor extends AbsolutePanel implements Editor
       }
    }-*/;
 
-   @Override
-   public void setHeight(String height)
-   {
-      super.setHeight(height);
-      setHeightNative(height);
-   }
-
-   /*
-    * set editor height
-    */
-   public native void setHeightNative(String height) /*-{
-      var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;      
-      if (editor !== null) {
-         editor.resize("100%", height);
-      }
-   }-*/;
-
    private native void removeEditorListeners() /*-{
       var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
       if (editor !== null) {
@@ -395,11 +455,6 @@ public class CKEditor extends AbsolutePanel implements Editor
    public boolean isReadOnly()
    {
       return (Boolean)params.get(EditorParameters.IS_READ_ONLY);
-   }
-
-   public int getLabelOffsetHeight()
-   {
-      return label.getOffsetHeight();
    }
 
    private static void showErrorDialog(String title, String message)
@@ -513,19 +568,8 @@ public class CKEditor extends AbsolutePanel implements Editor
 
    public String getMimeType()
    {
-      return (String)params.get(EditorParameters.MIME_TYPE);
+      return mimeType;
    }
-
-//   private List<String> getHotKeyList()
-//   {
-//      return (List<String>)params.get(EditorParameters.HOT_KEY_LIST);
-//   }
-//
-//   @Override
-//   public void setHotKeyList(List<String> hotKeyList)
-//   {
-//      params.put(EditorParameters.HOT_KEY_LIST, hotKeyList);
-//   }
 
    @Override
    public native void focus() /*-{

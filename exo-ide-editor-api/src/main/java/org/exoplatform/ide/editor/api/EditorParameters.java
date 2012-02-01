@@ -47,10 +47,5 @@ public interface EditorParameters
     * Key for {@link List} of hot keys
     */
    String HOT_KEYS = "hot_keys";
-
-   /**
-    * Key for content mime type
-    */
-   String MIME_TYPE = "mime_type";
    
 }
