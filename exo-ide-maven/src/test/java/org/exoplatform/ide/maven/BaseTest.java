@@ -71,7 +71,7 @@ public abstract class BaseTest extends TestCase
       repository = new File(target, "repository");
       repository.mkdir();
       Map<String, Object> config = new HashMap<String, Object>();
-      config.put(BuildService.BUILD_REPOSITORY, repository.getAbsolutePath());
+      config.put(BuildService.BUILDER_REPOSITORY, repository.getAbsolutePath());
       return config;
    }
 

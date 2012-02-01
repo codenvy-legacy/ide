@@ -27,19 +27,27 @@ import org.eclipse.jgit.api.Git;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static org.exoplatform.ide.maven.BuildHelper.delete;
+import static org.exoplatform.ide.maven.BuildHelper.makeBuilderFilesFilter;
 
 /**
  * Build manager.
@@ -49,171 +57,88 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class BuildService
 {
-   private static final class CacheElement
-   {
-      private final long expirationTime;
-      private final int hash;
-
-      final String id;
-      final MavenBuildTask task;
-
-      CacheElement(String id, MavenBuildTask task, long expirationTime)
-      {
-         this.id = id;
-         this.task = task;
-         this.expirationTime = expirationTime;
-         this.hash = 7 * 31 + id.hashCode();
-      }
-
-      @Override
-      public boolean equals(Object o)
-      {
-         if (this == o)
-         {
-            return true;
-         }
-         if (o == null || getClass() != o.getClass())
-         {
-            return false;
-         }
-         CacheElement e = (CacheElement)o;
-         return id.equals(e.id);
-      }
-
-      @Override
-      public int hashCode()
-      {
-         return hash;
-      }
-
-      boolean isExpired()
-      {
-         return expirationTime < System.currentTimeMillis();
-      }
-   }
-
-   private static final class BuildTaskCache
-   {
-      private final ConcurrentMap<String, CacheElement> map = new ConcurrentHashMap<String, CacheElement>();
-      private final Queue<CacheElement> queue = new ConcurrentLinkedQueue<CacheElement>();
-
-      void put(String id, MavenBuildTask task, long expirationTime)
-      {
-         CacheElement e = new CacheElement(id, task, expirationTime);
-         CacheElement prev = map.put(id, e);
-         if (prev != null)
-         {
-            queue.remove(prev);
-         }
-
-         queue.add(e);
-
-         CacheElement old;
-         while ((old = queue.peek()) != null && old.isExpired())
-         {
-            remove(old.id);
-         }
-      }
-
-      private MavenBuildTask remove(String id)
-      {
-         CacheElement e = map.remove(id);
-         if (e != null)
-         {
-            queue.remove(e);
-            BuildHelper.delete(e.task.getProjectDirectory());
-            BuildHelper.delete(e.task.getLogger().getFile());
-            return e.task;
-         }
-
-         return null;
-      }
-
-      MavenBuildTask get(String id)
-      {
-         CacheElement e = map.get(id);
-         return e != null ? e.task : null;
-      }
-   }
-
    /**
     * Name of configuration parameter that points to the directory where all builds stored.
     * Is such parameter is not specified then 'java.io.tmpdir' used.
     */
-   public static final String BUILD_REPOSITORY = "build.repository";
+   public static final String BUILDER_REPOSITORY = "builder.repository";
 
    /**
     * Name of configuration parameter that provides maven build goals.
     *
-    * @see #DEFAULT_BUILD_MAVEN_GOALS
+    * @see #DEFAULT_BUILDER_MAVEN_GOALS
     */
-   public static final String BUILD_MAVEN_GOALS = "build.maven.goals";
+   public static final String BUILDER_MAVEN_GOALS = "builder.maven.goals";
 
    /**
     * Name of configuration parameter that provides build timeout is seconds. After this time build may be terminated.
     *
-    * @see #DEFAULT_TIMEOUT
+    * @see #DEFAULT_BUILDER_TIMEOUT
     */
-   public static final String BUILD_TIMEOUT = "build.timeout";
+   public static final String BUILDER_TIMEOUT = "builder.timeout";
 
    /**
     * Name of configuration parameter that sets the number of build workers. In other words it set the number of build
     * process that can be run at the same time. If this parameter is not set then the number of available processors
     * used, e.g. <code>Runtime.getRuntime().availableProcessors();</code>
     */
-   public static final String BUILD_WORKERS_NUMBER = "build.workers.number";
+   public static final String BUILDER_WORKERS_NUMBER = "builder.workers.number";
 
    /**
     * Name of configuration parameter that sets time of keeping the results (artifact and logs) of build. After this
     * time the results of build may be removed.
     *
-    * @see #DEFAULT_BUILD_RESULT_EXPIRATION_TIME
+    * @see #DEFAULT_BUILDER_CLEAN_RESULT_DELAY_TIME
     */
-   public static final String BUILD_RESULT_EXPIRATION_TIME = "build.result.expiration.time";
+   public static final String BUILDER_CLEAN_RESULT_DELAY_TIME = "builder.clean.result.delay.time";
 
    /**
     * Name of parameter that set the max size of build queue. The number of build task in queue may not be greater than
     * provided by this parameter.
     *
-    * @see #DEFAULT_BUILD_QUEUE_SIZE
+    * @see #DEFAULT_BUILDER_QUEUE_SIZE
     */
-   public static final String BUILD_QUEUE_SIZE = "build.queue.size";
+   public static final String BUILDER_QUEUE_SIZE = "builder.queue.size";
 
    /** Default build timeout in seconds (120). After this time build may be terminated. */
-   public static final int DEFAULT_TIMEOUT = 120;
+   public static final int DEFAULT_BUILDER_TIMEOUT = 120;
 
    /** Default max size of build queue (100). */
-   public static final int DEFAULT_BUILD_QUEUE_SIZE = 100;
+   public static final int DEFAULT_BUILDER_QUEUE_SIZE = 100;
 
    /**
     * Default time of keeping the results of build in minutes (60). After this time the results of build (artifact and
     * logs) may be removed.
     */
-   public static final int DEFAULT_BUILD_RESULT_EXPIRATION_TIME = 60;
+   public static final int DEFAULT_BUILDER_CLEAN_RESULT_DELAY_TIME = 60;
 
    /** Default maven build goals 'test package'. */
-   public static final String[] DEFAULT_BUILD_MAVEN_GOALS = new String[]{"test", "package"};
+   public static final String[] DEFAULT_BUILDER_MAVEN_GOALS = new String[]{"test", "package"};
 
    /** Build task ID generator. */
    private static final AtomicLong idGenerator = new AtomicLong(1);
 
    private final ExecutorService pool;
-   private final BuildTaskCache tasks;
+   private final ConcurrentMap<String, CacheElement> map;
+   private final Queue<CacheElement> queue;
 
-   private final String repository;
+   private final ScheduledExecutorService cleaner;
+   private final Queue<File> cleanerQueue;
+
+   private final File repository;
    private final String[] goals;
    private final long timeoutMillis;
-   private final long keepBuildResultTimeMillis;
+   private final long cleanBuildResultDelayMillis;
 
    public BuildService(Map<String, Object> config)
    {
       this(
-         (String)getOption(config, BUILD_REPOSITORY, System.getProperty("java.io.tmpdir")),
-         (String[])getOption(config, BUILD_MAVEN_GOALS, DEFAULT_BUILD_MAVEN_GOALS),
-         (Integer)getOption(config, BUILD_TIMEOUT, DEFAULT_TIMEOUT),
-         (Integer)getOption(config, BUILD_WORKERS_NUMBER, Runtime.getRuntime().availableProcessors()),
-         (Integer)getOption(config, BUILD_QUEUE_SIZE, DEFAULT_BUILD_QUEUE_SIZE),
-         (Integer)getOption(config, BUILD_RESULT_EXPIRATION_TIME, DEFAULT_BUILD_RESULT_EXPIRATION_TIME)
+         (String)getOption(config, BUILDER_REPOSITORY, System.getProperty("java.io.tmpdir")),
+         (String[])getOption(config, BUILDER_MAVEN_GOALS, DEFAULT_BUILDER_MAVEN_GOALS),
+         (Integer)getOption(config, BUILDER_TIMEOUT, DEFAULT_BUILDER_TIMEOUT),
+         (Integer)getOption(config, BUILDER_WORKERS_NUMBER, Runtime.getRuntime().availableProcessors()),
+         (Integer)getOption(config, BUILDER_QUEUE_SIZE, DEFAULT_BUILDER_QUEUE_SIZE),
+         (Integer)getOption(config, BUILDER_CLEAN_RESULT_DELAY_TIME, DEFAULT_BUILDER_CLEAN_RESULT_DELAY_TIME)
       );
    }
 
@@ -223,7 +148,7 @@ public class BuildService
     * @param timeout the build timeout in seconds
     * @param workerNumber the number of build workers
     * @param buildQueueSize the max size of build queue. If this number reached then all new build request rejected
-    * @param keepBuildResultTime the time of keeping the results of build in minutes. After this time result of build
+    * @param cleanBuildResultDelay the time of keeping the results of build in minutes. After this time result of build
     * (both artifact and logs) may be removed.
     */
    protected BuildService(
@@ -232,7 +157,7 @@ public class BuildService
       int timeout,
       int workerNumber,
       int buildQueueSize,
-      int keepBuildResultTime)
+      int cleanBuildResultDelay)
    {
       if (repository == null || repository.isEmpty())
       {
@@ -250,18 +175,24 @@ public class BuildService
       {
          throw new IllegalArgumentException("Size of build queue may not be equals or less than 0. ");
       }
-      if (keepBuildResultTime <= 0)
+      if (cleanBuildResultDelay <= 0)
       {
-         throw new IllegalArgumentException("Time of keeping build results may not be equals or less than 0. ");
+         throw new IllegalArgumentException("Delay time of cleaning build results may not be equals or less than 0. ");
       }
 
-      this.repository = repository;
+      this.repository = new File(repository);
       this.goals = goals;
       this.timeoutMillis = timeout * 1000; // to milliseconds
-      this.keepBuildResultTimeMillis = keepBuildResultTime * 60 * 100; // to milliseconds
+      this.cleanBuildResultDelayMillis = cleanBuildResultDelay * 60 * 100; // to milliseconds
 
       //
-      this.tasks = new BuildTaskCache();
+      this.map = new ConcurrentHashMap<String, CacheElement>();
+      this.queue = new ConcurrentLinkedQueue<CacheElement>();
+
+      //
+      this.cleaner = Executors.newSingleThreadScheduledExecutor();
+      this.cleanerQueue = new ConcurrentLinkedQueue<File>();
+      cleaner.scheduleAtFixedRate(new CleanTask(), cleanBuildResultDelay, cleanBuildResultDelay, TimeUnit.MINUTES);
 
       //
       this.pool = new ThreadPoolExecutor(
@@ -315,8 +246,8 @@ public class BuildService
             }
          ).setTimeout(timeoutMillis);
 
-      TaskLogger taskLogger =
-         new TaskLogger(new File(projectDirectory.getParentFile(), projectDirectory.getName() + ".log"), new SystemOutHandler());
+      File logFile = new File(projectDirectory.getParentFile(), projectDirectory.getName() + ".log");
+      TaskLogger taskLogger = new TaskLogger(logFile/*, new SystemOutHandler()*/);
 
       final InvocationRequest request = new DefaultInvocationRequest()
          .setBaseDirectory(projectDirectory)
@@ -335,9 +266,30 @@ public class BuildService
 
       final String id = Long.toString(idGenerator.getAndIncrement());
       MavenBuildTask task = new MavenBuildTask(id, f, projectDirectory, taskLogger);
-      tasks.put(id, task, System.currentTimeMillis() + keepBuildResultTimeMillis);
+      add(id, task, System.currentTimeMillis() + cleanBuildResultDelayMillis);
 
       return task;
+   }
+
+   private void add(String id, MavenBuildTask task, long expirationTime)
+   {
+      CacheElement newElement = new CacheElement(id, task, expirationTime);
+      CacheElement prevElement = map.put(id, newElement);
+      if (prevElement != null)
+      {
+         queue.remove(prevElement);
+      }
+
+      queue.add(newElement);
+
+      CacheElement current;
+      while ((current = queue.peek()) != null && current.isExpired())
+      {
+         queue.poll();
+         map.remove(current.id);
+         cleanerQueue.offer(current.task.getProjectDirectory());
+         cleanerQueue.offer(current.task.getLogger().getFile());
+      }
    }
 
    /**
@@ -348,7 +300,8 @@ public class BuildService
     */
    public MavenBuildTask get(String id)
    {
-      return tasks.get(id);
+      CacheElement e = map.get(id);
+      return e != null ? e.task : null;
    }
 
    /**
@@ -359,8 +312,7 @@ public class BuildService
     */
    public MavenBuildTask cancel(String id)
    {
-      //MavenBuildTask task = tasks.remove(id);
-      MavenBuildTask task = tasks.get(id);
+      MavenBuildTask task = get(id);
       if (task != null)
       {
          task.cancel();
@@ -383,6 +335,81 @@ public class BuildService
       {
          pool.shutdownNow();
          Thread.currentThread().interrupt();
+      }
+      finally
+      {
+         cleaner.shutdownNow();
+
+         // Remove all build results.
+         // Not need to keep any artifacts of logs since they are inaccessible after stopping BuildService.
+         for (File f : repository.listFiles(makeBuilderFilesFilter()))
+         {
+            delete(f);
+         }
+      }
+   }
+
+   private class CleanTask implements Runnable
+   {
+      public void run()
+      {
+         //System.err.println("CLEAN " + new Date() + " " + cleanerQueue.size());
+         Set<File> failToDelete = new LinkedHashSet<File>();
+         File f;
+         while ((f = cleanerQueue.poll()) != null)
+         {
+            if (!delete(f))
+            {
+               failToDelete.add(f);
+            }
+         }
+         if (!failToDelete.isEmpty())
+         {
+            cleanerQueue.addAll(failToDelete);
+         }
+      }
+   }
+
+   private static final class CacheElement
+   {
+      private final long expirationTime;
+      private final int hash;
+
+      final String id;
+      final MavenBuildTask task;
+
+      CacheElement(String id, MavenBuildTask task, long expirationTime)
+      {
+         this.id = id;
+         this.task = task;
+         this.expirationTime = expirationTime;
+         this.hash = 7 * 31 + id.hashCode();
+      }
+
+      @Override
+      public boolean equals(Object o)
+      {
+         if (this == o)
+         {
+            return true;
+         }
+         if (o == null || getClass() != o.getClass())
+         {
+            return false;
+         }
+         CacheElement e = (CacheElement)o;
+         return id.equals(e.id);
+      }
+
+      @Override
+      public int hashCode()
+      {
+         return hash;
+      }
+
+      boolean isExpired()
+      {
+         return expirationTime < System.currentTimeMillis();
       }
    }
 }

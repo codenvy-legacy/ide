@@ -19,6 +19,7 @@
 package org.exoplatform.ide.maven;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.security.SecureRandom;
 
 /**
@@ -27,7 +28,20 @@ import java.security.SecureRandom;
  */
 public final class BuildHelper
 {
+   private static final String BUILDER_FILE_PREFIX = "build-";
    private static final SecureRandom gen = new SecureRandom();
+
+   public static FilenameFilter makeBuilderFilesFilter()
+   {
+      return new FilenameFilter()
+      {
+         @Override
+         public boolean accept(File dir, String name)
+         {
+            return name.startsWith(BUILDER_FILE_PREFIX);
+         }
+      };
+   }
 
    /**
     * Create new directory with random name.
@@ -35,13 +49,9 @@ public final class BuildHelper
     * @param parent parent for creation directory
     * @return newly created directory
     */
-   public static File makeProjectDirectory(String parent)
+   public static File makeProjectDirectory(File parent)
    {
-      if (parent == null || parent.isEmpty())
-      {
-         throw new IllegalArgumentException("Parent may not be null or empty string. ");
-      }
-      File dir = new File(parent, "build-" + Long.toString(Math.abs(gen.nextLong())));
+      File dir = new File(parent, BUILDER_FILE_PREFIX + Long.toString(Math.abs(gen.nextLong())));
       if (!dir.mkdirs())
       {
          throw new RuntimeException("Unable create project directory. ");

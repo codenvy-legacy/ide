@@ -37,22 +37,22 @@ public class BuilderBootstrap implements ServletContextListener
       Map<String, Object> config = new HashMap<String, Object>();
       ServletContext ctx = sce.getServletContext();
 
-      String goals = ctx.getInitParameter(BuildService.BUILD_MAVEN_GOALS);
+      String goals = ctx.getInitParameter(BuildService.BUILDER_MAVEN_GOALS);
       if (goals != null)
       {
-         config.put(BuildService.BUILD_MAVEN_GOALS, goals.split(","));
+         config.put(BuildService.BUILDER_MAVEN_GOALS, goals.split(","));
       }
 
-      config.put(BuildService.BUILD_REPOSITORY, ctx.getInitParameter(BuildService.BUILD_REPOSITORY));
+      config.put(BuildService.BUILDER_REPOSITORY, ctx.getInitParameter(BuildService.BUILDER_REPOSITORY));
 
-      config.put(BuildService.BUILD_TIMEOUT, getNumber(ctx.getInitParameter(BuildService.BUILD_TIMEOUT)));
+      config.put(BuildService.BUILDER_TIMEOUT, getNumber(ctx.getInitParameter(BuildService.BUILDER_TIMEOUT)));
 
-      config.put(BuildService.BUILD_WORKERS_NUMBER, getNumber(ctx.getInitParameter(BuildService.BUILD_WORKERS_NUMBER)));
+      config.put(BuildService.BUILDER_WORKERS_NUMBER, getNumber(ctx.getInitParameter(BuildService.BUILDER_WORKERS_NUMBER)));
 
-      config.put(BuildService.BUILD_QUEUE_SIZE, getNumber(ctx.getInitParameter(BuildService.BUILD_QUEUE_SIZE)));
+      config.put(BuildService.BUILDER_QUEUE_SIZE, getNumber(ctx.getInitParameter(BuildService.BUILDER_QUEUE_SIZE)));
 
-      config.put(BuildService.BUILD_RESULT_EXPIRATION_TIME,
-         getNumber(ctx.getInitParameter(BuildService.BUILD_RESULT_EXPIRATION_TIME)));
+      config.put(BuildService.BUILDER_CLEAN_RESULT_DELAY_TIME,
+         getNumber(ctx.getInitParameter(BuildService.BUILDER_CLEAN_RESULT_DELAY_TIME)));
 
       BuildService buildService = new BuildService(config);
       ctx.setAttribute(BuildService.class.getName(), buildService);

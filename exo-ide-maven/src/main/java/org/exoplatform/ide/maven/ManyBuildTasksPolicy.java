@@ -28,7 +28,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ManyBuildTasksPolicy implements RejectedExecutionHandler
+public final class ManyBuildTasksPolicy implements RejectedExecutionHandler
 {
    private final RejectedExecutionHandler delegate;
 
