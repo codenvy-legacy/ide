@@ -18,14 +18,12 @@
  */
 package org.eclipse.jdt.client.core;
 
-import org.eclipse.jdt.client.core.rewrite.ImportRewriteTestGwt;
-import org.eclipse.jdt.client.core.rewrite.SourceModifierTestGwt;
-
-import com.google.gwt.dev.javac.testing.Source;
-
 import com.google.gwt.junit.tools.GWTTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
+
+import org.eclipse.jdt.client.core.rewrite.ImportRewriteTestGwt;
+import org.eclipse.jdt.client.core.rewrite.SourceModifierTestGwt;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -41,7 +39,7 @@ public class GwtTestSuite extends TestCase
       suite.addTestSuite(ASTVisitorTestGwt.class);
       //      suite.addTestSuite(CodeAssistantTestGwt.class);
       suite.addTestSuite(ASTRewriteTestGwt.class);
-//      suite.addTestSuite(SourceModifierTest.class);
+      suite.addTestSuite(SourceModifierTestGwt.class);
       suite.addTestSuite(ImportRewriteTestGwt.class);
 
       return suite;
