@@ -508,7 +508,8 @@ class CompilationUnitResolver extends Compiler
             // convert AST
             CompilationUnit node =
                convert(compilationUnitDeclaration, parser.scanner.getSource(), apiLevel, options,
-                  false/* don't resolve binding */, null/* no binding table needed */, flags /* flags */, monitor, true);
+                  false/* don't resolve binding */, null/* no binding table needed */, flags /* flags */, monitor,
+                  true);
 
             // accept AST
             astRequestor.acceptAST(sourceUnits[i], node);
@@ -707,8 +708,8 @@ class CompilationUnitResolver extends Compiler
          boolean ignoreMethodBodies = (flags & IGNORE_METHOD_BODIES) != 0;
          compilerOptions.ignoreMethodBodies = ignoreMethodBodies;
          resolver =
-            new CompilationUnitResolver(nameEnvironment, getHandlingPolicy(), compilerOptions,
-               getRequestor(), problemFactory, monitor, false);
+            new CompilationUnitResolver(nameEnvironment, getHandlingPolicy(), compilerOptions, getRequestor(),
+               problemFactory, monitor, false);
          boolean analyzeAndGenerateCode = !ignoreMethodBodies;
          unit = resolver.resolve(null, // no existing compilation unit declaration
             sourceUnit, nodeSearcher, true, // method verification
@@ -736,7 +737,8 @@ class CompilationUnitResolver extends Compiler
          // }
          return unit;
       }
-      catch (Exception e) {
+      catch (Exception e)
+      {
          e.printStackTrace();
          return null;
       }

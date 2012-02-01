@@ -38,8 +38,8 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 public class AstView extends ViewImpl implements Display
 {
 
-   
    private ScrollPanel scrollPanel;
+
    /**
     * 
     */
@@ -49,6 +49,7 @@ public class AstView extends ViewImpl implements Display
       scrollPanel = new ScrollPanel(new Label("Parsing File..."));
       add(scrollPanel);
    }
+
    /**
     * @see org.eclipse.jdt.client.AstPesenter.Display#drawAst(org.eclipse.jdt.client.core.dom.CompilationUnit)
     */

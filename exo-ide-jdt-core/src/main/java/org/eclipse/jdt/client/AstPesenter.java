@@ -174,26 +174,26 @@ public class AstPesenter implements EditorActiveFileChangedHandler, ShowAstHandl
             return;
 
          int length = currentFile.getContent().split("\n").length;
-         for(int i =1; i<= length; i++)
+         for (int i = 1; i <= length; i++)
          {
             editor.clearErrorMark(i);
          }
-//         StringBuilder b = new StringBuilder();
-//         b.append("<pre>");
+         //         StringBuilder b = new StringBuilder();
+         //         b.append("<pre>");
          for (IProblem p : unit.getProblems())
          {
             int sourceLineNumber = p.getSourceLineNumber();
-            if(sourceLineNumber == 0)
+            if (sourceLineNumber == 0)
                sourceLineNumber = 1;
             editor.setErrorMark(sourceLineNumber, p.getMessage());
-//            if (p.getID() == IProblem.UndefinedType)
-//            {
-//               newProblems.add(p);
-//            }
-//            b.append("problem - ").append(p.getID()).append(" line: ").append(p.getSourceLineNumber())
-//               .append(p.getMessage().replaceAll("<", "&lt;")).append("<br>");
+            //            if (p.getID() == IProblem.UndefinedType)
+            //            {
+            //               newProblems.add(p);
+            //            }
+            //            b.append("problem - ").append(p.getID()).append(" line: ").append(p.getSourceLineNumber())
+            //               .append(p.getMessage().replaceAll("<", "&lt;")).append("<br>");
          }
-//         b.append("</pre>");
+         //         b.append("</pre>");
 
          // if (!problems.isEmpty())
          // {
@@ -235,7 +235,7 @@ public class AstPesenter implements EditorActiveFileChangedHandler, ShowAstHandl
          // });
          // }
          // else
-//         eventBus.fireEvent(new OutputEvent(b.toString(), Type.ERROR));
+         //         eventBus.fireEvent(new OutputEvent(b.toString(), Type.ERROR));
       }
    };
 

@@ -112,7 +112,7 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
    private boolean isTextBoxHasFocus = true;
 
    public CodeAssitantForm(int left, int top, String prefix, List<CompletionProposal> items,
-      ProposalSelectedHandler handler)
+      ProposalWidgetFactory widgetFactory, ProposalSelectedHandler handler)
    {
       this.handler = handler;
 
@@ -202,7 +202,7 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
       allWidgets = new ArrayList<ProposalWidget>();
       for (CompletionProposal t : items)
       {
-         ProposalWidget w = new SimpleProposalWidget(t);
+         ProposalWidget w = widgetFactory.biuld(t);
          w.addClickHandler(mousHandler);
          w.addDoubleClickHandler(mousHandler);
          allWidgets.add(w);
@@ -306,8 +306,8 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
    }
 
    private native void scroll(Element scroll, int pos)/*-{
-       scroll.scrollTop = scroll.scrollTop + pos;
-   }-*/;
+                                                      scroll.scrollTop = scroll.scrollTop + pos;
+                                                      }-*/;
 
    private void selectWidget(int i)
    {

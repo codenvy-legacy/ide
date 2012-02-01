@@ -18,10 +18,10 @@
  */
 package org.eclipse.jdt.client.codeassistant.ui;
 
-import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.resources.client.ImageResource;
+
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Image;
-
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -37,16 +37,12 @@ import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 public class SimpleProposalWidget extends ProposalWidget
 {
 
-   private Grid grid;
    /**
     * @param proposal
     */
    public SimpleProposalWidget(CompletionProposal proposal)
    {
       super(proposal);
-      grid = new Grid(1, 2);
-      grid.setStyleName(JavaClientBundle.INSTANCE.css().item());
-      grid.setWidth("100%");
 
       Image i = new Image(JavaClientBundle.INSTANCE.blankImage());
       i.setHeight("16px");
@@ -58,8 +54,6 @@ public class SimpleProposalWidget extends ProposalWidget
       grid.getCellFormatter().setWidth(0, 0, "16px");
       grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
       grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
-
-      initWidget(grid);
    }
 
    /**
@@ -69,7 +63,7 @@ public class SimpleProposalWidget extends ProposalWidget
    private String getProposalName()
    {
       String name;
-      if(proposal.getName() == null)
+      if (proposal.getName() == null)
          name = String.valueOf(((InternalCompletionProposal)proposal).getTypeName());
       else
          name = String.valueOf(proposal.getName());
@@ -111,6 +105,36 @@ public class SimpleProposalWidget extends ProposalWidget
    public void setDefaultStyle()
    {
       setStyleName(JavaClientBundle.INSTANCE.css().item());
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getImage(int)
+    */
+   @Override
+   protected ImageResource getImage(int flags)
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getTypeSignature()
+    */
+   @Override
+   protected String getTypeSignature()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getClassSignature()
+    */
+   @Override
+   protected String getClassSignature()
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 
 }

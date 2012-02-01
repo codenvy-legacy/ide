@@ -29,7 +29,6 @@ import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
-
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
 import com.google.gwt.user.client.ui.Button;
@@ -73,6 +72,7 @@ public class JdtTest
 {
 
    private DockLayoutPanel rootPanel;
+
    private Data d;
 
    public interface Data extends ClientBundle
@@ -80,11 +80,11 @@ public class JdtTest
 
       @Source("org/eclipse/jdt/client/TypeDeclaration.txt")
       TextResource content();
-      
+
       @Source("org/eclipse/jdt/client/TestClass.txt")
       TextResource testClass();
    }
-   
+
    public static class CARequestor extends CompletionRequestor
    {
 
@@ -98,7 +98,7 @@ public class JdtTest
       {
          proposals.add(proposal);
       }
-      
+
       /**
        * @see org.eclipse.jdt.client.core.CompletionRequestor#completionFailure(org.eclipse.jdt.client.core.compiler.IProblem)
        */
@@ -113,32 +113,32 @@ public class JdtTest
    /**
     * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
     */
-//   @Override
+   //   @Override
    public void onModuleLoad()
    {
-//      rootPanel = new DockLayoutPanel(Unit.PX);
-//      RootLayoutPanel.get().add(rootPanel);
-//      d = GWT.create(Data.class);
-//      rootPanel.addNorth(new Button(new SafeHtmlBuilder().appendEscaped("Create AST").toSafeHtml(), new ClickHandler()
-//      {
-//
-//         @Override
-//         public void onClick(ClickEvent event)
-//         {
-//            buildAst();
-//         }
-//      }), 30);
-//      
-//      rootPanel.addNorth(new Button("CodeAssistant", new ClickHandler()
-//      {
-//         
-//         @Override
-//         public void onClick(ClickEvent event)
-//         {
-//            codeAssistant();
-//         }
-//      }), 30);
-//      
+      //      rootPanel = new DockLayoutPanel(Unit.PX);
+      //      RootLayoutPanel.get().add(rootPanel);
+      //      d = GWT.create(Data.class);
+      //      rootPanel.addNorth(new Button(new SafeHtmlBuilder().appendEscaped("Create AST").toSafeHtml(), new ClickHandler()
+      //      {
+      //
+      //         @Override
+      //         public void onClick(ClickEvent event)
+      //         {
+      //            buildAst();
+      //         }
+      //      }), 30);
+      //      
+      //      rootPanel.addNorth(new Button("CodeAssistant", new ClickHandler()
+      //      {
+      //         
+      //         @Override
+      //         public void onClick(ClickEvent event)
+      //         {
+      //            codeAssistant();
+      //         }
+      //      }), 30);
+      //      
    }
 
    /**
@@ -152,15 +152,15 @@ public class JdtTest
       e.complete(new org.eclipse.jdt.client.compiler.batch.CompilationUnit(content, "TestClass", "UTF-8"),
          getCompletionPosition(content, 33, 39), 0);
       FlexTable table = new FlexTable();
-      
+
       rootPanel.add(table);
       int i = 0;
-      for(CompletionProposal p : requestor.proposals)
+      for (CompletionProposal p : requestor.proposals)
       {
          table.setWidget(++i, 0, new Label(getStringForProposal(p)));
       }
    }
-   
+
    /**
     * @param p
     * @return
@@ -172,8 +172,7 @@ public class JdtTest
       str.append(p.getFlags()).append(" ");
       str.append(p.getName()).append('(').append("par").append(')');
       str.append(" : ").append(ip.getTypeName()).append(" - ").append(ip.getDeclarationTypeName());
-      
-      
+
       return str.toString();
    }
 
@@ -183,7 +182,7 @@ public class JdtTest
       String[] strings = s.split("\n");
       if (strings.length < row)
          return 0;
-      
+
       int pos = 0;
 
       for (int i = 0; i < row - 1; i++)

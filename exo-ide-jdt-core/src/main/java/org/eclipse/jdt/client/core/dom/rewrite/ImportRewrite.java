@@ -14,17 +14,25 @@ package org.eclipse.jdt.client.core.dom.rewrite;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.dom.AST;
+import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.IBinding;
 import org.eclipse.jdt.client.core.dom.IMethodBinding;
 import org.eclipse.jdt.client.core.dom.ITypeBinding;
 import org.eclipse.jdt.client.core.dom.IVariableBinding;
+import org.eclipse.jdt.client.core.dom.ImportDeclaration;
 import org.eclipse.jdt.client.core.dom.Modifier;
 import org.eclipse.jdt.client.core.dom.ParameterizedType;
 import org.eclipse.jdt.client.core.dom.PrimitiveType;
 import org.eclipse.jdt.client.core.dom.Type;
 import org.eclipse.jdt.client.core.dom.WildcardType;
+import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
+import org.eclipse.jdt.client.runtime.NullProgressMonitor;
+import org.eclipse.jdt.client.text.BadLocationException;
+import org.eclipse.jdt.client.text.IDocument;
+import org.eclipse.jdt.client.text.edits.MultiTextEdit;
+import org.eclipse.jdt.client.text.edits.TextEdit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -153,6 +161,8 @@ public final class ImportRewrite
 
    private boolean useContextToFilterImplicitImports;
 
+   private IDocument document;
+
    // /**
    // * Creates a {@link ImportRewrite} from a {@link ICompilationUnit}. If <code>restoreExistingImports</code>
    // * is <code>true</code>, all existing imports are kept, and new imports will be inserted at best matching locations. If
@@ -184,49 +194,54 @@ public final class ImportRewrite
    // return new ImportRewrite(cu, null, existingImport);
    // }
 
-   // /**
-   // * Creates a {@link ImportRewrite} from a an AST ({@link CompilationUnit}). The AST has to be created from a
-   // * {@link ICompilationUnit}, that means {@link ASTParser#setSource(ICompilationUnit)} has been used when creating the
-   // * AST. If <code>restoreExistingImports</code> is <code>true</code>, all existing imports are kept, and new imports
-   // * will be inserted at best matching locations. If <code>restoreExistingImports</code> is <code>false</code>, the
-   // * existing imports will be removed and only the newly added imports will be created.
-   // * <p>
-   // * Note that this method is more efficient than using {@link #create(ICompilationUnit, boolean)} if an AST is already
-   // available.
-   // * </p>
-   // * @param astRoot the AST root node to create the imports for
-   // * @param restoreExistingImports specifies if the existing imports should be kept or removed.
-   // * @return the created import rewriter.
-   // * @throws IllegalArgumentException thrown when the passed AST is null or was not created from a compilation unit.
-   // */
-   // public static ImportRewrite create(CompilationUnit astRoot, boolean restoreExistingImports) {
-   // if (astRoot == null) {
-   //			throw new IllegalArgumentException("AST must not be null"); //$NON-NLS-1$
-   // }
-   // ITypeRoot typeRoot = astRoot.getTypeRoot();
-   // if (!(typeRoot instanceof ICompilationUnit)) {
-   //			throw new IllegalArgumentException("AST must have been constructed from a Java element"); //$NON-NLS-1$
-   // }
-   // List existingImport= null;
-   // if (restoreExistingImports) {
-   // existingImport= new ArrayList();
-   // List imports= astRoot.imports();
-   // for (int i= 0; i < imports.size(); i++) {
-   // ImportDeclaration curr= (ImportDeclaration) imports.get(i);
-   // StringBuffer buf= new StringBuffer();
-   // buf.append(curr.isStatic() ? STATIC_PREFIX : NORMAL_PREFIX).append(curr.getName().getFullyQualifiedName());
-   // if (curr.isOnDemand()) {
-   // if (buf.length() > 1)
-   // buf.append('.');
-   // buf.append('*');
-   // }
-   // existingImport.add(buf.toString());
-   // }
-   // }
-   // return new ImportRewrite((ICompilationUnit) typeRoot, astRoot, existingImport);
-   // }
+   /**
+   * Creates a {@link ImportRewrite} from a an AST ({@link CompilationUnit}). The AST has to be created from a
+   * {@link ICompilationUnit}, that means {@link ASTParser#setSource(ICompilationUnit)} has been used when creating the
+   * AST. If <code>restoreExistingImports</code> is <code>true</code>, all existing imports are kept, and new imports
+   * will be inserted at best matching locations. If <code>restoreExistingImports</code> is <code>false</code>, the
+   * existing imports will be removed and only the newly added imports will be created.
+   * <p>
+   * Note that this method is more efficient than using {@link #create(ICompilationUnit, boolean)} if an AST is already
+   available.
+   * </p>
+   * @param astRoot the AST root node to create the imports for
+   * @param restoreExistingImports specifies if the existing imports should be kept or removed.
+   * @return the created import rewriter.
+   * @throws IllegalArgumentException thrown when the passed AST is null or was not created from a compilation unit.
+   */
+   public static ImportRewrite create(IDocument document, CompilationUnit astRoot, boolean restoreExistingImports)
+   {
+      if (astRoot == null)
+      {
+         throw new IllegalArgumentException("AST must not be null"); //$NON-NLS-1$
+      }
+      //    ITypeRoot typeRoot = astRoot.getTypeRoot();
+      //    if (!(typeRoot instanceof ICompilationUnit)) {
+      //   			throw new IllegalArgumentException("AST must have been constructed from a Java element"); //$NON-NLS-1$
+      //    }
+      List existingImport = null;
+      if (restoreExistingImports)
+      {
+         existingImport = new ArrayList();
+         List imports = astRoot.imports();
+         for (int i = 0; i < imports.size(); i++)
+         {
+            ImportDeclaration curr = (ImportDeclaration)imports.get(i);
+            StringBuffer buf = new StringBuffer();
+            buf.append(curr.isStatic() ? STATIC_PREFIX : NORMAL_PREFIX).append(curr.getName().getFullyQualifiedName());
+            if (curr.isOnDemand())
+            {
+               if (buf.length() > 1)
+                  buf.append('.');
+               buf.append('*');
+            }
+            existingImport.add(buf.toString());
+         }
+      }
+      return new ImportRewrite(document, astRoot, existingImport);
+   }
 
-   private ImportRewrite(CompilationUnit astRoot, List existingImports)
+   private ImportRewrite(IDocument document, CompilationUnit astRoot, List existingImports)
    {
       this.astRoot = astRoot; // might be null
       if (existingImports != null)
@@ -239,6 +254,7 @@ public final class ImportRewrite
          this.existingImports = new ArrayList();
          this.restoreExistingImports = false;
       }
+      this.document = document;
       // this.filterImplicitImports= true;
       // // consider that no contexts are used
       // this.useContextToFilterImplicitImports = false;
@@ -393,36 +409,41 @@ public final class ImportRewrite
    // */
    /* package */final int findInImports(String qualifier, String name, int kind)
    {
+      boolean allowAmbiguity =
+         (kind == ImportRewriteContext.KIND_STATIC_METHOD) || (name.length() == 1 && name.charAt(0) == '*');
+      List imports = this.existingImports;
+      char prefix = (kind == ImportRewriteContext.KIND_TYPE) ? NORMAL_PREFIX : STATIC_PREFIX;
+
+      for (int i = imports.size() - 1; i >= 0; i--)
+      {
+         String curr = (String)imports.get(i);
+         int res = compareImport(prefix, qualifier, name, curr);
+         if (res != ImportRewriteContext.RES_NAME_UNKNOWN)
+         {
+            if (!allowAmbiguity || res == ImportRewriteContext.RES_NAME_FOUND)
+            {
+               if (prefix != STATIC_PREFIX)
+               {
+                  return res;
+               }
+               Object currKind = this.importsKindMap.get(curr.substring(1));
+               if (currKind != null && currKind.equals(this.importsKindMap.get(qualifier + '.' + name)))
+               {
+                  return res;
+               }
+            }
+         }
+      }
       // TODO
-      // boolean allowAmbiguity= (kind == ImportRewriteContext.KIND_STATIC_METHOD) || (name.length() == 1 && name.charAt(0) ==
-      // '*');
-      // List imports= this.existingImports;
-      // char prefix= (kind == ImportRewriteContext.KIND_TYPE) ? NORMAL_PREFIX : STATIC_PREFIX;
-      //
-      // for (int i= imports.size() - 1; i >= 0 ; i--) {
-      // String curr= (String) imports.get(i);
-      // int res= compareImport(prefix, qualifier, name, curr);
-      // if (res != ImportRewriteContext.RES_NAME_UNKNOWN) {
-      // if (!allowAmbiguity || res == ImportRewriteContext.RES_NAME_FOUND) {
-      // if (prefix != STATIC_PREFIX) {
-      // return res;
-      // }
-      // Object currKind = this.importsKindMap.get(curr.substring(1));
-      // if (currKind != null && currKind.equals(this.importsKindMap.get(qualifier + '.' + name))) {
-      // return res;
-      // }
-      // }
-      // }
-      // }
-      // if (this.filterImplicitImports && this.useContextToFilterImplicitImports) {
-      // String fPackageName= this.compilationUnit.getParent().getElementName();
-      // String mainTypeSimpleName= JavaCore.removeJavaLikeExtension(this.compilationUnit.getElementName());
-      // String fMainTypeName= Util.concatenateName(fPackageName, mainTypeSimpleName, '.');
-      // if (kind == ImportRewriteContext.KIND_TYPE
-      // && (qualifier.equals(fPackageName)
-      // || fMainTypeName.equals(Util.concatenateName(qualifier, name, '.'))))
-      // return ImportRewriteContext.RES_NAME_FOUND;
-      // }
+//      if (this.filterImplicitImports && this.useContextToFilterImplicitImports)
+//      {
+//         String fPackageName = this.compilationUnit.getParent().getElementName();
+//         String mainTypeSimpleName = JavaCore.removeJavaLikeExtension(this.compilationUnit.getElementName());
+//         String fMainTypeName = Util.concatenateName(fPackageName, mainTypeSimpleName, '.');
+//         if (kind == ImportRewriteContext.KIND_TYPE
+//            && (qualifier.equals(fPackageName) || fMainTypeName.equals(Util.concatenateName(qualifier, name, '.'))))
+//            return ImportRewriteContext.RES_NAME_FOUND;
+//      }
       return ImportRewriteContext.RES_NAME_UNKNOWN;
    }
 
@@ -1131,75 +1152,88 @@ public final class ImportRewrite
       return normalizedBinding.getTypeDeclaration().getQualifiedName();
    }
 
-   // TODO
-   // /**
-   // * Converts all modifications recorded by this rewriter into an object representing the corresponding text
-   // * edits to the source code of the rewrite's compilation unit. The compilation unit itself is not modified.
-   // * <p>
-   // * Calling this methods does not discard the modifications on record. Subsequence modifications are added
-   // * to the ones already on record. If this method is called again later, the resulting text edit object will accurately
-   // * reflect the net cumulative effect of all those changes.
-   // * </p>
-   // * @param monitor the progress monitor or <code>null</code>
-   // * @return text edit object describing the changes to the document corresponding to the changes
-   // * recorded by this rewriter
-   // * @throws CoreException the exception is thrown if the rewrite fails.
-   // */
-   // public final TextEdit rewriteImports(IProgressMonitor monitor) throws CoreException {
-   // if (monitor == null) {
-   // monitor= new NullProgressMonitor();
-   // }
-   //
-   // try {
-   // monitor.beginTask(Messages.bind(Messages.importRewrite_processDescription), 2);
-   // if (!hasRecordedChanges()) {
-   // this.createdImports= CharOperation.NO_STRINGS;
-   // this.createdStaticImports= CharOperation.NO_STRINGS;
-   // return new MultiTextEdit();
-   // }
-   //
-   // CompilationUnit usedAstRoot= this.astRoot;
-   // if (usedAstRoot == null) {
-   // ASTParser parser= ASTParser.newParser(AST.JLS4);
-   // parser.setSource(this.compilationUnit);
-   // parser.setFocalPosition(0); // reduced AST
-   // parser.setResolveBindings(false);
-   // usedAstRoot= (CompilationUnit) parser.createAST(new SubProgressMonitor(monitor, 1));
-   // }
-   //
-   // ImportRewriteAnalyzer computer=
-   // new ImportRewriteAnalyzer(
-   // this.compilationUnit,
-   // usedAstRoot,
-   // this.importOrder,
-   // this.importOnDemandThreshold,
-   // this.staticImportOnDemandThreshold,
-   // this.restoreExistingImports,
-   // this.useContextToFilterImplicitImports);
-   // computer.setFilterImplicitImports(this.filterImplicitImports);
-   //
-   // if (this.addedImports != null) {
-   // for (int i= 0; i < this.addedImports.size(); i++) {
-   // String curr= (String) this.addedImports.get(i);
-   // computer.addImport(curr.substring(1), STATIC_PREFIX == curr.charAt(0));
-   // }
-   // }
-   //
-   // if (this.removedImports != null) {
-   // for (int i= 0; i < this.removedImports.size(); i++) {
-   // String curr= (String) this.removedImports.get(i);
-   // computer.removeImport(curr.substring(1), STATIC_PREFIX == curr.charAt(0));
-   // }
-   // }
-   //
-   // TextEdit result= computer.getResultingEdits(new SubProgressMonitor(monitor, 1));
-   // this.createdImports= computer.getCreatedImports();
-   // this.createdStaticImports= computer.getCreatedStaticImports();
-   // return result;
-   // } finally {
-   // monitor.done();
-   // }
-   // }
+   /**
+   * Converts all modifications recorded by this rewriter into an object representing the corresponding text
+   * edits to the source code of the rewrite's compilation unit. The compilation unit itself is not modified.
+   * <p>
+   * Calling this methods does not discard the modifications on record. Subsequence modifications are added
+   * to the ones already on record. If this method is called again later, the resulting text edit object will accurately
+   * reflect the net cumulative effect of all those changes.
+   * </p>
+   * @param monitor the progress monitor or <code>null</code>
+   * @return text edit object describing the changes to the document corresponding to the changes
+   * recorded by this rewriter
+   * @throws CoreException the exception is thrown if the rewrite fails.
+   */
+   public final TextEdit rewriteImports(IProgressMonitor monitor) throws CoreException
+   {
+      if (monitor == null)
+      {
+         monitor = new NullProgressMonitor();
+      }
+
+      try
+      {
+         monitor.beginTask("Updating imports", 2);
+         if (!hasRecordedChanges())
+         {
+            this.createdImports = CharOperation.NO_STRINGS;
+            this.createdStaticImports = CharOperation.NO_STRINGS;
+            return new MultiTextEdit();
+         }
+
+         CompilationUnit usedAstRoot = this.astRoot;
+         if (usedAstRoot == null)
+         {
+            ASTParser parser = ASTParser.newParser(AST.JLS4);
+            parser.setSource(document.get().toCharArray());
+            parser.setFocalPosition(0); // reduced AST
+            parser.setResolveBindings(false);
+            usedAstRoot = (CompilationUnit)parser.createAST(null);
+         }
+
+         ImportRewriteAnalyzer computer =
+            new ImportRewriteAnalyzer(document, usedAstRoot, this.importOrder, this.importOnDemandThreshold,
+               this.staticImportOnDemandThreshold, this.restoreExistingImports, this.useContextToFilterImplicitImports);
+         computer.setFilterImplicitImports(this.filterImplicitImports);
+
+         if (this.addedImports != null)
+         {
+            for (int i = 0; i < this.addedImports.size(); i++)
+            {
+               String curr = (String)this.addedImports.get(i);
+               computer.addImport(curr.substring(1), STATIC_PREFIX == curr.charAt(0));
+            }
+         }
+
+         if (this.removedImports != null)
+         {
+            for (int i = 0; i < this.removedImports.size(); i++)
+            {
+               String curr = (String)this.removedImports.get(i);
+               computer.removeImport(curr.substring(1), STATIC_PREFIX == curr.charAt(0));
+            }
+         }
+
+         TextEdit result = null;
+         try
+         {
+            result = computer.getResultingEdits(new NullProgressMonitor());
+         }
+         catch (BadLocationException e)
+         {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+         }
+         this.createdImports = computer.getCreatedImports();
+         this.createdStaticImports = computer.getCreatedStaticImports();
+         return result;
+      }
+      finally
+      {
+         monitor.done();
+      }
+   }
 
    /**
     * Returns all new non-static imports created by the last invocation of {@link #rewriteImports(IProgressMonitor)} or
@@ -1298,6 +1332,11 @@ public final class ImportRewrite
          }
       }
       return (String[])res.toArray(new String[res.size()]);
+   }
+
+   public IDocument getDocument()
+   {
+      return document;
    }
 
 }

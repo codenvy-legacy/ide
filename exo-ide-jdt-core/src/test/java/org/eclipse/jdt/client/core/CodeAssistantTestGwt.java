@@ -38,7 +38,7 @@ public class CodeAssistantTestGwt extends ParserBaseTestGwt
    {
       CARequestor requestor = new CARequestor();
       CompletionEngine e = new CompletionEngine(new DummyNameEnvirement(null), requestor, JavaCore.getOptions(), null);
-      
+
       e.complete(new CompilationUnit(javaFiles, "CreateJavaClassPresenter", "UTF-8"),
          getCompletionPosition(javaFiles, 452, 19), 0);
       assertEquals(2, requestor.proposals.size());
@@ -70,6 +70,7 @@ public class CodeAssistantTestGwt extends ParserBaseTestGwt
       {
          proposals.add(proposal);
       }
+
       /**
        * @see org.eclipse.jdt.client.core.CompletionRequestor#completionFailure(org.eclipse.jdt.client.core.compiler.IProblem)
        */

@@ -164,7 +164,7 @@ public class ASTParser
     * Bits used to set the different values from CompilationUnitResolver values.
     */
    private int bits;
-   
+
    private INameEnvironment nameEnvironment;
 
    /**
@@ -328,7 +328,6 @@ public class ASTParser
          this.bits |= CompilationUnitResolver.INCLUDE_RUNNING_VM_BOOTCLASSPATH;
       }
    }
-   
 
    /**
     * @param nameEnvironment the nameEnvironment to set

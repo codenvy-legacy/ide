@@ -34,7 +34,7 @@ public class BinaryFieldImpl implements IBinaryField
 {
 
    private JSONObject field;
-   
+
    /**
     * @param field
     */
@@ -42,7 +42,7 @@ public class BinaryFieldImpl implements IBinaryField
    {
       this.field = field;
    }
-   
+
    /**
     * @see org.eclipse.jdt.client.internal.compiler.env.IGenericField#getModifiers()
     */
@@ -104,7 +104,8 @@ public class BinaryFieldImpl implements IBinaryField
    @Override
    public char[] getTypeName()
    {
-      return Signature.createTypeSignature(field.get("type").isString().stringValue(), true).replaceAll("\\.", "/").toCharArray();
+      return Signature.createTypeSignature(field.get("type").isString().stringValue(), true).replaceAll("\\.", "/")
+         .toCharArray();
    }
 
 }

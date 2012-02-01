@@ -113,7 +113,7 @@ public final class JavaCore
    /**
     * The plug-in identifier of the Java core support (value <code>"org.eclipse.jdt.core"</code>).
     */
-   private static final String PLUGIN_ID = "org.eclipse.jdt.core"; //$NON-NLS-1$
+   public static final String PLUGIN_ID = "org.eclipse.jdt.core"; //$NON-NLS-1$
 
    // Begin configurable option IDs {
 
@@ -423,12 +423,44 @@ public final class JavaCore
     */
    public static final String IGNORE = "ignore"; //$NON-NLS-1$
 
-   private static Map<String, String> options = new HashMap<String, String>();
+   /**
+    * Configurable option value: {@value}.
+    * @since 2.0
+    * @category OptionValue
+    */
+   public static final String INSERT = "insert"; //$NON-NLS-1$
+
+   /**
+    * Configurable option value: {@value}.
+    * @since 2.0
+    * @category OptionValue
+    */
+   public static final String DO_NOT_INSERT = "do not insert"; //$NON-NLS-1$
+
+   /**
+    * Configurable option value: {@value}.
+    * @since 2.0
+    * @category OptionValue
+    */
+   public static final String TAB = "tab"; //$NON-NLS-1$
+
+   /**
+    * Configurable option value: {@value}.
+    * @since 2.0
+    * @category OptionValue
+    */
+   public static final String SPACE = "space"; //$NON-NLS-1$
+
+   private static HashMap<String, String> options = new HashMap<String, String>();
 
    static
    {
       options.put(COMPILER_COMPLIANCE, VERSION_1_6);
       options.put(CORE_ENCODING, "UTF-8");
+      options.put(JavaCore.CORE_ENCODING, JavaCore.getEncoding());
+//      options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
+      options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
+      options.put(CompilerOptions.OPTION_TargetPlatform, JavaCore.VERSION_1_6);
    }
 
    /**
@@ -1439,13 +1471,14 @@ public final class JavaCore
     */
    public static HashMap<String, String> getOptions()
    {
-      HashMap<String, String> options = new HashMap<String, String>(10);
       // get encoding through resource plugin
-      options.put(JavaCore.CORE_ENCODING, JavaCore.getEncoding());
-      options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
-      options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
-      options.put(CompilerOptions.OPTION_TargetPlatform, JavaCore.VERSION_1_6);
+    
       return options;
+   }
+
+   public static String getOption(String key)
+   {
+      return getOptions().get(key);
    }
 
    // /**

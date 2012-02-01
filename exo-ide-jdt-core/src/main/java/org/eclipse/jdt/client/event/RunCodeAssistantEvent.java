@@ -29,8 +29,7 @@ public class RunCodeAssistantEvent extends GwtEvent<RunCodeAssistantHandler>
 {
 
    public static GwtEvent.Type<RunCodeAssistantHandler> TYPE = new Type<RunCodeAssistantHandler>();
-   
-   
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

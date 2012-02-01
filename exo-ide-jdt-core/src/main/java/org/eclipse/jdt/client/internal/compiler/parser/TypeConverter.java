@@ -348,8 +348,8 @@ public abstract class TypeConverter
       }
       else
       { // parameterized
-         // rebuild type reference from available fragments: char[][], arguments, char[][], arguments...
-         // check trailing qualified name
+        // rebuild type reference from available fragments: char[][], arguments, char[][], arguments...
+        // check trailing qualified name
          if (nameStarted)
          {
             addIdentifiers(typeSignature, nameFragmentStart, nameFragmentEnd + 1, identCount, fragments);
@@ -573,8 +573,8 @@ public abstract class TypeConverter
       }
       else
       { // parameterized
-         // rebuild type reference from available fragments: char[][], arguments, char[][], arguments...
-         // check trailing qualified name
+        // rebuild type reference from available fragments: char[][], arguments, char[][], arguments...
+        // check trailing qualified name
          if (nameFragmentStart > 0 && nameFragmentStart < length)
          {
             char[][] identifiers = CharOperation.splitOn('.', typeName, nameFragmentStart, nameFragmentEnd + 1);

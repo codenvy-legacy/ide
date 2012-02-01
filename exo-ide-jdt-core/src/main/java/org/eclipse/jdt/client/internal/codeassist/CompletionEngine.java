@@ -10,10 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.codeassist;
 
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Map;
-
 import org.eclipse.jdt.client.DummyNameEnvirement;
 import org.eclipse.jdt.client.core.CompletionContext;
 import org.eclipse.jdt.client.core.CompletionFlags;
@@ -26,36 +22,161 @@ import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.core.search.IJavaSearchConstants;
-
-import org.eclipse.jdt.client.internal.codeassist.complete.*;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionNodeDetector;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionNodeFound;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnAnnotationOfType;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnArgumentName;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnBranchStatementLabel;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnClassLiteralAccess;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnExplicitConstructorCall;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnFieldName;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnFieldType;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnImportReference;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnJavadoc;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnJavadocAllocationExpression;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnJavadocFieldReference;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnJavadocMessageSend;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnJavadocParamNameReference;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnJavadocQualifiedTypeReference;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnJavadocSingleTypeReference;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnJavadocTag;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnJavadocTypeParamReference;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnKeyword;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnLocalName;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnMarkerAnnotationName;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnMemberAccess;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnMemberValueName;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnMessageSend;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnMessageSendName;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnMethodName;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnMethodReturnType;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnPackageReference;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnParameterizedQualifiedTypeReference;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnQualifiedAllocationExpression;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnQualifiedNameReference;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnQualifiedTypeReference;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnSingleNameReference;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnSingleTypeReference;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnStringLiteral;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionParser;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionScanner;
+import org.eclipse.jdt.client.internal.codeassist.complete.InvalidCursorLocation;
 import org.eclipse.jdt.client.internal.codeassist.impl.AssistParser;
 import org.eclipse.jdt.client.internal.codeassist.impl.Engine;
 import org.eclipse.jdt.client.internal.codeassist.impl.Keywords;
 import org.eclipse.jdt.client.internal.compiler.CompilationResult;
 import org.eclipse.jdt.client.internal.compiler.DefaultErrorHandlingPolicies;
 import org.eclipse.jdt.client.internal.compiler.ExtraFlags;
-import org.eclipse.jdt.client.internal.compiler.ast.*;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.AllocationExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.Annotation;
+import org.eclipse.jdt.client.internal.compiler.ast.Argument;
+import org.eclipse.jdt.client.internal.compiler.ast.ArrayInitializer;
+import org.eclipse.jdt.client.internal.compiler.ast.ArrayReference;
+import org.eclipse.jdt.client.internal.compiler.ast.AssertStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.Assignment;
+import org.eclipse.jdt.client.internal.compiler.ast.BinaryExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.CaseStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.CastExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.ConditionalExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.ConstructorDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.Expression;
+import org.eclipse.jdt.client.internal.compiler.ast.FieldDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.FieldReference;
+import org.eclipse.jdt.client.internal.compiler.ast.ForStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.IfStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.ImportReference;
+import org.eclipse.jdt.client.internal.compiler.ast.Initializer;
+import org.eclipse.jdt.client.internal.compiler.ast.InstanceOfExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.Javadoc;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocImplicitTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocQualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocSingleTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.LocalDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.MemberValuePair;
+import org.eclipse.jdt.client.internal.compiler.ast.MessageSend;
+import org.eclipse.jdt.client.internal.compiler.ast.MethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.NameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.NormalAnnotation;
+import org.eclipse.jdt.client.internal.compiler.ast.OperatorExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.OperatorIds;
+import org.eclipse.jdt.client.internal.compiler.ast.ParameterizedQualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.ParameterizedSingleTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.QualifiedNameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.QualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.ReturnStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.SingleNameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.SingleTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.SuperReference;
+import org.eclipse.jdt.client.internal.compiler.ast.SwitchStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.ThisReference;
+import org.eclipse.jdt.client.internal.compiler.ast.TryStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeParameter;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.UnaryExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.UnionTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.WhileStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.client.internal.compiler.env.*;
+import org.eclipse.jdt.client.internal.compiler.env.AccessRestriction;
+import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
+import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
+import org.eclipse.jdt.client.internal.compiler.env.ISourceType;
+import org.eclipse.jdt.client.internal.compiler.env.NameEnvironmentAnswer;
 import org.eclipse.jdt.client.internal.compiler.impl.ReferenceContext;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
-import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
-import org.eclipse.jdt.client.internal.compiler.parser.SourceTypeConverter;
+import org.eclipse.jdt.client.internal.compiler.lookup.ArrayBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.BaseTypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.CompilationUnitScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
+import org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ImportBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite;
+import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.LookupEnvironment;
+import org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.PackageBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ParameterizedMethodBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ParameterizedTypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ProblemMethodBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ProblemReasons;
+import org.eclipse.jdt.client.internal.compiler.lookup.ProblemReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
+import org.eclipse.jdt.client.internal.compiler.lookup.SourceTypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeConstants;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeVariableBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.WildcardBinding;
 import org.eclipse.jdt.client.internal.compiler.parser.JavadocTagConstants;
+import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilation;
 import org.eclipse.jdt.client.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemSeverities;
-import org.eclipse.jdt.client.internal.compiler.util.SuffixConstants;
 import org.eclipse.jdt.client.internal.compiler.util.HashtableOfObject;
 import org.eclipse.jdt.client.internal.compiler.util.ObjectVector;
+import org.eclipse.jdt.client.internal.compiler.util.SuffixConstants;
 import org.eclipse.jdt.client.internal.core.BasicCompilationUnit;
 import org.eclipse.jdt.client.internal.core.INamingRequestor;
 import org.eclipse.jdt.client.internal.core.InternalNamingConventions;
 import org.eclipse.jdt.client.internal.core.util.Messages;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.runtime.OperationCanceledException;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * This class is the entry point for source completions. It contains two public APIs used to call CodeAssist on a given source
@@ -3609,8 +3730,8 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             }
             else
             { // https://bugs.eclipse.org/bugs/show_bug.cgi?id=310747
-               // If the variable is of type X[], and we're in the initializer
-               // we should have X as the expected type for the variable initializers.
+              // If the variable is of type X[], and we're in the initializer
+              // we should have X as the expected type for the variable initializers.
                binding = binding.leafComponentType();
                addExpectedType(binding, scope);
             }
@@ -4801,7 +4922,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
    {
       InternalCompletionProposal proposal =
          (InternalCompletionProposal)CompletionProposal.create(kind, completionOffset - this.offset);
-      // proposal.nameLookup = this.nameEnvironment.nameLookup;
+      proposal.nameLookup = this.nameEnvironment;
       proposal.completionEngine = this;
       return proposal;
    }
@@ -4818,7 +4939,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          char[] fullyQualifiedName = CharOperation.concat(packageName, typeName, '.');
 
          proposal = createProposal(CompletionProposal.TYPE_REF, this.actualCompletionPosition);
-         // proposal.nameLookup = this.nameEnvironment.nameLookup;
+         proposal.nameLookup = this.nameEnvironment;
          proposal.completionEngine = this;
          proposal.setDeclarationSignature(packageName);
          proposal.setSignature(getRequiredTypeSignature(typeBinding));
@@ -4947,7 +5068,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          InternalCompletionProposal proposal =
             (InternalCompletionProposal)CompletionProposal.create(CompletionProposal.TYPE_REF,
                this.actualCompletionPosition - this.offset);
-         // proposal.nameLookup = this.nameEnvironment.nameLookup;
+         proposal.nameLookup = this.nameEnvironment;
          proposal.completionEngine = this;
          proposal.setSignature(getSignature(typeParameter.binding));
          proposal.setTypeName(completionName);
@@ -4971,7 +5092,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          InternalCompletionProposal proposal =
             (InternalCompletionProposal)CompletionProposal.create(CompletionProposal.JAVADOC_TYPE_REF,
                this.actualCompletionPosition - this.offset);
-         // proposal.nameLookup = this.nameEnvironment.nameLookup;
+         proposal.nameLookup = this.nameEnvironment;
          proposal.completionEngine = this;
          proposal.setSignature(getSignature(typeParameter.binding));
          proposal.setTypeName(javadocCompletion);
@@ -5002,7 +5123,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          InternalCompletionProposal proposal =
             (InternalCompletionProposal)CompletionProposal.create(CompletionProposal.TYPE_REF,
                this.actualCompletionPosition - this.offset);
-         // proposal.nameLookup = this.nameEnvironment.nameLookup;
+         proposal.nameLookup = this.nameEnvironment;
          proposal.completionEngine = this;
          proposal.setDeclarationSignature(packageName);
          proposal.setSignature(createNonGenericTypeSignature(packageName, typeName));
@@ -5029,7 +5150,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          InternalCompletionProposal proposal =
             (InternalCompletionProposal)CompletionProposal.create(CompletionProposal.JAVADOC_TYPE_REF,
                this.actualCompletionPosition - this.offset);
-         // proposal.nameLookup = this.nameEnvironment.nameLookup;
+         proposal.nameLookup = this.nameEnvironment;
          proposal.completionEngine = this;
          proposal.setDeclarationSignature(packageName);
          proposal.setSignature(createNonGenericTypeSignature(packageName, typeName));
@@ -5067,7 +5188,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          InternalCompletionProposal proposal =
             (InternalCompletionProposal)CompletionProposal.create(CompletionProposal.TYPE_REF,
                this.actualCompletionPosition - this.offset);
-         // proposal.nameLookup = this.nameEnvironment.nameLookup;
+         proposal.nameLookup = this.nameEnvironment;
          proposal.completionEngine = this;
          proposal.setDeclarationSignature(refBinding.qualifiedPackageName());
          proposal.setSignature(getCompletedTypeSignature(refBinding));
@@ -5104,7 +5225,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          InternalCompletionProposal proposal =
             (InternalCompletionProposal)CompletionProposal.create(CompletionProposal.JAVADOC_TYPE_REF,
                this.actualCompletionPosition - this.offset);
-         // proposal.nameLookup = this.nameEnvironment.nameLookup;
+         proposal.nameLookup = this.nameEnvironment;
          proposal.completionEngine = this;
          proposal.setDeclarationSignature(refBinding.qualifiedPackageName());
          proposal.setSignature(getCompletedTypeSignature(refBinding));
@@ -5294,7 +5415,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
 
                InternalCompletionProposal typeProposal =
                   createProposal(CompletionProposal.TYPE_REF, this.actualCompletionPosition);
-               // typeProposal.nameLookup = this.nameEnvironment.nameLookup;
+               typeProposal.nameLookup = this.nameEnvironment;
                typeProposal.completionEngine = this;
                typeProposal.setDeclarationSignature(packageName);
                typeProposal.setSignature(getRequiredTypeSignature(currentType));
@@ -5619,7 +5740,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
 
                         InternalCompletionProposal typeProposal =
                            createProposal(CompletionProposal.TYPE_REF, this.actualCompletionPosition);
-                        // typeProposal.nameLookup = this.nameEnvironment.nameLookup;
+                        typeProposal.nameLookup = this.nameEnvironment;
                         typeProposal.completionEngine = this;
                         typeProposal.setDeclarationSignature(packageName);
                         typeProposal.setSignature(getRequiredTypeSignature(currentType));
@@ -5816,7 +5937,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
 
                         InternalCompletionProposal typeProposal =
                            createProposal(CompletionProposal.TYPE_REF, this.actualCompletionPosition);
-                        // typeProposal.nameLookup = this.nameEnvironment.nameLookup;
+                        typeProposal.nameLookup = this.nameEnvironment;
                         typeProposal.completionEngine = this;
                         typeProposal.setDeclarationSignature(packageName);
                         typeProposal.setSignature(getRequiredTypeSignature(currentType));
@@ -6245,7 +6366,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
 
                   InternalCompletionProposal typeImportProposal =
                      createProposal(CompletionProposal.TYPE_IMPORT, this.actualCompletionPosition);
-                  // typeImportProposal.nameLookup = this.nameEnvironment.nameLookup;
+                  typeImportProposal.nameLookup = this.nameEnvironment;
                   typeImportProposal.completionEngine = this;
                   char[] packageName = fieldType.qualifiedPackageName();
                   typeImportProposal.setDeclarationSignature(packageName);
@@ -7870,7 +7991,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
 
                InternalCompletionProposal typeImportProposal =
                   createProposal(CompletionProposal.TYPE_IMPORT, this.actualCompletionPosition);
-               // typeImportProposal.nameLookup = this.nameEnvironment.nameLookup;
+               typeImportProposal.nameLookup = this.nameEnvironment;
                typeImportProposal.completionEngine = this;
                char[] packageName = receiverType.qualifiedPackageName();
                typeImportProposal.setDeclarationSignature(packageName);
@@ -9447,7 +9568,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
 
                InternalCompletionProposal typeImportProposal =
                   createProposal(CompletionProposal.TYPE_IMPORT, this.actualCompletionPosition);
-               // typeImportProposal.nameLookup = this.nameEnvironment.nameLookup;
+               typeImportProposal.nameLookup = this.nameEnvironment;
                typeImportProposal.completionEngine = this;
                char[] packageName = receiverType.qualifiedPackageName();
                typeImportProposal.setDeclarationSignature(packageName);
@@ -12881,7 +13002,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
 
       InternalCompletionProposal typeProposal =
          createProposal(CompletionProposal.TYPE_REF, this.actualCompletionPosition);
-      // typeProposal.nameLookup = this.nameEnvironment.nameLookup;
+      typeProposal.nameLookup = this.nameEnvironment;
       typeProposal.completionEngine = this;
       typeProposal.setDeclarationSignature(packageName);
       typeProposal.setSignature(createNonGenericTypeSignature(packageName, typeName));

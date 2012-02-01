@@ -1195,7 +1195,8 @@ public class MethodVerifier
 
       for (int i = exceptions.length; --i >= 0;)
          exceptions[i] =
-            (ReferenceBinding)BinaryTypeBinding.resolveType(exceptions[i], this.environment, true /* raw conversion */);
+            (ReferenceBinding)BinaryTypeBinding
+               .resolveType(exceptions[i], this.environment, true /* raw conversion */);
       return exceptions;
    }
 

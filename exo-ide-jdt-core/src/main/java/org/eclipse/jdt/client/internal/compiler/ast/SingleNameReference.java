@@ -1206,7 +1206,8 @@ public class SingleNameReference extends NameReference implements OperatorIds
       else
       {
          this.actualReceiverType = scope.enclosingSourceType();
-         this.binding = scope.getBinding(this.token, this.bits & ASTNode.RestrictiveFlagMASK, this, true /* resolve */);
+         this.binding =
+            scope.getBinding(this.token, this.bits & ASTNode.RestrictiveFlagMASK, this, true /* resolve */);
       }
       if (this.binding.isValidBinding())
       {

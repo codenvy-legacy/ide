@@ -64,7 +64,7 @@ public class CompletionScanner extends Scanner
       {
          if (this.cursorLocation < this.startPosition && this.currentPosition == this.startPosition)
          { // fake empty identifier got issued
-            // remember actual identifier positions
+           // remember actual identifier positions
             this.completedIdentifierStart = this.startPosition;
             this.completedIdentifierEnd = this.completedIdentifierStart - 1;
             return this.completionIdentifier = EmptyCompletionIdentifier;
@@ -685,7 +685,7 @@ public class CompletionScanner extends Scanner
                         }
 
                         // handle the \\u case manually into comment
-                        if (this.currentCharacter == '\\')
+if (this.currentCharacter == '\\')
                         {
                            if (this.source[this.currentPosition] == '\\')
                               this.currentPosition++;
@@ -724,7 +724,7 @@ public class CompletionScanner extends Scanner
                               }
                            }
                            // handle the \\u case manually into comment
-                           if (this.currentCharacter == '\\')
+if (this.currentCharacter == '\\')
                            {
                               if (this.source[this.currentPosition] == '\\')
                                  this.currentPosition++;
@@ -870,7 +870,7 @@ public class CompletionScanner extends Scanner
                            isUnicode = false;
                         }
                         // handle the \\u case manually into comment
-                        if (this.currentCharacter == '\\')
+if (this.currentCharacter == '\\')
                         {
                            if (this.source[this.currentPosition] == '\\')
                               this.currentPosition++;
@@ -923,7 +923,7 @@ public class CompletionScanner extends Scanner
                               isUnicode = false;
                            }
                            // handle the \\u case manually into comment
-                           if (this.currentCharacter == '\\')
+if (this.currentCharacter == '\\')
                            {
                               if (this.source[this.currentPosition] == '\\')
                                  this.currentPosition++;

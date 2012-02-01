@@ -165,14 +165,15 @@ public class BindingKeyResolver extends BindingKeyParser
          this.typeBinding = baseTypeBinding;
       }
    }
-   
-  public class CaptureFinder extends ASTVisitor
+
+   public class CaptureFinder extends ASTVisitor
    {
       CaptureBinding capture;
 
       private int position;
-      
+
       private Binding wildcardBinding;
+
       /**
        * @param position
        * @param wildcardBinding
@@ -293,7 +294,7 @@ public class BindingKeyResolver extends BindingKeyParser
       if (outerParsedUnit == null)
          return;
       final Binding wildcardBinding = ((BindingKeyResolver)this.types.get(0)).compilerBinding;
-      
+
       CaptureFinder captureFinder = new CaptureFinder(position, wildcardBinding);
       outerParsedUnit.traverse(captureFinder, outerParsedUnit.scope);
       this.typeBinding = captureFinder.capture;

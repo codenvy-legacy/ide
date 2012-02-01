@@ -19,6 +19,10 @@ import org.eclipse.jdt.client.core.dom.ChildListPropertyDescriptor;
 import org.eclipse.jdt.client.core.dom.FieldDeclaration;
 import org.eclipse.jdt.client.core.dom.Statement;
 import org.eclipse.jdt.client.core.dom.StructuralPropertyDescriptor;
+import org.eclipse.jdt.client.internal.core.dom.rewrite.RewriteEvent;
+import org.eclipse.jdt.client.text.edits.TextEditGroup;
+import org.eclipse.jdt.client.internal.core.dom.rewrite.ListRewriteEvent;
+import org.eclipse.jdt.client.internal.core.dom.rewrite.RewriteEventStore;
 
 /**
  * For describing manipulations to a child list property of an AST node.
@@ -45,6 +49,16 @@ public final class ListRewrite
       this.childProperty = childProperty;
    }
 
+   private RewriteEventStore getRewriteStore()
+   {
+      return this.rewriter.getRewriteEventStore();
+   }
+
+   private ListRewriteEvent getEvent()
+   {
+      return getRewriteStore().getListEvent(this.parent, this.childProperty, true);
+   }
+
    /**
     * Returns the parent of the list for which this list rewriter was created.
     * 
@@ -69,29 +83,32 @@ public final class ListRewrite
       return this.childProperty;
    }
 
-   // /**TODO
-   // * Removes the given node from its parent's list property in the rewriter.
-   // * The node must be contained in the list.
-   // * The AST itself is not actually modified in any way; rather, the rewriter
-   // * just records a note that this node has been removed from this list.
-   // *
-   // * @param node the node being removed. The node can either be an original node in this list
-   // * or (since 3.4) a new node already inserted or used as replacement in this AST rewriter.
-   // * @param editGroup the edit group in which to collect the corresponding
-   // * text edits, or <code>null</code> if ungrouped
-   // * @throws IllegalArgumentException if the node is null, or if the node is not
-   // * part of this rewriter's AST, or if the described modification is invalid
-   // * (not a member of this node's original list)
-   // */
-   // public void remove(ASTNode node, TextEditGroup editGroup) {
-   // if (node == null) {
-   // throw new IllegalArgumentException();
-   // }
-   // RewriteEvent event= getEvent().removeEntry(node);
-   // if (editGroup != null) {
-   // getRewriteStore().setEventEditGroup(event, editGroup);
-   // }
-   // }
+   /**TODO
+   * Removes the given node from its parent's list property in the rewriter.
+   * The node must be contained in the list.
+   * The AST itself is not actually modified in any way; rather, the rewriter
+   * just records a note that this node has been removed from this list.
+   *
+   * @param node the node being removed. The node can either be an original node in this list
+   * or (since 3.4) a new node already inserted or used as replacement in this AST rewriter.
+   * @param editGroup the edit group in which to collect the corresponding
+   * text edits, or <code>null</code> if ungrouped
+   * @throws IllegalArgumentException if the node is null, or if the node is not
+   * part of this rewriter's AST, or if the described modification is invalid
+   * (not a member of this node's original list)
+   */
+   public void remove(ASTNode node, TextEditGroup editGroup)
+   {
+      if (node == null)
+      {
+         throw new IllegalArgumentException();
+      }
+      RewriteEvent event = getEvent().removeEntry(node);
+      if (editGroup != null)
+      {
+         getRewriteStore().setEventEditGroup(event, editGroup);
+      }
+   }
 
    /**
     * Returns the ASTRewrite instance from which this ListRewriter has been created from.
@@ -104,37 +121,40 @@ public final class ListRewrite
       return this.rewriter;
    }
 
-   // /** TODO
-   // * Replaces the given node from its parent's list property in the rewriter.
-   // * The node must be contained in the list.
-   // * The replacement node must either be brand new (not part of the original AST)
-   // * or a placeholder node (for example, one created by
-   // * {@link ASTRewrite#createCopyTarget(ASTNode)},
-   // * {@link ASTRewrite#createMoveTarget(ASTNode)},
-   // * or {@link ASTRewrite#createStringPlaceholder(String, int)}). The AST itself
-   // * is not actually modified in any way; rather, the rewriter just records
-   // * a note that this node has been replaced in this list.
-   // *
-   // * @param node the node being removed. The node can either be an original node in this list
-   // * or (since 3.4) a new node already inserted or used as replacement in this AST rewriter.
-   // * @param replacement the replacement node, or <code>null</code> if no
-   // * replacement
-   // * @param editGroup the edit group in which to collect the corresponding
-   // * text edits, or <code>null</code> if ungrouped
-   // * @throws IllegalArgumentException if the node is null, or if the node is not part
-   // * of this rewriter's AST, or if the replacement node is not a new node (or
-   // * placeholder), or if the described modification is otherwise invalid
-   // * (not a member of this node's original list)
-   // */
-   // public void replace(ASTNode node, ASTNode replacement, TextEditGroup editGroup) {
-   // if (node == null) {
-   // throw new IllegalArgumentException();
-   // }
-   // RewriteEvent event= getEvent().replaceEntry(node, replacement);
-   // if (editGroup != null) {
-   // getRewriteStore().setEventEditGroup(event, editGroup);
-   // }
-   // }
+   /** TODO
+   * Replaces the given node from its parent's list property in the rewriter.
+   * The node must be contained in the list.
+   * The replacement node must either be brand new (not part of the original AST)
+   * or a placeholder node (for example, one created by
+   * {@link ASTRewrite#createCopyTarget(ASTNode)},
+   * {@link ASTRewrite#createMoveTarget(ASTNode)},
+   * or {@link ASTRewrite#createStringPlaceholder(String, int)}). The AST itself
+   * is not actually modified in any way; rather, the rewriter just records
+   * a note that this node has been replaced in this list.
+   *
+   * @param node the node being removed. The node can either be an original node in this list
+   * or (since 3.4) a new node already inserted or used as replacement in this AST rewriter.
+   * @param replacement the replacement node, or <code>null</code> if no
+   * replacement
+   * @param editGroup the edit group in which to collect the corresponding
+   * text edits, or <code>null</code> if ungrouped
+   * @throws IllegalArgumentException if the node is null, or if the node is not part
+   * of this rewriter's AST, or if the replacement node is not a new node (or
+   * placeholder), or if the described modification is otherwise invalid
+   * (not a member of this node's original list)
+   */
+   public void replace(ASTNode node, ASTNode replacement, TextEditGroup editGroup)
+   {
+      if (node == null)
+      {
+         throw new IllegalArgumentException();
+      }
+      RewriteEvent event = getEvent().replaceEntry(node, replacement);
+      if (editGroup != null)
+      {
+         getRewriteStore().setEventEditGroup(event, editGroup);
+      }
+   }
 
    // /**TODO
    // * Inserts the given node into the list after the given element.
@@ -222,25 +242,27 @@ public final class ListRewrite
    // internalInsertAt(node, 0, false, editGroup);
    // }
 
-   // /** TODO
-   // * Inserts the given node into the list at the end of the list.
-   // * Equivalent to <code>insertAt(node, -1, editGroup)</code>.
-   // *
-   // * @param node the node to insert
-   // * @param editGroup the edit group in which to collect the corresponding
-   // * text edits, or <code>null</code> if ungrouped
-   // * @throws IllegalArgumentException if the node is null, or if the node is not part
-   // * of this rewriter's AST, or if the inserted node is not a new node (or
-   // * placeholder), or if the described modification is otherwise invalid
-   // * (not a member of this node's original list)
-   // * @see #insertAt(ASTNode, int, TextEditGroup)
-   // */
-   // public void insertLast(ASTNode node, TextEditGroup editGroup) {
-   // if (node == null) {
-   // throw new IllegalArgumentException();
-   // }
-   // internalInsertAt(node, -1, true, editGroup);
-   // }
+   /** TODO
+   * Inserts the given node into the list at the end of the list.
+   * Equivalent to <code>insertAt(node, -1, editGroup)</code>.
+   *
+   * @param node the node to insert
+   * @param editGroup the edit group in which to collect the corresponding
+   * text edits, or <code>null</code> if ungrouped
+   * @throws IllegalArgumentException if the node is null, or if the node is not part
+   * of this rewriter's AST, or if the inserted node is not a new node (or
+   * placeholder), or if the described modification is otherwise invalid
+   * (not a member of this node's original list)
+   * @see #insertAt(ASTNode, int, TextEditGroup)
+   */
+   public void insertLast(ASTNode node, TextEditGroup editGroup)
+   {
+      if (node == null)
+      {
+         throw new IllegalArgumentException();
+      }
+      internalInsertAt(node, -1, true, editGroup);
+   }
 
    // /**TODO
    // * Inserts the given node into the list at the given index.
@@ -274,15 +296,19 @@ public final class ListRewrite
    // }
 
    // TODO
-   // private void internalInsertAt(ASTNode node, int index, boolean boundToPrevious, TextEditGroup editGroup) {
-   // RewriteEvent event= getEvent().insert(node, index);
-   // if (boundToPrevious) {
-   // getRewriteStore().setInsertBoundToPrevious(node);
-   // }
-   // if (editGroup != null) {
-   // getRewriteStore().setEventEditGroup(event, editGroup);
-   // }
-   // }
+   private void internalInsertAt(ASTNode node, int index, boolean boundToPrevious, TextEditGroup editGroup)
+   {
+      RewriteEvent event = getEvent().insert(node, index);
+      if (boundToPrevious)
+      {
+         getRewriteStore().setInsertBoundToPrevious(node);
+      }
+      if (editGroup != null)
+      {
+         getRewriteStore().setEventEditGroup(event, editGroup);
+      }
+   }
+
    //
    //
    // private ASTNode createTargetNode(ASTNode first, ASTNode last, boolean isMove, ASTNode replacingNode, TextEditGroup
@@ -399,10 +425,8 @@ public final class ListRewrite
     */
    public List getOriginalList()
    {
-      // TODO
-      // List list= (List) getEvent().getOriginalValue();
-      // return Collections.unmodifiableList(list);
-      return Collections.EMPTY_LIST;
+      List list = (List)getEvent().getOriginalValue();
+      return Collections.unmodifiableList(list);
    }
 
    /**
@@ -412,10 +436,8 @@ public final class ListRewrite
     */
    public List getRewrittenList()
    {
-      // TODO
-      // List list= (List) getEvent().getNewValue();
-      // return Collections.unmodifiableList(list);
-      return Collections.EMPTY_LIST;
+      List list = (List)getEvent().getNewValue();
+      return Collections.unmodifiableList(list);
    }
 
 }

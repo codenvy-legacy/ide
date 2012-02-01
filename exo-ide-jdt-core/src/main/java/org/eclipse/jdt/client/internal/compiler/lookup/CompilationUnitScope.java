@@ -644,7 +644,7 @@ public class CompilationUnitScope extends Scope
          type =
             (ReferenceBinding)this.environment
                .convertToRawType(type, false /* do not force conversion of enclosing types */); // type imports are necessarily
-                                                                                                // raw for all except last
+                                                                                                 // raw for all except last
          if (!type.canBeSeenBy(this.fPackage))
             return new ProblemReferenceBinding(CharOperation.subarray(compoundName, 0, i), type,
                ProblemReasons.NotVisible);

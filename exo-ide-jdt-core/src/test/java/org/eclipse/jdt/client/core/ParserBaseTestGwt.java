@@ -19,7 +19,6 @@
 package org.eclipse.jdt.client.core;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 
@@ -36,7 +35,7 @@ import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAss
  * @version ${Id}: Jan 12, 2012 3:23:29 PM evgen $
  * 
  */
-public abstract class ParserBaseTestGwt extends GWTTestCase
+public abstract class ParserBaseTestGwt extends BaseTestGwt
 {
 
    protected CompilationUnit unit;
@@ -70,18 +69,9 @@ public abstract class ParserBaseTestGwt extends GWTTestCase
       parser.setEnvironment(null, new String[]{"/my/path"}, new String[]{"UTF-8"}, true);
       ASTNode ast = parser.createAST(null);
       unit = (CompilationUnit)ast;
-      
+
       new JavaCodeAssistantService(null, null);
       CompletionEngine.DEBUG = true;
-   }
-
-   /**
-    * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
-    */
-   @Override
-   public String getModuleName()
-   {
-      return "org.eclipse.jdt.IdeJdt";
    }
 
 }

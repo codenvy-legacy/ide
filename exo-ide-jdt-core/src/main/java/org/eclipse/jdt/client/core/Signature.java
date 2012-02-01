@@ -1884,26 +1884,26 @@ public final class Signature
       return CharOperation.toStrings(parameterTypes);
    }
 
-/**
-    * Returns a char array containing all but the last segment of the given
-    * dot-separated qualified name. Returns the empty char array if it is not qualified.
-    * <p>
-    * For example:
-    * <pre>
-    * <code>
-    * getQualifier({'j', 'a', 'v', 'a', '.', 'l', 'a', 'n', 'g', '.', 'O', 'b', 'j', 'e', 'c', 't'}) -> {'j', 'a', 'v', 'a', '.', 'l', 'a', 'n', 'g'}
-    * getQualifier({'O', 'u', 't', 'e', 'r', '.', 'I', 'n', 'n', 'e', 'r'}) -> {'O', 'u', 't', 'e', 'r'}
-    * getQualifier({'j', 'a', 'v', 'a', '.', 'u', 't', 'i', 'l', '.', 'L', 'i', 's', 't', '<', 'j', 'a', 'v', 'a', '.', 'l', 'a', 'n', 'g', '.', 'S', 't', 'r', 'i', 'n', 'g', '>'}) -> {'j', 'a', 'v', 'a', '.', 'u', 't', 'i', 'l'}
-    * </code>
-    * </pre>
-    * </p>
-    *
-    * @param name the name
-    * @return the qualifier prefix, or the empty char array if the name contains no
-    *   dots
-    * @exception NullPointerException if name is null
-    * @since 2.0
-    */
+   /**
+       * Returns a char array containing all but the last segment of the given
+       * dot-separated qualified name. Returns the empty char array if it is not qualified.
+       * <p>
+       * For example:
+       * <pre>
+       * <code>
+       * getQualifier({'j', 'a', 'v', 'a', '.', 'l', 'a', 'n', 'g', '.', 'O', 'b', 'j', 'e', 'c', 't'}) -> {'j', 'a', 'v', 'a', '.', 'l', 'a', 'n', 'g'}
+       * getQualifier({'O', 'u', 't', 'e', 'r', '.', 'I', 'n', 'n', 'e', 'r'}) -> {'O', 'u', 't', 'e', 'r'}
+       * getQualifier({'j', 'a', 'v', 'a', '.', 'u', 't', 'i', 'l', '.', 'L', 'i', 's', 't', '<', 'j', 'a', 'v', 'a', '.', 'l', 'a', 'n', 'g', '.', 'S', 't', 'r', 'i', 'n', 'g', '>'}) -> {'j', 'a', 'v', 'a', '.', 'u', 't', 'i', 'l'}
+       * </code>
+       * </pre>
+       * </p>
+       *
+       * @param name the name
+       * @return the qualifier prefix, or the empty char array if the name contains no
+       *   dots
+       * @exception NullPointerException if name is null
+       * @since 2.0
+       */
    public static char[] getQualifier(char[] name)
    {
       int firstGenericStart = CharOperation.indexOf(C_GENERIC_START, name);
@@ -2268,26 +2268,26 @@ public final class Signature
       return buffer.toString();
    }
 
-/**
-    * Returns all segments of the given dot-separated qualified name.
-    * Returns an array with only the given name if it is not qualified.
-    * Returns an empty array if the name is empty.
-    * <p>
-    * For example:
-    * <pre>
-    * <code>
-    * getSimpleNames({'j', 'a', 'v', 'a', '.', 'l', 'a', 'n', 'g', '.', 'O', 'b', 'j', 'e', 'c', 't'}) -> {{'j', 'a', 'v', 'a'}, {'l', 'a', 'n', 'g'}, {'O', 'b', 'j', 'e', 'c', 't'}}
-    * getSimpleNames({'O', 'b', 'j', 'e', 'c', 't'}) -> {{'O', 'b', 'j', 'e', 'c', 't'}}
-    * getSimpleNames({}) -> {}
-    * getSimpleNames({'j', 'a', 'v', 'a', '.', 'u', 't', 'i', 'l', '.', 'L', 'i', 's', 't', '<', 'j', 'a', 'v', 'a', '.', 'l', 'a', 'n', 'g', '.', 'S', 't', 'r', 'i', 'n', 'g', '>'}) -> {{'j', 'a', 'v', 'a'}, {'l', 'a', 'n', 'g'}, {'L', 'i', 's', 't', '<', 'j', 'a', 'v', 'a', '.', 'l', 'a', 'n', 'g', '.', 'S', 't', 'r', 'i', 'n', 'g'}}
-    * </code>
-    * </pre>
-    *
-    * @param name the name
-    * @return the list of simple names, possibly empty
-    * @exception NullPointerException if name is null
-    * @since 2.0
-    */
+   /**
+       * Returns all segments of the given dot-separated qualified name.
+       * Returns an array with only the given name if it is not qualified.
+       * Returns an empty array if the name is empty.
+       * <p>
+       * For example:
+       * <pre>
+       * <code>
+       * getSimpleNames({'j', 'a', 'v', 'a', '.', 'l', 'a', 'n', 'g', '.', 'O', 'b', 'j', 'e', 'c', 't'}) -> {{'j', 'a', 'v', 'a'}, {'l', 'a', 'n', 'g'}, {'O', 'b', 'j', 'e', 'c', 't'}}
+       * getSimpleNames({'O', 'b', 'j', 'e', 'c', 't'}) -> {{'O', 'b', 'j', 'e', 'c', 't'}}
+       * getSimpleNames({}) -> {}
+       * getSimpleNames({'j', 'a', 'v', 'a', '.', 'u', 't', 'i', 'l', '.', 'L', 'i', 's', 't', '<', 'j', 'a', 'v', 'a', '.', 'l', 'a', 'n', 'g', '.', 'S', 't', 'r', 'i', 'n', 'g', '>'}) -> {{'j', 'a', 'v', 'a'}, {'l', 'a', 'n', 'g'}, {'L', 'i', 's', 't', '<', 'j', 'a', 'v', 'a', '.', 'l', 'a', 'n', 'g', '.', 'S', 't', 'r', 'i', 'n', 'g'}}
+       * </code>
+       * </pre>
+       *
+       * @param name the name
+       * @return the list of simple names, possibly empty
+       * @exception NullPointerException if name is null
+       * @since 2.0
+       */
    public static char[][] getSimpleNames(char[] name)
    {
       int length = name == null ? 0 : name.length;

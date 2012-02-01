@@ -1649,10 +1649,10 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
          if (CharOperation.indexOf('$', actualType.compoundName[actualType.compoundName.length - 1]) > 0)
             actualType =
                (ReferenceBinding)BinaryTypeBinding.resolveType(actualType, this, false /* no raw conversion */); // must resolve
-                                                                                                                 // member types
-                                                                                                                 // before asking
-                                                                                                                 // for
-                                                                                                                 // enclosingType
+                                                                                                                  // member types
+                                                                                                                  // before asking
+                                                                                                                  // for
+                                                                                                                  // enclosingType
       ReferenceBinding actualEnclosing = actualType.enclosingType();
       if (actualEnclosing != null)
       { // convert needed if read some static member type

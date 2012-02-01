@@ -53,7 +53,7 @@ public class TypeInfoStorage
    {
       return storage.getItem(key);
    }
-   
+
    public boolean containsKey(String key)
    {
       return storage.getItem(key) != null;

@@ -14,9 +14,24 @@ import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ChildListPropertyDescriptor;
+import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.StructuralPropertyDescriptor;
+import org.eclipse.jdt.client.internal.compiler.parser.RecoveryScannerData;
+import org.eclipse.jdt.client.internal.core.dom.rewrite.ASTRewriteAnalyzer;
+import org.eclipse.jdt.client.internal.core.dom.rewrite.LineInformation;
+import org.eclipse.jdt.client.internal.core.dom.rewrite.NodeInfoStore;
+import org.eclipse.jdt.client.internal.core.dom.rewrite.NodeRewriteEvent;
+import org.eclipse.jdt.client.internal.core.dom.rewrite.RewriteEventStore;
+import org.eclipse.jdt.client.internal.core.dom.rewrite.RewriteEventStore.PropertyLocation;
+import org.eclipse.jdt.client.internal.core.dom.rewrite.TrackedNodePosition;
+import org.eclipse.jdt.client.text.IDocument;
+import org.eclipse.jdt.client.text.edits.MultiTextEdit;
+import org.eclipse.jdt.client.text.edits.TextEdit;
+import org.eclipse.jdt.client.text.edits.TextEditGroup;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -75,8 +90,9 @@ public class ASTRewrite
    /** root node for the rewrite: Only nodes under this root are accepted */
    private final AST ast;
 
-   // private final RewriteEventStore eventStore;
-   // private final NodeInfoStore nodeStore;
+   private final RewriteEventStore eventStore;
+
+   private final NodeInfoStore nodeStore;
 
    /**
     * Target source range computer; null means uninitialized; lazy initialized to <code>new TargetSourceRangeComputer()</code>.
@@ -120,8 +136,8 @@ public class ASTRewrite
    protected ASTRewrite(AST ast)
    {
       this.ast = ast;
-      // this.eventStore= new RewriteEventStore();
-      // this.nodeStore= new NodeInfoStore(ast);
+      this.eventStore = new RewriteEventStore();
+      this.nodeStore = new NodeInfoStore(ast);
    }
 
    /**
@@ -134,14 +150,16 @@ public class ASTRewrite
       return this.ast;
    }
 
-   // /**
-   // * Internal method. Returns the internal event store.
-   // * Clients should not use.
-   // * @return Returns the internal event store. Clients should not use.
-   // */
-   // protected final RewriteEventStore getRewriteEventStore() {
-   // return this.eventStore;
-   // }
+   /**
+   * Internal method. Returns the internal event store.
+   * Clients should not use.
+   * @return Returns the internal event store. Clients should not use.
+   */
+   protected final RewriteEventStore getRewriteEventStore()
+   {
+      return this.eventStore;
+   }
+
    //
    // /**
    // * Internal method. Returns the internal node info store.
@@ -152,135 +170,140 @@ public class ASTRewrite
    // return this.nodeStore;
    // }
 
-   // /** TODO
-   // * Converts all modifications recorded by this rewriter
-   // * into an object representing the corresponding text
-   // * edits to the given document containing the original source
-   // * code. The document itself is not modified.
-   // * <p>
-   // * For nodes in the original that are being replaced or deleted,
-   // * this rewriter computes the adjusted source ranges
-   // * by calling {@link TargetSourceRangeComputer#computeSourceRange(ASTNode)
-   // getExtendedSourceRangeComputer().computeSourceRange(node)}.
-   // * </p>
-   // * <p>
-   // * Calling this methods does not discard the modifications
-   // * on record. Subsequence modifications are added to the ones
-   // * already on record. If this method is called again later,
-   // * the resulting text edit object will accurately reflect
-   // * the net cumulative effect of all those changes.
-   // * </p>
-   // *
-   // * @param document original document containing source code
-   // * @param options the table of formatter options
-   // * (key type: <code>String</code>; value type: <code>String</code>);
-   // * or <code>null</code> to use the standard global options
-   // * {@link JavaCore#getOptions() JavaCore.getOptions()}
-   // * @return text edit object describing the changes to the
-   // * document corresponding to the changes recorded by this rewriter
-   // * @throws IllegalArgumentException An <code>IllegalArgumentException</code>
-   // * is thrown if the document passed does not correspond to the AST that is rewritten.
-   // */
-   // public TextEdit rewriteAST(IDocument document, Map<String, String> options) throws IllegalArgumentException
-   // {
-   // if (document == null)
-   // {
-   // throw new IllegalArgumentException();
-   // }
-   //
-   // ASTNode rootNode = getRootNode();
-   // if (rootNode == null)
-   // {
-   // return new MultiTextEdit(); // no changes
-   // }
-   //
-   // char[] content = document.get().toCharArray();
-   // LineInformation lineInfo = LineInformation.create(document);
-   // String lineDelim = TextUtilities.getDefaultLineDelimiter(document);
-   //
-   // ASTNode astRoot = rootNode.getRoot();
-   // List commentNodes = astRoot instanceof CompilationUnit ? ((CompilationUnit)astRoot).getCommentList() : null;
-   // Map currentOptions = options == null ? JavaCore.getOptions() : options;
-   // return internalRewriteAST(content, lineInfo, lineDelim, commentNodes, currentOptions, rootNode,
-   // (RecoveryScannerData)((CompilationUnit)astRoot).getStatementsRecoveryData());
-   // }
+   /**
+   * Converts all modifications recorded by this rewriter
+   * into an object representing the corresponding text
+   * edits to the given document containing the original source
+   * code. The document itself is not modified.
+   * <p>
+   * For nodes in the original that are being replaced or deleted,
+   * this rewriter computes the adjusted source ranges
+   * by calling {@link TargetSourceRangeComputer#computeSourceRange(ASTNode)
+   getExtendedSourceRangeComputer().computeSourceRange(node)}.
+   * </p>
+   * <p>
+   * Calling this methods does not discard the modifications
+   * on record. Subsequence modifications are added to the ones
+   * already on record. If this method is called again later,
+   * the resulting text edit object will accurately reflect
+   * the net cumulative effect of all those changes.
+   * </p>
+   *
+   * @param document original document containing source code
+   * @param options the table of formatter options
+   * (key type: <code>String</code>; value type: <code>String</code>);
+   * or <code>null</code> to use the standard global options
+   * {@link JavaCore#getOptions() JavaCore.getOptions()}
+   * @return text edit object describing the changes to the
+   * document corresponding to the changes recorded by this rewriter
+   * @throws IllegalArgumentException An <code>IllegalArgumentException</code>
+   * is thrown if the document passed does not correspond to the AST that is rewritten.
+   */
+   public TextEdit rewriteAST(IDocument document, Map<String, String> options) throws IllegalArgumentException
+   {
+      if (document == null)
+      {
+         throw new IllegalArgumentException();
+      }
 
-   // /** TODO
-   // * Converts all modifications recorded by this rewriter into an object representing the the corresponding text
-   // * edits to the source of a {@link ITypeRoot} from which the AST was created from.
-   // * The type root's source itself is not modified by this method call.
-   // * <p>
-   // * Important: This API can only be used if the modified AST has been created from a
-   // * {@link ITypeRoot} with source. That means {@link ASTParser#setSource(ICompilationUnit)},
-   // * {@link ASTParser#setSource(IClassFile)} or {@link ASTParser#setSource(ITypeRoot)}
-   // * has been used when initializing the {@link ASTParser}. A {@link IllegalArgumentException} is thrown
-   // * otherwise. An {@link IllegalArgumentException} is also thrown when the type roots buffer does not correspond
-   // * anymore to the AST. Use {@link #rewriteAST(IDocument, Map)} for all ASTs created from other content.
-   // * </p>
-   // * <p>
-   // * For nodes in the original that are being replaced or deleted,
-   // * this rewriter computes the adjusted source ranges
-   // * by calling {@link TargetSourceRangeComputer#computeSourceRange(ASTNode)
-   // getExtendedSourceRangeComputer().computeSourceRange(node)}.
-   // * </p>
-   // * <p>
-   // * Calling this methods does not discard the modifications
-   // * on record. Subsequence modifications are added to the ones
-   // * already on record. If this method is called again later,
-   // * the resulting text edit object will accurately reflect
-   // * the net cumulative effect of all those changes.
-   // * </p>
-   // *
-   // * @return text edit object describing the changes to the
-   // * document corresponding to the changes recorded by this rewriter
-   // * @throws JavaModelException A {@link JavaModelException} is thrown when
-   // * the underlying compilation units buffer could not be accessed.
-   // * @throws IllegalArgumentException An {@link IllegalArgumentException}
-   // * is thrown if the document passed does not correspond to the AST that is rewritten.
-   // *
-   // * @since 3.2
-   // */
-   // public TextEdit rewriteAST() throws JavaModelException, IllegalArgumentException {
-   // ASTNode rootNode= getRootNode();
-   // if (rootNode == null) {
-   // return new MultiTextEdit(); // no changes
-   // }
-   //
-   // ASTNode root= rootNode.getRoot();
-   // if (!(root instanceof CompilationUnit)) {
-   //			throw new IllegalArgumentException("This API can only be used if the AST is created from a compilation unit or class file"); //$NON-NLS-1$
-   // }
-   // CompilationUnit astRoot= (CompilationUnit) root;
-   // ITypeRoot typeRoot = astRoot.getTypeRoot();
-   // if (typeRoot == null || typeRoot.getBuffer() == null) {
-   //			throw new IllegalArgumentException("This API can only be used if the AST is created from a compilation unit or class file"); //$NON-NLS-1$
-   // }
-   //
-   // char[] content= typeRoot.getBuffer().getCharacters();
-   // LineInformation lineInfo= LineInformation.create(astRoot);
-   // String lineDelim= typeRoot.findRecommendedLineSeparator();
-   // Map options= typeRoot.getJavaProject().getOptions(true);
-   //
-   // return internalRewriteAST(content, lineInfo, lineDelim, astRoot.getCommentList(), options, rootNode,
-   // (RecoveryScannerData)astRoot.getStatementsRecoveryData());
-   // }
+      ASTNode rootNode = getRootNode();
+      if (rootNode == null)
+      {
+         return new MultiTextEdit(); // no changes
+      }
 
-   // TODO
-   // private TextEdit internalRewriteAST(char[] content, LineInformation lineInfo, String lineDelim, List commentNodes, Map
-   // options, ASTNode rootNode, RecoveryScannerData recoveryScannerData) {
-   // TextEdit result= new MultiTextEdit();
-   // //validateASTNotModified(rootNode);
-   //
-   // TargetSourceRangeComputer sourceRangeComputer= getExtendedSourceRangeComputer();
-   // this.eventStore.prepareMovedNodes(sourceRangeComputer);
-   //
-   // ASTRewriteAnalyzer visitor= new ASTRewriteAnalyzer(content, lineInfo, lineDelim, result, this.eventStore, this.nodeStore,
-   // commentNodes, options, sourceRangeComputer, recoveryScannerData);
-   // rootNode.accept(visitor); // throws IllegalArgumentException
-   //
-   // this.eventStore.revertMovedNodes();
-   // return result;
-   // }
+      char[] content = document.get().toCharArray();
+      LineInformation lineInfo = LineInformation.create(document);
+      String lineDelim = "\n";
+
+      ASTNode astRoot = rootNode.getRoot();
+      List commentNodes = astRoot instanceof CompilationUnit ? ((CompilationUnit)astRoot).getCommentList() : null;
+      Map currentOptions = options == null ? JavaCore.getOptions() : options;
+      return internalRewriteAST(content, lineInfo, lineDelim, commentNodes, currentOptions, rootNode,
+         (RecoveryScannerData)((CompilationUnit)astRoot).getStatementsRecoveryData());
+   }
+
+//   /** TODO
+//   * Converts all modifications recorded by this rewriter into an object representing the the corresponding text
+//   * edits to the source of a {@link ITypeRoot} from which the AST was created from.
+//   * The type root's source itself is not modified by this method call.
+//   * <p>
+//   * Important: This API can only be used if the modified AST has been created from a
+//   * {@link ITypeRoot} with source. That means {@link ASTParser#setSource(ICompilationUnit)},
+//   * {@link ASTParser#setSource(IClassFile)} or {@link ASTParser#setSource(ITypeRoot)}
+//   * has been used when initializing the {@link ASTParser}. A {@link IllegalArgumentException} is thrown
+//   * otherwise. An {@link IllegalArgumentException} is also thrown when the type roots buffer does not correspond
+//   * anymore to the AST. Use {@link #rewriteAST(IDocument, Map)} for all ASTs created from other content.
+//   * </p>
+//   * <p>
+//   * For nodes in the original that are being replaced or deleted,
+//   * this rewriter computes the adjusted source ranges
+//   * by calling {@link TargetSourceRangeComputer#computeSourceRange(ASTNode)
+//   getExtendedSourceRangeComputer().computeSourceRange(node)}.
+//   * </p>
+//   * <p>
+//   * Calling this methods does not discard the modifications
+//   * on record. Subsequence modifications are added to the ones
+//   * already on record. If this method is called again later,
+//   * the resulting text edit object will accurately reflect
+//   * the net cumulative effect of all those changes.
+//   * </p>
+//   *
+//   * @return text edit object describing the changes to the
+//   * document corresponding to the changes recorded by this rewriter
+//   * @throws JavaModelException A {@link JavaModelException} is thrown when
+//   * the underlying compilation units buffer could not be accessed.
+//   * @throws IllegalArgumentException An {@link IllegalArgumentException}
+//   * is thrown if the document passed does not correspond to the AST that is rewritten.
+//   *
+//   * @since 3.2
+//   */
+//   public TextEdit rewriteAST() throws JavaModelException, IllegalArgumentException
+//   {
+//      ASTNode rootNode = getRootNode();
+//      if (rootNode == null)
+//      {
+//         return new MultiTextEdit(); // no changes
+//      }
+//
+//      ASTNode root = rootNode.getRoot();
+//      if (!(root instanceof CompilationUnit))
+//      {
+//         throw new IllegalArgumentException(
+//            "This API can only be used if the AST is created from a compilation unit or class file"); //$NON-NLS-1$
+//      }
+//      CompilationUnit astRoot = (CompilationUnit)root;
+//      //    ITypeRoot typeRoot = astRoot.getTypeRoot();
+//      //    if (typeRoot == null || typeRoot.getBuffer() == null) {
+//      //   			throw new IllegalArgumentException("This API can only be used if the AST is created from a compilation unit or class file"); //$NON-NLS-1$
+//      //    }
+//
+//      char[] content = astRoot.getCharacters();
+//      LineInformation lineInfo = LineInformation.create(astRoot);
+//      String lineDelim = "\n";
+//      Map options = JavaCore.getOptions();
+//
+//      return internalRewriteAST(content, lineInfo, lineDelim, astRoot.getCommentList(), options, rootNode,
+//         (RecoveryScannerData)astRoot.getStatementsRecoveryData());
+//   }
+
+   private TextEdit internalRewriteAST(char[] content, LineInformation lineInfo, String lineDelim, List commentNodes,
+      Map options, ASTNode rootNode, RecoveryScannerData recoveryScannerData)
+   {
+      TextEdit result = new MultiTextEdit();
+      //validateASTNotModified(rootNode);
+
+      TargetSourceRangeComputer sourceRangeComputer = getExtendedSourceRangeComputer();
+      this.eventStore.prepareMovedNodes(sourceRangeComputer);
+
+      ASTRewriteAnalyzer visitor =
+         new ASTRewriteAnalyzer(content, lineInfo, lineDelim, result, this.eventStore, this.nodeStore, commentNodes,
+            options, sourceRangeComputer, recoveryScannerData);
+      rootNode.accept(visitor); // throws IllegalArgumentException
+
+      this.eventStore.revertMovedNodes();
+      return result;
+   }
 
    private ASTNode getRootNode()
    {
@@ -288,22 +311,29 @@ public class ASTRewrite
       int start = -1;
       int end = -1;
       // TODO
-      // for (Iterator iter= getRewriteEventStore().getChangeRootIterator(); iter.hasNext();) {
-      // ASTNode curr= (ASTNode) iter.next();
-      // if (!RewriteEventStore.isNewNode(curr)) {
-      // int currStart= curr.getStartPosition();
-      // int currEnd= currStart + curr.getLength();
-      // if (node == null || currStart < start && currEnd > end) {
-      // start= currStart;
-      // end= currEnd;
-      // node= curr;
-      // } else if (currStart < start) {
-      // start= currStart;
-      // } else if (currEnd > end) {
-      // end= currEnd;
-      // }
-      // }
-      // }
+      for (Iterator iter = getRewriteEventStore().getChangeRootIterator(); iter.hasNext();)
+      {
+         ASTNode curr = (ASTNode)iter.next();
+         if (!RewriteEventStore.isNewNode(curr))
+         {
+            int currStart = curr.getStartPosition();
+            int currEnd = currStart + curr.getLength();
+            if (node == null || currStart < start && currEnd > end)
+            {
+               start = currStart;
+               end = currEnd;
+               node = curr;
+            }
+            else if (currStart < start)
+            {
+               start = currStart;
+            }
+            else if (currEnd > end)
+            {
+               end = currEnd;
+            }
+         }
+      }
       if (node != null)
       {
          int currStart = node.getStartPosition();
@@ -332,126 +362,151 @@ public class ASTRewrite
     * root.accept(isModifiedVisitor); }
     */
 
-   // /** TODO
-   // * Removes the given node from its parent in this rewriter. The AST itself
-   // * is not actually modified in any way; rather, the rewriter just records
-   // * a note that this node should not be there.
-   // *
-   // * @param node the node being removed. The node can either be an original node in the AST
-   // * or (since 3.4) a new node already inserted or used as replacement in this AST rewriter.
-   // * @param editGroup the edit group in which to collect the corresponding
-   // * text edits, or <code>null</code> if ungrouped
-   // * @throws IllegalArgumentException if the node is null, or if the node is not
-   // * part of this rewriter's AST, or if the described modification is invalid
-   // * (such as removing a required node)
-   // */
-   // public final void remove(ASTNode node, TextEditGroup editGroup) {
-   // if (node == null) {
-   // throw new IllegalArgumentException();
-   // }
-   //
-   // StructuralPropertyDescriptor property;
-   // ASTNode parent;
-   // if (RewriteEventStore.isNewNode(node)) { // remove a new node, bug 164862
-   // PropertyLocation location= this.eventStore.getPropertyLocation(node, RewriteEventStore.NEW);
-   // if (location != null) {
-   // property= location.getProperty();
-   // parent= location.getParent();
-   // } else {
-   //				throw new IllegalArgumentException("Node is not part of the rewriter's AST"); //$NON-NLS-1$
-   // }
-   // } else {
-   // property= node.getLocationInParent();
-   // parent= node.getParent();
-   // }
-   //
-   // if (property.isChildListProperty()) {
-   // getListRewrite(parent, (ChildListPropertyDescriptor) property).remove(node, editGroup);
-   // } else {
-   // set(parent, property, null, editGroup);
-   // }
-   // }
+   /** TODO
+   * Removes the given node from its parent in this rewriter. The AST itself
+   * is not actually modified in any way; rather, the rewriter just records
+   * a note that this node should not be there.
+   *
+   * @param node the node being removed. The node can either be an original node in the AST
+   * or (since 3.4) a new node already inserted or used as replacement in this AST rewriter.
+   * @param editGroup the edit group in which to collect the corresponding
+   * text edits, or <code>null</code> if ungrouped
+   * @throws IllegalArgumentException if the node is null, or if the node is not
+   * part of this rewriter's AST, or if the described modification is invalid
+   * (such as removing a required node)
+   */
+   public final void remove(ASTNode node, TextEditGroup editGroup)
+   {
+      if (node == null)
+      {
+         throw new IllegalArgumentException();
+      }
 
-   // /** TODO
-   // * Replaces the given node in this rewriter. The replacement node
-   // * must either be brand new (not part of the original AST) or a placeholder
-   // * node (for example, one created by {@link #createCopyTarget(ASTNode)}
-   // * or {@link #createStringPlaceholder(String, int)}). The AST itself
-   // * is not actually modified in any way; rather, the rewriter just records
-   // * a note that this node has been replaced.
-   // *
-   // * @param node the node being replaced. The node can either be an original node in the AST
-   // * or (since 3.4) a new node already inserted or used as replacement in this AST rewriter.
-   // * @param replacement the replacement node, or <code>null</code> if no
-   // * replacement
-   // * @param editGroup the edit group in which to collect the corresponding
-   // * text edits, or <code>null</code> if ungrouped
-   // * @throws IllegalArgumentException if the node is null, or if the node is not part
-   // * of this rewriter's AST, or if the replacement node is not a new node (or
-   // * placeholder), or if the described modification is otherwise invalid
-   // */
-   // public final void replace(ASTNode node, ASTNode replacement, TextEditGroup editGroup) {
-   // if (node == null) {
-   // throw new IllegalArgumentException();
-   // }
-   //
-   // StructuralPropertyDescriptor property;
-   // ASTNode parent;
-   // if (RewriteEventStore.isNewNode(node)) { // replace a new node, bug 164862
-   // PropertyLocation location= this.eventStore.getPropertyLocation(node, RewriteEventStore.NEW);
-   // if (location != null) {
-   // property= location.getProperty();
-   // parent= location.getParent();
-   // } else {
-   //				throw new IllegalArgumentException("Node is not part of the rewriter's AST"); //$NON-NLS-1$
-   // }
-   // } else {
-   // property= node.getLocationInParent();
-   // parent= node.getParent();
-   // }
-   //
-   // if (property.isChildListProperty()) {
-   // getListRewrite(parent, (ChildListPropertyDescriptor) property).replace(node, replacement, editGroup);
-   // } else {
-   // set(parent, property, replacement, editGroup);
-   // }
-   // }
+      StructuralPropertyDescriptor property;
+      ASTNode parent;
+      if (RewriteEventStore.isNewNode(node))
+      { // remove a new node, bug 164862
+         PropertyLocation location = this.eventStore.getPropertyLocation(node, RewriteEventStore.NEW);
+         if (location != null)
+         {
+            property = location.getProperty();
+            parent = location.getParent();
+         }
+         else
+         {
+            throw new IllegalArgumentException("Node is not part of the rewriter's AST"); //$NON-NLS-1$
+         }
+      }
+      else
+      {
+         property = node.getLocationInParent();
+         parent = node.getParent();
+      }
 
-   // /** TODO
-   // * Sets the given property of the given node. If the given property is a child
-   // * property, the value must be a replacement node that is either be brand new
-   // * (not part of the original AST) or a placeholder node (for example, one
-   // * created by {@link #createCopyTarget(ASTNode)}
-   // * or {@link #createStringPlaceholder(String, int)}); or it must be
-   // * <code>null</code>, indicating that the child should be deleted.
-   // * If the given property is a simple property, the value must be the new
-   // * value (primitive types must be boxed) or <code>null</code>.
-   // * The AST itself is not actually modified in any way; rather, the rewriter
-   // * just records a note that this node has been changed in the specified way.
-   // *
-   // * @param node the node
-   // * @param property the node's property; either a simple property or a child property
-   // * @param value the replacement child or new value, or <code>null</code> if none
-   // * @param editGroup the edit group in which to collect the corresponding
-   // * text edits, or <code>null</code> if ungrouped
-   // * @throws IllegalArgumentException if the node or property is null, or if the node
-   // * is not part of this rewriter's AST, or if the property is not a node property,
-   // * or if the described modification is invalid
-   // */
-   // public final void set(ASTNode node, StructuralPropertyDescriptor property, Object value, TextEditGroup editGroup) {
-   // if (node == null || property == null) {
-   // throw new IllegalArgumentException();
-   // }
-   // validateIsCorrectAST(node);
-   // validatePropertyType(property, value);
-   // validateIsPropertyOfNode(property, node);
-   //
-   // NodeRewriteEvent nodeEvent= this.eventStore.getNodeEvent(node, property, true);
-   // nodeEvent.setNewValue(value);
-   // if (editGroup != null) {
-   // this.eventStore.setEventEditGroup(nodeEvent, editGroup);
-   // }
-   // }
+      if (property.isChildListProperty())
+      {
+         getListRewrite(parent, (ChildListPropertyDescriptor)property).remove(node, editGroup);
+      }
+      else
+      {
+         set(parent, property, null, editGroup);
+      }
+   }
+
+   /** TODO
+   * Replaces the given node in this rewriter. The replacement node
+   * must either be brand new (not part of the original AST) or a placeholder
+   * node (for example, one created by {@link #createCopyTarget(ASTNode)}
+   * or {@link #createStringPlaceholder(String, int)}). The AST itself
+   * is not actually modified in any way; rather, the rewriter just records
+   * a note that this node has been replaced.
+   *
+   * @param node the node being replaced. The node can either be an original node in the AST
+   * or (since 3.4) a new node already inserted or used as replacement in this AST rewriter.
+   * @param replacement the replacement node, or <code>null</code> if no
+   * replacement
+   * @param editGroup the edit group in which to collect the corresponding
+   * text edits, or <code>null</code> if ungrouped
+   * @throws IllegalArgumentException if the node is null, or if the node is not part
+   * of this rewriter's AST, or if the replacement node is not a new node (or
+   * placeholder), or if the described modification is otherwise invalid
+   */
+   public final void replace(ASTNode node, ASTNode replacement, TextEditGroup editGroup)
+   {
+      if (node == null)
+      {
+         throw new IllegalArgumentException();
+      }
+
+      StructuralPropertyDescriptor property;
+      ASTNode parent;
+      if (RewriteEventStore.isNewNode(node))
+      { // replace a new node, bug 164862
+         PropertyLocation location = this.eventStore.getPropertyLocation(node, RewriteEventStore.NEW);
+         if (location != null)
+         {
+            property = location.getProperty();
+            parent = location.getParent();
+         }
+         else
+         {
+            throw new IllegalArgumentException("Node is not part of the rewriter's AST"); //$NON-NLS-1$
+         }
+      }
+      else
+      {
+         property = node.getLocationInParent();
+         parent = node.getParent();
+      }
+
+      if (property.isChildListProperty())
+      {
+         getListRewrite(parent, (ChildListPropertyDescriptor)property).replace(node, replacement, editGroup);
+      }
+      else
+      {
+         set(parent, property, replacement, editGroup);
+      }
+   }
+
+   /** TODO
+   * Sets the given property of the given node. If the given property is a child
+   * property, the value must be a replacement node that is either be brand new
+   * (not part of the original AST) or a placeholder node (for example, one
+   * created by {@link #createCopyTarget(ASTNode)}
+   * or {@link #createStringPlaceholder(String, int)}); or it must be
+   * <code>null</code>, indicating that the child should be deleted.
+   * If the given property is a simple property, the value must be the new
+   * value (primitive types must be boxed) or <code>null</code>.
+   * The AST itself is not actually modified in any way; rather, the rewriter
+   * just records a note that this node has been changed in the specified way.
+   *
+   * @param node the node
+   * @param property the node's property; either a simple property or a child property
+   * @param value the replacement child or new value, or <code>null</code> if none
+   * @param editGroup the edit group in which to collect the corresponding
+   * text edits, or <code>null</code> if ungrouped
+   * @throws IllegalArgumentException if the node or property is null, or if the node
+   * is not part of this rewriter's AST, or if the property is not a node property,
+   * or if the described modification is invalid
+   */
+   public final void set(ASTNode node, StructuralPropertyDescriptor property, Object value, TextEditGroup editGroup)
+   {
+      if (node == null || property == null)
+      {
+         throw new IllegalArgumentException();
+      }
+      validateIsCorrectAST(node);
+      validatePropertyType(property, value);
+      validateIsPropertyOfNode(property, node);
+
+      NodeRewriteEvent nodeEvent = this.eventStore.getNodeEvent(node, property, true);
+      nodeEvent.setNewValue(value);
+      if (editGroup != null)
+      {
+         this.eventStore.setEventEditGroup(nodeEvent, editGroup);
+      }
+   }
 
    /**
     * Returns the value of the given property as managed by this rewriter. If the property has been removed, <code>null</code> is
@@ -542,30 +597,33 @@ public class ASTRewrite
       return m.get(propertyName);
    }
 
-   // /** TODO
-   // * Returns an object that tracks the source range of the given node
-   // * across the rewrite to its AST. Upon return, the result object reflects
-   // * the given node's current source range in the AST. After
-   // * <code>rewrite</code> is called, the result object is updated to
-   // * reflect the given node's source range in the rewritten AST.
-   // *
-   // * @param node the node to track
-   // * @return an object that tracks the source range of <code>node</code>
-   // * @throws IllegalArgumentException if the node is null, or if the node
-   // * is not part of this rewriter's AST, or if the node is already being
-   // * tracked
-   // */
-   // public final ITrackedNodePosition track(ASTNode node) {
-   // if (node == null) {
-   // throw new IllegalArgumentException();
-   // }
-   // TextEditGroup group= this.eventStore.getTrackedNodeData(node);
-   // if (group == null) {
-   //			group= new TextEditGroup("internal"); //$NON-NLS-1$
-   // this.eventStore.setTrackedNodeData(node, group);
-   // }
-   // return new TrackedNodePosition(group, node);
-   // }
+   /** TODO
+   * Returns an object that tracks the source range of the given node
+   * across the rewrite to its AST. Upon return, the result object reflects
+   * the given node's current source range in the AST. After
+   * <code>rewrite</code> is called, the result object is updated to
+   * reflect the given node's source range in the rewritten AST.
+   *
+   * @param node the node to track
+   * @return an object that tracks the source range of <code>node</code>
+   * @throws IllegalArgumentException if the node is null, or if the node
+   * is not part of this rewriter's AST, or if the node is already being
+   * tracked
+   */
+   public final ITrackedNodePosition track(ASTNode node)
+   {
+      if (node == null)
+      {
+         throw new IllegalArgumentException();
+      }
+      TextEditGroup group = this.eventStore.getTrackedNodeData(node);
+      if (group == null)
+      {
+         group = new TextEditGroup("internal"); //$NON-NLS-1$
+         this.eventStore.setTrackedNodeData(node, group);
+      }
+      return new TrackedNodePosition(group, node);
+   }
 
    private void validateIsExistingNode(ASTNode node)
    {

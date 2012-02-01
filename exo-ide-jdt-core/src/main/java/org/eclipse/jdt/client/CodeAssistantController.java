@@ -18,11 +18,10 @@
  */
 package org.eclipse.jdt.client;
 
-import com.google.gwt.user.client.Window;
-
 import org.eclipse.jdt.client.codeassistant.ui.CodeAssitantForm;
 import org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler;
 import org.eclipse.jdt.client.codeassistant.ui.ProposalWidget;
+import org.eclipse.jdt.client.codeassistant.ui.ProposalWidgetFactory;
 import org.eclipse.jdt.client.compiler.batch.CompilationUnit;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.CompletionRequestor;
@@ -31,6 +30,7 @@ import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.event.RunCodeAssistantEvent;
 import org.eclipse.jdt.client.event.RunCodeAssistantHandler;
 import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
+import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -83,11 +83,70 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       if (currentFile == null || currentEditor == null)
          return;
       CodeAssistantRequestor requestor = new CodeAssistantRequestor();
-
+      requestor
+         .setAllowsRequiredProposals(CompletionProposal.CONSTRUCTOR_INVOCATION, CompletionProposal.TYPE_REF, true);
       char[] fileContent = currentFile.getContent().toCharArray();
       CompletionEngine e =
          new CompletionEngine(new DummyNameEnvirement(currentFile.getProject().getId()), requestor,
-            JavaCore.getOptions(), null);
+            JavaCore.getOptions(), new IProgressMonitor()
+            {
+               private final static int TIMEOUT = 10000; // ms
+
+               private long endTime;
+
+               public void beginTask(String name, int totalWork)
+               {
+                  endTime = System.currentTimeMillis() + TIMEOUT;
+               }
+
+               public boolean isCanceled()
+               {
+                  return endTime <= System.currentTimeMillis();
+               }
+
+               @Override
+               public void done()
+               {
+                  // TODO Auto-generated method stub
+
+               }
+
+               @Override
+               public void internalWorked(double work)
+               {
+                  // TODO Auto-generated method stub
+
+               }
+
+               @Override
+               public void setCanceled(boolean value)
+               {
+                  // TODO Auto-generated method stub
+
+               }
+
+               @Override
+               public void setTaskName(String name)
+               {
+                  // TODO Auto-generated method stub
+
+               }
+
+               @Override
+               public void subTask(String name)
+               {
+                  // TODO Auto-generated method stub
+
+               }
+
+               @Override
+               public void worked(int work)
+               {
+                  // TODO Auto-generated method stub
+
+               }
+            });
+
       e.complete(
          new CompilationUnit(fileContent, currentFile.getName().substring(0, currentFile.getName().lastIndexOf('.')),
             "UTF-8"),
@@ -101,7 +160,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       String token = "";
       if (!subToken.endsWith(" "))
       {
-         String[] split = subToken.split("[ /+=!<>(){}\\[\\]?|&:\",'\\-;]+");
+         String[] split = subToken.split("[ /+=!<>(){}\\[\\]?|&:\",'\\-#;]+");
 
          if (split.length != 0)
          {
@@ -123,7 +182,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       int posX = currentEditor.getCursorOffsetX() - tokenToComplete.length() * 8 + 8;
       int posY = currentEditor.getCursorOffsetY() + 4;
       Collections.sort(requestor.proposals, comparator);
-      new CodeAssitantForm(posX, posY, tokenToComplete, requestor.proposals, this);
+      new CodeAssitantForm(posX, posY, tokenToComplete, requestor.proposals, new ProposalWidgetFactory(), this);
    }
 
    private Comparator<CompletionProposal> comparator = new Comparator<CompletionProposal>()
@@ -212,7 +271,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       String beforeCursor = beforeToken + String.valueOf(value.getProposal().getCompletion());
       int cursorPosition = 1;
       if (beforeCursor.contains("("))
-         cursorPosition = beforeCursor.lastIndexOf('(');
+         cursorPosition = beforeCursor.lastIndexOf('(') + 1;
       else
          cursorPosition = beforeCursor.length();
       currentEditor.replaceTextAtCurrentLine(beforeCursor + afterToken, cursorPosition);

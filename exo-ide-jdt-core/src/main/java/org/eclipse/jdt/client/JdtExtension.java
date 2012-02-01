@@ -48,7 +48,7 @@ public class JdtExtension extends Extension
       new AstPesenter(IDE.eventBus());
       new CodeAssistantController();
    }
-   
+
    public static class Con extends SimpleControl implements IDEControl
    {
 
@@ -103,7 +103,5 @@ public class JdtExtension extends Extension
 
       }
    }
-
-
 
 }

@@ -367,11 +367,11 @@ public class DummyNameEnvirement implements INameEnvironment
    }
 
    private native String findTypes(String url)/*-{
-		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.open("GET", url, false);
-		xmlhttp.send();
-		return xmlhttp.responseText;
-   }-*/;
+                                              var xmlhttp = new XMLHttpRequest();
+                                              xmlhttp.open("GET", url, false);
+                                              xmlhttp.send();
+                                              return xmlhttp.responseText;
+                                              }-*/;
 
    /**
     * @param qualifiedName

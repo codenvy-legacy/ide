@@ -4030,16 +4030,17 @@ public abstract class Scope
                if (lub == TypeBinding.INT)
                   return environment().createWildcard(genericType, rank, null, null /* no extra bound */,
                      Wildcard.UNBOUND);
-               return environment().createWildcard(genericType, rank, lub, null /* no extra bound */, Wildcard.EXTENDS);
+               return environment()
+                  .createWildcard(genericType, rank, lub, null /* no extra bound */, Wildcard.EXTENDS);
                // U, ? super V
             case Wildcard.SUPER :
                TypeBinding[] glb = greaterLowerBound(new TypeBinding[]{wildU.bound, v});
                if (glb == null)
                   return null;
-               return environment()
-                  .createWildcard(genericType, rank, glb[0], null /* no extra bound */, Wildcard.SUPER); // TODO (philippe) need
-                                                                                                         // to capture entire
-                                                                                                         // bounds
+               return environment().createWildcard(genericType, rank, glb[0], null /* no extra bound */,
+                  Wildcard.SUPER); // TODO (philippe) need
+                                   // to capture entire
+                                   // bounds
             case Wildcard.UNBOUND :
          }
       }
@@ -4362,7 +4363,8 @@ public abstract class Scope
          TypeBinding type = (TypeBinding)iter.next();
          leafType = type.leafComponentType();
          erasedSuperTypes[rank++] =
-            (leafType.isTypeVariable() || leafType.isWildcard() /* && !leafType.isCapture() */) ? type : type.erasure();
+            (leafType.isTypeVariable() || leafType.isWildcard() /* && !leafType.isCapture() */) ? type : type
+               .erasure();
       }
       // intersecting first type supertypes with other types' ones, nullifying non matching supertypes
       int remaining = superLength;

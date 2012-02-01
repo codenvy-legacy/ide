@@ -222,9 +222,9 @@ public class BinaryTypeBinding extends ReferenceBinding
          // attempt to find the enclosing type if it exists in the cache (otherwise - resolve it when requested)
          this.enclosingType =
             environment.getTypeFromConstantPoolName(enclosingTypeName, 0, -1, true, null /* could not be missing */); // pretend
-                                                                                                                      // parameterized
-                                                                                                                      // to avoid
-                                                                                                                      // raw
+                                                                                                                       // parameterized
+                                                                                                                       // to avoid
+                                                                                                                       // raw
          this.tagBits |= TagBits.MemberTypeMask; // must be a member type not a top-level or local type
          this.tagBits |= TagBits.HasUnresolvedEnclosingType;
          if (enclosingType().isStrictfp())

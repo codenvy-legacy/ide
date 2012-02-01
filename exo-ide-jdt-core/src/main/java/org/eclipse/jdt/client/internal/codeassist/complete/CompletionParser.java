@@ -757,7 +757,7 @@ public class CompletionParser extends AssistParser
       }
       if (this.astPtr > -1 && this.astStack[this.astPtr] instanceof LocalDeclaration)
       { // https://bugs.eclipse.org/bugs/show_bug.cgi?id=287939
-         // To take care of: if (a instance of X) int i = a.|
+        // To take care of: if (a instance of X) int i = a.|
          LocalDeclaration local = (LocalDeclaration)this.astStack[this.astPtr];
          if (local.initialization == this.assistNode)
          {
@@ -3922,7 +3922,7 @@ public class CompletionParser extends AssistParser
    {
       if (this.identifierLengthStack[this.identifierLengthPtr] > 1)
       { // reducing a qualified name
-         // potential receiver is being poped, so reset potential receiver
+        // potential receiver is being poped, so reset potential receiver
          this.invocationType = NO_RECEIVER;
          this.qualifier = -1;
       }
@@ -5484,7 +5484,7 @@ public class CompletionParser extends AssistParser
    {
       if (this.identifierLengthStack[this.identifierLengthPtr] > 1)
       { // reducing a qualified name
-         // potential receiver is being poped, so reset potential receiver
+        // potential receiver is being poped, so reset potential receiver
          this.invocationType = NO_RECEIVER;
          this.qualifier = -1;
       }
