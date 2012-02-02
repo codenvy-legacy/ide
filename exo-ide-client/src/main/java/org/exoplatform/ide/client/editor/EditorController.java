@@ -684,6 +684,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
             IDE.fireEvent(new EditorActiveFileChangedEvent(null, null));
             return;
          }
+         
          final EditorView editorView = (EditorView)event.getView();
          activeFile = editorView.getFile();
          Timer timer = new Timer()

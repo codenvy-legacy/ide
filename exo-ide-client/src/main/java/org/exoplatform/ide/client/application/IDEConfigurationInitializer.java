@@ -67,6 +67,14 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
    private ControlsRegistration controls;
 
    private ApplicationSettings applicationSettings;
+   
+   
+   private String initialOpenedProject;
+   
+   private List<String> initialOpenedFiles;
+   
+   private String initialActiveFile;
+   
 
    /**
     * @param controls
@@ -95,12 +103,20 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                   if (result.getUserInfo().getRoles() != null && result.getUserInfo().getRoles().size() > 0)
                   {
                      controls.initControls(result.getUserInfo().getRoles());
-
-                     IDE.fireEvent(new ConfigurationReceivedSuccessfullyEvent(applicationConfiguration));
-                     new SettingsServiceImpl(IDE.eventBus(), applicationConfiguration.getRegistryURL(), result
-                        .getUserInfo().getName(), IDELoader.getInstance(), applicationConfiguration.getContext());
+                     
+                     new SettingsServiceImpl(IDE.eventBus(), applicationConfiguration.getRegistryURL(), result.getUserInfo().getName(), IDELoader.getInstance(), applicationConfiguration.getContext());
                      SettingsService.getInstance().restoreFromCookies(applicationSettings);
+                     
+                     initialOpenedProject = applicationSettings.getValueAsString("opened-project");
+                     initialActiveFile = applicationSettings.getValueAsString("active-file");
 
+                     initialOpenedFiles = new ArrayList<String>();
+                     List<String> openedFiles = applicationSettings.getValueAsList("opened-files");
+                     if (openedFiles != null) {
+                        initialOpenedFiles.addAll(openedFiles);
+                     }
+                     
+                     IDE.fireEvent(new ConfigurationReceivedSuccessfullyEvent(applicationConfiguration));
                      DirectoryFilter.get().setPattern(applicationConfiguration.getHiddenFiles());
 
                      IDE.fireEvent(new ApplicationSettingsReceivedEvent(result.getSettings()));
@@ -167,7 +183,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       }
       else
       {
-         new RestoreOpenedFilesPhase(IDE.eventBus(), applicationSettings);
+         new RestoreOpenedFilesPhase(IDE.eventBus(), applicationSettings, initialOpenedProject, initialOpenedFiles, initialActiveFile);
       }
    }
 

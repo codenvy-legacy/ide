@@ -92,11 +92,23 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
    private boolean isRestoringOpenedFiles = false;
 
    private ProjectModel restoredProject;
+   
+   
+   private String initialOpenedProject;
+   
+   private List<String> initialOpenedFiles;
+   
+   private String initialActiveFile;
+   
 
-   public RestoreOpenedFilesPhase(HandlerManager eventBus, ApplicationSettings applicationSettings)
+   public RestoreOpenedFilesPhase(HandlerManager eventBus, ApplicationSettings applicationSettings, String initialOpenedProject, List<String> initialOpenedFiles, String initialActiveFile)
    {
       this.eventBus = eventBus;
       this.applicationSettings = applicationSettings;
+      
+      this.initialOpenedProject = initialOpenedProject;
+      this.initialOpenedFiles = initialOpenedFiles;
+      this.initialActiveFile = initialActiveFile;
 
       instance = this;
 
@@ -121,7 +133,8 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
    protected void execute()
    {
-      String openedProjectId = applicationSettings.getValueAsString(Settings.OPENED_PROJECT);
+      //String openedProjectId = applicationSettings.getValueAsString(Settings.OPENED_PROJECT);
+      String openedProjectId = initialOpenedProject;
 
       if (openedProjectId == null || openedProjectId.isEmpty())
       {
@@ -187,11 +200,15 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
    {
       if (!applicationSettings.containsKey(Settings.OPENED_FILES))
       {
-         applicationSettings.setValue(Settings.OPENED_FILES, new ArrayList<String>(), Store.SERVER);
+         applicationSettings.setValue(Settings.OPENED_FILES, new ArrayList<String>(), Store.COOKIES);
       }
 
       filesToLoad = new ArrayList<String>();
-      filesToLoad.addAll(applicationSettings.getValueAsList(Settings.OPENED_FILES));
+      filesToLoad.addAll(initialOpenedFiles);
+//      filesToLoad.addAll(applicationSettings.getValueAsList(Settings.OPENED_FILES));
+      
+      activeFileURL = applicationSettings.getValueAsString(Settings.ACTIVE_FILE);
+      activeFileURL = initialActiveFile;
 
       if (!applicationSettings.containsKey(Settings.DEFAULT_EDITORS))
       {
@@ -201,7 +218,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
       defaultEditors = new LinkedHashMap<String, String>();
       defaultEditors.putAll(applicationSettings.getValueAsMap(Settings.DEFAULT_EDITORS));
 
-      activeFileURL = applicationSettings.getValueAsString(Settings.ACTIVE_FILE);
+      
    }
 
    protected void lazyRestoreOpenedFiles()

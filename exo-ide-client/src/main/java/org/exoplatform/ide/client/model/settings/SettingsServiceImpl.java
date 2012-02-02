@@ -214,7 +214,7 @@ public class SettingsServiceImpl extends SettingsService
 
    private void setCookie(String name, String value)
    {
-      Cookies.setCookie(COOKIE_PREFIX + userName + USER_NAME_DELIMITER + name, value);
+      setCookie(name, value, new Date(System.currentTimeMillis() + 3600000));
    }
 
    private void setCookie(String name, String value, Date expires)
