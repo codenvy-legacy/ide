@@ -47,6 +47,8 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler, Enab
 
    private boolean showErrors = true;
 
+   private static final String EXIT_CODE = "X-Exit-Code";
+
    public ExceptionThrownEventHandler()
    {
       IDE.addHandler(ExceptionThrownEvent.TYPE, this);
@@ -92,23 +94,7 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler, Enab
 
       if (error instanceof ServerException)
       {
-         ServerException serverException = (ServerException)error;
-         if (serverException.isErrorMessageProvided())
-         {
-            String html =
-               "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText() + "<br><br><hr><br>"
-                  + serverException.getMessage();
-            Dialogs.getInstance().showError(html);
-         }
-         else
-         {
-            String html = "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
-            if (event.getErrorMessage() != null)
-            {
-               html += "<br><hr><br>Possible reasons:<br>" + event.getErrorMessage();
-            }
-            Dialogs.getInstance().showError(html);
-         }
+         processServerError((ServerException)error, event.getErrorMessage());
       }
       else
       {
@@ -171,4 +157,24 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler, Enab
       }
    }
 
+   private void processServerError(ServerException serverException, String errorMessage)
+   {
+      if (serverException.isErrorMessageProvided()
+         || (serverException.getHeader(EXIT_CODE) != null && !"0".equals(serverException.getHeader(EXIT_CODE))))
+      {
+         String html =
+            "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText() + "<br><br><hr><br>"
+               + serverException.getMessage();
+         Dialogs.getInstance().showError(html);
+      }
+      else
+      {
+         String html = "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
+         if (errorMessage != null)
+         {
+            html += "<br><hr><br>Possible reasons:<br>" + errorMessage;
+         }
+         Dialogs.getInstance().showError(html);
+      }
+   }
 }
