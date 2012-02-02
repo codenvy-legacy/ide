@@ -21,9 +21,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeVariableBinding;
 import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilation;
 import org.eclipse.jdt.client.internal.core.util.Util;
 
-/**
- * Internal implementation of method bindings.
- */
+/** Internal implementation of method bindings. */
 class MethodBinding implements IMethodBinding
 {
 
@@ -68,9 +66,7 @@ class MethodBinding implements IMethodBinding
       return getDeclaringClass().isAnnotation();
    }
 
-   /**
-    * @see IMethodBinding#isConstructor()
-    */
+   /** @see IMethodBinding#isConstructor() */
    public boolean isConstructor()
    {
       return this.binding.isConstructor();
@@ -99,9 +95,7 @@ class MethodBinding implements IMethodBinding
       return (this.binding.modifiers & ExtraCompilerModifiers.AccIsDefaultConstructor) != 0;
    }
 
-   /**
-    * @see IBinding#getName()
-    */
+   /** @see IBinding#getName() */
    public String getName()
    {
       if (this.name == null)
@@ -156,9 +150,7 @@ class MethodBinding implements IMethodBinding
       return this.annotations = AnnotationBinding.NoAnnotations;
    }
 
-   /**
-    * @see IMethodBinding#getDeclaringClass()
-    */
+   /** @see IMethodBinding#getDeclaringClass() */
    public ITypeBinding getDeclaringClass()
    {
       if (this.declaringClass == null)
@@ -207,9 +199,7 @@ class MethodBinding implements IMethodBinding
       return this.parameterAnnotations[index];
    }
 
-   /**
-    * @see IMethodBinding#getParameterTypes()
-    */
+   /** @see IMethodBinding#getParameterTypes() */
    public ITypeBinding[] getParameterTypes()
    {
       if (this.parameterTypes != null)
@@ -251,9 +241,7 @@ class MethodBinding implements IMethodBinding
       }
    }
 
-   /**
-    * @see IMethodBinding#getReturnType()
-    */
+   /** @see IMethodBinding#getReturnType() */
    public ITypeBinding getReturnType()
    {
       if (this.returnType == null)
@@ -270,9 +258,7 @@ class MethodBinding implements IMethodBinding
       return null;
    }
 
-   /**
-    * @see IMethodBinding#getExceptionTypes()
-    */
+   /** @see IMethodBinding#getExceptionTypes() */
    public ITypeBinding[] getExceptionTypes()
    {
       if (this.exceptionTypes != null)
@@ -298,41 +284,31 @@ class MethodBinding implements IMethodBinding
       return this.exceptionTypes = exTypes;
    }
 
-   /**
-    * @see IBinding#getKind()
-    */
+   /** @see IBinding#getKind() */
    public int getKind()
    {
       return IBinding.METHOD;
    }
 
-   /**
-    * @see IBinding#getModifiers()
-    */
+   /** @see IBinding#getModifiers() */
    public int getModifiers()
    {
       return this.binding.getAccessFlags() & VALID_MODIFIERS;
    }
 
-   /**
-    * @see IBinding#isDeprecated()
-    */
+   /** @see IBinding#isDeprecated() */
    public boolean isDeprecated()
    {
       return this.binding.isDeprecated();
    }
 
-   /**
-    * @see IBinding#isRecovered()
-    */
+   /** @see IBinding#isRecovered() */
    public boolean isRecovered()
    {
       return false;
    }
 
-   /**
-    * @see IBinding#isSynthetic()
-    */
+   /** @see IBinding#isSynthetic() */
    public boolean isSynthetic()
    {
       return this.binding.isSynthetic();
@@ -347,9 +323,7 @@ class MethodBinding implements IMethodBinding
       return this.binding.isVarargs();
    }
 
-   /**
-    * @see IBinding#getKey()
-    */
+   /** @see IBinding#getKey() */
    public String getKey()
    {
       if (this.key == null)
@@ -383,9 +357,7 @@ class MethodBinding implements IMethodBinding
       return BindingComparator.isEqual(this.binding, otherBinding);
    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.dom.IMethodBinding#getTypeParameters()
-    */
+   /** @see org.eclipse.jdt.client.core.dom.IMethodBinding#getTypeParameters() */
    public ITypeBinding[] getTypeParameters()
    {
       if (this.typeParameters != null)
@@ -426,9 +398,7 @@ class MethodBinding implements IMethodBinding
       return (typeVariableBindings != null && typeVariableBindings.length > 0);
    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.dom.IMethodBinding#getTypeArguments()
-    */
+   /** @see org.eclipse.jdt.client.core.dom.IMethodBinding#getTypeArguments() */
    public ITypeBinding[] getTypeArguments()
    {
       if (this.typeArguments != null)
@@ -460,18 +430,14 @@ class MethodBinding implements IMethodBinding
       return this.typeArguments = NO_TYPE_BINDINGS;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.dom.IMethodBinding#isParameterizedMethod()
-    */
+   /** @see org.eclipse.jdt.client.core.dom.IMethodBinding#isParameterizedMethod() */
    public boolean isParameterizedMethod()
    {
       return (this.binding instanceof ParameterizedGenericMethodBinding)
          && !((ParameterizedGenericMethodBinding)this.binding).isRaw;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.dom.IMethodBinding#isRawMethod()
-    */
+   /** @see org.eclipse.jdt.client.core.dom.IMethodBinding#isRawMethod() */
    public boolean isRawMethod()
    {
       return (this.binding instanceof ParameterizedGenericMethodBinding)
@@ -495,17 +461,13 @@ class MethodBinding implements IMethodBinding
       }
    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.dom.IMethodBinding#getMethodDeclaration()
-    */
+   /** @see org.eclipse.jdt.client.core.dom.IMethodBinding#getMethodDeclaration() */
    public IMethodBinding getMethodDeclaration()
    {
       return this.resolver.getMethodBinding(this.binding.original());
    }
 
-   /**
-    * @see IMethodBinding#overrides(IMethodBinding)
-    */
+   /** @see IMethodBinding#overrides(IMethodBinding) */
    public boolean overrides(IMethodBinding otherMethod)
    {
       LookupEnvironment lookupEnvironment = this.resolver.lookupEnvironment();

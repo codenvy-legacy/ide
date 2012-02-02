@@ -114,7 +114,6 @@ public class VariableDeclarationFragment extends VariableDeclaration
 
    /*
     * (omit javadoc for this method) Method declared on VariableDeclaration.
-    * 
     * @since 3.1
     */
    final SimplePropertyDescriptor internalExtraDimensionsProperty()
@@ -124,7 +123,6 @@ public class VariableDeclarationFragment extends VariableDeclaration
 
    /*
     * (omit javadoc for this method) Method declared on VariableDeclaration.
-    * 
     * @since 3.1
     */
    final ChildPropertyDescriptor internalInitializerProperty()
@@ -134,7 +132,6 @@ public class VariableDeclarationFragment extends VariableDeclaration
 
    /*
     * (omit javadoc for this method) Method declared on VariableDeclaration.
-    * 
     * @since 3.1
     */
    final ChildPropertyDescriptor internalNameProperty()
@@ -142,17 +139,13 @@ public class VariableDeclarationFragment extends VariableDeclaration
       return NAME_PROPERTY;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value)
    {
       if (property == EXTRA_DIMENSIONS_PROPERTY)
@@ -171,9 +164,7 @@ public class VariableDeclarationFragment extends VariableDeclaration
       return super.internalGetSetIntProperty(property, get, value);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
       if (property == NAME_PROPERTY)
@@ -204,17 +195,13 @@ public class VariableDeclarationFragment extends VariableDeclaration
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int getNodeType0()
    {
       return VARIABLE_DECLARATION_FRAGMENT;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    ASTNode clone0(AST target)
    {
       VariableDeclarationFragment result = new VariableDeclarationFragment(target);
@@ -225,18 +212,14 @@ public class VariableDeclarationFragment extends VariableDeclaration
       return result;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
       // dispatch to correct overloaded match method
       return matcher.match(this, other);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    void accept0(ASTVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -249,9 +232,7 @@ public class VariableDeclarationFragment extends VariableDeclaration
       visitor.endVisit(this);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on VariableDeclaration.
-    */
+   /* (omit javadoc for this method) Method declared on VariableDeclaration. */
    public SimpleName getName()
    {
       if (this.variableName == null)
@@ -270,9 +251,7 @@ public class VariableDeclarationFragment extends VariableDeclaration
       return this.variableName;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on VariableDeclaration.
-    */
+   /* (omit javadoc for this method) Method declared on VariableDeclaration. */
    public void setName(SimpleName variableName)
    {
       if (variableName == null)
@@ -323,17 +302,13 @@ public class VariableDeclarationFragment extends VariableDeclaration
       postValueChange(EXTRA_DIMENSIONS_PROPERTY);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on VariableDeclaration.
-    */
+   /* (omit javadoc for this method) Method declared on VariableDeclaration. */
    public Expression getInitializer()
    {
       return this.optionalInitializer;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on VariableDeclaration.
-    */
+   /* (omit javadoc for this method) Method declared on VariableDeclaration. */
    public void setInitializer(Expression initializer)
    {
       ASTNode oldChild = this.optionalInitializer;
@@ -342,18 +317,14 @@ public class VariableDeclarationFragment extends VariableDeclaration
       postReplaceChild(oldChild, initializer, INITIALIZER_PROPERTY);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       // treat Operator as free
       return BASE_NODE_SIZE + 3 * 4;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int treeSize()
    {
       return memSize() + (this.variableName == null ? 0 : getName().treeSize())

@@ -59,7 +59,6 @@ import javax.crypto.spec.OAEPParameterSpec;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 20, 2012 1:28:01 PM evgen $
- * 
  */
 public class AstPesenter implements EditorActiveFileChangedHandler, ShowAstHandler, ViewClosedHandler,
    EditorContentChangedHandler
@@ -94,9 +93,7 @@ public class AstPesenter implements EditorActiveFileChangedHandler, ShowAstHandl
       eventBus.addHandler(EditorContentChangedEvent.TYPE, this);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
+   /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
@@ -107,9 +104,7 @@ public class AstPesenter implements EditorActiveFileChangedHandler, ShowAstHandl
          editor = null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.event.ShowAstHandler#onShowAst(org.eclipse.jdt.client.event.ShowAstEvent)
-    */
+   /** @see org.eclipse.jdt.client.event.ShowAstHandler#onShowAst(org.eclipse.jdt.client.event.ShowAstEvent) */
    @Override
    public void onShowAst(ShowAstEvent event)
    {
@@ -125,9 +120,7 @@ public class AstPesenter implements EditorActiveFileChangedHandler, ShowAstHandl
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
+   /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent) */
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
@@ -135,9 +128,7 @@ public class AstPesenter implements EditorActiveFileChangedHandler, ShowAstHandl
          display = null;
    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.event.EditorContentChangedHandler#onEditorContentChanged(org.exoplatform.ide.editor.api.event.EditorContentChangedEvent)
-    */
+   /** @see org.exoplatform.ide.editor.api.event.EditorContentChangedHandler#onEditorContentChanged(org.exoplatform.ide.editor.api.event.EditorContentChangedEvent) */
    @Override
    public void onEditorContentChanged(EditorContentChangedEvent event)
    {
@@ -146,9 +137,7 @@ public class AstPesenter implements EditorActiveFileChangedHandler, ShowAstHandl
 
    }
 
-   /**
-    * @return
-    */
+   /** @return */
    private CompilationUnit parseFile()
    {
       ASTParser parser = ASTParser.newParser(AST.JLS3);
@@ -178,22 +167,22 @@ public class AstPesenter implements EditorActiveFileChangedHandler, ShowAstHandl
          {
             editor.clearErrorMark(i);
          }
-         //         StringBuilder b = new StringBuilder();
-         //         b.append("<pre>");
+         // StringBuilder b = new StringBuilder();
+         // b.append("<pre>");
          for (IProblem p : unit.getProblems())
          {
             int sourceLineNumber = p.getSourceLineNumber();
             if (sourceLineNumber == 0)
                sourceLineNumber = 1;
             editor.setErrorMark(sourceLineNumber, p.getMessage());
-            //            if (p.getID() == IProblem.UndefinedType)
-            //            {
-            //               newProblems.add(p);
-            //            }
-            //            b.append("problem - ").append(p.getID()).append(" line: ").append(p.getSourceLineNumber())
-            //               .append(p.getMessage().replaceAll("<", "&lt;")).append("<br>");
+            // if (p.getID() == IProblem.UndefinedType)
+            // {
+            // newProblems.add(p);
+            // }
+            // b.append("problem - ").append(p.getID()).append(" line: ").append(p.getSourceLineNumber())
+            // .append(p.getMessage().replaceAll("<", "&lt;")).append("<br>");
          }
-         //         b.append("</pre>");
+         // b.append("</pre>");
 
          // if (!problems.isEmpty())
          // {
@@ -235,7 +224,7 @@ public class AstPesenter implements EditorActiveFileChangedHandler, ShowAstHandl
          // });
          // }
          // else
-         //         eventBus.fireEvent(new OutputEvent(b.toString(), Type.ERROR));
+         // eventBus.fireEvent(new OutputEvent(b.toString(), Type.ERROR));
       }
    };
 

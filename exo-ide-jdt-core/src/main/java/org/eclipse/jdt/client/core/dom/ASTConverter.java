@@ -53,9 +53,7 @@ import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 import org.eclipse.jdt.client.internal.core.util.Util;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 
-/**
- * Internal class for converting internal compiler ASTs into public ASTs.
- */
+/** Internal class for converting internal compiler ASTs into public ASTs. */
 class ASTConverter
 {
 
@@ -626,9 +624,7 @@ class ASTConverter
          Block block = null;
          if (start != -1 && end != -1)
          {
-            /*
-             * start or end can be equal to -1 if we have an interface's method.
-             */
+            /* start or end can be equal to -1 if we have an interface's method. */
             block = new Block(this.ast);
             block.setSourceRange(start, closingPosition - start + 1);
             methodDecl.setBody(block);
@@ -1153,9 +1149,7 @@ class ASTConverter
       return assignment;
    }
 
-   /*
-    * Internal use only Used to convert class body declarations
-    */
+   /* Internal use only Used to convert class body declarations */
    public TypeDeclaration convert(org.eclipse.jdt.client.internal.compiler.ast.ASTNode[] nodes)
    {
       final TypeDeclaration typeDecl = new TypeDeclaration(this.ast);
@@ -4225,9 +4219,7 @@ class ASTConverter
       return emptyStatement;
    }
 
-   /**
-    * @return a new modifier
-    */
+   /** @return a new modifier */
    private Modifier createModifier(ModifierKeyword keyword)
    {
       final Modifier modifier = new Modifier(this.ast);
@@ -4694,9 +4686,7 @@ class ASTConverter
       this.pendingThisExpressionScopeResolution.add(thisExpression);
    }
 
-   /**
-    * Remove whitespaces and comments before and after the expression.
-    */
+   /** Remove whitespaces and comments before and after the expression. */
    private void trimWhiteSpacesAndComments(org.eclipse.jdt.client.internal.compiler.ast.Expression expression)
    {
       int start = expression.sourceStart;
@@ -4885,9 +4875,7 @@ class ASTConverter
       }
    }
 
-   /**
-    * This method is used to retrieve the start position of the Ellipsis
-    */
+   /** This method is used to retrieve the start position of the Ellipsis */
    protected int retrieveEllipsisStartPosition(int start, int end)
    {
       this.scanner.resetTo(start, end);
@@ -5399,9 +5387,7 @@ class ASTConverter
          annotationTypeMemberDeclaration.sourceStart);
    }
 
-   /**
-    * @param bodyDeclaration
-    */
+   /** @param bodyDeclaration */
    protected void setModifiers(BodyDeclaration bodyDeclaration,
       org.eclipse.jdt.client.internal.compiler.ast.Annotation[] annotations, int modifiersEnd)
    {

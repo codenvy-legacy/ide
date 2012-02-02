@@ -60,22 +60,17 @@ public abstract class AbstractVariableDeclaration extends Statement implements I
 
    public static final int TYPE_PARAMETER = 6;
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments() */
    public TypeBinding[] genericTypeArguments()
    {
       return null;
    }
 
-   /**
-    * Returns the constant kind of this variable declaration
-    */
+   /** Returns the constant kind of this variable declaration */
    public abstract int getKind();
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.InvocationSite#isSuperAccess()
     */
    public boolean isSuperAccess()
@@ -85,7 +80,6 @@ public abstract class AbstractVariableDeclaration extends Statement implements I
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.InvocationSite#isTypeAccess()
     */
    public boolean isTypeAccess()
@@ -142,9 +136,8 @@ public abstract class AbstractVariableDeclaration extends Statement implements I
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.lookup.InvocationSite#setActualReceiverType(org.eclipse.jdt.internal.compiler.lookup.
-    * ReferenceBinding)
+    * @see org.eclipse.jdt.internal.compiler.lookup.InvocationSite#setActualReceiverType
+    * (org.eclipse.jdt.internal.compiler.lookup. ReferenceBinding)
     */
    public void setActualReceiverType(ReferenceBinding receiverType)
    {
@@ -153,7 +146,6 @@ public abstract class AbstractVariableDeclaration extends Statement implements I
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.InvocationSite#setDepth(int)
     */
    public void setDepth(int depth)
@@ -164,7 +156,6 @@ public abstract class AbstractVariableDeclaration extends Statement implements I
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.InvocationSite#setFieldIndex(int)
     */
    public void setFieldIndex(int depth)

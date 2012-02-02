@@ -33,9 +33,7 @@ public class CompletionOnJavadocQualifiedTypeReference extends JavadocQualifiedT
       this.completionIdentifier = CharOperation.NO_CHAR;
    }
 
-   /**
-    * @param flags The completionFlags to set.
-    */
+   /** @param flags The completionFlags to set. */
    public void addCompletionFlags(int flags)
    {
       this.completionFlags |= flags;
@@ -73,8 +71,7 @@ public class CompletionOnJavadocQualifiedTypeReference extends JavadocQualifiedT
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.ast.QualifiedTypeReference#printExpression(int, java.lang.StringBuffer)
+    * @see org.eclipse.jdt.internal.compiler.ast.QualifiedTypeReference#printExpression (int, java.lang.StringBuffer)
     */
    public StringBuffer printExpression(int indent, StringBuffer output)
    {

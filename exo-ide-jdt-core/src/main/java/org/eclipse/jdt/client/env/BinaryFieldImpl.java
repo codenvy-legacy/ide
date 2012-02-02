@@ -28,60 +28,47 @@ import org.eclipse.jdt.client.internal.compiler.impl.Constant;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 17, 2012 4:33:03 PM evgen $
- * 
  */
 public class BinaryFieldImpl implements IBinaryField
 {
 
    private JSONObject field;
 
-   /**
-    * @param field
-    */
+   /** @param field */
    public BinaryFieldImpl(JSONObject field)
    {
       this.field = field;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IGenericField#getModifiers()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IGenericField#getModifiers() */
    @Override
    public int getModifiers()
    {
       return (int)field.get("modifiers").isNumber().doubleValue();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryField#getAnnotations()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryField#getAnnotations() */
    @Override
    public IBinaryAnnotation[] getAnnotations()
    {
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryField#getTagBits()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryField#getTagBits() */
    @Override
    public long getTagBits()
    {
       return 0;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryField#getConstant()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryField#getConstant() */
    @Override
    public Constant getConstant()
    {
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryField#getGenericSignature()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryField#getGenericSignature() */
    @Override
    public char[] getGenericSignature()
    {
@@ -89,18 +76,14 @@ public class BinaryFieldImpl implements IBinaryField
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryField#getName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryField#getName() */
    @Override
    public char[] getName()
    {
       return field.get("name").isString().stringValue().toCharArray();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryField#getTypeName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryField#getTypeName() */
    @Override
    public char[] getTypeName()
    {

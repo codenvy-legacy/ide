@@ -16,19 +16,18 @@ import java.util.List;
 import org.eclipse.jdt.client.text.AbstractLineTracker.DelimiterInfo;
 
 /**
- * Abstract, read-only implementation of <code>ILineTracker</code>. It lets the definition of
- * line delimiters to subclasses. Assuming that '\n' is the only line delimiter, this abstract
- * implementation defines the following line scheme:
+ * Abstract, read-only implementation of <code>ILineTracker</code>. It lets the definition of line delimiters to subclasses.
+ * Assuming that '\n' is the only line delimiter, this abstract implementation defines the following line scheme:
  * <ul>
- * <li> "" -> [0,0]
- * <li> "a" -> [0,1]
- * <li> "\n" -> [0,1], [1,0]
- * <li> "a\n" -> [0,2], [2,0]
- * <li> "a\nb" -> [0,2], [2,1]
- * <li> "a\nbc\n" -> [0,2], [2,3], [5,0]
+ * <li>"" -> [0,0]
+ * <li>"a" -> [0,1]
+ * <li>"\n" -> [0,1], [1,0]
+ * <li>"a\n" -> [0,2], [2,0]
+ * <li>"a\nb" -> [0,2], [2,1]
+ * <li>"a\nbc\n" -> [0,2], [2,3], [5,0]
  * </ul>
  * This class must be subclassed.
- *
+ * 
  * @since 3.2
  */
 abstract class ListLineTracker implements ILineTracker
@@ -40,16 +39,14 @@ abstract class ListLineTracker implements ILineTracker
    /** The length of the tracked text */
    private int fTextLength;
 
-   /**
-    * Creates a new line tracker.
-    */
+   /** Creates a new line tracker. */
    protected ListLineTracker()
    {
    }
 
    /**
     * Binary search for the line at a given offset.
-    *
+    * 
     * @param offset the offset whose line should be found
     * @return the line of the offset
     */
@@ -98,7 +95,7 @@ abstract class ListLineTracker implements ILineTracker
 
    /**
     * Returns the number of lines covered by the specified text range.
-    *
+    * 
     * @param startLine the line where the text range starts
     * @param offset the start offset of the text range
     * @param length the length of the text range
@@ -127,9 +124,7 @@ abstract class ListLineTracker implements ILineTracker
       return getLineNumberOfOffset(target) - startLine + 1;
    }
 
-   /*
-    * @see org.eclipse.jface.text.ILineTracker#getLineLength(int)
-    */
+   /* @see org.eclipse.jface.text.ILineTracker#getLineLength(int) */
    public final int getLineLength(int line) throws BadLocationException
    {
       int lines = fLines.size();
@@ -144,9 +139,7 @@ abstract class ListLineTracker implements ILineTracker
       return l.length;
    }
 
-   /*
-    * @see org.eclipse.jface.text.ILineTracker#getLineNumberOfOffset(int)
-    */
+   /* @see org.eclipse.jface.text.ILineTracker#getLineNumberOfOffset(int) */
    public final int getLineNumberOfOffset(int position) throws BadLocationException
    {
       if (position < 0 || position > fTextLength)
@@ -166,9 +159,7 @@ abstract class ListLineTracker implements ILineTracker
       return findLine(position);
    }
 
-   /*
-    * @see org.eclipse.jface.text.ILineTracker#getLineInformationOfOffset(int)
-    */
+   /* @see org.eclipse.jface.text.ILineTracker#getLineInformationOfOffset(int) */
    public final IRegion getLineInformationOfOffset(int position) throws BadLocationException
    {
       if (position > fTextLength)
@@ -186,9 +177,7 @@ abstract class ListLineTracker implements ILineTracker
       return getLineInformation(findLine(position));
    }
 
-   /*
-    * @see org.eclipse.jface.text.ILineTracker#getLineInformation(int)
-    */
+   /* @see org.eclipse.jface.text.ILineTracker#getLineInformation(int) */
    public final IRegion getLineInformation(int line) throws BadLocationException
    {
       int lines = fLines.size();
@@ -209,9 +198,7 @@ abstract class ListLineTracker implements ILineTracker
       return (l.delimiter != null ? new Line(l.offset, l.length - l.delimiter.length()) : l);
    }
 
-   /*
-    * @see org.eclipse.jface.text.ILineTracker#getLineOffset(int)
-    */
+   /* @see org.eclipse.jface.text.ILineTracker#getLineOffset(int) */
    public final int getLineOffset(int line) throws BadLocationException
    {
       int lines = fLines.size();
@@ -234,9 +221,7 @@ abstract class ListLineTracker implements ILineTracker
       return l.offset;
    }
 
-   /*
-    * @see org.eclipse.jface.text.ILineTracker#getNumberOfLines()
-    */
+   /* @see org.eclipse.jface.text.ILineTracker#getNumberOfLines() */
    public final int getNumberOfLines()
    {
       int lines = fLines.size();
@@ -248,9 +233,7 @@ abstract class ListLineTracker implements ILineTracker
       return (l.delimiter != null ? lines + 1 : lines);
    }
 
-   /*
-    * @see org.eclipse.jface.text.ILineTracker#getNumberOfLines(int, int)
-    */
+   /* @see org.eclipse.jface.text.ILineTracker#getNumberOfLines(int, int) */
    public final int getNumberOfLines(int position, int length) throws BadLocationException
    {
 
@@ -280,9 +263,7 @@ abstract class ListLineTracker implements ILineTracker
       return count;
    }
 
-   /*
-    * @see org.eclipse.jface.text.ILineTracker#getLineDelimiter(int)
-    */
+   /* @see org.eclipse.jface.text.ILineTracker#getLineDelimiter(int) */
    public final String getLineDelimiter(int line) throws BadLocationException
    {
       int lines = fLines.size();
@@ -301,9 +282,8 @@ abstract class ListLineTracker implements ILineTracker
    }
 
    /**
-    * Returns the information about the first delimiter found in the given text starting at the
-    * given offset.
-    *
+    * Returns the information about the first delimiter found in the given text starting at the given offset.
+    * 
     * @param text the text to be searched
     * @param offset the offset in the given text
     * @return the information of the first found delimiter or <code>null</code>
@@ -311,12 +291,11 @@ abstract class ListLineTracker implements ILineTracker
    protected abstract DelimiterInfo nextDelimiterInfo(String text, int offset);
 
    /**
-    * Creates the line structure for the given text. Newly created lines are inserted into the line
-    * structure starting at the given position. Returns the number of newly created lines.
-    *
+    * Creates the line structure for the given text. Newly created lines are inserted into the line structure starting at the
+    * given position. Returns the number of newly created lines.
+    * 
     * @param text the text for which to create a line structure
-    * @param insertPosition the position at which the newly created lines are inserted into the
-    *        tracker's line structure
+    * @param insertPosition the position at which the newly created lines are inserted into the tracker's line structure
     * @param offset the offset of all newly created lines
     * @return the number of newly created lines
     */
@@ -370,9 +349,7 @@ abstract class ListLineTracker implements ILineTracker
       throw new UnsupportedOperationException();
    }
 
-   /*
-    * @see org.eclipse.jface.text.ILineTracker#set(java.lang.String)
-    */
+   /* @see org.eclipse.jface.text.ILineTracker#set(java.lang.String) */
    public final void set(String text)
    {
       fLines.clear();
@@ -386,7 +363,7 @@ abstract class ListLineTracker implements ILineTracker
    /**
     * Returns the internal data structure, a {@link List} of {@link Line}s. Used only by
     * {@link TreeLineTracker#TreeLineTracker(ListLineTracker)}.
-    *
+    * 
     * @return the internal list of lines.
     */
    final List getLines()

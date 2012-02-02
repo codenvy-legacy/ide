@@ -40,9 +40,7 @@ public class NameEnvironmentAnswer
       this.accessRestriction = accessRestriction;
    }
 
-   /**
-    * Returns the associated access restriction, or null if none.
-    */
+   /** Returns the associated access restriction, or null if none. */
    public AccessRestriction getAccessRestriction()
    {
       return this.accessRestriction;

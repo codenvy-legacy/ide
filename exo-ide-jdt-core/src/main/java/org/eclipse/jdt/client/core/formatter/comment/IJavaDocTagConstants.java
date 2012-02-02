@@ -13,7 +13,7 @@ package org.eclipse.jdt.client.core.formatter.comment;
 
 /**
  * Javadoc tag constants.
- *
+ * 
  * @since 3.0
  */
 public interface IJavaDocTagConstants
@@ -131,9 +131,7 @@ public interface IJavaDocTagConstants
    /** JAVADOC STAR */
    public static final String JAVADOC_STAR = "*"; //$NON-NLS-1$
 
-   /*
-    *  Tags IDs
-    */
+   /* Tags IDs */
    static final int JAVADOC_TAGS_INDEX_MASK = 0xFFFF;
 
    static final int JAVADOC_TAGS_ID_MASK = 0xFF00;
@@ -148,7 +146,8 @@ public interface IJavaDocTagConstants
 
    static final int JAVADOC_SEPARATOR_TAGS_ID = 0x1000;
 
-   static final int JAVADOC_SINGLE_TAGS_ID = JAVADOC_SINGLE_BREAK_TAG_ID; // ID max for tags ID with no opening/closing (e.g. <bla>....</bla>)
+   static final int JAVADOC_SINGLE_TAGS_ID = JAVADOC_SINGLE_BREAK_TAG_ID; // ID max for tags ID with no opening/closing (e.g.
+                                                                          // <bla>....</bla>)
 
    static final int JAVADOC_CLOSED_TAG = 0x10000;
 }

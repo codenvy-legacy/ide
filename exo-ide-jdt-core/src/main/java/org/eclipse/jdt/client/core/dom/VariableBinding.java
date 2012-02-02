@@ -23,9 +23,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 
-/**
- * Internal implementation of variable bindings.
- */
+/** Internal implementation of variable bindings. */
 class VariableBinding implements IVariableBinding
 {
 
@@ -92,9 +90,7 @@ class VariableBinding implements IVariableBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see IVariableBinding#getConstantValue()
-    * 
     * @since 3.0
     */
    public Object getConstantValue()
@@ -126,9 +122,7 @@ class VariableBinding implements IVariableBinding
       return null;
    }
 
-   /*
-    * @see IVariableBinding#getDeclaringClass()
-    */
+   /* @see IVariableBinding#getDeclaringClass() */
    public ITypeBinding getDeclaringClass()
    {
       if (isField())
@@ -146,9 +140,7 @@ class VariableBinding implements IVariableBinding
       }
    }
 
-   /*
-    * @see IVariableBinding#getDeclaringMethod()
-    */
+   /* @see IVariableBinding#getDeclaringMethod() */
    public IMethodBinding getDeclaringMethod()
    {
       if (!isField())
@@ -192,9 +184,7 @@ class VariableBinding implements IVariableBinding
       return null;
    }
 
-   /*
-    * @see IBinding#getKey()
-    */
+   /* @see IBinding#getKey() */
    public String getKey()
    {
       if (this.key == null)
@@ -204,17 +194,13 @@ class VariableBinding implements IVariableBinding
       return this.key;
    }
 
-   /*
-    * @see IBinding#getKind()
-    */
+   /* @see IBinding#getKind() */
    public int getKind()
    {
       return IBinding.VARIABLE;
    }
 
-   /*
-    * @see IBinding#getModifiers()
-    */
+   /* @see IBinding#getModifiers() */
    public int getModifiers()
    {
       if (isField())
@@ -228,9 +214,7 @@ class VariableBinding implements IVariableBinding
       return Modifier.NONE;
    }
 
-   /*
-    * @see IBinding#getName()
-    */
+   /* @see IBinding#getName() */
    public String getName()
    {
       if (this.name == null)
@@ -240,9 +224,7 @@ class VariableBinding implements IVariableBinding
       return this.name;
    }
 
-   /*
-    * @see IVariableBinding#getType()
-    */
+   /* @see IVariableBinding#getType() */
    public ITypeBinding getType()
    {
       if (this.type == null)
@@ -343,7 +325,6 @@ class VariableBinding implements IVariableBinding
 
    /*
     * @see IVariableBinding#getVariableDeclaration()
-    * 
     * @since 3.1
     */
    public IVariableBinding getVariableDeclaration()
@@ -356,25 +337,19 @@ class VariableBinding implements IVariableBinding
       return this;
    }
 
-   /*
-    * @see IVariableBinding#getVariableId()
-    */
+   /* @see IVariableBinding#getVariableId() */
    public int getVariableId()
    {
       return this.binding.id;
    }
 
-   /*
-    * @see IVariableBinding#isParameter()
-    */
+   /* @see IVariableBinding#isParameter() */
    public boolean isParameter()
    {
       return (this.binding.tagBits & TagBits.IsArgument) != 0;
    }
 
-   /*
-    * @see IBinding#isDeprecated()
-    */
+   /* @see IBinding#isDeprecated() */
    public boolean isDeprecated()
    {
       if (isField())
@@ -386,7 +361,6 @@ class VariableBinding implements IVariableBinding
 
    /*
     * @see IVariableBinding#isEnumConstant()
-    * 
     * @since 3.1
     */
    public boolean isEnumConstant()
@@ -396,7 +370,6 @@ class VariableBinding implements IVariableBinding
 
    /*
     * @see IBinding#isEqualTo(Binding)
-    * 
     * @since 3.1
     */
    public boolean isEqualTo(IBinding other)
@@ -447,17 +420,13 @@ class VariableBinding implements IVariableBinding
       }
    }
 
-   /*
-    * @see IVariableBinding#isField()
-    */
+   /* @see IVariableBinding#isField() */
    public boolean isField()
    {
       return this.binding instanceof FieldBinding;
    }
 
-   /*
-    * @see IBinding#isSynthetic()
-    */
+   /* @see IBinding#isSynthetic() */
    public boolean isSynthetic()
    {
       if (isField())
@@ -469,7 +438,6 @@ class VariableBinding implements IVariableBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.core.dom.IBinding#isRecovered()
     */
    public boolean isRecovered()
@@ -479,7 +447,6 @@ class VariableBinding implements IVariableBinding
 
    /*
     * For debugging purpose only.
-    * 
     * @see java.lang.Object#toString()
     */
    public String toString()

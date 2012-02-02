@@ -244,8 +244,8 @@ public interface ITypeBinding extends IBinding
     * <li>For captures ({@link #isCapture()}) - returns the binding for the erasure of the leftmost bound if it has bounds and
     * java.lang.Object if it does not.</li>
     * <li>For array types ({@link #isArray()}) - returns an array type of the same dimension ({@link #getDimensions()}) as this
-    * type binding for which the element type is the erasure of the element type ({@link #getElementType()}) of this type binding.
-    * </li>
+    * type binding for which the element type is the erasure of the element type ( {@link #getElementType()}) of this type
+    * binding.</li>
     * <li>For all other type bindings - returns the identical binding.</li>
     * </ul>
     * 
@@ -493,7 +493,7 @@ public interface ITypeBinding extends IBinding
     * Returns whether this type binding represents an anonymous class.
     * <p>
     * An anonymous class is a subspecies of local class, and therefore mutually exclusive with member types. Note that anonymous
-    * classes have no name (<code>getName</code> returns the empty string).
+    * classes have no name ( <code>getName</code> returns the empty string).
     * </p>
     * 
     * @return <code>true</code> if this type binding is for an anonymous class, and <code>false</code> otherwise

@@ -22,9 +22,7 @@ import org.eclipse.jdt.client.internal.compiler.parser.RecoveryScannerData;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 import org.eclipse.jdt.client.internal.compiler.util.HashtableOfObjectToIntArray;
 
-/**
- * Internal AST visitor for propagating syntax errors.
- */
+/** Internal AST visitor for propagating syntax errors. */
 class ASTRecoveryPropagator extends DefaultASTVisitor
 {
    private static final int NOTHING = -1;
@@ -104,9 +102,7 @@ class ASTRecoveryPropagator extends DefaultASTVisitor
 
    private Vector stack = new Vector();
 
-   /**
-    * @noreference This method is not intended to be referenced by clients.
-    */
+   /** @noreference This method is not intended to be referenced by clients. */
    ASTRecoveryPropagator(CategorizedProblem[] problems, RecoveryScannerData data)
    {
       // visit Javadoc.tags() as well

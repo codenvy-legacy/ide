@@ -46,9 +46,7 @@ public class FieldBinding extends VariableBinding
       setAnnotations(initialFieldBinding.getAnnotations());
    }
 
-   /*
-    * API Answer the receiver's binding type from Binding.BindingID.
-    */
+   /* API Answer the receiver's binding type from Binding.BindingID. */
    public FieldBinding(FieldDeclaration field, TypeBinding type, int modifiers, ReferenceBinding declaringClass)
    {
       this(field.name, type, modifiers, declaringClass, null);
@@ -68,9 +66,7 @@ public class FieldBinding extends VariableBinding
 
    /*
     * Answer true if the receiver is visible to the type provided by the scope. InvocationSite implements isSuperAccess() to
-    * provide additional information if the receiver is protected.
-    * 
-    * NOTE: Cannot invoke this method with a compilation unit scope.
+    * provide additional information if the receiver is protected. NOTE: Cannot invoke this method with a compilation unit scope.
     */
 
    public final boolean canBeSeenBy(TypeBinding receiverType, InvocationSite invocationSite, Scope scope)
@@ -208,15 +204,21 @@ public class FieldBinding extends VariableBinding
    public char[] computeUniqueKey(boolean isLeaf)
    {
       // declaring key
-      char[] declaringKey = this.declaringClass == null /* case of length field for an array */
-      ? CharOperation.NO_CHAR : this.declaringClass.computeUniqueKey(false/* not a leaf */);
+      char[] declaringKey = this.declaringClass == null /*
+                                                         * case of length field for an array
+                                                         */
+      ? CharOperation.NO_CHAR : this.declaringClass.computeUniqueKey(false/*
+                                                                           * not a leaf
+                                                                           */);
       int declaringLength = declaringKey.length;
 
       // name
       int nameLength = this.name.length;
 
       // return type
-      char[] returnTypeKey = this.type == null ? new char[]{'V'} : this.type.computeUniqueKey(false/* not a leaf */);
+      char[] returnTypeKey = this.type == null ? new char[]{'V'} : this.type.computeUniqueKey(false/*
+                                                                                                    * not a leaf
+                                                                                                    */);
       int returnTypeLength = returnTypeKey.length;
 
       char[] uniqueKey = new char[declaringLength + 1 + nameLength + 1 + returnTypeLength];
@@ -283,9 +285,7 @@ public class FieldBinding extends VariableBinding
       return fieldConstant;
    }
 
-   /**
-    * X<T> t --> LX<TT;>;
-    */
+   /** X<T> t --> LX<TT;>; */
    public char[] genericSignature()
    {
       if ((this.modifiers & ExtraCompilerModifiers.AccGenericSignature) == 0)
@@ -355,22 +355,16 @@ public class FieldBinding extends VariableBinding
       return !isPublic() && !isProtected() && !isPrivate();
    }
 
-   /*
-    * Answer true if the receiver is a deprecated field
-    */
+   /* Answer true if the receiver is a deprecated field */
 
-   /*
-    * Answer true if the receiver has default visibility
-    */
+   /* Answer true if the receiver has default visibility */
 
    public final boolean isDeprecated()
    {
       return (this.modifiers & ClassFileConstants.AccDeprecated) != 0;
    }
 
-   /*
-    * Answer true if the receiver has private visibility
-    */
+   /* Answer true if the receiver has private visibility */
 
    public final boolean isPrivate()
    {
@@ -388,27 +382,21 @@ public class FieldBinding extends VariableBinding
       return this.declaringClass != null && this.declaringClass.isOrEnclosedByPrivateType();
    }
 
-   /*
-    * Answer true if the receiver has private visibility and is used locally
-    */
+   /* Answer true if the receiver has private visibility and is used locally */
 
    public final boolean isProtected()
    {
       return (this.modifiers & ClassFileConstants.AccProtected) != 0;
    }
 
-   /*
-    * Answer true if the receiver has public visibility
-    */
+   /* Answer true if the receiver has public visibility */
 
    public final boolean isPublic()
    {
       return (this.modifiers & ClassFileConstants.AccPublic) != 0;
    }
 
-   /*
-    * Answer true if the receiver is a static field
-    */
+   /* Answer true if the receiver is a static field */
 
    public final boolean isStatic()
    {
@@ -424,9 +412,7 @@ public class FieldBinding extends VariableBinding
       return (this.modifiers & ClassFileConstants.AccSynthetic) != 0;
    }
 
-   /*
-    * Answer true if the receiver is a transient field
-    */
+   /* Answer true if the receiver is a transient field */
 
    public final boolean isTransient()
    {
@@ -451,18 +437,14 @@ public class FieldBinding extends VariableBinding
       return (this.modifiers & ExtraCompilerModifiers.AccLocallyUsed) == 0 && this.compoundUseFlag > 0;
    }
 
-   /*
-    * Answer true if the receiver has protected visibility
-    */
+   /* Answer true if the receiver has protected visibility */
 
    public final boolean isViewedAsDeprecated()
    {
       return (this.modifiers & (ClassFileConstants.AccDeprecated | ExtraCompilerModifiers.AccDeprecatedImplicitly)) != 0;
    }
 
-   /*
-    * Answer true if the receiver is a volatile field
-    */
+   /* Answer true if the receiver is a volatile field */
 
    public final boolean isVolatile()
    {
@@ -474,12 +456,8 @@ public class FieldBinding extends VariableBinding
       return FIELD;
    }
 
-   /*
-    * Answer true if the receiver is visible to the invocationPackage.
-    */
-   /**
-    * Returns the original field (as opposed to parameterized instances)
-    */
+   /* Answer true if the receiver is visible to the invocationPackage. */
+   /** Returns the original field (as opposed to parameterized instances) */
    public FieldBinding original()
    {
       return this;

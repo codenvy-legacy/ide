@@ -12,9 +12,7 @@ package org.eclipse.jdt.client.internal.compiler.ast;
 
 import org.eclipse.jdt.client.internal.compiler.codegen.ExceptionLabel;
 
-/**
- * Extra behavior for statements which are generating subroutines
- */
+/** Extra behavior for statements which are generating subroutines */
 public abstract class SubRoutineStatement extends Statement
 {
 

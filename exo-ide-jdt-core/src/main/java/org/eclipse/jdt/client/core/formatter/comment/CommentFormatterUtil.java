@@ -27,7 +27,7 @@ import org.eclipse.jdt.client.internal.core.util.Util;
 
 /**
  * Comment formatting utils.
- *
+ * 
  * @since 3.1
  */
 public class CommentFormatterUtil
@@ -35,9 +35,8 @@ public class CommentFormatterUtil
 
    /**
     * Evaluates the edit on the given string.
-    *
-    * @throws IllegalArgumentException if the positions are not inside the
-    *                 string
+    * 
+    * @throws IllegalArgumentException if the positions are not inside the string
     */
    public static String evaluateFormatterEdit(String string, TextEdit edit, Position[] positions)
    {
@@ -63,12 +62,10 @@ public class CommentFormatterUtil
    }
 
    /**
-    * Creates edits that describe how to format the given string. Returns
-    * <code>null</code> if the code could not be formatted for the given
-    * kind.
-    *
-    * @throws IllegalArgumentException if the offset and length are not
-    *                 inside the string
+    * Creates edits that describe how to format the given string. Returns <code>null</code> if the code could not be formatted for
+    * the given kind.
+    * 
+    * @throws IllegalArgumentException if the offset and length are not inside the string
     */
    public static TextEdit format2(int kind, String string, int indentationLevel, String lineSeparator, Map options)
    {
@@ -82,9 +79,8 @@ public class CommentFormatterUtil
    }
 
    /**
-    * Returns a document with the given content and the given positions
-    * registered with the {@link DefaultPositionUpdater}.
-    *
+    * Returns a document with the given content and the given positions registered with the {@link DefaultPositionUpdater}.
+    * 
     * @param content the content
     * @param positions the positions
     * @return the document
@@ -136,7 +132,7 @@ public class CommentFormatterUtil
 
    /**
     * Logs the given throwable.
-    *
+    * 
     * @param t the throwable
     * @since 3.1
     */

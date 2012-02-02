@@ -135,9 +135,7 @@ public class TryStatement extends Statement
     */
    private ASTNode.NodeList resources = null;
 
-   /**
-    * The body; lazily initialized; defaults to an empty block.
-    */
+   /** The body; lazily initialized; defaults to an empty block. */
    private Block body = null;
 
    /**
@@ -145,9 +143,7 @@ public class TryStatement extends Statement
     */
    private ASTNode.NodeList catchClauses = new ASTNode.NodeList(CATCH_CLAUSES_PROPERTY);
 
-   /**
-    * The finally block, or <code>null</code> if none. Defaults to none.
-    */
+   /** The finally block, or <code>null</code> if none. Defaults to none. */
    private Block optionalFinallyBody = null;
 
    /**
@@ -168,17 +164,13 @@ public class TryStatement extends Statement
       }
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
       if (property == BODY_PROPERTY)
@@ -209,9 +201,7 @@ public class TryStatement extends Statement
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
       if (property == RESOURCES_PROPERTY)
@@ -226,17 +216,13 @@ public class TryStatement extends Statement
       return super.internalGetChildListProperty(property);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int getNodeType0()
    {
       return TRY_STATEMENT;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    ASTNode clone0(AST target)
    {
       TryStatement result = new TryStatement(target);
@@ -252,18 +238,14 @@ public class TryStatement extends Statement
       return result;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
       // dispatch to correct overloaded match method
       return matcher.match(this, other);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    void accept0(ASTVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -383,17 +365,13 @@ public class TryStatement extends Statement
       return this.resources;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       return super.memSize() + 4 * 4;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int treeSize()
    {
       return memSize() + (this.resources == null ? 0 : this.resources.listSize())

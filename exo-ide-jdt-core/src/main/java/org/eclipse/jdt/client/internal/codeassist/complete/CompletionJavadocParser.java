@@ -70,9 +70,7 @@ public class CompletionJavadocParser extends JavadocParser
       initLevelTags();
    }
 
-   /*
-    * Do not parse comment if completion location is not included.
-    */
+   /* Do not parse comment if completion location is not included. */
    public boolean checkDeprecation(int commentPtr)
    {
       boolean isDeprecated = false;
@@ -106,9 +104,7 @@ public class CompletionJavadocParser extends JavadocParser
       return isDeprecated;
    }
 
-   /*
-    * Replace stored Javadoc node with specific completion one.
-    */
+   /* Replace stored Javadoc node with specific completion one. */
    protected boolean commentParse()
    {
       this.docComment = new CompletionJavadoc(this.javadocStart, this.javadocEnd);
@@ -304,9 +300,7 @@ public class CompletionJavadocParser extends JavadocParser
       return this.completionNode;
    }
 
-   /*
-    * Get possible tags for a given prefix.
-    */
+   /* Get possible tags for a given prefix. */
    private char[][][] possibleTags(char[] prefix, boolean newLine)
    {
       char[][][] possibleTags = new char[2][][];
@@ -355,9 +349,7 @@ public class CompletionJavadocParser extends JavadocParser
       return (CompletionParser)this.sourceParser;
    }
 
-   /*
-    * Init tags arrays for current source level.
-    */
+   /* Init tags arrays for current source level. */
    private void initLevelTags()
    {
       int level = ((int)(this.complianceLevel >>> 16)) - ClassFileConstants.MAJOR_VERSION_1_1 + 1;
@@ -391,9 +383,7 @@ public class CompletionJavadocParser extends JavadocParser
       }
    }
 
-   /*
-    * Parse argument in @see tag method reference
-    */
+   /* Parse argument in @see tag method reference */
    protected Object parseArguments(Object receiver) throws InvalidInputException
    {
 
@@ -700,8 +690,7 @@ public class CompletionJavadocParser extends JavadocParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#parseReference()
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#parseReference ()
     */
    protected boolean parseReference() throws InvalidInputException
    {
@@ -716,8 +705,7 @@ public class CompletionJavadocParser extends JavadocParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#parseTag(int)
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#parseTag (int)
     */
    protected boolean parseTag(int previousPosition) throws InvalidInputException
    {
@@ -754,8 +742,7 @@ public class CompletionJavadocParser extends JavadocParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#parseThrows()
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#parseThrows ()
     */
    protected boolean parseThrows()
    {
@@ -998,7 +985,6 @@ public class CompletionJavadocParser extends JavadocParser
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#readToken()
     */
    protected int readToken() throws InvalidInputException
@@ -1012,9 +998,7 @@ public class CompletionJavadocParser extends JavadocParser
       return token;
    }
 
-   /*
-    * Recover syntax on invalid qualified name.
-    */
+   /* Recover syntax on invalid qualified name. */
    protected Object syntaxRecoverQualifiedName(int primitiveToken) throws InvalidInputException
    {
       if (this.cursorLocation == ((int)this.identifierPositionStack[this.identifierPtr]))
@@ -1040,9 +1024,7 @@ public class CompletionJavadocParser extends JavadocParser
       return this.completionNode;
    }
 
-   /*
-    * Recover syntax on type argument in invalid method/constructor reference
-    */
+   /* Recover syntax on type argument in invalid method/constructor reference */
    protected Object syntaxRecoverArgumentType(Object receiver, List arguments, Object argument)
       throws InvalidInputException
    {
@@ -1151,9 +1133,7 @@ public class CompletionJavadocParser extends JavadocParser
       return this.completionNode;
    }
 
-   /*
-    * Store completion node into doc comment.
-    */
+   /* Store completion node into doc comment. */
    protected void updateDocComment()
    {
       super.updateDocComment();
@@ -1167,8 +1147,7 @@ public class CompletionJavadocParser extends JavadocParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#verifySpaceOrEndComment()
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser# verifySpaceOrEndComment()
     */
    protected boolean verifySpaceOrEndComment()
    {

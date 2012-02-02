@@ -69,14 +69,10 @@ public class SimpleName extends Name
       return PROPERTY_DESCRIPTORS;
    }
 
-   /**
-    * An unspecified (but externally observable) legal Java identifier.
-    */
+   /** An unspecified (but externally observable) legal Java identifier. */
    private static final String MISSING_IDENTIFIER = "MISSING";//$NON-NLS-1$
 
-   /**
-    * The identifier; defaults to a unspecified, legal Java identifier.
-    */
+   /** The identifier; defaults to a unspecified, legal Java identifier. */
    private String identifier = MISSING_IDENTIFIER;
 
    /**
@@ -95,7 +91,6 @@ public class SimpleName extends Name
 
    /*
     * (omit javadoc for this method) Method declared on ASTNode.
-    * 
     * @since 3.0
     */
    final List internalStructuralPropertiesForType(int apiLevel)
@@ -103,9 +98,7 @@ public class SimpleName extends Name
       return propertyDescriptors(apiLevel);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value)
    {
       if (property == IDENTIFIER_PROPERTY)
@@ -124,17 +117,13 @@ public class SimpleName extends Name
       return super.internalGetSetObjectProperty(property, get, value);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int getNodeType0()
    {
       return SIMPLE_NAME;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    ASTNode clone0(AST target)
    {
       SimpleName result = new SimpleName(target);
@@ -143,18 +132,14 @@ public class SimpleName extends Name
       return result;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
       // dispatch to correct overloaded match method
       return matcher.match(this, other);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    void accept0(ASTVisitor visitor)
    {
       visitor.visit(this);
@@ -309,17 +294,13 @@ public class SimpleName extends Name
       return false;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on Name.
-    */
+   /* (omit javadoc for this method) Method declared on Name. */
    void appendName(StringBuffer buffer)
    {
       buffer.append(getIdentifier());
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       int size = BASE_NAME_NODE_SIZE + 2 * 4;
@@ -331,9 +312,7 @@ public class SimpleName extends Name
       return size;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int treeSize()
    {
       return memSize();

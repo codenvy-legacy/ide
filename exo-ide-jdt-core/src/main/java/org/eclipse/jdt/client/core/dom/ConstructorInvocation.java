@@ -127,17 +127,13 @@ public class ConstructorInvocation extends Statement
       }
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
       if (property == ARGUMENTS_PROPERTY)
@@ -152,17 +148,13 @@ public class ConstructorInvocation extends Statement
       return super.internalGetChildListProperty(property);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int getNodeType0()
    {
       return CONSTRUCTOR_INVOCATION;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    ASTNode clone0(AST target)
    {
       ConstructorInvocation result = new ConstructorInvocation(target);
@@ -176,18 +168,14 @@ public class ConstructorInvocation extends Statement
       return result;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
       // dispatch to correct overloaded match method
       return matcher.match(this, other);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    void accept0(ASTVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -242,18 +230,14 @@ public class ConstructorInvocation extends Statement
       return this.ast.getBindingResolver().resolveConstructor(this);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       // treat Code as free
       return BASE_NODE_SIZE + 2 * 4;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int treeSize()
    {
       return memSize() + (this.typeArguments == null ? 0 : this.typeArguments.listSize())

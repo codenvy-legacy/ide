@@ -51,7 +51,6 @@ public class Binding extends ASTAttribute
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getParent()
     */
    public Object getParent()
@@ -81,7 +80,6 @@ public class Binding extends ASTAttribute
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getChildren()
     */
    public Object[] getChildren()
@@ -365,7 +363,6 @@ public class Binding extends ASTAttribute
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getLabel()
     */
    public String getLabel()
@@ -436,7 +433,6 @@ public class Binding extends ASTAttribute
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getImage()
     */
    public Image getImage()
@@ -446,7 +442,6 @@ public class Binding extends ASTAttribute
 
    /*
     * (non-Javadoc)
-    * 
     * @see java.lang.Object#toString()
     */
    public String toString()
@@ -454,9 +449,7 @@ public class Binding extends ASTAttribute
       return getLabel();
    }
 
-   /*
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
+   /* @see java.lang.Object#equals(java.lang.Object) */
    public boolean equals(Object obj)
    {
       if (this == obj)
@@ -500,9 +493,7 @@ public class Binding extends ASTAttribute
       return true;
    }
 
-   /*
-    * @see java.lang.Object#hashCode()
-    */
+   /* @see java.lang.Object#hashCode() */
    public int hashCode()
    {
       int result = fParent != null ? fParent.hashCode() : 0;

@@ -46,9 +46,7 @@ public class PrefixExpression extends Expression
    public static class Operator
    {
 
-      /**
-       * The token for the operator.
-       */
+      /** The token for the operator. */
       private String token;
 
       /**
@@ -165,9 +163,7 @@ public class PrefixExpression extends Expression
       return PROPERTY_DESCRIPTORS;
    }
 
-   /**
-    * The operator; defaults to an unspecified prefix operator.
-    */
+   /** The operator; defaults to an unspecified prefix operator. */
    private PrefixExpression.Operator operator = PrefixExpression.Operator.PLUS;
 
    /**
@@ -186,17 +182,13 @@ public class PrefixExpression extends Expression
       super(ast);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value)
    {
       if (property == OPERATOR_PROPERTY)
@@ -215,9 +207,7 @@ public class PrefixExpression extends Expression
       return super.internalGetSetObjectProperty(property, get, value);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
       if (property == OPERAND_PROPERTY)
@@ -236,17 +226,13 @@ public class PrefixExpression extends Expression
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int getNodeType0()
    {
       return PREFIX_EXPRESSION;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    ASTNode clone0(AST target)
    {
       PrefixExpression result = new PrefixExpression(target);
@@ -256,18 +242,14 @@ public class PrefixExpression extends Expression
       return result;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
       // dispatch to correct overloaded match method
       return matcher.match(this, other);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    void accept0(ASTVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -352,18 +334,14 @@ public class PrefixExpression extends Expression
       postReplaceChild(oldChild, expression, OPERAND_PROPERTY);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       // treat Operator as free
       return BASE_NODE_SIZE + 2 * 4;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int treeSize()
    {
       return memSize() + (this.operand == null ? 0 : getOperand().treeSize());

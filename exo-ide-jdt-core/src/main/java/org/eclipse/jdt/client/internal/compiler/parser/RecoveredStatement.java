@@ -30,17 +30,13 @@ public class RecoveredStatement extends RecoveredElement
       this.statement = statement;
    }
 
-   /*
-    * Answer the associated parsed structure
-    */
+   /* Answer the associated parsed structure */
    public ASTNode parseTree()
    {
       return this.statement;
    }
 
-   /*
-    * Answer the very source end of the corresponding parse node
-    */
+   /* Answer the very source end of the corresponding parse node */
    public int sourceEnd()
    {
       return this.statement.sourceEnd;
@@ -61,9 +57,7 @@ public class RecoveredStatement extends RecoveredElement
       updatedStatement(0, new HashSet());
    }
 
-   /*
-    * Update the declarationSourceEnd of the corresponding parse node
-    */
+   /* Update the declarationSourceEnd of the corresponding parse node */
    public void updateSourceEndIfNecessary(int bodyStart, int bodyEnd)
    {
       if (this.statement.sourceEnd == 0)

@@ -76,15 +76,11 @@ import org.eclipse.jdt.client.internal.core.util.Util;
 class DefaultBindingResolver extends BindingResolver
 {
 
-   /*
-    * Holds on binding tables that can be shared by several ASTs.
-    */
+   /* Holds on binding tables that can be shared by several ASTs. */
    public static class BindingTables
    {
 
-      /**
-       * This map is used to get a binding from its binding key.
-       */
+      /** This map is used to get a binding from its binding key. */
       Map bindingKeysToBindings;
 
       /**
@@ -102,19 +98,13 @@ class DefaultBindingResolver extends BindingResolver
 
    }
 
-   /**
-    * This map is used to retrieve the corresponding block scope for a ast node
-    */
+   /** This map is used to retrieve the corresponding block scope for a ast node */
    Map astNodesToBlockScope;
 
-   /**
-    * This map is used to get an ast node from its binding (new binding) or DOM
-    */
+   /** This map is used to get an ast node from its binding (new binding) or DOM */
    Map bindingsToAstNodes;
 
-   /*
-    * The shared binding tables accros ASTs.
-    */
+   /* The shared binding tables accros ASTs. */
    BindingTables bindingTables;
 
    /**
@@ -125,9 +115,7 @@ class DefaultBindingResolver extends BindingResolver
     */
    Map newAstToOldAst;
 
-   /**
-    * Compilation unit scope
-    */
+   /** Compilation unit scope */
    private CompilationUnitScope scope;
 
    /**
@@ -135,14 +123,10 @@ class DefaultBindingResolver extends BindingResolver
     */
    boolean isRecoveringBindings;
 
-   /**
-    * Set to <code>true</code> if initialized from a java project
-    */
+   /** Set to <code>true</code> if initialized from a java project */
    boolean fromJavaProject;
 
-   /**
-    * Constructor for DefaultBindingResolver.
-    */
+   /** Constructor for DefaultBindingResolver. */
    DefaultBindingResolver(CompilationUnitScope scope, BindingTables bindingTables, boolean isRecoveringBindings,
       boolean fromJavaProject)
    {
@@ -167,9 +151,7 @@ class DefaultBindingResolver extends BindingResolver
       this.fromJavaProject = fromJavaProject;
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    synchronized ASTNode findDeclaringNode(IBinding binding)
    {
       if (binding == null)
@@ -247,9 +229,7 @@ class DefaultBindingResolver extends BindingResolver
       return (org.eclipse.jdt.client.internal.compiler.ast.ASTNode)this.newAstToOldAst.get(currentNode);
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    synchronized IMethodBinding getMethodBinding(
       org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding methodBinding)
    {
@@ -291,9 +271,7 @@ class DefaultBindingResolver extends BindingResolver
       return binding;
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    synchronized IPackageBinding getPackageBinding(
       org.eclipse.jdt.client.internal.compiler.lookup.PackageBinding packageBinding)
    {
@@ -367,9 +345,7 @@ class DefaultBindingResolver extends BindingResolver
       return binding;
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    synchronized ITypeBinding getTypeBinding(org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding referenceBinding)
    {
       if (referenceBinding == null)
@@ -438,9 +414,7 @@ class DefaultBindingResolver extends BindingResolver
       }
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    synchronized ITypeBinding getTypeBinding(RecoveredTypeBinding recoveredTypeBinding, int dimensions)
    {
       if (recoveredTypeBinding == null)
@@ -479,9 +453,7 @@ class DefaultBindingResolver extends BindingResolver
             }
             else
             {
-               /*
-                * http://dev.eclipse.org/bugs/show_bug.cgi?id=24449
-                */
+               /* http://dev.eclipse.org/bugs/show_bug.cgi?id=24449 */
                if (variableBinding instanceof ProblemFieldBinding)
                {
                   ProblemFieldBinding problemFieldBinding = (ProblemFieldBinding)variableBinding;
@@ -515,9 +487,7 @@ class DefaultBindingResolver extends BindingResolver
       return this.getVariableBinding(variableBinding);
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    synchronized IVariableBinding getVariableBinding(
       org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding variableBinding)
    {
@@ -545,9 +515,7 @@ class DefaultBindingResolver extends BindingResolver
          }
          else
          {
-            /*
-             * http://dev.eclipse.org/bugs/show_bug.cgi?id=24449
-             */
+            /* http://dev.eclipse.org/bugs/show_bug.cgi?id=24449 */
             if (variableBinding instanceof ProblemFieldBinding)
             {
                ProblemFieldBinding problemFieldBinding = (ProblemFieldBinding)variableBinding;
@@ -643,9 +611,7 @@ class DefaultBindingResolver extends BindingResolver
       return false;
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    LookupEnvironment lookupEnvironment()
    {
       return this.scope.environment();
@@ -659,9 +625,7 @@ class DefaultBindingResolver extends BindingResolver
       this.astNodesToBlockScope.put(astNode, blockScope);
    }
 
-   /*
-    * @see BindingResolver#resolveBoxing(Expression)
-    */
+   /* @see BindingResolver#resolveBoxing(Expression) */
    boolean resolveBoxing(Expression expression)
    {
       org.eclipse.jdt.client.internal.compiler.ast.ASTNode node =
@@ -675,9 +639,7 @@ class DefaultBindingResolver extends BindingResolver
       return false;
    }
 
-   /*
-    * @see BindingResolver#resolveUnboxing(Expression)
-    */
+   /* @see BindingResolver#resolveUnboxing(Expression) */
    boolean resolveUnboxing(Expression expression)
    {
       org.eclipse.jdt.client.internal.compiler.ast.ASTNode node =
@@ -691,9 +653,7 @@ class DefaultBindingResolver extends BindingResolver
       return false;
    }
 
-   /*
-    * @see BindingResolver#resolveConstantExpressionValue(Expression)
-    */
+   /* @see BindingResolver#resolveConstantExpressionValue(Expression) */
    Object resolveConstantExpressionValue(Expression expression)
    {
       org.eclipse.jdt.client.internal.compiler.ast.ASTNode node =
@@ -732,9 +692,7 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /*
-    * @see BindingResolver#resolveConstructor(ClassInstanceCreation)
-    */
+   /* @see BindingResolver#resolveConstructor(ClassInstanceCreation) */
    synchronized IMethodBinding resolveConstructor(ClassInstanceCreation expression)
    {
       org.eclipse.jdt.client.internal.compiler.ast.ASTNode node =
@@ -752,9 +710,7 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /*
-    * @see BindingResolver#resolveConstructor(ConstructorInvocation)
-    */
+   /* @see BindingResolver#resolveConstructor(ConstructorInvocation) */
    synchronized IMethodBinding resolveConstructor(ConstructorInvocation expression)
    {
       org.eclipse.jdt.client.internal.compiler.ast.ASTNode node =
@@ -769,8 +725,7 @@ class DefaultBindingResolver extends BindingResolver
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.core.dom.BindingResolver#resolveConstructor(org.eclipse.jdt.core.dom.EnumConstantDeclaration)
+    * @see org.eclipse.jdt.core.dom.BindingResolver#resolveConstructor(org.eclipse .jdt.core.dom.EnumConstantDeclaration)
     */
    IMethodBinding resolveConstructor(EnumConstantDeclaration enumConstantDeclaration)
    {
@@ -790,9 +745,7 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /*
-    * @see BindingResolver#resolveConstructor(SuperConstructorInvocation)
-    */
+   /* @see BindingResolver#resolveConstructor(SuperConstructorInvocation) */
    synchronized IMethodBinding resolveConstructor(SuperConstructorInvocation expression)
    {
       org.eclipse.jdt.client.internal.compiler.ast.ASTNode node =
@@ -805,9 +758,7 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    synchronized ITypeBinding resolveExpressionType(Expression expression)
    {
       try
@@ -907,9 +858,7 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /*
-    * @see BindingResolver#resolveField(FieldAccess)
-    */
+   /* @see BindingResolver#resolveField(FieldAccess) */
    synchronized IVariableBinding resolveField(FieldAccess fieldAccess)
    {
       Object oldNode = this.newAstToOldAst.get(fieldAccess);
@@ -921,9 +870,7 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /*
-    * @see BindingResolver#resolveField(SuperFieldAccess)
-    */
+   /* @see BindingResolver#resolveField(SuperFieldAccess) */
    synchronized IVariableBinding resolveField(SuperFieldAccess fieldAccess)
    {
       Object oldNode = this.newAstToOldAst.get(fieldAccess);
@@ -935,9 +882,7 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /*
-    * @see BindingResolver#resolveImport(ImportDeclaration)
-    */
+   /* @see BindingResolver#resolveImport(ImportDeclaration) */
    synchronized IBinding resolveImport(ImportDeclaration importDeclaration)
    {
       if (this.scope == null)
@@ -1040,8 +985,7 @@ class DefaultBindingResolver extends BindingResolver
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.core.dom.BindingResolver#resolveMember(org.eclipse.jdt.core.dom.AnnotationTypeMemberDeclaration)
+    * @see org.eclipse.jdt.core.dom.BindingResolver#resolveMember(org.eclipse.jdt .core.dom.AnnotationTypeMemberDeclaration)
     */
    IMethodBinding resolveMember(AnnotationTypeMemberDeclaration declaration)
    {
@@ -1065,9 +1009,7 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    synchronized IMethodBinding resolveMethod(MethodDeclaration method)
    {
       Object oldNode = this.newAstToOldAst.get(method);
@@ -1090,9 +1032,7 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    synchronized IMethodBinding resolveMethod(MethodInvocation method)
    {
       Object oldNode = this.newAstToOldAst.get(method);
@@ -1104,9 +1044,7 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    synchronized IMethodBinding resolveMethod(SuperMethodInvocation method)
    {
       Object oldNode = this.newAstToOldAst.get(method);
@@ -1446,9 +1384,7 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    synchronized IBinding resolveName(Name name)
    {
       org.eclipse.jdt.client.internal.compiler.ast.ASTNode node =
@@ -1742,9 +1678,7 @@ class DefaultBindingResolver extends BindingResolver
                }
                else
                {
-                  /*
-                   * http://dev.eclipse.org/bugs/show_bug.cgi?id=24449
-                   */
+                  /* http://dev.eclipse.org/bugs/show_bug.cgi?id=24449 */
                   if (binding instanceof ProblemFieldBinding)
                   {
                      ProblemFieldBinding problemFieldBinding = (ProblemFieldBinding)binding;
@@ -1855,9 +1789,7 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /*
-    * @see BindingResolver#resolvePackage(PackageDeclaration)
-    */
+   /* @see BindingResolver#resolvePackage(PackageDeclaration) */
    synchronized IPackageBinding resolvePackage(PackageDeclaration pkg)
    {
       if (this.scope == null)
@@ -1910,9 +1842,7 @@ class DefaultBindingResolver extends BindingResolver
 
    /*
     * (non-Javadoc)
-    * 
     * @see BindingResolver#resolveReference(MemberRef)
-    * 
     * @since 3.0
     */
    synchronized IBinding resolveReference(MemberRef ref)
@@ -1937,9 +1867,7 @@ class DefaultBindingResolver extends BindingResolver
 
    /*
     * (non-Javadoc)
-    * 
     * @see BindingResolver#resolveMemberValuePair(MemberValuePair)
-    * 
     * @since 3.2
     */
    synchronized IMemberValuePairBinding resolveMemberValuePair(
@@ -1955,9 +1883,7 @@ class DefaultBindingResolver extends BindingResolver
 
    /*
     * (non-Javadoc)
-    * 
     * @see BindingResolver#resolveReference(MethodRef)
-    * 
     * @since 3.0
     */
    synchronized IBinding resolveReference(MethodRef ref)
@@ -1977,8 +1903,7 @@ class DefaultBindingResolver extends BindingResolver
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.core.dom.BindingResolver#resolveType(org.eclipse.jdt.core.dom.AnnotationTypeDeclaration)
+    * @see org.eclipse.jdt.core.dom.BindingResolver#resolveType(org.eclipse.jdt.core .dom.AnnotationTypeDeclaration)
     */
    ITypeBinding resolveType(AnnotationTypeDeclaration type)
    {
@@ -2003,9 +1928,7 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /*
-    * @see BindingResolver#resolveType(AnonymousClassDeclaration)
-    */
+   /* @see BindingResolver#resolveType(AnonymousClassDeclaration) */
    synchronized ITypeBinding resolveType(AnonymousClassDeclaration type)
    {
       org.eclipse.jdt.client.internal.compiler.ast.ASTNode node =
@@ -2032,8 +1955,7 @@ class DefaultBindingResolver extends BindingResolver
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.core.dom.BindingResolver#resolveType(org.eclipse.jdt.core.dom.EnumDeclaration)
+    * @see org.eclipse.jdt.core.dom.BindingResolver#resolveType(org.eclipse.jdt.core .dom.EnumDeclaration)
     */
    ITypeBinding resolveType(EnumDeclaration type)
    {
@@ -2058,9 +1980,7 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    synchronized ITypeBinding resolveType(Type type)
    {
       // retrieve the old ast node
@@ -2172,9 +2092,7 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    synchronized ITypeBinding resolveType(TypeDeclaration type)
    {
       final Object node = this.newAstToOldAst.get(type);
@@ -2223,8 +2141,7 @@ class DefaultBindingResolver extends BindingResolver
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.core.dom.BindingResolver#resolveVariable(org.eclipse.jdt.core.dom.EnumConstantDeclaration)
+    * @see org.eclipse.jdt.core.dom.BindingResolver#resolveVariable(org.eclipse.jdt .core.dom.EnumConstantDeclaration)
     */
    synchronized IVariableBinding resolveVariable(EnumConstantDeclaration enumConstant)
    {
@@ -2249,9 +2166,7 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    synchronized IVariableBinding resolveVariable(VariableDeclaration variable)
    {
       final Object node = this.newAstToOldAst.get(variable);
@@ -2285,9 +2200,7 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    synchronized ITypeBinding resolveWellKnownType(String name)
    {
       if (this.scope == null)
@@ -2395,25 +2308,19 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    public CompilationUnitScope scope()
    {
       return this.scope;
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    synchronized void store(ASTNode node, org.eclipse.jdt.client.internal.compiler.ast.ASTNode oldASTNode)
    {
       this.newAstToOldAst.put(node, oldASTNode);
    }
 
-   /*
-    * Method declared on BindingResolver.
-    */
+   /* Method declared on BindingResolver. */
    synchronized void updateKey(ASTNode node, ASTNode newNode)
    {
       Object astNode = this.newAstToOldAst.remove(node);

@@ -142,14 +142,10 @@ public final class Modifier extends ASTNode implements IExtendedModifier
          return (ModifierKeyword)KEYWORDS.get(keyword);
       }
 
-      /**
-       * The flag value for the modifier.
-       */
+      /** The flag value for the modifier. */
       private int flagValue;
 
-      /**
-       * The keyword modifier string.
-       */
+      /** The keyword modifier string. */
       private String keyword;
 
       /**
@@ -465,7 +461,6 @@ public final class Modifier extends ASTNode implements IExtendedModifier
 
    /*
     * (omit javadoc for this method) Method declared on ASTNode.
-    * 
     * @since 3.0
     */
    void accept0(ASTVisitor visitor)
@@ -476,7 +471,6 @@ public final class Modifier extends ASTNode implements IExtendedModifier
 
    /*
     * (omit javadoc for this method) Method declared on ASTNode.
-    * 
     * @since 3.0
     */
    ASTNode clone0(AST target)
@@ -500,7 +494,6 @@ public final class Modifier extends ASTNode implements IExtendedModifier
 
    /*
     * (omit javadoc for this method) Method declared on ASTNode.
-    * 
     * @since 3.0
     */
    final int getNodeType0()
@@ -508,9 +501,7 @@ public final class Modifier extends ASTNode implements IExtendedModifier
       return MODIFIER;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value)
    {
       if (property == KEYWORD_PROPERTY)
@@ -529,9 +520,7 @@ public final class Modifier extends ASTNode implements IExtendedModifier
       return super.internalGetSetObjectProperty(property, get, value);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
@@ -548,9 +537,7 @@ public final class Modifier extends ASTNode implements IExtendedModifier
       return this.modifierKeyword == ModifierKeyword.ABSTRACT_KEYWORD;
    }
 
-   /**
-    * @see IExtendedModifier#isAnnotation()
-    */
+   /** @see IExtendedModifier#isAnnotation() */
    public boolean isAnnotation()
    {
       return false;
@@ -567,9 +554,7 @@ public final class Modifier extends ASTNode implements IExtendedModifier
       return this.modifierKeyword == ModifierKeyword.FINAL_KEYWORD;
    }
 
-   /**
-    * @see IExtendedModifier#isModifier()
-    */
+   /** @see IExtendedModifier#isModifier() */
    public boolean isModifier()
    {
       return true;
@@ -676,7 +661,6 @@ public final class Modifier extends ASTNode implements IExtendedModifier
 
    /*
     * (omit javadoc for this method) Method declared on ASTNode.
-    * 
     * @since 3.0
     */
    int memSize()
@@ -705,7 +689,6 @@ public final class Modifier extends ASTNode implements IExtendedModifier
 
    /*
     * (omit javadoc for this method) Method declared on ASTNode.
-    * 
     * @since 3.0
     */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
@@ -716,7 +699,6 @@ public final class Modifier extends ASTNode implements IExtendedModifier
 
    /*
     * (omit javadoc for this method) Method declared on ASTNode.
-    * 
     * @since 3.0
     */
    int treeSize()

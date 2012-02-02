@@ -25,9 +25,7 @@ public abstract class FlowInfo
 
    public final static int REACHABLE = 0;
 
-   /*
-    * unreachable code eg. while (true); i++; --> unreachable code
-    */
+   /* unreachable code eg. while (true); i++; --> unreachable code */
    public final static int UNREACHABLE_OR_DEAD = 1;
 
    /*
@@ -35,9 +33,7 @@ public abstract class FlowInfo
     */
    public final static int UNREACHABLE_BY_NULLANALYSIS = 2;
 
-   /*
-    * code unreachable in any fashion
-    */
+   /* code unreachable in any fashion */
    public final static int UNREACHABLE = UNREACHABLE_OR_DEAD | UNREACHABLE_BY_NULLANALYSIS;
 
    public final static int NULL_FLAG_MASK = 4;
@@ -172,14 +168,10 @@ public abstract class FlowInfo
     */
    abstract public FlowInfo initsWhenTrue();
 
-   /**
-    * Check status of definite assignment for a field.
-    */
+   /** Check status of definite assignment for a field. */
    abstract public boolean isDefinitelyAssigned(FieldBinding field);
 
-   /**
-    * Check status of definite assignment for a local.
-    */
+   /** Check status of definite assignment for a local. */
    public abstract boolean isDefinitelyAssigned(LocalVariableBinding local);
 
    /**
@@ -206,14 +198,10 @@ public abstract class FlowInfo
     */
    public abstract boolean isDefinitelyUnknown(LocalVariableBinding local);
 
-   /**
-    * Check status of potential assignment for a field.
-    */
+   /** Check status of potential assignment for a field. */
    abstract public boolean isPotentiallyAssigned(FieldBinding field);
 
-   /**
-    * Check status of potential assignment for a local variable.
-    */
+   /** Check status of potential assignment for a local variable. */
 
    abstract public boolean isPotentiallyAssigned(LocalVariableBinding field);
 
@@ -274,24 +262,16 @@ public abstract class FlowInfo
     */
    abstract public void markAsComparedEqualToNull(LocalVariableBinding local);
 
-   /**
-    * Record a field got definitely assigned.
-    */
+   /** Record a field got definitely assigned. */
    abstract public void markAsDefinitelyAssigned(FieldBinding field);
 
-   /**
-    * Record a local got definitely assigned to a non-null value.
-    */
+   /** Record a local got definitely assigned to a non-null value. */
    abstract public void markAsDefinitelyNonNull(LocalVariableBinding local);
 
-   /**
-    * Record a local got definitely assigned to null.
-    */
+   /** Record a local got definitely assigned to null. */
    abstract public void markAsDefinitelyNull(LocalVariableBinding local);
 
-   /**
-    * Reset all null-information about a given local.
-    */
+   /** Reset all null-information about a given local. */
    abstract public void resetNullInfo(LocalVariableBinding local);
 
    /**
@@ -309,14 +289,10 @@ public abstract class FlowInfo
     */
    abstract public void markPotentiallyNonNullBit(LocalVariableBinding local);
 
-   /**
-    * Record a local got definitely assigned.
-    */
+   /** Record a local got definitely assigned. */
    abstract public void markAsDefinitelyAssigned(LocalVariableBinding local);
 
-   /**
-    * Record a local got definitely assigned to an unknown value.
-    */
+   /** Record a local got definitely assigned to an unknown value. */
    abstract public void markAsDefinitelyUnknown(LocalVariableBinding local);
 
    /**
@@ -379,9 +355,7 @@ public abstract class FlowInfo
       return FlowInfo.UNKNOWN;
    }
 
-   /**
-    * Merge branches using optimized boolean conditions
-    */
+   /** Merge branches using optimized boolean conditions */
    public static UnconditionalFlowInfo mergedOptimizedBranches(FlowInfo initsWhenTrue, boolean isOptimizedTrue,
       FlowInfo initsWhenFalse, boolean isOptimizedFalse, boolean allowFakeDeadBranch)
    {
@@ -419,9 +393,7 @@ public abstract class FlowInfo
       return mergedInfo;
    }
 
-   /**
-    * Merge if-else branches using optimized boolean conditions
-    */
+   /** Merge if-else branches using optimized boolean conditions */
    public static UnconditionalFlowInfo mergedOptimizedBranchesIfElse(FlowInfo initsWhenTrue, boolean isOptimizedTrue,
       FlowInfo initsWhenFalse, boolean isOptimizedFalse, boolean allowFakeDeadBranch, FlowInfo flowInfo,
       IfStatement ifStatement)

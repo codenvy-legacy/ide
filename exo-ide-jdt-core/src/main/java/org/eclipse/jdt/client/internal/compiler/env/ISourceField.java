@@ -12,14 +12,10 @@ package org.eclipse.jdt.client.internal.compiler.env;
 
 public interface ISourceField extends IGenericField
 {
-   /**
-    * Answer the source end position of the field's declaration.
-    */
+   /** Answer the source end position of the field's declaration. */
    int getDeclarationSourceEnd();
 
-   /**
-    * Answer the source start position of the field's declaration.
-    */
+   /** Answer the source start position of the field's declaration. */
    int getDeclarationSourceStart();
 
    /**
@@ -28,14 +24,10 @@ public interface ISourceField extends IGenericField
     */
    char[] getInitializationSource();
 
-   /**
-    * Answer the source end position of the field's name.
-    */
+   /** Answer the source end position of the field's name. */
    int getNameSourceEnd();
 
-   /**
-    * Answer the source start position of the field's name.
-    */
+   /** Answer the source start position of the field's name. */
    int getNameSourceStart();
 
    /**

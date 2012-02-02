@@ -17,20 +17,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A move target edit denotes the target of a move operation. Move
- * target edits are only valid inside an edit tree if they have a
- * corresponding source edit. Furthermore a target edit can't
- * can't be a direct or indirect child of its associated source edit.
+ * A move target edit denotes the target of a move operation. Move target edits are only valid inside an edit tree if they have a
+ * corresponding source edit. Furthermore a target edit can't can't be a direct or indirect child of its associated source edit.
  * Violating one of two requirements will result in a <code>
  * MalformedTreeException</code> when executing the edit tree.
  * <p>
- * Move target edits can't be used as a parent for other edits.
- * Trying to add an edit to a move target edit results in a <code>
+ * Move target edits can't be used as a parent for other edits. Trying to add an edit to a move target edit results in a <code>
  * MalformedTreeException</code> as well.
- *
+ * 
  * @see org.eclipse.text.edits.MoveSourceEdit
  * @see org.eclipse.text.edits.CopyTargetEdit
- *
+ * 
  * @since 3.0
  */
 public final class MoveTargetEdit extends TextEdit
@@ -40,7 +37,7 @@ public final class MoveTargetEdit extends TextEdit
 
    /**
     * Constructs a new move target edit
-    *
+    * 
     * @param offset the edit's offset
     */
    public MoveTargetEdit(int offset)
@@ -50,7 +47,7 @@ public final class MoveTargetEdit extends TextEdit
 
    /**
     * Constructs an new move target edit
-    *
+    * 
     * @param offset the edit's offset
     * @param source the corresponding source edit
     */
@@ -60,18 +57,15 @@ public final class MoveTargetEdit extends TextEdit
       setSourceEdit(source);
    }
 
-   /*
-    * Copy constructor
-    */
+   /* Copy constructor */
    private MoveTargetEdit(MoveTargetEdit other)
    {
       super(other);
    }
 
    /**
-    * Returns the associated source edit or <code>null</code>
-    * if no source edit is associated yet.
-    *
+    * Returns the associated source edit or <code>null</code> if no source edit is associated yet.
+    * 
     * @return the source edit or <code>null</code>
     */
    public MoveSourceEdit getSourceEdit()
@@ -81,11 +75,10 @@ public final class MoveTargetEdit extends TextEdit
 
    /**
     * Sets the source edit.
-    *
+    * 
     * @param edit the source edit
-    *
-    * @exception MalformedTreeException is thrown if the target edit
-    *  is a direct or indirect child of the source edit
+    * 
+    * @exception MalformedTreeException is thrown if the target edit is a direct or indirect child of the source edit
     */
    public void setSourceEdit(MoveSourceEdit edit)
    {
@@ -103,17 +96,13 @@ public final class MoveTargetEdit extends TextEdit
       }
    }
 
-   /*
-    * @see TextEdit#doCopy
-    */
+   /* @see TextEdit#doCopy */
    protected TextEdit doCopy()
    {
       return new MoveTargetEdit(this);
    }
 
-   /*
-    * @see TextEdit#postProcessCopy
-    */
+   /* @see TextEdit#postProcessCopy */
    protected void postProcessCopy(TextEditCopier copier)
    {
       if (fSource != null)
@@ -125,9 +114,7 @@ public final class MoveTargetEdit extends TextEdit
       }
    }
 
-   /*
-    * @see TextEdit#accept0
-    */
+   /* @see TextEdit#accept0 */
    protected void accept0(TextEditVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -137,19 +124,15 @@ public final class MoveTargetEdit extends TextEdit
       }
    }
 
-   //---- consistency check ----------------------------------------------------------
+   // ---- consistency check ----------------------------------------------------------
 
-   /*
-    * @see TextEdit#traverseConsistencyCheck
-    */
+   /* @see TextEdit#traverseConsistencyCheck */
    int traverseConsistencyCheck(TextEditProcessor processor, IDocument document, List sourceEdits)
    {
       return super.traverseConsistencyCheck(processor, document, sourceEdits) + 1;
    }
 
-   /*
-    * @see TextEdit#performConsistencyCheck
-    */
+   /* @see TextEdit#performConsistencyCheck */
    void performConsistencyCheck(TextEditProcessor processor, IDocument document) throws MalformedTreeException
    {
       if (fSource == null)
@@ -158,11 +141,9 @@ public final class MoveTargetEdit extends TextEdit
          throw new MalformedTreeException(getParent(), this, "Source edit has different target edit."); //$NON-NLS-1$
    }
 
-   //---- document updating ----------------------------------------------------------------
+   // ---- document updating ----------------------------------------------------------------
 
-   /*
-    * @see TextEdit#performDocumentUpdating
-    */
+   /* @see TextEdit#performDocumentUpdating */
    int performDocumentUpdating(IDocument document) throws BadLocationException
    {
       String source = fSource.getContent();
@@ -187,11 +168,9 @@ public final class MoveTargetEdit extends TextEdit
       return fDelta;
    }
 
-   //---- region updating --------------------------------------------------------------
+   // ---- region updating --------------------------------------------------------------
 
-   /*
-    * @see org.eclipse.text.edits.TextEdit#traversePassThree
-    */
+   /* @see org.eclipse.text.edits.TextEdit#traversePassThree */
    int traverseRegionUpdating(TextEditProcessor processor, IDocument document, int accumulatedDelta, boolean delete)
    {
       // the children got already updated / normalized while they got removed

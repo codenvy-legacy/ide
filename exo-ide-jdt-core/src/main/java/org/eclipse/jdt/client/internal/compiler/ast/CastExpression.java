@@ -97,7 +97,9 @@ public class CastExpression extends Expression
       CastExpression alternateCast = new CastExpression(null, enclosingCast.type);
       alternateCast.resolvedType = enclosingCast.resolvedType;
       if (!alternateCast.checkCastTypesCompatibility(scope, enclosingCast.resolvedType,
-         nestedCast.expression.resolvedType, null /* no expr to avoid side-effects */))
+         nestedCast.expression.resolvedType, null /*
+                                                   * no expr to avoid side-effects
+                                                   */))
          return;
       scope.problemReporter().unnecessaryCast(nestedCast);
    }
@@ -224,9 +226,7 @@ public class CastExpression extends Expression
       }
    }
 
-   /**
-    * Check binary operator casted arguments
-    */
+   /** Check binary operator casted arguments */
    public static void checkNeedForArgumentCasts(BlockScope scope, int operator, int operatorSignature, Expression left,
       int leftTypeId, boolean leftIsCast, Expression right, int rightTypeId, boolean rightIsCast)
    {
@@ -408,7 +408,9 @@ public class CastExpression extends Expression
          for (int i = 0; i < argumentLength; i++)
          {
             if (originalArgumentTypes[i] != alternateArgumentTypes[i]
-            /* && !originalArgumentTypes[i].needsUncheckedConversion(alternateArgumentTypes[i]) */)
+            /*
+             * && !originalArgumentTypes[i].needsUncheckedConversion( alternateArgumentTypes[i])
+             */)
             {
                scope.problemReporter().unnecessaryCast((CastExpression)arguments[i]);
             }
@@ -602,9 +604,7 @@ public class CastExpression extends Expression
       return current;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#localVariableBinding()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.Expression#localVariableBinding() */
    public LocalVariableBinding localVariableBinding()
    {
       return this.expression.localVariableBinding();
@@ -615,9 +615,7 @@ public class CastExpression extends Expression
       return this.expression.nullStatus(flowInfo);
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#optimizedBooleanConstant()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.Expression#optimizedBooleanConstant() */
    public Constant optimizedBooleanConstant()
    {
       switch (this.resolvedType.id)
@@ -716,9 +714,7 @@ public class CastExpression extends Expression
       return this.resolvedType;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#setExpectedType(org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.Expression#setExpectedType(org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding) */
    public void setExpectedType(TypeBinding expectedType)
    {
       this.expectedType = expectedType;
@@ -751,9 +747,7 @@ public class CastExpression extends Expression
       return false;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#tagAsNeedCheckCast()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.Expression#tagAsNeedCheckCast() */
    public void tagAsNeedCheckCast()
    {
       this.bits |= ASTNode.GenerateCheckcast;

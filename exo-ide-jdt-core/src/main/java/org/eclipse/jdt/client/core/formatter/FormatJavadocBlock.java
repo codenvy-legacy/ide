@@ -14,12 +14,11 @@ import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.client.core.formatter.comment.IJavaDocTagConstants;
 
 /**
- * Represents a block in a {@link FormatJavadoc} which might be a
- * <b>description</b> or a <b>tag</b> (see{@link #isDescription()}).
- * </p><p>
- * The block might have a tag, a reference and nodes (see
- * {@link FormatJavadocNode}. Each of these elements might be present or not,
- * but at least one of them is.
+ * Represents a block in a {@link FormatJavadoc} which might be a <b>description</b> or a <b>tag</b> (see{@link #isDescription()}
+ * ). </p>
+ * <p>
+ * The block might have a tag, a reference and nodes (see {@link FormatJavadocNode}. Each of these elements might be present or
+ * not, but at least one of them is.
  * </p>
  */
 public class FormatJavadocBlock extends FormatJavadocNode implements IJavaDocTagConstants
@@ -182,8 +181,8 @@ public class FormatJavadocBlock extends FormatJavadocNode implements IJavaDocTag
             case JAVADOC_SEPARATOR_TAGS_ID :
                text.linesBefore = 1;
                break;
-         //	    	case JAVADOC_BREAK_TAGS_ID:
-         //				if (this.nodesPtr >= 0) text.linesBefore = 1;
+         // case JAVADOC_BREAK_TAGS_ID:
+         // if (this.nodesPtr >= 0) text.linesBefore = 1;
          }
       }
       addNode(text);
@@ -215,9 +214,7 @@ public class FormatJavadocBlock extends FormatJavadocNode implements IJavaDocTag
       return null;
    }
 
-   /*
-    * Return the text hierarchy for the given node
-    */
+   /* Return the text hierarchy for the given node */
    FormatJavadocText[] getTextHierarchy(FormatJavadocNode node, int htmlDepth)
    {
       if (this.nodes == null)
@@ -235,7 +232,7 @@ public class FormatJavadocBlock extends FormatJavadocNode implements IJavaDocTag
          if (lastText.depth == htmlDepth || // found same html tag level => use it
             lastText.htmlNodesPtr == -1)
          { // no more sub-levels => add one
-            // Text breakage
+           // Text breakage
             if (lastText.isHtmlTag())
             {
                // Set some lines before if previous was specific html tag
@@ -299,9 +296,8 @@ public class FormatJavadocBlock extends FormatJavadocNode implements IJavaDocTag
 
    /**
     * Returns whether the text is on the same line of the tag or not.
-    *
-    * @return <code>true</code> if the text is on the same line than the tag,
-    * 	<code>false</code> otherwise.
+    * 
+    * @return <code>true</code> if the text is on the same line than the tag, <code>false</code> otherwise.
     */
    public boolean hasTextOnTagLine()
    {
@@ -309,12 +305,10 @@ public class FormatJavadocBlock extends FormatJavadocNode implements IJavaDocTag
    }
 
    /**
-    * Returns whether the block is the javadoc comment description or not.
-    * The description begins after the starting delimiter and continues until the tag
-    * section.
-    *
-    * @return <code>true</code> if the block is the javadoc description,
-    * 	<code>false</code> otherwise.
+    * Returns whether the block is the javadoc comment description or not. The description begins after the starting delimiter and
+    * continues until the tag section.
+    * 
+    * @return <code>true</code> if the block is the javadoc description, <code>false</code> otherwise.
     */
    public boolean isDescription()
    {
@@ -322,11 +316,10 @@ public class FormatJavadocBlock extends FormatJavadocNode implements IJavaDocTag
    }
 
    /**
-    * Returns whether the block is the first block of the javadoc comment or not
-    * (independently of the fact it's a description or not).
-    *
-    * @return <code>true</code> if the block is the first of the javadoc
-    * 	comment, <code>false</code> otherwise.
+    * Returns whether the block is the first block of the javadoc comment or not (independently of the fact it's a description or
+    * not).
+    * 
+    * @return <code>true</code> if the block is the first of the javadoc comment, <code>false</code> otherwise.
     */
    public boolean isFirst()
    {
@@ -334,11 +327,10 @@ public class FormatJavadocBlock extends FormatJavadocNode implements IJavaDocTag
    }
 
    /**
-    * Returns whether the first block starts on the same line than the javadoc
-    * starting delimiter or not.
-    *
-    * @return <code>true</code> if the the first block starts on the same line
-    * 	than the javadoc starting delimiter, <code>false</code> otherwise.
+    * Returns whether the first block starts on the same line than the javadoc starting delimiter or not.
+    * 
+    * @return <code>true</code> if the the first block starts on the same line than the javadoc starting delimiter,
+    *         <code>false</code> otherwise.
     */
    public boolean isHeaderLine()
    {
@@ -348,11 +340,10 @@ public class FormatJavadocBlock extends FormatJavadocNode implements IJavaDocTag
    /**
     * Returns whether the block is immutable or not.
     * <p>
-    * Currently, only {@code} and {@literal} inline tags block are considered as
-    * immutable.
+    * Currently, only {@code} and {@literal} inline tags block are considered as immutable.
     * </p>
-    * @return <code>true</code> if the block is immutable,
-    * 	<code>false</code> otherwise.
+    * 
+    * @return <code>true</code> if the block is immutable, <code>false</code> otherwise.
     */
    public boolean isImmutable()
    {
@@ -361,10 +352,10 @@ public class FormatJavadocBlock extends FormatJavadocNode implements IJavaDocTag
 
    /**
     * Returns whether the block is a description or inlined in a description.
+    * 
     * @see #isParamTag()
-    *
-    * @return <code>true</code> if the block is a description or inlined in a
-    * 	description, <code>false</code> otherwise.
+    * 
+    * @return <code>true</code> if the block is a description or inlined in a description, <code>false</code> otherwise.
     */
    public boolean isInDescription()
    {
@@ -373,9 +364,8 @@ public class FormatJavadocBlock extends FormatJavadocNode implements IJavaDocTag
 
    /**
     * Returns whether the text is on the same line of the tag.
-    *
-    * @return <code>true</code> if the text is on the same line than the tag,
-    * 	<code>false</code> otherwise.
+    * 
+    * @return <code>true</code> if the text is on the same line than the tag, <code>false</code> otherwise.
     */
    public boolean isInlined()
    {
@@ -384,10 +374,10 @@ public class FormatJavadocBlock extends FormatJavadocNode implements IJavaDocTag
 
    /**
     * Returns whether the block is a param tag or inlined in a param tag.
+    * 
     * @see #isParamTag()
-    *
-    * @return <code>true</code> if the block is a param tag or inlined in a param
-    * 	tag, <code>false</code> otherwise.
+    * 
+    * @return <code>true</code> if the block is a param tag or inlined in a param tag, <code>false</code> otherwise.
     */
    public boolean isInParamTag()
    {
@@ -396,9 +386,8 @@ public class FormatJavadocBlock extends FormatJavadocNode implements IJavaDocTag
 
    /**
     * Returns whether the the tag is on one line only.
-    *
-    * @return <code>true</code> if the tag is on one line only,
-    * 	<code>false</code> otherwise.
+    * 
+    * @return <code>true</code> if the tag is on one line only, <code>false</code> otherwise.
     */
    public boolean isOneLineTag()
    {
@@ -406,11 +395,10 @@ public class FormatJavadocBlock extends FormatJavadocNode implements IJavaDocTag
    }
 
    /**
-    * Returns whether the block is a param tag or not.  Note that this also includes
-    * &#064;serialField, &#064;throws and &#064;exception tags.
-    *
-    * @return <code>true</code> if the block is a param tag,
-    * 	<code>false</code> otherwise.
+    * Returns whether the block is a param tag or not. Note that this also includes &#064;serialField, &#064;throws and
+    * &#064;exception tags.
+    * 
+    * @return <code>true</code> if the block is a param tag, <code>false</code> otherwise.
     */
    public boolean isParamTag()
    {

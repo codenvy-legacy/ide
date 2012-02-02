@@ -13,19 +13,13 @@ package org.eclipse.jdt.client.internal.compiler.env;
 public interface ISourceType extends IGenericType
 {
 
-   /**
-    * Answer the source end position of the type's declaration.
-    */
+   /** Answer the source end position of the type's declaration. */
    int getDeclarationSourceEnd();
 
-   /**
-    * Answer the source start position of the type's declaration.
-    */
+   /** Answer the source start position of the type's declaration. */
    int getDeclarationSourceStart();
 
-   /**
-    * Answer the enclosing type or null if the receiver is a top level type.
-    */
+   /** Answer the enclosing type or null if the receiver is a top level type. */
    ISourceType getEnclosingType();
 
    /**
@@ -42,9 +36,7 @@ public interface ISourceType extends IGenericType
     */
    char[][] getInterfaceNames();
 
-   /**
-    * Answer the receiver's member types.
-    */
+   /** Answer the receiver's member types. */
    ISourceType[] getMemberTypes();
 
    /**
@@ -54,19 +46,13 @@ public interface ISourceType extends IGenericType
     */
    ISourceMethod[] getMethods();
 
-   /**
-    * Answer the simple source name of the receiver.
-    */
+   /** Answer the simple source name of the receiver. */
    char[] getName();
 
-   /**
-    * Answer the source end position of the type's name.
-    */
+   /** Answer the source end position of the type's name. */
    int getNameSourceEnd();
 
-   /**
-    * Answer the source start position of the type's name.
-    */
+   /** Answer the source start position of the type's name. */
    int getNameSourceStart();
 
    /**
@@ -76,13 +62,9 @@ public interface ISourceType extends IGenericType
     */
    char[] getSuperclassName();
 
-   /**
-    * Answer the array of bound names of the receiver's type parameters.
-    */
+   /** Answer the array of bound names of the receiver's type parameters. */
    char[][][] getTypeParameterBounds();
 
-   /**
-    * Answer the names of the receiver's type parameters.
-    */
+   /** Answer the names of the receiver's type parameters. */
    char[][] getTypeParameterNames();
 }

@@ -18,9 +18,7 @@ import org.eclipse.jdt.client.core.compiler.InvalidInputException;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
 
-/**
- * Parser specialized for decoding javadoc comments
- */
+/** Parser specialized for decoding javadoc comments */
 public abstract class AbstractCommentParser implements JavadocTagConstants
 {
 
@@ -162,10 +160,8 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
    }
 
    /*
-    * (non-Javadoc) Returns true if tag @deprecated is present in javadoc comment.
-    * 
-    * If javadoc checking is enabled, will also construct an Javadoc node, which will be stored into Parser.javadoc slot for being
-    * consumed later on.
+    * (non-Javadoc) Returns true if tag @deprecated is present in javadoc comment. If javadoc checking is enabled, will also
+    * construct an Javadoc node, which will be stored into Parser.javadoc slot for being consumed later on.
     */
    protected boolean commentParse()
    {
@@ -610,17 +606,13 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
       }
    }
 
-   /**
-    * @return Returns the currentTokenType.
-    */
+   /** @return Returns the currentTokenType. */
    protected int getCurrentTokenType()
    {
       return this.currentTokenType;
    }
 
-   /*
-    * Parse argument in @see tag method reference
-    */
+   /* Parse argument in @see tag method reference */
    protected Object parseArguments(Object receiver) throws InvalidInputException
    {
 
@@ -797,30 +789,28 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
       throw new InvalidInputException();
    }
 
-   /**
-       * Parse a possible HTML tag like:
-       * <ul>
-       * 	<li>&lt;code&gt;
-       * 	<li>&lt;br&gt;
-       * 	<li>&lt;h?&gt;
-       * </ul>
-       *
-       * Note that the default is to do nothing!
-       *
-       * @param previousPosition The position of the '<' character on which the tag might start
-       * @param endTextPosition The position of the end of the previous text
-       * @return <code>true</code> if a valid html tag has been parsed, <code>false</code>
-       * 	otherwise
-       * @throws InvalidInputException If any problem happens during the parse in this area
-       */
+/**
+          * Parse a possible HTML tag like:
+          * <ul>
+          * 	<li>&lt;code&gt;
+          * 	<li>&lt;br&gt;
+          * 	<li>&lt;h?&gt;
+          * </ul>
+          *
+          * Note that the default is to do nothing!
+          *
+          * @param previousPosition The position of the '<' character on which the tag might start
+          * @param endTextPosition The position of the end of the previous text
+          * @return <code>true</code> if a valid html tag has been parsed, <code>false</code>
+          * 	otherwise
+          * @throws InvalidInputException If any problem happens during the parse in this area
+          */
    protected boolean parseHtmlTag(int previousPosition, int endTextPosition) throws InvalidInputException
    {
       return false;
    }
 
-   /*
-    * Parse an URL link reference in @see tag
-    */
+   /* Parse an URL link reference in @see tag */
    protected boolean parseHref() throws InvalidInputException
    {
       boolean skipComments = this.scanner.skipComments;
@@ -937,9 +927,7 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
       return false;
    }
 
-   /*
-    * Parse tag followed by an identifier
-    */
+   /* Parse tag followed by an identifier */
    protected boolean parseIdentifierTag(boolean report)
    {
       int token = readTokenSafely();
@@ -957,9 +945,7 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
       return false;
    }
 
-   /*
-    * Parse a method reference in @see tag
-    */
+   /* Parse a method reference in @see tag */
    protected Object parseMember(Object receiver) throws InvalidInputException
    {
       // Init
@@ -1030,9 +1016,7 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
       return null;
    }
 
-   /*
-    * Parse @param tag declaration
-    */
+   /* Parse @param tag declaration */
    protected boolean parseParam() throws InvalidInputException
    {
 
@@ -1301,9 +1285,7 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
       }
    }
 
-   /*
-    * Parse a qualified name and built a type reference if the syntax is valid.
-    */
+   /* Parse a qualified name and built a type reference if the syntax is valid. */
    protected Object parseQualifiedName(boolean reset) throws InvalidInputException
    {
 
@@ -1445,9 +1427,7 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
       return createTypeReference(primitiveToken);
    }
 
-   /*
-    * Parse a reference in @see tag
-    */
+   /* Parse a reference in @see tag */
    protected boolean parseReference() throws InvalidInputException
    {
       int currentPosition = this.scanner.currentPosition;
@@ -1543,7 +1523,9 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
                         boolean isUrlRef = false;
                         if (this.tagValue == TAG_SEE_VALUE)
                         {
-                           int length = currentError.length, i = 1 /* first char is " */;
+                           int length = currentError.length, i = 1 /*
+                                                                    * first char is "
+                                                                    */;
                            while (i < length && ScannerHelper.isLetter(currentError[i]))
                            {
                               i++;
@@ -1681,14 +1663,10 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
       return false;
    }
 
-   /*
-    * Parse tag declaration
-    */
+   /* Parse tag declaration */
    protected abstract boolean parseTag(int previousPosition) throws InvalidInputException;
 
-   /*
-    * Parse @throws tag declaration
-    */
+   /* Parse @throws tag declaration */
    protected boolean parseThrows()
    {
       int start = this.scanner.currentPosition;
@@ -1716,9 +1694,7 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
       return false;
    }
 
-   /*
-    * Return current character without move index position.
-    */
+   /* Return current character without move index position. */
    protected char peekChar()
    {
       int idx = this.index;
@@ -1817,27 +1793,19 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
       }
    }
 
-   /*
-    * Push a param name in ast node stack.
-    */
+   /* Push a param name in ast node stack. */
    protected abstract boolean pushParamName(boolean isTypeParam);
 
-   /*
-    * Push a reference statement in ast node stack.
-    */
+   /* Push a reference statement in ast node stack. */
    protected abstract boolean pushSeeRef(Object statement);
 
-   /*
-    * Push a text element in ast node stack
-    */
+   /* Push a text element in ast node stack */
    protected void pushText(int start, int end)
    {
       // do not store text by default
    }
 
-   /*
-    * Push a throws type ref in ast node stack.
-    */
+   /* Push a throws type ref in ast node stack. */
    protected abstract boolean pushThrowName(Object typeRef);
 
    /*
@@ -1870,9 +1838,7 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
       return c;
    }
 
-   /*
-    * Read token only if previous was consumed
-    */
+   /* Read token only if previous was consumed */
    protected int readToken() throws InvalidInputException
    {
       if (this.currentTokenType < 0)
@@ -1936,33 +1902,25 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
       this.inheritedPositions[this.inheritedPositionsPtr++] = position;
    }
 
-   /*
-    * Refresh start position and length of an inline tag.
-    */
+   /* Refresh start position and length of an inline tag. */
    protected void refreshInlineTagPosition(int previousPosition)
    {
       // do nothing by default
    }
 
-   /*
-    * Refresh return statement
-    */
+   /* Refresh return statement */
    protected void refreshReturnStatement()
    {
       // do nothing by default
    }
 
-   /**
-    * @param started the inlineTagStarted to set
-    */
+   /** @param started the inlineTagStarted to set */
    protected void setInlineTagStarted(boolean started)
    {
       this.inlineTagStarted = started;
    }
 
-   /*
-    * Entry point for recovery on invalid syntax
-    */
+   /* Entry point for recovery on invalid syntax */
    protected Object syntaxRecoverQualifiedName(int primitiveToken) throws InvalidInputException
    {
       // do nothing, just an entry point for recovery
@@ -2020,14 +1978,10 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
       return buffer.toString();
    }
 
-   /*
-    * Update
-    */
+   /* Update */
    protected abstract void updateDocComment();
 
-   /*
-    * Update line end
-    */
+   /* Update line end */
    protected void updateLineEnd()
    {
       while (this.index > (this.lineEnd + 1))

@@ -58,9 +58,7 @@ import java.util.List;
 public abstract class BodyDeclaration extends ASTNode
 {
 
-   /**
-    * The doc comment, or <code>null</code> if none. Defaults to none.
-    */
+   /** The doc comment, or <code>null</code> if none. Defaults to none. */
    Javadoc optionalDocComment = null;
 
    /**
@@ -283,9 +281,7 @@ public abstract class BodyDeclaration extends ASTNode
       return this.modifiers;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       return BASE_NODE_SIZE + 3 * 4;

@@ -35,9 +35,7 @@ public class JavadocFieldReference extends FieldReference
     * public Binding getBinding() { if (this.methodBinding != null) { return this.methodBinding; } return this.binding; }
     */
 
-   /*
-    * Resolves type on a Block or Class scope.
-    */
+   /* Resolves type on a Block or Class scope. */
    protected TypeBinding internalResolveType(Scope scope)
    {
 
@@ -166,8 +164,7 @@ public class JavadocFieldReference extends FieldReference
 
    /*
     * (non-Javadoc) Redefine to capture javadoc specific signatures
-    * 
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor,
+    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt .internal.compiler.ASTVisitor,
     * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, BlockScope scope)

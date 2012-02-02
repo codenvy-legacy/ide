@@ -139,17 +139,13 @@ public class NestedTypeBinding extends SourceTypeBinding
       return this.enclosingType;
    }
 
-   /**
-    * @return the enclosingInstancesSlotSize
-    */
+   /** @return the enclosingInstancesSlotSize */
    public int getEnclosingInstancesSlotSize()
    {
       return this.enclosingInstances == null ? 0 : this.enclosingInstances.length;
    }
 
-   /**
-    * @return the outerLocalVariablesSlotSize
-    */
+   /** @return the outerLocalVariablesSlotSize */
    public int getOuterLocalVariablesSlotSize()
    {
       if (this.outerLocalVariablesSlotSize < 0)

@@ -226,7 +226,7 @@ public abstract class CompletionRequestor
     * e.g. <code>{"java.util.Arrays.equals"}</code>
     * </p>
     * <p>
-    * Currently only on demand type references (<code>"java.util.Arrays.*"</code>), references to a static method or a static
+    * Currently only on demand type references ( <code>"java.util.Arrays.*"</code>), references to a static method or a static
     * field are used to compute completion proposals. Other kind of reference could be used in the future.
     * </p>
     * 

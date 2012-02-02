@@ -11,8 +11,9 @@
 package org.eclipse.jdt.client.core.formatter;
 
 /**
- * A location maintains positional information both in original source and in the output source.
- * It remembers source offsets, line/column and indentation level.
+ * A location maintains positional information both in original source and in the output source. It remembers source offsets,
+ * line/column and indentation level.
+ * 
  * @since 2.1
  */
 public class Location

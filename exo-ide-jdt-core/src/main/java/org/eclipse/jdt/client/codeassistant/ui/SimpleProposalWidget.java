@@ -31,15 +31,12 @@ import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Jan 26, 2012 11:59:49 AM evgen $
- *
+ * @version ${Id}: Jan 26, 2012 11:59:49 AM evgen $
  */
 public class SimpleProposalWidget extends ProposalWidget
 {
 
-   /**
-    * @param proposal
-    */
+   /** @param proposal */
    public SimpleProposalWidget(CompletionProposal proposal)
    {
       super(proposal);
@@ -70,18 +67,14 @@ public class SimpleProposalWidget extends ProposalWidget
       return name;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getName()
-    */
+   /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getName() */
    @Override
    public String getName()
    {
       return getProposalName();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getDecription()
-    */
+   /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getDecription() */
    @Override
    public Widget getDecription()
    {
@@ -89,27 +82,21 @@ public class SimpleProposalWidget extends ProposalWidget
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#setSelectedStyle()
-    */
+   /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#setSelectedStyle() */
    @Override
    public void setSelectedStyle()
    {
       setStyleName(JavaClientBundle.INSTANCE.css().selectedItem());
    }
 
-   /**
-    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#setDefaultStyle()
-    */
+   /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#setDefaultStyle() */
    @Override
    public void setDefaultStyle()
    {
       setStyleName(JavaClientBundle.INSTANCE.css().item());
    }
 
-   /**
-    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getImage(int)
-    */
+   /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getImage(int) */
    @Override
    protected ImageResource getImage(int flags)
    {
@@ -117,9 +104,7 @@ public class SimpleProposalWidget extends ProposalWidget
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getTypeSignature()
-    */
+   /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getTypeSignature() */
    @Override
    protected String getTypeSignature()
    {
@@ -127,9 +112,7 @@ public class SimpleProposalWidget extends ProposalWidget
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getClassSignature()
-    */
+   /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getClassSignature() */
    @Override
    protected String getClassSignature()
    {

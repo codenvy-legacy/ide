@@ -258,9 +258,7 @@ public class MessageSend extends Expression implements InvocationSite
    // codeStream.recordPositionsFrom(pc, (int)(this.nameSourcePosition >>> 32)); // highlight selector
    // }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments() */
    public TypeBinding[] genericTypeArguments()
    {
       return this.genericTypeArguments;
@@ -335,9 +333,7 @@ public class MessageSend extends Expression implements InvocationSite
       return FlowInfo.UNKNOWN;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#postConversionType(Scope)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.Expression#postConversionType(Scope) */
    public TypeBinding postConversionType(Scope scope)
    {
       TypeBinding convertedType = this.resolvedType;
@@ -441,7 +437,9 @@ public class MessageSend extends Expression implements InvocationSite
          for (int i = 0; i < length; i++)
          {
             TypeReference typeReference = this.typeArguments[i];
-            if ((this.genericTypeArguments[i] = typeReference.resolveType(scope, true /* check bounds */)) == null)
+            if ((this.genericTypeArguments[i] = typeReference.resolveType(scope, true /*
+                                                                                       * check bounds
+                                                                                       */)) == null)
             {
                argHasError = true;
             }
@@ -726,9 +724,7 @@ public class MessageSend extends Expression implements InvocationSite
       }
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#setExpectedType(org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.Expression#setExpectedType(org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding) */
    public void setExpectedType(TypeBinding expectedType)
    {
       this.expectedType = expectedType;

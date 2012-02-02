@@ -30,9 +30,7 @@ public final class MemberTypeBinding extends NestedTypeBinding
    }
 
    /*
-    * Answer the receiver's constant pool name.
-    * 
-    * NOTE: This method should only be used during/after code gen.
+    * Answer the receiver's constant pool name. NOTE: This method should only be used during/after code gen.
     */
 
    public char[] constantPoolName() /* java/lang/Object */
@@ -43,9 +41,7 @@ public final class MemberTypeBinding extends NestedTypeBinding
       return this.constantPoolName = CharOperation.concat(enclosingType().constantPoolName(), this.sourceName, '$');
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#initializeDeprecatedAnnotationTagBits()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#initializeDeprecatedAnnotationTagBits() */
    public void initializeDeprecatedAnnotationTagBits()
    {
       if ((this.tagBits & TagBits.DeprecatedAnnotationResolved) == 0)

@@ -513,9 +513,9 @@ public class CompletionProposal
     * </p>
     * <p>
     * This kind of proposal could require a long computation, so they are computed only if completion operation is called with a
-    * {@link IProgressMonitor} (e.g. {@link ICodeAssist#codeComplete(int, CompletionRequestor, IProgressMonitor)}).<br>
+    * {@link IProgressMonitor} (e.g. {@link ICodeAssist#codeComplete(int, CompletionRequestor, IProgressMonitor)} ).<br>
     * This kind of proposal is always is only proposals with a {@link #TYPE_REF} required proposal, so this kind of required
-    * proposal must be allowed: <code>requestor.setAllowsRequiredProposals(CONSTRUCTOR_INVOCATION, TYPE_REF, true)</code>.
+    * proposal must be allowed: <code>requestor.setAllowsRequiredProposals(CONSTRUCTOR_INVOCATION, TYPE_REF, true)</code> .
     * </p>
     * 
     * @see #getKind()
@@ -541,9 +541,9 @@ public class CompletionProposal
     * </p>
     * <p>
     * This kind of proposal could require a long computation, so they are computed only if completion operation is called with a
-    * {@link IProgressMonitor} (e.g. {@link ICodeAssist#codeComplete(int, CompletionRequestor, IProgressMonitor)})<br>
+    * {@link IProgressMonitor} (e.g. {@link ICodeAssist#codeComplete(int, CompletionRequestor, IProgressMonitor)} )<br>
     * This kind of proposal is always is only proposals with a {@link #TYPE_REF} required proposal, so this kind of required
-    * proposal must be allowed: <code>requestor.setAllowsRequiredProposals(CONSTRUCTOR_INVOCATION, TYPE_REF, true)</code>.
+    * proposal must be allowed: <code>requestor.setAllowsRequiredProposals(CONSTRUCTOR_INVOCATION, TYPE_REF, true)</code> .
     * </p>
     * 
     * @see #getKind()
@@ -670,7 +670,7 @@ public class CompletionProposal
 
    /**
     * Returns the character index of the end (exclusive) of the subrange in the source file buffer containing the relevant token.
-    * When there is no relevant token, the range is empty (<code>getEndToken() == getStartToken()</code>).
+    * When there is no relevant token, the range is empty ( <code>getEndToken() == getStartToken()</code>).
     * 
     * @return character index of token end position (exclusive)
     */
@@ -750,7 +750,7 @@ public class CompletionProposal
 
    /**
     * Returns the character index of the end of the subrange in the source file buffer to be replaced by the completion string. If
-    * the subrange is empty (<code>getReplaceEnd() == getReplaceStart()</code>), the completion string is to be inserted at this
+    * the subrange is empty ( <code>getReplaceEnd() == getReplaceStart()</code>), the completion string is to be inserted at this
     * index.
     * 
     * @return replacement end position (exclusive)
@@ -762,7 +762,7 @@ public class CompletionProposal
 
    /**
     * Sets the character indices of the subrange in the source file buffer to be replaced by the completion string. If the
-    * subrange is empty (<code>startIndex == endIndex</code>), the completion string is to be inserted at this index.
+    * subrange is empty ( <code>startIndex == endIndex</code>), the completion string is to be inserted at this index.
     * <p>
     * If not set, defaults to empty subrange at [0,0).
     * </p>

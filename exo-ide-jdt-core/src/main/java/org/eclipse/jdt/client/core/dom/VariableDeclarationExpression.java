@@ -18,9 +18,9 @@ import java.util.List;
 /**
  * Local variable declaration expression AST node type.
  * <p>
- * This kind of node collects together several variable declaration fragments (<code>VariableDeclarationFragment</code>) into a
- * single expression (<code>Expression</code>), all sharing the same modifiers and base type. This type of node can be used as the
- * initializer of a <code>ForStatement</code>, or wrapped in an <code>ExpressionStatement</code> to form the equivalent of a
+ * This kind of node collects together several variable declaration fragments ( <code>VariableDeclarationFragment</code>) into a
+ * single expression ( <code>Expression</code>), all sharing the same modifiers and base type. This type of node can be used as
+ * the initializer of a <code>ForStatement</code>, or wrapped in an <code>ExpressionStatement</code> to form the equivalent of a
  * <code>VariableDeclarationStatement</code>.
  * </p>
  * For JLS2:
@@ -62,7 +62,7 @@ public class VariableDeclarationExpression extends Expression
       VariableDeclarationExpression.class, "modifiers", IExtendedModifier.class, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * The "type" structural property of this node type (child type: {@link Type}).
+    * The "type" structural property of this node type (child type: {@link Type} ).
     * 
     * @since 3.0
     */
@@ -170,17 +170,13 @@ public class VariableDeclarationExpression extends Expression
       }
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value)
    {
       if (property == MODIFIERS_PROPERTY)
@@ -199,9 +195,7 @@ public class VariableDeclarationExpression extends Expression
       return super.internalGetSetIntProperty(property, get, value);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
       if (property == TYPE_PROPERTY)
@@ -220,9 +214,7 @@ public class VariableDeclarationExpression extends Expression
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
       if (property == MODIFIERS2_PROPERTY)
@@ -237,17 +229,13 @@ public class VariableDeclarationExpression extends Expression
       return super.internalGetChildListProperty(property);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int getNodeType0()
    {
       return VARIABLE_DECLARATION_EXPRESSION;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    ASTNode clone0(AST target)
    {
       VariableDeclarationExpression result = new VariableDeclarationExpression(target);
@@ -266,18 +254,14 @@ public class VariableDeclarationExpression extends Expression
 
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
       // dispatch to correct overloaded match method
       return matcher.match(this, other);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    void accept0(ASTVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -441,18 +425,14 @@ public class VariableDeclarationExpression extends Expression
       return this.variableDeclarationFragments;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       // treat Operator as free
       return BASE_NODE_SIZE + 4 * 4;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int treeSize()
    {
       return memSize() + (this.modifiers == null ? 0 : this.modifiers.listSize())

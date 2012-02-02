@@ -63,9 +63,7 @@ public class LocalVariableBinding extends VariableBinding
       this.tagBits |= TagBits.IsEffectivelyFinal;
    }
 
-   /*
-    * API Answer the receiver's binding type from Binding.BindingID.
-    */
+   /* API Answer the receiver's binding type from Binding.BindingID. */
    public final int kind()
    {
       return LOCAL;

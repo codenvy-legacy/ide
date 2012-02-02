@@ -16,9 +16,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 public class ExtendedStringLiteral extends StringLiteral
 {
 
-   /**
-    * Build a string+char literal
-    */
+   /** Build a string+char literal */
    public ExtendedStringLiteral(StringLiteral str, CharLiteral character)
    {
 
@@ -26,9 +24,7 @@ public class ExtendedStringLiteral extends StringLiteral
       extendWith(character);
    }
 
-   /**
-    * Build a two-strings literal
-    * */
+   /** Build a two-strings literal */
    public ExtendedStringLiteral(StringLiteral str1, StringLiteral str2)
    {
 
@@ -36,9 +32,7 @@ public class ExtendedStringLiteral extends StringLiteral
       extendWith(str2);
    }
 
-   /**
-    * Add the lit source to mine, just as if it was mine
-    */
+   /** Add the lit source to mine, just as if it was mine */
    public ExtendedStringLiteral extendWith(CharLiteral lit)
    {
 
@@ -51,9 +45,7 @@ public class ExtendedStringLiteral extends StringLiteral
       return this;
    }
 
-   /**
-    * Add the lit source to mine, just as if it was mine
-    */
+   /** Add the lit source to mine, just as if it was mine */
    public ExtendedStringLiteral extendWith(StringLiteral lit)
    {
 

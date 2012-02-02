@@ -25,9 +25,7 @@ import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
 
 import java.util.Map;
 
-/**
- * Utility class to parse different code snippets
- */
+/** Utility class to parse different code snippets */
 public class CodeSnippetParsingUtil
 {
 

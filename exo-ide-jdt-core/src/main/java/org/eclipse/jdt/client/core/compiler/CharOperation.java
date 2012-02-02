@@ -22,14 +22,10 @@ import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
 public final class CharOperation
 {
 
-   /**
-    * Constant for an empty char array
-    */
+   /** Constant for an empty char array */
    public static final char[] NO_CHAR = new char[0];
 
-   /**
-    * Constant for an empty char array with two dimensions.
-    */
+   /** Constant for an empty char array with two dimensions. */
    public static final char[][] NO_CHAR_CHAR = new char[0][];
 
    /**
@@ -267,7 +263,9 @@ public final class CharOperation
       if (name == null)
          return false; // null name cannot match
 
-      return camelCaseMatch(pattern, 0, pattern.length, name, 0, name.length, false/* not the same count of parts */);
+      return camelCaseMatch(pattern, 0, pattern.length, name, 0, name.length, false/*
+                                                                                    * not the same count of parts
+                                                                                    */);
    }
 
    /**
@@ -325,7 +323,7 @@ public final class CharOperation
     *           &nbsp;&nbsp;For example:
     *           <ul>
     *           <li>'HM' type string pattern will match 'HashMap' and 'HtmlMapper' types, but not 'HashMapEntry'</li> <li>'HMap'
-    *           type string pattern will still match previous 'HashMap' and 'HtmlMapper' types, but not 'HighMagnitude'</li>
+    *           type string pattern will still match previous 'HashMap' and 'HtmlMapper' types, but not 'HighMagnitude' </li>
     *           </ul>
     * @return true if the pattern matches the given name, false otherwise
     * @since 3.4
@@ -397,7 +395,9 @@ public final class CharOperation
    public static final boolean camelCaseMatch(char[] pattern, int patternStart, int patternEnd, char[] name,
       int nameStart, int nameEnd)
    {
-      return camelCaseMatch(pattern, patternStart, patternEnd, name, nameStart, nameEnd, false/* not the same count of parts */);
+      return camelCaseMatch(pattern, patternStart, patternEnd, name, nameStart, nameEnd, false/*
+                                                                                               * not the same count of parts
+                                                                                               */);
    }
 
    /**
@@ -490,7 +490,7 @@ public final class CharOperation
     *           &nbsp;&nbsp;For example:
     *           <ul>
     *           <li>'HM' type string pattern will match 'HashMap' and 'HtmlMapper' types, but not 'HashMapEntry'</li> <li>'HMap'
-    *           type string pattern will still match previous 'HashMap' and 'HtmlMapper' types, but not 'HighMagnitude'</li>
+    *           type string pattern will still match previous 'HashMap' and 'HtmlMapper' types, but not 'HighMagnitude' </li>
     *           </ul>
     * @return true if a sub-pattern matches the sub-part of the given name, false otherwise
     * @since 3.4
@@ -501,10 +501,8 @@ public final class CharOperation
 
       /*
        * !!!!!!!!!! WARNING !!!!!!!!!! The algorithm implemented in this method has been heavily used in
-       * StringOperation#getCamelCaseMatchingRegions(String, int, int, String, int, int, boolean) method.
-       * 
-       * So, if any change needs to be applied in the current algorithm, do NOT forget to also apply the same change in the
-       * StringOperation method!
+       * StringOperation#getCamelCaseMatchingRegions(String, int, int, String, int, int, boolean) method. So, if any change needs
+       * to be applied in the current algorithm, do NOT forget to also apply the same change in the StringOperation method!
        */
 
       if (name == null)

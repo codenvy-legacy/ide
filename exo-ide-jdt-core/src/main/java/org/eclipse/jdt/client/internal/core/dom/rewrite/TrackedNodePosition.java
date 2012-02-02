@@ -33,8 +33,9 @@ public class TrackedNodePosition implements ITrackedNodePosition
       this.node = node;
    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.corext.dom.ITrackedNodePosition#getStartPosition()
+   /*
+    * (non-Javadoc)
+    * @see org.eclipse.jdt.internal.corext.dom.ITrackedNodePosition#getStartPosition ()
     */
    public int getStartPosition()
    {
@@ -50,7 +51,8 @@ public class TrackedNodePosition implements ITrackedNodePosition
       return coverage.getOffset();
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.eclipse.jdt.internal.corext.dom.ITrackedNodePosition#getLength()
     */
    public int getLength()

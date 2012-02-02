@@ -23,7 +23,6 @@ import com.google.gwt.storage.client.Storage;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 24, 2012 4:31:23 PM evgen $
- * 
  */
 public class TypeInfoStorage
 {

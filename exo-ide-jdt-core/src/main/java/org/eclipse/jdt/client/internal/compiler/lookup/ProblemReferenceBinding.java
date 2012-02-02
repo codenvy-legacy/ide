@@ -27,17 +27,13 @@ public class ProblemReferenceBinding extends ReferenceBinding
       this.problemReason = problemReason;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#closestMatch()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#closestMatch() */
    public TypeBinding closestMatch()
    {
       return this.closestMatch;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#closestMatch()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#closestMatch() */
    public ReferenceBinding closestReferenceMatch()
    {
       return this.closestMatch;
@@ -81,9 +77,7 @@ public class ProblemReferenceBinding extends ReferenceBinding
    //
    // }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#shortReadableName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#shortReadableName() */
    public char[] shortReadableName()
    {
       return readableName();

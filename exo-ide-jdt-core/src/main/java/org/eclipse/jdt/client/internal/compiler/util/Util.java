@@ -413,12 +413,10 @@ public class Util implements SuffixConstants
 
    /*
     * NIO support to get input stream as byte array. Not used as with JDK 1.4.2 this support is slower than standard IO one...
-    * Keep it as comment for future in case of next JDK versions improve performance in this area...
-    * 
-    * public static byte[] getInputStreamAsByteArray(FileInputStream stream, int length) throws IOException {
-    * 
-    * FileChannel channel = stream.getChannel(); int size = (int)channel.size(); if (length >= 0 && length < size) size = length;
-    * byte[] contents = new byte[size]; ByteBuffer buffer = ByteBuffer.wrap(contents); channel.read(buffer); return contents; }
+    * Keep it as comment for future in case of next JDK versions improve performance in this area... public static byte[]
+    * getInputStreamAsByteArray(FileInputStream stream, int length) throws IOException { FileChannel channel =
+    * stream.getChannel(); int size = (int)channel.size(); if (length >= 0 && length < size) size = length; byte[] contents = new
+    * byte[size]; ByteBuffer buffer = ByteBuffer.wrap(contents); channel.read(buffer); return contents; }
     */
    // /**
    // * Returns the given input stream's contents as a byte array.
@@ -483,10 +481,9 @@ public class Util implements SuffixConstants
    /*
     * NIO support to get input stream as char array. Not used as with JDK 1.4.2 this support is slower than standard IO one...
     * Keep it as comment for future in case of next JDK versions improve performance in this area... public static char[]
-    * getInputStreamAsCharArray(FileInputStream stream, int length, String encoding) throws IOException {
-    * 
-    * FileChannel channel = stream.getChannel(); int size = (int)channel.size(); if (length >= 0 && length < size) size = length;
-    * Charset charset = encoding==null?systemCharset:Charset.forName(encoding); if (charset != null) { MappedByteBuffer bbuffer =
+    * getInputStreamAsCharArray(FileInputStream stream, int length, String encoding) throws IOException { FileChannel channel =
+    * stream.getChannel(); int size = (int)channel.size(); if (length >= 0 && length < size) size = length; Charset charset =
+    * encoding==null?systemCharset:Charset.forName(encoding); if (charset != null) { MappedByteBuffer bbuffer =
     * channel.map(FileChannel.MapMode.READ_ONLY, 0, size); CharsetDecoder decoder = charset.newDecoder(); CharBuffer buffer =
     * decoder.decode(bbuffer); char[] contents = new char[buffer.limit()]; buffer.get(contents); return contents; } throw new
     * UnsupportedCharsetException(SYSTEM_FILE_ENCODING); }
@@ -746,9 +743,7 @@ public class Util implements SuffixConstants
    /*
     * TODO (philippe) should consider promoting it to CharOperation Returns whether the given resource path matches one of the
     * inclusion/exclusion patterns. NOTE: should not be asked directly using pkg root pathes
-    * 
     * @see IClasspathEntry#getInclusionPatterns
-    * 
     * @see IClasspathEntry#getExclusionPatterns
     */
    public final static boolean isExcluded(char[] path, char[][] inclusionPatterns, char[][] exclusionPatterns,
@@ -951,9 +946,7 @@ public class Util implements SuffixConstants
       }
    }
 
-   /**
-    * Converts an array of Objects into String.
-    */
+   /** Converts an array of Objects into String. */
    public static String toString(Object[] objects)
    {
       return toString(objects, new Displayable()
@@ -967,9 +960,7 @@ public class Util implements SuffixConstants
       });
    }
 
-   /**
-    * Converts an array of Objects into String.
-    */
+   /** Converts an array of Objects into String. */
    public static String toString(Object[] objects, Displayable renderer)
    {
       if (objects == null)
@@ -1093,9 +1084,7 @@ public class Util implements SuffixConstants
    // classFile.recordInnerClasses(typeBinding);
    // }
    // }
-   /*
-    * // * External API //
-    */
+   /* // * External API // */
    // public static File getJavaHome() {
    //		String javaHome = System.getProperty("java.home");//$NON-NLS-1$
    // if (javaHome != null) {

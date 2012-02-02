@@ -24,7 +24,6 @@ import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 34360 2009-07-22 23:58:59Z evgen $
- * 
  */
 public class CompilationUnit implements ICompilationUnit
 {
@@ -76,36 +75,28 @@ public class CompilationUnit implements ICompilationUnit
       this.encoding = encoding;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IDependent#getFileName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IDependent#getFileName() */
    @Override
    public char[] getFileName()
    {
       return fileName;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit#getContents()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit#getContents() */
    @Override
    public char[] getContents()
    {
       return contents;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit#getMainTypeName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit#getMainTypeName() */
    @Override
    public char[] getMainTypeName()
    {
       return mainTypeName;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit#getPackageName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit#getPackageName() */
    @Override
    public char[][] getPackageName()
    {

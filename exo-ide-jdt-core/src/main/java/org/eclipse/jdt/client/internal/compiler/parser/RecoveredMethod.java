@@ -34,9 +34,7 @@ import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
 
-/**
- * Internal method structure for parsing recovery
- */
+/** Internal method structure for parsing recovery */
 
 public class RecoveredMethod extends RecoveredElement implements TerminalTokens
 {
@@ -79,9 +77,7 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
       }
    }
 
-   /*
-    * Record a nested block declaration
-    */
+   /* Record a nested block declaration */
    public RecoveredElement add(Block nestedBlockDeclaration, int bracketBalanceValue)
    {
       /*
@@ -114,9 +110,7 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
       return this;
    }
 
-   /*
-    * Record a field declaration
-    */
+   /* Record a field declaration */
    public RecoveredElement add(FieldDeclaration fieldDeclaration, int bracketBalanceValue)
    {
       resetPendingModifiers();
@@ -175,11 +169,9 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
       /*
        * char[][] localTypeName; if ((localDeclaration.modifiers & ~AccFinal) != 0 // local var can only be final ||
        * (localDeclaration.type == null) // initializer || ((localTypeName = localDeclaration.type.getTypeName()).length == 1 //
-       * non void && CharOperation.equals(localTypeName[0], VoidBinding.sourceName()))){
-       * 
-       * if (this.parent == null){ return this; // ignore } else {
-       * this.updateSourceEndIfNecessary(this.previousAvailableLineEnd(localDeclaration.declarationSourceStart - 1)); return
-       * this.parent.add(localDeclaration, bracketBalance); } }
+       * non void && CharOperation.equals(localTypeName[0], VoidBinding.sourceName()))){ if (this.parent == null){ return this; //
+       * ignore } else { this.updateSourceEndIfNecessary (this.previousAvailableLineEnd(localDeclaration.declarationSourceStart -
+       * 1)); return this.parent.add(localDeclaration, bracketBalance); } }
        */
       /*
        * do not consider a type starting passed the type end (if set) it must be belonging to an enclosing type
@@ -215,9 +207,7 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
       return this.methodBody.add(localDeclaration, bracketBalanceValue, true);
    }
 
-   /*
-    * Record a statement - regular method should have been created a block body
-    */
+   /* Record a statement - regular method should have been created a block body */
    public RecoveredElement add(Statement statement, int bracketBalanceValue)
    {
       resetPendingModifiers();
@@ -336,9 +326,7 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
       return this.methodDeclaration.bodyStart == this.methodDeclaration.sourceEnd + 1;
    }
 
-   /*
-    * Answer the associated parsed structure
-    */
+   /* Answer the associated parsed structure */
    public ASTNode parseTree()
    {
       return this.methodDeclaration;
@@ -352,9 +340,7 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
       this.pendingModifersSourceStart = -1;
    }
 
-   /*
-    * Answer the very source end of the corresponding parse node
-    */
+   /* Answer the very source end of the corresponding parse node */
    public int sourceEnd()
    {
       return this.methodDeclaration.declarationSourceEnd;
@@ -389,9 +375,7 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
       return result.toString();
    }
 
-   /*
-    * Update the bodyStart of the corresponding parse node
-    */
+   /* Update the bodyStart of the corresponding parse node */
    public void updateBodyStart(int bodyStart)
    {
       this.foundOpeningBrace = true;
@@ -445,7 +429,9 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
                this.methodDeclaration.bodyEnd = block.sourceEnd;
             }
 
-            /* first statement might be an explict constructor call destinated to a special slot */
+            /*
+             * first statement might be an explict constructor call destinated to a special slot
+             */
             if (this.methodDeclaration.isConstructor())
             {
                ConstructorDeclaration constructor = (ConstructorDeclaration)this.methodDeclaration;
@@ -499,7 +485,9 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
          /* might want to recover arguments or thrown exceptions */
          if (parser.listLength > 0 && parser.astLengthPtr > 0)
          { // awaiting interface type references
-            /* has consumed the arguments - listed elements must be thrown exceptions */
+            /*
+             * has consumed the arguments - listed elements must be thrown exceptions
+             */
             if (this.methodDeclaration.sourceEnd == parser.rParenPos)
             {
 
@@ -534,10 +522,14 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
             }
             else
             {
-               /* has not consumed arguments yet, listed elements must be arguments */
+               /*
+                * has not consumed arguments yet, listed elements must be arguments
+                */
                if (parser.currentToken == TokenNameLPAREN || parser.currentToken == TokenNameSEMICOLON)
                {
-                  /* if currentToken is parenthesis this last argument is a method/field signature */
+                  /*
+                   * if currentToken is parenthesis this last argument is a method/field signature
+                   */
                   parser.astLengthStack[parser.astLengthPtr]--;
                   parser.astPtr--;
                   parser.listLength--;
@@ -617,7 +609,9 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
                   if (canConsume)
                   {
                      parser.consumeMethodHeaderRightParen();
-                     /* fix-up positions, given they were updated against rParenPos, which did not get set */
+                     /*
+                      * fix-up positions, given they were updated against rParenPos, which did not get set
+                      */
                      if (parser.currentElement == this)
                      { // parameter addition might have added an awaiting (no return type) method - see 1FVXQZ4 */
                         this.methodDeclaration.sourceEnd =
@@ -696,9 +690,7 @@ public class RecoveredMethod extends RecoveredElement implements TerminalTokens
       updatedMethodDeclaration(0, new HashSet());
    }
 
-   /*
-    * Update the declarationSourceEnd of the corresponding parse node
-    */
+   /* Update the declarationSourceEnd of the corresponding parse node */
    public void updateSourceEndIfNecessary(int braceStart, int braceEnd)
    {
       if (this.methodDeclaration.declarationSourceEnd == 0)

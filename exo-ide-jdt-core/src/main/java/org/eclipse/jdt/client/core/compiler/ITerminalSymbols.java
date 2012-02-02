@@ -34,9 +34,7 @@ public interface ITerminalSymbols
 
    int TokenNameabstract = 98;
 
-   /**
-    * "assert" token (added in J2SE 1.4).
-    */
+   /** "assert" token (added in J2SE 1.4). */
    int TokenNameassert = 118;
 
    int TokenNameboolean = 18;
@@ -264,13 +262,9 @@ public interface ITerminalSymbols
     */
    int TokenNameELLIPSIS = 402;
 
-   /**
-    * @since 3.1
-    */
+   /** @since 3.1 */
    int TokenNameconst = 403;
 
-   /**
-    * @since 3.1
-    */
+   /** @since 3.1 */
    int TokenNamegoto = 404;
 }

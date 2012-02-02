@@ -70,9 +70,7 @@ public class RecoveredBlock extends RecoveredStatement implements TerminalTokens
       return super.add(methodDeclaration, bracketBalanceValue);
    }
 
-   /*
-    * Record a nested block declaration
-    */
+   /* Record a nested block declaration */
    public RecoveredElement add(Block nestedBlockDeclaration, int bracketBalanceValue)
    {
       resetPendingModifiers();
@@ -103,17 +101,13 @@ public class RecoveredBlock extends RecoveredStatement implements TerminalTokens
       return this;
    }
 
-   /*
-    * Record a local declaration
-    */
+   /* Record a local declaration */
    public RecoveredElement add(LocalDeclaration localDeclaration, int bracketBalanceValue)
    {
       return this.add(localDeclaration, bracketBalanceValue, false);
    }
 
-   /*
-    * Record a local declaration
-    */
+   /* Record a local declaration */
    public RecoveredElement add(LocalDeclaration localDeclaration, int bracketBalanceValue, boolean delegatedByParent)
    {
 
@@ -121,11 +115,9 @@ public class RecoveredBlock extends RecoveredStatement implements TerminalTokens
       /*
        * char[][] localTypeName; if ((localDeclaration.modifiers & ~AccFinal) != 0 // local var can only be final ||
        * (localDeclaration.type == null) // initializer || ((localTypeName = localDeclaration.type.getTypeName()).length == 1 //
-       * non void && CharOperation.equals(localTypeName[0], VoidBinding.sourceName()))){
-       * 
-       * if (delegatedByParent){ return this; //ignore } else {
-       * this.updateSourceEndIfNecessary(this.previousAvailableLineEnd(localDeclaration.declarationSourceStart - 1)); return
-       * this.parent.add(localDeclaration, bracketBalance); } }
+       * non void && CharOperation.equals(localTypeName[0], VoidBinding.sourceName()))){ if (delegatedByParent){ return this;
+       * //ignore } else { this.updateSourceEndIfNecessary (this.previousAvailableLineEnd(localDeclaration.declarationSourceStart
+       * - 1)); return this.parent.add(localDeclaration, bracketBalance); } }
        */
       /*
        * do not consider a local variable starting passed the block end (if set) it must be belonging to an enclosing block
@@ -160,17 +152,13 @@ public class RecoveredBlock extends RecoveredStatement implements TerminalTokens
       return this;
    }
 
-   /*
-    * Record a statement declaration
-    */
+   /* Record a statement declaration */
    public RecoveredElement add(Statement stmt, int bracketBalanceValue)
    {
       return this.add(stmt, bracketBalanceValue, false);
    }
 
-   /*
-    * Record a statement declaration
-    */
+   /* Record a statement declaration */
    public RecoveredElement add(Statement stmt, int bracketBalanceValue, boolean delegatedByParent)
    {
       resetPendingModifiers();
@@ -192,17 +180,13 @@ public class RecoveredBlock extends RecoveredStatement implements TerminalTokens
       return this;
    }
 
-   /*
-    * Addition of a type to an initializer (act like inside method body)
-    */
+   /* Addition of a type to an initializer (act like inside method body) */
    public RecoveredElement add(TypeDeclaration typeDeclaration, int bracketBalanceValue)
    {
       return this.add(typeDeclaration, bracketBalanceValue, false);
    }
 
-   /*
-    * Addition of a type to an initializer (act like inside method body)
-    */
+   /* Addition of a type to an initializer (act like inside method body) */
    public RecoveredElement add(TypeDeclaration typeDeclaration, int bracketBalanceValue, boolean delegatedByParent)
    {
 
@@ -266,9 +250,7 @@ public class RecoveredBlock extends RecoveredStatement implements TerminalTokens
       }
    }
 
-   /*
-    * Attach a recovered statement
-    */
+   /* Attach a recovered statement */
    void attach(RecoveredStatement recoveredStatement)
    {
 
@@ -297,9 +279,7 @@ public class RecoveredBlock extends RecoveredStatement implements TerminalTokens
       this.pendingModifersSourceStart = pendingModsSourceStart;
    }
 
-   /*
-    * Answer the associated parsed structure
-    */
+   /* Answer the associated parsed structure */
    public ASTNode parseTree()
    {
       return this.blockDeclaration;
@@ -329,9 +309,7 @@ public class RecoveredBlock extends RecoveredStatement implements TerminalTokens
       return result.toString();
    }
 
-   /*
-    * Rebuild a block from the nested structure which is in scope
-    */
+   /* Rebuild a block from the nested structure which is in scope */
    public Block updatedBlock(int depth, Set knownTypes)
    {
 
@@ -454,9 +432,7 @@ public class RecoveredBlock extends RecoveredStatement implements TerminalTokens
       return this.blockDeclaration;
    }
 
-   /*
-    * Rebuild a statement from the nested structure which is in scope
-    */
+   /* Rebuild a statement from the nested structure which is in scope */
    public Statement updatedStatement(int depth, Set knownTypes)
    {
 
@@ -501,18 +477,14 @@ public class RecoveredBlock extends RecoveredStatement implements TerminalTokens
       return this.add(block, 1);
    }
 
-   /*
-    * Final update the corresponding parse node
-    */
+   /* Final update the corresponding parse node */
    public void updateParseTree()
    {
 
       updatedBlock(0, new HashSet());
    }
 
-   /*
-    * Rebuild a flattened block from the nested structure which is in scope
-    */
+   /* Rebuild a flattened block from the nested structure which is in scope */
    public Statement updateStatement(int depth, Set knownTypes)
    {
 
@@ -549,9 +521,7 @@ public class RecoveredBlock extends RecoveredStatement implements TerminalTokens
       return this.blockDeclaration;
    }
 
-   /*
-    * Record a field declaration
-    */
+   /* Record a field declaration */
    public RecoveredElement add(FieldDeclaration fieldDeclaration, int bracketBalanceValue)
    {
       resetPendingModifiers();

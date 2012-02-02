@@ -74,7 +74,7 @@ public class ClassInstanceCreation extends Expression
       ClassInstanceCreation.class, "expression", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * The "name" structural property of this node type (child type: {@link Name}) (JLS2 API only).
+    * The "name" structural property of this node type (child type: {@link Name} ) (JLS2 API only).
     * 
     * @since 3.0
     */
@@ -82,7 +82,7 @@ public class ClassInstanceCreation extends Expression
       "name", Name.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * The "type" structural property of this node type (child type: {@link Type}) (added in JLS3 API).
+    * The "type" structural property of this node type (child type: {@link Type} ) (added in JLS3 API).
     * 
     * @since 3.1
     */
@@ -159,9 +159,7 @@ public class ClassInstanceCreation extends Expression
       }
    }
 
-   /**
-    * The optional expression; <code>null</code> for none; defaults to none.
-    */
+   /** The optional expression; <code>null</code> for none; defaults to none. */
    private Expression optionalExpression = null;
 
    /**
@@ -215,7 +213,6 @@ public class ClassInstanceCreation extends Expression
 
    /*
     * (omit javadoc for this method) Method declared on ASTNode.
-    * 
     * @since 3.0
     */
    final List internalStructuralPropertiesForType(int apiLevel)
@@ -223,9 +220,7 @@ public class ClassInstanceCreation extends Expression
       return propertyDescriptors(apiLevel);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
       if (property == EXPRESSION_PROPERTY)
@@ -280,9 +275,7 @@ public class ClassInstanceCreation extends Expression
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
       if (property == ARGUMENTS_PROPERTY)
@@ -297,17 +290,13 @@ public class ClassInstanceCreation extends Expression
       return super.internalGetChildListProperty(property);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int getNodeType0()
    {
       return CLASS_INSTANCE_CREATION;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    ASTNode clone0(AST target)
    {
       ClassInstanceCreation result = new ClassInstanceCreation(target);
@@ -328,18 +317,14 @@ public class ClassInstanceCreation extends Expression
       return result;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
       // dispatch to correct overloaded match method
       return matcher.match(this, other);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    void accept0(ASTVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -415,7 +400,7 @@ public class ClassInstanceCreation extends Expression
     * 
     * @return the type name node
     * @exception UnsupportedOperationException if this operation is used in an AST later than JLS2
-    * @deprecated In the JLS3 API, this method is replaced by {@link #getType()}, which returns a <code>Type</code> instead of a
+    * @deprecated In the JLS3 API, this method is replaced by {@link #getType()} , which returns a <code>Type</code> instead of a
     *             <code>Name</code>.
     */
    public Name getName()
@@ -596,18 +581,14 @@ public class ClassInstanceCreation extends Expression
       return this.ast.getBindingResolver().isResolvedTypeInferredFromExpectedType(this);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       // treat Code as free
       return BASE_NODE_SIZE + 6 * 4;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int treeSize()
    {
       // n.b. type == null for ast.API_LEVEL == JLS2

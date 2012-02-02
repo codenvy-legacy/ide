@@ -19,10 +19,7 @@ public interface IBinaryField extends IGenericField
     */
    IBinaryAnnotation[] getAnnotations();
 
-   /**
-    * 
-    * @return org.eclipse.jdt.internal.compiler.Constant
-    */
+   /** @return org.eclipse.jdt.internal.compiler.Constant */
    Constant getConstant();
 
    /**
@@ -31,14 +28,10 @@ public interface IBinaryField extends IGenericField
     */
    char[] getGenericSignature();
 
-   /**
-    * Answer the name of the field.
-    */
+   /** Answer the name of the field. */
    char[] getName();
 
-   /**
-    * Answer the tagbits set according to the bits for annotations.
-    */
+   /** Answer the tagbits set according to the bits for annotations. */
    long getTagBits();
 
    /**

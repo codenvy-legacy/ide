@@ -82,8 +82,9 @@ public class SingleTypeReference extends TypeReference
       }
       if (isTypeUseDeprecated(memberType, scope))
          reportDeprecatedType(memberType, scope);
-      memberType =
-         scope.environment().convertToRawType(memberType, false /* do not force conversion of enclosing types */);
+      memberType = scope.environment().convertToRawType(memberType, false /*
+                                                                           * do not force conversion of enclosing types
+                                                                           */);
       if (memberType.isRawType() && (this.bits & IgnoreRawTypeCheck) == 0
          && scope.compilerOptions().getSeverity(CompilerOptions.RawTypeReference) != ProblemSeverities.Ignore)
       {

@@ -36,7 +36,7 @@ public final class TagElement extends ASTNode implements IDocElement
 {
 
    /**
-    * The "tagName" structural property of this node type (type: {@link String}).
+    * The "tagName" structural property of this node type (type: {@link String} ).
     * 
     * @since 3.0
     */
@@ -79,9 +79,7 @@ public final class TagElement extends ASTNode implements IDocElement
       return PROPERTY_DESCRIPTORS;
    }
 
-   /**
-    * Standard doc tag name (value {@value} ).
-    */
+   /** Standard doc tag name (value {@value} ). */
    public static final String TAG_AUTHOR = "@author"; //$NON-NLS-1$
 
    /**
@@ -94,34 +92,22 @@ public final class TagElement extends ASTNode implements IDocElement
     */
    public static final String TAG_CODE = "@code"; //$NON-NLS-1$
 
-   /**
-    * Standard doc tag name (value {@value} ).
-    */
+   /** Standard doc tag name (value {@value} ). */
    public static final String TAG_DEPRECATED = "@deprecated"; //$NON-NLS-1$
 
-   /**
-    * Standard inline doc tag name (value {@value} ).
-    */
+   /** Standard inline doc tag name (value {@value} ). */
    public static final String TAG_DOCROOT = "@docRoot"; //$NON-NLS-1$
 
-   /**
-    * Standard doc tag name (value {@value} ).
-    */
+   /** Standard doc tag name (value {@value} ). */
    public static final String TAG_EXCEPTION = "@exception"; //$NON-NLS-1$
 
-   /**
-    * Standard inline doc tag name (value {@value} ).
-    */
+   /** Standard inline doc tag name (value {@value} ). */
    public static final String TAG_INHERITDOC = "@inheritDoc"; //$NON-NLS-1$
 
-   /**
-    * Standard inline doc tag name (value {@value} ).
-    */
+   /** Standard inline doc tag name (value {@value} ). */
    public static final String TAG_LINK = "@link"; //$NON-NLS-1$
 
-   /**
-    * Standard inline doc tag name (value {@value} ).
-    */
+   /** Standard inline doc tag name (value {@value} ). */
    public static final String TAG_LINKPLAIN = "@linkplain"; //$NON-NLS-1$
 
    /**
@@ -134,59 +120,37 @@ public final class TagElement extends ASTNode implements IDocElement
     */
    public static final String TAG_LITERAL = "@literal"; //$NON-NLS-1$
 
-   /**
-    * Standard doc tag name (value {@value} ).
-    */
+   /** Standard doc tag name (value {@value} ). */
    public static final String TAG_PARAM = "@param"; //$NON-NLS-1$
 
-   /**
-    * Standard doc tag name (value {@value} ).
-    */
+   /** Standard doc tag name (value {@value} ). */
    public static final String TAG_RETURN = "@return"; //$NON-NLS-1$
 
-   /**
-    * Standard doc tag name (value {@value} ).
-    */
+   /** Standard doc tag name (value {@value} ). */
    public static final String TAG_SEE = "@see"; //$NON-NLS-1$
 
-   /**
-    * Standard doc tag name (value {@value} ).
-    */
+   /** Standard doc tag name (value {@value} ). */
    public static final String TAG_SERIAL = "@serial"; //$NON-NLS-1$
 
-   /**
-    * Standard doc tag name (value {@value} ).
-    */
+   /** Standard doc tag name (value {@value} ). */
    public static final String TAG_SERIALDATA = "@serialData"; //$NON-NLS-1$
 
-   /**
-    * Standard doc tag name (value {@value} ).
-    */
+   /** Standard doc tag name (value {@value} ). */
    public static final String TAG_SERIALFIELD = "@serialField"; //$NON-NLS-1$
 
-   /**
-    * Standard doc tag name (value {@value} ).
-    */
+   /** Standard doc tag name (value {@value} ). */
    public static final String TAG_SINCE = "@since"; //$NON-NLS-1$
 
-   /**
-    * Standard doc tag name (value {@value} ).
-    */
+   /** Standard doc tag name (value {@value} ). */
    public static final String TAG_THROWS = "@throws"; //$NON-NLS-1$
 
-   /**
-    * Standard inline doc tag name (value {@value} ).
-    */
+   /** Standard inline doc tag name (value {@value} ). */
    public static final String TAG_VALUE = "@value"; //$NON-NLS-1$
 
-   /**
-    * Standard doc tag name (value {@value} ).
-    */
+   /** Standard doc tag name (value {@value} ). */
    public static final String TAG_VERSION = "@version"; //$NON-NLS-1$
 
-   /**
-    * The tag name, or null if none; defaults to null.
-    */
+   /** The tag name, or null if none; defaults to null. */
    private String optionalTagName = null;
 
    /**
@@ -208,17 +172,13 @@ public final class TagElement extends ASTNode implements IDocElement
       super(ast);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value)
    {
       if (property == TAG_NAME_PROPERTY)
@@ -237,9 +197,7 @@ public final class TagElement extends ASTNode implements IDocElement
       return super.internalGetSetObjectProperty(property, get, value);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
       if (property == FRAGMENTS_PROPERTY)
@@ -250,17 +208,13 @@ public final class TagElement extends ASTNode implements IDocElement
       return super.internalGetChildListProperty(property);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int getNodeType0()
    {
       return TAG_ELEMENT;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    ASTNode clone0(AST target)
    {
       TagElement result = new TagElement(target);
@@ -270,18 +224,14 @@ public final class TagElement extends ASTNode implements IDocElement
       return result;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
       // dispatch to correct overloaded match method
       return matcher.match(this, other);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    void accept0(ASTVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -363,25 +313,21 @@ public final class TagElement extends ASTNode implements IDocElement
     * </p>
     * 
     * @return <code>true</code> if this node is a nested tag element, and false if this node is either parented by a doc comment
-    *         node ({@link Javadoc}), or is unparented
+    *         node ( {@link Javadoc}), or is unparented
     */
    public boolean isNested()
    {
       return (getParent() instanceof TagElement);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       int size = BASE_NODE_SIZE + 2 * 4 + stringSize(this.optionalTagName);
       return size;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int treeSize()
    {
       return memSize() + this.fragments.listSize();

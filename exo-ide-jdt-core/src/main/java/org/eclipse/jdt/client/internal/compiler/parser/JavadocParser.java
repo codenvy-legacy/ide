@@ -18,9 +18,7 @@ import org.eclipse.jdt.client.internal.compiler.ast.*;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
 
-/**
- * Parser specialized for decoding javadoc comments
- */
+/** Parser specialized for decoding javadoc comments */
 public class JavadocParser extends AbstractCommentParser
 {
 
@@ -56,10 +54,8 @@ public class JavadocParser extends AbstractCommentParser
    }
 
    /*
-    * (non-Javadoc) Returns true if tag @deprecated is present in javadoc comment.
-    * 
-    * If javadoc checking is enabled, will also construct an Javadoc node, which will be stored into Parser.javadoc slot for being
-    * consumed later on.
+    * (non-Javadoc) Returns true if tag @deprecated is present in javadoc comment. If javadoc checking is enabled, will also
+    * construct an Javadoc node, which will be stored into Parser.javadoc slot for being consumed later on.
     */
    public boolean checkDeprecation(int commentPtr)
    {
@@ -168,8 +164,7 @@ public class JavadocParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createArgumentReference(char[], java.lang.Object, int)
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser# createArgumentReference(char[], java.lang.Object, int)
     */
    protected Object createArgumentReference(char[] name, int dim, boolean isVarargs, Object typeRef,
       long[] dimPositions, long argNamePos) throws InvalidInputException
@@ -212,8 +207,7 @@ public class JavadocParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createFieldReference()
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser# createFieldReference()
     */
    protected Object createFieldReference(Object receiver) throws InvalidInputException
    {
@@ -243,8 +237,7 @@ public class JavadocParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createMethodReference(java.lang.Object[])
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser# createMethodReference(java.lang.Object[])
     */
    protected Object createMethodReference(Object receiver, List arguments) throws InvalidInputException
    {
@@ -381,8 +374,7 @@ public class JavadocParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createReturnStatement()
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser# createReturnStatement()
     */
    protected Object createReturnStatement()
    {
@@ -392,8 +384,7 @@ public class JavadocParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#parseTagName()
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#parseTagName ()
     */
    protected void createTag()
    {
@@ -402,8 +393,7 @@ public class JavadocParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createTypeReference()
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser# createTypeReference()
     */
    protected Object createTypeReference(int primitiveToken)
    {
@@ -426,9 +416,7 @@ public class JavadocParser extends AbstractCommentParser
       return typeRef;
    }
 
-   /*
-    * Get current parsed type declaration.
-    */
+   /* Get current parsed type declaration. */
    protected TypeDeclaration getParsedTypeDeclaration()
    {
       int ptr = this.sourceParser.astPtr;
@@ -458,9 +446,7 @@ public class JavadocParser extends AbstractCommentParser
       return valid;
    }
 
-   /*
-    * Parse @return tag declaration
-    */
+   /* Parse @return tag declaration */
    protected boolean parseReturn()
    {
       if (this.returnStatement == null)
@@ -906,9 +892,7 @@ public class JavadocParser extends AbstractCommentParser
       return valid;
    }
 
-   /*
-    * Push a param name in ast node stack.
-    */
+   /* Push a param name in ast node stack. */
    protected boolean pushParamName(boolean isTypeParam)
    {
       // Create param reference
@@ -977,9 +961,7 @@ public class JavadocParser extends AbstractCommentParser
       return true;
    }
 
-   /*
-    * Push a reference statement in ast node stack.
-    */
+   /* Push a reference statement in ast node stack. */
    protected boolean pushSeeRef(Object statement)
    {
       if (this.astLengthPtr == -1)
@@ -1014,8 +996,7 @@ public class JavadocParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushText(int, int)
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushText (int, int)
     */
    protected void pushText(int start, int end)
    {
@@ -1023,9 +1004,7 @@ public class JavadocParser extends AbstractCommentParser
       this.tagWaitingForDescription = NO_TAG_VALUE;
    }
 
-   /*
-    * Push a throws type ref in ast node stack.
-    */
+   /* Push a throws type ref in ast node stack. */
    protected boolean pushThrowName(Object typeRef)
    {
       if (this.astLengthPtr == -1)
@@ -1059,8 +1038,7 @@ public class JavadocParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#refreshInlineTagPosition(int)
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser# refreshInlineTagPosition(int)
     */
    protected void refreshInlineTagPosition(int previousPosition)
    {
@@ -1074,9 +1052,7 @@ public class JavadocParser extends AbstractCommentParser
       }
    }
 
-   /*
-    * Refresh return statement
-    */
+   /* Refresh return statement */
    protected void refreshReturnStatement()
    {
       ((JavadocReturnStatement)this.returnStatement).bits &= ~ASTNode.Empty;
@@ -1091,9 +1067,7 @@ public class JavadocParser extends AbstractCommentParser
       return buffer.toString();
    }
 
-   /*
-    * Fill associated comment fields with ast nodes information stored in stack.
-    */
+   /* Fill associated comment fields with ast nodes information stored in stack. */
    protected void updateDocComment()
    {
 

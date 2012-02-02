@@ -67,7 +67,6 @@ import java.util.List;
  * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 25, 2010 4:18:55 PM evgen $
- * 
  */
 public class CodeAssitantForm extends Composite implements ChangeHandler, ResizeHandler
 {
@@ -257,9 +256,7 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
       }
    }
 
-   /**
-    * @see com.google.gwt.event.dom.client.ChangeHandler#onChange(com.google.gwt.event.dom.client.ChangeEvent)
-    */
+   /** @see com.google.gwt.event.dom.client.ChangeHandler#onChange(com.google.gwt.event.dom.client.ChangeEvent) */
    public void onChange(ChangeEvent event)
    {
       if (widgets.size() > 0)
@@ -330,9 +327,7 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
       selectToken(widgets.get(i));
    }
 
-   /**
-    * @param widget
-    */
+   /** @param widget */
    public void selectToken(ProposalWidget widget)
    {
       if (widget.equals(selectedWidget))
@@ -443,9 +438,7 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
    protected class AutoCompleteFormKeyboardManager implements Event.NativePreviewHandler
    {
 
-      /**
-       * @see com.google.gwt.user.client.Event.NativePreviewHandler#onPreviewNativeEvent(com.google.gwt.user.client.Event.NativePreviewEvent)
-       */
+      /** @see com.google.gwt.user.client.Event.NativePreviewHandler#onPreviewNativeEvent(com.google.gwt.user.client.Event.NativePreviewEvent) */
       public void onPreviewNativeEvent(NativePreviewEvent event)
       {
          NativeEvent nativeEvent = event.getNativeEvent();
@@ -504,18 +497,14 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
    protected class MousHandler implements ClickHandler, DoubleClickHandler
    {
 
-      /**
-       * @see com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event.dom.client.ClickEvent)
-       */
+      /** @see com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event.dom.client.ClickEvent) */
       public void onClick(ClickEvent event)
       {
          ProposalWidget t = (ProposalWidget)event.getSource();
          selectToken(t);
       }
 
-      /**
-       * @see com.google.gwt.event.dom.client.DoubleClickHandler#onDoubleClick(com.google.gwt.event.dom.client.DoubleClickEvent)
-       */
+      /** @see com.google.gwt.event.dom.client.DoubleClickHandler#onDoubleClick(com.google.gwt.event.dom.client.DoubleClickEvent) */
       public void onDoubleClick(DoubleClickEvent event)
       {
          tokenSelected();
@@ -523,9 +512,7 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
 
    }
 
-   /**
-    * Lock Layer uses for locking of screen. Uses for hiding popups.
-    */
+   /** Lock Layer uses for locking of screen. Uses for hiding popups. */
    private class LockLayer extends AbsolutePanel
    {
 
@@ -548,9 +535,7 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
 
    }
 
-   /**
-    * @see com.google.gwt.event.logical.shared.ResizeHandler#onResize(com.google.gwt.event.logical.shared.ResizeEvent)
-    */
+   /** @see com.google.gwt.event.logical.shared.ResizeHandler#onResize(com.google.gwt.event.logical.shared.ResizeEvent) */
    @Override
    public void onResize(ResizeEvent event)
    {

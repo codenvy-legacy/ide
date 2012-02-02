@@ -18,8 +18,8 @@ import java.util.List;
 /**
  * Local variable declaration statement AST node type.
  * <p>
- * This kind of node collects several variable declaration fragments (<code>VariableDeclarationFragment</code>) into a statement (
- * <code>Statement</code>), all sharing the same modifiers and base type.
+ * This kind of node collects several variable declaration fragments ( <code>VariableDeclarationFragment</code>) into a statement
+ * ( <code>Statement</code>), all sharing the same modifiers and base type.
  * </p>
  * For JLS2:
  * 
@@ -64,7 +64,7 @@ public class VariableDeclarationStatement extends Statement
       VariableDeclarationStatement.class, "modifiers", IExtendedModifier.class, CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * The "type" structural property of this node type (child type: {@link Type}).
+    * The "type" structural property of this node type (child type: {@link Type} ).
     * 
     * @since 3.0
     */
@@ -173,17 +173,13 @@ public class VariableDeclarationStatement extends Statement
       }
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value)
    {
       if (property == MODIFIERS_PROPERTY)
@@ -202,9 +198,7 @@ public class VariableDeclarationStatement extends Statement
       return super.internalGetSetIntProperty(property, get, value);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
       if (property == TYPE_PROPERTY)
@@ -223,9 +217,7 @@ public class VariableDeclarationStatement extends Statement
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
       if (property == MODIFIERS2_PROPERTY)
@@ -240,17 +232,13 @@ public class VariableDeclarationStatement extends Statement
       return super.internalGetChildListProperty(property);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int getNodeType0()
    {
       return VARIABLE_DECLARATION_STATEMENT;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    ASTNode clone0(AST target)
    {
       VariableDeclarationStatement result = new VariableDeclarationStatement(target);
@@ -269,18 +257,14 @@ public class VariableDeclarationStatement extends Statement
       return result;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
       // dispatch to correct overloaded match method
       return matcher.match(this, other);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    void accept0(ASTVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -444,17 +428,13 @@ public class VariableDeclarationStatement extends Statement
       return this.variableDeclarationFragments;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       return super.memSize() + 4 * 4;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int treeSize()
    {
       return memSize() + (this.modifiers == null ? 0 : this.modifiers.listSize())

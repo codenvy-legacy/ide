@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Type node for a named class type, a named interface type, or a type variable.
  * <p>
- * This kind of node is used to convert a name (<code>Name</code>) into a type (<code>Type</code>) by wrapping it.
+ * This kind of node is used to convert a name (<code>Name</code>) into a type ( <code>Type</code>) by wrapping it.
  * </p>
  * 
  * @since 2.0
@@ -27,7 +27,7 @@ public class SimpleType extends Type
 {
 
    /**
-    * The "name" structural property of this node type (child type: {@link Name}).
+    * The "name" structural property of this node type (child type: {@link Name} ).
     * 
     * @since 3.0
     */
@@ -77,17 +77,13 @@ public class SimpleType extends Type
       super(ast);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
       if (property == NAME_PROPERTY)
@@ -106,17 +102,13 @@ public class SimpleType extends Type
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int getNodeType0()
    {
       return SIMPLE_TYPE;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    ASTNode clone0(AST target)
    {
       SimpleType result = new SimpleType(target);
@@ -125,18 +117,14 @@ public class SimpleType extends Type
       return result;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
       // dispatch to correct overloaded match method
       return matcher.match(this, other);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    void accept0(ASTVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -192,18 +180,14 @@ public class SimpleType extends Type
       postReplaceChild(oldChild, typeName, NAME_PROPERTY);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       // treat Code as free
       return BASE_NODE_SIZE + 1 * 4;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int treeSize()
    {
       return memSize() + (this.typeName == null ? 0 : getName().treeSize());

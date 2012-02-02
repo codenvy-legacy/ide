@@ -15,9 +15,7 @@ import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 
-/**
- * Binding for a type parameter, held by source/binary type or method.
- */
+/** Binding for a type parameter, held by source/binary type or method. */
 public class TypeVariableBinding extends ReferenceBinding
 {
 
@@ -221,9 +219,7 @@ public class TypeVariableBinding extends ReferenceBinding
       }
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#canBeInstantiated()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#canBeInstantiated() */
    public boolean canBeInstantiated()
    {
       return false;
@@ -321,9 +317,7 @@ public class TypeVariableBinding extends ReferenceBinding
       return this.superclass.constantPoolName(); // java/lang/Object
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#debugName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#debugName() */
    public String debugName()
    {
       return new String(this.sourceName);
@@ -338,9 +332,7 @@ public class TypeVariableBinding extends ReferenceBinding
       return this.superclass; // java/lang/Object
    }
 
-   /**
-    * T::Ljava/util/Map;:Ljava/io/Serializable; T:LY<TT;>
-    */
+   /** T::Ljava/util/Map;:Ljava/io/Serializable; T:LY<TT;> */
    public char[] genericSignature()
    {
       StringBuffer sig = new StringBuffer(10);
@@ -361,9 +353,7 @@ public class TypeVariableBinding extends ReferenceBinding
       return genericSignature;
    }
 
-   /**
-    * T::Ljava/util/Map;:Ljava/io/Serializable; T:LY<TT;>
-    */
+   /** T::Ljava/util/Map;:Ljava/io/Serializable; T:LY<TT;> */
    public char[] genericTypeSignature()
    {
       if (this.genericTypeSignature != null)
@@ -385,9 +375,7 @@ public class TypeVariableBinding extends ReferenceBinding
       return true;
    }
 
-   /**
-    * Returns true if the type variable is directly bound to a given type
-    */
+   /** Returns true if the type variable is directly bound to a given type */
    public boolean isErasureBoundTo(TypeBinding type)
    {
       if (this.superclass.erasure() == type)
@@ -431,9 +419,7 @@ public class TypeVariableBinding extends ReferenceBinding
       return true;
    }
 
-   /**
-    * Returns true if the type was declared as a type variable
-    */
+   /** Returns true if the type was declared as a type variable */
    public boolean isTypeVariable()
    {
       return true;
@@ -481,9 +467,7 @@ public class TypeVariableBinding extends ReferenceBinding
       return Binding.NO_TYPES;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#readableName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#readableName() */
    public char[] readableName()
    {
       return this.sourceName;
@@ -498,8 +482,9 @@ public class TypeVariableBinding extends ReferenceBinding
       if (this.superclass != null)
       {
          ReferenceBinding resolveType =
-            (ReferenceBinding)BinaryTypeBinding
-               .resolveType(this.superclass, this.environment, true /* raw conversion */);
+            (ReferenceBinding)BinaryTypeBinding.resolveType(this.superclass, this.environment, true /*
+                                                                                                     * raw conversion
+                                                                                                     */);
          this.tagBits |= resolveType.tagBits & TagBits.ContainsNestedTypeReferences;
          this.superclass = resolveType;
       }
@@ -511,8 +496,9 @@ public class TypeVariableBinding extends ReferenceBinding
          for (int i = length; --i >= 0;)
          {
             ReferenceBinding resolveType =
-               (ReferenceBinding)BinaryTypeBinding
-                  .resolveType(interfaces[i], this.environment, true /* raw conversion */);
+               (ReferenceBinding)BinaryTypeBinding.resolveType(interfaces[i], this.environment, true /*
+                                                                                                      * raw conversion
+                                                                                                      */);
             this.tagBits |= resolveType.tagBits & TagBits.ContainsNestedTypeReferences;
             interfaces[i] = resolveType;
          }
@@ -533,9 +519,7 @@ public class TypeVariableBinding extends ReferenceBinding
       return this;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#shortReadableName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#shortReadableName() */
    public char[] shortReadableName()
    {
       return readableName();
@@ -551,9 +535,7 @@ public class TypeVariableBinding extends ReferenceBinding
       return this.superInterfaces;
    }
 
-   /**
-    * @see java.lang.Object#toString()
-    */
+   /** @see java.lang.Object#toString() */
    public String toString()
    {
       StringBuffer buffer = new StringBuffer(10);
@@ -581,9 +563,7 @@ public class TypeVariableBinding extends ReferenceBinding
       return buffer.toString();
    }
 
-   /**
-    * Upper bound doesn't perform erasure
-    */
+   /** Upper bound doesn't perform erasure */
    public TypeBinding upperBound()
    {
       if (this.firstBound != null)

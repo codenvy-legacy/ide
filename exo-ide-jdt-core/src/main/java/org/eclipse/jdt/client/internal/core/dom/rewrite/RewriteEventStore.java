@@ -20,8 +20,7 @@ import org.eclipse.jdt.client.core.dom.rewrite.TargetSourceRangeComputer;
 import org.eclipse.jdt.client.text.edits.TextEditGroup;
 
 /**
- * Stores all rewrite events, descriptions of events and knows which nodes
- * are copy or move sources or tracked.
+ * Stores all rewrite events, descriptions of events and knows which nodes are copy or move sources or tracked.
  */
 public final class RewriteEventStore
 {
@@ -66,14 +65,14 @@ public final class RewriteEventStore
    }
 
    /**
-    * Interface that allows to override the way how children are accessed from
-    * a parent. Use this interface when the rewriter is set up on an already
-    * modified AST's (as it is the case in the old ASTRewrite infrastructure)
+    * Interface that allows to override the way how children are accessed from a parent. Use this interface when the rewriter is
+    * set up on an already modified AST's (as it is the case in the old ASTRewrite infrastructure)
     */
    public static interface INodePropertyMapper
    {
       /**
        * Returns the node attribute for a given property name.
+       * 
        * @param parent The parent node
        * @param childProperty The child property to access
        * @return The child node at the given property location.
@@ -81,9 +80,7 @@ public final class RewriteEventStore
       Object getOriginalValue(ASTNode parent, StructuralPropertyDescriptor childProperty);
    }
 
-   /*
-    * Store element to associate event and node position/
-    */
+   /* Store element to associate event and node position/ */
    private static class EventHolder
    {
       public final ASTNode parent;
@@ -302,7 +299,8 @@ public final class RewriteEventStore
          }
       }
 
-      /* (non-Javadoc)
+      /*
+       * (non-Javadoc)
        * @see java.util.Iterator#hasNext()
        */
       public boolean hasNext()
@@ -311,7 +309,8 @@ public final class RewriteEventStore
             || this.trackedNodeIter.hasNext();
       }
 
-      /* (non-Javadoc)
+      /*
+       * (non-Javadoc)
        * @see java.util.Iterator#next()
        */
       public Object next()
@@ -331,7 +330,8 @@ public final class RewriteEventStore
          return this.trackedNodeIter.next();
       }
 
-      /* (non-Javadoc)
+      /*
+       * (non-Javadoc)
        * @see java.util.Iterator#remove()
        */
       public void remove()
@@ -346,7 +346,7 @@ public final class RewriteEventStore
 
    public final static int BOTH = NEW | ORIGINAL;
 
-   /** all events by parent*/
+   /** all events by parent */
    final Map eventLookup;
 
    /** cache for last accessed event */
@@ -355,17 +355,20 @@ public final class RewriteEventStore
    /** Maps events to group descriptions */
    private Map editGroups;
 
-   /** Stores which nodes are source of a copy or move (list of CopySourceInfo)*/
+   /** Stores which nodes are source of a copy or move (list of CopySourceInfo) */
    List nodeCopySources;
 
-   /** Stores node ranges that are used to copy or move (map of <PropertyLocation, CopyRangeInfo>)*/
+   /**
+    * Stores node ranges that are used to copy or move (map of <PropertyLocation, CopyRangeInfo>)
+    */
    Map nodeRangeInfos;
 
-   /** Stores which nodes are tracked and the corresponding edit group*/
+   /** Stores which nodes are tracked and the corresponding edit group */
    Map trackedNodes;
 
-   /** Stores which inserted nodes bound to the previous node. If not, a node is
-    * always bound to the next node */
+   /**
+    * Stores which inserted nodes bound to the previous node. If not, a node is always bound to the next node
+    */
    private Set insertBoundToPrevious;
 
    /** optional mapper to allow fix already modified AST trees */
@@ -390,8 +393,8 @@ public final class RewriteEventStore
 
    /**
     * Override the default way how to access children from a parent node.
-    * @param nodePropertyMapper The new <code>INodePropertyMapper</code> or
-    * <code>null</code>. to use the default.
+    * 
+    * @param nodePropertyMapper The new <code>INodePropertyMapper</code> or <code>null</code>. to use the default.
     */
    public void setNodePropertyMapper(INodePropertyMapper nodePropertyMapper)
    {
@@ -553,6 +556,7 @@ public final class RewriteEventStore
 
    /**
     * Kind is either ORIGINAL, NEW, or BOTH
+    * 
     * @param value
     * @param kind
     * @return Returns the event with the given value of <code>null</code>.
@@ -648,8 +652,7 @@ public final class RewriteEventStore
    }
 
    /*
-    * Gets an original child from the AST.
-    * Temporarily overridden to port the old rewriter to the new infrastructure.
+    * Gets an original child from the AST. Temporarily overridden to port the old rewriter to the new infrastructure.
     */
    private Object accessOriginalValue(ASTNode parent, StructuralPropertyDescriptor childProperty)
    {
@@ -698,8 +701,9 @@ public final class RewriteEventStore
    }
 
    /**
-    * Marks a node as tracked. The edits added to the group editGroup can be used to get the
-    * position of the node after the rewrite operation.
+    * Marks a node as tracked. The edits added to the group editGroup can be used to get the position of the node after the
+    * rewrite operation.
+    * 
     * @param node The node to track
     * @param editGroup Collects the range markers describing the node position.
     */
@@ -967,9 +971,7 @@ public final class RewriteEventStore
       return (RewriteEvent[])newChildEvents.toArray(new RewriteEvent[newChildEvents.size()]);
    }
 
-   /**
-    * Make sure all moved nodes are marked as removed or replaced.
-    */
+   /** Make sure all moved nodes are marked as removed or replaced. */
    private void prepareSingleNodeCopies()
    {
       for (int i = 0; i < this.nodeCopySources.size(); i++)

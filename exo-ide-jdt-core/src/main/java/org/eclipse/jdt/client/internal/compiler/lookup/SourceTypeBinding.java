@@ -882,9 +882,7 @@ public class SourceTypeBinding extends ReferenceBinding
       return this.fields;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#genericTypeSignature()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#genericTypeSignature() */
    public char[] genericTypeSignature()
    {
       if (this.genericReferenceTypeSignature == null)
@@ -1315,9 +1313,7 @@ public class SourceTypeBinding extends ReferenceBinding
       return accessors[1];
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#initializeDeprecatedAnnotationTagBits()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#initializeDeprecatedAnnotationTagBits() */
    public void initializeDeprecatedAnnotationTagBits()
    {
       if ((this.tagBits & TagBits.DeprecatedAnnotationResolved) == 0)
@@ -1710,9 +1706,13 @@ public class SourceTypeBinding extends ReferenceBinding
             FieldDeclaration fieldDecl = fieldDecls[f];
             TypeBinding fieldType =
                fieldDecl.getKind() == AbstractVariableDeclaration.ENUM_CONSTANT ? initializationScope.environment()
-                  .convertToRawType(this, false /* do not force conversion of enclosing types */) // enum constant is implicitly
-                                                                                                   // of declaring enum type
-                  : fieldDecl.type.resolveType(initializationScope, true /* check bounds */);
+                  .convertToRawType(this, false /*
+                                                 * do not force conversion of enclosing types
+                                                 */) // enum constant is implicitly
+                                                     // of declaring enum type
+                  : fieldDecl.type.resolveType(initializationScope, true /*
+                                                                          * check bounds
+                                                                          */);
             field.type = fieldType;
             field.modifiers &= ~ExtraCompilerModifiers.AccUnresolved;
             if (fieldType == null)
@@ -1788,8 +1788,9 @@ public class SourceTypeBinding extends ReferenceBinding
          ReferenceBinding resolvedExceptionType;
          for (int i = 0; i < size; i++)
          {
-            resolvedExceptionType =
-               (ReferenceBinding)exceptionTypes[i].resolveType(methodDecl.scope, true /* check bounds */);
+            resolvedExceptionType = (ReferenceBinding)exceptionTypes[i].resolveType(methodDecl.scope, true /*
+                                                                                                            * check bounds
+                                                                                                            */);
             if (resolvedExceptionType == null)
                continue;
             if (resolvedExceptionType.isBoundParameterizedType())
@@ -1844,7 +1845,9 @@ public class SourceTypeBinding extends ReferenceBinding
             }
             try
             {
-               parameterType = arg.type.resolveType(methodDecl.scope, true /* check bounds */);
+               parameterType = arg.type.resolveType(methodDecl.scope, true /*
+                                                                            * check bounds
+                                                                            */);
             }
             finally
             {
@@ -1931,7 +1934,9 @@ public class SourceTypeBinding extends ReferenceBinding
             }
             try
             {
-               methodType = returnType.resolveType(methodDecl.scope, true /* check bounds */);
+               methodType = returnType.resolveType(methodDecl.scope, true /*
+                                                                           * check bounds
+                                                                           */);
             }
             finally
             {
@@ -2067,9 +2072,7 @@ public class SourceTypeBinding extends ReferenceBinding
       return sortedBindings;
    }
 
-   /**
-    * Answer the collection of synthetic fields to append into the classfile
-    */
+   /** Answer the collection of synthetic fields to append into the classfile */
    public FieldBinding[] syntheticFields()
    {
       if (this.synthetics == null)

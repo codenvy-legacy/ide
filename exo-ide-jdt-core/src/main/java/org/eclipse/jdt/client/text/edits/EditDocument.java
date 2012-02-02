@@ -25,13 +25,13 @@ class EditDocument implements IDocument
       fBuffer = new StringBuffer(content);
    }
 
-   //	public void addDocumentListener(IDocumentListener listener) {
-   //		throw new UnsupportedOperationException();
-   //	}
+   // public void addDocumentListener(IDocumentListener listener) {
+   // throw new UnsupportedOperationException();
+   // }
    //
-   //	public void addDocumentPartitioningListener(IDocumentPartitioningListener listener) {
-   //		throw new UnsupportedOperationException();
-   //	}
+   // public void addDocumentPartitioningListener(IDocumentPartitioningListener listener) {
+   // throw new UnsupportedOperationException();
+   // }
    //
    public void addPosition(Position position) throws BadLocationException
    {
@@ -45,30 +45,30 @@ class EditDocument implements IDocument
    }
 
    //
-   //	public void addPositionCategory(String category) {
-   //		throw new UnsupportedOperationException();
-   //	}
+   // public void addPositionCategory(String category) {
+   // throw new UnsupportedOperationException();
+   // }
    //
-   //	public void addPositionUpdater(IPositionUpdater updater) {
-   //		throw new UnsupportedOperationException();
-   //	}
+   // public void addPositionUpdater(IPositionUpdater updater) {
+   // throw new UnsupportedOperationException();
+   // }
    //
-   //	public void addPrenotifiedDocumentListener(IDocumentListener documentAdapter) {
-   //		throw new UnsupportedOperationException();
-   //	}
+   // public void addPrenotifiedDocumentListener(IDocumentListener documentAdapter) {
+   // throw new UnsupportedOperationException();
+   // }
    //
-   //	public int computeIndexInCategory(String category, int offset) throws BadLocationException, BadPositionCategoryException {
-   //		throw new UnsupportedOperationException();
-   //	}
+   // public int computeIndexInCategory(String category, int offset) throws BadLocationException, BadPositionCategoryException {
+   // throw new UnsupportedOperationException();
+   // }
 
    public int computeNumberOfLines(String text)
    {
       throw new UnsupportedOperationException();
    }
 
-   //	public ITypedRegion[] computePartitioning(int offset, int length) throws BadLocationException {
-   //		throw new UnsupportedOperationException();
-   //	}
+   // public ITypedRegion[] computePartitioning(int offset, int length) throws BadLocationException {
+   // throw new UnsupportedOperationException();
+   // }
 
    public boolean containsPosition(String category, int offset, int length)
    {
@@ -100,9 +100,9 @@ class EditDocument implements IDocument
       throw new UnsupportedOperationException();
    }
 
-   //	public IDocumentPartitioner getDocumentPartitioner() {
-   //		throw new UnsupportedOperationException();
-   //	}
+   // public IDocumentPartitioner getDocumentPartitioner() {
+   // throw new UnsupportedOperationException();
+   // }
 
    public String[] getLegalContentTypes()
    {
@@ -124,13 +124,13 @@ class EditDocument implements IDocument
       throw new UnsupportedOperationException();
    }
 
-   //	public IRegion getLineInformation(int line) throws BadLocationException {
-   //		throw new UnsupportedOperationException();
-   //	}
+   // public IRegion getLineInformation(int line) throws BadLocationException {
+   // throw new UnsupportedOperationException();
+   // }
    //
-   //	public IRegion getLineInformationOfOffset(int offset) throws BadLocationException {
-   //		throw new UnsupportedOperationException();
-   //	}
+   // public IRegion getLineInformationOfOffset(int offset) throws BadLocationException {
+   // throw new UnsupportedOperationException();
+   // }
 
    public int getLineLength(int line) throws BadLocationException
    {
@@ -157,9 +157,9 @@ class EditDocument implements IDocument
       throw new UnsupportedOperationException();
    }
 
-   //	public ITypedRegion getPartition(int offset) throws BadLocationException {
-   //		throw new UnsupportedOperationException();
-   //	}
+   // public ITypedRegion getPartition(int offset) throws BadLocationException {
+   // throw new UnsupportedOperationException();
+   // }
 
    public String[] getPositionCategories()
    {
@@ -172,21 +172,21 @@ class EditDocument implements IDocument
    }
 
    //
-   //	public IPositionUpdater[] getPositionUpdaters() {
-   //		throw new UnsupportedOperationException();
-   //	}
+   // public IPositionUpdater[] getPositionUpdaters() {
+   // throw new UnsupportedOperationException();
+   // }
    //
-   //	public void insertPositionUpdater(IPositionUpdater updater, int index) {
-   //		throw new UnsupportedOperationException();
-   //	}
+   // public void insertPositionUpdater(IPositionUpdater updater, int index) {
+   // throw new UnsupportedOperationException();
+   // }
    //
-   //	public void removeDocumentListener(IDocumentListener listener) {
-   //		throw new UnsupportedOperationException();
-   //	}
+   // public void removeDocumentListener(IDocumentListener listener) {
+   // throw new UnsupportedOperationException();
+   // }
    //
-   //	public void removeDocumentPartitioningListener(IDocumentPartitioningListener listener) {
-   //		throw new UnsupportedOperationException();
-   //	}
+   // public void removeDocumentPartitioningListener(IDocumentPartitioningListener listener) {
+   // throw new UnsupportedOperationException();
+   // }
    //
    public void removePosition(Position position)
    {
@@ -204,13 +204,13 @@ class EditDocument implements IDocument
    }
 
    //
-   //	public void removePositionUpdater(IPositionUpdater updater) {
-   //		throw new UnsupportedOperationException();
-   //	}
+   // public void removePositionUpdater(IPositionUpdater updater) {
+   // throw new UnsupportedOperationException();
+   // }
    //
-   //	public void removePrenotifiedDocumentListener(IDocumentListener documentAdapter) {
-   //		throw new UnsupportedOperationException();
-   //	}
+   // public void removePrenotifiedDocumentListener(IDocumentListener documentAdapter) {
+   // throw new UnsupportedOperationException();
+   // }
 
    public void replace(int offset, int length, String text) throws BadLocationException
    {
@@ -219,7 +219,7 @@ class EditDocument implements IDocument
 
    /**
     * {@inheritDoc}
-    *
+    * 
     * @deprecated As of 3.0 search is provided by {@link FindReplaceDocumentAdapter}
     */
    public int search(int startOffset, String findString, boolean forwardSearch, boolean caseSensitive, boolean wholeWord)
@@ -233,9 +233,7 @@ class EditDocument implements IDocument
       throw new UnsupportedOperationException();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.text.IDocument#addPositionCategory(java.lang.String)
-    */
+   /** @see org.eclipse.jdt.client.text.IDocument#addPositionCategory(java.lang.String) */
    @Override
    public void addPositionCategory(String category)
    {
@@ -243,7 +241,7 @@ class EditDocument implements IDocument
 
    }
 
-   //	public void setDocumentPartitioner(IDocumentPartitioner partitioner) {
-   //		throw new UnsupportedOperationException();
-   //	}
+   // public void setDocumentPartitioner(IDocumentPartitioner partitioner) {
+   // throw new UnsupportedOperationException();
+   // }
 }

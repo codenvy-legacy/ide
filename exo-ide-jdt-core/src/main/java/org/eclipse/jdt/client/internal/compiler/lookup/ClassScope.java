@@ -820,10 +820,7 @@ public class ClassScope extends Scope
    }
 
    /*
-    * This method checks the modifiers of a field.
-    * 
-    * 9.3 & 8.3 Need to integrate the check for the final modifiers for nested types
-    * 
+    * This method checks the modifiers of a field. 9.3 & 8.3 Need to integrate the check for the final modifiers for nested types
     * Note : A scope is accessible by : fieldBinding.declaringClass.scope
     */
    private void checkAndSetModifiersForField(FieldBinding fieldBinding, FieldDeclaration fieldDecl)
@@ -1089,11 +1086,9 @@ public class ClassScope extends Scope
 
    /*
     * Our current belief based on available JCK tests is: inherited member types are visible as a potential superclass. inherited
-    * interfaces are not visible when defining a superinterface.
-    * 
-    * Error recovery story: ensure the superclass is set to java.lang.Object if a problem is detected resolving the superclass.
-    * 
-    * Answer false if an error was reported against the sourceType.
+    * interfaces are not visible when defining a superinterface. Error recovery story: ensure the superclass is set to
+    * java.lang.Object if a problem is detected resolving the superclass. Answer false if an error was reported against the
+    * sourceType.
     */
    private boolean connectSuperclass()
    {
@@ -1159,9 +1154,7 @@ public class ClassScope extends Scope
       return false; // reported some error against the source type
    }
 
-   /**
-    * enum X (implicitly) extends Enum<X>
-    */
+   /** enum X (implicitly) extends Enum<X> */
    private boolean connectEnumSuperclass()
    {
       SourceTypeBinding sourceType = this.referenceContext.binding;
@@ -1187,10 +1180,10 @@ public class ClassScope extends Scope
       }
       // check argument type compatibility
       ParameterizedTypeBinding superType =
-         environment().createParameterizedType(
-            rootEnumType,
-            new TypeBinding[]{environment()
-               .convertToRawType(sourceType, false /* do not force conversion of enclosing types */),}, null);
+         environment().createParameterizedType(rootEnumType,
+            new TypeBinding[]{environment().convertToRawType(sourceType, false /*
+                                                                                * do not force conversion of enclosing types
+                                                                                */),}, null);
       sourceType.tagBits |= (superType.tagBits & TagBits.HierarchyHasProblems); // propagate if missing supertpye
       sourceType.superclass = superType;
       // bound check (in case of bogus definition of Enum type)
@@ -1203,11 +1196,8 @@ public class ClassScope extends Scope
 
    /*
     * Our current belief based on available JCK 1.3 tests is: inherited member types are visible as a potential superclass.
-    * inherited interfaces are visible when defining a superinterface.
-    * 
-    * Error recovery story: ensure the superinterfaces contain only valid visible interfaces.
-    * 
-    * Answer false if an error was reported against the sourceType.
+    * inherited interfaces are visible when defining a superinterface. Error recovery story: ensure the superinterfaces contain
+    * only valid visible interfaces. Answer false if an error was reported against the sourceType.
     */
    private boolean connectSuperInterfaces()
    {
@@ -1534,10 +1524,8 @@ public class ClassScope extends Scope
    }
 
    /*
-    * Answer the problem reporter to use for raising new problems.
-    * 
-    * Note that as a side-effect, this updates the current reference context (unit, type or method) in case the problem handler
-    * decides it is necessary to abort.
+    * Answer the problem reporter to use for raising new problems. Note that as a side-effect, this updates the current reference
+    * context (unit, type or method) in case the problem handler decides it is necessary to abort.
     */
    public ProblemReporter problemReporter()
    {

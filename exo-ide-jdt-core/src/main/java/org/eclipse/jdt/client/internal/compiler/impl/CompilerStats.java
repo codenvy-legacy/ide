@@ -39,9 +39,7 @@ public class CompilerStats implements Comparable
       return this.endTime - this.startTime;
    }
 
-   /**
-    * @see java.lang.Comparable#compareTo(java.lang.Object)
-    */
+   /** @see java.lang.Comparable#compareTo(java.lang.Object) */
    public int compareTo(Object o)
    {
       CompilerStats otherStats = (CompilerStats)o;

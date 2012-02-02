@@ -63,17 +63,13 @@ public abstract class Engine implements ITypeRequestor
          (this.compilerOptions.getSeverity(CompilerOptions.DiscouragedReference) & ProblemSeverities.Error) != 0;
    }
 
-   /**
-    * Add an additional binary type
-    */
+   /** Add an additional binary type */
    public void accept(IBinaryType binaryType, PackageBinding packageBinding, AccessRestriction accessRestriction)
    {
       this.lookupEnvironment.createBinaryTypeFrom(binaryType, packageBinding, accessRestriction);
    }
 
-   /**
-    * Add an additional compilation unit.
-    */
+   /** Add an additional compilation unit. */
    public void accept(ICompilationUnit sourceUnit, AccessRestriction accessRestriction)
    {
       CompilationResult result = new CompilationResult(sourceUnit, 1, 1, this.compilerOptions.maxProblemsPerUnit);

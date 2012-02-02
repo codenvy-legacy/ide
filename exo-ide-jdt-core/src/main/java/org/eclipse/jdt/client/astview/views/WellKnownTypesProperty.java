@@ -35,7 +35,6 @@ public class WellKnownTypesProperty extends ASTAttribute
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getParent()
     */
    public Object getParent()
@@ -45,7 +44,6 @@ public class WellKnownTypesProperty extends ASTAttribute
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getChildren()
     */
    public Object[] getChildren()
@@ -63,7 +61,6 @@ public class WellKnownTypesProperty extends ASTAttribute
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getLabel()
     */
    public String getLabel()
@@ -73,7 +70,6 @@ public class WellKnownTypesProperty extends ASTAttribute
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getImage()
     */
    public Image getImage()
@@ -81,9 +77,7 @@ public class WellKnownTypesProperty extends ASTAttribute
       return null;
    }
 
-   /*
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
+   /* @see java.lang.Object#equals(java.lang.Object) */
    public boolean equals(Object obj)
    {
       if (this == obj)
@@ -95,9 +89,7 @@ public class WellKnownTypesProperty extends ASTAttribute
       return true;
    }
 
-   /*
-    * @see java.lang.Object#hashCode()
-    */
+   /* @see java.lang.Object#hashCode() */
    public int hashCode()
    {
       return 57;

@@ -14,12 +14,11 @@ import org.eclipse.jdt.client.text.BadLocationException;
 import org.eclipse.jdt.client.text.IDocument;
 
 /**
- * Text edit to insert a text at a given position in a
- * document.
+ * Text edit to insert a text at a given position in a document.
  * <p>
  * An insert edit is equivalent to <code>ReplaceEdit(offset, 0, text)
  * </code>
- *
+ * 
  * @since 3.0
  */
 public final class InsertEdit extends TextEdit
@@ -29,7 +28,7 @@ public final class InsertEdit extends TextEdit
 
    /**
     * Constructs a new insert edit.
-    *
+    * 
     * @param offset the insertion offset
     * @param text the text to insert
     */
@@ -39,9 +38,7 @@ public final class InsertEdit extends TextEdit
       fText = text;
    }
 
-   /*
-    * Copy constructor
-    */
+   /* Copy constructor */
    private InsertEdit(InsertEdit other)
    {
       super(other);
@@ -50,7 +47,7 @@ public final class InsertEdit extends TextEdit
 
    /**
     * Returns the text to be inserted.
-    *
+    * 
     * @return the edit's text.
     */
    public String getText()
@@ -58,17 +55,13 @@ public final class InsertEdit extends TextEdit
       return fText;
    }
 
-   /*
-    * @see TextEdit#doCopy
-    */
+   /* @see TextEdit#doCopy */
    protected TextEdit doCopy()
    {
       return new InsertEdit(this);
    }
 
-   /*
-    * @see TextEdit#accept0
-    */
+   /* @see TextEdit#accept0 */
    protected void accept0(TextEditVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -78,9 +71,7 @@ public final class InsertEdit extends TextEdit
       }
    }
 
-   /*
-    * @see TextEdit#performDocumentUpdating
-    */
+   /* @see TextEdit#performDocumentUpdating */
    int performDocumentUpdating(IDocument document) throws BadLocationException
    {
       document.replace(getOffset(), getLength(), fText);
@@ -88,9 +79,7 @@ public final class InsertEdit extends TextEdit
       return fDelta;
    }
 
-   /*
-    * @see TextEdit#deleteChildren
-    */
+   /* @see TextEdit#deleteChildren */
    boolean deleteChildren()
    {
       return false;

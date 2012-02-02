@@ -44,9 +44,7 @@ public class ArrayTypeReference extends SingleTypeReference
       return this.dimensions;
    }
 
-   /**
-    * @return char[][]
-    */
+   /** @return char[][] */
    public char[][] getParameterizedTypeName()
    {
       int dim = this.dimensions;

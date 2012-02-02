@@ -24,9 +24,7 @@ package org.eclipse.jdt.client.core.search;
 public interface IJavaSearchConstants
 {
 
-   /**
-    * The nature of searched element or the nature of match in unknown.
-    */
+   /** The nature of searched element or the nature of match in unknown. */
    int UNKNOWN = -1;
 
    /* Nature of searched element */

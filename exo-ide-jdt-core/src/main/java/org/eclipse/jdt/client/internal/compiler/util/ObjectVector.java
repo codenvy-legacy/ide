@@ -65,9 +65,7 @@ public final class ObjectVector
       this.size += newVector.size;
    }
 
-   /**
-    * Identity check
-    */
+   /** Identity check */
    public boolean containsIdentical(Object element)
    {
 
@@ -77,9 +75,7 @@ public final class ObjectVector
       return false;
    }
 
-   /**
-    * Equality check
-    */
+   /** Equality check */
    public boolean contains(Object element)
    {
 

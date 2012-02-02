@@ -27,14 +27,10 @@ package org.eclipse.jdt.client.core.dom;
 public abstract class StructuralPropertyDescriptor
 {
 
-   /**
-    * Property id.
-    */
+   /** Property id. */
    private final String propertyId;
 
-   /**
-    * The concrete AST node type that owns this property.
-    */
+   /** The concrete AST node type that owns this property. */
    private final Class nodeClass;
 
    /**

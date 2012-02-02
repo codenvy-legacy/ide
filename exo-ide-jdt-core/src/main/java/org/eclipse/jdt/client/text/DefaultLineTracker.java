@@ -13,11 +13,11 @@ package org.eclipse.jdt.client.text;
 /**
  * Standard implementation of {@link org.eclipse.jface.text.ILineTracker}.
  * <p>
- * The line tracker considers the three common line delimiters which are '\n',
- * '\r', '\r\n'.
+ * The line tracker considers the three common line delimiters which are '\n', '\r', '\r\n'.
  * <p>
  * This class is not intended to be subclassed.
  * </p>
+ * 
  * @noextend This class is not intended to be subclassed by clients.
  */
 public class DefaultLineTracker extends AbstractLineTracker
@@ -29,23 +29,19 @@ public class DefaultLineTracker extends AbstractLineTracker
    /** A predefined delimiter information which is always reused as return value */
    private DelimiterInfo fDelimiterInfo = new DelimiterInfo();
 
-   /**
-    * Creates a standard line tracker.
-    */
+   /** Creates a standard line tracker. */
    public DefaultLineTracker()
    {
    }
 
-   /*
-    * @see org.eclipse.jface.text.ILineTracker#getLegalLineDelimiters()
-    */
+   /* @see org.eclipse.jface.text.ILineTracker#getLegalLineDelimiters() */
    public String[] getLegalLineDelimiters()
    {
       return new String[]{"\n"};
    }
 
    /*
-    * @see org.eclipse.jface.text.AbstractLineTracker#nextDelimiterInfo(java.lang.String, int)
+    * @see org.eclipse.jface.text.AbstractLineTracker#nextDelimiterInfo(java.lang .String, int)
     */
    protected DelimiterInfo nextDelimiterInfo(String text, int offset)
    {

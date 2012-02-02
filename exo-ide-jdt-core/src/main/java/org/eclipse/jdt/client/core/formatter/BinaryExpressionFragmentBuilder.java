@@ -464,8 +464,10 @@ class BinaryExpressionFragmentBuilder extends ASTVisitor
       return false;
    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.QualifiedSuperReference, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+   /*
+    * (non-Javadoc)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal .compiler.ast.QualifiedSuperReference,
+    * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(QualifiedSuperReference qualifiedSuperReference, BlockScope scope)
    {
@@ -473,8 +475,10 @@ class BinaryExpressionFragmentBuilder extends ASTVisitor
       return false;
    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.QualifiedThisReference, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+   /*
+    * (non-Javadoc)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal .compiler.ast.QualifiedThisReference,
+    * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(QualifiedThisReference qualifiedThisReference, BlockScope scope)
    {
@@ -494,8 +498,10 @@ class BinaryExpressionFragmentBuilder extends ASTVisitor
       return false;
    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.SuperReference, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+   /*
+    * (non-Javadoc)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal .compiler.ast.SuperReference,
+    * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(SuperReference superReference, BlockScope scope)
    {

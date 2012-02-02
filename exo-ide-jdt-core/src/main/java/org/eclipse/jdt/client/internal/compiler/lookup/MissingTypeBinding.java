@@ -44,9 +44,7 @@ public class MissingTypeBinding extends BinaryTypeBinding
       this.methods = Binding.NO_METHODS;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#collectMissingTypes(java.util.List)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#collectMissingTypes(java.util.List) */
    public List collectMissingTypes(List missingTypes)
    {
       if (missingTypes == null)

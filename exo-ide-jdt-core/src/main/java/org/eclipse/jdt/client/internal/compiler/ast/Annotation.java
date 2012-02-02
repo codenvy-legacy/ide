@@ -18,9 +18,7 @@ import org.eclipse.jdt.client.internal.compiler.impl.Constant;
 import org.eclipse.jdt.client.internal.compiler.impl.IrritantSet;
 import org.eclipse.jdt.client.internal.compiler.lookup.*;
 
-/**
- * Annotation
- */
+/** Annotation */
 public abstract class Annotation extends Expression
 {
 
@@ -32,9 +30,7 @@ public abstract class Annotation extends Expression
 
    public TypeReference type;
 
-   /**
-    * The representation of this annotation in the type system.
-    */
+   /** The representation of this annotation in the type system. */
    private AnnotationBinding compilerAnnotation = null;
 
    public static long getRetentionPolicy(char[] policyName)

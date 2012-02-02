@@ -87,9 +87,7 @@ public class RecoveredUnit extends RecoveredElement
       }
    }
 
-   /*
-    * Record a method declaration: should be attached to last type
-    */
+   /* Record a method declaration: should be attached to last type */
    public RecoveredElement add(AbstractMethodDeclaration methodDeclaration, int bracketBalanceValue)
    {
 
@@ -125,9 +123,7 @@ public class RecoveredUnit extends RecoveredElement
       return this; // ignore
    }
 
-   /*
-    * Record a field declaration: should be attached to last type
-    */
+   /* Record a field declaration: should be attached to last type */
    public RecoveredElement add(FieldDeclaration fieldDeclaration, int bracketBalanceValue)
    {
 
@@ -219,9 +215,7 @@ public class RecoveredUnit extends RecoveredElement
       return this;
    }
 
-   /*
-    * Answer the associated parsed structure
-    */
+   /* Answer the associated parsed structure */
    public ASTNode parseTree()
    {
       return this.unitDeclaration;
@@ -235,9 +229,7 @@ public class RecoveredUnit extends RecoveredElement
       this.pendingModifersSourceStart = -1;
    }
 
-   /*
-    * Answer the very source end of the corresponding parse node
-    */
+   /* Answer the very source end of the corresponding parse node */
    public int sourceEnd()
    {
       return this.unitDeclaration.sourceEnd;
@@ -324,9 +316,7 @@ public class RecoveredUnit extends RecoveredElement
       updatedCompilationUnitDeclaration();
    }
 
-   /*
-    * Update the sourceEnd of the corresponding parse node
-    */
+   /* Update the sourceEnd of the corresponding parse node */
    public void updateSourceEndIfNecessary(int bodyStart, int bodyEnd)
    {
       if (this.unitDeclaration.sourceEnd == 0)

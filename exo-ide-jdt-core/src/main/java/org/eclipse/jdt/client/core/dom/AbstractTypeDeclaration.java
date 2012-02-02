@@ -245,9 +245,7 @@ public abstract class AbstractTypeDeclaration extends BodyDeclaration
     */
    abstract ITypeBinding internalResolveBinding();
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       return super.memSize() + 2 * 4;

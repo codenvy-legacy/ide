@@ -241,9 +241,7 @@ public abstract class Expression extends Statement
       return analyseCode(currentScope, flowContext, flowInfo);
    }
 
-   /**
-    * Returns false if cast is not legal.
-    */
+   /** Returns false if cast is not legal. */
    public final boolean checkCastTypesCompatibility(Scope scope, TypeBinding castType, TypeBinding expressionType,
       Expression expression)
    {
@@ -351,7 +349,9 @@ public abstract class Expression extends Statement
                   TypeBinding match = expressionType.findSuperTypeOriginatingFrom(castType);
                   if (match == null)
                   {
-                     checkUnsafeCast(scope, castType, expressionType, null /* no match */, true);
+                     checkUnsafeCast(scope, castType, expressionType, null /*
+                                                                            * no match
+                                                                            */, true);
                   }
                   // recurse on the type variable upper bound
                   return checkCastTypesCompatibility(scope, ((TypeVariableBinding)castType).upperBound(),
@@ -415,7 +415,9 @@ public abstract class Expression extends Statement
                      match = expressionType.findSuperTypeOriginatingFrom(castType);
                      if (match == null)
                      {
-                        checkUnsafeCast(scope, castType, expressionType, null /* no match */, true);
+                        checkUnsafeCast(scope, castType, expressionType, null /*
+                                                                               * no match
+                                                                               */, true);
                      }
                      // recurse on the type variable upper bound
                      return checkCastTypesCompatibility(scope, ((TypeVariableBinding)castType).upperBound(),
@@ -439,7 +441,9 @@ public abstract class Expression extends Statement
                         }
                         if (use15specifics)
                         {
-                           checkUnsafeCast(scope, castType, expressionType, null /* no match */, true);
+                           checkUnsafeCast(scope, castType, expressionType, null /*
+                                                                                  * no match
+                                                                                  */, true);
                            // ensure there is no collision between both interfaces: i.e. I1 extends List<String>, I2 extends
                            // List<Object>
                            if (scope.compilerOptions().complianceLevel < ClassFileConstants.JDK1_7)
@@ -505,7 +509,9 @@ public abstract class Expression extends Statement
                         }
                         if (use15specifics)
                         {
-                           checkUnsafeCast(scope, castType, expressionType, null /* no match */, true);
+                           checkUnsafeCast(scope, castType, expressionType, null /*
+                                                                                  * no match
+                                                                                  */, true);
                            // ensure there is no collision between both interfaces: i.e. I1 extends List<String>, I2 extends
                            // List<Object>
                            if (scope.compilerOptions().complianceLevel < ClassFileConstants.JDK1_7)
@@ -576,7 +582,9 @@ public abstract class Expression extends Statement
                         }
                         if (use15specifics)
                         {
-                           checkUnsafeCast(scope, castType, expressionType, null /* no match */, true);
+                           checkUnsafeCast(scope, castType, expressionType, null /*
+                                                                                  * no match
+                                                                                  */, true);
                            // ensure there is no collision between both interfaces: i.e. I1 extends List<String>, I2 extends
                            // List<Object>
                            if (scope.compilerOptions().complianceLevel < ClassFileConstants.JDK1_7)

@@ -11,8 +11,7 @@
 package org.eclipse.jdt.client.text;
 
 /**
- * Default implementation of {@link org.eclipse.jface.text.ITypedRegion}. A
- * <code>TypedRegion</code> is a value object.
+ * Default implementation of {@link org.eclipse.jface.text.ITypedRegion}. A <code>TypedRegion</code> is a value object.
  */
 public class TypedRegion extends Region implements ITypedRegion
 {
@@ -22,7 +21,7 @@ public class TypedRegion extends Region implements ITypedRegion
 
    /**
     * Creates a typed region based on the given specification.
-    *
+    * 
     * @param offset the region's offset
     * @param length the region's length
     * @param type the region's type
@@ -33,17 +32,13 @@ public class TypedRegion extends Region implements ITypedRegion
       fType = type;
    }
 
-   /*
-    * @see org.eclipse.jface.text.ITypedRegion#getType()
-    */
+   /* @see org.eclipse.jface.text.ITypedRegion#getType() */
    public String getType()
    {
       return fType;
    }
 
-   /*
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
+   /* @see java.lang.Object#equals(java.lang.Object) */
    public boolean equals(Object o)
    {
       if (o instanceof TypedRegion)
@@ -54,9 +49,7 @@ public class TypedRegion extends Region implements ITypedRegion
       return false;
    }
 
-   /*
-   * @see java.lang.Object#hashCode()
-   */
+   /* @see java.lang.Object#hashCode() */
    public int hashCode()
    {
       int type = fType == null ? 0 : fType.hashCode();

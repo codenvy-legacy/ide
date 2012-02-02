@@ -13,7 +13,7 @@ package org.eclipse.jdt.client.core.formatter;
 
 /**
  * Internal code formatter constants.
- *
+ * 
  * @since 3.4
  */
 
@@ -22,7 +22,7 @@ public interface ICodeFormatterConstants
    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=122247
    // constants used to handle the addition of new lines after annotations
 
-   /** annotation on unspecified source*/
+   /** annotation on unspecified source */
    public static final int ANNOTATION_UNSPECIFIED = 0;
 
    /** annotation on a type */

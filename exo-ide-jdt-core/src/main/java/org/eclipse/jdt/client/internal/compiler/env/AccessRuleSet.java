@@ -40,9 +40,7 @@ public class AccessRuleSet
       this.classpathEntryName = classpathEntryName;
    }
 
-   /**
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
+   /** @see java.lang.Object#equals(java.lang.Object) */
    public boolean equals(Object object)
    {
       if (this == object)
@@ -81,7 +79,9 @@ public class AccessRuleSet
       for (int i = 0, length = this.accessRules.length; i < length; i++)
       {
          AccessRule accessRule = this.accessRules[i];
-         if (CharOperation.pathMatch(accessRule.pattern, targetTypeFilePath, true/* case sensitive */, '/'))
+         if (CharOperation.pathMatch(accessRule.pattern, targetTypeFilePath, true/*
+                                                                                  * case sensitive
+                                                                                  */, '/'))
          {
             switch (accessRule.getProblemId())
             {

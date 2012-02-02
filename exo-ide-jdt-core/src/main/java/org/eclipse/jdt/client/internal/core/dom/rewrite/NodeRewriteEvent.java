@@ -26,23 +26,20 @@ public class NodeRewriteEvent extends RewriteEvent
       this.newValue = newValue;
    }
 
-   /**
-    * @return Returns the new value.
-    */
+   /** @return Returns the new value. */
    public Object getNewValue()
    {
       return this.newValue;
    }
 
-   /**
-    * @return Returns the original value.
-    */
+   /** @return Returns the original value. */
    public Object getOriginalValue()
    {
       return this.originalValue;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.eclipse.jdt.internal.corext.dom.RewriteEvent#getChangeKind()
     */
    public int getChangeKind()
@@ -66,7 +63,8 @@ public class NodeRewriteEvent extends RewriteEvent
       return REPLACED;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.eclipse.jdt.internal.corext.dom.RewriteEvent#isListRewrite()
     */
    public boolean isListRewrite()
@@ -83,7 +81,8 @@ public class NodeRewriteEvent extends RewriteEvent
       this.newValue = newValue;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.eclipse.jdt.internal.corext.dom.RewriteEvent#getChildren()
     */
    public RewriteEvent[] getChildren()
@@ -91,7 +90,8 @@ public class NodeRewriteEvent extends RewriteEvent
       return null;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see java.lang.Object#toString()
     */
    public String toString()

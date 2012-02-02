@@ -18,13 +18,13 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A <code>TextEditProcessor</code> manages a set of edits and applies
- * them as a whole to an <code>IDocument</code>.
+ * A <code>TextEditProcessor</code> manages a set of edits and applies them as a whole to an <code>IDocument</code>.
  * <p>
- * This class isn't intended to be subclassed.</p>
- *
+ * This class isn't intended to be subclassed.
+ * </p>
+ * 
  * @see org.eclipse.text.edits.TextEdit#apply(IDocument)
- *
+ * 
  * @since 3.0
  * @noextend This class is not intended to be subclassed by clients.
  */
@@ -44,16 +44,13 @@ public class TextEditProcessor
    private List fSourceEdits;
 
    /**
-    * Constructs a new edit processor for the given
-    * document.
-    *
+    * Constructs a new edit processor for the given document.
+    * 
     * @param document the document to manipulate
-    * @param root the root of the text edit tree describing
-    *  the modifications. By passing a text edit a a text edit
-    *  processor the ownership of the edit is transfered to the
-    *  text edit processors. Clients must not modify the edit
-    *  (e.g adding new children) any longer.
-    *
+    * @param root the root of the text edit tree describing the modifications. By passing a text edit a a text edit processor the
+    *           ownership of the edit is transfered to the text edit processors. Clients must not modify the edit (e.g adding new
+    *           children) any longer.
+    * 
     * @param style {@link TextEdit#NONE}, {@link TextEdit#CREATE_UNDO} or {@link TextEdit#UPDATE_REGIONS})
     */
    public TextEditProcessor(IDocument document, TextEdit root, int style)
@@ -63,8 +60,8 @@ public class TextEditProcessor
 
    private TextEditProcessor(IDocument document, TextEdit root, int style, boolean secondary)
    {
-      //		Assert.isNotNull(document);
-      //		Assert.isNotNull(root);
+      // Assert.isNotNull(document);
+      // Assert.isNotNull(root);
       fDocument = document;
       fRoot = root;
       if (fRoot instanceof MultiTextEdit)
@@ -78,9 +75,8 @@ public class TextEditProcessor
    }
 
    /**
-    * Creates a special internal processor used to during source computation inside
-    * move source and copy source edits
-    *
+    * Creates a special internal processor used to during source computation inside move source and copy source edits
+    * 
     * @param document the document to be manipulated
     * @param root the edit tree
     * @param style {@link TextEdit#NONE}, {@link TextEdit#CREATE_UNDO} or {@link TextEdit#UPDATE_REGIONS})
@@ -94,7 +90,7 @@ public class TextEditProcessor
 
    /**
     * Returns the document to be manipulated.
-    *
+    * 
     * @return the document
     */
    public IDocument getDocument()
@@ -104,7 +100,7 @@ public class TextEditProcessor
 
    /**
     * Returns the edit processor's root edit.
-    *
+    * 
     * @return the processor's root edit
     */
    public TextEdit getRoot()
@@ -114,7 +110,7 @@ public class TextEditProcessor
 
    /**
     * Returns the style bits of the text edit processor
-    *
+    * 
     * @return the style bits
     * @see TextEdit#CREATE_UNDO
     * @see TextEdit#UPDATE_REGIONS
@@ -126,11 +122,10 @@ public class TextEditProcessor
 
    /**
     * Checks if the processor can execute all its edits.
-    *
-    * @return <code>true</code> if the edits can be executed. Return  <code>false
-    * 	</code>otherwise. One major reason why edits cannot be executed are wrong
-    *  offset or length values of edits. Calling perform in this case will very
-    *  likely end in a <code>BadLocationException</code>.
+    * 
+    * @return <code>true</code> if the edits can be executed. Return <code>false
+    * 	</code>otherwise. One major reason why edits cannot be executed are wrong offset or length values of edits. Calling perform
+    *         in this case will very likely end in a <code>BadLocationException</code>.
     */
    public boolean canPerformEdits()
    {
@@ -149,14 +144,12 @@ public class TextEditProcessor
 
    /**
     * Executes the text edits.
-    *
+    * 
     * @return an object representing the undo of the executed edits
-    * @exception MalformedTreeException is thrown if the edit tree isn't
-    *  in a valid state. This exception is thrown before any edit is executed.
-    *  So the document is still in its original state.
-    * @exception BadLocationException is thrown if one of the edits in the
-    *  tree can't be executed. The state of the document is undefined if this
-    *  exception is thrown.
+    * @exception MalformedTreeException is thrown if the edit tree isn't in a valid state. This exception is thrown before any
+    *               edit is executed. So the document is still in its original state.
+    * @exception BadLocationException is thrown if one of the edits in the tree can't be executed. The state of the document is
+    *               undefined if this exception is thrown.
     */
    public UndoEdit performEdits() throws MalformedTreeException, BadLocationException
    {
@@ -177,7 +170,7 @@ public class TextEditProcessor
     * <p>
     * Note that this class isn't intended to be subclassed.
     * </p>
-    *
+    * 
     * @param edit the text edit
     * @return <code>true</code> if this processor considers the given edit
     */
@@ -186,7 +179,7 @@ public class TextEditProcessor
       return true;
    }
 
-   //---- checking --------------------------------------------------------------------
+   // ---- checking --------------------------------------------------------------------
 
    void checkIntegrityDo() throws MalformedTreeException
    {
@@ -202,15 +195,15 @@ public class TextEditProcessor
          throw new MalformedTreeException(null, fRoot, "End position lies outside document range"); //$NON-NLS-1$
    }
 
-   //---- execution --------------------------------------------------------------------
+   // ---- execution --------------------------------------------------------------------
 
    UndoEdit executeDo() throws BadLocationException
    {
       UndoCollector collector = new UndoCollector(fRoot);
       try
       {
-         //			if (createUndo())
-         //				collector.connect(fDocument);
+         // if (createUndo())
+         // collector.connect(fDocument);
          computeSources();
          fRoot.traverseDocumentUpdating(this, fDocument);
          if (updateRegions())
@@ -220,7 +213,7 @@ public class TextEditProcessor
       }
       finally
       {
-         //			collector.disconnect(fDocument);
+         // collector.disconnect(fDocument);
       }
       return collector.undo;
    }
@@ -246,8 +239,8 @@ public class TextEditProcessor
       UndoCollector collector = new UndoCollector(fRoot);
       try
       {
-         //			if (createUndo())
-         //				collector.connect(fDocument);
+         // if (createUndo())
+         // collector.connect(fDocument);
          TextEdit[] edits = fRoot.getChildren();
          for (int i = edits.length - 1; i >= 0; i--)
          {
@@ -256,7 +249,7 @@ public class TextEditProcessor
       }
       finally
       {
-         //			collector.disconnect(fDocument);
+         // collector.disconnect(fDocument);
       }
       return collector.undo;
    }

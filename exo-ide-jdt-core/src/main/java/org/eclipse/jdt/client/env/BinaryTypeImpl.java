@@ -34,70 +34,55 @@ import java.util.List;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 17, 2012 2:41:08 PM evgen $
- * 
  */
 public class BinaryTypeImpl implements IBinaryType
 {
 
    private JSONObject jsObj;
 
-   /**
-    * @param jsObj
-    */
+   /** @param jsObj */
    public BinaryTypeImpl(JSONObject jsObj)
    {
       super();
       this.jsObj = jsObj;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IGenericType#getModifiers()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IGenericType#getModifiers() */
    @Override
    public int getModifiers()
    {
       return (int)jsObj.get("modifiers").isNumber().doubleValue();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IGenericType#isBinaryType()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IGenericType#isBinaryType() */
    @Override
    public boolean isBinaryType()
    {
       return true;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IDependent#getFileName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IDependent#getFileName() */
    @Override
    public char[] getFileName()
    {
       return getSourceName();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getAnnotations()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getAnnotations() */
    @Override
    public IBinaryAnnotation[] getAnnotations()
    {
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getEnclosingMethod()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getEnclosingMethod() */
    @Override
    public char[] getEnclosingMethod()
    {
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getEnclosingTypeName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getEnclosingTypeName() */
    @Override
    public char[] getEnclosingTypeName()
    {
@@ -105,9 +90,7 @@ public class BinaryTypeImpl implements IBinaryType
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getFields()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getFields() */
    @Override
    public IBinaryField[] getFields()
    {
@@ -125,9 +108,7 @@ public class BinaryTypeImpl implements IBinaryType
       return fields;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getGenericSignature()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getGenericSignature() */
    @Override
    public char[] getGenericSignature()
    {
@@ -151,9 +132,7 @@ public class BinaryTypeImpl implements IBinaryType
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getInterfaceNames()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getInterfaceNames() */
    @Override
    public char[][] getInterfaceNames()
    {
@@ -169,9 +148,7 @@ public class BinaryTypeImpl implements IBinaryType
       return res;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getMemberTypes()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getMemberTypes() */
    @Override
    public IBinaryNestedType[] getMemberTypes()
    {
@@ -179,9 +156,7 @@ public class BinaryTypeImpl implements IBinaryType
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getMethods()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getMethods() */
    @Override
    public IBinaryMethod[] getMethods()
    {
@@ -192,7 +167,7 @@ public class BinaryTypeImpl implements IBinaryType
       if (array.size() == 0)
          return null;
 
-      //remove methods not declared in this class
+      // remove methods not declared in this class
       List<IBinaryMethod> methods = new ArrayList<IBinaryMethod>();
       String fqn = jsObj.get("name").isString().stringValue();
       for (int i = 0; i < array.size(); i++)
@@ -205,36 +180,28 @@ public class BinaryTypeImpl implements IBinaryType
       return methods.toArray(new IBinaryMethod[methods.size()]);
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getMissingTypeNames()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getMissingTypeNames() */
    @Override
    public char[][][] getMissingTypeNames()
    {
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getName() */
    @Override
    public char[] getName()
    {
       return jsObj.get("name").isString().stringValue().replaceAll("\\.", "/").toCharArray();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getSourceName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getSourceName() */
    @Override
    public char[] getSourceName()
    {
       return Signature.getSimpleName(jsObj.get("name").isString().stringValue()).toCharArray();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getSuperclassName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getSuperclassName() */
    @Override
    public char[] getSuperclassName()
    {
@@ -244,27 +211,21 @@ public class BinaryTypeImpl implements IBinaryType
       return value.replaceAll("\\.", "/").toCharArray();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getTagBits()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getTagBits() */
    @Override
    public long getTagBits()
    {
       return 0;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#isAnonymous()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#isAnonymous() */
    @Override
    public boolean isAnonymous()
    {
       return false;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#isLocal()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#isLocal() */
    @Override
    public boolean isLocal()
    {
@@ -272,9 +233,7 @@ public class BinaryTypeImpl implements IBinaryType
       return false;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#isMember()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#isMember() */
    @Override
    public boolean isMember()
    {
@@ -282,9 +241,7 @@ public class BinaryTypeImpl implements IBinaryType
       return false;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#sourceFileName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#sourceFileName() */
    @Override
    public char[] sourceFileName()
    {

@@ -10,17 +10,15 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.core.dom.rewrite;
 
+import org.eclipse.jdt.client.runtime.CoreException;
+import org.eclipse.jdt.client.runtime.IStatus;
+import org.eclipse.jdt.client.runtime.Status;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
 import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
-import org.eclipse.jdt.client.runtime.CoreException;
-import org.eclipse.jdt.client.runtime.IStatus;
-import org.eclipse.jdt.client.runtime.Status;
 
-/**
- * Wraps a scanner and offers convenient methods for finding tokens
- */
+/** Wraps a scanner and offers convenient methods for finding tokens */
 public class TokenScanner
 {
 
@@ -36,6 +34,7 @@ public class TokenScanner
 
    /**
     * Creates a TokenScanner
+    * 
     * @param scanner The scanner to be wrapped
     */
    public TokenScanner(Scanner scanner)
@@ -46,6 +45,7 @@ public class TokenScanner
 
    /**
     * Returns the wrapped scanner
+    * 
     * @return IScanner
     */
    public Scanner getScanner()
@@ -55,6 +55,7 @@ public class TokenScanner
 
    /**
     * Sets the scanner offset to the given offset.
+    * 
     * @param offset The offset to set
     */
    public void setOffset(int offset)
@@ -62,25 +63,19 @@ public class TokenScanner
       this.scanner.resetTo(offset, this.endPosition);
    }
 
-   /**
-    * @return Returns the offset after the current token
-    */
+   /** @return Returns the offset after the current token */
    public int getCurrentEndOffset()
    {
       return this.scanner.getCurrentTokenEndPosition() + 1;
    }
 
-   /**
-    * @return Returns the start offset of the current token
-    */
+   /** @return Returns the start offset of the current token */
    public int getCurrentStartOffset()
    {
       return this.scanner.getCurrentTokenStartPosition();
    }
 
-   /**
-    * @return Returns the length of the current token
-    */
+   /** @return Returns the length of the current token */
    public int getCurrentLength()
    {
       return getCurrentEndOffset() - getCurrentStartOffset();
@@ -88,10 +83,11 @@ public class TokenScanner
 
    /**
     * Reads the next token.
+    * 
     * @param ignoreComments If set, comments will be overread
     * @return Return the token id.
-    * @exception CoreException Thrown when the end of the file has been reached (code END_OF_FILE)
-    * or a lexical error was detected while scanning (code LEXICAL_ERROR)
+    * @exception CoreException Thrown when the end of the file has been reached (code END_OF_FILE) or a lexical error was detected
+    *               while scanning (code LEXICAL_ERROR)
     */
    public int readNext(boolean ignoreComments) throws CoreException
    {
@@ -117,11 +113,12 @@ public class TokenScanner
 
    /**
     * Reads the next token from the given offset.
+    * 
     * @param offset The offset to start reading from.
     * @param ignoreComments If set, comments will be overread.
     * @return Returns the token id.
-    * @exception CoreException Thrown when the end of the file has been reached (code END_OF_FILE)
-    * or a lexical error was detected while scanning (code LEXICAL_ERROR)
+    * @exception CoreException Thrown when the end of the file has been reached (code END_OF_FILE) or a lexical error was detected
+    *               while scanning (code LEXICAL_ERROR)
     */
    public int readNext(int offset, boolean ignoreComments) throws CoreException
    {
@@ -131,11 +128,12 @@ public class TokenScanner
 
    /**
     * Reads the next token from the given offset and returns the start offset of the token.
+    * 
     * @param offset The offset to start reading from.
     * @param ignoreComments If set, comments will be overread
     * @return Returns the start position of the next token.
-    * @exception CoreException Thrown when the end of the file has been reached (code END_OF_FILE)
-    * or a lexical error was detected while scanning (code LEXICAL_ERROR)
+    * @exception CoreException Thrown when the end of the file has been reached (code END_OF_FILE) or a lexical error was detected
+    *               while scanning (code LEXICAL_ERROR)
     */
    public int getNextStartOffset(int offset, boolean ignoreComments) throws CoreException
    {
@@ -145,11 +143,12 @@ public class TokenScanner
 
    /**
     * Reads the next token from the given offset and returns the offset after the token.
+    * 
     * @param offset The offset to start reading from.
     * @param ignoreComments If set, comments will be overread
     * @return Returns the start position of the next token.
-    * @exception CoreException Thrown when the end of the file has been reached (code END_OF_FILE)
-    * or a lexical error was detected while scanning (code LEXICAL_ERROR)
+    * @exception CoreException Thrown when the end of the file has been reached (code END_OF_FILE) or a lexical error was detected
+    *               while scanning (code LEXICAL_ERROR)
     */
    public int getNextEndOffset(int offset, boolean ignoreComments) throws CoreException
    {
@@ -159,9 +158,10 @@ public class TokenScanner
 
    /**
     * Reads until a token is reached.
+    * 
     * @param tok The token to read to.
-    * @exception CoreException Thrown when the end of the file has been reached (code END_OF_FILE)
-    * or a lexical error was detected while scanning (code LEXICAL_ERROR)
+    * @exception CoreException Thrown when the end of the file has been reached (code END_OF_FILE) or a lexical error was detected
+    *               while scanning (code LEXICAL_ERROR)
     */
    public void readToToken(int tok) throws CoreException
    {
@@ -175,10 +175,11 @@ public class TokenScanner
 
    /**
     * Reads until a token is reached, starting from the given offset.
+    * 
     * @param tok The token to read to.
     * @param offset The offset to start reading from.
-    * @exception CoreException Thrown when the end of the file has been reached (code END_OF_FILE)
-    * or a lexical error was detected while scanning (code LEXICAL_ERROR)
+    * @exception CoreException Thrown when the end of the file has been reached (code END_OF_FILE) or a lexical error was detected
+    *               while scanning (code LEXICAL_ERROR)
     */
    public void readToToken(int tok, int offset) throws CoreException
    {
@@ -188,11 +189,12 @@ public class TokenScanner
 
    /**
     * Reads from the given offset until a token is reached and returns the start offset of the token.
+    * 
     * @param token The token to be found.
     * @param startOffset The offset to start reading from.
     * @return Returns the start position of the found token.
-    * @exception CoreException Thrown when the end of the file has been reached (code END_OF_FILE)
-    * or a lexical error was detected while scanning (code LEXICAL_ERROR)
+    * @exception CoreException Thrown when the end of the file has been reached (code END_OF_FILE) or a lexical error was detected
+    *               while scanning (code LEXICAL_ERROR)
     */
    public int getTokenStartOffset(int token, int startOffset) throws CoreException
    {
@@ -202,11 +204,12 @@ public class TokenScanner
 
    /**
     * Reads from the given offset until a token is reached and returns the offset after the token.
+    * 
     * @param token The token to be found.
     * @param startOffset Offset to start reading from
     * @return Returns the end position of the found token.
-    * @exception CoreException Thrown when the end of the file has been reached (code END_OF_FILE)
-    * or a lexical error was detected while scanning (code LEXICAL_ERROR)
+    * @exception CoreException Thrown when the end of the file has been reached (code END_OF_FILE) or a lexical error was detected
+    *               while scanning (code LEXICAL_ERROR)
     */
    public int getTokenEndOffset(int token, int startOffset) throws CoreException
    {
@@ -216,11 +219,12 @@ public class TokenScanner
 
    /**
     * Reads from the given offset until a token is reached and returns the offset after the previous token.
+    * 
     * @param token The token to be found.
     * @param startOffset The offset to start scanning from.
     * @return Returns the end offset of the token previous to the given token.
-    * @exception CoreException Thrown when the end of the file has been reached (code END_OF_FILE)
-    * or a lexical error was detected while scanning (code LEXICAL_ERROR)
+    * @exception CoreException Thrown when the end of the file has been reached (code END_OF_FILE) or a lexical error was detected
+    *               while scanning (code LEXICAL_ERROR)
     */
    public int getPreviousTokenEndOffset(int token, int startOffset) throws CoreException
    {

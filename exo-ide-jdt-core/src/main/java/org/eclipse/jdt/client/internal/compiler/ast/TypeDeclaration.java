@@ -122,9 +122,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       this.compilationResult = compilationResult;
    }
 
-   /*
-    * We cause the compilation task to abort to a given extent.
-    */
+   /* We cause the compilation task to abort to a given extent. */
    public void abort(int abortLevel, CategorizedProblem problem)
    {
       switch (abortLevel)
@@ -238,10 +236,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       return methodDeclaration;
    }
 
-   /**
-    * Flow analysis for a local innertype
-    * 
-    */
+   /** Flow analysis for a local innertype */
    public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo)
    {
       if (this.ignoreFurtherInvestigation)
@@ -265,10 +260,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       return flowInfo;
    }
 
-   /**
-    * Flow analysis for a member innertype
-    * 
-    */
+   /** Flow analysis for a member innertype */
    public void analyseCode(ClassScope enclosingClassScope)
    {
       if (this.ignoreFurtherInvestigation)
@@ -285,10 +277,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       }
    }
 
-   /**
-    * Flow analysis for a local member innertype
-    * 
-    */
+   /** Flow analysis for a local member innertype */
    public void analyseCode(ClassScope currentScope, FlowContext flowContext, FlowInfo flowInfo)
    {
       if (this.ignoreFurtherInvestigation)
@@ -311,10 +300,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       }
    }
 
-   /**
-    * Flow analysis for a package member type
-    * 
-    */
+   /** Flow analysis for a package member type */
    public void analyseCode(CompilationUnitScope unitScope)
    {
       if (this.ignoreFurtherInvestigation)
@@ -520,9 +506,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       return constructor.binding;
    }
 
-   /**
-    * Find the matching parse node, answers null if nothing found
-    */
+   /** Find the matching parse node, answers null if nothing found */
    public FieldDeclaration declarationOf(FieldBinding fieldBinding)
    {
       if (fieldBinding != null && this.fields != null)
@@ -537,9 +521,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       return null;
    }
 
-   /**
-    * Find the matching parse node, answers null if nothing found
-    */
+   /** Find the matching parse node, answers null if nothing found */
    public TypeDeclaration declarationOf(MemberTypeBinding memberTypeBinding)
    {
       if (memberTypeBinding != null && this.memberTypes != null)
@@ -554,9 +536,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       return null;
    }
 
-   /**
-    * Find the matching parse node, answers null if nothing found
-    */
+   /** Find the matching parse node, answers null if nothing found */
    public AbstractMethodDeclaration declarationOf(MethodBinding methodBinding)
    {
       if (methodBinding != null && this.methods != null)
@@ -749,9 +729,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       return this.ignoreFurtherInvestigation;
    }
 
-   /**
-    * Common flow analysis for all types
-    */
+   /** Common flow analysis for all types */
    private void internalAnalyseCode(FlowContext flowContext, FlowInfo flowInfo)
    {
       if (!this.binding.isUsed() && this.binding.isOrEnclosedByPrivateType())
@@ -1190,10 +1168,12 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
          boolean needSerialVersion =
             this.scope.compilerOptions().getSeverity(CompilerOptions.MissingSerialVersion) != ProblemSeverities.Ignore
                && sourceType.isClass()
-               && sourceType
-                  .findSuperTypeOriginatingFrom(TypeIds.T_JavaIoExternalizable, false /* Externalizable is not a class */) == null
-               && sourceType
-                  .findSuperTypeOriginatingFrom(TypeIds.T_JavaIoSerializable, false /* Serializable is not a class */) != null;
+               && sourceType.findSuperTypeOriginatingFrom(TypeIds.T_JavaIoExternalizable, false /*
+                                                                                                 * Externalizable is not a class
+                                                                                                 */) == null
+               && sourceType.findSuperTypeOriginatingFrom(TypeIds.T_JavaIoSerializable, false /*
+                                                                                               * Serializable is not a class
+                                                                                               */) != null;
 
          if (needSerialVersion)
          {
@@ -1449,9 +1429,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       }
    }
 
-   /**
-    * Resolve a local type declaration
-    */
+   /** Resolve a local type declaration */
    public void resolve(BlockScope blockScope)
    {
 
@@ -1526,9 +1504,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       }
    }
 
-   /**
-    * Resolve a member type declaration (can be a local member)
-    */
+   /** Resolve a member type declaration (can be a local member) */
    public void resolve(ClassScope upperScope)
    {
       // member scopes are already created
@@ -1543,9 +1519,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       updateMaxFieldCount();
    }
 
-   /**
-    * Resolve a top level type declaration
-    */
+   /** Resolve a top level type declaration */
    public void resolve(CompilationUnitScope upperScope)
    {
       // top level : scope are already created
@@ -1558,10 +1532,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       this.ignoreFurtherInvestigation = true;
    }
 
-   /**
-    * Iteration for a package member type
-    * 
-    */
+   /** Iteration for a package member type */
    public void traverse(ASTVisitor visitor, CompilationUnitScope unitScope)
    {
       try
@@ -1631,9 +1602,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       }
    }
 
-   /**
-    * Iteration for a local innertype
-    */
+   /** Iteration for a local innertype */
    public void traverse(ASTVisitor visitor, BlockScope blockScope)
    {
       try
@@ -1703,10 +1672,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       }
    }
 
-   /**
-    * Iteration for a member innertype
-    * 
-    */
+   /** Iteration for a member innertype */
    public void traverse(ASTVisitor visitor, ClassScope classScope)
    {
       try
@@ -1800,9 +1766,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       }
    }
 
-   /**
-    * Returns whether the type is a secondary one or not.
-    */
+   /** Returns whether the type is a secondary one or not. */
    public boolean isSecondary()
    {
       return (this.bits & ASTNode.IsSecondaryType) != 0;

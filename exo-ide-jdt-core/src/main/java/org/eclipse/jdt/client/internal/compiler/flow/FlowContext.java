@@ -61,9 +61,7 @@ public class FlowContext implements TypeConstants
 
    public static final int PREEMPT_NULL_DIAGNOSTIC = 0x2;
 
-   /**
-    * used to hide null comparison related warnings inside assert statements
-    */
+   /** used to hide null comparison related warnings inside assert statements */
    public static final int HIDE_NULL_COMPARISON_WARNING = 0x4;
 
    public static final int CAN_ONLY_NULL_NON_NULL = 0x0000;
@@ -165,7 +163,9 @@ public class FlowContext implements TypeConstants
                for (int caughtIndex = 0, caughtCount = caughtExceptions.length; caughtIndex < caughtCount; caughtIndex++)
                {
                   ReferenceBinding caughtException = caughtExceptions[caughtIndex];
-                  int state = caughtException == null ? Scope.EQUAL_OR_MORE_SPECIFIC /* any exception */
+                  int state = caughtException == null ? Scope.EQUAL_OR_MORE_SPECIFIC /*
+                                                                                      * any exception
+                                                                                      */
                   : Scope.compareTypes(raisedException, caughtException);
                   if (abruptlyExitedLoops != null && caughtException != null && state != Scope.NOT_RELATED)
                   {
@@ -297,7 +297,9 @@ public class FlowContext implements TypeConstants
                      TypeBinding raisedException;
                      if ((raisedException = raisedExceptions[raisedIndex]) != null)
                      {
-                        int state = caughtException == null ? Scope.EQUAL_OR_MORE_SPECIFIC /* any exception */
+                        int state = caughtException == null ? Scope.EQUAL_OR_MORE_SPECIFIC /*
+                                                                                            * any exception
+                                                                                            */
                         : Scope.compareTypes(raisedException, caughtException);
                         if (abruptlyExitedLoops != null && caughtException != null && state != Scope.NOT_RELATED)
                         {
@@ -454,9 +456,7 @@ public class FlowContext implements TypeConstants
       return null;
    }
 
-   /*
-    * lookup through break labels
-    */
+   /* lookup through break labels */
    public FlowContext getTargetContextForBreakLabel(char[] labelName)
    {
       FlowContext current = this, lastNonReturningSubRoutine = null;
@@ -480,9 +480,7 @@ public class FlowContext implements TypeConstants
       return null;
    }
 
-   /*
-    * lookup through continue labels
-    */
+   /* lookup through continue labels */
    public FlowContext getTargetContextForContinueLabel(char[] labelName)
    {
       FlowContext current = this;
@@ -526,9 +524,7 @@ public class FlowContext implements TypeConstants
       return null;
    }
 
-   /*
-    * lookup a default break through breakable locations
-    */
+   /* lookup a default break through breakable locations */
    public FlowContext getTargetContextForDefaultBreak()
    {
       FlowContext current = this, lastNonReturningSubRoutine = null;
@@ -550,9 +546,7 @@ public class FlowContext implements TypeConstants
       return null;
    }
 
-   /*
-    * lookup a default continue amongst continuable locations
-    */
+   /* lookup a default continue amongst continuable locations */
    public FlowContext getTargetContextForDefaultContinue()
    {
       FlowContext current = this, lastNonReturningSubRoutine = null;

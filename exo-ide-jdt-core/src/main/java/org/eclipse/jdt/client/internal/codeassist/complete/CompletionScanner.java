@@ -685,7 +685,7 @@ public class CompletionScanner extends Scanner
                         }
 
                         // handle the \\u case manually into comment
-if (this.currentCharacter == '\\')
+                        if (this.currentCharacter == '\\')
                         {
                            if (this.source[this.currentPosition] == '\\')
                               this.currentPosition++;
@@ -724,15 +724,13 @@ if (this.currentCharacter == '\\')
                               }
                            }
                            // handle the \\u case manually into comment
-if (this.currentCharacter == '\\')
+                           if (this.currentCharacter == '\\')
                            {
                               if (this.source[this.currentPosition] == '\\')
                                  this.currentPosition++;
                            } // jump over the \\
                         }
-                        /*
-                         * We need to completely consume the line break
-                         */
+                        /* We need to completely consume the line break */
                         if (this.currentCharacter == '\r' && this.eofPosition > this.currentPosition)
                         {
                            if (this.source[this.currentPosition] == '\n')
@@ -870,7 +868,7 @@ if (this.currentCharacter == '\\')
                            isUnicode = false;
                         }
                         // handle the \\u case manually into comment
-if (this.currentCharacter == '\\')
+                        if (this.currentCharacter == '\\')
                         {
                            if (this.source[this.currentPosition] == '\\')
                               this.currentPosition++;
@@ -923,7 +921,7 @@ if (this.currentCharacter == '\\')
                               isUnicode = false;
                            }
                            // handle the \\u case manually into comment
-if (this.currentCharacter == '\\')
+                           if (this.currentCharacter == '\\')
                            {
                               if (this.source[this.currentPosition] == '\\')
                                  this.currentPosition++;

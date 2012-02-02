@@ -17,9 +17,7 @@ public interface ClassFileConstants
 
    int AccDefault = 0;
 
-   /*
-    * Modifiers
-    */
+   /* Modifiers */
    int AccPublic = 0x0001;
 
    int AccPrivate = 0x0002;
@@ -54,14 +52,10 @@ public interface ClassFileConstants
 
    int AccEnum = 0x4000;
 
-   /**
-    * Other VM flags.
-    */
+   /** Other VM flags. */
    int AccSuper = 0x0020;
 
-   /**
-    * Extra flags for types and members attributes.
-    */
+   /** Extra flags for types and members attributes. */
    int AccAnnotationDefault = ASTNode.Bit18; // indicate presence of an attribute "DefaultValue" (annotation method)
 
    int AccDeprecated = ASTNode.Bit21; // indicate presence of an attribute "Deprecated"

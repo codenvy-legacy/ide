@@ -71,9 +71,7 @@ public class Initializer extends FieldDeclaration
    // codeStream.recordPositionsFrom(pc, this.sourceStart);
    // }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration#getKind()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration#getKind() */
    public int getKind()
    {
       return INITIALIZER;

@@ -13,15 +13,11 @@ package org.eclipse.jdt.client.internal.compiler.env;
 public interface ISourceMethod extends IGenericMethod
 {
 
-   /**
-    * Answer the source end position of the method's declaration.
-    */
+   /** Answer the source end position of the method's declaration. */
 
    int getDeclarationSourceEnd();
 
-   /**
-    * Answer the source start position of the method's declaration.
-    */
+   /** Answer the source start position of the method's declaration. */
 
    int getDeclarationSourceStart();
 
@@ -33,15 +29,11 @@ public interface ISourceMethod extends IGenericMethod
 
    char[][] getExceptionTypeNames();
 
-   /**
-    * Answer the source end position of the method's selector.
-    */
+   /** Answer the source end position of the method's selector. */
 
    int getNameSourceEnd();
 
-   /**
-    * Answer the source start position of the method's selector.
-    */
+   /** Answer the source start position of the method's selector. */
 
    int getNameSourceStart();
 

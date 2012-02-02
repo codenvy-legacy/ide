@@ -13,24 +13,19 @@ package org.eclipse.jdt.client.text;
 import org.eclipse.jdt.client.runtime.Assert;
 
 /**
- * Positions describe text ranges of a document. Positions are adapted to
- * changes applied to that document. The text range is specified by an offset
- * and a length. Positions can be marked as deleted. Deleted positions are
- * considered to no longer represent a valid text range in the managing
- * document.
+ * Positions describe text ranges of a document. Positions are adapted to changes applied to that document. The text range is
+ * specified by an offset and a length. Positions can be marked as deleted. Deleted positions are considered to no longer
+ * represent a valid text range in the managing document.
  * <p>
- * Positions attached to documents are usually updated by position updaters.
- * Because position updaters are freely definable and because of the frequency
- * in which they are used, the fields of a position are made publicly
- * accessible. Clients other than position updaters are not allowed to access
- * these public fields.
+ * Positions attached to documents are usually updated by position updaters. Because position updaters are freely definable and
+ * because of the frequency in which they are used, the fields of a position are made publicly accessible. Clients other than
+ * position updaters are not allowed to access these public fields.
  * </p>
  * <p>
- * Positions cannot be used as keys in hash tables as they override
- * <code>equals</code> and <code>hashCode</code> as they would be value
- * objects.
+ * Positions cannot be used as keys in hash tables as they override <code>equals</code> and <code>hashCode</code> as they would be
+ * value objects.
  * </p>
- *
+ * 
  * @see org.eclipse.jface.text.IDocument
  */
 public class Position
@@ -47,7 +42,7 @@ public class Position
 
    /**
     * Creates a new position with the given offset and length 0.
-    *
+    * 
     * @param offset the position offset, must be >= 0
     */
    public Position(int offset)
@@ -57,7 +52,7 @@ public class Position
 
    /**
     * Creates a new position with the given offset and length.
-    *
+    * 
     * @param offset the position offset, must be >= 0
     * @param length the position length, must be >= 0
     */
@@ -69,25 +64,19 @@ public class Position
       this.length = length;
    }
 
-   /**
-    * Creates a new, not initialized position.
-    */
+   /** Creates a new, not initialized position. */
    protected Position()
    {
    }
 
-   /*
-   * @see java.lang.Object#hashCode()
-   */
+   /* @see java.lang.Object#hashCode() */
    public int hashCode()
    {
       int deleted = isDeleted ? 0 : 1;
       return (offset << 24) | (length << 16) | deleted;
    }
 
-   /**
-    * Marks this position as deleted.
-    */
+   /** Marks this position as deleted. */
    public void delete()
    {
       isDeleted = true;
@@ -95,7 +84,7 @@ public class Position
 
    /**
     * Marks this position as not deleted.
-    *
+    * 
     * @since 2.0
     */
    public void undelete()
@@ -103,9 +92,7 @@ public class Position
       isDeleted = false;
    }
 
-   /*
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
+   /* @see java.lang.Object#equals(java.lang.Object) */
    public boolean equals(Object other)
    {
       if (other instanceof Position)
@@ -118,7 +105,7 @@ public class Position
 
    /**
     * Returns the length of this position.
-    *
+    * 
     * @return the length of this position
     */
    public int getLength()
@@ -128,7 +115,7 @@ public class Position
 
    /**
     * Returns the offset of this position.
-    *
+    * 
     * @return the offset of this position
     */
    public int getOffset()
@@ -137,9 +124,8 @@ public class Position
    }
 
    /**
-    * Checks whether the given index is inside
-    * of this position's text range.
-    *
+    * Checks whether the given index is inside of this position's text range.
+    * 
     * @param index the index to check
     * @return <code>true</code> if <code>index</code> is inside of this position
     */
@@ -153,10 +139,8 @@ public class Position
    }
 
    /**
-    * Checks whether the intersection of the given text range
-    * and the text range represented by this position is empty
-    * or not.
-    *
+    * Checks whether the intersection of the given text range and the text range represented by this position is empty or not.
+    * 
     * @param rangeOffset the offset of the range to check
     * @param rangeLength the length of the range to check
     * @return <code>true</code> if intersection is not empty
@@ -184,7 +168,7 @@ public class Position
 
    /**
     * Returns whether this position has been deleted or not.
-    *
+    * 
     * @return <code>true</code> if position has been deleted
     */
    public boolean isDeleted()
@@ -194,7 +178,7 @@ public class Position
 
    /**
     * Changes the length of this position to the given length.
-    *
+    * 
     * @param length the new length of this position
     */
    public void setLength(int length)
@@ -205,7 +189,7 @@ public class Position
 
    /**
     * Changes the offset of this position to the given offset.
-    *
+    * 
     * @param offset the new offset of this position
     */
    public void setOffset(int offset)

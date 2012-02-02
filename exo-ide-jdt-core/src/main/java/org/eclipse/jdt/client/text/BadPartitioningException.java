@@ -15,7 +15,7 @@ package org.eclipse.jdt.client.text;
  * <p>
  * This class is not intended to be serialized.
  * </p>
- *
+ * 
  * @see org.eclipse.jface.text.IDocument
  * @see org.eclipse.jface.text.IDocumentExtension3
  * @since 3.0
@@ -28,20 +28,19 @@ public class BadPartitioningException extends Exception
     * <p>
     * Note: This class is not intended to be serialized.
     * </p>
+    * 
     * @since 3.1
     */
    private static final long serialVersionUID = 3256439205327876408L;
 
-   /**
-    * Creates a new bad partitioning exception.
-    */
+   /** Creates a new bad partitioning exception. */
    public BadPartitioningException()
    {
    }
 
    /**
     * Creates a new bad partitioning exception.
-    *
+    * 
     * @param message message describing the exception
     */
    public BadPartitioningException(String message)

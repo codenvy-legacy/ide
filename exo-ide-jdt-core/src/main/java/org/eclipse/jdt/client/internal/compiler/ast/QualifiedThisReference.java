@@ -75,7 +75,9 @@ public class QualifiedThisReference extends ThisReference
 
       this.constant = Constant.NotAConstant;
       // X.this is not a param/raw type as denoting enclosing instance
-      TypeBinding type = this.qualification.resolveType(scope, true /* check bounds */);
+      TypeBinding type = this.qualification.resolveType(scope, true /*
+                                                                     * check bounds
+                                                                     */);
       if (type == null || !type.isValidBinding())
          return null;
       // X.this is not a param/raw type as denoting enclosing instance

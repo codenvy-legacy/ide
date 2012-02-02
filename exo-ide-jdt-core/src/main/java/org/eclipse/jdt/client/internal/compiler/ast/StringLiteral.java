@@ -56,9 +56,7 @@ public class StringLiteral extends Literal
       return new ExtendedStringLiteral(this, lit);
    }
 
-   /**
-    * Add the lit source to mine, just as if it was mine
-    */
+   /** Add the lit source to mine, just as if it was mine */
    public StringLiteralConcatenation extendsWith(StringLiteral lit)
    {
       return new StringLiteralConcatenation(this, lit);

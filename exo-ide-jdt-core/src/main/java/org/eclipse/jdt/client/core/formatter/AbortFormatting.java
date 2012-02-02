@@ -11,9 +11,8 @@
 package org.eclipse.jdt.client.core.formatter;
 
 /**
- * Unchecked exception wrapping invalid input checked exception which may occur
- * when scanning original formatted source.
- *
+ * Unchecked exception wrapping invalid input checked exception which may occur when scanning original formatted source.
+ * 
  * @since 2.1
  */
 public class AbortFormatting extends RuntimeException

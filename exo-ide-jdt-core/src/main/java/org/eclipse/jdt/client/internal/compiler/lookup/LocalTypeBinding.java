@@ -254,7 +254,9 @@ public final class LocalTypeBinding extends NestedTypeBinding
       this.tagBits |= TagBits.MemberTypeMask;
    }
 
-   public void setConstantPoolName(char[] computedConstantPoolName) /* java/lang/Object */
+   public void setConstantPoolName(char[] computedConstantPoolName) /*
+                                                                     * java/lang/ Object
+                                                                     */
    {
       this.constantPoolName = computedConstantPoolName;
    }

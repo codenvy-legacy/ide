@@ -165,7 +165,9 @@ public abstract class AssistParser extends Parser
       }
       else
       {
-         /* Initializer bodies are parsed in the context of the type declaration, we must thus search it inside */
+         /*
+          * Initializer bodies are parsed in the context of the type declaration, we must thus search it inside
+          */
          if (this.referenceContext instanceof TypeDeclaration)
          {
             TypeDeclaration type = (TypeDeclaration)this.referenceContext;
@@ -206,7 +208,9 @@ public abstract class AssistParser extends Parser
             node = ((ForeachStatement)node).elementVariable;
          }
 
-         /* check for intermediate block creation, so recovery can properly close them afterwards */
+         /*
+          * check for intermediate block creation, so recovery can properly close them afterwards
+          */
          int nodeStart = node.sourceStart;
          for (int j = blockIndex; j <= this.realBlockPtr; j++)
          {
@@ -1085,9 +1089,7 @@ public abstract class AssistParser extends Parser
    public abstract TypeReference createParameterizedSingleAssistTypeReference(TypeReference[] typeArguments,
       char[] assistName, long position);
 
-   /*
-    * Flush parser/scanner state regarding to code assist
-    */
+   /* Flush parser/scanner state regarding to code assist */
    public void flushAssistState()
    {
       this.assistNode = null;
@@ -1818,9 +1820,7 @@ public abstract class AssistParser extends Parser
       }
    }
 
-   /*
-    * Prepares the state of the parser to go for BlockStatements.
-    */
+   /* Prepares the state of the parser to go for BlockStatements. */
    protected void prepareForBlockStatements()
    {
       this.nestedMethod[this.nestedType = 0] = 1;
@@ -1845,9 +1845,7 @@ public abstract class AssistParser extends Parser
       }
    }
 
-   /*
-    * Prepares the state of the parser to go for Headers.
-    */
+   /* Prepares the state of the parser to go for Headers. */
    protected void prepareForHeaders()
    {
       this.nestedMethod[this.nestedType = 0] = 0;
@@ -1970,9 +1968,8 @@ public abstract class AssistParser extends Parser
    }
 
    /*
-    * Reset context so as to resume to regular parse loop If unable to reset for resuming, answers false.
-    * 
-    * Move checkpoint location, reset internal stacks and decide which grammar goal is activated.
+    * Reset context so as to resume to regular parse loop If unable to reset for resuming, answers false. Move checkpoint
+    * location, reset internal stacks and decide which grammar goal is activated.
     */
    protected boolean resumeAfterRecovery()
    {

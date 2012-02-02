@@ -57,7 +57,9 @@ public class SourceElementParser extends CommentRecorderParser
    public SourceElementParser(final ISourceElementRequestor requestor, IProblemFactory problemFactory,
       CompilerOptions options, boolean reportLocalDeclarations, boolean optimizeStringLiterals)
    {
-      this(requestor, problemFactory, options, reportLocalDeclarations, optimizeStringLiterals, true/* use SourceJavadocParser */);
+      this(requestor, problemFactory, options, reportLocalDeclarations, optimizeStringLiterals, true/*
+                                                                                                     * use SourceJavadocParser
+                                                                                                     */);
    }
 
    public SourceElementParser(ISourceElementRequestor requestor, IProblemFactory problemFactory,
@@ -445,10 +447,7 @@ public class SourceElementParser extends CommentRecorderParser
       }
    }
 
-   /*
-    * 
-    * INTERNAL USE-ONLY
-    */
+   /* INTERNAL USE-ONLY */
    protected void consumeFieldAccess(boolean isSuperAccess)
    {
       // FieldAccess ::= Primary '.' 'Identifier'
@@ -525,10 +524,7 @@ public class SourceElementParser extends CommentRecorderParser
       rememberCategories();
    }
 
-   /*
-    * 
-    * INTERNAL USE-ONLY
-    */
+   /* INTERNAL USE-ONLY */
    protected void consumeMethodInvocationName()
    {
       // MethodInvocation ::= Name '(' ArgumentListopt ')'
@@ -559,10 +555,7 @@ public class SourceElementParser extends CommentRecorderParser
       }
    }
 
-   /*
-    * 
-    * INTERNAL USE-ONLY
-    */
+   /* INTERNAL USE-ONLY */
    protected void consumeMethodInvocationPrimary()
    {
       super.consumeMethodInvocationPrimary();
@@ -575,10 +568,7 @@ public class SourceElementParser extends CommentRecorderParser
       }
    }
 
-   /*
-    * 
-    * INTERNAL USE-ONLY
-    */
+   /* INTERNAL USE-ONLY */
    protected void consumeMethodInvocationPrimaryWithTypeArguments()
    {
       super.consumeMethodInvocationPrimaryWithTypeArguments();
@@ -591,10 +581,7 @@ public class SourceElementParser extends CommentRecorderParser
       }
    }
 
-   /*
-    * 
-    * INTERNAL USE-ONLY
-    */
+   /* INTERNAL USE-ONLY */
    protected void consumeMethodInvocationSuper()
    {
       // MethodInvocation ::= 'super' '.' 'Identifier' '(' ArgumentListopt ')'

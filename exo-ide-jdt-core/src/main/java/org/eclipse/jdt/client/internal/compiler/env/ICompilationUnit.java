@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.env;
 
-/**
- * This interface denotes a compilation unit, providing its name and content.
- */
+/** This interface denotes a compilation unit, providing its name and content. */
 public interface ICompilationUnit extends IDependent
 {
    /**
@@ -24,9 +22,7 @@ public interface ICompilationUnit extends IDependent
     */
    char[] getContents();
 
-   /**
-    * Answer the name of the top level public type. For example, {Hashtable}.
-    */
+   /** Answer the name of the top level public type. For example, {Hashtable}. */
    char[] getMainTypeName();
 
    /**

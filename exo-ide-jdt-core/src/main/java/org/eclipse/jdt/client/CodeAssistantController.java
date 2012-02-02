@@ -47,7 +47,6 @@ import java.util.List;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 24, 2012 5:11:46 PM evgen $
- * 
  */
 public class CodeAssistantController implements RunCodeAssistantHandler, EditorActiveFileChangedHandler,
    ProposalSelectedHandler
@@ -74,9 +73,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
-   /**
-    * @see org.eclipse.jdt.client.event.RunCodeAssistantHandler#onRunCodeAssistant(org.eclipse.jdt.client.event.RunCodeAssistantEvent)
-    */
+   /** @see org.eclipse.jdt.client.event.RunCodeAssistantHandler#onRunCodeAssistant(org.eclipse.jdt.client.event.RunCodeAssistantEvent) */
    @Override
    public void onRunCodeAssistant(RunCodeAssistantEvent event)
    {
@@ -206,18 +203,14 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
 
       private List<CompletionProposal> proposals = new ArrayList<CompletionProposal>();
 
-      /**
-       * @see org.eclipse.jdt.client.core.CompletionRequestor#accept(org.eclipse.jdt.client.core.CompletionProposal)
-       */
+      /** @see org.eclipse.jdt.client.core.CompletionRequestor#accept(org.eclipse.jdt.client.core.CompletionProposal) */
       @Override
       public void accept(CompletionProposal proposal)
       {
          proposals.add(proposal);
       }
 
-      /**
-       * @see org.eclipse.jdt.client.core.CompletionRequestor#completionFailure(org.eclipse.jdt.client.core.compiler.IProblem)
-       */
+      /** @see org.eclipse.jdt.client.core.CompletionRequestor#completionFailure(org.eclipse.jdt.client.core.compiler.IProblem) */
       @Override
       public void completionFailure(IProblem problem)
       {
@@ -226,9 +219,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
+   /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
@@ -253,18 +244,14 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       return pos + col - 1;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onStringSelected(java.lang.String)
-    */
+   /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onStringSelected(java.lang.String) */
    @Override
    public void onStringSelected(String value)
    {
       currentEditor.replaceTextAtCurrentLine(beforeToken + value + afterToken, (beforeToken + value).length());
    }
 
-   /**
-    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onTokenSelected(org.eclipse.jdt.client.codeassistant.ui.ProposalWidget)
-    */
+   /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onTokenSelected(org.eclipse.jdt.client.codeassistant.ui.ProposalWidget) */
    @Override
    public void onTokenSelected(ProposalWidget value)
    {
@@ -277,9 +264,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       currentEditor.replaceTextAtCurrentLine(beforeCursor + afterToken, cursorPosition);
    }
 
-   /**
-    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onCancelAutoComplete()
-    */
+   /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onCancelAutoComplete() */
    @Override
    public void onCancelAutoComplete()
    {

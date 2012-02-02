@@ -641,10 +641,10 @@ public class CompilationUnitScope extends Scope
 
       while (i < length)
       {
-         type =
-            (ReferenceBinding)this.environment
-               .convertToRawType(type, false /* do not force conversion of enclosing types */); // type imports are necessarily
-                                                                                                 // raw for all except last
+         type = (ReferenceBinding)this.environment.convertToRawType(type, false /*
+                                                                                 * do not force conversion of enclosing types
+                                                                                 */); // type imports are necessarily
+                                                                                      // raw for all except last
          if (!type.canBeSeenBy(this.fPackage))
             return new ProblemReferenceBinding(CharOperation.subarray(compoundName, 0, i), type,
                ProblemReasons.NotVisible);
@@ -788,10 +788,8 @@ public class CompilationUnitScope extends Scope
    }
 
    /*
-    * Answer the problem reporter to use for raising new problems.
-    * 
-    * Note that as a side-effect, this updates the current reference context (unit, type or method) in case the problem handler
-    * decides it is necessary to abort.
+    * Answer the problem reporter to use for raising new problems. Note that as a side-effect, this updates the current reference
+    * context (unit, type or method) in case the problem handler decides it is necessary to abort.
     */
    public ProblemReporter problemReporter()
    {
@@ -801,27 +799,20 @@ public class CompilationUnitScope extends Scope
    }
 
    /*
-    * What do we hold onto:
-    * 
-    * 1. when we resolve 'a.b.c', say we keep only 'a.b.c' & when we fail to resolve 'c' in 'a.b', lets keep 'a.b.c' THEN when we
-    * come across a new/changed/removed item named 'a.b.c', we would find all references to 'a.b.c' -> This approach fails because
-    * every type is resolved in every onDemand import to detect collision cases... so the references could be 10 times bigger than
-    * necessary.
-    * 
-    * 2. when we resolve 'a.b.c', lets keep 'a.b' & 'c' & when we fail to resolve 'c' in 'a.b', lets keep 'a.b' & 'c' THEN when we
-    * come across a new/changed/removed item named 'a.b.c', we would find all references to 'a.b' & 'c' -> This approach does not
-    * have a space problem but fails to handle collision cases. What happens if a type is added named 'a.b'? We would search for
-    * 'a' & 'b' but would not find a match.
-    * 
-    * 3. when we resolve 'a.b.c', lets keep 'a', 'a.b' & 'a', 'b', 'c' & when we fail to resolve 'c' in 'a.b', lets keep 'a',
-    * 'a.b' & 'a', 'b', 'c' THEN when we come across a new/changed/removed item named 'a.b.c', we would find all references to
-    * 'a.b' & 'c' OR 'a.b' -> 'a' & 'b' OR 'a' -> '' & 'a' -> As long as each single char[] is interned, we should not have a
-    * space problem and can handle collision cases.
-    * 
-    * 4. when we resolve 'a.b.c', lets keep 'a.b' & 'a', 'b', 'c' & when we fail to resolve 'c' in 'a.b', lets keep 'a.b' & 'a',
-    * 'b', 'c' THEN when we come across a new/changed/removed item named 'a.b.c', we would find all references to 'a.b' & 'c' OR
-    * 'a.b' -> 'a' & 'b' in the simple name collection OR 'a' -> 'a' in the simple name collection -> As long as each single
-    * char[] is interned, we should not have a space problem and can handle collision cases.
+    * What do we hold onto: 1. when we resolve 'a.b.c', say we keep only 'a.b.c' & when we fail to resolve 'c' in 'a.b', lets keep
+    * 'a.b.c' THEN when we come across a new/changed/removed item named 'a.b.c', we would find all references to 'a.b.c' -> This
+    * approach fails because every type is resolved in every onDemand import to detect collision cases... so the references could
+    * be 10 times bigger than necessary. 2. when we resolve 'a.b.c', lets keep 'a.b' & 'c' & when we fail to resolve 'c' in 'a.b',
+    * lets keep 'a.b' & 'c' THEN when we come across a new/changed/removed item named 'a.b.c', we would find all references to
+    * 'a.b' & 'c' -> This approach does not have a space problem but fails to handle collision cases. What happens if a type is
+    * added named 'a.b'? We would search for 'a' & 'b' but would not find a match. 3. when we resolve 'a.b.c', lets keep 'a',
+    * 'a.b' & 'a', 'b', 'c' & when we fail to resolve 'c' in 'a.b', lets keep 'a', 'a.b' & 'a', 'b', 'c' THEN when we come across
+    * a new/changed/removed item named 'a.b.c', we would find all references to 'a.b' & 'c' OR 'a.b' -> 'a' & 'b' OR 'a' -> '' &
+    * 'a' -> As long as each single char[] is interned, we should not have a space problem and can handle collision cases. 4. when
+    * we resolve 'a.b.c', lets keep 'a.b' & 'a', 'b', 'c' & when we fail to resolve 'c' in 'a.b', lets keep 'a.b' & 'a', 'b', 'c'
+    * THEN when we come across a new/changed/removed item named 'a.b.c', we would find all references to 'a.b' & 'c' OR 'a.b' ->
+    * 'a' & 'b' in the simple name collection OR 'a' -> 'a' in the simple name collection -> As long as each single char[] is
+    * interned, we should not have a space problem and can handle collision cases.
     */
    void recordQualifiedReference(char[][] qualifiedName)
    {

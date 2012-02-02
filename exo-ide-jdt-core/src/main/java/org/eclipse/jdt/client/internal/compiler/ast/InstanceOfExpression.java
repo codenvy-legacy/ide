@@ -86,7 +86,9 @@ public class InstanceOfExpression extends OperatorExpression
    {
       this.constant = Constant.NotAConstant;
       TypeBinding expressionType = this.expression.resolveType(scope);
-      TypeBinding checkedType = this.type.resolveType(scope, true /* check bounds */);
+      TypeBinding checkedType = this.type.resolveType(scope, true /*
+                                                                   * check bounds
+                                                                   */);
       if (expressionType == null || checkedType == null)
          return null;
 
@@ -102,9 +104,7 @@ public class InstanceOfExpression extends OperatorExpression
       return this.resolvedType = TypeBinding.BOOLEAN;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#tagAsUnnecessaryCast(Scope,TypeBinding)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.Expression#tagAsUnnecessaryCast(Scope,TypeBinding) */
    public void tagAsUnnecessaryCast(Scope scope, TypeBinding castType)
    {
       // null is not instanceof Type, recognize direct scenario

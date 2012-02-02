@@ -94,8 +94,9 @@ public class ClassLiteralAccess extends Expression
        * Outer.Inner<X>.class, Outer<X>.Inner<Y>.class etc. Corollary wise, we should resolve the type of the class literal
        * expression to be a raw type as class literals exist only for the raw underlying type.
        */
-      this.targetType =
-         scope.environment().convertToRawType(this.targetType, true /* force conversion of enclosing types */);
+      this.targetType = scope.environment().convertToRawType(this.targetType, true /*
+                                                                                    * force conversion of enclosing types
+                                                                                    */);
 
       if (this.targetType.isArrayType())
       {
@@ -130,8 +131,9 @@ public class ClassLiteralAccess extends Expression
             boxedType = scope.boxing(this.targetType);
          }
          this.resolvedType =
-            scope.environment()
-               .createParameterizedType(classType, new TypeBinding[]{boxedType}, null/* not a member */);
+            scope.environment().createParameterizedType(classType, new TypeBinding[]{boxedType}, null/*
+                                                                                                      * not a member
+                                                                                                      */);
       }
       else
       {

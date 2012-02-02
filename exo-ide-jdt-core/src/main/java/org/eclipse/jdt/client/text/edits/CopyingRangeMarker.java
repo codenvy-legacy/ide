@@ -14,10 +14,9 @@ import org.eclipse.jdt.client.text.BadLocationException;
 import org.eclipse.jdt.client.text.IDocument;
 
 /**
- * A <code>CopyingRangeMarker</code> can be used to track positions when executing
- * text edits. Additionally a copying range marker stores a local copy of the
- * text it captures when it gets executed.
- *
+ * A <code>CopyingRangeMarker</code> can be used to track positions when executing text edits. Additionally a copying range marker
+ * stores a local copy of the text it captures when it gets executed.
+ * 
  * @since 3.0
  */
 public final class CopyingRangeMarker extends TextEdit
@@ -26,9 +25,8 @@ public final class CopyingRangeMarker extends TextEdit
    private String fText;
 
    /**
-    * Creates a new <tt>CopyRangeMarker</tt> for the given
-    * offset and length.
-    *
+    * Creates a new <tt>CopyRangeMarker</tt> for the given offset and length.
+    * 
     * @param offset the marker's offset
     * @param length the marker's length
     */
@@ -37,26 +35,20 @@ public final class CopyingRangeMarker extends TextEdit
       super(offset, length);
    }
 
-   /*
-    * Copy constructor
-    */
+   /* Copy constructor */
    private CopyingRangeMarker(CopyingRangeMarker other)
    {
       super(other);
       fText = other.fText;
    }
 
-   /*
-    * @see TextEdit#doCopy
-    */
+   /* @see TextEdit#doCopy */
    protected TextEdit doCopy()
    {
       return new CopyingRangeMarker(this);
    }
 
-   /*
-    * @see TextEdit#accept0
-    */
+   /* @see TextEdit#accept0 */
    protected void accept0(TextEditVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -66,9 +58,7 @@ public final class CopyingRangeMarker extends TextEdit
       }
    }
 
-   /*
-    * @see TextEdit#performDocumentUpdating
-    */
+   /* @see TextEdit#performDocumentUpdating */
    int performDocumentUpdating(IDocument document) throws BadLocationException
    {
       fText = document.get(getOffset(), getLength());
@@ -76,9 +66,7 @@ public final class CopyingRangeMarker extends TextEdit
       return fDelta;
    }
 
-   /*
-    * @see TextEdit#deleteChildren
-    */
+   /* @see TextEdit#deleteChildren */
    boolean deleteChildren()
    {
       return false;

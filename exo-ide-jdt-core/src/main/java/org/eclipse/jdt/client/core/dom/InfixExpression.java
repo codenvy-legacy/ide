@@ -59,9 +59,7 @@ public class InfixExpression extends Expression
    public static class Operator
    {
 
-      /**
-       * The token for the operator.
-       */
+      /** The token for the operator. */
       private String token;
 
       /**
@@ -238,9 +236,7 @@ public class InfixExpression extends Expression
       return PROPERTY_DESCRIPTORS;
    }
 
-   /**
-    * The infix operator; defaults to InfixExpression.Operator.PLUS.
-    */
+   /** The infix operator; defaults to InfixExpression.Operator.PLUS. */
    private InfixExpression.Operator operator = InfixExpression.Operator.PLUS;
 
    /**
@@ -254,7 +250,7 @@ public class InfixExpression extends Expression
    private Expression rightOperand = null;
 
    /**
-    * The list of extended operand expressions (element type: {@link Expression}). Lazily initialized; defaults to an empty list.
+    * The list of extended operand expressions (element type: {@link Expression} ). Lazily initialized; defaults to an empty list.
     */
    private ASTNode.NodeList extendedOperands = null;
 
@@ -269,17 +265,13 @@ public class InfixExpression extends Expression
       super(ast);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value)
    {
       if (property == OPERATOR_PROPERTY)
@@ -298,9 +290,7 @@ public class InfixExpression extends Expression
       return super.internalGetSetObjectProperty(property, get, value);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
       if (property == LEFT_OPERAND_PROPERTY)
@@ -331,9 +321,7 @@ public class InfixExpression extends Expression
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
       if (property == EXTENDED_OPERANDS_PROPERTY)
@@ -344,17 +332,13 @@ public class InfixExpression extends Expression
       return super.internalGetChildListProperty(property);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int getNodeType0()
    {
       return INFIX_EXPRESSION;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    ASTNode clone0(AST target)
    {
       InfixExpression result = new InfixExpression(target);
@@ -370,18 +354,14 @@ public class InfixExpression extends Expression
       return result;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
       // dispatch to correct overloaded match method
       return matcher.match(this, other);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    void accept0(ASTVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -551,18 +531,14 @@ public class InfixExpression extends Expression
       return this.extendedOperands;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       // treat Operator as free
       return BASE_NODE_SIZE + 4 * 4;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int treeSize()
    {
       return memSize() + (this.leftOperand == null ? 0 : getLeftOperand().treeSize())

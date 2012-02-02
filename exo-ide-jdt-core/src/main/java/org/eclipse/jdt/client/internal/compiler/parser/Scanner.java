@@ -233,8 +233,8 @@ public class Scanner implements TerminalTokens
 
    public Scanner()
    {
-      this(false /* comment */, false /* whitespace */, false /* nls */,
-         ClassFileConstants.JDK1_3 /* sourceLevel */, null/* taskTag */, null/* taskPriorities */, true /* taskCaseSensitive */);
+      this(false /* comment */, false /* whitespace */, false /* nls */, ClassFileConstants.JDK1_3 /* sourceLevel */,
+         null/* taskTag */, null/* taskPriorities */, true /* taskCaseSensitive */);
    }
 
    public Scanner(boolean tokenizeComments, boolean tokenizeWhiteSpace, boolean checkNonExternalizedStringLiterals,
@@ -594,11 +594,8 @@ public class Scanner implements TerminalTokens
    }
 
    /*
-    * Search the source position corresponding to the end of a given line number
-    * 
-    * Line numbers are 1-based, and relative to the scanner initialPosition. Character positions are 0-based.
-    * 
-    * In case the given line number is inconsistent, answers -1.
+    * Search the source position corresponding to the end of a given line number Line numbers are 1-based, and relative to the
+    * scanner initialPosition. Character positions are 0-based. In case the given line number is inconsistent, answers -1.
     */
    public final int getLineEnd(int lineNumber)
    {
@@ -854,7 +851,6 @@ public class Scanner implements TerminalTokens
 
    /*
     * This method consumes digits as well as underscores if underscores are located between digits
-    * 
     * @throws InvalidInputException if underscores are not located between digits or if underscores are used in source < 1.7
     */
    private final void consumeDigits(int radix) throws InvalidInputException
@@ -864,7 +860,6 @@ public class Scanner implements TerminalTokens
 
    /*
     * This method consumes digits as well as underscores if underscores are located between digits
-    * 
     * @throws InvalidInputException if underscores are not located between digits or if underscores are used in source < 1.7
     */
    private final void consumeDigits(int radix, boolean expectingDigitFirst) throws InvalidInputException
@@ -1876,7 +1871,7 @@ public class Scanner implements TerminalTokens
                            }
 
                            // handle the \\u case manually into comment
-if (this.currentCharacter == '\\')
+                           if (this.currentCharacter == '\\')
                            {
                               if (this.source[this.currentPosition] == '\\')
                                  this.currentPosition++;
@@ -1901,15 +1896,13 @@ if (this.currentCharacter == '\\')
                                  isUnicode = true;
                               }
                               // handle the \\u case manually into comment
-if (this.currentCharacter == '\\')
+                              if (this.currentCharacter == '\\')
                               {
                                  if (this.source[this.currentPosition] == '\\')
                                     this.currentPosition++;
                               } // jump over the \\
                            }
-                           /*
-                            * We need to completely consume the line break
-                            */
+                           /* We need to completely consume the line break */
                            if (this.currentCharacter == '\r' && this.eofPosition > this.currentPosition)
                            {
                               if (this.source[this.currentPosition] == '\n')
@@ -2028,7 +2021,7 @@ if (this.currentCharacter == '\\')
                               isUnicode = false;
                            }
                            // handle the \\u case manually into comment
-if (this.currentCharacter == '\\')
+                           if (this.currentCharacter == '\\')
                            {
                               if (this.source[this.currentPosition] == '\\')
                                  this.currentPosition++; // jump over the \\
@@ -2088,7 +2081,7 @@ if (this.currentCharacter == '\\')
                                  isUnicode = false;
                               }
                               // handle the \\u case manually into comment
-if (this.currentCharacter == '\\')
+                              if (this.currentCharacter == '\\')
                               {
                                  if (this.source[this.currentPosition] == '\\')
                                     this.currentPosition++;
@@ -2485,7 +2478,7 @@ if (this.currentCharacter == '\\')
                            getNextUnicodeChar();
                         }
                         // handle the \\u case manually into comment
-if (this.currentCharacter == '\\')
+                        if (this.currentCharacter == '\\')
                         {
                            if (this.source[this.currentPosition] == '\\')
                               this.currentPosition++;
@@ -2510,15 +2503,13 @@ if (this.currentCharacter == '\\')
                               getNextUnicodeChar();
                            }
                            // handle the \\u case manually into comment
-if (this.currentCharacter == '\\')
+                           if (this.currentCharacter == '\\')
                            {
                               if (this.source[this.currentPosition] == '\\')
                                  this.currentPosition++;
                            } // jump over the \\
                         }
-                        /*
-                         * We need to completely consume the line break
-                         */
+                        /* We need to completely consume the line break */
                         if (this.currentCharacter == '\r' && this.eofPosition > this.currentPosition)
                         {
                            if (this.source[this.currentPosition] == '\n')
@@ -2627,7 +2618,7 @@ if (this.currentCharacter == '\\')
                            isUnicode = false;
                         }
                         // handle the \\u case manually into comment
-if (this.currentCharacter == '\\')
+                        if (this.currentCharacter == '\\')
                         {
                            if (this.source[this.currentPosition] == '\\')
                               this.currentPosition++; // jump over the \\
@@ -2686,7 +2677,7 @@ if (this.currentCharacter == '\\')
                               isUnicode = false;
                            }
                            // handle the \\u case manually into comment
-if (this.currentCharacter == '\\')
+                           if (this.currentCharacter == '\\')
                            {
                               if (this.source[this.currentPosition] == '\\')
                                  this.currentPosition++;
@@ -3305,7 +3296,7 @@ if (this.currentCharacter == '\\')
    protected final void scanEscapeCharacter() throws InvalidInputException
    {
       // the string with "\\u" is a legal string of two chars \ and u
-// thus we use a direct access to the source (for regular cases).
+      // thus we use a direct access to the source (for regular cases).
       switch (this.currentCharacter)
       {
          case 'b' :

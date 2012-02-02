@@ -129,9 +129,7 @@ public class DefaultProblem extends CategorizedProblem
       return this.arguments;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.compiler.CategorizedProblem#getCategoryID()
-    */
+   /** @see org.eclipse.jdt.client.core.compiler.CategorizedProblem#getCategoryID() */
    public int getCategoryID()
    {
       return ProblemReporter.getProblemCategory(this.severity, this.id);
@@ -265,7 +263,6 @@ public class DefaultProblem extends CategorizedProblem
 
    /*
     * Helper method: checks the severity to see if the Error bit is set.
-    * 
     * @return boolean
     */
    public boolean isError()
@@ -275,7 +272,6 @@ public class DefaultProblem extends CategorizedProblem
 
    /*
     * Helper method: checks the severity to see if the Error bit is not set.
-    * 
     * @return boolean
     */
    public boolean isWarning()
@@ -339,9 +335,7 @@ public class DefaultProblem extends CategorizedProblem
       return s;
    }
 
-   /**
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
+   /** @see java.lang.Object#equals(java.lang.Object) */
    @Override
    public boolean equals(Object obj)
    {

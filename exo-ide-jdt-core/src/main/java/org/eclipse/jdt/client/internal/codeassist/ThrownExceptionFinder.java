@@ -55,7 +55,9 @@ public class ThrownExceptionFinder extends ASTVisitor
       this.caughtExceptions = new SimpleSet();
       this.discouragedExceptions = new SimpleSet();
       tryStatement.traverse(this, scope);
-      removeCaughtExceptions(tryStatement, true /* remove unchecked exceptions this time */);
+      removeCaughtExceptions(tryStatement, true /*
+                                                 * remove unchecked exceptions this time
+                                                 */);
    }
 
    private void acceptException(ReferenceBinding binding)
@@ -117,7 +119,7 @@ public class ThrownExceptionFinder extends ASTVisitor
 
    /**
     * Returns all the thrown exceptions minus the ones that are already caught in previous catch blocks (of the same try), found
-    * by the call to {@link ThrownExceptionFinder#processThrownExceptions(TryStatement, BlockScope)}.
+    * by the call to {@link ThrownExceptionFinder#processThrownExceptions(TryStatement, BlockScope)} .
     * 
     * @return Returns an array of thrown exceptions that are still not caught in any catch block.
     */

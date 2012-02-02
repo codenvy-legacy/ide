@@ -17,9 +17,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.CompilationUnitScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
 
-/**
- * A visitor for iterating through the parse tree.
- */
+/** A visitor for iterating through the parse tree. */
 public abstract class ASTVisitor
 {
    public void acceptProblem(IProblem problem)

@@ -38,9 +38,7 @@ public class MethodDeclaration extends AbstractMethodDeclaration
 
    public TypeParameter[] typeParameters;
 
-   /**
-    * MethodDeclaration constructor comment.
-    */
+   /** MethodDeclaration constructor comment. */
    public MethodDeclaration(CompilationResult compilationResult)
    {
       super(compilationResult);

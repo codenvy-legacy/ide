@@ -15,9 +15,8 @@ import org.eclipse.jdt.client.internal.compiler.ast.Javadoc;
 /**
  * Represents a full Javadoc comment for the {@link FormatterCommentParser}.
  * <p>
- * It might have one or several blocks ( see {@link FormatJavadocBlock}). The
- * javadoc comment might starts with a <b>description</b> which means that its
- * first block has no tag.
+ * It might have one or several blocks ( see {@link FormatJavadocBlock}). The javadoc comment might starts with a
+ * <b>description</b> which means that its first block has no tag.
  * </p>
  */
 public class FormatJavadoc extends Javadoc
@@ -39,9 +38,8 @@ public class FormatJavadoc extends Javadoc
    }
 
    /**
-    * Return the first block of the javadoc or <code>null</code> if has no block
-    * at all.
-    *
+    * Return the first block of the javadoc or <code>null</code> if has no block at all.
+    * 
     * @return a {@link FormatJavadocBlock} or <code>null</code>.
     */
    public FormatJavadocBlock getFirstBlock()
@@ -55,10 +53,9 @@ public class FormatJavadoc extends Javadoc
 
    /**
     * Returns whether it has several lines or not.
-    *
-    * @return <code>true</code> if the javadoc comment has several lines
-    * 	<code>false</code> otherwise (e.g. header and footer are on the same
-    * 	line).
+    * 
+    * @return <code>true</code> if the javadoc comment has several lines <code>false</code> otherwise (e.g. header and footer are
+    *         on the same line).
     */
    public boolean isMultiLine()
    {

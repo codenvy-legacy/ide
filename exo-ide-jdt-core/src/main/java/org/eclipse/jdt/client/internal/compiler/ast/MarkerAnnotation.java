@@ -29,9 +29,7 @@ public class MarkerAnnotation extends Annotation
       this.sourceEnd = type.sourceEnd;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.Annotation#memberValuePairs()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.Annotation#memberValuePairs() */
    public MemberValuePair[] memberValuePairs()
    {
       return NoValuePairs;

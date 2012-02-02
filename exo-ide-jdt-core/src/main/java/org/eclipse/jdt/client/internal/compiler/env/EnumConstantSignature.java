@@ -32,17 +32,13 @@ public class EnumConstantSignature
       this.constName = constName;
    }
 
-   /**
-    * @return name of the type in the class file format
-    */
+   /** @return name of the type in the class file format */
    public char[] getTypeName()
    {
       return this.typeName;
    }
 
-   /**
-    * @return the name of the enum constant reference.
-    */
+   /** @return the name of the enum constant reference. */
    public char[] getEnumConstantName()
    {
       return this.constName;

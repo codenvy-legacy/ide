@@ -125,18 +125,14 @@ import org.eclipse.jdt.client.text.edits.TextEdit;
 
 /**
  * This class is responsible for formatting a valid java source code.
+ * 
  * @since 2.1
  */
 /*
-   <extension
-         id="org.eclipse.jdt.core.newformatter.codeformatter"
-         name="org.eclipse.jdt.core.newformatter.codeformatter"
-         point="org.eclipse.jdt.core.codeFormatter">
-      <codeFormatter
-            class="org.eclipse.jdt.internal.formatter.CodeFormatterVisitor">
-      </codeFormatter>
-   </extension>
-*/
+ * <extension id="org.eclipse.jdt.core.newformatter.codeformatter" name="org.eclipse.jdt.core.newformatter.codeformatter"
+ * point="org.eclipse.jdt.core.codeFormatter"> <codeFormatter class="org.eclipse.jdt.internal.formatter.CodeFormatterVisitor">
+ * </codeFormatter> </extension>
+ */
 public class CodeFormatterVisitor extends ASTVisitor
 {
 
@@ -157,8 +153,7 @@ public class CodeFormatterVisitor extends ASTVisitor
    private static final int NO_MODIFIERS = 0;
 
    /*
-    * Set of expected tokens type for a single type reference.
-    * This array needs to be SORTED.
+    * Set of expected tokens type for a single type reference. This array needs to be SORTED.
     */
    private static final int[] SINGLETYPEREFERENCE_EXPECTEDTOKENS = new int[]{TerminalTokens.TokenNameIdentifier,
       TerminalTokens.TokenNameboolean, TerminalTokens.TokenNamebyte, TerminalTokens.TokenNamechar,
@@ -201,16 +196,14 @@ public class CodeFormatterVisitor extends ASTVisitor
          settings == null ? ClassFileConstants.JDK1_3 : CompilerOptions.versionToJdkLevel(settings
             .get(JavaCore.COMPILER_SOURCE));
       this.localScanner =
-         new Scanner(true, false, false/*nls*/, sourceLevel/*sourceLevel*/, null/*taskTags*/,
-            null/*taskPriorities*/, true/*taskCaseSensitive*/);
+         new Scanner(true, false, false/* nls */, sourceLevel/* sourceLevel */, null/* taskTags */,
+            null/* taskPriorities */, true/* taskCaseSensitive */);
 
       this.preferences = preferences;
       this.scribe = new Scribe(this, sourceLevel, regions, codeSnippetParsingUtil, includeComments);
    }
 
-   /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#acceptProblem(org.eclipse.jdt.core.compiler.IProblem)
-    */
+   /** @see org.eclipse.jdt.internal.compiler.ASTVisitor#acceptProblem(org.eclipse.jdt.core.compiler.IProblem) */
    public void acceptProblem(IProblem problem)
    {
       super.acceptProblem(problem);
@@ -737,21 +730,15 @@ public class CodeFormatterVisitor extends ASTVisitor
       this.scribe.printComment();
       this.scribe.printModifiers(fieldDeclaration.annotations, this, ICodeFormatterConstants.ANNOTATION_ON_FIELD);
       this.scribe.space();
-      /*
-       * Field type
-       */
+      /* Field type */
       fieldDeclaration.type.traverse(this, scope);
 
-      /*
-       * Field name
-       */
+      /* Field name */
       this.scribe.alignFragment(memberAlignment, 0);
 
       this.scribe.printNextToken(TerminalTokens.TokenNameIdentifier, true);
 
-      /*
-       * Check for extra dimensions
-       */
+      /* Check for extra dimensions */
       int extraDimensions = getDimensions();
       if (extraDimensions != 0)
       {
@@ -762,9 +749,7 @@ public class CodeFormatterVisitor extends ASTVisitor
          }
       }
 
-      /*
-       * Field initialization
-       */
+      /* Field initialization */
       final Expression initialization = fieldDeclaration.initialization;
       if (initialization != null)
       {
@@ -825,14 +810,18 @@ public class CodeFormatterVisitor extends ASTVisitor
       }
       if ((importRef.bits & ASTNode.OnDemand) != 0)
       {
-         this.scribe.printQualifiedReference(importRef.sourceEnd, false/*do not expect parenthesis*/);
+         this.scribe.printQualifiedReference(importRef.sourceEnd, false/*
+                                                                        * do not expect parenthesis
+                                                                        */);
          this.scribe.printNextToken(TerminalTokens.TokenNameDOT);
          this.scribe.printNextToken(TerminalTokens.TokenNameMULTIPLY);
          this.scribe.printNextToken(TerminalTokens.TokenNameSEMICOLON, this.preferences.insert_space_before_semicolon);
       }
       else
       {
-         this.scribe.printQualifiedReference(importRef.sourceEnd, false/*do not expect parenthesis*/);
+         this.scribe.printQualifiedReference(importRef.sourceEnd, false/*
+                                                                        * do not expect parenthesis
+                                                                        */);
          this.scribe.printNextToken(TerminalTokens.TokenNameSEMICOLON, this.preferences.insert_space_before_semicolon);
       }
       if (isLast)
@@ -896,9 +885,7 @@ public class CodeFormatterVisitor extends ASTVisitor
             for (int i = 0, length = multipleFieldDeclarationsLength; i < length; i++)
             {
                FieldDeclaration fieldDeclaration = multiFieldDeclaration.declarations[i];
-               /*
-                * Field name
-                */
+               /* Field name */
                if (i == 0)
                {
                   this.scribe.alignFragment(fieldAlignment, 0);
@@ -909,9 +896,7 @@ public class CodeFormatterVisitor extends ASTVisitor
                   this.scribe.printNextToken(TerminalTokens.TokenNameIdentifier, false);
                }
 
-               /*
-                * Check for extra dimensions
-                */
+               /* Check for extra dimensions */
                int extraDimensions = getDimensions();
                if (extraDimensions != 0)
                {
@@ -922,9 +907,7 @@ public class CodeFormatterVisitor extends ASTVisitor
                   }
                }
 
-               /*
-                * Field initialization
-                */
+               /* Field initialization */
                final Expression initialization = fieldDeclaration.initialization;
                if (initialization != null)
                {
@@ -1147,9 +1130,7 @@ public class CodeFormatterVisitor extends ASTVisitor
       return this.scribe.getRootEdit();
    }
 
-   /**
-    * @param source the source of the comment to format
-    */
+   /** @param source the source of the comment to format */
    public void formatComment(int kind, String source, int start, int end, int indentationLevel)
    {
       if (source == null)
@@ -1159,9 +1140,7 @@ public class CodeFormatterVisitor extends ASTVisitor
 
    private void format(TypeDeclaration typeDeclaration)
    {
-      /*
-       * Print comments to get proper line number
-       */
+      /* Print comments to get proper line number */
       this.scribe.printComment();
       int line = this.scribe.line;
 
@@ -1174,9 +1153,7 @@ public class CodeFormatterVisitor extends ASTVisitor
          line = this.scribe.line;
       }
 
-      /*
-       * Type name
-       */
+      /* Type name */
       switch (TypeDeclaration.kind(typeDeclaration.modifiers))
       {
          case TypeDeclaration.CLASS_DECL :
@@ -1228,9 +1205,7 @@ public class CodeFormatterVisitor extends ASTVisitor
             this.scribe.space();
          }
       }
-      /*
-       * Superclass
-       */
+      /* Superclass */
       final TypeReference superclass = typeDeclaration.superclass;
       if (superclass != null)
       {
@@ -1259,9 +1234,7 @@ public class CodeFormatterVisitor extends ASTVisitor
          this.scribe.exitAlignment(superclassAlignment, true);
       }
 
-      /*
-       * Super Interfaces
-       */
+      /* Super Interfaces */
       final TypeReference[] superInterfaces = typeDeclaration.superInterfaces;
       if (superInterfaces != null)
       {
@@ -1328,9 +1301,7 @@ public class CodeFormatterVisitor extends ASTVisitor
          this.scribe.exitAlignment(interfaceAlignment, true);
       }
 
-      /*
-       * Type body
-       */
+      /* Type body */
       String class_declaration_brace;
       boolean space_before_opening_brace;
       int kind = TypeDeclaration.kind(typeDeclaration.modifiers);
@@ -1399,7 +1370,8 @@ public class CodeFormatterVisitor extends ASTVisitor
             {
                Alignment enumConstantsAlignment =
                   this.scribe.createAlignment(Alignment.ENUM_CONSTANTS, this.preferences.alignment_for_enum_constants,
-                     enumConstantsLength, this.scribe.scanner.currentPosition, 0, // we don't want to indent enum constants when splitting to a new line
+                     enumConstantsLength, this.scribe.scanner.currentPosition, 0, // we don't want to indent enum constants when
+                                                                                  // splitting to a new line
                      false);
                this.scribe.enterAlignment(enumConstantsAlignment);
                boolean ok = false;
@@ -1547,9 +1519,7 @@ public class CodeFormatterVisitor extends ASTVisitor
 
    private void formatAnonymousTypeDeclaration(TypeDeclaration typeDeclaration)
    {
-      /*
-       * Type body
-       */
+      /* Type body */
       String anonymous_type_declaration_brace_position = this.preferences.brace_position_for_anonymous_type_declaration;
 
       formatTypeOpeningBrace(anonymous_type_declaration_brace_position,
@@ -1899,9 +1869,7 @@ public class CodeFormatterVisitor extends ASTVisitor
       this.scribe.exitAlignment(cascadingMessageSendAlignment, true);
    }
 
-   /*
-    * Merged traversal of member (types, fields, methods)
-    */
+   /* Merged traversal of member (types, fields, methods) */
    private void formatClassBodyDeclarations(ASTNode[] nodes)
    {
       final int FIELD = 1, METHOD = 2, TYPE = 3;
@@ -2022,9 +1990,7 @@ public class CodeFormatterVisitor extends ASTVisitor
 
    private void formatLeftCurlyBrace(final int line, final String bracePosition)
    {
-      /*
-       * deal with (quite unexpected) comments right before lcurly
-       */
+      /* deal with (quite unexpected) comments right before lcurly */
       this.scribe.printComment(Scribe.PRESERVE_EMPTY_LINES_IN_FORMAT_LEFT_CURLY_BRACE);
       if (DefaultCodeFormatterConstants.NEXT_LINE_ON_WRAP.equals(bracePosition)
          && (this.scribe.line > line || this.scribe.column >= this.preferences.page_width))
@@ -2047,28 +2013,20 @@ public class CodeFormatterVisitor extends ASTVisitor
             this.scribe.space();
          }
 
-         /*
-          * Argument type
-          */
+         /* Argument type */
          if (localDeclaration.type != null)
          {
             localDeclaration.type.traverse(this, scope);
          }
-         /*
-          * Print the argument name
-         */
+         /* Print the argument name */
          this.scribe.printNextToken(TerminalTokens.TokenNameIdentifier, true);
       }
       else
       {
-         /*
-          * Print the argument name
-         */
+         /* Print the argument name */
          this.scribe.printNextToken(TerminalTokens.TokenNameIdentifier, false);
       }
-      /*
-       * Check for extra dimensions
-       */
+      /* Check for extra dimensions */
       int extraDimensions = getDimensions();
       if (extraDimensions != 0)
       {
@@ -2082,9 +2040,7 @@ public class CodeFormatterVisitor extends ASTVisitor
       final Expression initialization = localDeclaration.initialization;
       if (initialization != null)
       {
-         /*
-          * Print the method name
-          */
+         /* Print the method name */
          this.scribe.printNextToken(TerminalTokens.TokenNameEQUAL,
             this.preferences.insert_space_before_assignment_operator);
          if (this.preferences.insert_space_after_assignment_operator)
@@ -2623,7 +2579,8 @@ public class CodeFormatterVisitor extends ASTVisitor
       {
          int thrownExceptionsLength = thrownExceptions.length;
          Alignment throwsAlignment =
-            this.scribe.createAlignment(Alignment.THROWS, alignmentForThrowsClause, thrownExceptionsLength, // throws is the first token
+            this.scribe.createAlignment(Alignment.THROWS, alignmentForThrowsClause, thrownExceptionsLength, // throws is the first
+                                                                                                            // token
                this.scribe.scanner.currentPosition);
 
          this.scribe.enterAlignment(throwsAlignment);
@@ -2665,9 +2622,7 @@ public class CodeFormatterVisitor extends ASTVisitor
       }
    }
 
-   /*
-    * Merged traversal of member (types, fields, methods)
-    */
+   /* Merged traversal of member (types, fields, methods) */
    private void formatTypeMembers(TypeDeclaration typeDeclaration)
    {
       Alignment memberAlignment =
@@ -3042,7 +2997,7 @@ public class CodeFormatterVisitor extends ASTVisitor
          {
             switch (token)
             {
-               case TerminalTokens.TokenNameCOMMA ://90
+               case TerminalTokens.TokenNameCOMMA :// 90
                   return true;
                case TerminalTokens.TokenNameCOMMENT_BLOCK :
                case TerminalTokens.TokenNameCOMMENT_JAVADOC :
@@ -3104,7 +3059,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.AllocationExpression, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.AllocationExpression,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(AllocationExpression allocationExpression, BlockScope scope)
    {
@@ -3216,7 +3172,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.AND_AND_Expression, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.AND_AND_Expression,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(AND_AND_Expression and_and_Expression, BlockScope scope)
    {
@@ -3226,16 +3183,12 @@ public class CodeFormatterVisitor extends ASTVisitor
 
    public boolean visit(AnnotationMethodDeclaration annotationTypeMemberDeclaration, ClassScope scope)
    {
-      /*
-       * Print comments to get proper line number
-       */
+      /* Print comments to get proper line number */
       this.scribe.printComment();
       this.scribe.printModifiers(annotationTypeMemberDeclaration.annotations, this,
          ICodeFormatterConstants.ANNOTATION_ON_METHOD);
       this.scribe.space();
-      /*
-       * Print the method return type
-       */
+      /* Print the method return type */
       final TypeReference returnType = annotationTypeMemberDeclaration.returnType;
       final MethodScope annotationTypeMemberDeclarationScope = annotationTypeMemberDeclaration.scope;
 
@@ -3243,18 +3196,14 @@ public class CodeFormatterVisitor extends ASTVisitor
       {
          returnType.traverse(this, annotationTypeMemberDeclarationScope);
       }
-      /*
-       * Print the method name
-       */
+      /* Print the method name */
       this.scribe.printNextToken(TerminalTokens.TokenNameIdentifier, true);
       this.scribe.printNextToken(TerminalTokens.TokenNameLPAREN,
          this.preferences.insert_space_before_opening_paren_in_annotation_type_member_declaration);
       this.scribe.printNextToken(TerminalTokens.TokenNameRPAREN,
          this.preferences.insert_space_between_empty_parens_in_annotation_type_member_declaration);
 
-      /*
-       * Check for extra dimensions
-       */
+      /* Check for extra dimensions */
       int extraDimensions = annotationTypeMemberDeclaration.extendedDimensions;
       if (extraDimensions != 0)
       {
@@ -3278,7 +3227,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.Argument, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.Argument,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(Argument argument, BlockScope scope)
    {
@@ -3290,9 +3240,7 @@ public class CodeFormatterVisitor extends ASTVisitor
          this.scribe.space();
       }
 
-      /*
-       * Argument type
-       */
+      /* Argument type */
       if (argument.type != null)
       {
          if (argument.type instanceof UnionTypeReference)
@@ -3318,15 +3266,11 @@ public class CodeFormatterVisitor extends ASTVisitor
       }
       else
       {
-         /*
-          * Print the argument name
-          */
+         /* Print the argument name */
          this.scribe.printNextToken(TerminalTokens.TokenNameIdentifier, true);
       }
 
-      /*
-       * Check for extra dimensions
-       */
+      /* Check for extra dimensions */
       int extraDimensions = getDimensions();
       if (extraDimensions != 0)
       {
@@ -3341,7 +3285,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ArrayAllocationExpression, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ArrayAllocationExpression,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(ArrayAllocationExpression arrayAllocationExpression, BlockScope scope)
    {
@@ -3395,7 +3340,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ArrayInitializer, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ArrayInitializer,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(ArrayInitializer arrayInitializer, BlockScope scope)
    {
@@ -3609,7 +3555,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ArrayQualifiedTypeReference, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ArrayQualifiedTypeReference,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(ArrayQualifiedTypeReference arrayQualifiedTypeReference, BlockScope scope)
    {
@@ -3639,7 +3586,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ArrayQualifiedTypeReference, org.eclipse.jdt.internal.compiler.lookup.ClassScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ArrayQualifiedTypeReference,
+    *      org.eclipse.jdt.internal.compiler.lookup.ClassScope)
     */
    public boolean visit(ArrayQualifiedTypeReference arrayQualifiedTypeReference, ClassScope scope)
    {
@@ -3669,7 +3617,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ArrayReference, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ArrayReference,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(ArrayReference arrayReference, BlockScope scope)
    {
@@ -3698,7 +3647,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ArrayTypeReference, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ArrayTypeReference,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(ArrayTypeReference arrayTypeReference, BlockScope scope)
    {
@@ -3735,7 +3685,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ArrayTypeReference, org.eclipse.jdt.internal.compiler.lookup.ClassScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ArrayTypeReference,
+    *      org.eclipse.jdt.internal.compiler.lookup.ClassScope)
     */
    public boolean visit(ArrayTypeReference arrayTypeReference, ClassScope scope)
    {
@@ -3771,7 +3722,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.AssertStatement, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.AssertStatement,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(AssertStatement assertStatement, BlockScope scope)
    {
@@ -3796,7 +3748,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.Assignment, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.Assignment,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(Assignment assignment, BlockScope scope)
    {
@@ -3843,7 +3796,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.BinaryExpression, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.BinaryExpression,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(BinaryExpression binaryExpression, BlockScope scope)
    {
@@ -3886,7 +3840,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.Block, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.Block,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(Block block, BlockScope scope)
    {
@@ -3896,7 +3851,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.BreakStatement, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.BreakStatement,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(BreakStatement breakStatement, BlockScope scope)
    {
@@ -3912,7 +3868,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.CaseStatement, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.CaseStatement,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(CaseStatement caseStatement, BlockScope scope)
    {
@@ -3933,7 +3890,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.CastExpression, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.CastExpression,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(CastExpression castExpression, BlockScope scope)
    {
@@ -3966,7 +3924,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.CharLiteral, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.CharLiteral,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(CharLiteral charLiteral, BlockScope scope)
    {
@@ -3986,7 +3945,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ClassLiteralAccess, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ClassLiteralAccess,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(ClassLiteralAccess classLiteral, BlockScope scope)
    {
@@ -4008,7 +3968,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.Clinit, org.eclipse.jdt.internal.compiler.lookup.ClassScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.Clinit,
+    *      org.eclipse.jdt.internal.compiler.lookup.ClassScope)
     */
    public boolean visit(Clinit clinit, ClassScope scope)
    {
@@ -4017,7 +3978,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration, org.eclipse.jdt.internal.compiler.lookup.CompilationUnitScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration,
+    *      org.eclipse.jdt.internal.compiler.lookup.CompilationUnitScope)
     */
    public boolean visit(CompilationUnitDeclaration compilationUnitDeclaration, CompilationUnitScope scope)
    {
@@ -4030,9 +3992,7 @@ public class CodeFormatterVisitor extends ASTVisitor
       int headerEndPosition = types == null ? compilationUnitDeclaration.sourceEnd : types[0].declarationSourceStart;
       this.scribe.setHeaderComment(headerEndPosition);
 
-      /*
-       * Package declaration
-       */
+      /* Package declaration */
       ImportReference currentPackage = compilationUnitDeclaration.currentPackage;
       final boolean hasPackage = currentPackage != null;
       if (hasPackage)
@@ -4049,8 +4009,10 @@ public class CodeFormatterVisitor extends ASTVisitor
          // dump the package keyword
          this.scribe.printNextToken(TerminalTokens.TokenNamepackage);
          this.scribe.space();
-         this.scribe
-            .printQualifiedReference(compilationUnitDeclaration.currentPackage.sourceEnd, false/*do not expect parenthesis*/);
+         this.scribe.printQualifiedReference(compilationUnitDeclaration.currentPackage.sourceEnd, false/*
+                                                                                                        * do not expect
+                                                                                                        * parenthesis
+                                                                                                        */);
          this.scribe.printNextToken(TerminalTokens.TokenNameSEMICOLON, this.preferences.insert_space_before_semicolon);
          this.scribe.printComment(CodeFormatter.K_UNKNOWN, Scribe.BASIC_TRAILING_COMMENT);
          int blankLinesAfterPackage = this.preferences.blank_lines_after_package;
@@ -4068,9 +4030,7 @@ public class CodeFormatterVisitor extends ASTVisitor
          this.scribe.printComment();
       }
 
-      /*
-       * Import statements
-       */
+      /* Import statements */
       final ImportReference[] imports = compilationUnitDeclaration.imports;
       if (imports != null)
       {
@@ -4107,9 +4067,7 @@ public class CodeFormatterVisitor extends ASTVisitor
       formatEmptyTypeDeclaration(true);
 
       int blankLineBetweenTypeDeclarations = this.preferences.blank_lines_between_type_declarations;
-      /*
-       * Type declarations
-       */
+      /* Type declarations */
       if (types != null)
       {
          int typesLength = types.length;
@@ -4133,7 +4091,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.CompoundAssignment, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.CompoundAssignment,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(CompoundAssignment compoundAssignment, BlockScope scope)
    {
@@ -4145,9 +4104,7 @@ public class CodeFormatterVisitor extends ASTVisitor
       }
       compoundAssignment.lhs.traverse(this, scope);
 
-      /*
-       * Print the operator
-       */
+      /* Print the operator */
       int operator;
       switch (compoundAssignment.operator)
       {
@@ -4219,8 +4176,9 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-     * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ConditionalExpression, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
-     */
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ConditionalExpression,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    */
    public boolean visit(ConditionalExpression conditionalExpression, BlockScope scope)
    {
 
@@ -4279,7 +4237,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ConstructorDeclaration, org.eclipse.jdt.internal.compiler.lookup.ClassScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ConstructorDeclaration,
+    *      org.eclipse.jdt.internal.compiler.lookup.ClassScope)
     */
    public boolean visit(ConstructorDeclaration constructorDeclaration, ClassScope scope)
    {
@@ -4310,9 +4269,7 @@ public class CodeFormatterVisitor extends ASTVisitor
          }
          return false;
       }
-      /*
-       * Print comments to get proper line number
-       */
+      /* Print comments to get proper line number */
       this.scribe.printComment();
       int line = this.scribe.line;
       this.scribe
@@ -4357,9 +4314,7 @@ public class CodeFormatterVisitor extends ASTVisitor
          }
       }
 
-      /*
-       * Print the method name
-       */
+      /* Print the method name */
       this.scribe.printNextToken(TerminalTokens.TokenNameIdentifier, true);
 
       formatMethodArguments(constructorDeclaration,
@@ -4378,9 +4333,7 @@ public class CodeFormatterVisitor extends ASTVisitor
 
       if (!constructorDeclaration.isNative() && !constructorDeclaration.isAbstract())
       {
-         /*
-          * Method body
-          */
+         /* Method body */
          String constructor_declaration_brace = this.preferences.brace_position_for_constructor_declaration;
          formatLeftCurlyBrace(line, constructor_declaration_brace);
          formatOpeningBrace(constructor_declaration_brace,
@@ -4452,7 +4405,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ContinueStatement, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ContinueStatement,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(ContinueStatement continueStatement, BlockScope scope)
    {
@@ -4468,7 +4422,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.DoStatement, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.DoStatement,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(DoStatement doStatement, BlockScope scope)
    {
@@ -4486,9 +4441,7 @@ public class CodeFormatterVisitor extends ASTVisitor
          }
          else if (action instanceof EmptyStatement)
          {
-            /*
-             * This is an empty statement
-             */
+            /* This is an empty statement */
             formatNecessaryEmptyStatement();
          }
          else
@@ -4508,9 +4461,7 @@ public class CodeFormatterVisitor extends ASTVisitor
       }
       else
       {
-         /*
-          * This is an empty statement
-          */
+         /* This is an empty statement */
          formatNecessaryEmptyStatement();
       }
 
@@ -4538,7 +4489,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.DoubleLiteral, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.DoubleLiteral,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(DoubleLiteral doubleLiteral, BlockScope scope)
    {
@@ -4563,7 +4515,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.EmptyStatement, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.EmptyStatement,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(EmptyStatement statement, BlockScope scope)
    {
@@ -4579,9 +4532,7 @@ public class CodeFormatterVisitor extends ASTVisitor
    // field is an enum constant
    public boolean visit(FieldDeclaration enumConstant, MethodScope scope)
    {
-      /*
-       * Print comments to get proper line number
-       */
+      /* Print comments to get proper line number */
       this.scribe.printComment();
       final int line = this.scribe.line;
       this.scribe.printModifiers(enumConstant.annotations, this, ICodeFormatterConstants.ANNOTATION_ON_FIELD);
@@ -4602,9 +4553,7 @@ public class CodeFormatterVisitor extends ASTVisitor
          int methodsCount = typeDeclaration.methods == null ? 0 : typeDeclaration.methods.length;
          int membersCount = typeDeclaration.memberTypes == null ? 0 : typeDeclaration.memberTypes.length;
 
-         /*
-          * Type body
-          */
+         /* Type body */
          String enum_constant_brace = this.preferences.brace_position_for_enum_constant;
 
          formatLeftCurlyBrace(line, enum_constant_brace);
@@ -4645,7 +4594,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.EqualExpression, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.EqualExpression,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(EqualExpression equalExpression, BlockScope scope)
    {
@@ -4661,7 +4611,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ExplicitConstructorCall, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ExplicitConstructorCall,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(ExplicitConstructorCall explicitConstructor, BlockScope scope)
    {
@@ -4776,7 +4727,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.FalseLiteral, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.FalseLiteral,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(FalseLiteral falseLiteral, BlockScope scope)
    {
@@ -4796,7 +4748,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.FieldReference, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.FieldReference,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(FieldReference fieldReference, BlockScope scope)
    {
@@ -4818,7 +4771,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.FloatLiteral, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.FloatLiteral,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(FloatLiteral floatLiteral, BlockScope scope)
    {
@@ -4875,9 +4829,7 @@ public class CodeFormatterVisitor extends ASTVisitor
          }
          else if (action instanceof EmptyStatement)
          {
-            /*
-             * This is an empty statement
-             */
+            /* This is an empty statement */
             formatNecessaryEmptyStatement();
          }
          else
@@ -4896,16 +4848,15 @@ public class CodeFormatterVisitor extends ASTVisitor
       }
       else
       {
-         /*
-          * This is an empty statement
-          */
+         /* This is an empty statement */
          formatNecessaryEmptyStatement();
       }
       return false;
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ForStatement, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ForStatement,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(ForStatement forStatement, BlockScope scope)
    {
@@ -4995,9 +4946,7 @@ public class CodeFormatterVisitor extends ASTVisitor
          }
          else if (action instanceof EmptyStatement)
          {
-            /*
-             * This is an empty statement
-             */
+            /* This is an empty statement */
             formatNecessaryEmptyStatement();
          }
          else
@@ -5016,16 +4965,15 @@ public class CodeFormatterVisitor extends ASTVisitor
       }
       else
       {
-         /*
-          * This is an empty statement
-          */
+         /* This is an empty statement */
          formatNecessaryEmptyStatement();
       }
       return false;
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.IfStatement, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.IfStatement,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(IfStatement ifStatement, BlockScope scope)
    {
@@ -5055,9 +5003,7 @@ public class CodeFormatterVisitor extends ASTVisitor
                && this.preferences.keep_guardian_clause_on_one_line)
             {
                /*
-                * Need a specific formatting for guard clauses
-                * guard clauses are block with a single return or throw
-                * statement
+                * Need a specific formatting for guard clauses guard clauses are block with a single return or throw statement
                 */
                formatGuardClauseBlock((Block)thenStatement, scope);
             }
@@ -5194,7 +5140,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.Initializer, org.eclipse.jdt.internal.compiler.lookup.MethodScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.Initializer,
+    *      org.eclipse.jdt.internal.compiler.lookup.MethodScope)
     */
    public boolean visit(Initializer initializer, MethodScope scope)
    {
@@ -5208,7 +5155,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.InstanceOfExpression, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.InstanceOfExpression,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(InstanceOfExpression instanceOfExpression, BlockScope scope)
    {
@@ -5231,7 +5179,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.IntLiteral, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.IntLiteral,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(IntLiteral intLiteral, BlockScope scope)
    {
@@ -5256,7 +5205,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.LabeledStatement, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.LabeledStatement,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(LabeledStatement labeledStatement, BlockScope scope)
    {
@@ -5283,7 +5233,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.LocalDeclaration, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.LocalDeclaration,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(LocalDeclaration localDeclaration, BlockScope scope)
    {
@@ -5294,7 +5245,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.LongLiteral, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.LongLiteral,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(LongLiteral longLiteral, BlockScope scope)
    {
@@ -5325,7 +5277,9 @@ public class CodeFormatterVisitor extends ASTVisitor
       {
          this.scribe.space();
       }
-      this.scribe.printQualifiedReference(annotation.sourceEnd, false/*do not expect parenthesis*/);
+      this.scribe.printQualifiedReference(annotation.sourceEnd, false/*
+                                                                      * do not expect parenthesis
+                                                                      */);
       return false;
    }
 
@@ -5336,7 +5290,9 @@ public class CodeFormatterVisitor extends ASTVisitor
       {
          this.scribe.space();
       }
-      this.scribe.printQualifiedReference(annotation.sourceEnd, false/*do not expect parenthesis*/);
+      this.scribe.printQualifiedReference(annotation.sourceEnd, false/*
+                                                                      * do not expect parenthesis
+                                                                      */);
       return false;
    }
 
@@ -5354,7 +5310,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.MessageSend, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.MessageSend,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(MessageSend messageSend, BlockScope scope)
    {
@@ -5417,7 +5374,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.MethodDeclaration, org.eclipse.jdt.internal.compiler.lookup.ClassScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.MethodDeclaration,
+    *      org.eclipse.jdt.internal.compiler.lookup.ClassScope)
     */
    public boolean visit(MethodDeclaration methodDeclaration, ClassScope scope)
    {
@@ -5451,9 +5409,7 @@ public class CodeFormatterVisitor extends ASTVisitor
          return false;
       }
 
-      /*
-       * Print comments to get proper line number
-       */
+      /* Print comments to get proper line number */
       this.scribe.printComment();
       int line = this.scribe.line;
 
@@ -5515,9 +5471,7 @@ public class CodeFormatterVisitor extends ASTVisitor
                this.scribe.alignFragment(methodDeclAlignment, ++fragmentIndex);
             }
 
-            /*
-             * Print the method return type
-             */
+            /* Print the method return type */
             final TypeReference returnType = methodDeclaration.returnType;
 
             if (returnType != null)
@@ -5526,9 +5480,7 @@ public class CodeFormatterVisitor extends ASTVisitor
             }
             this.scribe.alignFragment(methodDeclAlignment, ++fragmentIndex);
 
-            /*
-             * Print the method name
-             */
+            /* Print the method name */
             this.scribe.printNextToken(TerminalTokens.TokenNameIdentifier, true);
 
             // Format arguments
@@ -5541,9 +5493,7 @@ public class CodeFormatterVisitor extends ASTVisitor
                this.preferences.insert_space_after_comma_in_method_declaration_parameters,
                this.preferences.alignment_for_parameters_in_method_declaration);
 
-            /*
-             * Check for extra dimensions
-             */
+            /* Check for extra dimensions */
             int extraDimensions = getDimensions();
             if (extraDimensions != 0)
             {
@@ -5572,9 +5522,7 @@ public class CodeFormatterVisitor extends ASTVisitor
       if (!methodDeclaration.isNative() && !methodDeclaration.isAbstract()
          && ((methodDeclaration.modifiers & ExtraCompilerModifiers.AccSemicolonBody) == 0))
       {
-         /*
-          * Method body
-          */
+         /* Method body */
          String method_declaration_brace = this.preferences.brace_position_for_method_declaration;
          formatLeftCurlyBrace(line, method_declaration_brace);
          formatOpeningBrace(method_declaration_brace,
@@ -5638,7 +5586,9 @@ public class CodeFormatterVisitor extends ASTVisitor
       {
          this.scribe.space();
       }
-      this.scribe.printQualifiedReference(annotation.sourceEnd, false/*do not expect parenthesis*/);
+      this.scribe.printQualifiedReference(annotation.sourceEnd, false/*
+                                                                      * do not expect parenthesis
+                                                                      */);
       this.scribe.printNextToken(TerminalTokens.TokenNameLPAREN,
          this.preferences.insert_space_before_opening_paren_in_annotation);
       if (this.preferences.insert_space_after_opening_paren_in_annotation)
@@ -5689,7 +5639,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.NullLiteral, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.NullLiteral,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(NullLiteral nullLiteral, BlockScope scope)
    {
@@ -5709,7 +5660,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.OR_OR_Expression, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.OR_OR_Expression,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(OR_OR_Expression or_or_Expression, BlockScope scope)
    {
@@ -6009,7 +5961,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.PostfixExpression, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.PostfixExpression,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(PostfixExpression postfixExpression, BlockScope scope)
    {
@@ -6036,7 +5989,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.PrefixExpression, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.PrefixExpression,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(PrefixExpression prefixExpression, BlockScope scope)
    {
@@ -6063,7 +6017,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.QualifiedAllocationExpression, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.QualifiedAllocationExpression,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(QualifiedAllocationExpression qualifiedAllocationExpression, BlockScope scope)
    {
@@ -6189,7 +6144,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.QualifiedNameReference, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.QualifiedNameReference,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(QualifiedNameReference qualifiedNameReference, BlockScope scope)
    {
@@ -6200,7 +6156,9 @@ public class CodeFormatterVisitor extends ASTVisitor
       {
          manageOpeningParenthesizedExpression(qualifiedNameReference, numberOfParens);
       }
-      this.scribe.printQualifiedReference(qualifiedNameReference.sourceEnd, numberOfParens >= 0/*expect parenthesis*/);
+      this.scribe.printQualifiedReference(qualifiedNameReference.sourceEnd, numberOfParens >= 0/*
+                                                                                                * expect parenthesis
+                                                                                                */);
 
       if (numberOfParens > 0)
       {
@@ -6210,7 +6168,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.QualifiedSuperReference, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.QualifiedSuperReference,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(QualifiedSuperReference qualifiedSuperReference, BlockScope scope)
    {
@@ -6233,7 +6192,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.QualifiedThisReference, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.QualifiedThisReference,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(QualifiedThisReference qualifiedThisReference, BlockScope scope)
    {
@@ -6256,7 +6216,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.QualifiedTypeReference, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.QualifiedTypeReference,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(QualifiedTypeReference qualifiedTypeReference, BlockScope scope)
    {
@@ -6267,7 +6228,9 @@ public class CodeFormatterVisitor extends ASTVisitor
       {
          manageOpeningParenthesizedExpression(qualifiedTypeReference, numberOfParens);
       }
-      this.scribe.printQualifiedReference(qualifiedTypeReference.sourceEnd, numberOfParens >= 0/*expect parenthesis*/);
+      this.scribe.printQualifiedReference(qualifiedTypeReference.sourceEnd, numberOfParens >= 0/*
+                                                                                                * expect parenthesis
+                                                                                                */);
 
       if (numberOfParens > 0)
       {
@@ -6277,7 +6240,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.QualifiedTypeReference, org.eclipse.jdt.internal.compiler.lookup.ClassScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.QualifiedTypeReference,
+    *      org.eclipse.jdt.internal.compiler.lookup.ClassScope)
     */
    public boolean visit(QualifiedTypeReference qualifiedTypeReference, ClassScope scope)
    {
@@ -6288,7 +6252,9 @@ public class CodeFormatterVisitor extends ASTVisitor
       {
          manageOpeningParenthesizedExpression(qualifiedTypeReference, numberOfParens);
       }
-      this.scribe.printQualifiedReference(qualifiedTypeReference.sourceEnd, numberOfParens >= 0/*expect parenthesis*/);
+      this.scribe.printQualifiedReference(qualifiedTypeReference.sourceEnd, numberOfParens >= 0/*
+                                                                                                * expect parenthesis
+                                                                                                */);
 
       if (numberOfParens > 0)
       {
@@ -6298,7 +6264,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ReturnStatement, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ReturnStatement,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(ReturnStatement returnStatement, BlockScope scope)
    {
@@ -6315,9 +6282,7 @@ public class CodeFormatterVisitor extends ASTVisitor
          }
          expression.traverse(this, scope);
       }
-      /*
-       * Print the semi-colon
-       */
+      /* Print the semi-colon */
       this.scribe.printNextToken(TerminalTokens.TokenNameSEMICOLON, this.preferences.insert_space_before_semicolon);
       this.scribe.printComment(CodeFormatter.K_UNKNOWN, Scribe.BASIC_TRAILING_COMMENT);
       return false;
@@ -6330,7 +6295,9 @@ public class CodeFormatterVisitor extends ASTVisitor
       {
          this.scribe.space();
       }
-      this.scribe.printQualifiedReference(annotation.sourceEnd, false/*do not expect parenthesis*/);
+      this.scribe.printQualifiedReference(annotation.sourceEnd, false/*
+                                                                      * do not expect parenthesis
+                                                                      */);
       this.scribe.printNextToken(TerminalTokens.TokenNameLPAREN,
          this.preferences.insert_space_before_opening_paren_in_annotation);
       if (this.preferences.insert_space_after_opening_paren_in_annotation)
@@ -6344,7 +6311,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.SingleNameReference, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.SingleNameReference,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(SingleNameReference singleNameReference, BlockScope scope)
    {
@@ -6364,7 +6332,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.SingleTypeReference, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.SingleTypeReference,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(SingleTypeReference singleTypeReference, BlockScope scope)
    {
@@ -6384,7 +6353,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.SingleTypeReference, org.eclipse.jdt.internal.compiler.lookup.ClassScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.SingleTypeReference,
+    *      org.eclipse.jdt.internal.compiler.lookup.ClassScope)
     */
    public boolean visit(SingleTypeReference singleTypeReference, ClassScope scope)
    {
@@ -6404,7 +6374,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.StringLiteral, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.StringLiteral,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(StringLiteral stringLiteral, BlockScope scope)
    {
@@ -6424,7 +6395,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.NullLiteral, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.NullLiteral,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(StringLiteralConcatenation stringLiteral, BlockScope scope)
    {
@@ -6484,7 +6456,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.SuperReference, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.SuperReference,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(SuperReference superReference, BlockScope scope)
    {
@@ -6504,7 +6477,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.SwitchStatement, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.SwitchStatement,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(SwitchStatement switchStatement, BlockScope scope)
    {
@@ -6519,9 +6493,7 @@ public class CodeFormatterVisitor extends ASTVisitor
       switchStatement.expression.traverse(this, scope);
       this.scribe.printNextToken(TerminalTokens.TokenNameRPAREN,
          this.preferences.insert_space_before_closing_paren_in_switch);
-      /*
-       * Type body
-       */
+      /* Type body */
       String switch_brace = this.preferences.brace_position_for_switch;
       formatOpeningBrace(switch_brace, this.preferences.insert_space_before_opening_brace_in_switch);
       this.scribe.printNewLine();
@@ -6618,9 +6590,7 @@ public class CodeFormatterVisitor extends ASTVisitor
             }
             if (statement instanceof Expression)
             {
-               /*
-                * Print the semi-colon
-                */
+               /* Print the semi-colon */
                this.scribe.printNextToken(TerminalTokens.TokenNameSEMICOLON,
                   this.preferences.insert_space_before_semicolon);
                this.scribe.printComment(CodeFormatter.K_UNKNOWN, Scribe.BASIC_TRAILING_COMMENT);
@@ -6639,9 +6609,7 @@ public class CodeFormatterVisitor extends ASTVisitor
                      LocalDeclaration nextLocal = (LocalDeclaration)statements[i + 1];
                      if (currentLocal.declarationSourceStart != nextLocal.declarationSourceStart)
                      {
-                        /*
-                         * Print the semi-colon
-                         */
+                        /* Print the semi-colon */
                         this.scribe.printNextToken(TerminalTokens.TokenNameSEMICOLON,
                            this.preferences.insert_space_before_semicolon);
                         this.scribe.printComment(CodeFormatter.K_UNKNOWN, Scribe.BASIC_TRAILING_COMMENT);
@@ -6650,9 +6618,7 @@ public class CodeFormatterVisitor extends ASTVisitor
                   }
                   else
                   {
-                     /*
-                      * Print the semi-colon
-                      */
+                     /* Print the semi-colon */
                      this.scribe.printNextToken(TerminalTokens.TokenNameSEMICOLON,
                         this.preferences.insert_space_before_semicolon);
                      this.scribe.printComment(CodeFormatter.K_UNKNOWN, Scribe.BASIC_TRAILING_COMMENT);
@@ -6661,9 +6627,7 @@ public class CodeFormatterVisitor extends ASTVisitor
                }
                else
                {
-                  /*
-                   * Print the semi-colon
-                   */
+                  /* Print the semi-colon */
                   this.scribe.printNextToken(TerminalTokens.TokenNameSEMICOLON,
                      this.preferences.insert_space_before_semicolon);
                   this.scribe.printComment(CodeFormatter.K_UNKNOWN, Scribe.BASIC_TRAILING_COMMENT);
@@ -6697,7 +6661,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.SynchronizedStatement, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.SynchronizedStatement,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(SynchronizedStatement synchronizedStatement, BlockScope scope)
    {
@@ -6724,7 +6689,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ThisReference, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ThisReference,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(ThisReference thisReference, BlockScope scope)
    {
@@ -6747,7 +6713,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ThrowStatement, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.ThrowStatement,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(ThrowStatement throwStatement, BlockScope scope)
    {
@@ -6761,16 +6728,15 @@ public class CodeFormatterVisitor extends ASTVisitor
          this.scribe.space();
       }
       expression.traverse(this, scope);
-      /*
-       * Print the semi-colon
-       */
+      /* Print the semi-colon */
       this.scribe.printNextToken(TerminalTokens.TokenNameSEMICOLON, this.preferences.insert_space_before_semicolon);
       this.scribe.printComment(CodeFormatter.K_UNKNOWN, Scribe.BASIC_TRAILING_COMMENT);
       return false;
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.TrueLiteral, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.TrueLiteral,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(TrueLiteral trueLiteral, BlockScope scope)
    {
@@ -6790,7 +6756,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.TryStatement, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.TryStatement,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(TryStatement tryStatement, BlockScope scope)
    {
@@ -6918,7 +6885,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.TypeDeclaration, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.TypeDeclaration,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(TypeDeclaration localTypeDeclaration, BlockScope scope)
    {
@@ -6928,7 +6896,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.TypeDeclaration, org.eclipse.jdt.internal.compiler.lookup.ClassScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.TypeDeclaration,
+    *      org.eclipse.jdt.internal.compiler.lookup.ClassScope)
     */
    public boolean visit(TypeDeclaration memberTypeDeclaration, ClassScope scope)
    {
@@ -6937,7 +6906,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.TypeDeclaration, org.eclipse.jdt.internal.compiler.lookup.CompilationUnitScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.TypeDeclaration,
+    *      org.eclipse.jdt.internal.compiler.lookup.CompilationUnitScope)
     */
    public boolean visit(TypeDeclaration typeDeclaration, CompilationUnitScope scope)
    {
@@ -7017,7 +6987,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.UnaryExpression, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.UnaryExpression,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(UnaryExpression unaryExpression, BlockScope scope)
    {
@@ -7028,9 +6999,7 @@ public class CodeFormatterVisitor extends ASTVisitor
          manageOpeningParenthesizedExpression(unaryExpression, numberOfParens);
       }
 
-      /*
-       * Print the operator
-       */
+      /* Print the operator */
       int operator;
       int operatorValue = (unaryExpression.bits & ASTNode.OperatorMASK) >> ASTNode.OperatorSHIFT;
       switch (operatorValue)
@@ -7114,7 +7083,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.UnionTypeReference, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.UnionTypeReference,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(UnionTypeReference unionTypeReference, BlockScope scope)
    {
@@ -7133,7 +7103,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.UnionTypeReference, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.UnionTypeReference,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(UnionTypeReference unionTypeReference, ClassScope scope)
    {
@@ -7152,7 +7123,8 @@ public class CodeFormatterVisitor extends ASTVisitor
    }
 
    /**
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.WhileStatement, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.WhileStatement,
+    *      org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(WhileStatement whileStatement, BlockScope scope)
    {
@@ -7181,9 +7153,7 @@ public class CodeFormatterVisitor extends ASTVisitor
          }
          else if (action instanceof EmptyStatement)
          {
-            /*
-             * This is an empty statement
-             */
+            /* This is an empty statement */
             formatNecessaryEmptyStatement();
          }
          else
@@ -7202,9 +7172,7 @@ public class CodeFormatterVisitor extends ASTVisitor
       }
       else
       {
-         /*
-          * This is an empty statement
-          */
+         /* This is an empty statement */
          formatNecessaryEmptyStatement();
       }
       return false;

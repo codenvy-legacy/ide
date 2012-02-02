@@ -16,13 +16,12 @@ import org.eclipse.jdt.client.core.CompletionProposal;
  * <li>{@link #getDeclarationSignature()} - the type signature of the type being implemented or subclassed</li>
  * <li>{@link #getDeclarationKey()} - the type unique key of the type being implemented or subclassed</li>
  * <li>{@link #getSignature()} - the method signature of the constructor that is referenced</li>
- * <li>{@link #getKey()} - the method unique key of the constructor that is referenced if the declaring type is not an
- * interface</li>
+ * <li>{@link #getKey()} - the method unique key of the constructor that is referenced if the declaring type is not an interface</li>
  * <li>{@link #getFlags()} - the modifiers flags of the constructor that is referenced</li>
  * </ul>
  * </p>
  */
-//TODO
+// TODO
 public class AnonymousClassDeclaration extends ProposalWidget
 {
 
@@ -45,9 +44,7 @@ public class AnonymousClassDeclaration extends ProposalWidget
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getImage(int)
-    */
+   /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getImage(int) */
    @Override
    protected ImageResource getImage(int flags)
    {
@@ -55,9 +52,7 @@ public class AnonymousClassDeclaration extends ProposalWidget
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getTypeSignature()
-    */
+   /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getTypeSignature() */
    @Override
    protected String getTypeSignature()
    {
@@ -65,9 +60,7 @@ public class AnonymousClassDeclaration extends ProposalWidget
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getClassSignature()
-    */
+   /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getClassSignature() */
    @Override
    protected String getClassSignature()
    {

@@ -28,8 +28,8 @@ import org.eclipse.jdt.client.core.dom.Modifier;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
- * Completion is a reference to a field. This kind of completion might occur in a context like <code>"this.ref^ = 0;"</code>
- * and complete it to <code>"this.refcount = 0;"</code>.
+ * Completion is a reference to a field. This kind of completion might occur in a context like <code>"this.ref^ = 0;"</code> and
+ * complete it to <code>"this.refcount = 0;"</code>.
  * <p>
  * The following additional context information is available for this kind of completion proposal at little extra cost:
  * <ul>
@@ -40,15 +40,14 @@ import org.exoplatform.ide.editor.java.client.JavaClientBundle;
  * referenced field is declared)</li>
  * </ul>
  * </p>
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  4:17:02 PM 34360 2009-07-22 23:58:59Z evgen $
+ * @version $Id: 4:17:02 PM 34360 2009-07-22 23:58:59Z evgen $
  */
 public class FieldRef extends ProposalWidget
 {
 
-   /**
-    * @param proposal
-    */
+   /** @param proposal */
    public FieldRef(CompletionProposal proposal)
    {
       super(proposal);
@@ -72,36 +71,28 @@ public class FieldRef extends ProposalWidget
       return JavaClientBundle.INSTANCE.defaultField();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getName()
-    */
+   /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getName() */
    @Override
    public String getName()
    {
       return String.valueOf(proposal.getName());
    }
 
-   /**
-    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getDecription()
-    */
+   /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getDecription() */
    @Override
    public Widget getDecription()
    {
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getClassSignature()
-    */
+   /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getClassSignature() */
    @Override
    protected String getClassSignature()
    {
       return String.valueOf(Signature.getSignatureSimpleName(proposal.getDeclarationSignature()));
    }
 
-   /**
-    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getTypeSignature()
-    */
+   /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#getTypeSignature() */
    @Override
    protected String getTypeSignature()
    {

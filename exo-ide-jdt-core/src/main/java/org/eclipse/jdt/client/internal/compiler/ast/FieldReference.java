@@ -83,7 +83,9 @@ public class FieldReference extends Reference implements InvocationSite
                // we could improve error msg here telling "cannot use compound assignment on final blank field"
             }
          }
-         manageSyntheticAccessIfNecessary(currentScope, flowInfo, true /* read-access */);
+         manageSyntheticAccessIfNecessary(currentScope, flowInfo, true /*
+                                                                        * read- access
+                                                                        */);
       }
       flowInfo =
          this.receiver.analyseCode(currentScope, flowContext, flowInfo, !this.binding.isStatic()).unconditionalInits();
@@ -168,7 +170,9 @@ public class FieldReference extends Reference implements InvocationSite
 
       if (valueRequired || currentScope.compilerOptions().complianceLevel >= ClassFileConstants.JDK1_4)
       {
-         manageSyntheticAccessIfNecessary(currentScope, flowInfo, true /* read-access */);
+         manageSyntheticAccessIfNecessary(currentScope, flowInfo, true /*
+                                                                        * read- access
+                                                                        */);
       }
       return flowInfo;
    }
@@ -551,9 +555,7 @@ public class FieldReference extends Reference implements InvocationSite
    // false);
    // }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments() */
    public TypeBinding[] genericTypeArguments()
    {
       return null;
@@ -644,9 +646,7 @@ public class FieldReference extends Reference implements InvocationSite
       }
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#postConversionType(Scope)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.Expression#postConversionType(Scope) */
    public TypeBinding postConversionType(Scope scope)
    {
       TypeBinding convertedType = this.resolvedType;

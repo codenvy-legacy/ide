@@ -36,8 +36,9 @@ public class Argument extends LocalDeclaration
    {
 
       // record the resolved type into the type reference
-      Binding existingVariable =
-         scope.getBinding(this.name, Binding.VARIABLE, this, false /* do not resolve hidden field */);
+      Binding existingVariable = scope.getBinding(this.name, Binding.VARIABLE, this, false /*
+                                                                                            * do not resolve hidden field
+                                                                                            */);
       if (existingVariable != null && existingVariable.isValidBinding())
       {
          if (existingVariable instanceof LocalVariableBinding && this.hiddenVariableDepth == 0)
@@ -89,9 +90,7 @@ public class Argument extends LocalDeclaration
       this.binding.useFlag = used ? LocalVariableBinding.USED : LocalVariableBinding.UNUSED;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration#getKind()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration#getKind() */
    public int getKind()
    {
       return (this.bits & ASTNode.IsArgument) != 0 ? PARAMETER : LOCAL_VARIABLE;
@@ -133,7 +132,9 @@ public class Argument extends LocalDeclaration
       // provide the scope with a side effect : insertion of a LOCAL
       // that represents the argument. The type must be from JavaThrowable
 
-      TypeBinding exceptionType = this.type.resolveType(scope, true /* check bounds */);
+      TypeBinding exceptionType = this.type.resolveType(scope, true /*
+                                                                     * check bounds
+                                                                     */);
       boolean hasError;
       if (exceptionType == null)
       {
@@ -166,8 +167,9 @@ public class Argument extends LocalDeclaration
             // fall thru to create the variable - avoids additional errors because the variable is missing
          }
       }
-      Binding existingVariable =
-         scope.getBinding(this.name, Binding.VARIABLE, this, false /* do not resolve hidden field */);
+      Binding existingVariable = scope.getBinding(this.name, Binding.VARIABLE, this, false /*
+                                                                                            * do not resolve hidden field
+                                                                                            */);
       if (existingVariable != null && existingVariable.isValidBinding())
       {
          if (existingVariable instanceof LocalVariableBinding && this.hiddenVariableDepth == 0)

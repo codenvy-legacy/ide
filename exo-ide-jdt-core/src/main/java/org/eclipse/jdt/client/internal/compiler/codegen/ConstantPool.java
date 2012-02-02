@@ -13,9 +13,7 @@ package org.eclipse.jdt.client.internal.compiler.codegen;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 
-/**
- * This type is used to store all the constant pool entries.
- */
+/** This type is used to store all the constant pool entries. */
 public class ConstantPool implements ClassFileConstants, TypeIds
 {
    // TODO Remove unused code found by UCDetector
@@ -256,9 +254,7 @@ public class ConstantPool implements ClassFileConstants, TypeIds
    //	public static final char[] EqualsSignature = "(Ljava/lang/Object;)Z".toCharArray(); //$NON-NLS-1$; 
    //	public static final char[] AddSuppressed = "addSuppressed".toCharArray(); //$NON-NLS-1$;
    //	public static final char[] AddSuppressedSignature = "(Ljava/lang/Throwable;)V".toCharArray(); //$NON-NLS-1$
-   /**
-    * // * ConstantPool constructor comment. //
-    */
+   /** // * ConstantPool constructor comment. // */
    // public ConstantPool(ClassFile classFile) {
    // this.UTF8Cache = new CharArrayCache(UTF8_INITIAL_SIZE);
    // this.stringCache = new CharArrayCache(STRING_INITIAL_SIZE);

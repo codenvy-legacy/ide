@@ -47,9 +47,7 @@ public class Error extends ExceptionAttribute
       return fParent;
    }
 
-   /*
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
+   /* @see java.lang.Object#equals(java.lang.Object) */
    public boolean equals(Object obj)
    {
       if (this == obj)
@@ -83,9 +81,7 @@ public class Error extends ExceptionAttribute
       return true;
    }
 
-   /*
-    * @see java.lang.Object#hashCode()
-    */
+   /* @see java.lang.Object#hashCode() */
    public int hashCode()
    {
       return (fParent != null ? fParent.hashCode() : 0) + (fLabel != null ? fLabel.hashCode() : 0);

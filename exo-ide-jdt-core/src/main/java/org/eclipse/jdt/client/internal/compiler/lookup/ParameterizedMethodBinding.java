@@ -338,25 +338,19 @@ public class ParameterizedMethodBinding extends MethodBinding
       return method;
    }
 
-   /**
-    * Returns true if some parameters got substituted.
-    */
+   /** Returns true if some parameters got substituted. */
    public boolean hasSubstitutedParameters()
    {
       return this.parameters != this.originalMethod.parameters;
    }
 
-   /**
-    * Returns true if the return type got substituted.
-    */
+   /** Returns true if the return type got substituted. */
    public boolean hasSubstitutedReturnType()
    {
       return this.returnType != this.originalMethod.returnType;
    }
 
-   /**
-    * Returns the original method (as opposed to parameterized instances)
-    */
+   /** Returns the original method (as opposed to parameterized instances) */
    public MethodBinding original()
    {
       return this.originalMethod.original();

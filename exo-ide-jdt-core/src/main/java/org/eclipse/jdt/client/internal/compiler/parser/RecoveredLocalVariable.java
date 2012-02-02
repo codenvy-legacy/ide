@@ -99,17 +99,13 @@ public class RecoveredLocalVariable extends RecoveredStatement
       }
    }
 
-   /*
-    * Answer the associated parsed structure
-    */
+   /* Answer the associated parsed structure */
    public ASTNode parseTree()
    {
       return this.localDeclaration;
    }
 
-   /*
-    * Answer the very source end of the corresponding parse node
-    */
+   /* Answer the very source end of the corresponding parse node */
    public int sourceEnd()
    {
       return this.localDeclaration.declarationSourceEnd;
@@ -158,9 +154,8 @@ public class RecoveredLocalVariable extends RecoveredStatement
    }
 
    /*
-    * A closing brace got consumed, might have closed the current element, in which case both the currentElement is exited.
-    * 
-    * Fields have no associated braces, thus if matches, then update parent.
+    * A closing brace got consumed, might have closed the current element, in which case both the currentElement is exited. Fields
+    * have no associated braces, thus if matches, then update parent.
     */
    public RecoveredElement updateOnClosingBrace(int braceStart, int braceEnd)
    {
@@ -201,9 +196,7 @@ public class RecoveredLocalVariable extends RecoveredStatement
       updatedStatement(0, new HashSet());
    }
 
-   /*
-    * Update the declarationSourceEnd of the corresponding parse node
-    */
+   /* Update the declarationSourceEnd of the corresponding parse node */
    public void updateSourceEndIfNecessary(int bodyStart, int bodyEnd)
    {
       if (this.localDeclaration.declarationSourceEnd == 0)

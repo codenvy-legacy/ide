@@ -227,8 +227,8 @@ public class ForStatement extends Statement
             ? loopingContext.initsOnBreak : flowInfo.addInitializationsFrom(loopingContext.initsOnBreak), // recover upstream null
                                                                                                           // info
             isConditionOptimizedTrue, exitBranch, isConditionOptimizedFalse, !isConditionTrue /*
-                                                                                               * for(;;){}while(true);
-                                                                                               * unreachable();
+                                                                                               * for ( ; ; ) { } while ( true ) ;
+                                                                                               * unreachable ( ) ;
                                                                                                */);
       // Variables initialized only for the purpose of the for loop can be removed for further flow info
       // https://bugs.eclipse.org/bugs/show_bug.cgi?id=359495

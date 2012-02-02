@@ -32,9 +32,7 @@ public class ParameterizedGenericMethodBinding extends ParameterizedMethodBindin
 
    private MethodBinding tiebreakMethod;
 
-   /**
-    * Perform inference of generic method type parameters and/or expected type
-    */
+   /** Perform inference of generic method type parameters and/or expected type */
    public static MethodBinding computeCompatibleMethod(MethodBinding originalMethod, TypeBinding[] arguments,
       Scope scope, InvocationSite invocationSite)
    {
@@ -144,9 +142,7 @@ public class ParameterizedGenericMethodBinding extends ParameterizedMethodBindin
       return methodSubstitute;
    }
 
-   /**
-    * Collect argument type mapping, handling varargs
-    */
+   /** Collect argument type mapping, handling varargs */
    private static ParameterizedGenericMethodBinding inferFromArgumentTypes(Scope scope, MethodBinding originalMethod,
       TypeBinding[] arguments, TypeBinding[] parameters, InferenceContext inferenceContext)
    {
@@ -207,7 +203,9 @@ public class ParameterizedGenericMethodBinding extends ParameterizedMethodBindin
          }
       }
       TypeVariableBinding[] originalVariables = originalMethod.typeVariables;
-      if (!resolveSubstituteConstraints(scope, originalVariables, inferenceContext, false/* ignore Ti<:Uk */))
+      if (!resolveSubstituteConstraints(scope, originalVariables, inferenceContext, false/*
+                                                                                          * ignore Ti < : Uk
+                                                                                          */))
          return null; // impossible substitution
 
       // apply inferred variable substitutions - replacing unresolved variable with original ones in param method
@@ -442,8 +440,8 @@ public class ParameterizedGenericMethodBinding extends ParameterizedMethodBindin
 
    /*
     * parameterizedDeclaringUniqueKey dot selector originalMethodGenericSignature percent typeArguments p.X<U> { <T> void bar(T t,
-    * U u) { new X<String>().bar(this, "") } } -->
-    * Lp/X<Ljava/lang/String;>;.bar<T:Ljava/lang/Object;>(TT;Ljava/lang/String;)V%<Lp/X;>
+    * U u) { new X<String>().bar(this, "") } } --> Lp/X<Ljava/lang/String
+    * ;>;.bar<T:Ljava/lang/Object;>(TT;Ljava/lang/String;)V%<Lp/X;>
     */
    public char[] computeUniqueKey(boolean isLeaf)
    {
@@ -467,9 +465,7 @@ public class ParameterizedGenericMethodBinding extends ParameterizedMethodBindin
       return result;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.Substitution#environment()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.Substitution#environment() */
    public LookupEnvironment environment()
    {
       return this.environment;
@@ -552,7 +548,9 @@ public class ParameterizedGenericMethodBinding extends ParameterizedMethodBindin
             }
          }
       }
-      if (!resolveSubstituteConstraints(scope, originalVariables, inferenceContext, true/* consider Ti<:Uk */))
+      if (!resolveSubstituteConstraints(scope, originalVariables, inferenceContext, true/*
+                                                                                         * consider Ti < : Uk
+                                                                                         */))
          return null; // incompatible
       // this.typeArguments = substitutes; - no op since side effects got performed during #resolveSubstituteConstraints
       for (int i = 0; i < varLength; i++)
@@ -672,17 +670,13 @@ public class ParameterizedGenericMethodBinding extends ParameterizedMethodBindin
       }
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.Substitution#isRawSubstitution()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.Substitution#isRawSubstitution() */
    public boolean isRawSubstitution()
    {
       return this.isRaw;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.Substitution#substitute(org.eclipse.jdt.client.internal.compiler.lookup.TypeVariableBinding)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.Substitution#substitute(org.eclipse.jdt.client.internal.compiler.lookup.TypeVariableBinding) */
    public TypeBinding substitute(TypeVariableBinding originalVariable)
    {
       TypeVariableBinding[] variables = this.originalMethod.typeVariables;
@@ -695,9 +689,7 @@ public class ParameterizedGenericMethodBinding extends ParameterizedMethodBindin
       return originalVariable;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding#tiebreakMethod()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding#tiebreakMethod() */
    public MethodBinding tiebreakMethod()
    {
       if (this.tiebreakMethod == null)

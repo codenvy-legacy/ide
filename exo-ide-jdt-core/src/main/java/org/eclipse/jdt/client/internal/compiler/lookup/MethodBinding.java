@@ -143,9 +143,7 @@ public class MethodBinding extends Binding
       return true;
    }
 
-   /*
-    * Answer true if the argument types & the receiver's parameters are equal
-    */
+   /* Answer true if the argument types & the receiver's parameters are equal */
    public final boolean areParametersEqual(MethodBinding method)
    {
       TypeBinding[] args = method.parameters;
@@ -162,13 +160,9 @@ public class MethodBinding extends Binding
       return true;
    }
 
-   /*
-    * API Answer the receiver's binding type from Binding.BindingID.
-    */
+   /* API Answer the receiver's binding type from Binding.BindingID. */
 
-   /*
-    * Answer true if the type variables have the same erasure
-    */
+   /* Answer true if the type variables have the same erasure */
    public final boolean areTypeVariableErasuresEqual(MethodBinding method)
    {
       TypeVariableBinding[] vars = method.typeVariables;
@@ -198,8 +192,9 @@ public class MethodBinding extends Binding
          TypeVariableBinding var = this.typeVariables[i];
          if (var.boundsCount() <= 1)
          {
-            arguments[i] =
-               env.convertToRawType(var.upperBound(), false /* do not force conversion of enclosing types */);
+            arguments[i] = env.convertToRawType(var.upperBound(), false /*
+                                                                         * do not force conversion of enclosing types
+                                                                         */);
          }
          else
          {
@@ -232,11 +227,8 @@ public class MethodBinding extends Binding
 
    /*
     * Answer true if the receiver is visible to the type provided by the scope. InvocationSite implements isSuperAccess() to
-    * provide additional information if the receiver is protected.
-    * 
-    * NOTE: This method should ONLY be sent if the receiver is a constructor.
-    * 
-    * NOTE: Cannot invoke this method with a compilation unit scope.
+    * provide additional information if the receiver is protected. NOTE: This method should ONLY be sent if the receiver is a
+    * constructor. NOTE: Cannot invoke this method with a compilation unit scope.
     */
 
    public final boolean canBeSeenBy(InvocationSite invocationSite, Scope scope)
@@ -295,9 +287,7 @@ public class MethodBinding extends Binding
 
    /*
     * Answer true if the receiver is visible to the type provided by the scope. InvocationSite implements isSuperAccess() to
-    * provide additional information if the receiver is protected.
-    * 
-    * NOTE: Cannot invoke this method with a compilation unit scope.
+    * provide additional information if the receiver is protected. NOTE: Cannot invoke this method with a compilation unit scope.
     */
    public final boolean canBeSeenBy(TypeBinding receiverType, InvocationSite invocationSite, Scope scope)
    {
@@ -478,7 +468,9 @@ public class MethodBinding extends Binding
    public char[] computeUniqueKey(boolean isLeaf)
    {
       // declaring class
-      char[] declaringKey = this.declaringClass.computeUniqueKey(false/* not a leaf */);
+      char[] declaringKey = this.declaringClass.computeUniqueKey(false/*
+                                                                       * not a leaf
+                                                                       */);
       int declaringLength = declaringKey.length;
 
       // selector
@@ -538,9 +530,8 @@ public class MethodBinding extends Binding
    }
 
    /*
-    * Answer the receiver's constant pool name.
-    * 
-    * <init> for constructors <clinit> for clinit methods or the source name of the method
+    * Answer the receiver's constant pool name. <init> for constructors <clinit> for clinit methods or the source name of the
+    * method
     */
    public final char[] constantPoolName()
    {
@@ -759,65 +750,49 @@ public class MethodBinding extends Binding
       return false;
    }
 
-   /*
-    * Answer true if the return type got substituted.
-    */
+   /* Answer true if the return type got substituted. */
    public boolean hasSubstitutedReturnType()
    {
       return false;
    }
 
-   /*
-    * Answer true if the receiver is an abstract method
-    */
+   /* Answer true if the receiver is an abstract method */
    public final boolean isAbstract()
    {
       return (this.modifiers & ClassFileConstants.AccAbstract) != 0;
    }
 
-   /*
-    * Answer true if the receiver is a bridge method
-    */
+   /* Answer true if the receiver is a bridge method */
    public final boolean isBridge()
    {
       return (this.modifiers & ClassFileConstants.AccBridge) != 0;
    }
 
-   /*
-    * Answer true if the receiver is a constructor
-    */
+   /* Answer true if the receiver is a constructor */
    public final boolean isConstructor()
    {
       return this.selector == TypeConstants.INIT;
    }
 
-   /*
-    * Answer true if the receiver has default visibility
-    */
+   /* Answer true if the receiver has default visibility */
    public final boolean isDefault()
    {
       return !isPublic() && !isProtected() && !isPrivate();
    }
 
-   /*
-    * Answer true if the receiver is a system generated default abstract method
-    */
+   /* Answer true if the receiver is a system generated default abstract method */
    public final boolean isDefaultAbstract()
    {
       return (this.modifiers & ExtraCompilerModifiers.AccDefaultAbstract) != 0;
    }
 
-   /*
-    * Answer true if the receiver is a deprecated method
-    */
+   /* Answer true if the receiver is a deprecated method */
    public final boolean isDeprecated()
    {
       return (this.modifiers & ClassFileConstants.AccDeprecated) != 0;
    }
 
-   /*
-    * Answer true if the receiver is final and cannot be overridden
-    */
+   /* Answer true if the receiver is final and cannot be overridden */
    public final boolean isFinal()
    {
       return (this.modifiers & ClassFileConstants.AccFinal) != 0;
@@ -850,9 +825,7 @@ public class MethodBinding extends Binding
       return false;
    }
 
-   /*
-    * Answer true if the receiver is a native method
-    */
+   /* Answer true if the receiver is a native method */
    public final boolean isNative()
    {
       return (this.modifiers & ClassFileConstants.AccNative) != 0;
@@ -866,9 +839,7 @@ public class MethodBinding extends Binding
       return (this.modifiers & ExtraCompilerModifiers.AccOverriding) != 0;
    }
 
-   /*
-    * Answer true if the receiver has private visibility
-    */
+   /* Answer true if the receiver has private visibility */
    public final boolean isPrivate()
    {
       return (this.modifiers & ClassFileConstants.AccPrivate) != 0;
@@ -884,25 +855,19 @@ public class MethodBinding extends Binding
       return this.declaringClass != null && this.declaringClass.isOrEnclosedByPrivateType();
    }
 
-   /*
-    * Answer true if the receiver has protected visibility
-    */
+   /* Answer true if the receiver has protected visibility */
    public final boolean isProtected()
    {
       return (this.modifiers & ClassFileConstants.AccProtected) != 0;
    }
 
-   /*
-    * Answer true if the receiver has public visibility
-    */
+   /* Answer true if the receiver has public visibility */
    public final boolean isPublic()
    {
       return (this.modifiers & ClassFileConstants.AccPublic) != 0;
    }
 
-   /*
-    * Answer true if the receiver is a static method
-    */
+   /* Answer true if the receiver is a static method */
    public final boolean isStatic()
    {
       return (this.modifiers & ClassFileConstants.AccStatic) != 0;
@@ -916,33 +881,25 @@ public class MethodBinding extends Binding
       return (this.modifiers & ClassFileConstants.AccStrictfp) != 0;
    }
 
-   /*
-    * Answer true if the receiver is a synchronized method
-    */
+   /* Answer true if the receiver is a synchronized method */
    public final boolean isSynchronized()
    {
       return (this.modifiers & ClassFileConstants.AccSynchronized) != 0;
    }
 
-   /*
-    * Answer true if the receiver has public visibility
-    */
+   /* Answer true if the receiver has public visibility */
    public final boolean isSynthetic()
    {
       return (this.modifiers & ClassFileConstants.AccSynthetic) != 0;
    }
 
-   /*
-    * Answer true if the receiver has private visibility and is used locally
-    */
+   /* Answer true if the receiver has private visibility and is used locally */
    public final boolean isUsed()
    {
       return (this.modifiers & ExtraCompilerModifiers.AccLocallyUsed) != 0;
    }
 
-   /*
-    * Answer true if the receiver method has varargs
-    */
+   /* Answer true if the receiver method has varargs */
    public boolean isVarargs()
    {
       return (this.modifiers & ClassFileConstants.AccVarargs) != 0;
@@ -966,9 +923,7 @@ public class MethodBinding extends Binding
       return Binding.METHOD;
    }
 
-   /*
-    * Answer true if the receiver is visible to the invocationPackage.
-    */
+   /* Answer true if the receiver is visible to the invocationPackage. */
 
    /**
     * Returns the original method (as opposed to parameterized/polymorphic instances)
@@ -1038,9 +993,7 @@ public class MethodBinding extends Binding
       this.signature = null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#shortReadableName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#shortReadableName() */
    public char[] shortReadableName()
    {
       StringBuffer buffer = new StringBuffer(this.parameters.length + 1 * 20);
@@ -1066,10 +1019,8 @@ public class MethodBinding extends Binding
    }
 
    /*
-    * Answer the receiver's signature.
-    * 
-    * NOTE: This method should only be used during/after code gen. The signature is cached so if the signature of the return type
-    * or any parameter type changes, the cached state is invalid.
+    * Answer the receiver's signature. NOTE: This method should only be used during/after code gen. The signature is cached so if
+    * the signature of the return type or any parameter type changes, the cached state is invalid.
     */
    public final char[] signature() /* (ILjava/lang/Thread;)Ljava/lang/Object; */
    {

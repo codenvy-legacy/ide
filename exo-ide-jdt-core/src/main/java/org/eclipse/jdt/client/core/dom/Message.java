@@ -20,14 +20,10 @@ package org.eclipse.jdt.client.core.dom;
 public class Message
 {
 
-   /**
-    * The message.
-    */
+   /** The message. */
    private String message;
 
-   /**
-    * The character index into the original source string, or -1 if none.
-    */
+   /** The character index into the original source string, or -1 if none. */
    private int startPosition;
 
    /**

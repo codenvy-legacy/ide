@@ -110,9 +110,7 @@ public class Initializer extends BodyDeclaration
       }
    }
 
-   /**
-    * The initializer body; lazily initialized; defaults to an empty block.
-    */
+   /** The initializer body; lazily initialized; defaults to an empty block. */
    private Block body = null;
 
    /**
@@ -131,7 +129,6 @@ public class Initializer extends BodyDeclaration
 
    /*
     * (omit javadoc for this method) Method declared on ASTNode.
-    * 
     * @since 3.0
     */
    final List internalStructuralPropertiesForType(int apiLevel)
@@ -139,9 +136,7 @@ public class Initializer extends BodyDeclaration
       return propertyDescriptors(apiLevel);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value)
    {
       if (property == MODIFIERS_PROPERTY)
@@ -160,9 +155,7 @@ public class Initializer extends BodyDeclaration
       return super.internalGetSetIntProperty(property, get, value);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
       if (property == JAVADOC_PROPERTY)
@@ -193,9 +186,7 @@ public class Initializer extends BodyDeclaration
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
       if (property == MODIFIERS2_PROPERTY)
@@ -206,41 +197,31 @@ public class Initializer extends BodyDeclaration
       return super.internalGetChildListProperty(property);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on BodyDeclaration.
-    */
+   /* (omit javadoc for this method) Method declared on BodyDeclaration. */
    final ChildPropertyDescriptor internalJavadocProperty()
    {
       return JAVADOC_PROPERTY;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on BodyDeclaration.
-    */
+   /* (omit javadoc for this method) Method declared on BodyDeclaration. */
    final ChildListPropertyDescriptor internalModifiers2Property()
    {
       return MODIFIERS2_PROPERTY;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on BodyDeclaration.
-    */
+   /* (omit javadoc for this method) Method declared on BodyDeclaration. */
    final SimplePropertyDescriptor internalModifiersProperty()
    {
       return MODIFIERS_PROPERTY;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int getNodeType0()
    {
       return INITIALIZER;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    ASTNode clone0(AST target)
    {
       Initializer result = new Initializer(target);
@@ -258,18 +239,14 @@ public class Initializer extends BodyDeclaration
       return result;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
       // dispatch to correct overloaded match method
       return matcher.match(this, other);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    void accept0(ASTVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -331,17 +308,13 @@ public class Initializer extends BodyDeclaration
       postReplaceChild(oldChild, body, BODY_PROPERTY);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       return super.memSize() + 1 * 4;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int treeSize()
    {
       return memSize() + (this.optionalDocComment == null ? 0 : getJavadoc().treeSize())

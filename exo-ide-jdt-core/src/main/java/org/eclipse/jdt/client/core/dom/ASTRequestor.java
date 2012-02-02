@@ -41,9 +41,7 @@ public abstract class ASTRequestor
     */
    CompilationUnitResolver compilationUnitResolver = null;
 
-   /**
-    * Creates a new instance.
-    */
+   /** Creates a new instance. */
    protected ASTRequestor()
    {
       // do nothing

@@ -21,14 +21,10 @@ package org.eclipse.jdt.client.runtime;
  */
 public final class OperationCanceledException extends RuntimeException
 {
-   /**
-    * All serializable objects should have a stable serialVersionUID
-    */
+   /** All serializable objects should have a stable serialVersionUID */
    private static final long serialVersionUID = 1L;
 
-   /**
-    * Creates a new exception.
-    */
+   /** Creates a new exception. */
    public OperationCanceledException()
    {
       super();

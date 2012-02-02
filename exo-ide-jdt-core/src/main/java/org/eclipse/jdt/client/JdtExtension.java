@@ -32,14 +32,11 @@ import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 20, 2012 1:08:51 PM evgen $
- * 
  */
 public class JdtExtension extends Extension
 {
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
+   /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
    @Override
    public void initialize()
    {
@@ -52,9 +49,7 @@ public class JdtExtension extends Extension
    public static class Con extends SimpleControl implements IDEControl
    {
 
-      /**
-       * @param id
-       */
+      /** @param id */
       public Con()
       {
          super("View/Show AST");
@@ -65,9 +60,7 @@ public class JdtExtension extends Extension
          setVisible(true);
       }
 
-      /**
-       * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-       */
+      /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
       @Override
       public void initialize()
       {
@@ -79,9 +72,7 @@ public class JdtExtension extends Extension
    public static class CodeAssistCommand extends SimpleControl implements IDEControl
    {
 
-      /**
-       * @param id
-       */
+      /** @param id */
       public CodeAssistCommand()
       {
          super("View/Run CodeAssist");
@@ -93,9 +84,7 @@ public class JdtExtension extends Extension
          setImages(JavaClientBundle.INSTANCE.classItem(), JavaClientBundle.INSTANCE.clockItem());
       }
 
-      /**
-       * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-       */
+      /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
       @Override
       public void initialize()
       {

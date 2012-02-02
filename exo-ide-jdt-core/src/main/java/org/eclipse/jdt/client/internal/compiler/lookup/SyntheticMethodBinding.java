@@ -285,9 +285,7 @@ public class SyntheticMethodBinding extends MethodBinding
       }
    }
 
-   /**
-    * Construct a bridge method
-    */
+   /** Construct a bridge method */
    public SyntheticMethodBinding(MethodBinding overridenMethodToBridge, MethodBinding targetMethod,
       SourceTypeBinding declaringClass)
    {
@@ -311,9 +309,7 @@ public class SyntheticMethodBinding extends MethodBinding
       this.index = methodId;
    }
 
-   /**
-    * Construct enum special methods: values or valueOf methods
-    */
+   /** Construct enum special methods: values or valueOf methods */
    public SyntheticMethodBinding(SourceTypeBinding declaringEnum, char[] selector)
    {
       this.declaringClass = declaringEnum;
@@ -343,9 +339,7 @@ public class SyntheticMethodBinding extends MethodBinding
       }
    }
 
-   /**
-    * Construct enum special methods: values or valueOf methods
-    */
+   /** Construct enum special methods: values or valueOf methods */
    public SyntheticMethodBinding(SourceTypeBinding declaringEnum, int startIndex, int endIndex)
    {
       this.declaringClass = declaringEnum;

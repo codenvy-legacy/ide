@@ -52,9 +52,7 @@ import org.eclipse.jdt.client.internal.compiler.util.HashtableOfObjectToInt;
 
 public class SourceElementNotifier
 {
-   /**
-    * An ast visitor that visits local type declarations.
-    */
+   /** An ast visitor that visits local type declarations. */
    public class LocalDeclarationVisitor extends ASTVisitor
    {
       public ImportReference currentPackage;
@@ -284,9 +282,7 @@ public class SourceElementNotifier
       return false;
    }
 
-   /*
-    * Update the bodyStart of the corresponding parse node
-    */
+   /* Update the bodyStart of the corresponding parse node */
    protected void notifySourceElementRequestor(AbstractMethodDeclaration methodDeclaration,
       TypeDeclaration declaringType, ImportReference currentPackage)
    {
@@ -465,9 +461,7 @@ public class SourceElementNotifier
       }
    }
 
-   /*
-    * Update the bodyStart of the corresponding parse node
-    */
+   /* Update the bodyStart of the corresponding parse node */
    public void notifySourceElementRequestor(CompilationUnitDeclaration parsedUnit, int sourceStart, int sourceEnd,
       boolean reportReference, HashtableOfObjectToInt sourceEndsMap, Map nodesToCategoriesMap)
    {
@@ -559,9 +553,7 @@ public class SourceElementNotifier
       }
    }
 
-   /*
-    * Update the bodyStart of the corresponding parse node
-    */
+   /* Update the bodyStart of the corresponding parse node */
    protected void notifySourceElementRequestor(FieldDeclaration fieldDeclaration, TypeDeclaration declaringType)
    {
 
@@ -839,9 +831,7 @@ public class SourceElementNotifier
       }
    }
 
-   /*
-    * Sort the given ast nodes by their positions.
-    */
+   /* Sort the given ast nodes by their positions. */
    private static void quickSort(ASTNode[] sortedCollection, int left, int right)
    {
       int original_left = left;

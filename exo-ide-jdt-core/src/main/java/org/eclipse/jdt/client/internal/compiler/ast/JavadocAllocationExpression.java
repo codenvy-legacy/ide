@@ -51,7 +51,9 @@ public class JavadocAllocationExpression extends AllocationExpression
       }
       else
       {
-         this.resolvedType = this.type.resolveType((BlockScope)scope, true /* check bounds */);
+         this.resolvedType = this.type.resolveType((BlockScope)scope, true /*
+                                                                            * check bounds
+                                                                            */);
       }
 
       // buffering the arguments' types

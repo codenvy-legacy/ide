@@ -85,9 +85,7 @@ public class RawTypeBinding extends ParameterizedTypeBinding
       return uniqueKey;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ParameterizedTypeBinding#createParameterizedMethod(org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ParameterizedTypeBinding#createParameterizedMethod(org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding) */
    public ParameterizedMethodBinding createParameterizedMethod(MethodBinding originalMethod)
    {
       if (originalMethod.typeVariables == Binding.NO_TYPE_VARIABLES || originalMethod.isStatic())
@@ -102,9 +100,7 @@ public class RawTypeBinding extends ParameterizedTypeBinding
       return RAW_TYPE;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#debugName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#debugName() */
    public String debugName()
    {
       StringBuffer nameBuffer = new StringBuffer(10);
@@ -112,9 +108,7 @@ public class RawTypeBinding extends ParameterizedTypeBinding
       return nameBuffer.toString();
    }
 
-   /**
-    * Ltype<param1 ... paramN>; LY<TT;>;
-    */
+   /** Ltype<param1 ... paramN>; LY<TT;>; */
    public char[] genericTypeSignature()
    {
       if (this.genericTypeSignature == null)
@@ -209,9 +203,7 @@ public class RawTypeBinding extends ParameterizedTypeBinding
       this.arguments = typeArguments;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#readableName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#readableName() */
    public char[] readableName() /* java.lang.Object, p.X<T> */
    {
       char[] readableName;
@@ -226,9 +218,7 @@ public class RawTypeBinding extends ParameterizedTypeBinding
       return readableName;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#shortReadableName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#shortReadableName() */
    public char[] shortReadableName() /* Object */
    {
       char[] shortReadableName;

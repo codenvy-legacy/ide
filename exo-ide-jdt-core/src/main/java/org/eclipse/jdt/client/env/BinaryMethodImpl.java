@@ -30,43 +30,34 @@ import org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 17, 2012 4:52:34 PM evgen $
- * 
  */
 public class BinaryMethodImpl implements IBinaryMethod
 {
 
    private JSONObject method;
 
-   /**
-    * @param method
-    */
+   /** @param method */
    public BinaryMethodImpl(JSONObject method)
    {
       super();
       this.method = method;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IGenericMethod#getModifiers()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IGenericMethod#getModifiers() */
    @Override
    public int getModifiers()
    {
       return (int)method.get("modifiers").isNumber().doubleValue();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IGenericMethod#isConstructor()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IGenericMethod#isConstructor() */
    @Override
    public boolean isConstructor()
    {
       return method.get("constructor").isBoolean().booleanValue();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IGenericMethod#getArgumentNames()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IGenericMethod#getArgumentNames() */
    @Override
    public char[][] getArgumentNames()
    {
@@ -83,18 +74,14 @@ public class BinaryMethodImpl implements IBinaryMethod
       return res;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#getAnnotations()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#getAnnotations() */
    @Override
    public IBinaryAnnotation[] getAnnotations()
    {
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#getDefaultValue()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#getDefaultValue() */
    @Override
    public Object getDefaultValue()
    {
@@ -102,9 +89,7 @@ public class BinaryMethodImpl implements IBinaryMethod
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#getExceptionTypeNames()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#getExceptionTypeNames() */
    @Override
    public char[][] getExceptionTypeNames()
    {
@@ -121,54 +106,50 @@ public class BinaryMethodImpl implements IBinaryMethod
       return res;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#getGenericSignature()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#getGenericSignature() */
    @Override
    public char[] getGenericSignature()
    {
-      //      String returnType = method.get("returnType").isString().stringValue();
-      //      boolean isGeneric = false;
-      //      if (returnType.length() == 1)
-      //      {
-      //         isGeneric = true;
-      //      }
-      //      else
-      //         returnType = Signature.createTypeSignature(returnType, true);
+      // String returnType = method.get("returnType").isString().stringValue();
+      // boolean isGeneric = false;
+      // if (returnType.length() == 1)
+      // {
+      // isGeneric = true;
+      // }
+      // else
+      // returnType = Signature.createTypeSignature(returnType, true);
       //
-      //      JSONArray array = method.get("parameterTypes").isArray();
+      // JSONArray array = method.get("parameterTypes").isArray();
       //
-      //      String params[] = new String[array.size()];
-      //      for (int i = 0; i < array.size(); i++)
-      //      {
-      //         String paramType = array.get(i).isString().stringValue();
-      //         if (paramType.length() == 1)
-      //         {
-      //            params[i] = "T" + paramType + ";";
-      //            isGeneric = true;
-      //         }
-      //         else
-      //         {
-      //            // if (paramType.contains("<"))
-      //            // paramType = paramType.substring(0, paramType.indexOf('<'));
-      ////            if (paramType.contains("<"))
-      ////            {
-      ////               pa
-      ////            }
-      ////            else  eTypeSignature(paramType, true)
-      //               params[i] = Signature.createTypeParameterSignature(paramType, new String[0]);
-      //         }
-      //      }
-      //      if (isGeneric)
-      //         return Signature.createMethodSignature(params, returnType).replaceAll("\\.", "/").toCharArray();
-      //      else
+      // String params[] = new String[array.size()];
+      // for (int i = 0; i < array.size(); i++)
+      // {
+      // String paramType = array.get(i).isString().stringValue();
+      // if (paramType.length() == 1)
+      // {
+      // params[i] = "T" + paramType + ";";
+      // isGeneric = true;
+      // }
+      // else
+      // {
+      // // if (paramType.contains("<"))
+      // // paramType = paramType.substring(0, paramType.indexOf('<'));
+      // // if (paramType.contains("<"))
+      // // {
+      // // pa
+      // // }
+      // // else eTypeSignature(paramType, true)
+      // params[i] = Signature.createTypeParameterSignature(paramType, new String[0]);
+      // }
+      // }
+      // if (isGeneric)
+      // return Signature.createMethodSignature(params, returnType).replaceAll("\\.", "/").toCharArray();
+      // else
       // TODO Auto-generated method stub
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#getMethodDescriptor()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#getMethodDescriptor() */
    @Override
    public char[] getMethodDescriptor()
    {
@@ -195,18 +176,14 @@ public class BinaryMethodImpl implements IBinaryMethod
          .replaceAll("\\.", "/").toCharArray();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#getParameterAnnotations(int)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#getParameterAnnotations(int) */
    @Override
    public IBinaryAnnotation[] getParameterAnnotations(int index)
    {
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#getSelector()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#getSelector() */
    @Override
    public char[] getSelector()
    {
@@ -216,18 +193,14 @@ public class BinaryMethodImpl implements IBinaryMethod
       return Signature.getSimpleName(method.get("name").isString().stringValue().toCharArray());
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#getTagBits()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#getTagBits() */
    @Override
    public long getTagBits()
    {
       return 0;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#isClinit()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#isClinit() */
    @Override
    public boolean isClinit()
    {

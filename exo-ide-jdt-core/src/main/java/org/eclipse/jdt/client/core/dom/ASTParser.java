@@ -104,19 +104,13 @@ public class ASTParser
       return new ASTParser(level);
    }
 
-   /**
-    * Level of AST API desired.
-    */
+   /** Level of AST API desired. */
    private final int apiLevel;
 
-   /**
-    * Kind of parse requested. Defaults to an entire compilation unit.
-    */
+   /** Kind of parse requested. Defaults to an entire compilation unit. */
    private int astKind;
 
-   /**
-    * Compiler options. Defaults to JavaCore.getOptions().
-    */
+   /** Compiler options. Defaults to JavaCore.getOptions(). */
    private Map compilerOptions;
 
    /**
@@ -124,9 +118,7 @@ public class ASTParser
     */
    private int focalPointPosition;
 
-   /**
-    * Source string.
-    */
+   /** Source string. */
    private char[] rawSource = null;
 
    /**
@@ -155,9 +147,7 @@ public class ASTParser
     */
    private String[] sourcepaths;
 
-   /**
-    * Encoding of the given sourcepaths entries.
-    */
+   /** Encoding of the given sourcepaths entries. */
    private String[] sourcepathsEncodings;
 
    /**
@@ -233,9 +223,7 @@ public class ASTParser
       return allClasspaths;
    }
 
-   /**
-    * Sets all the setting to their default values.
-    */
+   /** Sets all the setting to their default values. */
    private void initializeDefaults()
    {
       this.astKind = K_COMPILATION_UNIT;
@@ -329,9 +317,7 @@ public class ASTParser
       }
    }
 
-   /**
-    * @param nameEnvironment the nameEnvironment to set
-    */
+   /** @param nameEnvironment the nameEnvironment to set */
    public void setNameEnvironment(INameEnvironment nameEnvironment)
    {
       this.nameEnvironment = nameEnvironment;
@@ -444,7 +430,7 @@ public class ASTParser
     * 
     * <p>
     * This focal position is not used when the AST is built using
-    * {@link #createASTs(ICompilationUnit[], String[], ASTRequestor, IProgressMonitor)}.
+    * {@link #createASTs(ICompilationUnit[], String[], ASTRequestor, IProgressMonitor)} .
     * </p>
     * 
     * @param position a position into the corresponding body declaration
@@ -473,7 +459,7 @@ public class ASTParser
     * client to retrieve the following pieces of information available there:
     * <ul>
     * <li>{@linkplain CompilationUnit#getLineNumber(int) Line number map}. Line numbers start at 1 and only cover the subrange
-    * scanned (<code>source[offset]</code> through <code>source[offset+length-1]</code>).</li>
+    * scanned ( <code>source[offset]</code> through <code>source[offset+length-1]</code>).</li>
     * <li>{@linkplain CompilationUnit#getMessages() Compiler messages} and {@linkplain CompilationUnit#getProblems() detailed
     * problem reports}. Character positions are relative to the start of <code>source</code>; line positions are for the subrange
     * scanned.</li>
@@ -502,7 +488,7 @@ public class ASTParser
     * 
     * <p>
     * This kind is not used when the AST is built using
-    * {@link #createASTs(ICompilationUnit[], String[], ASTRequestor, IProgressMonitor)}.
+    * {@link #createASTs(ICompilationUnit[], String[], ASTRequestor, IProgressMonitor)} .
     * </p>
     * 
     * @param kind the kind of construct to parse: one of {@link #K_COMPILATION_UNIT}, {@link #K_CLASS_BODY_DECLARATIONS},
@@ -523,7 +509,7 @@ public class ASTParser
     * 
     * <p>
     * This source is not used when the AST is built using
-    * {@link #createASTs(ICompilationUnit[], String[], ASTRequestor, IProgressMonitor)}.
+    * {@link #createASTs(ICompilationUnit[], String[], ASTRequestor, IProgressMonitor)} .
     * </p>
     * 
     * <p>
@@ -618,7 +604,7 @@ public class ASTParser
     * 
     * <p>
     * This range is not used when the AST is built using
-    * {@link #createASTs(ICompilationUnit[], String[], ASTRequestor, IProgressMonitor)}.
+    * {@link #createASTs(ICompilationUnit[], String[], ASTRequestor, IProgressMonitor)} .
     * </p>
     * 
     * @param offset the index of the first character to parse
@@ -706,7 +692,7 @@ public class ASTParser
     * 
     * <p>
     * This unit name is not used when the AST is built using
-    * {@link #createASTs(ICompilationUnit[], String[], ASTRequestor, IProgressMonitor)}.
+    * {@link #createASTs(ICompilationUnit[], String[], ASTRequestor, IProgressMonitor)} .
     * </p>
     * 
     * @param unitName the name of the compilation unit that would contain the source string, or <code>null</code> if none
@@ -1214,7 +1200,7 @@ public class ASTParser
     * retrieve the following pieces of information available there:
     * <ul>
     * <li>{@linkplain CompilationUnit#getLineNumber(int) Line number map}. Line numbers start at 1 and only cover the subrange
-    * scanned (<code>source[offset]</code> through <code>source[offset+length-1]</code>).</li>
+    * scanned ( <code>source[offset]</code> through <code>source[offset+length-1]</code>).</li>
     * <li>{@linkplain CompilationUnit#getMessages() Compiler messages} and {@linkplain CompilationUnit#getProblems() detailed
     * problem reports}. Character positions are relative to the start of <code>source</code>; line positions are for the subrange
     * scanned.</li>

@@ -11,12 +11,11 @@
 package org.eclipse.jdt.client.text;
 
 /**
- * Indicates the attempt to access a non-existing position
- * category in a document.
+ * Indicates the attempt to access a non-existing position category in a document.
  * <p>
  * This class is not intended to be serialized.
  * </p>
- *
+ * 
  * @see org.eclipse.jface.text.IDocument
  */
 public class BadPositionCategoryException extends Exception
@@ -27,13 +26,12 @@ public class BadPositionCategoryException extends Exception
     * <p>
     * Note: This class is not intended to be serialized.
     * </p>
+    * 
     * @since 3.1
     */
    private static final long serialVersionUID = 3761405300745713206L;
 
-   /**
-    * Creates a new bad position category exception.
-    */
+   /** Creates a new bad position category exception. */
    public BadPositionCategoryException()
    {
       super();
@@ -41,7 +39,7 @@ public class BadPositionCategoryException extends Exception
 
    /**
     * Creates a new bad position category exception.
-    *
+    * 
     * @param message the exception's message
     */
    public BadPositionCategoryException(String message)

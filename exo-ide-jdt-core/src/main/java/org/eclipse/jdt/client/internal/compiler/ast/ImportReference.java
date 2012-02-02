@@ -53,9 +53,7 @@ public class ImportReference extends ASTNode
       return (this.modifiers & ClassFileConstants.AccStatic) != 0;
    }
 
-   /**
-    * @return char[][]
-    */
+   /** @return char[][] */
    public char[][] getImportName()
    {
 

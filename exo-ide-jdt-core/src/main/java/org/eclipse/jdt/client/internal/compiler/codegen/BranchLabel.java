@@ -76,9 +76,7 @@ public class BranchLabel extends Label
    // }
    // }
 
-   /**
-    * Makes the current label inline all references to the other label
-    */
+   /** Makes the current label inline all references to the other label */
    public void becomeDelegateFor(BranchLabel otherLabel)
    {
       // other label is delegating to receiver from now on
@@ -289,9 +287,7 @@ public class BranchLabel extends Label
    // }
    // }
 
-   /**
-    * Print out the receiver
-    */
+   /** Print out the receiver */
    public String toString()
    {
       String basic = getClass().getName();
@@ -311,9 +307,7 @@ public class BranchLabel extends Label
       return buffer.toString();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.codegen.Label#place()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.codegen.Label#place() */
    @Override
    public void place()
    {

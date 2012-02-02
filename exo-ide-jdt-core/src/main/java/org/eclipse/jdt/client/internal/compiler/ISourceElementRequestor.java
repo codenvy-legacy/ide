@@ -195,9 +195,7 @@ public interface ISourceElementRequestor
 
    /*
     * Table of line separator position. This table is passed once at the end of the parse action, so as to allow computation of
-    * normalized ranges.
-    * 
-    * A line separator might corresponds to several characters in the source,
+    * normalized ranges. A line separator might corresponds to several characters in the source,
     */
    void acceptLineSeparatorPositions(int[] positions);
 

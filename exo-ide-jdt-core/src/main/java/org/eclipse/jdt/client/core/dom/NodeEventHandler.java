@@ -21,9 +21,7 @@ package org.eclipse.jdt.client.core.dom;
 class NodeEventHandler
 {
 
-   /**
-    * Creates a node event handler.
-    */
+   /** Creates a node event handler. */
    NodeEventHandler()
    {
       // default implementation: do nothing

@@ -24,9 +24,7 @@ public abstract class OperatorExpression extends Expression implements OperatorI
       classInitialize();
    }
 
-   /**
-    * OperatorExpression constructor comment.
-    */
+   /** OperatorExpression constructor comment. */
    public OperatorExpression()
    {
       super();

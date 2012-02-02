@@ -27,17 +27,13 @@ public class RecoveredImport extends RecoveredElement
       this.importReference = importReference;
    }
 
-   /*
-    * Answer the associated parsed structure
-    */
+   /* Answer the associated parsed structure */
    public ASTNode parseTree()
    {
       return this.importReference;
    }
 
-   /*
-    * Answer the very source end of the corresponding parse node
-    */
+   /* Answer the very source end of the corresponding parse node */
    public int sourceEnd()
    {
       return this.importReference.declarationSourceEnd;
@@ -59,9 +55,7 @@ public class RecoveredImport extends RecoveredElement
       updatedImportReference();
    }
 
-   /*
-    * Update the declarationSourceEnd of the corresponding parse node
-    */
+   /* Update the declarationSourceEnd of the corresponding parse node */
    public void updateSourceEndIfNecessary(int bodyStart, int bodyEnd)
    {
       if (this.importReference.declarationSourceEnd == 0)

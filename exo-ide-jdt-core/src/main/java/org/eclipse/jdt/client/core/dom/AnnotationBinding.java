@@ -19,9 +19,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
 import org.eclipse.jdt.client.internal.compiler.util.*;
 
-/**
- * Internal class
- */
+/** Internal class */
 class AnnotationBinding implements IAnnotationBinding
 {
    static final AnnotationBinding[] NoAnnotations = new AnnotationBinding[0];
@@ -266,7 +264,6 @@ class AnnotationBinding implements IAnnotationBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.core.dom.IBinding#isRecovered()
     */
    public boolean isRecovered()

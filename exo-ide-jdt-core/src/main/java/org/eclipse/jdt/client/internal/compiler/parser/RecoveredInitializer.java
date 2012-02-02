@@ -52,9 +52,7 @@ public class RecoveredInitializer extends RecoveredField implements TerminalToke
       this.foundOpeningBrace = true;
    }
 
-   /*
-    * Record a nested block declaration
-    */
+   /* Record a nested block declaration */
    public RecoveredElement add(Block nestedBlockDeclaration, int bracketBalanceValue)
    {
 
@@ -82,16 +80,16 @@ public class RecoveredInitializer extends RecoveredField implements TerminalToke
       return this;
    }
 
-   /*
-    * Record a field declaration (act like inside method body)
-    */
+   /* Record a field declaration (act like inside method body) */
    public RecoveredElement add(FieldDeclaration newFieldDeclaration, int bracketBalanceValue)
    {
       resetPendingModifiers();
 
       /* local variables inside initializer can only be final and non void */
       char[][] fieldTypeName;
-      if ((newFieldDeclaration.modifiers & ~ClassFileConstants.AccFinal) != 0 /* local var can only be final */
+      if ((newFieldDeclaration.modifiers & ~ClassFileConstants.AccFinal) != 0 /*
+                                                                               * local var can only be final
+                                                                               */
          || (newFieldDeclaration.type == null) // initializer
          || ((fieldTypeName = newFieldDeclaration.type.getTypeName()).length == 1 // non void
          && CharOperation.equals(fieldTypeName[0], TypeBinding.VOID.sourceName())))
@@ -147,9 +145,7 @@ public class RecoveredInitializer extends RecoveredField implements TerminalToke
       return element.add(localDeclaration, bracketBalanceValue);
    }
 
-   /*
-    * Record a statement - regular method should have been created a block body
-    */
+   /* Record a statement - regular method should have been created a block body */
    public RecoveredElement add(Statement statement, int bracketBalanceValue)
    {
 
@@ -355,9 +351,7 @@ public class RecoveredInitializer extends RecoveredField implements TerminalToke
       return this; // request to restart
    }
 
-   /*
-    * Update the declarationSourceEnd of the corresponding parse node
-    */
+   /* Update the declarationSourceEnd of the corresponding parse node */
    public void updateSourceEndIfNecessary(int braceStart, int braceEnd)
    {
       if (this.fieldDeclaration.declarationSourceEnd == 0)

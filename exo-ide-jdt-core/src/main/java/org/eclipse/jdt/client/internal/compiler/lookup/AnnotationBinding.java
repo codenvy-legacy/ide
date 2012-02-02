@@ -12,9 +12,7 @@ package org.eclipse.jdt.client.internal.compiler.lookup;
 
 import org.eclipse.jdt.client.internal.compiler.ast.Annotation;
 
-/**
- * Represents JSR 175 Annotation instances in the type-system.
- */
+/** Represents JSR 175 Annotation instances in the type-system. */
 public class AnnotationBinding
 {
    // do not access directly - use getters instead (UnresolvedAnnotationBinding
@@ -184,7 +182,6 @@ public class AnnotationBinding
 
    /*
     * Computes a key that uniquely identifies this binding, using the given recipient's unique key. recipientKey @ typeKey
-    * 
     * @MyAnnot void bar() --> Lp/X;.bar()V@Lp/MyAnnot;
     */
    public char[] computeUniqueKey(char[] recipientKey)

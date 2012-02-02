@@ -29,9 +29,7 @@ public class ClassSignature
       this.className = className;
    }
 
-   /**
-    * @return name of the type in the class file format
-    */
+   /** @return name of the type in the class file format */
    public char[] getTypeName()
    {
       return this.className;

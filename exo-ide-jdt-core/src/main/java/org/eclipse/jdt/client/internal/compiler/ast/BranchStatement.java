@@ -24,9 +24,7 @@ public abstract class BranchStatement extends Statement
 
    public int initStateIndex = -1;
 
-   /**
-    * BranchStatement constructor comment.
-    */
+   /** BranchStatement constructor comment. */
    public BranchStatement(char[] label, int sourceStart, int sourceEnd)
    {
       this.label = label;

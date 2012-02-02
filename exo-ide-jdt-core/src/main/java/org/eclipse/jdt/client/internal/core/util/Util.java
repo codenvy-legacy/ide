@@ -35,9 +35,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Provides convenient utility methods to other types in this package.
- */
+/** Provides convenient utility methods to other types in this package. */
 public class Util
 {
 
@@ -216,9 +214,7 @@ public class Util
       return (T[])Arrays.asList(array).toArray();
    }
 
-   /**
-    * Combines two hash codes to make a new one.
-    */
+   /** Combines two hash codes to make a new one. */
    public static int combineHashCodes(int hashCode1, int hashCode2)
    {
       return hashCode1 * 17 + hashCode2;
@@ -275,9 +271,7 @@ public class Util
       return len1 - len2;
    }
 
-   /**
-    * Concatenate a String[] compound name to a continuous char[].
-    */
+   /** Concatenate a String[] compound name to a continuous char[]. */
    public static char[] concatCompoundNameToCharArray(String[] compoundName)
    {
       if (compoundName == null)
@@ -690,9 +684,7 @@ public class Util
       return qualifiedName.substring(i + 1);
    }
 
-   /**
-    * Extracts the parameter types from a method signature.
-    */
+   /** Extracts the parameter types from a method signature. */
    public static String[] extractParameterTypes(char[] sig)
    {
       int count = getParameterCount(sig);
@@ -731,9 +723,7 @@ public class Util
       return result;
    }
 
-   /**
-    * Extracts the return type from a method signature.
-    */
+   /** Extracts the return type from a method signature. */
    public static String extractReturnType(String sig)
    {
       int i = sig.lastIndexOf(')');
@@ -856,9 +846,7 @@ public class Util
    // return cu;
    // }
 
-   /**
-    * Returns the registered Java like extensions.
-    */
+   /** Returns the registered Java like extensions. */
    public static char[][] getJavaLikeExtensions()
    {
       if (JAVA_LIKE_EXTENSIONS == null)
@@ -1019,9 +1007,7 @@ public class Util
    // }
    // }
 
-   /**
-    * Returns the number of parameter types in a method signature.
-    */
+   /** Returns the number of parameter types in a method signature. */
    public static int getParameterCount(char[] sig)
    {
       int i = CharOperation.indexOf('(', sig) + 1;
@@ -1054,9 +1040,7 @@ public class Util
       return count;
    }
 
-   /**
-    * Put all the arguments in one String.
-    */
+   /** Put all the arguments in one String. */
    public static String getProblemArgumentsForMarker(String[] arguments)
    {
       StringBuffer args = new StringBuffer(10);
@@ -1286,14 +1270,14 @@ public class Util
    // }
    // }
 
-   /*
-    * Returns the signature of the given type.
-    */
+   /* Returns the signature of the given type. */
    public static String getSignature(Type type)
    {
       StringBuffer buffer = new StringBuffer();
       getFullyQualifiedName(type, buffer);
-      return Signature.createTypeSignature(buffer.toString(), false/* not resolved in source */);
+      return Signature.createTypeSignature(buffer.toString(), false/*
+                                                                    * not resolved in source
+                                                                    */);
    }
 
    // /*
@@ -1340,7 +1324,6 @@ public class Util
    /*
     * Returns the declaring type signature of the element represented by the given binding key. Returns the signature of the
     * element if it is a type.
-    * 
     * @return the declaring type signature
     */
    public static String getDeclaringTypeSignature(String key)
@@ -1411,9 +1394,7 @@ public class Util
       }
    }
 
-   /**
-    * Returns a trimmed version the simples names returned by Signature.
-    */
+   /** Returns a trimmed version the simples names returned by Signature. */
    public static String[] getTrimmedSimpleNames(String name)
    {
       String[] result = Signature.getSimpleNames(name);
@@ -1867,9 +1848,7 @@ public class Util
    // return JavaConventions.validateIdentifier(folderName, sourceLevel, complianceLevel).getSeverity() != IStatus.ERROR;
    // }
 
-   /**
-    * Returns true if the given method signature is valid, false if it is not.
-    */
+   /** Returns true if the given method signature is valid, false if it is not. */
    public static boolean isValidMethodSignature(String sig)
    {
       int len = sig.length();
@@ -1895,9 +1874,7 @@ public class Util
       return i == len;
    }
 
-   /**
-    * Returns true if the given type signature is valid, false if it is not.
-    */
+   /** Returns true if the given type signature is valid, false if it is not. */
    public static boolean isValidTypeSignature(String sig, boolean allowVoid)
    {
       int len = sig.length();
@@ -1920,9 +1897,7 @@ public class Util
       return binaryTypeName.substring(nameStart, end);
    }
 
-   /*
-    * Add a log entry
-    */
+   /* Add a log entry */
    public static void log(Throwable e, String message)
    {
       // TODO use logger
@@ -2102,9 +2077,7 @@ public class Util
    // return pkgName.toString();
    // }
 
-   /**
-    * Returns the length of the common prefix between s1 and s2.
-    */
+   /** Returns the length of the common prefix between s1 and s2. */
    public static int prefixLength(char[] s1, char[] s2)
    {
       int len = 0;
@@ -2114,9 +2087,7 @@ public class Util
       return len;
    }
 
-   /**
-    * Returns the length of the common prefix between s1 and s2.
-    */
+   /** Returns the length of the common prefix between s1 and s2. */
    public static int prefixLength(String s1, String s2)
    {
       int len = 0;
@@ -2161,9 +2132,7 @@ public class Util
       }
    }
 
-   /**
-    * Sort the comparable objects in the given collection.
-    */
+   /** Sort the comparable objects in the given collection. */
    private static void quickSort(Comparable[] sortedCollection, int left, int right)
    {
       int original_left = left;
@@ -2234,9 +2203,7 @@ public class Util
       }
    }
 
-   /**
-    * Sort the objects in the given collection using the given comparer.
-    */
+   /** Sort the objects in the given collection using the given comparer. */
    private static void quickSort(Object[] sortedCollection, int left, int right, Comparer comparer)
    {
       int original_left = left;
@@ -2272,9 +2239,7 @@ public class Util
       }
    }
 
-   /**
-    * Sort the strings in the given collection.
-    */
+   /** Sort the strings in the given collection. */
    private static void quickSort(String[] sortedCollection, int left, int right)
    {
       int original_left = left;
@@ -2357,9 +2322,7 @@ public class Util
    // return new String(result);
    // }
 
-   /*
-    * Resets the list of Java-like extensions after a change in content-type.
-    */
+   /* Resets the list of Java-like extensions after a change in content-type. */
    public static void resetJavaLikeExtensions()
    {
       JAVA_LIKE_EXTENSIONS = null;
@@ -2463,9 +2426,7 @@ public class Util
          quickSort(list, 0, list.length - 1);
    }
 
-   /**
-    * Sorts an array of Comparable objects in place.
-    */
+   /** Sorts an array of Comparable objects in place. */
    public static void sort(Comparable[] objects)
    {
       if (objects.length > 1)
@@ -2487,9 +2448,7 @@ public class Util
          quickSort(objects, 0, objects.length - 1, comparer);
    }
 
-   /**
-    * Sorts an array of strings in place using quicksort.
-    */
+   /** Sorts an array of strings in place using quicksort. */
    public static void sort(String[] strings)
    {
       if (strings.length > 1)
@@ -2568,9 +2527,7 @@ public class Util
          && compoundName[prefixLength - 1].toLowerCase().startsWith(prefix[prefixLength - 1].toLowerCase());
    }
 
-   /**
-    * Converts a String[] to char[][].
-    */
+   /** Converts a String[] to char[][]. */
    public static char[][] toCharArrays(String[] a)
    {
       int len = a.length;
@@ -2584,9 +2541,7 @@ public class Util
       return result;
    }
 
-   /**
-    * Converts a String to char[][], where segments are separate by '.'.
-    */
+   /** Converts a String to char[][], where segments are separate by '.'. */
    public static char[][] toCompoundChars(String s)
    {
       int len = s.length();
@@ -2625,9 +2580,7 @@ public class Util
    // localFile= fileStore.toLocalFile(EFS.CACHE, monitor);
    // return localFile;
    // }
-   /**
-    * Converts a char[][] to String, where segments are separated by '.'.
-    */
+   /** Converts a char[][] to String, where segments are separated by '.'. */
    public static String toString(char[][] c)
    {
       StringBuffer sb = new StringBuffer();
@@ -2657,9 +2610,7 @@ public class Util
       return sb.toString();
    }
 
-   /*
-    * Converts a char[][] to String[].
-    */
+   /* Converts a char[][] to String[]. */
    public static String[] toStrings(char[][] a)
    {
       int len = a.length;
@@ -2949,7 +2900,9 @@ public class Util
          {
             char[][] compoundName = typeReferences[i].getParameterizedTypeName();
             char[] typeName = CharOperation.concatWith(compoundName, '.');
-            typeSignatures[i] = Signature.createTypeSignature(typeName, false/* don't resolve */);
+            typeSignatures[i] = Signature.createTypeSignature(typeName, false/*
+                                                                              * don 't resolve
+                                                                              */);
          }
          signature = Signature.createIntersectionTypeSignature(typeSignatures);
       }
@@ -2957,22 +2910,20 @@ public class Util
       {
          char[][] compoundName = type.getParameterizedTypeName();
          char[] typeName = CharOperation.concatWith(compoundName, '.');
-         signature = Signature.createTypeSignature(typeName, false/* don't resolve */);
+         signature = Signature.createTypeSignature(typeName, false/*
+                                                                   * don't resolve
+                                                                   */);
       }
       return signature;
    }
 
-   /**
-    * Asserts that the given method signature is valid.
-    */
+   /** Asserts that the given method signature is valid. */
    public static void validateMethodSignature(String sig)
    {
       Assert.isTrue(isValidMethodSignature(sig));
    }
 
-   /**
-    * Asserts that the given type signature is valid.
-    */
+   /** Asserts that the given type signature is valid. */
    public static void validateTypeSignature(String sig, boolean allowVoid)
    {
       Assert.isTrue(isValidTypeSignature(sig, allowVoid));
@@ -3038,20 +2989,20 @@ public class Util
       return false;
    }
 
-   /**
-    * Get all type arguments from an array of signatures.
+/** Get all type arguments from an array of signatures.
     * 
     * Example: For following type X<Y<Z>,V<W>,U>.A<B> signatures is: [
-    * ['L','X','<','L','Y','<','L','Z',';'>',';','L','V','<','L','W',';'>',';','L','U',';',>',';'],
-    * ['L','A','<','L','B',';','>',';'] ]
+    * ['L','X','<'
+    * ,'L','Y','<','L','Z',';'>',';','L','V','<','L','W',';'>',';','L'
+    * ,'U',';',>',';'], ['L','A','<','L','B',';','>',';'] ]
     * 
-    * @see #splitTypeLevelsSignature(String) Then, this method returns: [ [ ['L','Y','<','L','Z',';'>',';'],
-    *      ['L','V','<','L','W',';'>',';'], ['L','U',';'] ], [ ['L','B',';'] ] ]
+    * @see #splitTypeLevelsSignature(String) Then, this method returns: [ [
+    *      ['L','Y','<','L','Z',';'>',';'], ['L','V','<','L','W',';'>',';'],
+    *      ['L','U',';'] ], [ ['L','B',';'] ] ]
     * 
     * @param typeSignatures Array of signatures (one per each type levels)
     * @throws IllegalArgumentException If one of provided signature is malformed
-    * @return char[][][] Array of type arguments for each signature
-    */
+    * @return char[][][] Array of type arguments for each signature */
    public final static char[][][] getAllTypeArguments(char[][] typeSignatures)
    {
       if (typeSignatures == null)
@@ -3194,8 +3145,8 @@ public class Util
     * 
     * Example: For following type X<Y<Z>,V<W>,U>.A<B>, unique key is: "LX<LY<LZ;>;LV<LW;>;LU;>.LA<LB;>;"
     * 
-    * The return splitted signatures array is: [
-    * ['L','X','<','L','Y','<','L','Z',';'>',';','L','V','<','L','W',';'>',';','L','U','>',';'], ['L','A','<','L','B',';','>',';']
+    * The return splitted signatures array is: [ ['L','X','<','L','Y','<','L','Z'
+    * ,';'>',';','L','V','<','L','W',';'>',';','L','U','>',';'], ['L','A','<','L','B',';','>',';']
     * 
     * @param typeSignature ParameterizedSourceType type signature
     * @return char[][] Array of signatures for each level of given unique key
@@ -3259,9 +3210,7 @@ public class Util
       return typeSignatures;
    }
 
-   /*
-    * Can throw IllegalArgumentException or ArrayIndexOutOfBoundsException
-    */
+   /* Can throw IllegalArgumentException or ArrayIndexOutOfBoundsException */
    public static String toAnchor(int startingIndex, char[] methodSignature, String methodName, boolean isVarArgs)
    {
       try

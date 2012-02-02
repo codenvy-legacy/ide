@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.dom;
 
-/**
- * This class represents the recovered binding for a variable
- */
+/** This class represents the recovered binding for a variable */
 class RecoveredVariableBinding implements IVariableBinding
 {
 

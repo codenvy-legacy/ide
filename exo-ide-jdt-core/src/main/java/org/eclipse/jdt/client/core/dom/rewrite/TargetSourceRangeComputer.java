@@ -24,8 +24,8 @@ import org.eclipse.jdt.client.core.dom.CompilationUnit;
  * Clients should subclass if they need to influence the the source range to be affected when replacing or deleting a particular
  * node. An instance of the subclass should be registered with
  * {@link ASTRewrite#setTargetSourceRangeComputer(TargetSourceRangeComputer)}. During a call to
- * {@link ASTRewrite#rewriteAST(org.eclipse.jface.text.IDocument, java.util.Map)}, the {@link #computeSourceRange(ASTNode)} method
- * on this object will be used to compute the source range for a node being deleted or replaced.
+ * {@link ASTRewrite#rewriteAST(org.eclipse.jface.text.IDocument, java.util.Map)} , the {@link #computeSourceRange(ASTNode)}
+ * method on this object will be used to compute the source range for a node being deleted or replaced.
  * </p>
  * 
  * @since 3.1
@@ -83,9 +83,7 @@ public class TargetSourceRangeComputer
       }
    }
 
-   /**
-    * Creates a new target source range computer.
-    */
+   /** Creates a new target source range computer. */
    public TargetSourceRangeComputer()
    {
       // do nothing

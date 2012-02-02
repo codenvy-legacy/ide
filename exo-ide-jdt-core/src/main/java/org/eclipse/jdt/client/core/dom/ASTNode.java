@@ -100,32 +100,15 @@ import org.eclipse.jdt.client.internal.core.dom.NaiveASTFlattener;
 public abstract class ASTNode
 {
    /*
-    * INSTRUCTIONS FOR ADDING NEW CONCRETE AST NODE TYPES
-    * 
-    * There are several things that need to be changed when a new concrete AST node type (call it "FooBar"):
-    * 
-    * 1. Create the FooBar AST node type class. The most effective way to do this is to copy a similar existing concrete node
-    * class to get a template that includes all the framework methods that must be implemented.
-    * 
-    * 2. Add node type constant ASTNode.FOO_BAR. Node constants are numbered consecutively. Add the constant after the existing
-    * ones.
-    * 
-    * 3. Add entry to ASTNode.nodeClassForType(int).
-    * 
-    * 4. Add AST.newFooBar() factory method.
-    * 
-    * 5. Add ASTVisitor.visit(FooBar) and endVisit(FooBar) methods.
-    * 
-    * 6. Add ASTMatcher.match(FooBar,Object) method.
-    * 
-    * 7. Ensure that SimpleName.isDeclaration() covers FooBar nodes if required.
-    * 
-    * 8. Add NaiveASTFlattener.visit(FooBar) method to illustrate how these nodes should be serialized.
-    * 
-    * 9. Update the AST test suites.
-    * 
-    * The next steps are to update AST.parse* to start generating the new type of nodes, and ASTRewrite to serialize them back
-    * out.
+    * INSTRUCTIONS FOR ADDING NEW CONCRETE AST NODE TYPES There are several things that need to be changed when a new concrete AST
+    * node type (call it "FooBar"): 1. Create the FooBar AST node type class. The most effective way to do this is to copy a
+    * similar existing concrete node class to get a template that includes all the framework methods that must be implemented. 2.
+    * Add node type constant ASTNode.FOO_BAR. Node constants are numbered consecutively. Add the constant after the existing ones.
+    * 3. Add entry to ASTNode.nodeClassForType(int). 4. Add AST.newFooBar() factory method. 5. Add ASTVisitor.visit(FooBar) and
+    * endVisit(FooBar) methods. 6. Add ASTMatcher.match(FooBar,Object) method. 7. Ensure that SimpleName.isDeclaration() covers
+    * FooBar nodes if required. 8. Add NaiveASTFlattener.visit(FooBar) method to illustrate how these nodes should be serialized.
+    * 9. Update the AST test suites. The next steps are to update AST.parse* to start generating the new type of nodes, and
+    * ASTRewrite to serialize them back out.
     */
 
    /**
@@ -150,7 +133,7 @@ public abstract class ASTNode
    public static final int ARRAY_CREATION = 3;
 
    /**
-    * Node type constant indicating a node of type <code>ArrayInitializer</code>.
+    * Node type constant indicating a node of type <code>ArrayInitializer</code> .
     * 
     * @see ArrayInitializer
     */
@@ -213,7 +196,7 @@ public abstract class ASTNode
    public static final int CATCH_CLAUSE = 12;
 
    /**
-    * Node type constant indicating a node of type <code>CharacterLiteral</code>.
+    * Node type constant indicating a node of type <code>CharacterLiteral</code> .
     * 
     * @see CharacterLiteral
     */
@@ -283,7 +266,7 @@ public abstract class ASTNode
    public static final int FIELD_ACCESS = 22;
 
    /**
-    * Node type constant indicating a node of type <code>FieldDeclaration</code>.
+    * Node type constant indicating a node of type <code>FieldDeclaration</code> .
     * 
     * @see FieldDeclaration
     */
@@ -332,7 +315,7 @@ public abstract class ASTNode
    public static final int JAVADOC = 29;
 
    /**
-    * Node type constant indicating a node of type <code>LabeledStatement</code>.
+    * Node type constant indicating a node of type <code>LabeledStatement</code> .
     * 
     * @see LabeledStatement
     */
@@ -346,7 +329,7 @@ public abstract class ASTNode
    public static final int METHOD_DECLARATION = 31;
 
    /**
-    * Node type constant indicating a node of type <code>MethodInvocation</code>.
+    * Node type constant indicating a node of type <code>MethodInvocation</code> .
     * 
     * @see MethodInvocation
     */
@@ -388,7 +371,7 @@ public abstract class ASTNode
    public static final int POSTFIX_EXPRESSION = 37;
 
    /**
-    * Node type constant indicating a node of type <code>PrefixExpression</code>.
+    * Node type constant indicating a node of type <code>PrefixExpression</code> .
     * 
     * @see PrefixExpression
     */
@@ -451,7 +434,7 @@ public abstract class ASTNode
    public static final int SUPER_CONSTRUCTOR_INVOCATION = 46;
 
    /**
-    * Node type constant indicating a node of type <code>SuperFieldAccess</code>.
+    * Node type constant indicating a node of type <code>SuperFieldAccess</code> .
     * 
     * @see SuperFieldAccess
     */
@@ -675,7 +658,7 @@ public abstract class ASTNode
    public static final int WILDCARD_TYPE = 76;
 
    /**
-    * Node type constant indicating a node of type <code>NormalAnnotation</code>.
+    * Node type constant indicating a node of type <code>NormalAnnotation</code> .
     * 
     * @see NormalAnnotation
     * @since 3.1
@@ -683,7 +666,7 @@ public abstract class ASTNode
    public static final int NORMAL_ANNOTATION = 77;
 
    /**
-    * Node type constant indicating a node of type <code>MarkerAnnotation</code>.
+    * Node type constant indicating a node of type <code>MarkerAnnotation</code> .
     * 
     * @see MarkerAnnotation
     * @since 3.1
@@ -937,9 +920,7 @@ public abstract class ASTNode
     */
    private ASTNode parent = null;
 
-   /**
-    * An unmodifiable empty map (used to implement <code>properties()</code>).
-    */
+   /** An unmodifiable empty map (used to implement <code>properties()</code>). */
    private static final Map UNMODIFIABLE_EMPTY_MAP = Collections.unmodifiableMap(new HashMap(1));
 
    /**
@@ -1082,9 +1063,7 @@ public abstract class ASTNode
        */
       ArrayList store = new ArrayList(0);
 
-      /**
-       * The property descriptor for this list.
-       */
+      /** The property descriptor for this list. */
       ChildListPropertyDescriptor propertyDescriptor;
 
       /**
@@ -1099,17 +1078,13 @@ public abstract class ASTNode
           */
          private int position = 0;
 
-         /*
-          * (non-Javadoc) Method declared on <code>Iterator</code>.
-          */
+         /* (non-Javadoc) Method declared on <code>Iterator</code>. */
          public boolean hasNext()
          {
             return this.position < NodeList.this.store.size();
          }
 
-         /*
-          * (non-Javadoc) Method declared on <code>Iterator</code>.
-          */
+         /* (non-Javadoc) Method declared on <code>Iterator</code>. */
          public Object next()
          {
             Object result = NodeList.this.store.get(this.position);
@@ -1117,9 +1092,7 @@ public abstract class ASTNode
             return result;
          }
 
-         /*
-          * (non-Javadoc) Method declared on <code>Iterator</code>.
-          */
+         /* (non-Javadoc) Method declared on <code>Iterator</code>. */
          public void remove()
          {
             throw new UnsupportedOperationException();
@@ -1167,7 +1140,6 @@ public abstract class ASTNode
 
       /*
        * (non-javadoc)
-       * 
        * @see java.util.AbstractCollection#size()
        */
       public int size()
@@ -1177,7 +1149,6 @@ public abstract class ASTNode
 
       /*
        * (non-javadoc)
-       * 
        * @see AbstractList#get(int)
        */
       public Object get(int index)
@@ -1187,7 +1158,6 @@ public abstract class ASTNode
 
       /*
        * (non-javadoc)
-       * 
        * @see List#set(int, java.lang.Object)
        */
       public Object set(int index, Object element)
@@ -1227,7 +1197,6 @@ public abstract class ASTNode
 
       /*
        * (non-javadoc)
-       * 
        * @see List#add(int, java.lang.Object)
        */
       public void add(int index, Object element)
@@ -1256,7 +1225,6 @@ public abstract class ASTNode
 
       /*
        * (non-javadoc)
-       * 
        * @see List#remove(int)
        */
       public Object remove(int index)
@@ -2235,7 +2203,7 @@ public abstract class ASTNode
    }
 
    /**
-    * Returns an unmodifiable table of the properties of this node with non-<code>null</code> values.
+    * Returns an unmodifiable table of the properties of this node with non- <code>null</code> values.
     * 
     * @return the table of property values keyed by property name (key type: <code>String</code>; value type: <code>Object</code>)
     */
@@ -2364,7 +2332,6 @@ public abstract class ASTNode
 
    /*
     * (non-Javadoc) This makes it consistent with the fact that a equals methods has been provided.
-    * 
     * @see java.lang.Object#hashCode()
     */
    public final int hashCode()
@@ -2716,9 +2683,7 @@ public abstract class ASTNode
       buffer.append(printer.getResult());
    }
 
-   /**
-    * Estimate of size of an object header in bytes.
-    */
+   /** Estimate of size of an object header in bytes. */
    static final int HEADERS = 12;
 
    /**

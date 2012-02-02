@@ -399,7 +399,6 @@ public class KeyToSignature extends BindingKeyParser
 
    /*
     * (non-Javadoc)
-    * 
     * @see java.lang.Object#toString()
     */
    public String toString()

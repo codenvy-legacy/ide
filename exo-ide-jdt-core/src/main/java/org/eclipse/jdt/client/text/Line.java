@@ -11,9 +11,8 @@
 package org.eclipse.jdt.client.text;
 
 /**
- * Describes a line as a particular number of characters beginning at
- * a particular offset, consisting of a particular number of characters,
- * and being closed with a particular line delimiter.
+ * Describes a line as a particular number of characters beginning at a particular offset, consisting of a particular number of
+ * characters, and being closed with a particular line delimiter.
  */
 final class Line implements IRegion
 {
@@ -29,7 +28,7 @@ final class Line implements IRegion
 
    /**
     * Creates a new Line.
-    *
+    * 
     * @param offset the offset of the line
     * @param end the last including character offset of the line
     * @param delimiter the line's delimiter
@@ -43,7 +42,7 @@ final class Line implements IRegion
 
    /**
     * Creates a new Line.
-    *
+    * 
     * @param offset the offset of the line
     * @param length the length of the line
     */
@@ -54,17 +53,13 @@ final class Line implements IRegion
       this.delimiter = null;
    }
 
-   /*
-    * @see org.eclipse.jface.text.IRegion#getOffset()
-    */
+   /* @see org.eclipse.jface.text.IRegion#getOffset() */
    public int getOffset()
    {
       return offset;
    }
 
-   /*
-    * @see org.eclipse.jface.text.IRegion#getLength()
-    */
+   /* @see org.eclipse.jface.text.IRegion#getLength() */
    public int getLength()
    {
       return length;

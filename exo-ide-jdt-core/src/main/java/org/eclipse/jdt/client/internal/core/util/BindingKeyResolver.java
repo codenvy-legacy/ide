@@ -84,9 +84,7 @@ public class BindingKeyResolver extends BindingKeyParser
 
    CompilationUnitDeclaration outerMostParsedUnit;
 
-   /*
-    * A hash set of the file names of already resolved units
-    */
+   /* A hash set of the file names of already resolved units */
    HashtableOfObject resolvedUnits;
 
    private BindingKeyResolver(BindingKeyParser parser, Compiler compiler, LookupEnvironment environment,
@@ -345,7 +343,9 @@ public class BindingKeyResolver extends BindingKeyParser
    {
       LocalTypeBinding[] localTypeBindings = this.parsedUnit.localTypes;
       for (int i = 0; i < this.parsedUnit.localTypeCount; i++)
-         if (CharOperation.equals(uniqueKey, localTypeBindings[i].computeUniqueKey(false/* not a leaf */)))
+         if (CharOperation.equals(uniqueKey, localTypeBindings[i].computeUniqueKey(false/*
+                                                                                         * not a leaf
+                                                                                         */)))
          {
             this.typeBinding = localTypeBindings[i];
             return;
@@ -548,8 +548,9 @@ public class BindingKeyResolver extends BindingKeyParser
    {
       if (this.typeBinding == null)
          return;
-      this.typeBinding =
-         this.environment.convertToRawType(this.typeBinding, false /* do not force conversion of enclosing types */);
+      this.typeBinding = this.environment.convertToRawType(this.typeBinding, false /*
+                                                                                    * do not force conversion of enclosing types
+                                                                                    */);
    }
 
    public void consumeSecondaryType(char[] simpleTypeName)
@@ -666,8 +667,10 @@ public class BindingKeyResolver extends BindingKeyParser
             break;
          case Wildcard.UNBOUND :
             this.typeBinding =
-               this.environment.createWildcard((ReferenceBinding)this.typeBinding, this.wildcardRank,
-                  null/* no bound */, null /* no extra bound */, kind);
+               this.environment.createWildcard((ReferenceBinding)this.typeBinding, this.wildcardRank, null/*
+                                                                                                           * no bound
+                                                                                                           */,
+                  null /* no extra bound */, kind);
             break;
       }
    }

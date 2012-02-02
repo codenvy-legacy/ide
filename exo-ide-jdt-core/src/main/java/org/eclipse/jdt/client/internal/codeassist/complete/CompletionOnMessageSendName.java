@@ -43,7 +43,9 @@ public class CompletionOnMessageSendName extends MessageSend
          this.genericTypeArguments = new TypeBinding[length];
          for (int i = 0; i < length; i++)
          {
-            this.genericTypeArguments[i] = this.typeArguments[i].resolveType(scope, true /* check bounds */);
+            this.genericTypeArguments[i] = this.typeArguments[i].resolveType(scope, true /*
+                                                                                          * check bounds
+                                                                                          */);
          }
       }
 

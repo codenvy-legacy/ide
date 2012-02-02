@@ -195,9 +195,7 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
       initializeParser();
    }
 
-   /**
-    * Add an additional binary type
-    */
+   /** Add an additional binary type */
    public void accept(IBinaryType binaryType, PackageBinding packageBinding, AccessRestriction accessRestriction)
    {
       this.lookupEnvironment.createBinaryTypeFrom(binaryType, packageBinding, accessRestriction);
@@ -248,9 +246,7 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
       }
    }
 
-   /**
-    * Add additional source types
-    */
+   /** Add additional source types */
    public void accept(ISourceType[] sourceTypes, PackageBinding packageBinding, AccessRestriction accessRestriction)
    {
       this.problemReporter.abortDueToInternalError(Messages.instance.abort_againstSourceModel(
@@ -469,9 +465,7 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
       this.referenceBindings = binaryTypes;
    }
 
-   /*
-    * Compiler crash recovery in case of unexpected runtime exceptions
-    */
+   /* Compiler crash recovery in case of unexpected runtime exceptions */
    protected void handleInternalException(Throwable internalException, CompilationUnitDeclaration unit,
       CompilationResult result)
    {
@@ -525,13 +519,13 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
       }
    }
 
-   /*
-    * Compiler recovery in case of internal AbortCompilation event
-    */
+   /* Compiler recovery in case of internal AbortCompilation event */
    protected void handleInternalException(AbortCompilation abortException, CompilationUnitDeclaration unit)
    {
 
-      /* special treatment for SilentAbort: silently cancelling the compilation process */
+      /*
+       * special treatment for SilentAbort: silently cancelling the compilation process
+       */
       if (abortException.isSilent)
       {
          if (abortException.silentException == null)
@@ -641,7 +635,9 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
             long resolveStart = System.currentTimeMillis();
             this.stats.parseTime += resolveStart - parseStart;
             // initial type binding creation
-            this.lookupEnvironment.buildTypeBindings(parsedUnit, null /* no access restriction */);
+            this.lookupEnvironment.buildTypeBindings(parsedUnit, null /*
+                                                                       * no access restriction
+                                                                       */);
             this.stats.resolveTime += System.currentTimeMillis() - resolveStart;
             addCompilationUnit(sourceUnits[i], parsedUnit);
             ImportReference currentPackage = parsedUnit.currentPackage;
@@ -666,9 +662,7 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
       this.lookupEnvironment.completeTypeBindings();
    }
 
-   /**
-    * Process a compilation unit already parsed and build.
-    */
+   /** Process a compilation unit already parsed and build. */
    public void process(CompilationUnitDeclaration unit, int i)
    {
       this.lookupEnvironment.unitBeingCompleted = unit;
@@ -852,7 +846,9 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
          else
          {
             // initial type binding creation
-            this.lookupEnvironment.buildTypeBindings(unit, null /* no access restriction */);
+            this.lookupEnvironment.buildTypeBindings(unit, null /*
+                                                                 * no access restriction
+                                                                 */);
 
             // binding resolution
             this.lookupEnvironment.completeTypeBindings();

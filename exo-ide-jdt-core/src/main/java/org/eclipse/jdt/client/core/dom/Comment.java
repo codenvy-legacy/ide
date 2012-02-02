@@ -48,7 +48,7 @@ public abstract class Comment extends ASTNode
    }
 
    /**
-    * Returns whether this comment is a block comment (<code>BlockComment</code>).
+    * Returns whether this comment is a block comment (<code>BlockComment</code> ).
     * 
     * @return <code>true</code> if this is a block comment, and <code>false</code> otherwise
     */
@@ -110,9 +110,7 @@ public abstract class Comment extends ASTNode
       this.alternateRoot = root;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       return BASE_NODE_SIZE + 1 * 4;

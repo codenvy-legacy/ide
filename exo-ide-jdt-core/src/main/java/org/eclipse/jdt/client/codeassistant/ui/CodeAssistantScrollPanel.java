@@ -29,14 +29,11 @@ import com.google.gwt.user.client.ui.ScrollPanel;
  * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 25, 2010 4:31:06 PM evgen $
- * 
  */
 public class CodeAssistantScrollPanel extends ScrollPanel implements HasMouseOutHandlers
 {
 
-   /**
-    * @see com.google.gwt.event.dom.client.HasMouseOutHandlers#addMouseOutHandler(com.google.gwt.event.dom.client.MouseOutHandler)
-    */
+   /** @see com.google.gwt.event.dom.client.HasMouseOutHandlers#addMouseOutHandler(com.google.gwt.event.dom.client.MouseOutHandler) */
    public HandlerRegistration addMouseOutHandler(MouseOutHandler handler)
    {
       return addDomHandler(handler, MouseOutEvent.getType());

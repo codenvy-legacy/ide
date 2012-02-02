@@ -11,16 +11,15 @@
 package org.eclipse.jdt.client.text.edits;
 
 /**
- * Thrown to indicate that an edit got added to a parent edit
- * but the child edit somehow conflicts with the parent or
- * one of it siblings.
+ * Thrown to indicate that an edit got added to a parent edit but the child edit somehow conflicts with the parent or one of it
+ * siblings.
  * <p>
  * This class is not intended to be serialized.
  * </p>
- *
+ * 
  * @see TextEdit#addChild(TextEdit)
  * @see TextEdit#addChildren(TextEdit[])
- *
+ * 
  * @since 3.0
  */
 public class MalformedTreeException extends RuntimeException
@@ -35,7 +34,7 @@ public class MalformedTreeException extends RuntimeException
 
    /**
     * Constructs a new malformed tree exception.
-    *
+    * 
     * @param parent the parent edit
     * @param child the child edit
     * @param message the detail message
@@ -49,7 +48,7 @@ public class MalformedTreeException extends RuntimeException
 
    /**
     * Returns the parent edit that caused the exception.
-    *
+    * 
     * @return the parent edit
     */
    public TextEdit getParent()
@@ -59,7 +58,7 @@ public class MalformedTreeException extends RuntimeException
 
    /**
     * Returns the child edit that caused the exception.
-    *
+    * 
     * @return the child edit
     */
    public TextEdit getChild()

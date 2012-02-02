@@ -737,7 +737,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
    /*
     * static final char[][] mainDeclarations = new char[][] { "package".toCharArray(), "import".toCharArray(),
     * "abstract".toCharArray(), "final".toCharArray(), "public".toCharArray(), "class".toCharArray(), "interface".toCharArray()};
-    * 
     * static final char[][] modifiers = // may want field, method, type & member type modifiers new char[][] {
     * "abstract".toCharArray(), "final".toCharArray(), "native".toCharArray(), "public".toCharArray(), "protected".toCharArray(),
     * "private".toCharArray(), "static".toCharArray(), "strictfp".toCharArray(), "synchronized".toCharArray(),
@@ -2112,7 +2111,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   ImportReference importReference = imports[i];
                   if (importReference instanceof CompletionOnImportReference)
                   {
-                     this.lookupEnvironment.buildTypeBindings(parsedUnit, null /* no access restriction */);
+                     this.lookupEnvironment.buildTypeBindings(parsedUnit, null /*
+                                                                                * no access restriction
+                                                                                */);
                      if ((this.unitScope = parsedUnit.scope) != null)
                      {
                         contextAccepted = true;
@@ -2203,7 +2204,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             {
                try
                {
-                  this.lookupEnvironment.buildTypeBindings(parsedUnit, null /* no access restriction */);
+                  this.lookupEnvironment.buildTypeBindings(parsedUnit, null /*
+                                                                             * no access restriction
+                                                                             */);
 
                   if ((this.unitScope = parsedUnit.scope) != null)
                   {
@@ -2610,7 +2613,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          if (!this.requestor.isIgnored(CompletionProposal.METHOD_REF)
             || !this.requestor.isIgnored(CompletionProposal.JAVADOC_METHOD_REF))
          {
-            findMethods(this.completionToken, null, null, receiverType, scope, new ObjectVector(), false, /* not only static */
+            findMethods(this.completionToken, null, null, receiverType, scope, new ObjectVector(), false, /*
+                                                                                                           * not only static
+                                                                                                           */
                false, fieldRef, scope, false, false, true, null, null, null, false, null, -1, -1);
             if (fieldRef.actualReceiverType instanceof ReferenceBinding)
             {
@@ -2820,7 +2825,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          {
 
             if (this.completionToken.length <= Keywords.INTERFACE.length
-               && CharOperation.prefixEquals(this.completionToken, Keywords.INTERFACE, false /* ignore case */
+               && CharOperation.prefixEquals(this.completionToken, Keywords.INTERFACE, false /*
+                                                                                              * ignore case
+                                                                                              */
                ))
             {
                int relevance = computeBaseRelevance();
@@ -4401,11 +4408,15 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
    {
       if (this.options.camelCaseMatch)
       {
-         if (CharOperation.equals(token, proposalName, true /* do not ignore case */))
+         if (CharOperation.equals(token, proposalName, true /*
+                                                             * do not ignore case
+                                                             */))
          {
             return R_CASE + R_EXACT_NAME;
          }
-         else if (CharOperation.prefixEquals(token, proposalName, true /* do not ignore case */))
+         else if (CharOperation.prefixEquals(token, proposalName, true /*
+                                                                        * do not ignore case
+                                                                        */))
          {
             return R_CASE;
          }
@@ -4418,9 +4429,13 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             return R_EXACT_NAME;
          }
       }
-      else if (CharOperation.prefixEquals(token, proposalName, true /* do not ignore case */))
+      else if (CharOperation.prefixEquals(token, proposalName, true /*
+                                                                     * do not ignore case
+                                                                     */))
       {
-         if (CharOperation.equals(token, proposalName, true /* do not ignore case */))
+         if (CharOperation.equals(token, proposalName, true /*
+                                                             * do not ignore case
+                                                             */))
          {
             return R_CASE + R_EXACT_NAME;
          }
@@ -5055,9 +5070,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       }
    }
 
-   /*
-    * Create a completion proposal for a member type.
-    */
+   /* Create a completion proposal for a member type. */
    private void createTypeParameterProposal(TypeParameter typeParameter, int relevance)
    {
       char[] completionName = typeParameter.name;
@@ -5109,9 +5122,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       }
    }
 
-   /*
-    * Create a completion proposal for a type.
-    */
+   /* Create a completion proposal for a type. */
    private void createTypeProposal(char[] packageName, char[] typeName, int modifiers, int accessibility,
       char[] completionName, int relevance)
    {
@@ -5173,9 +5184,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       }
    }
 
-   /*
-    * Create a completion proposal for a member type.
-    */
+   /* Create a completion proposal for a member type. */
    private void createTypeProposal(ReferenceBinding refBinding, char[] typeName, int accessibility,
       char[] completionName, int relevance, Binding[] missingElements, int[] missingElementsStarts,
       int[] missingElementsEnds, boolean missingElementsHaveProblems)
@@ -5496,7 +5505,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       if (token == null)
          return;
 
-      if (token.length <= classField.length && CharOperation.prefixEquals(token, classField, false /* ignore case */
+      if (token.length <= classField.length && CharOperation.prefixEquals(token, classField, false /*
+                                                                                                    * ignore case
+                                                                                                    */
       ))
       {
          int relevance = computeBaseRelevance();
@@ -6254,7 +6265,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          if (enumConstantLength > field.name.length)
             continue next;
 
-         if (!CharOperation.prefixEquals(enumConstantName, field.name, false /* ignore case */)
+         if (!CharOperation.prefixEquals(enumConstantName, field.name, false /*
+                                                                              * ignore case
+                                                                              */)
             && !(this.options.camelCaseMatch && CharOperation.camelCaseMatch(enumConstantName, field.name)))
             continue next;
 
@@ -6429,8 +6442,10 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             }
          }
 
-         findEnumConstants(enumConstantName, enumType, null /* doesn't need invocation scope */, new ObjectVector(),
-            alreadyUsedConstants, alreadyUsedConstantCount, false);
+         findEnumConstants(enumConstantName, enumType, null /*
+                                                             * doesn't need invocation scope
+                                                             */, new ObjectVector(), alreadyUsedConstants,
+            alreadyUsedConstantCount, false);
       }
    }
 
@@ -6457,7 +6472,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       if (typeName.length > exceptionType.sourceName.length)
          return;
 
-      if (!CharOperation.prefixEquals(typeName, exceptionType.sourceName, false/* ignore case */)
+      if (!CharOperation.prefixEquals(typeName, exceptionType.sourceName, false/*
+                                                                                * ignore case
+                                                                                */)
          && !(this.options.camelCaseMatch && CharOperation.camelCaseMatch(typeName, exceptionType.sourceName)))
          return;
 
@@ -6816,7 +6833,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          if (fieldLength > field.name.length)
             continue next;
 
-         if (!CharOperation.prefixEquals(fieldName, field.name, false /* ignore case */)
+         if (!CharOperation.prefixEquals(fieldName, field.name, false /*
+                                                                       * ignore case
+                                                                       */)
             && !(this.options.camelCaseMatch && CharOperation.camelCaseMatch(fieldName, field.name)))
             continue next;
 
@@ -7300,7 +7319,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             }
          }
          if (proposeMethod && token.length <= cloneMethod.length
-            && CharOperation.prefixEquals(token, cloneMethod, false /* ignore case */))
+            && CharOperation.prefixEquals(token, cloneMethod, false /*
+                                                                     * ignore case
+                                                                     */))
          {
             ReferenceBinding objectRef = scope.getJavaLangObject();
 
@@ -7929,7 +7950,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          if (fieldLength > field.name.length)
             continue next;
 
-         if (!CharOperation.prefixEquals(fieldName, field.name, false /* ignore case */)
+         if (!CharOperation.prefixEquals(fieldName, field.name, false /*
+                                                                       * ignore case
+                                                                       */)
             && !(this.options.camelCaseMatch && CharOperation.camelCaseMatch(fieldName, field.name)))
             continue next;
 
@@ -8157,7 +8180,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          if (typeLength > memberType.sourceName.length)
             continue next;
 
-         if (!CharOperation.prefixEquals(typeName, memberType.sourceName, false/* ignore case */)
+         if (!CharOperation.prefixEquals(typeName, memberType.sourceName, false/*
+                                                                                * ignore case
+                                                                                */)
             && !(this.options.camelCaseMatch && CharOperation.camelCaseMatch(typeName, memberType.sourceName)))
             continue next;
 
@@ -8214,7 +8239,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          if (!field.isStatic())
             continue next;
 
-         if (!CharOperation.prefixEquals(fieldName, field.name, false/* ignore case */)
+         if (!CharOperation.prefixEquals(fieldName, field.name, false/*
+                                                                      * ignore case
+                                                                      */)
             && !(this.options.camelCaseMatch && CharOperation.camelCaseMatch(fieldName, field.name)))
             continue next;
 
@@ -8288,7 +8315,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          if (methodLength > method.selector.length)
             continue next;
 
-         if (!CharOperation.prefixEquals(methodName, method.selector, false/* ignore case */)
+         if (!CharOperation.prefixEquals(methodName, method.selector, false/*
+                                                                            * ignore case
+                                                                            */)
             && !(this.options.camelCaseMatch && CharOperation.camelCaseMatch(methodName, method.selector)))
             continue next;
 
@@ -8432,9 +8461,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       }
    }
 
-   /*
-    * Find javadoc block tags for a given completion javadoc tag node
-    */
+   /* Find javadoc block tags for a given completion javadoc tag node */
    private void findJavadocBlockTags(CompletionOnJavadocTag javadocTag)
    {
       char[][] possibleTags = javadocTag.getPossibleBlockTags();
@@ -8471,9 +8498,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       }
    }
 
-   /*
-    * Find javadoc inline tags for a given completion javadoc tag node
-    */
+   /* Find javadoc inline tags for a given completion javadoc tag node */
    private void findJavadocInlineTags(CompletionOnJavadocTag javadocTag)
    {
       char[][] possibleTags = javadocTag.getPossibleInlineTags();
@@ -8515,9 +8540,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       }
    }
 
-   /*
-    * Find javadoc parameter names.
-    */
+   /* Find javadoc parameter names. */
    private void findJavadocParamNames(char[] token, char[][] missingParams, boolean isTypeParam)
    {
 
@@ -8572,7 +8595,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       int length = keyword.length;
       if (canCompleteEmptyToken || length > 0)
          for (int i = 0; i < choices.length; i++)
-            if (length <= choices[i].length && CharOperation.prefixEquals(keyword, choices[i], false /* ignore case */
+            if (length <= choices[i].length && CharOperation.prefixEquals(keyword, choices[i], false /*
+                                                                                                      * ignore case
+                                                                                                      */
             ))
             {
                int relevance = computeBaseRelevance();
@@ -8726,7 +8751,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       int length = label.length;
       for (int i = 0; i < choices.length; i++)
       {
-         if (length <= choices[i].length && CharOperation.prefixEquals(label, choices[i], false /* ignore case */
+         if (length <= choices[i].length && CharOperation.prefixEquals(label, choices[i], false /*
+                                                                                                 * ignore case
+                                                                                                 */
          ))
          {
             int relevance = computeBaseRelevance();
@@ -8798,7 +8825,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
 
          if (exactMatch)
          {
-            if (!CharOperation.equals(methodName, method.selector, false /* ignore case */
+            if (!CharOperation.equals(methodName, method.selector, false /*
+                                                                          * ignore case
+                                                                          */
             ))
                continue next;
 
@@ -8809,7 +8838,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             if (methodLength > method.selector.length)
                continue next;
 
-            if (!CharOperation.prefixEquals(methodName, method.selector, false/* ignore case */)
+            if (!CharOperation.prefixEquals(methodName, method.selector, false/*
+                                                                               * ignore case
+                                                                               */)
                && !(this.options.camelCaseMatch && CharOperation.camelCaseMatch(methodName, method.selector)))
                continue next;
          }
@@ -8958,7 +8989,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
 
          if (exactMatch)
          {
-            if (!CharOperation.equals(methodName, method.selector, false /* ignore case */))
+            if (!CharOperation.equals(methodName, method.selector, false /*
+                                                                          * ignore case
+                                                                          */))
             {
                continue next;
             }
@@ -8967,7 +9000,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          {
             if (methodLength > method.selector.length)
                continue next;
-            if (!CharOperation.prefixEquals(methodName, method.selector, false /* ignore case */)
+            if (!CharOperation.prefixEquals(methodName, method.selector, false /*
+                                                                                * ignore case
+                                                                                */)
                && !(this.options.camelCaseMatch && CharOperation.camelCaseMatch(methodName, method.selector)))
             {
                continue next;
@@ -9371,7 +9406,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          if (methodLength > method.selector.length)
             continue next;
 
-         if (!CharOperation.prefixEquals(methodName, method.selector, false /* ignore case */)
+         if (!CharOperation.prefixEquals(methodName, method.selector, false /*
+                                                                             * ignore case
+                                                                             */)
             && !(this.options.camelCaseMatch && CharOperation.camelCaseMatch(methodName, method.selector)))
          {
             continue next;
@@ -10033,7 +10070,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          if (typeLength > memberType.sourceName.length)
             continue next;
 
-         if (!CharOperation.prefixEquals(typeName, memberType.sourceName, false/* ignore case */)
+         if (!CharOperation.prefixEquals(typeName, memberType.sourceName, false/*
+                                                                                * ignore case
+                                                                                */)
             && !(this.options.camelCaseMatch && CharOperation.camelCaseMatch(typeName, memberType.sourceName)))
             continue next;
 
@@ -10487,7 +10526,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
 
                         if (typeLength > localType.sourceName.length)
                            continue next;
-                        if (!CharOperation.prefixEquals(typeName, localType.sourceName, false/* ignore case */)
+                        if (!CharOperation.prefixEquals(typeName, localType.sourceName, false/*
+                                                                                              * ignore case
+                                                                                              */)
                            && !(this.options.camelCaseMatch && CharOperation.camelCaseMatch(typeName,
                               localType.sourceName)))
                            continue next;
@@ -12128,7 +12169,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                      if (tokenLength > local.name.length)
                         continue next;
 
-                     if (!CharOperation.prefixEquals(token, local.name, false /* ignore case */)
+                     if (!CharOperation.prefixEquals(token, local.name, false /*
+                                                                               * ignore case
+                                                                               */)
                         && !(this.options.camelCaseMatch && CharOperation.camelCaseMatch(token, local.name)))
                         continue next;
 

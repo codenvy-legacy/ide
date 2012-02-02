@@ -16,9 +16,7 @@ import org.eclipse.jdt.client.core.compiler.CharOperation;
 
 public class AssistOptions
 {
-   /**
-    * Option IDs
-    */
+   /** Option IDs */
    public static final String OPTION_PerformVisibilityCheck = "org.eclipse.jdt.core.codeComplete.visibilityCheck"; //$NON-NLS-1$
 
    public static final String OPTION_PerformDeprecationCheck = "org.eclipse.jdt.core.codeComplete.deprecationCheck"; //$NON-NLS-1$
@@ -96,17 +94,13 @@ public class AssistOptions
 
    public char[][] argumentSuffixes = null;
 
-   /**
-    * Initializing the assist options with default settings
-    */
+   /** Initializing the assist options with default settings */
    public AssistOptions()
    {
       // Initializing the assist options with default settings
    }
 
-   /**
-    * Initializing the assist options with external settings
-    */
+   /** Initializing the assist options with external settings */
    public AssistOptions(Map settings)
    {
       if (settings == null)

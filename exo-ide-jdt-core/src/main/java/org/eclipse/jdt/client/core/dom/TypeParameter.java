@@ -71,9 +71,7 @@ public class TypeParameter extends ASTNode
     */
    private SimpleName typeVariableName = null;
 
-   /**
-    * The type bounds (element type: {@link Type}). Defaults to an empty list.
-    */
+   /** The type bounds (element type: {@link Type}). Defaults to an empty list. */
    private ASTNode.NodeList typeBounds = new ASTNode.NodeList(TYPE_BOUNDS_PROPERTY);
 
    /**
@@ -91,17 +89,13 @@ public class TypeParameter extends ASTNode
       unsupportedIn2();
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
       if (property == NAME_PROPERTY)
@@ -120,9 +114,7 @@ public class TypeParameter extends ASTNode
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
       if (property == TYPE_BOUNDS_PROPERTY)
@@ -133,17 +125,13 @@ public class TypeParameter extends ASTNode
       return super.internalGetChildListProperty(property);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int getNodeType0()
    {
       return TYPE_PARAMETER;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    ASTNode clone0(AST target)
    {
       TypeParameter result = new TypeParameter(target);
@@ -153,18 +141,14 @@ public class TypeParameter extends ASTNode
       return result;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
       // dispatch to correct overloaded match method
       return matcher.match(this, other);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    void accept0(ASTVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -247,18 +231,14 @@ public class TypeParameter extends ASTNode
       return this.typeBounds;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       // treat Code as free
       return BASE_NODE_SIZE + 2 * 4;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int treeSize()
    {
       return memSize() + (this.typeVariableName == null ? 0 : getName().treeSize()) + this.typeBounds.listSize();

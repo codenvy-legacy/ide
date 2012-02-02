@@ -245,9 +245,7 @@ public class CompilationResult
       return this.compilationUnit;
    }
 
-   /**
-    * Answer the errors encountered during compilation.
-    */
+   /** Answer the errors encountered during compilation. */
    public CategorizedProblem[] getErrors()
    {
       CategorizedProblem[] reportedProblems = getProblems();
@@ -269,9 +267,7 @@ public class CompilationResult
       return errors;
    }
 
-   /**
-    * Answer the initial file name
-    */
+   /** Answer the initial file name */
    public char[] getFileName()
    {
       return this.fileName;
@@ -393,9 +389,7 @@ public class CompilationResult
          quickPrioritize(problemList, left, original_right);
    }
 
-   /*
-    * Record the compilation unit result's package name
-    */
+   /* Record the compilation unit result's package name */
    public void recordPackageName(char[][] packName)
    {
       this.packageName = packName;

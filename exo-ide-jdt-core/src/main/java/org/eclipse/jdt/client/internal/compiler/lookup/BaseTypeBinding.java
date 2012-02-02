@@ -136,17 +136,13 @@ public final class BaseTypeBinding extends TypeBinding
       this.constantPoolName = constantPoolName;
    }
 
-   /**
-    * int -> I
-    */
+   /** int -> I */
    public char[] computeUniqueKey(boolean isLeaf)
    {
       return constantPoolName();
    }
 
-   /*
-    * Answer the receiver's constant pool name.
-    */
+   /* Answer the receiver's constant pool name. */
    public char[] constantPoolName()
    {
 
@@ -182,9 +178,7 @@ public final class BaseTypeBinding extends TypeBinding
       return this == TypeBinding.NULL;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#kind()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#kind() */
    public int kind()
    {
       return Binding.BASE_TYPE;

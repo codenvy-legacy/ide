@@ -11,9 +11,9 @@
 package org.eclipse.jdt.client.core.formatter.align;
 
 /**
- * Exception used to backtrack and break available alignments
- * When the exception is thrown, it is assumed that some alignment will be changed.
- *
+ * Exception used to backtrack and break available alignments When the exception is thrown, it is assumed that some alignment will
+ * be changed.
+ * 
  * @since 2.1
  */
 public class AlignmentException extends RuntimeException

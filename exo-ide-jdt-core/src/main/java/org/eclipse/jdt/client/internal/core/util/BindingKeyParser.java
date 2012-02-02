@@ -650,9 +650,7 @@ public class BindingKeyParser
       // default is to do nothing
    }
 
-   /*
-    * Returns the string that this binding key wraps.
-    */
+   /* Returns the string that this binding key wraps. */
    public String getKey()
    {
       return new String(this.scanner.source);
@@ -713,7 +711,9 @@ public class BindingKeyParser
          }
          else if (this.scanner.isAtTypeArgumentStart())
             // parameterized type
-            parseParameterizedType(null/* top level type or member type with raw enclosing type */, false/* no raw */);
+            parseParameterizedType(null/*
+                                        * top level type or member type with raw enclosing type
+                                        */, false/* no raw */);
          else if (this.scanner.isAtRawTypeEnd())
             // raw type
             parseRawType();

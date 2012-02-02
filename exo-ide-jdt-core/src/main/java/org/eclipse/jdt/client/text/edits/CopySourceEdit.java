@@ -17,20 +17,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A copy source edit denotes the source of a copy operation. Copy
- * source edits are only valid inside an edit tree if they have a
- * corresponding target edit. Furthermore the corresponding
- * target edit can't be a direct or indirect child of the source
- * edit. Violating one of two requirements will result in a <code>
+ * A copy source edit denotes the source of a copy operation. Copy source edits are only valid inside an edit tree if they have a
+ * corresponding target edit. Furthermore the corresponding target edit can't be a direct or indirect child of the source edit.
+ * Violating one of two requirements will result in a <code>
  * MalformedTreeException</code> when executing the edit tree.
  * <p>
- * A copy source edit can manage an optional source modifier. A
- * source modifier can provide a set of replace edits which will
- * to applied to the source before it gets inserted at the target
- * position.
- *
+ * A copy source edit can manage an optional source modifier. A source modifier can provide a set of replace edits which will to
+ * applied to the source before it gets inserted at the target position.
+ * 
  * @see org.eclipse.text.edits.CopyTargetEdit
- *
+ * 
  * @since 3.0
  */
 public final class CopySourceEdit extends TextEdit
@@ -109,7 +105,7 @@ public final class CopySourceEdit extends TextEdit
 
    /**
     * Constructs a new copy source edit.
-    *
+    * 
     * @param offset the edit's offset
     * @param length the edit's length
     */
@@ -120,7 +116,7 @@ public final class CopySourceEdit extends TextEdit
 
    /**
     * Constructs a new copy source edit.
-    *
+    * 
     * @param offset the edit's offset
     * @param length the edit's length
     * @param target the edit's target
@@ -131,9 +127,7 @@ public final class CopySourceEdit extends TextEdit
       setTargetEdit(target);
    }
 
-   /*
-    * Copy Constructor
-    */
+   /* Copy Constructor */
    private CopySourceEdit(CopySourceEdit other)
    {
       super(other);
@@ -142,9 +136,8 @@ public final class CopySourceEdit extends TextEdit
    }
 
    /**
-    * Returns the associated target edit or <code>null</code>
-    * if no target edit is associated yet.
-    *
+    * Returns the associated target edit or <code>null</code> if no target edit is associated yet.
+    * 
     * @return the target edit or <code>null</code>
     */
    public CopyTargetEdit getTargetEdit()
@@ -154,11 +147,10 @@ public final class CopySourceEdit extends TextEdit
 
    /**
     * Sets the target edit.
-    *
+    * 
     * @param edit the new target edit.
-    *
-    * @exception MalformedTreeException is thrown if the target edit
-    *  is a direct or indirect child of the source edit
+    * 
+    * @exception MalformedTreeException is thrown if the target edit is a direct or indirect child of the source edit
     */
    public void setTargetEdit(CopyTargetEdit edit) throws MalformedTreeException
    {
@@ -170,9 +162,8 @@ public final class CopySourceEdit extends TextEdit
    }
 
    /**
-    * Returns the current source modifier or <code>null</code>
-    * if no source modifier is set.
-    *
+    * Returns the current source modifier or <code>null</code> if no source modifier is set.
+    * 
     * @return the source modifier
     */
    public ISourceModifier getSourceModifier()
@@ -182,26 +173,21 @@ public final class CopySourceEdit extends TextEdit
 
    /**
     * Sets the optional source modifier.
-    *
-    * @param modifier the source modifier or <code>null</code>
-    *  if no source modification is need.
+    * 
+    * @param modifier the source modifier or <code>null</code> if no source modification is need.
     */
    public void setSourceModifier(ISourceModifier modifier)
    {
       fModifier = modifier;
    }
 
-   /*
-    * @see TextEdit#doCopy
-    */
+   /* @see TextEdit#doCopy */
    protected TextEdit doCopy()
    {
       return new CopySourceEdit(this);
    }
 
-   /*
-    * @see TextEdit#accept0
-    */
+   /* @see TextEdit#accept0 */
    protected void accept0(TextEditVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -211,7 +197,7 @@ public final class CopySourceEdit extends TextEdit
       }
    }
 
-   //---- API for CopyTargetEdit ------------------------------------------------
+   // ---- API for CopyTargetEdit ------------------------------------------------
 
    String getContent()
    {
@@ -228,9 +214,7 @@ public final class CopySourceEdit extends TextEdit
       fSourceContent = null;
    }
 
-   /*
-    * @see TextEdit#postProcessCopy
-    */
+   /* @see TextEdit#postProcessCopy */
    protected void postProcessCopy(TextEditCopier copier)
    {
       if (fTarget != null)
@@ -242,7 +226,7 @@ public final class CopySourceEdit extends TextEdit
       }
    }
 
-   //---- consistency check ----------------------------------------------------
+   // ---- consistency check ----------------------------------------------------
 
    int traverseConsistencyCheck(TextEditProcessor processor, IDocument document, List sourceEdits)
    {
@@ -280,13 +264,13 @@ public final class CopySourceEdit extends TextEdit
          throw new MalformedTreeException(getParent(), this, "No target edit provided."); //$NON-NLS-1$
       if (fTarget.getSourceEdit() != this)
          throw new MalformedTreeException(getParent(), this, "Target edit has different source edit."); //$NON-NLS-1$
-      /* causes ASTRewrite to fail
-      if (getRoot() != fTarget.getRoot())
-      	throw new MalformedTreeException(getParent(), this, TextEditMessages.getString("CopySourceEdit.different_tree")); //$NON-NLS-1$
-      */
+      /*
+       * causes ASTRewrite to fail if (getRoot() != fTarget.getRoot()) throw new MalformedTreeException(getParent(), this,
+       * TextEditMessages.getString("CopySourceEdit.different_tree")); //$NON-NLS-1$
+       */
    }
 
-   //---- source computation -------------------------------------------------------
+   // ---- source computation -------------------------------------------------------
 
    void traverseSourceComputation(TextEditProcessor processor, IDocument document)
    {
@@ -328,8 +312,8 @@ public final class CopySourceEdit extends TextEdit
       }
       catch (BadLocationException cannotHappen)
       {
-         //			Assert.isTrue(false);
-         //skip
+         // Assert.isTrue(false);
+         // skip
       }
    }
 
@@ -352,11 +336,11 @@ public final class CopySourceEdit extends TextEdit
       }
       catch (BadLocationException cannotHappen)
       {
-         //skip
+         // skip
       }
    }
 
-   //---- document updating ----------------------------------------------------------------
+   // ---- document updating ----------------------------------------------------------------
 
    int performDocumentUpdating(IDocument document) throws BadLocationException
    {
@@ -364,11 +348,9 @@ public final class CopySourceEdit extends TextEdit
       return fDelta;
    }
 
-   //---- region updating ----------------------------------------------------------------
+   // ---- region updating ----------------------------------------------------------------
 
-   /*
-    * @see TextEdit#deleteChildren
-    */
+   /* @see TextEdit#deleteChildren */
    boolean deleteChildren()
    {
       return false;

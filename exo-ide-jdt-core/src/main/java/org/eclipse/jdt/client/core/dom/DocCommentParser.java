@@ -55,10 +55,8 @@ class DocCommentParser extends AbstractCommentParser
    }
 
    /*
-    * (non-Javadoc) Returns true if tag @deprecated is present in annotation.
-    * 
-    * If annotation checking is enabled, will also construct an Annotation node, which will be stored into Parser.annotation slot
-    * for being consumed later on.
+    * (non-Javadoc) Returns true if tag @deprecated is present in annotation. If annotation checking is enabled, will also
+    * construct an Annotation node, which will be stored into Parser.annotation slot for being consumed later on.
     */
    public Javadoc parse(int[] positions)
    {
@@ -111,8 +109,7 @@ class DocCommentParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createArgumentReference(char[], java.lang.Object, int)
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser# createArgumentReference(char[], java.lang.Object, int)
     */
    protected Object createArgumentReference(char[] name, int dim, boolean isVarargs, Object typeRef,
       long[] dimPositions, long argNamePos) throws InvalidInputException
@@ -170,8 +167,7 @@ class DocCommentParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createFieldReference()
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser# createFieldReference()
     */
    protected Object createFieldReference(Object receiver) throws InvalidInputException
    {
@@ -207,8 +203,7 @@ class DocCommentParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createMethodReference(java.lang.Object[])
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser# createMethodReference(java.lang.Object[])
     */
    protected Object createMethodReference(Object receiver, List arguments) throws InvalidInputException
    {
@@ -256,7 +251,6 @@ class DocCommentParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createTag()
     */
    protected void createTag()
@@ -301,8 +295,7 @@ class DocCommentParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createTypeReference()
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser# createTypeReference()
     */
    protected Object createTypeReference(int primitiveToken)
    {
@@ -388,8 +381,7 @@ class DocCommentParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#parseIdentifierTag(boolean)
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser# parseIdentifierTag(boolean)
     */
    protected boolean parseIdentifierTag(boolean report)
    {
@@ -403,9 +395,7 @@ class DocCommentParser extends AbstractCommentParser
       return false;
    }
 
-   /*
-    * Parse @return tag declaration
-    */
+   /* Parse @return tag declaration */
    protected boolean parseReturn()
    {
       createTag();
@@ -414,8 +404,7 @@ class DocCommentParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#parseTag(int)
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#parseTag (int)
     */
    protected boolean parseTag(int previousPosition) throws InvalidInputException
    {
@@ -703,8 +692,7 @@ class DocCommentParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushParamName(java.lang.Object)
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushParamName (java.lang.Object)
     */
    protected boolean pushParamName(boolean isTypeParam)
    {
@@ -748,8 +736,7 @@ class DocCommentParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushSeeRef(java.lang.Object)
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushSeeRef (java.lang.Object)
     */
    protected boolean pushSeeRef(Object statement)
    {
@@ -798,8 +785,7 @@ class DocCommentParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushText(int, int)
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushText (int, int)
     */
    protected void pushText(int start, int end)
    {
@@ -856,8 +842,7 @@ class DocCommentParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushThrowName(java.lang.Object)
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushThrowName (java.lang.Object)
     */
    protected boolean pushThrowName(Object typeRef)
    {
@@ -880,8 +865,7 @@ class DocCommentParser extends AbstractCommentParser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#refreshInlineTagPosition(int)
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser# refreshInlineTagPosition(int)
     */
    protected void refreshInlineTagPosition(int previousPosition)
    {
@@ -905,9 +889,7 @@ class DocCommentParser extends AbstractCommentParser
       }
    }
 
-   /*
-    * Add stored tag elements to associated comment.
-    */
+   /* Add stored tag elements to associated comment. */
    protected void updateDocComment()
    {
       for (int idx = 0; idx <= this.astPtr; idx++)

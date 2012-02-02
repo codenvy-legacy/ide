@@ -135,17 +135,13 @@ public class IrritantSet
    // Internal state
    private int[] bits = new int[GROUP_MAX];
 
-   /**
-    * Constructor with initial irritant set
-    */
+   /** Constructor with initial irritant set */
    public IrritantSet(int singleGroupIrritants)
    {
       initialize(singleGroupIrritants);
    }
 
-   /**
-    * Constructor with initial irritant set
-    */
+   /** Constructor with initial irritant set */
    public IrritantSet(IrritantSet other)
    {
       initialize(other);

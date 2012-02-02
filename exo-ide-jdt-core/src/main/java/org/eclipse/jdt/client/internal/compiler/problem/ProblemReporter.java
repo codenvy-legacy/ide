@@ -1086,9 +1086,7 @@ public class ProblemReporter extends ProblemHandler
          case IProblem.TypeCollidesWithPackage :
             return ProblemSeverities.Warning;
 
-            /*
-             * Javadoc tags resolved references errors
-             */
+            /* Javadoc tags resolved references errors */
          case IProblem.JavadocInvalidParamName :
          case IProblem.JavadocDuplicateParamName :
          case IProblem.JavadocMissingParamName :
@@ -1130,9 +1128,7 @@ public class ProblemReporter extends ProblemHandler
                return ProblemSeverities.Ignore;
             }
             break;
-         /*
-          * Javadoc invalid tags due to deprecated references
-          */
+         /* Javadoc invalid tags due to deprecated references */
          case IProblem.JavadocUsingDeprecatedField :
          case IProblem.JavadocUsingDeprecatedConstructor :
          case IProblem.JavadocUsingDeprecatedMethod :
@@ -1142,9 +1138,7 @@ public class ProblemReporter extends ProblemHandler
                return ProblemSeverities.Ignore;
             }
             break;
-         /*
-          * Javadoc invalid tags due to non-visible references
-          */
+         /* Javadoc invalid tags due to non-visible references */
          case IProblem.JavadocNotVisibleField :
          case IProblem.JavadocNotVisibleConstructor :
          case IProblem.JavadocNotVisibleMethod :
@@ -1155,9 +1149,7 @@ public class ProblemReporter extends ProblemHandler
                return ProblemSeverities.Ignore;
             }
             break;
-         /*
-          * Javadoc missing tag descriptions
-          */
+         /* Javadoc missing tag descriptions */
          case IProblem.JavadocEmptyReturnTag :
             if (CompilerOptions.NO_TAG.equals(this.options.reportMissingJavadocTagDescription))
             {
@@ -1614,8 +1606,9 @@ public class ProblemReporter extends ProblemHandler
          ReferenceBinding referenceBinding = field.declaringClass;
          if (referenceBinding != null)
          {
-            if (referenceBinding
-               .findSuperTypeOriginatingFrom(TypeIds.T_JavaIoSerializable, false /* Serializable is not a class */) != null)
+            if (referenceBinding.findSuperTypeOriginatingFrom(TypeIds.T_JavaIoSerializable, false /*
+                                                                                                   * Serializable is not a class
+                                                                                                   */) != null)
             {
                return; // do not report field hiding for serialVersionUID field for class that implements Serializable
             }
@@ -1632,8 +1625,9 @@ public class ProblemReporter extends ProblemHandler
          ReferenceBinding referenceBinding = field.declaringClass;
          if (referenceBinding != null)
          {
-            if (referenceBinding
-               .findSuperTypeOriginatingFrom(TypeIds.T_JavaIoSerializable, false /* Serializable is not a class */) != null)
+            if (referenceBinding.findSuperTypeOriginatingFrom(TypeIds.T_JavaIoSerializable, false /*
+                                                                                                   * Serializable is not a class
+                                                                                                   */) != null)
             {
                return; // do not report field hiding for serialPersistenFields field for class that implements Serializable
             }
@@ -5920,9 +5914,15 @@ public class ProblemReporter extends ProblemHandler
 
    public void task(String tag, String message, String priority, int start, int end)
    {
-      this.handle(IProblem.Task,
-         new String[]{tag, message, priority/* secret argument that is not surfaced in getMessage() */}, new String[]{
-            tag, message, priority/* secret argument that is not surfaced in getMessage() */}, start, end);
+      this.handle(IProblem.Task, new String[]{tag, message, priority/*
+                                                                     * secret argument that is not surfaced in getMessage ()
+                                                                     */}, new String[]{tag, message, priority/*
+                                                                                                              * secret argument
+                                                                                                              * that is not
+                                                                                                              * surfaced in
+                                                                                                              * getMessage()
+                                                                                                              */},
+         start, end);
    }
 
    public void tooManyDimensions(ASTNode expression)
@@ -6690,8 +6690,9 @@ public class ProblemReporter extends ProblemHandler
          ReferenceBinding referenceBinding = field.declaringClass;
          if (referenceBinding != null)
          {
-            if (referenceBinding
-               .findSuperTypeOriginatingFrom(TypeIds.T_JavaIoSerializable, false /* Serializable is not a class */) != null)
+            if (referenceBinding.findSuperTypeOriginatingFrom(TypeIds.T_JavaIoSerializable, false /*
+                                                                                                   * Serializable is not a class
+                                                                                                   */) != null)
             {
                return; // do not report unused serialVersionUID field for class that implements Serializable
             }
@@ -6707,8 +6708,9 @@ public class ProblemReporter extends ProblemHandler
          ReferenceBinding referenceBinding = field.declaringClass;
          if (referenceBinding != null)
          {
-            if (referenceBinding
-               .findSuperTypeOriginatingFrom(TypeIds.T_JavaIoSerializable, false /* Serializable is not a class */) != null)
+            if (referenceBinding.findSuperTypeOriginatingFrom(TypeIds.T_JavaIoSerializable, false /*
+                                                                                                   * Serializable is not a class
+                                                                                                   */) != null)
             {
                return; // do not report unused serialVersionUID field for class that implements Serializable
             }

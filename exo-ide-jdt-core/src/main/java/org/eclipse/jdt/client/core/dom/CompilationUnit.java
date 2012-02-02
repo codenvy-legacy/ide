@@ -50,14 +50,10 @@ import java.util.List;
 public class CompilationUnit extends ASTNode
 {
 
-   /**
-    * Canonical empty list of messages.
-    */
+   /** Canonical empty list of messages. */
    private static final Message[] EMPTY_MESSAGES = new Message[0];
 
-   /**
-    * Canonical empty list of problems.
-    */
+   /** Canonical empty list of problems. */
    private static final IProblem[] EMPTY_PROBLEMS = new IProblem[0];
 
    /**
@@ -133,9 +129,7 @@ public class CompilationUnit extends ASTNode
     */
    private int[] lineEndTable = Util.EMPTY_INT_ARRAY;
 
-   /**
-    * Messages reported by the compiler during parsing or name resolution.
-    */
+   /** Messages reported by the compiler during parsing or name resolution. */
    private Message[] messages;
 
    /**
@@ -158,14 +152,10 @@ public class CompilationUnit extends ASTNode
     */
    private PackageDeclaration optionalPackageDeclaration = null;
 
-   /**
-    * Problems reported by the compiler during parsing or name resolution.
-    */
+   /** Problems reported by the compiler during parsing or name resolution. */
    private IProblem[] problems = EMPTY_PROBLEMS;
 
-   /**
-    * Internal data used to perform statements recovery.
-    */
+   /** Internal data used to perform statements recovery. */
    private Object statementsRecoveryData;
 
    /**
@@ -188,9 +178,7 @@ public class CompilationUnit extends ASTNode
       super(ast);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    void accept0(ASTVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -204,9 +192,7 @@ public class CompilationUnit extends ASTNode
       visitor.endVisit(this);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    ASTNode clone0(AST target)
    {
       CompilationUnit result = new CompilationUnit(target);
@@ -487,9 +473,7 @@ public class CompilationUnit extends ASTNode
       return this.messages;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int getNodeType0()
    {
       return COMPILATION_UNIT;
@@ -656,9 +640,7 @@ public class CompilationUnit extends ASTNode
       this.commentMapper.initialize(this, scanner);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
       if (property == IMPORTS_PROPERTY)
@@ -673,9 +655,7 @@ public class CompilationUnit extends ASTNode
       return super.internalGetChildListProperty(property);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
       if (property == PACKAGE_PROPERTY)
@@ -696,7 +676,6 @@ public class CompilationUnit extends ASTNode
 
    /*
     * (omit javadoc for this method) Method declared on ASTNode.
-    * 
     * @since 3.0
     */
    final List internalStructuralPropertiesForType(int apiLevel)
@@ -813,9 +792,7 @@ public class CompilationUnit extends ASTNode
       }
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       int size = BASE_NODE_SIZE + 8 * 4;
@@ -997,18 +974,14 @@ public class CompilationUnit extends ASTNode
       this.statementsRecoveryData = data;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
       // dispatch to correct overloaded match method
       return matcher.match(this, other);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int treeSize()
    {
       int size = memSize();

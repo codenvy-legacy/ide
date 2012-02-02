@@ -20,9 +20,7 @@ import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 import org.eclipse.jdt.client.core.formatter.comment.IJavaDocTagConstants;
 
-/**
- * Internal parser used for formatting javadoc comments.
- */
+/** Internal parser used for formatting javadoc comments. */
 public class FormatterCommentParser extends JavadocParser implements IJavaDocTagConstants
 {
    char[][] htmlTags;
@@ -61,8 +59,10 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
       return valid && this.docComment != null;
    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.parser.JavadocParser#createArgumentReference(char[], int, boolean, java.lang.Object, long[], long)
+   /*
+    * (non-Javadoc)
+    * @see org.eclipse.jdt.internal.compiler.parser.JavadocParser#createArgumentReference (char[], int, boolean, java.lang.Object,
+    * long[], long)
     */
    protected Object createArgumentReference(char[] name, int dim, boolean isVarargs, Object ref, long[] dimPositions,
       long argNamePos) throws InvalidInputException
@@ -77,8 +77,9 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
       return ref;
    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#createFakeReference(int)
+   /*
+    * (non-Javadoc)
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser# createFakeReference(int)
     */
    protected boolean createFakeReference(int start)
    {
@@ -90,8 +91,9 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
       return pushSeeRef(reference);
    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.parser.JavadocParser#createFieldReference(java.lang.Object)
+   /*
+    * (non-Javadoc)
+    * @see org.eclipse.jdt.internal.compiler.parser.JavadocParser#createFieldReference (java.lang.Object)
     */
    protected Object createFieldReference(Object receiver) throws InvalidInputException
    {
@@ -100,8 +102,9 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
       return new FormatJavadocReference(start, (int)this.identifierPositionStack[0], lineStart);
    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.parser.JavadocParser#createMethodReference(java.lang.Object, java.util.List)
+   /*
+    * (non-Javadoc)
+    * @see org.eclipse.jdt.internal.compiler.parser.JavadocParser#createMethodReference (java.lang.Object, java.util.List)
     */
    protected Object createMethodReference(Object receiver, List arguments) throws InvalidInputException
    {
@@ -110,7 +113,8 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
       return new FormatJavadocReference(start, this.scanner.getCurrentTokenEndPosition(), lineStart);
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.eclipse.jdt.internal.compiler.parser.JavadocParser#createTag()
     */
    protected void createTag()
@@ -140,8 +144,9 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
       }
    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.parser.JavadocParser#createTypeReference(int)
+   /*
+    * (non-Javadoc)
+    * @see org.eclipse.jdt.internal.compiler.parser.JavadocParser#createTypeReference (int)
     */
    protected Object createTypeReference(int primitiveToken)
    {
@@ -160,10 +165,8 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
    }
 
    /*
-    * Return the html tag index in the various arrays of IJavaDocTagConstants.
-    * The returned int is set as follow:
-    * 	- the array index is set on bits 0 to 7
-    * 	- the tag category is set on bit 8 to 15 (0xFF00 if no array includes the tag)
+    * Return the html tag index in the various arrays of IJavaDocTagConstants. The returned int is set as follow: - the array
+    * index is set on bits 0 to 7 - the tag category is set on bit 8 to 15 (0xFF00 if no array includes the tag)
     */
    private int getHtmlTagIndex(char[] htmlTag)
    {
@@ -216,8 +219,7 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
    }
 
    /*
-    * Parse an HTML tag expected to be either opening (e.g. <tag_name> ) or
-    * closing (e.g. </tag_name>).
+    * Parse an HTML tag expected to be either opening (e.g. <tag_name> ) or closing (e.g. </tag_name>).
     */
    protected boolean parseHtmlTag(int previousPosition, int endTextPosition) throws InvalidInputException
    {
@@ -353,7 +355,7 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
                this.index = currentPosition;
                loop : while (true)
                {
-                  //	    			currentPosition = this.index;
+                  // currentPosition = this.index;
                   switch (readChar())
                   {
                      case '<' :
@@ -421,8 +423,9 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
       return valid;
    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#parseIdentifierTag(boolean)
+   /*
+    * (non-Javadoc)
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser# parseIdentifierTag(boolean)
     */
    protected boolean parseIdentifierTag(boolean report)
    {
@@ -437,7 +440,8 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
       return false;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.eclipse.jdt.internal.compiler.parser.JavadocParser#parseParam()
     */
    protected boolean parseParam() throws InvalidInputException
@@ -470,8 +474,9 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
       return valid;
    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#parseReference()
+   /*
+    * (non-Javadoc)
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#parseReference ()
     */
    protected boolean parseReference() throws InvalidInputException
    {
@@ -485,16 +490,15 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
       return valid;
    }
 
-   /*
-    * Parse @return tag declaration
-    */
+   /* Parse @return tag declaration */
    protected boolean parseReturn()
    {
       createTag();
       return true;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.eclipse.jdt.internal.compiler.parser.JavadocParser#parseTag(int)
     */
    protected boolean parseTag(int previousPosition) throws InvalidInputException
@@ -571,7 +575,8 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
             if (length == TAG_CATEGORY_LENGTH && CharOperation.equals(TAG_CATEGORY, tagName))
             {
                this.tagValue = TAG_CATEGORY_VALUE;
-               valid = parseIdentifierTag(false); // TODO (frederic) reconsider parameter value when @category will be significant in spec
+               valid = parseIdentifierTag(false); // TODO (frederic) reconsider parameter value when @category will be significant
+                                                  // in spec
             }
             else if (length == TAG_CODE_LENGTH && this.inlineTagStarted && CharOperation.equals(TAG_CODE, tagName))
             {
@@ -766,7 +771,8 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
       return true;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.eclipse.jdt.internal.compiler.parser.JavadocParser#parseThrows()
     */
    protected boolean parseThrows()
@@ -782,8 +788,9 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
       return valid;
    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.parser.JavadocParser#pushParamName(boolean)
+   /*
+    * (non-Javadoc)
+    * @see org.eclipse.jdt.internal.compiler.parser.JavadocParser#pushParamName( boolean)
     */
    protected boolean pushParamName(boolean isTypeParam)
    {
@@ -800,8 +807,9 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
       return true;
    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.parser.JavadocParser#pushSeeRef(java.lang.Object)
+   /*
+    * (non-Javadoc)
+    * @see org.eclipse.jdt.internal.compiler.parser.JavadocParser#pushSeeRef(java .lang.Object)
     */
    protected boolean pushSeeRef(Object statement)
    {
@@ -837,8 +845,9 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
       return true;
    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushText(int, int)
+   /*
+    * (non-Javadoc)
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushText (int, int)
     */
    protected void pushText(int start, int end)
    {
@@ -900,8 +909,7 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
 
    /*
     * (non-Javadoc)
-    *
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushThrowName(java.lang.Object)
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#pushThrowName (java.lang.Object)
     */
    protected boolean pushThrowName(Object typeRef)
    {
@@ -915,9 +923,8 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
    }
 
    /*
-    * (non-Javadoc)
-    * Will update the inline tag position (end position) once tag was fully parsed.
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#refreshInlineTagPosition(int)
+    * (non-Javadoc) Will update the inline tag position (end position) once tag was fully parsed.
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser# refreshInlineTagPosition(int)
     */
    protected void refreshInlineTagPosition(int previousPosition)
    {
@@ -937,10 +944,9 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
    }
 
    /*
-    * Store the html tags level when entering an inline tag in case a wrong sequence
-    * of opening/closing tags is defined inside it. Then, when leaving the inline tag
-    * the level is reset to the entering value and avoid to wrongly attach subsequent
-    * html tags to node inside the inline tag last node...
+    * Store the html tags level when entering an inline tag in case a wrong sequence of opening/closing tags is defined inside it.
+    * Then, when leaving the inline tag the level is reset to the entering value and avoid to wrongly attach subsequent html tags
+    * to node inside the inline tag last node...
     */
    protected void setInlineTagStarted(boolean started)
    {
@@ -976,9 +982,8 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
    }
 
    /*
-    * Add stored tag elements to associated comment.
-    * Clean all blocks (i.e. resize arrays to avoid null slots)
-    * Set extra information on block about line relative positions.
+    * Add stored tag elements to associated comment. Clean all blocks (i.e. resize arrays to avoid null slots) Set extra
+    * information on block about line relative positions.
     */
    protected void updateDocComment()
    {
@@ -1015,8 +1020,9 @@ public class FormatterCommentParser extends JavadocParser implements IJavaDocTag
       }
    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#verifyEndLine(int)
+   /*
+    * (non-Javadoc)
+    * @see org.eclipse.jdt.internal.compiler.parser.AbstractCommentParser#verifyEndLine (int)
     */
    protected boolean verifyEndLine(int textPosition)
    {

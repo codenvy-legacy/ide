@@ -432,7 +432,7 @@ class MethodVerifier15 extends MethodVerifier
        * current type again. I have gotten rid of them as they in fact short circuit error reporting in cases where they should
        * not. This means that occasionally we would report the error twice - the diagnostics is valid however, albeit arguably
        * redundant. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=334313. For an example of a test where we do this extra
-       * reporting see org.eclipse.jdt.core.tests.compiler.regression.MethodVerifyTest.test159()
+       * reporting see org.eclipse.jdt.core.tests.compiler .regression.MethodVerifyTest.test159()
        */
       // check to see if this is just a warning, if so report it & skip to next method
       if (isUnsafeReturnTypeOverride(method, otherMethod))

@@ -37,9 +37,7 @@ public class JavadocMessageSend extends MessageSend
       this.arguments = arguments;
    }
 
-   /*
-    * Resolves type on a Block or Class scope.
-    */
+   /* Resolves type on a Block or Class scope. */
    private TypeBinding internalResolveType(Scope scope)
    {
       // Answer the signature return type
@@ -237,7 +235,6 @@ public class JavadocMessageSend extends MessageSend
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.InvocationSite#isSuperAccess()
     */
    public boolean isSuperAccess()
@@ -277,8 +274,7 @@ public class JavadocMessageSend extends MessageSend
 
    /*
     * (non-Javadoc) Redefine to capture javadoc specific signatures
-    * 
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor,
+    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt .internal.compiler.ASTVisitor,
     * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, BlockScope blockScope)
@@ -301,8 +297,7 @@ public class JavadocMessageSend extends MessageSend
 
    /*
     * (non-Javadoc) Redefine to capture javadoc specific signatures
-    * 
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor,
+    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt .internal.compiler.ASTVisitor,
     * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, ClassScope scope)

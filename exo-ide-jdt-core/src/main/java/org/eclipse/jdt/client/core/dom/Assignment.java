@@ -52,9 +52,7 @@ public class Assignment extends Expression
    public static class Operator
    {
 
-      /**
-       * The name of the operator
-       */
+      /** The name of the operator */
       private String op;
 
       /**
@@ -201,9 +199,7 @@ public class Assignment extends Expression
       return PROPERTY_DESCRIPTORS;
    }
 
-   /**
-    * The assignment operator; defaults to Assignment.Operator.ASSIGN
-    */
+   /** The assignment operator; defaults to Assignment.Operator.ASSIGN */
    private Assignment.Operator assignmentOperator = Assignment.Operator.ASSIGN;
 
    /**
@@ -227,17 +223,13 @@ public class Assignment extends Expression
       super(ast);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value)
    {
       if (property == OPERATOR_PROPERTY)
@@ -256,9 +248,7 @@ public class Assignment extends Expression
       return super.internalGetSetObjectProperty(property, get, value);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
       if (property == LEFT_HAND_SIDE_PROPERTY)
@@ -289,17 +279,13 @@ public class Assignment extends Expression
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int getNodeType0()
    {
       return ASSIGNMENT;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    ASTNode clone0(AST target)
    {
       Assignment result = new Assignment(target);
@@ -310,18 +296,14 @@ public class Assignment extends Expression
       return result;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
       // dispatch to correct overloaded match method
       return matcher.match(this, other);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    void accept0(ASTVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -455,18 +437,14 @@ public class Assignment extends Expression
       postReplaceChild(oldChild, expression, RIGHT_HAND_SIDE_PROPERTY);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       // treat Code as free
       return BASE_NODE_SIZE + 3 * 4;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int treeSize()
    {
       return memSize() + (this.leftHandSide == null ? 0 : getLeftHandSide().treeSize())

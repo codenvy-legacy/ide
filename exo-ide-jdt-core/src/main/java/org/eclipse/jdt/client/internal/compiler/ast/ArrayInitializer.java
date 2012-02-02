@@ -25,9 +25,7 @@ public class ArrayInitializer extends Expression
 
    public ArrayBinding binding; // the type of the { , , , }
 
-   /**
-    * ArrayInitializer constructor comment.
-    */
+   /** ArrayInitializer constructor comment. */
    public ArrayInitializer()
    {
 

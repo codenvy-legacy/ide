@@ -13,15 +13,11 @@ package org.eclipse.jdt.client.internal.compiler.env;
 public interface ISourceImport
 {
 
-   /**
-    * Answer the source end position of the import declaration.
-    */
+   /** Answer the source end position of the import declaration. */
 
    int getDeclarationSourceEnd();
 
-   /**
-    * Answer the source start position of the import declaration.
-    */
+   /** Answer the source start position of the import declaration. */
 
    int getDeclarationSourceStart();
 

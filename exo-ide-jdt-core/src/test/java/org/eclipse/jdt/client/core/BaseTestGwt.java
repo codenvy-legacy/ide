@@ -22,8 +22,8 @@ import com.google.gwt.junit.client.GWTTestCase;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  4:00:10 PM 34360 2009-07-22 23:58:59Z evgen $
- *
+ * @version $Id: 4:00:10 PM 34360 2009-07-22 23:58:59Z evgen $
+ * 
  */
 public abstract class BaseTestGwt extends GWTTestCase
 {

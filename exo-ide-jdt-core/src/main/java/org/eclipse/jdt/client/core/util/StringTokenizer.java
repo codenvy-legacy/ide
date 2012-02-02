@@ -77,9 +77,7 @@ public class StringTokenizer
       this(str, " \t\n\r\f", false);
    }
 
-   /**
-    * Skips delimiters.
-    */
+   /** Skips delimiters. */
    private void skipDelimiters()
    {
       while (!retTokens && (currentPosition < maxPosition) && (delimiters.indexOf(str.charAt(currentPosition)) >= 0))

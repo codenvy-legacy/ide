@@ -215,7 +215,7 @@ public interface IMethodBinding extends IBinding
     * returns the binding for the corresponding generic method.</li>
     * <li>For references to the method {@link Object#getClass() Object.getClass()}, returns the binding for the method declaration
     * which is declared to return <code>Class&lt;?&gt;</code> or <code>Class&lt;? extends Object&gt;</code>. In the reference
-    * binding, the return type becomes <code>Class&lt;? extends </code><em>R</em><code>&gt;</code>, where <em>R</em> is the
+    * binding, the return type becomes <code>Class&lt;? extends </code><em>R</em> <code>&gt;</code>, where <em>R</em> is the
     * erasure of the static type of the receiver of the method invocation.</li>
     * <li>For references to a signature polymorphic method from class MethodHandle, returns the declaration of the method. In the
     * reference binding, the parameter types and the return type are determined by the concrete invocation context.</li>

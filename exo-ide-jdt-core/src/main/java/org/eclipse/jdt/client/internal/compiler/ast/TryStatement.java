@@ -241,8 +241,8 @@ public class TryStatement extends SubRoutineStatement
                catchInfo.markAsDefinitelyNonNull(catchArg);
                /*
                 * "If we are about to consider an unchecked exception handler, potential inits may have occured inside the try
-                * block that need to be detected , e.g. try { x = 1; throwSomething();} catch(Exception e){ x = 2} "
-                * "(uncheckedExceptionTypes notNil and: [uncheckedExceptionTypes at: index]) ifTrue: [catchInits
+                * block that need to be detected , e.g. try { x = 1; throwSomething();} catch(Exception e){ x = 2}
+                * " "(uncheckedExceptionTypes notNil and: [uncheckedExceptionTypes at: index]) ifTrue: [catchInits
                 * addPotentialInitializationsFrom: tryInits]."
                 */
                if (this.tryBlock.statements == null && this.resources == NO_RESOURCES)
@@ -369,8 +369,8 @@ public class TryStatement extends SubRoutineStatement
                catchInfo.markAsDefinitelyNonNull(catchArg);
                /*
                 * "If we are about to consider an unchecked exception handler, potential inits may have occured inside the try
-                * block that need to be detected , e.g. try { x = 1; throwSomething();} catch(Exception e){ x = 2} "
-                * "(uncheckedExceptionTypes notNil and: [uncheckedExceptionTypes at: index]) ifTrue: [catchInits
+                * block that need to be detected , e.g. try { x = 1; throwSomething();} catch(Exception e){ x = 2}
+                * " "(uncheckedExceptionTypes notNil and: [uncheckedExceptionTypes at: index]) ifTrue: [catchInits
                 * addPotentialInitializationsFrom: tryInits]."
                 */
                if (this.tryBlock.statements == null && this.resources == NO_RESOURCES)

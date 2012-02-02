@@ -86,9 +86,7 @@ public class MethodScope extends BlockScope
       return s;
    }
 
-   /**
-    * Spec : 8.4.3 & 9.4
-    */
+   /** Spec : 8.4.3 & 9.4 */
    private void checkAndSetModifiersForConstructor(MethodBinding methodBinding)
    {
       int modifiers = methodBinding.modifiers;
@@ -184,9 +182,7 @@ public class MethodScope extends BlockScope
       methodBinding.modifiers = modifiers;
    }
 
-   /**
-    * Spec : 8.4.3 & 9.4
-    */
+   /** Spec : 8.4.3 & 9.4 */
    private void checkAndSetModifiersForMethod(MethodBinding methodBinding)
    {
       int modifiers = methodBinding.modifiers;

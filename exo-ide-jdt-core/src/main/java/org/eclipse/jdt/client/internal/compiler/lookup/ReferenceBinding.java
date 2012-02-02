@@ -177,50 +177,38 @@ abstract public class ReferenceBinding extends TypeBinding
       return len1 - len2;
    }
 
-   /**
-    * Sort the field array using a quicksort
-    */
+   /** Sort the field array using a quicksort */
    public static void sortFields(FieldBinding[] sortedFields, int left, int right)
    {
       Arrays.sort(sortedFields, left, right, FIELD_COMPARATOR);
    }
 
-   /**
-    * Sort the field array using a quicksort
-    */
+   /** Sort the field array using a quicksort */
    public static void sortMethods(MethodBinding[] sortedMethods, int left, int right)
    {
       Arrays.sort(sortedMethods, left, right, METHOD_COMPARATOR);
    }
 
-   /**
-    * Return the array of resolvable fields (resilience)
-    */
+   /** Return the array of resolvable fields (resilience) */
    public FieldBinding[] availableFields()
    {
       return fields();
    }
 
-   /**
-    * Return the array of resolvable methods (resilience)
-    */
+   /** Return the array of resolvable methods (resilience) */
    public MethodBinding[] availableMethods()
    {
       return methods();
    }
 
-   /**
-    * Answer true if the receiver can be instantiated
-    */
+   /** Answer true if the receiver can be instantiated */
    public boolean canBeInstantiated()
    {
       return (this.modifiers & (ClassFileConstants.AccAbstract | ClassFileConstants.AccInterface
          | ClassFileConstants.AccEnum | ClassFileConstants.AccAnnotation)) == 0;
    }
 
-   /**
-    * Answer true if the receiver is visible to the invocationPackage.
-    */
+   /** Answer true if the receiver is visible to the invocationPackage. */
    public final boolean canBeSeenBy(PackageBinding invocationPackage)
    {
       if (isPublic())
@@ -345,9 +333,7 @@ abstract public class ReferenceBinding extends TypeBinding
       return false;
    }
 
-   /**
-    * Answer true if the receiver is visible to the type provided by the scope.
-    */
+   /** Answer true if the receiver is visible to the type provided by the scope. */
    public final boolean canBeSeenBy(Scope scope)
    {
       if (isPublic())
@@ -825,9 +811,7 @@ abstract public class ReferenceBinding extends TypeBinding
       }
    }
 
-   /**
-    * p.X<T extends Y & I, U extends Y> {} -> Lp/X<TT;TU;>;
-    */
+   /** p.X<T extends Y & I, U extends Y> {} -> Lp/X<TT;TU;>; */
    public char[] computeUniqueKey(boolean isLeaf)
    {
       if (!isLeaf)
@@ -935,25 +919,19 @@ abstract public class ReferenceBinding extends TypeBinding
       return this.modifiers & ExtraCompilerModifiers.AccJustFlag;
    }
 
-   /**
-    * @return the JSR 175 annotations for this type.
-    */
+   /** @return the JSR 175 annotations for this type. */
    public AnnotationBinding[] getAnnotations()
    {
       return retrieveAnnotations(this);
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#getAnnotationTagBits()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#getAnnotationTagBits() */
    public long getAnnotationTagBits()
    {
       return this.tagBits;
    }
 
-   /**
-    * @return the enclosingInstancesSlotSize
-    */
+   /** @return the enclosingInstancesSlotSize */
    public int getEnclosingInstancesSlotSize()
    {
       if (isStatic())
@@ -976,9 +954,7 @@ abstract public class ReferenceBinding extends TypeBinding
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IDependent#getFileName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IDependent#getFileName() */
    public char[] getFileName()
    {
       return this.fileName;
@@ -1005,9 +981,7 @@ abstract public class ReferenceBinding extends TypeBinding
       return getMethods(selector);
    }
 
-   /**
-    * @return the outerLocalVariablesSlotSize
-    */
+   /** @return the outerLocalVariablesSlotSize */
    public int getOuterLocalVariablesSlotSize()
    {
       return 0;
@@ -1213,9 +1187,7 @@ abstract public class ReferenceBinding extends TypeBinding
       return false;
    }
 
-   /**
-    * Answer true if the receiver is an abstract type
-    */
+   /** Answer true if the receiver is an abstract type */
    public final boolean isAbstract()
    {
       return (this.modifiers & ClassFileConstants.AccAbstract) != 0;
@@ -1328,17 +1300,13 @@ abstract public class ReferenceBinding extends TypeBinding
       }
    }
 
-   /**
-    * Answer true if the receiver has default visibility
-    */
+   /** Answer true if the receiver has default visibility */
    public final boolean isDefault()
    {
       return (this.modifiers & (ClassFileConstants.AccPublic | ClassFileConstants.AccProtected | ClassFileConstants.AccPrivate)) == 0;
    }
 
-   /**
-    * Answer true if the receiver is a deprecated type
-    */
+   /** Answer true if the receiver is a deprecated type */
    public final boolean isDeprecated()
    {
       return (this.modifiers & ClassFileConstants.AccDeprecated) != 0;
@@ -1349,17 +1317,13 @@ abstract public class ReferenceBinding extends TypeBinding
       return (this.modifiers & ClassFileConstants.AccEnum) != 0;
    }
 
-   /**
-    * Answer true if the receiver is final and cannot be subclassed
-    */
+   /** Answer true if the receiver is final and cannot be subclassed */
    public final boolean isFinal()
    {
       return (this.modifiers & ClassFileConstants.AccFinal) != 0;
    }
 
-   /**
-    * Returns true if the type hierarchy is being connected
-    */
+   /** Returns true if the type hierarchy is being connected */
    public boolean isHierarchyBeingConnected()
    {
       return (this.tagBits & TagBits.EndHierarchyCheck) == 0 && (this.tagBits & TagBits.BeginHierarchyCheck) != 0;
@@ -1375,9 +1339,7 @@ abstract public class ReferenceBinding extends TypeBinding
          && (this.tagBits & TagBits.PauseHierarchyCheck) == 0;
    }
 
-   /**
-    * Returns true if the type hierarchy is connected
-    */
+   /** Returns true if the type hierarchy is connected */
    public boolean isHierarchyConnected()
    {
       return true;
@@ -1389,9 +1351,7 @@ abstract public class ReferenceBinding extends TypeBinding
       return (this.modifiers & ClassFileConstants.AccInterface) != 0;
    }
 
-   /**
-    * Answer true if the receiver has private visibility
-    */
+   /** Answer true if the receiver has private visibility */
    public final boolean isPrivate()
    {
       return (this.modifiers & ClassFileConstants.AccPrivate) != 0;
@@ -1414,25 +1374,19 @@ abstract public class ReferenceBinding extends TypeBinding
       return false;
    }
 
-   /**
-    * Answer true if the receiver has protected visibility
-    */
+   /** Answer true if the receiver has protected visibility */
    public final boolean isProtected()
    {
       return (this.modifiers & ClassFileConstants.AccProtected) != 0;
    }
 
-   /**
-    * Answer true if the receiver has public visibility
-    */
+   /** Answer true if the receiver has public visibility */
    public final boolean isPublic()
    {
       return (this.modifiers & ClassFileConstants.AccPublic) != 0;
    }
 
-   /**
-    * Answer true if the receiver is a static member type (or toplevel)
-    */
+   /** Answer true if the receiver is a static member type (or toplevel) */
    public final boolean isStatic()
    {
       return (this.modifiers & (ClassFileConstants.AccStatic | ClassFileConstants.AccInterface)) != 0
@@ -1460,9 +1414,7 @@ abstract public class ReferenceBinding extends TypeBinding
       return false;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#isThrowable()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#isThrowable() */
    public boolean isThrowable()
    {
       ReferenceBinding current = this;
@@ -1516,17 +1468,13 @@ abstract public class ReferenceBinding extends TypeBinding
       return false;
    }
 
-   /**
-    * Answer true if the receiver has private visibility and is used locally
-    */
+   /** Answer true if the receiver has private visibility and is used locally */
    public final boolean isUsed()
    {
       return (this.modifiers & ExtraCompilerModifiers.AccLocallyUsed) != 0;
    }
 
-   /**
-    * Answer true if the receiver is deprecated (or any of its enclosing types)
-    */
+   /** Answer true if the receiver is deprecated (or any of its enclosing types) */
    public final boolean isViewedAsDeprecated()
    {
       return (this.modifiers & (ClassFileConstants.AccDeprecated | ExtraCompilerModifiers.AccDeprecatedImplicitly)) != 0

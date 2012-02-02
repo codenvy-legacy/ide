@@ -11,11 +11,10 @@
 package org.eclipse.jdt.client.core.formatter;
 
 /**
- * Represents a reference in a javadoc comment block (see
- * {@link FormatJavadocBlock}.
+ * Represents a reference in a javadoc comment block (see {@link FormatJavadocBlock}.
  * <p>
- * A specific class is used as intermediate positions need to be stored for further
- * formatting improvements (typically for qualified references).
+ * A specific class is used as intermediate positions need to be stored for further formatting improvements (typically for
+ * qualified references).
  * </p>
  */
 public class FormatJavadocReference extends FormatJavadocNode

@@ -10,19 +10,13 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.env;
 
-/**
- * This represents class file information about an annotation instance.
- */
+/** This represents class file information about an annotation instance. */
 public interface IBinaryAnnotation
 {
 
-   /**
-    * @return the signature of the annotation type.
-    */
+   /** @return the signature of the annotation type. */
    char[] getTypeName();
 
-   /**
-    * @return the list of element value pairs of the annotation
-    */
+   /** @return the list of element value pairs of the annotation */
    IBinaryElementValuePair[] getElementValuePairs();
 }

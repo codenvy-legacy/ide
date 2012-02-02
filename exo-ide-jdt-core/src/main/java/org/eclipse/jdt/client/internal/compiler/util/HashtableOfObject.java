@@ -12,9 +12,7 @@ package org.eclipse.jdt.client.internal.compiler.util;
 
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 
-/**
- * Hashtable of {char[] --> Object }
- */
+/** Hashtable of {char[] --> Object } */
 public final class HashtableOfObject implements Cloneable
 {
 

@@ -19,14 +19,10 @@ import org.eclipse.jdt.client.internal.compiler.lookup.PackageBinding;
 public interface ITypeRequestor
 {
 
-   /**
-    * Accept the resolved binary form for the requested type.
-    */
+   /** Accept the resolved binary form for the requested type. */
    void accept(IBinaryType binaryType, PackageBinding packageBinding, AccessRestriction accessRestriction);
 
-   /**
-    * Accept the requested type's compilation unit.
-    */
+   /** Accept the requested type's compilation unit. */
    void accept(ICompilationUnit unit, AccessRestriction accessRestriction);
 
    /**

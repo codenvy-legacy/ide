@@ -66,9 +66,7 @@ public abstract class AbstractMethodDeclaration extends ASTNode implements Probl
       this.compilationResult = compilationResult;
    }
 
-   /*
-    * We cause the compilation task to abort to a given extent.
-    */
+   /* We cause the compilation task to abort to a given extent. */
    public void abort(int abortLevel, CategorizedProblem problem)
    {
 
@@ -88,9 +86,7 @@ public abstract class AbstractMethodDeclaration extends ASTNode implements Probl
    public abstract void analyseCode(ClassScope classScope, InitializationFlowContext initializationContext,
       FlowInfo info);
 
-   /**
-    * Bind and add argument's binding into the scope of the method
-    */
+   /** Bind and add argument's binding into the scope of the method */
    public void bindArguments()
    {
 

@@ -22,19 +22,13 @@ package org.eclipse.jdt.client.core;
  */
 public final class CompletionFlags
 {
-   /**
-    * Constant representing the absence of any flag
-    */
+   /** Constant representing the absence of any flag */
    public static final int Default = 0x0000;
 
-   /**
-    * Constant representing a static import
-    */
+   /** Constant representing a static import */
    public static final int StaticImport = 0x0001;
 
-   /**
-    * Not instantiable.
-    */
+   /** Not instantiable. */
    private CompletionFlags()
    {
       // Not instantiable

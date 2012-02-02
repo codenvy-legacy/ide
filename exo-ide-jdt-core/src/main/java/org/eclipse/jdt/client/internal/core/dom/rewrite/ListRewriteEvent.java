@@ -34,8 +34,8 @@ public class ListRewriteEvent extends RewriteEvent
    private List listEntries;
 
    /**
-    * Creates a ListRewriteEvent from the original ASTNodes. The resulting event
-    * represents the unmodified list.
+    * Creates a ListRewriteEvent from the original ASTNodes. The resulting event represents the unmodified list.
+    * 
     * @param originalNodes The original nodes (type ASTNode)
     */
    public ListRewriteEvent(List originalNodes)
@@ -45,6 +45,7 @@ public class ListRewriteEvent extends RewriteEvent
 
    /**
     * Creates a ListRewriteEvent from existing rewrite events.
+    * 
     * @param children The rewrite events for this list.
     */
    public ListRewriteEvent(RewriteEvent[] children)
@@ -79,7 +80,8 @@ public class ListRewriteEvent extends RewriteEvent
       return this.listEntries;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.eclipse.jdt.internal.corext.dom.ASTRewriteChange#getChangeKind()
     */
    public int getChangeKind()
@@ -98,7 +100,8 @@ public class ListRewriteEvent extends RewriteEvent
       return UNCHANGED;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.eclipse.jdt.internal.corext.dom.ASTRewriteChange#isListChange()
     */
    public boolean isListRewrite()
@@ -106,7 +109,8 @@ public class ListRewriteEvent extends RewriteEvent
       return true;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.eclipse.jdt.internal.corext.dom.RewriteEvent#getChildren()
     */
    public RewriteEvent[] getChildren()
@@ -115,7 +119,8 @@ public class ListRewriteEvent extends RewriteEvent
       return (RewriteEvent[])entries.toArray(new RewriteEvent[entries.size()]);
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.eclipse.jdt.internal.corext.dom.RewriteEvent#getOriginalNode()
     */
    public Object getOriginalValue()
@@ -123,7 +128,8 @@ public class ListRewriteEvent extends RewriteEvent
       return this.originalNodes;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.eclipse.jdt.internal.corext.dom.RewriteEvent#getNewValue()
     */
    public Object getNewValue()
@@ -232,7 +238,8 @@ public class ListRewriteEvent extends RewriteEvent
       return ((NodeRewriteEvent)getEntries().get(index)).getChangeKind();
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see java.lang.Object#toString()
     */
    public String toString()

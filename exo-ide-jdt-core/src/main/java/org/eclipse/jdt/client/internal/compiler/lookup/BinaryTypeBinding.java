@@ -70,7 +70,9 @@ public class BinaryTypeBinding extends ReferenceBinding
          EnumConstantSignature ref = (EnumConstantSignature)binaryValue;
          ReferenceBinding enumType =
             (ReferenceBinding)env.getTypeFromSignature(ref.getTypeName(), 0, -1, false, null, missingTypeNames);
-         enumType = (ReferenceBinding)resolveType(enumType, env, false /* no raw conversion */);
+         enumType = (ReferenceBinding)resolveType(enumType, env, false /*
+                                                                        * no raw conversion
+                                                                        */);
          return enumType.getField(ref.getEnumConstantName(), false);
       }
       if (binaryValue instanceof Object[])
@@ -155,9 +157,7 @@ public class BinaryTypeBinding extends ReferenceBinding
       return type;
    }
 
-   /**
-    * Default empty constructor for subclasses only.
-    */
+   /** Default empty constructor for subclasses only. */
    protected BinaryTypeBinding()
    {
       // only for subclasses
@@ -220,11 +220,12 @@ public class BinaryTypeBinding extends ReferenceBinding
       if (enclosingTypeName != null)
       {
          // attempt to find the enclosing type if it exists in the cache (otherwise - resolve it when requested)
-         this.enclosingType =
-            environment.getTypeFromConstantPoolName(enclosingTypeName, 0, -1, true, null /* could not be missing */); // pretend
-                                                                                                                       // parameterized
-                                                                                                                       // to avoid
-                                                                                                                       // raw
+         this.enclosingType = environment.getTypeFromConstantPoolName(enclosingTypeName, 0, -1, true, null /*
+                                                                                                            * could not be missing
+                                                                                                            */); // pretend
+                                                                                                                 // parameterized
+                                                                                                                 // to avoid
+                                                                                                                 // raw
          this.tagBits |= TagBits.MemberTypeMask; // must be a member type not a top-level or local type
          this.tagBits |= TagBits.HasUnresolvedEnclosingType;
          if (enclosingType().isStrictfp())
@@ -234,9 +235,7 @@ public class BinaryTypeBinding extends ReferenceBinding
       }
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#availableMethods()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#availableMethods() */
    public FieldBinding[] availableFields()
    {
       if ((this.tagBits & TagBits.AreFieldsComplete) != 0)
@@ -300,9 +299,7 @@ public class BinaryTypeBinding extends ReferenceBinding
       return combinedTypeVars;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#availableMethods()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#availableMethods() */
    public MethodBinding[] availableMethods()
    {
       if ((this.tagBits & TagBits.AreMethodsComplete) != 0)
@@ -357,7 +354,9 @@ public class BinaryTypeBinding extends ReferenceBinding
                   // attempt to find each member type if it exists in the cache (otherwise - resolve it when requested)
                   this.memberTypes[i] =
                      this.environment
-                        .getTypeFromConstantPoolName(memberTypeStructures[i].getName(), 0, -1, false, null /* could not be missing */);
+                        .getTypeFromConstantPoolName(memberTypeStructures[i].getName(), 0, -1, false, null /*
+                                                                                                            * could not be missing
+                                                                                                            */);
                this.tagBits |= TagBits.HasUnresolvedMemberTypes;
             }
          }
@@ -856,9 +855,8 @@ public class BinaryTypeBinding extends ReferenceBinding
    }
 
    /*
-    * Answer the receiver's enclosing type... null if the receiver is a top level type.
-    * 
-    * NOTE: enclosingType of a binary type is resolved when needed
+    * Answer the receiver's enclosing type... null if the receiver is a top level type. NOTE: enclosingType of a binary type is
+    * resolved when needed
     */
    public ReferenceBinding enclosingType()
    {
@@ -866,8 +864,9 @@ public class BinaryTypeBinding extends ReferenceBinding
          return this.enclosingType;
 
       // finish resolving the type
-      this.enclosingType =
-         (ReferenceBinding)resolveType(this.enclosingType, this.environment, false /* no raw conversion */);
+      this.enclosingType = (ReferenceBinding)resolveType(this.enclosingType, this.environment, false /*
+                                                                                                      * no raw conversion
+                                                                                                      */);
       this.tagBits &= ~TagBits.HasUnresolvedEnclosingType;
       return this.enclosingType;
    }
@@ -935,7 +934,9 @@ public class BinaryTypeBinding extends ReferenceBinding
                this.environment.getTypeFromSignature(methodDescriptor, index, end, false, this, missingTypeNames);
             if (param instanceof UnresolvedReferenceBinding)
             {
-               param = resolveType(param, this.environment, true /* raw conversion */);
+               param = resolveType(param, this.environment, true /*
+                                                                  * raw conversion
+                                                                  */);
             }
             parameters[i] = param;
             index = end + 1;
@@ -965,9 +966,7 @@ public class BinaryTypeBinding extends ReferenceBinding
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#genericTypeSignature()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#genericTypeSignature() */
    public char[] genericTypeSignature()
    {
       return computeGenericTypeSignature(this.typeVariables);
@@ -1353,7 +1352,9 @@ public class BinaryTypeBinding extends ReferenceBinding
       if ((field.modifiers & ExtraCompilerModifiers.AccUnresolved) == 0)
          return field;
 
-      TypeBinding resolvedType = resolveType(field.type, this.environment, true /* raw conversion */);
+      TypeBinding resolvedType = resolveType(field.type, this.environment, true /*
+                                                                                 * raw conversion
+                                                                                 */);
       field.type = resolvedType;
       if ((resolvedType.tagBits & TagBits.HasMissingType) != 0)
       {
@@ -1370,7 +1371,9 @@ public class BinaryTypeBinding extends ReferenceBinding
 
       if (!method.isConstructor())
       {
-         TypeBinding resolvedType = resolveType(method.returnType, this.environment, true /* raw conversion */);
+         TypeBinding resolvedType = resolveType(method.returnType, this.environment, true /*
+                                                                                           * raw conversion
+                                                                                           */);
          method.returnType = resolvedType;
          if ((resolvedType.tagBits & TagBits.HasMissingType) != 0)
          {
@@ -1379,7 +1382,9 @@ public class BinaryTypeBinding extends ReferenceBinding
       }
       for (int i = method.parameters.length; --i >= 0;)
       {
-         TypeBinding resolvedType = resolveType(method.parameters[i], this.environment, true /* raw conversion */);
+         TypeBinding resolvedType = resolveType(method.parameters[i], this.environment, true /*
+                                                                                              * raw conversion
+                                                                                              */);
          method.parameters[i] = resolvedType;
          if ((resolvedType.tagBits & TagBits.HasMissingType) != 0)
          {
@@ -1389,7 +1394,9 @@ public class BinaryTypeBinding extends ReferenceBinding
       for (int i = method.thrownExceptions.length; --i >= 0;)
       {
          ReferenceBinding resolvedType =
-            (ReferenceBinding)resolveType(method.thrownExceptions[i], this.environment, true /* raw conversion */);
+            (ReferenceBinding)resolveType(method.thrownExceptions[i], this.environment, true /*
+                                                                                              * raw conversion
+                                                                                              */);
          method.thrownExceptions[i] = resolvedType;
          if ((resolvedType.tagBits & TagBits.HasMissingType) != 0)
          {
@@ -1422,9 +1429,8 @@ public class BinaryTypeBinding extends ReferenceBinding
    }
 
    /*
-    * Answer the receiver's superclass... null if the receiver is Object or an interface.
-    * 
-    * NOTE: superclass of a binary type is resolved when needed
+    * Answer the receiver's superclass... null if the receiver is Object or an interface. NOTE: superclass of a binary type is
+    * resolved when needed
     */
    public ReferenceBinding superclass()
    {
@@ -1432,7 +1438,9 @@ public class BinaryTypeBinding extends ReferenceBinding
          return this.superclass;
 
       // finish resolving the type
-      this.superclass = (ReferenceBinding)resolveType(this.superclass, this.environment, true /* raw conversion */);
+      this.superclass = (ReferenceBinding)resolveType(this.superclass, this.environment, true /*
+                                                                                               * raw conversion
+                                                                                               */);
       this.tagBits &= ~TagBits.HasUnresolvedSuperclass;
       if (this.superclass.problemId() == ProblemReasons.NotFound)
          this.tagBits |= TagBits.HierarchyHasProblems; // propagate type inconsistency
@@ -1447,8 +1455,9 @@ public class BinaryTypeBinding extends ReferenceBinding
 
       for (int i = this.superInterfaces.length; --i >= 0;)
       {
-         this.superInterfaces[i] =
-            (ReferenceBinding)resolveType(this.superInterfaces[i], this.environment, true /* raw conversion */);
+         this.superInterfaces[i] = (ReferenceBinding)resolveType(this.superInterfaces[i], this.environment, true /*
+                                                                                                                  * raw conversion
+                                                                                                                  */);
          if (this.superInterfaces[i].problemId() == ProblemReasons.NotFound)
             this.tagBits |= TagBits.HierarchyHasProblems; // propagate type inconsistency
       }

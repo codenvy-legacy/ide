@@ -31,9 +31,7 @@ public class JavadocArgumentExpression extends Expression
       this.bits |= InsideJavadoc;
    }
 
-   /*
-    * Resolves type on a Block or Class scope.
-    */
+   /* Resolves type on a Block or Class scope. */
    private TypeBinding internalResolveType(Scope scope)
    {
       this.constant = Constant.NotAConstant;
@@ -135,8 +133,7 @@ public class JavadocArgumentExpression extends Expression
 
    /*
     * (non-Javadoc) Redefine to capture javadoc specific signatures
-    * 
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor,
+    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt .internal.compiler.ASTVisitor,
     * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, BlockScope blockScope)

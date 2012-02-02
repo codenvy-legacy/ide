@@ -86,7 +86,9 @@ public class SingleNameReference extends NameReference implements OperatorIds
                   // https://bugs.eclipse.org/bugs/show_bug.cgi?id=318682
                   currentScope.resetEnclosingMethodStaticFlag();
                }
-               manageSyntheticAccessIfNecessary(currentScope, flowInfo, true /* read-access */);
+               manageSyntheticAccessIfNecessary(currentScope, flowInfo, true /*
+                                                                              * read - access
+                                                                              */);
                break;
             case Binding.LOCAL : // reading a local variable
                // check if assigning a final blank field
@@ -120,7 +122,9 @@ public class SingleNameReference extends NameReference implements OperatorIds
       switch (this.bits & ASTNode.RestrictiveFlagMASK)
       {
          case Binding.FIELD : // assigning to a field
-            manageSyntheticAccessIfNecessary(currentScope, flowInfo, false /* write-access */);
+            manageSyntheticAccessIfNecessary(currentScope, flowInfo, false /*
+                                                                            * write- access
+                                                                            */);
 
             // check if assigning a final field
             FieldBinding fieldBinding = (FieldBinding)this.binding;
@@ -207,7 +211,9 @@ public class SingleNameReference extends NameReference implements OperatorIds
          case Binding.FIELD : // reading a field
             if (valueRequired || currentScope.compilerOptions().complianceLevel >= ClassFileConstants.JDK1_4)
             {
-               manageSyntheticAccessIfNecessary(currentScope, flowInfo, true /* read-access */);
+               manageSyntheticAccessIfNecessary(currentScope, flowInfo, true /*
+                                                                              * read - access
+                                                                              */);
             }
             // check if reading a final blank field
             FieldBinding fieldBinding = (FieldBinding)this.binding;
@@ -1029,9 +1035,7 @@ public class SingleNameReference extends NameReference implements OperatorIds
    // codeStream.aload_0();
    // }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments() */
    public TypeBinding[] genericTypeArguments()
    {
       return null;
@@ -1127,9 +1131,7 @@ public class SingleNameReference extends NameReference implements OperatorIds
       return FlowInfo.NON_NULL; // never get there
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#postConversionType(Scope)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.Expression#postConversionType(Scope) */
    public TypeBinding postConversionType(Scope scope)
    {
       TypeBinding convertedType = this.resolvedType;
@@ -1206,8 +1208,7 @@ public class SingleNameReference extends NameReference implements OperatorIds
       else
       {
          this.actualReceiverType = scope.enclosingSourceType();
-         this.binding =
-            scope.getBinding(this.token, this.bits & ASTNode.RestrictiveFlagMASK, this, true /* resolve */);
+         this.binding = scope.getBinding(this.token, this.bits & ASTNode.RestrictiveFlagMASK, this, true /* resolve */);
       }
       if (this.binding.isValidBinding())
       {
@@ -1266,8 +1267,9 @@ public class SingleNameReference extends NameReference implements OperatorIds
                TypeBinding type = (TypeBinding)this.binding;
                if (isTypeUseDeprecated(type, scope))
                   scope.problemReporter().deprecatedType(type, this);
-               type =
-                  scope.environment().convertToRawType(type, false /* do not force conversion of enclosing types */);
+               type = scope.environment().convertToRawType(type, false /*
+                                                                        * do not force conversion of enclosing types
+                                                                        */);
                return this.resolvedType = type;
          }
       }

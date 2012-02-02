@@ -119,9 +119,7 @@ public class FieldDeclaration extends AbstractVariableDeclaration
    // codeStream.recordPositionsFrom(pc, this.sourceStart);
    // }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration#getKind()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration#getKind() */
    public int getKind()
    {
       return this.type == null ? ENUM_CONSTANT : FIELD;
@@ -174,8 +172,11 @@ public class FieldDeclaration extends AbstractVariableDeclaration
                // we do the checks below ourselves, using the appropriate conditions for access check of
                // protected members from superclasses.
                FieldBinding existingVariable =
-                  classScope.findField(declaringType.superclass, this.name, this,
-                     false /* do not resolve hidden field */, true /* no visibility checks please */);
+                  classScope.findField(declaringType.superclass, this.name, this, false /*
+                                                                                         * do not resolve hidden field
+                                                                                         */, true /*
+                                                                                                   * no visibility checks please
+                                                                                                   */);
                if (existingVariable == null)
                   break checkHidingSuperField; // keep checking outer scenario
                if (!existingVariable.isValidBinding())

@@ -76,9 +76,7 @@ public class ElementValuePair
       this.binding = binding;
    }
 
-   /**
-    * @return the name of the element value pair.
-    */
+   /** @return the name of the element value pair. */
    public char[] getName()
    {
       return this.name;

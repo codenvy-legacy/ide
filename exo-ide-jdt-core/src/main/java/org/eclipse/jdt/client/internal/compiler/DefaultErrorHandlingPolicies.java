@@ -14,9 +14,8 @@ public class DefaultErrorHandlingPolicies
 {
 
    /*
-    * Accumulate all problems, then exit without proceeding.
-    * 
-    * Typically, the #proceedWithProblems(Problem[]) should show the problems.
+    * Accumulate all problems, then exit without proceeding. Typically, the #proceedWithProblems(Problem[]) should show the
+    * problems.
     */
    public static IErrorHandlingPolicy exitAfterAllProblems()
    {
@@ -34,9 +33,7 @@ public class DefaultErrorHandlingPolicies
       };
    }
 
-   /*
-    * Exit without proceeding on the first problem wich appears to be an error.
-    */
+   /* Exit without proceeding on the first problem wich appears to be an error. */
    public static IErrorHandlingPolicy exitOnFirstError()
    {
       return new IErrorHandlingPolicy()
@@ -53,9 +50,7 @@ public class DefaultErrorHandlingPolicies
       };
    }
 
-   /*
-    * Proceed on the first error met.
-    */
+   /* Proceed on the first error met. */
    public static IErrorHandlingPolicy proceedOnFirstError()
    {
       return new IErrorHandlingPolicy()
@@ -72,9 +67,7 @@ public class DefaultErrorHandlingPolicies
       };
    }
 
-   /*
-    * Accumulate all problems, then proceed with them.
-    */
+   /* Accumulate all problems, then proceed with them. */
    public static IErrorHandlingPolicy proceedWithAllProblems()
    {
       return new IErrorHandlingPolicy()

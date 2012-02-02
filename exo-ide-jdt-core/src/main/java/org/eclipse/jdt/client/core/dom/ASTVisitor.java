@@ -46,7 +46,7 @@ package org.eclipse.jdt.client.core.dom;
  * While it is possible to modify the tree in the visitor, care is required to ensure that the consequences are as expected and
  * desirable. During the course of an ordinary visit starting at a given node, every node in the subtree is visited exactly twice,
  * first with <code>visit</code> and then with <code>endVisit</code>. During a traversal of a stationary tree, each node is either
- * behind (after <code>endVisit</code>), ahead (before <code>visit</code>), or in progress (between <code>visit</code> and the
+ * behind (after <code>endVisit</code>), ahead (before <code>visit</code> ), or in progress (between <code>visit</code> and the
  * matching <code>endVisit</code>). Changes to the "behind" region of the tree are of no consequence to the visit in progress.
  * Changes to the "ahead" region will be taken in stride. Changes to the "in progress" portion are the more interesting cases.
  * With a node, the various properties are arranged in a linear list, with a cursor that separates the properties that have been

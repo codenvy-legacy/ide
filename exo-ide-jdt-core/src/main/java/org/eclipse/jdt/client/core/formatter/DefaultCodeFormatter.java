@@ -35,9 +35,7 @@ import org.eclipse.jdt.client.text.edits.TextEdit;
 public class DefaultCodeFormatter extends CodeFormatter
 {
 
-   /**
-    * Debug trace
-    */
+   /** Debug trace */
    public static boolean DEBUG = false;
 
    // Mask for code formatter kinds
@@ -163,9 +161,7 @@ public class DefaultCodeFormatter extends CodeFormatter
       return format(kind, source, new IRegion[]{new Region(offset, length)}, indentationLevel, lineSeparator);
    }
 
-   /**
-    * {@inheritDoc}
-    */
+   /** {@inheritDoc} */
    public TextEdit format(int kind, String source, IRegion[] regions, int indentationLevel, String lineSeparator)
    {
       if (!regionsSatisfiesPreconditions(regions, source.length()))
@@ -190,7 +186,7 @@ public class DefaultCodeFormatter extends CodeFormatter
          case K_JAVA_DOC :
          case K_MULTI_LINE_COMMENT :
          case K_SINGLE_LINE_COMMENT :
-            //https://bugs.eclipse.org/bugs/show_bug.cgi?id=204091
+            // https://bugs.eclipse.org/bugs/show_bug.cgi?id=204091
             throw new IllegalArgumentException();
       }
       return null;
@@ -213,8 +209,7 @@ public class DefaultCodeFormatter extends CodeFormatter
    }
 
    /*
-    * Format a javadoc comment.
-    * Since bug 102780 this is done by a specific method when new javadoc formatter is activated.
+    * Format a javadoc comment. Since bug 102780 this is done by a specific method when new javadoc formatter is activated.
     */
    private TextEdit formatComment(int kind, String source, int indentationLevel, String lineSeparator, IRegion[] regions)
    {
@@ -480,6 +475,7 @@ public class DefaultCodeFormatter extends CodeFormatter
 
    /**
     * Deprecated as using old option constant
+    * 
     * @deprecated
     */
    private Object oldCommentFormatOption()
@@ -495,8 +491,8 @@ public class DefaultCodeFormatter extends CodeFormatter
          // scanner use to check if the kind could be K_JAVA_DOC, K_MULTI_LINE_COMMENT or K_SINGLE_LINE_COMMENT
          // do not tokenize white spaces to get single comments even with spaces before...
          PROBING_SCANNER =
-            new Scanner(true, false/*do not tokenize whitespaces*/, false/*nls*/, ClassFileConstants.JDK1_6,
-               ClassFileConstants.JDK1_6, null/*taskTags*/, null/*taskPriorities*/, true/*taskCaseSensitive*/);
+            new Scanner(true, false/* do not tokenize whitespaces */, false/* nls */, ClassFileConstants.JDK1_6,
+               ClassFileConstants.JDK1_6, null/* taskTags */, null/* taskPriorities */, true/* taskCaseSensitive */);
       }
       PROBING_SCANNER.setSource(source.toCharArray());
 
@@ -572,10 +568,7 @@ public class DefaultCodeFormatter extends CodeFormatter
    }
 
    /**
-    * True if
-    * 1. All regions are within maxLength
-    * 2. regions are sorted
-    * 3. regions are not overlapping
+    * True if 1. All regions are within maxLength 2. regions are sorted 3. regions are not overlapping
     */
    private boolean regionsSatisfiesPreconditions(IRegion[] regions, int maxLength)
    {

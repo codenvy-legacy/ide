@@ -57,7 +57,8 @@ import org.eclipse.jdt.client.text.edits.TextEdit;
          this.positions = new ArrayList();
       }
 
-      /* (non-Javadoc)
+      /*
+       * (non-Javadoc)
        * @see org.eclipse.jdt.core.dom.ASTVisitor#preVisit(ASTNode)
        */
       public void preVisit(ASTNode node)
@@ -74,7 +75,8 @@ import org.eclipse.jdt.client.text.edits.TextEdit;
          }
       }
 
-      /* (non-Javadoc)
+      /*
+       * (non-Javadoc)
        * @see org.eclipse.jdt.core.dom.ASTVisitor#postVisit(ASTNode)
        */
       public void postVisit(ASTNode node)
@@ -91,8 +93,9 @@ import org.eclipse.jdt.client.text.edits.TextEdit;
          }
       }
 
-      /* (non-Javadoc)
-       * @see org.eclipse.jdt.internal.corext.dom.ASTRewriteFlattener#visit(org.eclipse.jdt.core.dom.Block)
+      /*
+       * (non-Javadoc)
+       * @see org.eclipse.jdt.internal.corext.dom.ASTRewriteFlattener#visit(org. eclipse.jdt.core.dom.Block)
        */
       public boolean visit(Block node)
       {
@@ -188,9 +191,8 @@ import org.eclipse.jdt.client.text.edits.TextEdit;
    }
 
    /**
-    * Returns the string accumulated in the visit formatted using the default formatter.
-    * Updates the existing node's positions.
-    *
+    * Returns the string accumulated in the visit formatted using the default formatter. Updates the existing node's positions.
+    * 
     * @param node The node to flatten.
     * @param initialIndentationLevel The initial indentation level.
     * @param resultingMarkers Resulting the updated NodeMarkers.
@@ -253,12 +255,12 @@ import org.eclipse.jdt.client.text.edits.TextEdit;
 
    /**
     * Evaluates the edit on the given string.
+    * 
     * @param string The string to format
     * @param edit The edit resulted from the code formatter
     * @param positions Positions to update or <code>null</code>.
     * @return The formatted string
-    * @throws IllegalArgumentException If the positions are not inside the string, a
-    *  IllegalArgumentException is thrown.
+    * @throws IllegalArgumentException If the positions are not inside the string, a IllegalArgumentException is thrown.
     */
    public static String evaluateFormatterEdit(String string, TextEdit edit, Position[] positions)
    {
@@ -277,7 +279,7 @@ import org.eclipse.jdt.client.text.edits.TextEdit;
       }
       catch (BadLocationException e)
       {
-         //JavaPlugin.log(e); // bug in the formatter
+         // JavaPlugin.log(e); // bug in the formatter
          Assert.isTrue(false, "Fromatter created edits with wrong positions: " + e.getMessage()); //$NON-NLS-1$
       }
       return null;
@@ -290,13 +292,14 @@ import org.eclipse.jdt.client.text.edits.TextEdit;
    }
 
    /**
-    * Creates edits that describe how to format the given string. Returns <code>null</code> if the code could not be formatted for the given kind.
+    * Creates edits that describe how to format the given string. Returns <code>null</code> if the code could not be formatted for
+    * the given kind.
+    * 
     * @param node Node describing the type of the string
     * @param str The unformatted string
     * @param indentationLevel
     * @return Returns the edit representing the result of the formatter
-    * @throws IllegalArgumentException If the offset and length are not inside the string, a
-    *  IllegalArgumentException is thrown.
+    * @throws IllegalArgumentException If the offset and length are not inside the string, a IllegalArgumentException is thrown.
     */
    private TextEdit formatNode(ASTNode node, String str, int indentationLevel)
    {
@@ -399,26 +402,26 @@ import org.eclipse.jdt.client.text.edits.TextEdit;
                // javadoc formatting disabled due to bug 93644
                return null;
 
-               //				wiat for bug 93644
-               //				case ASTNode.MEMBER_REF:
-               //				case ASTNode.METHOD_REF:
-               //					prefix= "/**\n * @see ";
-               //					suffix= "\n*/";
-               //					code= CodeFormatter.K_JAVA_DOC;
-               //					break;
-               //				case ASTNode.METHOD_REF_PARAMETER:
-               //					prefix= "/**\n * @see A#foo(";
-               //					suffix= ")\n*/";
-               //					code= CodeFormatter.K_JAVA_DOC;
-               //					break;
-               //				case ASTNode.TAG_ELEMENT:
-               //				case ASTNode.TEXT_ELEMENT:
-               //					prefix= "/**\n * ";
-               //					suffix= "\n*/";
-               //					code= CodeFormatter.K_JAVA_DOC;
-               //					break;
+               // wiat for bug 93644
+               // case ASTNode.MEMBER_REF:
+               // case ASTNode.METHOD_REF:
+               // prefix= "/**\n * @see ";
+               // suffix= "\n*/";
+               // code= CodeFormatter.K_JAVA_DOC;
+               // break;
+               // case ASTNode.METHOD_REF_PARAMETER:
+               // prefix= "/**\n * @see A#foo(";
+               // suffix= ")\n*/";
+               // code= CodeFormatter.K_JAVA_DOC;
+               // break;
+               // case ASTNode.TAG_ELEMENT:
+               // case ASTNode.TEXT_ELEMENT:
+               // prefix= "/**\n * ";
+               // suffix= "\n*/";
+               // code= CodeFormatter.K_JAVA_DOC;
+               // break;
             default :
-               //Assert.isTrue(false, "Node type not covered: " + node.getClass().getName());
+               // Assert.isTrue(false, "Node type not covered: " + node.getClass().getName());
                return null;
          }
       }

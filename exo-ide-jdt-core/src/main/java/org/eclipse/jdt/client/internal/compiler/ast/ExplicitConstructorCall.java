@@ -179,9 +179,7 @@ public class ExplicitConstructorCall extends Statement implements InvocationSite
    // }
    // }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments() */
    public TypeBinding[] genericTypeArguments()
    {
       return this.genericTypeArguments;
@@ -203,10 +201,9 @@ public class ExplicitConstructorCall extends Statement implements InvocationSite
    }
 
    /*
-    * Inner emulation consists in either recording a dependency link only, or performing one level of propagation.
-    * 
-    * Dependency mechanism is used whenever dealing with source target types, since by the time we reach them, we might not yet
-    * know their exact need.
+    * Inner emulation consists in either recording a dependency link only, or performing one level of propagation. Dependency
+    * mechanism is used whenever dealing with source target types, since by the time we reach them, we might not yet know their
+    * exact need.
     */
    void manageEnclosingInstanceAccessIfNecessary(BlockScope currentScope, FlowInfo flowInfo)
    {
@@ -386,7 +383,9 @@ public class ExplicitConstructorCall extends Statement implements InvocationSite
             for (int i = 0; i < length; i++)
             {
                TypeReference typeReference = this.typeArguments[i];
-               if ((this.genericTypeArguments[i] = typeReference.resolveType(scope, true /* check bounds */)) == null)
+               if ((this.genericTypeArguments[i] = typeReference.resolveType(scope, true /*
+                                                                                          * check bounds
+                                                                                          */)) == null)
                {
                   argHasError = true;
                }

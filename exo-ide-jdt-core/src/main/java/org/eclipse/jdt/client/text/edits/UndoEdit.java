@@ -17,14 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class encapsulates the reverse changes of an executed text
- * edit tree. To apply an undo memento to a document use method
+ * This class encapsulates the reverse changes of an executed text edit tree. To apply an undo memento to a document use method
  * <code>apply(IDocument)</code>.
  * <p>
- * Clients can't add additional children to an undo edit nor can they
- * add an undo edit as a child to another edit. Doing so results in
- * both cases in a <code>MalformedTreeException<code>.
- *
+ * Clients can't add additional children to an undo edit nor can they add an undo edit as a child to another edit. Doing so
+ * results in both cases in a <code>MalformedTreeException<code>.
+ * 
  * @since 3.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  */
@@ -42,7 +40,7 @@ public final class UndoEdit extends TextEdit
    }
 
    /*
-    * @see org.eclipse.text.edits.TextEdit#internalAdd(org.eclipse.text.edits.TextEdit)
+    * @see org.eclipse.text.edits.TextEdit#internalAdd(org.eclipse.text.edits.TextEdit )
     */
    void internalAdd(TextEdit child) throws MalformedTreeException
    {
@@ -50,7 +48,7 @@ public final class UndoEdit extends TextEdit
    }
 
    /*
-    * @see org.eclipse.text.edits.MultiTextEdit#aboutToBeAdded(org.eclipse.text.edits.TextEdit)
+    * @see org.eclipse.text.edits.MultiTextEdit#aboutToBeAdded(org.eclipse.text.edits .TextEdit)
     */
    void aboutToBeAdded(TextEdit parent)
    {
@@ -67,17 +65,13 @@ public final class UndoEdit extends TextEdit
       processor.checkIntegrityUndo();
    }
 
-   /*
-    * @see org.eclipse.text.edits.TextEdit#doCopy()
-    */
+   /* @see org.eclipse.text.edits.TextEdit#doCopy() */
    protected TextEdit doCopy()
    {
       return new UndoEdit(this);
    }
 
-   /*
-    * @see TextEdit#accept0
-    */
+   /* @see TextEdit#accept0 */
    protected void accept0(TextEditVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -87,9 +81,7 @@ public final class UndoEdit extends TextEdit
       }
    }
 
-   /*
-    * @see TextEdit#performDocumentUpdating
-    */
+   /* @see TextEdit#performDocumentUpdating */
    int performDocumentUpdating(IDocument document) throws BadLocationException
    {
       fDelta = 0;

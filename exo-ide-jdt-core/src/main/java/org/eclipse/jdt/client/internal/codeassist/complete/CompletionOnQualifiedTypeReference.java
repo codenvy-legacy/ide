@@ -61,9 +61,7 @@ public class CompletionOnQualifiedTypeReference extends QualifiedTypeReference
       getTypeBinding(scope);
    }
 
-   /*
-    * No expansion of the completion reference into an array one
-    */
+   /* No expansion of the completion reference into an array one */
    public TypeReference copyDims(int dim)
    {
       return this;

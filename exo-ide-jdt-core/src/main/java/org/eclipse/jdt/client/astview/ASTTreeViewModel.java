@@ -74,7 +74,6 @@ import java.util.List;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 13, 2012 10:30:27 AM evgen $
- * 
  */
 public class ASTTreeViewModel implements TreeViewModel
 {
@@ -122,9 +121,7 @@ public class ASTTreeViewModel implements TreeViewModel
 
    private ListDataProvider<Object> astListDataProvider;
 
-   /**
-    * @param unit
-    */
+   /** @param unit */
    public ASTTreeViewModel(CompilationUnit unit)
    {
       this.unit = unit;
@@ -133,9 +130,7 @@ public class ASTTreeViewModel implements TreeViewModel
       list.addAll(getNodeChildren(unit));
    }
 
-   /**
-    * @see com.google.gwt.view.client.TreeViewModel#getNodeInfo(java.lang.Object)
-    */
+   /** @see com.google.gwt.view.client.TreeViewModel#getNodeInfo(java.lang.Object) */
    @Override
    public <T> NodeInfo<?> getNodeInfo(T value)
    {
@@ -357,9 +352,7 @@ public class ASTTreeViewModel implements TreeViewModel
       return new Object[0];
    }
 
-   /**
-    * @see com.google.gwt.view.client.TreeViewModel#isLeaf(java.lang.Object)
-    */
+   /** @see com.google.gwt.view.client.TreeViewModel#isLeaf(java.lang.Object) */
    @Override
    public boolean isLeaf(Object parent)
    {

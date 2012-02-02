@@ -34,9 +34,7 @@ public class CompletionOnJavadocMessageSend extends JavadocMessageSend implement
       this.completionFlags |= flags;
    }
 
-   /**
-    * @param flags The completionFlags to set.
-    */
+   /** @param flags The completionFlags to set. */
    public void addCompletionFlags(int flags)
    {
       this.completionFlags |= flags;
@@ -74,8 +72,7 @@ public class CompletionOnJavadocMessageSend extends JavadocMessageSend implement
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.ast.JavadocMessageSend#printExpression(int, java.lang.StringBuffer)
+    * @see org.eclipse.jdt.internal.compiler.ast.JavadocMessageSend#printExpression (int, java.lang.StringBuffer)
     */
    public StringBuffer printExpression(int indent, StringBuffer output)
    {

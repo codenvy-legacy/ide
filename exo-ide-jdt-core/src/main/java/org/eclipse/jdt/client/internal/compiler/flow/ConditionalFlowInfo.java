@@ -14,10 +14,7 @@ package org.eclipse.jdt.client.internal.compiler.flow;
 import org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
 
-/**
- * Record conditional initialization status during definite assignment analysis
- * 
- */
+/** Record conditional initialization status during definite assignment analysis */
 public class ConditionalFlowInfo extends FlowInfo
 {
 

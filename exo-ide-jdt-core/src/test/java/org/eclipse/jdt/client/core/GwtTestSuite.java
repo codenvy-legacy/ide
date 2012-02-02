@@ -22,13 +22,14 @@ import com.google.gwt.junit.tools.GWTTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import org.eclipse.jdt.client.core.rewrite.ASTRewritingMethodDeclTestGwt;
+import org.eclipse.jdt.client.core.rewrite.ASTRewritingTypeDeclTestGwt;
 import org.eclipse.jdt.client.core.rewrite.ImportRewriteTestGwt;
 import org.eclipse.jdt.client.core.rewrite.SourceModifierTestGwt;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 12, 2012 2:44:53 PM evgen $
- * 
  */
 public class GwtTestSuite extends TestCase
 {
@@ -41,7 +42,8 @@ public class GwtTestSuite extends TestCase
       suite.addTestSuite(ASTRewriteTestGwt.class);
       suite.addTestSuite(SourceModifierTestGwt.class);
       suite.addTestSuite(ImportRewriteTestGwt.class);
-
+      suite.addTestSuite(ASTRewritingMethodDeclTestGwt.class);
+      suite.addTestSuite(ASTRewritingTypeDeclTestGwt.class);
       return suite;
    }
 }

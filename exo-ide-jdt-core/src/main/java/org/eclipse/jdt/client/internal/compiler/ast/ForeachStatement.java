@@ -168,7 +168,9 @@ public class ForeachStatement extends Statement
          FlowInfo.mergedOptimizedBranches((loopingContext.initsOnBreak.tagBits & FlowInfo.UNREACHABLE) != 0
             ? loopingContext.initsOnBreak : flowInfo.addInitializationsFrom(loopingContext.initsOnBreak), // recover upstream null
                                                                                                           // info
-            false, exitBranch, false, true /* for(;;){}while(true); unreachable(); */);
+            false, exitBranch, false, true /*
+                                            * for(;;){}while(true); unreachable();
+                                            */);
       this.mergedInitStateIndex = currentScope.methodScope().recordInitializationStates(mergedInfo);
       return mergedInfo;
    }

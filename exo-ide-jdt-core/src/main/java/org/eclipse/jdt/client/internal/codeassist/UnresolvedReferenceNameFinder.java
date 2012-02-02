@@ -76,7 +76,9 @@ public class UnresolvedReferenceNameFinder extends ASTVisitor
       if (name == null)
          return;
 
-      if (!CharOperation.prefixEquals(this.completionEngine.completionToken, name, false /* ignore case */)
+      if (!CharOperation.prefixEquals(this.completionEngine.completionToken, name, false /*
+                                                                                          * ignore case
+                                                                                          */)
          && !(this.completionEngine.options.camelCaseMatch && CharOperation.camelCaseMatch(
             this.completionEngine.completionToken, name)))
          return;

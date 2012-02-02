@@ -23,9 +23,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 
 public abstract class Reference extends Expression
 {
-   /**
-    * BaseLevelReference constructor comment.
-    */
+   /** BaseLevelReference constructor comment. */
    public Reference()
    {
       super();

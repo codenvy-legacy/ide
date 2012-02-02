@@ -68,13 +68,19 @@ public abstract class CategorizedProblem implements IProblem
    /** Category for fatal problems in import statements */
    public static final int CAT_IMPORT = 30;
 
-   /** Category for fatal problems related to types, could be addressed by some type change */
+   /**
+    * Category for fatal problems related to types, could be addressed by some type change
+    */
    public static final int CAT_TYPE = 40;
 
-   /** Category for fatal problems related to type members, could be addressed by some field or method change */
+   /**
+    * Category for fatal problems related to type members, could be addressed by some field or method change
+    */
    public static final int CAT_MEMBER = 50;
 
-   /** Category for fatal problems which could not be addressed by external changes, but require an edit to be addressed */
+   /**
+    * Category for fatal problems which could not be addressed by external changes, but require an edit to be addressed
+    */
    public static final int CAT_INTERNAL = 60;
 
    /** Category for optional problems in Javadoc */
@@ -98,7 +104,9 @@ public abstract class CategorizedProblem implements IProblem
    /** Category for optional problems related to type safety in generics */
    public static final int CAT_UNCHECKED_RAW = 130;
 
-   /** Category for optional problems related to internationalization of String literals */
+   /**
+    * Category for optional problems related to internationalization of String literals
+    */
    public static final int CAT_NLS = 140;
 
    /** Category for optional problems related to access restrictions */

@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-/**
- * Context used during type inference for a generic method invocation
- */
+/** Context used during type inference for a generic method invocation */
 public class InferenceContext
 {
 

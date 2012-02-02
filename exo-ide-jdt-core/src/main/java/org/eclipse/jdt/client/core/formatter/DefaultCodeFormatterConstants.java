@@ -20,7 +20,7 @@ import org.eclipse.jdt.client.core.formatter.align.Alignment;
 
 /**
  * Constants used to set up the options of the code formatter.
- *
+ * 
  * @since 3.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  * @noextend This class is not intended to be subclassed by clients.
@@ -32,6 +32,7 @@ public class DefaultCodeFormatterConstants
     * <pre>
     * FORMATTER / Value to set a brace location at the end of a line.
     * </pre>
+    * 
     * @see #FORMATTER_BRACE_POSITION_FOR_ANONYMOUS_TYPE_DECLARATION
     * @see #FORMATTER_BRACE_POSITION_FOR_ARRAY_INITIALIZER
     * @see #FORMATTER_BRACE_POSITION_FOR_BLOCK
@@ -47,6 +48,7 @@ public class DefaultCodeFormatterConstants
     * <pre>
     * FORMATTER / Value to set an option to false.
     * </pre>
+    * 
     * @since 3.0
     */
    public static final String FALSE = "false"; //$NON-NLS-1$
@@ -58,6 +60,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           FALSE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.0
@@ -72,6 +75,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.0
     */
@@ -85,6 +89,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.1
     */
@@ -98,6 +103,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_NO_SPLIT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.6
     */
@@ -111,6 +117,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.0
     */
@@ -124,6 +131,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.0
     */
@@ -137,6 +145,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.0
     */
@@ -150,6 +159,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_NO_SPLIT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.2
     */
@@ -163,6 +173,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.0
     */
@@ -176,6 +187,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_ONE_PER_LINE, INDENT_BY_ONE)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.0
     */
@@ -189,6 +201,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_ONE_PER_LINE, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.0
     */
@@ -202,6 +215,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:  values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:          createAlignmentValue(false, WRAP_NO_SPLIT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.1
     */
@@ -215,6 +229,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.0
     */
@@ -228,6 +243,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_NO_SPLIT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.6
     */
@@ -241,6 +257,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.0
     */
@@ -254,6 +271,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.0
     */
@@ -267,6 +285,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.0
     */
@@ -280,6 +299,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_NEXT_PER_LINE, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.7.1
     */
@@ -293,6 +313,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.0
     */
@@ -306,6 +327,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_NEXT_SHIFTED, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.0
     */
@@ -319,6 +341,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.1
     */
@@ -332,6 +355,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.0
     */
@@ -345,6 +369,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.0
     */
@@ -358,6 +383,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.0
     */
@@ -371,6 +397,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   values returned by <code>createAlignmentValue(boolean, int, int)</code> call
     *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
     * </pre>
+    * 
     * @see #createAlignmentValue(boolean, int, int)
     * @since 3.7.1
     */
@@ -384,6 +411,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "0"
     * </pre>
+    * 
     * @since 3.0
     */
    public static final String FORMATTER_BLANK_LINES_AFTER_IMPORTS = JavaCore.PLUGIN_ID
@@ -396,6 +424,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "0"
     * </pre>
+    * 
     * @since 3.0
     */
    public static final String FORMATTER_BLANK_LINES_AFTER_PACKAGE = JavaCore.PLUGIN_ID
@@ -408,6 +437,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "0"
     * </pre>
+    * 
     * @since 3.0
     */
    public static final String FORMATTER_BLANK_LINES_AT_BEGINNING_OF_METHOD_BODY = JavaCore.PLUGIN_ID
@@ -420,6 +450,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "0"
     * </pre>
+    * 
     * @since 3.0
     */
    public static final String FORMATTER_BLANK_LINES_BEFORE_FIELD = JavaCore.PLUGIN_ID
@@ -432,6 +463,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "0"
     * </pre>
+    * 
     * @since 3.0
     */
    public static final String FORMATTER_BLANK_LINES_BEFORE_FIRST_CLASS_BODY_DECLARATION = JavaCore.PLUGIN_ID
@@ -444,6 +476,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "0"
     * </pre>
+    * 
     * @since 3.0
     */
    public static final String FORMATTER_BLANK_LINES_BEFORE_IMPORTS = JavaCore.PLUGIN_ID
@@ -456,6 +489,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "0"
     * </pre>
+    * 
     * @since 3.0
     */
    public static final String FORMATTER_BLANK_LINES_BEFORE_MEMBER_TYPE = JavaCore.PLUGIN_ID
@@ -468,6 +502,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "0"
     * </pre>
+    * 
     * @since 3.0
     */
    public static final String FORMATTER_BLANK_LINES_BEFORE_METHOD = JavaCore.PLUGIN_ID
@@ -480,6 +515,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "0"
     * </pre>
+    * 
     * @since 3.0
     */
    public static final String FORMATTER_BLANK_LINES_BEFORE_NEW_CHUNK = JavaCore.PLUGIN_ID
@@ -492,6 +528,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "0"
     * </pre>
+    * 
     * @since 3.0
     */
    public static final String FORMATTER_BLANK_LINES_BEFORE_PACKAGE = JavaCore.PLUGIN_ID
@@ -504,9 +541,10 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "1"
     * </pre>
-    * Note: Import groups are defined once "Organize Import" operation has been executed. The code formatter itself
-    * doesn't define the import groups.
-    *
+    * 
+    * Note: Import groups are defined once "Organize Import" operation has been executed. The code formatter itself doesn't define
+    * the import groups.
+    * 
     * @since 3.3
     */
    public static final String FORMATTER_BLANK_LINES_BETWEEN_IMPORT_GROUPS = JavaCore.PLUGIN_ID
@@ -519,6 +557,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "0"
     * </pre>
+    * 
     * @since 3.0
     */
    public static final String FORMATTER_BLANK_LINES_BETWEEN_TYPE_DECLARATIONS = JavaCore.PLUGIN_ID
@@ -531,6 +570,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { END_OF_LINE, NEXT_LINE, NEXT_LINE_SHIFTED, NEXT_LINE_ON_WRAP }
     *     - default:           END_OF_LINE
     * </pre>
+    * 
     * @see #END_OF_LINE
     * @see #NEXT_LINE
     * @see #NEXT_LINE_SHIFTED
@@ -547,6 +587,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { END_OF_LINE, NEXT_LINE, NEXT_LINE_SHIFTED, NEXT_LINE_ON_WRAP }
     *     - default:           END_OF_LINE
     * </pre>
+    * 
     * @see #END_OF_LINE
     * @see #NEXT_LINE
     * @see #NEXT_LINE_SHIFTED
@@ -563,6 +604,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { END_OF_LINE, NEXT_LINE, NEXT_LINE_SHIFTED, NEXT_LINE_ON_WRAP }
     *     - default:           END_OF_LINE
     * </pre>
+    * 
     * @see #END_OF_LINE
     * @see #NEXT_LINE
     * @see #NEXT_LINE_SHIFTED
@@ -579,6 +621,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { END_OF_LINE, NEXT_LINE, NEXT_LINE_SHIFTED, NEXT_LINE_ON_WRAP }
     *     - default:           END_OF_LINE
     * </pre>
+    * 
     * @see #END_OF_LINE
     * @see #NEXT_LINE
     * @see #NEXT_LINE_SHIFTED
@@ -596,6 +639,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { END_OF_LINE, NEXT_LINE, NEXT_LINE_SHIFTED, NEXT_LINE_ON_WRAP }
     *     - default:           END_OF_LINE
     * </pre>
+    * 
     * @see #END_OF_LINE
     * @see #NEXT_LINE
     * @see #NEXT_LINE_SHIFTED
@@ -612,6 +656,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { END_OF_LINE, NEXT_LINE, NEXT_LINE_SHIFTED, NEXT_LINE_ON_WRAP }
     *     - default:           END_OF_LINE
     * </pre>
+    * 
     * @see #END_OF_LINE
     * @see #NEXT_LINE
     * @see #NEXT_LINE_SHIFTED
@@ -628,6 +673,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { END_OF_LINE, NEXT_LINE, NEXT_LINE_SHIFTED, NEXT_LINE_ON_WRAP }
     *     - default:           END_OF_LINE
     * </pre>
+    * 
     * @see #END_OF_LINE
     * @see #NEXT_LINE
     * @see #NEXT_LINE_SHIFTED
@@ -644,6 +690,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { END_OF_LINE, NEXT_LINE, NEXT_LINE_SHIFTED, NEXT_LINE_ON_WRAP }
     *     - default:           END_OF_LINE
     * </pre>
+    * 
     * @see #END_OF_LINE
     * @see #NEXT_LINE
     * @see #NEXT_LINE_SHIFTED
@@ -660,6 +707,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { END_OF_LINE, NEXT_LINE, NEXT_LINE_SHIFTED, NEXT_LINE_ON_WRAP }
     *     - default:           END_OF_LINE
     * </pre>
+    * 
     * @see #END_OF_LINE
     * @see #NEXT_LINE
     * @see #NEXT_LINE_SHIFTED
@@ -676,6 +724,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { END_OF_LINE, NEXT_LINE, NEXT_LINE_SHIFTED, NEXT_LINE_ON_WRAP }
     *     - default:           END_OF_LINE
     * </pre>
+    * 
     * @see #END_OF_LINE
     * @see #NEXT_LINE
     * @see #NEXT_LINE_SHIFTED
@@ -692,6 +741,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { END_OF_LINE, NEXT_LINE, NEXT_LINE_SHIFTED, NEXT_LINE_ON_WRAP }
     *     - default:           END_OF_LINE
     * </pre>
+    * 
     * @see #END_OF_LINE
     * @see #NEXT_LINE
     * @see #NEXT_LINE_SHIFTED
@@ -708,10 +758,12 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           FALSE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.1
-    * @deprecated Use {@link #FORMATTER_COMMENT_CLEAR_BLANK_LINES_IN_BLOCK_COMMENT} and {@link #FORMATTER_COMMENT_CLEAR_BLANK_LINES_IN_JAVADOC_COMMENT}
+    * @deprecated Use {@link #FORMATTER_COMMENT_CLEAR_BLANK_LINES_IN_BLOCK_COMMENT} and
+    *             {@link #FORMATTER_COMMENT_CLEAR_BLANK_LINES_IN_JAVADOC_COMMENT}
     */
    public final static String FORMATTER_COMMENT_CLEAR_BLANK_LINES =
       "org.eclipse.jdt.core.formatter.comment.clear_blank_lines"; //$NON-NLS-1$
@@ -723,6 +775,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           FALSE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.3
@@ -737,6 +790,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           FALSE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.3
@@ -751,11 +805,12 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.1
     * @deprecated Use multiple settings for each kind of comments. See {@link #FORMATTER_COMMENT_FORMAT_BLOCK_COMMENT},
-    * {@link #FORMATTER_COMMENT_FORMAT_JAVADOC_COMMENT} and {@link #FORMATTER_COMMENT_FORMAT_LINE_COMMENT}.
+    *             {@link #FORMATTER_COMMENT_FORMAT_JAVADOC_COMMENT} and {@link #FORMATTER_COMMENT_FORMAT_LINE_COMMENT}.
     */
    public final static String FORMATTER_COMMENT_FORMAT = "org.eclipse.jdt.core.formatter.comment.format_comments"; //$NON-NLS-1$
 
@@ -766,6 +821,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.3
@@ -780,10 +836,9 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
-    * Note that this option is ignored if either the
-    * {@link #FORMATTER_COMMENT_FORMAT_LINE_COMMENT} option has been set to
-    * {@link #FALSE} or the formatter is created with the mode
-    * {@link ToolFactory#M_FORMAT_NEW}.
+    * 
+    * Note that this option is ignored if either the {@link #FORMATTER_COMMENT_FORMAT_LINE_COMMENT} option has been set to
+    * {@link #FALSE} or the formatter is created with the mode {@link ToolFactory#M_FORMAT_NEW}.
     * 
     * @see #TRUE
     * @see #FALSE
@@ -800,6 +855,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           FALSE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.7
@@ -814,6 +870,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.3
@@ -828,6 +885,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.3
@@ -842,6 +900,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           FALSE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.1
@@ -855,6 +914,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.1
@@ -868,6 +928,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.1
@@ -882,6 +943,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.1
@@ -896,6 +958,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.1
@@ -910,6 +973,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -924,6 +988,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -938,6 +1003,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "80"
     * </pre>
+    * 
     * @since 3.1
     */
    public final static String FORMATTER_COMMENT_LINE_LENGTH = "org.eclipse.jdt.core.formatter.comment.line_length"; //$NON-NLS-1$
@@ -949,6 +1015,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.6
@@ -963,6 +1030,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.6
@@ -977,6 +1045,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.0
@@ -990,6 +1059,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "2"
     * </pre>
+    * 
     * @since 3.0
     */
    public static final String FORMATTER_CONTINUATION_INDENTATION = JavaCore.PLUGIN_ID
@@ -1002,6 +1072,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "2"
     * </pre>
+    * 
     * @since 3.0
     */
    public static final String FORMATTER_CONTINUATION_INDENTATION_FOR_ARRAY_INITIALIZER = JavaCore.PLUGIN_ID
@@ -1014,6 +1085,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   TRUE / FALSE
     *     - default:           FALSE
     * </pre>
+    * 
     * @since 3.6
     */
    public static final String FORMATTER_USE_ON_OFF_TAGS = JavaCore.PLUGIN_ID + ".formatter.use_on_off_tags"; //$NON-NLS-1$
@@ -1031,81 +1103,108 @@ public class DefaultCodeFormatterConstants
     * <p>
     * Note that:
     * <ol>
-    * <li>This tag is used by the formatter only if the 
-    * {@link #FORMATTER_USE_ON_OFF_TAGS} option is set to {@link #TRUE}.</li>
-    * <li>The tag name will be trimmed. Hence if it does contain white spaces
-    * at the beginning or at the end, they will not be taken into account while
-    * searching for the tag in the comments</li>
-    * <li>If a tag is starting with a letter or digit, then it cannot be leaded by
-    * another letter or digit to be recognized
-    * (<code>"ToDisableFormatter"</code> will not be recognized as a disabling tag
-    * <code>"DisableFormatter"</code>, but <code>"To:DisableFormatter"</code>
-    * will be detected for either tag <code>"DisableFormatter"</code> or
+    * <li>This tag is used by the formatter only if the {@link #FORMATTER_USE_ON_OFF_TAGS} option is set to {@link #TRUE}.</li>
+    * <li>The tag name will be trimmed. Hence if it does contain white spaces at the beginning or at the end, they will not be
+    * taken into account while searching for the tag in the comments</li>
+    * <li>If a tag is starting with a letter or digit, then it cannot be leaded by another letter or digit to be recognized (
+    * <code>"ToDisableFormatter"</code> will not be recognized as a disabling tag <code>"DisableFormatter"</code>, but
+    * <code>"To:DisableFormatter"</code> will be detected for either tag <code>"DisableFormatter"</code> or
     * <code>":DisableFormatter"</code>).<br>
-    * Respectively, a tag ending with a letter or digit cannot be followed by a letter
-    * or digit to be recognized (<code>"DisableFormatter1"</code> will not be
-    * recognized as a disabling tag <code>"DisableFormatter"</code>, but
-    * <code>"DisableFormatter:1"</code> will be detected either for tag
-    * <code>"DisableFormatter"</code> or <code>"DisableFormatter:"</code>)</li>
-    * <li>As soon as the formatter encounters the defined disabling tag, it stops to
-    * format the code from the beginning of the comment including this tag. If it
-    * was already disabled, the tag has no special effect.
+    * Respectively, a tag ending with a letter or digit cannot be followed by a letter or digit to be recognized (
+    * <code>"DisableFormatter1"</code> will not be recognized as a disabling tag <code>"DisableFormatter"</code>, but
+    * <code>"DisableFormatter:1"</code> will be detected either for tag <code>"DisableFormatter"</code> or
+    * <code>"DisableFormatter:"</code>)</li>
+    * <li>As soon as the formatter encounters the defined disabling tag, it stops to format the code from the beginning of the
+    * comment including this tag. If it was already disabled, the tag has no special effect.
     * <p>
-    * For example, the second default enabling tag &quot;<b>@formatter:off</b>&quot;
-    * in the following snippet is not necessary as the formatter was already disabled
-    * since the first one:
+    * For example, the second default enabling tag &quot;<b>@formatter:off</b>&quot; in the following snippet is not necessary as
+    * the formatter was already disabled since the first one:
+    * 
     * <pre>
-    * class X {
-    * // @formatter:off
-    * void foo1() {}
-    * // @formatter:off
-    * void foo2() {}
-    * void bar1() {}
-    * void bar2() {}
-    * }
-    * </pre></p>
-    * </li>
-    * <li>If no enabling tag is found by the formatter after the disabling tag, then
-    * the end of the snippet won't be formatted.<br>
-    * For example, when a disabling tag is put at the beginning of the code, then
-    * the entire content of a compilation unit is not formatted:
-    * <pre>
-    * // @formatter:off
-    * class X {
-    * void foo1() {}
-    * void foo2() {}
-    * void bar1() {}
-    * void bar2() {}
+    * class X
+    * {
+    *    // @formatter:off
+    *    void foo1()
+    *    {
+    *    }
+    * 
+    *    // @formatter:off
+    *    void foo2()
+    *    {
+    *    }
+    * 
+    *    void bar1()
+    *    {
+    *    }
+    * 
+    *    void bar2()
+    *    {
+    *    }
     * }
     * </pre>
+    * 
+    * </p>
     * </li>
-    * <li>If a mix of disabling and enabling tags is done in the same comment, then
-    * the formatter will only take into account the last encountered tag in the
-    * comment.
-    * <p>For example, in the following snippet, the formatter will be disabled after
-    * the comment:</p>
+    * <li>If no enabling tag is found by the formatter after the disabling tag, then the end of the snippet won't be formatted.<br>
+    * For example, when a disabling tag is put at the beginning of the code, then the entire content of a compilation unit is not
+    * formatted:
+    * 
     * <pre>
-    * class X {
-    * &#47;&#42;
-    * &nbsp;&#42; This is a comment with a mix of disabling and enabling tags:
-    * &nbsp;&#42;  - <b>@formatter:off</b>
-    * &nbsp;&#42;  - <b>@formatter:on</b>
-    * &nbsp;&#42;  - <b>@formatter:off</b>
-    * &nbsp;&#42; The formatter will stop to format from the beginning of this comment...
-    * &nbsp;&#42;&#47;
-    * void foo() {}
-    * void bar() {}
+    * // @formatter:off
+    * class X
+    * {
+    *    void foo1()
+    *    {
+    *    }
+    * 
+    *    void foo2()
+    *    {
+    *    }
+    * 
+    *    void bar1()
+    *    {
+    *    }
+    * 
+    *    void bar2()
+    *    {
+    *    }
     * }
     * </pre>
+    * 
     * </li>
-    * <li>The tag cannot include newline character (i.e. '\n') but it can have white
-    * spaces.<br>
+    * <li>If a mix of disabling and enabling tags is done in the same comment, then the formatter will only take into account the
+    * last encountered tag in the comment.
+    * <p>
+    * For example, in the following snippet, the formatter will be disabled after the comment:
+    * </p>
+    * 
+    * <pre>
+    * class X
+    * {
+    *    /*
+    *     * This is a comment with a mix of disabling and enabling tags: - &lt;b&gt;@formatter:off&lt;/b&gt; - &lt;b&gt;@formatter:on&lt;/b&gt; -
+    *     * &lt;b&gt;@formatter:off&lt;/b&gt; The formatter will stop to format from the beginning of this comment...
+    *     &#42;/
+    *    void foo()
+    *    {
+    *    }
+    * 
+    *    void bar()
+    *    {
+    *    }
+    * }
+    * </pre>
+    * 
+    * </li>
+    * <li>The tag cannot include newline character (i.e. '\n') but it can have white spaces.<br>
     * E.g. "<b>format: off</b>" is a valid disabling tag.<br>
-    * In the future, newlines may be used to support multiple disabling tags.
-    * </li>
+    * In the future, newlines may be used to support multiple disabling tags.</li>
     * <li>The tag can include line or block comments start/end tokens.
-    * <p>If such tags are used, e.g. "<b>//J-</b>", then the single comment can
-    * also stop the formatting as shown in the following snippet:</p>
+    * <p>
+    * If such tags are used, e.g. "<b>//J-</b>", then the single comment can also stop the formatting as shown in the following
+    * snippet:
+    * </p>
+    * 
     * <pre>
     * //J-
     * // Formatting was stopped from comment above...
@@ -1114,34 +1213,52 @@ public class DefaultCodeFormatterConstants
     * // Formatting is restarted from here...
     * void foo() {}
     * </pre>
-    * <p>As any disabling tags, as soon as a comment includes it,
-    * the formatting stops from this comment:</p>
+    * 
+    * <p>
+    * As any disabling tags, as soon as a comment includes it, the formatting stops from this comment:
+    * </p>
+    * 
     * <pre>
-    * public class X {
-    * // Line comment including the disabling tag: //J-
-    * // Formatting was stopped from comment above...
-    * void   foo1()   {}
-    * //J+
-    * // Formatting restarts from here...
-    * void   bar1()   {}
-    * &#47;&#42;
-    * &nbsp;&#42; Block comment including the disabling tag: //J+
-    * &nbsp;&#42; The formatter stops from this comment...
-    * &nbsp;&#42;&#47;
-    * void   foo2()   {}
-    * //J+
-    * // Formatting restarts from here...
-    * void   bar2()   {}
-    * &#47;&#42;&#42;
-    * &nbsp;&#42; Javadoc comment including the enabling tag: //J+
-    * &nbsp;&#42; The formatter stops from this comment...
-    * &nbsp;&#42;&#47;
-    * void   foo3()   {}
+    * public class X
+    * {
+    *    // Line comment including the disabling tag: //J-
+    *    // Formatting was stopped from comment above...
+    *    void foo1()
+    *    {
+    *    }
+    * 
+    *    // J+
+    *    // Formatting restarts from here...
+    *    void bar1()
+    *    {
+    *    }
+    * 
+    *    /*
+    *     * Block comment including the disabling tag: //J+ The formatter stops from this comment...
+    *     &#42;/
+    *    void foo2()
+    *    {
+    *    }
+    * 
+    *    // J+
+    *    // Formatting restarts from here...
+    *    void bar2()
+    *    {
+    *    }
+    * 
+    *    /**
+    *     * Javadoc comment including the enabling tag: //J+ The formatter stops from this comment...
+    *     &#42;/
+    *    void foo3()
+    *    {
+    *    }
     * }
     * </pre>
+    * 
     * </li>
     * </ol>
     * </p>
+    * 
     * @since 3.6
     */
    public static final String FORMATTER_DISABLING_TAG = JavaCore.PLUGIN_ID + ".formatter.disabling_tag"; //$NON-NLS-1$
@@ -1157,122 +1274,173 @@ public class DefaultCodeFormatterConstants
     * <p>
     * Note that:
     * <ol>
-    * <li>This tag is used by the formatter only if the 
-    * {@link #FORMATTER_USE_ON_OFF_TAGS} option is set to {@link #TRUE}.</li>
-    * <li>The tag name will be trimmed. Hence if it does contain white spaces
-    * at the beginning or at the end, they will not be taken into account while
-    * searching for the tag in the comments</li>
-    * <li>If a tag is starting with a letter or digit, then it cannot be leaded by
-    * another letter or digit to be recognized
-    * (<code>"ReEnableFormatter"</code> will not be recognized as an enabling tag
-    * <code>"EnableFormatter"</code>, but <code>"Re:EnableFormatter"</code>
-    * will be detected for either tag <code>"EnableFormatter"</code> or
+    * <li>This tag is used by the formatter only if the {@link #FORMATTER_USE_ON_OFF_TAGS} option is set to {@link #TRUE}.</li>
+    * <li>The tag name will be trimmed. Hence if it does contain white spaces at the beginning or at the end, they will not be
+    * taken into account while searching for the tag in the comments</li>
+    * <li>If a tag is starting with a letter or digit, then it cannot be leaded by another letter or digit to be recognized (
+    * <code>"ReEnableFormatter"</code> will not be recognized as an enabling tag <code>"EnableFormatter"</code>, but
+    * <code>"Re:EnableFormatter"</code> will be detected for either tag <code>"EnableFormatter"</code> or
     * <code>":EnableFormatter"</code>).<br>
-    * Respectively, a tag ending with a letter or digit cannot be followed by a letter
-    * or digit to be recognized (<code>"EnableFormatter1"</code> will not be
-    * recognized as an enabling tag <code>"EnableFormatter"</code>, but
-    * <code>"EnableFormatter:1"</code> will be detected either for tag
-    * <code>"EnableFormatter"</code> or <code>"EnableFormatter:"</code>)</li>
-    * <li>As soon as the formatter encounters the defined enabling tag, it re-starts
-    * to format the code just after the comment including this tag. If it was already
-    * active, i.e. already re-enabled or never disabled, the tag has no special effect.
+    * Respectively, a tag ending with a letter or digit cannot be followed by a letter or digit to be recognized (
+    * <code>"EnableFormatter1"</code> will not be recognized as an enabling tag <code>"EnableFormatter"</code>, but
+    * <code>"EnableFormatter:1"</code> will be detected either for tag <code>"EnableFormatter"</code> or
+    * <code>"EnableFormatter:"</code>)</li>
+    * <li>As soon as the formatter encounters the defined enabling tag, it re-starts to format the code just after the comment
+    * including this tag. If it was already active, i.e. already re-enabled or never disabled, the tag has no special effect.
     * <p>
-    * For example, the default enabling tag &quot;<b>@formatter:on</b>&quot;
-    * in the following snippet is not necessary as the formatter has never been
-    * disabled:
+    * For example, the default enabling tag &quot;<b>@formatter:on</b>&quot; in the following snippet is not necessary as the
+    * formatter has never been disabled:
+    * 
     * <pre>
-    * class X {
-    * void foo1() {}
-    * void foo2() {}
-    * // @formatter:on
-    * void bar1() {}
-    * void bar2() {}
+    * class X
+    * {
+    *    void foo1()
+    *    {
+    *    }
+    * 
+    *    void foo2()
+    *    {
+    *    }
+    * 
+    *    // @formatter:on
+    *    void bar1()
+    *    {
+    *    }
+    * 
+    *    void bar2()
+    *    {
+    *    }
     * }
     * </pre>
-    * Or, in the following other snippet, the second enabling tag is not necessary as
-    * the formatting will have been re-enabled by the first one:
+    * 
+    * Or, in the following other snippet, the second enabling tag is not necessary as the formatting will have been re-enabled by
+    * the first one:
+    * 
     * <pre>
-    * class X {
-    * // @formatter:off
-    * void foo1() {}
-    * void foo2() {}
-    * // @formatter:on
-    * void bar1() {}
-    * // @formatter:on
-    * void bar2() {}
-    * }
-    * </pre></p>
-    * </li>
-    * <li>If a mix of disabling and enabling tags is done in the same comment, then
-    * the formatter will only take into account the last encountered tag in the
-    * comment.
-    * <p>For example, in the following snippet, the formatter will be re-enabled after
-    * the comment:</p>
-    * <pre>
-    * // @formatter:off
-    * class X {
-    * &#47;&#42;
-    * &nbsp;&#42; This is a comment with a mix of disabling and enabling tags:
-    * &nbsp;&#42;  - <b>@formatter:on</b>
-    * &nbsp;&#42;  - <b>@formatter:off</b>
-    * &nbsp;&#42;  - <b>@formatter:on</b>
-    * &nbsp;&#42; The formatter will restart to format after this comment...
-    * &nbsp;&#42;&#47;
-    * void foo() {}
-    * void bar() {}
+    * class X
+    * {
+    *    // @formatter:off
+    *    void foo1()
+    *    {
+    *    }
+    * 
+    *    void foo2()
+    *    {
+    *    }
+    * 
+    *    // @formatter:on
+    *    void bar1()
+    *    {
+    *    }
+    * 
+    *    // @formatter:on
+    *    void bar2()
+    *    {
+    *    }
     * }
     * </pre>
+    * 
+    * </p>
     * </li>
-    * <li>The tag cannot include newline character (i.e. '\n') but it can have white
-    * spaces.<br>
+    * <li>If a mix of disabling and enabling tags is done in the same comment, then the formatter will only take into account the
+    * last encountered tag in the comment.
+    * <p>
+    * For example, in the following snippet, the formatter will be re-enabled after the comment:
+    * </p>
+    * 
+    * <pre>
+    * // @formatter:off
+    * class X
+    * {
+    *    /*
+    *     * This is a comment with a mix of disabling and enabling tags: - &lt;b&gt;@formatter:on&lt;/b&gt; - &lt;b&gt;@formatter:off&lt;/b&gt; -
+    *     * &lt;b&gt;@formatter:on&lt;/b&gt; The formatter will restart to format after this comment...
+    *     &#42;/
+    *    void foo()
+    *    {
+    *    }
+    * 
+    *    void bar()
+    *    {
+    *    }
+    * }
+    * </pre>
+    * 
+    * </li>
+    * <li>The tag cannot include newline character (i.e. '\n') but it can have white spaces.<br>
     * E.g. "<b>format: on</b>" is a valid enabling tag<br>
-    * In the future, newlines may be used to support multiple enabling tags.
-    * </li>
-    * <li>The tag can include line or block comments start/end tokens. Javadoc
-    * tokens are not considered as valid tags.
-    * <p>If such tags are used, e.g. "<b>//J+</b>", then the single comment can
-    * also start the formatting as shown in the following snippet:</p>
+    * In the future, newlines may be used to support multiple enabling tags.</li>
+    * <li>The tag can include line or block comments start/end tokens. Javadoc tokens are not considered as valid tags.
+    * <p>
+    * If such tags are used, e.g. "<b>//J+</b>", then the single comment can also start the formatting as shown in the following
+    * snippet:
+    * </p>
+    * 
     * <pre>
-    * //J-
+    * // J-
     * // Formatting was stopped from comment above...
-    * public class X {
-    * //J+
-    * // Formatting restarts from here...
-    * void foo() {}
+    * public class X
+    * {
+    *    // J+
+    *    // Formatting restarts from here...
+    *    void foo()
+    *    {
+    *    }
     * }
     * </pre>
-    * <p>As any enabling tags, as soon as a comment includes it,
-    * the formatting restarts just after the comment:</p>
+    * 
+    * <p>
+    * As any enabling tags, as soon as a comment includes it, the formatting restarts just after the comment:
+    * </p>
+    * 
     * <pre>
-    * public class X {
-    * //J-
-    * // Formatting was stopped from comment above...
-    * void   foo1()   {}
-    * // Line comment including the enabling tag: //J+
-    * // Formatting restarts from here...
-    * void   bar1()   {}
-    * //J-
-    * // Formatting was stopped from comment above...
-    * void   foo2()   {}
-    * &#47;&#42;
-    * &nbsp;&#42; Block comment including the enabling tag: //J+
-    * &nbsp;&#42; The formatter restarts after this comment...
-    * &nbsp;&#42;&#47;
-    * // Formatting restarts from here...
-    * void   bar2()   {}
-    * //J-
-    * // Formatting was stopped from comment above...
-    * void   foo3()   {}
-    * &#47;&#42;&#42;
-    * &nbsp;&#42; Javadoc comment including the enabling tag: //J+
-    * &nbsp;&#42; The formatter restarts after this comment...
-    * &nbsp;&#42;&#47;
-    * void   bar3()   {}
+    * public class X
+    * {
+    *    // J-
+    *    // Formatting was stopped from comment above...
+    *    void foo1()
+    *    {
+    *    }
+    * 
+    *    // Line comment including the enabling tag: //J+
+    *    // Formatting restarts from here...
+    *    void bar1()
+    *    {
+    *    }
+    * 
+    *    // J-
+    *    // Formatting was stopped from comment above...
+    *    void foo2()
+    *    {
+    *    }
+    * 
+    *    /*
+    *     * Block comment including the enabling tag: //J+ The formatter restarts after this comment...
+    *     &#42;/
+    *    // Formatting restarts from here...
+    *    void bar2()
+    *    {
+    *    }
+    * 
+    *    // J-
+    *    // Formatting was stopped from comment above...
+    *    void foo3()
+    *    {
+    *    }
+    * 
+    *    /**
+    *     * Javadoc comment including the enabling tag: //J+ The formatter restarts after this comment...
+    *     &#42;/
+    *    void bar3()
+    *    {
+    *    }
     * }
     * </pre>
+    * 
     * </li>
     * </ol>
     * </p>
+    * 
     * @since 3.6
     */
    public static final String FORMATTER_ENABLING_TAG = JavaCore.PLUGIN_ID + ".formatter.enabling_tag"; //$NON-NLS-1$
@@ -1284,6 +1452,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.2
@@ -1298,6 +1467,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.1
@@ -1312,6 +1482,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.1
@@ -1326,6 +1497,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.0
@@ -1340,6 +1512,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.0
@@ -1354,6 +1527,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           FALSE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.2
@@ -1367,6 +1541,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.0
@@ -1381,6 +1556,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.0
@@ -1395,6 +1571,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.0
@@ -1409,6 +1586,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.0
@@ -1423,8 +1601,10 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "4"
     * </pre>
-    * <p>This option is used only if the tab char is set to MIXED.
+    * <p>
+    * This option is used only if the tab char is set to MIXED.
     * </p>
+    * 
     * @see #FORMATTER_TAB_CHAR
     * @since 3.1
     */
@@ -1437,14 +1617,14 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
-    * @deprecated
-    * All new options must be enabled to activate old strategy
-    * {@link #FORMATTER_INSERT_NEW_LINE_AFTER_ANNOTATION_ON_MEMBER}
-    * {@link #FORMATTER_INSERT_NEW_LINE_AFTER_ANNOTATION_ON_LOCAL_VARIABLE}
-    * {@link #FORMATTER_INSERT_NEW_LINE_AFTER_ANNOTATION_ON_PARAMETER}
+    * @deprecated All new options must be enabled to activate old strategy
+    *             {@link #FORMATTER_INSERT_NEW_LINE_AFTER_ANNOTATION_ON_MEMBER}
+    *             {@link #FORMATTER_INSERT_NEW_LINE_AFTER_ANNOTATION_ON_LOCAL_VARIABLE}
+    *             {@link #FORMATTER_INSERT_NEW_LINE_AFTER_ANNOTATION_ON_PARAMETER}
     */
    public static final String FORMATTER_INSERT_NEW_LINE_AFTER_ANNOTATION = JavaCore.PLUGIN_ID
       + ".formatter.insert_new_line_after_annotation";//$NON-NLS-1$
@@ -1456,15 +1636,15 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.4
-    * @deprecated
-    * All new options must be enabled to activate old strategy
-    * {@link #FORMATTER_INSERT_NEW_LINE_AFTER_ANNOTATION_ON_FIELD}
-    * {@link #FORMATTER_INSERT_NEW_LINE_AFTER_ANNOTATION_ON_METHOD}
-    * {@link #FORMATTER_INSERT_NEW_LINE_AFTER_ANNOTATION_ON_PACKAGE}
-    * {@link #FORMATTER_INSERT_NEW_LINE_AFTER_ANNOTATION_ON_TYPE}
+    * @deprecated All new options must be enabled to activate old strategy
+    *             {@link #FORMATTER_INSERT_NEW_LINE_AFTER_ANNOTATION_ON_FIELD}
+    *             {@link #FORMATTER_INSERT_NEW_LINE_AFTER_ANNOTATION_ON_METHOD}
+    *             {@link #FORMATTER_INSERT_NEW_LINE_AFTER_ANNOTATION_ON_PACKAGE}
+    *             {@link #FORMATTER_INSERT_NEW_LINE_AFTER_ANNOTATION_ON_TYPE}
     */
    public static final String FORMATTER_INSERT_NEW_LINE_AFTER_ANNOTATION_ON_MEMBER = JavaCore.PLUGIN_ID
       + ".formatter.insert_new_line_after_annotation_on_member";//$NON-NLS-1$
@@ -1476,6 +1656,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.7
@@ -1490,6 +1671,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.7
@@ -1504,6 +1686,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.7
@@ -1518,6 +1701,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.7
@@ -1532,6 +1716,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.4
@@ -1546,6 +1731,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.4
@@ -1560,6 +1746,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.6
@@ -1574,6 +1761,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1588,6 +1776,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -1602,6 +1791,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1616,6 +1806,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1630,6 +1821,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1644,6 +1836,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1658,6 +1851,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1672,6 +1866,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.2
@@ -1686,6 +1881,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1700,6 +1896,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1714,6 +1911,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -1728,6 +1926,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -1742,6 +1941,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1756,6 +1956,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1770,6 +1971,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -1784,6 +1986,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1798,6 +2001,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -1812,6 +2016,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -1826,6 +2031,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1840,6 +2046,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -1854,6 +2061,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -1868,6 +2076,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1882,6 +2091,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1896,6 +2106,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1910,6 +2121,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1924,6 +2136,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1938,6 +2151,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -1952,6 +2166,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1966,6 +2181,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -1980,6 +2196,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -1994,6 +2211,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2008,6 +2226,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2022,6 +2241,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2036,6 +2256,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2050,6 +2271,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2064,6 +2286,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2078,6 +2301,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2092,6 +2316,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2106,6 +2331,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2120,6 +2346,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2134,6 +2361,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2148,6 +2376,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2162,6 +2391,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2176,6 +2406,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2190,6 +2421,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2204,6 +2436,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2218,6 +2451,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2232,6 +2466,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2246,6 +2481,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2260,6 +2496,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2274,6 +2511,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2288,6 +2526,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2302,6 +2541,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2316,6 +2556,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2330,6 +2571,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2344,6 +2586,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2358,6 +2601,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2372,6 +2616,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2386,6 +2631,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2400,6 +2646,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2414,6 +2661,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2428,6 +2676,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2442,6 +2691,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2456,6 +2706,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2470,6 +2721,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2484,6 +2736,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2498,6 +2751,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.7.1
@@ -2512,6 +2766,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2526,6 +2781,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2540,6 +2796,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2554,6 +2811,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2568,6 +2826,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2582,6 +2841,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2597,6 +2857,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.7.1
@@ -2611,6 +2872,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2625,6 +2887,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2639,6 +2902,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2653,6 +2917,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2667,6 +2932,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2681,6 +2947,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2695,6 +2962,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2709,6 +2977,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2723,6 +2992,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2737,6 +3007,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2751,6 +3022,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2765,6 +3037,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2779,6 +3052,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2793,6 +3067,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2807,6 +3082,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2821,6 +3097,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -2835,6 +3112,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2849,6 +3127,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2863,6 +3142,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2877,6 +3157,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2891,6 +3172,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2905,6 +3187,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2919,6 +3202,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2933,6 +3217,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.7.1
@@ -2947,6 +3232,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2961,6 +3247,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2975,6 +3262,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -2989,6 +3277,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3003,6 +3292,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3017,6 +3307,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3031,6 +3322,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3045,6 +3337,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3059,6 +3352,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3073,6 +3367,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3087,6 +3382,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3101,6 +3397,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3115,6 +3412,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3129,6 +3427,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3143,6 +3442,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3157,6 +3457,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3171,6 +3472,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3185,6 +3487,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3199,6 +3502,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3213,6 +3517,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3227,6 +3532,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3241,6 +3547,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3255,6 +3562,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3269,6 +3577,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3283,6 +3592,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3297,6 +3607,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3311,6 +3622,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3325,6 +3637,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3339,6 +3652,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3353,6 +3667,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3367,6 +3682,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3381,6 +3697,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3395,6 +3712,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3409,6 +3727,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3423,6 +3742,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3437,6 +3757,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3451,6 +3772,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3465,6 +3787,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3479,6 +3802,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3493,6 +3817,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3507,6 +3832,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3521,6 +3847,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3535,6 +3862,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3549,6 +3877,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3563,6 +3892,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3577,6 +3907,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3591,6 +3922,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3605,6 +3937,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3619,6 +3952,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3633,6 +3967,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3647,6 +3982,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3661,6 +3997,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3675,6 +4012,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3689,6 +4027,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3703,6 +4042,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3717,6 +4057,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.7.1
@@ -3731,6 +4072,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3745,7 +4087,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
-    *
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.2
@@ -3760,7 +4102,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
-    *
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.3
@@ -3775,6 +4117,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3789,6 +4132,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3803,6 +4147,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3817,6 +4162,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3831,6 +4177,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3845,6 +4192,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3860,6 +4208,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.7.1
@@ -3874,6 +4223,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3888,6 +4238,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3902,6 +4253,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3916,6 +4268,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3930,6 +4283,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3944,6 +4298,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3958,6 +4313,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.1
@@ -3972,6 +4328,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -3986,6 +4343,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { INSERT, DO_NOT_INSERT }
     *     - default:           DO_NOT_INSERT
     * </pre>
+    * 
     * @see JavaCore#INSERT
     * @see JavaCore#DO_NOT_INSERT
     * @since 3.0
@@ -4000,6 +4358,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           FALSE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.0
@@ -4014,6 +4373,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           FALSE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.0
@@ -4028,6 +4388,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           FALSE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.0
@@ -4042,6 +4403,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           FALSE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.0
@@ -4056,6 +4418,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           FALSE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.0
@@ -4070,6 +4433,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "80"
     * </pre>
+    * 
     * @since 3.0
     */
    public static final String FORMATTER_LINE_SPLIT = JavaCore.PLUGIN_ID + ".formatter.lineSplit"; //$NON-NLS-1$
@@ -4081,7 +4445,9 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           FALSE
     * </pre>
+    * 
     * Note that this option is ignored if the formatter is created with the mode {@link ToolFactory#M_FORMAT_NEW}.
+    * 
     * @see #TRUE
     * @see #FALSE
     * @see ToolFactory#createCodeFormatter(Map, int)
@@ -4097,12 +4463,14 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           FALSE
     * </pre>
+    * 
     * Note that:
     * <ul>
     * <li>this option is ignored if the formatter is created with the mode {@link ToolFactory#M_FORMAT_NEW}</li>
-    * <li>even with this option activated, the formatter still can ignore line comments starting at first column
-    * if the option {@link #FORMATTER_COMMENT_FORMAT_LINE_COMMENT_STARTING_ON_FIRST_COLUMN} is set to {@value #FALSE}</li>
+    * <li>even with this option activated, the formatter still can ignore line comments starting at first column if the option
+    * {@link #FORMATTER_COMMENT_FORMAT_LINE_COMMENT_STARTING_ON_FIRST_COLUMN} is set to {@value #FALSE}</li>
     * </ul>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @see ToolFactory#createCodeFormatter(Map, int)
@@ -4118,6 +4486,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "0"
     * </pre>
+    * 
     * @since 3.0
     */
    public static final String FORMATTER_NUMBER_OF_EMPTY_LINES_TO_PRESERVE = JavaCore.PLUGIN_ID
@@ -4135,7 +4504,7 @@ public class DefaultCodeFormatterConstants
     * 			       + "where z=a";
     * 			}
     * 			}
-    *
+    * 
     * 		will be preserved by the formatter when the new preference is used
     * 		even if the maximum line width would give it enough space to join the lines.
     * 		Hence produces the following output:
@@ -4146,11 +4515,12 @@ public class DefaultCodeFormatterConstants
     * 			                + "where z=a";
     * 			    }
     * 			}
-    *
+    * 
     *     - option id:         "org.eclipse.jdt.core.formatter.join_wrapped_lines"
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @since 3.5
     */
    public static final String FORMATTER_JOIN_WRAPPED_LINES = JavaCore.PLUGIN_ID + ".formatter.join_wrapped_lines"; //$NON-NLS-1$
@@ -4169,11 +4539,12 @@ public class DefaultCodeFormatterConstants
     * 
     * 		will be unchanged by the formatter when this new preference is used,
     * 		even if the maximum line width would give it enough space to join the lines.
-    *
+    * 
     *     - option id:         "org.eclipse.jdt.core.formatter.join_lines_in_comments"
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * @since 3.5
     */
    public static final String FORMATTER_JOIN_LINES_IN_COMMENTS = JavaCore.PLUGIN_ID
@@ -4186,6 +4557,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           FALSE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.0
@@ -4200,8 +4572,9 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TAB, SPACE, MIXED }
     *     - default:           TAB
     * </pre>
+    * 
     * More values may be added in the future.
-    *
+    * 
     * @see JavaCore#TAB
     * @see JavaCore#SPACE
     * @see #MIXED
@@ -4216,6 +4589,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
     *     - default:           "4"
     * </pre>
+    * 
     * @since 3.0
     */
    public static final String FORMATTER_TAB_SIZE = JavaCore.PLUGIN_ID + ".formatter.tabulation.size"; //$NON-NLS-1$
@@ -4227,6 +4601,7 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           FALSE
     * </pre>
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.1
@@ -4241,7 +4616,9 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * This option is used only if the option {@link #FORMATTER_ALIGNMENT_FOR_BINARY_EXPRESSION} is set.
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.3
@@ -4256,7 +4633,9 @@ public class DefaultCodeFormatterConstants
     *     - possible values:   { TRUE, FALSE }
     *     - default:           TRUE
     * </pre>
+    * 
     * This option is used only if the option {@link #FORMATTER_ALIGNMENT_FOR_UNION_TYPE_IN_MULTICATCH} is set.
+    * 
     * @see #TRUE
     * @see #FALSE
     * @since 3.7.1
@@ -4272,36 +4651,51 @@ public class DefaultCodeFormatterConstants
     *     - default:           TRUE
     * </pre>
     * <p>
-    * This option changes the formatter behavior when nested method calls are encountered.
-    * Since 3.6, the formatter tries to wrap outermost method calls first to have a better output.</p>
-    * <p>For example, let's say we are using the Eclipse built-in profile with a max line width=40+space for tab policy.
-    * Then consider the following snippet:</p>
+    * This option changes the formatter behavior when nested method calls are encountered. Since 3.6, the formatter tries to wrap
+    * outermost method calls first to have a better output.
+    * </p>
+    * <p>
+    * For example, let's say we are using the Eclipse built-in profile with a max line width=40+space for tab policy. Then
+    * consider the following snippet:
+    * </p>
+    * 
     * <pre>
-    * public class X01 {
-    *     void test() {
-    *         foo(bar(1, 2, 3, 4), bar(5, 6, 7, 8));
-    *     }
+    * public class X01
+    * {
+    *    void test()
+    *    {
+    *       foo(bar(1, 2, 3, 4), bar(5, 6, 7, 8));
+    *    }
     * }
     * </pre>
-    * <p>With this new strategy, the formatter will wrap the line earlier, between the arguments of the message call
-    * for this example, and then it will allow to keep each nested call on a single line.</p>
-    * <p>Hence, the output will be:</p>
+    * <p>
+    * With this new strategy, the formatter will wrap the line earlier, between the arguments of the message call for this
+    * example, and then it will allow to keep each nested call on a single line.
+    * </p>
+    * <p>
+    * Hence, the output will be:
+    * </p>
+    * 
     * <pre>
-    * public class X01 {
-    *     void test() {
-    *         foo(bar(1, 2, 3, 4),
-    *             bar(5, 6, 7, 8));
-    *     }
+    * public class X01
+    * {
+    *    void test()
+    *    {
+    *       foo(bar(1, 2, 3, 4), bar(5, 6, 7, 8));
+    *    }
     * }
     * </pre>
     * <p>
     * </p>
-    * <p><b><u>Important notes</u></b>:</p>
+    * <p>
+    * <b><u>Important notes</u></b>:
+    * </p>
     * <ol>
-    * <li>This new behavior is automatically activated (i.e. the default value for this preference is {@link #TRUE}).
-    * If the backward compatibility regarding previous versions' formatter behavior (i.e. before 3.6 version) is necessary,
-    * then the preference needs to be set to {@link #FALSE} to retrieve the previous formatter behavior.</li>
-    * <li>The new strategy currently only applies to nested method calls, but might be extended to other nested expressions in future versions</li>
+    * <li>This new behavior is automatically activated (i.e. the default value for this preference is {@link #TRUE}). If the
+    * backward compatibility regarding previous versions' formatter behavior (i.e. before 3.6 version) is necessary, then the
+    * preference needs to be set to {@link #FALSE} to retrieve the previous formatter behavior.</li>
+    * <li>The new strategy currently only applies to nested method calls, but might be extended to other nested expressions in
+    * future versions</li>
     * </ol>
     * 
     * @see #TRUE
@@ -4315,6 +4709,7 @@ public class DefaultCodeFormatterConstants
     * <pre>
     * FORMATTER / The wrapping is done by indenting by one compare to the current indentation.
     * </pre>
+    * 
     * @since 3.0
     */
    public static final int INDENT_BY_ONE = 2;
@@ -4323,6 +4718,7 @@ public class DefaultCodeFormatterConstants
     * <pre>
     * FORMATTER / The wrapping is done by using the current indentation.
     * </pre>
+    * 
     * @since 3.0
     */
    public static final int INDENT_DEFAULT = 0;
@@ -4331,6 +4727,7 @@ public class DefaultCodeFormatterConstants
     * <pre>
     * FORMATTER / The wrapping is done by indenting on column under the splitting location.
     * </pre>
+    * 
     * @since 3.0
     */
    public static final int INDENT_ON_COLUMN = 1;
@@ -4339,6 +4736,7 @@ public class DefaultCodeFormatterConstants
     * <pre>
     * FORMATTER / Possible value for the option FORMATTER_TAB_CHAR
     * </pre>
+    * 
     * @since 3.1
     * @see JavaCore#TAB
     * @see JavaCore#SPACE
@@ -4351,6 +4749,7 @@ public class DefaultCodeFormatterConstants
     * FORMATTER / Value to set a brace location at the start of the next line with
     *             the right indentation.
     * </pre>
+    * 
     * @see #FORMATTER_BRACE_POSITION_FOR_ANONYMOUS_TYPE_DECLARATION
     * @see #FORMATTER_BRACE_POSITION_FOR_ARRAY_INITIALIZER
     * @see #FORMATTER_BRACE_POSITION_FOR_BLOCK
@@ -4367,6 +4766,7 @@ public class DefaultCodeFormatterConstants
     * FORMATTER / Value to set a brace location at the start of the next line if a wrapping
     *             occured.
     * </pre>
+    * 
     * @see #FORMATTER_BRACE_POSITION_FOR_ANONYMOUS_TYPE_DECLARATION
     * @see #FORMATTER_BRACE_POSITION_FOR_ARRAY_INITIALIZER
     * @see #FORMATTER_BRACE_POSITION_FOR_BLOCK
@@ -4383,6 +4783,7 @@ public class DefaultCodeFormatterConstants
     * FORMATTER / Value to set a brace location at the start of the next line with
     *             an extra indentation.
     * </pre>
+    * 
     * @see #FORMATTER_BRACE_POSITION_FOR_ANONYMOUS_TYPE_DECLARATION
     * @see #FORMATTER_BRACE_POSITION_FOR_ARRAY_INITIALIZER
     * @see #FORMATTER_BRACE_POSITION_FOR_BLOCK
@@ -4398,6 +4799,7 @@ public class DefaultCodeFormatterConstants
     * <pre>
     * FORMATTER / Value to set an option to true.
     * </pre>
+    * 
     * @since 3.0
     */
    public static final String TRUE = "true"; //$NON-NLS-1$
@@ -4406,6 +4808,7 @@ public class DefaultCodeFormatterConstants
     * <pre>
     * FORMATTER / The wrapping is done using as few lines as possible.
     * </pre>
+    * 
     * @since 3.0
     */
    public static final int WRAP_COMPACT = 1;
@@ -4415,6 +4818,7 @@ public class DefaultCodeFormatterConstants
     * FORMATTER / The wrapping is done putting the first element on a new
     *             line and then wrapping next elements using as few lines as possible.
     * </pre>
+    * 
     * @since 3.0
     */
    public static final int WRAP_COMPACT_FIRST_BREAK = 2;
@@ -4424,6 +4828,7 @@ public class DefaultCodeFormatterConstants
     * FORMATTER / The wrapping is done by putting each element on its own line
     *             except the first element.
     * </pre>
+    * 
     * @since 3.0
     */
    public static final int WRAP_NEXT_PER_LINE = 5;
@@ -4433,6 +4838,7 @@ public class DefaultCodeFormatterConstants
     * FORMATTER / The wrapping is done by putting each element on its own line.
     *             All elements are indented by one except the first element.
     * </pre>
+    * 
     * @since 3.0
     */
    public static final int WRAP_NEXT_SHIFTED = 4;
@@ -4441,6 +4847,7 @@ public class DefaultCodeFormatterConstants
     * <pre>
     * FORMATTER / Value to disable alignment.
     * </pre>
+    * 
     * @since 3.0
     */
    public static final int WRAP_NO_SPLIT = 0;
@@ -4449,23 +4856,21 @@ public class DefaultCodeFormatterConstants
     * <pre>
     * FORMATTER / The wrapping is done by putting each element on its own line.
     * </pre>
+    * 
     * @since 3.0
     */
    public static final int WRAP_ONE_PER_LINE = 3;
 
-   /*
-    * Private constants. Not in javadoc
-    */
+   /* Private constants. Not in javadoc */
    private static final IllegalArgumentException WRONG_ARGUMENT = new IllegalArgumentException();
 
    /**
-    * Create a new alignment value according to the given values. This must be used to set up
-    * the alignment options.
-    *
+    * Create a new alignment value according to the given values. This must be used to set up the alignment options.
+    * 
     * @param forceSplit the given force value
     * @param wrapStyle the given wrapping style
     * @param indentStyle the given indent style
-    *
+    * 
     * @return the new alignement value
     */
    public static String createAlignmentValue(boolean forceSplit, int wrapStyle, int indentStyle)
@@ -4505,9 +4910,8 @@ public class DefaultCodeFormatterConstants
    }
 
    /**
-    * Returns the formatter settings that most closely approximate
-    * the default formatter settings of Eclipse version 2.1.
-    *
+    * Returns the formatter settings that most closely approximate the default formatter settings of Eclipse version 2.1.
+    * 
     * @return the Eclipse 2.1 settings
     * @since 3.0
     */
@@ -4518,7 +4922,7 @@ public class DefaultCodeFormatterConstants
 
    /**
     * Returns the default Eclipse formatter settings
-    *
+    * 
     * @return the Eclipse default settings
     * @since 3.1
     */
@@ -4528,16 +4932,15 @@ public class DefaultCodeFormatterConstants
    }
 
    /**
-    * <p>Return the force value of the given alignment value.
-    * The given alignment value should be created using the <code>createAlignmentValue(boolean, int, int)</code>
-    * API.
+    * <p>
+    * Return the force value of the given alignment value. The given alignment value should be created using the
+    * <code>createAlignmentValue(boolean, int, int)</code> API.
     * </p>
-    *
+    * 
     * @param value the given alignment value
     * @return the force value of the given alignment value
     * @see #createAlignmentValue(boolean, int, int)
-    * @exception IllegalArgumentException if the given alignment value is null, or if it
-    * doesn't have a valid format.
+    * @exception IllegalArgumentException if the given alignment value is null, or if it doesn't have a valid format.
     */
    public static boolean getForceWrapping(String value)
    {
@@ -4557,16 +4960,15 @@ public class DefaultCodeFormatterConstants
    }
 
    /**
-    * <p>Return the indentation style of the given alignment value.
-    * The given alignment value should be created using the <code>createAlignmentValue(boolean, int, int)</code>
-    * API.
+    * <p>
+    * Return the indentation style of the given alignment value. The given alignment value should be created using the
+    * <code>createAlignmentValue(boolean, int, int)</code> API.
     * </p>
-    *
+    * 
     * @param value the given alignment value
     * @return the indentation style of the given alignment value
     * @see #createAlignmentValue(boolean, int, int)
-    * @exception IllegalArgumentException if the given alignment value is null, or if it
-    * doesn't have a valid format.
+    * @exception IllegalArgumentException if the given alignment value is null, or if it doesn't have a valid format.
     */
    public static int getIndentStyle(String value)
    {
@@ -4598,7 +5000,7 @@ public class DefaultCodeFormatterConstants
 
    /**
     * Returns the settings according to the Java conventions.
-    *
+    * 
     * @return the settings according to the Java conventions
     * @since 3.0
     */
@@ -4608,16 +5010,15 @@ public class DefaultCodeFormatterConstants
    }
 
    /**
-    * <p>Return the wrapping style of the given alignment value.
-    * The given alignment value should be created using the <code>createAlignmentValue(boolean, int, int)</code>
-    * API.
+    * <p>
+    * Return the wrapping style of the given alignment value. The given alignment value should be created using the
+    * <code>createAlignmentValue(boolean, int, int)</code> API.
     * </p>
-    *
+    * 
     * @param value the given alignment value
     * @return the wrapping style of the given alignment value
     * @see #createAlignmentValue(boolean, int, int)
-    * @exception IllegalArgumentException if the given alignment value is null, or if it
-    * doesn't have a valid format.
+    * @exception IllegalArgumentException if the given alignment value is null, or if it doesn't have a valid format.
     */
    public static int getWrappingStyle(String value)
    {
@@ -4651,17 +5052,16 @@ public class DefaultCodeFormatterConstants
    }
 
    /**
-    * <p>Set the force value of the given alignment value and return the new value.
-    * The given alignment value should be created using the <code>createAlignmentValue(boolean, int, int)</code>
-    * API.
+    * <p>
+    * Set the force value of the given alignment value and return the new value. The given alignment value should be created using
+    * the <code>createAlignmentValue(boolean, int, int)</code> API.
     * </p>
-    *
+    * 
     * @param value the given alignment value
     * @param force the given force value
     * @return the new alignment value
     * @see #createAlignmentValue(boolean, int, int)
-    * @exception IllegalArgumentException if the given alignment value is null, or if it
-    * doesn't have a valid format.
+    * @exception IllegalArgumentException if the given alignment value is null, or if it doesn't have a valid format.
     */
    public static String setForceWrapping(String value, boolean force)
    {
@@ -4687,11 +5087,11 @@ public class DefaultCodeFormatterConstants
    }
 
    /**
-    * <p>Set the indentation style of the given alignment value and return the new value.
-    * The given value should be created using the <code>createAlignmentValue(boolean, int, int)</code>
-    * API.
+    * <p>
+    * Set the indentation style of the given alignment value and return the new value. The given value should be created using the
+    * <code>createAlignmentValue(boolean, int, int)</code> API.
     * </p>
-    *
+    * 
     * @param value the given alignment value
     * @param indentStyle the given indentation style
     * @return the new alignment value
@@ -4699,9 +5099,8 @@ public class DefaultCodeFormatterConstants
     * @see #INDENT_DEFAULT
     * @see #INDENT_ON_COLUMN
     * @see #createAlignmentValue(boolean, int, int)
-    * @exception IllegalArgumentException if the given alignment value is null, if the given
-    * indentation style is not one of the possible indentation styles, or if the given
-    * alignment value doesn't have a valid format.
+    * @exception IllegalArgumentException if the given alignment value is null, if the given indentation style is not one of the
+    *               possible indentation styles, or if the given alignment value doesn't have a valid format.
     */
    public static String setIndentStyle(String value, int indentStyle)
    {
@@ -4740,11 +5139,11 @@ public class DefaultCodeFormatterConstants
    }
 
    /**
-    * <p>Set the wrapping style of the given alignment value and return the new value.
-    * The given value should be created using the <code>createAlignmentValue(boolean, int, int)</code>
-    * API.
+    * <p>
+    * Set the wrapping style of the given alignment value and return the new value. The given value should be created using the
+    * <code>createAlignmentValue(boolean, int, int)</code> API.
     * </p>
-    *
+    * 
     * @param value the given alignment value
     * @param wrappingStyle the given wrapping style
     * @return the new alignment value
@@ -4755,9 +5154,8 @@ public class DefaultCodeFormatterConstants
     * @see #WRAP_NO_SPLIT
     * @see #WRAP_ONE_PER_LINE
     * @see #createAlignmentValue(boolean, int, int)
-    * @exception IllegalArgumentException if the given alignment value is null, if the given
-    * wrapping style is not one of the possible wrapping styles, or if the given
-    * alignment value doesn't have a valid format.
+    * @exception IllegalArgumentException if the given alignment value is null, if the given wrapping style is not one of the
+    *               possible wrapping styles, or if the given alignment value doesn't have a valid format.
     */
    public static String setWrappingStyle(String value, int wrappingStyle)
    {

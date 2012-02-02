@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.util;
 
-/**
- * HashSet of Object[]
- */
+/** HashSet of Object[] */
 public final class HashSetOfInt implements Cloneable
 {
 

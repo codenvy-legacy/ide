@@ -19,9 +19,7 @@ import org.eclipse.jdt.client.core.ISourceRange;
  */
 public final class NodeFinder
 {
-   /**
-    * This class defines the actual visitor that finds the node.
-    */
+   /** This class defines the actual visitor that finds the node. */
    private static class NodeFinderVisitor extends ASTVisitor
    {
       private int fStart;

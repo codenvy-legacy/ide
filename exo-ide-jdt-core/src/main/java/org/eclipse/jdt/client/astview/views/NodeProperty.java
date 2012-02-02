@@ -32,7 +32,6 @@ public class NodeProperty extends ASTAttribute
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getParent()
     */
    public Object getParent()
@@ -42,7 +41,6 @@ public class NodeProperty extends ASTAttribute
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getChildren()
     */
    public Object[] getChildren()
@@ -61,7 +59,6 @@ public class NodeProperty extends ASTAttribute
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getLabel()
     */
    public String getLabel()
@@ -101,7 +98,6 @@ public class NodeProperty extends ASTAttribute
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.astview.views.ASTAttribute#getImage()
     */
    public Image getImage()
@@ -155,7 +151,6 @@ public class NodeProperty extends ASTAttribute
 
    /*
     * (non-Javadoc)
-    * 
     * @see java.lang.Object#toString()
     */
    public String toString()

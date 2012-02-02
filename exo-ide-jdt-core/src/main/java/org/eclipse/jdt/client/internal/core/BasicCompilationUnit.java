@@ -77,9 +77,7 @@ public class BasicCompilationUnit implements ICompilationUnit
       return CharOperation.NO_CHAR;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IDependent#getFileName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.IDependent#getFileName() */
    public char[] getFileName()
    {
       return this.fileName;

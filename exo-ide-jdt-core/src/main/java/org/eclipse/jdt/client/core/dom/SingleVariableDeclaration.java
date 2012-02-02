@@ -64,7 +64,7 @@ public class SingleVariableDeclaration extends VariableDeclaration
       SingleVariableDeclaration.class, "name", SimpleName.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * The "type" structural property of this node type (child type: {@link Type}).
+    * The "type" structural property of this node type (child type: {@link Type} ).
     * 
     * @since 3.0
     */
@@ -72,7 +72,7 @@ public class SingleVariableDeclaration extends VariableDeclaration
       SingleVariableDeclaration.class, "type", Type.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * The "varargs" structural property of this node type (type: {@link Boolean}) (added in JLS3 API).
+    * The "varargs" structural property of this node type (type: {@link Boolean} ) (added in JLS3 API).
     * 
     * @since 3.1
     */
@@ -168,9 +168,7 @@ public class SingleVariableDeclaration extends VariableDeclaration
     */
    private SimpleName variableName = null;
 
-   /**
-    * The type; lazily initialized; defaults to a unspecified, legal type.
-    */
+   /** The type; lazily initialized; defaults to a unspecified, legal type. */
    private Type type = null;
 
    /**
@@ -213,7 +211,6 @@ public class SingleVariableDeclaration extends VariableDeclaration
 
    /*
     * (omit javadoc for this method) Method declared on VariableDeclaration.
-    * 
     * @since 3.1
     */
    final SimplePropertyDescriptor internalExtraDimensionsProperty()
@@ -223,7 +220,6 @@ public class SingleVariableDeclaration extends VariableDeclaration
 
    /*
     * (omit javadoc for this method) Method declared on VariableDeclaration.
-    * 
     * @since 3.1
     */
    final ChildPropertyDescriptor internalInitializerProperty()
@@ -233,7 +229,6 @@ public class SingleVariableDeclaration extends VariableDeclaration
 
    /*
     * (omit javadoc for this method) Method declared on VariableDeclaration.
-    * 
     * @since 3.1
     */
    final ChildPropertyDescriptor internalNameProperty()
@@ -241,17 +236,13 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return NAME_PROPERTY;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value)
    {
       if (property == MODIFIERS_PROPERTY)
@@ -282,9 +273,7 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return super.internalGetSetIntProperty(property, get, value);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value)
    {
       if (property == VARARGS_PROPERTY)
@@ -303,9 +292,7 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return super.internalGetSetBooleanProperty(property, get, value);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
       if (property == NAME_PROPERTY)
@@ -348,9 +335,7 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
       if (property == MODIFIERS2_PROPERTY)
@@ -361,17 +346,13 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return super.internalGetChildListProperty(property);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int getNodeType0()
    {
       return SINGLE_VARIABLE_DECLARATION;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    ASTNode clone0(AST target)
    {
       SingleVariableDeclaration result = new SingleVariableDeclaration(target);
@@ -392,18 +373,14 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return result;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
       // dispatch to correct overloaded match method
       return matcher.match(this, other);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    void accept0(ASTVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -507,9 +484,7 @@ public class SingleVariableDeclaration extends VariableDeclaration
       postValueChange(MODIFIERS_PROPERTY);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on VariableDeclaration.
-    */
+   /* (omit javadoc for this method) Method declared on VariableDeclaration. */
    public SimpleName getName()
    {
       if (this.variableName == null)
@@ -528,9 +503,7 @@ public class SingleVariableDeclaration extends VariableDeclaration
       return this.variableName;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on VariableDeclaration.
-    */
+   /* (omit javadoc for this method) Method declared on VariableDeclaration. */
    public void setName(SimpleName variableName)
    {
       if (variableName == null)
@@ -632,7 +605,6 @@ public class SingleVariableDeclaration extends VariableDeclaration
 
    /*
     * (omit javadoc for this method) Method declared on VariableDeclaration.
-    * 
     * @since 2.1
     */
    public int getExtraDimensions()
@@ -642,7 +614,6 @@ public class SingleVariableDeclaration extends VariableDeclaration
 
    /*
     * (omit javadoc for this method) Method declared on VariableDeclaration.
-    * 
     * @since 2.1
     */
    public void setExtraDimensions(int dimensions)
@@ -656,17 +627,13 @@ public class SingleVariableDeclaration extends VariableDeclaration
       postValueChange(EXTRA_DIMENSIONS_PROPERTY);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on VariableDeclaration.
-    */
+   /* (omit javadoc for this method) Method declared on VariableDeclaration. */
    public Expression getInitializer()
    {
       return this.optionalInitializer;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on VariableDeclaration.
-    */
+   /* (omit javadoc for this method) Method declared on VariableDeclaration. */
    public void setInitializer(Expression initializer)
    {
       // a SingleVariableDeclaration may occur inside an Expression
@@ -677,18 +644,14 @@ public class SingleVariableDeclaration extends VariableDeclaration
       postReplaceChild(oldChild, initializer, INITIALIZER_PROPERTY);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       // treat Operator as free
       return BASE_NODE_SIZE + 7 * 4;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int treeSize()
    {
       return memSize() + (this.modifiers == null ? 0 : this.modifiers.listSize())

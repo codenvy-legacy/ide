@@ -21,13 +21,9 @@ public interface Substitution
     */
    TypeBinding substitute(TypeVariableBinding typeVariable);
 
-   /**
-    * Returns the lookup environment
-    */
+   /** Returns the lookup environment */
    LookupEnvironment environment();
 
-   /**
-    * Returns true for raw substitution
-    */
+   /** Returns true for raw substitution */
    boolean isRawSubstitution();
 }

@@ -173,9 +173,7 @@ public final class Flags
     */
    public static final int AccAnnotation = ClassFileConstants.AccAnnotation;
 
-   /**
-    * Not instantiable.
-    */
+   /** Not instantiable. */
    private Flags()
    {
       // Not instantiable

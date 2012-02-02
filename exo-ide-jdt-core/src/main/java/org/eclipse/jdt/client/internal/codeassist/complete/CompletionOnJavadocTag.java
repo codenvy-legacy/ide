@@ -37,9 +37,7 @@ public class CompletionOnJavadocTag extends JavadocSingleNameReference implement
          this.completionFlags |= ALL_POSSIBLE_TAGS;
    }
 
-   /**
-    * @param flags The completionFlags to set.
-    */
+   /** @param flags The completionFlags to set. */
    public void addCompletionFlags(int flags)
    {
       this.completionFlags |= flags;
@@ -57,8 +55,7 @@ public class CompletionOnJavadocTag extends JavadocSingleNameReference implement
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.ast.AllocationExpression#printExpression(int, java.lang.StringBuffer)
+    * @see org.eclipse.jdt.internal.compiler.ast.AllocationExpression#printExpression (int, java.lang.StringBuffer)
     */
    public StringBuffer printExpression(int indent, StringBuffer output)
    {

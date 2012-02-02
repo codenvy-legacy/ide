@@ -57,9 +57,7 @@ public abstract class AbstractAnnotationProcessorManager
     */
    public abstract ICompilationUnit[] getDeletedUnits();
 
-   /**
-    * Reinitialize the receiver
-    */
+   /** Reinitialize the receiver */
    public abstract void reset();
 
    /**

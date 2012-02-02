@@ -13,7 +13,7 @@ package org.eclipse.jdt.client.core.compiler;
 /**
  * A compilation progress is used by the {@link BatchCompiler} to report progress during compilation. It is also used to request
  * cancellation of the compilation. Clients of the {@link BatchCompiler} should subclass this class, instantiate the subclass and
- * pass this instance to {@link BatchCompiler#compile(String, java.io.PrintWriter, java.io.PrintWriter, CompilationProgress)}.
+ * pass this instance to {@link BatchCompiler#compile(String, java.io.PrintWriter, java.io.PrintWriter, CompilationProgress)} .
  * <p>
  * This class is intended to be instantiated and subclassed by clients.
  * </p>

@@ -32,9 +32,7 @@ public abstract class TypeReference extends Expression
 
    public static final TypeReference[] NO_TYPE_ARGUMENTS = new TypeReference[0];
 
-   /*
-    * Answer a base type reference (can be an array of base type).
-    */
+   /* Answer a base type reference (can be an array of base type). */
    public static final TypeReference baseTypeReference(int baseType, int dim)
    {
 
@@ -110,9 +108,7 @@ public abstract class TypeReference extends Expression
 
    public abstract char[] getLastToken();
 
-   /**
-    * @return char[][] TODO (jerome) should merge back into #getTypeName()
-    */
+   /** @return char[][] TODO (jerome) should merge back into #getTypeName() */
    public char[][] getParameterizedTypeName()
    {
       return getTypeName();
@@ -120,9 +116,7 @@ public abstract class TypeReference extends Expression
 
    protected abstract TypeBinding getTypeBinding(Scope scope);
 
-   /**
-    * @return char[][]
-    */
+   /** @return char[][] */
    public abstract char[][] getTypeName();
 
    protected TypeBinding internalResolveType(Scope scope)
@@ -145,8 +139,9 @@ public abstract class TypeReference extends Expression
                   TypeBinding type = this.resolvedType.closestMatch();
                   if (type == null)
                      return null;
-                  return scope.environment()
-                     .convertToRawType(type, false /* do not force conversion of enclosing types */);
+                  return scope.environment().convertToRawType(type, false /*
+                                                                           * do not force conversion of enclosing types
+                                                                           */);
                default :
                   return null;
             }
@@ -185,7 +180,9 @@ public abstract class TypeReference extends Expression
       {
          reportDeprecatedType(type, scope);
       }
-      type = scope.environment().convertToRawType(type, false /* do not force conversion of enclosing types */);
+      type = scope.environment().convertToRawType(type, false /*
+                                                               * do not force conversion of enclosing types
+                                                               */);
       if (type.leafComponentType().isRawType() && (this.bits & ASTNode.IgnoreRawTypeCheck) == 0
          && scope.compilerOptions().getSeverity(CompilerOptions.RawTypeReference) != ProblemSeverities.Ignore)
       {

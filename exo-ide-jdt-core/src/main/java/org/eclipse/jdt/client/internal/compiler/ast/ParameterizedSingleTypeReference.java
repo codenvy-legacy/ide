@@ -50,18 +50,14 @@ public class ParameterizedSingleTypeReference extends ArrayTypeReference
       }
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.TypeReference#copyDims(int)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.TypeReference#copyDims(int) */
    public TypeReference copyDims(int dim)
    {
       return new ParameterizedSingleTypeReference(this.token, this.typeArguments, dim, (((long)this.sourceStart) << 32)
          + this.sourceEnd);
    }
 
-   /**
-    * @return char[][]
-    */
+   /** @return char[][] */
    public char[][] getParameterizedTypeName()
    {
       StringBuffer buffer = new StringBuffer(5);
@@ -91,17 +87,13 @@ public class ParameterizedSingleTypeReference extends ArrayTypeReference
       return new char[][]{name};
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.ArrayQualifiedTypeReference#getTypeBinding(org.eclipse.jdt.client.internal.compiler.lookup.Scope)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.ArrayQualifiedTypeReference#getTypeBinding(org.eclipse.jdt.client.internal.compiler.lookup.Scope) */
    protected TypeBinding getTypeBinding(Scope scope)
    {
       return null; // not supported here - combined with resolveType(...)
    }
 
-   /*
-    * No need to check for reference to raw type per construction
-    */
+   /* No need to check for reference to raw type per construction */
    private TypeBinding internalResolveType(Scope scope, ReferenceBinding enclosingType, boolean checkBounds)
    {
       // handle the error here
@@ -196,10 +188,14 @@ public class ParameterizedSingleTypeReference extends ArrayTypeReference
          {
             enclosingType =
                currentType.isStatic() ? (ReferenceBinding)scope.environment()
-                  .convertToRawType(enclosingType, false /* do not force conversion of enclosing types */) : scope
-                  .environment().convertToParameterizedType(enclosingType);
+                  .convertToRawType(enclosingType, false /*
+                                                          * do not force conversion of enclosing types
+                                                          */) : scope.environment().convertToParameterizedType(
+                  enclosingType);
             currentType =
-               scope.environment().createParameterizedType((ReferenceBinding)currentType.erasure(), null /* no arg */,
+               scope.environment().createParameterizedType((ReferenceBinding)currentType.erasure(), null /*
+                                                                                                          * no arg
+                                                                                                          */,
                   enclosingType);
          }
       }
@@ -373,7 +369,9 @@ public class ParameterizedSingleTypeReference extends ArrayTypeReference
 
    public TypeBinding resolveType(ClassScope scope)
    {
-      return internalResolveType(scope, null, false /* no bounds check in classScope */);
+      return internalResolveType(scope, null, false /*
+                                                     * no bounds check in classScope
+                                                     */);
    }
 
    public TypeBinding resolveTypeEnclosing(BlockScope scope, ReferenceBinding enclosingType)

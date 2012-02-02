@@ -15,15 +15,15 @@ import org.eclipse.jdt.client.core.formatter.comment.IJavaDocTagConstants;
 /**
  * Represents text inside a javadoc comment block.
  * <p>
- * Text may be simple as <code>Line inside a javadoc comment block</code>
- * or may be a html tag. Note that to minimize memory footprint, only text
- * positions are stored.
- * </p><p>
- * Simple text may have one or several lines. When it has several lines, the
- * positions of the line breaks are also stored in the {@link #separators} array.
- * </p><p>
- * When text has html tags, then they are stored in {@link #htmlNodes} array
- * in a recursive way.
+ * Text may be simple as <code>Line inside a javadoc comment block</code> or may be a html tag. Note that to minimize memory
+ * footprint, only text positions are stored.
+ * </p>
+ * <p>
+ * Simple text may have one or several lines. When it has several lines, the positions of the line breaks are also stored in the
+ * {@link #separators} array.
+ * </p>
+ * <p>
+ * When text has html tags, then they are stored in {@link #htmlNodes} array in a recursive way.
  * </p>
  */
 public class FormatJavadocText extends FormatJavadocNode implements IJavaDocTagConstants
@@ -53,10 +53,8 @@ public class FormatJavadocText extends FormatJavadocNode implements IJavaDocTagC
    }
 
    /*
-    * Append a text to current one.
-    * If the given text is not an html tag or is a closing tag, then just append to
-    * the current text recording the separators. Otherwise, create a new html tag
-    * child node.
+    * Append a text to current one. If the given text is not an html tag or is a closing tag, then just append to the current text
+    * recording the separators. Otherwise, create a new html tag child node.
     */
    void appendText(FormatJavadocText text)
    {
@@ -184,9 +182,9 @@ public class FormatJavadocText extends FormatJavadocNode implements IJavaDocTagC
 
    /**
     * Returns whether the text is a closing html tag or not.
-    *
-    * @return <code>true</code> if the node is an html tag and has '/' before its
-    * 	name (e.g. </bla>), <code>false</code> otherwise.
+    * 
+    * @return <code>true</code> if the node is an html tag and has '/' before its name (e.g. </bla>), <code>false</code>
+    *         otherwise.
     */
    public boolean isClosingHtmlTag()
    {
@@ -195,9 +193,8 @@ public class FormatJavadocText extends FormatJavadocNode implements IJavaDocTagC
 
    /**
     * Returns whether the text is a html tag or not.
-    *
-    * @return <code>true</code> if the node is a html tag, <code>false</code>
-    * 	otherwise.
+    * 
+    * @return <code>true</code> if the node is a html tag, <code>false</code> otherwise.
     */
    public boolean isHtmlTag()
    {
@@ -209,9 +206,8 @@ public class FormatJavadocText extends FormatJavadocNode implements IJavaDocTagC
     * <p>
     * The text in an immutable tags is <b>never</b> formatted.
     * </p>
-    *
-    * @return <code>true</code> if the node is an immutable tag,
-    *		<code>false</code> otherwise.
+    * 
+    * @return <code>true</code> if the node is an immutable tag, <code>false</code> otherwise.
     */
    public boolean isImmutableHtmlTag()
    {
@@ -222,12 +218,10 @@ public class FormatJavadocText extends FormatJavadocNode implements IJavaDocTagC
    /**
     * Returns whether the text is immutable or not.
     * <p>
-    * A text in considered as immutable when it  belongs to an immutable block
-    * or when it's an immutable html tag.
+    * A text in considered as immutable when it belongs to an immutable block or when it's an immutable html tag.
     * </p>
-    *
-    * @return <code>true</code> if the node is an immutable tag,
-    *		<code>false</code> otherwise.
+    * 
+    * @return <code>true</code> if the node is an immutable tag, <code>false</code> otherwise.
     */
    public boolean isImmutable()
    {
@@ -237,12 +231,10 @@ public class FormatJavadocText extends FormatJavadocNode implements IJavaDocTagC
    }
 
    /**
-    * Returns whether the text at the given separator index position is after a
-    * separator tag or not.
-    *
-    * @return <code>true</code> if the text is after a separator tag,
-    *		<code>false</code> otherwise or if the given index is out the range of
-    *		the text separators.
+    * Returns whether the text at the given separator index position is after a separator tag or not.
+    * 
+    * @return <code>true</code> if the text is after a separator tag, <code>false</code> otherwise or if the given index is out
+    *         the range of the text separators.
     */
    public boolean isTextAfterHtmlSeparatorTag(int separatorIndex)
    {
@@ -254,7 +246,8 @@ public class FormatJavadocText extends FormatJavadocNode implements IJavaDocTagC
 
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.eclipse.jdt.internal.formatter.FormatJavadocNode#isText()
     */
    public boolean isText()
@@ -262,7 +255,8 @@ public class FormatJavadocText extends FormatJavadocNode implements IJavaDocTagC
       return true;
    }
 
-   /* (non-Javadoc)
+   /*
+    * (non-Javadoc)
     * @see org.eclipse.jdt.internal.formatter.FormatJavadocNode#setHeaderLine(int)
     */
    void setHeaderLine(int javadocLineStart)

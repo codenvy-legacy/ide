@@ -334,9 +334,7 @@ public class OR_OR_Expression extends BinaryExpression
       return false;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.BinaryExpression#resolveType(org.eclipse.jdt.client.internal.compiler.lookup.BlockScope)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.BinaryExpression#resolveType(org.eclipse.jdt.client.internal.compiler.lookup.BlockScope) */
    public TypeBinding resolveType(BlockScope scope)
    {
       TypeBinding result = super.resolveType(scope);

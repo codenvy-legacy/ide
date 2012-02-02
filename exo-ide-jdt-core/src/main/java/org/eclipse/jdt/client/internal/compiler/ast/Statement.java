@@ -60,15 +60,15 @@ public abstract class Statement extends ASTNode
 
    public static final int COMPLAINED_UNREACHABLE = 2;
 
-   /** Empty hook for checking null status against declaration using null annotations, once this will be supported. */
+   /**
+    * Empty hook for checking null status against declaration using null annotations, once this will be supported.
+    */
    protected int checkAgainstNullAnnotation(BlockScope currentScope, LocalVariableBinding local, int nullStatus)
    {
       return nullStatus;
    }
 
-   /**
-    * INTERNAL USE ONLY. This is used to redirect inter-statements jumps.
-    */
+   /** INTERNAL USE ONLY. This is used to redirect inter-statements jumps. */
    public void branchChainTo(BranchLabel label)
    {
       // do nothing by default
@@ -222,9 +222,7 @@ public abstract class Statement extends ASTNode
 
    public abstract void resolve(BlockScope scope);
 
-   /**
-    * Returns case constant associated to this statement (NotAConstant if none)
-    */
+   /** Returns case constant associated to this statement (NotAConstant if none) */
    public Constant resolveCase(BlockScope scope, TypeBinding testType, SwitchStatement switchStatement)
    {
       // statement within a switch that are not case are treated as normal statement....

@@ -707,7 +707,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          }
          else
          {
-            /* Initializer bodies are parsed in the context of the type declaration, we must thus search it inside */
+            /*
+             * Initializer bodies are parsed in the context of the type declaration, we must thus search it inside
+             */
             if (this.referenceContext instanceof TypeDeclaration)
             {
                TypeDeclaration type = (TypeDeclaration)this.referenceContext;
@@ -1837,9 +1839,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       }
    }
 
-   /**
-    * @param op binary operator
-    */
+   /** @param op binary operator */
    protected void consumeBinaryExpressionWithName(int op)
    {
       pushOnExpressionStack(getUnspecifiedReferenceOptimized());
@@ -2623,9 +2623,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
             this.expressionStack[this.expressionPtr + 1], this.expressionStack[this.expressionPtr + 2]);
    }
 
-   /**
-    * @param op
-    */
+   /** @param op */
    protected void consumeConditionalExpressionWithName(int op)
    {
       // ConditionalExpression ::= Name '?' Expression ':' ConditionalExpression
@@ -3857,9 +3855,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          new EqualExpression(this.expressionStack[this.expressionPtr], this.expressionStack[this.expressionPtr + 1], op);
    }
 
-   /*
-    * @param op
-    */
+   /* @param op */
    protected void consumeEqualityExpressionWithName(int op)
    {
       // EqualityExpression ::= Name '==' RelationalExpression
@@ -4836,7 +4832,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          // method.bodyEnd = this.scanner.currentPosition-1;
          // this.currentElement = this.currentElement.parent;
          // } else
-         if (this.currentToken == TokenNameSEMICOLON /* && !method.isAnnotationMethod() */)
+         if (this.currentToken == TokenNameSEMICOLON /*
+                                                      * && !method.isAnnotationMethod ()
+                                                      */)
          {
             method.modifiers |= ExtraCompilerModifiers.AccSemicolonBody;
             method.declarationSourceEnd = this.scanner.currentPosition - 1;
@@ -10338,9 +10336,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    protected void dispatchDeclarationInto(int length)
    {
       /*
-       * they are length on this.astStack that should go into methods fields constructors lists of the typeDecl
-       * 
-       * Return if there is a constructor declaration in the methods declaration
+       * they are length on this.astStack that should go into methods fields constructors lists of the typeDecl Return if there is
+       * a constructor declaration in the methods declaration
        */
 
       // Looks for the size of each array .
@@ -10576,13 +10573,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    }
 
    /*
-    * Flush comments defined prior to a given positions.
-    * 
-    * Note: comments are stacked in syntactical order
-    * 
-    * Either answer given <position>, or the end position of a comment line immediately following the <position> (same line)
-    * 
-    * e.g. void foo(){ } // end of method foo
+    * Flush comments defined prior to a given positions. Note: comments are stacked in syntactical order Either answer given
+    * <position>, or the end position of a comment line immediately following the <position> (same line) e.g. void foo(){ } // end
+    * of method foo
     */
    public int flushCommentsDefinedPriorTo(int position)
    {
@@ -10708,11 +10701,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    /*
     * Answer back an array of sourceStart/sourceEnd positions of the available JavaDoc comments. The array is a flattened
-    * structure: 2*n entries with consecutives start and end positions.
-    * 
-    * If no JavaDoc is available, then null is answered instead of an empty array.
-    * 
-    * e.g. { 10, 20, 25, 45 } --> javadoc1 from 10 to 20, javadoc2 from 25 to 45
+    * structure: 2*n entries with consecutives start and end positions. If no JavaDoc is available, then null is answered instead
+    * of an empty array. e.g. { 10, 20, 25, 45 } --> javadoc1 from 10 to 20, javadoc2 from 25 to 45
     */
    public int[] getJavaDocPositions()
    {
@@ -11328,7 +11318,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    public void initializeScanner()
    {
       this.scanner =
-         new Scanner(false /* comment */, false /* whitespace */, false, /* will be set in initialize(boolean) */
+         new Scanner(false /* comment */, false /* whitespace */, false, /*
+                                                                          * will be set in initialize ( boolean )
+                                                                          */
          this.options.sourceLevel /* sourceLevel */, this.options.complianceLevel /* complianceLevel */,
             this.options.taskTags/* taskTags */, this.options.taskPriorities/* taskPriorities */,
             this.options.isTaskCaseSensitive/* taskCaseSensitive */);
@@ -11423,9 +11415,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    }
 
    /*
-    * Move checkpoint location (current implementation is moving it by one token)
-    * 
-    * Answers true if successfully moved checkpoint (in other words, it did not attempt to move it beyond end of file).
+    * Move checkpoint location (current implementation is moving it by one token) Answers true if successfully moved checkpoint
+    * (in other words, it did not attempt to move it beyond end of file).
     */
    protected boolean moveRecoveryCheckpoint()
    {
@@ -11483,33 +11474,22 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       return true;
 
       /*
-       * The following implementation moves the checkpoint location by one line:
-       * 
-       * int pos = this.lastCheckPoint; // reset this.scanner, and move checkpoint by one token this.scanner.startPosition = pos;
-       * this.scanner.currentPosition = pos; this.scanner.diet = false; // quit jumping over method bodies
-       * 
-       * // if about to restart, then no need to shift token if (this.restartRecovery){ this.lastIgnoredToken = -1; return true; }
-       * 
-       * // protect against shifting on an invalid token this.lastIgnoredToken = this.nextIgnoredToken; this.nextIgnoredToken =
-       * -1;
-       * 
-       * boolean wasTokenizingWhiteSpace = this.scanner.tokenizeWhiteSpace; this.scanner.tokenizeWhiteSpace = true;
-       * checkpointMove: do { try { this.nextIgnoredToken = this.scanner.getNextToken(); switch(this.nextIgnoredToken){ case
-       * Scanner.TokenNameWHITESPACE : if(this.scanner.getLineNumber(this.scanner.startPosition) ==
-       * this.scanner.getLineNumber(this.scanner.currentPosition)){ this.nextIgnoredToken = -1; } break; case TokenNameSEMICOLON :
-       * case TokenNameLBRACE : case TokenNameRBRACE : break; case TokenNameIdentifier : if(this.scanner.currentPosition ==
-       * this.scanner.startPosition){ this.scanner.currentPosition++; // on fake completion identifier } default:
-       * this.nextIgnoredToken = -1; break; case TokenNameEOF : break checkpointMove; } } catch(InvalidInputException e){ pos =
-       * this.scanner.currentPosition; } } while (this.nextIgnoredToken < 0); this.scanner.tokenizeWhiteSpace =
-       * wasTokenizingWhiteSpace;
-       * 
-       * if (this.nextIgnoredToken == TokenNameEOF) { // no more recovery after this point if (this.currentToken == TokenNameEOF)
-       * { // already tried one iteration on EOF return false; } } this.lastCheckPoint = this.scanner.currentPosition;
-       * 
-       * // reset this.scanner again to previous checkpoint location this.scanner.startPosition = pos;
-       * this.scanner.currentPosition = pos; this.scanner.commentPtr = -1;
-       * 
-       * return true;
+       * The following implementation moves the checkpoint location by one line: int pos = this.lastCheckPoint; // reset
+       * this.scanner, and move checkpoint by one token this.scanner.startPosition = pos; this.scanner.currentPosition = pos;
+       * this.scanner.diet = false; // quit jumping over method bodies // if about to restart, then no need to shift token if
+       * (this.restartRecovery){ this.lastIgnoredToken = -1; return true; } // protect against shifting on an invalid token
+       * this.lastIgnoredToken = this.nextIgnoredToken; this.nextIgnoredToken = -1; boolean wasTokenizingWhiteSpace =
+       * this.scanner.tokenizeWhiteSpace; this.scanner.tokenizeWhiteSpace = true; checkpointMove: do { try { this.nextIgnoredToken
+       * = this.scanner.getNextToken(); switch(this.nextIgnoredToken){ case Scanner.TokenNameWHITESPACE :
+       * if(this.scanner.getLineNumber(this.scanner.startPosition) == this.scanner.getLineNumber(this.scanner.currentPosition)){
+       * this.nextIgnoredToken = -1; } break; case TokenNameSEMICOLON : case TokenNameLBRACE : case TokenNameRBRACE : break; case
+       * TokenNameIdentifier : if(this.scanner.currentPosition == this.scanner.startPosition){ this.scanner.currentPosition++; //
+       * on fake completion identifier } default: this.nextIgnoredToken = -1; break; case TokenNameEOF : break checkpointMove; } }
+       * catch(InvalidInputException e){ pos = this.scanner.currentPosition; } } while (this.nextIgnoredToken < 0);
+       * this.scanner.tokenizeWhiteSpace = wasTokenizingWhiteSpace; if (this.nextIgnoredToken == TokenNameEOF) { // no more
+       * recovery after this point if (this.currentToken == TokenNameEOF) { // already tried one iteration on EOF return false; }
+       * } this.lastCheckPoint = this.scanner.currentPosition; // reset this.scanner again to previous checkpoint location
+       * this.scanner.startPosition = pos; this.scanner.currentPosition = pos; this.scanner.commentPtr = -1; return true;
        */
    }
 
@@ -11948,7 +11928,9 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    {
       // parses a compilation unit and manages error handling (even bugs....)
 
-      return parse(sourceUnit, compilationResult, -1, -1/* parse without reseting the scanner */);
+      return parse(sourceUnit, compilationResult, -1, -1/*
+                                                         * parse without reseting the scanner
+                                                         */);
    }
 
    // A P I
@@ -12451,9 +12433,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       }
    }
 
-   /*
-    * Prepares the state of the parser to go for BlockStatements.
-    */
+   /* Prepares the state of the parser to go for BlockStatements. */
    protected void prepareForBlockStatements()
    {
       this.nestedMethod[this.nestedType = 0] = 1;
@@ -12534,9 +12514,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected void pushOnAstStack(ASTNode node)
    {
-      /*
-       * add a new obj on top of the ast stack astPtr points on the top
-       */
+      /* add a new obj on top of the ast stack astPtr points on the top */
 
       int stackLength = this.astStack.length;
       if (++this.astPtr >= stackLength)
@@ -13075,9 +13053,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       this.scanner.commentPtr = -1;
    }
 
-   /*
-    * Reset context so as to resume to regular parse loop
-    */
+   /* Reset context so as to resume to regular parse loop */
    protected void resetStacks()
    {
 
@@ -13102,9 +13078,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    }
 
    /*
-    * Reset context so as to resume to regular parse loop If unable to reset for resuming, answers false.
-    * 
-    * Move checkpoint location, reset internal stacks and decide which grammar goal is activated.
+    * Reset context so as to resume to regular parse loop If unable to reset for resuming, answers false. Move checkpoint
+    * location, reset internal stacks and decide which grammar goal is activated.
     */
    protected boolean resumeAfterRecovery()
    {
@@ -13276,9 +13251,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    }
 
-   /*
-    * Update recovery state based on current parser/scanner state
-    */
+   /* Update recovery state based on current parser/scanner state */
    protected void updateRecoveryState()
    {
 

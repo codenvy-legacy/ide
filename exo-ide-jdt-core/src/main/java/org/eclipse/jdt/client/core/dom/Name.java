@@ -35,9 +35,7 @@ public abstract class Name extends Expression implements IDocElement
     */
    static final int BASE_NAME_NODE_SIZE = BASE_NODE_SIZE + 1 * 4;
 
-   /**
-    * This index represents the position inside a qualified name.
-    */
+   /** This index represents the position inside a qualified name. */
    int index;
 
    /**
@@ -64,7 +62,7 @@ public abstract class Name extends Expression implements IDocElement
    }
 
    /**
-    * Returns whether this name is a qualified name (<code>QualifiedName</code>).
+    * Returns whether this name is a qualified name (<code>QualifiedName</code> ).
     * 
     * @return <code>true</code> if this is a qualified name, and <code>false</code> otherwise
     */

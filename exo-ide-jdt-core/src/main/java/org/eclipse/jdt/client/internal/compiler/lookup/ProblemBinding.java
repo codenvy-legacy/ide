@@ -46,9 +46,7 @@ public class ProblemBinding extends Binding
       this.searchType = searchType;
    }
 
-   /*
-    * API Answer the receiver's binding type from Binding.BindingID.
-    */
+   /* API Answer the receiver's binding type from Binding.BindingID. */
 
    public final int kind()
    {

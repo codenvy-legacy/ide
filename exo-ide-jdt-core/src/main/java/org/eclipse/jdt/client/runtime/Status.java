@@ -11,8 +11,7 @@
 package org.eclipse.jdt.client.runtime;
 
 /**
- * A concrete status implementation, suitable either for 
- * instantiating or subclassing.
+ * A concrete status implementation, suitable either for instantiating or subclassing.
  * <p>
  * This class can be used without OSGi running.
  * </p>
@@ -20,14 +19,12 @@ package org.eclipse.jdt.client.runtime;
 public class Status implements IStatus
 {
 
-   /**
-    * Constant used to indicate an unknown plugin id.
-    */
+   /** Constant used to indicate an unknown plugin id. */
    private static final String unknownId = "unknown"; //$NON-NLS-1$
 
    /**
     * A standard OK status with an "ok" message.
-    *
+    * 
     * @since 3.0
     */
    public static final IStatus OK_STATUS = new Status(OK, unknownId, OK, "ok", null); //$NON-NLS-1$
@@ -51,37 +48,30 @@ public class Status implements IStatus
     */
    private int severity = OK;
 
-   /** Unique identifier of plug-in.
-    */
+   /** Unique identifier of plug-in. */
    private String pluginId;
 
-   /** Plug-in-specific status code.
-    */
+   /** Plug-in-specific status code. */
    private int code;
 
-   /** Message, localized to the current locale.
-    */
+   /** Message, localized to the current locale. */
    private String message;
 
-   /** Wrapped exception, or <code>null</code> if none.
-    */
+   /** Wrapped exception, or <code>null</code> if none. */
    private Throwable exception = null;
 
-   /** Constant to avoid generating garbage.
-    */
+   /** Constant to avoid generating garbage. */
    private static final IStatus[] theEmptyStatusArray = new IStatus[0];
 
    /**
-    * Creates a new status object.  The created status has no children.
-    *
-    * @param severity the severity; one of <code>OK</code>, <code>ERROR</code>, 
-    * <code>INFO</code>, <code>WARNING</code>,  or <code>CANCEL</code>
+    * Creates a new status object. The created status has no children.
+    * 
+    * @param severity the severity; one of <code>OK</code>, <code>ERROR</code>, <code>INFO</code>, <code>WARNING</code>, or
+    *           <code>CANCEL</code>
     * @param pluginId the unique identifier of the relevant plug-in
     * @param code the plug-in-specific status code, or <code>OK</code>
-    * @param message a human-readable message, localized to the
-    *    current locale
-    * @param exception a low-level exception, or <code>null</code> if not
-    *    applicable 
+    * @param message a human-readable message, localized to the current locale
+    * @param exception a low-level exception, or <code>null</code> if not applicable
     */
    public Status(int severity, String pluginId, int code, String message, Throwable exception)
    {
@@ -93,17 +83,14 @@ public class Status implements IStatus
    }
 
    /**
-    * Simplified constructor of a new status object; assumes that code is <code>OK</code>.
-    * The created status has no children.
-    *
-    * @param severity the severity; one of <code>OK</code>, <code>ERROR</code>, 
-    * <code>INFO</code>, <code>WARNING</code>,  or <code>CANCEL</code>
+    * Simplified constructor of a new status object; assumes that code is <code>OK</code>. The created status has no children.
+    * 
+    * @param severity the severity; one of <code>OK</code>, <code>ERROR</code>, <code>INFO</code>, <code>WARNING</code>, or
+    *           <code>CANCEL</code>
     * @param pluginId the unique identifier of the relevant plug-in
-    * @param message a human-readable message, localized to the
-    *    current locale
-    * @param exception a low-level exception, or <code>null</code> if not
-    *    applicable
-    *     
+    * @param message a human-readable message, localized to the current locale
+    * @param exception a low-level exception, or <code>null</code> if not applicable
+    * 
     * @since org.eclipse.equinox.common 3.3
     */
    public Status(int severity, String pluginId, String message, Throwable exception)
@@ -116,15 +103,14 @@ public class Status implements IStatus
    }
 
    /**
-    * Simplified constructor of a new status object; assumes that code is <code>OK</code> and
-    * exception is <code>null</code>. The created status has no children.
-    *
-    * @param severity the severity; one of <code>OK</code>, <code>ERROR</code>, 
-    * <code>INFO</code>, <code>WARNING</code>,  or <code>CANCEL</code>
+    * Simplified constructor of a new status object; assumes that code is <code>OK</code> and exception is <code>null</code>. The
+    * created status has no children.
+    * 
+    * @param severity the severity; one of <code>OK</code>, <code>ERROR</code>, <code>INFO</code>, <code>WARNING</code>, or
+    *           <code>CANCEL</code>
     * @param pluginId the unique identifier of the relevant plug-in
-    * @param message a human-readable message, localized to the
-    *    current locale
-    *    
+    * @param message a human-readable message, localized to the current locale
+    * 
     * @since org.eclipse.equinox.common 3.3
     */
    public Status(int severity, String pluginId, String message)
@@ -136,72 +122,72 @@ public class Status implements IStatus
       setException(null);
    }
 
-   /* (Intentionally not javadoc'd)
-    * Implements the corresponding method on <code>IStatus</code>.
+   /*
+    * (Intentionally not javadoc'd) Implements the corresponding method on <code>IStatus</code>.
     */
    public IStatus[] getChildren()
    {
       return theEmptyStatusArray;
    }
 
-   /* (Intentionally not javadoc'd)
-    * Implements the corresponding method on <code>IStatus</code>.
+   /*
+    * (Intentionally not javadoc'd) Implements the corresponding method on <code>IStatus</code>.
     */
    public int getCode()
    {
       return code;
    }
 
-   /* (Intentionally not javadoc'd)
-    * Implements the corresponding method on <code>IStatus</code>.
+   /*
+    * (Intentionally not javadoc'd) Implements the corresponding method on <code>IStatus</code>.
     */
    public Throwable getException()
    {
       return exception;
    }
 
-   /* (Intentionally not javadoc'd)
-    * Implements the corresponding method on <code>IStatus</code>.
+   /*
+    * (Intentionally not javadoc'd) Implements the corresponding method on <code>IStatus</code>.
     */
    public String getMessage()
    {
       return message;
    }
 
-   /* (Intentionally not javadoc'd)
-    * Implements the corresponding method on <code>IStatus</code>.
+   /*
+    * (Intentionally not javadoc'd) Implements the corresponding method on <code>IStatus</code>.
     */
    public String getPlugin()
    {
       return pluginId;
    }
 
-   /* (Intentionally not javadoc'd)
-    * Implements the corresponding method on <code>IStatus</code>.
+   /*
+    * (Intentionally not javadoc'd) Implements the corresponding method on <code>IStatus</code>.
     */
    public int getSeverity()
    {
       return severity;
    }
 
-   /* (Intentionally not javadoc'd)
-    * Implements the corresponding method on <code>IStatus</code>.
+   /*
+    * (Intentionally not javadoc'd) Implements the corresponding method on <code>IStatus</code>.
     */
    public boolean isMultiStatus()
    {
       return false;
    }
 
-   /* (Intentionally not javadoc'd)
-    * Implements the corresponding method on <code>IStatus</code>.
+   /*
+    * (Intentionally not javadoc'd) Implements the corresponding method on <code>IStatus</code>.
     */
    public boolean isOK()
    {
       return severity == OK;
    }
 
-   /* (Intentionally not javadoc'd)
-    * Implements the corresponding method on <code>IStatus</code>.
+   /*
+    * (Intentionally not javadoc'd) Implements the corresponding method on <code>IStatus</code>.
     */
    public boolean matches(int severityMask)
    {
@@ -210,7 +196,7 @@ public class Status implements IStatus
 
    /**
     * Sets the status code.
-    *
+    * 
     * @param code the plug-in-specific status code, or <code>OK</code>
     */
    protected void setCode(int code)
@@ -220,9 +206,8 @@ public class Status implements IStatus
 
    /**
     * Sets the exception.
-    *
-    * @param exception a low-level exception, or <code>null</code> if not
-    *    applicable 
+    * 
+    * @param exception a low-level exception, or <code>null</code> if not applicable
     */
    protected void setException(Throwable exception)
    {
@@ -230,11 +215,9 @@ public class Status implements IStatus
    }
 
    /**
-    * Sets the message. If null is passed, message is set to an empty
-    * string.
-    *
-    * @param message a human-readable message, localized to the
-    *    current locale
+    * Sets the message. If null is passed, message is set to an empty string.
+    * 
+    * @param message a human-readable message, localized to the current locale
     */
    protected void setMessage(String message)
    {
@@ -246,7 +229,7 @@ public class Status implements IStatus
 
    /**
     * Sets the plug-in id.
-    *
+    * 
     * @param pluginId the unique identifier of the relevant plug-in
     */
    protected void setPlugin(String pluginId)
@@ -257,9 +240,9 @@ public class Status implements IStatus
 
    /**
     * Sets the severity.
-    *
-    * @param severity the severity; one of <code>OK</code>, <code>ERROR</code>, 
-    * <code>INFO</code>, <code>WARNING</code>,  or <code>CANCEL</code>
+    * 
+    * @param severity the severity; one of <code>OK</code>, <code>ERROR</code>, <code>INFO</code>, <code>WARNING</code>, or
+    *           <code>CANCEL</code>
     */
    protected void setSeverity(int severity)
    {
@@ -269,8 +252,7 @@ public class Status implements IStatus
    }
 
    /**
-    * Returns a string representation of the status, suitable 
-    * for debugging purposes only.
+    * Returns a string representation of the status, suitable for debugging purposes only.
     */
    public String toString()
    {

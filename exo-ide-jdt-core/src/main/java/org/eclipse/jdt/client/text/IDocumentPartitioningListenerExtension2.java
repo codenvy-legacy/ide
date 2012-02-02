@@ -11,13 +11,11 @@
 package org.eclipse.jdt.client.text;
 
 /**
- * Extension interface to
- * {@link org.eclipse.jface.text.IDocumentPartitioningListener}.
+ * Extension interface to {@link org.eclipse.jface.text.IDocumentPartitioningListener}.
  * <p>
- *
- * Replaces the previous notification mechanisms by introducing an explicit
- * document partitioning changed event.
- *
+ * 
+ * Replaces the previous notification mechanisms by introducing an explicit document partitioning changed event.
+ * 
  * @see org.eclipse.jface.text.DocumentPartitioningChangedEvent
  * @since 3.0
  */
@@ -27,11 +25,9 @@ public interface IDocumentPartitioningListenerExtension2
    /**
     * Signals the change of document partitionings.
     * <p>
-    * This method replaces
-    * {@link IDocumentPartitioningListener#documentPartitioningChanged(IDocument)}
-    * and
+    * This method replaces {@link IDocumentPartitioningListener#documentPartitioningChanged(IDocument)} and
     * {@link IDocumentPartitioningListenerExtension#documentPartitioningChanged(IDocument, IRegion)}
-    *
+    * 
     * @param event the event describing the change
     * @see IDocument#addDocumentPartitioningListener(IDocumentPartitioningListener)
     */

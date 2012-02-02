@@ -37,9 +37,7 @@ public interface CompletionOnJavadoc
     */
    public int getCompletionFlags();
 
-   /**
-    * @param flags The completionFlags to add.
-    */
+   /** @param flags The completionFlags to add. */
    public void addCompletionFlags(int flags);
 
 }

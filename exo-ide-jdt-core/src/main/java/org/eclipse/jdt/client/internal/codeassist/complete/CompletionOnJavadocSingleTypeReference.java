@@ -27,9 +27,7 @@ public class CompletionOnJavadocSingleTypeReference extends JavadocSingleTypeRef
          typeRef.tagSourceStart);
    }
 
-   /**
-    * @param flags The completionFlags to set.
-    */
+   /** @param flags The completionFlags to set. */
    public void addCompletionFlags(int flags)
    {
       this.completionFlags |= flags;
@@ -67,8 +65,7 @@ public class CompletionOnJavadocSingleTypeReference extends JavadocSingleTypeRef
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.ast.SingleTypeReference#printExpression(int, java.lang.StringBuffer)
+    * @see org.eclipse.jdt.internal.compiler.ast.SingleTypeReference#printExpression (int, java.lang.StringBuffer)
     */
    public StringBuffer printExpression(int indent, StringBuffer output)
    {

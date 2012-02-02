@@ -23,21 +23,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A move source edit denotes the source of a move operation. Move
- * source edits are only valid inside an edit tree if they have a
- * corresponding target edit. Furthermore the corresponding target
- * edit can't be a direct or indirect child of the source edit.
+ * A move source edit denotes the source of a move operation. Move source edits are only valid inside an edit tree if they have a
+ * corresponding target edit. Furthermore the corresponding target edit can't be a direct or indirect child of the source edit.
  * Violating one of two requirements will result in a <code>
  * MalformedTreeException</code> when executing the edit tree.
  * <p>
- * A move source edit can manage an optional source modifier. A
- * source modifier can provide a set of replace edits which will
- * to applied to the source before it gets inserted at the target
- * position.
- *
+ * A move source edit can manage an optional source modifier. A source modifier can provide a set of replace edits which will to
+ * applied to the source before it gets inserted at the target position.
+ * 
  * @see org.eclipse.text.edits.MoveTargetEdit
  * @see org.eclipse.text.edits.CopySourceEdit
- *
+ * 
  * @since 3.0
  */
 public final class MoveSourceEdit extends TextEdit
@@ -53,7 +49,7 @@ public final class MoveSourceEdit extends TextEdit
 
    /**
     * Constructs a new move source edit.
-    *
+    * 
     * @param offset the edit's offset
     * @param length the edit's length
     */
@@ -64,7 +60,7 @@ public final class MoveSourceEdit extends TextEdit
 
    /**
     * Constructs a new copy source edit.
-    *
+    * 
     * @param offset the edit's offset
     * @param length the edit's length
     * @param target the edit's target
@@ -75,9 +71,7 @@ public final class MoveSourceEdit extends TextEdit
       setTargetEdit(target);
    }
 
-   /*
-    * Copy constructor
-    */
+   /* Copy constructor */
    private MoveSourceEdit(MoveSourceEdit other)
    {
       super(other);
@@ -86,9 +80,8 @@ public final class MoveSourceEdit extends TextEdit
    }
 
    /**
-    * Returns the associated target edit or <code>null</code>
-    * if no target edit is associated yet.
-    *
+    * Returns the associated target edit or <code>null</code> if no target edit is associated yet.
+    * 
     * @return the target edit or <code>null</code>
     */
    public MoveTargetEdit getTargetEdit()
@@ -98,11 +91,10 @@ public final class MoveSourceEdit extends TextEdit
 
    /**
     * Sets the target edit.
-    *
+    * 
     * @param edit the new target edit.
-    *
-    * @exception MalformedTreeException is thrown if the target edit
-    *  is a direct or indirect child of the source edit
+    * 
+    * @exception MalformedTreeException is thrown if the target edit is a direct or indirect child of the source edit
     */
    public void setTargetEdit(MoveTargetEdit edit)
    {
@@ -111,9 +103,8 @@ public final class MoveSourceEdit extends TextEdit
    }
 
    /**
-    * Returns the current source modifier or <code>null</code>
-    * if no source modifier is set.
-    *
+    * Returns the current source modifier or <code>null</code> if no source modifier is set.
+    * 
     * @return the source modifier
     */
    public ISourceModifier getSourceModifier()
@@ -123,16 +114,15 @@ public final class MoveSourceEdit extends TextEdit
 
    /**
     * Sets the optional source modifier.
-    *
-    * @param modifier the source modifier or <code>null</code>
-    *  if no source modification is need.
+    * 
+    * @param modifier the source modifier or <code>null</code> if no source modification is need.
     */
    public void setSourceModifier(ISourceModifier modifier)
    {
       fModifier = modifier;
    }
 
-   //---- API for MoveTargetEdit ---------------------------------------------
+   // ---- API for MoveTargetEdit ---------------------------------------------
 
    String getContent()
    {
@@ -155,19 +145,15 @@ public final class MoveSourceEdit extends TextEdit
       fSourceRoot = null;
    }
 
-   //---- Copying -------------------------------------------------------------
+   // ---- Copying -------------------------------------------------------------
 
-   /*
-    * @see TextEdit#doCopy
-    */
+   /* @see TextEdit#doCopy */
    protected TextEdit doCopy()
    {
       return new MoveSourceEdit(this);
    }
 
-   /*
-    * @see TextEdit#postProcessCopy
-    */
+   /* @see TextEdit#postProcessCopy */
    protected void postProcessCopy(TextEditCopier copier)
    {
       if (fTarget != null)
@@ -179,11 +165,9 @@ public final class MoveSourceEdit extends TextEdit
       }
    }
 
-   //---- Visitor -------------------------------------------------------------
+   // ---- Visitor -------------------------------------------------------------
 
-   /*
-    * @see TextEdit#accept0
-    */
+   /* @see TextEdit#accept0 */
    protected void accept0(TextEditVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -193,7 +177,7 @@ public final class MoveSourceEdit extends TextEdit
       }
    }
 
-   //---- consistency check ----------------------------------------------------------------
+   // ---- consistency check ----------------------------------------------------------------
 
    int traverseConsistencyCheck(TextEditProcessor processor, IDocument document, List sourceEdits)
    {
@@ -231,13 +215,13 @@ public final class MoveSourceEdit extends TextEdit
          throw new MalformedTreeException(getParent(), this, "No target edit provided."); //$NON-NLS-1$
       if (fTarget.getSourceEdit() != this)
          throw new MalformedTreeException(getParent(), this, "Target edit has different source edit."); //$NON-NLS-1$
-      /* Causes AST rewrite to fail
-      if (getRoot() != fTarget.getRoot())
-      	throw new MalformedTreeException(getParent(), this, TextEditMessages.getString("MoveSourceEdit.different_tree")); //$NON-NLS-1$
-      */
+      /*
+       * Causes AST rewrite to fail if (getRoot() != fTarget.getRoot()) throw new MalformedTreeException(getParent(), this,
+       * TextEditMessages.getString("MoveSourceEdit.different_tree")); //$NON-NLS-1$
+       */
    }
 
-   //---- source computation --------------------------------------------------------------
+   // ---- source computation --------------------------------------------------------------
 
    void traverseSourceComputation(TextEditProcessor processor, IDocument document)
    {
@@ -280,7 +264,7 @@ public final class MoveSourceEdit extends TextEdit
       }
       catch (BadLocationException cannotHappen)
       {
-         //Assert.isTrue(false);
+         // Assert.isTrue(false);
       }
    }
 
@@ -292,7 +276,7 @@ public final class MoveSourceEdit extends TextEdit
       return TextEdit.NONE;
    }
 
-   //---- document updating ----------------------------------------------------------------
+   // ---- document updating ----------------------------------------------------------------
 
    int performDocumentUpdating(IDocument document) throws BadLocationException
    {
@@ -301,17 +285,15 @@ public final class MoveSourceEdit extends TextEdit
       return fDelta;
    }
 
-   //---- region updating --------------------------------------------------------------
+   // ---- region updating --------------------------------------------------------------
 
-   /*
-    * @see TextEdit#deleteChildren
-    */
+   /* @see TextEdit#deleteChildren */
    boolean deleteChildren()
    {
       return false;
    }
 
-   //---- content transformation --------------------------------------------------
+   // ---- content transformation --------------------------------------------------
 
    private boolean needsTransformation()
    {
@@ -332,7 +314,7 @@ public final class MoveSourceEdit extends TextEdit
          }
          catch (BadLocationException cannotHappen)
          {
-            //				Assert.isTrue(false);
+            // Assert.isTrue(false);
          }
          restorePositions(editMap);
       }
@@ -350,7 +332,7 @@ public final class MoveSourceEdit extends TextEdit
          }
          catch (BadLocationException cannotHappen)
          {
-            //				Assert.isTrue(false);
+            // Assert.isTrue(false);
          }
       }
    }

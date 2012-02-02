@@ -27,9 +27,7 @@ import org.eclipse.jdt.client.internal.compiler.ast.TypeParameter;
 import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 
-/**
- * Internal type structure for parsing recovery
- */
+/** Internal type structure for parsing recovery */
 
 public class RecoveredType extends RecoveredStatement implements TerminalTokens
 {
@@ -380,9 +378,7 @@ public class RecoveredType extends RecoveredStatement implements TerminalTokens
       }
    }
 
-   /*
-    * Answer the body end of the corresponding parse node
-    */
+   /* Answer the body end of the corresponding parse node */
    public int bodyEnd()
    {
       if (this.bodyEnd == 0)
@@ -416,9 +412,7 @@ public class RecoveredType extends RecoveredStatement implements TerminalTokens
       }
    }
 
-   /*
-    * Answer the enclosing type node, or null if none
-    */
+   /* Answer the enclosing type node, or null if none */
    public RecoveredType enclosingType()
    {
       RecoveredElement current = this.parent;
@@ -472,9 +466,7 @@ public class RecoveredType extends RecoveredStatement implements TerminalTokens
       return this.typeDeclaration.name;
    }
 
-   /*
-    * Answer the associated parsed structure
-    */
+   /* Answer the associated parsed structure */
    public ASTNode parseTree()
    {
       return this.typeDeclaration;
@@ -488,9 +480,7 @@ public class RecoveredType extends RecoveredStatement implements TerminalTokens
       this.pendingModifersSourceStart = -1;
    }
 
-   /*
-    * Answer the very source end of the corresponding parse node
-    */
+   /* Answer the very source end of the corresponding parse node */
    public int sourceEnd()
    {
       return this.typeDeclaration.declarationSourceEnd;
@@ -541,9 +531,7 @@ public class RecoveredType extends RecoveredStatement implements TerminalTokens
       return result.toString();
    }
 
-   /*
-    * Update the bodyStart of the corresponding parse node
-    */
+   /* Update the bodyStart of the corresponding parse node */
    public void updateBodyStart(int bodyStart)
    {
       this.foundOpeningBrace = true;
@@ -562,7 +550,9 @@ public class RecoveredType extends RecoveredStatement implements TerminalTokens
       TypeDeclaration updatedType = updatedTypeDeclaration(depth + 1, knownTypes);
       if (updatedType != null && (updatedType.bits & ASTNode.IsAnonymousType) != 0)
       {
-         /* in presence of an anonymous type, we want the full allocation expression */
+         /*
+          * in presence of an anonymous type, we want the full allocation expression
+          */
          QualifiedAllocationExpression allocation = updatedType.allocation;
 
          if (allocation.statementEnd == -1)
@@ -908,7 +898,9 @@ public class RecoveredType extends RecoveredStatement implements TerminalTokens
     */
    public RecoveredElement updateOnOpeningBrace(int braceStart, int braceEnd)
    {
-      /* in case the opening brace is not close enough to the signature, ignore it */
+      /*
+       * in case the opening brace is not close enough to the signature, ignore it
+       */
       if (this.bracketBalance == 0)
       {
          /*
@@ -958,9 +950,7 @@ public class RecoveredType extends RecoveredStatement implements TerminalTokens
       updatedTypeDeclaration(0, new HashSet());
    }
 
-   /*
-    * Update the declarationSourceEnd of the corresponding parse node
-    */
+   /* Update the declarationSourceEnd of the corresponding parse node */
    public void updateSourceEndIfNecessary(int start, int end)
    {
       if (this.typeDeclaration.declarationSourceEnd == 0)

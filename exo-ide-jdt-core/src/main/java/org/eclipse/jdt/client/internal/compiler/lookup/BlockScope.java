@@ -74,18 +74,14 @@ public class BlockScope extends Scope
       super(kind, parent);
    }
 
-   /*
-    * Create the class scope & binding for the anonymous type.
-    */
+   /* Create the class scope & binding for the anonymous type. */
    public final void addAnonymousType(TypeDeclaration anonymousType, ReferenceBinding superBinding)
    {
       ClassScope anonymousClassScope = new ClassScope(this, anonymousType);
       anonymousClassScope.buildAnonymousTypeBinding(enclosingSourceType(), superBinding);
    }
 
-   /*
-    * Create the class scope & binding for the local type.
-    */
+   /* Create the class scope & binding for the local type. */
    public final void addLocalType(TypeDeclaration localType)
    {
       ClassScope localTypeScope = new ClassScope(this, localType);
@@ -303,10 +299,9 @@ public class BlockScope extends Scope
 
    /*
     * Note that it must never produce a direct access to the targetEnclosingType, but instead a field sequence
-    * (this$2.this$1.this$0) so as to handle such a test case:
-    * 
-    * class XX { void foo() { class A { class B { class C { boolean foo() { return (Object) A.this == (Object) B.this; } } } } new
-    * A().new B().new C(); } } where we only want to deal with ONE enclosing instance for C (could not figure out an A for C)
+    * (this$2.this$1.this$0) so as to handle such a test case: class XX { void foo() { class A { class B { class C { boolean foo()
+    * { return (Object) A.this == (Object) B.this; } } } } new A().new B().new C(); } } where we only want to deal with ONE
+    * enclosing instance for C (could not figure out an A for C)
     */
    public final ReferenceBinding findLocalType(char[] name)
    {
@@ -416,29 +411,17 @@ public class BlockScope extends Scope
 
    /*
     * API flag is a mask of the following values VARIABLE (= FIELD or LOCAL), TYPE. Only bindings corresponding to the mask will
-    * be answered.
-    * 
-    * if the VARIABLE mask is set then If the first name provided is a field (or local) then the field (or local) is answered
-    * Otherwise, package names and type names are consumed until a field is found. In this case, the field is answered.
-    * 
+    * be answered. if the VARIABLE mask is set then If the first name provided is a field (or local) then the field (or local) is
+    * answered Otherwise, package names and type names are consumed until a field is found. In this case, the field is answered.
     * if the TYPE mask is set, package names and type names are consumed until the end of the input. Only if all of the input is
-    * consumed is the type answered
-    * 
-    * All other conditions are errors, and a problem binding is returned.
-    * 
-    * NOTE: If a problem binding is returned, senders should extract the compound name from the binding & not assume the problem
-    * applies to the entire compoundName.
-    * 
-    * The VARIABLE mask has precedence over the TYPE mask.
-    * 
-    * InvocationSite implements isSuperAccess(); this is used to determine if the discovered field is visible. setFieldIndex(int);
-    * this is used to record the number of names that were consumed.
-    * 
-    * For example, getBinding({"foo","y","q", VARIABLE, site) will answer the binding for the field or local named "foo" (or an
-    * error binding if none exists). In addition, setFieldIndex(1) will be sent to the invocation site. If a type named "foo"
-    * exists, it will not be detected (and an error binding will be answered)
-    * 
-    * IMPORTANT NOTE: This method is written under the assumption that compoundName is longer than length 1.
+    * consumed is the type answered All other conditions are errors, and a problem binding is returned. NOTE: If a problem binding
+    * is returned, senders should extract the compound name from the binding & not assume the problem applies to the entire
+    * compoundName. The VARIABLE mask has precedence over the TYPE mask. InvocationSite implements isSuperAccess(); this is used
+    * to determine if the discovered field is visible. setFieldIndex(int); this is used to record the number of names that were
+    * consumed. For example, getBinding({"foo","y","q", VARIABLE, site) will answer the binding for the field or local named "foo"
+    * (or an error binding if none exists). In addition, setFieldIndex(1) will be sent to the invocation site. If a type named
+    * "foo" exists, it will not be detected (and an error binding will be answered) IMPORTANT NOTE: This method is written under
+    * the assumption that compoundName is longer than length 1.
     */
    public Binding getBinding(char[][] compoundName, int mask, InvocationSite invocationSite, boolean needResolve)
    {
@@ -493,8 +476,9 @@ public class BlockScope extends Scope
 
       // know binding is now a ReferenceBinding
       ReferenceBinding referenceBinding = (ReferenceBinding)binding;
-      binding =
-         environment().convertToRawType(referenceBinding, false /* do not force conversion of enclosing types */);
+      binding = environment().convertToRawType(referenceBinding, false /*
+                                                                        * do not force conversion of enclosing types
+                                                                        */);
       if (invocationSite instanceof ASTNode)
       {
          ASTNode invocationNode = (ASTNode)invocationSite;
@@ -687,14 +671,11 @@ public class BlockScope extends Scope
 
    /*
     * This retrieves the argument that maps to an enclosing instance of the suitable type, if not found then answers nil -- do not
-    * create one
-    * 
-    * #implicitThis : the implicit this will be ok #((arg) this$n) : available as a constructor arg #((arg) this$n ... this$p) :
-    * available as as a constructor arg + a sequence of fields #((fieldDescr) this$n ... this$p) : available as a sequence of
-    * fields nil : not found
-    * 
-    * Note that this algorithm should answer the shortest possible sequence when shortcuts are available: this$0 . this$0 . this$0
-    * instead of this$2 . this$1 . this$0 . this$1 . this$0 thus the code generation will be more compact and runtime faster
+    * create one #implicitThis : the implicit this will be ok #((arg) this$n) : available as a constructor arg #((arg) this$n ...
+    * this$p) : available as as a constructor arg + a sequence of fields #((fieldDescr) this$n ... this$p) : available as a
+    * sequence of fields nil : not found Note that this algorithm should answer the shortest possible sequence when shortcuts are
+    * available: this$0 . this$0 . this$0 instead of this$2 . this$1 . this$0 . this$1 . this$0 thus the code generation will be
+    * more compact and runtime faster
     */
    public VariableBinding[] getEmulationPath(LocalVariableBinding outerLocalVariable)
    {
@@ -731,12 +712,10 @@ public class BlockScope extends Scope
 
    /*
     * This retrieves the argument that maps to an enclosing instance of the suitable type, if not found then answers nil -- do not
-    * create one
-    * 
-    * #implicitThis : the implicit this will be ok #((arg) this$n) : available as a constructor arg #((arg) this$n access$m...
-    * access$p) : available as as a constructor arg + a sequence of synthetic accessors to synthetic fields #((fieldDescr) this$n
-    * access#m... access$p) : available as a first synthetic field + a sequence of synthetic accessors to synthetic fields null :
-    * not found jls 15.9.2 + http://www.ergnosis.com/java-spec-report/java-language/jls-8.8.5.1-d.html
+    * create one #implicitThis : the implicit this will be ok #((arg) this$n) : available as a constructor arg #((arg) this$n
+    * access$m... access$p) : available as as a constructor arg + a sequence of synthetic accessors to synthetic fields
+    * #((fieldDescr) this$n access#m... access$p) : available as a first synthetic field + a sequence of synthetic accessors to
+    * synthetic fields null : not found jls 15.9.2 + http://www.ergnosis.com/java-spec-report/java-language/jls-8.8.5.1-d.html
     */
    public Object[] getEmulationPath(ReferenceBinding targetEnclosingType, boolean onlyExactMatch,
       boolean denyEnclosingArgInConstructorCall)
@@ -956,10 +935,8 @@ public class BlockScope extends Scope
    }
 
    /*
-    * Answer the problem reporter to use for raising new problems.
-    * 
-    * Note that as a side-effect, this updates the current reference context (unit, type or method) in case the problem handler
-    * decides it is necessary to abort.
+    * Answer the problem reporter to use for raising new problems. Note that as a side-effect, this updates the current reference
+    * context (unit, type or method) in case the problem handler decides it is necessary to abort.
     */
    public ProblemReporter problemReporter()
    {
@@ -990,9 +967,7 @@ public class BlockScope extends Scope
    }
 
    /*
-    * Answer the reference type of this scope.
-    * 
-    * It is the nearest enclosing type of this scope.
+    * Answer the reference type of this scope. It is the nearest enclosing type of this scope.
     */
    public TypeDeclaration referenceType()
    {

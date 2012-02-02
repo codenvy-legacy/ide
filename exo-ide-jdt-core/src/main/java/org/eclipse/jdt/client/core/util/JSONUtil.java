@@ -25,7 +25,6 @@ import com.google.gwt.json.client.JSONValue;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 10, 2012 5:15:22 PM evgen $
- * 
  */
 public class JSONUtil
 {

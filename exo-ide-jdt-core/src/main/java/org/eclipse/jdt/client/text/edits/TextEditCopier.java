@@ -17,10 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Copies a tree of text edits. A text edit copier keeps a map
- * between original and new text edits. It can be used to map
- * a copy back to its original edit.
- *
+ * Copies a tree of text edits. A text edit copier keeps a map between original and new text edits. It can be used to map a copy
+ * back to its original edit.
+ * 
  * @since 3.0
  */
 public final class TextEditCopier
@@ -31,25 +30,24 @@ public final class TextEditCopier
    private Map fCopies;
 
    /**
-    * Constructs a new <code>TextEditCopier</code> for the
-    * given edit. The actual copy is done by calling <code>
+    * Constructs a new <code>TextEditCopier</code> for the given edit. The actual copy is done by calling <code>
     * perform</code>.
-    *
+    * 
     * @param edit the edit to copy
-    *
+    * 
     * @see #perform()
     */
    public TextEditCopier(TextEdit edit)
    {
       super();
-      //		Assert.isNotNull(edit);
+      // Assert.isNotNull(edit);
       fEdit = edit;
       fCopies = new HashMap();
    }
 
    /**
     * Performs the actual copying.
-    *
+    * 
     * @return the copy
     */
    public TextEdit perform()
@@ -68,19 +66,17 @@ public final class TextEditCopier
 
    /**
     * Returns the copy for the original text edit.
-    *
-    * @param original the original for which the copy
-    *  is requested
-    * @return the copy of the original edit or <code>null</code>
-    *  if the original isn't managed by this copier
+    * 
+    * @param original the original for which the copy is requested
+    * @return the copy of the original edit or <code>null</code> if the original isn't managed by this copier
     */
    public TextEdit getCopy(TextEdit original)
    {
-      //		Assert.isNotNull(original);
+      // Assert.isNotNull(original);
       return (TextEdit)fCopies.get(original);
    }
 
-   //---- helper methods --------------------------------------------
+   // ---- helper methods --------------------------------------------
 
    private TextEdit doCopy(TextEdit edit)
    {

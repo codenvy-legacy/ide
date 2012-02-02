@@ -33,9 +33,7 @@ public class CompletionOnJavadocParamNameReference extends JavadocSingleNameRefe
          nameRef.tagSourceStart);
    }
 
-   /**
-    * @param flags The completionFlags to set.
-    */
+   /** @param flags The completionFlags to set. */
    public void addCompletionFlags(int flags)
    {
       this.completionFlags |= flags;
@@ -53,8 +51,7 @@ public class CompletionOnJavadocParamNameReference extends JavadocSingleNameRefe
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.ast.AllocationExpression#printExpression(int, java.lang.StringBuffer)
+    * @see org.eclipse.jdt.internal.compiler.ast.AllocationExpression#printExpression (int, java.lang.StringBuffer)
     */
    public StringBuffer printExpression(int indent, StringBuffer output)
    {
@@ -66,9 +63,8 @@ public class CompletionOnJavadocParamNameReference extends JavadocSingleNameRefe
 
    /*
     * (non-Javadoc)
-    * 
-    * @see
-    * org.eclipse.jdt.internal.compiler.ast.SingleNameReference#reportError(org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ast.SingleNameReference#reportError(
+    * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public TypeBinding reportError(BlockScope scope)
    {

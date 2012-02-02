@@ -75,9 +75,7 @@ public abstract class Binding
 
    public static final ReferenceBinding[] UNINITIALIZED_REFERENCE_TYPES = new ReferenceBinding[0];
 
-   /*
-    * Answer the receiver's binding type from Binding.BindingID.
-    */
+   /* Answer the receiver's binding type from Binding.BindingID. */
    public abstract int kind();
 
    /*
@@ -119,9 +117,7 @@ public abstract class Binding
       // empty block
    }
 
-   /*
-    * API Answer true if the receiver is not a problem binding
-    */
+   /* API Answer true if the receiver is not a problem binding */
    public final boolean isValidBinding()
    {
       return problemId() == ProblemReasons.NoError;
@@ -147,14 +143,10 @@ public abstract class Binding
       return ProblemReasons.NoError;
    }
 
-   /*
-    * Answer a printable representation of the receiver.
-    */
+   /* Answer a printable representation of the receiver. */
    public abstract char[] readableName();
 
-   /*
-    * Shorter printable representation of the receiver (no qualified type)
-    */
+   /* Shorter printable representation of the receiver (no qualified type) */
    public char[] shortReadableName()
    {
       return readableName();

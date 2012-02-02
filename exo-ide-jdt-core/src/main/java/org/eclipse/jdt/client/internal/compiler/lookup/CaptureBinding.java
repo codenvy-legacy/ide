@@ -225,17 +225,13 @@ public class CaptureBinding extends TypeVariableBinding
       }
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#isCapture()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#isCapture() */
    public boolean isCapture()
    {
       return true;
    }
 
-   /**
-    * @see TypeBinding#isEquivalentTo(TypeBinding)
-    */
+   /** @see TypeBinding#isEquivalentTo(TypeBinding) */
    public boolean isEquivalentTo(TypeBinding otherType)
    {
       if (this == otherType)

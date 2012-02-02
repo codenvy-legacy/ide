@@ -47,7 +47,6 @@ import org.exoplatform.ide.editor.java.client.JavaClientBundle;
  * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 19, 2010 4:13:18 PM evgen $
- * 
  */
 public abstract class ProposalWidget extends Composite implements HasClickHandlers, HasMouseOverHandlers,
    HasDoubleClickHandlers
@@ -120,17 +119,13 @@ public abstract class ProposalWidget extends Composite implements HasClickHandle
       return span;
    }
 
-   /**
-    * @return the token
-    */
+   /** @return the token */
    public CompletionProposal getProposal()
    {
       return proposal;
    }
 
-   /**
-    * @return name of token
-    */
+   /** @return name of token */
    public abstract String getName();
 
    /**
@@ -140,42 +135,32 @@ public abstract class ProposalWidget extends Composite implements HasClickHandle
     */
    public abstract Widget getDecription();
 
-   /**
-    * Calls when user select this {@link Widget}
-    */
+   /** Calls when user select this {@link Widget} */
    public void setSelectedStyle()
    {
       setStyleName(JavaClientBundle.INSTANCE.css().selectedItem());
    }
 
-   /**
-    * Calls when clear selection or mouse blur this {@link Widget}
-    */
+   /** Calls when clear selection or mouse blur this {@link Widget} */
    public void setDefaultStyle()
    {
       setStyleName(JavaClientBundle.INSTANCE.css().item());
    }
 
-   /**
-    * @see com.google.gwt.event.dom.client.HasClickHandlers#addClickHandler(com.google.gwt.event.dom.client.ClickHandler)
-    */
+   /** @see com.google.gwt.event.dom.client.HasClickHandlers#addClickHandler(com.google.gwt.event.dom.client.ClickHandler) */
    public HandlerRegistration addClickHandler(ClickHandler handler)
    {
 
       return addDomHandler(handler, ClickEvent.getType());
    }
 
-   /**
-    * @see com.google.gwt.event.dom.client.HasMouseOverHandlers#addMouseOverHandler(com.google.gwt.event.dom.client.MouseOverHandler)
-    */
+   /** @see com.google.gwt.event.dom.client.HasMouseOverHandlers#addMouseOverHandler(com.google.gwt.event.dom.client.MouseOverHandler) */
    public HandlerRegistration addMouseOverHandler(MouseOverHandler handler)
    {
       return addDomHandler(handler, MouseOverEvent.getType());
    }
 
-   /**
-    * @see com.google.gwt.event.dom.client.HasDoubleClickHandlers#addDoubleClickHandler(com.google.gwt.event.dom.client.DoubleClickHandler)
-    */
+   /** @see com.google.gwt.event.dom.client.HasDoubleClickHandlers#addDoubleClickHandler(com.google.gwt.event.dom.client.DoubleClickHandler) */
    public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler)
    {
       return addDomHandler(handler, DoubleClickEvent.getType());

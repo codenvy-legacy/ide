@@ -35,9 +35,7 @@ public class JavadocSingleTypeReference extends SingleTypeReference
       this.bits |= ASTNode.InsideJavadoc;
    }
 
-   /*
-    * We need to modify resolving behavior to handle package references
-    */
+   /* We need to modify resolving behavior to handle package references */
    protected TypeBinding internalResolveType(Scope scope)
    {
       // handle the error here
@@ -119,8 +117,7 @@ public class JavadocSingleTypeReference extends SingleTypeReference
 
    /*
     * (non-Javadoc) Redefine to capture javadoc specific signatures
-    * 
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor,
+    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt .internal.compiler.ASTVisitor,
     * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, BlockScope scope)

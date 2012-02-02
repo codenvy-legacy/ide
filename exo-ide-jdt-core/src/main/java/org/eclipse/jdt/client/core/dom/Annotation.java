@@ -74,17 +74,13 @@ public abstract class Annotation extends Expression implements IExtendedModifier
       super(ast);
    }
 
-   /**
-    * @see IExtendedModifier#isModifier()
-    */
+   /** @see IExtendedModifier#isModifier() */
    public boolean isModifier()
    {
       return false;
    }
 
-   /**
-    * @see IExtendedModifier#isAnnotation()
-    */
+   /** @see IExtendedModifier#isAnnotation() */
    public boolean isAnnotation()
    {
       return true;
@@ -157,7 +153,7 @@ public abstract class Annotation extends Expression implements IExtendedModifier
    }
 
    /**
-    * Returns whether this is a single member annotation. ({@link SingleMemberAnnotation}).
+    * Returns whether this is a single member annotation. ( {@link SingleMemberAnnotation}).
     * 
     * @return <code>true</code> if this is a single member annotation, and <code>false</code> otherwise
     */
@@ -166,9 +162,7 @@ public abstract class Annotation extends Expression implements IExtendedModifier
       return (this instanceof SingleMemberAnnotation);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       return BASE_NODE_SIZE + 1 * 4;

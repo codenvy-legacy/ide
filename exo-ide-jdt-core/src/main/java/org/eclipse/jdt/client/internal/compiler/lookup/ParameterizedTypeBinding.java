@@ -16,9 +16,7 @@ import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
 import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
 
-/**
- * A parameterized type encapsulates a type with type arguments,
- */
+/** A parameterized type encapsulates a type with type arguments, */
 public class ParameterizedTypeBinding extends ReferenceBinding implements Substitution
 {
 
@@ -107,9 +105,7 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       }
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#canBeInstantiated()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#canBeInstantiated() */
    public boolean canBeInstantiated()
    {
       return ((this.tagBits & TagBits.HasDirectWildcard) == 0) && super.canBeInstantiated(); // cannot instantiate param type with
@@ -162,9 +158,7 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return capturedParameterizedType;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#collectMissingTypes(java.util.List)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#collectMissingTypes(java.util.List) */
    public List collectMissingTypes(List missingTypes)
    {
       if ((this.tagBits & TagBits.HasMissingType) != 0)
@@ -317,9 +311,7 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       inferenceContext.depth--;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#computeId()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#computeId() */
    public void computeId()
    {
       this.id = TypeIds.NoId;
@@ -379,9 +371,7 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return uniqueKey;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#constantPoolName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#constantPoolName() */
    public char[] constantPoolName()
    {
       return this.type.constantPoolName(); // erasure
@@ -392,9 +382,7 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return new ParameterizedMethodBinding(this, originalMethod);
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#debugName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#debugName() */
    public String debugName()
    {
       StringBuffer nameBuffer = new StringBuffer(10);
@@ -420,41 +408,31 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return nameBuffer.toString();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#enclosingType()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#enclosingType() */
    public ReferenceBinding enclosingType()
    {
       return this.enclosingType;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.Substitution#environment()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.Substitution#environment() */
    public LookupEnvironment environment()
    {
       return this.environment;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#erasure()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#erasure() */
    public TypeBinding erasure()
    {
       return this.type.erasure(); // erasure
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#fieldCount()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#fieldCount() */
    public int fieldCount()
    {
       return this.type.fieldCount(); // same as erasure (lazy)
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#fields()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#fields() */
    public FieldBinding[] fields()
    {
       if ((this.tagBits & TagBits.AreFieldsComplete) != 0)
@@ -493,9 +471,7 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return this.type;
    }
 
-   /**
-    * Ltype<param1 ... paramN>; LY<TT;>;
-    */
+   /** Ltype<param1 ... paramN>; LY<TT;>; */
    public char[] genericTypeSignature()
    {
       if (this.genericTypeSignature == null)
@@ -545,9 +521,7 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return this.genericTypeSignature;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#getAnnotationTagBits()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#getAnnotationTagBits() */
    public long getAnnotationTagBits()
    {
       return this.type.getAnnotationTagBits();
@@ -558,9 +532,7 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return genericType().getEnclosingInstancesSlotSize();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#getExactConstructor(TypeBinding[])
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#getExactConstructor(TypeBinding[]) */
    public MethodBinding getExactConstructor(TypeBinding[] argumentTypes)
    {
       int argCount = argumentTypes.length;
@@ -700,9 +672,7 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return ReferenceBinding.binarySearch(fieldName, this.fields);
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#getMemberType(char[])
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#getMemberType(char[]) */
    public ReferenceBinding getMemberType(char[] typeName)
    {
       memberTypes(); // ensure memberTypes have been initialized... must create all at once unlike methods
@@ -716,9 +686,7 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#getMethods(char[])
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#getMethods(char[]) */
    public MethodBinding[] getMethods(char[] selector)
    {
       if (this.methods != null)
@@ -787,9 +755,7 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return this.type.hasMemberTypes();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#implementsMethod(MethodBinding)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#implementsMethod(MethodBinding) */
    public boolean implementsMethod(MethodBinding method)
    {
       return this.type.implementsMethod(method); // erasure
@@ -936,9 +902,7 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return this.superclass != null && this.superInterfaces != null;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.Substitution#isRawSubstitution()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.Substitution#isRawSubstitution() */
    public boolean isRawSubstitution()
    {
       return isRawType();
@@ -949,9 +913,7 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return PARAMETERIZED_TYPE;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#memberTypes()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#memberTypes() */
    public ReferenceBinding[] memberTypes()
    {
       if (this.memberTypes == null)
@@ -980,9 +942,7 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return this.memberTypes;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#methods()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#methods() */
    public MethodBinding[] methods()
    {
       if ((this.tagBits & TagBits.AreMethodsComplete) != 0)
@@ -1019,25 +979,19 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return this.type.problemId();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#qualifiedPackageName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#qualifiedPackageName() */
    public char[] qualifiedPackageName()
    {
       return this.type.qualifiedPackageName();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#qualifiedSourceName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#qualifiedSourceName() */
    public char[] qualifiedSourceName()
    {
       return this.type.qualifiedSourceName();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#readableName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#readableName() */
    public char[] readableName()
    {
       StringBuffer nameBuffer = new StringBuffer(10);
@@ -1073,18 +1027,21 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
 
       this.tagBits &= ~TagBits.HasUnresolvedTypeVariables; // can be recursive so only want to call once
       ReferenceBinding resolvedType =
-         (ReferenceBinding)BinaryTypeBinding.resolveType(this.type, this.environment, false /* no raw conversion */); // still
-                                                                                                                       // part of
-                                                                                                                       // parameterized
-                                                                                                                       // type ref
+         (ReferenceBinding)BinaryTypeBinding.resolveType(this.type, this.environment, false /*
+                                                                                             * no raw conversion
+                                                                                             */); // still
+                                                                                                  // part of
+                                                                                                  // parameterized
+                                                                                                  // type ref
       this.tagBits |= resolvedType.tagBits & TagBits.ContainsNestedTypeReferences;
       if (this.arguments != null)
       {
          int argLength = this.arguments.length;
          for (int i = 0; i < argLength; i++)
          {
-            TypeBinding resolveType =
-               BinaryTypeBinding.resolveType(this.arguments[i], this.environment, true /* raw conversion */);
+            TypeBinding resolveType = BinaryTypeBinding.resolveType(this.arguments[i], this.environment, true /*
+                                                                                                               * raw conversion
+                                                                                                               */);
             this.arguments[i] = resolveType;
             this.tagBits |= resolvedType.tagBits & TagBits.ContainsNestedTypeReferences;
          }
@@ -1120,9 +1077,7 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return this;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#shortReadableName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.Binding#shortReadableName() */
    public char[] shortReadableName()
    {
       StringBuffer nameBuffer = new StringBuffer(10);
@@ -1151,9 +1106,7 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return shortReadableName;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#signature()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#signature() */
    public char[] signature()
    {
       if (this.signature == null)
@@ -1163,17 +1116,13 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return this.signature;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#sourceName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#sourceName() */
    public char[] sourceName()
    {
       return this.type.sourceName();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.Substitution#substitute(org.eclipse.jdt.client.internal.compiler.lookup.TypeVariableBinding)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.Substitution#substitute(org.eclipse.jdt.client.internal.compiler.lookup.TypeVariableBinding) */
    public TypeBinding substitute(TypeVariableBinding originalVariable)
    {
 
@@ -1208,9 +1157,7 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return originalVariable;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#superclass()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#superclass() */
    public ReferenceBinding superclass()
    {
       if (this.superclass == null)
@@ -1224,9 +1171,7 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
       return this.superclass;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#superInterfaces()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#superInterfaces() */
    public ReferenceBinding[] superInterfaces()
    {
       if (this.superInterfaces == null)
@@ -1268,25 +1213,19 @@ public class ParameterizedTypeBinding extends ReferenceBinding implements Substi
          initialize(this.type, this.arguments);
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#syntheticEnclosingInstanceTypes()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#syntheticEnclosingInstanceTypes() */
    public ReferenceBinding[] syntheticEnclosingInstanceTypes()
    {
       return genericType().syntheticEnclosingInstanceTypes();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#syntheticOuterLocalVariables()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#syntheticOuterLocalVariables() */
    public SyntheticArgumentBinding[] syntheticOuterLocalVariables()
    {
       return genericType().syntheticOuterLocalVariables();
    }
 
-   /**
-    * @see java.lang.Object#toString()
-    */
+   /** @see java.lang.Object#toString() */
    public String toString()
    {
       StringBuffer buffer = new StringBuffer(30);

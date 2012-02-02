@@ -31,9 +31,7 @@ public class JavadocSingleNameReference extends SingleNameReference
       resolve(scope, true, scope.compilerOptions().reportUnusedParameterIncludeDocCommentReference);
    }
 
-   /**
-    * Resolve without warnings
-    */
+   /** Resolve without warnings */
    public void resolve(BlockScope scope, boolean warn, boolean considerParamRefAsUsage)
    {
 
@@ -65,8 +63,7 @@ public class JavadocSingleNameReference extends SingleNameReference
 
    /*
     * (non-Javadoc) Redefine to capture javadoc specific signatures
-    * 
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor,
+    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt .internal.compiler.ASTVisitor,
     * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, BlockScope scope)
@@ -77,8 +74,7 @@ public class JavadocSingleNameReference extends SingleNameReference
 
    /*
     * (non-Javadoc) Redefine to capture javadoc specific signatures
-    * 
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor,
+    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt .internal.compiler.ASTVisitor,
     * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, ClassScope scope)

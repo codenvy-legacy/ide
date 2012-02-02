@@ -141,9 +141,7 @@ public class NaiveASTFlattener extends ASTVisitor
 
    private int indent = 0;
 
-   /**
-    * Creates a new AST printer.
-    */
+   /** Creates a new AST printer. */
    public NaiveASTFlattener()
    {
       this.buffer = new StringBuffer();
@@ -193,7 +191,7 @@ public class NaiveASTFlattener extends ASTVisitor
    }
 
    /**
-    * Internal synonym for {@link TypeDeclarationStatement#getTypeDeclaration()}. Use to alleviate deprecation warnings.
+    * Internal synonym for {@link TypeDeclarationStatement#getTypeDeclaration()} . Use to alleviate deprecation warnings.
     * 
     * @deprecated
     * @since 3.4
@@ -278,9 +276,7 @@ public class NaiveASTFlattener extends ASTVisitor
       }
    }
 
-   /**
-    * Resets this printer so that it can be used again.
-    */
+   /** Resets this printer so that it can be used again. */
    public void reset()
    {
       this.buffer.setLength(0);
@@ -299,7 +295,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(AnnotationTypeDeclaration)
-    * 
     * @since 3.1
     */
    public boolean visit(AnnotationTypeDeclaration node)
@@ -324,7 +319,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(AnnotationTypeMemberDeclaration)
-    * 
     * @since 3.1
     */
    public boolean visit(AnnotationTypeMemberDeclaration node)
@@ -348,9 +342,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(AnonymousClassDeclaration)
-    */
+   /* @see ASTVisitor#visit(AnonymousClassDeclaration) */
    public boolean visit(AnonymousClassDeclaration node)
    {
       this.buffer.append("{\n");//$NON-NLS-1$
@@ -366,9 +358,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(ArrayAccess)
-    */
+   /* @see ASTVisitor#visit(ArrayAccess) */
    public boolean visit(ArrayAccess node)
    {
       node.getArray().accept(this);
@@ -378,9 +368,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(ArrayCreation)
-    */
+   /* @see ASTVisitor#visit(ArrayCreation) */
    public boolean visit(ArrayCreation node)
    {
       this.buffer.append("new ");//$NON-NLS-1$
@@ -408,9 +396,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(ArrayInitializer)
-    */
+   /* @see ASTVisitor#visit(ArrayInitializer) */
    public boolean visit(ArrayInitializer node)
    {
       this.buffer.append("{");//$NON-NLS-1$
@@ -427,9 +413,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(ArrayType)
-    */
+   /* @see ASTVisitor#visit(ArrayType) */
    public boolean visit(ArrayType node)
    {
       node.getComponentType().accept(this);
@@ -437,9 +421,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(AssertStatement)
-    */
+   /* @see ASTVisitor#visit(AssertStatement) */
    public boolean visit(AssertStatement node)
    {
       printIndent();
@@ -454,9 +436,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(Assignment)
-    */
+   /* @see ASTVisitor#visit(Assignment) */
    public boolean visit(Assignment node)
    {
       node.getLeftHandSide().accept(this);
@@ -465,9 +445,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(Block)
-    */
+   /* @see ASTVisitor#visit(Block) */
    public boolean visit(Block node)
    {
       this.buffer.append("{\n");//$NON-NLS-1$
@@ -485,7 +463,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(BlockComment)
-    * 
     * @since 3.0
     */
    public boolean visit(BlockComment node)
@@ -495,9 +472,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(BooleanLiteral)
-    */
+   /* @see ASTVisitor#visit(BooleanLiteral) */
    public boolean visit(BooleanLiteral node)
    {
       if (node.booleanValue() == true)
@@ -511,9 +486,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(BreakStatement)
-    */
+   /* @see ASTVisitor#visit(BreakStatement) */
    public boolean visit(BreakStatement node)
    {
       printIndent();
@@ -527,9 +500,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(CastExpression)
-    */
+   /* @see ASTVisitor#visit(CastExpression) */
    public boolean visit(CastExpression node)
    {
       this.buffer.append("(");//$NON-NLS-1$
@@ -539,9 +510,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(CatchClause)
-    */
+   /* @see ASTVisitor#visit(CatchClause) */
    public boolean visit(CatchClause node)
    {
       this.buffer.append("catch (");//$NON-NLS-1$
@@ -551,18 +520,14 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(CharacterLiteral)
-    */
+   /* @see ASTVisitor#visit(CharacterLiteral) */
    public boolean visit(CharacterLiteral node)
    {
       this.buffer.append(node.getEscapedValue());
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(ClassInstanceCreation)
-    */
+   /* @see ASTVisitor#visit(ClassInstanceCreation) */
    public boolean visit(ClassInstanceCreation node)
    {
       if (node.getExpression() != null)
@@ -611,9 +576,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(CompilationUnit)
-    */
+   /* @see ASTVisitor#visit(CompilationUnit) */
    public boolean visit(CompilationUnit node)
    {
       if (node.getPackage() != null)
@@ -633,9 +596,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(ConditionalExpression)
-    */
+   /* @see ASTVisitor#visit(ConditionalExpression) */
    public boolean visit(ConditionalExpression node)
    {
       node.getExpression().accept(this);
@@ -646,9 +607,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(ConstructorInvocation)
-    */
+   /* @see ASTVisitor#visit(ConstructorInvocation) */
    public boolean visit(ConstructorInvocation node)
    {
       printIndent();
@@ -683,9 +642,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(ContinueStatement)
-    */
+   /* @see ASTVisitor#visit(ContinueStatement) */
    public boolean visit(ContinueStatement node)
    {
       printIndent();
@@ -699,9 +656,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(DoStatement)
-    */
+   /* @see ASTVisitor#visit(DoStatement) */
    public boolean visit(DoStatement node)
    {
       printIndent();
@@ -713,9 +668,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(EmptyStatement)
-    */
+   /* @see ASTVisitor#visit(EmptyStatement) */
    public boolean visit(EmptyStatement node)
    {
       printIndent();
@@ -725,7 +678,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(EnhancedForStatement)
-    * 
     * @since 3.1
     */
    public boolean visit(EnhancedForStatement node)
@@ -742,7 +694,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(EnumConstantDeclaration)
-    * 
     * @since 3.1
     */
    public boolean visit(EnumConstantDeclaration node)
@@ -777,7 +728,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(EnumDeclaration)
-    * 
     * @since 3.1
     */
    public boolean visit(EnumDeclaration node)
@@ -831,9 +781,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(ExpressionStatement)
-    */
+   /* @see ASTVisitor#visit(ExpressionStatement) */
    public boolean visit(ExpressionStatement node)
    {
       printIndent();
@@ -842,9 +790,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(FieldAccess)
-    */
+   /* @see ASTVisitor#visit(FieldAccess) */
    public boolean visit(FieldAccess node)
    {
       node.getExpression().accept(this);
@@ -853,9 +799,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(FieldDeclaration)
-    */
+   /* @see ASTVisitor#visit(FieldDeclaration) */
    public boolean visit(FieldDeclaration node)
    {
       if (node.getJavadoc() != null)
@@ -886,9 +830,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(ForStatement)
-    */
+   /* @see ASTVisitor#visit(ForStatement) */
    public boolean visit(ForStatement node)
    {
       printIndent();
@@ -918,9 +860,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(IfStatement)
-    */
+   /* @see ASTVisitor#visit(IfStatement) */
    public boolean visit(IfStatement node)
    {
       printIndent();
@@ -936,9 +876,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(ImportDeclaration)
-    */
+   /* @see ASTVisitor#visit(ImportDeclaration) */
    public boolean visit(ImportDeclaration node)
    {
       printIndent();
@@ -959,9 +897,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(InfixExpression)
-    */
+   /* @see ASTVisitor#visit(InfixExpression) */
    public boolean visit(InfixExpression node)
    {
       node.getLeftOperand().accept(this);
@@ -983,9 +919,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(Initializer)
-    */
+   /* @see ASTVisitor#visit(Initializer) */
    public boolean visit(Initializer node)
    {
       if (node.getJavadoc() != null)
@@ -1004,9 +938,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(InstanceofExpression)
-    */
+   /* @see ASTVisitor#visit(InstanceofExpression) */
    public boolean visit(InstanceofExpression node)
    {
       node.getLeftOperand().accept(this);
@@ -1015,9 +947,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(Javadoc)
-    */
+   /* @see ASTVisitor#visit(Javadoc) */
    public boolean visit(Javadoc node)
    {
       printIndent();
@@ -1031,9 +961,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(LabeledStatement)
-    */
+   /* @see ASTVisitor#visit(LabeledStatement) */
    public boolean visit(LabeledStatement node)
    {
       printIndent();
@@ -1045,7 +973,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(LineComment)
-    * 
     * @since 3.0
     */
    public boolean visit(LineComment node)
@@ -1056,7 +983,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(MarkerAnnotation)
-    * 
     * @since 3.1
     */
    public boolean visit(MarkerAnnotation node)
@@ -1068,7 +994,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(MemberRef)
-    * 
     * @since 3.0
     */
    public boolean visit(MemberRef node)
@@ -1084,7 +1009,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(MemberValuePair)
-    * 
     * @since 3.1
     */
    public boolean visit(MemberValuePair node)
@@ -1095,9 +1019,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(MethodDeclaration)
-    */
+   /* @see ASTVisitor#visit(MethodDeclaration) */
    public boolean visit(MethodDeclaration node)
    {
       if (node.getJavadoc() != null)
@@ -1188,9 +1110,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(MethodInvocation)
-    */
+   /* @see ASTVisitor#visit(MethodInvocation) */
    public boolean visit(MethodInvocation node)
    {
       if (node.getExpression() != null)
@@ -1232,7 +1152,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(MethodRef)
-    * 
     * @since 3.0
     */
    public boolean visit(MethodRef node)
@@ -1259,7 +1178,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(MethodRefParameter)
-    * 
     * @since 3.0
     */
    public boolean visit(MethodRefParameter node)
@@ -1282,7 +1200,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(Modifier)
-    * 
     * @since 3.1
     */
    public boolean visit(Modifier node)
@@ -1293,7 +1210,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(NormalAnnotation)
-    * 
     * @since 3.1
     */
    public boolean visit(NormalAnnotation node)
@@ -1314,27 +1230,21 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(NullLiteral)
-    */
+   /* @see ASTVisitor#visit(NullLiteral) */
    public boolean visit(NullLiteral node)
    {
       this.buffer.append("null");//$NON-NLS-1$
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(NumberLiteral)
-    */
+   /* @see ASTVisitor#visit(NumberLiteral) */
    public boolean visit(NumberLiteral node)
    {
       this.buffer.append(node.getToken());
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(PackageDeclaration)
-    */
+   /* @see ASTVisitor#visit(PackageDeclaration) */
    public boolean visit(PackageDeclaration node)
    {
       if (node.getAST().apiLevel() >= AST.JLS3)
@@ -1359,7 +1269,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(ParameterizedType)
-    * 
     * @since 3.1
     */
    public boolean visit(ParameterizedType node)
@@ -1379,9 +1288,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(ParenthesizedExpression)
-    */
+   /* @see ASTVisitor#visit(ParenthesizedExpression) */
    public boolean visit(ParenthesizedExpression node)
    {
       this.buffer.append("(");//$NON-NLS-1$
@@ -1390,9 +1297,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(PostfixExpression)
-    */
+   /* @see ASTVisitor#visit(PostfixExpression) */
    public boolean visit(PostfixExpression node)
    {
       node.getOperand().accept(this);
@@ -1400,9 +1305,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(PrefixExpression)
-    */
+   /* @see ASTVisitor#visit(PrefixExpression) */
    public boolean visit(PrefixExpression node)
    {
       this.buffer.append(node.getOperator().toString());
@@ -1410,18 +1313,14 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(PrimitiveType)
-    */
+   /* @see ASTVisitor#visit(PrimitiveType) */
    public boolean visit(PrimitiveType node)
    {
       this.buffer.append(node.getPrimitiveTypeCode().toString());
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(QualifiedName)
-    */
+   /* @see ASTVisitor#visit(QualifiedName) */
    public boolean visit(QualifiedName node)
    {
       node.getQualifier().accept(this);
@@ -1432,7 +1331,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(QualifiedType)
-    * 
     * @since 3.1
     */
    public boolean visit(QualifiedType node)
@@ -1443,9 +1341,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(ReturnStatement)
-    */
+   /* @see ASTVisitor#visit(ReturnStatement) */
    public boolean visit(ReturnStatement node)
    {
       printIndent();
@@ -1459,18 +1355,14 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(SimpleName)
-    */
+   /* @see ASTVisitor#visit(SimpleName) */
    public boolean visit(SimpleName node)
    {
       this.buffer.append(node.getIdentifier());
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(SimpleType)
-    */
+   /* @see ASTVisitor#visit(SimpleType) */
    public boolean visit(SimpleType node)
    {
       return true;
@@ -1478,7 +1370,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(SingleMemberAnnotation)
-    * 
     * @since 3.1
     */
    public boolean visit(SingleMemberAnnotation node)
@@ -1491,9 +1382,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(SingleVariableDeclaration)
-    */
+   /* @see ASTVisitor#visit(SingleVariableDeclaration) */
    public boolean visit(SingleVariableDeclaration node)
    {
       printIndent();
@@ -1527,18 +1416,14 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(StringLiteral)
-    */
+   /* @see ASTVisitor#visit(StringLiteral) */
    public boolean visit(StringLiteral node)
    {
       this.buffer.append(node.getEscapedValue());
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(SuperConstructorInvocation)
-    */
+   /* @see ASTVisitor#visit(SuperConstructorInvocation) */
    public boolean visit(SuperConstructorInvocation node)
    {
       printIndent();
@@ -1578,9 +1463,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(SuperFieldAccess)
-    */
+   /* @see ASTVisitor#visit(SuperFieldAccess) */
    public boolean visit(SuperFieldAccess node)
    {
       if (node.getQualifier() != null)
@@ -1593,9 +1476,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(SuperMethodInvocation)
-    */
+   /* @see ASTVisitor#visit(SuperMethodInvocation) */
    public boolean visit(SuperMethodInvocation node)
    {
       if (node.getQualifier() != null)
@@ -1636,9 +1517,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(SwitchCase)
-    */
+   /* @see ASTVisitor#visit(SwitchCase) */
    public boolean visit(SwitchCase node)
    {
       if (node.isDefault())
@@ -1655,9 +1534,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(SwitchStatement)
-    */
+   /* @see ASTVisitor#visit(SwitchStatement) */
    public boolean visit(SwitchStatement node)
    {
       this.buffer.append("switch (");//$NON-NLS-1$
@@ -1677,9 +1554,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(SynchronizedStatement)
-    */
+   /* @see ASTVisitor#visit(SynchronizedStatement) */
    public boolean visit(SynchronizedStatement node)
    {
       this.buffer.append("synchronized (");//$NON-NLS-1$
@@ -1691,7 +1566,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(TagElement)
-    * 
     * @since 3.0
     */
    public boolean visit(TagElement node)
@@ -1741,7 +1615,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(TextElement)
-    * 
     * @since 3.0
     */
    public boolean visit(TextElement node)
@@ -1750,9 +1623,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(ThisExpression)
-    */
+   /* @see ASTVisitor#visit(ThisExpression) */
    public boolean visit(ThisExpression node)
    {
       if (node.getQualifier() != null)
@@ -1764,9 +1635,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(ThrowStatement)
-    */
+   /* @see ASTVisitor#visit(ThrowStatement) */
    public boolean visit(ThrowStatement node)
    {
       printIndent();
@@ -1776,9 +1645,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(TryStatement)
-    */
+   /* @see ASTVisitor#visit(TryStatement) */
    public boolean visit(TryStatement node)
    {
       printIndent();
@@ -1816,9 +1683,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(TypeDeclaration)
-    */
+   /* @see ASTVisitor#visit(TypeDeclaration) */
    public boolean visit(TypeDeclaration node)
    {
       if (node.getJavadoc() != null)
@@ -1912,9 +1777,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(TypeDeclarationStatement)
-    */
+   /* @see ASTVisitor#visit(TypeDeclarationStatement) */
    public boolean visit(TypeDeclarationStatement node)
    {
       if (node.getAST().apiLevel() == JLS2)
@@ -1928,9 +1791,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(TypeLiteral)
-    */
+   /* @see ASTVisitor#visit(TypeLiteral) */
    public boolean visit(TypeLiteral node)
    {
       node.getType().accept(this);
@@ -1940,7 +1801,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(TypeParameter)
-    * 
     * @since 3.1
     */
    public boolean visit(TypeParameter node)
@@ -1964,7 +1824,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(UnionType)
-    * 
     * @since 3.7
     */
    public boolean visit(UnionType node)
@@ -1981,9 +1840,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(VariableDeclarationExpression)
-    */
+   /* @see ASTVisitor#visit(VariableDeclarationExpression) */
    public boolean visit(VariableDeclarationExpression node)
    {
       if (node.getAST().apiLevel() == JLS2)
@@ -2008,9 +1865,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(VariableDeclarationFragment)
-    */
+   /* @see ASTVisitor#visit(VariableDeclarationFragment) */
    public boolean visit(VariableDeclarationFragment node)
    {
       node.getName().accept(this);
@@ -2026,9 +1881,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(VariableDeclarationStatement)
-    */
+   /* @see ASTVisitor#visit(VariableDeclarationStatement) */
    public boolean visit(VariableDeclarationStatement node)
    {
       printIndent();
@@ -2055,9 +1908,7 @@ public class NaiveASTFlattener extends ASTVisitor
       return false;
    }
 
-   /*
-    * @see ASTVisitor#visit(WhileStatement)
-    */
+   /* @see ASTVisitor#visit(WhileStatement) */
    public boolean visit(WhileStatement node)
    {
       printIndent();
@@ -2070,7 +1921,6 @@ public class NaiveASTFlattener extends ASTVisitor
 
    /*
     * @see ASTVisitor#visit(WildcardType)
-    * 
     * @since 3.1
     */
    public boolean visit(WildcardType node)

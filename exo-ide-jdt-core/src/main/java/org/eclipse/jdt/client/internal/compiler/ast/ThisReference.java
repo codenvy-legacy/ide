@@ -37,9 +37,7 @@ public class ThisReference extends Reference
       this.sourceEnd = sourceEnd;
    }
 
-   /*
-    * @see Reference#analyseAssignment(...)
-    */
+   /* @see Reference#analyseAssignment(...) */
    public FlowInfo analyseAssignment(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo,
       Assignment assignment, boolean isCompound)
    {

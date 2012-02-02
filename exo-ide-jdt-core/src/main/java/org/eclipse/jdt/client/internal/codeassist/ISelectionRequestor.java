@@ -12,9 +12,7 @@ package org.eclipse.jdt.client.internal.codeassist;
 
 import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 
-/**
- * A selection requestor accepts results from the selection engine.
- */
+/** A selection requestor accepts results from the selection engine. */
 public interface ISelectionRequestor
 {
    /**

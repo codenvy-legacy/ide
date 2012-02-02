@@ -2,8 +2,8 @@ package org.eclipse.jdt.client.internal.compiler.problem;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * '/home/evgen/exo/exo-int/ide/trunk/exo-ide-jdt-core/locale/src/org/eclipse/jdt/client/internal/compiler/problem/Messages.properties'
- * .
+ * '/home/evgen/exo/exo-int/ide/trunk/exo-ide-jdt-core/locale/src/org/eclipse/jdt/client/internal/compiler/problem/Messages.properti
+ * e s ' .
  */
 public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
 {
@@ -153,7 +153,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $114();
 
    /**
-    * Translated "The method {1}({2}) in the type {0} is not applicable for the arguments ({3})".
+    * Translated "The method {1}({2}) in the type {0} is not applicable for the arguments ({3})" .
     * 
     * @return translated "The method {1}({2}) in the type {0} is not applicable for the arguments ({3})"
     */
@@ -171,7 +171,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $116();
 
    /**
-    * Translated "The static method {1}({2}) from the type {0} should be accessed in a static way".
+    * Translated "The static method {1}({2}) from the type {0} should be accessed in a static way" .
     * 
     * @return translated "The static method {1}({2}) from the type {0} should be accessed in a static way"
     */
@@ -189,7 +189,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $118();
 
    /**
-    * Translated "The static method {1}({2}) from the type {0} should be accessed directly ".
+    * Translated "The static method {1}({2}) from the type {0} should be accessed directly " .
     * 
     * @return translated "The static method {1}({2}) from the type {0} should be accessed directly "
     */
@@ -216,7 +216,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $121();
 
    /**
-    * Translated "The method {1}({2}) from the type {0} can potentially be declared as static".
+    * Translated "The method {1}({2}) from the type {0} can potentially be declared as static" .
     * 
     * @return translated "The method {1}({2}) from the type {0} can potentially be declared as static"
     */
@@ -279,7 +279,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $134();
 
    /**
-    * Translated "Cannot refer to an instance field {0} while explicitly invoking a constructor".
+    * Translated "Cannot refer to an instance field {0} while explicitly invoking a constructor" .
     * 
     * @return translated "Cannot refer to an instance field {0} while explicitly invoking a constructor"
     */
@@ -288,7 +288,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $135();
 
    /**
-    * Translated "Cannot refer to an instance method while explicitly invoking a constructor".
+    * Translated "Cannot refer to an instance method while explicitly invoking a constructor" .
     * 
     * @return translated "Cannot refer to an instance method while explicitly invoking a constructor"
     */
@@ -306,7 +306,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $137();
 
    /**
-    * Translated "Cannot refer to 'this' nor 'super' while explicitly invoking a constructor".
+    * Translated "Cannot refer to 'this' nor 'super' while explicitly invoking a constructor" .
     * 
     * @return translated "Cannot refer to 'this' nor 'super' while explicitly invoking a constructor"
     */
@@ -324,7 +324,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $139();
 
    /**
-    * Translated "Implicit super constructor {0}({1}) is undefined for default constructor. Must define an explicit constructor".
+    * Translated "Implicit super constructor {0}({1}) is undefined for default constructor. Must define an explicit constructor" .
     * 
     * @return translated
     *         "Implicit super constructor {0}({1}) is undefined for default constructor. Must define an explicit constructor"
@@ -334,8 +334,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $140();
 
    /**
-    * Translated
-    * "Implicit super constructor {0}({1}) is not visible for default constructor. Must define an explicit constructor".
+    * Translated "Implicit super constructor {0}({1}) is not visible for default constructor. Must define an explicit constructor"
+    * .
     * 
     * @return translated
     *         "Implicit super constructor {0}({1}) is not visible for default constructor. Must define an explicit constructor"
@@ -345,7 +345,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $141();
 
    /**
-    * Translated "Implicit super constructor {0}({1}) is ambiguous for default constructor. Must define an explicit constructor".
+    * Translated "Implicit super constructor {0}({1}) is ambiguous for default constructor. Must define an explicit constructor" .
     * 
     * @return translated
     *         "Implicit super constructor {0}({1}) is ambiguous for default constructor. Must define an explicit constructor"
@@ -355,7 +355,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $142();
 
    /**
-    * Translated "Implicit super constructor {0}({1}) is undefined. Must explicitly invoke another constructor".
+    * Translated "Implicit super constructor {0}({1}) is undefined. Must explicitly invoke another constructor" .
     * 
     * @return translated "Implicit super constructor {0}({1}) is undefined. Must explicitly invoke another constructor"
     */
@@ -364,7 +364,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $143();
 
    /**
-    * Translated "Implicit super constructor {0}({1}) is not visible. Must explicitly invoke another constructor".
+    * Translated "Implicit super constructor {0}({1}) is not visible. Must explicitly invoke another constructor" .
     * 
     * @return translated "Implicit super constructor {0}({1}) is not visible. Must explicitly invoke another constructor"
     */
@@ -373,7 +373,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $144();
 
    /**
-    * Translated "Implicit super constructor {0}({1}) is ambiguous. Must explicitly invoke another constructor".
+    * Translated "Implicit super constructor {0}({1}) is ambiguous. Must explicitly invoke another constructor" .
     * 
     * @return translated "Implicit super constructor {0}({1}) is ambiguous. Must explicitly invoke another constructor"
     */
@@ -493,7 +493,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $157();
 
    /**
-    * Translated "Cannot define dimension expressions when an array initializer is provided".
+    * Translated "Cannot define dimension expressions when an array initializer is provided" .
     * 
     * @return translated "Cannot define dimension expressions when an array initializer is provided"
     */
@@ -502,7 +502,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $158();
 
    /**
-    * Translated "Variable must provide either dimension expressions or an array initializer".
+    * Translated "Variable must provide either dimension expressions or an array initializer" .
     * 
     * @return translated "Variable must provide either dimension expressions or an array initializer"
     */
@@ -566,7 +566,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
 
    /**
     * Translated
-    * "Unreachable catch block for {0}. Only more specific exceptions are thrown and handled by previous catch block(s).".
+    * "Unreachable catch block for {0}. Only more specific exceptions are thrown and handled by previous catch block(s)." .
     * 
     * @return translated
     *         "Unreachable catch block for {0}. Only more specific exceptions are thrown and handled by previous catch block(s)."
@@ -585,7 +585,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $166();
 
    /**
-    * Translated "Unreachable catch block for {0}. This exception is never thrown from the try statement body".
+    * Translated "Unreachable catch block for {0}. This exception is never thrown from the try statement body" .
     * 
     * @return translated "Unreachable catch block for {0}. This exception is never thrown from the try statement body"
     */
@@ -603,7 +603,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $168();
 
    /**
-    * Translated "Cannot switch on a value of type {0}. Only convertible int values or enum constants are permitted".
+    * Translated "Cannot switch on a value of type {0}. Only convertible int values or enum constants are permitted" .
     * 
     * @return translated "Cannot switch on a value of type {0}. Only convertible int values or enum constants are permitted"
     */
@@ -703,7 +703,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
 
    /**
     * Translated
-    * "Possible accidental assignment in place of a comparison. A condition expression should not be reduced to an assignment".
+    * "Possible accidental assignment in place of a comparison. A condition expression should not be reduced to an assignment" .
     * 
     * @return translated
     *         "Possible accidental assignment in place of a comparison. A condition expression should not be reduced to an assignment"
@@ -740,7 +740,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $181();
 
    /**
-    * Translated "Unnecessary cast from {0} to {1}. It is already compatible with the argument type {2}".
+    * Translated "Unnecessary cast from {0} to {1}. It is already compatible with the argument type {2}" .
     * 
     * @return translated "Unnecessary cast from {0} to {1}. It is already compatible with the argument type {2}"
     */
@@ -767,7 +767,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $184();
 
    /**
-    * Translated "The declared exception {3} is not actually thrown by the method {1}({2}) from type {0}".
+    * Translated "The declared exception {3} is not actually thrown by the method {1}({2}) from type {0}" .
     * 
     * @return translated "The declared exception {3} is not actually thrown by the method {1}({2}) from type {0}"
     */
@@ -776,7 +776,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $185();
 
    /**
-    * Translated "The declared exception {2} is not actually thrown by the constructor {0}({1})".
+    * Translated "The declared exception {2} is not actually thrown by the constructor {0}({1})" .
     * 
     * @return translated "The declared exception {2} is not actually thrown by the constructor {0}({1})"
     */
@@ -785,7 +785,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $186();
 
    /**
-    * Translated "Unreachable catch block for {0}. It is already handled by the catch block for {1}".
+    * Translated "Unreachable catch block for {0}. It is already handled by the catch block for {1}" .
     * 
     * @return translated "Unreachable catch block for {0}. It is already handled by the catch block for {1}"
     */
@@ -803,7 +803,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $188();
 
    /**
-    * Translated "Statement unnecessarily nested within else clause. The corresponding then clause does not complete normally".
+    * Translated "Statement unnecessarily nested within else clause. The corresponding then clause does not complete normally" .
     * 
     * @return translated
     *         "Statement unnecessarily nested within else clause. The corresponding then clause does not complete normally"
@@ -813,7 +813,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $189();
 
    /**
-    * Translated "Read access to enclosing field {0}.{1} is emulated by a synthetic accessor method".
+    * Translated "Read access to enclosing field {0}.{1} is emulated by a synthetic accessor method" .
     * 
     * @return translated "Read access to enclosing field {0}.{1} is emulated by a synthetic accessor method"
     */
@@ -822,7 +822,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $190();
 
    /**
-    * Translated "Write access to enclosing field {0}.{1} is emulated by a synthetic accessor method".
+    * Translated "Write access to enclosing field {0}.{1} is emulated by a synthetic accessor method" .
     * 
     * @return translated "Write access to enclosing field {0}.{1} is emulated by a synthetic accessor method"
     */
@@ -831,7 +831,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $191();
 
    /**
-    * Translated "Access to enclosing method {1}({2}) from the type {0} is emulated by a synthetic accessor method".
+    * Translated "Access to enclosing method {1}({2}) from the type {0} is emulated by a synthetic accessor method" .
     * 
     * @return translated "Access to enclosing method {1}({2}) from the type {0} is emulated by a synthetic accessor method"
     */
@@ -840,7 +840,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $192();
 
    /**
-    * Translated "Access to enclosing constructor {0}({1}) is emulated by a synthetic accessor method".
+    * Translated "Access to enclosing constructor {0}({1}) is emulated by a synthetic accessor method" .
     * 
     * @return translated "Access to enclosing constructor {0}({1}) is emulated by a synthetic accessor method"
     */
@@ -939,7 +939,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $200();
 
    /**
-    * Translated "Cannot make a static reference to the non-static method {1}({2}) from the type {0}".
+    * Translated "Cannot make a static reference to the non-static method {1}({2}) from the type {0}" .
     * 
     * @return translated "Cannot make a static reference to the non-static method {1}({2}) from the type {0}"
     */
@@ -1239,7 +1239,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $242();
 
    /**
-    * Translated "Cannot refer to a non-final variable {0} inside an inner class defined in a different method".
+    * Translated "Cannot refer to a non-final variable {0} inside an inner class defined in a different method" .
     * 
     * @return translated "Cannot refer to a non-final variable {0} inside an inner class defined in a different method"
     */
@@ -1338,7 +1338,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $259();
 
    /**
-    * Translated "The member interface {0} can only be defined inside a top-level class or interface".
+    * Translated "The member interface {0} can only be defined inside a top-level class or interface" .
     * 
     * @return translated "The member interface {0} can only be defined inside a top-level class or interface"
     */
@@ -1356,7 +1356,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $260();
 
    /**
-    * Translated "Non-externalized string literal; it should be followed by //$NON-NLS-<n>$".
+    * Translated "Non-externalized string literal; it should be followed by //$NON-NLS-<n>$" .
     * 
     * @return translated "Non-externalized string literal; it should be followed by //$NON-NLS-<n>$"
     */
@@ -1446,7 +1446,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $27();
 
    /**
-    * Translated "No enclosing instance of type {0} is available due to some intermediate constructor invocation".
+    * Translated "No enclosing instance of type {0} is available due to some intermediate constructor invocation" .
     * 
     * @return translated "No enclosing instance of type {0} is available due to some intermediate constructor invocation"
     */
@@ -1482,7 +1482,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $3();
 
    /**
-    * Translated "The member annotation {0} can only be defined inside a top-level class or interface".
+    * Translated "The member annotation {0} can only be defined inside a top-level class or interface" .
     * 
     * @return translated "The member annotation {0} can only be defined inside a top-level class or interface"
     */
@@ -1509,7 +1509,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $301();
 
    /**
-    * Translated "Illegal modifier for the class {0}; only public, abstract & final are permitted".
+    * Translated "Illegal modifier for the class {0}; only public, abstract & final are permitted" .
     * 
     * @return translated "Illegal modifier for the class {0}; only public, abstract & final are permitted"
     */
@@ -1518,7 +1518,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $302();
 
    /**
-    * Translated "Illegal modifier for the interface {0}; only public & abstract are permitted".
+    * Translated "Illegal modifier for the interface {0}; only public & abstract are permitted" .
     * 
     * @return translated "Illegal modifier for the interface {0}; only public & abstract are permitted"
     */
@@ -1528,7 +1528,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
 
    /**
     * Translated
-    * "Illegal modifier for the member class {0}; only public, protected, private, static, abstract & final are permitted".
+    * "Illegal modifier for the member class {0}; only public, protected, private, static, abstract & final are permitted" .
     * 
     * @return translated
     *         "Illegal modifier for the member class {0}; only public, protected, private, static, abstract & final are permitted"
@@ -1538,8 +1538,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $304();
 
    /**
-    * Translated
-    * "Illegal modifier for the member interface {0}; only public, protected, private, static & abstract are permitted".
+    * Translated "Illegal modifier for the member interface {0}; only public, protected, private, static & abstract are permitted"
+    * .
     * 
     * @return translated
     *         "Illegal modifier for the member interface {0}; only public, protected, private, static & abstract are permitted"
@@ -1549,7 +1549,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $305();
 
    /**
-    * Translated "Illegal modifier for the local class {0}; only abstract or final is permitted".
+    * Translated "Illegal modifier for the local class {0}; only abstract or final is permitted" .
     * 
     * @return translated "Illegal modifier for the local class {0}; only abstract or final is permitted"
     */
@@ -1585,7 +1585,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $309();
 
    /**
-    * Translated "The member enum {0} can only be defined inside a top-level class or interface".
+    * Translated "The member enum {0} can only be defined inside a top-level class or interface" .
     * 
     * @return translated "The member enum {0} can only be defined inside a top-level class or interface"
     */
@@ -1603,7 +1603,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $310();
 
    /**
-    * Translated "The member type {0} cannot be declared static; static types can only be declared in static or top level types".
+    * Translated "The member type {0} cannot be declared static; static types can only be declared in static or top level types" .
     * 
     * @return translated
     *         "The member type {0} cannot be declared static; static types can only be declared in static or top level types"
@@ -1613,7 +1613,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $311();
 
    /**
-    * Translated "The type {0} cannot be the superclass of {1}; a superclass must be a class".
+    * Translated "The type {0} cannot be the superclass of {1}; a superclass must be a class" .
     * 
     * @return translated "The type {0} cannot be the superclass of {1}; a superclass must be a class"
     */
@@ -1640,7 +1640,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $314();
 
    /**
-    * Translated "The type {0} cannot be a superinterface of {1}; a superinterface must be an interface".
+    * Translated "The type {0} cannot be a superinterface of {1}; a superinterface must be an interface" .
     * 
     * @return translated "The type {0} cannot be a superinterface of {1}; a superinterface must be an interface"
     */
@@ -1649,7 +1649,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $315();
 
    /**
-    * Translated "Cycle detected: the type {0} cannot extend/implement itself or one of its own member types".
+    * Translated "Cycle detected: the type {0} cannot extend/implement itself or one of its own member types" .
     * 
     * @return translated "Cycle detected: the type {0} cannot extend/implement itself or one of its own member types"
     */
@@ -1658,7 +1658,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $316();
 
    /**
-    * Translated "Cycle detected: a cycle exists in the type hierarchy between {0} and {1}".
+    * Translated "Cycle detected: a cycle exists in the type hierarchy between {0} and {1}" .
     * 
     * @return translated "Cycle detected: a cycle exists in the type hierarchy between {0} and {1}"
     */
@@ -1694,7 +1694,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $32();
 
    /**
-    * Translated "No exception of type {0} can be thrown; an exception type must be a subclass of Throwable".
+    * Translated "No exception of type {0} can be thrown; an exception type must be a subclass of Throwable" .
     * 
     * @return translated "No exception of type {0} can be thrown; an exception type must be a subclass of Throwable"
     */
@@ -1730,7 +1730,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $323();
 
    /**
-    * Translated "The type {0} cannot be resolved. It is indirectly referenced from required .class files".
+    * Translated "The type {0} cannot be resolved. It is indirectly referenced from required .class files" .
     * 
     * @return translated "The type {0} cannot be resolved. It is indirectly referenced from required .class files"
     */
@@ -1757,7 +1757,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $327();
 
    /**
-    * Translated "The declared package \"{1}\" does not match the expected package \"{0}\"".
+    * Translated "The declared package \"{1}\" does not match the expected package \"{0}\"" .
     * 
     * @return translated "The declared package \"{1}\" does not match the expected package \"{0}\""
     */
@@ -1802,7 +1802,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $331();
 
    /**
-    * Translated "The type {0} should also implement hashCode() since it overrides Object.equals()".
+    * Translated "The type {0} should also implement hashCode() since it overrides Object.equals()" .
     * 
     * @return translated "The type {0} should also implement hashCode() since it overrides Object.equals()"
     */
@@ -1839,7 +1839,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
 
    /**
     * Translated
-    * "Illegal modifier for the field {0}; only public, protected, private, static, final, transient & volatile are permitted".
+    * "Illegal modifier for the field {0}; only public, protected, private, static, final, transient & volatile are permitted" .
     * 
     * @return translated
     *         "Illegal modifier for the field {0}; only public, protected, private, static, final, transient & volatile are permitted"
@@ -1849,7 +1849,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $342();
 
    /**
-    * Translated "Illegal modifier for the interface field {0}.{1}; only public, static & final are permitted".
+    * Translated "Illegal modifier for the interface field {0}.{1}; only public, static & final are permitted" .
     * 
     * @return translated "Illegal modifier for the interface field {0}.{1}; only public, static & final are permitted"
     */
@@ -1876,7 +1876,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $345();
 
    /**
-    * Translated "The field {0} cannot be declared static; static fields can only be declared in static or top level types".
+    * Translated "The field {0} cannot be declared static; static fields can only be declared in static or top level types" .
     * 
     * @return translated
     *         "The field {0} cannot be declared static; static fields can only be declared in static or top level types"
@@ -1925,7 +1925,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $358();
 
    /**
-    * Translated "Illegal modifier for the interface method {0}; only public & abstract are permitted".
+    * Translated "Illegal modifier for the interface method {0}; only public & abstract are permitted" .
     * 
     * @return translated "Illegal modifier for the interface method {0}; only public & abstract are permitted"
     */
@@ -1934,7 +1934,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $359();
 
    /**
-    * Translated "The method {1} in type {0} can only set one of public / protected / private".
+    * Translated "The method {1} in type {0} can only set one of public / protected / private" .
     * 
     * @return translated "The method {1} in type {0} can only set one of public / protected / private"
     */
@@ -1943,7 +1943,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $360();
 
    /**
-    * Translated "The method {1} cannot be declared static; static methods can only be declared in a static or top level type".
+    * Translated "The method {1} cannot be declared static; static methods can only be declared in a static or top level type" .
     * 
     * @return translated
     *         "The method {1} cannot be declared static; static methods can only be declared in a static or top level type"
@@ -1953,7 +1953,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $361();
 
    /**
-    * Translated "The abstract method {1} in type {0} can only set a visibility modifier, one of public or protected".
+    * Translated "The abstract method {1} in type {0} can only set a visibility modifier, one of public or protected" .
     * 
     * @return translated "The abstract method {1} in type {0} can only set a visibility modifier, one of public or protected"
     */
@@ -1962,7 +1962,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $362();
 
    /**
-    * Translated "The abstract method {1} in type {0} can only be defined by an abstract class".
+    * Translated "The abstract method {1} in type {0} can only be defined by an abstract class" .
     * 
     * @return translated "The abstract method {1} in type {0} can only be defined by an abstract class"
     */
@@ -1998,7 +1998,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $368();
 
    /**
-    * Translated "Illegal modifier for the constructor in type {0}; only public, protected & private are permitted".
+    * Translated "Illegal modifier for the constructor in type {0}; only public, protected & private are permitted" .
     * 
     * @return translated "Illegal modifier for the constructor in type {0}; only public, protected & private are permitted"
     */
@@ -2178,7 +2178,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $409();
 
    /**
-    * Translated "The method {0} does not override the inherited method from {1} since it is private to a different package".
+    * Translated "The method {0} does not override the inherited method from {1} since it is private to a different package" .
     * 
     * @return translated
     *         "The method {0} does not override the inherited method from {1} since it is private to a different package"
@@ -2209,7 +2209,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $412();
 
    /**
-    * Translated "The return type is incompatible with {0}, thus this interface cannot be implemented".
+    * Translated "The return type is incompatible with {0}, thus this interface cannot be implemented" .
     * 
     * @return translated "The return type is incompatible with {0}, thus this interface cannot be implemented"
     */
@@ -2218,7 +2218,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $413();
 
    /**
-    * Translated "Exception {0} is not compatible with throws clause in {1}, thus this interface cannot be implemented".
+    * Translated "Exception {0} is not compatible with throws clause in {1}, thus this interface cannot be implemented" .
     * 
     * @return translated "Exception {0} is not compatible with throws clause in {1}, thus this interface cannot be implemented"
     */
@@ -2227,7 +2227,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $414();
 
    /**
-    * Translated "The variable argument type {0} of the method {1} must be the last parameter".
+    * Translated "The variable argument type {0} of the method {1} must be the last parameter" .
     * 
     * @return translated "The variable argument type {0} of the method {1} must be the last parameter"
     */
@@ -2245,7 +2245,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $416();
 
    /**
-    * Translated "The method {0}.{1}({2}) is overriding a synchronized method without being synchronized".
+    * Translated "The method {0}.{1}({2}) is overriding a synchronized method without being synchronized" .
     * 
     * @return translated "The method {0}.{1}({2}) is overriding a synchronized method without being synchronized"
     */
@@ -2254,7 +2254,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $417();
 
    /**
-    * Translated "The type {3} must implement the inherited abstract method {2}.{0}({1}) to override {6}.{4}({5})".
+    * Translated "The type {3} must implement the inherited abstract method {2}.{0}({1}) to override {6}.{4}({5})" .
     * 
     * @return translated "The type {3} must implement the inherited abstract method {2}.{0}({1}) to override {6}.{4}({5})"
     */
@@ -2299,7 +2299,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $422();
 
    /**
-    * Translated "Too many constants, the constant pool for {0} would exceed 65536 entries".
+    * Translated "Too many constants, the constant pool for {0} would exceed 65536 entries" .
     * 
     * @return translated "Too many constants, the constant pool for {0} would exceed 65536 entries"
     */
@@ -2308,7 +2308,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $430();
 
    /**
-    * Translated "The type generates a string that requires more than 65535 bytes to encode in Utf8 format in the constant pool".
+    * Translated "The type generates a string that requires more than 65535 bytes to encode in Utf8 format in the constant pool" .
     * 
     * @return translated
     *         "The type generates a string that requires more than 65535 bytes to encode in Utf8 format in the constant pool"
@@ -2336,7 +2336,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $433();
 
    /**
-    * Translated "The synthetic method created to access {0}({1}) of type {2} has too many parameters".
+    * Translated "The synthetic method created to access {0}({1}) of type {2} has too many parameters" .
     * 
     * @return translated "The synthetic method created to access {0}({1}) of type {2} has too many parameters"
     */
@@ -2345,7 +2345,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $434();
 
    /**
-    * Translated "'assert' should not be used as an identifier, since it is a reserved keyword from source level 1.4 on".
+    * Translated "'assert' should not be used as an identifier, since it is a reserved keyword from source level 1.4 on" .
     * 
     * @return translated "'assert' should not be used as an identifier, since it is a reserved keyword from source level 1.4 on"
     */
@@ -2354,7 +2354,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $440();
 
    /**
-    * Translated "'enum' should not be used as an identifier, since it is a reserved keyword from source level 1.5 on".
+    * Translated "'enum' should not be used as an identifier, since it is a reserved keyword from source level 1.5 on" .
     * 
     * @return translated "'enum' should not be used as an identifier, since it is a reserved keyword from source level 1.5 on"
     */
@@ -2390,7 +2390,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $451();
 
    /**
-    * Translated "Potential null pointer access: The variable {0} may be null at this location".
+    * Translated "Potential null pointer access: The variable {0} may be null at this location" .
     * 
     * @return translated "Potential null pointer access: The variable {0} may be null at this location"
     */
@@ -2399,7 +2399,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $452();
 
    /**
-    * Translated "Redundant null check: The variable {0} can only be null at this location".
+    * Translated "Redundant null check: The variable {0} can only be null at this location" .
     * 
     * @return translated "Redundant null check: The variable {0} can only be null at this location"
     */
@@ -2408,7 +2408,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $453();
 
    /**
-    * Translated "Null comparison always yields false: The variable {0} can only be null at this location".
+    * Translated "Null comparison always yields false: The variable {0} can only be null at this location" .
     * 
     * @return translated "Null comparison always yields false: The variable {0} can only be null at this location"
     */
@@ -2417,7 +2417,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $454();
 
    /**
-    * Translated "Redundant assignment: The variable {0} can only be null at this location".
+    * Translated "Redundant assignment: The variable {0} can only be null at this location" .
     * 
     * @return translated "Redundant assignment: The variable {0} can only be null at this location"
     */
@@ -2426,7 +2426,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $455();
 
    /**
-    * Translated "instanceof always yields false: The variable {0} can only be null at this location".
+    * Translated "instanceof always yields false: The variable {0} can only be null at this location" .
     * 
     * @return translated "instanceof always yields false: The variable {0} can only be null at this location"
     */
@@ -2444,7 +2444,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $457();
 
    /**
-    * Translated "Null comparison always yields false: The variable {0} cannot be null at this location".
+    * Translated "Null comparison always yields false: The variable {0} cannot be null at this location" .
     * 
     * @return translated "Null comparison always yields false: The variable {0} cannot be null at this location"
     */
@@ -2462,7 +2462,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $460();
 
    /**
-    * Translated "Invalid URL reference. Double quote the reference or use the href syntax".
+    * Translated "Invalid URL reference. Double quote the reference or use the href syntax" .
     * 
     * @return translated "Invalid URL reference. Double quote the reference or use the href syntax"
     */
@@ -2489,7 +2489,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $464();
 
    /**
-    * Translated "''{0}'' visibility for malformed doc comments hides this ''{1}'' reference".
+    * Translated "''{0}'' visibility for malformed doc comments hides this ''{1}'' reference" .
     * 
     * @return translated "''{0}'' visibility for malformed doc comments hides this ''{1}'' reference"
     */
@@ -2831,7 +2831,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $500();
 
    /**
-    * Translated "The method {1}({2}) in the type {0} is not applicable for the arguments ({3})".
+    * Translated "The method {1}({2}) in the type {0} is not applicable for the arguments ({3})" .
     * 
     * @return translated "The method {1}({2}) in the type {0} is not applicable for the arguments ({3})"
     */
@@ -3056,7 +3056,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $523();
 
    /**
-    * Translated "The type {0} is not generic; it cannot be parameterized with arguments <{1}>".
+    * Translated "The type {0} is not generic; it cannot be parameterized with arguments <{1}>" .
     * 
     * @return translated "The type {0} is not generic; it cannot be parameterized with arguments <{1}>"
     */
@@ -3065,7 +3065,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $524();
 
    /**
-    * Translated "Incorrect number of arguments for type {0}; it cannot be parameterized with arguments <{1}>".
+    * Translated "Incorrect number of arguments for type {0}; it cannot be parameterized with arguments <{1}>" .
     * 
     * @return translated "Incorrect number of arguments for type {0}; it cannot be parameterized with arguments <{1}>"
     */
@@ -3075,7 +3075,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
 
    /**
     * Translated
-    * "Bound mismatch: The type {0} is not a valid substitute for the bounded parameter <{2} extends {3}> of the type {1}".
+    * "Bound mismatch: The type {0} is not a valid substitute for the bounded parameter <{2} extends {3}> of the type {1}" .
     * 
     * @return translated
     *         "Bound mismatch: The type {0} is not a valid substitute for the bounded parameter <{2} extends {3}> of the type {1}"
@@ -3085,7 +3085,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $526();
 
    /**
-    * Translated "Method {0}({2}) has the same erasure {0}({3}) as another method in type {1}".
+    * Translated "Method {0}({2}) has the same erasure {0}({3}) as another method in type {1}" .
     * 
     * @return translated "Method {0}({2}) has the same erasure {0}({3}) as another method in type {1}"
     */
@@ -3103,7 +3103,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $528();
 
    /**
-    * Translated "The type {0} is not an interface; it cannot be specified as a bounded parameter".
+    * Translated "The type {0} is not an interface; it cannot be specified as a bounded parameter" .
     * 
     * @return translated "The type {0} is not an interface; it cannot be specified as a bounded parameter"
     */
@@ -3113,7 +3113,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
 
    /**
     * Translated
-    * "Type safety: The constructor {0}({1}) belongs to the raw type {0}. References to generic type {2} should be parameterized".
+    * "Type safety: The constructor {0}({1}) belongs to the raw type {0}. References to generic type {2} should be parameterized"
+    * .
     * 
     * @return translated
     *         "Type safety: The constructor {0}({1}) belongs to the raw type {0}. References to generic type {2} should be parameterized"
@@ -3124,7 +3125,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
 
    /**
     * Translated
-    * "Type safety: The method {0}({1}) belongs to the raw type {2}. References to generic type {3} should be parameterized".
+    * "Type safety: The method {0}({1}) belongs to the raw type {2}. References to generic type {3} should be parameterized" .
     * 
     * @return translated
     *         "Type safety: The method {0}({1}) belongs to the raw type {2}. References to generic type {3} should be parameterized"
@@ -3134,7 +3135,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $531();
 
    /**
-    * Translated "Type safety: The expression of type {0} needs unchecked conversion to conform to {1}".
+    * Translated "Type safety: The expression of type {0} needs unchecked conversion to conform to {1}" .
     * 
     * @return translated "Type safety: The expression of type {0} needs unchecked conversion to conform to {1}"
     */
@@ -3152,7 +3153,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $533();
 
    /**
-    * Translated "Cannot use the parameterized type {0} either in catch block or throws clause".
+    * Translated "Cannot use the parameterized type {0} either in catch block or throws clause" .
     * 
     * @return translated "Cannot use the parameterized type {0} either in catch block or throws clause"
     */
@@ -3182,7 +3183,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $536();
 
    /**
-    * Translated "The type parameter {0} should not be bounded by the final type {1}. Final types cannot be further extended".
+    * Translated "The type parameter {0} should not be bounded by the final type {1}. Final types cannot be further extended" .
     * 
     * @return translated
     *         "The type parameter {0} should not be bounded by the final type {1}. Final types cannot be further extended"
@@ -3192,7 +3193,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $537();
 
    /**
-    * Translated "Inconsistent classfile encountered: The undefined type parameter {0} is referenced from within {1}".
+    * Translated "Inconsistent classfile encountered: The undefined type parameter {0} is referenced from within {1}" .
     * 
     * @return translated "Inconsistent classfile encountered: The undefined type parameter {0} is referenced from within {1}"
     */
@@ -3201,7 +3202,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $538();
 
    /**
-    * Translated "The interface {2} cannot be implemented more than once with different arguments: {0} and {1}".
+    * Translated "The interface {2} cannot be implemented more than once with different arguments: {0} and {1}" .
     * 
     * @return translated "The interface {2} cannot be implemented more than once with different arguments: {0} and {1}"
     */
@@ -3312,7 +3313,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $547();
 
    /**
-    * Translated "The method {0}({1}) of type {2} is not generic; it cannot be parameterized with arguments <{3}>".
+    * Translated "The method {0}({1}) of type {2} is not generic; it cannot be parameterized with arguments <{3}>" .
     * 
     * @return translated "The method {0}({1}) of type {2} is not generic; it cannot be parameterized with arguments <{3}>"
     */
@@ -3342,7 +3343,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $55();
 
    /**
-    * Translated "The parameterized method <{3}>{0}({1}) of type {2} is not applicable for the arguments ({4})".
+    * Translated "The parameterized method <{3}>{0}({1}) of type {2} is not applicable for the arguments ({4})" .
     * 
     * @return translated "The parameterized method <{3}>{0}({1}) of type {2} is not applicable for the arguments ({4})"
     */
@@ -3351,7 +3352,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $550();
 
    /**
-    * Translated "The constructor {0}({1}) of type {2} is not generic; it cannot be parameterized with arguments <{3}>".
+    * Translated "The constructor {0}({1}) of type {2} is not generic; it cannot be parameterized with arguments <{3}>" .
     * 
     * @return translated "The constructor {0}({1}) of type {2} is not generic; it cannot be parameterized with arguments <{3}>"
     */
@@ -3372,7 +3373,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $552();
 
    /**
-    * Translated "The parameterized constructor <{3}>{0}({1}) of type {2} is not applicable for the arguments ({4})".
+    * Translated "The parameterized constructor <{3}>{0}({1}) of type {2} is not applicable for the arguments ({4})" .
     * 
     * @return translated "The parameterized constructor <{3}>{0}({1}) of type {2} is not applicable for the arguments ({4})"
     */
@@ -3381,7 +3382,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $553();
 
    /**
-    * Translated "The method {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>".
+    * Translated "The method {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>" .
     * 
     * @return translated
     *         "The method {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>"
@@ -3391,7 +3392,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $554();
 
    /**
-    * Translated "The constructor {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>".
+    * Translated "The constructor {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>"
+    * .
     * 
     * @return translated
     *         "The constructor {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>"
@@ -3401,7 +3403,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $555();
 
    /**
-    * Translated "The type {1} cannot extend or implement {0}. A supertype may not specify any wildcard".
+    * Translated "The type {1} cannot extend or implement {0}. A supertype may not specify any wildcard" .
     * 
     * @return translated "The type {1} cannot extend or implement {0}. A supertype may not specify any wildcard"
     */
@@ -3450,7 +3452,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
 
    /**
     * Translated
-    * "Name clash: The method {0}({1}) of type {2} has the same erasure as {0}({3}) of type {4} but does not override it".
+    * "Name clash: The method {0}({1}) of type {2} has the same erasure as {0}({3}) of type {4} but does not override it" .
     * 
     * @return translated
     *         "Name clash: The method {0}({1}) of type {2} has the same erasure as {0}({3}) of type {4} but does not override it"
@@ -3460,7 +3462,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $560();
 
    /**
-    * Translated "The member type {0}<{1}> must be qualified with a parameterized type, since it is not static".
+    * Translated "The member type {0}<{1}> must be qualified with a parameterized type, since it is not static" .
     * 
     * @return translated "The member type {0}<{1}> must be qualified with a parameterized type, since it is not static"
     */
@@ -3469,7 +3471,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $561();
 
    /**
-    * Translated "The member type {0} must be parameterized, since it is qualified with a parameterized type".
+    * Translated "The member type {0} must be parameterized, since it is qualified with a parameterized type" .
     * 
     * @return translated "The member type {0} must be parameterized, since it is qualified with a parameterized type"
     */
@@ -3490,7 +3492,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $563();
 
    /**
-    * Translated "Duplicate methods named {0} with the parameters ({2}) and ({3}) are defined by the type {1}".
+    * Translated "Duplicate methods named {0} with the parameters ({2}) and ({3}) are defined by the type {1}" .
     * 
     * @return translated "Duplicate methods named {0} with the parameters ({2}) and ({3}) are defined by the type {1}"
     */
@@ -3529,7 +3531,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $568();
 
    /**
-    * Translated "Type safety: Unchecked invocation {0}({3}) of the generic constructor {0}({1}) of type {2}".
+    * Translated "Type safety: Unchecked invocation {0}({3}) of the generic constructor {0}({1}) of type {2}" .
     * 
     * @return translated "Type safety: Unchecked invocation {0}({3}) of the generic constructor {0}({1}) of type {2}"
     */
@@ -3547,7 +3549,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $57();
 
    /**
-    * Translated "Type safety: Unchecked invocation {0}({3}) of the generic method {0}({1}) of type {2}".
+    * Translated "Type safety: Unchecked invocation {0}({3}) of the generic method {0}({1}) of type {2}" .
     * 
     * @return translated "Type safety: Unchecked invocation {0}({3}) of the generic method {0}({1}) of type {2}"
     */
@@ -3565,7 +3567,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $571();
 
    /**
-    * Translated "{0} is a raw type. References to generic type {1} should be parameterized".
+    * Translated "{0} is a raw type. References to generic type {1} should be parameterized" .
     * 
     * @return translated "{0} is a raw type. References to generic type {1} should be parameterized"
     */
@@ -3574,7 +3576,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $572();
 
    /**
-    * Translated "Cannot specify any additional bound {0} when first bound is a type parameter".
+    * Translated "Cannot specify any additional bound {0} when first bound is a type parameter" .
     * 
     * @return translated "Cannot specify any additional bound {0} when first bound is a type parameter"
     */
@@ -3610,7 +3612,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $576();
 
    /**
-    * Translated "The nested type {0} is hiding the type parameter {1} of the generic method {2}({3}) of type {4}".
+    * Translated "The nested type {0} is hiding the type parameter {1} of the generic method {2}({3}) of type {4}" .
     * 
     * @return translated "The nested type {0} is hiding the type parameter {1} of the generic method {2}({3}) of type {4}"
     */
@@ -3640,7 +3642,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $579();
 
    /**
-    * Translated "The final local variable {0} cannot be assigned. It must be blank and not using a compound assignment".
+    * Translated "The final local variable {0} cannot be assigned. It must be blank and not using a compound assignment" .
     * 
     * @return translated "The final local variable {0} cannot be assigned. It must be blank and not using a compound assignment"
     */
@@ -3676,7 +3678,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $582();
 
    /**
-    * Translated "Duplicate methods named {0} with the parameters ({1}) and ({2}) are inherited from the types {3} and {4}".
+    * Translated "Duplicate methods named {0} with the parameters ({1}) and ({2}) are inherited from the types {3} and {4}" .
     * 
     * @return translated
     *         "Duplicate methods named {0} with the parameters ({1}) and ({2}) are inherited from the types {3} and {4}"
@@ -3695,7 +3697,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $59();
 
    /**
-    * Translated "Syntax error, type parameters are only available if source level is 1.5 or greater".
+    * Translated "Syntax error, type parameters are only available if source level is 1.5 or greater" .
     * 
     * @return translated "Syntax error, type parameters are only available if source level is 1.5 or greater"
     */
@@ -3704,7 +3706,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $590();
 
    /**
-    * Translated "Syntax error, static imports are only available if source level is 1.5 or greater".
+    * Translated "Syntax error, static imports are only available if source level is 1.5 or greater" .
     * 
     * @return translated "Syntax error, static imports are only available if source level is 1.5 or greater"
     */
@@ -3713,7 +3715,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $591();
 
    /**
-    * Translated "Syntax error, 'for each' statements are only available if source level is 1.5 or greater".
+    * Translated "Syntax error, 'for each' statements are only available if source level is 1.5 or greater" .
     * 
     * @return translated "Syntax error, 'for each' statements are only available if source level is 1.5 or greater"
     */
@@ -3722,7 +3724,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $592();
 
    /**
-    * Translated "Syntax error, parameterized types are only available if source level is 1.5 or greater".
+    * Translated "Syntax error, parameterized types are only available if source level is 1.5 or greater" .
     * 
     * @return translated "Syntax error, parameterized types are only available if source level is 1.5 or greater"
     */
@@ -3731,7 +3733,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $593();
 
    /**
-    * Translated "Syntax error, enum declarations are only available if source level is 1.5 or greater".
+    * Translated "Syntax error, enum declarations are only available if source level is 1.5 or greater" .
     * 
     * @return translated "Syntax error, enum declarations are only available if source level is 1.5 or greater"
     */
@@ -3740,7 +3742,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $594();
 
    /**
-    * Translated "Syntax error, varargs are only available if source level is 1.5 or greater".
+    * Translated "Syntax error, varargs are only available if source level is 1.5 or greater" .
     * 
     * @return translated "Syntax error, varargs are only available if source level is 1.5 or greater"
     */
@@ -3749,7 +3751,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $595();
 
    /**
-    * Translated "Syntax error, annotations are only available if source level is 1.5 or greater".
+    * Translated "Syntax error, annotations are only available if source level is 1.5 or greater" .
     * 
     * @return translated "Syntax error, annotations are only available if source level is 1.5 or greater"
     */
@@ -3758,7 +3760,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $596();
 
    /**
-    * Translated "Syntax error, annotation declarations are only available if source level is 1.5 or greater".
+    * Translated "Syntax error, annotation declarations are only available if source level is 1.5 or greater" .
     * 
     * @return translated "Syntax error, annotation declarations are only available if source level is 1.5 or greater"
     */
@@ -3794,7 +3796,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $6();
 
    /**
-    * Translated "The final local variable {0} cannot be assigned, since it is defined in an enclosing type".
+    * Translated "The final local variable {0} cannot be assigned, since it is defined in an enclosing type" .
     * 
     * @return translated "The final local variable {0} cannot be assigned, since it is defined in an enclosing type"
     */
@@ -3803,7 +3805,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $60();
 
    /**
-    * Translated "Illegal modifier for the annotation attribute {0}.{1}; only public & abstract are permitted".
+    * Translated "Illegal modifier for the annotation attribute {0}.{1}; only public & abstract are permitted" .
     * 
     * @return translated "Illegal modifier for the annotation attribute {0}.{1}; only public & abstract are permitted"
     */
@@ -3830,7 +3832,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $602();
 
    /**
-    * Translated "Illegal modifier for the annotation type {0}; only public & abstract are permitted".
+    * Translated "Illegal modifier for the annotation type {0}; only public & abstract are permitted" .
     * 
     * @return translated "Illegal modifier for the annotation type {0}; only public & abstract are permitted"
     */
@@ -3840,7 +3842,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
 
    /**
     * Translated
-    * "Illegal modifier for the member annotation type {0}; only public, protected, private, static & abstract are permitted".
+    * "Illegal modifier for the member annotation type {0}; only public, protected, private, static & abstract are permitted" .
     * 
     * @return translated
     *         "Illegal modifier for the member annotation type {0}; only public, protected, private, static & abstract are permitted"
@@ -3862,7 +3864,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $605();
 
    /**
-    * Translated "Cycle detected: the annotation type {0} cannot contain attributes of the annotation type itself".
+    * Translated "Cycle detected: the annotation type {0} cannot contain attributes of the annotation type itself" .
     * 
     * @return translated "Cycle detected: the annotation type {0} cannot contain attributes of the annotation type itself"
     */
@@ -3871,7 +3873,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $606();
 
    /**
-    * Translated "Cycle detected: a cycle exists between annotation attributes of {0} and {1}".
+    * Translated "Cycle detected: a cycle exists between annotation attributes of {0} and {1}" .
     * 
     * @return translated "Cycle detected: a cycle exists between annotation attributes of {0} and {1}"
     */
@@ -3934,7 +3936,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $612();
 
    /**
-    * Translated "The value for annotation attribute {0}.{1} must be a constant expression".
+    * Translated "The value for annotation attribute {0}.{1} must be a constant expression" .
     * 
     * @return translated "The value for annotation attribute {0}.{1} must be a constant expression"
     */
@@ -3943,7 +3945,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $613();
 
    /**
-    * Translated "Illegal modifier for the annotation field {0}.{1}; only public, static & final are permitted".
+    * Translated "Illegal modifier for the annotation field {0}.{1}; only public, static & final are permitted" .
     * 
     * @return translated "Illegal modifier for the annotation field {0}.{1}; only public, static & final are permitted"
     */
@@ -4042,7 +4044,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $624();
 
    /**
-    * Translated "The value for annotation attribute {0}.{1} must be some @{2} annotation ".
+    * Translated "The value for annotation attribute {0}.{1} must be some @{2} annotation " .
     * 
     * @return translated "The value for annotation attribute {0}.{1} must be some @{2} annotation "
     */
@@ -4060,8 +4062,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $626();
 
    /**
-    * Translated
-    * "The method {0}({1}) of type {2} should be tagged with @Override since it actually overrides a superclass method".
+    * Translated "The method {0}({1}) of type {2} should be tagged with @Override since it actually overrides a superclass method"
+    * .
     * 
     * @return translated
     *         "The method {0}({1}) of type {2} should be tagged with @Override since it actually overrides a superclass method"
@@ -4080,7 +4082,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $628();
 
    /**
-    * Translated "The deprecated method {0}({1}) of type {2} should be annotated with @Deprecated".
+    * Translated "The deprecated method {0}({1}) of type {2} should be annotated with @Deprecated" .
     * 
     * @return translated "The deprecated method {0}({1}) of type {2} should be annotated with @Deprecated"
     */
@@ -4125,7 +4127,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $632();
 
    /**
-    * Translated "The value for annotation attribute {0}.{1} must be an enum constant expression".
+    * Translated "The value for annotation attribute {0}.{1} must be an enum constant expression" .
     * 
     * @return translated "The value for annotation attribute {0}.{1} must be an enum constant expression"
     */
@@ -4134,7 +4136,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $633();
 
    /**
-    * Translated "The method {0}({1}) of type {2} must override or implement a supertype method".
+    * Translated "The method {0}({1}) of type {2} must override or implement a supertype method" .
     * 
     * @return translated "The method {0}({1}) of type {2} must override or implement a supertype method"
     */
@@ -4153,7 +4155,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
 
    /**
     * Translated
-    * "The method {0}({1}) of type {2} should be tagged with @Override since it actually overrides a superinterface method".
+    * "The method {0}({1}) of type {2} should be tagged with @Override since it actually overrides a superinterface method" .
     * 
     * @return translated
     *         "The method {0}({1}) of type {2} should be tagged with @Override since it actually overrides a superinterface method"
@@ -4172,7 +4174,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $64();
 
    /**
-    * Translated "Too many parameters, parameter {0} is exceeding the limit of 255 words eligible for method parameters".
+    * Translated "Too many parameters, parameter {0} is exceeding the limit of 255 words eligible for method parameters" .
     * 
     * @return translated "Too many parameters, parameter {0} is exceeding the limit of 255 words eligible for method parameters"
     */
@@ -4182,7 +4184,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
 
    /**
     * Translated
-    * "Too many local variables, local variable {0} is exceeding the limit of 65535 words eligible for method local variables".
+    * "Too many local variables, local variable {0} is exceeding the limit of 65535 words eligible for method local variables" .
     * 
     * @return translated
     *         "Too many local variables, local variable {0} is exceeding the limit of 65535 words eligible for method local variables"
@@ -4205,7 +4207,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
 
    /**
     * Translated
-    * "Too many synthetic parameters, emulated parameter {0} is exceeding the limit of 255 words eligible for method parameters".
+    * "Too many synthetic parameters, emulated parameter {0} is exceeding the limit of 255 words eligible for method parameters" .
     * 
     * @return translated
     *         "Too many synthetic parameters, emulated parameter {0} is exceeding the limit of 255 words eligible for method parameters"
@@ -4251,7 +4253,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $70();
 
    /**
-    * Translated "The class file {0} contains a signature ''{1}'' ill-formed at position {2}".
+    * Translated "The class file {0} contains a signature ''{1}'' ill-formed at position {2}" .
     * 
     * @return translated "The class file {0} contains a signature ''{1}'' ill-formed at position {2}"
     */
@@ -4260,7 +4262,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $700();
 
    /**
-    * Translated "Cannot read the source from {0}; either the file uses a different encoding than {1} or it is corrupted".
+    * Translated "Cannot read the source from {0}; either the file uses a different encoding than {1} or it is corrupted" .
     * 
     * @return translated "Cannot read the source from {0}; either the file uses a different encoding than {1} or it is corrupted"
     */
@@ -4359,7 +4361,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $751();
 
    /**
-    * Translated "Illegal modifier for the member enum {0}; only public, protected, private & static are permitted".
+    * Translated "Illegal modifier for the member enum {0}; only public, protected, private & static are permitted" .
     * 
     * @return translated "Illegal modifier for the member enum {0}; only public, protected, private & static are permitted"
     */
@@ -4377,7 +4379,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $754();
 
    /**
-    * Translated "The qualified case label {0}.{1} must be replaced with the unqualified enum constant {1}".
+    * Translated "The qualified case label {0}.{1} must be replaced with the unqualified enum constant {1}" .
     * 
     * @return translated "The qualified case label {0}.{1} must be replaced with the unqualified enum constant {1}"
     */
@@ -4416,7 +4418,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $758();
 
    /**
-    * Translated "The field {0}.{1} cannot be referenced from an enum case label; only enum constants can be used in enum switch".
+    * Translated "The field {0}.{1} cannot be referenced from an enum case label; only enum constants can be used in enum switch"
+    * .
     * 
     * @return translated
     *         "The field {0}.{1} cannot be referenced from an enum case label; only enum constants can be used in enum switch"
@@ -4444,7 +4447,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $760();
 
    /**
-    * Translated "The enum constant {1} needs a corresponding case label in this enum switch on {0}".
+    * Translated "The enum constant {1} needs a corresponding case label in this enum switch on {0}" .
     * 
     * @return translated "The enum constant {1} needs a corresponding case label in this enum switch on {0}"
     */
@@ -4507,7 +4510,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $78();
 
    /**
-    * Translated "The type {1} is not accessible due to restriction on classpath entry {0}".
+    * Translated "The type {1} is not accessible due to restriction on classpath entry {0}" .
     * 
     * @return translated "The type {1} is not accessible due to restriction on classpath entry {0}"
     */
@@ -4516,7 +4519,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $78592();
 
    /**
-    * Translated "The type {1} is not accessible due to restriction on required project {0}".
+    * Translated "The type {1} is not accessible due to restriction on required project {0}" .
     * 
     * @return translated "The type {1} is not accessible due to restriction on required project {0}"
     */
@@ -4525,7 +4528,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $78593();
 
    /**
-    * Translated "The type {1} is not accessible due to restriction on required library {0}".
+    * Translated "The type {1} is not accessible due to restriction on required library {0}" .
     * 
     * @return translated "The type {1} is not accessible due to restriction on required library {0}"
     */
@@ -4534,7 +4537,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $78594();
 
    /**
-    * Translated "The field {1} from the type {2} is not accessible due to restriction on classpath entry {0}".
+    * Translated "The field {1} from the type {2} is not accessible due to restriction on classpath entry {0}" .
     * 
     * @return translated "The field {1} from the type {2} is not accessible due to restriction on classpath entry {0}"
     */
@@ -4543,7 +4546,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $78596();
 
    /**
-    * Translated "The field {1} from the type {2} is not accessible due to restriction on required project {0}".
+    * Translated "The field {1} from the type {2} is not accessible due to restriction on required project {0}" .
     * 
     * @return translated "The field {1} from the type {2} is not accessible due to restriction on required project {0}"
     */
@@ -4552,7 +4555,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $78597();
 
    /**
-    * Translated "The field {1} from the type {2} is not accessible due to restriction on required library {0}".
+    * Translated "The field {1} from the type {2} is not accessible due to restriction on required library {0}" .
     * 
     * @return translated "The field {1} from the type {2} is not accessible due to restriction on required library {0}"
     */
@@ -4561,7 +4564,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $78598();
 
    /**
-    * Translated "The constructor {1} is not accessible due to restriction on classpath entry {0}".
+    * Translated "The constructor {1} is not accessible due to restriction on classpath entry {0}" .
     * 
     * @return translated "The constructor {1} is not accessible due to restriction on classpath entry {0}"
     */
@@ -4570,7 +4573,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $78600();
 
    /**
-    * Translated "The constructor {1} is not accessible due to restriction on required project {0}".
+    * Translated "The constructor {1} is not accessible due to restriction on required project {0}" .
     * 
     * @return translated "The constructor {1} is not accessible due to restriction on required project {0}"
     */
@@ -4579,7 +4582,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $78601();
 
    /**
-    * Translated "The constructor {1} is not accessible due to restriction on required library {0}".
+    * Translated "The constructor {1} is not accessible due to restriction on required library {0}" .
     * 
     * @return translated "The constructor {1} is not accessible due to restriction on required library {0}"
     */
@@ -4588,7 +4591,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $78602();
 
    /**
-    * Translated "The method {1} from the type {2} is not accessible due to restriction on classpath entry {0}".
+    * Translated "The method {1} from the type {2} is not accessible due to restriction on classpath entry {0}" .
     * 
     * @return translated "The method {1} from the type {2} is not accessible due to restriction on classpath entry {0}"
     */
@@ -4597,7 +4600,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $78604();
 
    /**
-    * Translated "The method {1} from the type {2} is not accessible due to restriction on required project {0}".
+    * Translated "The method {1} from the type {2} is not accessible due to restriction on required project {0}" .
     * 
     * @return translated "The method {1} from the type {2} is not accessible due to restriction on required project {0}"
     */
@@ -4606,7 +4609,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $78605();
 
    /**
-    * Translated "The method {1} from the type {2} is not accessible due to restriction on required library {0}".
+    * Translated "The method {1} from the type {2} is not accessible due to restriction on required library {0}" .
     * 
     * @return translated "The method {1} from the type {2} is not accessible due to restriction on required library {0}"
     */
@@ -4667,7 +4670,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
 
    /**
     * Translated
-    * "Varargs methods should only override or be overridden by other varargs methods unlike {2}.{0}({1}) and {4}.{0}({3})".
+    * "Varargs methods should only override or be overridden by other varargs methods unlike {2}.{0}({1}) and {4}.{0}({3})" .
     * 
     * @return translated
     *         "Varargs methods should only override or be overridden by other varargs methods unlike {2}.{0}({1}) and {4}.{0}({3})"
@@ -4686,7 +4689,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $804();
 
    /**
-    * Translated "@SafeVarargs annotation cannot be applied to non-final instance method {0}".
+    * Translated "@SafeVarargs annotation cannot be applied to non-final instance method {0}" .
     * 
     * @return translated "@SafeVarargs annotation cannot be applied to non-final instance method {0}"
     */
@@ -4743,7 +4746,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $850();
 
    /**
-    * Translated "The method {0}({1}) of type {2} is not generic; it cannot be parameterized with arguments <{3}>".
+    * Translated "The method {0}({1}) of type {2} is not generic; it cannot be parameterized with arguments <{3}>" .
     * 
     * @return translated "The method {0}({1}) of type {2} is not generic; it cannot be parameterized with arguments <{3}>"
     */
@@ -4764,7 +4767,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $852();
 
    /**
-    * Translated "The parameterized method <{3}>{0}({1}) of type {2} is not applicable for the arguments ({4})".
+    * Translated "The parameterized method <{3}>{0}({1}) of type {2} is not applicable for the arguments ({4})" .
     * 
     * @return translated "The parameterized method <{3}>{0}({1}) of type {2} is not applicable for the arguments ({4})"
     */
@@ -4773,7 +4776,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $853();
 
    /**
-    * Translated "The method {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>".
+    * Translated "The method {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>" .
     * 
     * @return translated
     *         "The method {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>"
@@ -4795,7 +4798,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $855();
 
    /**
-    * Translated "The constructor {0}({1}) of type {2} is not generic; it cannot be parameterized with arguments <{3}>".
+    * Translated "The constructor {0}({1}) of type {2} is not generic; it cannot be parameterized with arguments <{3}>" .
     * 
     * @return translated "The constructor {0}({1}) of type {2} is not generic; it cannot be parameterized with arguments <{3}>"
     */
@@ -4816,7 +4819,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $857();
 
    /**
-    * Translated "The parameterized constructor <{3}>{0}({1}) of type {2} is not applicable for the arguments ({4})".
+    * Translated "The parameterized constructor <{3}>{0}({1}) of type {2} is not applicable for the arguments ({4})" .
     * 
     * @return translated "The parameterized constructor <{3}>{0}({1}) of type {2} is not applicable for the arguments ({4})"
     */
@@ -4825,7 +4828,8 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $858();
 
    /**
-    * Translated "The constructor {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>".
+    * Translated "The constructor {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>"
+    * .
     * 
     * @return translated
     *         "The constructor {0}({1}) of raw type {2} is no longer generic; it cannot be parameterized with arguments <{3}>"
@@ -4889,7 +4893,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $875();
 
    /**
-    * Translated "Invocation of polymorphic methods not allowed for source level below 1.7".
+    * Translated "Invocation of polymorphic methods not allowed for source level below 1.7" .
     * 
     * @return translated "Invocation of polymorphic methods not allowed for source level below 1.7"
     */
@@ -4898,7 +4902,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $876();
 
    /**
-    * Translated "Cannot switch on a value of type {0}. Only convertible int values, strings or enum constants are permitted".
+    * Translated "Cannot switch on a value of type {0}. Only convertible int values, strings or enum constants are permitted" .
     * 
     * @return translated
     *         "Cannot switch on a value of type {0}. Only convertible int values, strings or enum constants are permitted"
@@ -4917,7 +4921,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $878();
 
    /**
-    * Translated "Explicit type arguments cannot be used with '<>' in an allocation expression".
+    * Translated "Explicit type arguments cannot be used with '<>' in an allocation expression" .
     * 
     * @return translated "Explicit type arguments cannot be used with '<>' in an allocation expression"
     */
@@ -4947,7 +4951,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $881();
 
    /**
-    * Translated "Unhandled exception type {0} thrown by automatic close() invocation on {1}".
+    * Translated "Unhandled exception type {0} thrown by automatic close() invocation on {1}" .
     * 
     * @return translated "Unhandled exception type {0} thrown by automatic close() invocation on {1}"
     */
@@ -4974,7 +4978,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $884();
 
    /**
-    * Translated "The local variable {0} is hiding another local variable defined in an enclosing type scope".
+    * Translated "The local variable {0} is hiding another local variable defined in an enclosing type scope" .
     * 
     * @return translated "The local variable {0} is hiding another local variable defined in an enclosing type scope"
     */
@@ -4992,7 +4996,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $91();
 
    /**
-    * Translated "The field {0}.{1} is hiding another local variable defined in an enclosing type scope".
+    * Translated "The field {0}.{1} is hiding another local variable defined in an enclosing type scope" .
     * 
     * @return translated "The field {0}.{1} is hiding another local variable defined in an enclosing type scope"
     */
@@ -5010,7 +5014,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $93();
 
    /**
-    * Translated "The parameter {0} is hiding another local variable defined in an enclosing type scope".
+    * Translated "The parameter {0} is hiding another local variable defined in an enclosing type scope" .
     * 
     * @return translated "The parameter {0} is hiding another local variable defined in an enclosing type scope"
     */
@@ -5028,7 +5032,7 @@ public interface Messages extends com.google.gwt.i18n.client.ConstantsWithLookup
    String $95();
 
    /**
-    * Translated "The serializable class {0} does not declare a static final serialVersionUID field of type long".
+    * Translated "The serializable class {0} does not declare a static final serialVersionUID field of type long" .
     * 
     * @return translated "The serializable class {0} does not declare a static final serialVersionUID field of type long"
     */

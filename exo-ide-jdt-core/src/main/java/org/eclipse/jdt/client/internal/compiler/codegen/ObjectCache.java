@@ -42,9 +42,7 @@ public class ObjectCache
       this.valueTable = new int[initialCapacity];
    }
 
-   /**
-    * Clears the hash table so that it has no more elements in it.
-    */
+   /** Clears the hash table so that it has no more elements in it. */
    public void clear()
    {
       for (int i = this.keyTable.length; --i >= 0;)

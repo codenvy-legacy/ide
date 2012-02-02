@@ -39,8 +39,10 @@ class CascadingMethodInvocationFragmentBuilder extends ASTVisitor
       return this.fragmentsList.size();
    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal.compiler.ast.MessageSend, org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+   /*
+    * (non-Javadoc)
+    * @see org.eclipse.jdt.internal.compiler.ASTVisitor#visit(org.eclipse.jdt.internal .compiler.ast.MessageSend,
+    * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public boolean visit(MessageSend messageSend, BlockScope scope)
    {

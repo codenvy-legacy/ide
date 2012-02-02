@@ -54,7 +54,6 @@ import java.util.Set;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 13, 2012 3:10:43 PM evgen $
- * 
  */
 public class DummyNameEnvirement implements INameEnvironment
 {
@@ -207,9 +206,7 @@ public class DummyNameEnvirement implements INameEnvironment
       this.projectId = projectId;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findType(char[][])
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findType(char[][]) */
    @Override
    public NameEnvironmentAnswer findType(char[][] compoundTypeName)
    {
@@ -243,9 +240,7 @@ public class DummyNameEnvirement implements INameEnvironment
       return builder.toString();
    }
 
-   /**
-    * @param key
-    */
+   /** @param key */
    private void loadClassInfo(final String key)
    {
       final JSONTypeInfoUnmarshaller jsonTypeInfoUnmarshaller = new JSONTypeInfoUnmarshaller();
@@ -335,9 +330,7 @@ public class DummyNameEnvirement implements INameEnvironment
       // return false;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#cleanup()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#cleanup() */
    @Override
    public void cleanup()
    {
@@ -451,9 +444,7 @@ public class DummyNameEnvirement implements INameEnvironment
 
       private JSONObject typeInfo;
 
-      /**
-       * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-       */
+      /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
       @Override
       public void unmarshal(Response response) throws UnmarshallerException
       {
@@ -463,9 +454,7 @@ public class DummyNameEnvirement implements INameEnvironment
          }
       }
 
-      /**
-       * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-       */
+      /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
       @Override
       public TypeInfo getPayload()
       {

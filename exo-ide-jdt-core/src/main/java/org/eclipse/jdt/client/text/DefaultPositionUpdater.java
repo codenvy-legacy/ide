@@ -13,8 +13,8 @@ package org.eclipse.jdt.client.text;
 /**
  * Default implementation of {@link org.eclipse.jface.text.IPositionUpdater}.
  * <p>
- * A default position updater must be configured with the position category whose positions it will
- * update. Other position categories are not affected by this updater.
+ * A default position updater must be configured with the position category whose positions it will update. Other position
+ * categories are not affected by this updater.
  * </p>
  * <p>
  * This implementation follows the specification below:
@@ -22,21 +22,19 @@ package org.eclipse.jdt.client.text;
  * <ul>
  * <li>Inserting or deleting text before the position shifts the position accordingly.</li>
  * <li>Inserting text at the position offset shifts the position accordingly.</li>
- * <li>Inserting or deleting text strictly contained by the position shrinks or stretches the
- * position.</li>
+ * <li>Inserting or deleting text strictly contained by the position shrinks or stretches the position.</li>
  * <li>Inserting or deleting text after a position does not affect the position.</li>
- * <li>Deleting text which strictly contains the position deletes the position. Note that the
- * position is not deleted if its only shrunken to length zero. To delete a position, the
- * modification must delete from <i>strictly before</i> to <i>strictly after</i> the position.</li>
- * <li>Replacing text contained by the position shrinks or expands the position (but does not shift it),
- * such that the final position contains the original position and the replacing text.</li>
- * <li>Replacing text overlapping the position in other ways is considered as a sequence of first deleting
- * the replaced text and afterwards inserting the new text. Thus, a position is shrunken and can
- * then be shifted (if the replaced text overlaps the offset of the position).</li>
+ * <li>Deleting text which strictly contains the position deletes the position. Note that the position is not deleted if its only
+ * shrunken to length zero. To delete a position, the modification must delete from <i>strictly before</i> to <i>strictly
+ * after</i> the position.</li>
+ * <li>Replacing text contained by the position shrinks or expands the position (but does not shift it), such that the final
+ * position contains the original position and the replacing text.</li>
+ * <li>Replacing text overlapping the position in other ways is considered as a sequence of first deleting the replaced text and
+ * afterwards inserting the new text. Thus, a position is shrunken and can then be shifted (if the replaced text overlaps the
+ * offset of the position).</li>
  * </ul>
- * This class can be used as is or be adapted by subclasses. Fields are protected to allow
- * subclasses direct access. Because of the frequency with which position updaters are used this is
- * a performance decision.
+ * This class can be used as is or be adapted by subclasses. Fields are protected to allow subclasses direct access. Because of
+ * the frequency with which position updaters are used this is a performance decision.
  */
 public class DefaultPositionUpdater implements IPositionUpdater
 {
@@ -64,7 +62,7 @@ public class DefaultPositionUpdater implements IPositionUpdater
 
    /**
     * Creates a new default position updater for the given category.
-    *
+    * 
     * @param category the category the updater is responsible for
     */
    public DefaultPositionUpdater(String category)
@@ -74,7 +72,7 @@ public class DefaultPositionUpdater implements IPositionUpdater
 
    /**
     * Returns the category this updater is responsible for.
-    *
+    * 
     * @return the category this updater is responsible for
     */
    protected String getCategory()
@@ -83,9 +81,8 @@ public class DefaultPositionUpdater implements IPositionUpdater
    }
 
    /**
-    * Returns whether the current event describes a well formed replace
-    * by which the current position is directly affected.
-    *
+    * Returns whether the current event describes a well formed replace by which the current position is directly affected.
+    * 
     * @return <code>true</code> the current position is directly affected
     * @since 3.0
     */
@@ -94,9 +91,7 @@ public class DefaultPositionUpdater implements IPositionUpdater
       return fLength > 0 && fReplaceLength > 0 && fPosition.length < fOriginalPosition.length;
    }
 
-   /**
-    * Adapts the currently investigated position to an insertion.
-    */
+   /** Adapts the currently investigated position to an insertion. */
    protected void adaptToInsert()
    {
 
@@ -117,9 +112,7 @@ public class DefaultPositionUpdater implements IPositionUpdater
          fPosition.offset += fReplaceLength;
    }
 
-   /**
-    * Adapts the currently investigated position to a deletion.
-    */
+   /** Adapts the currently investigated position to a deletion. */
    protected void adaptToRemove()
    {
 
@@ -165,10 +158,9 @@ public class DefaultPositionUpdater implements IPositionUpdater
    }
 
    /**
-    * Adapts the currently investigated position to the replace operation.
-    * First it checks whether the change replaces only a non-zero range inside the range of the position (including the borders).
-    * If not, it performs first the deletion of the previous text and afterwards
-    * the insertion of the new text.
+    * Adapts the currently investigated position to the replace operation. First it checks whether the change replaces only a
+    * non-zero range inside the range of the position (including the borders). If not, it performs first the deletion of the
+    * previous text and afterwards the insertion of the new text.
     */
    protected void adaptToReplace()
    {
@@ -191,10 +183,9 @@ public class DefaultPositionUpdater implements IPositionUpdater
    }
 
    /**
-    * Determines whether the currently investigated position has been deleted by
-    * the replace operation specified in the current event. If so, it deletes
-    * the position and removes it from the document's position category.
-    *
+    * Determines whether the currently investigated position has been deleted by the replace operation specified in the current
+    * event. If so, it deletes the position and removes it from the document's position category.
+    * 
     * @return <code>true</code> if position has not been deleted
     */
    protected boolean notDeleted()
@@ -220,7 +211,7 @@ public class DefaultPositionUpdater implements IPositionUpdater
    }
 
    /*
-    * @see org.eclipse.jface.text.IPositionUpdater#update(org.eclipse.jface.text.DocumentEvent)
+    * @see org.eclipse.jface.text.IPositionUpdater#update(org.eclipse.jface.text. DocumentEvent)
     */
    public void update(DocumentEvent event)
    {

@@ -14,9 +14,7 @@ package org.eclipse.jdt.client.core.dom;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
 
-/**
- * Internal implementation of package bindings.
- */
+/** Internal implementation of package bindings. */
 class PackageBinding implements IPackageBinding
 {
 
@@ -117,9 +115,7 @@ class PackageBinding implements IPackageBinding
       return AnnotationBinding.NoAnnotations;
    }
 
-   /*
-    * @see IBinding#getName()
-    */
+   /* @see IBinding#getName() */
    public String getName()
    {
       if (this.name == null)
@@ -129,17 +125,13 @@ class PackageBinding implements IPackageBinding
       return this.name;
    }
 
-   /*
-    * @see IPackageBinding#isUnnamed()
-    */
+   /* @see IPackageBinding#isUnnamed() */
    public boolean isUnnamed()
    {
       return getName().equals(UNNAMED);
    }
 
-   /*
-    * @see IPackageBinding#getNameComponents()
-    */
+   /* @see IPackageBinding#getNameComponents() */
    public String[] getNameComponents()
    {
       if (this.components == null)
@@ -149,49 +141,37 @@ class PackageBinding implements IPackageBinding
       return this.components;
    }
 
-   /*
-    * @see IBinding#getKind()
-    */
+   /* @see IBinding#getKind() */
    public int getKind()
    {
       return IBinding.PACKAGE;
    }
 
-   /*
-    * @see IBinding#getModifiers()
-    */
+   /* @see IBinding#getModifiers() */
    public int getModifiers()
    {
       return Modifier.NONE;
    }
 
-   /*
-    * @see IBinding#isDeprecated()
-    */
+   /* @see IBinding#isDeprecated() */
    public boolean isDeprecated()
    {
       return false;
    }
 
-   /**
-    * @see IBinding#isRecovered()
-    */
+   /** @see IBinding#isRecovered() */
    public boolean isRecovered()
    {
       return false;
    }
 
-   /**
-    * @see IBinding#isSynthetic()
-    */
+   /** @see IBinding#isSynthetic() */
    public boolean isSynthetic()
    {
       return false;
    }
 
-   /*
-    * @see IBinding#getKey()
-    */
+   /* @see IBinding#getKey() */
    public String getKey()
    {
       return new String(this.binding.computeUniqueKey());
@@ -199,7 +179,6 @@ class PackageBinding implements IPackageBinding
 
    /*
     * @see IBinding#isEqualTo(Binding)
-    * 
     * @since 3.1
     */
    public boolean isEqualTo(IBinding other)
@@ -248,7 +227,6 @@ class PackageBinding implements IPackageBinding
 
    /*
     * For debugging purpose only.
-    * 
     * @see java.lang.Object#toString()
     */
    public String toString()

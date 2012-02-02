@@ -155,9 +155,7 @@ class CompilationUnitResolver extends Compiler
       this.fromJavaProject = fromJavaProject;
    }
 
-   /*
-    * Add additional source types
-    */
+   /* Add additional source types */
    public void accept(ISourceType[] sourceTypes, PackageBinding packageBinding, AccessRestriction accessRestriction)
    {
       // Need to reparse the entire source of the compilation unit so as to get source positions
@@ -208,7 +206,9 @@ class CompilationUnitResolver extends Compiler
                parsedUnit = this.parser.dietParse(sourceUnit, unitResult);
             }
             // initial type binding creation
-            this.lookupEnvironment.buildTypeBindings(parsedUnit, null /* no access restriction */);
+            this.lookupEnvironment.buildTypeBindings(parsedUnit, null /*
+                                                                       * no access restriction
+                                                                       */);
             addCompilationUnit(sourceUnit, parsedUnit);
             this.requestedSources.put(unitResult.getFileName(), sourceUnit);
             worked(1);
@@ -309,13 +309,13 @@ class CompilationUnitResolver extends Compiler
       compilerOptions.performMethodsFullRecovery = statementsRecovery;
       compilerOptions.performStatementsRecovery = statementsRecovery;
       compilerOptions.parseLiteralExpressionsAsConstants = false;
-      compilerOptions.storeAnnotations = true /* store annotations in the bindings */;
+      compilerOptions.storeAnnotations = true /*
+                                               * store annotations in the bindings
+                                               */;
       return compilerOptions;
    }
 
-   /*
-    * Low-level API performing the actual compilation
-    */
+   /* Low-level API performing the actual compilation */
    protected static IErrorHandlingPolicy getHandlingPolicy()
    {
 
@@ -351,7 +351,6 @@ class CompilationUnitResolver extends Compiler
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.Compiler#initializeParser()
     */
    public void initializeParser()
@@ -367,9 +366,7 @@ class CompilationUnitResolver extends Compiler
          super.process(unit, i);
    }
 
-   /*
-    * Compiler crash recovery in case of unexpected runtime exceptions
-    */
+   /* Compiler crash recovery in case of unexpected runtime exceptions */
    protected void handleInternalException(Throwable internalException, CompilationUnitDeclaration unit,
       CompilationResult result)
    {
@@ -380,9 +377,7 @@ class CompilationUnitResolver extends Compiler
       }
    }
 
-   /*
-    * Compiler recovery in case of internal AbortCompilation event
-    */
+   /* Compiler recovery in case of internal AbortCompilation event */
    protected void handleInternalException(AbortCompilation abortException, CompilationUnitDeclaration unit)
    {
       super.handleInternalException(abortException, unit);
@@ -507,9 +502,13 @@ class CompilationUnitResolver extends Compiler
 
             // convert AST
             CompilationUnit node =
-               convert(compilationUnitDeclaration, parser.scanner.getSource(), apiLevel, options,
-                  false/* don't resolve binding */, null/* no binding table needed */, flags /* flags */, monitor,
-                  true);
+               convert(compilationUnitDeclaration, parser.scanner.getSource(), apiLevel, options, false/*
+                                                                                                        * don 't resolve binding
+                                                                                                        */, null/*
+                                                                                                                 * no binding
+                                                                                                                 * table needed
+                                                                                                                 */,
+                  flags /* flags */, monitor, true);
 
             // accept AST
             astRequestor.acceptAST(sourceUnits[i], node);
@@ -1097,8 +1096,9 @@ class CompilationUnitResolver extends Compiler
                   AST ast = AST.newAST(apiLevel);
                   ast.setFlag(flags | AST.RESOLVED_BINDINGS);
                   ast.setDefaultNodeFlag(ASTNode.ORIGINAL);
-                  ASTConverter converter =
-                     new ASTConverter(compilerOptions, true/* need to resolve bindings */, this.monitor);
+                  ASTConverter converter = new ASTConverter(compilerOptions, true/*
+                                                                                  * need to resolve bindings
+                                                                                  */, this.monitor);
                   BindingResolver resolver =
                      new DefaultBindingResolver(unit.scope, this.bindingTables,
                         (flags & ENABLE_BINDINGS_RECOVERY) != 0, this.fromJavaProject);
@@ -1268,7 +1268,9 @@ class CompilationUnitResolver extends Compiler
          else
          {
             // initial type binding creation
-            this.lookupEnvironment.buildTypeBindings(unit, null /* no access restriction */);
+            this.lookupEnvironment.buildTypeBindings(unit, null /*
+                                                                 * no access restriction
+                                                                 */);
 
             // binding resolution
             this.lookupEnvironment.completeTypeBindings();

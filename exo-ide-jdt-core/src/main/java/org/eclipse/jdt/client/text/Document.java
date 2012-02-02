@@ -11,29 +11,25 @@
 package org.eclipse.jdt.client.text;
 
 /**
- * Default document implementation. Uses a {@link org.eclipse.jface.text.GapTextStore} wrapped
- * inside a {@link org.eclipse.jface.text.CopyOnWriteTextStore} as text store.
+ * Default document implementation. Uses a {@link org.eclipse.jface.text.GapTextStore} wrapped inside a
+ * {@link org.eclipse.jface.text.CopyOnWriteTextStore} as text store.
  * <p>
- * The used line tracker considers the following strings as line delimiters: "\n", "\r", "\r\n". In
- * case of a text replacement across line delimiter boundaries and with different line delimiters,
- * the line tracker might have to be repaired. Use
- * {@link #isLineInformationRepairNeeded(int, int, String)} before doing the text replace if you
- * have the need to discover such a situation.
+ * The used line tracker considers the following strings as line delimiters: "\n", "\r", "\r\n". In case of a text replacement
+ * across line delimiter boundaries and with different line delimiters, the line tracker might have to be repaired. Use
+ * {@link #isLineInformationRepairNeeded(int, int, String)} before doing the text replace if you have the need to discover such a
+ * situation.
  * </p>
  * <p>
- * The document is ready to use. It has a default position category for which a default position
- * updater is installed.
+ * The document is ready to use. It has a default position category for which a default position updater is installed.
  * </p>
  * <p>
- * <strong>Performance:</strong> The implementation should perform reasonably well for typical
- * source code documents. It is not designed for very large documents of a size of several
- * megabytes. Space-saving implementations are initially used for both the text store and the line
- * tracker; the first modification after a {@link #set(String) set} incurs the cost to transform the
+ * <strong>Performance:</strong> The implementation should perform reasonably well for typical source code documents. It is not
+ * designed for very large documents of a size of several megabytes. Space-saving implementations are initially used for both the
+ * text store and the line tracker; the first modification after a {@link #set(String) set} incurs the cost to transform the
  * document structures to efficiently handle updates.
  * </p>
  * <p>
- * See {@link GapTextStore} and <code>TreeLineTracker</code> for algorithmic behavior of the used
- * document structures.
+ * See {@link GapTextStore} and <code>TreeLineTracker</code> for algorithmic behavior of the used document structures.
  * </p>
  * 
  * @see org.eclipse.jface.text.GapTextStore
@@ -41,9 +37,7 @@ package org.eclipse.jdt.client.text;
  */
 public class Document extends AbstractDocument
 {
-   /**
-    * Creates a new empty document.
-    */
+   /** Creates a new empty document. */
    public Document()
    {
       super();
@@ -54,7 +48,7 @@ public class Document extends AbstractDocument
 
    /**
     * Creates a new document with the given initial content.
-    *
+    * 
     * @param initialContent the document's initial content
     */
    public Document(String initialContent)
@@ -68,7 +62,7 @@ public class Document extends AbstractDocument
    }
 
    /*
-    * @see org.eclipse.jface.text.IRepairableDocumentExtension#isLineInformationRepairNeeded(int, int, java.lang.String)
+    * @see org.eclipse.jface.text.IRepairableDocumentExtension# isLineInformationRepairNeeded(int, int, java.lang.String)
     * @since 3.4
     */
    public boolean isLineInformationRepairNeeded(int offset, int length, String text) throws BadLocationException
@@ -81,7 +75,7 @@ public class Document extends AbstractDocument
 
    /**
     * Checks whether the line information needs to be repaired.
-    *
+    * 
     * @param text the text to check
     * @return <code>true</code> if the line information must be repaired
     * @since 3.4

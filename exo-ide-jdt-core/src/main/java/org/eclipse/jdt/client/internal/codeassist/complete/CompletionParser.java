@@ -320,7 +320,9 @@ public class CompletionParser extends AssistParser
             }
          }
 
-         /* if in context of a type, then persists the identifier into a fake field return type */
+         /*
+          * if in context of a type, then persists the identifier into a fake field return type
+          */
          if (this.currentElement instanceof RecoveredType)
          {
             RecoveredType recoveredType = (RecoveredType)this.currentElement;
@@ -2680,7 +2682,6 @@ public class CompletionParser extends AssistParser
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.parser.Parser#consumeClassDeclaration()
     */
    protected void consumeClassDeclaration()
@@ -2788,7 +2789,6 @@ public class CompletionParser extends AssistParser
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.parser.Parser#consumeCompilationUnit()
     */
    protected void consumeCompilationUnit()
@@ -5408,9 +5408,7 @@ public class CompletionParser extends AssistParser
       return this.dietParse(sourceUnit, compilationResult);
    }
 
-   /*
-    * Flush parser/scanner state regarding to code assist
-    */
+   /* Flush parser/scanner state regarding to code assist */
    public void flushAssistState()
    {
 
@@ -5804,9 +5802,7 @@ public class CompletionParser extends AssistParser
       }
    }
 
-   /*
-    * Prepares the state of the parser to go for BlockStatements.
-    */
+   /* Prepares the state of the parser to go for BlockStatements. */
    protected void prepareForBlockStatements()
    {
       this.nestedMethod[this.nestedType = 0] = 1;
@@ -5953,9 +5949,7 @@ public class CompletionParser extends AssistParser
       }
    }
 
-   /*
-    * Reset internal state after completion is over
-    */
+   /* Reset internal state after completion is over */
 
    public void reset()
    {
@@ -5967,9 +5961,7 @@ public class CompletionParser extends AssistParser
       }
    }
 
-   /*
-    * Reset internal state after completion is over
-    */
+   /* Reset internal state after completion is over */
 
    public void resetAfterCompletion()
    {
@@ -5988,9 +5980,8 @@ public class CompletionParser extends AssistParser
    }
 
    /*
-    * Reset context so as to resume to regular parse loop If unable to reset for resuming, answers false.
-    * 
-    * Move checkpoint location, reset internal stacks and decide which grammar goal is activated.
+    * Reset context so as to resume to regular parse loop If unable to reset for resuming, answers false. Move checkpoint
+    * location, reset internal stacks and decide which grammar goal is activated.
     */
    protected boolean resumeAfterRecovery()
    {
@@ -6064,9 +6055,7 @@ public class CompletionParser extends AssistParser
       return String.valueOf(buffer);
    }
 
-   /*
-    * Update recovery state based on current parser/scanner state
-    */
+   /* Update recovery state based on current parser/scanner state */
    protected void updateRecoveryState()
    {
 

@@ -23,7 +23,6 @@ package org.eclipse.jdt.client.codeassistant.ui;
  * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 25, 2010 5:01:51 PM evgen $
- * 
  */
 public interface ProposalSelectedHandler
 {

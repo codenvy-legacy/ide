@@ -188,9 +188,7 @@ public class AllocationExpression extends Expression implements InvocationSite
    // codeStream.recordPositionsFrom(pc, this.sourceStart);
    // }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments() */
    public TypeBinding[] genericTypeArguments()
    {
       return this.genericTypeArguments;
@@ -207,10 +205,9 @@ public class AllocationExpression extends Expression implements InvocationSite
    }
 
    /*
-    * Inner emulation consists in either recording a dependency link only, or performing one level of propagation.
-    * 
-    * Dependency mechanism is used whenever dealing with source target types, since by the time we reach them, we might not yet
-    * know their exact need.
+    * Inner emulation consists in either recording a dependency link only, or performing one level of propagation. Dependency
+    * mechanism is used whenever dealing with source target types, since by the time we reach them, we might not yet know their
+    * exact need.
     */
    public void manageEnclosingInstanceAccessIfNecessary(BlockScope currentScope, FlowInfo flowInfo)
    {
@@ -351,7 +348,9 @@ public class AllocationExpression extends Expression implements InvocationSite
          for (int i = 0; i < length; i++)
          {
             TypeReference typeReference = this.typeArguments[i];
-            if ((this.genericTypeArguments[i] = typeReference.resolveType(scope, true /* check bounds */)) == null)
+            if ((this.genericTypeArguments[i] = typeReference.resolveType(scope, true /*
+                                                                                       * check bounds
+                                                                                       */)) == null)
             {
                argHasError = true;
             }
@@ -612,17 +611,13 @@ public class AllocationExpression extends Expression implements InvocationSite
       visitor.endVisit(this, scope);
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#setExpectedType(org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.Expression#setExpectedType(org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding) */
    public void setExpectedType(TypeBinding expectedType)
    {
       this.typeExpected = expectedType;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#expectedType()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#expectedType() */
    public TypeBinding expectedType()
    {
       return this.typeExpected;

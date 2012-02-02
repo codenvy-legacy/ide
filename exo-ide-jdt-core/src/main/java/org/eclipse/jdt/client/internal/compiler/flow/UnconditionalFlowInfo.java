@@ -30,9 +30,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
  */
 public class UnconditionalFlowInfo extends FlowInfo
 {
-   /**
-    * Exception raised when unexpected behavior is detected.
-    */
+   /** Exception raised when unexpected behavior is detected. */
    public static class AssertionFailedException extends RuntimeException
    {
       private static final long serialVersionUID = 1827352841030089703L;
@@ -882,9 +880,7 @@ public class UnconditionalFlowInfo extends FlowInfo
       return ((this.extra[2][vectorIndex] & this.extra[5][vectorIndex] & ~this.extra[3][vectorIndex] & ~this.extra[4][vectorIndex]) & (1L << (position % BitCacheSize))) != 0;
    }
 
-   /**
-    * Check status of potential assignment at a given position.
-    */
+   /** Check status of potential assignment at a given position. */
    final private boolean isPotentiallyAssigned(int position)
    {
       // id is zero-based
@@ -1296,9 +1292,7 @@ public class UnconditionalFlowInfo extends FlowInfo
       }
    }
 
-   /**
-    * Record a definite assignment at a given position.
-    */
+   /** Record a definite assignment at a given position. */
    final private void markAsDefinitelyAssigned(int position)
    {
 
@@ -2109,9 +2103,7 @@ public class UnconditionalFlowInfo extends FlowInfo
       return this;
    }
 
-   /*
-    * Answer the total number of fields in enclosing types of a given type
-    */
+   /* Answer the total number of fields in enclosing types of a given type */
    static int numberOfEnclosingFields(ReferenceBinding type)
    {
       int count = 0;

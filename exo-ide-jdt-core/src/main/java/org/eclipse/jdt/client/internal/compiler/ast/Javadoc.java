@@ -17,9 +17,7 @@ import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.client.internal.compiler.lookup.*;
 import org.eclipse.jdt.client.internal.compiler.parser.JavadocTagConstants;
 
-/**
- * Node representing a structured Javadoc comment
- */
+/** Node representing a structured Javadoc comment */
 public class Javadoc extends ASTNode
 {
 
@@ -75,9 +73,7 @@ public class Javadoc extends ASTNode
       return true;
    }
 
-   /*
-    * Search node with a given staring position in javadoc objects arrays.
-    */
+   /* Search node with a given staring position in javadoc objects arrays. */
    public ASTNode getNodeStartingAt(int start)
    {
       int length = 0;
@@ -232,9 +228,7 @@ public class Javadoc extends ASTNode
       return output;
    }
 
-   /*
-    * Resolve type javadoc
-    */
+   /* Resolve type javadoc */
    public void resolve(ClassScope scope)
    {
       if ((this.bits & ASTNode.ResolveJavadoc) == 0)
@@ -309,9 +303,7 @@ public class Javadoc extends ASTNode
       }
    }
 
-   /*
-    * Resolve compilation unit javadoc
-    */
+   /* Resolve compilation unit javadoc */
    public void resolve(CompilationUnitScope unitScope)
    {
       if ((this.bits & ASTNode.ResolveJavadoc) == 0)
@@ -323,9 +315,7 @@ public class Javadoc extends ASTNode
       // (unless the unit happens to be package-info.java - in which case we don't come here.)
    }
 
-   /*
-    * Resolve method javadoc
-    */
+   /* Resolve method javadoc */
    public void resolve(MethodScope methScope)
    {
       if ((this.bits & ASTNode.ResolveJavadoc) == 0)
@@ -335,7 +325,9 @@ public class Javadoc extends ASTNode
       // get method declaration
       AbstractMethodDeclaration methDecl = methScope.referenceMethod();
       boolean overriding =
-         methDecl == null /* field declaration */|| methDecl.binding == null /* compiler error */
+         methDecl == null /* field declaration */|| methDecl.binding == null /*
+                                                                              * compiler error
+                                                                              */
             ? false
             : !methDecl.binding.isStatic()
                && ((methDecl.binding.modifiers & (ExtraCompilerModifiers.AccImplementing | ExtraCompilerModifiers.AccOverriding)) != 0);
@@ -613,9 +605,7 @@ public class Javadoc extends ASTNode
       }
    }
 
-   /*
-    * Resolve @param tags while method scope
-    */
+   /* Resolve @param tags while method scope */
    private void resolveParamTags(MethodScope scope, boolean reportMissing, boolean considerParamRefAsUsage)
    {
       AbstractMethodDeclaration methodDecl = scope.referenceMethod();
@@ -701,9 +691,7 @@ public class Javadoc extends ASTNode
       }
    }
 
-   /*
-    * Resolve @param tags for type parameters
-    */
+   /* Resolve @param tags for type parameters */
    private void resolveTypeParameterTags(Scope scope, boolean reportMissing)
    {
       int paramTypeParamLength = this.paramTypeParameters == null ? 0 : this.paramTypeParameters.length;
@@ -839,9 +827,7 @@ public class Javadoc extends ASTNode
       }
    }
 
-   /*
-    * Resolve @throws/@exception tags while method scope
-    */
+   /* Resolve @throws/@exception tags while method scope */
    private void resolveThrowsTags(MethodScope methScope, boolean reportMissing)
    {
       AbstractMethodDeclaration md = methScope.referenceMethod();
@@ -1128,10 +1114,9 @@ public class Javadoc extends ASTNode
             }
          }
          /*
-          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=286918
-          * 
-          * We are concerned only about the Single type references (i.e. without any package) If they are not in default package,
-          * then report an error. References with qualified yet incorrect names would have already been taken care of.
+          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=286918 We are concerned only about the Single type references (i.e.
+          * without any package) If they are not in default package, then report an error. References with qualified yet incorrect
+          * names would have already been taken care of.
           */
          if (scope.referenceCompilationUnit().isPackageInfo() && typeReference instanceof JavadocSingleTypeReference)
          {

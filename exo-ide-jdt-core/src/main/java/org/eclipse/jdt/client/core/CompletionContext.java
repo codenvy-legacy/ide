@@ -229,7 +229,7 @@ public class CompletionContext
 
    /**
     * Returns the character index of the end (exclusive) of the subrange in the source file buffer containing the relevant token.
-    * When there is no relevant token, the range is empty (<code>getTokenEnd() == getTokenStart() - 1</code>).
+    * When there is no relevant token, the range is empty ( <code>getTokenEnd() == getTokenStart() - 1</code>).
     * 
     * @return character index of token end position (exclusive)
     * @since 3.2

@@ -70,9 +70,7 @@ public class ParameterizedQualifiedTypeReference extends ArrayQualifiedTypeRefer
       return new ParameterizedQualifiedTypeReference(this.tokens, this.typeArguments, dim, this.sourcePositions);
    }
 
-   /**
-    * @return char[][]
-    */
+   /** @return char[][] */
    public char[][] getParameterizedTypeName()
    {
       int length = this.tokens.length;
@@ -118,19 +116,15 @@ public class ParameterizedQualifiedTypeReference extends ArrayQualifiedTypeRefer
 
    /*
     * (non-Javadoc)
-    * 
-    * @see
-    * org.eclipse.jdt.internal.compiler.ast.ArrayQualifiedTypeReference#getTypeBinding(org.eclipse.jdt.internal.compiler.lookup
-    * .Scope)
+    * @see org.eclipse.jdt.internal.compiler.ast.ArrayQualifiedTypeReference#
+    * getTypeBinding(org.eclipse.jdt.internal.compiler.lookup .Scope)
     */
    protected TypeBinding getTypeBinding(Scope scope)
    {
       return null; // not supported here - combined with resolveType(...)
    }
 
-   /*
-    * No need to check for reference to raw type per construction
-    */
+   /* No need to check for reference to raw type per construction */
    private TypeBinding internalResolveType(Scope scope, boolean checkBounds)
    {
       // handle the error here
@@ -236,8 +230,10 @@ public class ParameterizedQualifiedTypeReference extends ArrayQualifiedTypeRefer
             {
                qualifyingType =
                   currentType.isStatic() ? (ReferenceBinding)scope.environment()
-                     .convertToRawType(qualifyingType, false /* do not force conversion of enclosing types */) : scope
-                     .environment().convertToParameterizedType(qualifyingType);
+                     .convertToRawType(qualifyingType, false /*
+                                                              * do not force conversion of enclosing types
+                                                              */) : scope.environment().convertToParameterizedType(
+                     qualifyingType);
             }
          }
          else

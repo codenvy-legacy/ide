@@ -187,7 +187,9 @@ public class QualifiedNameReference extends NameReference
             }
          }
       }
-      manageSyntheticAccessIfNecessary(currentScope, lastFieldBinding, -1 /* write-access */, flowInfo);
+      manageSyntheticAccessIfNecessary(currentScope, lastFieldBinding, -1 /*
+                                                                           * write- access
+                                                                           */, flowInfo);
 
       return flowInfo;
    }
@@ -849,9 +851,7 @@ public class QualifiedNameReference extends NameReference
    // codeStream.aload_0();
    // }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments() */
    public TypeBinding[] genericTypeArguments()
    {
       return null;
@@ -1045,9 +1045,7 @@ public class QualifiedNameReference extends NameReference
       }
    }
 
-   /**
-    * index is <0 to denote write access emulation
-    */
+   /** index is <0 to denote write access emulation */
    public void manageSyntheticAccessIfNecessary(BlockScope currentScope, FieldBinding fieldBinding, int index,
       FlowInfo flowInfo)
    {
@@ -1066,8 +1064,12 @@ public class QualifiedNameReference extends NameReference
          if (declaringClass != currentScope.enclosingSourceType())
          {
             setSyntheticAccessor(fieldBinding, index, ((SourceTypeBinding)declaringClass).addSyntheticMethod(
-               codegenField, index >= 0 /* read-access? */, false /* not super access */));
-            currentScope.problemReporter().needToEmulateFieldAccess(codegenField, this, index >= 0 /* read-access? */);
+               codegenField, index >= 0 /* read-access? */, false /*
+                                                                   * not super access
+                                                                   */));
+            currentScope.problemReporter().needToEmulateFieldAccess(codegenField, this, index >= 0 /*
+                                                                                                    * read - access ?
+                                                                                                    */);
             return;
          }
       }
@@ -1083,10 +1085,15 @@ public class QualifiedNameReference extends NameReference
          {
             FieldBinding codegenField =
                getCodegenBinding(index < 0 ? (this.otherBindings == null ? 0 : this.otherBindings.length) : index);
-            setSyntheticAccessor(fieldBinding, index,
-               ((SourceTypeBinding)currentScope.enclosingSourceType().enclosingTypeAt(depth)).addSyntheticMethod(
-                  codegenField, index >= 0 /* read-access? */, false /* not super access */));
-            currentScope.problemReporter().needToEmulateFieldAccess(codegenField, this, index >= 0 /* read-access? */);
+            setSyntheticAccessor(fieldBinding, index, ((SourceTypeBinding)currentScope.enclosingSourceType()
+               .enclosingTypeAt(depth)).addSyntheticMethod(codegenField, index >= 0 /*
+                                                                                     * read - access ?
+                                                                                     */, false /*
+                                                                                                * not super access
+                                                                                                */));
+            currentScope.problemReporter().needToEmulateFieldAccess(codegenField, this, index >= 0 /*
+                                                                                                    * read - access ?
+                                                                                                    */);
             return;
          }
       }
@@ -1118,9 +1125,7 @@ public class QualifiedNameReference extends NameReference
       return Constant.NotAConstant;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#postConversionType(Scope)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.Expression#postConversionType(Scope) */
    public TypeBinding postConversionType(Scope scope)
    {
       TypeBinding convertedType = this.resolvedType;
@@ -1315,8 +1320,9 @@ public class QualifiedNameReference extends NameReference
                TypeBinding type = (TypeBinding)this.binding;
                // if (isTypeUseDeprecated(type, scope))
                // scope.problemReporter().deprecatedType(type, this);
-               type =
-                  scope.environment().convertToRawType(type, false /* do not force conversion of enclosing types */);
+               type = scope.environment().convertToRawType(type, false /*
+                                                                        * do not force conversion of enclosing types
+                                                                        */);
                return this.resolvedType = type;
          }
       }

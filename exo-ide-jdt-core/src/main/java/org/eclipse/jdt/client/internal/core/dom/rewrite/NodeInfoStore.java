@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2011 IBM Corporation and others.
+ * Copyright (c) 2000, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,8 +47,8 @@ public final class NodeInfoStore
    }
 
    /**
-    * Marks a node as a placehoder for a plain string content. The type of the node should correspond to the
-    * code's code content.
+    * Marks a node as a placehoder for a plain string content. The type of the node should correspond to the code's code content.
+    * 
     * @param placeholder The placeholder node that acts for the string content.
     * @param code The string content.
     */
@@ -61,6 +61,7 @@ public final class NodeInfoStore
 
    /**
     * Marks a node as a copy or move target. The copy target represents a copied node at the target (copied) site.
+    * 
     * @param target The node at the target site. Can be a placeholder node but also the source node itself.
     * @param copySource The info at the source site.
     */
@@ -73,6 +74,7 @@ public final class NodeInfoStore
 
    /**
     * Creates a placeholder node of the given type. <code>null</code> if the type is not supported
+    * 
     * @param nodeType Type of the node to create. Use the type constants in {@link NodeInfoStore}.
     * @return Returns a place holder node.
     */

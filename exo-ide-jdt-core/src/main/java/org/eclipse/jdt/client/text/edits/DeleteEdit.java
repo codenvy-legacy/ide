@@ -18,7 +18,7 @@ import org.eclipse.jdt.client.text.IDocument;
  * <p>
  * A delete edit is equivalent to <code>ReplaceEdit(
  * offset, length, "")</code>.
- *
+ * 
  * @since 3.0
  */
 public final class DeleteEdit extends TextEdit
@@ -26,7 +26,7 @@ public final class DeleteEdit extends TextEdit
 
    /**
     * Constructs a new delete edit.
-    *
+    * 
     * @param offset the offset of the range to replace
     * @param length the length of the range to replace
     */
@@ -35,25 +35,19 @@ public final class DeleteEdit extends TextEdit
       super(offset, length);
    }
 
-   /*
-    * Copy constructor
-    */
+   /* Copy constructor */
    private DeleteEdit(DeleteEdit other)
    {
       super(other);
    }
 
-   /*
-    * @see TextEdit#doCopy
-    */
+   /* @see TextEdit#doCopy */
    protected TextEdit doCopy()
    {
       return new DeleteEdit(this);
    }
 
-   /*
-    * @see TextEdit#accept0
-    */
+   /* @see TextEdit#accept0 */
    protected void accept0(TextEditVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -63,9 +57,7 @@ public final class DeleteEdit extends TextEdit
       }
    }
 
-   /*
-    * @see TextEdit#performDocumentUpdating
-    */
+   /* @see TextEdit#performDocumentUpdating */
    int performDocumentUpdating(IDocument document) throws BadLocationException
    {
       document.replace(getOffset(), getLength(), ""); //$NON-NLS-1$
@@ -73,9 +65,7 @@ public final class DeleteEdit extends TextEdit
       return fDelta;
    }
 
-   /*
-    * @see TextEdit#deleteChildren
-    */
+   /* @see TextEdit#deleteChildren */
    boolean deleteChildren()
    {
       return true;

@@ -104,9 +104,7 @@ public class CompilationUnitDeclaration extends ASTNode implements ProblemSeveri
       this.sourceEnd = sourceLength - 1;
    }
 
-   /*
-    * We cause the compilation task to abort to a given extent.
-    */
+   /* We cause the compilation task to abort to a given extent. */
    public void abort(int abortLevel, CategorizedProblem problem)
    {
       switch (abortLevel)
@@ -120,9 +118,7 @@ public class CompilationUnitDeclaration extends ASTNode implements ProblemSeveri
       }
    }
 
-   /*
-    * Dispatch code analysis AND request saturation of inner emulation
-    */
+   /* Dispatch code analysis AND request saturation of inner emulation */
    public void analyseCode()
    {
       if (this.ignoreFurtherInvestigation)
@@ -532,9 +528,7 @@ public class CompilationUnitDeclaration extends ASTNode implements ProblemSeveri
       return output;
    }
 
-   /*
-    * Force inner local types to update their innerclass emulation
-    */
+   /* Force inner local types to update their innerclass emulation */
    public void propagateInnerEmulationForAllLocalTypes()
    {
       this.isPropagatingInnerClassEmulation = true;

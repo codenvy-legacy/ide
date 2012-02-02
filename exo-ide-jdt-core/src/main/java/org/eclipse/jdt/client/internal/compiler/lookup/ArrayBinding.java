@@ -61,9 +61,7 @@ public final class ArrayBinding extends TypeBinding
       return this.environment.createArrayType(this.leafComponentType.closestMatch(), this.dimensions);
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#collectMissingTypes(java.util.List)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#collectMissingTypes(java.util.List) */
    public List collectMissingTypes(List missingTypes)
    {
       if ((this.tagBits & TagBits.HasMissingType) != 0)
@@ -110,9 +108,7 @@ public final class ArrayBinding extends TypeBinding
       }
    }
 
-   /*
-    * brakets leafUniqueKey p.X[][] --> [[Lp/X;
-    */
+   /* brakets leafUniqueKey p.X[][] --> [[Lp/X; */
    public char[] computeUniqueKey(boolean isLeaf)
    {
       char[] brackets = new char[this.dimensions];
@@ -150,9 +146,8 @@ public final class ArrayBinding extends TypeBinding
    }
 
    /*
-    * Answer an array whose dimension size is one less than the receiver.
-    * 
-    * When the receiver's dimension size is one then answer the leaf component type.
+    * Answer an array whose dimension size is one less than the receiver. When the receiver's dimension size is one then answer
+    * the leaf component type.
     */
 
    public TypeBinding elementsType()
@@ -162,9 +157,7 @@ public final class ArrayBinding extends TypeBinding
       return this.environment.createArrayType(this.leafComponentType, this.dimensions - 1);
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#erasure()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#erasure() */
    public TypeBinding erasure()
    {
       TypeBinding erasedType = this.leafComponentType.erasure();

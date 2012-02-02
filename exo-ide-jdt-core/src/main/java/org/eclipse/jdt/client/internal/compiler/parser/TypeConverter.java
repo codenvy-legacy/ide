@@ -60,9 +60,7 @@ public abstract class TypeConverter
          fragments.add(extractIdentifiers(typeSignature, start, endExclusive - 1, identCount));
    }
 
-   /*
-    * Build an import reference from an import name, e.g. java.lang.*
-    */
+   /* Build an import reference from an import name, e.g. java.lang.* */
    protected ImportReference createImportReference(String[] importName, int start, int end, boolean onDemand,
       int modifiers)
    {
@@ -108,9 +106,7 @@ public abstract class TypeConverter
       return parameter;
    }
 
-   /*
-    * Build a type reference from a readable name, e.g. java.lang.Object[][]
-    */
+   /* Build a type reference from a readable name, e.g. java.lang.Object[][] */
    protected TypeReference createTypeReference(char[] typeName, int start, int end, boolean includeGenericsAnyway)
    {
 
@@ -119,9 +115,7 @@ public abstract class TypeConverter
       return decodeType(typeName, length, start, end, true);
    }
 
-   /*
-    * Build a type reference from a readable name, e.g. java.lang.Object[][]
-    */
+   /* Build a type reference from a readable name, e.g. java.lang.Object[][] */
    protected TypeReference createTypeReference(char[] typeName, int start, int end)
    {
 
@@ -130,9 +124,7 @@ public abstract class TypeConverter
       return decodeType(typeName, length, start, end, false);
    }
 
-   /*
-    * Build a type reference from a type signature, e.g. Ljava.lang.Object;
-    */
+   /* Build a type reference from a type signature, e.g. Ljava.lang.Object; */
    protected TypeReference createTypeReference(String typeSignature, int start, int end)
    {
 
@@ -490,10 +482,9 @@ public abstract class TypeConverter
                 * explicitly requested generics to be included. The parameter includeGenericsAnyway should be used by the caller
                 * to signal that in the calling context generics information must be internalized even when the requesting project
                 * is 1.4. But in all cases, we must skip over them to see if there are any applicable type fragments after the
-                * type parameters: i.e we just aren't done having seen a '<' in 1.4 mode.
-                * 
-                * Because of the way type signatures are encoded, TypeConverter.decodeType(String, int, int, int) is immune to
-                * this problem. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=325633
+                * type parameters: i.e we just aren't done having seen a '<' in 1.4 mode. Because of the way type signatures are
+                * encoded, TypeConverter.decodeType(String, int, int, int) is immune to this problem. See
+                * https://bugs.eclipse.org/bugs/show_bug.cgi?id=325633
                 */
                if (this.has1_5Compliance || includeGenericsAnyway)
                {

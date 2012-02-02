@@ -19,9 +19,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.ElementValuePair;
 import org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 
-/**
- * Internal class.
- */
+/** Internal class. */
 class MemberValuePairBinding implements IMemberValuePairBinding
 {
    static final MemberValuePairBinding[] NoPair = new MemberValuePairBinding[0];
@@ -273,7 +271,6 @@ class MemberValuePairBinding implements IMemberValuePairBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.core.dom.IBinding#isRecovered()
     */
    public boolean isRecovered()

@@ -16,9 +16,7 @@ package org.eclipse.jdt.client.core.dom;
 import org.eclipse.jdt.client.core.dom.BindingResolver;
 import org.eclipse.jdt.client.core.dom.IMethodBinding;
 
-/**
- * Member value pair which compose of default values.
- */
+/** Member value pair which compose of default values. */
 class DefaultValuePairBinding extends MemberValuePairBinding
 {
 

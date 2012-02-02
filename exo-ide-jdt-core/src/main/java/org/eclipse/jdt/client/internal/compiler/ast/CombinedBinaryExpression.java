@@ -55,14 +55,10 @@ public class CombinedBinaryExpression extends BinaryExpression
     */
    public int arityMax;
 
-   /**
-    * Upper limit for {@link #arityMax}.
-    */
+   /** Upper limit for {@link #arityMax}. */
    public static final int ARITY_MAX_MAX = 160;
 
-   /**
-    * Default lower limit for {@link #arityMax}.
-    */
+   /** Default lower limit for {@link #arityMax}. */
    public static final int ARITY_MAX_MIN = 20;
 
    /**

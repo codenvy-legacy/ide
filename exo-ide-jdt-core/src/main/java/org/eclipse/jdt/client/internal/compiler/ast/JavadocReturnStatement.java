@@ -24,8 +24,7 @@ public class JavadocReturnStatement extends ReturnStatement
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.ast.Statement#resolve(org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+    * @see org.eclipse.jdt.internal.compiler.ast.Statement#resolve(org.eclipse.jdt .internal.compiler.lookup.BlockScope)
     */
    public void resolve(BlockScope scope)
    {
@@ -48,7 +47,6 @@ public class JavadocReturnStatement extends ReturnStatement
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.ast.Statement#printStatement(int, java.lang.StringBuffer)
     */
    public StringBuffer printStatement(int tab, StringBuffer output)
@@ -61,8 +59,7 @@ public class JavadocReturnStatement extends ReturnStatement
 
    /*
     * (non-Javadoc) Redefine to capture javadoc specific signatures
-    * 
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor,
+    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt .internal.compiler.ASTVisitor,
     * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, BlockScope scope)
@@ -73,8 +70,7 @@ public class JavadocReturnStatement extends ReturnStatement
 
    /*
     * (non-Javadoc) Redefine to capture javadoc specific signatures
-    * 
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.internal.compiler.ASTVisitor,
+    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt .internal.compiler.ASTVisitor,
     * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, ClassScope scope)

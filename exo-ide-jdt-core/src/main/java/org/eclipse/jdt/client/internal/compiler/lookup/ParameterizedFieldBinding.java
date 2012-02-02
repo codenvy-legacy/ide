@@ -34,25 +34,19 @@ public class ParameterizedFieldBinding extends FieldBinding
       this.id = originalField.id;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding#constant()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding#constant() */
    public Constant constant()
    {
       return this.originalField.constant();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding#original()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding#original() */
    public FieldBinding original()
    {
       return this.originalField.original();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding#constant()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding#constant() */
    public void setConstant(Constant constant)
    {
       this.originalField.setConstant(constant);

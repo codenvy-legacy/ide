@@ -19,23 +19,15 @@ public interface IDebugRequestor
     */
    void acceptDebugResult(CompilationResult result);
 
-   /*
-    * Answers true when in active mode
-    */
+   /* Answers true when in active mode */
    boolean isActive();
 
-   /*
-    * Activate debug callbacks
-    */
+   /* Activate debug callbacks */
    void activate();
 
-   /*
-    * Deactivate debug callbacks
-    */
+   /* Deactivate debug callbacks */
    void deactivate();
 
-   /*
-    * Reset debug requestor after compilation has finished
-    */
+   /* Reset debug requestor after compilation has finished */
    void reset();
 }

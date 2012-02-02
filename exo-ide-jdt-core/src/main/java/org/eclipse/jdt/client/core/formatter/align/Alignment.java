@@ -16,7 +16,7 @@ import org.eclipse.jdt.client.core.formatter.Scribe;
 
 /**
  * Alignment management
- *
+ * 
  * @since 2.1
  */
 public class Alignment
@@ -149,69 +149,94 @@ public class Alignment
    // reset
    private boolean reset = false;
 
-   /*
-    * Alignment modes
-    */
+   /* Alignment modes */
    public static final int M_FORCE = 1; // if bit set, then alignment will be non-optional (default is optional)
 
-   public static final int M_INDENT_ON_COLUMN = 2; // if bit set, broken fragments will be aligned on current location column (default is to break at current indentation level)
+   public static final int M_INDENT_ON_COLUMN = 2; // if bit set, broken fragments will be aligned on current location column
+                                                   // (default is to break at current indentation level)
 
-   public static final int M_INDENT_BY_ONE = 4; // if bit set, broken fragments will be indented one level below current (not using continuation indentation)
+   public static final int M_INDENT_BY_ONE = 4; // if bit set, broken fragments will be indented one level below current (not
+                                                // using continuation indentation)
 
    // split modes can be combined either with M_FORCE or M_INDENT_ON_COLUMN
 
-   /** foobar(#fragment1, #fragment2, <ul>
-    *  <li>    #fragment3, #fragment4 </li>
+   /**
+    * foobar(#fragment1, #fragment2,
+    * <ul>
+    * <li>#fragment3, #fragment4</li>
     * </ul>
     */
    public static final int M_COMPACT_SPLIT = 16; // fill each line with all possible fragments
 
-   /** foobar(<ul>
-    * <li>    #fragment1, #fragment2,  </li>
-    * <li>     #fragment5, #fragment4, </li>
+   /**
+    * foobar(
+    * <ul>
+    * <li>#fragment1, #fragment2,</li>
+    * <li>#fragment5, #fragment4,</li>
     * </ul>
     */
-   public static final int M_COMPACT_FIRST_BREAK_SPLIT = 32; //  compact mode, but will first try to break before first fragment
+   public static final int M_COMPACT_FIRST_BREAK_SPLIT = 32; // compact mode, but will first try to break before first fragment
 
-   /** foobar(<ul>
-    * <li>     #fragment1,  </li>
-    * <li>     #fragment2,  </li>
-    * <li>     #fragment3 </li>
-    * <li>     #fragment4,  </li>
+   /**
+    * foobar(
+    * <ul>
+    * <li>#fragment1,</li>
+    * <li>#fragment2,</li>
+    * <li>#fragment3</li>
+    * <li>#fragment4,</li>
     * </ul>
     */
    public static final int M_ONE_PER_LINE_SPLIT = 32 + 16; // one fragment per line
 
    /**
-    * foobar(<ul>
-    * <li>     #fragment1,  </li>
-    * <li>        #fragment2,  </li>
-    * <li>        #fragment3 </li>
-    * <li>        #fragment4,  </li>
+    * foobar(
+    * <ul>
+    * <li>#fragment1,</li>
+    * <li>#fragment2,</li>
+    * <li>#fragment3</li>
+    * <li>#fragment4,</li>
     * </ul>
     */
    public static final int M_NEXT_SHIFTED_SPLIT = 64; // one fragment per line, subsequent are indented further
 
-   /** foobar(#fragment1, <ul>
-    * <li>      #fragment2,  </li>
-    * <li>      #fragment3 </li>
-    * <li>      #fragment4,  </li>
+   /**
+    * foobar(#fragment1,
+    * <ul>
+    * <li>#fragment2,</li>
+    * <li>#fragment3</li>
+    * <li>#fragment4,</li>
     * </ul>
     */
    public static final int M_NEXT_PER_LINE_SPLIT = 64 + 16; // one per line, except first fragment (if possible)
 
-   //64+32
-   //64+32+16
+   // 64+32
+   // 64+32+16
 
    // mode controlling column alignments
    /**
     * <table BORDER COLS=4 WIDTH="100%" >
-    * <tr><td>#fragment1A</td>            <td>#fragment2A</td>       <td>#fragment3A</td>  <td>#very-long-fragment4A</td></tr>
-    * <tr><td>#fragment1B</td>            <td>#long-fragment2B</td>  <td>#fragment3B</td>  <td>#fragment4B</td></tr>
-    * <tr><td>#very-long-fragment1C</td>  <td>#fragment2C</td>       <td>#fragment3C</td>  <td>#fragment4C</td></tr>
+    * <tr>
+    * <td>#fragment1A</td>
+    * <td>#fragment2A</td>
+    * <td>#fragment3A</td>
+    * <td>#very-long-fragment4A</td>
+    * </tr>
+    * <tr>
+    * <td>#fragment1B</td>
+    * <td>#long-fragment2B</td>
+    * <td>#fragment3B</td>
+    * <td>#fragment4B</td>
+    * </tr>
+    * <tr>
+    * <td>#very-long-fragment1C</td>
+    * <td>#fragment2C</td>
+    * <td>#fragment3C</td>
+    * <td>#fragment4C</td>
+    * </tr>
     * </table>
     */
-   public static final int M_MULTICOLUMN = 256; // fragments are on same line, but multiple line of fragments will be aligned vertically
+   public static final int M_MULTICOLUMN = 256; // fragments are on same line, but multiple line of fragments will be aligned
+                                                // vertically
 
    public static final int M_NO_ALIGNMENT = 0;
 
@@ -338,10 +363,10 @@ public class Alignment
          if (this.needRedoColumnAlignment && this.fragmentIndex == this.fragmentCount - 1)
          { // alignment too small
 
-            //				if (CodeFormatterVisitor.DEBUG){
-            //					System.out.println("ALIGNMENT TOO SMALL");
-            //					System.out.println(this);
-            //				}
+            // if (CodeFormatterVisitor.DEBUG){
+            // System.out.println("ALIGNMENT TOO SMALL");
+            // System.out.println(this);
+            // }
             this.needRedoColumnAlignment = false;
             int relativeDepth = 0;
             Alignment targetAlignment = this.scribe.memberAlignment;
@@ -371,10 +396,9 @@ public class Alignment
    }
 
    /**
-    * Returns whether the alignment can be aligned or not.
-    * Only used for message send alignment, it currently blocks its alignment
-    * when it's at the first nesting level of a message send. It allow to save
-    * space on the argument broken line by reducing the number of indentations.
+    * Returns whether the alignment can be aligned or not. Only used for message send alignment, it currently blocks its alignment
+    * when it's at the first nesting level of a message send. It allow to save space on the argument broken line by reducing the
+    * number of indentations.
     */
    public boolean canAlign()
    {
@@ -443,10 +467,8 @@ public class Alignment
       switch (this.mode & SPLIT_MASK)
       {
 
-      /*  # aligned fragment
-       *  foo(
-       *     #AAAAA, #BBBBB,
-       *     #CCCC);
+      /*
+       * # aligned fragment foo( #AAAAA, #BBBBB, #CCCC);
        */
          case M_COMPACT_FIRST_BREAK_SPLIT :
             if (this.fragmentBreaks[0] == NONE)
@@ -467,9 +489,8 @@ public class Alignment
             }
             while (--i >= 0);
             break;
-         /*  # aligned fragment
-          *  foo(#AAAAA, #BBBBB,
-          *     #CCCC);
+         /*
+          * # aligned fragment foo(#AAAAA, #BBBBB, #CCCC);
           */
          case M_COMPACT_SPLIT :
             i = this.fragmentIndex;
@@ -485,11 +506,8 @@ public class Alignment
             while (--i >= 0);
             break;
 
-         /*  # aligned fragment
-          *  foo(
-          *      #AAAAA,
-          *          #BBBBB,
-          *          #CCCC);
+         /*
+          * # aligned fragment foo( #AAAAA, #BBBBB, #CCCC);
           */
          case M_NEXT_SHIFTED_SPLIT :
             if (this.fragmentBreaks[0] == NONE)
@@ -505,11 +523,8 @@ public class Alignment
             }
             break;
 
-         /*  # aligned fragment
-          *  foo(
-          *      #AAAAA,
-          *      #BBBBB,
-          *      #CCCC);
+         /*
+          * # aligned fragment foo( #AAAAA, #BBBBB, #CCCC);
           */
          case M_ONE_PER_LINE_SPLIT :
             if (this.fragmentBreaks[0] == NONE)
@@ -522,10 +537,8 @@ public class Alignment
                return this.wasSplit = true;
             }
             break;
-         /*  # aligned fragment
-          *  foo(#AAAAA,
-          *      #BBBBB,
-          *      #CCCC);
+         /*
+          * # aligned fragment foo(#AAAAA, #BBBBB, #CCCC);
           */
          case M_NEXT_PER_LINE_SPLIT :
             if (this.fragmentBreaks[0] == NONE)

@@ -104,7 +104,6 @@ public class CommentRecorderParser extends Parser
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.parser.Parser#consumeClassHeader()
     */
    protected void consumeClassHeader()
@@ -115,8 +114,7 @@ public class CommentRecorderParser extends Parser
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.Parser#consumeEmptyTypeDeclaration()
+    * @see org.eclipse.jdt.internal.compiler.parser.Parser#consumeEmptyTypeDeclaration ()
     */
    protected void consumeEmptyTypeDeclaration()
    {
@@ -126,7 +124,6 @@ public class CommentRecorderParser extends Parser
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.parser.Parser#consumeInterfaceHeader()
     */
    protected void consumeInterfaceHeader()
@@ -137,7 +134,6 @@ public class CommentRecorderParser extends Parser
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.parser.Parser#endParse(int)
     */
    protected CompilationUnitDeclaration endParse(int act)
@@ -153,8 +149,7 @@ public class CommentRecorderParser extends Parser
 
    /*
     * (non-Javadoc) Save all source comments currently stored before flushing them.
-    * 
-    * @see org.eclipse.jdt.internal.compiler.parser.Parser#flushCommentsDefinedPriorTo(int)
+    * @see org.eclipse.jdt.internal.compiler.parser.Parser#flushCommentsDefinedPriorTo (int)
     */
    public int flushCommentsDefinedPriorTo(int position)
    {
@@ -245,7 +240,6 @@ public class CommentRecorderParser extends Parser
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.parser.Parser#initialize()
     */
    public void initialize(boolean initializeNLS)
@@ -256,7 +250,6 @@ public class CommentRecorderParser extends Parser
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.parser.Parser#initialize()
     */
    public void initialize()
@@ -267,7 +260,6 @@ public class CommentRecorderParser extends Parser
 
    /*
     * (non-Javadoc) Create and store a specific comment recorder scanner.
-    * 
     * @see org.eclipse.jdt.internal.compiler.parser.Parser#initializeScanner()
     */
    public void initializeScanner()
@@ -279,9 +271,7 @@ public class CommentRecorderParser extends Parser
             this.options.taskPriorities/* taskPriorities */, this.options.isTaskCaseSensitive/* taskCaseSensitive */);
    }
 
-   /*
-    * Push all stored comments in stack.
-    */
+   /* Push all stored comments in stack. */
    private void pushOnCommentsStack(int start, int end)
    {
 
@@ -311,7 +301,6 @@ public class CommentRecorderParser extends Parser
 
    /*
     * (non-Javadoc) Save all source comments currently stored before flushing them.
-    * 
     * @see org.eclipse.jdt.internal.compiler.parser.Parser#resetModifiers()
     */
    protected void resetModifiers()

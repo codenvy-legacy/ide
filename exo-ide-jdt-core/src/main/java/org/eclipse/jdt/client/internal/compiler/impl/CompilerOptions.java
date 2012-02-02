@@ -27,9 +27,7 @@ import org.eclipse.jdt.client.internal.compiler.util.Util;
 public class CompilerOptions
 {
 
-   /**
-    * Option IDs
-    */
+   /** Option IDs */
    public static final String OPTION_LocalVariableAttribute = "org.eclipse.jdt.core.compiler.debug.localVariable"; //$NON-NLS-1$
 
    public static final String OPTION_LineNumberAttribute = "org.eclipse.jdt.core.compiler.debug.lineNumber"; //$NON-NLS-1$
@@ -309,9 +307,7 @@ public class CompilerOptions
    public static final String OPTION_ReportRedundantSpecificationOfTypeArguments =
       "org.eclipse.jdt.core.compiler.problem.redundantSpecificationOfTypeArguments"; //$NON-NLS-1$
 
-   /**
-    * Possible values for configurable options
-    */
+   /** Possible values for configurable options */
    public static final String GENERATE = "generate";//$NON-NLS-1$
 
    public static final String DO_NOT_GENERATE = "do not generate"; //$NON-NLS-1$
@@ -518,10 +514,14 @@ public class CompilerOptions
     * Default settings are to be defined in {@lnk CompilerOptions#resetDefaults()}
     */
 
-   /** Classfile debug information, may contain source file name, line numbers, local variable tables, etc... */
+   /**
+    * Classfile debug information, may contain source file name, line numbers, local variable tables, etc...
+    */
    public int produceDebugAttributes;
 
-   /** Compliance level for the compiler, refers to a JDK version, e.g. {@link ClassFileConstants#JDK1_4} */
+   /**
+    * Compliance level for the compiler, refers to a JDK version, e.g. {@link ClassFileConstants#JDK1_4}
+    */
    public long complianceLevel;
 
    /**
@@ -531,17 +531,21 @@ public class CompilerOptions
     */
    public long originalComplianceLevel;
 
-   /** Java source level, refers to a JDK version, e.g. {@link ClassFileConstants#JDK1_4} */
+   /**
+    * Java source level, refers to a JDK version, e.g. {@link ClassFileConstants#JDK1_4}
+    */
    public long sourceLevel;
 
    /**
     * Original Java source level, refers to a JDK version, e.g. {@link ClassFileConstants#JDK1_4} Usually same as the field
     * sourceLevel, though the latter could deviate to create temporary sandbox modes during reconcile operations. See
     * https://bugs.eclipse.org/bugs/show_bug.cgi?id=323633
-    * */
+    */
    public long originalSourceLevel;
 
-   /** VM target level, refers to a JDK version, e.g. {@link ClassFileConstants#JDK1_4} */
+   /**
+    * VM target level, refers to a JDK version, e.g. {@link ClassFileConstants#JDK1_4}
+    */
    public long targetJDK;
 
    /** Source encoding format */
@@ -553,7 +557,9 @@ public class CompilerOptions
    /** Indicates whether reference info is desired */
    public boolean produceReferenceInfo;
 
-   /** Indicates if unused/optimizable local variables need to be preserved (debugging purpose) */
+   /**
+    * Indicates if unused/optimizable local variables need to be preserved (debugging purpose)
+    */
    public boolean preserveAllLocalVariables;
 
    /** Indicates whether literal expressions are inlined at parse-time or not */
@@ -577,7 +583,9 @@ public class CompilerOptions
    /** Specify whether override of deprecated method is to be reported */
    public boolean reportDeprecationWhenOverridingDeprecatedMethod;
 
-   /** Specify if should report unused parameter when implementing abstract method */
+   /**
+    * Specify if should report unused parameter when implementing abstract method
+    */
    public boolean reportUnusedParameterWhenImplementingAbstract;
 
    /** Specify if should report unused parameter when overriding concrete method */
@@ -586,19 +594,27 @@ public class CompilerOptions
    /** Specify if should report documented unused parameter (in javadoc) */
    public boolean reportUnusedParameterIncludeDocCommentReference;
 
-   /** Specify if should reported unused declared thrown exception when overriding method */
+   /**
+    * Specify if should reported unused declared thrown exception when overriding method
+    */
    public boolean reportUnusedDeclaredThrownExceptionWhenOverriding;
 
-   /** Specify if should reported unused declared thrown exception when documented in javadoc */
+   /**
+    * Specify if should reported unused declared thrown exception when documented in javadoc
+    */
    public boolean reportUnusedDeclaredThrownExceptionIncludeDocCommentReference;
 
-   /** Specify if should reported unused declared thrown exception when Exception or Throwable */
+   /**
+    * Specify if should reported unused declared thrown exception when Exception or Throwable
+    */
    public boolean reportUnusedDeclaredThrownExceptionExemptExceptionAndThrowable;
 
    /** Specify whether should report constructor/setter method parameter hiding */
    public boolean reportSpecialParameterHidingField;
 
-   /** Specify whether trivial deadcode pattern is to be reported (e.g. if (DEBUG) ...) */
+   /**
+    * Specify whether trivial deadcode pattern is to be reported (e.g. if (DEBUG) ...)
+    */
    public boolean reportDeadCodeInTrivialIfStatement;
 
    /** Master flag controlling whether doc comment should be processed */
@@ -607,7 +623,9 @@ public class CompilerOptions
    /** Specify if invalid javadoc shall be reported */
    public boolean reportInvalidJavadocTags;
 
-   /** Only report invalid javadoc above a given level of visibility of associated construct */
+   /**
+    * Only report invalid javadoc above a given level of visibility of associated construct
+    */
    public int reportInvalidJavadocTagsVisibility;
 
    /** Specify if deprecated javadoc ref is allowed */
@@ -619,28 +637,38 @@ public class CompilerOptions
    /** Specify when to report missing javadoc tag description */
    public String reportMissingJavadocTagDescription;
 
-   /** Only report missing javadoc tags above a given level of visibility of associated construct */
+   /**
+    * Only report missing javadoc tags above a given level of visibility of associated construct
+    */
    public int reportMissingJavadocTagsVisibility;
 
    /** Specify if need to flag missing javadoc tags for overriding method */
    public boolean reportMissingJavadocTagsOverriding;
 
-   /** Specify if need to flag missing javadoc tags for method type parameters (java 1.5 and above) */
+   /**
+    * Specify if need to flag missing javadoc tags for method type parameters (java 1.5 and above)
+    */
    public boolean reportMissingJavadocTagsMethodTypeParameters;
 
-   /** Only report missing javadoc comment above a given level of visibility of associated construct */
+   /**
+    * Only report missing javadoc comment above a given level of visibility of associated construct
+    */
    public int reportMissingJavadocCommentsVisibility;
 
    /** Specify if need to flag missing javadoc comment for overriding method */
    public boolean reportMissingJavadocCommentsOverriding;
 
-   /** Indicate whether the JSR bytecode should be inlined to avoid its presence in classfile */
+   /**
+    * Indicate whether the JSR bytecode should be inlined to avoid its presence in classfile
+    */
    public boolean inlineJsrBytecode;
 
    /** Indicate if @SuppressWarning annotations are activated */
    public boolean suppressWarnings;
 
-   /** Indicate if @SuppressWarning annotations should also suppress optional errors */
+   /**
+    * Indicate if @SuppressWarning annotations should also suppress optional errors
+    */
    public boolean suppressOptionalErrors;
 
    /** Specify if should treat optional error as fatal or just like warning */
@@ -658,7 +686,9 @@ public class CompilerOptions
    /** Store annotations */
    public boolean storeAnnotations;
 
-   /** Specify if need to report missing override annotation for a method implementing an interface method (java 1.6 and above) */
+   /**
+    * Specify if need to report missing override annotation for a method implementing an interface method (java 1.6 and above)
+    */
    public boolean reportMissingOverrideAnnotationForInterfaceMethodImplementation;
 
    /** Indicate if annotation processing generates classfiles */
@@ -667,7 +697,9 @@ public class CompilerOptions
    /** Indicate if method bodies should be ignored */
    public boolean ignoreMethodBodies;
 
-   /** Raise null related warnings for variables tainted inside an assert statement (java 1.4 and above) */
+   /**
+    * Raise null related warnings for variables tainted inside an assert statement (java 1.4 and above)
+    */
    public boolean includeNullInfoFromAsserts;
 
    /** Controls whether forced generic type problems get reported */
@@ -700,9 +732,7 @@ public class CompilerOptions
    // 		"unused", //$NON-NLS-1$
    // };
 
-   /**
-    * Initializing the compiler options with defaults
-    */
+   /** Initializing the compiler options with defaults */
    public CompilerOptions()
    {
       this(null); // use default options
@@ -1000,9 +1030,7 @@ public class CompilerOptions
       return result;
    }
 
-   /**
-    * For suppressable warnings
-    */
+   /** For suppressable warnings */
    public static String warningTokenFromIrritant(int irritant)
    {
       // keep in sync with warningTokens and warningTokenToIrritant
@@ -1421,7 +1449,7 @@ public class CompilerOptions
       this.inlineJsrBytecode = false;
 
       // javadoc comment support
-      this.docCommentSupport = false;
+      this.docCommentSupport = true;
 
       // suppress warning annotation
       this.suppressWarnings = true;

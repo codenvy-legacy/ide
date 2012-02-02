@@ -29,7 +29,6 @@ public class JavadocImplicitTypeReference extends TypeReference
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.ast.TypeReference#copyDims(int)
     */
    public TypeReference copyDims(int dim)
@@ -39,8 +38,7 @@ public class JavadocImplicitTypeReference extends TypeReference
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.ast.TypeReference#getTypeBinding(org.eclipse.jdt.internal.compiler.lookup.Scope)
+    * @see org.eclipse.jdt.internal.compiler.ast.TypeReference#getTypeBinding(org .eclipse.jdt.internal.compiler.lookup.Scope)
     */
    protected TypeBinding getTypeBinding(Scope scope)
    {
@@ -55,7 +53,6 @@ public class JavadocImplicitTypeReference extends TypeReference
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.ast.TypeReference#getTypeName()
     */
    public char[][] getTypeName()
@@ -133,7 +130,9 @@ public class JavadocImplicitTypeReference extends TypeReference
       // raw convert all enclosing types when dealing with Javadoc references
       if (type.isGenericType() || type.isParameterizedType())
       {
-         type = scope.environment().convertToRawType(type, true /* force the conversion of enclosing types */);
+         type = scope.environment().convertToRawType(type, true /*
+                                                                 * force the conversion of enclosing types
+                                                                 */);
       }
 
       if (hasError)

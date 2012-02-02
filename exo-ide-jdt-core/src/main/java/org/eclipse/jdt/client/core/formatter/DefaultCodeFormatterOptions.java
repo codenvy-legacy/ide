@@ -22,6 +22,7 @@ import org.eclipse.jdt.client.core.formatter.align.Alignment;
 
 /**
  * This is still subject to changes before 3.0.
+ * 
  * @since 3.0
  */
 
@@ -3734,9 +3735,9 @@ public class DefaultCodeFormatterOptions
    }
 
    /**
-    * This method is used to handle deprecated preferences which might be replaced by
-    * one or more preferences.
-    * Depending on deprecated option handling policy, set the new formatting option(s).
+    * This method is used to handle deprecated preferences which might be replaced by one or more preferences. Depending on
+    * deprecated option handling policy, set the new formatting option(s).
+    * 
     * @param settings the given map
     * @deprecated
     */

@@ -171,9 +171,7 @@ public class LocalDeclaration extends AbstractVariableDeclaration
    // codeStream.recordPositionsFrom(pc, this.sourceStart);
    // }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration#getKind()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration#getKind() */
    public int getKind()
    {
       return LOCAL_VARIABLE;
@@ -183,7 +181,9 @@ public class LocalDeclaration extends AbstractVariableDeclaration
    {
 
       // create a binding and add it to the scope
-      TypeBinding variableType = this.type.resolveType(scope, true /* check bounds */);
+      TypeBinding variableType = this.type.resolveType(scope, true /*
+                                                                    * check bounds
+                                                                    */);
 
       checkModifiers();
       if (variableType != null)
@@ -200,8 +200,9 @@ public class LocalDeclaration extends AbstractVariableDeclaration
          }
       }
 
-      Binding existingVariable =
-         scope.getBinding(this.name, Binding.VARIABLE, this, false /* do not resolve hidden field */);
+      Binding existingVariable = scope.getBinding(this.name, Binding.VARIABLE, this, false /*
+                                                                                            * do not resolve hidden field
+                                                                                            */);
       if (existingVariable != null && existingVariable.isValidBinding())
       {
          if (existingVariable instanceof LocalVariableBinding && this.hiddenVariableDepth == 0)

@@ -66,9 +66,7 @@ abstract public class TypeBinding extends Binding
 
    public final static BaseTypeBinding VOID = new BaseTypeBinding(TypeIds.T_void, TypeConstants.VOID, new char[]{'V'});
 
-   /**
-    * Match a well-known type id to its binding
-    */
+   /** Match a well-known type id to its binding */
    public static final TypeBinding wellKnownType(Scope scope, int id)
    {
       switch (id)
@@ -98,9 +96,7 @@ abstract public class TypeBinding extends Binding
       }
    }
 
-   /*
-    * Answer true if the receiver can be instantiated
-    */
+   /* Answer true if the receiver can be instantiated */
    public boolean canBeInstantiated()
    {
       return !isBaseType();
@@ -156,9 +152,7 @@ abstract public class TypeBinding extends Binding
       return new String(readableName());
    }
 
-   /*
-    * Answer the receiver's dimensions - 0 for non-array types
-    */
+   /* Answer the receiver's dimensions - 0 for non-array types */
    public int dimensions()
    {
       return 0;
@@ -266,9 +260,7 @@ abstract public class TypeBinding extends Binding
       return null;
    }
 
-   /**
-    * Find supertype which originates from a given type, or null if not found
-    */
+   /** Find supertype which originates from a given type, or null if not found */
    public TypeBinding findSuperTypeOriginatingFrom(TypeBinding otherType)
    {
       if (this == otherType)
@@ -399,9 +391,7 @@ abstract public class TypeBinding extends Binding
       return null;
    }
 
-   /**
-    * Returns the type to use for generic cast, or null if none required
-    */
+   /** Returns the type to use for generic cast, or null if none required */
    public TypeBinding genericCast(TypeBinding targetType)
    {
       if (this == targetType)
@@ -495,33 +485,25 @@ abstract public class TypeBinding extends Binding
       return (this.tagBits & TagBits.IsAnonymousType) != 0;
    }
 
-   /*
-    * Answer true if the receiver is an array
-    */
+   /* Answer true if the receiver is an array */
    public final boolean isArrayType()
    {
       return (this.tagBits & TagBits.IsArrayType) != 0;
    }
 
-   /*
-    * Answer true if the receiver is a base type
-    */
+   /* Answer true if the receiver is a base type */
    public final boolean isBaseType()
    {
       return (this.tagBits & TagBits.IsBaseType) != 0;
    }
 
-   /**
-    * Returns true if parameterized type AND not of the form List<?>
-    */
+   /** Returns true if parameterized type AND not of the form List<?> */
    public boolean isBoundParameterizedType()
    {
       return (this.tagBits & TagBits.IsBoundParameterizedType) != 0;
    }
 
-   /**
-    * Returns true if the type is the capture of some wildcard
-    */
+   /** Returns true if the type is the capture of some wildcard */
    public boolean isCapture()
    {
       return false;
@@ -698,9 +680,7 @@ abstract public class TypeBinding extends Binding
       return false;
    }
 
-   /**
-    * Returns true if a type is provably distinct from another one,
-    */
+   /** Returns true if a type is provably distinct from another one, */
    public boolean isProvablyDistinct(TypeBinding otherType)
    {
 
@@ -1031,9 +1011,7 @@ abstract public class TypeBinding extends Binding
       return kind() == Binding.RAW_TYPE;
    }
 
-   /**
-    * JLS(3) 4.7. Note: Foo<?>.Bar is also reifiable
-    */
+   /** JLS(3) 4.7. Note: Foo<?>.Bar is also reifiable */
    public boolean isReifiable()
    {
       TypeBinding leafType = leafComponentType();
@@ -1074,9 +1052,7 @@ abstract public class TypeBinding extends Binding
       return true;
    }
 
-   /**
-    * Returns true if a given type may be thrown
-    */
+   /** Returns true if a given type may be thrown */
    public boolean isThrowable()
    {
       return false;
@@ -1287,17 +1263,13 @@ abstract public class TypeBinding extends Binding
       return false;
    }
 
-   /**
-    * Returns true if the type was declared as a type variable
-    */
+   /** Returns true if the type was declared as a type variable */
    public boolean isTypeVariable()
    {
       return false;
    }
 
-   /**
-    * Returns true if wildcard type of the form '?' (no bound)
-    */
+   /** Returns true if wildcard type of the form '?' (no bound) */
    public boolean isUnboundWildcard()
    {
       return false;
@@ -1311,17 +1283,13 @@ abstract public class TypeBinding extends Binding
       return false;
    }
 
-   /**
-    * Returns true if the type is a wildcard
-    */
+   /** Returns true if the type is a wildcard */
    public boolean isWildcard()
    {
       return false;
    }
 
-   /*
-    * API Answer the receiver's binding type from Binding.BindingID.
-    */
+   /* API Answer the receiver's binding type from Binding.BindingID. */
    public int kind()
    {
       return Binding.TYPE;

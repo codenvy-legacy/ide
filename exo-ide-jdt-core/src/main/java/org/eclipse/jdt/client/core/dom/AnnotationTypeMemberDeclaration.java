@@ -56,7 +56,7 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
       AnnotationTypeMemberDeclaration.class, "name", SimpleName.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
 
    /**
-    * The "type" structural property of this node type (child type: {@link Type}).
+    * The "type" structural property of this node type (child type: {@link Type} ).
     */
    public static final ChildPropertyDescriptor TYPE_PROPERTY = new ChildPropertyDescriptor(
       AnnotationTypeMemberDeclaration.class, "type", Type.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
@@ -100,9 +100,7 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
     */
    private SimpleName memberName = null;
 
-   /**
-    * The member type; lazily initialized; defaults to int.
-    */
+   /** The member type; lazily initialized; defaults to int. */
    private Type memberType = null;
 
    /**
@@ -126,17 +124,13 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
       unsupportedIn2();
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
       if (property == JAVADOC_PROPERTY)
@@ -203,9 +197,7 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalGetChildListProperty(ChildListPropertyDescriptor property)
    {
       if (property == MODIFIERS2_PROPERTY)
@@ -216,42 +208,32 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
       return super.internalGetChildListProperty(property);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on BodyDeclaration.
-    */
+   /* (omit javadoc for this method) Method declared on BodyDeclaration. */
    final ChildPropertyDescriptor internalJavadocProperty()
    {
       return JAVADOC_PROPERTY;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on BodyDeclaration.
-    */
+   /* (omit javadoc for this method) Method declared on BodyDeclaration. */
    final ChildListPropertyDescriptor internalModifiers2Property()
    {
       return MODIFIERS2_PROPERTY;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on BodyDeclaration.
-    */
+   /* (omit javadoc for this method) Method declared on BodyDeclaration. */
    final SimplePropertyDescriptor internalModifiersProperty()
    {
       // this property will not be asked for (node type did not exist in JLS2)
       return null;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int getNodeType0()
    {
       return ANNOTATION_TYPE_MEMBER_DECLARATION;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    ASTNode clone0(AST target)
    {
       AnnotationTypeMemberDeclaration result = new AnnotationTypeMemberDeclaration(target);
@@ -264,18 +246,14 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
       return result;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
       // dispatch to correct overloaded match method
       return matcher.match(this, other);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    void accept0(ASTVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -424,17 +402,13 @@ public class AnnotationTypeMemberDeclaration extends BodyDeclaration
       return this.ast.getBindingResolver().resolveMember(this);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       return super.memSize() + 3 * 4;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int treeSize()
    {
       return memSize() + (this.optionalDocComment == null ? 0 : getJavadoc().treeSize()) + this.modifiers.listSize()

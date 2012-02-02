@@ -82,9 +82,7 @@ public class CaseStatement extends Statement
    // codeStream.recordPositionsFrom(pc, this.sourceStart);
    // }
 
-   /**
-    * No-op : should use resolveCase(...) instead.
-    */
+   /** No-op : should use resolveCase(...) instead. */
    public void resolve(BlockScope scope)
    {
       // no-op : should use resolveCase(...) instead.

@@ -32,8 +32,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Jan 20, 2012 1:33:45 PM evgen $
- *
+ * @version ${Id}: Jan 20, 2012 1:33:45 PM evgen $
  */
 public class AstView extends ViewImpl implements Display
 {
@@ -50,9 +49,7 @@ public class AstView extends ViewImpl implements Display
       add(scrollPanel);
    }
 
-   /**
-    * @see org.eclipse.jdt.client.AstPesenter.Display#drawAst(org.eclipse.jdt.client.core.dom.CompilationUnit)
-    */
+   /** @see org.eclipse.jdt.client.AstPesenter.Display#drawAst(org.eclipse.jdt.client.core.dom.CompilationUnit) */
    @Override
    public void drawAst(CompilationUnit cUnit)
    {

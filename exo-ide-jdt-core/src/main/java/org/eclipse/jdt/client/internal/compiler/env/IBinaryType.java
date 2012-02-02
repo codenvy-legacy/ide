@@ -46,9 +46,7 @@ public interface IBinaryType extends IGenericType
 
    char[] getEnclosingTypeName();
 
-   /**
-    * Answer the receiver's fields or null if the array is empty.
-    */
+   /** Answer the receiver's fields or null if the array is empty. */
 
    IBinaryField[] getFields();
 
@@ -81,9 +79,7 @@ public interface IBinaryType extends IGenericType
 
    IBinaryNestedType[] getMemberTypes();
 
-   /**
-    * Answer the receiver's methods or null if the array is empty.
-    */
+   /** Answer the receiver's methods or null if the array is empty. */
 
    IBinaryMethod[] getMethods();
 
@@ -114,24 +110,16 @@ public interface IBinaryType extends IGenericType
 
    char[] getSuperclassName();
 
-   /**
-    * Answer the tagbits set according to the bits for annotations.
-    */
+   /** Answer the tagbits set according to the bits for annotations. */
    long getTagBits();
 
-   /**
-    * Answer true if the receiver is an anonymous class. false otherwise
-    */
+   /** Answer true if the receiver is an anonymous class. false otherwise */
    boolean isAnonymous();
 
-   /**
-    * Answer true if the receiver is a local class. false otherwise
-    */
+   /** Answer true if the receiver is a local class. false otherwise */
    boolean isLocal();
 
-   /**
-    * Answer true if the receiver is a member class. false otherwise
-    */
+   /** Answer true if the receiver is a member class. false otherwise */
    boolean isMember();
 
    /**

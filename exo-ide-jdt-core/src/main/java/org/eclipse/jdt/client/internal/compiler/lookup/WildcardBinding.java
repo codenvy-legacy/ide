@@ -74,9 +74,7 @@ public class WildcardBinding extends ReferenceBinding
       return this.otherBounds == null ? Binding.WILDCARD_TYPE : Binding.INTERSECTION_TYPE;
    }
 
-   /**
-    * Returns true if the argument type satisfies the wildcard bound(s)
-    */
+   /** Returns true if the argument type satisfies the wildcard bound(s) */
    public boolean boundCheck(TypeBinding argumentType)
    {
       switch (this.boundKind)
@@ -99,18 +97,14 @@ public class WildcardBinding extends ReferenceBinding
       }
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#canBeInstantiated()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#canBeInstantiated() */
    public boolean canBeInstantiated()
    {
       // cannot be asked per construction
       return false;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#collectMissingTypes(java.util.List)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#collectMissingTypes(java.util.List) */
    public List collectMissingTypes(List missingTypes)
    {
       if ((this.tagBits & TagBits.HasMissingType) != 0)
@@ -420,7 +414,9 @@ public class WildcardBinding extends ReferenceBinding
     */
    public char[] computeUniqueKey(boolean isLeaf)
    {
-      char[] genericTypeKey = this.genericType.computeUniqueKey(false/* not a leaf */);
+      char[] genericTypeKey = this.genericType.computeUniqueKey(false/*
+                                                                      * not a leaf
+                                                                      */);
       char[] wildCardKey;
       // We now encode the rank also in the binding key - https://bugs.eclipse.org/bugs/show_bug.cgi?id=234609
       char[] rankComponent = ('{' + String.valueOf(this.rank) + '}').toCharArray();
@@ -430,28 +426,26 @@ public class WildcardBinding extends ReferenceBinding
             wildCardKey = TypeConstants.WILDCARD_STAR;
             break;
          case Wildcard.EXTENDS :
-            wildCardKey =
-               CharOperation.concat(TypeConstants.WILDCARD_PLUS, this.bound.computeUniqueKey(false/* not a leaf */));
+            wildCardKey = CharOperation.concat(TypeConstants.WILDCARD_PLUS, this.bound.computeUniqueKey(false/*
+                                                                                                              * not a leaf
+                                                                                                              */));
             break;
          default : // SUPER
-            wildCardKey =
-               CharOperation.concat(TypeConstants.WILDCARD_MINUS, this.bound.computeUniqueKey(false/* not a leaf */));
+            wildCardKey = CharOperation.concat(TypeConstants.WILDCARD_MINUS, this.bound.computeUniqueKey(false/*
+                                                                                                               * not a leaf
+                                                                                                               */));
             break;
       }
       return CharOperation.concat(genericTypeKey, rankComponent, wildCardKey);
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#constantPoolName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#constantPoolName() */
    public char[] constantPoolName()
    {
       return erasure().constantPoolName();
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#debugName()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#debugName() */
    public String debugName()
    {
       return toString();
@@ -459,7 +453,6 @@ public class WildcardBinding extends ReferenceBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#erasure()
     */
    public TypeBinding erasure()
@@ -481,7 +474,6 @@ public class WildcardBinding extends ReferenceBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.TypeBinding#signature()
     */
    public char[] genericTypeSignature()
@@ -535,9 +527,7 @@ public class WildcardBinding extends ReferenceBinding
       }
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#isSuperclassOf(org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding)
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding#isSuperclassOf(org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding) */
    public boolean isSuperclassOf(ReferenceBinding otherType)
    {
       if (this.boundKind == Wildcard.SUPER)
@@ -567,17 +557,13 @@ public class WildcardBinding extends ReferenceBinding
       return this.superclass != null && this.superInterfaces != null;
    }
 
-   /**
-    * Returns true if the type is a wildcard
-    */
+   /** Returns true if the type is a wildcard */
    public boolean isUnboundWildcard()
    {
       return this.boundKind == Wildcard.UNBOUND;
    }
 
-   /**
-    * Returns true if the type is a wildcard
-    */
+   /** Returns true if the type is a wildcard */
    public boolean isWildcard()
    {
       return true;
@@ -585,7 +571,6 @@ public class WildcardBinding extends ReferenceBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.Binding#readableName()
     */
    public char[] readableName()
@@ -620,24 +605,30 @@ public class WildcardBinding extends ReferenceBinding
          return this;
 
       this.tagBits &= ~TagBits.HasUnresolvedTypeVariables;
-      BinaryTypeBinding.resolveType(this.genericType, this.environment, false /* no raw conversion */);
+      BinaryTypeBinding.resolveType(this.genericType, this.environment, false /*
+                                                                               * no raw conversion
+                                                                               */);
       switch (this.boundKind)
       {
          case Wildcard.EXTENDS :
-            TypeBinding resolveType =
-               BinaryTypeBinding.resolveType(this.bound, this.environment, true /* raw conversion */);
+            TypeBinding resolveType = BinaryTypeBinding.resolveType(this.bound, this.environment, true /*
+                                                                                                        * raw conversion
+                                                                                                        */);
             this.bound = resolveType;
             this.tagBits |= resolveType.tagBits & TagBits.ContainsNestedTypeReferences;
             for (int i = 0, length = this.otherBounds == null ? 0 : this.otherBounds.length; i < length; i++)
             {
-               resolveType =
-                  BinaryTypeBinding.resolveType(this.otherBounds[i], this.environment, true /* raw conversion */);
+               resolveType = BinaryTypeBinding.resolveType(this.otherBounds[i], this.environment, true /*
+                                                                                                        * raw conversion
+                                                                                                        */);
                this.otherBounds[i] = resolveType;
                this.tagBits |= resolveType.tagBits & TagBits.ContainsNestedTypeReferences;
             }
             break;
          case Wildcard.SUPER :
-            resolveType = BinaryTypeBinding.resolveType(this.bound, this.environment, true /* raw conversion */);
+            resolveType = BinaryTypeBinding.resolveType(this.bound, this.environment, true /*
+                                                                                            * raw conversion
+                                                                                            */);
             this.bound = resolveType;
             this.tagBits |= resolveType.tagBits & TagBits.ContainsNestedTypeReferences;
             break;
@@ -648,7 +639,6 @@ public class WildcardBinding extends ReferenceBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.Binding#shortReadableName()
     */
    public char[] shortReadableName()
@@ -677,9 +667,7 @@ public class WildcardBinding extends ReferenceBinding
       }
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#signature()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding#signature() */
    public char[] signature()
    {
       // should not be called directly on a wildcard; signature should only be asked on
@@ -699,7 +687,6 @@ public class WildcardBinding extends ReferenceBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding#sourceName()
     */
    public char[] sourceName()
@@ -719,7 +706,6 @@ public class WildcardBinding extends ReferenceBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.internal.compiler.lookup.TypeVariableBinding#superclass()
     */
    public ReferenceBinding superclass()
@@ -747,8 +733,7 @@ public class WildcardBinding extends ReferenceBinding
 
    /*
     * (non-Javadoc)
-    * 
-    * @see org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding#superInterfaces()
+    * @see org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding#superInterfaces ()
     */
    public ReferenceBinding[] superInterfaces()
    {
@@ -818,9 +803,7 @@ public class WildcardBinding extends ReferenceBinding
          initialize(this.genericType, this.bound, this.otherBounds);
    }
 
-   /**
-    * @see java.lang.Object#toString()
-    */
+   /** @see java.lang.Object#toString() */
    public String toString()
    {
       switch (this.boundKind)
@@ -843,9 +826,7 @@ public class WildcardBinding extends ReferenceBinding
       }
    }
 
-   /**
-    * Returns associated type variable, or null in case of inconsistency
-    */
+   /** Returns associated type variable, or null in case of inconsistency */
    public TypeVariableBinding typeVariable()
    {
       if (this.typeVariable == null)

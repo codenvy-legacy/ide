@@ -42,9 +42,7 @@ class DefaultCommentMapper
 
    static final int STORAGE_INCREMENT = 16;
 
-   /**
-    * @param table the given table of comments
-    */
+   /** @param table the given table of comments */
    DefaultCommentMapper(Comment[] table)
    {
       this.comments = table;
@@ -163,11 +161,8 @@ class DefaultCommentMapper
 
    /*
     * Search the line number corresponding to a specific position between the given line range (inclusive)
-    * 
     * @param position int
-    * 
     * @parem lineRange size-2 int[]
-    * 
     * @return int
     */
    public final int getLineNumber(int position, int[] lineRange)
@@ -178,9 +173,7 @@ class DefaultCommentMapper
          (lineRange[1] > length ? length : lineRange[1]) - 1);
    }
 
-   /*
-    * Returns the extended end position of the given node.
-    */
+   /* Returns the extended end position of the given node. */
    public int getExtendedEnd(ASTNode node)
    {
       int end = node.getStartPosition() + node.getLength();

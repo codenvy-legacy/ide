@@ -57,9 +57,7 @@ public class RecoveredElement
       return this.parent.addAnnotationName(identifierPtr, identifierLengthPtr, annotationStart, bracketBalanceValue);
    }
 
-   /*
-    * Record a method declaration
-    */
+   /* Record a method declaration */
    public RecoveredElement add(AbstractMethodDeclaration methodDeclaration, int bracketBalanceValue)
    {
 
@@ -71,9 +69,7 @@ public class RecoveredElement
       return this.parent.add(methodDeclaration, bracketBalanceValue);
    }
 
-   /*
-    * Record a nested block declaration
-    */
+   /* Record a nested block declaration */
    public RecoveredElement add(Block nestedBlockDeclaration, int bracketBalanceValue)
    {
 
@@ -85,9 +81,7 @@ public class RecoveredElement
       return this.parent.add(nestedBlockDeclaration, bracketBalanceValue);
    }
 
-   /*
-    * Record a field declaration
-    */
+   /* Record a field declaration */
    public RecoveredElement add(FieldDeclaration fieldDeclaration, int bracketBalanceValue)
    {
 
@@ -99,9 +93,7 @@ public class RecoveredElement
       return this.parent.add(fieldDeclaration, bracketBalanceValue);
    }
 
-   /*
-    * Record an import reference
-    */
+   /* Record an import reference */
    public RecoveredElement add(ImportReference importReference, int bracketBalanceValue)
    {
 
@@ -113,9 +105,7 @@ public class RecoveredElement
       return this.parent.add(importReference, bracketBalanceValue);
    }
 
-   /*
-    * Record a local declaration
-    */
+   /* Record a local declaration */
    public RecoveredElement add(LocalDeclaration localDeclaration, int bracketBalanceValue)
    {
 
@@ -127,9 +117,7 @@ public class RecoveredElement
       return this.parent.add(localDeclaration, bracketBalanceValue);
    }
 
-   /*
-    * Record a statement
-    */
+   /* Record a statement */
    public RecoveredElement add(Statement statement, int bracketBalanceValue)
    {
 
@@ -141,9 +129,7 @@ public class RecoveredElement
       return this.parent.add(statement, bracketBalanceValue);
    }
 
-   /*
-    * Record a type declaration
-    */
+   /* Record a type declaration */
    public RecoveredElement add(TypeDeclaration typeDeclaration, int bracketBalanceValue)
    {
 
@@ -173,9 +159,7 @@ public class RecoveredElement
       // default implementation: do nothing
    }
 
-   /*
-    * Answer the depth of this element, considering the parent link.
-    */
+   /* Answer the depth of this element, considering the parent link. */
    public int depth()
    {
       int depth = 0;
@@ -185,9 +169,7 @@ public class RecoveredElement
       return depth;
    }
 
-   /*
-    * Answer the enclosing method node, or null if none
-    */
+   /* Answer the enclosing method node, or null if none */
    public RecoveredInitializer enclosingInitializer()
    {
       RecoveredElement current = this;
@@ -202,9 +184,7 @@ public class RecoveredElement
       return null;
    }
 
-   /*
-    * Answer the enclosing method node, or null if none
-    */
+   /* Answer the enclosing method node, or null if none */
    public RecoveredMethod enclosingMethod()
    {
       RecoveredElement current = this;
@@ -219,9 +199,7 @@ public class RecoveredElement
       return null;
    }
 
-   /*
-    * Answer the enclosing type node, or null if none
-    */
+   /* Answer the enclosing type node, or null if none */
    public RecoveredType enclosingType()
    {
       RecoveredElement current = this;
@@ -236,9 +214,7 @@ public class RecoveredElement
       return null;
    }
 
-   /*
-    * Answer the closest specified parser
-    */
+   /* Answer the closest specified parser */
    public Parser parser()
    {
       RecoveredElement current = this;
@@ -253,9 +229,7 @@ public class RecoveredElement
       return null;
    }
 
-   /*
-    * Answer the associated parsed structure
-    */
+   /* Answer the associated parsed structure */
    public ASTNode parseTree()
    {
       return null;
@@ -267,9 +241,7 @@ public class RecoveredElement
       // recovered elements which have pending modifiers must override this method
    }
 
-   /*
-    * Iterate the enclosing blocks and tag them so as to preserve their content
-    */
+   /* Iterate the enclosing blocks and tag them so as to preserve their content */
    public void preserveEnclosingBlocks()
    {
       RecoveredElement current = this;
@@ -316,9 +288,7 @@ public class RecoveredElement
       return previousLineEnd;
    }
 
-   /*
-    * Answer the very source end of the corresponding parse node
-    */
+   /* Answer the very source end of the corresponding parse node */
    public int sourceEnd()
    {
       return 0;
@@ -334,9 +304,7 @@ public class RecoveredElement
       return result.toString();
    }
 
-   /*
-    * Answer the top node
-    */
+   /* Answer the top node */
    public RecoveredElement topElement()
    {
       RecoveredElement current = this;
@@ -357,9 +325,7 @@ public class RecoveredElement
       return super.toString();
    }
 
-   /*
-    * Answer the enclosing type node, or null if none
-    */
+   /* Answer the enclosing type node, or null if none */
    public RecoveredType type()
    {
       RecoveredElement current = this;
@@ -374,9 +340,7 @@ public class RecoveredElement
       return null;
    }
 
-   /*
-    * Update the bodyStart of the corresponding parse node
-    */
+   /* Update the bodyStart of the corresponding parse node */
    public void updateBodyStart(int bodyStart)
    {
       this.foundOpeningBrace = true;
@@ -419,17 +383,13 @@ public class RecoveredElement
       return null; // no update is necessary
    }
 
-   /*
-    * Final update the corresponding parse node
-    */
+   /* Final update the corresponding parse node */
    public void updateParseTree()
    {
       // default implementation: do nothing
    }
 
-   /*
-    * Update the declarationSourceEnd of the corresponding parse node
-    */
+   /* Update the declarationSourceEnd of the corresponding parse node */
    public void updateSourceEndIfNecessary(int braceStart, int braceEnd)
    {
       // default implementation: do nothing

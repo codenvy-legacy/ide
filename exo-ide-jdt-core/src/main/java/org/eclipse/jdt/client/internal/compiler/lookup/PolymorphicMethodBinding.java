@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-/**
- * Binding denoting a polymorphic method
- */
+/** Binding denoting a polymorphic method */
 public class PolymorphicMethodBinding extends MethodBinding
 {
 

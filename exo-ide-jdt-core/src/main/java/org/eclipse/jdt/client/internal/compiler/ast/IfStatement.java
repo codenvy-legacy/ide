@@ -161,7 +161,9 @@ public class IfStatement extends Statement
       // merge THEN & ELSE initializations
       FlowInfo mergedInfo =
          FlowInfo.mergedOptimizedBranchesIfElse(thenFlowInfo, isConditionOptimizedTrue, elseFlowInfo,
-            isConditionOptimizedFalse, true /* if(true){ return; } fake-reachable(); */, flowInfo, this);
+            isConditionOptimizedFalse, true /*
+                                             * if(true){ return; } fake-reachable();
+                                             */, flowInfo, this);
       this.mergedInitStateIndex = currentScope.methodScope().recordInitializationStates(mergedInfo);
       return mergedInfo;
    }

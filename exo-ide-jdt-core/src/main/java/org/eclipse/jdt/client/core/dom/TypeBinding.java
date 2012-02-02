@@ -33,9 +33,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeVariableBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.WildcardBinding;
 import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilation;
 
-/**
- * Internal implementation of type bindings.
- */
+/** Internal implementation of type bindings. */
 class TypeBinding implements ITypeBinding
 {
    private static final StringLiteral EXPRESSION = new org.eclipse.jdt.client.internal.compiler.ast.StringLiteral(0, 0);
@@ -143,7 +141,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * @see ITypeBinding#getBinaryName()
-    * 
     * @since 3.0
     */
    public String getBinaryName()
@@ -187,7 +184,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getBound()
     */
    public ITypeBinding getBound()
@@ -208,7 +204,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getGenericTypeOfWildcardType()
     */
    public ITypeBinding getGenericTypeOfWildcardType()
@@ -228,7 +223,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getRank()
     */
    public int getRank()
@@ -244,9 +238,7 @@ class TypeBinding implements ITypeBinding
       }
    }
 
-   /*
-    * @see ITypeBinding#getComponentType()
-    */
+   /* @see ITypeBinding#getComponentType() */
    public ITypeBinding getComponentType()
    {
       if (!isArray())
@@ -257,9 +249,7 @@ class TypeBinding implements ITypeBinding
       return this.resolver.getTypeBinding(arrayBinding.elementsType());
    }
 
-   /*
-    * @see ITypeBinding#getDeclaredFields()
-    */
+   /* @see ITypeBinding#getDeclaredFields() */
    public synchronized IVariableBinding[] getDeclaredFields()
    {
       if (this.fields != null)
@@ -312,9 +302,7 @@ class TypeBinding implements ITypeBinding
       return this.fields = NO_VARIABLE_BINDINGS;
    }
 
-   /*
-    * @see ITypeBinding#getDeclaredMethods()
-    */
+   /* @see ITypeBinding#getDeclaredMethods() */
    public synchronized IMethodBinding[] getDeclaredMethods()
    {
       if (this.methods != null)
@@ -372,17 +360,13 @@ class TypeBinding implements ITypeBinding
       return this.methods = NO_METHOD_BINDINGS;
    }
 
-   /*
-    * @see ITypeBinding#getDeclaredModifiers()
-    */
+   /* @see ITypeBinding#getDeclaredModifiers() */
    public int getDeclaredModifiers()
    {
       return getModifiers();
    }
 
-   /*
-    * @see ITypeBinding#getDeclaredTypes()
-    */
+   /* @see ITypeBinding#getDeclaredTypes() */
    public synchronized ITypeBinding[] getDeclaredTypes()
    {
       if (this.members != null)
@@ -424,9 +408,7 @@ class TypeBinding implements ITypeBinding
       return this.members = NO_TYPE_BINDINGS;
    }
 
-   /*
-    * @see ITypeBinding#getDeclaringMethod()
-    */
+   /* @see ITypeBinding#getDeclaringMethod() */
    public synchronized IMethodBinding getDeclaringMethod()
    {
       if (this.binding instanceof LocalTypeBinding)
@@ -474,9 +456,7 @@ class TypeBinding implements ITypeBinding
       return null;
    }
 
-   /*
-    * @see ITypeBinding#getDeclaringClass()
-    */
+   /* @see ITypeBinding#getDeclaringClass() */
    public synchronized ITypeBinding getDeclaringClass()
    {
       if (isClass() || isInterface() || isEnum())
@@ -525,9 +505,7 @@ class TypeBinding implements ITypeBinding
       return null;
    }
 
-   /*
-    * @see ITypeBinding#getDimensions()
-    */
+   /* @see ITypeBinding#getDimensions() */
    public int getDimensions()
    {
       if (!isArray())
@@ -538,9 +516,7 @@ class TypeBinding implements ITypeBinding
       return arrayBinding.dimensions;
    }
 
-   /*
-    * @see ITypeBinding#getElementType()
-    */
+   /* @see ITypeBinding#getElementType() */
    public ITypeBinding getElementType()
    {
       if (!isArray())
@@ -553,7 +529,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getTypeDeclaration()
     */
    public ITypeBinding getTypeDeclaration()
@@ -565,7 +540,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getErasure()
     */
    public ITypeBinding getErasure()
@@ -660,9 +634,7 @@ class TypeBinding implements ITypeBinding
    // return null;
    // }
 
-   /*
-    * @see IBinding#getKey()
-    */
+   /* @see IBinding#getKey() */
    public String getKey()
    {
       if (this.key == null)
@@ -672,17 +644,13 @@ class TypeBinding implements ITypeBinding
       return this.key;
    }
 
-   /*
-    * @see IBinding#getKind()
-    */
+   /* @see IBinding#getKind() */
    public int getKind()
    {
       return IBinding.TYPE;
    }
 
-   /*
-    * @see IBinding#getModifiers()
-    */
+   /* @see IBinding#getModifiers() */
    public int getModifiers()
    {
       if (isClass())
@@ -811,9 +779,7 @@ class TypeBinding implements ITypeBinding
       }
    }
 
-   /*
-    * @see ITypeBinding#getPackage()
-    */
+   /* @see ITypeBinding#getPackage() */
    public IPackageBinding getPackage()
    {
       switch (this.binding.kind())
@@ -829,9 +795,7 @@ class TypeBinding implements ITypeBinding
       return this.resolver.getPackageBinding(referenceBinding.getPackage());
    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.dom.ITypeBinding#getQualifiedName()
-    */
+   /** @see org.eclipse.jdt.client.core.dom.ITypeBinding#getQualifiedName() */
    public String getQualifiedName()
    {
       StringBuffer buffer;
@@ -959,9 +923,7 @@ class TypeBinding implements ITypeBinding
       }
    }
 
-   /*
-    * @see ITypeBinding#getSuperclass()
-    */
+   /* @see ITypeBinding#getSuperclass() */
    public synchronized ITypeBinding getSuperclass()
    {
       if (this.binding == null)
@@ -1000,7 +962,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getTypeArguments()
     */
    public ITypeBinding[] getTypeArguments()
@@ -1032,7 +993,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getTypeBounds()
     */
    public ITypeBinding[] getTypeBounds()
@@ -1103,7 +1063,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getTypeParameters()
     */
    public ITypeBinding[] getTypeParameters()
@@ -1139,9 +1098,7 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#getWildcard()
-    * 
     * @since 3.1
     */
    public ITypeBinding getWildcard()
@@ -1156,9 +1113,7 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isGenericType()
-    * 
     * @since 3.1
     */
    public boolean isGenericType()
@@ -1174,7 +1129,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isAnnotation()
     */
    public boolean isAnnotation()
@@ -1182,9 +1136,7 @@ class TypeBinding implements ITypeBinding
       return this.binding.isAnnotationType();
    }
 
-   /*
-    * @see ITypeBinding#isAnonymous()
-    */
+   /* @see ITypeBinding#isAnonymous() */
    public boolean isAnonymous()
    {
       if (isClass() || isInterface() || isEnum())
@@ -1195,9 +1147,7 @@ class TypeBinding implements ITypeBinding
       return false;
    }
 
-   /*
-    * @see ITypeBinding#isArray()
-    */
+   /* @see ITypeBinding#isArray() */
    public boolean isArray()
    {
       return this.binding.isArrayType();
@@ -1205,7 +1155,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see ITypeBinding#isAssignmentCompatible(ITypeBinding)
     */
    public boolean isAssignmentCompatible(ITypeBinding type)
@@ -1233,7 +1182,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see ITypeBinding#isCapture()
     */
    public boolean isCapture()
@@ -1243,7 +1191,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see ITypeBinding#isCastCompatible(ITypeBinding)
     */
    public boolean isCastCompatible(ITypeBinding type)
@@ -1268,9 +1215,7 @@ class TypeBinding implements ITypeBinding
       }
    }
 
-   /*
-    * @see ITypeBinding#isClass()
-    */
+   /* @see ITypeBinding#isClass() */
    public boolean isClass()
    {
       switch (this.binding.kind())
@@ -1283,9 +1228,7 @@ class TypeBinding implements ITypeBinding
       return this.binding.isClass();
    }
 
-   /*
-    * @see IBinding#isDeprecated()
-    */
+   /* @see IBinding#isDeprecated() */
    public boolean isDeprecated()
    {
       if (isClass() || isInterface() || isEnum())
@@ -1298,7 +1241,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see ITypeBinding#isEnum()
     */
    public boolean isEnum()
@@ -1308,7 +1250,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * @see IBinding#isEqualTo(Binding)
-    * 
     * @since 3.1
     */
    public boolean isEqualTo(IBinding other)
@@ -1332,9 +1273,7 @@ class TypeBinding implements ITypeBinding
       return BindingComparator.isEqual(this.binding, otherBinding);
    }
 
-   /*
-    * @see ITypeBinding#isFromSource()
-    */
+   /* @see ITypeBinding#isFromSource() */
    public boolean isFromSource()
    {
       if (isClass() || isInterface() || isEnum())
@@ -1397,9 +1336,7 @@ class TypeBinding implements ITypeBinding
       return false;
    }
 
-   /*
-    * @see ITypeBinding#isInterface()
-    */
+   /* @see ITypeBinding#isInterface() */
    public boolean isInterface()
    {
       switch (this.binding.kind())
@@ -1412,9 +1349,7 @@ class TypeBinding implements ITypeBinding
       return this.binding.isInterface();
    }
 
-   /*
-    * @see ITypeBinding#isLocal()
-    */
+   /* @see ITypeBinding#isLocal() */
    public boolean isLocal()
    {
       if (isClass() || isInterface() || isEnum())
@@ -1425,9 +1360,7 @@ class TypeBinding implements ITypeBinding
       return false;
    }
 
-   /*
-    * @see ITypeBinding#isMember()
-    */
+   /* @see ITypeBinding#isMember() */
    public boolean isMember()
    {
       if (isClass() || isInterface() || isEnum())
@@ -1438,9 +1371,7 @@ class TypeBinding implements ITypeBinding
       return false;
    }
 
-   /*
-    * @see ITypeBinding#isNested()
-    */
+   /* @see ITypeBinding#isNested() */
    public boolean isNested()
    {
       if (isClass() || isInterface() || isEnum())
@@ -1451,9 +1382,7 @@ class TypeBinding implements ITypeBinding
       return false;
    }
 
-   /**
-    * @see ITypeBinding#isNullType()
-    */
+   /** @see ITypeBinding#isNullType() */
    public boolean isNullType()
    {
       return this.binding == org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding.NULL;
@@ -1461,7 +1390,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isParameterizedType()
     */
    public boolean isParameterizedType()
@@ -1469,9 +1397,7 @@ class TypeBinding implements ITypeBinding
       return this.binding.isParameterizedTypeWithActualArguments();
    }
 
-   /*
-    * @see ITypeBinding#isPrimitive()
-    */
+   /* @see ITypeBinding#isPrimitive() */
    public boolean isPrimitive()
    {
       return !isNullType() && this.binding.isBaseType();
@@ -1479,7 +1405,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isRawType()
     */
    public boolean isRawType()
@@ -1489,7 +1414,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see IBinding#isRecovered()
     */
    public boolean isRecovered()
@@ -1499,7 +1423,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see ITypeBinding#isSubTypeCompatible(ITypeBinding)
     */
    public boolean isSubTypeCompatible(ITypeBinding type)
@@ -1525,17 +1448,13 @@ class TypeBinding implements ITypeBinding
       }
    }
 
-   /**
-    * @see IBinding#isSynthetic()
-    */
+   /** @see IBinding#isSynthetic() */
    public boolean isSynthetic()
    {
       return false;
    }
 
-   /*
-    * @see ITypeBinding#isTopLevel()
-    */
+   /* @see ITypeBinding#isTopLevel() */
    public boolean isTopLevel()
    {
       if (isClass() || isInterface() || isEnum())
@@ -1546,9 +1465,7 @@ class TypeBinding implements ITypeBinding
       return false;
    }
 
-   /*
-    * @see ITypeBinding#isTypeVariable()
-    */
+   /* @see ITypeBinding#isTypeVariable() */
    public boolean isTypeVariable()
    {
       return this.binding.isTypeVariable() && !this.binding.isCapture();
@@ -1556,7 +1473,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isUpperbound()
     */
    public boolean isUpperbound()
@@ -1573,7 +1489,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * (non-Javadoc)
-    * 
     * @see org.eclipse.jdt.core.dom.ITypeBinding#isWildcardType()
     */
    public boolean isWildcardType()
@@ -1583,7 +1498,6 @@ class TypeBinding implements ITypeBinding
 
    /*
     * For debugging purpose only.
-    * 
     * @see java.lang.Object#toString()
     */
    public String toString()

@@ -13,9 +13,7 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
 import org.eclipse.jdt.client.internal.compiler.ast.*;
 import org.eclipse.jdt.client.internal.compiler.lookup.*;
 
-/**
- * Node representing a Javadoc comment including code selection.
- */
+/** Node representing a Javadoc comment including code selection. */
 public class CompletionJavadoc extends Javadoc
 {
 
@@ -26,9 +24,7 @@ public class CompletionJavadoc extends Javadoc
       super(sourceStart, sourceEnd);
    }
 
-   /**
-    * @return Returns the completionNode.
-    */
+   /** @return Returns the completionNode. */
    public Expression getCompletionNode()
    {
       return this.completionNode;
@@ -221,9 +217,7 @@ public class CompletionJavadoc extends Javadoc
       internalResolve(scope);
    }
 
-   /*
-    * Look for missing method @param tags
-    */
+   /* Look for missing method @param tags */
    private char[][] missingParamTags(Binding paramNameRefBinding, MethodScope methScope)
    {
 
@@ -287,9 +281,7 @@ public class CompletionJavadoc extends Javadoc
       return null;
    }
 
-   /*
-    * Look for missing type parameters @param tags
-    */
+   /* Look for missing type parameters @param tags */
    private char[][] missingTypeParameterTags(Binding paramNameRefBinding, Scope scope)
    {
       int paramTypeParamLength = this.paramTypeParameters == null ? 0 : this.paramTypeParameters.length;

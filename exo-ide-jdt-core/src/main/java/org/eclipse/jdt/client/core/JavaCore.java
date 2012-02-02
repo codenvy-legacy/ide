@@ -131,7 +131,8 @@ public final class JavaCore
     * <dt>Option id:</dt>
     * <dd><code>"org.eclipse.jdt.core.compiler.codegen.targetPlatform"</code></dd>
     * <dt>Possible values:</dt>
-    * <dd><code>{ "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "cldc1.1" }</code></dd>
+    * <dd>
+    * <code>{ "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "cldc1.1" }</code></dd>
     * <dt>Default:</dt>
     * <dd><code>"1.2"</code></dd>
     * </dl>
@@ -424,28 +425,32 @@ public final class JavaCore
    public static final String IGNORE = "ignore"; //$NON-NLS-1$
 
    /**
-    * Configurable option value: {@value}.
+    * Configurable option value: {@value} .
+    * 
     * @since 2.0
     * @category OptionValue
     */
    public static final String INSERT = "insert"; //$NON-NLS-1$
 
    /**
-    * Configurable option value: {@value}.
+    * Configurable option value: {@value} .
+    * 
     * @since 2.0
     * @category OptionValue
     */
    public static final String DO_NOT_INSERT = "do not insert"; //$NON-NLS-1$
 
    /**
-    * Configurable option value: {@value}.
+    * Configurable option value: {@value} .
+    * 
     * @since 2.0
     * @category OptionValue
     */
    public static final String TAB = "tab"; //$NON-NLS-1$
 
    /**
-    * Configurable option value: {@value}.
+    * Configurable option value: {@value} .
+    * 
     * @since 2.0
     * @category OptionValue
     */
@@ -458,7 +463,7 @@ public final class JavaCore
       options.put(COMPILER_COMPLIANCE, VERSION_1_6);
       options.put(CORE_ENCODING, "UTF-8");
       options.put(JavaCore.CORE_ENCODING, JavaCore.getEncoding());
-//      options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
+      // options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
       options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
       options.put(CompilerOptions.OPTION_TargetPlatform, JavaCore.VERSION_1_6);
    }
@@ -1472,7 +1477,7 @@ public final class JavaCore
    public static HashMap<String, String> getOptions()
    {
       // get encoding through resource plugin
-    
+
       return options;
    }
 

@@ -180,9 +180,7 @@ public interface JavadocTagConstants
 
    public final static int SEE_TAG_EXPECTED_ORDER = 2;
 
-   /*
-    * Tag kinds indexes
-    */
+   /* Tag kinds indexes */
    public final static int BLOCK_IDX = 0;
 
    public final static int INLINE_IDX = 1;
@@ -190,9 +188,7 @@ public interface JavadocTagConstants
    // href tag
    public final static char[] HREF_TAG = {'h', 'r', 'e', 'f'};
 
-   /*
-    * Tags versions
-    */
+   /* Tags versions */
    public static final char[][][] BLOCK_TAGS = {
       // since 1.0
       {TAG_AUTHOR, TAG_DEPRECATED, TAG_EXCEPTION, TAG_PARAM, TAG_RETURN, TAG_SEE, TAG_VERSION, TAG_CATEGORY /*
@@ -269,9 +265,7 @@ public interface JavadocTagConstants
       TAG_TYPE_INLINE // TAG_DOC_ROOT_VALUE = 20;
       };
 
-   /*
-    * Tags usage
-    */
+   /* Tags usage */
    public static final char[][] PACKAGE_TAGS = {TAG_SEE, TAG_SINCE, TAG_SERIAL, TAG_AUTHOR, TAG_VERSION, TAG_CATEGORY,
       TAG_LINK, TAG_LINKPLAIN, TAG_DOC_ROOT, TAG_VALUE,};
 

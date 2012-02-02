@@ -26,6 +26,7 @@ import org.eclipse.jdt.client.core.dom.ParameterizedType;
 import org.eclipse.jdt.client.core.dom.PrimitiveType;
 import org.eclipse.jdt.client.core.dom.Type;
 import org.eclipse.jdt.client.core.dom.WildcardType;
+import org.eclipse.jdt.client.internal.core.dom.rewrite.ImportRewriteAnalyzer;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
@@ -99,24 +100,18 @@ public final class ImportRewrite
        */
       public final static int RES_NAME_CONFLICT = 3;
 
-      /**
-       * Kind constant specifying that the element is a type import.
-       */
+      /** Kind constant specifying that the element is a type import. */
       public final static int KIND_TYPE = 1;
 
-      /**
-       * Kind constant specifying that the element is a static field import.
-       */
+      /** Kind constant specifying that the element is a static field import. */
       public final static int KIND_STATIC_FIELD = 2;
 
-      /**
-       * Kind constant specifying that the element is a static method import.
-       */
+      /** Kind constant specifying that the element is a static method import. */
       public final static int KIND_STATIC_METHOD = 3;
 
       /**
        * Searches for the given element in the context and reports if the element is known ({@link #RES_NAME_FOUND}), unknown (
-       * {@link #RES_NAME_UNKNOWN}) or if its name conflicts ({@link #RES_NAME_CONFLICT}) with an other element.
+       * {@link #RES_NAME_UNKNOWN}) or if its name conflicts ( {@link #RES_NAME_CONFLICT}) with an other element.
        * 
        * @param qualifier The qualifier of the element, can be package or the qualified name of a type
        * @param name The simple name of the element; either a type, method or field name or * for on-demand imports.
@@ -195,30 +190,31 @@ public final class ImportRewrite
    // }
 
    /**
-   * Creates a {@link ImportRewrite} from a an AST ({@link CompilationUnit}). The AST has to be created from a
-   * {@link ICompilationUnit}, that means {@link ASTParser#setSource(ICompilationUnit)} has been used when creating the
-   * AST. If <code>restoreExistingImports</code> is <code>true</code>, all existing imports are kept, and new imports
-   * will be inserted at best matching locations. If <code>restoreExistingImports</code> is <code>false</code>, the
-   * existing imports will be removed and only the newly added imports will be created.
-   * <p>
-   * Note that this method is more efficient than using {@link #create(ICompilationUnit, boolean)} if an AST is already
-   available.
-   * </p>
-   * @param astRoot the AST root node to create the imports for
-   * @param restoreExistingImports specifies if the existing imports should be kept or removed.
-   * @return the created import rewriter.
-   * @throws IllegalArgumentException thrown when the passed AST is null or was not created from a compilation unit.
-   */
+    * Creates a {@link ImportRewrite} from a an AST ({@link CompilationUnit}). The AST has to be created from a
+    * {@link ICompilationUnit}, that means {@link ASTParser#setSource(ICompilationUnit)} has been used when creating the AST. If
+    * <code>restoreExistingImports</code> is <code>true</code>, all existing imports are kept, and new imports will be inserted at
+    * best matching locations. If <code>restoreExistingImports</code> is <code>false</code>, the existing imports will be removed
+    * and only the newly added imports will be created.
+    * <p>
+    * Note that this method is more efficient than using {@link #create(ICompilationUnit, boolean)} if an AST is already
+    * available.
+    * </p>
+    * 
+    * @param astRoot the AST root node to create the imports for
+    * @param restoreExistingImports specifies if the existing imports should be kept or removed.
+    * @return the created import rewriter.
+    * @throws IllegalArgumentException thrown when the passed AST is null or was not created from a compilation unit.
+    */
    public static ImportRewrite create(IDocument document, CompilationUnit astRoot, boolean restoreExistingImports)
    {
       if (astRoot == null)
       {
          throw new IllegalArgumentException("AST must not be null"); //$NON-NLS-1$
       }
-      //    ITypeRoot typeRoot = astRoot.getTypeRoot();
-      //    if (!(typeRoot instanceof ICompilationUnit)) {
+      // ITypeRoot typeRoot = astRoot.getTypeRoot();
+      // if (!(typeRoot instanceof ICompilationUnit)) {
       //   			throw new IllegalArgumentException("AST must have been constructed from a Java element"); //$NON-NLS-1$
-      //    }
+      // }
       List existingImport = null;
       if (restoreExistingImports)
       {
@@ -435,15 +431,15 @@ public final class ImportRewrite
          }
       }
       // TODO
-//      if (this.filterImplicitImports && this.useContextToFilterImplicitImports)
-//      {
-//         String fPackageName = this.compilationUnit.getParent().getElementName();
-//         String mainTypeSimpleName = JavaCore.removeJavaLikeExtension(this.compilationUnit.getElementName());
-//         String fMainTypeName = Util.concatenateName(fPackageName, mainTypeSimpleName, '.');
-//         if (kind == ImportRewriteContext.KIND_TYPE
-//            && (qualifier.equals(fPackageName) || fMainTypeName.equals(Util.concatenateName(qualifier, name, '.'))))
-//            return ImportRewriteContext.RES_NAME_FOUND;
-//      }
+      // if (this.filterImplicitImports && this.useContextToFilterImplicitImports)
+      // {
+      // String fPackageName = this.compilationUnit.getParent().getElementName();
+      // String mainTypeSimpleName = JavaCore.removeJavaLikeExtension(this.compilationUnit.getElementName());
+      // String fMainTypeName = Util.concatenateName(fPackageName, mainTypeSimpleName, '.');
+      // if (kind == ImportRewriteContext.KIND_TYPE
+      // && (qualifier.equals(fPackageName) || fMainTypeName.equals(Util.concatenateName(qualifier, name, '.'))))
+      // return ImportRewriteContext.RES_NAME_FOUND;
+      // }
       return ImportRewriteContext.RES_NAME_UNKNOWN;
    }
 
@@ -1153,18 +1149,18 @@ public final class ImportRewrite
    }
 
    /**
-   * Converts all modifications recorded by this rewriter into an object representing the corresponding text
-   * edits to the source code of the rewrite's compilation unit. The compilation unit itself is not modified.
-   * <p>
-   * Calling this methods does not discard the modifications on record. Subsequence modifications are added
-   * to the ones already on record. If this method is called again later, the resulting text edit object will accurately
-   * reflect the net cumulative effect of all those changes.
-   * </p>
-   * @param monitor the progress monitor or <code>null</code>
-   * @return text edit object describing the changes to the document corresponding to the changes
-   * recorded by this rewriter
-   * @throws CoreException the exception is thrown if the rewrite fails.
-   */
+    * Converts all modifications recorded by this rewriter into an object representing the corresponding text edits to the source
+    * code of the rewrite's compilation unit. The compilation unit itself is not modified.
+    * <p>
+    * Calling this methods does not discard the modifications on record. Subsequence modifications are added to the ones already
+    * on record. If this method is called again later, the resulting text edit object will accurately reflect the net cumulative
+    * effect of all those changes.
+    * </p>
+    * 
+    * @param monitor the progress monitor or <code>null</code>
+    * @return text edit object describing the changes to the document corresponding to the changes recorded by this rewriter
+    * @throws CoreException the exception is thrown if the rewrite fails.
+    */
    public final TextEdit rewriteImports(IProgressMonitor monitor) throws CoreException
    {
       if (monitor == null)

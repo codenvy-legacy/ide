@@ -14,9 +14,8 @@ import org.eclipse.jdt.client.text.BadLocationException;
 import org.eclipse.jdt.client.text.IDocument;
 
 /**
- * Text edit to replace a range in a document with a different
- * string.
- *
+ * Text edit to replace a range in a document with a different string.
+ * 
  * @since 3.0
  */
 public final class ReplaceEdit extends TextEdit
@@ -26,7 +25,7 @@ public final class ReplaceEdit extends TextEdit
 
    /**
     * Constructs a new replace edit.
-    *
+    * 
     * @param offset the offset of the range to replace
     * @param length the length of the range to replace
     * @param text the new text
@@ -34,13 +33,12 @@ public final class ReplaceEdit extends TextEdit
    public ReplaceEdit(int offset, int length, String text)
    {
       super(offset, length);
-      //		Assert.isNotNull(text);
+      // Assert.isNotNull(text);
       fText = text;
    }
 
    /*
     * Copy constructor
-    *
     * @param other the edit to copy from
     */
    private ReplaceEdit(ReplaceEdit other)
@@ -50,9 +48,8 @@ public final class ReplaceEdit extends TextEdit
    }
 
    /**
-    * Returns the new text replacing the text denoted
-    * by the edit.
-    *
+    * Returns the new text replacing the text denoted by the edit.
+    * 
     * @return the edit's text.
     */
    public String getText()
@@ -60,17 +57,13 @@ public final class ReplaceEdit extends TextEdit
       return fText;
    }
 
-   /*
-    * @see TextEdit#doCopy
-    */
+   /* @see TextEdit#doCopy */
    protected TextEdit doCopy()
    {
       return new ReplaceEdit(this);
    }
 
-   /*
-    * @see TextEdit#accept0
-    */
+   /* @see TextEdit#accept0 */
    protected void accept0(TextEditVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -80,9 +73,7 @@ public final class ReplaceEdit extends TextEdit
       }
    }
 
-   /*
-    * @see TextEdit#performDocumentUpdating
-    */
+   /* @see TextEdit#performDocumentUpdating */
    int performDocumentUpdating(IDocument document) throws BadLocationException
    {
       document.replace(getOffset(), getLength(), fText);
@@ -90,9 +81,7 @@ public final class ReplaceEdit extends TextEdit
       return fDelta;
    }
 
-   /*
-    * @see TextEdit#deleteChildren
-    */
+   /* @see TextEdit#deleteChildren */
    boolean deleteChildren()
    {
       return true;

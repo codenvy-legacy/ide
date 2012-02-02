@@ -13,9 +13,7 @@ package org.eclipse.jdt.client.internal.compiler.ast;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.lookup.*;
 
-/**
- * Normal annotation node
- */
+/** Normal annotation node */
 public class NormalAnnotation extends Annotation
 {
 
@@ -40,9 +38,7 @@ public class NormalAnnotation extends Annotation
       return pairs;
    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.Annotation#memberValuePairs()
-    */
+   /** @see org.eclipse.jdt.client.internal.compiler.ast.Annotation#memberValuePairs() */
    public MemberValuePair[] memberValuePairs()
    {
       return this.memberValuePairs == null ? NoValuePairs : this.memberValuePairs;

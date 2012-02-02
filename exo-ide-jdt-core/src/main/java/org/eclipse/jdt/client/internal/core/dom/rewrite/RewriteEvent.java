@@ -17,20 +17,17 @@ public abstract class RewriteEvent
 {
 
    /**
-    * Change kind to describe that the event is an insert event.
-    * Does not apply for list events.
+    * Change kind to describe that the event is an insert event. Does not apply for list events.
     */
    public static final int INSERTED = 1;
 
    /**
-    * Change kind to describe that the event is an remove event.
-    * Does not apply for list events.
+    * Change kind to describe that the event is an remove event. Does not apply for list events.
     */
    public static final int REMOVED = 2;
 
    /**
-    * Change kind to describe that the event is an replace event.
-    * Does not apply for list events.
+    * Change kind to describe that the event is an replace event. Does not apply for list events.
     */
    public static final int REPLACED = 4;
 
@@ -39,19 +36,13 @@ public abstract class RewriteEvent
     */
    public static final int CHILDREN_CHANGED = 8;
 
-   /**
-    * Change kind to signal that the property did not change
-    */
+   /** Change kind to signal that the property did not change */
    public static final int UNCHANGED = 0;
 
-   /**
-    * @return Returns the event's change kind.
-    */
+   /** @return Returns the event's change kind. */
    public abstract int getChangeKind();
 
-   /**
-    * @return Returns true if the given event is a list event.
-    */
+   /** @return Returns true if the given event is a list event. */
    public abstract boolean isListRewrite();
 
    /**
@@ -71,8 +62,7 @@ public abstract class RewriteEvent
    public abstract Object getNewValue();
 
    /**
-    * @return Return the events describing the changes in a list. returns <code>null</code> if the
-    * event is not a list event.
+    * @return Return the events describing the changes in a list. returns <code>null</code> if the event is not a list event.
     */
    public abstract RewriteEvent[] getChildren();
 

@@ -29,9 +29,7 @@ public class LabeledStatement extends Statement
    // for local variables table attributes
    int mergedInitStateIndex = -1;
 
-   /**
-    * LabeledStatement constructor comment.
-    */
+   /** LabeledStatement constructor comment. */
    public LabeledStatement(char[] label, Statement statement, long labelPosition, int sourceEnd)
    {
 

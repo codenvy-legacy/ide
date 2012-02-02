@@ -17,7 +17,7 @@ package org.eclipse.jdt.client.runtime;
  * All activity is broken down into a linear sequence of tasks against which progress is reported. When a task begins, a
  * <code>beginTask(String, int)
  * </code> notification is reported, followed by any number and mixture of progress reports (<code>worked()</code>) and subtask
- * notifications (<code>subTask(String)</code>). When the task is eventually completed, a <code>done()</code> notification is
+ * notifications ( <code>subTask(String)</code>). When the task is eventually completed, a <code>done()</code> notification is
  * reported. After the <code>done()</code> notification, the progress monitor cannot be reused; i.e., <code>
  * beginTask(String, int)</code> cannot be called again after the call to <code>done()</code>.
  * </p>

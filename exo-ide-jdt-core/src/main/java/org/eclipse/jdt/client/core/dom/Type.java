@@ -99,7 +99,7 @@ public abstract class Type extends ASTNode
    }
 
    /**
-    * Returns whether this type is a parameterized type ({@link ParameterizedType}).
+    * Returns whether this type is a parameterized type ( {@link ParameterizedType}).
     * 
     * @return <code>true</code> if this is a parameterized type, and <code>false</code> otherwise
     * @since 3.1

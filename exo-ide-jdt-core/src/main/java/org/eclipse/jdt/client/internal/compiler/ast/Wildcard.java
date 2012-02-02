@@ -14,9 +14,7 @@ import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.lookup.*;
 
-/**
- * Node to represent Wildcard
- */
+/** Node to represent Wildcard */
 public class Wildcard extends SingleTypeReference
 {
 
@@ -80,8 +78,9 @@ public class Wildcard extends SingleTypeReference
             return null;
          }
       }
-      WildcardBinding wildcard =
-         scope.environment().createWildcard(genericType, rank, boundType, null /* no extra bound */, this.kind);
+      WildcardBinding wildcard = scope.environment().createWildcard(genericType, rank, boundType, null /*
+                                                                                                        * no extra bound
+                                                                                                        */, this.kind);
       return this.resolvedType = wildcard;
    }
 

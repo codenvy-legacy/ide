@@ -15,8 +15,7 @@ import org.eclipse.jdt.client.internal.compiler.parser.JavadocTagConstants;
 /**
  * Abstract class for all {@link FormatJavadoc} nodes.
  * <p>
- * The basic information for these nodes are the start and end positions in the
- * source.
+ * The basic information for these nodes are the start and end positions in the source.
  * </p>
  */
 public abstract class FormatJavadocNode implements JavadocTagConstants
@@ -53,12 +52,10 @@ public abstract class FormatJavadocNode implements JavadocTagConstants
    }
 
    /**
-    * Returns whether the node is a text (see {@link FormatJavadocText} or not.
-    * In case not, that means that the node is an block (see
-    * {@link FormatJavadocBlock}).
-    *
-    * @return <code>true</code> if the node is a text <code>false</code>
-    * 	otherwise.
+    * Returns whether the node is a text (see {@link FormatJavadocText} or not. In case not, that means that the node is an block
+    * (see {@link FormatJavadocBlock}).
+    * 
+    * @return <code>true</code> if the node is a text <code>false</code> otherwise.
     */
    public boolean isText()
    {
@@ -66,11 +63,9 @@ public abstract class FormatJavadocNode implements JavadocTagConstants
    }
 
    /**
-    * Returns whether the node is immutable or not. If <code>true</code>, then
-    * the formatter will leave it contents unchanged.
-    *
-    * @return <code>true</code> if the node is immutable, <code>false</code>
-    * 	otherwise.
+    * Returns whether the node is immutable or not. If <code>true</code>, then the formatter will leave it contents unchanged.
+    * 
+    * @return <code>true</code> if the node is immutable, <code>false</code> otherwise.
     */
    public boolean isImmutable()
    {

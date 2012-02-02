@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.util;
 
-/**
- * Hashtable of {Object --> int[] }
- */
+/** Hashtable of {Object --> int[] } */
 public final class HashtableOfObjectToIntArray implements Cloneable
 {
 

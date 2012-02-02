@@ -66,7 +66,6 @@ import com.google.gwt.core.client.EntryPoint;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 5, 2012 5:15:04 PM evgen $
- * 
  */
 public class JdtTest
 {
@@ -90,18 +89,14 @@ public class JdtTest
 
       private List<CompletionProposal> proposals = new ArrayList<CompletionProposal>();
 
-      /**
-       * @see org.eclipse.jdt.client.core.CompletionRequestor#accept(org.eclipse.jdt.client.core.CompletionProposal)
-       */
+      /** @see org.eclipse.jdt.client.core.CompletionRequestor#accept(org.eclipse.jdt.client.core.CompletionProposal) */
       @Override
       public void accept(CompletionProposal proposal)
       {
          proposals.add(proposal);
       }
 
-      /**
-       * @see org.eclipse.jdt.client.core.CompletionRequestor#completionFailure(org.eclipse.jdt.client.core.compiler.IProblem)
-       */
+      /** @see org.eclipse.jdt.client.core.CompletionRequestor#completionFailure(org.eclipse.jdt.client.core.compiler.IProblem) */
       @Override
       public void completionFailure(IProblem problem)
       {
@@ -110,35 +105,33 @@ public class JdtTest
       }
    }
 
-   /**
-    * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
-    */
-   //   @Override
+   /** @see com.google.gwt.core.client.EntryPoint#onModuleLoad() */
+   // @Override
    public void onModuleLoad()
    {
-      //      rootPanel = new DockLayoutPanel(Unit.PX);
-      //      RootLayoutPanel.get().add(rootPanel);
-      //      d = GWT.create(Data.class);
-      //      rootPanel.addNorth(new Button(new SafeHtmlBuilder().appendEscaped("Create AST").toSafeHtml(), new ClickHandler()
-      //      {
+      // rootPanel = new DockLayoutPanel(Unit.PX);
+      // RootLayoutPanel.get().add(rootPanel);
+      // d = GWT.create(Data.class);
+      // rootPanel.addNorth(new Button(new SafeHtmlBuilder().appendEscaped("Create AST").toSafeHtml(), new ClickHandler()
+      // {
       //
-      //         @Override
-      //         public void onClick(ClickEvent event)
-      //         {
-      //            buildAst();
-      //         }
-      //      }), 30);
-      //      
-      //      rootPanel.addNorth(new Button("CodeAssistant", new ClickHandler()
-      //      {
-      //         
-      //         @Override
-      //         public void onClick(ClickEvent event)
-      //         {
-      //            codeAssistant();
-      //         }
-      //      }), 30);
-      //      
+      // @Override
+      // public void onClick(ClickEvent event)
+      // {
+      // buildAst();
+      // }
+      // }), 30);
+      //
+      // rootPanel.addNorth(new Button("CodeAssistant", new ClickHandler()
+      // {
+      //
+      // @Override
+      // public void onClick(ClickEvent event)
+      // {
+      // codeAssistant();
+      // }
+      // }), 30);
+      //
    }
 
    /**

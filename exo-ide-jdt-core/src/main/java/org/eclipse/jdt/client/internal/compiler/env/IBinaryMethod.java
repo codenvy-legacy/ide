@@ -70,13 +70,9 @@ public interface IBinaryMethod extends IGenericMethod
     */
    char[] getSelector();
 
-   /**
-    * Answer the tagbits set according to the bits for annotations.
-    */
+   /** Answer the tagbits set according to the bits for annotations. */
    long getTagBits();
 
-   /**
-    * Answer whether the receiver represents a class initializer method.
-    */
+   /** Answer whether the receiver represents a class initializer method. */
    boolean isClinit();
 }

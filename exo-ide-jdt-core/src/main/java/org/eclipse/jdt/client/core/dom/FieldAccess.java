@@ -33,7 +33,7 @@ import java.util.List;
  * <li>An expression with "super" can only be represented as a super field access expression (<code>SuperFieldAccess</code>).
  * "super" is a also keyword, and therefore invalid as an identifier.</li>
  * <li>An expression like "foo.bar" can be represented either as a qualified name (<code>QualifiedName</code>) or as a field
- * access expression (<code>FieldAccess</code>) containing simple names. Either is acceptable, and there is no way to choose
+ * access expression ( <code>FieldAccess</code>) containing simple names. Either is acceptable, and there is no way to choose
  * between them without information about what the names resolve to (<code>ASTParser</code> may return either).</li>
  * <li>Other expressions ending in an identifier, such as "foo().bar" can only be represented as field access expressions (
  * <code>FieldAccess</code>).</li>
@@ -116,17 +116,13 @@ public class FieldAccess extends Expression
       super(ast);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final List internalStructuralPropertiesForType(int apiLevel)
    {
       return propertyDescriptors(apiLevel);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child)
    {
       if (property == EXPRESSION_PROPERTY)
@@ -157,17 +153,13 @@ public class FieldAccess extends Expression
       return super.internalGetSetChildProperty(property, get, child);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final int getNodeType0()
    {
       return FIELD_ACCESS;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    ASTNode clone0(AST target)
    {
       FieldAccess result = new FieldAccess(target);
@@ -177,18 +169,14 @@ public class FieldAccess extends Expression
       return result;
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    final boolean subtreeMatch0(ASTMatcher matcher, Object other)
    {
       // dispatch to correct overloaded match method
       return matcher.match(this, other);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    void accept0(ASTVisitor visitor)
    {
       boolean visitChildren = visitor.visit(this);
@@ -292,9 +280,7 @@ public class FieldAccess extends Expression
       postReplaceChild(oldChild, fieldName, NAME_PROPERTY);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int memSize()
    {
       // treat Code as free
@@ -315,9 +301,7 @@ public class FieldAccess extends Expression
       return this.ast.getBindingResolver().resolveField(this);
    }
 
-   /*
-    * (omit javadoc for this method) Method declared on ASTNode.
-    */
+   /* (omit javadoc for this method) Method declared on ASTNode. */
    int treeSize()
    {
       return memSize() + (this.expression == null ? 0 : getExpression().treeSize())

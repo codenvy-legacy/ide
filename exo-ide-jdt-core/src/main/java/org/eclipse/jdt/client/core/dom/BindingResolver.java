@@ -29,9 +29,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.LookupEnvironment;
 class BindingResolver
 {
 
-   /**
-    * Creates a binding resolver.
-    */
+   /** Creates a binding resolver. */
    BindingResolver()
    {
       // default implementation: do nothing
