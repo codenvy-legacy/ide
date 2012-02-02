@@ -118,7 +118,14 @@ public class BuildService
    /** Build task ID generator. */
    private static final AtomicLong idGenerator = new AtomicLong(1);
 
+   private static String nextTaskID()
+   {
+      return Long.toString(idGenerator.getAndIncrement());
+   }
+
+   //
    private final ExecutorService pool;
+
    private final ConcurrentMap<String, CacheElement> map;
    private final Queue<CacheElement> queue;
 
@@ -264,7 +271,7 @@ public class BuildService
          }
       });
 
-      final String id = Long.toString(idGenerator.getAndIncrement());
+      final String id = nextTaskID();
       MavenBuildTask task = new MavenBuildTask(id, f, projectDirectory, taskLogger);
       add(id, task, System.currentTimeMillis() + cleanBuildResultDelayMillis);
 
@@ -285,7 +292,7 @@ public class BuildService
       CacheElement current;
       while ((current = queue.peek()) != null && current.isExpired())
       {
-         queue.poll();
+         queue.remove(current);
          map.remove(current.id);
          cleanerQueue.offer(current.task.getProjectDirectory());
          cleanerQueue.offer(current.task.getLogger().getFile());
