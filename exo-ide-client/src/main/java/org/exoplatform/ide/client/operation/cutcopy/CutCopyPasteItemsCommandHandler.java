@@ -319,9 +319,7 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
                @Override
                protected void onFailure(Throwable exception)
                {
-                  // super.onFailure(exception);
                   IDE.fireEvent(new ExceptionThrownEvent(exception));
-                  handleError();
                }
             });
       }
@@ -342,103 +340,8 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
       IDE.fireEvent(new RefreshBrowserEvent(folders, folderToPaste));
    }
 
-   /****************************************************************************************************
-    * FINALIZE
-    ****************************************************************************************************/
-
-   private void handleError()
-   {
-      if (numItemToCut > 0)
-      {
-         List<Folder> folders = new ArrayList<Folder>();
-
-         folders.add(folderFromPaste);
-         folders.add(folderToPaste);
-         IDE.fireEvent(new RefreshBrowserEvent(folders, folderToPaste));
-      }
-   }
-
-   // private void updateOpenedFiles(FolderModel movedFolder, FolderModel source)
-   // {
-   // //TODO
-   // if (!href.endsWith("/"))
-   // {
-   // href += "/";
-   // }
-   // List<String> keys = new ArrayList<String>();
-   // for (String key : openedFiles.keySet())
-   // {
-   // keys.add(key);
-   // }
-   //
-   // for (String key : keys)
-   // {
-   // if (key.startsWith(sourceHref))
-   // {
-   // File file = openedFiles.get(key);
-   // String fileHref = file.getHref().replace(sourceHref, href);
-   // file.setHref(fileHref);
-   //
-   // openedFiles.remove(key);
-   // openedFiles.put(fileHref, file);
-   // eventBus.fireEvent(new EditorReplaceFileEvent(new File(key), file));
-   // }
-   // }
-   // }
-
    public void moveComplete(String newId, final Item source)
    {
-      // Unmarshallable<Item> unmarshall;
-      // if (source instanceof FileModel)
-      // {
-      // unmarshall = new ItemUnmarshaller(new FileModel());
-      // }
-      // else
-      // {
-      // unmarshall = new ItemUnmarshaller(new FolderModel());
-      // }
-      //
-      // try
-      // {
-      // VirtualFileSystem.getInstance().getItem(newId, new AsyncRequestCallback<Item>(unmarshall)
-      // {
-      //
-      // @Override
-      // protected void onSuccess(Item result)
-      // {
-      // numItemToCut--;
-      // if (result instanceof FileModel)
-      // {
-      // FileModel file = (FileModel)result;
-      //
-      // if (openedFiles.containsKey(source.getId()))
-      // {
-      // FileModel openedFile = openedFiles.get(source.getId());
-      // openedFiles.remove(source.getId());
-      // file.setContent(openedFile.getContent());
-      // openedFiles.put(file.getId(), file);
-      //
-      // eventBus.fireEvent(new EditorReplaceFileEvent((FileModel)source, file));
-      // }
-      // }
-      // else
-      // {
-      // updateOpenedFiles((FolderModel)result, (FolderModel)source);
-      // }
-      //
-      // }
-      //
-      // @Override
-      // protected void onFailure(Throwable exception)
-      // {
-      // eventBus.fireEvent(new ExceptionThrownEvent(exception));
-      // }
-      // });
-      // }
-      // catch (RequestException e)
-      // {
-      // eventBus.fireEvent(new ExceptionThrownEvent(e));
-      // }
       if (itemsToCut.size() != 0)
       {
          itemsToCut.remove(source);
