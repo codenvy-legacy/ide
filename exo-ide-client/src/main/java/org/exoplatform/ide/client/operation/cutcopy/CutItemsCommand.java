@@ -35,6 +35,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import java.util.List;
+
 /**
  * Created by The eXo Platform SAS.
  * 
@@ -53,6 +55,10 @@ public class CutItemsCommand extends SimpleControl implements IDEControl, VfsCha
    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.cutItemsPromptControl();
 
    private VirtualFileSystemInfo vfsInfo;
+
+   private boolean browserPanelSelected = false;
+
+   private List<Item> selectedItems;
 
    /**
     * 
@@ -84,52 +90,46 @@ public class CutItemsCommand extends SimpleControl implements IDEControl, VfsCha
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() != 1)
+      this.selectedItems = event.getSelectedItems();
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
+    */
+   @Override
+   public void onViewActivated(ViewActivatedEvent event)
+   {
+
+      browserPanelSelected =
+         (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay);
+      updateState();
+   }
+
+   protected void updateState()
+   {
+      if (vfsInfo == null || selectedItems == null || selectedItems.size() != 1)
       {
          setEnabled(false);
          return;
       }
 
-      Item item = event.getSelectedItems().get(0);
-
-      if (event.getView() instanceof ProjectExplorerDisplay && item instanceof ProjectModel)
+      if (selectedItems.get(0) instanceof ProjectModel
+         || selectedItems.get(0).getId().equals(vfsInfo.getRoot().getId()))
       {
          setEnabled(false);
          return;
       }
 
-      if (event.getView() instanceof NavigatorDisplay && vfsInfo != null
-         && item.getId().equals(vfsInfo.getRoot().getId()))
-      {
-         setEnabled(false);
-         return;
-      }
-
-      setEnabled(true);
+      setEnabled(browserPanelSelected);
    }
 
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
-      if (event.getVfsInfo() == null)
-      {
-         setVisible(false);
-      }
-      else
-      {
-         setVisible(true);
-      }
-   }
-
-   @Override
-   public void onViewActivated(ViewActivatedEvent event)
-   {
-      if (!(event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay))
-      {
-         setEnabled(false);
-      }
-
+      setVisible(vfsInfo != null);
+      updateState();
    }
 
 }

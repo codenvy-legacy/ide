@@ -32,6 +32,9 @@ import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -49,6 +52,10 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.refreshTitleControl();
 
    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.refreshPromptControl();
+
+   private boolean browserPanelSelected = false;
+
+   private List<Item> selectedItems;
 
    /**
     * 
@@ -79,13 +86,8 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() != 1)
-      {
-         setEnabled(false);
-         return;
-      }
-
-      setEnabled(true);
+      this.selectedItems = event.getSelectedItems();
+      updateState();
    }
 
    /**
@@ -94,23 +96,24 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getVfsInfo() != null)
-      {
-         setVisible(true);
-      }
-      else
-      {
-         setVisible(false);
-      }
+      setVisible(event.getVfsInfo() != null);
    }
 
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      if (!(event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay))
-      {
-         setEnabled(false);
-      }
+      browserPanelSelected =
+         (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay);
+      updateState();
    }
 
+   protected void updateState()
+   {
+      if (selectedItems.size() != 1)
+      {
+         setEnabled(false);
+         return;
+      }
+      setEnabled(browserPanelSelected);
+   }
 }

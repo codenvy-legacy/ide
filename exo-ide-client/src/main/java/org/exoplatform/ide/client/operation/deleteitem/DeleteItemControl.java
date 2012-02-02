@@ -29,11 +29,14 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -53,6 +56,10 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.deleteItemsPromptControl();
 
    private VirtualFileSystemInfo vfsInfo;
+
+   private View view;
+
+   private List<Item> selectedItems;
 
    /**
     * 
@@ -82,23 +89,14 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
    {
       vfsInfo = event.getVfsInfo();
 
-      if (event.getVfsInfo() != null)
-      {
-         setVisible(true);
-      }
-      else
-      {
-         setVisible(false);
-      }
+      setVisible(vfsInfo != null);
    }
 
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      if (!(event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay))
-      {
-         setEnabled(false);
-      }
+      view = event.getView();
+      updateState();
    }
 
    /**
@@ -107,26 +105,32 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems() == null || event.getSelectedItems().size() != 1)
-      {
-         return;
-      }
+      this.selectedItems = event.getSelectedItems();
+      updateState();
+   }
 
-      Item selectedItem = event.getSelectedItems().get(0);
-
-      if (event.getView() instanceof ProjectExplorerDisplay && selectedItem instanceof ProjectModel)
-      {
-         setEnabled(false);
-         return;
-      }
-
-      if (event.getView() instanceof NavigatorDisplay && selectedItem.getId().equals(vfsInfo.getRoot().getId()))
+   protected void updateState()
+   {
+      if (selectedItems == null || selectedItems.size() != 1)
       {
          setEnabled(false);
          return;
       }
 
-      setEnabled(true);
+      if (selectedItems.get(0).getId().equals(vfsInfo.getRoot().getId()))
+      {
+         setEnabled(false);
+         return;
+      }
+
+      if (view instanceof ProjectExplorerDisplay && selectedItems.get(0) instanceof ProjectModel)
+      {
+         setEnabled(false);
+         return;
+      }
+
+      boolean browserPanelSelected = (view instanceof NavigatorDisplay || view instanceof ProjectExplorerDisplay);
+      setEnabled(browserPanelSelected);
    }
 
 }

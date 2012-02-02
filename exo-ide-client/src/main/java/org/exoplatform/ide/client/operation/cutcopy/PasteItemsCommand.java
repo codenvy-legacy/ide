@@ -31,6 +31,9 @@ import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
@@ -49,6 +52,10 @@ public class PasteItemsCommand extends SimpleControl implements IDEControl, Item
    private final static String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.pasteItemsPromptControl();
 
    private boolean itemsToPasteSelected = false;
+
+   private boolean browserPanelSelected = false;
+
+   private List<Item> selectedItems;
 
    /**
     * 
@@ -82,7 +89,7 @@ public class PasteItemsCommand extends SimpleControl implements IDEControl, Item
    public void onItemsToPasteSelected(ItemsToPasteSelectedEvent event)
    {
       itemsToPasteSelected = true;
-      setEnabled(true);
+      updateState();
    }
 
    /**
@@ -92,7 +99,7 @@ public class PasteItemsCommand extends SimpleControl implements IDEControl, Item
    public void onPasteItemsComlete(PasteItemsCompleteEvent event)
    {
       itemsToPasteSelected = false;
-      setEnabled(false);
+      updateState();
    }
 
    /**
@@ -101,42 +108,32 @@ public class PasteItemsCommand extends SimpleControl implements IDEControl, Item
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() != 1)
-      {
-         setEnabled(false);
-         return;
-      }
-
-      if (itemsToPasteSelected)
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
+      selectedItems = event.getSelectedItems();
+      updateState();
    }
 
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getVfsInfo() != null)
-      {
-         setVisible(true);
-      }
-      else
-      {
-         setVisible(false);
-      }
+      setVisible(event.getVfsInfo() != null);
    }
 
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      if (!(event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay))
-      {
-         setEnabled(false);
-      }
+      browserPanelSelected =
+         (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay);
+      updateState();
    }
 
+   protected void updateState()
+   {
+      if (selectedItems == null || selectedItems.size() != 1)
+      {
+         setEnabled(false);
+         return;
+      }
+
+      setEnabled(itemsToPasteSelected && browserPanelSelected);
+   }
 }
