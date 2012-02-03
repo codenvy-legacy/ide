@@ -715,7 +715,7 @@ public final class ImportRewriteAnalyzer
       // return qualifier.equals(mainTypeName);
       // }
       // return qualifier.equals(packageName +'.' + mainTypeName);
-      return true;
+      return false;
    }
 
    public void addImport(String fullTypeName, boolean isStatic)

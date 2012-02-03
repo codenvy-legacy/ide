@@ -2,7 +2,7 @@ package org.eclipse.jdt.client.codeassistant.ui;
 
 import org.eclipse.jdt.client.codeassistant.ui.widgets.AnonymousClassDeclaration;
 import org.eclipse.jdt.client.codeassistant.ui.widgets.FieldRef;
-import org.eclipse.jdt.client.codeassistant.ui.widgets.MethodDeclaration;
+import org.eclipse.jdt.client.codeassistant.ui.widgets.MethodDeclarationWidget;
 import org.eclipse.jdt.client.codeassistant.ui.widgets.MethodRef;
 import org.eclipse.jdt.client.core.CompletionProposal;
 
@@ -26,7 +26,7 @@ public class ProposalWidgetFactory
             return new FieldRef(proposal);
 
          case CompletionProposal.METHOD_DECLARATION :
-            return new MethodDeclaration(proposal);
+            return new MethodDeclarationWidget(proposal);
       }
       return new SimpleProposalWidget(proposal);
    }

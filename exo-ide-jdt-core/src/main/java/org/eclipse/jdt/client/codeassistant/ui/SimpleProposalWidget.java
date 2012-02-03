@@ -27,6 +27,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.internal.codeassist.InternalCompletionProposal;
+import org.eclipse.jdt.client.text.IDocument;
+import org.eclipse.jdt.client.text.edits.InsertEdit;
+import org.eclipse.jdt.client.text.edits.TextEdit;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
@@ -118,6 +121,15 @@ public class SimpleProposalWidget extends ProposalWidget
    {
       // TODO Auto-generated method stub
       return null;
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#apply(org.eclipse.jdt.client.text.IDocument)
+    */
+   @Override
+   public void apply(IDocument document)
+   {
+      TextEdit edit = new InsertEdit(proposal.getReplaceStart(), String.valueOf(proposal.getCompletion()));
    }
 
 }

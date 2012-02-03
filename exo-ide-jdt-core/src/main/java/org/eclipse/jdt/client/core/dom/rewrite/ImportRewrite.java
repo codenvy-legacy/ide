@@ -251,10 +251,10 @@ public final class ImportRewrite
          this.restoreExistingImports = false;
       }
       this.document = document;
-      // this.filterImplicitImports= true;
-      // // consider that no contexts are used
-      // this.useContextToFilterImplicitImports = false;
-      //
+       this.filterImplicitImports= true;
+       // consider that no contexts are used
+       this.useContextToFilterImplicitImports = false;
+      
       this.defaultContext = new ImportRewriteContext()
       {
          public int findInContext(String qualifier, String name, int kind)
@@ -262,15 +262,14 @@ public final class ImportRewrite
             return findInImports(qualifier, name, kind);
          }
       };
-      // this.addedImports= null; // Initialized on use
-      // this.removedImports= null; // Initialized on use
-      // this.createdImports= null;
-      // this.createdStaticImports= null;
-      //
-      // this.importOrder= CharOperation.NO_STRINGS;
-      // this.importOnDemandThreshold= 99;
-      // this.staticImportOnDemandThreshold= 99;
-      //
+      this.addedImports = null; // Initialized on use
+      this.removedImports = null; // Initialized on use
+      this.createdImports = null;
+      this.createdStaticImports = null;
+
+      this.importOrder = CharOperation.NO_STRINGS;
+      this.importOnDemandThreshold = 99;
+      this.staticImportOnDemandThreshold = 99;
       this.importsKindMap = new HashMap();
    }
 

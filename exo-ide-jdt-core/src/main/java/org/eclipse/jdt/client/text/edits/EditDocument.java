@@ -13,6 +13,7 @@ package org.eclipse.jdt.client.text.edits;
 import org.eclipse.jdt.client.text.BadLocationException;
 import org.eclipse.jdt.client.text.BadPositionCategoryException;
 import org.eclipse.jdt.client.text.IDocument;
+import org.eclipse.jdt.client.text.IRegion;
 import org.eclipse.jdt.client.text.Position;
 
 class EditDocument implements IDocument
@@ -124,13 +125,15 @@ class EditDocument implements IDocument
       throw new UnsupportedOperationException();
    }
 
-   // public IRegion getLineInformation(int line) throws BadLocationException {
-   // throw new UnsupportedOperationException();
-   // }
-   //
-   // public IRegion getLineInformationOfOffset(int offset) throws BadLocationException {
-   // throw new UnsupportedOperationException();
-   // }
+   public IRegion getLineInformation(int line) throws BadLocationException
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   public IRegion getLineInformationOfOffset(int offset) throws BadLocationException
+   {
+      throw new UnsupportedOperationException();
+   }
 
    public int getLineLength(int line) throws BadLocationException
    {

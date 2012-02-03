@@ -38,6 +38,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.dom.Modifier;
+import org.eclipse.jdt.client.text.BadLocationException;
+import org.eclipse.jdt.client.text.IDocument;
+import org.eclipse.jdt.client.text.edits.MalformedTreeException;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
@@ -165,5 +168,12 @@ public abstract class ProposalWidget extends Composite implements HasClickHandle
    {
       return addDomHandler(handler, DoubleClickEvent.getType());
    }
+   
+   /**
+    * Inserts the proposed completion into the given document.
+    *
+    * @param document the document into which to insert the proposed completion
+    */
+   public abstract void apply(IDocument document);
 
 }

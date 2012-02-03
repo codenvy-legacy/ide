@@ -6,6 +6,11 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.eclipse.jdt.client.codeassistant.ui.ProposalWidget;
 import org.eclipse.jdt.client.core.CompletionProposal;
+import org.eclipse.jdt.client.text.BadLocationException;
+import org.eclipse.jdt.client.text.IDocument;
+import org.eclipse.jdt.client.text.edits.InsertEdit;
+import org.eclipse.jdt.client.text.edits.MalformedTreeException;
+import org.eclipse.jdt.client.text.edits.TextEdit;
 
 /**
  * Completion is a declaration of an anonymous class. This kind of completion might occur in a context like
@@ -66,5 +71,30 @@ public class AnonymousClassDeclaration extends ProposalWidget
    {
       // TODO Auto-generated method stub
       return null;
+   }
+
+   /**
+    * @throws BadLocationException 
+    * @throws MalformedTreeException 
+    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#apply(org.eclipse.jdt.client.text.IDocument)
+    */
+   @Override
+   public void apply(IDocument document)
+   {
+      TextEdit edit = new InsertEdit(proposal.getReplaceStart(), String.valueOf(proposal.getCompletion()));
+      try
+      {
+         edit.apply(document);
+      }
+      catch (MalformedTreeException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+      catch (BadLocationException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
    }
 }

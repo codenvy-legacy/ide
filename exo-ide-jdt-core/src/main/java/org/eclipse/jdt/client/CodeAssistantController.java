@@ -31,6 +31,8 @@ import org.eclipse.jdt.client.event.RunCodeAssistantEvent;
 import org.eclipse.jdt.client.event.RunCodeAssistantHandler;
 import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
+import org.eclipse.jdt.client.text.Document;
+import org.eclipse.jdt.client.text.IDocument;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -255,13 +257,23 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
    @Override
    public void onTokenSelected(ProposalWidget value)
    {
-      String beforeCursor = beforeToken + String.valueOf(value.getProposal().getCompletion());
-      int cursorPosition = 1;
-      if (beforeCursor.contains("("))
-         cursorPosition = beforeCursor.lastIndexOf('(') + 1;
-      else
-         cursorPosition = beforeCursor.length();
-      currentEditor.replaceTextAtCurrentLine(beforeCursor + afterToken, cursorPosition);
+      // String beforeCursor = beforeToken + String.valueOf(value.getProposal().getCompletion());
+      // int cursorPosition = 1;
+      // if (beforeCursor.contains("("))
+      // cursorPosition = beforeCursor.lastIndexOf('(') + 1;
+      // else
+      // cursorPosition = beforeCursor.length();
+      // currentEditor.replaceTextAtCurrentLine(beforeCursor + afterToken, cursorPosition);
+      try
+      {
+         IDocument document = new Document(currentEditor.getText());
+         value.apply(document);
+         currentEditor.setText(document.get());
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onCancelAutoComplete() */

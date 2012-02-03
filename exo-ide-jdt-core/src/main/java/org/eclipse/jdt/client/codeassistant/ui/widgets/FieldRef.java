@@ -25,6 +25,11 @@ import org.eclipse.jdt.client.codeassistant.ui.ProposalWidget;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.dom.Modifier;
+import org.eclipse.jdt.client.text.BadLocationException;
+import org.eclipse.jdt.client.text.IDocument;
+import org.eclipse.jdt.client.text.edits.InsertEdit;
+import org.eclipse.jdt.client.text.edits.MalformedTreeException;
+import org.eclipse.jdt.client.text.edits.TextEdit;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
@@ -97,6 +102,29 @@ public class FieldRef extends ProposalWidget
    protected String getTypeSignature()
    {
       return String.valueOf(Signature.getSignatureSimpleName(proposal.getSignature()));
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.codeassistant.ui.ProposalWidget#apply(org.eclipse.jdt.client.text.IDocument)
+    */
+   @Override
+   public void apply(IDocument document)
+   {
+      TextEdit edit = new InsertEdit(proposal.getReplaceStart(), String.valueOf(proposal.getCompletion()));
+      try
+      {
+         edit.apply(document);
+      }
+      catch (MalformedTreeException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+      catch (BadLocationException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
    }
 
 }

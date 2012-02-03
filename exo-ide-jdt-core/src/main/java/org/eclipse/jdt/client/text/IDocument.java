@@ -533,26 +533,26 @@ public interface IDocument
     */
    int getLineOffset(int line) throws BadLocationException;
 
-   // /**
-   // * Returns a description of the specified line. The line is described by its
-   // * offset and its length excluding the line's delimiter.
-   // *
-   // * @param line the line of interest
-   // * @return a line description
-   // * @exception BadLocationException if the line number is invalid in this document
-   // */
-   // IRegion getLineInformation(int line) throws BadLocationException;
+    /**
+    * Returns a description of the specified line. The line is described by its
+    * offset and its length excluding the line's delimiter.
+    *
+    * @param line the line of interest
+    * @return a line description
+    * @exception BadLocationException if the line number is invalid in this document
+    */
+    IRegion getLineInformation(int line) throws BadLocationException;
 
-   // /**
-   // * Returns a description of the line at the given offset.
-   // * The description contains the offset and the length of the line
-   // * excluding the line's delimiter.
-   // *
-   // * @param offset the offset whose line should be described
-   // * @return a region describing the line
-   // * @exception BadLocationException if offset is invalid in this document
-   // */
-   // IRegion getLineInformationOfOffset(int offset) throws BadLocationException;
+    /**
+    * Returns a description of the line at the given offset.
+    * The description contains the offset and the length of the line
+    * excluding the line's delimiter.
+    *
+    * @param offset the offset whose line should be described
+    * @return a region describing the line
+    * @exception BadLocationException if offset is invalid in this document
+    */
+    IRegion getLineInformationOfOffset(int offset) throws BadLocationException;
 
    /**
     * Returns the number of lines in this document
