@@ -52,7 +52,7 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * Heroku API authenticator.
- * 
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -100,8 +100,9 @@ public class HerokuAuthenticator
 
    /**
     * Obtain heroku API key and store it somewhere (it is dependent to implementation) for next usage. Key should be
-    * used by {@link #authenticate(HttpURLConnection)} instead of password for any request to heroku service.
-    * 
+    * used by {@link Heroku#authenticate(HerokuCredentials, HttpURLConnection)} instead of password for any request to
+    * heroku service.
+    *
     * @param email email address that used when create account at heroku.com
     * @param password password
     * @throws HerokuException if heroku server return unexpected or error status for request
@@ -132,7 +133,9 @@ public class HerokuAuthenticator
          output.close();
 
          if (http.getResponseCode() != 200)
+         {
             throw Heroku.fault(http);
+         }
 
          InputStream input = http.getInputStream();
          JsonValue jsonValue;
@@ -159,13 +162,15 @@ public class HerokuAuthenticator
       finally
       {
          if (http != null)
+         {
             http.disconnect();
+         }
       }
    }
 
    /**
     * Remove local saved credentials.
-    * 
+    *
     * @see #login(String, String)
     */
    public final void logout() throws VirtualFileSystemException, IOException
