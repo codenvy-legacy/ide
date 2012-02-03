@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.operation.search;
 
+import com.google.gwt.http.client.URL;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -135,7 +137,7 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
       HashMap<String, String> query = new HashMap<String, String>();
       String content = display.getSearchContentItem().getValue();
       String contentType = display.getMimeTypeItem().getValue();
-      query.put("text", content);
+      query.put("text", URL.encode(content));
       query.put("mediaType", contentType);
 
       Item item = selectedItems.get(0);
