@@ -48,6 +48,19 @@ public class Builder
    @Inject
    private BuildService tasks;
 
+   public Builder(@QueryParam("async") boolean async)
+   {
+      if (async)
+      {
+         // Prevent running builder methods asynchronously in EverRest framework.
+         // Builder uses BuildService that has own thread pool for running build jobs.
+         throw new WebApplicationException(Response
+            .status(400)
+            .entity("Builder does not support asynchronous mode. ")
+            .type(MediaType.TEXT_PLAIN).build());
+      }
+   }
+
    @GET
    @Path("build")
    public Response build(@QueryParam("remoteuri") String remoteURI, @Context UriInfo uriInfo)
