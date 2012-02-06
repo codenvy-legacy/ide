@@ -9,7 +9,7 @@
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
    <inherits name='org.exoplatform.ide.editor.java.JavaEditorExtension' />
     <replace-with class="org.eclipse.jdt.client.AstView">
-      <when-type-is class="org.eclipse.jdt.client.AstPesenter.Display" />
+      <when-type-is class="org.eclipse.jdt.client.AstPresenter.Display" />
    </replace-with>
    <source path="client" />
    <entry-point class="org.eclipse.jdt.client.JdtExtension" />

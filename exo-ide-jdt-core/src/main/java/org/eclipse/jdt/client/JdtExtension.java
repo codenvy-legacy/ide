@@ -42,7 +42,7 @@ public class JdtExtension extends Extension
    {
       IDE.getInstance().addControl(new Con());
       IDE.getInstance().addControl(new CodeAssistCommand(), Docking.TOOLBAR_RIGHT);
-      new AstPesenter(IDE.eventBus());
+      new AstPresenter(IDE.eventBus());
       new CodeAssistantController();
    }
 

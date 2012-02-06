@@ -60,7 +60,7 @@ import javax.crypto.spec.OAEPParameterSpec;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 20, 2012 1:28:01 PM evgen $
  */
-public class AstPesenter implements EditorActiveFileChangedHandler, ShowAstHandler, ViewClosedHandler,
+public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHandler, ViewClosedHandler,
    EditorContentChangedHandler
 {
 
@@ -84,7 +84,7 @@ public class AstPesenter implements EditorActiveFileChangedHandler, ShowAstHandl
    /**
     * 
     */
-   public AstPesenter(HandlerManager eventBus)
+   public AstPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);

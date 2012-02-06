@@ -24,7 +24,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.client.ui.ScrollPanel;
 
-import org.eclipse.jdt.client.AstPesenter.Display;
+import org.eclipse.jdt.client.AstPresenter.Display;
 import org.eclipse.jdt.client.astview.ASTTreeViewModel;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -49,7 +49,7 @@ public class AstView extends ViewImpl implements Display
       add(scrollPanel);
    }
 
-   /** @see org.eclipse.jdt.client.AstPesenter.Display#drawAst(org.eclipse.jdt.client.core.dom.CompilationUnit) */
+   /** @see org.eclipse.jdt.client.AstPresenter.Display#drawAst(org.eclipse.jdt.client.core.dom.CompilationUnit) */
    @Override
    public void drawAst(CompilationUnit cUnit)
    {
