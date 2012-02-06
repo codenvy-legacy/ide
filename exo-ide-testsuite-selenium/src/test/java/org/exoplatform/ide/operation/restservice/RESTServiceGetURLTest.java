@@ -113,7 +113,7 @@ public class RESTServiceGetURLTest extends BaseTest
    }
 
    @AfterClass
-   public static void tearDown()
+   public static void tearDown() throws Exception
    {
       try
       {
@@ -121,7 +121,9 @@ public class RESTServiceGetURLTest extends BaseTest
         if (IDE.OUTPUT.getOutputMessage(2).contains("/" + PROJECT + "/" + FILE_NAME + " undeployed successfully."))
         {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-        }        
+        }
+        else 
+           IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
       }
         catch (IOException e)
       {
