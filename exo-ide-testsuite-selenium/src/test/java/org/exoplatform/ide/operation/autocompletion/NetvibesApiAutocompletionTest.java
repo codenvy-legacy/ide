@@ -25,15 +25,12 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: NetvibesApiAutocompletionsTest Jan 27, 2011 2:03:27 PM evgen $
- *
+ * 
  */
 public class NetvibesApiAutocompletionTest extends CodeAssistantBaseTest
 {
@@ -42,21 +39,23 @@ public class NetvibesApiAutocompletionTest extends CodeAssistantBaseTest
 
    private static final String NETVIBES_CONTENT = "<script type=\"text/javascript\">\n\n\n\n</script>";
 
-   @BeforeClass
-   public static void setUp() throws IOException
+   @Before
+   public void beforeTest() throws Exception
    {
       createProject(NetvibesApiAutocompletionTest.class.getSimpleName());
 
       VirtualFileSystemUtils.createFile(project.get(Link.REL_CREATE_FILE), NETVIBES_NAME, MimeType.UWA_WIDGET,
          NETVIBES_CONTENT);
+      openProject();
+      openFiles();
    }
 
-   @Before
-   public void openFile() throws Exception
+   public void openFiles() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + NETVIBES_NAME);
       IDE.PROJECT.EXPLORER.openItem(projectName + "/" + NETVIBES_NAME);
       IDE.EDITOR.waitActiveFile(projectName + "/" + NETVIBES_NAME);
+      IDE.WELCOME_PAGE.close();
    }
 
    @Test
@@ -69,8 +68,8 @@ public class NetvibesApiAutocompletionTest extends CodeAssistantBaseTest
 
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("widget");
-      IDE.CODEASSISTANT.checkElementPresent("UWA");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("widget"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("UWA"));
 
       IDE.CODEASSISTANT.typeToInput("w");
       IDE.CODEASSISTANT.insertSelectedItem();
@@ -78,8 +77,8 @@ public class NetvibesApiAutocompletionTest extends CodeAssistantBaseTest
       IDE.EDITOR.typeTextIntoEditor(0, ".");
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("addBody(content)");
-      IDE.CODEASSISTANT.checkElementPresent("createElement(tagName,options) : Element");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("addBody(content)"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("createElement(tagName,options) : Element"));
 
       IDE.CODEASSISTANT.typeToInput("getE");
       IDE.CODEASSISTANT.insertSelectedItem();
@@ -91,13 +90,13 @@ public class NetvibesApiAutocompletionTest extends CodeAssistantBaseTest
       IDE.EDITOR.typeTextIntoEditor(0, "UWA.");
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("Array");
-      IDE.CODEASSISTANT.checkElementPresent("Data");
-      IDE.CODEASSISTANT.checkElementPresent("Element");
-      IDE.CODEASSISTANT.checkElementPresent("Json");
-      IDE.CODEASSISTANT.checkElementPresent("String");
-      IDE.CODEASSISTANT.checkElementPresent("Utils");
-      IDE.CODEASSISTANT.checkElementPresent("Widget");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("Array"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("Data"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("Element"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("Json"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("String"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("Utils"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("Widget"));
 
       IDE.CODEASSISTANT.typeToInput("Data");
       IDE.CODEASSISTANT.insertSelectedItem();
@@ -107,15 +106,14 @@ public class NetvibesApiAutocompletionTest extends CodeAssistantBaseTest
       IDE.EDITOR.typeTextIntoEditor(0, ".");
 
       IDE.CODEASSISTANT.openForm();
-
-      IDE.CODEASSISTANT.checkElementPresent("domainMatch(url, options) : Boolean");
-      IDE.CODEASSISTANT.checkElementPresent("getFeed(url, callback)");
-      IDE.CODEASSISTANT.checkElementPresent("getOfflineCache()");
-      IDE.CODEASSISTANT.checkElementPresent("getText(url, callback)");
-      IDE.CODEASSISTANT.checkElementPresent("getXml(url, callback)");
-      IDE.CODEASSISTANT.checkElementPresent("proxifyUrl(url, options)");
-      IDE.CODEASSISTANT.checkElementPresent("request(url, options)");
-      IDE.CODEASSISTANT.checkElementPresent("storeInCache(url, callbackArguments)");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("domainMatch(url, options) : Boolean"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("getFeed(url, callback)"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("getOfflineCache()"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("getText(url, callback)"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("getXml(url, callback)"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("proxifyUrl(url, options)"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("request(url, options)"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("storeInCache(url, callbackArguments)"));
 
       IDE.CODEASSISTANT.typeToInput("getF");
       IDE.CODEASSISTANT.insertSelectedItem();
@@ -133,13 +131,13 @@ public class NetvibesApiAutocompletionTest extends CodeAssistantBaseTest
 
       IDE.EDITOR.typeTextIntoEditor(0, "var a = new Array(); \n var b = new UWA.Element(); \n a.");
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("concat(array2, array3, ...): Array");
-      IDE.CODEASSISTANT.checkElementPresent("detect(iterator): Boolean");
-      IDE.CODEASSISTANT.checkElementPresent("equals(compare): Boolean");
-      IDE.CODEASSISTANT.checkElementPresent("every(fn, bind)");
-      IDE.CODEASSISTANT.checkElementPresent("filter(fn, bind)");
-      IDE.CODEASSISTANT.checkElementPresent("forEach(fn, bind)");
-      IDE.CODEASSISTANT.checkElementPresent("length:Number");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("concat(array2, array3, ...): Array"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("detect(iterator): Boolean"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("equals(compare): Boolean"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("every(fn, bind)"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("filter(fn, bind)"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("forEach(fn, bind)"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("length:Number"));
       IDE.CODEASSISTANT.typeToInput("som");
 
       IDE.CODEASSISTANT.insertSelectedItem();
@@ -149,19 +147,19 @@ public class NetvibesApiAutocompletionTest extends CodeAssistantBaseTest
       IDE.EDITOR.moveCursorDown(0, 1);
 
       IDE.EDITOR.typeTextIntoEditor(0, "b.");
-      
-      //sleep form to give editor time to parse file content
+
+      // sleep form to give editor time to parse file content
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      
+
       IDE.CODEASSISTANT.openForm();
-      
-      IDE.CODEASSISTANT.checkElementPresent("addClassName(className) : Object");
-      IDE.CODEASSISTANT.checkElementPresent("getPosition() : Object");
-      IDE.CODEASSISTANT.checkElementPresent("hide() : Object");
-      IDE.CODEASSISTANT.checkElementPresent("show() : Object");
-      IDE.CODEASSISTANT.checkElementPresent("setHTML(html) : Object");
-      IDE.CODEASSISTANT.checkElementPresent("setContent(content) : Object");
-      IDE.CODEASSISTANT.checkElementPresent("inject(el, where) : Object");
+
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("addClassName(className) : Object"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("getPosition() : Object"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("hide() : Object"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("show() : Object"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("setHTML(html) : Object"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("setContent(content) : Object"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("inject(el, where) : Object"));
 
       IDE.CODEASSISTANT.typeToInput("setOpa");
 

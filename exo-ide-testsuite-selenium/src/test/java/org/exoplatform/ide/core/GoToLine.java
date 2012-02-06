@@ -145,6 +145,7 @@ public class GoToLine extends AbstractTestModule
     */
    public void typeIntoLineNumberField(String value) throws InterruptedException
    {
+      driver().findElement(By.name("ideGoToLineFormLineNumberField")).click();
       IDE().INPUT.typeToElement(lineNumberField, value, true);
    }
 

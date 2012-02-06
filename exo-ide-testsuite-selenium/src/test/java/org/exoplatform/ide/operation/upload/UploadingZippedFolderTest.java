@@ -38,14 +38,11 @@ import java.io.IOException;
  * 
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Dec 15, 2010 $
- *
+ * 
  */
 public class UploadingZippedFolderTest extends BaseTest
 {
-   private static final String FOLDER_NAME = UploadingZippedFolderTest.class.getSimpleName();
-
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER_NAME;
+   private static final String PROJECT = UploadingZippedFolderTest.class.getSimpleName();
 
    private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/sample.zip";
 
@@ -54,7 +51,7 @@ public class UploadingZippedFolderTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (IOException e)
       {
@@ -66,7 +63,7 @@ public class UploadingZippedFolderTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {
@@ -74,10 +71,13 @@ public class UploadingZippedFolderTest extends BaseTest
    }
 
    @Test
-   public void testUploadingHtml() throws Exception
+   public void testUploadingZippedFolder() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
       uploadZippedFolder(FILE_PATH);
 
@@ -91,28 +91,25 @@ public class UploadingZippedFolderTest extends BaseTest
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
-      IDE.WORKSPACE.waitForItem(WS_URL + testFolder + "/");
-      
-      IDE.NAVIGATION.assertItemVisible(WS_URL + testFolder + "/");
-      IDE.NAVIGATION.assertItemVisible(WS_URL + folder + "/");
-      IDE.NAVIGATION.assertItemVisible(WS_URL + sampleFile);
-      IDE.NAVIGATION.assertItemVisible(WS_URL +  settingsFile);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + testFolder);
+      IDE.LOADER.waitClosed();
 
-      IDE.WORKSPACE.selectItem(WS_URL +  folder + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      
-      //add timeout for reading content from folder (fix for cloud-IDE-assembly)
-      IDE.WORKSPACE.waitForItem(WS_URL + folder + "/" + projectFolder + "/");
-      IDE.NAVIGATION.assertItemVisible(WS_URL + folder + "/" + projectFolder + "/");
+      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + testFolder));
+      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + folder));
+      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + sampleFile));
+      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + settingsFile));
 
-      IDE.WORKSPACE.selectItem(WS_URL + testFolder + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + testFolder + "/" + mineFile);
-      IDE.NAVIGATION.assertItemVisible(WS_URL +  testFolder + "/" + exoFolder + "/");
-      IDE.NAVIGATION.assertItemVisible(WS_URL + testFolder + "/" + mineFile);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + folder);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + folder + "/" + projectFolder);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + settingsFile, false);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + testFolder);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + testFolder + "/" + mineFile);
+
+      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + testFolder + "/" + exoFolder));
+      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + testFolder + "/" + mineFile));
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + settingsFile);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + settingsFile);
 
       String text = IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(text.length() > 0);
@@ -120,14 +117,13 @@ public class UploadingZippedFolderTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
       IDE.PROPERTIES.waitOpened();
       assertEquals(MimeType.TEXT_XML, IDE.PROPERTIES.getContentType());
-
    }
 
    protected void uploadZippedFolder(String filePath) throws Exception
    {
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FOLDER);
       IDE.UPLOAD.waitOpened();
-      
+
       try
       {
          File file = new File(filePath);
@@ -137,8 +133,7 @@ public class UploadingZippedFolderTest extends BaseTest
       {
       }
 
-      assertEquals(
-         filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length()), IDE.UPLOAD.getFilePathValue());
+      assertEquals(filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length()), IDE.UPLOAD.getFilePathValue());
       IDE.UPLOAD.clickUploadButton();
       IDE.UPLOAD.waitClosed();
    }

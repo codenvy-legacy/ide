@@ -27,6 +27,7 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.event.KeyEvent;
@@ -80,6 +81,7 @@ public class ViewVersionHistoryTest extends BaseTest
     * @throws Exception
     */
    @Test
+   @Ignore
    public void testViewVersionHistoryButton() throws Exception
    {
       selenium().refresh();
@@ -171,6 +173,7 @@ public class ViewVersionHistoryTest extends BaseTest
     * @throws Exception
     */
    @Test
+   @Ignore
    public void testViewVersionHistoryOneFile() throws Exception
    {
       selenium().refresh();
@@ -230,6 +233,7 @@ public class ViewVersionHistoryTest extends BaseTest
     * @throws Exception
     */
    @Test
+   @Ignore
    public void testOpenCloseVersionPanel() throws Exception
    {
       selenium().refresh();
@@ -309,6 +313,7 @@ public class ViewVersionHistoryTest extends BaseTest
     * @throws Exception
     */
    @Test
+   @Ignore
    public void testVersionPanelForFewFiles() throws Exception
    {
       selenium().refresh();

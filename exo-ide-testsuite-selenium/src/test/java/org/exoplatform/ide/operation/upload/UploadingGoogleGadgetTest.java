@@ -30,68 +30,58 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class UploadingGoogleGadgetTest extends BaseTest
 {
-   
-   private static final String FOLDER_NAME = UploadingGoogleGadgetTest.class.getSimpleName();
-   
+
+   private static final String PROJECT = UploadingGoogleGadgetTest.class.getSimpleName();
+
    private static final String FILE_NAME = "gadget.xml";
-   
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
-   
-   //temp URL after change URL IDE
-   private static final String URL_WITH_IDE = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
-   
+
    private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/gadget.xml";
-   
+
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (IOException e)
       {
       }
    }
-   
+
    @Test
    public void testUploadGoogleGadget() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
+
       IDE.UPLOAD.open(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.GOOGLE_GADGET);
       
-    //add timeout for reading content from folder (fix for cloud-IDE-assembly)
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
       
-      String url = getSelectedItemUrl();
-      
-      assertEquals(URL_WITH_IDE + "/" + FILE_NAME, url);
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
-      
-      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-      IDE.PROPERTIES.waitOpened();
+      IDE.PROPERTIES.openProperties();
       assertEquals(MimeType.GOOGLE_GADGET, IDE.PROPERTIES.getContentType());
-    }
-   
+   }
+
    @AfterClass
    public static void tearDown()
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {

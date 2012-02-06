@@ -25,7 +25,9 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -36,21 +38,21 @@ import org.junit.Test;
 public class CheckHilightTextTest extends BaseTest
 {
 
-   private static String FOLDER_NAME = CheckHilightTextTest.class.getSimpleName();
+   private final static String PROJECT = CheckHilightTextTest.class.getSimpleName();
 
-   private static String HTML_FILE_NAME = "newHtmlFile.html";
+   private final static String HTML_FILE_NAME = "newHtmlFile.html";
 
-   private static String CSS_FILE_NAME = "newCssFile.css";
+   private final static String CSS_FILE_NAME = "newCssFile.css";
 
-   private static String JS_FILE_NAME = "newJavaScriptFile.js";
+   private final static String JS_FILE_NAME = "newJavaScriptFile.js";
 
-   private static String GADGET_FILE_NAME = "newGoogleGadget.gadget";
+   private final static String GADGET_FILE_NAME = "newGoogleGadget.gadget";
 
-   private static String GROOVY_FILE_NAME = "newGroovyFile.groovy";
+   private final static String GROOVY_FILE_NAME = "newGroovyFile.groovy";
 
-   private static String XML_FILE_NAME = "newXMLFile.xml";
+   private final static String XML_FILE_NAME = "newXMLFile.xml";
 
-   private static String TXT_FILE_NAME = "newTextFile.txt";
+   private final static String TXT_FILE_NAME = "newTextFile.txt";
 
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/";
 
@@ -59,14 +61,14 @@ public class CheckHilightTextTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put(PATH + HTML_FILE_NAME, MimeType.TEXT_HTML, WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + CSS_FILE_NAME, MimeType.TEXT_CSS, WS_URL + FOLDER_NAME + "/" + CSS_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + JS_FILE_NAME, MimeType.APPLICATION_JAVASCRIPT, WS_URL + FOLDER_NAME + "/" + JS_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, WS_URL + FOLDER_NAME + "/" + GADGET_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + GROOVY_FILE_NAME, MimeType.GROOVY_SERVICE, WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + XML_FILE_NAME, MimeType.TEXT_XML, WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
-         VirtualFileSystemUtils.put(PATH + TXT_FILE_NAME, MimeType.TEXT_PLAIN, WS_URL + FOLDER_NAME + "/" + TXT_FILE_NAME);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.put(PATH + HTML_FILE_NAME, MimeType.TEXT_HTML, WS_URL + PROJECT + "/" + HTML_FILE_NAME);
+         VirtualFileSystemUtils.put(PATH + CSS_FILE_NAME, MimeType.TEXT_CSS, WS_URL + PROJECT + "/" + CSS_FILE_NAME);
+         VirtualFileSystemUtils.put(PATH + JS_FILE_NAME, MimeType.APPLICATION_JAVASCRIPT, WS_URL + PROJECT + "/" + JS_FILE_NAME);
+         VirtualFileSystemUtils.put(PATH + GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, WS_URL + PROJECT + "/" + GADGET_FILE_NAME);
+         VirtualFileSystemUtils.put(PATH + GROOVY_FILE_NAME, MimeType.GROOVY_SERVICE, WS_URL + PROJECT + "/" + GROOVY_FILE_NAME);
+         VirtualFileSystemUtils.put(PATH + XML_FILE_NAME, MimeType.TEXT_XML, WS_URL + PROJECT + "/" + XML_FILE_NAME);
+         VirtualFileSystemUtils.put(PATH + TXT_FILE_NAME, MimeType.TEXT_PLAIN, WS_URL + PROJECT + "/" + TXT_FILE_NAME);
       }
       catch (Exception e)
       {
@@ -78,31 +80,40 @@ public class CheckHilightTextTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
       }
    }
    
+   @Before
+   public void openProject() throws Exception
+   {
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.WELCOME_PAGE.close();
+   }
+   
    @Test
+   @Ignore
    public void checkXML() throws InterruptedException, Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + XML_FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + XML_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE_NAME);
       
       /*
        *1. Check highlighting XML
        */
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
-      Thread.sleep(TestConstants.CODEMIRROR_PARSING_PERIOD);
       checkHilightXML();
       IDE.EDITOR.closeFile(0);
       
       /*
        * 2. Check highlighting TXT
        */
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + TXT_FILE_NAME);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + PROJECT + "/" + TXT_FILE_NAME);
       Thread.sleep(TestConstants.CODEMIRROR_PARSING_PERIOD);
       checkHiligtTXT();
       IDE.EDITOR.closeFile(0);
@@ -110,7 +121,7 @@ public class CheckHilightTextTest extends BaseTest
       /*
        * 3. Check highlighting JavaScript
        */
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + JS_FILE_NAME);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + PROJECT + "/" + JS_FILE_NAME);
       Thread.sleep(TestConstants.CODEMIRROR_PARSING_PERIOD);
       checkHilightJavaScript();
       IDE.EDITOR.closeFile(0);
@@ -118,7 +129,7 @@ public class CheckHilightTextTest extends BaseTest
       /*
        * 4. Check highlighting HTML
        */
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + PROJECT + "/" + HTML_FILE_NAME);
       Thread.sleep(TestConstants.CODEMIRROR_PARSING_PERIOD);
       checkHilightHTML();
       IDE.EDITOR.closeFile(0);
@@ -126,7 +137,7 @@ public class CheckHilightTextTest extends BaseTest
       /*
        * 5. Check highlighting GROOVY
        */
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + PROJECT + "/" + GROOVY_FILE_NAME);
       Thread.sleep(TestConstants.CODEMIRROR_PARSING_PERIOD);
       checkHilightGroovy();
       IDE.EDITOR.closeFile(0);
@@ -134,7 +145,7 @@ public class CheckHilightTextTest extends BaseTest
       /*
        * 6. Check highlighting CSS
        */
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + CSS_FILE_NAME);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + PROJECT + "/" + CSS_FILE_NAME);
       Thread.sleep(TestConstants.CODEMIRROR_PARSING_PERIOD);
       chekHilightingInCssFile();
       IDE.EDITOR.closeFile(0);
@@ -142,7 +153,7 @@ public class CheckHilightTextTest extends BaseTest
       /*
        * 7. Check highlighting Google Gadget
        */
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + GADGET_FILE_NAME);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + PROJECT + "/" + GADGET_FILE_NAME);
       Thread.sleep(TestConstants.CODEMIRROR_PARSING_PERIOD);
       checkHiligtGoogleGadget();
       IDE.EDITOR.closeFile(0);

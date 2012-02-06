@@ -28,6 +28,7 @@ import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -70,6 +71,7 @@ public class CodeOutLineRubyTest extends CodeAssistantBaseTest
    }
 
    @Test
+   @Ignore
    public void testCodeOutLineRuby() throws Exception
    {     
       // open outline panel

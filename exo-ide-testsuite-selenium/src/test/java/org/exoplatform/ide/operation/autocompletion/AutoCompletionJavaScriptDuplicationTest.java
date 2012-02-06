@@ -18,22 +18,25 @@
  */
 package org.exoplatform.ide.operation.autocompletion;
 
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.ide.MenuCommands;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class AutoCompletionJavaScriptDuplicationTest extends CodeAssistantBaseTest
 {
 
-   @BeforeClass
-   public static void createPoject()
+   @Before
+   public void createPoject() throws Exception
    {
       createProject(AutoCompletionJavaScriptDuplicationTest.class.getSimpleName());
+      openProject();
    }
 
    @Test
@@ -47,13 +50,13 @@ public class AutoCompletionJavaScriptDuplicationTest extends CodeAssistantBaseTe
 
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("a");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("a"));
       IDE.CODEASSISTANT.closeForm();
       IDE.EDITOR.moveCursorDown(0, 3);
 
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("a()");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("a()"));
       IDE.CODEASSISTANT.closeForm();
    }
 

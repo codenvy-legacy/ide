@@ -192,6 +192,8 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
       //---- 3 -----------------
       //click on validation message to go to error
+      //TODO after fix in CHROME Thread should be remove
+      Thread.sleep(1000);
       IDE.OUTPUT.clickOnErrorMessage(1);
 
       IDE.WARNING_DIALOG.waitOpened();

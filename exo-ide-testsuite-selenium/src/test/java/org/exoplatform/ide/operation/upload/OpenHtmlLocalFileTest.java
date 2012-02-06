@@ -24,7 +24,6 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -35,17 +34,13 @@ import java.io.IOException;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class OpenHtmlLocalFileTest extends BaseTest
 {
-
    private static String HTML_NAME = "file.html";
 
-   private static String FOLDER_NAME = OpenHtmlLocalFileTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER_NAME + "/";
+   private static String PROJECT = OpenHtmlLocalFileTest.class.getSimpleName();
 
    private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.html";
 
@@ -54,7 +49,7 @@ public class OpenHtmlLocalFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (IOException e)
       {
@@ -64,34 +59,28 @@ public class OpenHtmlLocalFileTest extends BaseTest
    @Test
    public void testOpenHtml() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(URL);
-
-      IDE.WORKSPACE.selectItem(URL);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
       IDE.UPLOAD.open(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH, MimeType.TEXT_HTML);
-
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.EDITOR.checkCodeEditorOpened(0);
+      IDE.EDITOR.waitTabPresent(1);
 
       String text = IDE.EDITOR.getTextFromCodeEditor(0);
 
       assertTrue(text.length() > 0);
 
       String fileContent = getFileContent(FILE_PATH);
-
       assertEquals(fileContent.split("\n").length, text.split("\n").length);
 
-      saveAsByTopMenu(HTML_NAME);
+      IDE.EDITOR.saveAs(1, HTML_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_NAME);
 
-      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-
+      IDE.PROPERTIES.openProperties();
 
       assertEquals(MimeType.TEXT_HTML, IDE.PROPERTIES.getContentType());
-
-      IDE.EDITOR.closeFile(0);
    }
 
    @AfterClass
@@ -99,7 +88,7 @@ public class OpenHtmlLocalFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {

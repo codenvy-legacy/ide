@@ -23,20 +23,24 @@ import static org.junit.Assert.fail;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
+import java.util.Map;
+
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: RubyAutoCompletionTest May 11, 2011 11:52:33 AM evgen $
- *
+ * 
  */
 public class RubyAutoCompletionTest extends BaseTest
 {
-   private static final String FOLDER_NAME = RubyAutoCompletionTest.class.getSimpleName();
+   private static final String PROJECT = RubyAutoCompletionTest.class.getSimpleName();
 
    private static final String FILE_NAME = "RubyCodeAssistantTest.rb";
 
@@ -45,10 +49,10 @@ public class RubyAutoCompletionTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME + "/");
-         VirtualFileSystemUtils.put(
-            "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/ruby/rubyAutocompletion.rb",
-            MimeType.APPLICATION_RUBY, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.APPLICATION_RUBY,
+            "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/ruby/rubyAutocompletion.rb");
       }
       catch (Exception e)
       {
@@ -61,7 +65,7 @@ public class RubyAutoCompletionTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -71,81 +75,86 @@ public class RubyAutoCompletionTest extends BaseTest
    @Test
    public void testRubyAutocompletion() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
-      goToLine(26);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+
+      IDE.GOTOLINE.goToLine(26);
 
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("h");
-      IDE.CODEASSISTANT.checkElementPresent("w");
-      IDE.CODEASSISTANT.checkElementPresent("@i");
-      IDE.CODEASSISTANT.checkElementPresent("@@ins");
-      IDE.CODEASSISTANT.checkElementPresent("$cl");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("h"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("w"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("@i"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("@@ins"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("$cl"));
 
       IDE.CODEASSISTANT.typeToInput("@@");
-
-      IDE.CODEASSISTANT.insertSelectedItem();
+      IDE.CODEASSISTANT.typeToInput("\n");
 
       IDE.EDITOR.typeTextIntoEditor(0, ".");
+      // Pause is necessary for parsing tokens by CodeMirror
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("prec_f()");
-      IDE.CODEASSISTANT.checkElementPresent("between?(arg1, arg2, arg3)");
-      IDE.CODEASSISTANT.checkElementPresent("abs()");
-      IDE.CODEASSISTANT.checkElementPresent("next()");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("prec_f()"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("between?(arg1, arg2, arg3)"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("abs()"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("next()"));
 
       IDE.CODEASSISTANT.typeToInput("ro");
-
-      IDE.CODEASSISTANT.insertSelectedItem();
+      IDE.CODEASSISTANT.typeToInput("\n");
 
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("@@ins.round()"));
 
-      goToLine(32);
+      IDE.GOTOLINE.goToLine(32);
 
       IDE.EDITOR.typeTextIntoEditor(0, "M");
-      //this method fix problem of returning cursor in codeeditor before character "M"
+      // this method fix problem of returning cursor in codeeditor before character "M"
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
+      // Pause is necessary for parsing tokens by CodeMirror
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("MDA");
-      IDE.CODEASSISTANT.checkElementPresent("MyClass");
-      IDE.CODEASSISTANT.checkElementPresent("Method");
-      IDE.CODEASSISTANT.checkElementPresent("Math");
-
-      IDE.CODEASSISTANT.insertSelectedItem();
-
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("MDA"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("MyClass"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("Method"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("Math"));
+      IDE.CODEASSISTANT.typeToInput("\n");
       IDE.EDITOR.typeTextIntoEditor(0, ".");
+      // Pause is necessary for parsing tokens by CodeMirror
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("finite?()");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("finite?()"));
 
       IDE.CODEASSISTANT.typeToInput("inf");
-      IDE.CODEASSISTANT.insertSelectedItem();
+      IDE.CODEASSISTANT.typeToInput("\n");
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("MDA.infinite?()"));
 
-      goToLine(33);
+      IDE.GOTOLINE.goToLine(33);
 
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("g");
-      IDE.CODEASSISTANT.checkElementPresent("num");
-      IDE.CODEASSISTANT.checkElementPresent("$cl");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("g"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("num"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("$cl"));
 
-      IDE.CODEASSISTANT.insertSelectedItem();
+      IDE.CODEASSISTANT.typeToInput("\n");
       IDE.EDITOR.typeTextIntoEditor(0, ".");
+      // Pause is necessary for parsing tokens by CodeMirror
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("get");
-      IDE.CODEASSISTANT.checkElementPresent("set");
-      IDE.CODEASSISTANT.checkElementPresent("hello");
-      IDE.CODEASSISTANT.checkElementPresent("initialize");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("get"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("set"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("hello"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("initialize"));
 
       IDE.CODEASSISTANT.closeForm();
-
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
-
 }

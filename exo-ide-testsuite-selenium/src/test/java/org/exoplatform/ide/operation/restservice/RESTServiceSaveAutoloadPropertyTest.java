@@ -59,58 +59,58 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
    @Test
    public void testAutoload() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.NAVIGATION.createFolder(FOLDER_NAME);
-
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      Thread.sleep(TestConstants.SLEEP);
-
-      saveAsUsingToolbarButton(FILE_NAME);
-      IDE.WORKSPACE.waitForItem(URL);
-
-      IDE.EDITOR.closeFile(0);
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL, false);
-
-      IDE.MENU.runCommand("Run", MenuCommands.Run.UNDEPLOY_REST_SERVICE);
-
-      String mess = IDE.OUTPUT.getOutputMessage(1);
-
-      assertTrue(mess.contains("[ERROR]"));
-      assertTrue(mess.contains(FILE_NAME + " undeploy failed. Error (400: Bad Request)"));
-
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD);
-      Thread.sleep(TestConstants.SLEEP);
-
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.UNSET_AUTOLOAD, true);
-
-      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-
-      //      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "/// test comment 1\n");
-      IDE.EDITOR.typeTextIntoEditor(0, "/// test comment 1\n");
-
-      saveCurrentFile();
-      Thread.sleep(TestConstants.SLEEP);
-
-      IDE.EDITOR.closeFile(0);
-
-      IDE.WORKSPACE.selectRootItem();
-
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.waitForItem(URL);
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL, false);
-      IDE.EDITOR.checkCodeEditorOpened(0);
-
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
-
-      mess = IDE.OUTPUT.getOutputMessage(2);
-
-      assertTrue(mess.contains("[INFO]"));
-      assertTrue(mess.contains(FILE_NAME + " undeployed successfully."));
+//      IDE.WORKSPACE.waitForRootItem();
+//      IDE.NAVIGATION.createFolder(FOLDER_NAME);
+//
+//      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+//      Thread.sleep(TestConstants.SLEEP);
+//
+//      saveAsUsingToolbarButton(FILE_NAME);
+//      IDE.WORKSPACE.waitForItem(URL);
+//
+//      IDE.EDITOR.closeFile(0);
+//
+//      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL, false);
+//
+//      IDE.MENU.runCommand("Run", MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+//
+//      String mess = IDE.OUTPUT.getOutputMessage(1);
+//
+//      assertTrue(mess.contains("[ERROR]"));
+//      assertTrue(mess.contains(FILE_NAME + " undeploy failed. Error (400: Bad Request)"));
+//
+//      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD);
+//      Thread.sleep(TestConstants.SLEEP);
+//
+//      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.UNSET_AUTOLOAD, true);
+//
+//      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
+//
+//      //      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "/// test comment 1\n");
+//      IDE.EDITOR.typeTextIntoEditor(0, "/// test comment 1\n");
+//
+//      saveCurrentFile();
+//      Thread.sleep(TestConstants.SLEEP);
+//
+//      IDE.EDITOR.closeFile(0);
+//
+//      IDE.WORKSPACE.selectRootItem();
+//
+//      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+//      Thread.sleep(TestConstants.SLEEP);
+//
+//      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + FOLDER_NAME + "/");
+//      IDE.WORKSPACE.waitForItem(URL);
+//
+//      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL, false);
+//      IDE.EDITOR.checkCodeEditorOpened(0);
+//
+//      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+//
+//      mess = IDE.OUTPUT.getOutputMessage(2);
+//
+//      assertTrue(mess.contains("[INFO]"));
+//      assertTrue(mess.contains(FILE_NAME + " undeployed successfully."));
    }
 
    @AfterClass

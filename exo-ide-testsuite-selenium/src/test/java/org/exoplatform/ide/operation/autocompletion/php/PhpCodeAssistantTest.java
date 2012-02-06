@@ -19,27 +19,28 @@
 package org.exoplatform.ide.operation.autocompletion.php;
 
 import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.After;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
+import java.util.Map;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class PhpCodeAssistantTest extends BaseTest
 {
 
-   private static final String FOLDER_NAME = PhpCodeAssistantTest.class.getSimpleName();
+   private static final String PROJECT = PhpCodeAssistantTest.class.getSimpleName();
 
    private static final String FILE_NAME = "PHPTest.php";
 
@@ -48,115 +49,106 @@ public class PhpCodeAssistantTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME + "/");
-         VirtualFileSystemUtils.put("src/test/resources/org/exoplatform/ide/operation/file/autocomplete/php/php.php",
-            MimeType.APPLICATION_PHP, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.APPLICATION_PHP,
+            "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/php/php.php");
       }
       catch (Exception e)
       {
-         fail("Can't create test folder");
+         fail("Can't create test project");
       }
-   }
-
-   @Before
-   public void beforeTest() throws Exception
-   {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
-
    }
 
    @Test
    public void testPhpLocalVarAndParameters() throws Exception
    {
-      goToLine(19);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.LOADER.waitClosed();
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+
+      IDE.GOTOLINE.goToLine(19);
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("$a");
-      IDE.CODEASSISTANT.checkElementPresent("$go:String");
-      IDE.CODEASSISTANT.checkElementPresent("$_COOKIE");
-      IDE.CODEASSISTANT.checkElementPresent("$HTTP_SERVER_VARS");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("$a"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("$go:String"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("$_COOKIE"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("$HTTP_SERVER_VARS"));
       IDE.CODEASSISTANT.closeForm();
    }
 
    @Test
    public void testPhpObjectThis() throws Exception
    {
-      goToLine(21);
+      IDE.GOTOLINE.goToLine(21);
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("$sp2:ArrayList");
-      IDE.CODEASSISTANT.checkElementPresent("AA");
-      IDE.CODEASSISTANT.checkElementPresent("sf2()");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("$sp2:ArrayList"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("AA"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("sf2()"));
       IDE.CODEASSISTANT.closeForm();
    }
 
    @Test
    public void testPhpClassSelf() throws Exception
    {
-      goToLine(20);
+      IDE.GOTOLINE.goToLine(20);
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("$p2:Handler");
-      IDE.CODEASSISTANT.checkElementPresent("f2($a)");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("$p2:Handler"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("f2($a)"));
       IDE.CODEASSISTANT.closeForm();
    }
 
    @Test
    public void testPhpVariableClass() throws Exception
    {
-      goToLine(28);
+      IDE.GOTOLINE.goToLine(28);
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("f2($a)");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("f2($a)"));
       IDE.CODEASSISTANT.closeForm();
    }
 
    @Test
    public void testPhpVarStaticClass() throws Exception
    {
-      goToLine(29);
+      IDE.GOTOLINE.goToLine(29);
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("$sp2:ArrayList");
-      IDE.CODEASSISTANT.checkElementPresent("AA");
-      IDE.CODEASSISTANT.checkElementPresent("sf2()");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("$sp2:ArrayList"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("AA"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("sf2()"));
       IDE.CODEASSISTANT.closeForm();
    }
 
    @Test
    public void testPhpStaticClass() throws Exception
    {
-      goToLine(30);
+      IDE.GOTOLINE.goToLine(30);
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("$sp2:ArrayList");
-      IDE.CODEASSISTANT.checkElementPresent("AA");
-      IDE.CODEASSISTANT.checkElementPresent("sf2()");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("$sp2:ArrayList"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("AA"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("sf2()"));
       IDE.CODEASSISTANT.closeForm();
    }
 
    @Test
    public void testPhpRootConstAndVars() throws Exception
    {
-      goToLine(31);
+      IDE.GOTOLINE.goToLine(31);
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("$t:SimpleClass1");
-      IDE.CODEASSISTANT.checkElementPresent("t");
-      IDE.CODEASSISTANT.checkElementPresent("SimpleClass1");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("$t:SimpleClass1"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("t"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("SimpleClass1"));
       IDE.CODEASSISTANT.closeForm();
-   }
-
-   @After
-   public void afterTest() throws Exception
-   {
-      IDE.CODEASSISTANT.closeForm();
-      IDE.EDITOR.closeFile(0);
-
    }
 
    @AfterClass
@@ -164,7 +156,7 @@ public class PhpCodeAssistantTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WORKSPACE_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {

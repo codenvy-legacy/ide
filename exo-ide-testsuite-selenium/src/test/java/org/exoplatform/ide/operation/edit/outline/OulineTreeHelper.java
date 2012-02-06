@@ -236,7 +236,6 @@ public class OulineTreeHelper extends BaseTest
       int fileLineNumbers = fileContent.split("\\r?\\n").length;   
       
       IDE.GOTOLINE.goToLine(1);
-      IDE.EDITOR.clickOnEditor(0);
            
       // go to the end of file
       do
@@ -278,7 +277,6 @@ public class OulineTreeHelper extends BaseTest
    private void checkOutlineItemFromFile(int itemRowNumber, String itemLabel, int fileLineNumber) throws Exception
    {
       IDE.GOTOLINE.goToLine(fileLineNumber);
-      IDE.EDITOR.clickOnEditor(0);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       assertTrue("Verifing if is selected an outline item with row number = " + itemRowNumber, IDE.OUTLINE.isItemSelected(itemRowNumber));
    }

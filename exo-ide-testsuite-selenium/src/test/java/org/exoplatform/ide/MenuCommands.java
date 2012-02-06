@@ -147,6 +147,8 @@ public interface MenuCommands
       public static final String OPEN_LOCAL_FILE = "Open Local File...";
 
       public static final String OPEN_FILE_BY_PATH = "Open File By Path...";
+      
+      public static final String OPEN_FILE_BY_URL = "Open by URL...";
 
       public static final String DOWNLOAD = "Download...";
 

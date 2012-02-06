@@ -25,7 +25,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -37,8 +36,8 @@ public class JavaCodeAssistantTest extends CodeAssistantBaseTest
 {
    private static final String FILE_NAME = "JavaTestClass.java";
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void beforeTest() throws Exception
    {
       try
       {
@@ -51,11 +50,7 @@ public class JavaCodeAssistantTest extends CodeAssistantBaseTest
       {
          fail("Can't create test folder");
       }
-   }
-
-   @Before
-   public void openFile() throws Exception
-   {
+      openProject();
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
@@ -64,7 +59,7 @@ public class JavaCodeAssistantTest extends CodeAssistantBaseTest
    @Test
    public void testJavaCodeAssistant() throws Exception
    {
-      goToLine(32);
+      IDE.GOTOLINE.goToLine(32);
       IDE.EDITOR.typeTextIntoEditor(0, "a");
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.clearInput();

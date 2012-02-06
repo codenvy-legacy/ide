@@ -199,7 +199,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       Thread.sleep(500);
       assertEquals(textToRevert, IDE.EDITOR.getTextFromCodeEditor(0));
 
-      //press Ctrl+Y
+      // press Ctrl+Y
       IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "Y");
       assertEquals(textToRevert + "5", IDE.EDITOR.getTextFromCodeEditor(0));
 

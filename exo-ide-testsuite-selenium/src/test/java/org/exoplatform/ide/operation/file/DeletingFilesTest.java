@@ -91,44 +91,57 @@ public class DeletingFilesTest extends BaseTest
    @Test
    public void testDeletingFile() throws Exception
    {
+
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + GROOVY_FILE_NAME);
+      String path = PROJECT + "/" + GROOVY_FILE_NAME;
+      IDE.PROJECT.EXPLORER.waitForItem(path);
 
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GROOVY_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GROOVY_FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(path);
+      IDE.EDITOR.waitActiveFile(path);
+      IDE.PROJECT.EXPLORER.selectItem(path);
       IDE.DELETE.deleteSelectedItems();
-      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + GROOVY_FILE_NAME);
-      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + GROOVY_FILE_NAME).getStatusCode());
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(path);
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + path).getStatusCode());
 
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GOOGLE_GADGET_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GOOGLE_GADGET_FILE_NAME);
+      path = PROJECT + "/" + GOOGLE_GADGET_FILE_NAME;
+      IDE.PROJECT.EXPLORER.openItem(path);
+      IDE.EDITOR.waitActiveFile(path);
+      IDE.PROJECT.EXPLORER.selectItem(path);
       IDE.DELETE.deleteSelectedItems();
-      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + GOOGLE_GADGET_FILE_NAME);
-      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + GOOGLE_GADGET_FILE_NAME).getStatusCode());
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(path);
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + path).getStatusCode());
 
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + JAVA_SCRIPT_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + JAVA_SCRIPT_FILE_NAME);
+      path = PROJECT + "/" + JAVA_SCRIPT_FILE_NAME;
+      IDE.PROJECT.EXPLORER.openItem(path);
+      IDE.EDITOR.waitActiveFile(path);
+      IDE.PROJECT.EXPLORER.selectItem(path);
       IDE.DELETE.deleteSelectedItems();
-      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + JAVA_SCRIPT_FILE_NAME);
-      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + JAVA_SCRIPT_FILE_NAME).getStatusCode());
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(path);
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + path).getStatusCode());
 
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + XML_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE_NAME);
+      path = PROJECT + "/" + XML_FILE_NAME;
+      IDE.PROJECT.EXPLORER.openItem(path);
+      IDE.EDITOR.waitActiveFile(path);
+      IDE.PROJECT.EXPLORER.selectItem(path);
       IDE.DELETE.deleteSelectedItems();
-      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + XML_FILE_NAME);
-      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + XML_FILE_NAME).getStatusCode());
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(path);
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + path).getStatusCode());
 
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEXT_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEXT_FILE_NAME);
+      path = PROJECT + "/" + TEXT_FILE_NAME;
+      IDE.PROJECT.EXPLORER.openItem(path);
+      IDE.EDITOR.waitActiveFile(path);
+      IDE.PROJECT.EXPLORER.selectItem(path);
       IDE.DELETE.deleteSelectedItems();
-      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + TEXT_FILE_NAME);
-      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + TEXT_FILE_NAME).getStatusCode());
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(path);
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + path).getStatusCode());
 
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
+      path = PROJECT + "/" + HTML_FILE_NAME;
+      IDE.PROJECT.EXPLORER.openItem(path);
+      IDE.EDITOR.waitActiveFile(path);
+      IDE.PROJECT.EXPLORER.selectItem(path);
       IDE.DELETE.deleteSelectedItems();
-      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + HTML_FILE_NAME);
-      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + HTML_FILE_NAME).getStatusCode());
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(path);
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + path).getStatusCode());
    }
 }

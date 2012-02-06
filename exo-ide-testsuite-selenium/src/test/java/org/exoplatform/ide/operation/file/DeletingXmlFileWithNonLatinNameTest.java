@@ -22,9 +22,12 @@ import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -73,14 +76,24 @@ public class DeletingXmlFileWithNonLatinNameTest extends BaseTest
       }
       catch (Exception e)
       {
+         e.printStackTrace();
       }
    }
+   
+  
 
    @Test
    public void testDeletingXmlFileWithNonLatinName() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+       //need a refresh because of no clear reason 
+       //not Latin characters are displayed as "??????" 
+       //and it does not reproduce under actual use 
+     
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FILE_NAME);
 

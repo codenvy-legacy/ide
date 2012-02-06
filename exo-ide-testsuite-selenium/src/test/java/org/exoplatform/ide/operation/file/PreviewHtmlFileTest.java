@@ -24,11 +24,13 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 /**
  * Created by The eXo Platform SAS.
@@ -78,6 +80,7 @@ public class PreviewHtmlFileTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
       /*
        * 1. create HTML file
@@ -95,8 +98,9 @@ public class PreviewHtmlFileTest extends BaseTest
       /*
        * 3. open "PreviewHtmlFileTest/PreviewHtmlFile.html" file
        */
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      String path = PROJECT + "/" + FILE_NAME;
+      IDE.PROJECT.EXPLORER.openItem(path);
+      IDE.EDITOR.waitActiveFile(path);
 
       /*
        * 4. "Preview" button must be enabled
@@ -111,35 +115,36 @@ public class PreviewHtmlFileTest extends BaseTest
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.SHOW_PREVIEW);
       IDE.PREVIEW.waitHtmlPreviewOpened();
       
-      
-    //TODO  rework following all steps when ready preview:
-      
       IDE.PREVIEW.selectPreviewIFrame();
 
-      assertTrue(selenium().isElementPresent("//p/b/i[text()='Changed Content.']"));
-      assertTrue(selenium()
-         .isElementPresent("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']"));
+      assertTrue(driver.findElements(By.xpath("//p/b/i[text()='Changed Content.']")).size()>0);
+      assertTrue(driver.findElements(By.xpath("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']")).size()>0);
       IDE.selectMainFrame();
 
       /*
        * 7. Close "Preview".
        */
+      Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.PREVIEW.closeView();
 
       /*
        * 8. Close "PreviewHtmlFile.html" and check "Preview" button.
        */
-      IDE.EDITOR.closeFile(1);
+      IDE.EDITOR.closeFile(FILE_NAME);
 
       assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.SHOW_PREVIEW));
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW, false);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW, false);
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW));
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW));
 
       /*
        * 9. Reopen "PreviewHtmlFile.html" and click "Preview".
        */
-      IDE.NAVIGATION.selectAndRefreshFolder(PROJECT + "/");
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + PROJECT + "/" + FILE_NAME, false);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(path);
+      IDE.PROJECT.EXPLORER.openItem(path);
+      IDE.EDITOR.waitActiveFile(path);
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
 
       /*
@@ -147,18 +152,15 @@ public class PreviewHtmlFileTest extends BaseTest
        */
       assertTrue(IDE.PREVIEW.isHtmlPreviewOpened());
       IDE.PREVIEW.selectPreviewIFrame();
-      assertTrue(selenium().isElementPresent("//p/b/i[text()='Changed Content.']"));
-      assertTrue(selenium()
-         .isElementPresent("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']"));
+      assertTrue(driver.findElements(By.xpath("//p/b/i[text()='Changed Content.']")).size()>0);
+      assertTrue(driver.findElements(By.xpath("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']")).size()>0);
       IDE.selectMainFrame();
 
       /*
        * 11. Close all tabs in editor.
        */
-      IDE.EDITOR.closeFile(1);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-
-      IDE.PREVIEW.closeView();
+      IDE.EDITOR.closeFile(FILE_NAME);
+      IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
 }

@@ -48,13 +48,15 @@ import java.lang.reflect.ParameterizedType;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class VirtualFileSystemUtils
 {
 
@@ -261,7 +263,7 @@ public class VirtualFileSystemUtils
    public static int upoadZipFolder(String zipPath, String storageUrl) throws HttpException, IOException
    {
       File f = new File(zipPath);
-      //FIXME there is no upload service. Use import zip feature of VFS
+      // FIXME there is no upload service. Use import zip feature of VFS
       PostMethod filePost = new PostMethod(BaseTest.BASE_URL + BaseTest.REST_CONTEXT + "/ide/upload/folder");
       Part[] parts = {new StringPart("location", storageUrl), new FilePart("file", f)};
       filePost.setRequestEntity(new MultipartRequestEntity(parts, filePost.getParams()));
@@ -271,6 +273,7 @@ public class VirtualFileSystemUtils
 
    /**
     * Delete folder by Link
+    * 
     * @param link
     * @return http status code
     * @throws IOException
@@ -336,6 +339,7 @@ public class VirtualFileSystemUtils
 
    /**
     * Import project zip to IDE
+    * 
     * @param projectName name of the project
     * @param zipPath local path to project zip
     * @return map of the Link, related to created project
@@ -377,6 +381,7 @@ public class VirtualFileSystemUtils
 
    /**
     * Create folder in root.
+    * 
     * @param name
     * @return
     * @throws IOException
@@ -466,6 +471,7 @@ public class VirtualFileSystemUtils
 
    /**
     * Create file with local file content
+    * 
     * @param link
     * @param name
     * @param mimeType

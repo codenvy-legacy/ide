@@ -19,12 +19,14 @@
 package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -39,7 +41,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
 {
    //IDE-10: Creating and "Saving As" new files.
 
-   private static final String FOLDER_NAME = CreatingAndSavingAsNewFileTest.class.getSimpleName();
+   private static final String PROJECT = CreatingAndSavingAsNewFileTest.class.getSimpleName();
 
    private static final String REST_SERVICE_FILE_NAME = "TestGroovyRest.groovy";
 
@@ -68,10 +70,24 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
+      }
+   }
+   
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+
+      }
+      catch (Exception e)
+      {
+         fail("Cant create project ");
       }
    }
 
@@ -79,20 +95,20 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
    public void testCreatingAndSavingAsNewFiles() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.CREATE.createProject(FOLDER_NAME);
-      IDE.PROJECT.EXPLORER.waitForItem(FOLDER_NAME);
-      IDE.PROJECT.EXPLORER.selectItem(FOLDER_NAME);
-
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      
       createFileAndSaveAs(MenuCommands.New.REST_SERVICE_FILE, "grs", REST_SERVICE_FILE_NAME);
       createFileAndSaveAs(MenuCommands.New.TEXT_FILE, "txt", TXT_FILE_NAME);
       createFileAndSaveAs(MenuCommands.New.XML_FILE, "xml", XML_FILE_NAME);
       createFileAndSaveAs(MenuCommands.New.HTML_FILE, "html", HTML_FILE_NAME);
       createFileAndSaveAs(MenuCommands.New.JAVASCRIPT_FILE, "js", JS_FILE_NAME);
       createFileAndSaveAs(MenuCommands.New.CSS_FILE, "css", CSS_FILE_NAME);
-      createFileAndSaveAs(MenuCommands.New.GOOGLE_GADGET_FILE, "xml", GADGET_FILE_NAME);
+      createFileAndSaveAs(MenuCommands.New.GOOGLE_GADGET_FILE, "gadget", GADGET_FILE_NAME);
       createFileAndSaveAs(MenuCommands.New.GROOVY_TEMPLATE_FILE, "gtmpl", GROOVY_TEMPLATE_FILE_NANE);
       createFileAndSaveAs(MenuCommands.New.GROOVY_SCRIPT_FILE, "groovy", GROOVY_FILE_NAME);
-      createFileAndSaveAs(MenuCommands.New.CHROMATTIC, "groovy", CHROMATTIC_FILE_NAME);
+      createFileAndSaveAs(MenuCommands.New.CHROMATTIC, "cmtc", CHROMATTIC_FILE_NAME);
       createFileAndSaveAs(MenuCommands.New.NETVIBES_WIDGET, "html", NETVIBES_FILE_NAME);
    }
 
@@ -100,18 +116,18 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       throws InterruptedException, Exception
    {
       IDE.TOOLBAR.runCommandFromNewPopupMenu(menuTitle);
-      IDE.EDITOR.waitActiveFile(FOLDER_NAME + "/" + "Untitled file." + fileExtention);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + "Untitled file." + fileExtention);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(menuTitle);
-      IDE.EDITOR.waitActiveFile(FOLDER_NAME + "/" + "Untitled file 1." + fileExtention);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + "Untitled file 1." + fileExtention);
 
       IDE.EDITOR.saveAs(1, fileName);
-      IDE.PROJECT.EXPLORER.waitForItem(FOLDER_NAME + "/" + fileName);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + fileName);
       IDE.EDITOR.closeFile(fileName);
       IDE.EDITOR.waitTabNotPresent(fileName);
       IDE.EDITOR.closeTabIgnoringChanges(1);
 
-      Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(FOLDER_NAME + "/" + fileName));
-      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME + "/" + fileName).getStatusCode());
+      Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + fileName));
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + fileName).getStatusCode());
    }
 
 }

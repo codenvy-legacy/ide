@@ -67,6 +67,7 @@ public class RenameClosedFileTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         refresh();
       }
       catch (Exception e)
       {
@@ -96,7 +97,6 @@ public class RenameClosedFileTest extends BaseTest
    @Test
    public void testChangeMimeType() throws Exception
    {
-      selenium().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
 
@@ -112,6 +112,7 @@ public class RenameClosedFileTest extends BaseTest
 
       IDE.PROPERTIES.openProperties();
       assertEquals(MimeType.TEXT_XML, IDE.PROPERTIES.getContentType());
+      IDE.LOADER.waitClosed();
       IDE.PROPERTIES.closeProperties();
       IDE.EDITOR.closeFile(1);
    }
@@ -119,7 +120,6 @@ public class RenameClosedFileTest extends BaseTest
    @Test
    public void testRenameAndChangeMimeType() throws Exception
    {
-      selenium().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
 
@@ -139,6 +139,7 @@ public class RenameClosedFileTest extends BaseTest
 
       IDE.PROPERTIES.openProperties();
       assertEquals(MimeType.TEXT_XML, IDE.PROPERTIES.getContentType());
+      IDE.LOADER.waitClosed();
       IDE.PROPERTIES.closeProperties();
       IDE.EDITOR.closeFile(1);
    }

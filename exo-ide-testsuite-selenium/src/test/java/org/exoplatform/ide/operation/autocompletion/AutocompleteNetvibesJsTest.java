@@ -19,6 +19,7 @@
 package org.exoplatform.ide.operation.autocompletion;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -26,18 +27,14 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-
 /**
- * Test for javascript autocomplete form
- * inside "script" tag in Netvibes files.
+ * Test for javascript autocomplete form inside "script" tag in Netvibes files.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: AutocompleteNetvibesJsTest.java Jan 24, 2011 11:35:17 AM vereshchaka $
- *
+ * 
  */
 public class AutocompleteNetvibesJsTest extends CodeAssistantBaseTest
 {
@@ -45,26 +42,29 @@ public class AutocompleteNetvibesJsTest extends CodeAssistantBaseTest
 
    private static final String NETVIBES_CONTENT = "<script type=\"text/javascript\">\n\n\n\n</script>";
 
-   @BeforeClass
-   public static void setUp() throws IOException
+   @Before
+   public void beforeTest() throws Exception
    {
       createProject(AutocompleteNetvibesJsTest.class.getSimpleName());
 
       VirtualFileSystemUtils.createFile(project.get(Link.REL_CREATE_FILE), NETVIBES_NAME, MimeType.UWA_WIDGET,
          NETVIBES_CONTENT);
+      openProject();
+      openFiles();
    }
 
-   @Before
-   public void openFile() throws Exception
+   public void openFiles() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + NETVIBES_NAME);
       IDE.PROJECT.EXPLORER.openItem(projectName + "/" + NETVIBES_NAME);
       IDE.EDITOR.waitActiveFile(projectName + "/" + NETVIBES_NAME);
+      IDE.WELCOME_PAGE.close();
    }
 
    /**
-    * Test, that autocomplete form contains all netvibes snippets.
-    * Also check javadoc form, which displays hint for selected snippet.
+    * Test, that autocomplete form contains all netvibes snippets. Also check javadoc form, which displays hint for selected
+    * snippet.
+    * 
     * @throws Exception
     */
    @Test
@@ -90,12 +90,12 @@ public class AutocompleteNetvibesJsTest extends CodeAssistantBaseTest
       /*
        * Check, that all UWA snippets are present.
        */
-      IDE.CODEASSISTANT.checkElementPresent("name");
-      IDE.CODEASSISTANT.checkElementPresent("flash");
-      IDE.CODEASSISTANT.checkElementPresent("jsonrequest");
-      IDE.CODEASSISTANT.checkElementPresent("pager");
-      IDE.CODEASSISTANT.checkElementPresent("tabs");
-      IDE.CODEASSISTANT.checkElementPresent("thumbnailed");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("name"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("flash"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsonrequest"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("pager"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("tabs"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("thumbnailed"));
 
       /*
        * 5. Move down, and check, that javadoc form appeared with hint.
@@ -106,11 +106,10 @@ public class AutocompleteNetvibesJsTest extends CodeAssistantBaseTest
       /*
        * Check, that javadoc (description) panel appeared.
        */
-
       Assert.assertTrue(IDE.CODEASSISTANT.getDocPanelText().startsWith(FLASH_CONTENT));
 
-      //      Autocomplete.moveCursorDown(4);
-      //      Thread.sleep(TestConstants.SLEEP);
+      // Autocomplete.moveCursorDown(4);
+      // Thread.sleep(TestConstants.SLEEP);
       IDE.CODEASSISTANT.typeToInput("jsonrequest", true);
 
       IDE.CODEASSISTANT.waitForDocPanelOpened();
@@ -135,6 +134,7 @@ public class AutocompleteNetvibesJsTest extends CodeAssistantBaseTest
 
    /**
     * Test, that Flass template (snippet) inserted correctly.
+    * 
     * @throws Exception
     */
    @Test
@@ -145,6 +145,7 @@ public class AutocompleteNetvibesJsTest extends CodeAssistantBaseTest
 
    /**
     * Test, that Json Request template (snippet) inserted correctly.
+    * 
     * @throws Exception
     */
    @Test
@@ -155,6 +156,7 @@ public class AutocompleteNetvibesJsTest extends CodeAssistantBaseTest
 
    /**
     * Test, that Pager template (snippet) inserted correctly.
+    * 
     * @throws Exception
     */
    @Test
@@ -165,6 +167,7 @@ public class AutocompleteNetvibesJsTest extends CodeAssistantBaseTest
 
    /**
     * Test, that Tabs template (snippet) inserted correctly.
+    * 
     * @throws Exception
     */
    @Test
@@ -175,6 +178,7 @@ public class AutocompleteNetvibesJsTest extends CodeAssistantBaseTest
 
    /**
     * Test, that Thumbnailed template (snippet) inserted correctly.
+    * 
     * @throws Exception
     */
    @Test
@@ -184,11 +188,8 @@ public class AutocompleteNetvibesJsTest extends CodeAssistantBaseTest
    }
 
    /**
-    * Open netvibes file (with one tag "script".
-    * Type some text and call autocomplete form.
-    * Move down the autocomplete list on <code>rowNumber</code> rows
-    * and press enter.
-    * Check, that text in file contains snippet.
+    * Open netvibes file (with one tag "script". Type some text and call autocomplete form. Move down the autocomplete list on
+    * <code>rowNumber</code> rows and press enter. Check, that text in file contains snippet.
     * 
     * @param rowNumber - number of rows to move down in autocomplete list
     * @param snippetTemplate - text of snippet, that will be inserted
@@ -220,12 +221,11 @@ public class AutocompleteNetvibesJsTest extends CodeAssistantBaseTest
       IDE.CODEASSISTANT.insertSelectedItem();
 
       checkText(IDE.EDITOR.getTextFromCodeEditor(0), snippetTemplate);
+
    }
 
    /**
-    * Compares two text in such way:
-    * split both strings of lines (by \n)
-    * and compare each line (before trim them).
+    * Compares two text in such way: split both strings of lines (by \n) and compare each line (before trim them).
     * 
     * @param fileContent
     * @param snippetContent
@@ -253,7 +253,7 @@ public class AutocompleteNetvibesJsTest extends CodeAssistantBaseTest
       }
    }
 
-   //--------Netvibes Snippets----------
+   // --------Netvibes Snippets----------
 
    private static final String JSON_REQUEST_CONTENT =
       "// Json request snippet ////////////////////////////////////////////////////////////////////////////////\n"

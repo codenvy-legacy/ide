@@ -37,7 +37,7 @@ import java.util.UUID;
  * @author <a href="mailto:roman.iyvshyn@exoplatform.com">Roman Iyvshyn</a>
  * @author <a href="mailto:njusha.exo@gmail.com">Nadia Zavalko</a>
  * @version $Id: Aug 11, 2010
- *
+ * 
  */
 public class CutFileTest extends BaseTest
 {
@@ -54,8 +54,9 @@ public class CutFileTest extends BaseTest
    private static final String CUT_OPENED_FILE = "Can't cut opened file %s";
 
    private static final String CUT_FOLDER_WITH_OPENED_FILE = "Can't cut folder %s, it contains open file %s";
-   
+
    public static final String WRONG_DESTINATION = "Destination folder already contains item with the same name.";
+
    @BeforeClass
    public static void setUp()
    {
@@ -86,7 +87,7 @@ public class CutFileTest extends BaseTest
       }
    }
 
-   //IDE-114
+   // IDE-114
    @Test
    public void testCutFile() throws Exception
    {
@@ -99,20 +100,21 @@ public class CutFileTest extends BaseTest
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
 
-      //Check Paste disabled:
+      // Check Paste disabled:
       assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
       assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
-      //Check Copy enabled:
+      // Check Copy enabled:
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU));
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU));
       assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR));
       assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR));
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
-      //Check Paste disabled:
+      // Check Paste disabled:
       assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
       assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
-      //Check Copy enabled:
+      // Check Copy enabled:
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU));
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU));
       assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR));
@@ -120,17 +122,17 @@ public class CutFileTest extends BaseTest
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
 
-      //Cut opened file causes warning message:
+      // Cut opened file causes warning message:
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
       IDE.WARNING_DIALOG.waitOpened();
       assertEquals(String.format(CUT_OPENED_FILE, FILE_NAME_1), IDE.WARNING_DIALOG.getWarningMessage());
       IDE.WARNING_DIALOG.clickOk();
       IDE.WARNING_DIALOG.waitClosed();
-      //Check Paste disabled:
+      // Check Paste disabled:
       assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
       assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
 
-      //Cut folder, which contains opened file:
+      // Cut folder, which contains opened file:
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_1);
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
       IDE.WARNING_DIALOG.waitOpened();
@@ -138,11 +140,11 @@ public class CutFileTest extends BaseTest
          IDE.WARNING_DIALOG.getWarningMessage());
       IDE.WARNING_DIALOG.clickOk();
       IDE.WARNING_DIALOG.waitClosed();
-      //Check Paste disabled:
+      // Check Paste disabled:
       assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
       assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
 
-      //Close file :
+      // Close file :
       IDE.EDITOR.closeFile(FILE_NAME_1);
       IDE.EDITOR.waitTabNotPresent(FILE_NAME_1);
 
@@ -157,8 +159,7 @@ public class CutFileTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       IDE.WARNING_DIALOG.waitOpened();
-      assertEquals(WRONG_DESTINATION,
-         IDE.WARNING_DIALOG.getWarningMessage());
+      assertTrue(IDE.WARNING_DIALOG.getWarningMessage().contains(WRONG_DESTINATION));
       IDE.WARNING_DIALOG.clickOk();
       IDE.WARNING_DIALOG.waitClosed();
 

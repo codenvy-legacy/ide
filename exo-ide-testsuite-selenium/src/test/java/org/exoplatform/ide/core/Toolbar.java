@@ -75,7 +75,6 @@ public class Toolbar extends AbstractTestModule
     */
    public void runCommand(String buttonTitle) throws Exception
    {
-      waitButtonPresentAtLeft(buttonTitle);
       WebElement button = toolbar.findElement(By.cssSelector(String.format(Locators.BUTTON_SELECTOR, buttonTitle)));
       button.click();
    }

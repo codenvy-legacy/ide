@@ -24,7 +24,6 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -35,17 +34,13 @@ import java.io.IOException;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class OpenGroovyLocalFileTest extends BaseTest
 {
-
-   private static String FOLDER_NAME = OpenGroovyLocalFileTest.class.getSimpleName();
+   private static String PROJECT = OpenGroovyLocalFileTest.class.getSimpleName();
 
    private static String GROOVY_NAME = "Example.groovy";
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER_NAME + "/";
 
    private static final String FILE_PATH =
       "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.groovy";
@@ -55,7 +50,7 @@ public class OpenGroovyLocalFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (IOException e)
       {
@@ -65,15 +60,14 @@ public class OpenGroovyLocalFileTest extends BaseTest
    @Test
    public void testOpenGroovy() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(URL);
-      IDE.WORKSPACE.selectItem(URL);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.LOADER.waitClosed();
 
       IDE.UPLOAD.open(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH, MimeType.GROOVY_SERVICE);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.EDITOR.waitTabPresent(1);
 
-      IDE.EDITOR.checkCodeEditorOpened(0);
       String text = IDE.EDITOR.getTextFromCodeEditor(0);
 
       assertTrue(text.length() > 0);
@@ -82,14 +76,13 @@ public class OpenGroovyLocalFileTest extends BaseTest
 
       assertEquals(fileContent.split("\n").length, text.split("\n").length);
 
-      saveAsByTopMenu(GROOVY_NAME);
+      IDE.EDITOR.saveAs(1, GROOVY_NAME);
 
-      IDE.WORKSPACE.waitForItem(URL + GROOVY_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + GROOVY_NAME);
 
-      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
+      IDE.PROPERTIES.openProperties();
 
       assertEquals(MimeType.GROOVY_SERVICE, IDE.PROPERTIES.getContentType());
-      IDE.EDITOR.closeFile(0);
    }
 
    @AfterClass
@@ -97,7 +90,7 @@ public class OpenGroovyLocalFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {

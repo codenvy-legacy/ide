@@ -25,36 +25,54 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Test for "Open local file" form.
  * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class OpenLocalFileTest extends BaseTest
 {
    private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/test";
-   
+
+   private static final String PROJECT = OpenLocalFileTest.class.getSimpleName();
+
+   @Before
+   public void beforeTest()
+   {
+      try
+      {
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+      }
+      catch (IOException e)
+      {
+      }
+   }
+
    @Test
    public void testOpenFileWithoutExtention() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
-      IDE.WORKSPACE.selectItem(WS_URL);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
-      //call Open Local File form
+      // call Open Local File form
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE);
-      IDE.UPLOAD.waitOpened();
+      IDE.UPLOAD.waitOpenLocalFileViewOpened();
       assertFalse(IDE.UPLOAD.isUploadButtonEnabled());
-      
-      //select file from local driver without file extention
+
+      // select file from local driver without file extention
       try
       {
          File file = new File(FILE_PATH);
@@ -63,24 +81,32 @@ public class OpenLocalFileTest extends BaseTest
       catch (Exception e)
       {
       }
-      
-      Thread.sleep(TestConstants.SLEEP);
-      
+
       String fileName = FILE_PATH.substring(FILE_PATH.lastIndexOf("/") + 1, FILE_PATH.length());
       assertEquals(fileName, IDE.UPLOAD.getFilePathValue());
-      
+
       assertEquals("", IDE.UPLOAD.getMimeTypeValue());
       assertFalse(IDE.UPLOAD.isUploadButtonEnabled());
-      
+
       IDE.UPLOAD.setMimeType(MimeType.TEXT_HTML);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      
+
       assertTrue(IDE.UPLOAD.isUploadButtonEnabled());
-      
+
       IDE.UPLOAD.clickUploadButton();
       IDE.UPLOAD.waitClosed();
-      
-      IDE.EDITOR.waitTabPresent(0);
 
+      IDE.EDITOR.waitTabPresent(1);
+   }
+
+   @After
+   public void afterTest()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      }
+      catch (IOException e)
+      {
+      }
    }
 }

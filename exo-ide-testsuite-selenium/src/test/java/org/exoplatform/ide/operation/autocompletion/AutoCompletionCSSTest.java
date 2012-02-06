@@ -21,22 +21,23 @@ package org.exoplatform.ide.operation.autocompletion;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.MenuCommands;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class AutoCompletionCSSTest extends CodeAssistantBaseTest
 {
 
-   @BeforeClass
-   public static void createProject()
+   @Before
+   public void createProject() throws Exception
    {
       createProject(AutoCompletionCSSTest.class.getSimpleName());
+      openProject();
    }
 
    @Test
@@ -51,12 +52,11 @@ public class AutoCompletionCSSTest extends CodeAssistantBaseTest
    public void testGoogleGadget() throws Exception
    {
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      IDE.EDITOR.waitActiveFile(AutoCompletionCSSTest.class.getSimpleName() + "/Untitled file.xml");
+      IDE.EDITOR.waitActiveFile(AutoCompletionCSSTest.class.getSimpleName() + "/Untitled file.gadget");
       IDE.EDITOR.moveCursorDown(0, 4);
       IDE.EDITOR.moveCursorRight(0, 16);
       IDE.EDITOR.typeTextIntoEditor(0, Keys.RETURN + "<style>\n\n\n</style>");
       IDE.EDITOR.moveCursorUp(0, 1);
-
       cssTest();
    }
 
@@ -69,7 +69,7 @@ public class AutoCompletionCSSTest extends CodeAssistantBaseTest
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + Keys.ENTER);
       IDE.EDITOR.typeTextIntoEditor(0, "<script>\n</script>");
 
-      IDE.EDITOR.moveCursorDown(0, 2);
+      IDE.EDITOR.moveCursorDown(0, 1);
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + Keys.ENTER);
       IDE.EDITOR.typeTextIntoEditor(0, "<style>\n\n</style>");
       IDE.EDITOR.moveCursorUp(0, 1);
@@ -79,11 +79,11 @@ public class AutoCompletionCSSTest extends CodeAssistantBaseTest
 
    private void cssTest() throws Exception
    {
-      IDE.EDITOR.typeTextIntoEditor(0, ".main{" + Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, ".main{\n");
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.typeToInput("list-st");
       IDE.CODEASSISTANT.moveCursorDown(3);
-      IDE.CODEASSISTANT.insertSelectedItem();
+      IDE.CODEASSISTANT.typeToInput("\n");
       String text = IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(text.contains("list-style-type"));
    }

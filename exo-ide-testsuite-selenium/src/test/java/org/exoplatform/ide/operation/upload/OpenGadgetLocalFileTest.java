@@ -24,8 +24,6 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -36,17 +34,14 @@ import java.io.IOException;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class OpenGadgetLocalFileTest extends BaseTest
 {
 
-   private static String FOLDER_NAME = OpenGadgetLocalFileTest.class.getSimpleName();
+   private static String PROJECT = OpenGadgetLocalFileTest.class.getSimpleName();
 
    private static String GADGET_NAME = "gadget.xml";
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER_NAME + "/";
 
    private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/gadget.xml";
 
@@ -55,7 +50,7 @@ public class OpenGadgetLocalFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (IOException e)
       {
@@ -65,18 +60,15 @@ public class OpenGadgetLocalFileTest extends BaseTest
    @Test
    public void testOpenGadget() throws Exception
    {
-
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(URL);
-
-      IDE.WORKSPACE.selectItem(URL);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       IDE.UPLOAD.open(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH, MimeType.GOOGLE_GADGET);
 
-      IDE.EDITOR.waitTabPresent(0);
-
-      IDE.EDITOR.checkCodeEditorOpened(0);
+      IDE.EDITOR.waitTabPresent(1);
 
       String text = IDE.EDITOR.getTextFromCodeEditor(0);
 
@@ -86,13 +78,13 @@ public class OpenGadgetLocalFileTest extends BaseTest
 
       assertEquals(fileContent.split("\n").length, text.split("\n").length);
 
-      saveAsByTopMenu(GADGET_NAME);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.saveAs(1, GADGET_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + GADGET_NAME);
+      IDE.LOADER.waitClosed();
 
       IDE.PROPERTIES.openProperties();
 
       assertEquals(MimeType.GOOGLE_GADGET, IDE.PROPERTIES.getContentType());
-      IDE.EDITOR.closeFile(0);
    }
 
    @AfterClass
@@ -100,7 +92,7 @@ public class OpenGadgetLocalFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {

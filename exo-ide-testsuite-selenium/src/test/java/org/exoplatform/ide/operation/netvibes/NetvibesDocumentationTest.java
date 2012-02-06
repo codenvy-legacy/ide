@@ -20,13 +20,22 @@ package org.exoplatform.ide.operation.netvibes;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.operation.file.CreatingAndSavingAsNewFileTest;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 
@@ -40,6 +49,7 @@ import java.io.IOException;
 public class NetvibesDocumentationTest extends BaseTest
 {
 
+   private static final String PROJECT = NetvibesDocumentationTest.class.getSimpleName();
    /**
     *  Locator for documentation iframe
     */
@@ -48,15 +58,33 @@ public class NetvibesDocumentationTest extends BaseTest
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/";
 
-   private static String FILE_NAME = NetvibesDocumentationTest.class.getSimpleName();
+   private static String FILE_NAME = "netvibes.html";
+   
+   
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+
+      }
+      catch (Exception e)
+      {
+         fail("Cant create project ");
+      }
+   }
 
    @Test
    public void testNetvibesDocumentation() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.EDITOR.waitTabPresent(1);
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.SHOW_DOCUMENTATION, true);
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_DOCUMENTATION);
@@ -64,28 +92,56 @@ public class NetvibesDocumentationTest extends BaseTest
       assertTrue(selenium().isElementPresent(IDE_DOCUMENTATION_FRAME));
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
-      IDE.EDITOR.waitTabPresent(1);
-      waitForElementNotPresent(IDE_DOCUMENTATION_FRAME);
-      assertFalse(selenium().isElementPresent(IDE_DOCUMENTATION_FRAME));
-
-      IDE.EDITOR.selectTab(0);
-      waitForElementPresent(IDE_DOCUMENTATION_FRAME);
-      assertTrue(selenium().isElementPresent(IDE_DOCUMENTATION_FRAME));
-
-      saveAsByTopMenu(FILE_NAME);
-      waitForElementPresent(IDE_DOCUMENTATION_FRAME);
-      assertTrue(selenium().isElementPresent(IDE_DOCUMENTATION_FRAME));
-
+      IDE.EDITOR.waitTabPresent(2);
+      waitForCloseDocTab();
+      assertTrue(driver.findElements(By.xpath(IDE_DOCUMENTATION_FRAME)).isEmpty());
       IDE.EDITOR.selectTab(1);
-      waitForElementNotPresent(IDE_DOCUMENTATION_FRAME);
+      waitForElementPresent(IDE_DOCUMENTATION_FRAME);
+      assertEquals(1,driver.findElements(By.xpath(IDE_DOCUMENTATION_FRAME)).size());
+
+      
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS);
+      IDE.ASK_FOR_VALUE_DIALOG.waitOpened();
+      IDE.ASK_FOR_VALUE_DIALOG.setValue(FILE_NAME);
+      IDE.ASK_FOR_VALUE_DIALOG.clickOkButton();
+      IDE.ASK_FOR_VALUE_DIALOG.waitClosed();
+      
+      waitForElementPresent(IDE_DOCUMENTATION_FRAME);
+      assertTrue(selenium().isElementPresent(IDE_DOCUMENTATION_FRAME));
+
+      IDE.EDITOR.selectTab(2);
+      waitForCloseDocTab();
       assertFalse(selenium().isElementPresent(IDE_DOCUMENTATION_FRAME));
 
       refresh();
-      IDE.WORKSPACE.waitForItem(WS_URL + FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       waitForElementPresent(IDE_DOCUMENTATION_FRAME);
       
       assertTrue(selenium().isElementPresent(IDE_DOCUMENTATION_FRAME));
 
+   }
+
+   private void waitForCloseDocTab()
+   {
+      new WebDriverWait(driver, 5).until(new ExpectedCondition<Boolean>()
+         {
+
+            @Override
+            public Boolean apply(WebDriver input)
+            {
+               try
+               {
+                  input.findElement(By.xpath(IDE_DOCUMENTATION_FRAME));
+                  return false;
+               }
+               catch (NoSuchElementException e)
+               {
+                  return true;
+               }
+            }
+         });
    }
 
    @AfterClass
@@ -93,9 +149,9 @@ public class NetvibesDocumentationTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + FILE_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
-      catch (IOException e)
+      catch (Exception e)
       {
       }
    }

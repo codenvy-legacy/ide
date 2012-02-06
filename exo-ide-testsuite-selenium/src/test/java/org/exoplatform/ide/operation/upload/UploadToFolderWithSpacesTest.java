@@ -30,12 +30,12 @@ import java.io.IOException;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 5, 2011 10:31:55 AM anya $
- *
+ * @version $Id: Jul 5, 2011 10:31:55 AM anya $
+ * 
  */
 public class UploadToFolderWithSpacesTest extends BaseTest
 {
-   private static final String TEST_FOLDER = UploadToFolderWithSpacesTest.class.getSimpleName();
+   private static final String PROJECT = UploadToFolderWithSpacesTest.class.getSimpleName();
 
    private static String TEST_FILE = "Test File@.txt";
 
@@ -49,7 +49,7 @@ public class UploadToFolderWithSpacesTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (IOException e)
       {
@@ -59,31 +59,32 @@ public class UploadToFolderWithSpacesTest extends BaseTest
    @Test
    public void testUploadingFileWithSpaces() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
-      //Create folder with spaces:
-      IDE.NAVIGATION.createFolder(FOLDER);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FOLDER + "/");
+      // Create folder with spaces:
+      IDE.FOLDER.createFolder(FOLDER);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER);
 
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + FOLDER + "/");
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE);
+      IDE.UPLOAD.waitOpened();
+      try
+      {
+         File file = new File(FILE_PATH);
+         IDE.UPLOAD.setUploadFilePath(file.getCanonicalPath());
+      }
+      catch (Exception e)
+      {
+      }
 
-       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE);
-       IDE.UPLOAD.waitOpened();
-       try
-       {
-          File file = new File(FILE_PATH);
-          IDE.UPLOAD.setUploadFilePath(file.getCanonicalPath());
-       }
-       catch (Exception e)
-       {
-       }
+      IDE.UPLOAD.clickUploadButton();
+      IDE.UPLOAD.waitClosed();
 
-       IDE.UPLOAD.clickUploadButton();
-       IDE.UPLOAD.waitClosed();
-
-       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FOLDER + "/" + TEST_FILE);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER + "/" + TEST_FILE);
    }
 
    @AfterClass
@@ -91,7 +92,7 @@ public class UploadToFolderWithSpacesTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {

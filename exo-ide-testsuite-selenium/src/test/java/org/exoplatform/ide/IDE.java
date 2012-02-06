@@ -33,6 +33,7 @@ import org.exoplatform.ide.core.DeployNodeType;
 import org.exoplatform.ide.core.Editor;
 import org.exoplatform.ide.core.FindReplace;
 import org.exoplatform.ide.core.Folder;
+import org.exoplatform.ide.core.GetURL;
 import org.exoplatform.ide.core.GoToLine;
 import org.exoplatform.ide.core.InformationDialog;
 import org.exoplatform.ide.core.Input;
@@ -41,6 +42,7 @@ import org.exoplatform.ide.core.LogReader;
 import org.exoplatform.ide.core.Login;
 import org.exoplatform.ide.core.Menu;
 import org.exoplatform.ide.core.Navigation;
+import org.exoplatform.ide.core.OpenFileByURL;
 import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Output;
 import org.exoplatform.ide.core.Perspective;
@@ -61,9 +63,8 @@ import org.exoplatform.ide.core.Toolbar;
 import org.exoplatform.ide.core.Upload;
 import org.exoplatform.ide.core.Versions;
 import org.exoplatform.ide.core.WarningDialog;
+import org.exoplatform.ide.core.WelcomePage;
 import org.exoplatform.ide.core.Workspace;
-
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
@@ -130,7 +131,9 @@ public class IDE
 
    public GoToLine GOTOLINE;
 
-   public Upload UPLOAD = new Upload();
+   public GetURL GET_URL;
+
+   public Upload UPLOAD;
 
    public FindReplace FINDREPLACE;
 
@@ -140,7 +143,7 @@ public class IDE
 
    public RESTService REST_SERVICE;
 
-   public Search SEARCH = new Search();
+   public Search SEARCH;
 
    public Output OUTPUT;
 
@@ -176,6 +179,10 @@ public class IDE
 
    public CustomizeHotkeys CUSTOMIZE_HOTKEYS;
 
+   public OpenFileByURL OPEN_FILE_BY_URL;
+
+   public WelcomePage WELCOME_PAGE;
+
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
       this.selenium = selenium;
@@ -195,11 +202,13 @@ public class IDE
       FOLDER = PageFactory.initElements(driver, Folder.class);
       FINDREPLACE = PageFactory.initElements(driver, FindReplace.class);
       GOTOLINE = PageFactory.initElements(driver, GoToLine.class);
+      GET_URL = PageFactory.initElements(driver, GetURL.class);
       INPUT = PageFactory.initElements(driver, Input.class);
       LOADER = PageFactory.initElements(driver, Loader.class);
       MENU = PageFactory.initElements(driver, Menu.class);
       OUTLINE = PageFactory.initElements(driver, Outline.class);
       OUTPUT = PageFactory.initElements(driver, Output.class);
+      OPEN_FILE_BY_URL = PageFactory.initElements(driver, OpenFileByURL.class);
       PREVIEW = PageFactory.initElements(driver, Preview.class);
       PREVIEW_NODE_TYPE = PageFactory.initElements(driver, PreviewNodeType.class);
       PERSPECTIVE = PageFactory.initElements(driver, Perspective.class);
@@ -208,6 +217,7 @@ public class IDE
       RENAME = PageFactory.initElements(driver, Rename.class);
       SAVE_AS_TEMPLATE = PageFactory.initElements(driver, SaveAsTemplate.class);
       SELECT_WORKSPACE = PageFactory.initElements(driver, SelectWorkspace.class);
+      SEARCH = PageFactory.initElements(driver, Search.class);
       STATUSBAR = PageFactory.initElements(driver, Statusbar.class);
       TOOLBAR = PageFactory.initElements(driver, Toolbar.class);
       TEMPLATES = PageFactory.initElements(driver, Templates.class);
@@ -221,6 +231,8 @@ public class IDE
       REST_SERVICE_DISCOVERY = PageFactory.initElements(driver, RESTServiceDiscovery.class);
       PROGRESS_BAR = PageFactory.initElements(driver, ProgressBar.class);
       CUSTOMIZE_HOTKEYS = PageFactory.initElements(driver, CustomizeHotkeys.class);
+      UPLOAD = PageFactory.initElements(driver, Upload.class);
+      WELCOME_PAGE = PageFactory.initElements(driver, WelcomePage.class);
    }
 
    public Selenium getSelenium()
@@ -236,9 +248,8 @@ public class IDE
    /**
     * Select main frame of IDE.
     * 
-    * This method is used, after typing text in editor.
-    * To type text you must select editor iframe. After typing,
-    * to return to them main frame, use selectMainFrame()
+    * This method is used, after typing text in editor. To type text you must select editor iframe. After typing, to return to
+    * them main frame, use selectMainFrame()
     * 
     */
    public void selectMainFrame()

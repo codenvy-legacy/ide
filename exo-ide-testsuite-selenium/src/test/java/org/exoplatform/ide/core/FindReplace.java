@@ -18,10 +18,7 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -51,8 +48,6 @@ public class FindReplace extends AbstractTestModule
 
       String REPLACE_ALL_BUTTON_ID = "ideFindReplaceTextFormReplaceAllButton";
 
-      String CANCEL_BUTTON_ID = "ideFindReplaceTextFormCancelButton";
-
       String FIND_FIELD_ID = "ideFindReplaceTextFormFindField";
 
       String REPLACE_FIELD_ID = "ideFindReplaceTextFormReplaceField";
@@ -60,9 +55,9 @@ public class FindReplace extends AbstractTestModule
       String CASE_SENSITIVE_FIELD_ID = "ideFindReplaceTextFormCaseSensitiveField";
 
       String FIND_RESULT_LABEL_ID = "ideFindReplaceTextFormFindResult";
-      
+
    }
-   
+
    private static final String VIEW_TITLE = "Find/Replace";
 
    public static final String NOT_FOUND_RESULT = "String not found.";
@@ -81,9 +76,6 @@ public class FindReplace extends AbstractTestModule
 
    @FindBy(id = Locators.REPLACE_ALL_BUTTON_ID)
    private WebElement replaceAllButton;
-
-   @FindBy(id = Locators.CANCEL_BUTTON_ID)
-   private WebElement cancelButton;
 
    @FindBy(name = Locators.FIND_FIELD_ID)
    private WebElement findField;
@@ -111,7 +103,7 @@ public class FindReplace extends AbstractTestModule
          {
             try
             {
-               return view != null && view.isDisplayed();
+               return isOpened();
             }
             catch (NoSuchElementException e)
             {
@@ -120,7 +112,16 @@ public class FindReplace extends AbstractTestModule
          }
       });
    }
-   
+
+   public boolean isOpened()
+   {
+      return (view != null && view.isDisplayed() && findField != null && findField.isDisplayed()
+         && replaceField != null && replaceField.isDisplayed() && findButton != null && findButton.isDisplayed()
+         && replaceButton != null && replaceButton.isDisplayed() && replaceFindButton != null
+         && replaceFindButton.isDisplayed() && replaceAllButton != null && replaceAllButton.isDisplayed()
+         && caseSensitiveField != null && caseSensitiveField.isDisplayed());
+   }
+
    public void waitCloseButtonAppeared() throws Exception
    {
       new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
@@ -140,7 +141,7 @@ public class FindReplace extends AbstractTestModule
          }
       });
    }
-   
+
    public void waitFindButtonAppeared() throws Exception
    {
       new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
@@ -159,7 +160,7 @@ public class FindReplace extends AbstractTestModule
          }
       });
    }
-   
+
    public void waitFindFieldAppeared() throws Exception
    {
       new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
@@ -186,7 +187,7 @@ public class FindReplace extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -202,7 +203,7 @@ public class FindReplace extends AbstractTestModule
          }
       });
    }
-   
+
    public void closeView()
    {
       IDE().PERSPECTIVE.getCloseViewButton(VIEW_TITLE).click();
@@ -211,39 +212,15 @@ public class FindReplace extends AbstractTestModule
    /**
     * Check the state of the find replace form: all elements to be present and the state of buttons.
     */
+   @Deprecated
    public void checkFindReplaceFormAppeared()
    {
-      assertTrue(view.isDisplayed());
-      assertTrue(findButton.isDisplayed());
-      assertTrue(replaceButton.isDisplayed());
-      assertTrue(replaceFindButton.isDisplayed());
-      assertTrue(replaceAllButton.isDisplayed());
-      assertTrue(cancelButton.isDisplayed());
-      assertTrue(findField.isDisplayed());
-      assertTrue(replaceField.isDisplayed());
-      assertTrue(caseSensitiveField.isDisplayed());
-
+      // TODO remove to test
       // Check buttons state
       assertFalse(isReplaceButtonEnabled());
       assertFalse(isReplaceFindButtonEnabled());
       assertFalse(isFindButtonEnabled());
       assertFalse(isReplaceAllButtonEnabled());
-      assertTrue(isCancelButtonEnabled());
-   }
-
-   public void checkFindReplaceFormNotAppeared()
-   {
-      assertNull(view);
-   }
-
-   /**
-    * Get enabled state of cancel button.
-    * 
-    * @return boolean enabled state of cancel button
-    */
-   public boolean isCancelButtonEnabled()
-   {
-      return IDE().BUTTON.isButtonEnabled(cancelButton);
    }
 
    /**
@@ -296,22 +273,14 @@ public class FindReplace extends AbstractTestModule
       IDE().INPUT.typeToElement(replaceField, text, true);
    }
 
-   public void checkFindFieldNotEmptyState()
+   public boolean isFindFieldNotEmptyState()
    {
-      assertTrue(isFindButtonEnabled());
-      assertTrue(isReplaceAllButtonEnabled());
-      assertFalse(isReplaceButtonEnabled());
-      assertFalse(isReplaceFindButtonEnabled());
-      assertTrue(isCancelButtonEnabled());
+      return (isFindButtonEnabled() && isReplaceAllButtonEnabled() && !isReplaceButtonEnabled() && !isReplaceFindButtonEnabled());
    }
 
-   public void checkFindFieldEmptyState()
+   public boolean checkFindFieldEmptyState()
    {
-      assertTrue(isFindButtonEnabled());
-      assertTrue(isReplaceAllButtonEnabled());
-      assertFalse(isReplaceButtonEnabled());
-      assertFalse(isReplaceFindButtonEnabled());
-      assertTrue(isCancelButtonEnabled());
+      return (isFindButtonEnabled() && isReplaceAllButtonEnabled() && !isReplaceButtonEnabled() && !isReplaceFindButtonEnabled());
    }
 
    public void clickFindButton() throws InterruptedException
@@ -334,39 +303,26 @@ public class FindReplace extends AbstractTestModule
       replaceAllButton.click();
    }
 
-   public void clickCancelButton() throws InterruptedException
-   {
-      cancelButton.click();
-   }
-
    /**
     * Check buttons when text is found.
     */
-   public void checkStateWhenTextFound()
+   public boolean isStateWhenTextFound()
    {
-      assertTrue(isFindButtonEnabled());
-      assertTrue(isReplaceAllButtonEnabled());
-      assertTrue(isReplaceButtonEnabled());
-      assertTrue(isReplaceFindButtonEnabled());
-      assertTrue(isCancelButtonEnabled());
-      assertEquals("", getFindResultText());
+      return (isFindButtonEnabled() && isReplaceAllButtonEnabled() && isReplaceButtonEnabled()
+         && isReplaceFindButtonEnabled() && getFindResultText().isEmpty());
    }
 
    /**
     * Check buttons when text is not found.
     */
-   public void checkStateWhenTextNotFound()
+   public boolean isStateWhenTextNotFound()
    {
-      assertTrue(isFindButtonEnabled());
-      assertTrue(isReplaceAllButtonEnabled());
-      assertFalse(isReplaceButtonEnabled());
-      assertFalse(isReplaceFindButtonEnabled());
-      assertTrue(isCancelButtonEnabled());
-      assertEquals(NOT_FOUND_RESULT, getFindResultText());
+      return (isFindButtonEnabled() && isReplaceAllButtonEnabled() && !isReplaceButtonEnabled() && !isReplaceFindButtonEnabled())
+         && NOT_FOUND_RESULT.equals(getFindResultText());
    }
 
    /**
-    * Returns the value of the find text result label. 
+    * Returns the value of the find text result label.
     * 
     * @return {@link String} result of the find text operation
     */

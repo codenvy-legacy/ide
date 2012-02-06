@@ -36,7 +36,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Jan 17, 2011 2:27:36 PM vereshchaka $
- *
+ * 
  */
 public class CodeAssistant extends AbstractTestModule
 {
@@ -47,7 +47,9 @@ public class CodeAssistant extends AbstractTestModule
    private static final String PANEL_ID = "exo-ide-autocomplete-panel";
 
    private static final String PANEL = "//table[@id='exo-ide-autocomplete-panel']";
-   
+
+   private static final String ELEMENT_LOCATOR = PANEL + "//div[text()='%s']";
+
    private static final String SUBSTITUTE_ELEMENT = PANEL + "//div[text()='%s']";
 
    /**
@@ -61,7 +63,7 @@ public class CodeAssistant extends AbstractTestModule
 
    @FindBy(xpath = PANEL)
    private WebElement panel;
-   
+
    @FindBy(id = INPUT)
    private WebElement input;
 
@@ -79,9 +81,7 @@ public class CodeAssistant extends AbstractTestModule
     */
    public void typeToInput(String text) throws Exception
    {
-      input.sendKeys(text);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      
+      IDE().INPUT.typeToElement(input, text);
    }
 
    /**
@@ -100,19 +100,21 @@ public class CodeAssistant extends AbstractTestModule
 
    /**
     * Check, that element <code>elementTitle</code> is present in autocomplete panel.
-    *  
+    * 
     * @param elementTitle - the title of element
     */
+   @Deprecated
    public void checkElementPresent(String elementTitle)
    {
+
       assertTrue(selenium().isElementPresent(PANEL + "//div[text()='" + elementTitle + "']"));
    }
-   
+
    public boolean isElementPresent(String elementTitle)
    {
       try
       {
-         WebElement element = panel.findElement(By.xpath(String.format(SUBSTITUTE_ELEMENT, elementTitle)));
+         WebElement element = driver().findElement(By.xpath(String.format(ELEMENT_LOCATOR, elementTitle)));
          return element != null && element.isDisplayed();
       }
       catch (NoSuchElementException e)
@@ -128,6 +130,7 @@ public class CodeAssistant extends AbstractTestModule
 
    /**
     * Move cursor down
+    * 
     * @param row Number of rows to move down
     * @throws InterruptedException
     */
@@ -153,8 +156,9 @@ public class CodeAssistant extends AbstractTestModule
     */
    public void closeForm()
    {
+      selectProposalPanel();
       input.sendKeys(Keys.ESCAPE);
-      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
+      (new WebDriverWait(driver(), 5)).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -173,25 +177,35 @@ public class CodeAssistant extends AbstractTestModule
    }
 
    /**
-    * Press Enter key to close form and paste selected item in to the editor 
-    * @throws InterruptedException 
+    * Click to the proposal panel
+    */
+   public void selectProposalPanel()
+   {
+      driver().findElement(By.id(PANEL_ID)).click();
+   }
+
+   /**
+    * Press Enter key to close form and paste selected item in to the editor
+    * 
+    * @throws InterruptedException
     */
    public void insertSelectedItem() throws InterruptedException
    {
-      //RETURN key is used instead of ENTER because 
-      //of issue http://code.google.com/p/selenium/issues/detail?id=2180
+      // RETURN key is used instead of ENTER because
+      // of issue http://code.google.com/p/selenium/issues/detail?id=2180
       input.sendKeys(Keys.RETURN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
    }
 
    /**
     * Open Autocompletion Form
+    * 
     * @throws Exception
     */
    public void openForm() throws Exception
    {
       IDE().EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SPACE);
-      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
+      (new WebDriverWait(driver(), 5)).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -244,9 +258,22 @@ public class CodeAssistant extends AbstractTestModule
       });
    }
 
+   public void waitForInput()
+   {
+      (new WebDriverWait(driver(), 5)).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver d)
+         {
+            return input != null && input.isDisplayed();
+         }
+      });
+   }
+
    /**
     * @param name
-    * @throws InterruptedException 
+    * @throws InterruptedException
     */
    public void selectImportProposal(String name) throws InterruptedException
    {

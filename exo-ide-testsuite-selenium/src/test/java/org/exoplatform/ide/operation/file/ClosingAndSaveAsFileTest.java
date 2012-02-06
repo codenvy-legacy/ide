@@ -20,13 +20,18 @@ package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS .
@@ -44,12 +49,38 @@ public class ClosingAndSaveAsFileTest extends BaseTest
 
    private static final String FILE2 = "new XML file.xml";
 
-   @After
-   public void tearDown()
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+
+      }
+      catch (Exception e)
+      {
+         fail("Cant create project ");
+      }
+   }
+
+   @AfterClass
+   public static void tearDown()
    {
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      }
+      catch (Exception e)
+      {
+      }
+   }
+
+   @After
+   public void refreshBrowser()
+   {
+      try
+      {
+         refresh();
       }
       catch (Exception e)
       {
@@ -61,8 +92,9 @@ public class ClosingAndSaveAsFileTest extends BaseTest
    public void testClosingAndSaveAsFile() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.CREATE.createProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem("/" + PROJECT);
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.waitTabPresent(1);
@@ -82,7 +114,7 @@ public class ClosingAndSaveAsFileTest extends BaseTest
       IDE.ASK_FOR_VALUE_DIALOG.clickOkButton();
       IDE.ASK_FOR_VALUE_DIALOG.waitClosed();
 
-      IDE.WORKSPACE.waitForItem("/" + PROJECT + "/" + FILE);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE);
 
       assertTrue(IDE.EDITOR.isTabPresentInEditorTabset(1));
       assertEquals(FILE, IDE.EDITOR.getTabTitle(1));
@@ -93,13 +125,13 @@ public class ClosingAndSaveAsFileTest extends BaseTest
    @Test
    public void testSaveAsFileAfterTryingToCloseNewFile() throws Exception
    {
-      selenium.refresh();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.CREATE.createProject(PROJECT);
-
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-
-      IDE.WORKSPACE.selectItem(PROJECT);
+      if (!IDE.PROJECT.EXPLORER.isItemPresent(PROJECT)) //project already open
+      {
+         IDE.PROJECT.EXPLORER.waitOpened();
+         IDE.PROJECT.OPEN.openProject(PROJECT);
+         IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      }
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       IDE.EDITOR.waitTabPresent(1);
 
@@ -111,7 +143,7 @@ public class ClosingAndSaveAsFileTest extends BaseTest
 
       IDE.EDITOR.saveAndCloseFile(1, FILE2);
 
-      IDE.WORKSPACE.waitForItem(PROJECT + "/" + FILE2);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE2);
       Assert.assertFalse(IDE.EDITOR.isTabPresentInEditorTabset(FILE2));
    }
 

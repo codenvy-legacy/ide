@@ -21,6 +21,7 @@ package org.exoplatform.ide.operation.file;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -30,6 +31,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Response;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.net.URLEncoder;
@@ -85,6 +87,20 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       }
    }
 
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+
+      }
+      catch (Exception e)
+      {
+         fail("Cant create project ");
+      }
+   }
+
    //IDE-47: Creating and "Saving As" new XML file with non-latin name 
    /**
     * Test added to Ignore, because at the moment not solved a problem with encoding Cyrillic characters to URL.
@@ -96,8 +112,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
    public void testCreateAndSaveAsXmlWithNonLatinName() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
-
-      IDE.PROJECT.CREATE.createProject(PROJECT);
+      IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
@@ -113,23 +128,25 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT);
 
       IDE.EDITOR.saveAs(1, XML_FILE);
-      IDE.WORKSPACE.waitForItem(PROJECT + "/" + XML_FILE);
+      String pathXml = PROJECT + "/" + XML_FILE;
+      IDE.PROJECT.EXPLORER.waitForItem(pathXml);
 
       assertEquals(XML_FILE, IDE.EDITOR.getTabTitle(1));
 
       //check file properties
       IDE.PROPERTIES.openProperties();
-      checkProperties(String.valueOf(XML_CONTENT.length()), MimeType.TEXT_XML, XML_FILE);
+      //code mirror adds one more newline at the end of file
+      checkProperties(String.valueOf(XML_CONTENT.length() + 1), MimeType.TEXT_XML, XML_FILE);
 
       IDE.EDITOR.closeFile(1);
 
       //check file on server
       checkFileExists(WS_URL + PROJECT + "/" + URLEncoder.encode(XML_FILE, "UTF-8"), XML_CONTENT);
 
-      Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + XML_FILE));
+      Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(pathXml));
 
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + XML_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE);
+      IDE.PROJECT.EXPLORER.openItem(pathXml);
+      IDE.EDITOR.waitActiveFile(pathXml);
 
       //change file content
       IDE.EDITOR.deleteFileContent(1);
@@ -137,11 +154,13 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
 
       //save as file
       IDE.EDITOR.saveAs(1, NEW_XML_FILE);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + NEW_XML_FILE);
+      String pathNewXml = PROJECT + "/" + NEW_XML_FILE;
+      IDE.PROJECT.EXPLORER.waitForItem(pathNewXml);
 
       assertEquals(NEW_XML_FILE, IDE.EDITOR.getTabTitle(1));
       IDE.PROPERTIES.openProperties();
-      checkProperties(String.valueOf(XML_CONTENT_2.length()), MimeType.TEXT_XML, NEW_XML_FILE);
+      //code mirror adds one more newline at the end of file
+      checkProperties(String.valueOf(XML_CONTENT_2.length()+1), MimeType.TEXT_XML, NEW_XML_FILE);
 
       IDE.EDITOR.closeFile(1);
 
@@ -149,8 +168,8 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       checkFileExists(WS_URL + PROJECT + "/" + URLEncoder.encode(XML_FILE, "UTF-8"), XML_CONTENT);
       checkFileExists(WS_URL + PROJECT + "/" + URLEncoder.encode(NEW_XML_FILE, "UTF-8"), XML_CONTENT_2);
 
-      Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + XML_FILE));
-      Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + NEW_XML_FILE));
+      Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(pathXml));
+      Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(pathNewXml));
    }
 
    /**

@@ -69,7 +69,7 @@ public class Loader extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 15).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)

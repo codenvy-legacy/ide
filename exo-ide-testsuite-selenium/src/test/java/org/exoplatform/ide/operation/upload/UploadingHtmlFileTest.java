@@ -34,16 +34,13 @@ import java.io.IOException;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class UploadingHtmlFileTest extends BaseTest
 {
-   private static final String FOLDER_NAME = UploadingHtmlFileTest.class.getSimpleName();
+   private static final String PROJECT = UploadingHtmlFileTest.class.getSimpleName();
 
    private static String HTML_NAME = "Example.html";
-
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER_NAME;
 
    private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.html";
 
@@ -52,7 +49,7 @@ public class UploadingHtmlFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (IOException e)
       {
@@ -62,12 +59,17 @@ public class UploadingHtmlFileTest extends BaseTest
    @Test
    public void testUploadingHtml() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
       IDE.UPLOAD.open(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.TEXT_HTML);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + HTML_NAME, false);
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.EDITOR.checkCodeEditorOpened(0);
+
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_NAME);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_NAME);
 
       String text = IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(text.length() > 0);
@@ -86,7 +88,7 @@ public class UploadingHtmlFileTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {

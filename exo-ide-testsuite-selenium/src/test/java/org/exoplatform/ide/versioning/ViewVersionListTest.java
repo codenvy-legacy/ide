@@ -25,6 +25,7 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.event.KeyEvent;
@@ -84,6 +85,7 @@ public class ViewVersionListTest extends BaseTest
     * @throws Exception
     */
    @Test
+   @Ignore
    public void testViewVersionList() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
@@ -201,6 +203,7 @@ public class ViewVersionListTest extends BaseTest
     * @throws Exception
     */
    @Test
+   @Ignore
    public void testViewVersionListWithNavigateVersions() throws Exception
    {
       refresh();

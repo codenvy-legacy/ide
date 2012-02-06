@@ -26,6 +26,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.event.KeyEvent;
@@ -96,6 +97,7 @@ public class NavigateVersionsTest extends BaseTest
    }
 
    @Test
+   @Ignore
    public void testNavigateOlderVersion() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
@@ -297,6 +299,7 @@ public class NavigateVersionsTest extends BaseTest
    }
 
    @Test
+   @Ignore
    public void testNavigateNewerVersion() throws Exception
    {
       refresh();
@@ -430,6 +433,7 @@ public class NavigateVersionsTest extends BaseTest
    }
 
    @Test
+   @Ignore
    public void testNavigateNewerVersionWithSave() throws Exception
    {
       refresh();
@@ -546,6 +550,7 @@ public class NavigateVersionsTest extends BaseTest
    }
 
    @Test
+   @Ignore
    public void testNavigateVersionWithClosePanel() throws Exception
    {
       refresh();

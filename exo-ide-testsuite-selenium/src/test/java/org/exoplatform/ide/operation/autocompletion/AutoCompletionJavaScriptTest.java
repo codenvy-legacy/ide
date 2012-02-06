@@ -21,27 +21,35 @@ package org.exoplatform.ide.operation.autocompletion;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.MenuCommands;
-import org.junit.BeforeClass;
+import org.exoplatform.ide.TestConstants;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class AutoCompletionJavaScriptTest extends CodeAssistantBaseTest
 {
 
-   @BeforeClass
-   public static void createProject()
+   @Before
+   public void createProject() throws Exception
    {
       createProject(AutoCompletionJavaScriptTest.class.getSimpleName());
+      openProject();
+   }
+
+   public void closeWelcomePage() throws Exception
+   {
+      IDE.WELCOME_PAGE.close();
    }
 
    @Test
    public void testPlainJS() throws InterruptedException, Exception
    {
+      closeWelcomePage();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
       IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.js");
       javaScriptTest();
@@ -50,8 +58,9 @@ public class AutoCompletionJavaScriptTest extends CodeAssistantBaseTest
    @Test
    public void testGoogleGadget() throws InterruptedException, Exception
    {
+      closeWelcomePage();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.xml");
+      IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.gadget");
       IDE.EDITOR.moveCursorDown(0, 4);
       IDE.EDITOR.moveCursorRight(0, 10);
       IDE.EDITOR.typeTextIntoEditor(0, Keys.RETURN.toString());
@@ -66,6 +75,7 @@ public class AutoCompletionJavaScriptTest extends CodeAssistantBaseTest
    @Test
    public void testHTML() throws InterruptedException, Exception
    {
+      closeWelcomePage();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.html");
       IDE.EDITOR.moveCursorDown(0, 2);
@@ -88,6 +98,7 @@ public class AutoCompletionJavaScriptTest extends CodeAssistantBaseTest
    @Test
    public void testGroovyTemplate() throws InterruptedException, Exception
    {
+      closeWelcomePage();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_TEMPLATE_FILE);
       IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.gtmpl");
       IDE.EDITOR.deleteFileContent(0);
@@ -109,17 +120,20 @@ public class AutoCompletionJavaScriptTest extends CodeAssistantBaseTest
    }
 
    /**
-    * @throws Exception 
+    * @throws Exception
     */
    private void javaScriptTest() throws Exception
    {
 
       IDE.EDITOR.typeTextIntoEditor(0, "function a () {\nreturn 1;\n}\n");
       IDE.EDITOR.typeTextIntoEditor(0, "var b = function() {\nreturn 2;\n}\n");
+      Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("a()");
-      IDE.CODEASSISTANT.checkElementPresent("b()");
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("a()"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("b()"));
 
       IDE.CODEASSISTANT.moveCursorDown(1);
       IDE.CODEASSISTANT.insertSelectedItem();
@@ -151,7 +165,7 @@ public class AutoCompletionJavaScriptTest extends CodeAssistantBaseTest
 
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("topFunc()");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("topFunc()"));
       IDE.CODEASSISTANT.checkElementNotPresent("localVarOfTopFunc");
       IDE.CODEASSISTANT.checkElementNotPresent("privateFunc1OfTopFunc()");
       IDE.CODEASSISTANT.checkElementNotPresent("localVarOfPrivateFuncOfTopFunc");

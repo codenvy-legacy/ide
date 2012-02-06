@@ -27,6 +27,7 @@ import org.exoplatform.ide.operation.autocompletion.groovy.GroovyLocalVariableTe
 import org.exoplatform.ide.operation.autocompletion.groovy.GroovyObjectCompletionTest;
 import org.exoplatform.ide.operation.autocompletion.groovy.GroovyProjectAutocompletionTest;
 import org.exoplatform.ide.operation.autocompletion.groovy.ImportStatementInsertionTest;
+import org.exoplatform.ide.operation.autocompletion.java.JavaCodeAssistantTest;
 import org.exoplatform.ide.operation.autocompletion.jsp.AutoCompleteJspTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -38,12 +39,24 @@ import org.junit.runners.Suite.SuiteClasses;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({AutoCompletionCSSTest.class, AutoCompletionHTMLTest.class,
-   AutoCompletionJavaScriptDuplicationTest.class, AutoCompletionJavaScriptTest.class, AutoCompletionXMLTest.class,
-   AutocompleteNetvibesJsTest.class, GroovyObjectCompletionTest.class, GroovyClassMethodsCompletionTest.class,
-   GroovyClassNameCompletionTest.class, GroovyLocalVariableTest.class, GroovyAnnotationAutocompleteTest.class,
-   GroovyKeywordsAutocompletionTest.class, ImportStatementInsertionTest.class,
-   GroovyProjectAutocompletionTest.class, ChrommaticImportAssistantTest.class, NetvibesApiAutocompletionTest.class, AutoCompleteJspTest.class})
+@SuiteClasses({AutoCompletionCSSTest.class, //
+               AutoCompletionHTMLTest.class,//
+               AutoCompletionJavaScriptDuplicationTest.class,// 
+               AutoCompletionJavaScriptTest.class, //
+               AutoCompletionXMLTest.class,//
+               AutocompleteNetvibesJsTest.class,//
+               GroovyObjectCompletionTest.class,//
+               GroovyClassMethodsCompletionTest.class,//
+               GroovyClassNameCompletionTest.class, //
+               GroovyLocalVariableTest.class,//
+               GroovyAnnotationAutocompleteTest.class,//
+               GroovyKeywordsAutocompletionTest.class,//
+               ImportStatementInsertionTest.class,//
+               GroovyProjectAutocompletionTest.class,//
+               ChrommaticImportAssistantTest.class, //
+               NetvibesApiAutocompletionTest.class, //
+               AutoCompleteJspTest.class,
+               JavaCodeAssistantTest.class})
 public class AutoCompletionTestSuite
 {
 

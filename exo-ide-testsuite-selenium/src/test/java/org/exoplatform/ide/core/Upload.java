@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertEquals;
-
 import org.exoplatform.ide.MenuCommands;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -32,18 +30,16 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.File;
 
 /**
- * Operations with Upload (Open Local File) dialogs:
- * open dialog, upload file.
+ * Operations with Upload (Open Local File) dialogs: open dialog, upload file.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Upload.java May 5, 2011 11:57:54 AM vereshchaka $
- *
+ * 
  */
 public class Upload extends AbstractTestModule
 {
    /**
-    * Form names, that are available for uploading:
-    * upload file, upload ziiped folder or open local file.
+    * Form names, that are available for uploading: upload file, upload ziiped folder or open local file.
     */
    public interface FormName
    {
@@ -69,7 +65,9 @@ public class Upload extends AbstractTestModule
 
       String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
-      String BROWSER_BUTTON_ID = "ideUploadFormBrowseButton";
+      String OPEN_LOCAL_FILE_VIEW_ID = "ideOpenLocalFile";
+
+      String OPEN_LOCAL_FILE_VIEW_LOCATOR = "//div[@view-id='" + OPEN_LOCAL_FILE_VIEW_ID + "']";
 
       String FILE_NAME_FIELD_ID = "ideUploadFormFilenameField";
 
@@ -85,6 +83,9 @@ public class Upload extends AbstractTestModule
    @FindBy(xpath = Locators.VIEW_LOCATOR)
    WebElement view;
 
+   @FindBy(xpath = Locators.OPEN_LOCAL_FILE_VIEW_LOCATOR)
+   WebElement openLocalFileView;
+
    @FindBy(name = Locators.FILE_NAME_FIELD_ID)
    WebElement fileNameField;
 
@@ -97,9 +98,6 @@ public class Upload extends AbstractTestModule
    @FindBy(id = Locators.CANCEL_BUTTON_ID)
    WebElement cancelButton;
 
-   @FindBy(id = Locators.BROWSER_BUTTON_ID)
-   WebElement browserButton;
-
    @FindBy(xpath = Locators.FILE_FIELD_LOCATOR)
    WebElement fileField;
 
@@ -110,14 +108,14 @@ public class Upload extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
          {
             try
             {
-               return (view != null && view.isDisplayed());
+               return isOpened();
             }
             catch (NoSuchElementException e)
             {
@@ -134,7 +132,7 @@ public class Upload extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -154,42 +152,120 @@ public class Upload extends AbstractTestModule
 
    public boolean isOpened()
    {
-      return (view != null && view.isDisplayed() && browserButton != null && browserButton.isDisplayed()
-         && uploadButton != null && uploadButton.isDisplayed() && cancelButton != null && uploadButton.isDisplayed()
-         && fileNameField != null && fileNameField.isDisplayed());
+      return (view != null && view.isDisplayed() && uploadButton != null && uploadButton.isDisplayed()
+         && cancelButton != null && cancelButton.isDisplayed() && fileNameField != null && fileNameField.isDisplayed());
+   }
+
+   /**
+    * Wait Upload view opened.
+    * 
+    * @throws Exception
+    */
+   public void waitOpenLocalFileViewOpened() throws Exception
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return isOpenLocalFileViewOpened();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   /**
+    * Wait Open local file view closed.
+    * 
+    * @throws Exception
+    */
+   public void waitOpenLocalFileViewClosed() throws Exception
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(Locators.OPEN_LOCAL_FILE_VIEW_LOCATOR));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
+   }
+
+   public boolean isOpenLocalFileViewOpened()
+   {
+      return (openLocalFileView != null && openLocalFileView.isDisplayed() && uploadButton != null
+         && uploadButton.isDisplayed() && cancelButton != null && cancelButton.isDisplayed() && fileNameField != null && fileNameField
+         .isDisplayed());
    }
 
    public void open(String formName, String filePath, String mimeType) throws Exception
    {
       IDE().MENU.runCommand(MenuCommands.File.FILE, formName);
-      waitOpened();
+
+      if (FormName.OPEN_LOCAL_FILE.equals(formName))
+      {
+         waitOpenLocalFileViewOpened();
+      }
+      else
+      {
+         waitOpened();
+      }
       try
       {
          File file = new File(filePath);
-         setUploadFilePath(file.getCanonicalPath());
+         setUploadFilePath(file.getAbsolutePath());
       }
       catch (Exception e)
       {
       }
 
-      String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
-      assertEquals(fileName, getFilePathValue());
+      final String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
+
+      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return fileName.equals(getFilePathValue());
+         }
+      });
 
       setMimeType(mimeType);
       clickUploadButton();
 
-      waitClosed();
+      if (FormName.OPEN_LOCAL_FILE.equals(formName))
+      {
+         waitOpenLocalFileViewClosed();
+      }
+      else
+      {
+         waitClosed();
+      }
    }
 
    /**
     * Set path of the file to be uploaded to file's upload input.
     * 
     * @param path file's path
-    * @throws InterruptedException 
+    * @throws InterruptedException
     */
    public void setUploadFilePath(String path) throws InterruptedException
    {
-      IDE().INPUT.typeToElement(fileField, path, true);
+      IDE().INPUT.typeToElement(fileField, path);
    }
 
    /**
@@ -213,7 +289,7 @@ public class Upload extends AbstractTestModule
     * Type text to Mime type field.
     * 
     * @param text text to type
-    * @throws InterruptedException 
+    * @throws InterruptedException
     */
    public void setMimeType(String mimeType) throws InterruptedException
    {
@@ -264,16 +340,6 @@ public class Upload extends AbstractTestModule
    public void clickCancelButton()
    {
       cancelButton.click();
-   }
-
-   /**
-    * Returns enabled state of browser button.
-    * 
-    * @return {@link Boolean} enabled state
-    */
-   public boolean isBrowserButtonEnabled()
-   {
-      return IDE().BUTTON.isButtonEnabled(browserButton);
    }
 
    /**

@@ -48,7 +48,7 @@ public class Editor extends AbstractTestModule
    private interface Locators
    {
       /**
-       * XPATH CodeMirror locator. 
+       * XPATH CodeMirror locator.
        */
       public static final String CODE_MIRROR_EDITOR = "//body[@class='editbox']";
 
@@ -56,10 +56,9 @@ public class Editor extends AbstractTestModule
        * XPATH CK editor locator.
        */
       String CK_EDITOR = "//table[@class='cke_editor']";
-      
-     
-      String CK_EDITOR_IFRAME ="td.cke_contents>iframe";
-      
+
+      String CK_EDITOR_IFRAME = "td.cke_contents>iframe";
+
       String EDITOR_TABSET_LOCATOR = "//div[@id='editor']";
 
       String TAB_LOCATOR = "//div[@tab-bar-index='%s']";
@@ -99,7 +98,7 @@ public class Editor extends AbstractTestModule
    }
 
    private WebElement editor;
-   
+
    @FindBy(className = Locators.LINE_HIGHLIGHTER_CLASS)
    private WebElement highlighter;
 
@@ -129,7 +128,7 @@ public class Editor extends AbstractTestModule
    {
       editor.findElement(
          By.xpath(String.format(Locators.EDITOR_TABSET_LOCATOR + Locators.TAB_LOCATOR + "//span", tabIndex))).click();
-      //TODO replace with wait for condition
+      // TODO replace with wait for condition
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
 
@@ -139,7 +138,7 @@ public class Editor extends AbstractTestModule
          editor.findElement(By.xpath(String.format(Locators.EDITOR_TABSET_LOCATOR + Locators.TITLE_SPAN_LOCATOR,
             fileName)));
       tab.click();
-      //TODO replace with wait for condition
+      // TODO replace with wait for condition
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
 
@@ -155,8 +154,7 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * Click on Close Tab button.
-    * Old name of this method is "clickCloseTabButton(int tabIndex)"
+    * Click on Close Tab button. Old name of this method is "clickCloseTabButton(int tabIndex)"
     * 
     * @param tabIndex index of tab, starts at 0
     */
@@ -177,7 +175,7 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * Closes file 
+    * Closes file
     * 
     * @param tabIndex
     */
@@ -216,9 +214,9 @@ public class Editor extends AbstractTestModule
    /**
     * Close tab in editor. Close ask window in case it appear while closing.
     * 
-   * @param tabIndex index of tab, starts at 0
-   * @throws Exception
-   */
+    * @param tabIndex index of tab, starts at 0
+    * @throws Exception
+    */
    public void closeTabIgnoringChanges(int tabIndex) throws Exception
    {
       selectTab(tabIndex);
@@ -332,10 +330,7 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * Close new file. 
-    * If saveFile true - save file.
-    * If fileName is null - save with default name, else
-    * save with fileName name.
+    * Close new file. If saveFile true - save file. If fileName is null - save with default name, else save with fileName name.
     * 
     * @param tabIndex - index of tab in editor panel
     * @param saveFile - is save file before closing
@@ -401,9 +396,8 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * Returns the active state of the editor.
-    * Index starts from <code>0</code>.
-    *   
+    * Returns the active state of the editor. Index starts from <code>0</code>.
+    * 
     * @param editorIndex editor's index
     * @return {@link Boolean} <code>true</code> if active
     */
@@ -455,7 +449,7 @@ public class Editor extends AbstractTestModule
     * Delete pointed number of lines in editor.
     * 
     * @param count number of lines to delete
-    * @throws Exception 
+    * @throws Exception
     */
    public void deleteLinesInEditor(int tabIndex, int count) throws Exception
    {
@@ -466,31 +460,23 @@ public class Editor extends AbstractTestModule
       }
    }
 
-  
-   
-   
-   
-   
-   
-   
    /**
-    *  Delete all file content via Ctrl+a, Delete
+    * Delete all file content via Ctrl+a, Delete
     */
    public void deleteFileContent(int tabIndex) throws Exception
    {
       typeTextIntoEditor(tabIndex, Keys.CONTROL.toString() + "a" + Keys.DELETE.toString());
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
-   
-   
+
    /**
-    *  Delete all file content via Ctrl+a, Delete
+    * Delete all file content via Ctrl+a, Delete
     */
    public void deleteFileContentInCKEditor(int tabIndex) throws Exception
    {
-      
+
       typeTextIntoCkEditor(tabIndex, Keys.CONTROL.toString() + "a" + Keys.DELETE.toString());
-      
+
    }
    
 
@@ -499,8 +485,7 @@ public class Editor extends AbstractTestModule
     * 
     * Index of tabs begins from 0.
     * 
-    * Sometimes, if you can't type text to editor,
-    * try before to click on editor:
+    * Sometimes, if you can't type text to editor, try before to click on editor:
     * 
     * selenium().clickAt("//body[@class='editbox']", "5,5");
     * 
@@ -509,21 +494,25 @@ public class Editor extends AbstractTestModule
     */
    public void typeTextIntoEditor(int tabIndex, String text) throws Exception
    {
-      selectIFrameWithEditor(tabIndex);
-      driver().switchTo().activeElement().sendKeys(text);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      IDE().selectMainFrame();
+      try
+      {
+         selectIFrameWithEditor(tabIndex);
+         WebElement editor = driver().switchTo().activeElement();
+         editor.sendKeys(text);
+         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      }
+      finally
+      {
+         IDE().selectMainFrame();
+      }
    }
-   
-   
-   
+
    /**
     * Type text to file, opened in tab.
     * 
     * Index of tabs begins from 0.
     * 
-    * Sometimes, if you can't type text to editor,
-    * try before to click on editor:
+    * Sometimes, if you can't type text to editor, try before to click on editor:
     * 
     * selenium().clickAt("//body[@class='editbox']", "5,5");
     * 
@@ -534,20 +523,19 @@ public class Editor extends AbstractTestModule
    {
       selectIFrameWithEditor(tabIndex);
       IDE().selectMainFrame();
-      WebElement ckEditorIframe = driver().findElement(By.cssSelector(Locators.CK_EDITOR_IFRAME)); 
+      WebElement ckEditorIframe = driver().findElement(By.cssSelector(Locators.CK_EDITOR_IFRAME));
       driver().switchTo().frame(ckEditorIframe);
       driver().switchTo().activeElement().sendKeys(text);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE().selectMainFrame();
    }
-   
 
    /**
     * Move cursor in editor down to pointed number of lines.
     * 
     * @param tabIndex index of the tab
     * @param rows number of lines to move down
-    * @throws Exception 
+    * @throws Exception
     */
    public void moveCursorDown(int tabIndex, int rows) throws Exception
    {
@@ -563,7 +551,7 @@ public class Editor extends AbstractTestModule
     * 
     * @param tabIndex index of the tab
     * @param rows number of lines to move up
-    * @throws Exception 
+    * @throws Exception
     */
    public void moveCursorUp(int tabIndex, int rows) throws Exception
    {
@@ -578,7 +566,7 @@ public class Editor extends AbstractTestModule
     * 
     * @param tabIndex index of the tab
     * @param rows number of symbols to move left
-    * @throws Exception 
+    * @throws Exception
     */
    public void moveCursorLeft(int tabIndex, int symbols) throws Exception
    {
@@ -593,7 +581,7 @@ public class Editor extends AbstractTestModule
     * 
     * @param tabIndex index of the tab
     * @param rows number of symbols to move right
-    * @throws Exception 
+    * @throws Exception
     */
    public void moveCursorRight(int tabIndex, int symbols) throws Exception
    {
@@ -609,7 +597,7 @@ public class Editor extends AbstractTestModule
     * 
     * 
     * @param tabIndex starts from 0
-    * @return content panel locator 
+    * @return content panel locator
     */
    public String getContentPanelLocator(int tabIndex)
    {
@@ -627,6 +615,7 @@ public class Editor extends AbstractTestModule
       WebElement editorFrame = driver().findElement(By.xpath(iFrameWithEditorLocator));
       driver().switchTo().frame(editorFrame);
    }
+
    /**
     * Mouse click on editor.
     * 
@@ -653,18 +642,17 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * select tab star with 1
-    * switch to iframe with ck_editor
-    * and return text into ck_editor
+    * select tab star with 1 switch to iframe with ck_editor and return text into ck_editor
+    * 
     * @param tabIndex
     * @return
     * @throws Exception
     */
    public String getTextFromCKEditor(int tabIndex) throws Exception
-  {
+   {
       selectIFrameWithEditor(tabIndex);
       IDE().selectMainFrame();
-      WebElement ckEditorIframe = driver().findElement(By.cssSelector(Locators.CK_EDITOR_IFRAME)); 
+      WebElement ckEditorIframe = driver().findElement(By.cssSelector(Locators.CK_EDITOR_IFRAME));
       driver().switchTo().frame(ckEditorIframe);
       String text = driver().switchTo().activeElement().getText();
       IDE().selectMainFrame();
@@ -672,7 +660,8 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * Wait while tab appears in editor 
+    * Wait while tab appears in editor
+    * 
     * @param tabIndex - index of tab, starts at 0
     * @throws Exception
     */
@@ -680,7 +669,7 @@ public class Editor extends AbstractTestModule
    {
       final String tab = Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TAB_LOCATOR, tabIndex);
 
-      new WebDriverWait(driver(), TestConstants.EDITOR_OPEN_PERIOD).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -699,14 +688,15 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * Wait while tab appears in editor 
+    * Wait while tab appears in editor
+    * 
     * @param tabIndex - index of tab, starts at 0
     * @throws Exception
     */
    public void waitActiveFile(String path) throws Exception
    {
       final String location = (path.startsWith("/")) ? path : "/" + path;
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -724,7 +714,8 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * Wait while tab disappears in editor 
+    * Wait while tab disappears in editor
+    * 
     * @param tabIndex - index of tab, starts at 0
     * @throws Exception
     */
@@ -782,13 +773,13 @@ public class Editor extends AbstractTestModule
     */
    public void checkCkEditorOpened(int tabIndex) throws Exception
    {
-      //TODO    
+      // TODO
       String locator =
          "//div[@panel-id='editor' and @tab-index='" + tabIndex
             + "']//table[@class='cke_editor']//td[@class='cke_contents']/iframe";
 
       assertTrue(selenium().isElementPresent(locator));
-      //assertTrue(selenium().isVisible(locator));
+      // assertTrue(selenium().isVisible(locator));
    }
 
    /**
@@ -799,7 +790,7 @@ public class Editor extends AbstractTestModule
     */
    public void checkCodeEditorOpened(int tabIndex) throws Exception
    {
-      //TODO
+      // TODO
 
       String locator =
          "//div[@panel-id='editor'and @tab-index='" + tabIndex + "']//div[@class='CodeMirror-wrapping']/iframe";
@@ -838,10 +829,10 @@ public class Editor extends AbstractTestModule
    {
       editor.findElement(By.id(Locators.DESIGN_BUTTON_ID)).click();
    }
-   
+
    public void selectCkEditorIframe(int tabIndex)
    {
-      //TODO
+      // TODO
       String divIndex = String.valueOf(tabIndex);
       selenium().selectFrame(
          "//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
@@ -851,8 +842,8 @@ public class Editor extends AbstractTestModule
    public String getSelectedText(int tabIndex) throws Exception
    {
       selectIFrameWithEditor(tabIndex);
-      //TODO find how to get selected text
-      String text = selenium().getEval("if (window.getSelection) { window.getSelection().toString();}");
+      // TODO find how to get selected text
+      String text = selenium().getEval("if (window.getSelection()) { window.getSelection().toString();}");
 
       IDE().selectMainFrame();
       return text;

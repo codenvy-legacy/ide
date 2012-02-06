@@ -27,6 +27,7 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -74,6 +75,7 @@ public class RestoreVersionTest extends BaseTest
    }
 
    @Test
+   @Ignore
    public void testRestoreVersion() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
@@ -226,6 +228,7 @@ public class RestoreVersionTest extends BaseTest
    }
 
    @Test
+   @Ignore
    public void testRestoreVersionAndEditFile() throws Exception
    {
       selenium().refresh();

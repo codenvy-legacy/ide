@@ -25,20 +25,21 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: Dec 6, 2010 $
+ *
  */
 public class ImportStatementInsertionTest extends CodeAssistantBaseTest
 {
 
    private final static String SERVICE_FILE_NAME = "import-statement-insertion.groovy";
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void beforeTest() throws Exception
    {
       String serviceFilePath =
          "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/" + SERVICE_FILE_NAME;
@@ -52,6 +53,8 @@ public class ImportStatementInsertionTest extends CodeAssistantBaseTest
       {
          fail("Can't create project structure");
       }
+      
+      openProject();
    }
 
    //GWTX-64: "Don't insert "import <FQN>;" statement if this is class from default package or 
@@ -71,7 +74,7 @@ public class ImportStatementInsertionTest extends CodeAssistantBaseTest
       
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.typeToInput("ase64");
-      IDE.CODEASSISTANT.insertSelectedItem();
+      IDE.CODEASSISTANT.typeToInput("\n");
 
       //test import statement
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("// simple groovy script"));
@@ -87,9 +90,9 @@ public class ImportStatementInsertionTest extends CodeAssistantBaseTest
       IDE.EDITOR.deleteLinesInEditor(0, 1);
       IDE.EDITOR.typeTextIntoEditor(0, "B");
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.typeToInput("itSet");
-      IDE.CODEASSISTANT.insertSelectedItem();
-
+      IDE.CODEASSISTANT.waitForInput();
+      IDE.CODEASSISTANT.typeToInput("itSet\n");
+      
       //test import statement
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("// simple groovy script"));
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import javax.ws.rs.Path"));

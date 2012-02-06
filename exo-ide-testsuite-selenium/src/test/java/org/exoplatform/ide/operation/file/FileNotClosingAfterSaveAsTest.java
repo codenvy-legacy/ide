@@ -22,6 +22,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -37,37 +38,51 @@ import java.io.IOException;
 public class FileNotClosingAfterSaveAsTest extends BaseTest
 {
 
-   private static final String FOLDER_NAME = FileNotClosingAfterSaveAsTest.class.getSimpleName();
+   private static final String PROJECT = FileNotClosingAfterSaveAsTest.class.getSimpleName();
 
    private static final String FILE_NAME_1 = "file-" + FileNotClosingAfterSaveAsTest.class.getSimpleName() + "-"
       + System.currentTimeMillis();
 
    private static final String FILE_NAME_2 = "file-" + FileNotClosingAfterSaveAsTest.class.getSimpleName() + "-"
       + System.currentTimeMillis() + "5";
-
+   
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+      }
+      catch (Exception e)
+      {
+         
+      }
+   }
+   
    //http://jira.exoplatform.com/browse/IDE-404
    @Test
    public void testFileNotClosingAfterSaveAs() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.CREATE.createProject(FOLDER_NAME);
-      IDE.PROJECT.EXPLORER.selectItem(FOLDER_NAME);
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       IDE.EDITOR.waitTabPresent(1);
       IDE.EDITOR.saveAs(1, FILE_NAME_1);
-      IDE.PROJECT.EXPLORER.waitForItem(FOLDER_NAME + "/" + FILE_NAME_1);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME_1);
       IDE.EDITOR.closeFile(1);
       
-      IDE.PROJECT.EXPLORER.openItem(FOLDER_NAME + "/" + FILE_NAME_1);
-      IDE.EDITOR.waitActiveFile(FOLDER_NAME + "/" + FILE_NAME_1);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME_1);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME_1);
       IDE.EDITOR.typeTextIntoEditor(1, "test test test");
       IDE.EDITOR.closeTabIgnoringChanges(1);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       IDE.EDITOR.waitTabPresent(1);
       IDE.EDITOR.saveAs(1, FILE_NAME_2);
-      IDE.EDITOR.waitActiveFile(FOLDER_NAME + "/" + FILE_NAME_2);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME_2);
    }
 
    @AfterClass
@@ -76,7 +91,7 @@ public class FileNotClosingAfterSaveAsTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-            + "/" + FOLDER_NAME);
+            + "/" + PROJECT);
       }
       catch (IOException e)
       {

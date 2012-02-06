@@ -26,7 +26,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -42,8 +42,8 @@ public class GroovyLocalVariableTest extends CodeAssistantBaseTest
 
    private static String FILE_NAME = "GroovyLocalVariable.groovy";
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void beforeTest() throws Exception
    {
       try
       {
@@ -56,6 +56,8 @@ public class GroovyLocalVariableTest extends CodeAssistantBaseTest
       {
          fail("Can't create project structure");
       }
+      
+      openProject();
    }
 
    @Test
@@ -80,6 +82,7 @@ public class GroovyLocalVariableTest extends CodeAssistantBaseTest
 
       IDE.EDITOR.moveCursorDown(0, 5);
       IDE.CODEASSISTANT.openForm();
+      
       assertTrue(IDE.CODEASSISTANT.isElementPresent("e:Exception"));
       assertTrue(IDE.CODEASSISTANT.isElementPresent("name:String"));
       assertTrue(IDE.CODEASSISTANT.isElementPresent("s:String"));
@@ -91,7 +94,6 @@ public class GroovyLocalVariableTest extends CodeAssistantBaseTest
 
       assertFalse(IDE.CODEASSISTANT.isElementPresent("col:Object"));
       assertFalse(IDE.CODEASSISTANT.isElementPresent("stream:PrintStream"));
-      assertFalse(IDE.CODEASSISTANT.isElementPresent("d"));
       assertFalse(IDE.CODEASSISTANT.isElementPresent("ii"));
       IDE.CODEASSISTANT.closeForm();
 

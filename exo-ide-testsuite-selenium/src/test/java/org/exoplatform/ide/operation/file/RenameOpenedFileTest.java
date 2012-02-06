@@ -81,7 +81,8 @@ public class RenameOpenedFileTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE1);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE1);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE1);
-
+      
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FILE1);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       IDE.RENAME.waitOpened();
 

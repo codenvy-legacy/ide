@@ -23,17 +23,17 @@ import static org.junit.Assert.fail;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.Keys;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyClassNameProjectTest Jan 20, 2011 2:13:30 PM evgen $
- *
+ * 
  */
 public class GroovyProjectAutocompletionTest extends CodeAssistantBaseTest
 {
@@ -47,8 +47,8 @@ public class GroovyProjectAutocompletionTest extends CodeAssistantBaseTest
 
    private static final String CLASSPATH_FILE_NAME = ".groovyclasspath";
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void beforeTest() throws Exception
    {
       try
       {
@@ -62,46 +62,37 @@ public class GroovyProjectAutocompletionTest extends CodeAssistantBaseTest
       {
          fail("Can't create project structure");
       }
+
+      openProject();
+      IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + REST_SERVICE_FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(projectName + "/" + REST_SERVICE_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(projectName + "/" + REST_SERVICE_FILE_NAME);
    }
 
    @Test
    public void testGroovyClassNameProject() throws Exception
    {
-      //open file
-      IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + REST_SERVICE_FILE_NAME);
-      IDE.PROJECT.EXPLORER.openItem(projectName + "/" + REST_SERVICE_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(projectName + "/" + REST_SERVICE_FILE_NAME);
-      
       IDE.EDITOR.moveCursorDown(0, 12);
-
       IDE.EDITOR.typeTextIntoEditor(0, "Po");
-
       IDE.CODEASSISTANT.openForm();
-      
-
       assertTrue(IDE.CODEASSISTANT.isElementPresent("Pojo"));
-
-      IDE.CODEASSISTANT.typeToInput("jo");
+      IDE.CODEASSISTANT.moveCursorDown(1);
       IDE.CODEASSISTANT.insertSelectedItem();
 
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import org.exoplatform.sample.Pojo"));
 
-      IDE.EDITOR.typeTextIntoEditor(0, " p" + Keys.ENTER.toString());
-
+      IDE.EDITOR.typeTextIntoEditor(0, " p\n");
       IDE.EDITOR.typeTextIntoEditor(0, "p.");
+      Thread.sleep(TestConstants.SLEEP_SHORT);
 
       IDE.CODEASSISTANT.openForm();
-
+      Thread.sleep(TestConstants.SLEEP_SHORT);
       assertTrue(IDE.CODEASSISTANT.isElementPresent("getName():java.lang.String"));
       assertTrue(IDE.CODEASSISTANT.isElementPresent("printText(java.lang.String):void"));
       assertTrue(IDE.CODEASSISTANT.isElementPresent("setName(java.lang.String):void"));
 
       IDE.CODEASSISTANT.typeToInput("pr");
-
       IDE.CODEASSISTANT.insertSelectedItem();
-
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("p.printText(java.lang.String)"));
-
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("p.printText(String)"));
    }
-
 }

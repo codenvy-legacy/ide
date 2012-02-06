@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
@@ -82,6 +83,7 @@ public class RESTServiceOutputErrorTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       IDE.OUTPUT.waitForMessageShow(1, 5);
 
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.LAUNCH_REST_SERVICE, true);
       IDE.REST_SERVICE.launchRestService();
 
       assertTrue(IDE.REST_SERVICE.isPathPresent("/outputError/Inner/{first}/{second}/node/{paramList: .+}"));

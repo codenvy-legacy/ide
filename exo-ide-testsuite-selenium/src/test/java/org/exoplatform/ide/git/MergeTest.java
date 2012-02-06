@@ -194,7 +194,6 @@ public class MergeTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
       
-      IDE.PROJECT.EXPLORER.openItem(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE);
 
       //Modify file:

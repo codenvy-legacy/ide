@@ -22,24 +22,24 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 10, 2010 2:34:17 PM evgen $
- *
+ * 
  */
 public class GroovyClassNameCompletionTest extends CodeAssistantBaseTest
 {
-   
-   @BeforeClass
-   public static void createProject()
+   @Before
+   public void createProject() throws Exception
    {
       createProject(GroovyClassNameCompletionTest.class.getSimpleName());
+      openProject();
    }
 
    @Test
@@ -51,17 +51,17 @@ public class GroovyClassNameCompletionTest extends CodeAssistantBaseTest
       IDE.EDITOR.moveCursorDown(0, 9);
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "\nCollection");
 
-      //open autocomplete form
+      // open autocomplete form
       IDE.CODEASSISTANT.openForm();
 
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("Collections"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("CollectionCertStore"));
       assertTrue(IDE.CODEASSISTANT.isElementPresent("Collection"));
 
       IDE.CODEASSISTANT.moveCursorDown(1);
 
       IDE.CODEASSISTANT.insertSelectedItem();
 
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("Collections"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("CollectionCertStore"));
    }
 
 }

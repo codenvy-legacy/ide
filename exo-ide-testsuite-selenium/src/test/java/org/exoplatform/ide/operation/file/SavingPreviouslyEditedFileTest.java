@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Response;
@@ -74,6 +75,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         refresh();
       }
       catch (Exception e)
       {
@@ -83,9 +85,13 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    @Test
    public void testSavePreviouslyEditedFile() throws Exception
    {
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      if (!IDE.PROJECT.EXPLORER.isItemPresent(PROJECT))
+      {
+         IDE.PROJECT.EXPLORER.waitOpened();
+         IDE.PROJECT.OPEN.openProject(PROJECT);
+         IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      }
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       //Create new XML file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
@@ -118,12 +124,11 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       IDE.EDITOR.typeTextIntoEditor(1, XML_TEXT1);
       IDE.EDITOR.typeTextIntoEditor(1, XML_TEXT2);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.EDITOR.closeFile(1);
 
-      selenium.refresh();
+      refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
-      //TODO remove opening project, when saving current project is done:
-      IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
@@ -151,10 +156,13 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    @Test
    public void testEditAndSaveJustCreatedFile() throws Exception
    {
-      selenium.refresh();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      if (!IDE.PROJECT.EXPLORER.isItemPresent(PROJECT))
+      {
+         IDE.PROJECT.EXPLORER.waitOpened();
+         IDE.PROJECT.OPEN.openProject(PROJECT);
+         IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      }
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       //Open new file and save it:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
@@ -184,11 +192,13 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
    @Test
    public void testOpenEditAndSaveJustCreatedFile() throws Exception
    {
-      selenium.refresh();
-
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      if (!IDE.PROJECT.EXPLORER.isItemPresent(PROJECT))
+      {
+         IDE.PROJECT.EXPLORER.waitOpened();
+         IDE.PROJECT.OPEN.openProject(PROJECT);
+         IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      }
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       //Open new file and save it:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);

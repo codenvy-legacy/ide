@@ -24,10 +24,12 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -60,6 +62,7 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
       }
    }
 
+   //@Ignore
    @Test
    public void testAnnotationInheritance() throws Exception
    {
@@ -85,14 +88,13 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
       IDE.REST_SERVICE.isValuePresentInPathList("/testAnnotationInheritance");
       IDE.REST_SERVICE.isValuePresentInPathList("/testAnnotationInheritance/InnerPath/{pathParam}");
       IDE.REST_SERVICE.isValuePresentInPathList("/testAnnotationInheritance/InnerPath/{pathParam}");
-      IDE.REST_SERVICE.typeToPathField("/testAnnotationInheritance/InnerPath/Ñ‚ÐµÑ�Ñ‚");
-
+      IDE.REST_SERVICE.typeToPathField("/testAnnotationInheritance/InnerPath/test");
       assertParameters();
 
       IDE.REST_SERVICE.sendRequest();
       IDE.OUTPUT.waitForMessageShow(2, 10);
       String mess = IDE.OUTPUT.getOutputMessage(2);
-      assertTrue(mess.contains("PathParam:Ñ‚ÐµÑ�Ñ‚"));
+      assertTrue(mess.contains("PathParam:test"));
       IDE.EDITOR.closeFile(FILE_NAME);
       IDE.EDITOR.waitTabNotPresent(FILE_NAME);
    }
@@ -116,6 +118,12 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
    {
       try
       {
+         IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+         IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+         IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+         Thread.sleep(1000);
+         IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+         IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
          IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }

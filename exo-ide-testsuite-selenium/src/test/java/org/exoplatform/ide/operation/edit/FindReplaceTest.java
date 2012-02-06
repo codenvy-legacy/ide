@@ -27,8 +27,8 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
@@ -94,8 +94,8 @@ public class FindReplaceTest extends BaseTest
 
    private final String wordToReplace = "form";
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void beforeTest()
    {
       try
       {
@@ -121,23 +121,28 @@ public class FindReplaceTest extends BaseTest
    public void testFindTextInFile() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME_TXT);
 
-      //Open file
+      // Open file
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME_TXT);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME_TXT);
       assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE));
 
-      //Open Find/Replace view:
+      // Open Find/Replace view:
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.FIND_REPLACE);
       IDE.FINDREPLACE.waitOpened();
-      IDE.FINDREPLACE.checkFindReplaceFormAppeared();
+      assertFalse(IDE.FINDREPLACE.isReplaceButtonEnabled());
+      assertFalse(IDE.FINDREPLACE.isReplaceFindButtonEnabled());
+      assertFalse(IDE.FINDREPLACE.isFindButtonEnabled());
+      assertFalse(IDE.FINDREPLACE.isReplaceAllButtonEnabled());
       assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE));
 
       // Type what to find
       IDE.FINDREPLACE.typeInFindField(wordToFind1);
-      IDE.FINDREPLACE.checkFindFieldNotEmptyState();
+      assertTrue(IDE.FINDREPLACE.isFindFieldNotEmptyState());
 
       // Step 5. Put cursor at the start of the document and click "Find"
       // button.
@@ -146,28 +151,28 @@ public class FindReplaceTest extends BaseTest
       assertEquals(wordToFind1, IDE.EDITOR.getSelectedText(0));
 
       // Check buttons enabled
-      IDE.FINDREPLACE.checkStateWhenTextFound();
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextFound());
 
       // Step 6
       IDE.FINDREPLACE.clickFindButton();
       assertEquals("Gadget", IDE.EDITOR.getSelectedText(0));
 
       // Check buttons enabled
-      IDE.FINDREPLACE.checkStateWhenTextFound();
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextFound());
 
       // Step 7
       IDE.FINDREPLACE.clickFindButton();
       assertEquals("Gadget", IDE.EDITOR.getSelectedText(0));
 
       // Check buttons enabled
-      IDE.FINDREPLACE.checkStateWhenTextFound();
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextFound());
 
       // Step 8
       IDE.FINDREPLACE.clickFindButton();
       assertEquals("Gadget", IDE.EDITOR.getSelectedText(0));
 
       // Check buttons enabled
-      IDE.FINDREPLACE.checkStateWhenTextNotFound();
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextNotFound());
 
       // Step 9
       IDE.FINDREPLACE.clickCaseSensitiveField();
@@ -177,13 +182,13 @@ public class FindReplaceTest extends BaseTest
 
       assertEquals(wordToFind1, IDE.EDITOR.getSelectedText(0));
       // Check buttons enabled
-      IDE.FINDREPLACE.checkStateWhenTextFound();
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextFound());
 
       // Step 10
       IDE.FINDREPLACE.clickFindButton();
       assertEquals(wordToFind1, IDE.EDITOR.getSelectedText(0));
       // Check buttons enabled
-      IDE.FINDREPLACE.checkStateWhenTextNotFound();
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextNotFound());
 
       // Step 11
       IDE.FINDREPLACE.typeInFindField("");
@@ -191,12 +196,12 @@ public class FindReplaceTest extends BaseTest
 
       // Step 12
       IDE.FINDREPLACE.typeInFindField(wordToFind2);
-      IDE.FINDREPLACE.checkFindFieldNotEmptyState();
+      assertTrue(IDE.FINDREPLACE.isFindFieldNotEmptyState());
       IDE.FINDREPLACE.clickFindButton();
-      IDE.FINDREPLACE.checkStateWhenTextNotFound();
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextNotFound());
 
       // Step 13 Close "Find/Replace" dialog window.
-      IDE.FINDREPLACE.clickCancelButton();
+      IDE.FINDREPLACE.closeView();
       IDE.FINDREPLACE.waitClosed();
       assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE));
       IDE.EDITOR.closeFile(1);
@@ -206,11 +211,13 @@ public class FindReplaceTest extends BaseTest
    public void testReplaceTextInFile() throws Exception
    {
       driver.navigate().refresh();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
-      //Open file
+      // Open file
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
       assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE));
@@ -219,13 +226,16 @@ public class FindReplaceTest extends BaseTest
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.FIND_REPLACE);
 
       IDE.FINDREPLACE.waitOpened();
-      IDE.FINDREPLACE.checkFindReplaceFormAppeared();
+      assertFalse(IDE.FINDREPLACE.isReplaceButtonEnabled());
+      assertFalse(IDE.FINDREPLACE.isReplaceFindButtonEnabled());
+      assertFalse(IDE.FINDREPLACE.isFindButtonEnabled());
+      assertFalse(IDE.FINDREPLACE.isReplaceAllButtonEnabled());
       assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE));
 
       // Step 4
       // Print "panel" to find field
       IDE.FINDREPLACE.typeInFindField(wordToFind3);
-      IDE.FINDREPLACE.checkFindFieldNotEmptyState();
+      assertTrue(IDE.FINDREPLACE.isFindFieldNotEmptyState());
 
       // Check "Case sensitive"
       IDE.FINDREPLACE.clickCaseSensitiveField();
@@ -235,7 +245,7 @@ public class FindReplaceTest extends BaseTest
       IDE.FINDREPLACE.clickFindButton();
       assertEquals(wordToFind3, IDE.EDITOR.getSelectedText(0));
       // Check buttons enabled
-      IDE.FINDREPLACE.checkStateWhenTextFound();
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextFound());
 
       // Step 5 Print "form" to replace field and click replace.
       IDE.FINDREPLACE.typeInReplaceField(wordToReplace);
@@ -250,7 +260,7 @@ public class FindReplaceTest extends BaseTest
       IDE.FINDREPLACE.clickFindButton();
       assertEquals(wordToFind3, IDE.EDITOR.getSelectedText(0));
       // Check buttons enabled
-      IDE.FINDREPLACE.checkStateWhenTextFound();
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextFound());
 
       // Step 7 Clear replace field and click replace button
       IDE.FINDREPLACE.typeInReplaceField("");
@@ -274,17 +284,17 @@ public class FindReplaceTest extends BaseTest
       assertEquals("Panel", IDE.EDITOR.getSelectedText(0));
 
       // Check buttons enabled
-      IDE.FINDREPLACE.checkStateWhenTextFound();
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextFound());
 
       // Step 10 Click "Replace/Find" button
       IDE.FINDREPLACE.clickReplaceFindButton();
       assertEquals("Panel", IDE.EDITOR.getSelectedText(0));
-      IDE.FINDREPLACE.checkStateWhenTextFound();
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextFound());
 
       // Step 11 Click "Replace/Find" again
       IDE.FINDREPLACE.clickReplaceFindButton();
       assertEquals("Panel", IDE.EDITOR.getSelectedText(0));
-      IDE.FINDREPLACE.checkStateWhenTextFound();
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextFound());
 
       // Step 12 Put cursor position at the start of document and make
       // "Case sensitive" not checked, text in find field is "panel", make
@@ -301,10 +311,10 @@ public class FindReplaceTest extends BaseTest
       IDE.EDITOR.typeTextIntoEditor(0, Keys.HOME.toString() + Keys.PAGE_UP);
       IDE.FINDREPLACE.clickFindButton();
       // Check buttons enabled
-      IDE.FINDREPLACE.checkStateWhenTextNotFound();
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextNotFound());
 
       // Step 15 Close "Find/Replace" dialog window.
-      IDE.FINDREPLACE.clickCancelButton();
+      IDE.FINDREPLACE.closeView();
       IDE.FINDREPLACE.waitClosed();
 
       assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE));
@@ -316,11 +326,13 @@ public class FindReplaceTest extends BaseTest
    public void testfindReplaceInFewFiles() throws Exception
    {
       driver.navigate().refresh();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME_HTML);
 
-      //Open files
+      // Open files
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME_HTML);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME_HTML);
 
@@ -335,88 +347,91 @@ public class FindReplaceTest extends BaseTest
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.FIND_REPLACE);
       IDE.FINDREPLACE.waitOpened();
-      IDE.FINDREPLACE.checkFindReplaceFormAppeared();
+      assertFalse(IDE.FINDREPLACE.isReplaceButtonEnabled());
+      assertFalse(IDE.FINDREPLACE.isReplaceFindButtonEnabled());
+      assertFalse(IDE.FINDREPLACE.isFindButtonEnabled());
+      assertFalse(IDE.FINDREPLACE.isReplaceAllButtonEnabled());
       assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE));
 
-      //Step 4 Print "html" word in "Find" field, put cursot at start of document and click "Find"
+      // Step 4 Print "html" word in "Find" field, put cursot at start of document and click "Find"
       IDE.FINDREPLACE.typeInFindField("html");
-      IDE.FINDREPLACE.checkFindFieldNotEmptyState();
+      assertTrue(IDE.FINDREPLACE.isFindFieldNotEmptyState());
       // Make system mouse click on editor space
       IDE.EDITOR.typeTextIntoEditor(0, Keys.HOME.toString() + Keys.PAGE_UP);
 
       IDE.FINDREPLACE.clickFindButton();
       assertEquals("html", IDE.EDITOR.getSelectedText(0));
       // Check buttons enabled
-      IDE.FINDREPLACE.checkStateWhenTextFound();
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextFound());
 
-      //Step 5 Go to "rest2.groovy" file.
+      // Step 5 Go to "rest2.groovy" file.
       IDE.EDITOR.selectTab(3);
-      //Step 6 Click "Find" button.
+      // Step 6 Click "Find" button.
       IDE.FINDREPLACE.clickFindButton();
       assertEquals("", IDE.EDITOR.getSelectedText(1));
       // Check buttons enabled
-      IDE.FINDREPLACE.checkStateWhenTextNotFound();
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextNotFound());
 
-      //Step 7 Go to "rest.groovy" file.
+      // Step 7 Go to "rest.groovy" file.
       IDE.EDITOR.selectTab(2);
-      //Step 8 
-      //Print "import" in find field
+      // Step 8
+      // Print "import" in find field
       IDE.FINDREPLACE.typeInFindField("import");
-      //Print "define" in replace field, 
+      // Print "define" in replace field,
       IDE.FINDREPLACE.typeInReplaceField("define");
-      //Put cursor at start and click on "Find" button
+      // Put cursor at start and click on "Find" button
       IDE.EDITOR.typeTextIntoEditor(1, Keys.HOME.toString() + Keys.PAGE_UP);
       IDE.FINDREPLACE.clickFindButton();
       assertEquals("import", IDE.EDITOR.getSelectedText(1));
       // Check buttons enabled
-      IDE.FINDREPLACE.checkStateWhenTextFound();
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextFound());
 
-      //Step 9 Go to "rest2.groovy" file.
-      IDE.EDITOR.selectTab(3);
-      //Step 10 
-      //Print "java" into the find field
+      // Step 9 Go to "rest2.groovy" file.
+      // Step 10
+      // Print "java" into the find field
+      IDE.EDITOR.selectTab(FILE_NAME_GROOVY_1);
       IDE.FINDREPLACE.typeInFindField("java");
 
-      //Put cursor at start and click on "Find" button
+      // Put cursor at start and click on "Find" button
       IDE.EDITOR.typeTextIntoEditor(1, Keys.HOME.toString() + Keys.PAGE_UP);
       IDE.FINDREPLACE.clickFindButton();
       assertEquals("java", IDE.EDITOR.getSelectedText(1));
       // Check buttons enabled
-      IDE.FINDREPLACE.checkStateWhenTextFound();
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextFound());
 
-      //Step 11 Click "Replace" button
+      // Step 11 Click "Replace" button
       IDE.FINDREPLACE.clickReplaceButton();
-      //TODO check replaced text
+      // TODO check replaced text
       assertFalse(IDE.FINDREPLACE.isReplaceButtonEnabled());
       assertFalse(IDE.FINDREPLACE.isReplaceFindButtonEnabled());
 
-      //Step 12 Go to "test.html" file
+      // Step 12 Go to "test.html" file
       IDE.EDITOR.selectTab(1);
-      //Step 13 Click "Replace/Find"
+      // Step 13 Click "Replace/Find"
       IDE.FINDREPLACE.clickReplaceFindButton();
-      //TODO check replaced
+      // TODO check replaced
       assertEquals("html", IDE.EDITOR.getSelectedText(0));
       // Check buttons enabled
-      IDE.FINDREPLACE.checkStateWhenTextFound();
-      //Step 14 Click "Replace/Find" again
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextFound());
+      // Step 14 Click "Replace/Find" again
       IDE.FINDREPLACE.clickReplaceFindButton();
-      //TODO Check replaced
+      // TODO Check replaced
       // Check buttons enabled
-      IDE.FINDREPLACE.checkStateWhenTextFound();
+      assertTrue(IDE.FINDREPLACE.isStateWhenTextFound());
 
-      //Step 15 Go to "rest.groovy" file
+      // Step 15 Go to "rest.groovy" file
       IDE.EDITOR.selectTab(2);
-      //Step 16 Click "Replace All" button
+      // Step 16 Click "Replace All" button
       IDE.FINDREPLACE.clickReplaceAllButton();
-      //TODO check replaced
+      // TODO check replaced
       // Step 17 Close "Find/Replace" dialog window.
-      IDE.FINDREPLACE.clickCancelButton();
+      IDE.FINDREPLACE.closeView();
       IDE.FINDREPLACE.waitClosed();
       assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE));
    }
 
-   @AfterClass
-   public static void afterTest()
+   @After
+   public void afterTest()
    {
       try
       {

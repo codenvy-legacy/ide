@@ -69,13 +69,14 @@ public class Menu extends AbstractTestModule
       //Call top menu command:
       WebElement topMenuItem =
          driver().findElement(By.xpath(String.format(Locators.TOP_MENU_ITEM_LOCATOR, topMenuName)));
+      waitForTopMenuPresent(topMenuItem);
+      IDE().LOADER.waitClosed();
       topMenuItem.click();
       waitMenuPopUp();
 
       //Call command from menu popup:
       WebElement menuItem = driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_LOCATOR, commandName)));
       menuItem.click();
-
       waitMenuPopUpClosed();
    }
 
@@ -319,6 +320,34 @@ public class Menu extends AbstractTestModule
          lockLayer.click();
          waitMenuPopUpClosed();
       }
+   }
+
+
+
+   /**
+    * Wait appearance Top menu
+    * From eXoToolbar
+    * @param menuName
+    * @throws Exception
+    */
+   public void waitForTopMenuPresent(final WebElement menuName) throws Exception
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               return menuName != null && menuName.isDisplayed();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+
    }
 
 }

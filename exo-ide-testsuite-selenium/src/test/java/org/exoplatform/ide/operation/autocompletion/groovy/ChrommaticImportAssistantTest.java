@@ -26,10 +26,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -40,19 +37,17 @@ public class ChrommaticImportAssistantTest extends CodeAssistantBaseTest
 
    private final static String FILE_NAME = "importChrommatic.groovy";
 
-   @BeforeClass
-   public static void setUp() throws IOException
+   @Before
+   public void beforeTest() throws Exception
    {
       createProject(ChrommaticImportAssistantTest.class.getSimpleName());
       String serviceFilePath =
          "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/importAssistantChrommatic.groovy";
       VirtualFileSystemUtils.createFileFromLocal(project.get(Link.REL_CREATE_FILE), FILE_NAME,
          MimeType.CHROMATTIC_DATA_OBJECT, serviceFilePath);
-   }
-
-   @Before
-   public void openFile() throws Exception
-   {
+      
+      openProject();
+      
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
@@ -68,7 +63,7 @@ public class ChrommaticImportAssistantTest extends CodeAssistantBaseTest
       IDE.CODEASSISTANT.waitForImportAssistForOpened();
 
       IDE.CODEASSISTANT.selectImportProposal("Base64");
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import java.util.prefs.Base64"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import com.sun.net.httpserver.Base64"));
    }
 
 }

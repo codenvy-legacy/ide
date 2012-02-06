@@ -81,7 +81,7 @@ public class RESTServiceGetURLTest extends BaseTest
       IDE.REST_SERVICE.openGetURLForm();
 
       String url = IDE.REST_SERVICE.getUrlFromGetURLForm();
-
+      
       assertTrue((BASE_URL + REST_CONTEXT_IDE + "/testService").equals(url));
       //Close form
       IDE.REST_SERVICE.closeGetURLForm();
@@ -117,10 +117,13 @@ public class RESTServiceGetURLTest extends BaseTest
    {
       try
       {
-         //TODO     Utils.undeployService(BASE_URL, REST_CONTEXT, url);
+        //TODO     Utils.undeployService(BASE_URL, REST_CONTEXT, url);
+        if (IDE.OUTPUT.getOutputMessage(2).contains("/" + PROJECT + "/" + FILE_NAME + " undeployed successfully."))
+        {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+        }        
       }
-      catch (IOException e)
+        catch (IOException e)
       {
       }
    }

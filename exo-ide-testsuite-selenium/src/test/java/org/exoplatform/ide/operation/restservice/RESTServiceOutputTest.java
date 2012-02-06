@@ -105,7 +105,7 @@ public class RESTServiceOutputTest extends BaseTest
       IDE.REST_SERVICE.sendRequest();
       IDE.OUTPUT.waitForMessageShow(3, 5);
       mess = IDE.OUTPUT.getOutputMessage(3);
-      assertTrue(mess.contains("Param List 1:param1; Test Query Parameter 1: ; Test-Header 1: test; Body:"));
+      assertTrue(mess.contains("Param List 1:param1/; Test Query Parameter 1: ; Test-Header 1: test; Body:"));
 
       IDE.REST_SERVICE.launchRestService();
       IDE.REST_SERVICE.typeToPathField("/overralTest/Inner/node/param1");
@@ -120,7 +120,7 @@ public class RESTServiceOutputTest extends BaseTest
       IDE.OUTPUT.waitForMessageShow(4, 5);
       mess = IDE.OUTPUT.getOutputMessage(4);
       assertTrue(mess
-         .contains("Param List 1:param1; Test Query Parameter 1: value 1; Test-Header 1: value 2; Body:Ð¿Ñ€Ð¸ÐºÐ»Ð°Ð´ Ð¿Ð¾Ð²Ñ–Ð´Ð¾Ð¼Ð»ÐµÐ½Ð½Ñ�"));
+         .contains("Param List 1:param1/; Test Query Parameter 1: value 1; Test-Header 1: value 2; Body:Ð¿Ñ€Ð¸ÐºÐ»Ð°Ð´ Ð¿Ð¾Ð²Ñ–Ð´Ð¾Ð¼Ð»ÐµÐ½Ð½Ñ�"));
 
       IDE.REST_SERVICE.launchRestService();
       IDE.REST_SERVICE.typeToPathField("/overralTest/Inner/node/param1/param2/param3");
@@ -138,7 +138,7 @@ public class RESTServiceOutputTest extends BaseTest
       IDE.OUTPUT.waitForMessageShow(5, 5);
       mess = IDE.OUTPUT.getOutputMessage(5);
       assertTrue(mess
-         .contains("Param List 2:param1/param2/param3; Test Query Parameter 2: value 1; Test-Header 2: value 2"));
+         .contains("Param List 2:param1/param2/param3/; Test Query Parameter 2: value 1; Test-Header 2: value 2"));
    }
 
    private void checkFields(String path, String method, String request, String response)

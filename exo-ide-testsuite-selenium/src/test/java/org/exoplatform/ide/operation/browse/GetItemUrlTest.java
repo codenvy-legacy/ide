@@ -19,106 +19,127 @@
 package org.exoplatform.ide.operation.browse;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Created by The eXo Platform SAS.
- *	
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:   ${date} ${time}
- *
+ * @version $Id: ${date} ${time}
+ * 
  */
 public class GetItemUrlTest extends BaseTest
 {
 
-   private final String WORK_SPACE_LOCATOR = "//div[@ID=\"ideNavigatorItemTreeGrid\"]//div[@class=\"ide-Tree-label\"]/";
-
    private final String content1 = "<p> Hello!!! </p>";
-
-   private final String content2 = "Hello!!!";
 
    private final String searchPhrase = "Hello!!!";
 
-   private final String file1Name = "gadget.xml";
+   private final String file1Name = "gadget.txt";
 
-   private final String file2Name = "Example.groovy";
+   private final String folderName = "myFolder";
 
-   private final String folderName = GetItemUrlTest.class.getSimpleName();
+   private static final String PROJECT = GetItemUrlTest.class.getSimpleName();
 
    private final String entrypoint = WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
+
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+      }
+      catch (Exception e)
+      {
+         fail("Can't create test project");
+      }
+   }
+
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      }
+      catch (Exception e)
+      {
+      }
+   }
 
    @Test
    public void testGetFileUrl() throws Exception
    {
-      //Create first file
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.txt");
+
       IDE.EDITOR.deleteLinesInEditor(0, 7);
       assertEquals("", IDE.EDITOR.getTextFromCodeEditor(0));
       IDE.EDITOR.typeTextIntoEditor(0, content1);
-      IDE.NAVIGATION.saveFileAs(file1Name);
+      IDE.EDITOR.saveAs(1, file1Name);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + file1Name);
+      IDE.EDITOR.closeFile(file1Name);
+      IDE.EDITOR.waitTabNotPresent(file1Name);
 
-      IDE.EDITOR.closeFile(0);
-      IDE.NAVIGATION.assertItemVisible(WS_URL + file1Name);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.FOLDER.createFolder(folderName);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + folderName);
 
-      IDE.NAVIGATION.createFolder(folderName);
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
+      // Test project item:
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GET_URL));
 
-      assertEquals("", IDE.EDITOR.getTextFromCodeEditor(0));
-      IDE.EDITOR.typeTextIntoEditor(1, content2);
-      IDE.NAVIGATION.saveFileAs(file2Name);
-      IDE.EDITOR.closeFile(0);
-      IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/" + file2Name);
+      // Test folder:
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + folderName);
+      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GET_URL));
 
-      //Refresh root item
-      IDE.WORKSPACE.selectRootItem();
-      IDE.TOOLBAR.runCommand("Refresh Selected Folder");
-      String workspaceName = IDE.NAVIGATION.getRowTitle(1);
-      String url = getSelectedItemUrl();
-      assertTrue(url.startsWith(BASE_URL));
-      assertTrue(url.endsWith(entrypoint + workspaceName + "/"));
+      // Test file:
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + file1Name);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GET_URL));
 
-      //Open url and check file and folder are present
-      openLink(url);
-      assertTrue(selenium().isElementPresent("link=" + file1Name));
-      assertTrue(selenium().isElementPresent("link=" + folderName));
-      selenium().goBack();
-      selenium().waitForPageToLoad("12000");
-      Thread.sleep(TestConstants.SLEEP);
+      String url = IDE.GET_URL.getURL();
 
-      //Check get URL for file in root of the tree
-      IDE.WORKSPACE.selectItem(WS_URL + file1Name);
-      url = getSelectedItemUrl();
-      assertTrue(url.startsWith(BASE_URL));
-      assertTrue(url.endsWith(entrypoint + workspaceName + "/" + file1Name));
+      driver.navigate().to(url);
 
-      //Check get URL for folder in root of the tree
-      IDE.WORKSPACE.selectItem(WS_URL + folderName + "/");
-      url = getSelectedItemUrl();
-      assertTrue(url.startsWith(BASE_URL));
-      assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/"));
+      new WebDriverWait(driver, 10).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               return content1.equals(driver.findElement(By.tagName("body")).getText());
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
 
-      //Open url and check file and folder are present
-      openLink(url);
-      assertTrue(selenium().isElementPresent("link=" + file2Name));
-      selenium().goBack();
-      selenium().waitForPageToLoad("12000");
-      Thread.sleep(TestConstants.SLEEP);
-
-      //Check get URL for the file in the folder
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + folderName + "/");
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.selectItem(WS_URL + folderName + "/" + file2Name);
-      url = getSelectedItemUrl();
-      assertTrue(url.startsWith(BASE_URL));
-      assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/" + file2Name));
-
+      driver.navigate().back();
+      IDE.PROJECT.EXPLORER.waitOpened();
    }
 
    /**
@@ -127,56 +148,15 @@ public class GetItemUrlTest extends BaseTest
    @Test
    public void testGetFileUrlWithSearch() throws Exception
    {
-      IDE.WORKSPACE.selectRootItem();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SEARCH);
-      IDE.SEARCH.waitPerformSearchOpened();
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      //Check form inputs
-      assertEquals("/", IDE.SEARCH.getPathValue());
-      assertEquals("", IDE.SEARCH.getContainingTextValue());
-      assertEquals("", IDE.SEARCH.getMimeTypeValue());
-      //Type content to input
-      IDE.SEARCH.setContainingTextValue(searchPhrase);
-      //Click "Search" button
-      IDE.SEARCH.clickSearchButton();
-      IDE.SEARCH.waitPerformSearchClosed();
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.SEARCH.performSearch("/" + PROJECT, "", "");
       IDE.SEARCH.waitSearchResultsOpened();
 
-      //Check files are found
-      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + file1Name);
-      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + folderName + "/" + file2Name);
-
-      String workspaceName = selenium().getText(WORK_SPACE_LOCATOR);
-
-      //Check get URL for first file
-      IDE.NAVIGATION.selectItemInSearchTree(WS_URL + file1Name);
-      String url = getSelectedItemUrl();
-      assertTrue(url.startsWith(BASE_URL));
-      assertTrue(url.endsWith(entrypoint + workspaceName + "/" + file1Name));
-
-      //Check get URL for second file
-      IDE.NAVIGATION.selectItemInSearchTree(WS_URL + folderName + "/" + file2Name);
-      url = getSelectedItemUrl();
-      assertTrue(url.startsWith(BASE_URL));
-      assertTrue(url.endsWith(entrypoint + workspaceName + "/" + folderName + "/" + file2Name));
-
-      selectWorkspaceTab();
-      IDE.WORKSPACE.selectItem(WS_URL + folderName + "/");
-      IDE.NAVIGATION.deleteSelectedItems();
-      IDE.WORKSPACE.selectItem(WS_URL + file1Name);
-      IDE.NAVIGATION.deleteSelectedItems();
-   }
-
-   /**
-    * Open link.
-    * 
-    * @param link link to open
-    * @throws Exception 
-    */
-   private void openLink(String link) throws Exception
-   {
-      selenium().open(link);
-      selenium().waitForPageToLoad("6000");
-      Thread.sleep(TestConstants.SLEEP);
+      // TODO end the test when search is ready
    }
 }

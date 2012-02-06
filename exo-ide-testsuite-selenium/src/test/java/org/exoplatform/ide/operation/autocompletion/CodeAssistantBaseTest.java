@@ -21,17 +21,16 @@ package org.exoplatform.ide.operation.autocompletion;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 
 import java.io.IOException;
 import java.util.Map;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Nov 8, 2011 3:48:28 PM evgen $
- *
+ * @version ${Id}: Nov 8, 2011 3:48:28 PM evgen $
+ * 
  */
 public abstract class CodeAssistantBaseTest extends BaseTest
 {
@@ -62,22 +61,24 @@ public abstract class CodeAssistantBaseTest extends BaseTest
       createProject(name, null);
    }
 
-   @AfterClass
-   public static void deleteProject() throws IOException
+   @After
+   public void deleteProject() throws IOException
    {
       if (project != null)
          VirtualFileSystemUtils.deleteFolder(project.get(Link.REL_DELETE));
    }
 
-   @Before
    public void openProject() throws Exception
    {
       driver.navigate().refresh();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitOpened();
+
       IDE.PROJECT.OPEN.openProject(projectName);
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(projectName);
    }
-   
+
    protected void openFile(String name) throws Exception
    {
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + name);

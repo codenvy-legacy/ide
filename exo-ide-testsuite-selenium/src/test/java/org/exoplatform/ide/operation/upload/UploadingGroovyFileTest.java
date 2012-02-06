@@ -25,8 +25,8 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -35,26 +35,23 @@ import java.io.IOException;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class UploadingGroovyFileTest extends BaseTest
 {
-   private static final String FOLDER_NAME = UploadingGroovyFileTest.class.getSimpleName();
+   private static final String PROJECT = UploadingGroovyFileTest.class.getSimpleName();
 
    private static String GROOVY_NAME = "Example.groovy";
-
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER_NAME;
 
    private static final String FILE_PATH =
       "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.groovy";
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void beforeTest()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (IOException e)
       {
@@ -64,14 +61,18 @@ public class UploadingGroovyFileTest extends BaseTest
    @Test
    public void testUploadingGroovy() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
 
       IDE.UPLOAD.open(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.GROOVY_SERVICE);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + GROOVY_NAME, false);
-      IDE.EDITOR.waitTabPresent(0);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + GROOVY_NAME);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GROOVY_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GROOVY_NAME);
 
-      IDE.EDITOR.checkCodeEditorOpened(0);
       String text = IDE.EDITOR.getTextFromCodeEditor(0);
 
       assertTrue(text.length() > 0);
@@ -80,24 +81,24 @@ public class UploadingGroovyFileTest extends BaseTest
 
       assertEquals(fileContent.split("\n").length, text.split("\n").length);
 
-      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
-      IDE.PROPERTIES.waitOpened();
+      IDE.PROPERTIES.openProperties();
       assertEquals(MimeType.GROOVY_SERVICE, IDE.PROPERTIES.getContentType());
    }
 
-   //IDE-322 Issue
+   // IDE-322 Issue
    @Test
    public void testAllMimeTypesArePresent() throws Exception
    {
-      refresh();
-
-      //----- 1 --------------
-      //open upload form
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
+      
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE);
       IDE.UPLOAD.waitOpened();
 
-      //----- 2 --------------
-      //type path to file on local system to upload
       try
       {
          File file = new File(FILE_PATH);
@@ -109,23 +110,20 @@ public class UploadingGroovyFileTest extends BaseTest
       assertEquals(FILE_PATH.substring(FILE_PATH.lastIndexOf("/") + 1, FILE_PATH.length()),
          IDE.UPLOAD.getFilePathValue());
 
-      //----- 2 --------------
-      //click to open mime types list
-      //check, all mime types for groovy extention are present
-      assertTrue(IDE.UPLOAD.isMimeTypeContainsProposes("script/groovy", "application/x-groovy",
+      assertTrue(IDE.UPLOAD.isMimeTypeContainsProposes("application/x-groovy",
          "application/x-jaxrs+groovy", "application/x-groovy+html", "application/x-chromattic+groovy"));
 
-      //close form
+      // close form
       IDE.UPLOAD.clickCancelButton();
       IDE.UPLOAD.waitClosed();
    }
 
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void afterTest()
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {

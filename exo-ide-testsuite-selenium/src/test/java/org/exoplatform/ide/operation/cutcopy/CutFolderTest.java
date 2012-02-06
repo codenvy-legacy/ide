@@ -36,7 +36,7 @@ import org.junit.Test;
  * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class CutFolderTest extends BaseTest
 {
@@ -51,11 +51,7 @@ public class CutFolderTest extends BaseTest
    private static final String FILE = "file.groovy";
 
    /**
-    * Create next folders' structure in the workspace root:
-    * folder 1/
-    *    folder 2/
-    *        file.groovy - file with sample content  
-    * folder 2/
+    * Create next folders' structure in the workspace root: folder 1/ folder 2/ file.groovy - file with sample content folder 2/
     */
    @BeforeClass
    public static void setUp()
@@ -93,15 +89,15 @@ public class CutFolderTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER1);
 
-      //Open folder 1
+      // Open folder 1
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER1 + "/" + FOLDER2);
 
-      //Open folder 2
+      // Open folder 2
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER1 + "/" + FOLDER2);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER1 + "/" + FOLDER2 + "/" + FILE);
 
-      //Paste commands are disabled, Cut/Copy are enabled
+      // Paste commands are disabled, Cut/Copy are enabled
       assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
       assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR));
       assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR));
@@ -113,7 +109,7 @@ public class CutFolderTest extends BaseTest
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER1 + "/" + FOLDER2);
       IDE.TOOLBAR.runCommand(MenuCommands.Edit.CUT_TOOLBAR);
 
-      //Paste commands are enabled.
+      // Paste commands are enabled.
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.PASTE, true);
       assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
@@ -122,23 +118,23 @@ public class CutFolderTest extends BaseTest
       assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
 
-      //Paste in the same folder:
+      // Paste in the same folder:
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER1);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.PASTE);
 
       IDE.WARNING_DIALOG.waitOpened();
-      assertEquals(CutFileTest.WRONG_DESTINATION, IDE.WARNING_DIALOG.getWarningMessage());
+      assertTrue(IDE.WARNING_DIALOG.getWarningMessage().contains(CutFileTest.WRONG_DESTINATION));
       IDE.WARNING_DIALOG.clickOk();
       IDE.WARNING_DIALOG.waitClosed();
 
       assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
 
-      //Paste in folder, which contains with the same name:
+      // Paste in folder, which contains with the same name:
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.TOOLBAR.runCommand(MenuCommands.Edit.PASTE_TOOLBAR);
       IDE.WARNING_DIALOG.waitOpened();
-      assertEquals(CutFileTest.WRONG_DESTINATION, IDE.WARNING_DIALOG.getWarningMessage());
+      assertTrue(IDE.WARNING_DIALOG.getWarningMessage().contains(CutFileTest.WRONG_DESTINATION));
       IDE.WARNING_DIALOG.clickOk();
       IDE.WARNING_DIALOG.waitClosed();
 
@@ -166,9 +162,7 @@ public class CutFolderTest extends BaseTest
    }
 
    /**
-    * Check, that FOLDER_1,  
-    * FOLDER_2, FOLDER_2/FOLDER2, FOLDER_2/FOLDER_2/FILE_1
-    * are present on webdav.
+    * Check, that FOLDER_1, FOLDER_2, FOLDER_2/FOLDER2, FOLDER_2/FOLDER_2/FILE_1 are present on webdav.
     * 
     * And FOLDER_1/FOLDER_2 are not present.
     * 

@@ -21,26 +21,27 @@ package org.exoplatform.ide.operation.autocompletion;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.MenuCommands;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class AutoCompletionXMLTest extends CodeAssistantBaseTest
 {
 
-   @BeforeClass
-   public static void createProject()
+   @Before
+   public void createProject() throws Exception
    {
       createProject(AutoCompletionXMLTest.class.getSimpleName());
+      openProject();
    }
 
    @Test
-   public void openForm() throws Throwable
+   public void testXMLAutocompletion() throws Throwable
    {
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.xml");
@@ -61,7 +62,7 @@ public class AutoCompletionXMLTest extends CodeAssistantBaseTest
       IDE.CODEASSISTANT.openForm();
 
       IDE.CODEASSISTANT.typeToInput("ro");
-      IDE.CODEASSISTANT.checkElementPresent("rot");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("rot"));
       IDE.CODEASSISTANT.insertSelectedItem();
 
       String textAfter = IDE.EDITOR.getTextFromCodeEditor(0);

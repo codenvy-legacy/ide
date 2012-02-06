@@ -32,7 +32,7 @@ public interface TestConstants
    
    int REDRAW_PERIOD = 500 * multiple;
 
-   int TYPE_DELAY_PERIOD = 10;
+   int TYPE_DELAY_PERIOD = 30;
 
    int ANIMATION_PERIOD = 10;
 

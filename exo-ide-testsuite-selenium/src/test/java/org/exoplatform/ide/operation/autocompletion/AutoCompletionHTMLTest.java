@@ -21,22 +21,23 @@ package org.exoplatform.ide.operation.autocompletion;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.MenuCommands;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class AutoCompletionHTMLTest extends CodeAssistantBaseTest
 {
 
-   @BeforeClass
-   public static void createProject()
+   @Before
+   public void createProject() throws Exception
    {
       createProject(AutoCompletionHTMLTest.class.getSimpleName());
+      openProject();
    }
 
    @Test
@@ -44,9 +45,7 @@ public class AutoCompletionHTMLTest extends CodeAssistantBaseTest
    {
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.html");
-
       IDE.EDITOR.moveCursorDown(0, 4);
-
       htmlTest();
    }
 
@@ -58,10 +57,10 @@ public class AutoCompletionHTMLTest extends CodeAssistantBaseTest
    public void testGoogleGadget() throws InterruptedException, Exception
    {
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.xml");
+      IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.gadget");
       IDE.EDITOR.moveCursorDown(0, 4);
 
-      GoogleGadgetTest();
+      googleGadgetTest();
    }
 
    @Test
@@ -87,9 +86,9 @@ public class AutoCompletionHTMLTest extends CodeAssistantBaseTest
 
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("!DOCTYPE");
-      IDE.CODEASSISTANT.checkElementPresent("acronym");
-      IDE.CODEASSISTANT.checkElementPresent("a");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("!DOCTYPE"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("acronym"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("a"));
       IDE.CODEASSISTANT.closeForm();
    }
 
@@ -125,7 +124,7 @@ public class AutoCompletionHTMLTest extends CodeAssistantBaseTest
       assertTrue(text.contains("<p class=\"\"></p>"));
    }
 
-   private void GoogleGadgetTest() throws Exception
+   private void googleGadgetTest() throws Exception
    {
       IDE.EDITOR.typeTextIntoEditor(0, Keys.HOME.toString() + Keys.RETURN.toString());
 

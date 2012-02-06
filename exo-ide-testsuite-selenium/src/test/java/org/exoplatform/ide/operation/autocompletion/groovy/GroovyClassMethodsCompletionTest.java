@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
@@ -37,10 +37,11 @@ import org.openqa.selenium.Keys;
 public class GroovyClassMethodsCompletionTest extends CodeAssistantBaseTest
 {
 
-   @BeforeClass
-   public static void createProject()
+   @Before
+   public void createProject() throws Exception
    {
       createProject(GroovyClassMethodsCompletionTest.class.getSimpleName());
+      openProject();
    }
 
    @Test
@@ -72,8 +73,9 @@ public class GroovyClassMethodsCompletionTest extends CodeAssistantBaseTest
        * sort(List):void
        * sort(List, Comparator):void
        */
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("sort(List):void"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("sort(List, Comparator):void"));
+      
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("sort(java.util.List<T>):void"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("sort(java.util.List<T>, java.util.Comparator<? super T>):void"));
 
       /*
        * 6. Select sort(List, Comparator):void element
@@ -88,7 +90,7 @@ public class GroovyClassMethodsCompletionTest extends CodeAssistantBaseTest
       /*
        * Check, that autocomplete form dissapeared, and new text in editor appeared.
        */
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("Collections.sort(List, Comparator)"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("Collections.sort(List<T>, Comparator<? super T>)"));
    }
 
 }

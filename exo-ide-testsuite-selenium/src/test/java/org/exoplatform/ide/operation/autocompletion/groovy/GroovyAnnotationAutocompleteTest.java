@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
@@ -34,10 +34,11 @@ import org.openqa.selenium.Keys;
 public class GroovyAnnotationAutocompleteTest extends CodeAssistantBaseTest
 {
 
-   @BeforeClass
-   public static void createProject()
+   @Before
+   public void createProject() throws Exception
    {
       createProject(GroovyAnnotationAutocompleteTest.class.getSimpleName());
+      openProject();
    }
 
    @Test
