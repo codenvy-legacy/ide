@@ -117,7 +117,7 @@ public class RunRestServiceCommandTest extends BaseTest
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
 
       assertFalse(IDE.REST_SERVICE.isFormOpened());
-Thread.sleep(1000);
+      IDE.LOADER.waitClosed();
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_GROOVY_SERVICE);
       IDE.OUTPUT.waitForMessageShow(3, 5);
 
@@ -197,6 +197,7 @@ Thread.sleep(1000);
          IDE.OUTPUT.getOutputMessage(1));
       assertEquals("[INFO] " + "/" + PROJECT + "/" + FILE_FOR_CHANGE_CONTENT_NAME + " deployed successfully.",
          IDE.OUTPUT.getOutputMessage(2));
+
    }
 
    @Test

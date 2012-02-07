@@ -103,12 +103,19 @@ public class RESTServiceResponseHeadersTest extends BaseTest
    }
 
    @AfterClass
-   public static void tearDown()
+   public static void tearDown() throws Exception
    {
       try
       {
-         //TODO Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
-         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         if (IDE.OUTPUT.getOutputMessage(3).contains("/" + PROJECT + "/" + FILE_NAME + " undeployed successfully."))
+         {
+            //TODO Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
+            VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         }
+         else
+         {
+            IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+         }
       }
       catch (IOException e)
       {

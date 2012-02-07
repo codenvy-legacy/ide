@@ -62,7 +62,7 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
       }
    }
 
-   //@Ignore
+   //  @Ignore
    @Test
    public void testAnnotationInheritance() throws Exception
    {
@@ -118,14 +118,14 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
    {
       try
       {
-         IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-         IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
          IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-         Thread.sleep(1000);
          IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
          IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+         IDE.LOADER.waitClosed();
          IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+         IDE.LOADER.waitClosed();
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+
       }
       catch (IOException e)
       {

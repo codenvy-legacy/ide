@@ -136,6 +136,8 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest
       // Check received message:
       mess = IDE.OUTPUT.getOutputMessage(4);
       assertTrue(mess.contains("{\"value\" : \"value4\"}"));
+
+      
    }
 
    /**
