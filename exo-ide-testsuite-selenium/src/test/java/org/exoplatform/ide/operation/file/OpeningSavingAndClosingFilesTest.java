@@ -23,12 +23,14 @@ import static org.junit.Assert.assertFalse;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
 
 import java.io.IOException;
 import java.util.Map;
@@ -54,6 +56,26 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
    private static String XML_FILE_NAME = "newXMLFile.xml";
 
    private static String TXT_FILE_NAME = "newTextFile.txt";
+
+   private static String DEFAULT_CONTENT_CSS_FILE =
+      "/*Some example CSS*/\n\n@import url (\"something.css\")\nbody {\n  margin 0;\n  padding 3em 6em;\n  font-family: tahoma, arial, sans-serif;\n  color #000;\n}\n  #navigation a {\n    font-weigt: bold;\n  text-decoration: none !important;\n}\n}";
+
+   private static String DEFAULT_CONTENT_HTML_FILE =
+      "<html>\n<head>\n  <title>HTML Example</title>\n  <script type='text/javascript'>\n    function foo(bar, baz) {\n      alert('quux');\n      return bar + baz + 1;\n    }\n  </script>\n  <style type='text/css'>\n    div.border {\n      border: 1px solid black;\n      padding: 3px;\n    }\n    #foo code {\n      font-family: courier, monospace;\n      font-size: 80%;\n      color: #448888;\n    }\n  </style>\n</head>\n<body>\n  <p>Hello</p>\n</body>\n</html>";
+
+   private static String DEFAULT_CONTENT_GADGET_FILE =
+      "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<Module>\n  <ModulePrefs title=\"Hello World!\" />\n  <Content type=\"html\">\n    <![CDATA[\n    <script type='text/javascript'>\n      function foo(bar, baz) {\n        alert('quux');\n        return bar + baz + 1;\n      }\n    </script>\n    <style type='text/css'>\n      div.border {\n        border: 1px solid black;\n        padding: 3px;\n      }\n      #foo code {\n        font-family: courier, monospace;\n        font-size: 80%;\n        color: #448888;\n      }\n    </style>\n    <p>Hello</p>\n    ]]></Content></Module>";
+
+   private static String DEFAULT_CONTENT_JS_FILE =
+      "//Here you see some JavaScript code. Mess around with it to get\n//acquinted with CodeMirror's features.\n\n// Press enter inside the objects and your new line will\n// intended.\n\nvar keyBindings ={\n  enter:\"newline-and-indent\",\n  tab:\"reindent-selection\",\n  ctrl_z \"undo\",\n  ctrl_y:\"redo\"\n  };\n  var regex =/foo|bar/i;\n  function example (x){\n  var y=44.4;\n  return x+y;\n  }";
+
+   private static String DEFAULT_CONTENT_GROOVY_FILE =
+      "//simple groovy script\n\nimport javax.ws.rs.Path\nimport javax.ws.rs.GET\nimport javax.ws.rs.PathParam\n\n@Path (\"/\")\npublic class HelloWorld{\n@Get\n@Path (\"helloworld/{name}\")\npublic String hello(PathParam(\"name\")String name){\n  return \"Hello\"+name\n  }\n  }";
+
+   private static String DEFAULT_CONTENT_XML_FILE =
+      "<?xml version='1.0' encoding='UTF-8'?>\n<Module>\n  <UserPref>name=\"last_location\" datatype=\"hidden\"</<UserPref>\n</Module>";
+
+   private static String DEFAULT_CONTENT_TXT_FILE = "text content";
 
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/";
 
@@ -98,221 +120,192 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + CSS_FILE_NAME);
 
-      reopenFiles();
-      changeFiles();
-      saveAndCloseFile();
-      reopenFiles();
-      clickTabAndCheckSaveButton();
-      checkSaveInFiles();
-   }
+      //step 1 check all files is present, open all files, checks default content.
+      checkAllFilesPresent();
 
-   /**
-    * Check changes were saved in file.
-    * 
-    * @throws Exception
-    */
-   public void checkSaveInFiles() throws Exception
-   {
-      // check changed string in CSS file
-      String CSS =
-         "Change file\n/*Some example CSS*/\n\n@import url (\"something.css\")\nbody {\n  margin 0;\n  padding 3em 6em;\n  font-family: tahoma, arial, sans-serif;\n  color #000;\n}\n  #navigation a {\n    font-weigt: bold;\n  text-decoration: none !important;\n}\n}";
-      IDE.EDITOR.selectTab(CSS_FILE_NAME);
-      assertEquals(CSS, IDE.EDITOR.getTextFromCodeEditor(7));
+      //close welcome tab for easy indexing of tabs and iframes in testcase
+      IDE.EDITOR.clickCloseEditorButton(0);
+      IDE.EDITOR.waitTabNotPresent(0);
+      checkDefaultContentInOpenFiles();
 
-      // check changed string in Google Gadget file
-      String GG =
-         "Change file\n<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<Module>\n  <ModulePrefs title=\"Hello World!\" />\n  <Content type=\"html\">\n    <![CDATA[\n    <script type='text/javascript'>\n      function foo(bar, baz) {\n        alert('quux');\n        return bar + baz + 1;\n      }\n    </script>\n    <style type='text/css'>\n      div.border {\n        border: 1px solid black;\n        padding: 3px;\n      }\n      #foo code {\n        font-family: courier, monospace;\n        font-size: 80%;\n        color: #448888;\n      }\n    </style>\n    <p>Hello</p>\n    ]]></Content></Module>";
-      IDE.EDITOR.selectTab(GADGET_FILE_NAME);
-      assertEquals(GG, IDE.EDITOR.getTextFromCodeEditor(8));
-
-      // check changed string in Groovy file
-      String Groovy =
-         "//simple groovy script\n\nimport javax.ws.rs.Path\nimport javax.ws.rs.GET\nimport javax.ws.rs.PathParam\n\n@Path (\"/\")\npublic class HelloWorld{\n@Get\n@Path (\"helloworld/{name}\")\npublic String hello(PathParam(\"name\")String name){\n  return \"Hello\"+name\n  }\n  }";
-      IDE.EDITOR.selectTab(GROOVY_FILE_NAME);
-      assertEquals(Groovy, IDE.EDITOR.getTextFromCodeEditor(9));
-
-      // check changed string in HTML file
-      String HTML =
-         "Change file\n<html>\n<head>\n  <title>HTML Example</title>\n  <script type='text/javascript'>\n    function foo(bar, baz) {\n      alert('quux');\n      return bar + baz + 1;\n    }\n  </script>\n  <style type='text/css'>\n    div.border {\n      border: 1px solid black;\n      padding: 3px;\n    }\n    #foo code {\n      font-family: courier, monospace;\n      font-size: 80%;\n      color: #448888;\n    }\n  </style>\n</head>\n<body>\n  <p>Hello</p>\n</body>\n</html>";
-      IDE.EDITOR.selectTab(HTML_FILE_NAME);
-      assertEquals(HTML, IDE.EDITOR.getTextFromCodeEditor(10));
-
-      // check changed string in JS file
-      String JS =
-         "var a=5;\n//Here you see some JavaScript code. Mess around with it to get\n//acquinted with CodeMirror's features.\n\n// Press enter inside the objects and your new line will\n// intended.\n\nvar keyBindings ={\n  enter:\"newline-and-indent\",\n  tab:\"reindent-selection\",\n  ctrl_z \"undo\",\n  ctrl_y:\"redo\"\n  };\n  var regex =/foo|bar/i;\n  function example (x){\n  var y=44.4;\n  return x+y;\n  }";
-      IDE.EDITOR.selectTab(JS_FILE_NAME);
-      assertEquals(JS, IDE.EDITOR.getTextFromCodeEditor(11));
-
-      // check changed string in TXT file
-      String TXT = "text content";
-      IDE.EDITOR.selectTab(TXT_FILE_NAME);
-      assertEquals(TXT, IDE.EDITOR.getTextFromCodeEditor(12));
-   }
-
-   /**
-    * Reopened files.
-    * 
-    * @throws InterruptedException
-    * @throws Exception
-    */
-   public void reopenFiles() throws InterruptedException, Exception
-   {
-      openCss();
-      openGooglegadget();
-      openGroovy();
-      openHtml();
-      openJavaScript();
-      openTXT();
-      openXML();
-   }
-
-   /**
-    * Save file and close it.
-    * 
-    * @throws InterruptedException
-    * @throws Exception
-    */
-   public void saveAndCloseFile() throws InterruptedException, Exception
-   {
-      // Save and closeCssFile
-      IDE.EDITOR.selectTab(CSS_FILE_NAME);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
-      IDE.EDITOR.waitNoContentModificationMark(CSS_FILE_NAME);
-      IDE.EDITOR.closeFile(CSS_FILE_NAME);
-
-      // Save and closeGoogleGadgetFile
-      IDE.EDITOR.selectTab(GADGET_FILE_NAME);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
-      IDE.EDITOR.waitNoContentModificationMark(GADGET_FILE_NAME);
-      IDE.EDITOR.closeFile(GADGET_FILE_NAME);
-
-      // Save and close HTMLFile
-      IDE.EDITOR.selectTab(HTML_FILE_NAME);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
-      IDE.EDITOR.waitNoContentModificationMark(HTML_FILE_NAME);
-      IDE.EDITOR.closeFile(HTML_FILE_NAME);
-
-      // Save and closeJsFile
-      IDE.EDITOR.selectTab(JS_FILE_NAME);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
-      IDE.EDITOR.waitNoContentModificationMark(JS_FILE_NAME);
-      IDE.EDITOR.closeFile(JS_FILE_NAME);
-
-      //
-      //      // Save and closeXMLFile
-      IDE.EDITOR.selectTab(XML_FILE_NAME);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
-      IDE.EDITOR.waitNoContentModificationMark(XML_FILE_NAME);
-      IDE.EDITOR.closeFile(XML_FILE_NAME);
-
-      //      // close GroovyFile
-      IDE.EDITOR.closeFile(GROOVY_FILE_NAME);
-      IDE.EDITOR.closeFile(TXT_FILE_NAME);
-   }
-
-   /**
-    * Change files' content.
-    * 
-    * @throws Exception
-    */
-   public void changeFiles() throws Exception
-   {
-      // changeCssFile
-      assertFalse(IDE.EDITOR.isFileContentChanged(CSS_FILE_NAME));
-      IDE.EDITOR.selectTab(CSS_FILE_NAME);
+      //step 2 change file (add string "change file" into CSS, gadget, html and js file)
+      IDE.EDITOR.selectTab("newCssFile.css");
       IDE.EDITOR.typeTextIntoEditor(0, "Change file\n");
-      IDE.EDITOR.waitFileContentModificationMark(CSS_FILE_NAME);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+      IDE.LOADER.waitClosed();
+      assertFalse(IDE.EDITOR.isFileContentChanged(0));
 
-      // changeGoogleGadgetFile
-      assertFalse(IDE.EDITOR.isFileContentChanged(GADGET_FILE_NAME));
-      IDE.EDITOR.selectTab(GADGET_FILE_NAME);
+      IDE.EDITOR.selectTab("newHtmlFile.html");
       IDE.EDITOR.typeTextIntoEditor(1, "Change file\n");
-      IDE.EDITOR.waitFileContentModificationMark(GADGET_FILE_NAME);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+      IDE.LOADER.waitClosed();
+      assertFalse(IDE.EDITOR.isFileContentChanged(1));
 
-      // changeHTMLFile
-      assertFalse(IDE.EDITOR.isFileContentChanged(HTML_FILE_NAME));
-      IDE.EDITOR.selectTab(HTML_FILE_NAME);
-      IDE.EDITOR.typeTextIntoEditor(3, "Change file\n");
-      IDE.EDITOR.waitFileContentModificationMark(HTML_FILE_NAME);
+      IDE.EDITOR.selectTab("newJavaScriptFile.js");
+      IDE.EDITOR.typeTextIntoEditor(2, "Change file\n");
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+      IDE.LOADER.waitClosed();
+      assertFalse(IDE.EDITOR.isFileContentChanged(2));
 
-      // changeJavaScriptFile
-      assertFalse(IDE.EDITOR.isFileContentChanged(JS_FILE_NAME));
-      IDE.EDITOR.selectTab(JS_FILE_NAME);
-      IDE.EDITOR.typeTextIntoEditor(4, "var a=5;\n");
-      IDE.EDITOR.waitFileContentModificationMark(JS_FILE_NAME);
+      IDE.EDITOR.selectTab("newGroovyFile.groovy");
+      IDE.EDITOR.typeTextIntoEditor(4, "Change file\n");
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+      IDE.LOADER.waitClosed();
+      assertFalse(IDE.EDITOR.isFileContentChanged(4));
 
-      // changeXMLFile
-      assertFalse(IDE.EDITOR.isFileContentChanged(XML_FILE_NAME));
-      IDE.EDITOR.selectTab(XML_FILE_NAME);
-      IDE.EDITOR.typeTextIntoEditor(6, "Change file\n");
-      IDE.EDITOR.waitFileContentModificationMark(XML_FILE_NAME);
+      //step 3 close all files
+      IDE.EDITOR.clickCloseEditorButton(CSS_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitTabNotPresent(CSS_FILE_NAME);
+
+      IDE.EDITOR.clickCloseEditorButton(HTML_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitTabNotPresent(HTML_FILE_NAME);
+
+      IDE.EDITOR.clickCloseEditorButton(GADGET_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitTabNotPresent(GADGET_FILE_NAME);
+
+      IDE.EDITOR.clickCloseEditorButton(GROOVY_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitTabNotPresent(GROOVY_FILE_NAME);
+
+      IDE.EDITOR.clickCloseEditorButton(JS_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitTabNotPresent(JS_FILE_NAME);
+
+      IDE.EDITOR.clickCloseEditorButton(TXT_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitTabNotPresent(TXT_FILE_NAME);
+
+      IDE.EDITOR.clickCloseEditorButton(XML_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitTabNotPresent(XML_FILE_NAME);
+
+      //step 4 reopen all files check changed and not changed file. Check save button state
+      driver.navigate().refresh();
+      checkAllFilesPresent();
+      IDE.EDITOR.clickCloseEditorButton(0);
+      IDE.EDITOR.waitTabNotPresent(0);
+      checkStatusReopenedFiles();
    }
 
-   protected void clickTabAndCheckSaveButton() throws Exception
-   {
-      IDE.EDITOR.selectTab(CSS_FILE_NAME);
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
-
-      IDE.EDITOR.selectTab(HTML_FILE_NAME);
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
-
-      IDE.EDITOR.selectTab(GADGET_FILE_NAME);
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
-
-      IDE.EDITOR.selectTab(GROOVY_FILE_NAME);
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
-
-      IDE.EDITOR.selectTab(JS_FILE_NAME);
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
-
-      IDE.EDITOR.selectTab(TXT_FILE_NAME);
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
-
-      IDE.EDITOR.selectTab(XML_FILE_NAME);
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
-   }
-
-   public void openXML() throws InterruptedException, Exception
-   {
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + XML_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE_NAME);
-   }
-
-   public void openTXT() throws InterruptedException, Exception
-   {
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TXT_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TXT_FILE_NAME);
-   }
-
-   public void openJavaScript() throws InterruptedException, Exception
-   {
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + JS_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + JS_FILE_NAME);
-   }
-
-   public void openHtml() throws InterruptedException, Exception
-   {
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
-   }
-
-   public void openGroovy() throws InterruptedException, Exception
-   {
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GROOVY_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GROOVY_FILE_NAME);
-   }
-
-   public void openGooglegadget() throws InterruptedException, Exception
-   {
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GADGET_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
-   }
-
-   public void openCss() throws InterruptedException, Exception
+   /**
+    * method is check all status (change and not change) after 
+    * previous steps
+    * @throws Exception
+    */
+   private void checkStatusReopenedFiles() throws Exception
    {
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + CSS_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + CSS_FILE_NAME);
+      assertEquals("Change file\n" + DEFAULT_CONTENT_CSS_FILE, IDE.EDITOR.getTextFromCodeEditor(0));
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
+      IDE.EDITOR.selectTab(1);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
+      assertEquals("Change file\n" + DEFAULT_CONTENT_HTML_FILE, IDE.EDITOR.getTextFromCodeEditor(1));
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + JS_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
+      IDE.EDITOR.selectTab(2);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + JS_FILE_NAME);
+      assertEquals("Change file\n  " + DEFAULT_CONTENT_JS_FILE, IDE.EDITOR.getTextFromCodeEditor(2));
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GADGET_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
+      IDE.EDITOR.selectTab(3);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
+      assertEquals(DEFAULT_CONTENT_GADGET_FILE, IDE.EDITOR.getTextFromCodeEditor(3));
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GROOVY_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
+      IDE.EDITOR.selectTab(4);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GROOVY_FILE_NAME);
+      assertEquals("Change file\n" + DEFAULT_CONTENT_GROOVY_FILE, IDE.EDITOR.getTextFromCodeEditor(4));
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + XML_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
+      IDE.EDITOR.selectTab(5);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE_NAME);
+      assertEquals(DEFAULT_CONTENT_XML_FILE, IDE.EDITOR.getTextFromCodeEditor(5));
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TXT_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
+      IDE.EDITOR.selectTab(6);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TXT_FILE_NAME);
+      assertEquals(DEFAULT_CONTENT_TXT_FILE, IDE.EDITOR.getTextFromCodeEditor(6));
    }
+
+   /**
+    * @throws Exception
+    */
+   private void checkDefaultContentInOpenFiles() throws Exception
+   {
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + CSS_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + CSS_FILE_NAME);
+      assertEquals(DEFAULT_CONTENT_CSS_FILE, IDE.EDITOR.getTextFromCodeEditor(0));
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.selectTab(1);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
+      assertEquals(DEFAULT_CONTENT_HTML_FILE, IDE.EDITOR.getTextFromCodeEditor(1));
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + JS_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.selectTab(2);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + JS_FILE_NAME);
+      assertEquals(DEFAULT_CONTENT_JS_FILE, IDE.EDITOR.getTextFromCodeEditor(2));
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GADGET_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.selectTab(3);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
+      assertEquals(DEFAULT_CONTENT_GADGET_FILE, IDE.EDITOR.getTextFromCodeEditor(3));
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GROOVY_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.selectTab(4);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GROOVY_FILE_NAME);
+      assertEquals(DEFAULT_CONTENT_GROOVY_FILE, IDE.EDITOR.getTextFromCodeEditor(4));
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + XML_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.selectTab(5);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE_NAME);
+      assertEquals(DEFAULT_CONTENT_XML_FILE, IDE.EDITOR.getTextFromCodeEditor(5));
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TXT_FILE_NAME);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.selectTab(6);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TXT_FILE_NAME);
+      assertEquals(DEFAULT_CONTENT_TXT_FILE, IDE.EDITOR.getTextFromCodeEditor(6));
+   }
+
+   /**
+    * @throws Exception
+    */
+   private void checkAllFilesPresent() throws Exception
+   {
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + CSS_FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + JS_FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + GROOVY_FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + GADGET_FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + XML_FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TXT_FILE_NAME);
+   }
+
 }
