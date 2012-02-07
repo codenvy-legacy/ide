@@ -190,7 +190,7 @@ public class BuildService
       this.repository = new File(repository);
       this.goals = goals;
       this.timeoutMillis = timeout * 1000; // to milliseconds
-      this.cleanBuildResultDelayMillis = cleanBuildResultDelay * 60 * 100; // to milliseconds
+      this.cleanBuildResultDelayMillis = cleanBuildResultDelay * 60 * 1000; // to milliseconds
 
       //
       this.map = new ConcurrentHashMap<String, CacheElement>();
