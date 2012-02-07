@@ -22,9 +22,15 @@ import com.google.gwt.junit.tools.GWTTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import org.eclipse.jdt.client.core.rewrite.ASTRewritingExpressionsTestGwt;
+import org.eclipse.jdt.client.core.rewrite.ASTRewritingGroupNodeTestGwt;
 import org.eclipse.jdt.client.core.rewrite.ASTRewritingMethodDeclTestGwt;
+import org.eclipse.jdt.client.core.rewrite.ASTRewritingMoveCodeTestGwt;
+import org.eclipse.jdt.client.core.rewrite.ASTRewritingRevertTestGwt;
+import org.eclipse.jdt.client.core.rewrite.ASTRewritingTrackingTestGwt;
 import org.eclipse.jdt.client.core.rewrite.ASTRewritingTypeDeclTestGwt;
 import org.eclipse.jdt.client.core.rewrite.ImportRewriteTestGwt;
+import org.eclipse.jdt.client.core.rewrite.LineCommentOffsetsTestGwt;
 import org.eclipse.jdt.client.core.rewrite.SourceModifierTestGwt;
 
 /**
@@ -44,6 +50,15 @@ public class GwtTestSuite extends TestCase
       suite.addTestSuite(ImportRewriteTestGwt.class);
       suite.addTestSuite(ASTRewritingMethodDeclTestGwt.class);
       suite.addTestSuite(ASTRewritingTypeDeclTestGwt.class);
+      suite.addTestSuite(ASTRewritingExpressionsTestGwt.class);
+      suite.addTestSuite(ASTRewritingGroupNodeTestGwt.class);
+      //suite.addTestSuite(ASTRewritingJavadocTestGwt.class);
+      suite.addTestSuite(ASTRewritingMoveCodeTestGwt.class);
+      suite.addTestSuite(ASTRewritingRevertTestGwt.class);
+      //suite.addTestSuite(ASTRewritingStatementsTestGwt.class);
+      suite.addTestSuite(ASTRewritingTrackingTestGwt.class);
+      //suite.addTestSuite(ASTRewritingWithStatementsRecoveryTestGwt.class);
+      suite.addTestSuite(LineCommentOffsetsTestGwt.class);
       return suite;
    }
 }
