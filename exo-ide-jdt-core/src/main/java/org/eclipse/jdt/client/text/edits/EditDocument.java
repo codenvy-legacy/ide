@@ -13,6 +13,8 @@ package org.eclipse.jdt.client.text.edits;
 import org.eclipse.jdt.client.text.BadLocationException;
 import org.eclipse.jdt.client.text.BadPositionCategoryException;
 import org.eclipse.jdt.client.text.IDocument;
+import org.eclipse.jdt.client.text.IDocumentListener;
+import org.eclipse.jdt.client.text.IPositionUpdater;
 import org.eclipse.jdt.client.text.IRegion;
 import org.eclipse.jdt.client.text.Position;
 
@@ -26,14 +28,6 @@ class EditDocument implements IDocument
       fBuffer = new StringBuffer(content);
    }
 
-   // public void addDocumentListener(IDocumentListener listener) {
-   // throw new UnsupportedOperationException();
-   // }
-   //
-   // public void addDocumentPartitioningListener(IDocumentPartitioningListener listener) {
-   // throw new UnsupportedOperationException();
-   // }
-   //
    public void addPosition(Position position) throws BadLocationException
    {
       throw new UnsupportedOperationException();
@@ -44,15 +38,10 @@ class EditDocument implements IDocument
    {
       throw new UnsupportedOperationException();
    }
-
-   //
-   // public void addPositionCategory(String category) {
-   // throw new UnsupportedOperationException();
-   // }
-   //
-   // public void addPositionUpdater(IPositionUpdater updater) {
-   // throw new UnsupportedOperationException();
-   // }
+   
+    public void addPositionUpdater(IPositionUpdater updater) {
+    throw new UnsupportedOperationException();
+    }
    //
    // public void addPrenotifiedDocumentListener(IDocumentListener documentAdapter) {
    // throw new UnsupportedOperationException();
@@ -206,14 +195,15 @@ class EditDocument implements IDocument
       throw new UnsupportedOperationException();
    }
 
-   //
-   // public void removePositionUpdater(IPositionUpdater updater) {
-   // throw new UnsupportedOperationException();
-   // }
-   //
-   // public void removePrenotifiedDocumentListener(IDocumentListener documentAdapter) {
-   // throw new UnsupportedOperationException();
-   // }
+   public void removePositionUpdater(IPositionUpdater updater)
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   public void removePrenotifiedDocumentListener(IDocumentListener documentAdapter)
+   {
+      throw new UnsupportedOperationException();
+   }
 
    public void replace(int offset, int length, String text) throws BadLocationException
    {

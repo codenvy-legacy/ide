@@ -51,7 +51,6 @@ import org.eclipse.jdt.client.text.edits.MultiTextEdit;
 public final class ImportRewriteAnalyzer
 {
 
-   // private final ICompilationUnit compilationUnit;
    private final IDocument document;
 
    private final ArrayList packageEntries;
@@ -700,7 +699,7 @@ public final class ImportRewriteAnalyzer
 
    private boolean isImplicitImport(String qualifier)
    {
-      if (JAVA_LANG.equals(qualifier))
+      if (qualifier.startsWith(JAVA_LANG))
       {
          return true;
       }

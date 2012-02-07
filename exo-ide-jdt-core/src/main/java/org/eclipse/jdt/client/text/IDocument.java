@@ -325,27 +325,27 @@ public interface IDocument
    // */
    // int computeIndexInCategory(String category, int offset) throws BadLocationException, BadPositionCategoryException;
 
-   // /**
-   // * Appends a new position updater to the document's list of position updaters.
-   // * Position updaters may be added multiple times.<p>
-   // * An <code>IPositionUpdater</code> may call back to this method
-   // * when being inside a document notification.
-   // *
-   // * @param updater the updater to be added
-   // */
-   // void addPositionUpdater(IPositionUpdater updater);
+    /**
+    * Appends a new position updater to the document's list of position updaters.
+    * Position updaters may be added multiple times.<p>
+    * An <code>IPositionUpdater</code> may call back to this method
+    * when being inside a document notification.
+    *
+    * @param updater the updater to be added
+    */
+    void addPositionUpdater(IPositionUpdater updater);
 
-   // /**
-   // * Removes the position updater from the document's list of position updaters.
-   // * If the position updater has multiple occurrences only the first occurrence is
-   // * removed. If the position updater is not registered with this document, nothing
-   // * happens.<p>
-   // * An <code>IPositionUpdater</code> may call back to this method
-   // * when being inside a document notification.
-   // *
-   // * @param updater the updater to be removed
-   // */
-   // void removePositionUpdater(IPositionUpdater updater);
+    /**
+    * Removes the position updater from the document's list of position updaters.
+    * If the position updater has multiple occurrences only the first occurrence is
+    * removed. If the position updater is not registered with this document, nothing
+    * happens.<p>
+    * An <code>IPositionUpdater</code> may call back to this method
+    * when being inside a document notification.
+    *
+    * @param updater the updater to be removed
+    */
+    void removePositionUpdater(IPositionUpdater updater);
 
    // /**
    // * Inserts the position updater at the specified index in the document's

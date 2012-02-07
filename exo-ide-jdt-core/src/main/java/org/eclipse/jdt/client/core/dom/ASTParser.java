@@ -1114,10 +1114,7 @@ public class ASTParser
                if (this.rawSource != null)
                {
                   needToResolveBindings =
-                     ((this.bits & CompilationUnitResolver.RESOLVE_BINDING) != 0)
-                        && this.unitName != null
-                        && (this.classpaths != null || this.sourcepaths != null || ((this.bits & CompilationUnitResolver.INCLUDE_RUNNING_VM_BOOTCLASSPATH) != 0))
-                        && this.compilerOptions != null;
+                     ((this.bits & CompilationUnitResolver.RESOLVE_BINDING) != 0);
                   sourceUnit =
                      new BasicCompilationUnit(this.rawSource, null, this.unitName == null ? "" : this.unitName); //$NON-NLS-1$
                }
@@ -1437,5 +1434,13 @@ public class ASTParser
                compilationUnit.types().add(typeDeclaration);
             }
       }
+   }
+
+   /**
+    * @param string
+    */
+   public void setSource(String string)
+   {
+      this.rawSource = string.toCharArray();
    }
 }

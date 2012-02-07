@@ -18,6 +18,8 @@
  */
 package org.eclipse.jdt.client.codeassistant.ui;
 
+import com.google.gwt.user.client.DOM;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
@@ -28,19 +30,16 @@ import com.google.gwt.event.dom.client.HasMouseOverHandlers;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.eclipse.jdt.client.core.CompletionProposal;
+import org.eclipse.jdt.client.codeassistant.AbstractJavaCompletionProposal;
+import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.core.dom.Modifier;
-import org.eclipse.jdt.client.text.BadLocationException;
-import org.eclipse.jdt.client.text.IDocument;
-import org.eclipse.jdt.client.text.edits.MalformedTreeException;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
@@ -51,63 +50,37 @@ import org.exoplatform.ide.editor.java.client.JavaClientBundle;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 19, 2010 4:13:18 PM evgen $
  */
-public abstract class ProposalWidget extends Composite implements HasClickHandlers, HasMouseOverHandlers,
-   HasDoubleClickHandlers
+public class ProposalWidget extends Composite implements HasClickHandlers, HasMouseOverHandlers, HasDoubleClickHandlers
 {
 
-   protected CompletionProposal proposal;
+   protected IJavaCompletionProposal proposal;
 
    protected Grid grid;
 
-   public ProposalWidget(CompletionProposal proposal)
+   public ProposalWidget(IJavaCompletionProposal proposal)
    {
       this.proposal = proposal;
 
-      grid = new Grid(1, 4);
+      grid = new Grid(1, 2);
       grid.setStyleName(JavaClientBundle.INSTANCE.css().item());
       grid.setWidth("100%");
-      ImageResource image = getImage(proposal.getFlags());
-      if (image == null)
-         image = JavaClientBundle.INSTANCE.blankImage();
+      Image i = proposal.getImage(); // getImage(proposal.getFlags());
+      if (i == null)
+         i = new Image(JavaClientBundle.INSTANCE.blankImage());
 
-      Image i = new Image(image);
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
 
-      Label nameLabel = new Label(getName() + " ", false);
-      nameLabel.getElement().setInnerHTML(getModifiers(proposal.getFlags()) + nameLabel.getElement().getInnerHTML());
-      grid.setWidget(0, 1, nameLabel);
-
-      String typeSignature = getTypeSignature();
-      if (typeSignature != null)
-      {
-         Label type = new Label(" : " + typeSignature, false);
-         grid.setWidget(0, 2, type);
-      }
-
-      String classSignature = getClassSignature();
-      if (classSignature != null)
-      {
-         Label l = new Label("-" + classSignature, false);
-         l.setStyleName(JavaClientBundle.INSTANCE.css().fqnStyle());
-         grid.setWidget(0, 3, l);
-      }
+      HTML html = new HTML(proposal.getDisplayString());
+      DOM.setStyleAttribute(html.getElement(), "whiteSpace", "nowrap");
+      grid.setWidget(0, 1, html);
 
       grid.getCellFormatter().setWidth(0, 0, "16px");
       grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
       grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 3, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setWidth(0, 3, "100%");
       initWidget(grid);
 
    }
-
-   protected abstract ImageResource getImage(int flags);
-
-   protected abstract String getTypeSignature();
-
-   protected abstract String getClassSignature();
 
    protected String getModifiers(int flags)
    {
@@ -123,20 +96,28 @@ public abstract class ProposalWidget extends Composite implements HasClickHandle
    }
 
    /** @return the token */
-   public CompletionProposal getProposal()
+   public IJavaCompletionProposal getProposal()
    {
       return proposal;
    }
 
    /** @return name of token */
-   public abstract String getName();
+   public String getName()
+   {
+      if (proposal instanceof AbstractJavaCompletionProposal)
+         return ((AbstractJavaCompletionProposal)proposal).getSortString();
+      return proposal.getDisplayString();
+   }
 
    /**
     * Get token description. It's may be javadoc, template content etc.
     * 
     * @return {@link Widget} with description
     */
-   public abstract Widget getDecription();
+   public Widget getDecription()
+   {
+      return null;
+   }
 
    /** Calls when user select this {@link Widget} */
    public void setSelectedStyle()
@@ -168,12 +149,5 @@ public abstract class ProposalWidget extends Composite implements HasClickHandle
    {
       return addDomHandler(handler, DoubleClickEvent.getType());
    }
-   
-   /**
-    * Inserts the proposed completion into the given document.
-    *
-    * @param document the document into which to insert the proposed completion
-    */
-   public abstract void apply(IDocument document);
 
 }

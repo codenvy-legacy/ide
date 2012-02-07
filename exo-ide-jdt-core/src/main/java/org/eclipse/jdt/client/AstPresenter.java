@@ -18,17 +18,9 @@
  */
 package org.eclipse.jdt.client;
 
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-
-import com.google.gwt.user.client.DeferredCommand;
-
-import com.google.gwt.core.client.Scheduler;
-
-import com.google.gwt.user.client.Timer;
-
 import com.google.gwt.core.client.GWT;
-
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.core.dom.AST;
@@ -40,8 +32,6 @@ import org.eclipse.jdt.client.event.ShowAstHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -49,12 +39,6 @@ import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.shared.File;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.crypto.spec.OAEPParameterSpec;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -77,16 +61,13 @@ public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHand
 
    private Display display;
 
-   private HandlerManager eventBus;
-
-   private List<IProblem> problems = new ArrayList<IProblem>();
+   public static CompilationUnit UNIT;
 
    /**
     * 
     */
    public AstPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(ShowAstEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
@@ -149,6 +130,7 @@ public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHand
       parser.setNameEnvironment(new DummyNameEnvirement(currentFile.getProject().getId()));
       ASTNode ast = parser.createAST(null);
       CompilationUnit unit = (CompilationUnit)ast;
+      UNIT = unit;
       return unit;
    }
 
@@ -167,64 +149,13 @@ public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHand
          {
             editor.clearErrorMark(i);
          }
-         // StringBuilder b = new StringBuilder();
-         // b.append("<pre>");
          for (IProblem p : unit.getProblems())
          {
             int sourceLineNumber = p.getSourceLineNumber();
             if (sourceLineNumber == 0)
                sourceLineNumber = 1;
             editor.setErrorMark(sourceLineNumber, p.getMessage());
-            // if (p.getID() == IProblem.UndefinedType)
-            // {
-            // newProblems.add(p);
-            // }
-            // b.append("problem - ").append(p.getID()).append(" line: ").append(p.getSourceLineNumber())
-            // .append(p.getMessage().replaceAll("<", "&lt;")).append("<br>");
          }
-         // b.append("</pre>");
-
-         // if (!problems.isEmpty())
-         // {
-         // Scheduler.get().scheduleDeferred(new ScheduledCommand()
-         // {
-         //
-         // @Override
-         // public void execute()
-         // {
-         // CompilationUnit unit = parseFile();
-         // if (unit.getProblems().length == 0)
-         // return;
-         // StringBuilder b = new StringBuilder();
-         // b.append("<pre>");
-         // List<IProblem> newProblems = new ArrayList<IProblem>();
-         // boolean newTypes = false;
-         // for (IProblem p : unit.getProblems())
-         // {
-         // if (p.getID() == IProblem.UndefinedType)
-         // {
-         // if (!newProblems.contains(p))
-         // {
-         // newTypes = true;
-         // }
-         // }
-         //
-         // b.append("problem - ").append(p.getID()).append(" line: ").append(p.getSourceLineNumber())
-         // .append(p.getMessage().replaceAll("<", "&lt;")).append("<br>");
-         // }
-         // b.append("</pre>");
-         //
-         // if (newTypes)
-         // {
-         // Scheduler.get().scheduleDeferred(this);
-         // return;
-         // }
-         // eventBus.fireEvent(new OutputEvent(b.toString(), Type.ERROR));
-         // }
-         // });
-         // }
-         // else
-         // eventBus.fireEvent(new OutputEvent(b.toString(), Type.ERROR));
       }
    };
 

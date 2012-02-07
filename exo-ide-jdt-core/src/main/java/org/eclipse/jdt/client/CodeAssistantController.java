@@ -18,15 +18,15 @@
  */
 package org.eclipse.jdt.client;
 
+import org.eclipse.jdt.client.codeassistant.AbstractJavaCompletionProposal;
+import org.eclipse.jdt.client.codeassistant.CompletionProposalCollector;
+import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.ui.CodeAssitantForm;
 import org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler;
 import org.eclipse.jdt.client.codeassistant.ui.ProposalWidget;
-import org.eclipse.jdt.client.codeassistant.ui.ProposalWidgetFactory;
 import org.eclipse.jdt.client.compiler.batch.CompilationUnit;
 import org.eclipse.jdt.client.core.CompletionProposal;
-import org.eclipse.jdt.client.core.CompletionRequestor;
 import org.eclipse.jdt.client.core.JavaCore;
-import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.event.RunCodeAssistantEvent;
 import org.eclipse.jdt.client.event.RunCodeAssistantHandler;
 import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
@@ -41,10 +41,8 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -81,15 +79,15 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
    {
       if (currentFile == null || currentEditor == null)
          return;
-      CodeAssistantRequestor requestor = new CodeAssistantRequestor();
-      requestor
+      CompletionProposalCollector collector = new CompletionProposalCollector(AstPresenter.UNIT, false);
+      collector
          .setAllowsRequiredProposals(CompletionProposal.CONSTRUCTOR_INVOCATION, CompletionProposal.TYPE_REF, true);
       char[] fileContent = currentFile.getContent().toCharArray();
       CompletionEngine e =
-         new CompletionEngine(new DummyNameEnvirement(currentFile.getProject().getId()), requestor,
+         new CompletionEngine(new DummyNameEnvirement(currentFile.getProject().getId()), collector,
             JavaCore.getOptions(), new IProgressMonitor()
             {
-               private final static int TIMEOUT = 10000; // ms
+               private final static int TIMEOUT = 60000; // ms
 
                private long endTime;
 
@@ -146,49 +144,65 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
                }
             });
 
-      e.complete(
-         new CompilationUnit(fileContent, currentFile.getName().substring(0, currentFile.getName().lastIndexOf('.')),
-            "UTF-8"),
-         getCompletionPosition(currentFile.getContent(), currentEditor.getCursorRow(), currentEditor.getCursorCol()), 0);
-
-      currentLineNumber = currentEditor.getCursorRow();
-      String lineContent = currentEditor.getLineContent(currentLineNumber);
-      String subToken = lineContent.substring(0, currentEditor.getCursorCol() - 1);
-      afterToken = lineContent.substring(currentEditor.getCursorCol() - 1);
-
-      String token = "";
-      if (!subToken.endsWith(" "))
+      try
       {
-         String[] split = subToken.split("[ /+=!<>(){}\\[\\]?|&:\",'\\-#;]+");
+         e.complete(
+            new CompilationUnit(fileContent,
+               currentFile.getName().substring(0, currentFile.getName().lastIndexOf('.')), "UTF-8"),
+            getCompletionPosition(currentFile.getContent(), currentEditor.getCursorRow(), currentEditor.getCursorCol()),
+            0);
 
-         if (split.length != 0)
+         currentLineNumber = currentEditor.getCursorRow();
+         String lineContent = currentEditor.getLineContent(currentLineNumber);
+         String subToken = lineContent.substring(0, currentEditor.getCursorCol() - 1);
+         afterToken = lineContent.substring(currentEditor.getCursorCol() - 1);
+
+         String token = "";
+         if (!subToken.endsWith(" "))
          {
-            token = split[split.length - 1];
-         }
-      }
-      if (token.contains("."))
-      {
-         String varToken = token.substring(0, token.lastIndexOf('.'));
-         tokenToComplete = token.substring(token.lastIndexOf('.') + 1);
-         beforeToken = subToken.substring(0, subToken.lastIndexOf(varToken) + varToken.length() + 1);
-      }
-      else
-      {
-         beforeToken = subToken.substring(0, subToken.lastIndexOf(token));
-         tokenToComplete = token;
-      }
+            String[] split = subToken.split("[ /+=!<>(){}\\[\\]?|&:\",'\\-#;]+");
 
-      int posX = currentEditor.getCursorOffsetX() - tokenToComplete.length() * 8 + 8;
-      int posY = currentEditor.getCursorOffsetY() + 4;
-      Collections.sort(requestor.proposals, comparator);
-      new CodeAssitantForm(posX, posY, tokenToComplete, requestor.proposals, new ProposalWidgetFactory(), this);
+            if (split.length != 0)
+            {
+               token = split[split.length - 1];
+            }
+         }
+         if (token.contains("."))
+         {
+            String varToken = token.substring(0, token.lastIndexOf('.'));
+            tokenToComplete = token.substring(token.lastIndexOf('.') + 1);
+            if (token.length() == 1)
+            {
+               beforeToken = subToken.substring(0, subToken.lastIndexOf(varToken));
+            }
+            else
+               beforeToken = subToken.substring(0, subToken.lastIndexOf(varToken) + varToken.length() + 1);
+         }
+         else
+         {
+            beforeToken = subToken.substring(0, subToken.lastIndexOf(token));
+            tokenToComplete = token;
+         }
+
+         int posX = currentEditor.getCursorOffsetX() - tokenToComplete.length() * 8 + 8;
+         int posY = currentEditor.getCursorOffsetY() + 4;
+         // Collections.sort(requestor.proposals, comparator);
+         IJavaCompletionProposal[] javaCompletionProposals = collector.getJavaCompletionProposals();
+         Arrays.sort(javaCompletionProposals, comparator);
+         new CodeAssitantForm(posX, posY, tokenToComplete, javaCompletionProposals, this);
+      }
+      catch (Exception ex)
+      {
+         IDE.fireEvent(new OutputEvent(ex.getMessage(), Type.ERROR));
+         ex.printStackTrace();
+      }
    }
 
-   private Comparator<CompletionProposal> comparator = new Comparator<CompletionProposal>()
+   private Comparator<IJavaCompletionProposal> comparator = new Comparator<IJavaCompletionProposal>()
    {
 
       @Override
-      public int compare(CompletionProposal o1, CompletionProposal o2)
+      public int compare(IJavaCompletionProposal o1, IJavaCompletionProposal o2)
       {
 
          if (o1.getRelevance() > o2.getRelevance())
@@ -199,27 +213,6 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
             return 0;
       }
    };
-
-   public static class CodeAssistantRequestor extends CompletionRequestor
-   {
-
-      private List<CompletionProposal> proposals = new ArrayList<CompletionProposal>();
-
-      /** @see org.eclipse.jdt.client.core.CompletionRequestor#accept(org.eclipse.jdt.client.core.CompletionProposal) */
-      @Override
-      public void accept(CompletionProposal proposal)
-      {
-         proposals.add(proposal);
-      }
-
-      /** @see org.eclipse.jdt.client.core.CompletionRequestor#completionFailure(org.eclipse.jdt.client.core.compiler.IProblem) */
-      @Override
-      public void completionFailure(IProblem problem)
-      {
-         IDE.fireEvent(new OutputEvent(problem.getMessage(), Type.ERROR));
-         super.completionFailure(problem);
-      }
-   }
 
    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
    @Override
@@ -257,18 +250,22 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
    @Override
    public void onTokenSelected(ProposalWidget value)
    {
-      // String beforeCursor = beforeToken + String.valueOf(value.getProposal().getCompletion());
-      // int cursorPosition = 1;
-      // if (beforeCursor.contains("("))
-      // cursorPosition = beforeCursor.lastIndexOf('(') + 1;
-      // else
-      // cursorPosition = beforeCursor.length();
-      // currentEditor.replaceTextAtCurrentLine(beforeCursor + afterToken, cursorPosition);
       try
       {
+         IJavaCompletionProposal proposal = value.getProposal();
          IDocument document = new Document(currentEditor.getText());
-         value.apply(document);
+         proposal.apply(document);
          currentEditor.setText(document.get());
+         if (proposal instanceof AbstractJavaCompletionProposal)
+         {
+            AbstractJavaCompletionProposal proposal2 = (AbstractJavaCompletionProposal)proposal;
+            int cursorPosition = proposal2.getCursorPosition();
+            int replacementOffset = proposal2.getReplacementOffset();
+            String string = document.get(0, replacementOffset + cursorPosition);
+            String[] split = string.split("\n");
+            currentEditor.goToPosition(split.length, split[split.length - 1].length() + 1);
+            currentEditor.setFocus();
+         }
       }
       catch (Exception e)
       {

@@ -1608,27 +1608,31 @@ public class StubUtility
    // return CodeStyleConfiguration.createImportRewrite(cu, restoreExistingImports);
    // }
    //
-   // /**
-   // * Returns a {@link ImportRewrite} using {@link ImportRewrite#create(CompilationUnit, boolean)} and
-   // * configures the rewriter with the settings as specified in the JDT UI preferences.
-   // * <p>
-   // * This method sets {@link ImportRewrite#setUseContextToFilterImplicitImports(boolean)} to <code>true</code>
-   // * iff the given AST has been resolved with bindings. Clients should always supply a context
-   // * when they call one of the <code>addImport(...)</code> methods.
-   // * </p>
-   // *
-   // * @param astRoot the AST root to create the rewriter on
-   // * @param restoreExistingImports specifies if the existing imports should be kept or removed.
-   // * @return the new rewriter configured with the settings as specified in the JDT UI preferences.
-   // *
-   // * @see ImportRewrite#create(CompilationUnit, boolean)
-   // */
-   // public static ImportRewrite createImportRewrite(CompilationUnit astRoot, boolean restoreExistingImports) {
-   // ImportRewrite rewrite= CodeStyleConfiguration.createImportRewrite(astRoot, restoreExistingImports);
-   // if (astRoot.getAST().hasResolvedBindings()) {
-   // rewrite.setUseContextToFilterImplicitImports(true);
-   // }
-   // return rewrite;
-   // }
+   /**
+    * Returns a {@link ImportRewrite} using {@link ImportRewrite#create(CompilationUnit, boolean)} and configures the rewriter
+    * with the settings as specified in the JDT UI preferences.
+    * <p>
+    * This method sets {@link ImportRewrite#setUseContextToFilterImplicitImports(boolean)} to <code>true</code> iff the given AST
+    * has been resolved with bindings. Clients should always supply a context when they call one of the
+    * <code>addImport(...)</code> methods.
+    * </p>
+    * 
+    * @param astRoot the AST root to create the rewriter on
+    * @param restoreExistingImports specifies if the existing imports should be kept or removed.
+    * @return the new rewriter configured with the settings as specified in the JDT UI preferences.
+    * 
+    * @see ImportRewrite#create(CompilationUnit, boolean)
+    */
+   public static ImportRewrite createImportRewrite(IDocument document, CompilationUnit astRoot, boolean restoreExistingImports)
+   {
+      ImportRewrite rewrite = ImportRewrite.create(document, astRoot, true);
+      rewrite .setOnDemandImportThreshold(99);
+      rewrite .setStaticOnDemandImportThreshold(99);
+      if (astRoot.getAST().hasResolvedBindings())
+      {
+         rewrite.setUseContextToFilterImplicitImports(true);
+      }
+      return rewrite;
+   }
 
 }
