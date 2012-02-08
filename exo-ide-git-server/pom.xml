@@ -8,7 +8,7 @@
    </parent>
    <artifactId>exo-ide-git-server</artifactId>
    <packaging>war</packaging>
-   <name>eXo IDE :: GIT : server</name>
+   <name>eXo IDE :: GIT :: Server</name>
 
    <dependencies>
       <dependency>

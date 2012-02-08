@@ -12,7 +12,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-shell-testsuite-selenium</artifactId>
    <packaging>jar</packaging>
-   <name>exo-ide-shell-testsuite-selenium</name>
+   <name>Exo IDE :: Shell :: Test Suite Selenium</name>
 
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

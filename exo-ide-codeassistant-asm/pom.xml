@@ -28,7 +28,7 @@
    </parent>
    <artifactId>exo-ide-codeassistant-asm</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: CodeAssistant : Asm</name>
+   <name>eXo IDE :: Code Assistant Asm</name>
 
    <dependencies>
       <dependency>

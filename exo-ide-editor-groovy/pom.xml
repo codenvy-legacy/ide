@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-groovy</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor : Groovy</name>
+   <name>eXo IDE :: Editor :: Groovy</name>
    <dependencies>
 
       <dependency>

@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-extension-gadget-gatein</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Extension : GateIn Gadget Deploy</name>
+   <name>eXo IDE :: Extension :: GateIn Gadget Deploy</name>
    <properties>
       <org.exoplatform.gatein.version>3.1.4-PLF</org.exoplatform.gatein.version>
    </properties>

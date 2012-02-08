@@ -10,12 +10,8 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-ruby</artifactId>
    <version>1.2.0-M6-SNAPSHOT</version>
-   <name>eXo IDE :: Editor : Ruby</name>
+   <name>eXo IDE :: Editor :: Ruby</name>
    
-   <properties>                                                                                                                                                                                                 
-    <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>                                                                                                                   
-  </properties>    
-
    <dependencies>
       <dependency>
          <groupId>com.google.gwt</groupId>
@@ -59,53 +55,5 @@
       </resources>
       <sourceDirectory>src/main/java</sourceDirectory>
       <outputDirectory>target/classes</outputDirectory>
-      <plugins>
-
-         <!-- GWT Maven Plugin -->
-         <!-- 
-         <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>gwt-maven-plugin</artifactId>
-            <executions>
-               <execution>
-                  <goals>
-                     <goal>compile</goal>
-                     <goal>test</goal>
-                     <goal>i18n</goal>
-                  </goals>
-               </execution>
-            </executions>
-            <configuration>
-               <runTarget>RubyEditorExtension.html</runTarget>
-               <hostedWebapp>${webappDirectory}</hostedWebapp>
-               <i18nMessagesBundle>org.exoplatform.ide.editor.ruby.client.Messages</i18nMessagesBundle>
-               <testTimeOut>500</testTimeOut>                                                                                                                                                                  
-               <mode>htmlunit</mode>                                                                                                                                                                           
-               <productionMode>false</productionMode>
-               <logLevel>ERROR</logLevel>
-            </configuration>
-         </plugin>
-          -->
-
-         <!-- Copy static web files before executing gwt:run -->
-         <!-- 
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <executions>
-               <execution>
-                  <phase>compile</phase>
-                  <goals>
-                     <goal>exploded</goal>
-                  </goals>
-               </execution>
-            </executions>
-            <configuration>
-               <webappDirectory>${webappDirectory}</webappDirectory>
-            </configuration>
-         </plugin>
-          -->
-         
-      </plugins>
    </build>
 </project>

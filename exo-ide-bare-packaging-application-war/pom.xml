@@ -11,7 +11,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-bare-packaging-application-war</artifactId>
    <packaging>war</packaging>
-   <name>eXo IDE :: Packaging : Bare Application</name>
+   <name>eXo IDE :: Packaging :: Bare Application</name>
 
    <dependencies>
 

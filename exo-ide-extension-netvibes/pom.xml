@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-extension-netvibes</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Extension : Netvibes</name>
+   <name>eXo IDE :: Extension :: Netvibes</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>

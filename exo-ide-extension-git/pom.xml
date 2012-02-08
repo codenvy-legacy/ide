@@ -10,7 +10,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-extension-git</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Extension : Git</name>
+   <name>eXo IDE :: Extension :: Git</name>
 
    <dependencies>
       <dependency>

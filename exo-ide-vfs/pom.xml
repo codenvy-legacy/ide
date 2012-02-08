@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-vfs</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: vfs</name>
+   <name>eXo IDE :: Virtual File System</name>
    <dependencies>
       <dependency>
           <groupId>org.exoplatform.kernel</groupId>

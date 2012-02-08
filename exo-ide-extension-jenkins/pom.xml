@@ -7,7 +7,7 @@
       <version>1.2.0-M6-SNAPSHOT</version>
    </parent>
    <artifactId>exo-ide-extension-jenkins</artifactId>
-   <name>eXo IDE :: Extension : Jenkins</name>
+   <name>eXo IDE :: Extension :: Jenkins</name>
    <dependencies>
       <dependency>
          <groupId>javax.ws.rs</groupId>

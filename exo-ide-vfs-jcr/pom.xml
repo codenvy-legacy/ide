@@ -8,7 +8,7 @@
    </parent>
    <artifactId>exo-ide-vfs-jcr</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: vfs :: JCR</name>
+   <name>eXo IDE :: Virtual File System :: JCR</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
@@ -76,11 +76,5 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-vfs</artifactId>
       </dependency>
-      <!--
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-server</artifactId>
-      </dependency>
-      -->
    </dependencies>
 </project>

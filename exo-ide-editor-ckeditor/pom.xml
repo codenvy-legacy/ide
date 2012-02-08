@@ -19,7 +19,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-ckeditor</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor : CKEditor</name>
+   <name>eXo IDE :: Editor :: CKEditor</name>
 
    <dependencies>
       

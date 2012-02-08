@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-netvibes</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor : Netvibes</name>
+   <name>eXo IDE :: Editor :: Netvibes</name>
    <dependencies>
 
       <dependency>

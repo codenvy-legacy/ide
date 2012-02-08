@@ -8,7 +8,7 @@
    </parent>
    <artifactId>exo-ide-codeassistant-api</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: CodeAssitant : API</name>
+   <name>eXo IDE :: Code Assitant API</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>

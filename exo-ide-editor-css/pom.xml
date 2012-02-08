@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-css</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor : CSS</name>
+   <name>eXo IDE :: Editor :: CSS</name>
    <dependencies>
 
       <dependency>

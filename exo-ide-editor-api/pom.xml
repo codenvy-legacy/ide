@@ -19,7 +19,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-api</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor : API</name>
+   <name>eXo IDE :: Editor :: API</name>
 
    <dependencies>
       <dependency>

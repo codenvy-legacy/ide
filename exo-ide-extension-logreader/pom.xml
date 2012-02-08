@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-extension-logreader</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Extension : LogReader</name>
+   <name>eXo IDE :: Extension :: LogReader</name>
    <dependencies>
       <!-- CLIENT SIDE -->
       <dependency>

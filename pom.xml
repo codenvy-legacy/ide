@@ -735,7 +735,7 @@
       </plugins>
    </build>
    <modules>
-
+      <module>dev-resources</module>
       <module>exo-ide-vfs</module>
       <module>exo-ide-vfs-jcr</module>
 

@@ -19,7 +19,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-codemirror</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor : Codemirror</name>
+   <name>eXo IDE :: Editor :: Codemirror</name>
 
    <dependencies>
       <dependency>

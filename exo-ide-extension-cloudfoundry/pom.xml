@@ -8,23 +8,12 @@
    </parent>
    <artifactId>exo-ide-extension-cloudfoundry</artifactId>
    <version>1.2.0-M6-SNAPSHOT</version>
-   <name>eXo IDE :: Extension :: CLOUDFOUNDRY</name>
+   <name>eXo IDE :: Extension :: CloudFoundry</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-server</artifactId>
       </dependency>
-
-      <!-- <dependency> -->
-      <!-- <groupId>org.exoplatform.jcr</groupId> -->
-      <!-- <artifactId>exo.jcr.component.core</artifactId> -->
-      <!-- <exclusions> -->
-      <!-- <exclusion> -->
-      <!-- <artifactId>xstream</artifactId> -->
-      <!-- <groupId>xstream</groupId> -->
-      <!-- </exclusion> -->
-      <!-- </exclusions> -->
-      <!-- </dependency> -->
 
       <dependency>
          <groupId>javax.ws.rs</groupId>

@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-extension-ssh</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Extension : SSH</name>
+   <name>eXo IDE :: Extension :: SSH</name>
    <dependencies>
       <dependency>
          <groupId>com.jcraft</groupId>

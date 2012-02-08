@@ -9,7 +9,7 @@
    </parent>
    <artifactId>exo-ide-jdt-core</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: JDT : Core</name>
+   <name>eXo IDE :: JDT :: Core</name>
    <dependencies>
 
       <dependency>

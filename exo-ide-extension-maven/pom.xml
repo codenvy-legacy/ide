@@ -8,7 +8,7 @@
    </parent>
    <artifactId>exo-ide-extension-maven</artifactId>
    <version>1.2.0-M6-SNAPSHOT</version>
-   <name>eXo IDE :: Extension : Maven</name>
+   <name>eXo IDE :: Extension :: Maven</name>
    <dependencies>
       <dependency>
          <groupId>javax.ws.rs</groupId>

@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-xml</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor : XML</name>
+   <name>eXo IDE :: Editor :: XML</name>
    <dependencies>
 
       <dependency>
