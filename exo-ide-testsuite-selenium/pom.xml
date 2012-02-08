@@ -146,9 +146,8 @@
                            <skip>false</skip>
                            <excludes>
                               <exclude>**/*TestSuite.java</exclude>
-                              <exclude>**/*RESTServiceSandboxTest.java</exclude>
-                              <exclude>**/*CloudHerokuTest.java</exclude>
                               <exclude>**/*StoreOpenedFilesHistoryTest.java</exclude>
+                              <exclude>**/*AbstractHotkeysTest.java</exclude>
                               <exclude>**/*WorkspaceTest.java</exclude>
                            </excludes>
                         </configuration>
