@@ -48,7 +48,7 @@ public class GroovyClassNameCompletionTest extends CodeAssistantBaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       IDE.EDITOR.waitActiveFile(projectName + "/" + "Untitled file.grs");
 
-      IDE.EDITOR.moveCursorDown(0, 9);
+      IDE.GOTOLINE.goToLine(9);
       IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "\nCollection");
 
       // open autocomplete form
