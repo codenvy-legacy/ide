@@ -118,6 +118,8 @@ public interface MenuCommands
    {
       String VIEW = "View";
 
+      String OUTLINE = "Outline";
+      
       String GO_TO_FOLDER = "Go to Folder";
 
       String GET_URL = "Get URL...";
