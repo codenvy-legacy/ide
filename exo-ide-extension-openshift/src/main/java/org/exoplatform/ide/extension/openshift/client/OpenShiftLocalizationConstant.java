@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.openshift.client;
 
+import com.google.gwt.i18n.client.LocalizableResource.Key;
+
 import com.google.gwt.i18n.client.Messages;
 
 /**
@@ -168,6 +170,18 @@ public interface OpenShiftLocalizationConstant extends Messages
    @Key("control.updatePublicKey.prompt")
    String updatePublicKeyControlPrompt();
 
+   /*
+    * Switch account
+    */
+   @Key("control.switchAccount.id")
+   String switchAccountControlId();
+
+   @Key("control.switchAccount.switch.title")
+   String switchAccountControlSwitchTitle();
+
+   @Key("control.switchAccount.switch.prompt")
+   String switchAccountControlSwitchPrompt();
+   
    /*
     * Login view
     */

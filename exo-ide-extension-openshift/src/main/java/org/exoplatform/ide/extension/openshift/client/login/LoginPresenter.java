@@ -37,6 +37,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.extension.openshift.client.login.SwitchAccountEvent;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
@@ -48,7 +49,7 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
  * @version $Id: May 25, 2011 3:56:55 PM anya $
  * 
  */
-public class LoginPresenter implements LoginHandler, ViewClosedHandler
+public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAccountHandler
 {
    interface Display extends IsView
    {
@@ -73,6 +74,13 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
        */
       HasValue<String> getEmailField();
 
+      /**
+       * Get login result label.
+       * 
+       * @return {@link HasValue}
+       */
+      HasValue<String> getLoginResult();
+      
       /**
        * Get password field.
        * 
@@ -99,6 +107,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
    {
       IDE.addHandler(LoginEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(SwitchAccountEvent.TYPE, this);
    }
 
    /**
@@ -241,5 +250,31 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
       {
          display = null;
       }
+   }
+
+   /**
+    * 
+    * @see org.exoplatform.ide.extension.openshift.client.login.SwitchAccountHandler#onSwitchAccount(org.exoplatform.ide.extension.openshift.client.login.SwitchAccountEvent)
+    */
+   @Override
+   public void onSwitchAccount(org.exoplatform.ide.extension.openshift.client.login.SwitchAccountEvent event)
+   {
+      if (display == null)
+      {
+         openLoginForm();
+      }
+   }
+   
+   /**
+    * Open form to login to OpenShift
+    */
+   private void openLoginForm()
+   {
+      Display display = GWT.create(Display.class);
+      bindDisplay(display);
+      IDE.getInstance().openView(display.asView());
+      display.enableLoginButton(false);
+      display.focusInEmailField();
+      display.getLoginResult().setValue("");
    }
 }

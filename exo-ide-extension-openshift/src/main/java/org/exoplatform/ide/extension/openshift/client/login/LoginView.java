@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.component.PasswordTextInput;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -44,9 +45,9 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
 {
    private static final String ID = "ideLoginView";
 
-   private static final int WIDTH = 400;
+   private static final int WIDTH = 410;
 
-   private static final int HEIGHT = 170;
+   private static final int HEIGHT = 200;
 
    private static final String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
 
@@ -55,6 +56,8 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    private static final String EMAIL_FIELD_ID = "ideLoginViewEmailField";
 
    private static final String PASSWORD_FIELD_ID = "ideLoginViewPasswordField";
+   
+   private static final String LOGIN_RESULT_ID = "ideLoginViewLoginResult";
 
    /**
     * UI binder for this view.
@@ -89,6 +92,9 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    @UiField
    ImageButton cancelButton;
 
+   @UiField
+   Label loginResult;
+
    public LoginView()
    {
       super(ID, ViewType.MODAL, OpenShiftExtension.LOCALIZATION_CONSTANT.loginViewTitle(), null, WIDTH, HEIGHT);
@@ -100,6 +106,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
       passwordField.setHeight("22px");
       loginButton.setButtonId(LOGIN_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
+      loginResult.setID(LOGIN_RESULT_ID);
    }
 
    /**
@@ -154,6 +161,16 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    public void focusInEmailField()
    {
       emailField.focus();
+   }
+
+   /**
+    * 
+    * @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#getLoginResult()
+    */
+   @Override
+   public HasValue<String> getLoginResult()
+   {
+      return loginResult;
    }
 
 }

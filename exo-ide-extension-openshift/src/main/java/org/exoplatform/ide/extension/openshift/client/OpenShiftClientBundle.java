@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.openshift.client;
 
+import com.google.gwt.resources.client.ClientBundle.Source;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
@@ -69,6 +71,12 @@ public interface OpenShiftClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/openshift/images/controls/appInfo_Disabled.png")
    ImageResource applicationInfoControlDisabled();
 
+   @Source("org/exoplatform/ide/extension/heroku/images/controls/switchAccount.png")
+   ImageResource switchAccount();
+
+   @Source("org/exoplatform/ide/extension/heroku/images/controls/switchAccount_Disabled.png")
+   ImageResource switchAccountDisabled();
+   
    @Source("org/exoplatform/ide/extension/openshift/images/controls/preview.png")
    ImageResource previewControl();
 
