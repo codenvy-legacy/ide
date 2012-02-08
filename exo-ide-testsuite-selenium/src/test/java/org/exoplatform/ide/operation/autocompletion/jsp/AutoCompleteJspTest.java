@@ -58,6 +58,7 @@ public class AutoCompleteJspTest extends CodeAssistantBaseTest
       openFile(FILE_NAME);
    }
 
+   
    @Test
    public void testAutocompleteJsp() throws Exception
    {
