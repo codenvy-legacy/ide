@@ -29,7 +29,6 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({CursorPositionStatusBarTest.class, 
-                
                DialogAboutTest.class, CustomizeToolbarTest.class, 
                CookiesTest.class,
                HotkeysFormTest.class,
