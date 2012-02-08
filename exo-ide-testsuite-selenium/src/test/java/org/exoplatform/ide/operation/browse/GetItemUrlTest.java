@@ -131,7 +131,7 @@ public class GetItemUrlTest extends BaseTest
             try
             {
                WebElement hello = driver.findElement(By.xpath("//body[contains(.,'<p> Hello!!! </p>')]"));
-               return hello !=null && hello.isDisplayed();
+               return hello != null && hello.isDisplayed();
             }
             catch (NoSuchElementException e)
             {
