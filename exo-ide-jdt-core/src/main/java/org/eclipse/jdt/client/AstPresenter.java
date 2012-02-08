@@ -28,6 +28,8 @@ import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.event.CancelParseEvent;
+import org.eclipse.jdt.client.event.CancelParseHandler;
 import org.eclipse.jdt.client.event.ShowAstEvent;
 import org.eclipse.jdt.client.event.ShowAstHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -46,7 +48,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  * @version ${Id}: Jan 20, 2012 1:28:01 PM evgen $
  */
 public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHandler, ViewClosedHandler,
-   EditorContentChangedHandler
+   EditorContentChangedHandler, CancelParseHandler
 {
 
    public interface Display extends IsView
@@ -71,6 +73,7 @@ public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHand
       eventBus.addHandler(ShowAstEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(EditorContentChangedEvent.TYPE, this);
+      eventBus.addHandler(CancelParseEvent.TYPE, this);
    }
 
    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
@@ -174,5 +177,14 @@ public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHand
         
        }
    };
+
+   /**
+    * @see org.eclipse.jdt.client.event.CancelParseHandler#onCancelParse(org.eclipse.jdt.client.event.CancelParseEvent)
+    */
+   @Override
+   public void onCancelParse(CancelParseEvent event)
+   {
+      timer.cancel();
+   }
 
 }

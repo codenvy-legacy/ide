@@ -33,6 +33,7 @@ import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTParser;
+import org.eclipse.jdt.client.event.CancelParseEvent;
 import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.text.Document;
@@ -57,6 +58,58 @@ import java.util.Comparator;
 public class CodeAssistantController implements RunCodeAssistantHandler, EditorActiveFileChangedHandler,
    ProposalSelectedHandler
 {
+
+   /**
+    * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+    * @version $Id:  2:09:49 PM 34360 2009-07-22 23:58:59Z evgen $
+    *
+    */
+   private static final class ProgressMonitor implements IProgressMonitor
+   {
+      private final static int TIMEOUT = 30000; // ms
+
+      private long endTime;
+
+      public void beginTask(String name, int totalWork)
+      {
+         endTime = System.currentTimeMillis() + TIMEOUT;
+      }
+
+      public boolean isCanceled()
+      {
+         return endTime <= System.currentTimeMillis();
+      }
+
+      @Override
+      public void done()
+      {
+      }
+
+      @Override
+      public void internalWorked(double work)
+      {
+      }
+
+      @Override
+      public void setCanceled(boolean value)
+      {
+      }
+
+      @Override
+      public void setTaskName(String name)
+      {
+      }
+
+      @Override
+      public void subTask(String name)
+      {
+      }
+
+      @Override
+      public void worked(int work)
+      {
+      }
+   }
 
    private FileModel currentFile;
 
@@ -85,6 +138,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
    {
       if (currentFile == null || currentEditor == null)
          return;
+      IDE.fireEvent(new CancelParseEvent());
       GWT.runAsync(new RunAsyncCallback()
       {
          
@@ -109,10 +163,11 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
    private void codecomplete()
    {
       ASTParser parser = ASTParser.newParser(AST.JLS3);
-      parser.setSource(currentFile.getContent().toCharArray());
+      parser.setSource(currentEditor.getText().toCharArray());
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
       parser.setUnitName(currentFile.getName().substring(0, currentFile.getName().lastIndexOf('.')));
       parser.setNameEnvironment(new DummyNameEnvirement(currentFile.getProject().getId()));
+      parser.setResolveBindings(true);
       ASTNode ast = parser.createAST(null);
       org.eclipse.jdt.client.core.dom.CompilationUnit unit = (org.eclipse.jdt.client.core.dom.CompilationUnit)ast;
       
@@ -122,64 +177,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       char[] fileContent = currentFile.getContent().toCharArray();
       CompletionEngine e =
          new CompletionEngine(new DummyNameEnvirement(currentFile.getProject().getId()), collector,
-            JavaCore.getOptions(), new IProgressMonitor()
-            {
-               private final static int TIMEOUT = 60000; // ms
-
-               private long endTime;
-
-               public void beginTask(String name, int totalWork)
-               {
-                  endTime = System.currentTimeMillis() + TIMEOUT;
-               }
-
-               public boolean isCanceled()
-               {
-                  return endTime <= System.currentTimeMillis();
-               }
-
-               @Override
-               public void done()
-               {
-                  // TODO Auto-generated method stub
-
-               }
-
-               @Override
-               public void internalWorked(double work)
-               {
-                  // TODO Auto-generated method stub
-
-               }
-
-               @Override
-               public void setCanceled(boolean value)
-               {
-                  // TODO Auto-generated method stub
-
-               }
-
-               @Override
-               public void setTaskName(String name)
-               {
-                  // TODO Auto-generated method stub
-
-               }
-
-               @Override
-               public void subTask(String name)
-               {
-                  // TODO Auto-generated method stub
-
-               }
-
-               @Override
-               public void worked(int work)
-               {
-                  // TODO Auto-generated method stub
-
-               }
-            });
+            JavaCore.getOptions(), new ProgressMonitor());
 
       try
       {
