@@ -18,6 +18,9 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
+
 import org.eclipse.jdt.client.codeassistant.AbstractJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.CompletionProposalCollector;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
@@ -27,8 +30,9 @@ import org.eclipse.jdt.client.codeassistant.ui.ProposalWidget;
 import org.eclipse.jdt.client.compiler.batch.CompilationUnit;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.JavaCore;
-import org.eclipse.jdt.client.event.RunCodeAssistantEvent;
-import org.eclipse.jdt.client.event.RunCodeAssistantHandler;
+import org.eclipse.jdt.client.core.dom.AST;
+import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.text.Document;
@@ -38,6 +42,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.eclipse.jdt.client.event.RunCodeAssistantEvent;
+import org.eclipse.jdt.client.event.RunCodeAssistantHandler;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
@@ -63,7 +69,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
    private String beforeToken;
 
    private int currentLineNumber;
-
+   
    /**
     * 
     */
@@ -73,13 +79,44 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
-   /** @see org.eclipse.jdt.client.event.RunCodeAssistantHandler#onRunCodeAssistant(org.eclipse.jdt.client.event.RunCodeAssistantEvent) */
+   /** @see org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantHandler#onRunCodeAssistant(org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent) */
    @Override
    public void onRunCodeAssistant(RunCodeAssistantEvent event)
    {
       if (currentFile == null || currentEditor == null)
          return;
-      CompletionProposalCollector collector = new CompletionProposalCollector(AstPresenter.UNIT, false);
+      GWT.runAsync(new RunAsyncCallback()
+      {
+         
+         @Override
+         public void onSuccess()
+         {
+            codecomplete();
+         }
+         
+         @Override
+         public void onFailure(Throwable reason)
+         {
+            // TODO Auto-generated method stub
+            reason.printStackTrace();
+         }
+      });
+   }
+
+   /**
+    * 
+    */
+   private void codecomplete()
+   {
+      ASTParser parser = ASTParser.newParser(AST.JLS3);
+      parser.setSource(currentFile.getContent().toCharArray());
+      parser.setKind(ASTParser.K_COMPILATION_UNIT);
+      parser.setUnitName(currentFile.getName().substring(0, currentFile.getName().lastIndexOf('.')));
+      parser.setNameEnvironment(new DummyNameEnvirement(currentFile.getProject().getId()));
+      ASTNode ast = parser.createAST(null);
+      org.eclipse.jdt.client.core.dom.CompilationUnit unit = (org.eclipse.jdt.client.core.dom.CompilationUnit)ast;
+      
+      CompletionProposalCollector collector = new CompletionProposalCollector(unit, false);
       collector
          .setAllowsRequiredProposals(CompletionProposal.CONSTRUCTOR_INVOCATION, CompletionProposal.TYPE_REF, true);
       char[] fileContent = currentFile.getContent().toCharArray();
@@ -154,35 +191,8 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
 
          currentLineNumber = currentEditor.getCursorRow();
          String lineContent = currentEditor.getLineContent(currentLineNumber);
-         String subToken = lineContent.substring(0, currentEditor.getCursorCol() - 1);
-         afterToken = lineContent.substring(currentEditor.getCursorCol() - 1);
 
-         String token = "";
-         if (!subToken.endsWith(" "))
-         {
-            String[] split = subToken.split("[ /+=!<>(){}\\[\\]?|&:\",'\\-#;]+");
-
-            if (split.length != 0)
-            {
-               token = split[split.length - 1];
-            }
-         }
-         if (token.contains("."))
-         {
-            String varToken = token.substring(0, token.lastIndexOf('.'));
-            tokenToComplete = token.substring(token.lastIndexOf('.') + 1);
-            if (token.length() == 1)
-            {
-               beforeToken = subToken.substring(0, subToken.lastIndexOf(varToken));
-            }
-            else
-               beforeToken = subToken.substring(0, subToken.lastIndexOf(varToken) + varToken.length() + 1);
-         }
-         else
-         {
-            beforeToken = subToken.substring(0, subToken.lastIndexOf(token));
-            tokenToComplete = token;
-         }
+         parseTokenLine(lineContent, currentEditor.getCursorCol());
 
          int posX = currentEditor.getCursorOffsetX() - tokenToComplete.length() * 8 + 8;
          int posY = currentEditor.getCursorOffsetY() + 4;
@@ -193,9 +203,79 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       }
       catch (Exception ex)
       {
-         IDE.fireEvent(new OutputEvent(ex.getMessage(), Type.ERROR));
-         ex.printStackTrace();
+         String st = ex.getClass().getName() + ": " + ex.getMessage();
+         for (StackTraceElement ste : ex.getStackTrace())
+            st += "\n" + ste.toString();
+         IDE.fireEvent(new OutputEvent(st, Type.ERROR));
       }
+   }
+   
+   /**
+    * @param line
+    */
+   private void parseTokenLine(String line, int cursorPos)
+   {
+      String tokenLine = "";
+      tokenToComplete = "";
+      afterToken = "";
+      beforeToken = "";
+      if (line.length() > cursorPos - 1)
+      {
+         afterToken = line.substring(cursorPos - 1, line.length());
+         tokenLine = line.substring(0, cursorPos - 1);
+
+      }
+      else
+      {
+         afterToken = "";
+         if (line.endsWith(" "))
+         {
+            tokenToComplete = "";
+            beforeToken = line;
+            return;
+         }
+
+         tokenLine = line;
+      }
+
+      for (int i = tokenLine.length() - 1; i >= 0; i--)
+      {
+         switch (tokenLine.charAt(i))
+         {
+            case ' ' :
+            case '.' :
+            case '(' :
+            case ')' :
+            case '{' :
+            case '}' :
+            case ';' :
+            case '[' :
+            case ']' :
+            case '+' :
+            case '=' :
+            case '-' :
+            case '|' :
+            case '&' :
+            case ':' :
+            case '*' :
+            case '/' :
+            case '?' :
+            case '"' :
+            case '\'' :
+            case '<' :
+            case '>' :
+            case ',' :
+               beforeToken = tokenLine.substring(0, i + 1);
+               tokenToComplete = tokenLine.substring(i + 1);
+               return;
+
+            default :
+               break;
+         }
+         beforeToken = "";
+         tokenToComplete = tokenLine;
+      }
+
    }
 
    private Comparator<IJavaCompletionProposal> comparator = new Comparator<IJavaCompletionProposal>()

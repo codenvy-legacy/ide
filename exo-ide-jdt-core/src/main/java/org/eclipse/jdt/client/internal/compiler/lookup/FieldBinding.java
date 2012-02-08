@@ -470,23 +470,22 @@ public class FieldBinding extends VariableBinding
 
    public FieldDeclaration sourceField()
    {
-      SourceTypeBinding sourceType;
       try
       {
-         sourceType = (SourceTypeBinding)this.declaringClass;
+         SourceTypeBinding sourceType = (SourceTypeBinding)this.declaringClass;
+         FieldDeclaration[] fields = sourceType.scope.referenceContext.fields;
+         if (fields != null)
+         {
+            for (int i = fields.length; --i >= 0;)
+               if (this == fields[i].binding)
+                  return fields[i];
+         }
+         return null;
       }
       catch (ClassCastException e)
       {
          return null;
       }
 
-      FieldDeclaration[] fields = sourceType.scope.referenceContext.fields;
-      if (fields != null)
-      {
-         for (int i = fields.length; --i >= 0;)
-            if (this == fields[i].binding)
-               return fields[i];
-      }
-      return null;
    }
 }

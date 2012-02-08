@@ -19,6 +19,7 @@
 package org.eclipse.jdt.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
 
@@ -60,8 +61,6 @@ public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHand
    private CodeMirror editor;
 
    private Display display;
-
-   public static CompilationUnit UNIT;
 
    /**
     * 
@@ -130,9 +129,9 @@ public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHand
       parser.setNameEnvironment(new DummyNameEnvirement(currentFile.getProject().getId()));
       ASTNode ast = parser.createAST(null);
       CompilationUnit unit = (CompilationUnit)ast;
-      UNIT = unit;
       return unit;
    }
+
 
    private Timer timer = new Timer()
    {
@@ -140,23 +139,40 @@ public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHand
       @Override
       public void run()
       {
-         CompilationUnit unit = parseFile();
-         if (unit.getProblems().length == 0 || editor == null)
-            return;
+         GWT.runAsync(new RunAsyncCallback()
+         {
+            
+            
+            @Override
+            public void onSuccess()
+            {
+               CompilationUnit unit = parseFile();
+               if (unit.getProblems().length == 0 || editor == null)
+                  return;
 
-         int length = currentFile.getContent().split("\n").length;
-         for (int i = 1; i <= length; i++)
-         {
-            editor.clearErrorMark(i);
-         }
-         for (IProblem p : unit.getProblems())
-         {
-            int sourceLineNumber = p.getSourceLineNumber();
-            if (sourceLineNumber == 0)
-               sourceLineNumber = 1;
-            editor.setErrorMark(sourceLineNumber, p.getMessage());
-         }
-      }
+               int length = currentFile.getContent().split("\n").length;
+               for (int i = 1; i <= length; i++)
+               {
+                  editor.clearErrorMark(i);
+               }
+               for (IProblem p : unit.getProblems())
+               {
+                  int sourceLineNumber = p.getSourceLineNumber();
+                  if (sourceLineNumber == 0)
+                     sourceLineNumber = 1;
+                  editor.setErrorMark(sourceLineNumber, p.getMessage());
+               }
+            }            
+            
+            @Override
+            public void onFailure(Throwable reason)
+            {
+               // TODO Auto-generated method stub
+               reason.printStackTrace();
+            }
+         });
+        
+       }
    };
 
 }
