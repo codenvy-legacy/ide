@@ -32,6 +32,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -122,14 +123,15 @@ public class GetItemUrlTest extends BaseTest
 
       driver.navigate().to(url);
 
-      new WebDriverWait(driver, 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver, 5).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver driver)
          {
             try
             {
-               return content1.equals(driver.findElement(By.tagName("body")).getText());
+               WebElement hello = driver.findElement(By.xpath("//body[contains(.,'<p> Hello!!! </p>')]"));
+               return hello !=null && hello.isDisplayed();
             }
             catch (NoSuchElementException e)
             {
