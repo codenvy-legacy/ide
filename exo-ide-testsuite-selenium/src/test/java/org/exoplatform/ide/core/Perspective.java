@@ -51,7 +51,7 @@ public class Perspective extends AbstractTestModule
 
       String PANEL_MAXIMIZED_ATTRIBUTE = "panel-maximized";
 
-      String PANEL_LOCATOR = "//div[@panel-id='%s']";
+      String PANEL_LOCATOR = "//div[id='%s']";
 
       String VIEW_LOCATOR = "//div[@view-id='%s']";
 
@@ -71,8 +71,27 @@ public class Perspective extends AbstractTestModule
    public void maximizePanel(String panelId) throws Exception
    {
       WebElement maximizeButton = driver().findElement(By.id(String.format(Locators.MAXIMIZE_BUTTON_ID, panelId)));
+      waitMaximizeButtonAppear(panelId);
       maximizeButton.click();
       waitMaximized(panelId);
+   }
+
+   /**
+    * Wait panel appearance maximize button.
+    * 
+    * @param panelId panel's id
+    */
+   private void waitMaximizeButtonAppear(final String panelId)
+   {
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            WebElement maxButton = driver().findElement(By.id(String.format(Locators.MAXIMIZE_BUTTON_ID, panelId)));
+            return maxButton != null && maxButton.isDisplayed();
+         }
+      });
    }
 
    /**
@@ -84,6 +103,7 @@ public class Perspective extends AbstractTestModule
    public void restorePanel(String panelId) throws Exception
    {
       WebElement restoreButton = driver().findElement(By.id(String.format(Locators.RESORE_BUTTON_ID, panelId)));
+
       restoreButton.click();
       waitRestored(panelId);
    }
@@ -130,7 +150,7 @@ public class Perspective extends AbstractTestModule
     */
    public boolean isPanelMaximized(String panelId)
    {
-      WebElement panel = driver().findElement(By.xpath(String.format(Locators.PANEL_LOCATOR, panelId)));
+      WebElement panel = driver().findElement(By.id(panelId));
       String attribute = panel.getAttribute(Locators.PANEL_MAXIMIZED_ATTRIBUTE);
       return panel.isDisplayed() && attribute != null && Boolean.parseBoolean(attribute);
    }
