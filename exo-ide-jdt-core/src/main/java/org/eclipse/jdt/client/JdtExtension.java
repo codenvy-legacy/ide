@@ -18,16 +18,13 @@
  */
 package org.eclipse.jdt.client;
 
-import org.eclipse.jdt.client.event.RunCodeAssistantEvent;
-import org.eclipse.jdt.client.event.RunCodeAssistantHandler;
 import org.eclipse.jdt.client.event.ShowAstEvent;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
-import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -41,7 +38,7 @@ public class JdtExtension extends Extension
    public void initialize()
    {
       IDE.getInstance().addControl(new Con());
-      IDE.getInstance().addControl(new CodeAssistCommand(), Docking.TOOLBAR_RIGHT);
+//      IDE.getInstance().addControl(new CodeAssistCommand(), Docking.TOOLBAR_RIGHT);
       new AstPresenter(IDE.eventBus());
       new CodeAssistantController();
    }

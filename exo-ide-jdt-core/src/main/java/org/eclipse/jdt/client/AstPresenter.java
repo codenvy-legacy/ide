@@ -32,8 +32,11 @@ import org.eclipse.jdt.client.event.CancelParseEvent;
 import org.eclipse.jdt.client.event.CancelParseHandler;
 import org.eclipse.jdt.client.event.ShowAstEvent;
 import org.eclipse.jdt.client.event.ShowAstHandler;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -48,7 +51,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  * @version ${Id}: Jan 20, 2012 1:28:01 PM evgen $
  */
 public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHandler, ViewClosedHandler,
-   EditorContentChangedHandler, CancelParseHandler
+   EditorContentChangedHandler, CancelParseHandler, EditorFileOpenedHandler
 {
 
    public interface Display extends IsView
@@ -64,6 +67,10 @@ public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHand
 
    private Display display;
 
+   private boolean needReparse = false;
+
+   private int problemCount = 0;
+
    /**
     * 
     */
@@ -74,33 +81,42 @@ public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHand
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(EditorContentChangedEvent.TYPE, this);
       eventBus.addHandler(CancelParseEvent.TYPE, this);
+      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
    }
 
    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      currentFile = event.getFile();
-      if (event.getEditor() instanceof CodeMirror)
-         editor = (CodeMirror)event.getEditor();
+      if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
+      {
+         currentFile = event.getFile();
+         if (event.getEditor() instanceof CodeMirror)
+            editor = (CodeMirror)event.getEditor();
+         else
+            editor = null;
+      }
       else
+      {
+         currentFile = null;
          editor = null;
+      }
    }
 
    /** @see org.eclipse.jdt.client.event.ShowAstHandler#onShowAst(org.eclipse.jdt.client.event.ShowAstEvent) */
    @Override
    public void onShowAst(ShowAstEvent event)
    {
+      if (editor == null)
+         return;
+
       if (display == null)
       {
          display = GWT.create(Display.class);
          IDE.getInstance().openView(display.asView());
       }
-      if (currentFile != null)
-      {
-         CompilationUnit unit = parseFile();
-         display.drawAst(unit);
-      }
+      CompilationUnit unit = parseFile();
+      display.drawAst(unit);
    }
 
    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent) */
@@ -123,11 +139,12 @@ public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHand
    /** @return */
    private CompilationUnit parseFile()
    {
+      if (editor == null)
+         return null;
       ASTParser parser = ASTParser.newParser(AST.JLS3);
-      parser.setSource(currentFile.getContent().toCharArray());
+      parser.setSource(editor.getText());
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
       parser.setUnitName(currentFile.getName().substring(0, currentFile.getName().lastIndexOf('.')));
-      parser.setEnvironment(new String[]{"fersf"}, new String[]{"wfer"}, new String[]{"UTF-8"}, true);
       parser.setResolveBindings(true);
       parser.setNameEnvironment(new DummyNameEnvirement(currentFile.getProject().getId()));
       ASTNode ast = parser.createAST(null);
@@ -135,48 +152,65 @@ public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHand
       return unit;
    }
 
-
    private Timer timer = new Timer()
    {
 
       @Override
       public void run()
       {
-         GWT.runAsync(new RunAsyncCallback()
-         {
-            
-            
-            @Override
-            public void onSuccess()
-            {
-               CompilationUnit unit = parseFile();
-               if (unit.getProblems().length == 0 || editor == null)
-                  return;
-
-               int length = currentFile.getContent().split("\n").length;
-               for (int i = 1; i <= length; i++)
-               {
-                  editor.clearErrorMark(i);
-               }
-               for (IProblem p : unit.getProblems())
-               {
-                  int sourceLineNumber = p.getSourceLineNumber();
-                  if (sourceLineNumber == 0)
-                     sourceLineNumber = 1;
-                  editor.setErrorMark(sourceLineNumber, p.getMessage());
-               }
-            }            
-            
-            @Override
-            public void onFailure(Throwable reason)
-            {
-               // TODO Auto-generated method stub
-               reason.printStackTrace();
-            }
-         });
-        
-       }
+         asyncParse();
+      }
    };
+
+   private void asyncParse()
+   {
+      GWT.runAsync(new RunAsyncCallback()
+      {
+
+         @Override
+         public void onSuccess()
+         {
+            CompilationUnit unit = parseFile();
+            if (needReparse)
+            {
+               IProblem[] problems = unit.getProblems();
+               if (problems.length == problemCount)
+               {
+                  needReparse = false;
+                  problemCount = 0;
+               }
+               else
+               {
+                  problemCount = unit.getProblems().length;
+                  timer.schedule(1000);
+                  return;
+               }
+
+            }
+            if (unit == null || unit.getProblems().length == 0 || editor == null)
+               return;
+
+            int length = currentFile.getContent().split("\n").length;
+            for (int i = 1; i <= length; i++)
+            {
+               editor.clearErrorMark(i);
+            }
+            for (IProblem p : unit.getProblems())
+            {
+               int sourceLineNumber = p.getSourceLineNumber();
+               if (sourceLineNumber == 0)
+                  sourceLineNumber = 1;
+               editor.setErrorMark(sourceLineNumber, p.getMessage());
+            }
+         }
+
+         @Override
+         public void onFailure(Throwable reason)
+         {
+            reason.printStackTrace();
+         }
+      });
+   }
 
    /**
     * @see org.eclipse.jdt.client.event.CancelParseHandler#onCancelParse(org.eclipse.jdt.client.event.CancelParseEvent)
@@ -185,6 +219,15 @@ public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHand
    public void onCancelParse(CancelParseEvent event)
    {
       timer.cancel();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
+    */
+   @Override
+   public void onEditorFileOpened(EditorFileOpenedEvent event)
+   {
+      needReparse = true;
    }
 
 }
