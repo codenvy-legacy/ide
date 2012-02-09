@@ -21,8 +21,11 @@ package org.exoplatform.ide.operation.browse.highlight;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.google.gwt.user.client.Command;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -42,7 +45,7 @@ import java.util.Map;
 // http://jira.exoplatform.org/browse/IDE-486
 public class HighlightOutlineTest extends BaseTest
 {
-   
+
    private static final String PROJECT = HighlightOutlineTest.class.getSimpleName();
 
    private final static String FILE_NAME = "RESTCodeOutline.grs";
@@ -55,8 +58,7 @@ public class HighlightOutlineTest extends BaseTest
       {
          Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
          Link link = project.get(Link.REL_CREATE_FILE);
-         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_SERVICE,
-         filePath);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_SERVICE, filePath);
       }
       catch (Exception e)
       {
@@ -83,27 +85,27 @@ public class HighlightOutlineTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-      
+
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
-      
+
       IDE.EDITOR.waitTabPresent(1);
 
       // open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOpened();
       assertTrue(IDE.OUTLINE.isActive());
-      
+      assertTrue(IDE.OUTLINE.isHiglightBorderPresent());
+
       //reopen file
       IDE.EDITOR.closeFile(FILE_NAME);
       IDE.EDITOR.waitTabNotPresent(FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitTabPresent(1);
       
-      IDE.OUTLINE.waitOpened();
+      assertTrue(IDE.EDITOR.isHighlighterInEditor(1));
       assertFalse(IDE.OUTLINE.isActive());
-
       IDE.EDITOR.typeTextIntoEditor(1, "\nFOO\nBAR");
       //wait for some redrawing in IDE
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.SAVE, true);

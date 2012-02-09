@@ -93,24 +93,26 @@ public class HighlightCKEditorTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
+      
       //step 1 open file after close 'welcome' tab      
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + GADGET_FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_FILE_NAME);
+      
       IDE.EDITOR.clickCloseEditorButton(0);
       IDE.EDITOR.waitTabNotPresent(0);
 
       //step 2 check highlight googlegadget in ckeditor
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + GADGET_FILE_NAME);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GADGET_FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
       IDE.EDITOR.clickDesignButton();
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
-      IDE.EDITOR.isHighlighterInCKEditor(0);
+      IDE.EDITOR.isHighlighterInEditor(0);
 
-      IDE.selectMainFrame();
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-
+      
+      IDE.EDITOR.forcedClosureFile(0);
+      
       //TODO uncommit after fix issue IDE-1421
-
+      //IDE.EDITOR.waitTabNotPresent(0);
       //      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_FILE_NAME);
       //      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
       //      IDE.EDITOR.clickDesignButton();

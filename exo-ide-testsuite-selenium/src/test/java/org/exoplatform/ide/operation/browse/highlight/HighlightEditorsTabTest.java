@@ -25,9 +25,15 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -39,34 +45,39 @@ import org.junit.Test;
 public class HighlightEditorsTabTest extends BaseTest
 {
 
-   private static String FOLDER_NAME = HighlightEditorsTabTest.class.getSimpleName();
+   private static String PROJECT = HighlightCKEditorTest.class.getSimpleName();
 
-   private static String FILE_NAME = HighlightEditorsTabTest.class.getSimpleName() + "File";
+   private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/";
 
-   @Before
-   public void setUp()
+   private static String HTML_FILE_NAME = "newHtmlFile.html";
+
+   private static String GADGET_FILE_NAME = "newGroovyFile.groovy";
+
+   @BeforeClass
+   public static void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put(
-            "src/test/resources/org/exoplatform/ide/operation/edit/outline/HtmlCodeOutline.html", MimeType.TEXT_HTML,
-            WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, HTML_FILE_NAME, MimeType.TEXT_HTML, PATH + HTML_FILE_NAME);
+
+         VirtualFileSystemUtils.createFileFromLocal(link, GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, PATH
+            + GADGET_FILE_NAME);
       }
-      catch (Exception e)
+      catch (IOException e)
       {
       }
    }
 
-   @After
-   public void tearDown()
+   @AfterClass
+   public static void tearDown()
    {
-      deleteCookies();
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
-      catch (Exception e)
+      catch (IOException e)
       {
       }
    }
@@ -74,40 +85,30 @@ public class HighlightEditorsTabTest extends BaseTest
    @Test
    public void testHighlightEditorTab() throws Exception
    {
+
       IDE.PROJECT.EXPLORER.waitOpened();
-      
-      assertTrue(IDE.PROJECT.EXPLORER.isActive());
-      
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
-      waitForElementPresent("//div[@panel-id='editor']");
-      assertTrue(IDE.EDITOR.isActive(0));
+      //step 1 open file after close 'welcome' tab      
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + GADGET_FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_FILE_NAME);
 
-      IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
-      waitForElementPresent("ideOutlineTreeGrid");
-      assertTrue(IDE.OUTLINE.isActive());
-      assertFalse(IDE.EDITOR.isActive(0));
+      IDE.EDITOR.clickCloseEditorButton(0);
+      IDE.EDITOR.waitTabNotPresent(0);
 
-      IDE.OUTLINE.closeOutline();
-      waitForElementNotPresent("ideOutlineTreeGrid");
-      assertFalse(IDE.OUTLINE.isOutlineViewVisible());
-      assertTrue(IDE.EDITOR.isActive(0));
-      
-      IDE.EDITOR.closeFile(1);
+      //step 2 check highlight googlegadget in ckeditor
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GADGET_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
+      IDE.EDITOR.isHighlighterInEditor(0);
+      IDE.EDITOR.forcedClosureFile(0);
 
-      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.EDITOR.clickDesignButton();
-      waitForElementPresent("//div[@panel-id='editor']");
-      assertTrue(IDE.EDITOR.isActive(1));
-      
-      //TODO should be compled should be completed after fix problem issue IDE-804
-      //IDE.EDITOR.closeFile(0);
-      //waitForElementNotPresent("//div[@panel-id='editor']");
-      
-      //TODO fix problem return highlighter in workspace
-      //IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
+      IDE.EDITOR.waitTabNotPresent(0);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
+      IDE.EDITOR.isHighlighterInEditor(1);
+
    }
 
 }
