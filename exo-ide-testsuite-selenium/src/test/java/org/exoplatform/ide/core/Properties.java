@@ -19,13 +19,17 @@
 package org.exoplatform.ide.core;
 
 import org.exoplatform.ide.ToolbarCommands;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.sql.Driver;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -55,6 +59,10 @@ public class Properties extends AbstractTestModule
          "//div[@view-id='ideFilePropertiesView']//td[@propertyname='Content length']";
 
       String CLOSE_VIEW_BUTTON_LOCATOR = "//div[@button-name='close-tab' and @tab-title='Properties']";
+
+      String HIGHLITER_BORDER = VIEW_LOCATOR
+         + "//div[@component=\"Border\" and contains(@style, 'border-color: rgb(182, 204, 232)')]";
+
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
@@ -81,6 +89,14 @@ public class Properties extends AbstractTestModule
 
    @FindBy(xpath = Locators.CLOSE_VIEW_BUTTON_LOCATOR)
    private WebElement closeViewButton;
+
+   /**
+    * click on Proporties editor
+    */
+   public void clickOnProperties()
+   {
+      view.click();
+   }
 
    /**
     * Get Content Length property value.
@@ -214,4 +230,25 @@ public class Properties extends AbstractTestModule
    {
       return IDE().PERSPECTIVE.isViewActive(view);
    }
+
+  
+   /**
+    * Returns true if highlight border present
+    * @return
+    */
+   public boolean isHiglightBorderPresent()
+   {
+      WebElement border = driver().findElement(By.xpath(Locators.HIGHLITER_BORDER));
+
+      try
+      {
+         return border != null && border.isDisplayed();
+      }
+      catch (Exception e)
+      {
+         return false;
+      }
+
+   }
+
 }
