@@ -26,9 +26,16 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.operation.file.OpeningSavingAndClosingFilesTest;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -37,71 +44,78 @@ import org.junit.Test;
  * @version $Id: Nov 15, 2010 $
  * 
  */
-public class HighlightCKEditorTest extends BaseTest {
-	private final static String URL = BASE_URL + REST_CONTEXT + "/"
-			+ WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+public class HighlightCKEditorTest extends BaseTest
+{
 
-	private static String FOLDER_NAME = HighlightCKEditorTest.class
-			.getSimpleName();
+   private static String PROJECT = HighlightCKEditorTest.class.getSimpleName();
 
-	private static String FILE_NAME = HighlightCKEditorTest.class
-			.getSimpleName()
-			+ "File";
+   private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/";
 
-	@Before
-	public void setUp() {
-		try {
-			VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
-			VirtualFileSystemUtils
-					.put(
-							"src/test/resources/org/exoplatform/ide/operation/edit/outline/HtmlCodeOutline.html",
-							MimeType.TEXT_HTML, URL + FOLDER_NAME + "/"
-									+ FILE_NAME);
-		} catch (Exception e) {
-		}
-	}
+   private static String HTML_FILE_NAME = "newHtmlFile.html";
 
-	// This test will fail until IDE-424
-	@Test
-	public void testHighlightCKEdditor() throws Exception {
-		IDE.WORKSPACE.waitForRootItem();
+   private static String GADGET_FILE_NAME = "newGroovyFile.groovy";
 
-		assertTrue(IDE.PROJECT.EXPLORER.isActive());
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, HTML_FILE_NAME, MimeType.TEXT_HTML, PATH + HTML_FILE_NAME);
 
-		IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-		IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+         VirtualFileSystemUtils.createFileFromLocal(link, GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, PATH
+            + GADGET_FILE_NAME);
+      }
+      catch (IOException e)
+      {
+      }
+   }
 
-		IDE.WORKSPACE.waitForItem(URL + FOLDER_NAME + "/" + FILE_NAME);
-		IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
-		IDE.WORKSPACE.doubleClickOnFile(URL + FOLDER_NAME + "/" + FILE_NAME);
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      }
+      catch (IOException e)
+      {
+      }
+   }
+
+
+   @Test
+   public void testHighlightCKEdditor() throws Exception
+   {
+     
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+
+      //step 1 open file after close 'welcome' tab      
+      IDE.EDITOR.clickCloseEditorButton(0);
+      IDE.EDITOR.waitTabNotPresent(0);
+
+      //step 2 check highlight googlegadget in ckeditor
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + GADGET_FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GADGET_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
       IDE.EDITOR.clickDesignButton();
-		waitForElementPresent("//div[@panel-id='editor']");
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
+      IDE.EDITOR.isHighlighterInCKEditor(0);
 
-		IDE.MENU
-				.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
-		Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-		assertTrue(IDE.PROJECT.EXPLORER.isActive());
-		assertFalse(IDE.EDITOR.isActive(0));
-		
-		IDE.EDITOR.clickOnEditor(0);
+      IDE.selectMainFrame();
+      IDE.EDITOR.closeTabIgnoringChanges(0);
 
-		// TODO should be compled should be completed after fix problem|
-		// highlighting in codeeditor after setting cursor in text
-		// IDE.PERSPECTIVE.checkViewIsActive("editor-0");
-		// IDE.PERSPECTIVE.checkViewIsNotActive("idePreviewHTMLView");
-		// ------------------------------------------------------------
+      //TODO uncommit after fix issue IDE-1421
 
-		// TODO should be compled should be completed after fix problem issue IDE-804
-		//IDE.EDITOR.closeFile(0);
-	}
+      //      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_FILE_NAME);
+      //      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
+      //      IDE.EDITOR.clickDesignButton();
+      //      IDE.EDITOR.isHighlighterInCKEditor(1);
 
-	@After
-	public void tearDown() {
-		deleteCookies();
-		try {
-			VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
-		} catch (Exception e) {
-		}
-	}
+   }
 
 }
