@@ -19,39 +19,21 @@
 package org.eclipse.jdt.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
 
-import org.eclipse.jdt.client.core.compiler.IProblem;
-import org.eclipse.jdt.client.core.dom.AST;
-import org.eclipse.jdt.client.core.dom.ASTNode;
-import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
-import org.eclipse.jdt.client.event.CancelParseEvent;
-import org.eclipse.jdt.client.event.CancelParseHandler;
 import org.eclipse.jdt.client.event.ShowAstEvent;
 import org.eclipse.jdt.client.event.ShowAstHandler;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
-import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
-import org.exoplatform.ide.editor.codemirror.CodeMirror;
-import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 20, 2012 1:28:01 PM evgen $
  */
-public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHandler, ViewClosedHandler,
-   EditorContentChangedHandler, CancelParseHandler, EditorFileOpenedHandler
+public class AstPresenter implements ShowAstHandler, ViewClosedHandler, UpdateOutlineHandler
 {
 
    public interface Display extends IsView
@@ -61,62 +43,33 @@ public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHand
       void drawAst(CompilationUnit cUnit);
    }
 
-   private FileModel currentFile;
-
-   private CodeMirror editor;
-
    private Display display;
 
-   private boolean needReparse = false;
-
-   private int problemCount = 0;
+   private CompilationUnit unit;
 
    /**
     * 
     */
    public AstPresenter(HandlerManager eventBus)
    {
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(ShowAstEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(EditorContentChangedEvent.TYPE, this);
-      eventBus.addHandler(CancelParseEvent.TYPE, this);
-      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
-   }
+      eventBus.addHandler(UpdateOutlineEvent.TYPE, this);
 
-   /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
-      {
-         currentFile = event.getFile();
-         if (event.getEditor() instanceof CodeMirror)
-            editor = (CodeMirror)event.getEditor();
-         else
-            editor = null;
-      }
-      else
-      {
-         currentFile = null;
-         editor = null;
-      }
    }
 
    /** @see org.eclipse.jdt.client.event.ShowAstHandler#onShowAst(org.eclipse.jdt.client.event.ShowAstEvent) */
    @Override
    public void onShowAst(ShowAstEvent event)
    {
-      if (editor == null)
-         return;
 
       if (display == null)
       {
          display = GWT.create(Display.class);
          IDE.getInstance().openView(display.asView());
       }
-      CompilationUnit unit = parseFile();
-      display.drawAst(unit);
+      if (unit != null)
+         display.drawAst(unit);
    }
 
    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent) */
@@ -127,107 +80,13 @@ public class AstPresenter implements EditorActiveFileChangedHandler, ShowAstHand
          display = null;
    }
 
-   /** @see org.exoplatform.ide.editor.api.event.EditorContentChangedHandler#onEditorContentChanged(org.exoplatform.ide.editor.api.event.EditorContentChangedEvent) */
-   @Override
-   public void onEditorContentChanged(EditorContentChangedEvent event)
-   {
-      timer.cancel();
-      timer.schedule(2000);
-
-   }
-
-   /** @return */
-   private CompilationUnit parseFile()
-   {
-      if (editor == null)
-         return null;
-      ASTParser parser = ASTParser.newParser(AST.JLS3);
-      parser.setSource(editor.getText());
-      parser.setKind(ASTParser.K_COMPILATION_UNIT);
-      parser.setUnitName(currentFile.getName().substring(0, currentFile.getName().lastIndexOf('.')));
-      parser.setResolveBindings(true);
-      parser.setNameEnvironment(new DummyNameEnvirement(currentFile.getProject().getId()));
-      ASTNode ast = parser.createAST(null);
-      CompilationUnit unit = (CompilationUnit)ast;
-      return unit;
-   }
-
-   private Timer timer = new Timer()
-   {
-
-      @Override
-      public void run()
-      {
-         asyncParse();
-      }
-   };
-
-   private void asyncParse()
-   {
-      GWT.runAsync(new RunAsyncCallback()
-      {
-
-         @Override
-         public void onSuccess()
-         {
-            CompilationUnit unit = parseFile();
-            if (needReparse)
-            {
-               IProblem[] problems = unit.getProblems();
-               if (problems.length == problemCount)
-               {
-                  needReparse = false;
-                  problemCount = 0;
-               }
-               else
-               {
-                  problemCount = unit.getProblems().length;
-                  timer.schedule(1000);
-                  return;
-               }
-
-            }
-            if (unit == null || unit.getProblems().length == 0 || editor == null)
-               return;
-
-            int length = currentFile.getContent().split("\n").length;
-            for (int i = 1; i <= length; i++)
-            {
-               editor.clearErrorMark(i);
-            }
-            for (IProblem p : unit.getProblems())
-            {
-               int sourceLineNumber = p.getSourceLineNumber();
-               if (sourceLineNumber == 0)
-                  sourceLineNumber = 1;
-               editor.setErrorMark(sourceLineNumber, p.getMessage());
-            }
-         }
-
-         @Override
-         public void onFailure(Throwable reason)
-         {
-            reason.printStackTrace();
-         }
-      });
-   }
-
    /**
-    * @see org.eclipse.jdt.client.event.CancelParseHandler#onCancelParse(org.eclipse.jdt.client.event.CancelParseEvent)
+    * @see org.eclipse.jdt.client.UpdateOutlineHandler#onUpdateOutline(org.eclipse.jdt.client.UpdateOutlineEvent)
     */
    @Override
-   public void onCancelParse(CancelParseEvent event)
+   public void onUpdateOutline(UpdateOutlineEvent event)
    {
-      timer.cancel();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
-    */
-   @Override
-   public void onEditorFileOpened(EditorFileOpenedEvent event)
-   {
-      needReparse = true;
+      unit = event.getCompilationUnit();
    }
 
 }

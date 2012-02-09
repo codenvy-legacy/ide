@@ -34,8 +34,6 @@ import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.event.CancelParseEvent;
-import org.eclipse.jdt.client.event.RunCodeAssistantEvent;
-import org.eclipse.jdt.client.event.RunCodeAssistantHandler;
 import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.text.Document;
@@ -45,6 +43,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.eclipse.jdt.client.event.RunCodeAssistantEvent;
+import org.eclipse.jdt.client.event.RunCodeAssistantHandler;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
