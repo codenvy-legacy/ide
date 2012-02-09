@@ -95,6 +95,11 @@ public class Editor extends AbstractTestModule
       String LINE_HIGHLIGHTER_CLASS = "CodeMirror-line-highlighter";
 
       String HIGHLIGHTER_SELECTOR = "div[view-id=editor-%s] div." + LINE_HIGHLIGHTER_CLASS;
+
+      String DESIGN_EDITOR_PREFIX = "//div[@view-id='editor-%s']";
+
+      String HIGHLITER_BORDER = DESIGN_EDITOR_PREFIX
+         + "//div[@component= 'Border' and contains(@style, 'color: rgb(182, 204, 232)')]";
    }
 
    private WebElement editor;
@@ -258,6 +263,57 @@ public class Editor extends AbstractTestModule
       });
    }
 
+   
+   
+   
+   /**
+    * 
+    * 
+    * @param tabIndex index of tab, starts at 0
+    * @throws Exception
+    */
+   public void forcedClosureFile(int tabIndex) throws Exception
+   {
+      selectTab(tabIndex);
+      final String viewId = editor.findElement(By.xpath(Locators.ACTIVE_EDITOR_TAB_LOCATOR)).getAttribute("view-id");
+      clickCloseEditorButton(tabIndex);
+
+      /*
+       * Closing ask dialogs if them is appears.
+       */
+      if (IDE().ASK_DIALOG.isOpened())
+      {
+         IDE().ASK_DIALOG.clickNo();
+      }
+      else if (IDE().ASK_FOR_VALUE_DIALOG.isOpened())
+      {
+         IDE().ASK_FOR_VALUE_DIALOG.clickNoButton();
+      }
+      else 
+      
+      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR, viewId)));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
+   }
+   
+   
+   
+   
+   
    /**
     * 
     * 
@@ -478,7 +534,6 @@ public class Editor extends AbstractTestModule
       typeTextIntoCkEditor(tabIndex, Keys.CONTROL.toString() + "a" + Keys.DELETE.toString());
 
    }
-   
 
    /**
     * Type text to file, opened in tab.
@@ -869,4 +924,18 @@ public class Editor extends AbstractTestModule
          return null;
       }
    }
+
+   public boolean isHighlighterInEditor(int numEditor)
+   {
+      WebElement border = driver().findElement(By.xpath(String.format(Locators.HIGHLITER_BORDER, numEditor)));
+      try
+      {
+         return border != null && border.isDisplayed();
+      }
+      catch (Exception e)
+      {
+         return false;
+      }
+   }
+
 }
