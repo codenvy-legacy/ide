@@ -23,7 +23,6 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
@@ -67,28 +66,28 @@ public class JdtExtension extends Extension
       }
    }
 
-   public static class CodeAssistCommand extends SimpleControl implements IDEControl
-   {
-
-      /** @param id */
-      public CodeAssistCommand()
-      {
-         super("View/Run CodeAssist");
-         setTitle("Run CodeAssist");
-         setPrompt("Run CodeAssist");
-         setEvent(new RunCodeAssistantEvent());
-         setEnabled(true);
-         setVisible(true);
-         setImages(JavaClientBundle.INSTANCE.classItem(), JavaClientBundle.INSTANCE.clockItem());
-      }
-
-      /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
-      @Override
-      public void initialize()
-      {
-         // TODO Auto-generated method stub
-
-      }
-   }
+//   public static class CodeAssistCommand extends SimpleControl implements IDEControl
+//   {
+//
+//      /** @param id */
+//      public CodeAssistCommand()
+//      {
+//         super("View/Run CodeAssist");
+//         setTitle("Run CodeAssist");
+//         setPrompt("Run CodeAssist");
+//         setEvent(new RunCodeAssistantEvent());
+//         setEnabled(true);
+//         setVisible(true);
+//         setImages(JavaClientBundle.INSTANCE.classItem(), JavaClientBundle.INSTANCE.clockItem());
+//      }
+//
+//      /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+//      @Override
+//      public void initialize()
+//      {
+//         // TODO Auto-generated method stub
+//
+//      }
+//   }
 
 }
