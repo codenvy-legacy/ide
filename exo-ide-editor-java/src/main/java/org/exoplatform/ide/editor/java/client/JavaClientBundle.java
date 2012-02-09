@@ -74,6 +74,15 @@ public interface JavaClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/editor/java/client/images/public-method.png")
    ImageResource publicMethod();
 
+   @Source("org/exoplatform/ide/editor/java/client/images/package.png")
+   ImageResource packageItem();
+
+   @Source("org/exoplatform/ide/editor/java/client/images/import.png")
+   ImageResource importItem();
+
+   @Source("org/exoplatform/ide/editor/java/client/images/imports.png")
+   ImageResource imports();
+
    @Source("org/exoplatform/ide/editor/java/client/images/local.png")
    ImageResource variable();
 
