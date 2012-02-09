@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.core;
 
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -60,6 +61,10 @@ public class Outline extends AbstractTestModule
       String ROW_SELECTOR = "div#" + TREE_ID + " div.gwt-Label";
 
       String ROW_BY_TITLE_LOCATOR = "//div[@id='" + TREE_ID + "']//div[@class='gwt-Label' and text()='%s']";
+      
+      String BORDER_PREFIX = "//div[@component=\"Border\" and contains(@style, 'color: rgb(182, 204, 232)')]";
+      
+      String HIGHLITER_BORDER = VIEW_LOCATOR + BORDER_PREFIX ;
    }
 
    public static final String NOT_AVAILABLE_TITLE = "An outline is not available.";
@@ -444,4 +449,29 @@ public class Outline extends AbstractTestModule
          }
       });
    }
+
+   
+   
+   /**
+    * Returns true if highlight border present
+    * @return
+    */
+   public boolean isHiglightBorderPresent()
+   {
+      WebElement border = driver().findElement(By.xpath(Locators.HIGHLITER_BORDER));
+      try
+      {
+         return border != null && border.isDisplayed();
+      }
+      catch (Exception e)
+      {
+         return false;
+      }
+
+   }
+
+   
+   
+   
+   
 }
