@@ -41,6 +41,7 @@ public class JdtExtension extends Extension
 //      IDE.getInstance().addControl(new CodeAssistCommand(), Docking.TOOLBAR_RIGHT);
       new AstPresenter(IDE.eventBus());
       new CodeAssistantController();
+      new JavaCodeController();
    }
 
    public static class Con extends SimpleControl implements IDEControl
