@@ -60,8 +60,9 @@ public class Properties extends AbstractTestModule
 
       String CLOSE_VIEW_BUTTON_LOCATOR = "//div[@button-name='close-tab' and @tab-title='Properties']";
 
-      String HIGHLITER_BORDER = VIEW_LOCATOR
-         + "//div[@component=\"Border\" and contains(@style, 'border-color: rgb(182, 204, 232)')]";
+      String BORDER_PREFIX = "//div[@component=\"Border\" and contains(@style, 'color: rgb(182, 204, 232)')]";
+
+      String HIGHLITER_BORDER = VIEW_LOCATOR + BORDER_PREFIX;
 
    }
 
@@ -231,7 +232,6 @@ public class Properties extends AbstractTestModule
       return IDE().PERSPECTIVE.isViewActive(view);
    }
 
-  
    /**
     * Returns true if highlight border present
     * @return
@@ -239,7 +239,6 @@ public class Properties extends AbstractTestModule
    public boolean isHiglightBorderPresent()
    {
       WebElement border = driver().findElement(By.xpath(Locators.HIGHLITER_BORDER));
-
       try
       {
          return border != null && border.isDisplayed();
