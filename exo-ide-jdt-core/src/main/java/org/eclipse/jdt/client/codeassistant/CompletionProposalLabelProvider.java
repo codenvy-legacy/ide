@@ -20,6 +20,7 @@ import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.dom.Modifier;
 import org.eclipse.jdt.client.internal.corext.util.SignatureUtil;
 import org.eclipse.jdt.client.runtime.Assert;
+import org.exoplatform.ide.editor.codeassistant.util.ModifierHelper;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
@@ -273,6 +274,7 @@ public class CompletionProposalLabelProvider
    StyledString createMethodProposalLabel(CompletionProposal methodProposal)
    {
       StyledString nameBuffer = new StyledString();
+      nameBuffer.append(getModifiers(methodProposal.getFlags()));
 
       // method name
       nameBuffer.append(methodProposal.getName());
@@ -313,6 +315,34 @@ public class CompletionProposalLabelProvider
    }
 
    /**
+    * @param flags
+    * @return
+    */
+   private String getModifiers(int flags)
+   {
+      StringBuilder b = new StringBuilder();
+      // b.append("<span style=\"position: absolute; height: 10px; font-size: 10px; margin-top: -5px; margin-left: -6px; color=#6d0000;\">S</span>");
+
+      b.append("<span style = \"position: absolute; margin-top: -5px; margin-left: -25px; width: 22px; ");
+      b.append("height: 10px; font-family:  font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 10px; \">");
+      if (Modifier.isAbstract(flags))
+         b.append("<font color ='#004e00' style='float: right;'>A</font>");
+      if (Modifier.isFinal(flags))
+         b.append("<font color ='#174c83' style='float: right;'>F</font>");
+      if (Modifier.isStatic(flags))
+         b.append("<font color ='#6d0000' style='float: right;'>S</font>");
+      if (Modifier.isVolatile(flags))
+         b.append("<font color ='#174c83' style='float: right;'>V</font>");
+      if (Modifier.isTransient(flags))
+         b.append("<font color ='#174c83' style='float: right;'>T</font>");
+      if (Modifier.isSynchronized(flags))
+         b.append("<font color ='#004e00' style='float: right;'>Sc</font>");
+      b.append("</span>");
+
+      return b.toString();
+   }
+
+   /**
     * Creates a display label for the given method proposal. The display label consists of:
     * <ul>
     * <li>the method name</li>
@@ -347,7 +377,7 @@ public class CompletionProposalLabelProvider
 
    StyledString createOverrideMethodProposalLabel(CompletionProposal methodProposal)
    {
-      StyledString nameBuffer = new StyledString();
+      StyledString nameBuffer = new StyledString(getModifiers(methodProposal.getFlags()));
 
       // method name
       nameBuffer.append(methodProposal.getName());
@@ -417,7 +447,7 @@ public class CompletionProposalLabelProvider
       else
          signature = typeProposal.getSignature();
       char[] fullName = Signature.toCharArray(signature);
-      return createTypeProposalLabel(fullName);
+      return createTypeProposalLabel(fullName, typeProposal.getFlags());
    }
 
    StyledString createJavadocTypeProposalLabel(CompletionProposal typeProposal)
@@ -432,13 +462,13 @@ public class CompletionProposalLabelProvider
       return createSimpleLabel(proposal);
    }
 
-   StyledString createTypeProposalLabel(char[] fullName)
+   StyledString createTypeProposalLabel(char[] fullName, int flags)
    {
       // only display innermost type name as type name, using any
       // enclosing types as qualification
       int qIndex = findSimpleNameStart(fullName);
 
-      StyledString buf = new StyledString();
+      StyledString buf = new StyledString(getModifiers(flags));
       buf.append(new String(fullName, qIndex, fullName.length - qIndex));
       if (qIndex > 0)
       {
@@ -516,7 +546,7 @@ public class CompletionProposalLabelProvider
       if (!isThisPrefix(name))
          name = proposal.getName();
 
-      StyledString buf = new StyledString();
+      StyledString buf = new StyledString(getModifiers(proposal.getFlags()));
       buf.append(name);
       char[] typeName = Signature.getSignatureSimpleName(proposal.getSignature());
       if (typeName.length > 0)
@@ -731,7 +761,6 @@ public class CompletionProposalLabelProvider
 
    ImageResource createTypeImageDescriptor(CompletionProposal proposal)
    {
-      // TODO use modifiers
       final int flags = proposal.getFlags();
       if (Flags.isEnum(flags))
          return JavaClientBundle.INSTANCE.enumItem();
