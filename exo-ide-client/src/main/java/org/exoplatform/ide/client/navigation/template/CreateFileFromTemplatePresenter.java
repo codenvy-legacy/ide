@@ -73,10 +73,13 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Presenter for form "Create file from template"
@@ -561,15 +564,19 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       final String nameWithoutExt = name.substring(0, name.lastIndexOf("."));
       String extension = name.substring(name.lastIndexOf(".") + 1, name.length());
       int index = 1;
-      for (FileModel file : openedFiles.values())
+      Set<String> openedFilesNames = new HashSet<String>();
+      Set<String> openedFilesParentIds = new HashSet<String>();
+      for (FileModel m : openedFiles.values())
       {
-         if (file.getParentId().equals(folder.getId()) && file.getName().equals(name))
-         {
-            name = nameWithoutExt + " " + index + "." + extension;
-            index++;
-         }
+         openedFilesNames.add(m.getName());
+         openedFilesParentIds.add(m.getParentId());
       }
-
+      while (openedFilesNames.contains(name) && openedFilesParentIds.contains(folder.getId()))
+      {
+         name = nameWithoutExt + " " + index + "." + extension;
+         index++;
+      }
+      
       return name;
    }
 

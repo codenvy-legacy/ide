@@ -45,10 +45,14 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Project;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS.
@@ -91,15 +95,17 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
 
       String fileName = UNTITLED_FILE_NAME + "." + extension;
       int index = 1;
+      Set<String> openedFilesNames = new HashSet<String>();
       for (FileModel m : openedFiles.values())
       {
-         if (m.getName().equals(fileName))
-         {
-            fileName = UNTITLED_FILE_NAME + " " + index + "." + extension;
-            index++;
-         }
+         openedFilesNames.add(m.getName());
       }
-
+      while (openedFilesNames.contains(fileName))
+      {
+         fileName = UNTITLED_FILE_NAME + " " + index + "." + extension;
+         index++;
+      }
+      
       FolderModel parent = new FolderModel();
       ProjectModel project = null;
       if (selectedItems != null && selectedItems.size() != 0)
