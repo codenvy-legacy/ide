@@ -29,9 +29,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This visitor is used for collecting child nodes of the parent AST node.
- * First, <code>visit</code> method must be called for necessary AST node.
- * Child nodes are available with the use of  {@link GetChildrenVisitor.#getNodes()}.
+ * This visitor is used for collecting child nodes of the parent AST node. First, <code>visit</code> method must be called for
+ * necessary AST node. Child nodes are available with the use of {@link GetChildrenVisitor.#getNodes()}.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Feb 6, 2012 6:07:12 PM anya $
@@ -54,7 +53,11 @@ public class GetChildrenVisitor extends ASTVisitor
    {
       nodes.clear();
       nodes.add(compilationUnit.getPackage());
-      nodes.add(new ImportGroupNode("import declarations", compilationUnit.imports()));
+      if (!compilationUnit.imports().isEmpty())
+      {
+         nodes.add(new ImportGroupNode("import declarations", compilationUnit.imports()));
+      }
+
       if (!compilationUnit.types().isEmpty())
       {
          nodes.add((ASTNode)compilationUnit.types().get(0));

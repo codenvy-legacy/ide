@@ -19,6 +19,7 @@
 package org.eclipse.jdt.client;
 
 import org.eclipse.jdt.client.event.ShowAstEvent;
+import org.eclipse.jdt.client.outline.OutlinePresenter;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -40,7 +41,7 @@ public class JdtExtension extends Extension
       new AstPresenter(IDE.eventBus());
       new CodeAssistantController();
       new JavaCodeController();
-      // new OutlinePresenter();
+      new OutlinePresenter();
    }
 
    public static class Con extends SimpleControl implements IDEControl

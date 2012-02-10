@@ -25,7 +25,6 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.view.client.TreeViewModel;
 
 import org.eclipse.jdt.client.core.dom.ASTNode;
-import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.EnumDeclaration;
 import org.eclipse.jdt.client.core.dom.FieldDeclaration;
 import org.eclipse.jdt.client.core.dom.ImportDeclaration;
@@ -122,18 +121,14 @@ public class OutlineTreeViewModel implements TreeViewModel
     */
    private GetChildrenVisitor getChildrenVisitor = new GetChildrenVisitor();
 
-   /**
-    * Single selection model.
-    */
-   private SingleSelectionModel<Object> selectionModel = new SingleSelectionModel<Object>();
+   private SingleSelectionModel<Object> selectionModel;
 
    /**
     * @param compilationUnit complilation unit to display
     */
-   public OutlineTreeViewModel(CompilationUnit compilationUnit)
+   public OutlineTreeViewModel(SingleSelectionModel<Object> selectionModel)
    {
-      getChildrenVisitor.visit(compilationUnit);
-      dataProvider.getList().addAll(getChildrenVisitor.getNodes());
+      this.selectionModel = selectionModel;
    }
 
    /**
@@ -181,7 +176,7 @@ public class OutlineTreeViewModel implements TreeViewModel
     * @param parent
     * @return {@link List}
     */
-   public List<Object> getChildren(ASTNode parent)
+   protected List<Object> getChildren(ASTNode parent)
    {
       if (parent instanceof TypeDeclaration)
       {
@@ -195,5 +190,10 @@ public class OutlineTreeViewModel implements TreeViewModel
       }
 
       return new ArrayList<Object>();
+   }
+
+   public ListDataProvider<Object> getDataProvider()
+   {
+      return dataProvider;
    }
 }

@@ -21,13 +21,16 @@ package org.eclipse.jdt.client.outline;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.view.client.SingleSelectionModel;
 
+import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.exoplatform.gwtframework.ui.client.CellTreeResource;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+
+import java.util.List;
 
 /**
  * View for Java Outline tree.
@@ -47,10 +50,22 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display
 
    private CellTree cellTree;
 
+   private OutlineTreeViewModel outlineTreeViewModel;
+
+   private SingleSelectionModel<Object> selectionModel;
+
    public OutlineView()
    {
+      // TODO Fix view properties
       super("OutlineViewId", ViewType.INFORMATION, "Java Outline");
-      scrollPanel = new ScrollPanel(new Label("Parsing File..."));
+      selectionModel = new SingleSelectionModel<Object>();
+      scrollPanel = new ScrollPanel();
+
+      outlineTreeViewModel = new OutlineTreeViewModel(selectionModel);
+      cellTree = new CellTree(outlineTreeViewModel, null, res);
+      cellTree.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
+
+      scrollPanel.add(cellTree);
       add(scrollPanel);
    }
 
@@ -60,16 +75,54 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display
    @Override
    public void updateOutline(CompilationUnit cUnit)
    {
-      try
-      {
-         cellTree = new CellTree(new OutlineTreeViewModel(cUnit), null, res);
-         cellTree.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
-         scrollPanel.clear();
-         scrollPanel.add(cellTree);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
+      outlineTreeViewModel.getDataProvider().getList().clear();
+      GetChildrenVisitor visitor = new GetChildrenVisitor();
+      visitor.visit(cUnit);
+      outlineTreeViewModel.getDataProvider().getList().addAll(visitor.getNodes());
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.outline.OutlinePresenter.Display#getSingleSelectionModel()
+    */
+   @Override
+   public SingleSelectionModel<Object> getSingleSelectionModel()
+   {
+      return selectionModel;
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.outline.OutlinePresenter.Display#selectNode(org.eclipse.jdt.client.core.dom.ASTNode)
+    */
+   @Override
+   public void selectNode(ASTNode node)
+   {
+      selectionModel.setSelected(node, true);
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.outline.OutlinePresenter.Display#focusInTree()
+    */
+   @Override
+   public void focusInTree()
+   {
+      cellTree.setFocus(true);
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.outline.OutlinePresenter.Display#getNodes()
+    */
+   @Override
+   public List<Object> getNodes()
+   {
+      return outlineTreeViewModel.getDataProvider().getList();
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.outline.OutlinePresenter.Display#openNode(java.lang.Object)
+    */
+   @Override
+   public void openNode(Object object)
+   {
+      //TODO
    }
 }

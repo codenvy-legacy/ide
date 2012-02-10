@@ -300,7 +300,7 @@ public class CreateWidgetVisitor extends ASTVisitor
          span += (Modifier.isVolatile(modifiers)) ? "<span class='item-modifier' style='color:#6d0000'>v</span>" : "";
          span += (Modifier.isStatic(modifiers)) ? "<span class='item-modifier' style='color:#6d0000'>s</span>" : "";
          span += (Modifier.isFinal(modifiers)) ? "<span class='item-modifier' style='color:#174c83'>f</span>" : "";
-         span += (Modifier.isAbstract(modifiers)) ? "<span class='item-modifier' style='color:#004e00'>A</font>" : "";
+         span += (Modifier.isAbstract(modifiers)) ? "<span class='item-modifier' style='color:#004e00'>A</span>" : "";
          span += "</span>";
          return span;
       }
