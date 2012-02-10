@@ -221,6 +221,7 @@ public class JavaMethodCompletionProposal extends LazyJavaCompletionProposal
          buffer.append(replacement.substring(0, replacement.lastIndexOf('.') + 1));
       }
 
+      // TODO
       if (fProposal.getKind() != CompletionProposal.CONSTRUCTOR_INVOCATION)
          buffer.append(fProposal.getName());
 
@@ -235,8 +236,8 @@ public class JavaMethodCompletionProposal extends LazyJavaCompletionProposal
    {
       // IJavaProject project= fInvocationContext.getProject();
       // if (project != null)
-      // return new MethodProposalInfo(project, fProposal);
-      return super.computeProposalInfo();
+      return new MethodProposalInfo(fProposal);
+      // return super.computeProposalInfo();
    }
 
    /*

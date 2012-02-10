@@ -57,6 +57,15 @@ public class StyledString
    }
 
    /**
+    * @param cs
+    */
+   public StyledString(char[] cs)
+   {
+      this();
+      append(cs);
+   }
+
+   /**
     * @return
     */
    public String getString()

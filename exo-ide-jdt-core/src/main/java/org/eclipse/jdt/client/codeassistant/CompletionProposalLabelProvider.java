@@ -20,7 +20,6 @@ import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.dom.Modifier;
 import org.eclipse.jdt.client.internal.corext.util.SignatureUtil;
 import org.eclipse.jdt.client.runtime.Assert;
-import org.exoplatform.ide.editor.codeassistant.util.ModifierHelper;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**

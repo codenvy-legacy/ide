@@ -23,6 +23,7 @@ import com.google.gwt.core.client.RunAsyncCallback;
 
 import org.eclipse.jdt.client.codeassistant.AbstractJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.CompletionProposalCollector;
+import org.eclipse.jdt.client.codeassistant.FillArgumentNamesCompletionProposalCollector;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.ui.CodeAssitantForm;
 import org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler;
@@ -171,9 +172,10 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       ASTNode ast = parser.createAST(null);
       org.eclipse.jdt.client.core.dom.CompilationUnit unit = (org.eclipse.jdt.client.core.dom.CompilationUnit)ast;
       
-      CompletionProposalCollector collector = new CompletionProposalCollector(unit, false);
+      CompletionProposalCollector collector = new FillArgumentNamesCompletionProposalCollector(unit);
       collector
          .setAllowsRequiredProposals(CompletionProposal.CONSTRUCTOR_INVOCATION, CompletionProposal.TYPE_REF, true);
+      collector.setRequireExtendedContext(true);
       char[] fileContent = currentFile.getContent().toCharArray();
       CompletionEngine e =
          new CompletionEngine(new DummyNameEnvirement(currentFile.getProject().getId()), collector,
