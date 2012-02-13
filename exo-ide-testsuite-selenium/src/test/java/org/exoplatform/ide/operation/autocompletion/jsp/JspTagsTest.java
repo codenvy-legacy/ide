@@ -24,9 +24,12 @@ import static org.junit.Assert.fail;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -35,6 +38,8 @@ import org.junit.Test;
  */
 public class JspTagsTest extends BaseTest
 {
+
+   private static final String PROJECT = JspTagsTest.class.getSimpleName();
 
    private static final String FOLDER_NAME = JspTagsTest.class.getSimpleName();
 
@@ -48,10 +53,12 @@ public class JspTagsTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME + "/");
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME + "/");
          VirtualFileSystemUtils.put(
             "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/jsp/testJspTag.jsp",
-            MimeType.APPLICATION_JSP, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+            MimeType.APPLICATION_JSP, WS_URL + PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       }
       catch (Exception e)
       {
@@ -62,37 +69,50 @@ public class JspTagsTest extends BaseTest
    @Test
    public void testJspTag() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+     
+      
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
 
-      goToLine(10);
+      IDE.GOTOLINE.goToLine(10);
+
+     IDE.CODEASSISTANT.openForm();
       IDE.EDITOR.typeTextIntoEditor(0, "<jsp:");
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("jsp:attribute");
-      IDE.CODEASSISTANT.checkElementPresent("jsp:body");
-      IDE.CODEASSISTANT.checkElementPresent("jsp:element");
-      IDE.CODEASSISTANT.checkElementPresent("jsp:fallback");
-      IDE.CODEASSISTANT.checkElementPresent("jsp:forward");
-      IDE.CODEASSISTANT.checkElementPresent("jsp:getProperty");
-      IDE.CODEASSISTANT.checkElementPresent("jsp:include");
-      IDE.CODEASSISTANT.checkElementPresent("jsp:invoke");
-      IDE.CODEASSISTANT.checkElementPresent("jsp:output");
-      IDE.CODEASSISTANT.checkElementPresent("jsp:plugin");
-      IDE.CODEASSISTANT.checkElementPresent("jsp:text");
-      IDE.CODEASSISTANT.checkElementPresent("jsp:useBean");
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:attribute"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:body"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:element"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:fallback"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:forward"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:getProperty"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:include"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:invoke"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:output"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:plugin"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:text"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:useBean"));
 
+      
+      
       IDE.CODEASSISTANT.typeToInput("use");
-     //TODO waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
+      
+    
+     //TODO waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
       IDE.CODEASSISTANT.checkDocFormPresent();
-      //TODO assertEquals(docMessage, selenium().getText(CodeAssistant.Locators.JAVADOC_DIV));
+      //TODO assertEquals(docMessage, selenium().getText(CodeAssistant.Locators.JAVADOC_DIV)));
       IDE.CODEASSISTANT.insertSelectedItem();
       
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("<jsp:useBean id=\"\"></jsp:useBean>"));
+      IDE.EDITOR.getTextFromCodeEditor(0).contains("<jsp:useBean id=\"\"></jsp:useBean>");
       
-     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-     IDE.EDITOR.closeTabIgnoringChanges(0);
+     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0));
+    // IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    @AfterClass
