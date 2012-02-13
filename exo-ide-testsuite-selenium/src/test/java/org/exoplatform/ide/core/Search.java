@@ -20,9 +20,11 @@ package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertEquals;
 
+import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.Utils;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -321,15 +323,29 @@ public class Search extends AbstractTestModule
       return driver().findElements(By.cssSelector(Locators.SEARCH_RESULT_SELECTOR)).size();
    }
 
+  
    /**
-    * Generate item id in search tree 
-    * @param href of item 
+    * Generate item id 
+    * @param path item's name 
     * @return id of item
     */
-   public String getItemId(String href) throws Exception
+   public String getItemId(String path) throws Exception
    {
-      return TREE_PREFIX_ID + Utils.md5(href);
+      path = (path.startsWith(BaseTest.WS_URL)) ? path.replace(BaseTest.WS_URL, "") : path;
+      String itemId = (path.startsWith("/")) ? path : "/" + path;
+      itemId = Utils.md5(itemId);
+      return TREE_PREFIX_ID + itemId;
    }
+   
+//   /**
+//    * Generate item id in search tree 
+//    * @param href of item 
+//    * @return id of item
+//    */
+//   public String getItemId(String href) throws Exception
+//   {
+//      return TREE_PREFIX_ID + Utils.md5(href);
+//   }
 
    public void doubleClickOnFile(String fileURL) throws Exception
    {
