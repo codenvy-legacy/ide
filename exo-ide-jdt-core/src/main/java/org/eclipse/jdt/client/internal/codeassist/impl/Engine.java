@@ -12,7 +12,7 @@ package org.eclipse.jdt.client.internal.codeassist.impl;
 
 import java.util.Map;
 
-import org.eclipse.jdt.client.DummyNameEnvirement;
+import org.eclipse.jdt.client.DummyNameEnvironment;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.*;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
@@ -31,7 +31,7 @@ public abstract class Engine implements ITypeRequestor
 
    protected CompilationUnitScope unitScope;
 
-   public DummyNameEnvirement nameEnvironment;
+   public DummyNameEnvironment nameEnvironment;
 
    public AssistOptions options;
 

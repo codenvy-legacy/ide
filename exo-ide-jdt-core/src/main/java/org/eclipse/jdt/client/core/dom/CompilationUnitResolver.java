@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.dom;
 
-import org.eclipse.jdt.client.DummyNameEnvirement;
+import org.eclipse.jdt.client.DummyNameEnvironment;
 import org.eclipse.jdt.client.core.INameEnvironmentWithProgress;
 import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.client.core.compiler.CharOperation;

@@ -14,6 +14,7 @@ import org.eclipse.jdt.client.codeassistant.api.ContentAssistInvocationContext;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.core.CompletionContext;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.text.IDocument;
 
 /**
  * Describes the context of a content assist invocation in a Java editor.
@@ -40,69 +41,26 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
 
    private CompilationUnit compilationUnit;
 
-   // /**
-   // * Creates a new context.
-   // *
-   // * @param viewer the viewer used by the editor
-   // * @param offset the invocation offset
-   // * @param editor the editor that content assist is invoked in
-   // */
-   // public JavaContentAssistInvocationContext(ITextViewer viewer, int offset, IEditorPart editor) {
-   // super(viewer, offset);
-   // Assert.isNotNull(editor);
-   // fEditor= editor;
-   // }
-
    /**
     * Creates a new context.
     * 
     * @param unit the compilation unit in <code>document</code>
     */
-   public JavaContentAssistInvocationContext()
+   public JavaContentAssistInvocationContext(IDocument document, int offset)
    {
-      super();
+      super(document, offset);
       fCUComputed = true;
    }
 
    /**
     * @param compilationUnit
     */
-   public JavaContentAssistInvocationContext(CompilationUnit compilationUnit)
+   public JavaContentAssistInvocationContext(CompilationUnit compilationUnit, IDocument document, int offset)
    {
-      this();
+      this(document, offset);
       this.compilationUnit = compilationUnit;
    }
 
-   // /**
-   // * Returns the compilation unit that content assist is invoked in, <code>null</code> if there
-   // * is none.
-   // *
-   // * @return the compilation unit that content assist is invoked in, possibly <code>null</code>
-   // */
-   // public ICompilationUnit getCompilationUnit() {
-   // if (!fCUComputed) {
-   // fCUComputed= true;
-   // if (fCollector != null)
-   // fCU= fCollector.getCompilationUnit();
-   // else {
-   // IJavaElement je= EditorUtility.getEditorInputJavaElement(fEditor, false);
-   // if (je instanceof ICompilationUnit)
-   // fCU= (ICompilationUnit)je;
-   // }
-   // }
-   // return fCU;
-   // }
-
-   // /**
-   // * Returns the project of the compilation unit that content assist is invoked in,
-   // * <code>null</code> if none.
-   // *
-   // * @return the current java project, possibly <code>null</code>
-   // */
-   // public IJavaProject getProject() {
-   // ICompilationUnit unit= getCompilationUnit();
-   // return unit == null ? null : unit.getJavaProject();
-   // }
 
    // /**
    // * Returns the keyword proposals that are available in this context, possibly none.

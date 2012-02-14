@@ -16,7 +16,7 @@ import java.util.Set;
 
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.search.IJavaSearchConstants;
-import org.eclipse.jdt.client.DummyNameEnvirement;
+import org.eclipse.jdt.client.DummyNameEnvironment;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.ast.*;
 import org.eclipse.jdt.client.internal.compiler.env.AccessRestriction;
@@ -174,7 +174,7 @@ public class MissingTypesGuesser extends ASTVisitor
 
    private CompletionEngine.CompletionProblemFactory problemFactory;
 
-   private DummyNameEnvirement nameEnvironment;
+   private DummyNameEnvironment nameEnvironment;
 
    private HashMap substituedTypes;
 

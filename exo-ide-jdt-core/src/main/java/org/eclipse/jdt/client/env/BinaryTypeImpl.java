@@ -200,6 +200,16 @@ public class BinaryTypeImpl implements IBinaryType
    {
       return Signature.getSimpleName(jsObj.get("name").isString().stringValue()).toCharArray();
    }
+   
+   /**
+    * Answer the resolved name of the type in the source file format:
+    * <code>java.lang.String</code>
+    * @return
+    */
+   public char[] getFqn()
+   {
+      return jsObj.get("name").isString().stringValue().toCharArray();
+   }
 
    /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#getSuperclassName() */
    @Override
@@ -246,6 +256,15 @@ public class BinaryTypeImpl implements IBinaryType
    public char[] sourceFileName()
    {
       return null;
+   }
+   
+   /**
+    * JSON representation of this object
+    * @return JSON string
+    */
+   public String toJsonString()
+   {
+      return jsObj.toString();
    }
 
 }

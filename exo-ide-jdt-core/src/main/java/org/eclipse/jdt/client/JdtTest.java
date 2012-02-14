@@ -141,7 +141,7 @@ public class JdtTest
    {
       CARequestor requestor = new CARequestor();
       char[] content = d.testClass().getText().toCharArray();
-      CompletionEngine e = new CompletionEngine(new DummyNameEnvirement(null), requestor, JavaCore.getOptions(), null);
+      CompletionEngine e = new CompletionEngine(new DummyNameEnvironment(null), requestor, JavaCore.getOptions(), null);
       e.complete(new org.eclipse.jdt.client.compiler.batch.CompilationUnit(content, "TestClass", "UTF-8"),
          getCompletionPosition(content, 33, 39), 0);
       FlexTable table = new FlexTable();

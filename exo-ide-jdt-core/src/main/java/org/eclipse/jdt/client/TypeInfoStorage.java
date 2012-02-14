@@ -18,9 +18,21 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.gwt.json.client.JSONParser;
+
+import com.google.gwt.json.client.JSONObject;
+
 import com.google.gwt.storage.client.Storage;
 
+import org.eclipse.jdt.client.core.Signature;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
+ * Local storage for Java types info.
+ * Key is FQN of Java Type. Value JSON representation of {@link TypeInfo} class
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 24, 2012 4:31:23 PM evgen $
  */
@@ -56,5 +68,27 @@ public class TypeInfoStorage
    public boolean containsKey(String key)
    {
       return storage.getItem(key) != null;
+   }
+
+   public List<JSONObject> getTypesByNamePrefix(String prefix, boolean fqnPart)
+   {
+      List<JSONObject> res = new ArrayList<JSONObject>();
+      for (int i = 0; i < storage.getLength(); i++)
+      {
+         String key = storage.key(i);
+         if (fqnPart && !key.startsWith(prefix))
+         {
+            continue;
+         }
+         else
+         {
+            String simpleName = Signature.getSimpleName(key);
+            if (simpleName.equals(key) || !simpleName.startsWith(prefix))
+               continue;
+         }
+         res.add(JSONParser.parseLenient(storage.getItem(key)).isObject());
+      }
+      return res;
+
    }
 }

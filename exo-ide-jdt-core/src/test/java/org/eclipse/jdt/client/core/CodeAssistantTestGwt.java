@@ -18,7 +18,7 @@
  */
 package org.eclipse.jdt.client.core;
 
-import org.eclipse.jdt.client.DummyNameEnvirement;
+import org.eclipse.jdt.client.DummyNameEnvironment;
 import org.eclipse.jdt.client.compiler.batch.CompilationUnit;
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
@@ -37,7 +37,7 @@ public class CodeAssistantTestGwt extends ParserBaseTestGwt
    public void testCodeAssistantOnInnerInterface()
    {
       CARequestor requestor = new CARequestor();
-      CompletionEngine e = new CompletionEngine(new DummyNameEnvirement(null), requestor, JavaCore.getOptions(), null);
+      CompletionEngine e = new CompletionEngine(new DummyNameEnvironment(null), requestor, JavaCore.getOptions(), null);
 
       e.complete(new CompilationUnit(javaFiles, "CreateJavaClassPresenter", "UTF-8"),
          getCompletionPosition(javaFiles, 452, 19), 0);
@@ -47,7 +47,7 @@ public class CodeAssistantTestGwt extends ParserBaseTestGwt
    public void testLocalVariables()
    {
       CARequestor requestor = new CARequestor();
-      CompletionEngine e = new CompletionEngine(new DummyNameEnvirement(null), requestor, JavaCore.getOptions(), null);
+      CompletionEngine e = new CompletionEngine(new DummyNameEnvironment(null), requestor, JavaCore.getOptions(), null);
       e.complete(new CompilationUnit(javaFiles, "CreateJavaClassPresenter", "UTF-8"),
          getCompletionPosition(javaFiles, 481, 7), 0);
       for (CompletionProposal p : requestor.proposals)

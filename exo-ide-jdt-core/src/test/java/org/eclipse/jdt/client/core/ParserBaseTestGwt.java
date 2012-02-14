@@ -22,7 +22,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 
-import org.eclipse.jdt.client.DummyNameEnvirement;
+import org.eclipse.jdt.client.DummyNameEnvironment;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTParser;
@@ -65,7 +65,7 @@ public abstract class ParserBaseTestGwt extends BaseTestGwt
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
       parser.setUnitName("CreateJavaClassPresenter");
       parser.setSource(javaFiles);
-      parser.setNameEnvironment(new DummyNameEnvirement(null));
+      parser.setNameEnvironment(new DummyNameEnvironment(null));
       parser.setEnvironment(null, new String[]{"/my/path"}, new String[]{"UTF-8"}, true);
       ASTNode ast = parser.createAST(null);
       unit = (CompilationUnit)ast;

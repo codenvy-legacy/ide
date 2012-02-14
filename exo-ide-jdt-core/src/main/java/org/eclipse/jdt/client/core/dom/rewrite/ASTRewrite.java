@@ -10,15 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.dom.rewrite;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
-import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.core.dom.Block;
 import org.eclipse.jdt.client.core.dom.ChildListPropertyDescriptor;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
@@ -29,14 +23,19 @@ import org.eclipse.jdt.client.internal.core.dom.rewrite.LineInformation;
 import org.eclipse.jdt.client.internal.core.dom.rewrite.NodeInfoStore;
 import org.eclipse.jdt.client.internal.core.dom.rewrite.NodeRewriteEvent;
 import org.eclipse.jdt.client.internal.core.dom.rewrite.RewriteEventStore;
-import org.eclipse.jdt.client.internal.core.dom.rewrite.TrackedNodePosition;
 import org.eclipse.jdt.client.internal.core.dom.rewrite.RewriteEventStore.CopySourceInfo;
 import org.eclipse.jdt.client.internal.core.dom.rewrite.RewriteEventStore.PropertyLocation;
+import org.eclipse.jdt.client.internal.core.dom.rewrite.TrackedNodePosition;
 import org.eclipse.jdt.client.text.IDocument;
 import org.eclipse.jdt.client.text.TextUtilities;
 import org.eclipse.jdt.client.text.edits.MultiTextEdit;
 import org.eclipse.jdt.client.text.edits.TextEdit;
 import org.eclipse.jdt.client.text.edits.TextEditGroup;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Infrastructure for modifying code by describing changes to AST nodes. The AST rewriter collects descriptions of modifications

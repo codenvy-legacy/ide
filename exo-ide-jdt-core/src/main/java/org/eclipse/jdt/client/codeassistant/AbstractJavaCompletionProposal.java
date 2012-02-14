@@ -28,7 +28,6 @@ import org.eclipse.jdt.client.text.DefaultPositionUpdater;
 import org.eclipse.jdt.client.text.IDocument;
 import org.eclipse.jdt.client.text.IPositionUpdater;
 import org.eclipse.jdt.client.text.Position;
-
 /**
  * 
  * @since 3.2
@@ -218,6 +217,8 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
    {
       fInvocationContext = context;
       compilationUnit = context.getCompilationUnit();
+      //TODO set configurable
+      fToggleEating = true;
    }
 
    /*
@@ -289,7 +290,10 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
     */
    public void apply(IDocument document, char trigger, int offset)
    {
-
+      int newLength=  fInvocationContext.getInvocationOffset() - getReplacementOffset();
+      if ((insertCompletion() ^ fToggleEating) && newLength >= 0)
+         setReplacementLength(newLength);
+      
       if (isSupportingRequiredProposals())
       {
          CompletionProposal coreProposal = ((MemberProposalInfo)getProposalInfo()).fProposal;
@@ -365,7 +369,7 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
             replacement = buffer.toString();
             setReplacementString(replacement);
          }
-
+       
          // reference position just at the end of the document change.
          int referenceOffset = getReplacementOffset() + getReplacementLength();
          final ReferenceTracker referenceTracker = new ReferenceTracker();
@@ -399,10 +403,9 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
       JavaContentAssistInvocationContext invocationContext)
    {
       // if (PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_FILL_ARGUMENT_NAMES))
-      // return (LazyJavaCompletionProposal)new
-      // FillArgumentNamesCompletionProposalCollector(invocationContext).createJavaCompletionProposal(completionProposal);
+      return (LazyJavaCompletionProposal)new FillArgumentNamesCompletionProposalCollector(invocationContext).createJavaCompletionProposal(completionProposal);
       // else
-      return new LazyJavaTypeCompletionProposal(completionProposal, invocationContext);
+//      return new LazyJavaTypeCompletionProposal(completionProposal, invocationContext);
    }
 
    private boolean isSmartTrigger(char trigger)

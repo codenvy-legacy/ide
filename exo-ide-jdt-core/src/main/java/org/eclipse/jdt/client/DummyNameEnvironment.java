@@ -18,44 +18,45 @@
  */
 package org.eclipse.jdt.client;
 
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.Splittable;
-import com.google.web.bindery.autobean.shared.impl.StringQuoter;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.Splittable;
+import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
+import org.eclipse.jdt.client.core.Signature;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.env.BinaryTypeImpl;
 import org.eclipse.jdt.client.internal.codeassist.ISearchRequestor;
+import org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod;
 import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.client.internal.compiler.env.NameEnvironmentAnswer;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
 import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
-import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.TypesUnmarshaller;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 13, 2012 3:10:43 PM evgen $
  */
-public class DummyNameEnvirement implements INameEnvironment
+public class DummyNameEnvironment implements INameEnvironment
 {
 
    protected interface JsonClasses extends ClientBundle
@@ -120,8 +121,6 @@ public class DummyNameEnvirement implements INameEnvironment
       @Source("org/eclipse/jdt/client/void.json")
       TextResource voidClass();
    }
-
-   // private static Map<String, IBinaryType> typeStorage;
 
    private static Set<String> packages;
 
@@ -201,7 +200,7 @@ public class DummyNameEnvirement implements INameEnvironment
    /**
     * 
     */
-   public DummyNameEnvirement(String projectId)
+   public DummyNameEnvironment(String projectId)
    {
       this.projectId = projectId;
    }
@@ -334,25 +333,95 @@ public class DummyNameEnvirement implements INameEnvironment
    @Override
    public void cleanup()
    {
-      // TODO Auto-generated method stub
-
    }
 
    /**
-    * @param qualifiedName
-    * @param camelCaseMatch
-    * @param completionEngine
-    * @param monitor
+    * Must be used only by CompletionEngine. The progress monitor is used to be able to cancel completion operations
+    * 
+    * Find constructor declarations that are defined in the current environment and whose name starts with the given prefix. The
+    * prefix is a qualified name separated by periods or a simple name (ex. java.util.V or V).
+    * 
+    * The constructors found are passed to one of the following methods: ISearchRequestor.acceptConstructor(...)
     */
-   public void findConstructorDeclarations(char[] qualifiedName, boolean camelCaseMatch,
-      final ISearchRequestor requestor, IProgressMonitor monitor)
+   public void findConstructorDeclarations(char[] prefix, boolean camelCaseMatch, final ISearchRequestor requestor,
+      IProgressMonitor monitor)
    {
+      int lastDotIndex = CharOperation.lastIndexOf('.', prefix);
+      char[] qualification, simpleName;
+      if (lastDotIndex < 0)
+      {
+         qualification = null;
+         if (camelCaseMatch)
+         {
+            simpleName = prefix;
+         }
+         else
+         {
+            simpleName = CharOperation.toLowerCase(prefix);
+         }
+      }
+      else
+      {
+         qualification = CharOperation.subarray(prefix, 0, lastDotIndex);
+         if (camelCaseMatch)
+         {
+            simpleName = CharOperation.subarray(prefix, lastDotIndex + 1, prefix.length);
+         }
+         else
+         {
+            simpleName = CharOperation.toLowerCase(CharOperation.subarray(prefix, lastDotIndex + 1, prefix.length));
+         }
+      }
+      String url =
+         "/rest/private" + "/ide/code-assistant/java/classes-by-prefix" + "?prefix=" + new String(simpleName)
+            + "&projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
+      try
+      {
+         List<JSONObject> typesByNamePrefix =
+            TypeInfoStorage.get().getTypesByNamePrefix(new String(prefix), qualification != null);
+         for (JSONObject object : typesByNamePrefix)
+         {
+            addConstructor(new BinaryTypeImpl(object), requestor);
+         }
+         String typesJson = findTypes(url);
+         JSONArray typesFromServer = null;
+         if (typesJson != null)
+         {
+            typesFromServer = JSONParser.parseLenient(typesJson).isArray();
+            for (int i = 0; i < typesFromServer.size(); i++)
+            {
+               JSONObject object = typesFromServer.get(i).isObject();
+               BinaryTypeImpl type = new BinaryTypeImpl(object);
+               TypeInfoStorage.get().putType(new String(type.getSourceName()), type.toJsonString());
+               addConstructor(type, requestor);
+            }
+         }
 
+      }
+      catch (Exception e)
+      {
+         // TODO: handle exception
+         e.printStackTrace();
+      }
+   }
+
+   private void addConstructor(BinaryTypeImpl type, final ISearchRequestor requestor)
+   {
+      for (IBinaryMethod method : type.getMethods())
+      {
+         if (!method.isConstructor())
+            continue;
+         int parameterCount = Signature.getParameterCount(method.getMethodDescriptor());
+         char[][] parameterTypes = Signature.getParameterTypes(method.getMethodDescriptor());
+         requestor.acceptConstructor(method.getModifiers(), type.getSourceName(), parameterCount,
+            method.getMethodDescriptor(), parameterTypes, method.getArgumentNames(), type.getModifiers(),
+            Signature.getQualifier(type.getFqn()), 0, new String(type.getSourceName()), null);
+      }
    }
 
    /**
-    * @param qualifiedName
-    * @param completionEngine
+    * Find the packages that start with the given prefix. A valid prefix is a qualified name separated by periods (ex. java.util).
+    * The packages found are passed to: ISearchRequestor.acceptPackage(char[][] packageName)
     */
    public void findPackages(char[] qualifiedName, ISearchRequestor requestor)
    {
@@ -360,11 +429,11 @@ public class DummyNameEnvirement implements INameEnvironment
    }
 
    private native String findTypes(String url)/*-{
-                                              var xmlhttp = new XMLHttpRequest();
-                                              xmlhttp.open("GET", url, false);
-                                              xmlhttp.send();
-                                              return xmlhttp.responseText;
-                                              }-*/;
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("GET", url, false);
+		xmlhttp.send();
+		return xmlhttp.responseText;
+   }-*/;
 
    /**
     * @param qualifiedName
@@ -401,30 +470,6 @@ public class DummyNameEnvirement implements INameEnvironment
       {
          e.printStackTrace();
       }
-
-      //
-      // JavaCodeAssistantService.get().findClassesByPrefix(new String(qualifiedName), projectId,
-      // new AsyncRequestCallback<TypesList>(unmarshaller)
-      // {
-      //
-      // @Override
-      // protected void onSuccess(TypesList result)
-      // {
-      // for (ShortTypeInfo info : result.getTypes())
-      // {
-      //
-      // requestor.acceptType(info.getName().substring(0, info.getName().lastIndexOf(".")).toCharArray(), info
-      // .getName().substring(info.getName().lastIndexOf(".")).toCharArray(), null, info.getModifiers(),
-      // null);
-      // }
-      // }
-      //
-      // @Override
-      // protected void onFailure(Throwable exception)
-      // {
-      // // ignore
-      // }
-      // });
    }
 
    /**

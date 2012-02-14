@@ -14,6 +14,7 @@ import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.text.IDocument;
 
 /**
  * Completion proposal collector which creates proposals with filled in argument names.
@@ -26,15 +27,20 @@ public final class FillArgumentNamesCompletionProposalCollector extends Completi
 
    private final boolean fIsGuessArguments;
 
-   public FillArgumentNamesCompletionProposalCollector(CompilationUnit unit)
+   public FillArgumentNamesCompletionProposalCollector(CompilationUnit unit, IDocument document, int invocationOffset)
    {
-      super(unit, false);
-      // setInvocationContext(context);
-      // IPreferenceStore preferenceStore= JavaPlugin.getDefault().getPreferenceStore();
+      super(unit, false, document, invocationOffset);
       fIsGuessArguments = true;// preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_GUESS_METHOD_ARGUMENTS);
-      // if (preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_FILL_ARGUMENT_NAMES)) {
       setRequireExtendedContext(true);
-      // }
+   }
+
+   /**
+    * @param invocationContext
+    */
+   public FillArgumentNamesCompletionProposalCollector(JavaContentAssistInvocationContext invocationContext)
+   {
+      this(invocationContext.getCompilationUnit(), invocationContext.getDocument(), invocationContext.getInvocationOffset());
+      setInvocationContext(invocationContext);
    }
 
    /*
@@ -62,8 +68,7 @@ public final class FillArgumentNamesCompletionProposalCollector extends Completi
       String completion = String.valueOf(methodProposal.getCompletion());
       // super class' behavior if this is not a normal completion or has no
       // parameters
-      if ((completion.length() == 0) || ((completion.length() == 1) && completion.charAt(0) == ')')
-         || Signature.getParameterCount(methodProposal.getSignature()) == 0 || getContext().isInJavadoc())
+      if ((completion.length() == 0) || ((completion.length() == 1) && completion.charAt(0) == ')') || Signature.getParameterCount(methodProposal.getSignature()) == 0 || getContext().isInJavadoc())
          return super.createJavaCompletionProposal(methodProposal);
 
       LazyJavaCompletionProposal proposal = null;

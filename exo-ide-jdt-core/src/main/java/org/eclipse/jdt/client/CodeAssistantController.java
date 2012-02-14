@@ -62,12 +62,12 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
 
    /**
     * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
-    * @version $Id:  2:09:49 PM 34360 2009-07-22 23:58:59Z evgen $
-    *
+    * @version $Id: 2:09:49 PM 34360 2009-07-22 23:58:59Z evgen $
+    * 
     */
    private static final class ProgressMonitor implements IProgressMonitor
    {
-      private final static int TIMEOUT = 30000; // ms
+      private final static int TIMEOUT = 60000; // ms
 
       private long endTime;
 
@@ -78,7 +78,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
 
       public boolean isCanceled()
       {
-         return endTime <= System.currentTimeMillis();
+         return false;// endTime <= System.currentTimeMillis();
       }
 
       @Override
@@ -123,7 +123,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
    private String beforeToken;
 
    private int currentLineNumber;
-   
+
    /**
     * 
     */
@@ -142,13 +142,13 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       IDE.fireEvent(new CancelParseEvent());
       GWT.runAsync(new RunAsyncCallback()
       {
-         
+
          @Override
          public void onSuccess()
          {
             codecomplete();
          }
-         
+
          @Override
          public void onFailure(Throwable reason)
          {
@@ -164,21 +164,25 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
    private void codecomplete()
    {
       ASTParser parser = ASTParser.newParser(AST.JLS3);
-      parser.setSource(currentEditor.getText().toCharArray());
+      IDocument document = new Document(currentEditor.getText());
+      parser.setSource(document.get().toCharArray());
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
       parser.setUnitName(currentFile.getName().substring(0, currentFile.getName().lastIndexOf('.')));
-      parser.setNameEnvironment(new DummyNameEnvirement(currentFile.getProject().getId()));
+      parser.setNameEnvironment(new DummyNameEnvironment(currentFile.getProject().getId()));
       parser.setResolveBindings(true);
       ASTNode ast = parser.createAST(null);
       org.eclipse.jdt.client.core.dom.CompilationUnit unit = (org.eclipse.jdt.client.core.dom.CompilationUnit)ast;
-      
-      CompletionProposalCollector collector = new FillArgumentNamesCompletionProposalCollector(unit);
+
+      int completionPosition =
+         getCompletionPosition(currentFile.getContent(), currentEditor.getCursorRow(), currentEditor.getCursorCol());
+      CompletionProposalCollector collector =
+         new FillArgumentNamesCompletionProposalCollector(unit, document, completionPosition);
       collector
          .setAllowsRequiredProposals(CompletionProposal.CONSTRUCTOR_INVOCATION, CompletionProposal.TYPE_REF, true);
       collector.setRequireExtendedContext(true);
-      char[] fileContent = currentFile.getContent().toCharArray();
+      char[] fileContent = document.get().toCharArray();
       CompletionEngine e =
-         new CompletionEngine(new DummyNameEnvirement(currentFile.getProject().getId()), collector,
+         new CompletionEngine(new DummyNameEnvironment(currentFile.getProject().getId()), collector,
             JavaCore.getOptions(), new ProgressMonitor());
 
       try
@@ -186,8 +190,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
          e.complete(
             new CompilationUnit(fileContent,
                currentFile.getName().substring(0, currentFile.getName().lastIndexOf('.')), "UTF-8"),
-            getCompletionPosition(currentFile.getContent(), currentEditor.getCursorRow(), currentEditor.getCursorCol()),
-            0);
+            completionPosition, 0);
 
          currentLineNumber = currentEditor.getCursorRow();
          String lineContent = currentEditor.getLineContent(currentLineNumber);
@@ -196,7 +199,6 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
 
          int posX = currentEditor.getCursorOffsetX() - tokenToComplete.length() * 8 + 8;
          int posY = currentEditor.getCursorOffsetY() + 4;
-         // Collections.sort(requestor.proposals, comparator);
          IJavaCompletionProposal[] javaCompletionProposals = collector.getJavaCompletionProposals();
          Arrays.sort(javaCompletionProposals, comparator);
          new CodeAssitantForm(posX, posY, tokenToComplete, javaCompletionProposals, this);
@@ -209,7 +211,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
          IDE.fireEvent(new OutputEvent(st, Type.ERROR));
       }
    }
-   
+
    /**
     * @param line
     */

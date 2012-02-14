@@ -23,9 +23,9 @@ import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.eclipse.jdt.client.core.formatter.CodeFormatter;
-import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.jdt.client.runtime.Assert;
+import org.eclipse.jdt.client.text.IDocument;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -79,16 +79,12 @@ public class CompletionProposalCollector extends CompletionRequestor
 
    private final CompletionProposalLabelProvider fLabelProvider = new CompletionProposalLabelProvider();
 
-   // private final ImageDescriptorRegistry fRegistry= JavaPlugin.getImageDescriptorRegistry();
-
    private final List<IJavaCompletionProposal> fJavaProposals = new ArrayList<IJavaCompletionProposal>();
 
    private final List<IJavaCompletionProposal> fKeywords = new ArrayList<IJavaCompletionProposal>();
 
    private final Set<String> fSuggestedMethodNames = new HashSet<String>();
 
-   // private final ICompilationUnit fCompilationUnit;
-   // private final IJavaProject fJavaProject;
    private int fUserReplacementLength;
 
    private CompletionContext fContext;
@@ -102,6 +98,8 @@ public class CompletionProposalCollector extends CompletionRequestor
 
    private CompilationUnit fCompilationUnit;
 
+   private int invocationOffset;
+
    /**
     * The UI invocation context or <code>null</code>.
     * 
@@ -109,25 +107,14 @@ public class CompletionProposalCollector extends CompletionRequestor
     */
    private JavaContentAssistInvocationContext fInvocationContext;
 
-   /**
-    * Creates a new instance ready to collect proposals. Note that proposals for anonymous types and method declarations are not
-    * created when using this constructor, as those need to know the compilation unit that they are created on. Use
-    * {@link CompletionProposalCollector#CompletionProposalCollector(ICompilationUnit)} instead to get all proposals.
-    * <p>
-    * If the passed Java project is <code>null</code>, no javadoc will be available as
-    * {@link org.eclipse.jface.text.contentassist.ICompletionProposal#getAdditionalProposalInfo() additional info} on the created
-    * (e.g. method and type) proposals.
-    * </p>
-    * 
-    */
-   public CompletionProposalCollector()
-   {
-      this(null, false);
-   }
+   private final IDocument document;
 
-   public CompletionProposalCollector(CompilationUnit compilationUnit, boolean ignoreAll)
+   public CompletionProposalCollector(CompilationUnit compilationUnit, boolean ignoreAll, IDocument document,
+      int invocationOffset)
    {
       super(ignoreAll);
+      this.document = document;
+      this.invocationOffset = invocationOffset;
       fCompilationUnit = compilationUnit;
 
       fUserReplacementLength = -1;
@@ -137,23 +124,7 @@ public class CompletionProposalCollector extends CompletionRequestor
       }
       getInvocationContext();
    }
-
-   // /**
-   // * Creates a new instance ready to collect proposals. If the passed <code>ICompilationUnit</code> is not contained in an
-   // * {@link IJavaProject}, no javadoc will be available as
-   // * {@link org.eclipse.jface.text.contentassist.ICompletionProposal#getAdditionalProposalInfo() additional info} on the
-   // created
-   // * proposals.
-   // *
-   // * @param cu the compilation unit that the result collector will operate on
-   // * @param ignoreAll <code>true</code> to ignore all kinds of completion proposals
-   // * @since 3.4
-   // */
-   // public CompletionProposalCollector(ICompilationUnit cu, boolean ignoreAll)
-   // {
-   // this(cu.getJavaProject(), cu, ignoreAll);
-   // }
-
+   
    /*
     * (non-Javadoc)
     * @see org.eclipse.jdt.core.CompletionRequestor#setIgnored(int, boolean)
@@ -195,7 +166,11 @@ public class CompletionProposalCollector extends CompletionRequestor
    protected final JavaContentAssistInvocationContext getInvocationContext()
    {
       if (fInvocationContext == null)
-         setInvocationContext(new JavaContentAssistInvocationContext(fCompilationUnit));
+      {
+         setInvocationContext(new JavaContentAssistInvocationContext(fCompilationUnit, document, invocationOffset));
+         fInvocationContext.setCollector(this);
+      }
+       
       return fInvocationContext;
    }
 
@@ -329,7 +304,6 @@ public class CompletionProposalCollector extends CompletionRequestor
    public final IJavaCompletionProposal[] getJavaCompletionProposals()
    {
       return fJavaProposals.toArray(new IJavaCompletionProposal[fJavaProposals.size()]);
-      // return Collections.toArray(fJavaProposals, IJavaCompletionProposal.class);
    }
 
    /**
@@ -340,7 +314,6 @@ public class CompletionProposalCollector extends CompletionRequestor
    public final IJavaCompletionProposal[] getKeywordCompletionProposals()
    {
       return fKeywords.toArray(new IJavaCompletionProposal[fKeywords.size()]);
-      // return CollectionsUtil.toArray(fKeywords, IJavaCompletionProposal.class);
    }
 
    /**
@@ -698,7 +671,6 @@ public class CompletionProposalCollector extends CompletionRequestor
       // return null;
       //
       // IType type = (IType)element;
-
       String completion = String.valueOf(proposal.getCompletion());
       int start = proposal.getReplaceStart();
       int length = getLength(proposal);
