@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.codeassist.impl;
 
-import java.util.Map;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
+
+import java.util.Map;
 
 public class AssistOptions
 {

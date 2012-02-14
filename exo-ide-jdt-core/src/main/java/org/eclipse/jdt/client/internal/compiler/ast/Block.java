@@ -11,9 +11,10 @@
 package org.eclipse.jdt.client.internal.compiler.ast;
 
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
-import org.eclipse.jdt.client.internal.compiler.codegen.*;
-import org.eclipse.jdt.client.internal.compiler.flow.*;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.codegen.BranchLabel;
+import org.eclipse.jdt.client.internal.compiler.flow.FlowContext;
+import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 
 public class Block extends Statement
 {

@@ -12,11 +12,11 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.formatter;
 
-import java.util.Map;
-
 import org.eclipse.jdt.client.core.JavaCore;
-import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterOptions;
+import org.eclipse.jdt.client.core.ToolFactory;
 import org.eclipse.jdt.client.core.formatter.align.Alignment;
+
+import java.util.Map;
 
 /**
  * Constants used to set up the options of the code formatter.

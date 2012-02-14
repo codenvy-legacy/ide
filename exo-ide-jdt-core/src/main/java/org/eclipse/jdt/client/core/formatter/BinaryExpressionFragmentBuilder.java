@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.formatter;
 
-import java.util.ArrayList;
-
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.ast.AND_AND_Expression;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.AllocationExpression;
 import org.eclipse.jdt.client.internal.compiler.ast.ArrayAllocationExpression;
 import org.eclipse.jdt.client.internal.compiler.ast.ArrayInitializer;
@@ -21,7 +20,6 @@ import org.eclipse.jdt.client.internal.compiler.ast.ArrayQualifiedTypeReference;
 import org.eclipse.jdt.client.internal.compiler.ast.ArrayReference;
 import org.eclipse.jdt.client.internal.compiler.ast.ArrayTypeReference;
 import org.eclipse.jdt.client.internal.compiler.ast.Assignment;
-import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.BinaryExpression;
 import org.eclipse.jdt.client.internal.compiler.ast.CastExpression;
 import org.eclipse.jdt.client.internal.compiler.ast.CharLiteral;
@@ -40,7 +38,6 @@ import org.eclipse.jdt.client.internal.compiler.ast.InstanceOfExpression;
 import org.eclipse.jdt.client.internal.compiler.ast.IntLiteral;
 import org.eclipse.jdt.client.internal.compiler.ast.LongLiteral;
 import org.eclipse.jdt.client.internal.compiler.ast.MessageSend;
-import org.eclipse.jdt.client.internal.compiler.ast.StringLiteralConcatenation;
 import org.eclipse.jdt.client.internal.compiler.ast.NullLiteral;
 import org.eclipse.jdt.client.internal.compiler.ast.OR_OR_Expression;
 import org.eclipse.jdt.client.internal.compiler.ast.OperatorIds;
@@ -52,6 +49,7 @@ import org.eclipse.jdt.client.internal.compiler.ast.QualifiedSuperReference;
 import org.eclipse.jdt.client.internal.compiler.ast.QualifiedThisReference;
 import org.eclipse.jdt.client.internal.compiler.ast.SingleNameReference;
 import org.eclipse.jdt.client.internal.compiler.ast.StringLiteral;
+import org.eclipse.jdt.client.internal.compiler.ast.StringLiteralConcatenation;
 import org.eclipse.jdt.client.internal.compiler.ast.SuperReference;
 import org.eclipse.jdt.client.internal.compiler.ast.ThisReference;
 import org.eclipse.jdt.client.internal.compiler.ast.TrueLiteral;
@@ -59,6 +57,8 @@ import org.eclipse.jdt.client.internal.compiler.ast.UnaryExpression;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
+
+import java.util.ArrayList;
 
 class BinaryExpressionFragmentBuilder extends ASTVisitor
 {

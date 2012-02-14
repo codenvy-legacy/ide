@@ -10,7 +10,13 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.client.internal.compiler.ast.*;
+import org.eclipse.jdt.client.internal.compiler.ast.Annotation;
+import org.eclipse.jdt.client.internal.compiler.ast.ArrayInitializer;
+import org.eclipse.jdt.client.internal.compiler.ast.ClassLiteralAccess;
+import org.eclipse.jdt.client.internal.compiler.ast.Expression;
+import org.eclipse.jdt.client.internal.compiler.ast.FieldReference;
+import org.eclipse.jdt.client.internal.compiler.ast.NameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.Reference;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
 

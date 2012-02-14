@@ -18,32 +18,14 @@
  */
 package org.eclipse.jdt.client;
 
-import com.google.gwt.user.client.ui.ScrollPanel;
-
-import com.google.gwt.dom.client.Style.Unit;
-
-import com.google.gwt.user.client.ui.DockLayoutPanel;
-
-import com.google.gwt.user.cellview.client.CellTree;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-
-import com.google.gwt.user.client.ui.Button;
-
-import com.google.gwt.user.client.ui.FlexTable;
-
-import com.google.gwt.user.client.ui.Label;
-
-import com.google.gwt.user.client.ui.RootLayoutPanel;
-
 import com.google.gwt.core.client.GWT;
-
-import com.google.gwt.resources.client.TextResource;
-
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.TextResource;
+import com.google.gwt.user.cellview.client.CellTree;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ScrollPanel;
 
 import org.eclipse.jdt.client.astview.ASTTreeViewModel;
 import org.eclipse.jdt.client.core.CompletionProposal;
@@ -54,14 +36,11 @@ import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
-import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
 import org.eclipse.jdt.client.internal.codeassist.InternalCompletionProposal;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.google.gwt.core.client.EntryPoint;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

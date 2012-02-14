@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.dom.rewrite;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.Block;
 import org.eclipse.jdt.client.core.dom.ChildListPropertyDescriptor;
@@ -25,6 +22,9 @@ import org.eclipse.jdt.client.internal.core.dom.rewrite.RewriteEvent;
 import org.eclipse.jdt.client.internal.core.dom.rewrite.RewriteEventStore;
 import org.eclipse.jdt.client.internal.core.dom.rewrite.RewriteEventStore.CopySourceInfo;
 import org.eclipse.jdt.client.text.edits.TextEditGroup;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * For describing manipulations to a child list property of an AST node.

@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import java.util.List;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
 import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
+
+import java.util.List;
 
 /** A parameterized type encapsulates a type with type arguments, */
 public class ParameterizedTypeBinding extends ReferenceBinding implements Substitution

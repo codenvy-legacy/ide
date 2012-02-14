@@ -11,13 +11,13 @@
 
 package org.eclipse.jdt.client.core.dom;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
 import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Character literal nodes.

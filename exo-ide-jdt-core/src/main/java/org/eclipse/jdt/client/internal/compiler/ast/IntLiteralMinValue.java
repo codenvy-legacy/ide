@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 
-import org.eclipse.jdt.client.internal.compiler.impl.*;
+import org.eclipse.jdt.client.internal.compiler.impl.IntConstant;
 
 public class IntLiteralMinValue extends IntLiteral
 {

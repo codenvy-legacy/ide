@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.codeassist;
 
-import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnJavadoc;
-import org.eclipse.jdt.client.internal.codeassist.complete.CompletionParser;
 import org.eclipse.jdt.client.core.CompletionContext;
 import org.eclipse.jdt.client.core.Signature;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionOnJavadoc;
+import org.eclipse.jdt.client.internal.codeassist.complete.CompletionParser;
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration;
 import org.eclipse.jdt.client.internal.compiler.lookup.LookupEnvironment;

@@ -13,7 +13,10 @@ package org.eclipse.jdt.client.internal.compiler.ast;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
 public class JavadocArgumentExpression extends Expression
 {

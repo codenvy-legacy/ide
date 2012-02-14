@@ -12,10 +12,14 @@
 package org.eclipse.jdt.client.internal.compiler.ast;
 
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
-import org.eclipse.jdt.client.internal.compiler.codegen.*;
-import org.eclipse.jdt.client.internal.compiler.flow.*;
-import org.eclipse.jdt.client.internal.compiler.impl.*;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.flow.FlowContext;
+import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
+import org.eclipse.jdt.client.internal.compiler.impl.Constant;
+import org.eclipse.jdt.client.internal.compiler.lookup.ArrayBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 
 public class ArrayAllocationExpression extends Expression
 {
@@ -49,51 +53,6 @@ public class ArrayAllocationExpression extends Expression
       return flowInfo;
    }
 
-   // /**
-   // * Code generation for a array allocation expression
-   // */
-   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   // {
-   //
-   // int pc = codeStream.position;
-   //
-   // if (this.initializer != null)
-   // {
-   // this.initializer.generateCode(currentScope, codeStream, valueRequired);
-   // return;
-   // }
-   //
-   // int explicitDimCount = 0;
-   // for (int i = 0, max = this.dimensions.length; i < max; i++)
-   // {
-   // Expression dimExpression;
-   // if ((dimExpression = this.dimensions[i]) == null)
-   // break; // implicit dim, no further explict after this point
-   // dimExpression.generateCode(currentScope, codeStream, true);
-   // explicitDimCount++;
-   // }
-   //
-   // // array allocation
-   // if (explicitDimCount == 1)
-   // {
-   // // Mono-dimensional array
-   // codeStream.newArray((ArrayBinding)this.resolvedType);
-   // }
-   // else
-   // {
-   // // Multi-dimensional array
-   // codeStream.multianewarray(this.resolvedType, explicitDimCount);
-   // }
-   // if (valueRequired)
-   // {
-   // codeStream.generateImplicitConversion(this.implicitConversion);
-   // }
-   // else
-   // {
-   // codeStream.pop();
-   // }
-   // codeStream.recordPositionsFrom(pc, this.sourceStart);
-   // }
 
    public StringBuffer printExpression(int indent, StringBuffer output)
    {

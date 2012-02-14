@@ -11,7 +11,6 @@
 package org.eclipse.jdt.client.core;
 
 import org.eclipse.jdt.client.core.compiler.CharOperation;
-
 import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
 import org.eclipse.jdt.client.internal.core.INamingRequestor;
 import org.eclipse.jdt.client.internal.core.InternalNamingConventions;

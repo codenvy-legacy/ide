@@ -12,6 +12,7 @@ package org.eclipse.jdt.client.text.edits;
 
 import org.eclipse.jdt.client.text.BadLocationException;
 import org.eclipse.jdt.client.text.BadPositionCategoryException;
+import org.eclipse.jdt.client.text.FindReplaceDocumentAdapter;
 import org.eclipse.jdt.client.text.IDocument;
 import org.eclipse.jdt.client.text.IDocumentListener;
 import org.eclipse.jdt.client.text.IPositionUpdater;

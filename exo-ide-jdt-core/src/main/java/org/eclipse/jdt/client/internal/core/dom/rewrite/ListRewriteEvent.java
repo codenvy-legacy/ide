@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.core.dom.rewrite;
 
+import org.eclipse.jdt.client.core.dom.ASTNode;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.eclipse.jdt.client.core.dom.ASTNode;
 
 /**
  *

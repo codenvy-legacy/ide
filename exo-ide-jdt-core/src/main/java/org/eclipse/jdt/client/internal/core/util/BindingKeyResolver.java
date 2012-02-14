@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.core.util;
 
-import java.util.ArrayList;
-
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
@@ -49,6 +47,8 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeVariableBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.WildcardBinding;
 import org.eclipse.jdt.client.internal.compiler.util.HashtableOfObject;
+
+import java.util.ArrayList;
 
 public class BindingKeyResolver extends BindingKeyParser
 {

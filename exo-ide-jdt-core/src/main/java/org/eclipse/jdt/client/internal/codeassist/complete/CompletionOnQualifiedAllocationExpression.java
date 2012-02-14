@@ -34,8 +34,16 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
  * before the cursor.
  */
 
-import org.eclipse.jdt.client.internal.compiler.ast.*;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.AllocationExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.QualifiedAllocationExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.SingleTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
+import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ParameterizedTypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
 public class CompletionOnQualifiedAllocationExpression extends QualifiedAllocationExpression
 {

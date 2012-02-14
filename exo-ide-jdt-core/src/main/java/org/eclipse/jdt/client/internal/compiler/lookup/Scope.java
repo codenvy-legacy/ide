@@ -10,10 +10,16 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import java.util.*;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
-import org.eclipse.jdt.client.internal.compiler.ast.*;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.CaseStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.ImportReference;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeParameter;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.client.internal.compiler.impl.ReferenceContext;
@@ -23,6 +29,14 @@ import org.eclipse.jdt.client.internal.compiler.util.HashtableOfObject;
 import org.eclipse.jdt.client.internal.compiler.util.ObjectVector;
 import org.eclipse.jdt.client.internal.compiler.util.SimpleLookupTable;
 import org.eclipse.jdt.client.internal.compiler.util.SimpleSet;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class Scope
 {

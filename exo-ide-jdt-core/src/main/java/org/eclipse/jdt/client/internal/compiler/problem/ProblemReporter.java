@@ -14,9 +14,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.problem;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.IProblem;
@@ -108,6 +105,9 @@ import org.eclipse.jdt.client.internal.compiler.parser.RecoveryScanner;
 import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 import org.eclipse.jdt.client.internal.compiler.util.Messages;
+
+import java.util.Iterator;
+import java.util.List;
 
 public class ProblemReporter extends ProblemHandler
 {

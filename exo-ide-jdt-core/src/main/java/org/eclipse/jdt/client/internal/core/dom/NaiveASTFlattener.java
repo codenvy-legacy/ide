@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.core.dom;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTVisitor;
@@ -107,6 +104,9 @@ import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.client.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.client.core.dom.WhileStatement;
 import org.eclipse.jdt.client.core.dom.WildcardType;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Internal AST visitor for serializing an AST in a quick and dirty fashion. For various reasons the resulting string is not

@@ -11,23 +11,26 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration;
 import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.client.internal.compiler.env.*;
+import org.eclipse.jdt.client.internal.compiler.env.AccessRestriction;
+import org.eclipse.jdt.client.internal.compiler.env.IBinaryType;
+import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
+import org.eclipse.jdt.client.internal.compiler.env.NameEnvironmentAnswer;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.client.internal.compiler.impl.ITypeRequestor;
 import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilation;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
 import org.eclipse.jdt.client.internal.compiler.util.HashtableOfPackage;
 import org.eclipse.jdt.client.internal.compiler.util.SimpleLookupTable;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class LookupEnvironment implements ProblemReasons, TypeConstants
 {

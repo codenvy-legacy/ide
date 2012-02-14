@@ -16,10 +16,28 @@ package org.eclipse.jdt.client.internal.compiler.ast;
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.client.internal.compiler.codegen.*;
-import org.eclipse.jdt.client.internal.compiler.flow.*;
+import org.eclipse.jdt.client.internal.compiler.flow.FlowContext;
+import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
+import org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite;
+import org.eclipse.jdt.client.internal.compiler.lookup.LocalTypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.NestedTypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ParameterizedGenericMethodBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ParameterizedTypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ProblemMethodBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.RawTypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.SourceTypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.SyntheticArgumentBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeConstants;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemSeverities;
 
@@ -114,79 +132,6 @@ public class AllocationExpression extends Expression implements InvocationSite
       return null;
    }
 
-   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   // {
-   // if (!valueRequired)
-   // currentScope.problemReporter().unusedObjectAllocation(this);
-   //
-   // int pc = codeStream.position;
-   // MethodBinding codegenBinding = this.binding.original();
-   // ReferenceBinding allocatedType = codegenBinding.declaringClass;
-   //
-   // codeStream.new_(allocatedType);
-   // boolean isUnboxing = (this.implicitConversion & TypeIds.UNBOXING) != 0;
-   // if (valueRequired || isUnboxing)
-   // {
-   // codeStream.dup();
-   // }
-   // // better highlight for allocation: display the type individually
-   // if (this.type != null)
-   // { // null for enum constant body
-   // codeStream.recordPositionsFrom(pc, this.type.sourceStart);
-   // }
-   // else
-   // {
-   // // push enum constant name and ordinal
-   // codeStream.ldc(String.valueOf(this.enumConstant.name));
-   // codeStream.generateInlinedValue(this.enumConstant.binding.id);
-   // }
-   //
-   // // handling innerclass instance allocation - enclosing instance arguments
-   // if (allocatedType.isNestedType())
-   // {
-   // codeStream.generateSyntheticEnclosingInstanceValues(currentScope, allocatedType, enclosingInstance(), this);
-   // }
-   // // generate the arguments for constructor
-   // generateArguments(this.binding, this.arguments, currentScope, codeStream);
-   // // handling innerclass instance allocation - outer local arguments
-   // if (allocatedType.isNestedType())
-   // {
-   // codeStream.generateSyntheticOuterArgumentValues(currentScope, allocatedType, this);
-   // }
-   // // invoke constructor
-   // if (this.syntheticAccessor == null)
-   // {
-   // codeStream.invoke(Opcodes.OPC_invokespecial, codegenBinding, null /* default declaringClass */);
-   // }
-   // else
-   // {
-   // // synthetic accessor got some extra arguments appended to its signature, which need values
-   // for (int i = 0, max = this.syntheticAccessor.parameters.length - codegenBinding.parameters.length; i < max; i++)
-   // {
-   // codeStream.aconst_null();
-   // }
-   // codeStream.invoke(Opcodes.OPC_invokespecial, this.syntheticAccessor, null /* default declaringClass */);
-   // }
-   // if (valueRequired)
-   // {
-   // codeStream.generateImplicitConversion(this.implicitConversion);
-   // }
-   // else if (isUnboxing)
-   // {
-   // // conversion only generated if unboxing
-   // codeStream.generateImplicitConversion(this.implicitConversion);
-   // switch (postConversionType(currentScope).id)
-   // {
-   // case T_long :
-   // case T_double :
-   // codeStream.pop2();
-   // break;
-   // default :
-   // codeStream.pop();
-   // }
-   // }
-   // codeStream.recordPositionsFrom(pc, this.sourceStart);
-   // }
 
    /** @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments() */
    public TypeBinding[] genericTypeArguments()

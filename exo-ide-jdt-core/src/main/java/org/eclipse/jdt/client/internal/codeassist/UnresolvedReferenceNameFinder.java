@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.codeassist;
 
+import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.codeassist.complete.CompletionParser;
 import org.eclipse.jdt.client.internal.codeassist.complete.CompletionScanner;
-import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;

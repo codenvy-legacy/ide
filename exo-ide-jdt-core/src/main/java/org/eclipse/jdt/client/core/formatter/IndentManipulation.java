@@ -10,19 +10,17 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.formatter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
-
-import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
 import org.eclipse.jdt.client.text.BadLocationException;
 import org.eclipse.jdt.client.text.DefaultLineTracker;
 import org.eclipse.jdt.client.text.ILineTracker;
 import org.eclipse.jdt.client.text.IRegion;
-
 import org.eclipse.jdt.client.text.edits.ReplaceEdit;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Helper class to provide String manipulation functions dealing with indentations.

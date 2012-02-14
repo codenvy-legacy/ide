@@ -12,7 +12,7 @@ package org.eclipse.jdt.client.internal.compiler.ast;
 
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.lookup.CompilationUnitScope;
 
 public class ImportReference extends ASTNode
 {

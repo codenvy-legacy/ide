@@ -10,19 +10,12 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core;
 
+import org.eclipse.jdt.client.core.formatter.CodeFormatter;
+import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatter;
+import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.eclipse.jdt.client.core.compiler.IScanner;
-import org.eclipse.jdt.client.core.compiler.ITerminalSymbols;
-import org.eclipse.jdt.client.core.formatter.CodeFormatter;
-import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
-import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
-import org.eclipse.jdt.client.internal.compiler.util.SuffixConstants;
-import org.eclipse.jdt.client.internal.compiler.util.Util;
-//import org.eclipse.jdt.client.internal.core.util.PublicScanner;
-import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatter;
 
 /**
  * Factory for creating various compiler tools, such as scanners, parsers and compilers.

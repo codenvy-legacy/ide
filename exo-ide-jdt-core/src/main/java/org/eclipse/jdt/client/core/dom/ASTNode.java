@@ -11,6 +11,8 @@
 
 package org.eclipse.jdt.client.core.dom;
 
+import org.eclipse.jdt.client.internal.core.dom.NaiveASTFlattener;
+
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,8 +20,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.eclipse.jdt.client.internal.core.dom.NaiveASTFlattener;
 
 /**
  * Abstract superclass of all Abstract Syntax Tree (AST) node types.

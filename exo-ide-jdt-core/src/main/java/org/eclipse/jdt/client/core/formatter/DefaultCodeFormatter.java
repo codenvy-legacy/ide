@@ -10,14 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.formatter;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.compiler.ITerminalSymbols;
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
-import org.eclipse.jdt.client.core.formatter.CodeFormatter;
-import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration;
 import org.eclipse.jdt.client.internal.compiler.ast.ConstructorDeclaration;
@@ -31,6 +26,9 @@ import org.eclipse.jdt.client.internal.core.util.CodeSnippetParsingUtil;
 import org.eclipse.jdt.client.text.IRegion;
 import org.eclipse.jdt.client.text.Region;
 import org.eclipse.jdt.client.text.edits.TextEdit;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class DefaultCodeFormatter extends CodeFormatter
 {

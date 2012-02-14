@@ -11,7 +11,9 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.client.internal.compiler.ast.*;
+import org.eclipse.jdt.client.internal.compiler.ast.MethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;

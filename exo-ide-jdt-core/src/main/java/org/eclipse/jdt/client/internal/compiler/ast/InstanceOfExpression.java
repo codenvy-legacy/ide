@@ -11,10 +11,14 @@
 package org.eclipse.jdt.client.internal.compiler.ast;
 
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
-import org.eclipse.jdt.client.internal.compiler.codegen.*;
-import org.eclipse.jdt.client.internal.compiler.flow.*;
+import org.eclipse.jdt.client.internal.compiler.flow.FlowContext;
+import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
+import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
 public class InstanceOfExpression extends OperatorExpression
 {

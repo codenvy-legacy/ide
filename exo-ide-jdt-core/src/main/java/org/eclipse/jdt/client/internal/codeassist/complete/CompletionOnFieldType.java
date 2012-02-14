@@ -32,7 +32,8 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
  */
 
 import org.eclipse.jdt.client.core.compiler.CharOperation;
-import org.eclipse.jdt.client.internal.compiler.ast.*;
+import org.eclipse.jdt.client.internal.compiler.ast.FieldDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
 
 public class CompletionOnFieldType extends FieldDeclaration
 {

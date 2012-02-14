@@ -32,7 +32,7 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
  * before the cursor.
  */
 
-import org.eclipse.jdt.client.internal.compiler.ast.*;
+import org.eclipse.jdt.client.internal.compiler.ast.ImportReference;
 
 public class CompletionOnImportReference extends ImportReference
 {

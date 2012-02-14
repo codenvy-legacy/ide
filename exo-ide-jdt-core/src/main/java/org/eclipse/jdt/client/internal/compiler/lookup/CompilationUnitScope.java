@@ -12,11 +12,18 @@
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
 import org.eclipse.jdt.client.core.compiler.CharOperation;
-import org.eclipse.jdt.client.internal.compiler.ast.*;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.ImportReference;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.env.AccessRestriction;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
-import org.eclipse.jdt.client.internal.compiler.util.*;
+import org.eclipse.jdt.client.internal.compiler.util.CompoundNameVector;
+import org.eclipse.jdt.client.internal.compiler.util.HashtableOfObject;
+import org.eclipse.jdt.client.internal.compiler.util.HashtableOfType;
+import org.eclipse.jdt.client.internal.compiler.util.ObjectVector;
+import org.eclipse.jdt.client.internal.compiler.util.SimpleNameVector;
 
 public class CompilationUnitScope extends Scope
 {

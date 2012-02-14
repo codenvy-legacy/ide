@@ -11,9 +11,6 @@
 
 package org.eclipse.jdt.client.core.dom;
 
-import java.util.List;
-import java.util.Vector;
-
 import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.IProblem;
@@ -21,6 +18,9 @@ import org.eclipse.jdt.client.internal.compiler.parser.RecoveryScanner;
 import org.eclipse.jdt.client.internal.compiler.parser.RecoveryScannerData;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 import org.eclipse.jdt.client.internal.compiler.util.HashtableOfObjectToIntArray;
+
+import java.util.List;
+import java.util.Vector;
 
 /** Internal AST visitor for propagating syntax errors. */
 class ASTRecoveryPropagator extends DefaultASTVisitor

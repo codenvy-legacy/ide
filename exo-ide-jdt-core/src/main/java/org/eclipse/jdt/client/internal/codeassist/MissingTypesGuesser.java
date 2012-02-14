@@ -10,15 +10,19 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.codeassist;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
-
+import org.eclipse.jdt.client.DummyNameEnvironment;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.search.IJavaSearchConstants;
-import org.eclipse.jdt.client.DummyNameEnvironment;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
-import org.eclipse.jdt.client.internal.compiler.ast.*;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.ArrayQualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.ArrayTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.ParameterizedQualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.ParameterizedSingleTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.QualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.SingleTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
 import org.eclipse.jdt.client.internal.compiler.env.AccessRestriction;
 import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
@@ -28,6 +32,10 @@ import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.client.internal.compiler.util.HashtableOfObjectToInt;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 public class MissingTypesGuesser extends ASTVisitor
 {

@@ -10,14 +10,21 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import java.util.ArrayList;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.client.internal.compiler.env.*;
+import org.eclipse.jdt.client.internal.compiler.env.ClassSignature;
+import org.eclipse.jdt.client.internal.compiler.env.EnumConstantSignature;
+import org.eclipse.jdt.client.internal.compiler.env.IBinaryAnnotation;
+import org.eclipse.jdt.client.internal.compiler.env.IBinaryElementValuePair;
+import org.eclipse.jdt.client.internal.compiler.env.IBinaryField;
+import org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod;
+import org.eclipse.jdt.client.internal.compiler.env.IBinaryNestedType;
+import org.eclipse.jdt.client.internal.compiler.env.IBinaryType;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
 import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilation;
 import org.eclipse.jdt.client.internal.compiler.util.SimpleLookupTable;
+
+import java.util.ArrayList;
 
 /*
  Not all fields defined by this type are initialized when it is created.

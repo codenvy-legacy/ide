@@ -10,13 +10,13 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.parser;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /** Parser specialized for decoding javadoc comments */
 public abstract class AbstractCommentParser implements JavadocTagConstants

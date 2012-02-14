@@ -11,9 +11,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.dom;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;
 import org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration;
@@ -62,6 +59,9 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeConstants;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilation;
 import org.eclipse.jdt.client.internal.core.util.Util;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Internal class for resolving bindings using old ASTs.

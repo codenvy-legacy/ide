@@ -10,16 +10,30 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 
-import org.eclipse.jdt.client.core.compiler.*;
-import org.eclipse.jdt.client.internal.compiler.*;
+import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.core.compiler.IProblem;
+import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
+import org.eclipse.jdt.client.internal.compiler.CompilationResult;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.client.internal.compiler.codegen.*;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
 import org.eclipse.jdt.client.internal.compiler.flow.InitializationFlowContext;
-import org.eclipse.jdt.client.internal.compiler.impl.*;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
-import org.eclipse.jdt.client.internal.compiler.parser.*;
-import org.eclipse.jdt.client.internal.compiler.problem.*;
+import org.eclipse.jdt.client.internal.compiler.impl.ReferenceContext;
+import org.eclipse.jdt.client.internal.compiler.lookup.AnnotationBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
+import org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
+import org.eclipse.jdt.client.internal.compiler.parser.Parser;
+import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilation;
+import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilationUnit;
+import org.eclipse.jdt.client.internal.compiler.problem.AbortMethod;
+import org.eclipse.jdt.client.internal.compiler.problem.AbortType;
+import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
+import org.eclipse.jdt.client.internal.compiler.problem.ProblemSeverities;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
 
 public abstract class AbstractMethodDeclaration extends ASTNode implements ProblemSeverities, ReferenceContext
@@ -185,169 +199,6 @@ public abstract class AbstractMethodDeclaration extends ASTNode implements Probl
    {
 
       return this.compilationResult;
-   }
-
-   // /**
-   // * Bytecode generation for a method
-   // * @param classScope
-   // * @param classFile
-   // */
-   // public void generateCode(ClassScope classScope, ClassFile classFile)
-   // {
-   //
-   // int problemResetPC = 0;
-   // classFile.codeStream.wideMode = false; // reset wideMode to false
-   // if (this.ignoreFurtherInvestigation)
-   // {
-   // // method is known to have errors, dump a problem method
-   // if (this.binding == null)
-   // return; // handle methods with invalid signature or duplicates
-   // int problemsLength;
-   // CategorizedProblem[] problems = this.scope.referenceCompilationUnit().compilationResult.getProblems();
-   // CategorizedProblem[] problemsCopy = new CategorizedProblem[problemsLength = problems.length];
-   // System.arraycopy(problems, 0, problemsCopy, 0, problemsLength);
-   // classFile.addProblemMethod(this, this.binding, problemsCopy);
-   // return;
-   // }
-   // boolean restart = false;
-   // boolean abort = false;
-   // // regular code generation
-   // do
-   // {
-   // try
-   // {
-   // problemResetPC = classFile.contentsOffset;
-   // this.generateCode(classFile);
-   // restart = false;
-   // }
-   // catch (AbortMethod e)
-   // {
-   // // a fatal error was detected during code generation, need to restart code gen if possible
-   // if (e.compilationResult == CodeStream.RESTART_IN_WIDE_MODE)
-   // {
-   // // a branch target required a goto_w, restart code gen in wide mode.
-   // if (!restart)
-   // {
-   // classFile.contentsOffset = problemResetPC;
-   // classFile.methodCount--;
-   // classFile.codeStream.resetInWideMode(); // request wide mode
-   // restart = true;
-   // }
-   // else
-   // {
-   // // after restarting in wide mode, code generation failed again
-   // // report a problem
-   // restart = false;
-   // abort = true;
-   // }
-   // }
-   // else if (e.compilationResult == CodeStream.RESTART_CODE_GEN_FOR_UNUSED_LOCALS_MODE)
-   // {
-   // classFile.contentsOffset = problemResetPC;
-   // classFile.methodCount--;
-   // classFile.codeStream.resetForCodeGenUnusedLocals();
-   // restart = true;
-   // }
-   // else
-   // {
-   // restart = false;
-   // abort = true;
-   // }
-   // }
-   // }
-   // while (restart);
-   // // produce a problem method accounting for this fatal error
-   // if (abort)
-   // {
-   // int problemsLength;
-   // CategorizedProblem[] problems = this.scope.referenceCompilationUnit().compilationResult.getAllProblems();
-   // CategorizedProblem[] problemsCopy = new CategorizedProblem[problemsLength = problems.length];
-   // System.arraycopy(problems, 0, problemsCopy, 0, problemsLength);
-   // classFile.addProblemMethod(this, this.binding, problemsCopy, problemResetPC);
-   // }
-   // }
-   //
-   // public void generateCode(ClassFile classFile)
-   // {
-   //
-   // classFile.generateMethodInfoHeader(this.binding);
-   // int methodAttributeOffset = classFile.contentsOffset;
-   // int attributeNumber = classFile.generateMethodInfoAttributes(this.binding);
-   // if ((!this.binding.isNative()) && (!this.binding.isAbstract()))
-   // {
-   // int codeAttributeOffset = classFile.contentsOffset;
-   // classFile.generateCodeAttributeHeader();
-   // CodeStream codeStream = classFile.codeStream;
-   // codeStream.reset(this, classFile);
-   // // initialize local positions
-   // this.scope.computeLocalVariablePositions(this.binding.isStatic() ? 0 : 1, codeStream);
-   //
-   // // arguments initialization for local variable debug attributes
-   // if (this.arguments != null)
-   // {
-   // for (int i = 0, max = this.arguments.length; i < max; i++)
-   // {
-   // LocalVariableBinding argBinding;
-   // codeStream.addVisibleLocalVariable(argBinding = this.arguments[i].binding);
-   // argBinding.recordInitializationStartPC(0);
-   // }
-   // }
-   // if (this.statements != null)
-   // {
-   // for (int i = 0, max = this.statements.length; i < max; i++)
-   // this.statements[i].generateCode(this.scope, codeStream);
-   // }
-   // // if a problem got reported during code gen, then trigger problem method creation
-   // if (this.ignoreFurtherInvestigation)
-   // {
-   // throw new AbortMethod(this.scope.referenceCompilationUnit().compilationResult, null);
-   // }
-   // if ((this.bits & ASTNode.NeedFreeReturn) != 0)
-   // {
-   // codeStream.return_();
-   // }
-   // // local variable attributes
-   // codeStream.exitUserScope(this.scope);
-   // codeStream.recordPositionsFrom(0, this.declarationSourceEnd);
-   // try
-   // {
-   // classFile.completeCodeAttribute(codeAttributeOffset);
-   // }
-   // catch (NegativeArraySizeException e)
-   // {
-   // throw new AbortMethod(this.scope.referenceCompilationUnit().compilationResult, null);
-   // }
-   // attributeNumber++;
-   // }
-   // else
-   // {
-   // checkArgumentsSize();
-   // }
-   // classFile.completeMethodInfo(this.binding, methodAttributeOffset, attributeNumber);
-   // }
-
-   private void checkArgumentsSize()
-   {
-      TypeBinding[] parameters = this.binding.parameters;
-      int size = 1; // an abstract method or a native method cannot be static
-      for (int i = 0, max = parameters.length; i < max; i++)
-      {
-         switch (parameters[i].id)
-         {
-            case TypeIds.T_long :
-            case TypeIds.T_double :
-               size += 2;
-               break;
-            default :
-               size++;
-               break;
-         }
-         if (size > 0xFF)
-         {
-            this.scope.problemReporter().noMoreAvailableSpaceForArgument(this.scope.locals[i],
-               this.scope.locals[i].declaration);
-         }
-      }
    }
 
    public boolean hasErrors()

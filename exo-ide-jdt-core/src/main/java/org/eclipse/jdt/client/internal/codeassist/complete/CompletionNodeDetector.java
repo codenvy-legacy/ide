@@ -10,9 +10,45 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.codeassist.complete;
 
-import org.eclipse.jdt.client.internal.compiler.*;
-import org.eclipse.jdt.client.internal.compiler.ast.*;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
+import org.eclipse.jdt.client.internal.compiler.ast.AND_AND_Expression;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.AllocationExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.ArrayAllocationExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.ArrayInitializer;
+import org.eclipse.jdt.client.internal.compiler.ast.ArrayQualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.ArrayReference;
+import org.eclipse.jdt.client.internal.compiler.ast.ArrayTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.Assignment;
+import org.eclipse.jdt.client.internal.compiler.ast.BinaryExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.CastExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.CompoundAssignment;
+import org.eclipse.jdt.client.internal.compiler.ast.ConditionalExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.EqualExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.ExplicitConstructorCall;
+import org.eclipse.jdt.client.internal.compiler.ast.FieldReference;
+import org.eclipse.jdt.client.internal.compiler.ast.InstanceOfExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.MemberValuePair;
+import org.eclipse.jdt.client.internal.compiler.ast.MessageSend;
+import org.eclipse.jdt.client.internal.compiler.ast.OR_OR_Expression;
+import org.eclipse.jdt.client.internal.compiler.ast.ParameterizedQualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.ParameterizedSingleTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.PostfixExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.PrefixExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.QualifiedAllocationExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.QualifiedNameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.QualifiedSuperReference;
+import org.eclipse.jdt.client.internal.compiler.ast.QualifiedThisReference;
+import org.eclipse.jdt.client.internal.compiler.ast.QualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.SingleNameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.SingleTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.StringLiteral;
+import org.eclipse.jdt.client.internal.compiler.ast.SuperReference;
+import org.eclipse.jdt.client.internal.compiler.ast.ThisReference;
+import org.eclipse.jdt.client.internal.compiler.ast.UnaryExpression;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.CompilationUnitScope;
 
 /** Detect the presence of a node in expression */
 public class CompletionNodeDetector extends ASTVisitor

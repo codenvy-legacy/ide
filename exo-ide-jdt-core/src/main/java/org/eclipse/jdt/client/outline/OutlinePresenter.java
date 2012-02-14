@@ -18,9 +18,8 @@
  */
 package org.eclipse.jdt.client.outline;
 
-import com.google.gwt.user.client.Timer;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 

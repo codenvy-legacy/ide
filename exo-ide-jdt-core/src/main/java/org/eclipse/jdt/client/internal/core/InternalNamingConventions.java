@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.core;
 
-import java.util.Map;
-
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
@@ -21,6 +19,8 @@ import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 import org.eclipse.jdt.client.internal.compiler.util.SimpleSetOfCharArray;
+
+import java.util.Map;
 
 public class InternalNamingConventions
 {

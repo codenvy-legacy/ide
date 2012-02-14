@@ -10,13 +10,13 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.core.dom.rewrite;
 
-import org.eclipse.jdt.client.runtime.CoreException;
-import org.eclipse.jdt.client.runtime.IStatus;
-import org.eclipse.jdt.client.runtime.Status;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
 import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
+import org.eclipse.jdt.client.runtime.CoreException;
+import org.eclipse.jdt.client.runtime.IStatus;
+import org.eclipse.jdt.client.runtime.Status;
 
 /** Wraps a scanner and offers convenient methods for finding tokens */
 public class TokenScanner

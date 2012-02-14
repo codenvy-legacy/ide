@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.formatter.align;
 
-import org.eclipse.jdt.client.runtime.Assert;
 import org.eclipse.jdt.client.core.formatter.Location;
 import org.eclipse.jdt.client.core.formatter.Scribe;
+import org.eclipse.jdt.client.runtime.Assert;
 
 /**
  * Alignment management

@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ISourceElementRequestor.ParameterInfo;
 import org.eclipse.jdt.client.internal.compiler.ISourceElementRequestor.TypeParameterInfo;
@@ -49,6 +46,9 @@ import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
 import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeConstants;
 import org.eclipse.jdt.client.internal.compiler.util.HashtableOfObjectToInt;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 public class SourceElementNotifier
 {

@@ -14,9 +14,6 @@ import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.core.dom.ASTNode;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
  *
  */

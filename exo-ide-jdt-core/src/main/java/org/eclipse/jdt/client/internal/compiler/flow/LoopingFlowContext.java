@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.flow;
 
-import java.util.ArrayList;
-
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.Expression;
 import org.eclipse.jdt.client.internal.compiler.ast.Reference;
@@ -24,6 +22,8 @@ import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 import org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding;
+
+import java.util.ArrayList;
 
 /**
  * Reflects the context of code analysis, keeping track of enclosing try statements, exception handlers, etc...

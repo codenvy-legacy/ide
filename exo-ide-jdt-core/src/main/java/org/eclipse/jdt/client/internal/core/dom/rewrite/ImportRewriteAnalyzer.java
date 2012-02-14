@@ -10,22 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.core.dom.rewrite;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.eclipse.jdt.client.runtime.IProgressMonitor;
-import org.eclipse.jdt.client.runtime.NullProgressMonitor;
-//import org.eclipse.jdt.core.IBuffer;
-//import org.eclipse.jdt.core.ICompilationUnit;
-//import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.client.core.JavaCore;
-//import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.dom.ASTNode;
@@ -35,11 +20,8 @@ import org.eclipse.jdt.client.core.dom.ImportDeclaration;
 import org.eclipse.jdt.client.core.dom.LineComment;
 import org.eclipse.jdt.client.core.dom.PackageDeclaration;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
-//import org.eclipse.jdt.core.search.IJavaSearchConstants;
-//import org.eclipse.jdt.core.search.IJavaSearchScope;
-//import org.eclipse.jdt.core.search.SearchEngine;
-//import org.eclipse.jdt.core.search.TypeNameRequestor;
-//import org.eclipse.jdt.internal.core.JavaProject;
+import org.eclipse.jdt.client.runtime.IProgressMonitor;
+import org.eclipse.jdt.client.runtime.NullProgressMonitor;
 import org.eclipse.jdt.client.text.BadLocationException;
 import org.eclipse.jdt.client.text.IDocument;
 import org.eclipse.jdt.client.text.IRegion;
@@ -47,6 +29,14 @@ import org.eclipse.jdt.client.text.Region;
 import org.eclipse.jdt.client.text.edits.DeleteEdit;
 import org.eclipse.jdt.client.text.edits.InsertEdit;
 import org.eclipse.jdt.client.text.edits.MultiTextEdit;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public final class ImportRewriteAnalyzer
 {

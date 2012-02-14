@@ -10,13 +10,28 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.parser;
 
-import java.util.List;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
-import org.eclipse.jdt.client.internal.compiler.ast.*;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.Expression;
+import org.eclipse.jdt.client.internal.compiler.ast.Javadoc;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocAllocationExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocArgumentExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocArrayQualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocArraySingleTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocFieldReference;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocImplicitTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocMessageSend;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocQualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocReturnStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocSingleNameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocSingleTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
+
+import java.util.List;
 
 /** Parser specialized for decoding javadoc comments */
 public class JavadocParser extends AbstractCommentParser

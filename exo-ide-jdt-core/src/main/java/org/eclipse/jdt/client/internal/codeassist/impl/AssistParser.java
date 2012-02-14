@@ -15,7 +15,27 @@ package org.eclipse.jdt.client.internal.codeassist.impl;
  *
  */
 
-import org.eclipse.jdt.client.internal.compiler.ast.*;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.Annotation;
+import org.eclipse.jdt.client.internal.compiler.ast.Block;
+import org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.ConstructorDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.ExplicitConstructorCall;
+import org.eclipse.jdt.client.internal.compiler.ast.Expression;
+import org.eclipse.jdt.client.internal.compiler.ast.FieldDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.ForeachStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.ImportReference;
+import org.eclipse.jdt.client.internal.compiler.ast.Initializer;
+import org.eclipse.jdt.client.internal.compiler.ast.LocalDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.MessageSend;
+import org.eclipse.jdt.client.internal.compiler.ast.MethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.NameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.Statement;
+import org.eclipse.jdt.client.internal.compiler.ast.SuperReference;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
 import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;

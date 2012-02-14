@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.util;
 
-import java.util.Arrays;
-
 import org.eclipse.jdt.client.core.Signature;
+
+import java.util.Arrays;
 
 /**
  * Utilities for Signature operations.

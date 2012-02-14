@@ -11,7 +11,9 @@
 package org.eclipse.jdt.client.internal.compiler.ast;
 
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
 public class QualifiedSuperReference extends QualifiedThisReference
 {

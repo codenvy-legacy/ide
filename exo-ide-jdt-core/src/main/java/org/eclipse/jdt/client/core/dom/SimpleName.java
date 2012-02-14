@@ -11,13 +11,13 @@
 
 package org.eclipse.jdt.client.core.dom;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * AST node for a simple name. A simple name is an identifier other than a keyword, boolean literal ("true", "false") or null

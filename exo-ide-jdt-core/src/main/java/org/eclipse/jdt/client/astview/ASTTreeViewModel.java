@@ -18,12 +18,9 @@
  */
 package org.eclipse.jdt.client.astview;
 
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-
 import com.google.gwt.cell.client.AbstractCell;
-
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.view.client.ListDataProvider;
-
 import com.google.gwt.view.client.TreeViewModel;
 
 import org.eclipse.jdt.client.astview.views.ASTAttribute;
@@ -34,6 +31,7 @@ import org.eclipse.jdt.client.astview.views.NodeProperty;
 import org.eclipse.jdt.client.astview.views.ProblemsProperty;
 import org.eclipse.jdt.client.astview.views.SettingsProperty;
 import org.eclipse.jdt.client.astview.views.WellKnownTypesProperty;
+import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.client.core.dom.Annotation;
@@ -65,7 +63,6 @@ import org.eclipse.jdt.client.core.dom.SuperMethodInvocation;
 import org.eclipse.jdt.client.core.dom.Type;
 import org.eclipse.jdt.client.core.dom.TypeParameter;
 import org.eclipse.jdt.client.core.dom.VariableDeclaration;
-import org.eclipse.jdt.client.core.Signature;
 
 import java.util.ArrayList;
 import java.util.Arrays;

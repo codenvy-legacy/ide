@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.parser;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;
 import org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration;
@@ -26,6 +23,9 @@ import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
 import org.eclipse.jdt.client.internal.compiler.ast.TypeParameter;
 import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /** Internal type structure for parsing recovery */
 

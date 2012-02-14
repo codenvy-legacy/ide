@@ -16,7 +16,21 @@ import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
 import org.eclipse.jdt.client.internal.compiler.impl.IrritantSet;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.lookup.AnnotationBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ElementValuePair;
+import org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.PackageBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
+import org.eclipse.jdt.client.internal.compiler.lookup.SourceTypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeConstants;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 
 /** Annotation */
 public abstract class Annotation extends Expression

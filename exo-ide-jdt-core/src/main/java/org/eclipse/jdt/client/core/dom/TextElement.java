@@ -11,10 +11,10 @@
 
 package org.eclipse.jdt.client.core.dom;
 
+import org.eclipse.jdt.client.internal.compiler.util.Util;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.eclipse.jdt.client.internal.compiler.util.Util;
 
 /**
  * AST node for a text element within a doc comment.

@@ -13,11 +13,11 @@ package org.eclipse.jdt.client.internal.compiler.parser;
 /**
  * Internal statement structure for parsing recovery
  */
-import java.util.HashSet;
-import java.util.Set;
-
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.Statement;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class RecoveredStatement extends RecoveredElement
 {

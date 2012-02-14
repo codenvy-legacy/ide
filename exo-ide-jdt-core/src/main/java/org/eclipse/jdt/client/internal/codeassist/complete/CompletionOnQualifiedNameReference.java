@@ -33,8 +33,14 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
  * which should be replaced by the completion.
  */
 
-import org.eclipse.jdt.client.internal.compiler.ast.*;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.ast.QualifiedNameReference;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.MissingTypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ProblemFieldBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ProblemReasons;
+import org.eclipse.jdt.client.internal.compiler.lookup.ProblemReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
 public class CompletionOnQualifiedNameReference extends QualifiedNameReference
 {

@@ -10,19 +10,36 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.codeassist.impl;
 
-import java.util.Map;
-
 import org.eclipse.jdt.client.DummyNameEnvironment;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
-import org.eclipse.jdt.client.internal.compiler.*;
+import org.eclipse.jdt.client.internal.compiler.CompilationResult;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.FieldDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.Initializer;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.client.internal.compiler.env.*;
-
-import org.eclipse.jdt.client.internal.compiler.ast.*;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
-import org.eclipse.jdt.client.internal.compiler.parser.*;
+import org.eclipse.jdt.client.internal.compiler.env.AccessRestriction;
+import org.eclipse.jdt.client.internal.compiler.env.IBinaryType;
+import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
+import org.eclipse.jdt.client.internal.compiler.env.ISourceType;
+import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
+import org.eclipse.jdt.client.internal.compiler.impl.ITypeRequestor;
+import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
+import org.eclipse.jdt.client.internal.compiler.lookup.CompilationUnitScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
+import org.eclipse.jdt.client.internal.compiler.lookup.ImportBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ImportConflictBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.LookupEnvironment;
+import org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.PackageBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
+import org.eclipse.jdt.client.internal.compiler.parser.SourceTypeConverter;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemSeverities;
-import org.eclipse.jdt.client.internal.compiler.impl.*;
+
+import java.util.Map;
 
 public abstract class Engine implements ITypeRequestor
 {

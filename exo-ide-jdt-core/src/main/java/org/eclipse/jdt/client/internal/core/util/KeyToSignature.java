@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.core.util;
 
-import java.util.ArrayList;
-
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
 import org.eclipse.jdt.client.internal.compiler.codegen.ConstantPool;
+
+import java.util.ArrayList;
 
 /*
  * Converts a binding key into a signature

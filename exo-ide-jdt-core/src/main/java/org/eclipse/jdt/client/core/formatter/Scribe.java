@@ -11,18 +11,14 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.formatter;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Map;
-
-import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
-import org.eclipse.jdt.client.core.formatter.CodeFormatter;
+import org.eclipse.jdt.client.core.formatter.align.Alignment;
+import org.eclipse.jdt.client.core.formatter.align.AlignmentException;
+import org.eclipse.jdt.client.core.formatter.comment.CommentFormatterUtil;
+import org.eclipse.jdt.client.core.formatter.comment.IJavaDocTagConstants;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.ast.Annotation;
-import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 import org.eclipse.jdt.client.internal.compiler.parser.Parser;
 import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
@@ -31,21 +27,15 @@ import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
 import org.eclipse.jdt.client.internal.core.util.CodeSnippetParsingUtil;
 import org.eclipse.jdt.client.internal.core.util.RecordedParsingInformation;
-import org.eclipse.jdt.client.core.formatter.align.Alignment;
-import org.eclipse.jdt.client.core.formatter.align.AlignmentException;
-import org.eclipse.jdt.client.core.formatter.comment.CommentFormatterUtil;
-//import org.eclipse.jdt.client.core.formatter.comment.HTMLEntity2JavaReader;
-import org.eclipse.jdt.client.core.formatter.comment.IJavaDocTagConstants;
-//import org.eclipse.jdt.client.core.formatter.comment.Java2HTMLEntityReader;
-import org.eclipse.jdt.client.text.BadLocationException;
-import org.eclipse.jdt.client.text.DefaultLineTracker;
-import org.eclipse.jdt.client.text.ILineTracker;
 import org.eclipse.jdt.client.text.IRegion;
 import org.eclipse.jdt.client.text.Region;
 import org.eclipse.jdt.client.text.edits.MalformedTreeException;
 import org.eclipse.jdt.client.text.edits.MultiTextEdit;
 import org.eclipse.jdt.client.text.edits.ReplaceEdit;
 import org.eclipse.jdt.client.text.edits.TextEdit;
+
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * This class is responsible for dumping formatted source

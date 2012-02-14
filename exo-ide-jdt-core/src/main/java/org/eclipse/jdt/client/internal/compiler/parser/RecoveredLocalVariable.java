@@ -13,9 +13,6 @@ package org.eclipse.jdt.client.internal.compiler.parser;
 /**
  * Internal local variable structure for parsing recovery
  */
-import java.util.HashSet;
-import java.util.Set;
-
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.Annotation;
 import org.eclipse.jdt.client.internal.compiler.ast.ArrayQualifiedTypeReference;
@@ -23,6 +20,9 @@ import org.eclipse.jdt.client.internal.compiler.ast.ArrayTypeReference;
 import org.eclipse.jdt.client.internal.compiler.ast.Expression;
 import org.eclipse.jdt.client.internal.compiler.ast.LocalDeclaration;
 import org.eclipse.jdt.client.internal.compiler.ast.Statement;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class RecoveredLocalVariable extends RecoveredStatement
 {

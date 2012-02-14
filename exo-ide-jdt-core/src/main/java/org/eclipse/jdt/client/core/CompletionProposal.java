@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core;
 
-import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.internal.codeassist.InternalCompletionProposal;
+import org.eclipse.jdt.client.runtime.IProgressMonitor;
 
 /**
  * Completion proposal.

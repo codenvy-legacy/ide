@@ -12,14 +12,11 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.formatter;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
-import org.eclipse.jdt.client.core.formatter.CodeFormatter;
-import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
+import org.eclipse.jdt.client.core.formatter.align.Alignment;
+import org.eclipse.jdt.client.core.formatter.align.AlignmentException;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.ast.AND_AND_Expression;
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
@@ -49,7 +46,6 @@ import org.eclipse.jdt.client.internal.compiler.ast.CompoundAssignment;
 import org.eclipse.jdt.client.internal.compiler.ast.ConditionalExpression;
 import org.eclipse.jdt.client.internal.compiler.ast.ConstructorDeclaration;
 import org.eclipse.jdt.client.internal.compiler.ast.ContinueStatement;
-import org.eclipse.jdt.client.internal.compiler.ast.UnionTypeReference;
 import org.eclipse.jdt.client.internal.compiler.ast.DoStatement;
 import org.eclipse.jdt.client.internal.compiler.ast.DoubleLiteral;
 import org.eclipse.jdt.client.internal.compiler.ast.EmptyStatement;
@@ -105,6 +101,7 @@ import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
 import org.eclipse.jdt.client.internal.compiler.ast.TypeParameter;
 import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
 import org.eclipse.jdt.client.internal.compiler.ast.UnaryExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.UnionTypeReference;
 import org.eclipse.jdt.client.internal.compiler.ast.WhileStatement;
 import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
@@ -118,10 +115,11 @@ import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
 import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 import org.eclipse.jdt.client.internal.core.util.CodeSnippetParsingUtil;
-import org.eclipse.jdt.client.core.formatter.align.Alignment;
-import org.eclipse.jdt.client.core.formatter.align.AlignmentException;
 import org.eclipse.jdt.client.text.IRegion;
 import org.eclipse.jdt.client.text.edits.TextEdit;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * This class is responsible for formatting a valid java source code.

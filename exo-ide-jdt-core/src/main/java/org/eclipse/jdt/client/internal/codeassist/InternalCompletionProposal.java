@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.codeassist;
 
-import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.core.CompletionContext;
 import org.eclipse.jdt.client.core.CompletionFlags;
 import org.eclipse.jdt.client.core.CompletionProposal;
@@ -20,9 +19,9 @@ import org.eclipse.jdt.client.core.Flags;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod;
-import org.eclipse.jdt.client.internal.compiler.env.IBinaryType;
 import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.client.internal.compiler.env.NameEnvironmentAnswer;
+import org.eclipse.jdt.client.runtime.IProgressMonitor;
 
 /**
  * Internal completion proposal

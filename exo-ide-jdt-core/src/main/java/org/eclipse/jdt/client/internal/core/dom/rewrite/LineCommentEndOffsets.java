@@ -11,12 +11,12 @@
 
 package org.eclipse.jdt.client.internal.core.dom.rewrite;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.eclipse.jdt.client.core.dom.LineComment;
 import org.eclipse.jdt.client.core.formatter.IndentManipulation;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class LineCommentEndOffsets
 {

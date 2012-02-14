@@ -10,15 +10,19 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.client.internal.compiler.ast.*;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.Argument;
+import org.eclipse.jdt.client.internal.compiler.ast.ConstructorDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.QualifiedNameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.SingleNameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeParameter;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
 import org.eclipse.jdt.client.internal.compiler.flow.UnconditionalFlowInfo;
 import org.eclipse.jdt.client.internal.compiler.impl.ReferenceContext;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
-//import org.eclipse.jdt.internal.compiler.codegen.CodeStream;
-//import org.eclipse.jdt.internal.compiler.flow.FlowInfo;
-//import org.eclipse.jdt.internal.compiler.flow.UnconditionalFlowInfo;
 
 /**
  * Specific block scope used for methods, constructors or clinits, representing its outermost blockscope. Note also that such a

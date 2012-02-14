@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.codeassist;
 
-import java.util.Stack;
-
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.ast.AllocationExpression;
 import org.eclipse.jdt.client.internal.compiler.ast.Argument;
@@ -28,6 +26,8 @@ import org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.client.internal.compiler.util.SimpleSet;
+
+import java.util.Stack;
 
 public class ThrownExceptionFinder extends ASTVisitor
 {

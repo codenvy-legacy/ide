@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.parser;
 
-import java.util.Set;
-
-import org.eclipse.jdt.client.core.compiler.*;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.Block;
 import org.eclipse.jdt.client.internal.compiler.ast.FieldDeclaration;
@@ -22,6 +20,8 @@ import org.eclipse.jdt.client.internal.compiler.ast.Statement;
 import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
+
+import java.util.Set;
 
 public class RecoveredInitializer extends RecoveredField implements TerminalTokens
 {

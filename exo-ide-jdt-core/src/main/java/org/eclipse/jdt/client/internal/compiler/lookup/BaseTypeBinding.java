@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 
 public final class BaseTypeBinding extends TypeBinding
 {

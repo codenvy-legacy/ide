@@ -16,18 +16,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.dom;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.eclipse.jdt.client.runtime.Assert;
-
-import org.eclipse.jdt.client.text.edits.TextEdit;
-
-import org.eclipse.jdt.client.text.BadLocationException;
-import org.eclipse.jdt.client.text.Document;
-
-import org.eclipse.jdt.client.core.Flags;
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTVisitor;
@@ -41,7 +29,6 @@ import org.eclipse.jdt.client.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.DoStatement;
 import org.eclipse.jdt.client.core.dom.EnhancedForStatement;
-import org.eclipse.jdt.client.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.client.core.dom.Expression;
 import org.eclipse.jdt.client.core.dom.FieldAccess;
 import org.eclipse.jdt.client.core.dom.FieldDeclaration;
@@ -54,11 +41,9 @@ import org.eclipse.jdt.client.core.dom.IVariableBinding;
 import org.eclipse.jdt.client.core.dom.IfStatement;
 import org.eclipse.jdt.client.core.dom.InfixExpression;
 import org.eclipse.jdt.client.core.dom.Message;
-import org.eclipse.jdt.client.core.dom.MethodDeclaration;
 import org.eclipse.jdt.client.core.dom.MethodInvocation;
 import org.eclipse.jdt.client.core.dom.Modifier;
 import org.eclipse.jdt.client.core.dom.Name;
-import org.eclipse.jdt.client.core.dom.NodeFinder;
 import org.eclipse.jdt.client.core.dom.ParameterizedType;
 import org.eclipse.jdt.client.core.dom.ParenthesizedExpression;
 import org.eclipse.jdt.client.core.dom.PrimitiveType;
@@ -74,10 +59,15 @@ import org.eclipse.jdt.client.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.client.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.client.core.dom.WhileStatement;
-
-import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
-//import org.eclipse.jdt.client.internal.corext.util.Strings;
+import org.eclipse.jdt.client.runtime.Assert;
+import org.eclipse.jdt.client.text.BadLocationException;
+import org.eclipse.jdt.client.text.Document;
+import org.eclipse.jdt.client.text.edits.TextEdit;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 //import org.eclipse.jdt.internal.ui.JavaPlugin;
 //import org.eclipse.jdt.internal.ui.preferences.MembersOrderPreferenceCache;

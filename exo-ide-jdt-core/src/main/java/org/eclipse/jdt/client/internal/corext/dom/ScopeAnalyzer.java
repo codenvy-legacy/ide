@@ -10,11 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.dom;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.AbstractTypeDeclaration;
@@ -48,6 +43,11 @@ import org.eclipse.jdt.client.core.dom.TypeParameter;
 import org.eclipse.jdt.client.core.dom.VariableDeclaration;
 import org.eclipse.jdt.client.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.client.core.dom.VariableDeclarationStatement;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 //import org.eclipse.jdt.internal.ui.text.correction.ASTResolving;
 

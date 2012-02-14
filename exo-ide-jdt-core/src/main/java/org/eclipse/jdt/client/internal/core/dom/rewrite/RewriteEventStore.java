@@ -10,14 +10,24 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.core.dom.rewrite;
 
-import java.util.*;
-
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.Block;
 import org.eclipse.jdt.client.core.dom.StructuralPropertyDescriptor;
 import org.eclipse.jdt.client.core.dom.rewrite.TargetSourceRangeComputer;
 import org.eclipse.jdt.client.text.edits.TextEditGroup;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
 /**
  * Stores all rewrite events, descriptions of events and knows which nodes are copy or move sources or tracked.

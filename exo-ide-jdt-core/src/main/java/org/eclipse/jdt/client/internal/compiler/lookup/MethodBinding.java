@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import java.util.List;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;
@@ -19,7 +17,8 @@ import org.eclipse.jdt.client.internal.compiler.ast.Argument;
 import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.codegen.ConstantPool;
-import org.eclipse.jdt.client.internal.compiler.util.Util;
+
+import java.util.List;
 
 public class MethodBinding extends Binding
 {

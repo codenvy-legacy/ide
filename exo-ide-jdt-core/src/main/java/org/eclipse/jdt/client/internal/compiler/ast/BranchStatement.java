@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 
-import org.eclipse.jdt.client.internal.compiler.codegen.*;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.codegen.BranchLabel;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 
 public abstract class BranchStatement extends Statement
 {

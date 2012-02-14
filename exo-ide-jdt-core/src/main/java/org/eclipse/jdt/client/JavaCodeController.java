@@ -18,12 +18,10 @@
  */
 package org.eclipse.jdt.client;
 
-import com.google.gwt.core.client.Scheduler.RepeatingCommand;
-
-import com.google.gwt.core.client.Scheduler;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.user.client.Timer;
 
 import org.eclipse.jdt.client.core.compiler.IProblem;

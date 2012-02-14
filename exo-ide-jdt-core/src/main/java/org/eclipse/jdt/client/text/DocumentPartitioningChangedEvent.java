@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.text;
 
+import org.eclipse.jdt.client.runtime.Assert;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import org.eclipse.jdt.client.runtime.Assert;
 
 /**
  * Event describing the change of document partitionings.

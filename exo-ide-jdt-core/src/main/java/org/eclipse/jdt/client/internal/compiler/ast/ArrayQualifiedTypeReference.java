@@ -12,7 +12,11 @@ package org.eclipse.jdt.client.internal.compiler.ast;
 
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.LookupEnvironment;
+import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilation;
 
 public class ArrayQualifiedTypeReference extends QualifiedTypeReference

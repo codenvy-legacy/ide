@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.dom;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
@@ -20,6 +17,9 @@ import org.eclipse.jdt.client.internal.compiler.parser.AbstractCommentParser;
 import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Internal parser used for decoding doc comments.

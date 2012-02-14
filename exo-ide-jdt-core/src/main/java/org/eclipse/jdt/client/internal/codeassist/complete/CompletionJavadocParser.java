@@ -10,17 +10,27 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.codeassist.complete;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
 import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
-import org.eclipse.jdt.client.internal.compiler.ast.*;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.Expression;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocAllocationExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocArgumentExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocFieldReference;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocMessageSend;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocQualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocSingleNameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocSingleTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.parser.JavadocParser;
 import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Parser specialized for decoding javadoc comments which includes cursor location for code completion.

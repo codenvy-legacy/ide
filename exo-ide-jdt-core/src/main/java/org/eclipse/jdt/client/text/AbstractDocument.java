@@ -11,15 +11,15 @@
 
 package org.eclipse.jdt.client.text;
 
+import org.eclipse.jdt.client.runtime.Assert;
+import org.eclipse.jdt.client.runtime.ListenerList;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.eclipse.jdt.client.runtime.Assert;
-import org.eclipse.jdt.client.runtime.ListenerList;
 
 /**
  * Abstract default implementation of <code>IDocument</code> and its extension interfaces

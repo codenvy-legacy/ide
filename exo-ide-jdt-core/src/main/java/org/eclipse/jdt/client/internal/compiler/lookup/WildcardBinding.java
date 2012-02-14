@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import java.util.List;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+
+import java.util.List;
 
 /*
  * A wildcard acts as an argument for parameterized types, allowing to

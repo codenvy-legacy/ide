@@ -90,7 +90,6 @@ package org.eclipse.jdt.client.core;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
-import org.eclipse.jdt.client.internal.core.util.Util;
 
 import java.util.HashMap;
 import java.util.Map;

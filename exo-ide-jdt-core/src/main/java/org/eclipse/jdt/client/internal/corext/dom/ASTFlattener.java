@@ -10,11 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.dom;
 
-import java.util.Iterator;
-import java.util.List;
-
-import org.eclipse.jdt.client.runtime.Assert;
-
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.AbstractTypeDeclaration;
@@ -109,6 +104,10 @@ import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.client.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.client.core.dom.WhileStatement;
 import org.eclipse.jdt.client.core.dom.WildcardType;
+import org.eclipse.jdt.client.runtime.Assert;
+
+import java.util.Iterator;
+import java.util.List;
 
 //import org.eclipse.jdt.internal.ui.javaeditor.ASTProvider;
 

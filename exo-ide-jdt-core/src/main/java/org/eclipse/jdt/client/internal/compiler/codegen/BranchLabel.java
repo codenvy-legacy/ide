@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.codegen;
 
-import java.util.Arrays;
 
 public class BranchLabel extends Label
 {

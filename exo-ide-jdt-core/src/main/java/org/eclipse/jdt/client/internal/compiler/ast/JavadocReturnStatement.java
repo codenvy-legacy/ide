@@ -11,7 +11,11 @@
 package org.eclipse.jdt.client.internal.compiler.ast;
 
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
 public class JavadocReturnStatement extends ReturnStatement
 {

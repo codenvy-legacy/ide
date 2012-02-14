@@ -10,14 +10,13 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.text;
 
+import org.eclipse.jdt.client.runtime.Assert;
+import org.eclipse.jdt.client.text.AbstractLineTracker.DelimiterInfo;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-
-import org.eclipse.jdt.client.runtime.Assert;
-
-import org.eclipse.jdt.client.text.AbstractLineTracker.DelimiterInfo;
 
 /**
  * Abstract implementation of <code>ILineTracker</code>. It lets the definition of line delimiters to subclasses. Assuming that

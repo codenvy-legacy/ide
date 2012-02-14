@@ -18,10 +18,8 @@
  */
 package org.eclipse.jdt.client;
 
-import com.google.gwt.json.client.JSONParser;
-
 import com.google.gwt.json.client.JSONObject;
-
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.storage.client.Storage;
 
 import org.eclipse.jdt.client.core.Signature;

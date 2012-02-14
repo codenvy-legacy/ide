@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.dom;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTParser;
@@ -36,6 +33,9 @@ import org.eclipse.jdt.client.core.dom.UnionType;
 import org.eclipse.jdt.client.core.dom.VariableDeclaration;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite.ImportRewriteContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ASTNodeFactory {
 

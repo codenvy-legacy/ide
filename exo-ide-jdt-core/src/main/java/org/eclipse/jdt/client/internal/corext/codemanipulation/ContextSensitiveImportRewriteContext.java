@@ -10,17 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-//import org.eclipse.jdt.client.core.ICompilationUnit;
-//import org.eclipse.jdt.client.core.IJavaElement;
-//import org.eclipse.jdt.client.core.IJavaProject;
-//import org.eclipse.jdt.client.core.IPackageFragment;
-//import org.eclipse.jdt.client.core.IType;
-//import org.eclipse.jdt.client.core.ITypeRoot;
-//import org.eclipse.jdt.client.core.JavaModelException;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
@@ -29,12 +18,14 @@ import org.eclipse.jdt.client.core.dom.ITypeBinding;
 import org.eclipse.jdt.client.core.dom.ImportDeclaration;
 import org.eclipse.jdt.client.core.dom.Modifier;
 import org.eclipse.jdt.client.core.dom.Name;
-import org.eclipse.jdt.client.core.dom.SimpleName;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite.ImportRewriteContext;
-
 import org.eclipse.jdt.client.internal.corext.dom.ScopeAnalyzer;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * This <code>ImportRewriteContext</code> is aware of all the types visible in <code>compilationUnit</code> at

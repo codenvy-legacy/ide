@@ -18,9 +18,9 @@
  */
 package org.eclipse.jdt.client;
 
-import org.eclipse.jdt.client.core.dom.CompilationUnit;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.eclipse.jdt.client.core.dom.CompilationUnit;
 
 /**
  * Event occurs to update Java Outline. To handle it implement {@link UpdateOutlineHandler}.

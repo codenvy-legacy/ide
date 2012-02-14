@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.formatter;
 
-import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.client.core.formatter.comment.IJavaDocTagConstants;
+import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 
 /**
  * Represents a block in a {@link FormatJavadoc} which might be a <b>description</b> or a <b>tag</b> (see{@link #isDescription()}

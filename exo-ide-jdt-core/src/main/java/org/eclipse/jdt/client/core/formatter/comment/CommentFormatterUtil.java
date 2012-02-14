@@ -10,20 +10,17 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.formatter.comment;
 
-import java.util.Map;
-
-import org.eclipse.jdt.client.text.edits.TextEdit;
-
+import org.eclipse.jdt.client.core.ToolFactory;
+import org.eclipse.jdt.client.internal.core.util.Util;
 import org.eclipse.jdt.client.runtime.Assert;
 import org.eclipse.jdt.client.text.BadLocationException;
 import org.eclipse.jdt.client.text.BadPositionCategoryException;
 import org.eclipse.jdt.client.text.DefaultPositionUpdater;
 import org.eclipse.jdt.client.text.Document;
 import org.eclipse.jdt.client.text.Position;
+import org.eclipse.jdt.client.text.edits.TextEdit;
 
-import org.eclipse.jdt.client.core.ToolFactory;
-
-import org.eclipse.jdt.client.internal.core.util.Util;
+import java.util.Map;
 
 /**
  * Comment formatting utils.

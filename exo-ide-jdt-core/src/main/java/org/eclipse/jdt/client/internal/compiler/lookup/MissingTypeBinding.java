@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MissingTypeBinding extends BinaryTypeBinding
 {

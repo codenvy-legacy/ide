@@ -11,9 +11,9 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.env;
 
-import java.util.Arrays;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
+
+import java.util.Arrays;
 
 /**
  * Represents a class reference in the class file. One of the possible results for the default value of an annotation method or an

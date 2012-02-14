@@ -12,13 +12,12 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.formatter;
 
+import org.eclipse.jdt.client.core.JavaCore;
+import org.eclipse.jdt.client.core.formatter.align.Alignment;
+import org.eclipse.jdt.client.internal.compiler.util.Util;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
-import org.eclipse.jdt.client.core.JavaCore;
-import org.eclipse.jdt.client.internal.compiler.util.Util;
-import org.eclipse.jdt.client.core.formatter.align.Alignment;
 
 /**
  * This is still subject to changes before 3.0.

@@ -13,9 +13,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.Compiler;
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
@@ -23,6 +20,9 @@ import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemSeverities;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class CompilerOptions
 {

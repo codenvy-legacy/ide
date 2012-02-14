@@ -10,8 +10,19 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.codeassist.complete;
 
-import org.eclipse.jdt.client.internal.compiler.ast.*;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.Argument;
+import org.eclipse.jdt.client.internal.compiler.ast.Expression;
+import org.eclipse.jdt.client.internal.compiler.ast.Javadoc;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocSingleNameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeParameter;
+import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.CompilationUnitScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeVariableBinding;
 
 /** Node representing a Javadoc comment including code selection. */
 public class CompletionJavadoc extends Javadoc

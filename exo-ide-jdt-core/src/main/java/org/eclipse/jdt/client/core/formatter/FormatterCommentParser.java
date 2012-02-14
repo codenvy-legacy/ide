@@ -10,15 +10,15 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.formatter;
 
-import java.util.List;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
+import org.eclipse.jdt.client.core.formatter.comment.IJavaDocTagConstants;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.parser.JavadocParser;
 import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
-import org.eclipse.jdt.client.core.formatter.comment.IJavaDocTagConstants;
+
+import java.util.List;
 
 /** Internal parser used for formatting javadoc comments. */
 public class FormatterCommentParser extends JavadocParser implements IJavaDocTagConstants

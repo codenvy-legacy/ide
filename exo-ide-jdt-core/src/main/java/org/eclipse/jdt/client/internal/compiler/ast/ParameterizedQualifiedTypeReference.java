@@ -15,7 +15,16 @@ import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.PackageBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ParameterizedTypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ProblemReasons;
+import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeVariableBinding;
 
 /**
  * Syntactic representation of a reference to a generic type. Note that it might also have a dimension.

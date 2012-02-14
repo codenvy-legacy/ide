@@ -12,11 +12,11 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.text;
 
-import com.google.gwt.regexp.shared.RegExp;
-
 import com.google.gwt.regexp.shared.MatchResult;
 
 import org.eclipse.jdt.client.runtime.Assert;
+
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Provides search and replace operations on {@link org.eclipse.jface.text.IDocument}.

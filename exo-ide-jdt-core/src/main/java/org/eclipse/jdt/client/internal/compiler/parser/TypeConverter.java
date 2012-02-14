@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.parser;
 
-import java.util.ArrayList;
-
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
@@ -29,6 +27,8 @@ import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeConstants;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
+
+import java.util.ArrayList;
 
 public abstract class TypeConverter
 {

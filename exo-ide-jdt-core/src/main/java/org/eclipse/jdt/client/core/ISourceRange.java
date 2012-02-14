@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core;
 
+import org.eclipse.jdt.client.core.dom.rewrite.TargetSourceRangeComputer.SourceRange;
+
 /**
  * A source range defines an element's source coordinates relative to its source buffer.
  * 

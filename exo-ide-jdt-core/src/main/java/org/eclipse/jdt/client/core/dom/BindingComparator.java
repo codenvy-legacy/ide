@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.dom;
 
-import java.util.HashSet;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
@@ -24,6 +22,8 @@ import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeVariableBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.WildcardBinding;
+
+import java.util.HashSet;
 
 /**
  * Internal helper class for comparing bindings.

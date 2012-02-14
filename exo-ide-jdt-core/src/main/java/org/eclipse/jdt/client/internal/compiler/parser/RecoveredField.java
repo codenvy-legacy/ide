@@ -13,9 +13,6 @@ package org.eclipse.jdt.client.internal.compiler.parser;
 /**
  * Internal field structure for parsing recovery
  */
-import java.util.HashSet;
-import java.util.Set;
-
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration;
 import org.eclipse.jdt.client.internal.compiler.ast.Annotation;
@@ -25,6 +22,9 @@ import org.eclipse.jdt.client.internal.compiler.ast.Expression;
 import org.eclipse.jdt.client.internal.compiler.ast.FieldDeclaration;
 import org.eclipse.jdt.client.internal.compiler.ast.Statement;
 import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class RecoveredField extends RecoveredElement
 {

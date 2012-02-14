@@ -17,7 +17,24 @@ import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.env.AccessRestriction;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.lookup.AnnotationBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ArrayBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
+import org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite;
+import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.PackageBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ParameterizedGenericMethodBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
+import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeConstants;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
+import org.eclipse.jdt.client.internal.compiler.lookup.WildcardBinding;
 
 public abstract class ASTNode implements TypeConstants, TypeIds {
 

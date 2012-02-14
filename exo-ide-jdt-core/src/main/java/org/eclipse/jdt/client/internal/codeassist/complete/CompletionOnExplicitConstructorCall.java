@@ -32,8 +32,9 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
  * before the cursor.
  */
 
-import org.eclipse.jdt.client.internal.compiler.ast.*;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.ast.ExplicitConstructorCall;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
 
 public class CompletionOnExplicitConstructorCall extends ExplicitConstructorCall
 {

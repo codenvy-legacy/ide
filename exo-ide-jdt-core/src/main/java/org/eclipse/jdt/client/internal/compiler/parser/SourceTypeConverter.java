@@ -24,19 +24,12 @@ package org.eclipse.jdt.client.internal.compiler.parser;
  *
  */
 
-import org.eclipse.jdt.client.core.ISourceRange;
 import org.eclipse.jdt.client.core.Signature;
-import org.eclipse.jdt.client.core.compiler.CharOperation;
-import org.eclipse.jdt.client.core.dom.ImportDeclaration;
 import org.eclipse.jdt.client.internal.compiler.CompilationResult;
-import org.eclipse.jdt.client.internal.compiler.ast.*;
-import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.client.internal.compiler.env.*;
-
-import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
+import org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration;
+import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
+import org.eclipse.jdt.client.internal.compiler.env.ISourceType;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
-import org.eclipse.jdt.client.internal.core.*;
-import org.eclipse.jdt.client.internal.core.util.Util;
 
 public class SourceTypeConverter extends TypeConverter
 {

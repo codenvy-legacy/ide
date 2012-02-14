@@ -10,13 +10,13 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import java.util.Arrays;
-import java.util.Comparator;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ast.MethodDeclaration;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.util.SimpleLookupTable;
+
+import java.util.Arrays;
+import java.util.Comparator;
 
 /*
  Not all fields defined by this type (& its subclasses) are initialized when it is created.

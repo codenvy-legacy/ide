@@ -19,7 +19,6 @@
 package org.eclipse.jdt.client.env;
 
 import com.google.gwt.json.client.JSONArray;
-
 import com.google.gwt.json.client.JSONObject;
 
 import org.eclipse.jdt.client.core.Signature;

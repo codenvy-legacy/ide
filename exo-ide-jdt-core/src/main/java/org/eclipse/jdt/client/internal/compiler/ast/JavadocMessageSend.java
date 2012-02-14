@@ -13,7 +13,16 @@ package org.eclipse.jdt.client.internal.compiler.ast;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ProblemMethodBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ProblemReasons;
+import org.eclipse.jdt.client.internal.compiler.lookup.ProblemReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
 public class JavadocMessageSend extends MessageSend
 {

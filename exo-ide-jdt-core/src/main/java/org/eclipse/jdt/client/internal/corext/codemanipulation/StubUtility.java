@@ -11,45 +11,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
-import java.util.AbstractList;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
-
-import org.eclipse.jdt.client.runtime.CoreException;
-import org.eclipse.jdt.client.runtime.IStatus;
-import org.eclipse.jdt.client.runtime.Status;
-
-import org.eclipse.jdt.client.text.edits.DeleteEdit;
-import org.eclipse.jdt.client.text.edits.MalformedTreeException;
-import org.eclipse.jdt.client.text.edits.MultiTextEdit;
-
-import org.eclipse.jdt.client.text.BadLocationException;
-import org.eclipse.jdt.client.text.Document;
-import org.eclipse.jdt.client.text.IDocument;
-import org.eclipse.jdt.client.text.IRegion;
-//import org.eclipse.jdt.client.text.templates.Template;
-//import org.eclipse.jdt.client.text.templates.TemplateBuffer;
-//import org.eclipse.jdt.client.text.templates.TemplateException;
-//import org.eclipse.jdt.client.text.templates.TemplateVariable;
-//import org.eclipse.jdt.client.text.templates.persistence.TemplatePersistenceData;
-//import org.eclipse.jdt.client.text.templates.persistence.TemplateStore;
-
-import org.eclipse.jdt.client.core.Flags;
-import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.NamingConventions;
-//import org.eclipse.jdt.client.core.NamingConventions;
-import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
-import org.eclipse.jdt.client.core.dom.AST;
-import org.eclipse.jdt.client.core.dom.ASTNode;
-import org.eclipse.jdt.client.core.dom.ASTParser;
-import org.eclipse.jdt.client.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.client.core.dom.ArrayType;
 import org.eclipse.jdt.client.core.dom.CastExpression;
 import org.eclipse.jdt.client.core.dom.ClassInstanceCreation;
@@ -61,27 +24,29 @@ import org.eclipse.jdt.client.core.dom.IBinding;
 import org.eclipse.jdt.client.core.dom.IMethodBinding;
 import org.eclipse.jdt.client.core.dom.ITypeBinding;
 import org.eclipse.jdt.client.core.dom.IVariableBinding;
-import org.eclipse.jdt.client.core.dom.MethodDeclaration;
 import org.eclipse.jdt.client.core.dom.MethodInvocation;
 import org.eclipse.jdt.client.core.dom.Modifier;
 import org.eclipse.jdt.client.core.dom.Name;
 import org.eclipse.jdt.client.core.dom.NumberLiteral;
 import org.eclipse.jdt.client.core.dom.ParameterizedType;
-import org.eclipse.jdt.client.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.client.core.dom.StringLiteral;
 import org.eclipse.jdt.client.core.dom.StructuralPropertyDescriptor;
 import org.eclipse.jdt.client.core.dom.SuperConstructorInvocation;
 import org.eclipse.jdt.client.core.dom.SuperMethodInvocation;
 import org.eclipse.jdt.client.core.dom.Type;
-import org.eclipse.jdt.client.core.dom.TypeParameter;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
-import org.eclipse.jdt.client.core.formatter.IndentManipulation;
-
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.corext.dom.Bindings;
-//import org.eclipse.jdt.client.internal.corext.template.java.CodeTemplateContext;
-//import org.eclipse.jdt.client.internal.corext.template.java.CodeTemplateContextType;
-//import org.eclipse.jdt.client.internal.corext.util.Strings;
+import org.eclipse.jdt.client.runtime.CoreException;
+import org.eclipse.jdt.client.text.IDocument;
+
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 //import org.eclipse.jdt.ui.CodeStyleConfiguration;
 //import org.eclipse.jdt.ui.PreferenceConstants;

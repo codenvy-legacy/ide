@@ -51,7 +51,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
-import org.eclipse.jdt.client.core.CompletionProposal;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;

@@ -17,7 +17,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.ElementValuePair;
 import org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
-import org.eclipse.jdt.client.internal.compiler.util.*;
+import org.eclipse.jdt.client.internal.compiler.util.HashtableOfObject;
 
 /** Internal class */
 class AnnotationBinding implements IAnnotationBinding

@@ -10,12 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.core.dom.rewrite;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.jdt.client.runtime.Assert;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.ToolFactory;
 import org.eclipse.jdt.client.core.dom.ASTNode;
@@ -27,6 +21,7 @@ import org.eclipse.jdt.client.core.dom.Statement;
 import org.eclipse.jdt.client.core.formatter.CodeFormatter;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jdt.client.core.formatter.IndentManipulation;
+import org.eclipse.jdt.client.runtime.Assert;
 import org.eclipse.jdt.client.text.BadLocationException;
 import org.eclipse.jdt.client.text.BadPositionCategoryException;
 import org.eclipse.jdt.client.text.DefaultPositionUpdater;
@@ -37,6 +32,11 @@ import org.eclipse.jdt.client.text.edits.InsertEdit;
 import org.eclipse.jdt.client.text.edits.MultiTextEdit;
 import org.eclipse.jdt.client.text.edits.ReplaceEdit;
 import org.eclipse.jdt.client.text.edits.TextEdit;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /* package */final class ASTRewriteFormatter
 {

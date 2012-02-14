@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.text;
 
+import org.eclipse.jdt.client.text.AbstractLineTracker.DelimiterInfo;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.eclipse.jdt.client.text.AbstractLineTracker.DelimiterInfo;
 
 /**
  * Abstract, read-only implementation of <code>ILineTracker</code>. It lets the definition of line delimiters to subclasses.

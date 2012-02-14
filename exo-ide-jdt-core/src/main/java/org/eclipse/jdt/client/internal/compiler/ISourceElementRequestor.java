@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler;
 
-import java.util.HashMap;
-
 import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;
 import org.eclipse.jdt.client.internal.compiler.ast.Annotation;
@@ -19,6 +17,8 @@ import org.eclipse.jdt.client.internal.compiler.ast.Expression;
 import org.eclipse.jdt.client.internal.compiler.ast.FieldDeclaration;
 import org.eclipse.jdt.client.internal.compiler.ast.ImportReference;
 import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
+
+import java.util.HashMap;
 
 /*
  * Part of the source element parser responsible for building the output. It

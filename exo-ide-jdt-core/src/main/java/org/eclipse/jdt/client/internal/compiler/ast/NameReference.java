@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
+import org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite;
+import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
 public abstract class NameReference extends Reference implements InvocationSite
 {

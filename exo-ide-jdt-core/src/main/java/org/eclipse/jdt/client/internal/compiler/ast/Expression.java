@@ -11,12 +11,9 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 
-import java.util.ArrayList;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.client.internal.compiler.codegen.BranchLabel;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowContext;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
@@ -36,8 +33,8 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeVariableBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.WildcardBinding;
-import org.eclipse.jdt.client.internal.compiler.problem.ShouldNotImplement;
-import org.eclipse.jdt.client.internal.compiler.util.Messages;
+
+import java.util.ArrayList;
 
 public abstract class Expression extends Statement
 {

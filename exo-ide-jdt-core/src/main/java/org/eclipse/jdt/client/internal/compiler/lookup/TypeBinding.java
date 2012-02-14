@@ -11,10 +11,10 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import java.util.List;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
+
+import java.util.List;
 
 /*
  * Not all fields defined by this type (& its subclasses) are initialized when it is created.

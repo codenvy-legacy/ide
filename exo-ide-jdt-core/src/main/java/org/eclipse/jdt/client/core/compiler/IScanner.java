@@ -11,7 +11,6 @@
 
 package org.eclipse.jdt.client.core.compiler;
 
-import org.eclipse.jdt.client.core.compiler.InvalidInputException;
 
 /**
  * Definition of a Java scanner, as returned by the <code>ToolFactory</code>. The scanner is responsible for tokenizing a given

@@ -12,8 +12,8 @@ package org.eclipse.jdt.client.astview.views;
 
 import com.google.gwt.user.client.ui.Image;
 
-import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.compiler.IProblem;
+import org.eclipse.jdt.client.core.dom.CompilationUnit;
 
 /**
  *

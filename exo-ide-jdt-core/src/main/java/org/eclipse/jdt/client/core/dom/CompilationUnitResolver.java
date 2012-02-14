@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.dom;
 
-import org.eclipse.jdt.client.DummyNameEnvironment;
-import org.eclipse.jdt.client.core.INameEnvironmentWithProgress;
 import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.CompilationResult;
@@ -31,7 +29,6 @@ import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
 import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
 import org.eclipse.jdt.client.internal.compiler.lookup.PackageBinding;
 import org.eclipse.jdt.client.internal.compiler.parser.Parser;
-import org.eclipse.jdt.client.internal.compiler.parser.SourceTypeConverter;
 import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilation;
 import org.eclipse.jdt.client.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;

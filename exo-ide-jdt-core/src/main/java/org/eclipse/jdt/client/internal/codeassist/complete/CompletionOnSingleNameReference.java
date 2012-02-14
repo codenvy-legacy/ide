@@ -31,8 +31,10 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
  * which should be replaced by the completion.
  */
 
-import org.eclipse.jdt.client.internal.compiler.ast.*;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
+import org.eclipse.jdt.client.internal.compiler.ast.SingleNameReference;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
 public class CompletionOnSingleNameReference extends SingleNameReference
 {

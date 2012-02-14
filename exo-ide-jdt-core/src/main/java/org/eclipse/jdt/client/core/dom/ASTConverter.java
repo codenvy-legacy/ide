@@ -11,12 +11,6 @@
 
 package org.eclipse.jdt.client.core.dom;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
@@ -52,6 +46,12 @@ import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 import org.eclipse.jdt.client.internal.core.util.Util;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /** Internal class for converting internal compiler ASTs into public ASTs. */
 class ASTConverter

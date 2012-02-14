@@ -14,10 +14,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;
@@ -32,6 +28,10 @@ import org.eclipse.jdt.client.internal.compiler.env.AccessRestriction;
 import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilation;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
 import org.eclipse.jdt.client.internal.compiler.util.HashtableOfObject;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class ClassScope extends Scope
 {

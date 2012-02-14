@@ -10,15 +10,11 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.text;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import org.eclipse.jdt.client.runtime.Assert;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
-import java.util.Set;
-
-import org.eclipse.jdt.client.runtime.Assert;
 
 /**
  * A collection of text functions.

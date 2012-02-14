@@ -11,9 +11,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-import java.util.HashMap;
-import java.util.Iterator;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;
@@ -29,6 +26,9 @@ import org.eclipse.jdt.client.internal.compiler.impl.Constant;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemSeverities;
 import org.eclipse.jdt.client.internal.compiler.util.SimpleLookupTable;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
+
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class SourceTypeBinding extends ReferenceBinding
 {

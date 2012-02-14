@@ -11,9 +11,13 @@
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
 import org.eclipse.jdt.client.core.compiler.CharOperation;
-import org.eclipse.jdt.client.internal.compiler.ast.*;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.CaseStatement;
+import org.eclipse.jdt.client.internal.compiler.ast.LocalDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.MethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.client.internal.compiler.impl.Constant;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
 
 public class BlockScope extends Scope

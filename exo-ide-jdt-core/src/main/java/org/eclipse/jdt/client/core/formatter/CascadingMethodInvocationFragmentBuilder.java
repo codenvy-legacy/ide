@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.formatter;
 
-import java.util.ArrayList;
-
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.MessageSend;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+
+import java.util.ArrayList;
 
 class CascadingMethodInvocationFragmentBuilder extends ASTVisitor
 {
