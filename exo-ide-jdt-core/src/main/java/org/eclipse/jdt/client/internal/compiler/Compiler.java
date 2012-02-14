@@ -12,7 +12,6 @@
 package org.eclipse.jdt.client.internal.compiler;
 
 import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
-import org.eclipse.jdt.client.core.compiler.CompilationProgress;
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration;
@@ -49,8 +48,6 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
 
    public CompilerStats stats;
 
-   public CompilationProgress progress;
-
    public int remainingIterations = 1;
 
    // management of unit to be processed
@@ -84,38 +81,38 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
     */
    public static IDebugRequestor DebugRequestor = null;
 
-   /**
-    * Answer a new compiler using the given name environment and compiler options. The environment and options will be in effect
-    * for the lifetime of the compiler. When the compiler is run, compilation results are sent to the given requestor.
-    * 
-    * @param environment org.eclipse.jdt.internal.compiler.api.env.INameEnvironment Environment used by the compiler in order to
-    *           resolve type and package names. The name environment implements the actual connection of the compiler to the
-    *           outside world (e.g. in batch mode the name environment is performing pure file accesses, reuse previous build
-    *           state or connection to repositories). Note: the name environment is responsible for implementing the actual
-    *           classpath rules.
-    * 
-    * @param policy org.eclipse.jdt.internal.compiler.api.problem.IErrorHandlingPolicy Configurable part for problem handling,
-    *           allowing the compiler client to specify the rules for handling problems (stop on first error or accumulate them
-    *           all) and at the same time perform some actions such as opening a dialog in UI when compiling interactively.
-    * @see org.eclipse.jdt.client.internal.compiler.DefaultErrorHandlingPolicies
-    * 
-    * @param options org.eclipse.jdt.internal.compiler.impl.CompilerOptions The options that control the compiler behavior.
-    * 
-    * @param requestor org.eclipse.jdt.internal.compiler.api.ICompilerRequestor Component which will receive and persist all
-    *           compilation results and is intended to consume them as they are produced. Typically, in a batch compiler, it is
-    *           responsible for writing out the actual .class files to the file system.
-    * @see org.eclipse.jdt.client.internal.compiler.CompilationResult
-    * 
-    * @param problemFactory org.eclipse.jdt.internal.compiler.api.problem.IProblemFactory Factory used inside the compiler to
-    *           create problem descriptors. It allows the compiler client to supply its own representation of compilation problems
-    *           in order to avoid object conversions. Note that the factory is not supposed to accumulate the created problems,
-    *           the compiler will gather them all and hand them back as part of the compilation unit result.
-    */
-   public Compiler(INameEnvironment environment, IErrorHandlingPolicy policy, CompilerOptions options,
-      final ICompilerRequestor requestor, IProblemFactory problemFactory)
-   {
-      this(environment, policy, options, requestor, problemFactory, null /* progress */);
-   }
+//   /**
+//    * Answer a new compiler using the given name environment and compiler options. The environment and options will be in effect
+//    * for the lifetime of the compiler. When the compiler is run, compilation results are sent to the given requestor.
+//    * 
+//    * @param environment org.eclipse.jdt.internal.compiler.api.env.INameEnvironment Environment used by the compiler in order to
+//    *           resolve type and package names. The name environment implements the actual connection of the compiler to the
+//    *           outside world (e.g. in batch mode the name environment is performing pure file accesses, reuse previous build
+//    *           state or connection to repositories). Note: the name environment is responsible for implementing the actual
+//    *           classpath rules.
+//    * 
+//    * @param policy org.eclipse.jdt.internal.compiler.api.problem.IErrorHandlingPolicy Configurable part for problem handling,
+//    *           allowing the compiler client to specify the rules for handling problems (stop on first error or accumulate them
+//    *           all) and at the same time perform some actions such as opening a dialog in UI when compiling interactively.
+//    * @see org.eclipse.jdt.client.internal.compiler.DefaultErrorHandlingPolicies
+//    * 
+//    * @param options org.eclipse.jdt.internal.compiler.impl.CompilerOptions The options that control the compiler behavior.
+//    * 
+//    * @param requestor org.eclipse.jdt.internal.compiler.api.ICompilerRequestor Component which will receive and persist all
+//    *           compilation results and is intended to consume them as they are produced. Typically, in a batch compiler, it is
+//    *           responsible for writing out the actual .class files to the file system.
+//    * @see org.eclipse.jdt.client.internal.compiler.CompilationResult
+//    * 
+//    * @param problemFactory org.eclipse.jdt.internal.compiler.api.problem.IProblemFactory Factory used inside the compiler to
+//    *           create problem descriptors. It allows the compiler client to supply its own representation of compilation problems
+//    *           in order to avoid object conversions. Note that the factory is not supposed to accumulate the created problems,
+//    *           the compiler will gather them all and hand them back as part of the compilation unit result.
+//    */
+//   public Compiler(INameEnvironment environment, IErrorHandlingPolicy policy, CompilerOptions options,
+//      final ICompilerRequestor requestor, IProblemFactory problemFactory)
+//   {
+//      this(environment, policy, options, requestor, problemFactory, null /* progress */);
+//   }
 
    // /**
    // * Answer a new compiler using the given name environment and compiler options.
@@ -164,11 +161,10 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
    // }
 
    public Compiler(INameEnvironment environment, IErrorHandlingPolicy policy, CompilerOptions options,
-      final ICompilerRequestor requestor, IProblemFactory problemFactory, CompilationProgress progress)
+      final ICompilerRequestor requestor, IProblemFactory problemFactory)
    {
 
       this.options = options;
-      this.progress = progress;
 
       // wrap requestor in DebugRequestor if one is specified
       if (DebugRequestor == null)
@@ -281,184 +277,17 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
       internalBeginToCompile(sourceUnits, maxUnits);
    }
 
-   /**
-    * Checks whether the compilation has been canceled and reports the given progress to the compiler progress.
-    */
-   protected void reportProgress(String taskDecription)
-   {
-      if (this.progress != null)
-      {
-         if (this.progress.isCanceled())
-         {
-            // Only AbortCompilation can stop the compiler cleanly.
-            // We check cancellation again following the call to compile.
-            throw new AbortCompilation(true, null);
-         }
-         this.progress.setTaskName(taskDecription);
-      }
-   }
 
-   /**
-    * Checks whether the compilation has been canceled and reports the given work increment to the compiler progress.
-    */
-   protected void reportWorked(int workIncrement, int currentUnitIndex)
-   {
-      if (this.progress != null)
-      {
-         if (this.progress.isCanceled())
-         {
-            // Only AbortCompilation can stop the compiler cleanly.
-            // We check cancellation again following the call to compile.
-            throw new AbortCompilation(true, null);
-         }
-         this.progress.worked(workIncrement, (this.totalUnits * this.remainingIterations) - currentUnitIndex - 1);
-      }
-   }
-
-   /**
-    * // * General API // * -> compile each of supplied files // * -> recompile any required types for which we have an incomplete
-    * principle structure //
-    */
-   // public void compile(ICompilationUnit[] sourceUnits)
-   // {
-   // this.stats.startTime = System.currentTimeMillis();
-   // CompilationUnitDeclaration unit = null;
-   // ProcessTaskManager processingTask = null;
-   // try
-   // {
-   // // build and record parsed units
-   // reportProgress(Messages.compilation_beginningToCompile);
-   //
-   // if (this.annotationProcessorManager == null)
-   // {
-   // beginToCompile(sourceUnits);
-   // }
-   // else
-   // {
-   // ICompilationUnit[] originalUnits = org.eclipse.jdt.client.internal.core.util.Util.clone(sourceUnits); // remember source
-   // units in case a source type collision occurs
-   // try
-   // {
-   // beginToCompile(sourceUnits);
-   //
-   // processAnnotations();
-   // if (!this.options.generateClassFiles)
-   // {
-   // // -proc:only was set on the command line
-   // return;
-   // }
-   // }
-   // catch (SourceTypeCollisionException e)
-   // {
-   // reset();
-   // // a generated type was referenced before it was created
-   // // the compiler either created a MissingType or found a BinaryType for it
-   // // so add the processor's generated files & start over,
-   // // but remember to only pass the generated files to the annotation processor
-   // int originalLength = originalUnits.length;
-   // int newProcessedLength = e.newAnnotationProcessorUnits.length;
-   // ICompilationUnit[] combinedUnits = new ICompilationUnit[originalLength + newProcessedLength];
-   // System.arraycopy(originalUnits, 0, combinedUnits, 0, originalLength);
-   // System.arraycopy(e.newAnnotationProcessorUnits, 0, combinedUnits, originalLength, newProcessedLength);
-   // this.annotationProcessorStartIndex = originalLength;
-   // compile(combinedUnits);
-   // return;
-   // }
-   // }
-   //
-   // if (this.useSingleThread)
-   // {
-   // // process all units (some more could be injected in the loop by the lookup environment)
-   // for (int i = 0; i < this.totalUnits; i++)
-   // {
-   // unit = this.unitsToProcess[i];
-   // reportProgress(Messages.bind(Messages.compilation_processing, new String(unit.getFileName())));
-   // try
-   // {
-   // process(unit, i);
-   // }
-   // finally
-   // {
-   // // cleanup compilation unit result
-   // unit.cleanUp();
-   // }
-   // this.unitsToProcess[i] = null; // release reference to processed unit declaration
-   //
-   // reportWorked(1, i);
-   // this.stats.lineCount += unit.compilationResult.lineSeparatorPositions.length;
-   // long acceptStart = System.currentTimeMillis();
-   // this.requestor.acceptResult(unit.compilationResult.tagAsAccepted());
-   // this.stats.generateTime += System.currentTimeMillis() - acceptStart; // record accept time as part of generation
-   // }
-   // }
-   // else
-   // {
-   // processingTask = new ProcessTaskManager(this);
-   // int acceptedCount = 0;
-   // // process all units (some more could be injected in the loop by the lookup environment)
-   // // the processTask can continue to process units until its fixed sized cache is full then it must wait
-   // // for this this thread to accept the units as they appear (it only waits if no units are available)
-   // while (true)
-   // {
-   // try
-   // {
-   // unit = processingTask.removeNextUnit(); // waits if no units are in the processed queue
-   // }
-   // catch (Error e)
-   // {
-   // unit = processingTask.unitToProcess;
-   // throw e;
-   // }
-   // catch (RuntimeException e)
-   // {
-   // unit = processingTask.unitToProcess;
-   // throw e;
-   // }
-   // if (unit == null)
-   // break;
-   // reportWorked(1, acceptedCount++);
-   // this.stats.lineCount += unit.compilationResult.lineSeparatorPositions.length;
-   // this.requestor.acceptResult(unit.compilationResult.tagAsAccepted());
-   // }
-   // }
-   // }
-   // catch (AbortCompilation e)
-   // {
-   // this.handleInternalException(e, unit);
-   // }
-   // catch (Error e)
-   // {
-   // this.handleInternalException(e, unit, null);
-   // throw e; // rethrow
-   // }
-   // catch (RuntimeException e)
-   // {
-   // this.handleInternalException(e, unit, null);
-   // throw e; // rethrow
-   // }
-   // finally
-   // {
-   // if (processingTask != null)
-   // {
-   // processingTask.shutdown();
-   // processingTask = null;
-   // }
-   // reset();
-   // this.annotationProcessorStartIndex = 0;
-   // this.stats.endTime = System.currentTimeMillis();
-   // }
-   // }
-
-   public synchronized CompilationUnitDeclaration getUnitToProcess(int next)
-   {
-      if (next < this.totalUnits)
-      {
-         CompilationUnitDeclaration unit = this.unitsToProcess[next];
-         this.unitsToProcess[next] = null; // release reference to processed unit declaration
-         return unit;
-      }
-      return null;
-   }
+//   public synchronized CompilationUnitDeclaration getUnitToProcess(int next)
+//   {
+//      if (next < this.totalUnits)
+//      {
+//         CompilationUnitDeclaration unit = this.unitsToProcess[next];
+//         this.unitsToProcess[next] = null; // release reference to processed unit declaration
+//         return unit;
+//      }
+//      return null;
+//   }
 
    public void setBinaryTypes(ReferenceBinding[] binaryTypes)
    {

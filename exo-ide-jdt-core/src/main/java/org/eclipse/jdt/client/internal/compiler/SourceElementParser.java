@@ -10,19 +10,46 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler;
 
-import java.util.HashMap;
-
-import org.eclipse.jdt.client.core.compiler.*;
-import org.eclipse.jdt.client.internal.compiler.ast.*;
+import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
+import org.eclipse.jdt.client.internal.compiler.ast.AllocationExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.Annotation;
+import org.eclipse.jdt.client.internal.compiler.ast.ArrayQualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.ArrayTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.ConstructorDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.Expression;
+import org.eclipse.jdt.client.internal.compiler.ast.FieldDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.FieldReference;
+import org.eclipse.jdt.client.internal.compiler.ast.ImportReference;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocAllocationExpression;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocFieldReference;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocMessageSend;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocQualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.JavadocSingleTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.MemberValuePair;
+import org.eclipse.jdt.client.internal.compiler.ast.MessageSend;
+import org.eclipse.jdt.client.internal.compiler.ast.MethodDeclaration;
+import org.eclipse.jdt.client.internal.compiler.ast.NameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.ParameterizedQualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.ParameterizedSingleTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.QualifiedNameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.QualifiedTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.SingleMemberAnnotation;
+import org.eclipse.jdt.client.internal.compiler.ast.SingleNameReference;
+import org.eclipse.jdt.client.internal.compiler.ast.SingleTypeReference;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.client.internal.compiler.env.*;
-import org.eclipse.jdt.client.internal.compiler.impl.*;
-import org.eclipse.jdt.client.internal.compiler.lookup.*;
-import org.eclipse.jdt.client.internal.compiler.problem.*;
+import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
+import org.eclipse.jdt.client.internal.compiler.impl.ReferenceContext;
+import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeConstants;
+import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
 import org.eclipse.jdt.client.internal.compiler.util.HashtableOfObjectToInt;
 import org.eclipse.jdt.client.internal.core.util.CommentRecorderParser;
-import org.eclipse.jdt.client.internal.core.util.Messages;
-import org.eclipse.jdt.client.runtime.IProgressMonitor;
+
+import java.util.HashMap;
 
 /**
  * A source element parser extracts structural and reference information from a piece of source.
@@ -1077,46 +1104,46 @@ public class SourceElementParser extends CommentRecorderParser
       return new SingleNameReference(source, positions);
    }
 
-   public CompilationUnitDeclaration parseCompilationUnit(ICompilationUnit unit, boolean fullParse, IProgressMonitor pm)
-   {
-
-      boolean old = this.diet;
-      CompilationUnitDeclaration parsedUnit = null;
-      try
-      {
-         this.diet = true;
-         this.reportReferenceInfo = fullParse;
-         CompilationResult compilationUnitResult = new CompilationResult(unit, 0, 0, this.options.maxProblemsPerUnit);
-         parsedUnit = parse(unit, compilationUnitResult);
-         if (pm != null && pm.isCanceled())
-            throw new RuntimeException(Messages.operation_cancelled);
-         if (this.scanner.recordLineSeparator)
-         {
-            this.requestor.acceptLineSeparatorPositions(compilationUnitResult.getLineSeparatorPositions());
-         }
-         int initialStart = this.scanner.initialPosition;
-         int initialEnd = this.scanner.eofPosition;
-         if (this.reportLocalDeclarations || fullParse)
-         {
-            this.diet = false;
-            getMethodBodies(parsedUnit);
-         }
-         this.scanner.resetTo(initialStart, initialEnd);
-         this.notifier.notifySourceElementRequestor(parsedUnit, this.scanner.initialPosition, this.scanner.eofPosition,
-            this.reportReferenceInfo, this.sourceEnds, this.nodesToCategories);
-         return parsedUnit;
-      }
-      catch (AbortCompilation e)
-      {
-         // ignore this exception
-      }
-      finally
-      {
-         this.diet = old;
-         reset();
-      }
-      return parsedUnit;
-   }
+//   public CompilationUnitDeclaration parseCompilationUnit(ICompilationUnit unit, boolean fullParse, IProgressMonitor pm)
+//   {
+//
+//      boolean old = this.diet;
+//      CompilationUnitDeclaration parsedUnit = null;
+//      try
+//      {
+//         this.diet = true;
+//         this.reportReferenceInfo = fullParse;
+//         CompilationResult compilationUnitResult = new CompilationResult(unit, 0, 0, this.options.maxProblemsPerUnit);
+//         parsedUnit = parse(unit, compilationUnitResult);
+//         if (pm != null && pm.isCanceled())
+//            throw new RuntimeException(Messages.operation_cancelled);
+//         if (this.scanner.recordLineSeparator)
+//         {
+//            this.requestor.acceptLineSeparatorPositions(compilationUnitResult.getLineSeparatorPositions());
+//         }
+//         int initialStart = this.scanner.initialPosition;
+//         int initialEnd = this.scanner.eofPosition;
+//         if (this.reportLocalDeclarations || fullParse)
+//         {
+//            this.diet = false;
+//            getMethodBodies(parsedUnit);
+//         }
+//         this.scanner.resetTo(initialStart, initialEnd);
+//         this.notifier.notifySourceElementRequestor(parsedUnit, this.scanner.initialPosition, this.scanner.eofPosition,
+//            this.reportReferenceInfo, this.sourceEnds, this.nodesToCategories);
+//         return parsedUnit;
+//      }
+//      catch (AbortCompilation e)
+//      {
+//         // ignore this exception
+//      }
+//      finally
+//      {
+//         this.diet = old;
+//         reset();
+//      }
+//      return parsedUnit;
+//   }
 
    private void rememberCategories()
    {

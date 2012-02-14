@@ -54,24 +54,6 @@ public class ExceptionLabel extends Label
       // }
    }
 
-   public void placeStart()
-   {
-      // int startPosition = this.codeStream.position;
-      // if (this.count > 0 && this.ranges[this.count - 1] == startPosition)
-      // { // start == previous end ?
-      // // reopen current handler
-      // this.count--;
-      // return;
-      // }
-      // // only need to grow on even additions (i.e. placeStart only)
-      // int length;
-      // if (this.count == (length = this.ranges.length))
-      // {
-      // System.arraycopy(this.ranges, 0, this.ranges = new int[length * 2], 0, length);
-      // }
-      // this.ranges[this.count++] = startPosition;
-   }
-
    public String toString()
    {
       String basic = getClass().getName();

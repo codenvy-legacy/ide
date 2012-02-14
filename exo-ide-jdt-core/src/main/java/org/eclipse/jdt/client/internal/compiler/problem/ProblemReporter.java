@@ -870,31 +870,6 @@ public class ProblemReporter extends ProblemHandler
          new String[]{new String(type.shortReadableName())}, location.sourceStart, location.sourceEnd);
    }
 
-   public void bytecodeExceeds64KLimit(AbstractMethodDeclaration location)
-   {
-      MethodBinding method = location.binding;
-      if (location.isConstructor())
-      {
-         this.handle(IProblem.BytecodeExceeds64KLimitForConstructor, new String[]{new String(location.selector),
-            typesAsString(method, false)}, new String[]{new String(location.selector), typesAsString(method, true)},
-            ProblemSeverities.Error | ProblemSeverities.Abort | ProblemSeverities.Fatal, location.sourceStart,
-            location.sourceEnd);
-      }
-      else
-      {
-         this.handle(IProblem.BytecodeExceeds64KLimit,
-            new String[]{new String(location.selector), typesAsString(method, false)}, new String[]{
-               new String(location.selector), typesAsString(method, true)}, ProblemSeverities.Error
-               | ProblemSeverities.Abort | ProblemSeverities.Fatal, location.sourceStart, location.sourceEnd);
-      }
-   }
-
-   public void bytecodeExceeds64KLimit(TypeDeclaration location)
-   {
-      this.handle(IProblem.BytecodeExceeds64KLimitForClinit, NoArgument, NoArgument, ProblemSeverities.Error
-         | ProblemSeverities.Abort | ProblemSeverities.Fatal, location.sourceStart, location.sourceEnd);
-   }
-
    public void cannotAllocateVoidArray(Expression expression)
    {
       this.handle(IProblem.CannotAllocateVoidArray, NoArgument, NoArgument, expression.sourceStart,

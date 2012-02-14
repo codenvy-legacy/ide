@@ -162,36 +162,6 @@ public final class AST {
 	 */
 	static final int RESOLVED_BINDINGS = 0x80000000;
 
-	/**
-	 * Internal method.
-	 * <p>
-	 * This method converts the given internal compiler AST for the given source string
-	 * into a compilation unit. This method is not intended to be called by clients.
-	 * </p>
-	 *
- 	 * @param level the API level; one of the LEVEL constants
-	 * @param compilationUnitDeclaration an internal AST node for a compilation unit declaration
-	 * @param source the string of the Java compilation unit
-	 * @param options compiler options
-	 * @param workingCopy the working copy that the AST is created from
-	 * @param monitor the progress monitor used to report progress and request cancellation,
-	 *     or <code>null</code> if none
-	 * @param isResolved whether the given compilation unit declaration is resolved
-	 * @return the compilation unit node
-	 * @deprecated Use org.eclipse.jdt.core.dom.AST.convertCompilationUnit(int, CompilationUnitDeclaration, Map, boolean, CompilationUnit, int, IProgressMonitor) instead
-	 * @noreference This method is not intended to be referenced by clients.
-	 */
-	public static CompilationUnit convertCompilationUnit(
-			int level,
-			org.eclipse.jdt.client.internal.compiler.ast.CompilationUnitDeclaration compilationUnitDeclaration,
-			char[] source,
-			Map options,
-			boolean isResolved,
-			int reconcileFlags,
-			IProgressMonitor monitor) {
-		return null;
-	}
-
 //	/**
 //	 * Internal method.
 //	 * <p>
@@ -2915,18 +2885,6 @@ public final class AST {
 		this.originalModificationCount = count;
 	}
 
-	/**
-     * Checks that this AST operation is only used when
-     * building level JLS2 ASTs.
-
-     * @exception UnsupportedOperationException
-	 * @since 3.0
-     */
-	void supportedOnlyIn2() {
-	  if (this.apiLevel != AST.JLS2) {
-	  	throw new UnsupportedOperationException("Operation not supported in JLS2 AST"); //$NON-NLS-1$
-	  }
-	}
 
 	/**
      * Checks that this AST operation is not used when

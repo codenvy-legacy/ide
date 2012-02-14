@@ -41,14 +41,6 @@ import org.eclipse.jdt.client.internal.core.util.Util;
 public class SourceTypeConverter extends TypeConverter
 {
 
-   /*
-    * Exception thrown while converting an anonymous type of a member type in this case, we must parse the source as the enclosing
-    * instance cannot be recreated from the model
-    */
-   public static class AnonymousMemberFound extends RuntimeException
-   {
-      private static final long serialVersionUID = 1L;
-   }
 
    public static final int FIELD = 0x01;
 

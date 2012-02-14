@@ -566,32 +566,32 @@ public class Util
       return true;
    }
 
-   /**
-    * Compares two arrays using equals() on the elements. The arrays are first sorted. Either or both arrays may be null. Returns
-    * true if both are null. Returns false if only one is null. If both are arrays, returns true iff they have the same length and
-    * iff, after sorting both arrays, all elements compare true with equals. The original arrays are left untouched.
-    */
-   public static boolean equalArraysOrNullSortFirst(Comparable[] a, Comparable[] b)
-   {
-      if (a == b)
-         return true;
-      if (a == null || b == null)
-         return false;
-      int len = a.length;
-      if (len != b.length)
-         return false;
-      if (len >= 2)
-      { // only need to sort if more than two items
-         a = sortCopy(a);
-         b = sortCopy(b);
-      }
-      for (int i = 0; i < len; ++i)
-      {
-         if (!a[i].equals(b[i]))
-            return false;
-      }
-      return true;
-   }
+//   /**
+//    * Compares two arrays using equals() on the elements. The arrays are first sorted. Either or both arrays may be null. Returns
+//    * true if both are null. Returns false if only one is null. If both are arrays, returns true iff they have the same length and
+//    * iff, after sorting both arrays, all elements compare true with equals. The original arrays are left untouched.
+//    */
+//   public static boolean equalArraysOrNullSortFirst(Comparable[] a, Comparable[] b)
+//   {
+//      if (a == b)
+//         return true;
+//      if (a == null || b == null)
+//         return false;
+//      int len = a.length;
+//      if (len != b.length)
+//         return false;
+//      if (len >= 2)
+//      { // only need to sort if more than two items
+//         a = sortCopy(a);
+//         b = sortCopy(b);
+//      }
+//      for (int i = 0; i < len; ++i)
+//      {
+//         if (!a[i].equals(b[i]))
+//            return false;
+//      }
+//      return true;
+//   }
 
    /**
     * Compares two String arrays using equals() on the elements. The arrays are first sorted. Either or both arrays may be null.
@@ -2508,64 +2508,64 @@ public class Util
       return copy;
    }
 
-   /*
-    * Returns whether the given compound name starts with the given prefix. Returns true if the n first elements of the prefix are
-    * equals and the last element of the prefix is a prefix of the corresponding element in the compound name.
-    */
-   public static boolean startsWithIgnoreCase(String[] compoundName, String[] prefix, boolean partialMatch)
-   {
-      int prefixLength = prefix.length;
-      int nameLength = compoundName.length;
-      if (prefixLength > nameLength)
-         return false;
-      for (int i = 0; i < prefixLength - 1; i++)
-      {
-         if (!compoundName[i].equalsIgnoreCase(prefix[i]))
-            return false;
-      }
-      return (partialMatch || prefixLength == nameLength)
-         && compoundName[prefixLength - 1].toLowerCase().startsWith(prefix[prefixLength - 1].toLowerCase());
-   }
-
-   /** Converts a String[] to char[][]. */
-   public static char[][] toCharArrays(String[] a)
-   {
-      int len = a.length;
-      if (len == 0)
-         return CharOperation.NO_CHAR_CHAR;
-      char[][] result = new char[len][];
-      for (int i = 0; i < len; ++i)
-      {
-         result[i] = a[i].toCharArray();
-      }
-      return result;
-   }
-
-   /** Converts a String to char[][], where segments are separate by '.'. */
-   public static char[][] toCompoundChars(String s)
-   {
-      int len = s.length();
-      if (len == 0)
-      {
-         return CharOperation.NO_CHAR_CHAR;
-      }
-      int segCount = 1;
-      for (int off = s.indexOf('.'); off != -1; off = s.indexOf('.', off + 1))
-      {
-         ++segCount;
-      }
-      char[][] segs = new char[segCount][];
-      int start = 0;
-      for (int i = 0; i < segCount; ++i)
-      {
-         int dot = s.indexOf('.', start);
-         int end = (dot == -1 ? s.length() : dot);
-         segs[i] = new char[end - start];
-         s.getChars(start, end, segs[i], 0);
-         start = end + 1;
-      }
-      return segs;
-   }
+//   /*
+//    * Returns whether the given compound name starts with the given prefix. Returns true if the n first elements of the prefix are
+//    * equals and the last element of the prefix is a prefix of the corresponding element in the compound name.
+//    */
+//   public static boolean startsWithIgnoreCase(String[] compoundName, String[] prefix, boolean partialMatch)
+//   {
+//      int prefixLength = prefix.length;
+//      int nameLength = compoundName.length;
+//      if (prefixLength > nameLength)
+//         return false;
+//      for (int i = 0; i < prefixLength - 1; i++)
+//      {
+//         if (!compoundName[i].equalsIgnoreCase(prefix[i]))
+//            return false;
+//      }
+//      return (partialMatch || prefixLength == nameLength)
+//         && compoundName[prefixLength - 1].toLowerCase().startsWith(prefix[prefixLength - 1].toLowerCase());
+//   }
+//
+//   /** Converts a String[] to char[][]. */
+//   public static char[][] toCharArrays(String[] a)
+//   {
+//      int len = a.length;
+//      if (len == 0)
+//         return CharOperation.NO_CHAR_CHAR;
+//      char[][] result = new char[len][];
+//      for (int i = 0; i < len; ++i)
+//      {
+//         result[i] = a[i].toCharArray();
+//      }
+//      return result;
+//   }
+//
+//   /** Converts a String to char[][], where segments are separate by '.'. */
+//   public static char[][] toCompoundChars(String s)
+//   {
+//      int len = s.length();
+//      if (len == 0)
+//      {
+//         return CharOperation.NO_CHAR_CHAR;
+//      }
+//      int segCount = 1;
+//      for (int off = s.indexOf('.'); off != -1; off = s.indexOf('.', off + 1))
+//      {
+//         ++segCount;
+//      }
+//      char[][] segs = new char[segCount][];
+//      int start = 0;
+//      for (int i = 0; i < segCount; ++i)
+//      {
+//         int dot = s.indexOf('.', start);
+//         int end = (dot == -1 ? s.length() : dot);
+//         segs[i] = new char[end - start];
+//         s.getChars(start, end, segs[i], 0);
+//         start = end + 1;
+//      }
+//      return segs;
+//   }
 
    // /*
    // * Converts the given URI to a local file. Use the existing file if the uri is on the local file system.
@@ -2593,77 +2593,77 @@ public class Util
       return sb.toString();
    }
 
-   /**
-    * Converts a char[][] and a char[] to String, where segments are separated by '.'.
-    */
-   public static String toString(char[][] c, char[] d)
-   {
-      if (c == null)
-         return new String(d);
-      StringBuffer sb = new StringBuffer();
-      for (int i = 0, max = c.length; i < max; ++i)
-      {
-         sb.append(c[i]);
-         sb.append('.');
-      }
-      sb.append(d);
-      return sb.toString();
-   }
+//   /**
+//    * Converts a char[][] and a char[] to String, where segments are separated by '.'.
+//    */
+//   public static String toString(char[][] c, char[] d)
+//   {
+//      if (c == null)
+//         return new String(d);
+//      StringBuffer sb = new StringBuffer();
+//      for (int i = 0, max = c.length; i < max; ++i)
+//      {
+//         sb.append(c[i]);
+//         sb.append('.');
+//      }
+//      sb.append(d);
+//      return sb.toString();
+//   }
+//
+//   /* Converts a char[][] to String[]. */
+//   public static String[] toStrings(char[][] a)
+//   {
+//      int len = a.length;
+//      String[] result = new String[len];
+//      for (int i = 0; i < len; ++i)
+//      {
+//         result[i] = new String(a[i]);
+//      }
+//      return result;
+//   }
 
-   /* Converts a char[][] to String[]. */
-   public static String[] toStrings(char[][] a)
-   {
-      int len = a.length;
-      String[] result = new String[len];
-      for (int i = 0; i < len; ++i)
-      {
-         result[i] = new String(a[i]);
-      }
-      return result;
-   }
+//   private static char[] toUnresolvedTypeSignature(char[] signature)
+//   {
+//      int length = signature.length;
+//      if (length <= 1)
+//         return signature;
+//      StringBuffer buffer = new StringBuffer(length);
+//      toUnresolvedTypeSignature(signature, 0, length, buffer);
+//      int bufferLength = buffer.length();
+//      char[] result = new char[bufferLength];
+//      buffer.getChars(0, bufferLength, result, 0);
+//      return result;
+//   }
 
-   private static char[] toUnresolvedTypeSignature(char[] signature)
-   {
-      int length = signature.length;
-      if (length <= 1)
-         return signature;
-      StringBuffer buffer = new StringBuffer(length);
-      toUnresolvedTypeSignature(signature, 0, length, buffer);
-      int bufferLength = buffer.length();
-      char[] result = new char[bufferLength];
-      buffer.getChars(0, bufferLength, result, 0);
-      return result;
-   }
-
-   private static int toUnresolvedTypeSignature(char[] signature, int start, int length, StringBuffer buffer)
-   {
-      if (signature[start] == Signature.C_RESOLVED)
-         buffer.append(Signature.C_UNRESOLVED);
-      else
-         buffer.append(signature[start]);
-      for (int i = start + 1; i < length; i++)
-      {
-         char c = signature[i];
-         switch (c)
-         {
-            case '/' :
-            case Signature.C_DOLLAR :
-               buffer.append(Signature.C_DOT);
-               break;
-            case Signature.C_GENERIC_START :
-               buffer.append(Signature.C_GENERIC_START);
-               i = toUnresolvedTypeSignature(signature, i + 1, length, buffer);
-               break;
-            case Signature.C_GENERIC_END :
-               buffer.append(Signature.C_GENERIC_END);
-               return i;
-            default :
-               buffer.append(c);
-               break;
-         }
-      }
-      return length;
-   }
+//   private static int toUnresolvedTypeSignature(char[] signature, int start, int length, StringBuffer buffer)
+//   {
+//      if (signature[start] == Signature.C_RESOLVED)
+//         buffer.append(Signature.C_UNRESOLVED);
+//      else
+//         buffer.append(signature[start]);
+//      for (int i = start + 1; i < length; i++)
+//      {
+//         char c = signature[i];
+//         switch (c)
+//         {
+//            case '/' :
+//            case Signature.C_DOLLAR :
+//               buffer.append(Signature.C_DOT);
+//               break;
+//            case Signature.C_GENERIC_START :
+//               buffer.append(Signature.C_GENERIC_START);
+//               i = toUnresolvedTypeSignature(signature, i + 1, length, buffer);
+//               break;
+//            case Signature.C_GENERIC_END :
+//               buffer.append(Signature.C_GENERIC_END);
+//               return i;
+//            default :
+//               buffer.append(c);
+//               break;
+//         }
+//      }
+//      return length;
+//   }
 
    private static void appendArrayTypeSignature(char[] string, int start, StringBuffer buffer, boolean compact)
    {
@@ -2787,81 +2787,81 @@ public class Util
       }
    }
 
-   public static String toString(char[] declaringClass, char[] methodName, char[] methodSignature,
-      boolean includeReturnType, boolean compact)
-   {
-      final boolean isConstructor = CharOperation.equals(methodName, INIT);
-      int firstParen = CharOperation.indexOf(Signature.C_PARAM_START, methodSignature);
-      if (firstParen == -1)
-      {
-         return ""; //$NON-NLS-1$
-      }
-
-      StringBuffer buffer = new StringBuffer(methodSignature.length + 10);
-
-      // decode declaring class name
-      // it can be either an array signature or a type signature
-      if (declaringClass != null && declaringClass.length > 0)
-      {
-         char[] declaringClassSignature = null;
-         if (declaringClass[0] == Signature.C_ARRAY)
-         {
-            CharOperation.replace(declaringClass, '/', '.');
-            declaringClassSignature = Signature.toCharArray(declaringClass);
-         }
-         else
-         {
-            CharOperation.replace(declaringClass, '/', '.');
-            declaringClassSignature = declaringClass;
-         }
-         int lastIndexOfSlash = CharOperation.lastIndexOf('.', declaringClassSignature);
-         if (compact && lastIndexOfSlash != -1)
-         {
-            buffer.append(declaringClassSignature, lastIndexOfSlash + 1, declaringClassSignature.length
-               - lastIndexOfSlash - 1);
-         }
-         else
-         {
-            buffer.append(declaringClassSignature);
-         }
-         if (!isConstructor)
-         {
-            buffer.append('.');
-         }
-      }
-
-      // selector
-      if (!isConstructor && methodName != null)
-      {
-         buffer.append(methodName);
-      }
-
-      // parameters
-      buffer.append('(');
-      char[][] pts = Signature.getParameterTypes(methodSignature);
-      for (int i = 0, max = pts.length; i < max; i++)
-      {
-         appendTypeSignature(pts[i], 0, buffer, compact);
-         if (i != pts.length - 1)
-         {
-            buffer.append(',');
-            buffer.append(' ');
-         }
-      }
-      buffer.append(')');
-
-      if (!isConstructor)
-      {
-         buffer.append(" : "); //$NON-NLS-1$
-         // return type
-         if (includeReturnType)
-         {
-            char[] rts = Signature.getReturnType(methodSignature);
-            appendTypeSignature(rts, 0, buffer, compact);
-         }
-      }
-      return String.valueOf(buffer);
-   }
+//   public static String toString(char[] declaringClass, char[] methodName, char[] methodSignature,
+//      boolean includeReturnType, boolean compact)
+//   {
+//      final boolean isConstructor = CharOperation.equals(methodName, INIT);
+//      int firstParen = CharOperation.indexOf(Signature.C_PARAM_START, methodSignature);
+//      if (firstParen == -1)
+//      {
+//         return ""; //$NON-NLS-1$
+//      }
+//
+//      StringBuffer buffer = new StringBuffer(methodSignature.length + 10);
+//
+//      // decode declaring class name
+//      // it can be either an array signature or a type signature
+//      if (declaringClass != null && declaringClass.length > 0)
+//      {
+//         char[] declaringClassSignature = null;
+//         if (declaringClass[0] == Signature.C_ARRAY)
+//         {
+//            CharOperation.replace(declaringClass, '/', '.');
+//            declaringClassSignature = Signature.toCharArray(declaringClass);
+//         }
+//         else
+//         {
+//            CharOperation.replace(declaringClass, '/', '.');
+//            declaringClassSignature = declaringClass;
+//         }
+//         int lastIndexOfSlash = CharOperation.lastIndexOf('.', declaringClassSignature);
+//         if (compact && lastIndexOfSlash != -1)
+//         {
+//            buffer.append(declaringClassSignature, lastIndexOfSlash + 1, declaringClassSignature.length
+//               - lastIndexOfSlash - 1);
+//         }
+//         else
+//         {
+//            buffer.append(declaringClassSignature);
+//         }
+//         if (!isConstructor)
+//         {
+//            buffer.append('.');
+//         }
+//      }
+//
+//      // selector
+//      if (!isConstructor && methodName != null)
+//      {
+//         buffer.append(methodName);
+//      }
+//
+//      // parameters
+//      buffer.append('(');
+//      char[][] pts = Signature.getParameterTypes(methodSignature);
+//      for (int i = 0, max = pts.length; i < max; i++)
+//      {
+//         appendTypeSignature(pts[i], 0, buffer, compact);
+//         if (i != pts.length - 1)
+//         {
+//            buffer.append(',');
+//            buffer.append(' ');
+//         }
+//      }
+//      buffer.append(')');
+//
+//      if (!isConstructor)
+//      {
+//         buffer.append(" : "); //$NON-NLS-1$
+//         // return type
+//         if (includeReturnType)
+//         {
+//            char[] rts = Signature.getReturnType(methodSignature);
+//            appendTypeSignature(rts, 0, buffer, compact);
+//         }
+//      }
+//      return String.valueOf(buffer);
+//   }
 
    /*
     * Returns the unresolved type parameter signatures of the given method e.g. {"QString;", "[int", "[[Qjava.util.Vector;"}
@@ -2949,45 +2949,45 @@ public class Util
    // printStream.println();
    // }
 
-   /**
-    * Returns true if the given name ends with one of the known java like extension. (implementation is not creating extra
-    * strings)
-    */
-   public final static boolean isJavaLikeFileName(String name)
-   {
-      if (name == null)
-         return false;
-      return indexOfJavaLikeExtension(name) != -1;
-   }
+//   /**
+//    * Returns true if the given name ends with one of the known java like extension. (implementation is not creating extra
+//    * strings)
+//    */
+//   public final static boolean isJavaLikeFileName(String name)
+//   {
+//      if (name == null)
+//         return false;
+//      return indexOfJavaLikeExtension(name) != -1;
+//   }
 
-   /**
-    * Returns true if the given name ends with one of the known java like extension. (implementation is not creating extra
-    * strings)
-    */
-   public final static boolean isJavaLikeFileName(char[] fileName)
-   {
-      if (fileName == null)
-         return false;
-      int fileNameLength = fileName.length;
-      char[][] javaLikeExtensions = getJavaLikeExtensions();
-      extensions : for (int i = 0, length = javaLikeExtensions.length; i < length; i++)
-      {
-         char[] extension = javaLikeExtensions[i];
-         int extensionLength = extension.length;
-         int extensionStart = fileNameLength - extensionLength;
-         if (extensionStart - 1 < 0)
-            continue;
-         if (fileName[extensionStart - 1] != '.')
-            continue;
-         for (int j = 0; j < extensionLength; j++)
-         {
-            if (fileName[extensionStart + j] != extension[j])
-               continue extensions;
-         }
-         return true;
-      }
-      return false;
-   }
+//   /**
+//    * Returns true if the given name ends with one of the known java like extension. (implementation is not creating extra
+//    * strings)
+//    */
+//   public final static boolean isJavaLikeFileName(char[] fileName)
+//   {
+//      if (fileName == null)
+//         return false;
+//      int fileNameLength = fileName.length;
+//      char[][] javaLikeExtensions = getJavaLikeExtensions();
+//      extensions : for (int i = 0, length = javaLikeExtensions.length; i < length; i++)
+//      {
+//         char[] extension = javaLikeExtensions[i];
+//         int extensionLength = extension.length;
+//         int extensionStart = fileNameLength - extensionLength;
+//         if (extensionStart - 1 < 0)
+//            continue;
+//         if (fileName[extensionStart - 1] != '.')
+//            continue;
+//         for (int j = 0; j < extensionLength; j++)
+//         {
+//            if (fileName[extensionStart + j] != extension[j])
+//               continue extensions;
+//         }
+//         return true;
+//      }
+//      return false;
+//   }
 
 /** Get all type arguments from an array of signatures.
     * 
@@ -3016,130 +3016,6 @@ public class Util
       return typeArguments;
    }
 
-   // public static IAnnotation getAnnotation(JavaElement parent, IBinaryAnnotation binaryAnnotation, String memberValuePairName)
-   // {
-   // char[] typeName = org.eclipse.jdt.core.Signature.toCharArray(CharOperation.replaceOnCopy(binaryAnnotation.getTypeName(),
-   // '/', '.'));
-   // return new Annotation(parent, new String(typeName), memberValuePairName);
-   // }
-   //
-   // public static Object getAnnotationMemberValue(JavaElement parent, MemberValuePair memberValuePair, Object binaryValue) {
-   // if (binaryValue instanceof Constant) {
-   // return getAnnotationMemberValue(memberValuePair, (Constant) binaryValue);
-   // } else if (binaryValue instanceof IBinaryAnnotation) {
-   // memberValuePair.valueKind = IMemberValuePair.K_ANNOTATION;
-   // return getAnnotation(parent, (IBinaryAnnotation) binaryValue, memberValuePair.getMemberName());
-   // } else if (binaryValue instanceof ClassSignature) {
-   // memberValuePair.valueKind = IMemberValuePair.K_CLASS;
-   // char[] className = Signature.toCharArray(CharOperation.replaceOnCopy(((ClassSignature) binaryValue).getTypeName(), '/',
-   // '.'));
-   // return new String(className);
-   // } else if (binaryValue instanceof EnumConstantSignature) {
-   // memberValuePair.valueKind = IMemberValuePair.K_QUALIFIED_NAME;
-   // EnumConstantSignature enumConstant = (EnumConstantSignature) binaryValue;
-   // char[] enumName = Signature.toCharArray(CharOperation.replaceOnCopy(enumConstant.getTypeName(), '/', '.'));
-   // char[] qualifiedName = CharOperation.concat(enumName, enumConstant.getEnumConstantName(), '.');
-   // return new String(qualifiedName);
-   // } else if (binaryValue instanceof Object[]) {
-   // memberValuePair.valueKind = -1; // modified below by the first call to getMemberValue(...)
-   // Object[] binaryValues = (Object[]) binaryValue;
-   // int length = binaryValues.length;
-   // Object[] values = new Object[length];
-   // for (int i = 0; i < length; i++) {
-   // int previousValueKind = memberValuePair.valueKind;
-   // Object value = getAnnotationMemberValue(parent, memberValuePair, binaryValues[i]);
-   // if (previousValueKind != -1 && memberValuePair.valueKind != previousValueKind) {
-   // // values are heterogeneous, value kind is thus unknown
-   // memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
-   // }
-   // if (value instanceof Annotation) {
-   // Annotation annotation = (Annotation) value;
-   // for (int j = 0; j < i; j++) {
-   // if (annotation.equals(values[j])) {
-   // annotation.occurrenceCount++;
-   // }
-   // }
-   // }
-   // values[i] = value;
-   // }
-   // if (memberValuePair.valueKind == -1)
-   // memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
-   // return values;
-   // } else {
-   // memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
-   // return null;
-   // }
-   // }
-
-   // /*
-   // * Creates a member value from the given constant, and sets the valueKind on the given memberValuePair
-   // */
-   // public static Object getAnnotationMemberValue(MemberValuePair memberValuePair, Constant constant) {
-   // if (constant == null) {
-   // memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
-   // return null;
-   // }
-   // switch (constant.typeID()) {
-   // case TypeIds.T_int :
-   // memberValuePair.valueKind = IMemberValuePair.K_INT;
-   // return new Integer(constant.intValue());
-   // case TypeIds.T_byte :
-   // memberValuePair.valueKind = IMemberValuePair.K_BYTE;
-   // return new Byte(constant.byteValue());
-   // case TypeIds.T_short :
-   // memberValuePair.valueKind = IMemberValuePair.K_SHORT;
-   // return new Short(constant.shortValue());
-   // case TypeIds.T_char :
-   // memberValuePair.valueKind = IMemberValuePair.K_CHAR;
-   // return new Character(constant.charValue());
-   // case TypeIds.T_float :
-   // memberValuePair.valueKind = IMemberValuePair.K_FLOAT;
-   // return new Float(constant.floatValue());
-   // case TypeIds.T_double :
-   // memberValuePair.valueKind = IMemberValuePair.K_DOUBLE;
-   // return new Double(constant.doubleValue());
-   // case TypeIds.T_boolean :
-   // memberValuePair.valueKind = IMemberValuePair.K_BOOLEAN;
-   // return Boolean.valueOf(constant.booleanValue());
-   // case TypeIds.T_long :
-   // memberValuePair.valueKind = IMemberValuePair.K_LONG;
-   // return new Long(constant.longValue());
-   // case TypeIds.T_JavaLangString :
-   // memberValuePair.valueKind = IMemberValuePair.K_STRING;
-   // return constant.stringValue();
-   // default:
-   // memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
-   // return null;
-   // }
-   // }
-   //
-   // /*
-   // * Creates a member value from the given constant in case of negative numerals,
-   // * and sets the valueKind on the given memberValuePair
-   // */
-   // public static Object getNegativeAnnotationMemberValue(MemberValuePair memberValuePair, Constant constant) {
-   // if (constant == null) {
-   // memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
-   // return null;
-   // }
-   // switch (constant.typeID()) {
-   // case TypeIds.T_int :
-   // memberValuePair.valueKind = IMemberValuePair.K_INT;
-   // return new Integer(constant.intValue() * -1);
-   // case TypeIds.T_float :
-   // memberValuePair.valueKind = IMemberValuePair.K_FLOAT;
-   // return new Float(constant.floatValue() * -1.0f);
-   // case TypeIds.T_double :
-   // memberValuePair.valueKind = IMemberValuePair.K_DOUBLE;
-   // return new Double(constant.doubleValue() * -1.0);
-   // case TypeIds.T_long :
-   // memberValuePair.valueKind = IMemberValuePair.K_LONG;
-   // return new Long(constant.longValue() * -1L);
-   // default:
-   // memberValuePair.valueKind = IMemberValuePair.K_UNKNOWN;
-   // return null;
-   // }
-   // }
    /**
     * Split signatures of all levels from a type unique key.
     * 
@@ -3210,18 +3086,18 @@ public class Util
       return typeSignatures;
    }
 
-   /* Can throw IllegalArgumentException or ArrayIndexOutOfBoundsException */
-   public static String toAnchor(int startingIndex, char[] methodSignature, String methodName, boolean isVarArgs)
-   {
-      try
-      {
-         return new String(toAnchor(startingIndex, methodSignature, methodName.toCharArray(), isVarArgs));
-      }
-      catch (IllegalArgumentException e)
-      {
-         return null;
-      }
-   }
+//   /* Can throw IllegalArgumentException or ArrayIndexOutOfBoundsException */
+//   public static String toAnchor(int startingIndex, char[] methodSignature, String methodName, boolean isVarArgs)
+//   {
+//      try
+//      {
+//         return new String(toAnchor(startingIndex, methodSignature, methodName.toCharArray(), isVarArgs));
+//      }
+//      catch (IllegalArgumentException e)
+//      {
+//         return null;
+//      }
+//   }
 
    public static char[] toAnchor(int startingIndex, char[] methodSignature, char[] methodName, boolean isVargArgs)
    {

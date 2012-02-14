@@ -171,7 +171,6 @@ import org.eclipse.jdt.client.internal.compiler.util.SuffixConstants;
 import org.eclipse.jdt.client.internal.core.BasicCompilationUnit;
 import org.eclipse.jdt.client.internal.core.INamingRequestor;
 import org.eclipse.jdt.client.internal.core.InternalNamingConventions;
-import org.eclipse.jdt.client.internal.core.util.Messages;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.runtime.OperationCanceledException;
 
@@ -2056,8 +2055,8 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          System.out.println("COMPLETION - Source :"); //$NON-NLS-1$
          System.out.println(sourceUnit.getContents());
       }
-      if (this.monitor != null)
-         this.monitor.beginTask(Messages.engine_completing, IProgressMonitor.UNKNOWN);
+//      if (this.monitor != null)
+//         this.monitor.beginTask(Messages.engine_completing, IProgressMonitor.UNKNOWN);
       this.requestor.beginReporting();
       boolean contextAccepted = false;
       try
@@ -7459,54 +7458,54 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       }
    }
 
-   protected void findFieldsAndMethodsFromAnotherReceiver(char[] token, TypeReference receiverType, Scope scope,
-      ObjectVector fieldsFound, ObjectVector methodsFound, InvocationSite invocationSite, Scope invocationScope,
-      boolean implicitCall, boolean superCall, Binding[] missingElements, int[] missingElementsStarts,
-      int[] missingElementsEnds, boolean missingElementsHaveProblems, char[][] receiverName, int receiverStart,
-      int receiverEnd)
-   {
-
-      if (receiverType.resolvedType == null)
-         return;
-
-      TypeBinding receiverTypeBinding = receiverType.resolvedType;
-      char[] castedReceiver = null;
-
-      char[] castedTypeChars = CharOperation.concatWith(receiverType.getTypeName(), '.');
-      if (this.source != null)
-      {
-         int memberRefStart = this.startPosition;
-
-         char[] receiverChars = CharOperation.subarray(this.source, receiverStart, receiverEnd);
-         char[] dotChars = CharOperation.subarray(this.source, receiverEnd, memberRefStart);
-
-         castedReceiver =
-            CharOperation.concat(
-               CharOperation.concat('(',
-                  CharOperation.concat(CharOperation.concat('(', castedTypeChars, ')'), receiverChars), ')'), dotChars);
-      }
-      else
-      {
-         castedReceiver =
-            CharOperation.concat(
-               CharOperation.concat(
-                  '(',
-                  CharOperation.concat(CharOperation.concat('(', castedTypeChars, ')'),
-                     CharOperation.concatWith(receiverName, '.')), ')'), DOT);
-      }
-
-      if (castedReceiver == null)
-         return;
-
-      int oldStartPosition = this.startPosition;
-      this.startPosition = receiverStart;
-
-      findFieldsAndMethods(token, receiverTypeBinding, scope, fieldsFound, methodsFound, invocationSite,
-         invocationScope, implicitCall, superCall, missingElements, missingElementsStarts, missingElementsEnds,
-         missingElementsHaveProblems, castedReceiver, receiverStart, receiverEnd);
-
-      this.startPosition = oldStartPosition;
-   }
+//   protected void findFieldsAndMethodsFromAnotherReceiver(char[] token, TypeReference receiverType, Scope scope,
+//      ObjectVector fieldsFound, ObjectVector methodsFound, InvocationSite invocationSite, Scope invocationScope,
+//      boolean implicitCall, boolean superCall, Binding[] missingElements, int[] missingElementsStarts,
+//      int[] missingElementsEnds, boolean missingElementsHaveProblems, char[][] receiverName, int receiverStart,
+//      int receiverEnd)
+//   {
+//
+//      if (receiverType.resolvedType == null)
+//         return;
+//
+//      TypeBinding receiverTypeBinding = receiverType.resolvedType;
+//      char[] castedReceiver = null;
+//
+//      char[] castedTypeChars = CharOperation.concatWith(receiverType.getTypeName(), '.');
+//      if (this.source != null)
+//      {
+//         int memberRefStart = this.startPosition;
+//
+//         char[] receiverChars = CharOperation.subarray(this.source, receiverStart, receiverEnd);
+//         char[] dotChars = CharOperation.subarray(this.source, receiverEnd, memberRefStart);
+//
+//         castedReceiver =
+//            CharOperation.concat(
+//               CharOperation.concat('(',
+//                  CharOperation.concat(CharOperation.concat('(', castedTypeChars, ')'), receiverChars), ')'), dotChars);
+//      }
+//      else
+//      {
+//         castedReceiver =
+//            CharOperation.concat(
+//               CharOperation.concat(
+//                  '(',
+//                  CharOperation.concat(CharOperation.concat('(', castedTypeChars, ')'),
+//                     CharOperation.concatWith(receiverName, '.')), ')'), DOT);
+//      }
+//
+//      if (castedReceiver == null)
+//         return;
+//
+//      int oldStartPosition = this.startPosition;
+//      this.startPosition = receiverStart;
+//
+//      findFieldsAndMethods(token, receiverTypeBinding, scope, fieldsFound, methodsFound, invocationSite,
+//         invocationScope, implicitCall, superCall, missingElements, missingElementsStarts, missingElementsEnds,
+//         missingElementsHaveProblems, castedReceiver, receiverStart, receiverEnd);
+//
+//      this.startPosition = oldStartPosition;
+//   }
 
    private void findFieldsAndMethodsFromCastedReceiver(ASTNode enclosingNode, Binding qualifiedBinding, Scope scope,
       ObjectVector fieldsFound, ObjectVector methodsFound, InvocationSite invocationSite, Scope invocationScope,

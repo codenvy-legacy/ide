@@ -77,23 +77,6 @@ class CompilationUnitResolver extends Compiler
     */
    public static final int ENABLE_STATEMENTS_RECOVERY = 0x02;
 
-   /* A list of int */
-   public static class IntArrayList
-   {
-      public int[] list = new int[5];
-
-      public int length = 0;
-
-      public void add(int i)
-      {
-         if (this.list.length == this.length)
-         {
-            System.arraycopy(this.list, 0, this.list = new int[this.length * 2], 0, this.length);
-         }
-         this.list[this.length++] = i;
-      }
-   }
-
    /*
     * The sources that were requested. Map from file name (char[]) to org.eclipse.jdt.internal.compiler.env.ICompilationUnit.
     */

@@ -171,13 +171,4 @@ public class DefaultProblemFactory implements IProblemFactory
       return new String(output.toString());
    }
 
-   /**
-    * @param problem CategorizedProblem
-    * @return String
-    */
-   public final String localizedMessage(CategorizedProblem problem)
-   {
-      return getLocalizedMessage(problem.getID(), problem.getArguments());
-   }
-
 }
