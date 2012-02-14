@@ -322,6 +322,44 @@ public abstract class CodeAssistant
       }
       return result;
    }
+   
+   /**
+    * Return sets of {@link TypeInfo} object associated with the class or
+    * interface matched to name. (means Class simple name begin on {namePrefix})
+    * Example: if name == "Node" result can content information about: -
+    * javax.xml.soap.Node - com.google.gwt.xml.client.Node - org.w3c.dom.Node -
+    * org.w3c.dom.traversal.NodeFilter - org.w3c.dom.traversal.NodeIterator
+    * @param namePrefix Prefix for class simple name
+    * @param projectId Id of current project
+    * @param vfsId If of the VitrualFileSystem
+    * @return List of {@link TypeInfo}
+    * @throws CodeAssistantException
+    * @throws VirtualFileSystemException
+    */
+   public List<TypeInfo> getTypeInfoByNamePrefix(String namePrefix, String projectId, String vfsId) throws CodeAssistantException, VirtualFileSystemException
+   {
+      List<TypeInfo> searchResult = storage.getTypesInfoByNamePrefix(namePrefix);
+      List<TypeInfo> list = getTypeInfoByNamePrefixFromProject(namePrefix, projectId,vfsId);
+      if(list != null)
+          searchResult.addAll(list);
+      return searchResult; 
+   }
+
+   /**
+    * Return sets of {@link TypeInfo} object associated with the class or
+    * interface matched to name. (means Class simple name begin on {namePrefix})
+    * Example: if name == "Node" result can content information about: -
+    * javax.xml.soap.Node - com.google.gwt.xml.client.Node - org.w3c.dom.Node -
+    * org.w3c.dom.traversal.NodeFilter - org.w3c.dom.traversal.NodeIterator
+    * @param namePrefix
+    * @param projectId
+    * @param vfsId
+    * @return
+    * @throws VirtualFileSystemException
+    * @throws CodeAssistantException
+    */
+   protected abstract List<TypeInfo> getTypeInfoByNamePrefixFromProject(String namePrefix, String projectId, String vfsId)  throws VirtualFileSystemException, CodeAssistantException;
+
 
    /**
     * Find all classes or annotations or interfaces in project

@@ -30,6 +30,8 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -37,9 +39,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
 /**
  * Service provide Autocomplete of source code is also known as code completion feature. In a source code editor autocomplete is
@@ -87,6 +87,30 @@ public class RestCodeAssistantJava
          LOG.error("Class info for " + fqn + " not found");
       return null;
    }
+   
+   /**
+    * Returns the Classs objects associated with the class or interface with the given simple name prefix.
+    * 
+    * @param fqn the Full Qualified Name
+    * @return {@link TypeInfo}
+    * @throws CodeAssistantException
+    * @throws VirtualFileSystemException
+    */
+   @GET
+   @Path("/classes-by-prefix")
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<TypeInfo> getTypesByNamePrefix(@QueryParam("prefix") String namePrefix, @QueryParam("projectid") String projectId,
+      @QueryParam("vfsid") String vfsId) throws CodeAssistantException, VirtualFileSystemException
+   {
+      List<TypeInfo> infos = codeAssistant.getTypeInfoByNamePrefix(namePrefix, projectId, vfsId);
+
+      if (infos != null)
+         return infos;
+
+      if (LOG.isDebugEnabled())
+         LOG.error("Class witn name prefix '" + namePrefix + "' not found");
+      return null;
+   }
 
    /**
     * Returns set of FQNs matched to prefix (means FQN begin on {prefix} or Class simple name) Example : if prefix = "java.util.c"
@@ -101,7 +125,7 @@ public class RestCodeAssistantJava
    @GET
    @Path("/find-by-prefix/{prefix}")
    @Produces(MediaType.APPLICATION_JSON)
-   public TypesList findFQNsByPrefix(@Context UriInfo uriInfo, @PathParam("prefix") String prefix,
+   public TypesList findFQNsByPrefix(@PathParam("prefix") String prefix,
       @QueryParam("where") String where, @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId)
       throws CodeAssistantException, VirtualFileSystemException
    {

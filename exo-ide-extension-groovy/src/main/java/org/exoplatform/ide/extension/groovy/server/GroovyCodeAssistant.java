@@ -238,4 +238,15 @@ public class GroovyCodeAssistant extends CodeAssistant
 
       return null;
    }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getTypeInfoByNamePrefixFromProject(java.lang.String, java.lang.String, java.lang.String)
+    */
+   @Override
+   protected List<TypeInfo> getTypeInfoByNamePrefixFromProject(String namePrefix, String projectId, String vfsId)
+      throws VirtualFileSystemException, CodeAssistantException
+   {
+      // not used in Groovy code assistant, so always return null
+      return null;
+   }
 }

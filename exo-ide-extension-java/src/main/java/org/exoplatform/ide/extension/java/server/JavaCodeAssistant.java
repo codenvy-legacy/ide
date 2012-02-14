@@ -358,4 +358,21 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
 
       return (entity.getComment() == null ? "" : entity.getComment()) + Util.tagsToString(entity.getTags());
    }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getTypeInfoByNamePrefixFromProject(java.lang.String, java.lang.String, java.lang.String)
+    */
+   @Override
+   protected List<TypeInfo> getTypeInfoByNamePrefixFromProject(String namePrefix, String projectId, String vfsId)
+      throws VirtualFileSystemException, CodeAssistantException
+   {
+      JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
+      List<TypeInfo> typeInfos = new ArrayList<TypeInfo>();
+      for(JavaClass clazz : builder.getClasses())
+      {
+         if(clazz.getName().startsWith(namePrefix))
+            typeInfos.add(Util.convert(clazz));
+      }
+      return typeInfos;
+   }
 }

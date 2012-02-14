@@ -232,4 +232,12 @@ public class SearchTest
       String javaDoc = storage.getClassJavaDoc("test.javadoc.JavaDocClass(int,java.lang.Integer)");
       assertEquals("Constructor java doc with parameters", javaDoc);
    }
+   
+   @Test
+   public void testSearchClassesByNamePrefix() throws Exception
+   {
+      List<TypeInfo> typeInfos = storage.getTypesInfoByNamePrefix("A");
+
+      assertEquals(2, typeInfos.size());
+   }
 }

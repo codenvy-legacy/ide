@@ -153,4 +153,14 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
          prefix(DataIndexFields.CLASS_NAME, namePrefix), DEFAULT_RESULT_LIMIT, 0);
    }
 
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getTypesInfoByNamePrefix(java.lang.String)
+    */
+   @Override
+   public List<TypeInfo> getTypesInfoByNamePrefix(String namePrefix) throws CodeAssistantException
+   {
+      return queryExecutor.executeQuery(new TypeInfoExtractor(this), IndexType.JAVA,
+         prefix(DataIndexFields.CLASS_NAME, namePrefix), DEFAULT_RESULT_LIMIT, 0);
+   }
+
 }

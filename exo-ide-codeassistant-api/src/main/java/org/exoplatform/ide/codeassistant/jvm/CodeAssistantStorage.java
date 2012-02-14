@@ -123,4 +123,18 @@ public interface CodeAssistantStorage
     * @throws CodeAssistantException
     */
    List<ShortTypeInfo> getTypesByNamePrefix(String namePrefix) throws CodeAssistantException;
+   
+   /**
+    * 
+    * Return sets of {@link TypeInfo} object associated with the class or
+    * interface matched to name. (means Class simple name begin on {namePrefix})
+    * Example: if name == "Node" result can content information about: -
+    * javax.xml.soap.Node - com.google.gwt.xml.client.Node - org.w3c.dom.Node -
+    * org.w3c.dom.traversal.NodeFilter - org.w3c.dom.traversal.NodeIterator
+    * @param namePrefix
+    *           the string for matching FQNs
+    * @return {@link List<ShortTypeInfo>}
+    * @throws CodeAssistantException
+    */
+   List<TypeInfo> getTypesInfoByNamePrefix(String namePrefix) throws CodeAssistantException;
 }
