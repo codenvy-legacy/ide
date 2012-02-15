@@ -73,7 +73,6 @@ public class ExploringWorkspacePanelTest extends BaseTest
       {
          fail("Can't create test folders");
       }
-
    }
 
    @AfterClass

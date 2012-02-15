@@ -52,26 +52,36 @@ public class ChangeHighlightTest extends BaseTest
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       assertTrue(IDE.PROJECT.EXPLORER.isActive());
 
+      //close welcome page
+      IDE.EDITOR.waitTabPresent(0);
+      IDE.EDITOR.clickCloseEditorButton(0);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitTabNotPresent(0);
+      
       //Open new file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.xml");
+      IDE.EDITOR.waitTabPresent(0);
       assertTrue(IDE.EDITOR.isActive(0));
       assertFalse(IDE.PROJECT.EXPLORER.isActive());
 
       //Close file:
-      IDE.EDITOR.closeTabIgnoringChanges(1);
-      IDE.EDITOR.waitTabNotPresent(1);
-      assertTrue(IDE.PROJECT.EXPLORER.isActive());
+      IDE.EDITOR.closeTabIgnoringChanges(0);
+      IDE.EDITOR.waitTabNotPresent(0);
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      assertFalse(IDE.PROJECT.EXPLORER.isActive());
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       assertTrue(IDE.PROJECT.EXPLORER.isActive());
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.xml");
-      IDE.EDITOR.saveAs(1, FILE_NAME);
+      IDE.EDITOR.waitTabPresent(0);
+      IDE.EDITOR.saveAs(0, FILE_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);

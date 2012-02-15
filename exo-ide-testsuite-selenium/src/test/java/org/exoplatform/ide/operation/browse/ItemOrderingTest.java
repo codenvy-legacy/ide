@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.operation.browse;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -26,8 +28,13 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -38,6 +45,8 @@ import org.junit.Test;
  */
 public class ItemOrderingTest extends BaseTest
 {
+
+   private static final String PROJECT = ItemOrderingTest.class.getSimpleName();
 
    private static final String TEST_FOLDER_1 = "folder-1";
 
@@ -51,83 +60,110 @@ public class ItemOrderingTest extends BaseTest
 
    private static final String TEST_FILE_1_2 = "file-1-2";
 
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+
+      }
+      catch (Exception e)
+      {
+         fail("Can't create test folders");
+      }
+
+   }
+
+   @AfterClass
+   public static void TearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT + "/");
+      }
+      catch (Exception e)
+      {
+         fail("Can't create test folders");
+      }
+
+   }
+
    @Test
    public void testItemOrdering() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+
+      //close welcome tab for easy numbered tabs and editors
+      IDE.EDITOR.clickCloseEditorButton(0);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitTabNotPresent(0);
+
       // create test files
-      createSaveAndCloseFile(MenuCommands.New.XML_FILE, TEST_FILE_1_2, 0);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.EDITOR.saveAs(0, TEST_FILE_1_2);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE_1_2);
+      IDE.EDITOR.closeFile(0);
 
-      IDE.WORKSPACE.selectRootItem();
-      createSaveAndCloseFile(MenuCommands.New.XML_FILE, UPPERCASE_TEST_FILE_1, 0);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.EDITOR.saveAs(0, UPPERCASE_TEST_FILE_1);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + UPPERCASE_TEST_FILE_1);
+      IDE.EDITOR.closeFile(0);
 
-      IDE.WORKSPACE.selectRootItem();
-      createSaveAndCloseFile(MenuCommands.New.XML_FILE, TEST_FILE_1, 0);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.EDITOR.saveAs(0, TEST_FILE_1);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE_1);
+      IDE.EDITOR.closeFile(0);
 
       // create test folders
-      IDE.WORKSPACE.selectRootItem();
-      IDE.NAVIGATION.createFolder(TEST_FOLDER_1_2);
-      IDE.WORKSPACE.selectRootItem();
-      IDE.NAVIGATION.createFolder(UPPERCASE_TEST_FOLDER_1);
-      IDE.WORKSPACE.selectRootItem();
-      IDE.NAVIGATION.createFolder(TEST_FOLDER_1);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.FOLDER.createFolder(TEST_FOLDER_1_2);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER_1_2);
 
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.FOLDER.createFolder(UPPERCASE_TEST_FOLDER_1);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + UPPERCASE_TEST_FOLDER_1);
+
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.FOLDER.createFolder(TEST_FOLDER_1);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER_1);
+
+      //check all elements in explorer
       checkItemOrderingInNavigationPanel();
 
-      // test ordering within the Navigation Panel after the refreshing root folder
-      IDE.WORKSPACE.selectRootItem();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      Thread.sleep(TestConstants.IDE_INITIALIZATION_PERIOD);
-
-      // test ordering within the Search Panel
-      IDE.WORKSPACE.selectRootItem();
-      IDE.SEARCH.performSearch("/", "", MimeType.TEXT_XML);
-      checkItemOrderngInSearchResultPanel();
+      //serch all xml files and check
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.TOOLBAR.runCommand(MenuCommands.File.SEARCH);
+      IDE.SEARCH.waitPerformSearchOpened();
+      IDE.SEARCH.setMimeTypeValue(MimeType.TEXT_XML);
+      IDE.SEARCH.setMimeTypeValue("\n");
+      IDE.SEARCH.clickSearchButton();
+      IDE.SEARCH.waitSearchResultsOpened();
+      assertTrue(IDE.SEARCH.isFilePresent(PROJECT + "/" + TEST_FILE_1_2));
+      IDE.SEARCH.isFilePresent(PROJECT + "/" + UPPERCASE_TEST_FILE_1);
+      IDE.SEARCH.isFilePresent(PROJECT + "/" + TEST_FILE_1);
    }
 
    private void checkItemOrderingInNavigationPanel() throws Exception
    {
-
-      IDE.NAVIGATION.assertItemVisible(WS_URL + UPPERCASE_TEST_FOLDER_1 + "/");
-      assertEquals(UPPERCASE_TEST_FOLDER_1, selenium().getText(IDE.NAVIGATION.getItemId(WS_URL + UPPERCASE_TEST_FOLDER_1 + "/")));
-
-      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER_1 + "/");
-      assertEquals(TEST_FOLDER_1, selenium().getText(IDE.NAVIGATION.getItemId(WS_URL + TEST_FOLDER_1 + "/")));
-
-      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER_1_2 + "/");
-      assertEquals(TEST_FOLDER_1_2, selenium().getText(IDE.NAVIGATION.getItemId(WS_URL + TEST_FOLDER_1_2 + "/")));
-
-      IDE.NAVIGATION.assertItemVisible(WS_URL + UPPERCASE_TEST_FILE_1);
-      assertEquals(UPPERCASE_TEST_FILE_1, selenium().getText(IDE.NAVIGATION.getItemId(WS_URL + UPPERCASE_TEST_FILE_1)));
-
-      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FILE_1);
-      assertEquals(TEST_FILE_1, selenium().getText(IDE.NAVIGATION.getItemId(WS_URL + TEST_FILE_1)));
-
-      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FILE_1_2);
-      assertEquals(TEST_FILE_1_2, selenium().getText(IDE.NAVIGATION.getItemId(WS_URL + TEST_FILE_1_2)));
+      IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + TEST_FILE_1_2);
+      IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + UPPERCASE_TEST_FILE_1);
+      IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + TEST_FILE_1);
+      IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + TEST_FOLDER_1_2);
+      IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + UPPERCASE_TEST_FOLDER_1);
+      IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + TEST_FOLDER_1);
    }
 
-   private void checkItemOrderngInSearchResultPanel() throws Exception
-   {
-      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + UPPERCASE_TEST_FILE_1);
-      assertEquals(UPPERCASE_TEST_FILE_1, IDE.NAVIGATION.getRowTitleInSearchTree(2));
-
-      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + TEST_FILE_1);
-      assertEquals(TEST_FILE_1, selenium().getText(IDE.NAVIGATION.getItemIdSearch(WS_URL + TEST_FILE_1)));
-
-      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + TEST_FILE_1_2);
-      assertEquals(TEST_FILE_1_2, selenium().getText(IDE.NAVIGATION.getItemIdSearch(WS_URL + TEST_FILE_1_2)));
-   }
-
+   
    @AfterClass
    public static void tearDown() throws Exception
    {
-      VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER_1);
-      VirtualFileSystemUtils.delete(WS_URL + UPPERCASE_TEST_FOLDER_1);
-      VirtualFileSystemUtils.delete(WS_URL + TEST_FILE_1);
-      VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER_1_2);
-      VirtualFileSystemUtils.delete(WS_URL + UPPERCASE_TEST_FILE_1);
-      VirtualFileSystemUtils.delete(WS_URL + TEST_FILE_1_2);
+      VirtualFileSystemUtils.delete(WS_URL + PROJECT);
    }
 
 }
