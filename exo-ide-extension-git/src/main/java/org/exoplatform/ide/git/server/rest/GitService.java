@@ -22,6 +22,7 @@ import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
 import org.exoplatform.ide.git.server.InfoPage;
+import org.exoplatform.ide.git.server.LogPage;
 import org.exoplatform.ide.git.server.StatusPage;
 import org.exoplatform.ide.git.shared.AddRequest;
 import org.exoplatform.ide.git.shared.Branch;
@@ -35,7 +36,6 @@ import org.exoplatform.ide.git.shared.DiffRequest;
 import org.exoplatform.ide.git.shared.FetchRequest;
 import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.InitRequest;
-import org.exoplatform.ide.git.shared.Log;
 import org.exoplatform.ide.git.shared.LogRequest;
 import org.exoplatform.ide.git.shared.MergeRequest;
 import org.exoplatform.ide.git.shared.MergeResult;
@@ -49,7 +49,6 @@ import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
-import org.exoplatform.ide.git.shared.Status;
 import org.exoplatform.ide.git.shared.StatusRequest;
 import org.exoplatform.ide.git.shared.Tag;
 import org.exoplatform.ide.git.shared.TagCreateRequest;
@@ -59,13 +58,10 @@ import org.exoplatform.ide.vfs.server.GitUrlResolver;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
-import org.exoplatform.ide.vfs.server.exceptions.GitUrlResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.services.security.ConversationState;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -77,10 +73,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -90,7 +85,6 @@ import javax.ws.rs.core.UriInfo;
 @Path("ide/git")
 public class GitService
 {
-
    @Inject
    private LocalPathResolver localPathResolver;
 
@@ -105,25 +99,6 @@ public class GitService
 
    @QueryParam("projectid")
    private String projectId;
-
-   private static class InfoPageWrapper implements StreamingOutput
-   {
-      private final InfoPage infoPage;
-
-      public InfoPageWrapper(InfoPage infoPage)
-      {
-         this.infoPage = infoPage;
-      }
-
-      /**
-       * @see javax.ws.rs.core.StreamingOutput#write(java.io.OutputStream)
-       */
-      @Override
-      public void write(OutputStream output) throws IOException, WebApplicationException
-      {
-         infoPage.writeTo(output);
-      }
-   }
 
    @Path("add")
    @POST
@@ -196,14 +171,16 @@ public class GitService
    @Path("branch-list")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   public List<Branch> branchList(BranchListRequest request) throws GitException, LocalPathResolveException,
+   @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+   public GenericEntity<List<Branch>> branchList(BranchListRequest request) throws GitException, LocalPathResolveException,
       VirtualFileSystemException
    {
       GitConnection gitConnection = getGitConnection();
       try
       {
-         return gitConnection.branchList(request);
+         return new GenericEntity<List<Branch>>(gitConnection.branchList(request))
+         {
+         };
       }
       finally
       {
@@ -250,14 +227,13 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.TEXT_PLAIN)
-   public StreamingOutput diff(DiffRequest request) throws GitException, LocalPathResolveException,
+   public InfoPage diff(DiffRequest request) throws GitException, LocalPathResolveException,
       VirtualFileSystemException
    {
       GitConnection gitConnection = getGitConnection();
       try
       {
-         InfoPage diffPage = gitConnection.diff(request);
-         return new InfoPageWrapper(diffPage);
+         return gitConnection.diff(request);
       }
       finally
       {
@@ -300,27 +276,9 @@ public class GitService
    @Path("log")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.TEXT_PLAIN)
-   public StreamingOutput log(LogRequest request) throws GitException, LocalPathResolveException,
+   @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+   public LogPage log(LogRequest request) throws GitException, LocalPathResolveException,
       VirtualFileSystemException
-   {
-      GitConnection gitConnection = getGitConnection();
-      try
-      {
-         InfoPage logPage = gitConnection.log(request);
-         return new InfoPageWrapper(logPage);
-      }
-      finally
-      {
-         gitConnection.close();
-      }
-   }
-
-   @Path("log")
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   public Log jsonLog(LogRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException
    {
       GitConnection gitConnection = getGitConnection();
       try
@@ -502,27 +460,8 @@ public class GitService
    @Path("status")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.TEXT_PLAIN)
-   public StreamingOutput status(StatusRequest request) throws GitException, LocalPathResolveException,
-      VirtualFileSystemException
-   {
-      GitConnection gitConnection = getGitConnection();
-      try
-      {
-         StatusPage statusPage = gitConnection.status(request);
-         return new InfoPageWrapper(statusPage);
-      }
-      finally
-      {
-         gitConnection.close();
-      }
-   }
-
-   @Path("status")
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   public Status jsonStatus(StatusRequest request) throws GitException, LocalPathResolveException,
+   @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+   public StatusPage status(StatusRequest request) throws GitException, LocalPathResolveException,
       VirtualFileSystemException
    {
       GitConnection gitConnection = getGitConnection();
@@ -573,15 +512,17 @@ public class GitService
 
    @Path("tag-list")
    @POST
-   @Produces(MediaType.APPLICATION_JSON)
    @Consumes(MediaType.APPLICATION_JSON)
-   public List<Tag> tagList(TagListRequest request) throws GitException, LocalPathResolveException,
+   @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+   public GenericEntity<List<Tag>> tagList(TagListRequest request) throws GitException, LocalPathResolveException,
       VirtualFileSystemException
    {
       GitConnection gitConnection = getGitConnection();
       try
       {
-         return gitConnection.tagList(request);
+         return new GenericEntity<List<Tag>>(gitConnection.tagList(request))
+         {
+         };
       }
       finally
       {
@@ -591,7 +532,7 @@ public class GitService
 
    @Path("read-only-url")
    @GET
-   public String readOnlyGitUrl(@Context UriInfo uriInfo) throws VirtualFileSystemException 
+   public String readOnlyGitUrl(@Context UriInfo uriInfo) throws VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       return gitUrlResolver.resolve(uriInfo, vfs, projectId);
@@ -603,11 +544,15 @@ public class GitService
       GitUser gituser = null;
       ConversationState user = ConversationState.getCurrent();
       if (user != null)
+      {
          gituser = new GitUser(user.getIdentity().getUserId());
+      }
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
+      {
          throw new VirtualFileSystemException(
             "Can't resolve path on the Local File System : Virtual file system not initialized");
+      }
       return GitConnectionFactory.getInstance().getConnection(localPathResolver.resolve(vfs, projectId), gituser);
    }
 }

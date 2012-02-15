@@ -41,6 +41,7 @@ public class LogPage extends Log implements InfoPage
    // The same as C git does.
    private static final String DATE_FORMAT = "EEE MMM dd HH:mm:ss yyyy ZZZZZ";
    private static final DateFormat dateFormat;
+
    static
    {
       dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
@@ -53,33 +54,36 @@ public class LogPage extends Log implements InfoPage
       super(commits);
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.InfoPage#writeTo(java.io.OutputStream)
-    */
+   /** @see org.exoplatform.ide.git.server.InfoPage#writeTo(java.io.OutputStream) */
    @Override
    public void writeTo(OutputStream out) throws IOException
    {
-      // Default behavior only at the moment. 
       PrintWriter writer = new PrintWriter(out);
-
+      DateFormat df = (DateFormat)dateFormat.clone();
       for (Revision commit : commits)
       {
          writer.format("commit %s\n", commit.getId());
 
          GitUser commiter = commit.getCommitter();
          if (commiter != null)
+         {
             writer.format("Author: %1$s <%2$s>\n", commiter.getName(), commiter.getEmail());
+         }
 
          long commitTime = commit.getCommitTime();
          if (commitTime > 0)
-            writer.format("Date:   %s\n", ((DateFormat)dateFormat.clone()).format(new Date(commitTime)));
+         {
+            writer.format("Date:   %s\n", df.format(new Date(commitTime)));
+         }
 
          writer.println();
 
          // Message with indent.
          String[] lines = commit.getMessage().split("\n");
          for (String line : lines)
+         {
             writer.format("    %s\n", line);
+         }
 
          writer.println();
       }

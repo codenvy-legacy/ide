@@ -128,8 +128,10 @@ import org.exoplatform.ide.git.shared.TagCreateRequest;
 import org.exoplatform.ide.git.shared.TagDeleteRequest;
 import org.exoplatform.ide.git.shared.TagListRequest;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -147,9 +149,6 @@ import java.util.regex.Pattern;
 public class JGitConnection implements GitConnection
 {
    // -------------------------
-   private String _branchName = "master";
-   private String _branchRef = "refs/heads/master";
-   // -------------------------
    private final Repository repository;
    private final GitUser user;
 
@@ -163,9 +162,7 @@ public class JGitConnection implements GitConnection
       this.user = user;
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#add(org.exoplatform.ide.git.shared.AddRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#add(org.exoplatform.ide.git.shared.AddRequest) */
    @Override
    public void add(AddRequest request) throws GitException
    {
@@ -173,9 +170,13 @@ public class JGitConnection implements GitConnection
 
       String[] filepattern = request.getFilepattern();
       if (filepattern == null)
+      {
          filepattern = AddRequest.DEFAULT_PATTERN;
+      }
       for (int i = 0; i < filepattern.length; i++)
+      {
          addCommand.addFilepattern(filepattern[i]);
+      }
 
       try
       {
@@ -187,9 +188,7 @@ public class JGitConnection implements GitConnection
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#branchCheckout(org.exoplatform.ide.git.shared.BranchCheckoutRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#branchCheckout(org.exoplatform.ide.git.shared.BranchCheckoutRequest) */
    @Override
    public void branchCheckout(BranchCheckoutRequest request) throws GitException
    {
@@ -197,7 +196,9 @@ public class JGitConnection implements GitConnection
       CheckoutCommand_Copy checkoutCommand = new CheckoutCommand_Copy(repository).setName(request.getName());
       String startPoint = request.getStartPoint();
       if (startPoint != null)
+      {
          checkoutCommand.setStartPoint(startPoint);
+      }
       checkoutCommand.setCreateBranch(request.isCreateNew());
 
       try
@@ -208,7 +209,9 @@ public class JGitConnection implements GitConnection
       {
          Throwable cause = e.getCause();
          if (cause != null)
+         {
             throw new GitException(cause.getMessage(), cause);
+         }
          throw new GitException(e.getMessage(), e);
       }
       catch (RefAlreadyExistsException e)
@@ -225,29 +228,30 @@ public class JGitConnection implements GitConnection
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#branchCreate(org.exoplatform.ide.git.shared.BranchCreateRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#branchCreate(org.exoplatform.ide.git.shared.BranchCreateRequest) */
    @Override
    public Branch branchCreate(BranchCreateRequest request) throws GitException
    {
       CreateBranchCommand createBranchCommand = new Git(repository).branchCreate().setName(request.getName());
       String start = request.getStartPoint();
       if (start != null)
+      {
          createBranchCommand.setStartPoint(start);
+      }
       try
       {
          Ref brRef = createBranchCommand.call();
          String refName = brRef.getName();
-         Branch branch = new Branch(refName, false, Repository.shortenRefName(refName));
 
-         return branch;
+         return new Branch(refName, false, Repository.shortenRefName(refName));
       }
       catch (JGitInternalException e)
       {
          Throwable cause = e.getCause();
          if (cause != null)
+         {
             throw new GitException(cause.getMessage(), cause);
+         }
          throw new GitException(e.getMessage(), e);
       }
       catch (RefAlreadyExistsException e)
@@ -264,9 +268,7 @@ public class JGitConnection implements GitConnection
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#branchDelete(org.exoplatform.ide.git.shared.BranchDeleteRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#branchDelete(org.exoplatform.ide.git.shared.BranchDeleteRequest) */
    @Override
    public void branchDelete(BranchDeleteRequest request) throws GitException
    {
@@ -278,7 +280,9 @@ public class JGitConnection implements GitConnection
       {
          Throwable cause = e.getCause();
          if (cause != null)
+         {
             throw new GitException(cause.getMessage(), cause);
+         }
          throw new GitException(e.getMessage(), e);
       }
       catch (NotMergedException e)
@@ -291,39 +295,49 @@ public class JGitConnection implements GitConnection
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#branchList(org.exoplatform.ide.git.shared.BranchListRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#branchList(org.exoplatform.ide.git.shared.BranchListRequest) */
    @Override
    public List<Branch> branchList(BranchListRequest request) throws GitException
    {
       String listMode = request.getListMode();
       if (listMode != null
          && !(listMode.equals(BranchListRequest.LIST_ALL) || listMode.equals(BranchListRequest.LIST_REMOTE)))
+      {
          throw new IllegalArgumentException("Unsupported list mode '" + listMode + "'. Must be either 'a' or 'r'. ");
+      }
 
       ListBranchCommand listBranchCommand = new Git(repository).branchList();
       if (listMode != null)
       {
          if (listMode.equals(BranchListRequest.LIST_ALL))
+         {
             listBranchCommand.setListMode(ListMode.ALL);
+         }
          else if (listMode.equals(BranchListRequest.LIST_REMOTE))
+         {
             listBranchCommand.setListMode(ListMode.REMOTE);
+         }
       }
       List<Ref> refs = listBranchCommand.call();
       String current = null;
       try
       {
          Ref headRef = repository.getRef(Constants.HEAD);
-         if (headRef != null)
+         if (!(headRef == null || Constants.HEAD.equals(headRef.getLeaf().getName())))
+         {
             current = headRef.getLeaf().getName();
+         }
       }
       catch (IOException e)
       {
          throw new GitException(e.getMessage(), e);
       }
 
-      List<Branch> branches = new ArrayList<Branch>(refs.size());
+      List<Branch> branches = new ArrayList<Branch>();
+      if (current == null)
+      {
+         branches.add(new Branch("(no branch)", true, "(no branch)"));
+      }
 
       for (Ref brRef : refs)
       {
@@ -335,22 +349,24 @@ public class JGitConnection implements GitConnection
       return branches;
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#clone(org.exoplatform.ide.git.shared.CloneRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#clone(org.exoplatform.ide.git.shared.CloneRequest) */
    public GitConnection clone(CloneRequest request) throws URISyntaxException, GitException
    {
       try
       {
          File workDir = repository.getWorkTree();
          if (!(workDir.exists() || workDir.mkdirs()))
+         {
             throw new GitException("Can't create working folder " + workDir + ". ");
+         }
          repository.create();
 
          StoredConfig config = repository.getConfig();
          String remoteName = request.getRemoteName();
          if (remoteName == null)
+         {
             remoteName = Constants.DEFAULT_REMOTE_NAME;
+         }
 
          RemoteConfig remoteConfig = new RemoteConfig(config, remoteName);
          remoteConfig.addURI(new URIish(request.getRemoteUri()));
@@ -364,7 +380,9 @@ public class JGitConnection implements GitConnection
             for (int i = 0; i < branchesToFetch.length; i++)
             {
                if (fetchRefSpec.matchSource(branchesToFetch[i]))
+               {
                   remoteConfig.addFetchRefSpec(new RefSpec(branchesToFetch[i]));
+               }
             }
          }
          else
@@ -374,10 +392,13 @@ public class JGitConnection implements GitConnection
 
          remoteConfig.update(config);
 
-         config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, _branchName, ConfigConstants.CONFIG_KEY_REMOTE,
+         final String branchName = "master";
+         final String branchRef = "refs/heads/master";
+
+         config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branchName, ConfigConstants.CONFIG_KEY_REMOTE,
             remoteName);
-         config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, _branchName, ConfigConstants.CONFIG_KEY_MERGE,
-            _branchRef);
+         config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branchName, ConfigConstants.CONFIG_KEY_MERGE,
+            branchRef);
 
          GitUser gitUser = getUser();
          if (gitUser != null)
@@ -393,7 +414,9 @@ public class JGitConnection implements GitConnection
 
          int timeout = request.getTimeout();
          if (timeout > 0)
+         {
             transport.setTimeout(timeout);
+         }
 
          FetchResult fetchResult;
          try
@@ -407,9 +430,11 @@ public class JGitConnection implements GitConnection
 
          // Merge command is not work here. Looks like JGit bug. It fails with NPE that should not happen.
          // But 'merge' command from C git (original) works as well on repository create and fetched with JGit.
-         Ref headRef = fetchResult.getAdvertisedRef(_branchRef);
+         Ref headRef = fetchResult.getAdvertisedRef(branchRef);
          if (headRef == null || headRef.getObjectId() == null)
+         {
             return this;
+         }
 
          RevWalk revWalk = new RevWalk(repository);
          RevCommit commit;
@@ -439,7 +464,9 @@ public class JGitConnection implements GitConnection
          finally
          {
             if (dirCache != null)
+            {
                dirCache.unlock();
+            }
          }
 
          return this;
@@ -466,29 +493,39 @@ public class JGitConnection implements GitConnection
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#commit(org.exoplatform.ide.git.shared.CommitRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#commit(org.exoplatform.ide.git.shared.CommitRequest) */
    @Override
    public Revision commit(CommitRequest request) throws GitException
    {
       try
       {
+         // Check do we have something to commit.
+         StatusPage status = status(new StatusRequest());
+         // Changed and add to index files. If empty ot null then nothing to commit.
+         List<GitFile> toCommit = status.getChangedNotCommited();
+         if (!request.isAll() && (toCommit == null || toCommit.isEmpty()))
+         {
+            // Nothing to commit.
+            OutputStream buff = new ByteArrayOutputStream();
+            status.writeTo(buff);
+            throw new GitException(buff.toString());
+         }
+
          CommitCommand commitCommand =
             new Git(repository).commit().setMessage(request.getMessage()).setAll(request.isAll());
 
          GitUser committer = getUser();
          if (committer != null)
+         {
             commitCommand.setCommitter(committer.getName(), committer.getEmail());
+         }
 
          RevCommit commit = commitCommand.call();
 
-         PersonIdent committerIdent = commit.getCommitterIdent();
-         Revision revision =
-            new Revision(commit.getId().getName(), commit.getFullMessage(), (long)commit.getCommitTime() * 1000,
-               new GitUser(committerIdent.getName(), committerIdent.getEmailAddress()));
+         PersonIdent committerIdentity = commit.getCommitterIdent();
 
-         return revision;
+         return new Revision(commit.getId().getName(), commit.getFullMessage(), (long)commit.getCommitTime() * 1000,
+            new GitUser(committerIdentity.getName(), committerIdentity.getEmailAddress()));
       }
       catch (NoHeadException e)
       {
@@ -510,27 +547,29 @@ public class JGitConnection implements GitConnection
       {
          Throwable cause = e.getCause();
          if (cause != null)
+         {
             throw new GitException(cause.getMessage(), cause);
+         }
          throw new GitException(e.getMessage(), e);
       }
       catch (WrongRepositoryStateException e)
       {
          throw new GitException(e.getMessage(), e);
       }
+      catch (IOException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#diff(org.exoplatform.ide.git.shared.DiffRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#diff(org.exoplatform.ide.git.shared.DiffRequest) */
    @Override
    public DiffPage diff(DiffRequest request) throws GitException
    {
       return new JGitDiffPage(request, repository);
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#fetch(org.exoplatform.ide.git.shared.FetchRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#fetch(org.exoplatform.ide.git.shared.FetchRequest) */
    @Override
    public void fetch(FetchRequest request) throws GitException
    {
@@ -554,12 +593,18 @@ public class JGitConnection implements GitConnection
 
          String remote = request.getRemote();
          if (remote != null)
+         {
             fetchCommand.setRemote(remote);
+         }
          if (fetchRefSpecs != null)
+         {
             fetchCommand.setRefSpecs(fetchRefSpecs);
+         }
          int timeout = request.getTimeout();
          if (timeout > 0)
+         {
             fetchCommand.setTimeout(timeout);
+         }
          fetchCommand.setRemoveDeletedRefs(request.isRemoveDeletedRefs());
 
          fetchCommand.call();
@@ -568,7 +613,9 @@ public class JGitConnection implements GitConnection
       {
          Throwable cause = e.getCause();
          if (cause != null)
+         {
             throw new GitException(cause.getMessage(), cause);
+         }
          throw new GitException(e.getMessage(), e);
       }
       catch (InvalidRemoteException e)
@@ -577,17 +624,15 @@ public class JGitConnection implements GitConnection
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#init(org.exoplatform.ide.git.shared.InitRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#init(org.exoplatform.ide.git.shared.InitRequest) */
    @Override
    public GitConnection init(InitRequest request) throws GitException
    {
       File workDir = repository.getWorkTree();
-      /*if (!(workDir.exists() || workDir.mkdirs()))
-         throw new GitException("Can't create working folder " + workDir + ". ");*/
       if (!workDir.exists())
+      {
          throw new GitException("Working folder " + workDir + " not exists . ");
+      }
 
       boolean bare = request.isBare();
 
@@ -629,7 +674,9 @@ public class JGitConnection implements GitConnection
             {
                Throwable cause = e.getCause();
                if (cause != null)
+               {
                   throw new GitException(cause.getMessage(), cause);
+               }
                throw new GitException(e.getMessage(), e);
             }
          }
@@ -649,9 +696,7 @@ public class JGitConnection implements GitConnection
       return this;
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#log(org.exoplatform.ide.git.shared.LogRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#log(org.exoplatform.ide.git.shared.LogRequest) */
    @Override
    public LogPage log(LogRequest request) throws GitException
    {
@@ -663,10 +708,10 @@ public class JGitConnection implements GitConnection
          while (revIterator.hasNext())
          {
             RevCommit commit = revIterator.next();
-            PersonIdent committerIdent = commit.getCommitterIdent();
+            PersonIdent committerIdentity = commit.getCommitterIdent();
             commits.add(new Revision(commit.getId().getName(), commit.getFullMessage(),
-               (long)commit.getCommitTime() * 1000, new GitUser(committerIdent.getName(), committerIdent
-                  .getEmailAddress())));
+               (long)commit.getCommitTime() * 1000, new GitUser(committerIdentity.getName(), committerIdentity
+               .getEmailAddress())));
          }
          return new LogPage(commits);
       }
@@ -678,14 +723,14 @@ public class JGitConnection implements GitConnection
       {
          Throwable cause = e.getCause();
          if (cause != null)
+         {
             throw new GitException(cause.getMessage(), cause);
+         }
          throw new GitException(e.getMessage(), e);
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#merge(org.exoplatform.ide.git.shared.MergeRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#merge(org.exoplatform.ide.git.shared.MergeRequest) */
    @Override
    public MergeResult merge(MergeRequest request) throws GitException
    {
@@ -693,7 +738,9 @@ public class JGitConnection implements GitConnection
       {
          Ref ref = repository.getRef(request.getCommit());
          if (ref == null)
+         {
             throw new IllegalArgumentException("Invalid reference to commit for merge " + request.getCommit());
+         }
          org.eclipse.jgit.api.MergeResult jgitMergeResult = new Git(repository).merge().include(ref).call();
          return new JGitMergeResult(jgitMergeResult);
       }
@@ -727,18 +774,14 @@ public class JGitConnection implements GitConnection
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#mv(org.exoplatform.ide.git.shared.MoveRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#mv(org.exoplatform.ide.git.shared.MoveRequest) */
    @Override
    public void mv(MoveRequest request) throws GitException
    {
       throw new RuntimeException("Not implemented yet. ");
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#pull(org.exoplatform.ide.git.shared.PullRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#pull(org.exoplatform.ide.git.shared.PullRequest) */
    @Override
    public void pull(PullRequest request) throws GitException
    {
@@ -746,7 +789,9 @@ public class JGitConnection implements GitConnection
       {
          String fullBranch = repository.getFullBranch();
          if (!fullBranch.startsWith(Constants.R_HEADS))
+         {
             throw new DetachedHeadException("HEAD is detached. Cannot pull. ");
+         }
 
          String branch = fullBranch.substring(Constants.R_HEADS.length());
 
@@ -756,7 +801,9 @@ public class JGitConnection implements GitConnection
          {
             remote = config.getString(ConfigConstants.CONFIG_BRANCH_SECTION, branch, ConfigConstants.CONFIG_KEY_REMOTE);
             if (remote == null)
+            {
                remote = Constants.DEFAULT_REMOTE_NAME;
+            }
          }
 
          String remoteBranch = null;
@@ -785,18 +832,26 @@ public class JGitConnection implements GitConnection
          FetchCommand fetchCommand = new Git(repository).fetch();
          fetchCommand.setRemote(remote);
          if (fetchRefSpecs != null)
+         {
             fetchCommand.setRefSpecs(fetchRefSpecs);
+         }
          int timeout = request.getTimeout();
          if (timeout > 0)
+         {
             fetchCommand.setTimeout(timeout);
+         }
 
          FetchResult fetchResult = fetchCommand.call();
 
          Ref remoteBranchRef = fetchResult.getAdvertisedRef(remoteBranch);
          if (remoteBranchRef == null)
+         {
             remoteBranchRef = fetchResult.getAdvertisedRef(Constants.R_HEADS + remoteBranch);
+         }
          if (remoteBranchRef == null)
+         {
             throw new GitException("Cannot get ref for remote branch " + remoteBranch + ". ");
+         }
 
          new Git(repository).merge().include(remoteBranchRef).call();
       }
@@ -839,9 +894,7 @@ public class JGitConnection implements GitConnection
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#push(org.exoplatform.ide.git.shared.PushRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#push(org.exoplatform.ide.git.shared.PushRequest) */
    @Override
    public void push(PushRequest request) throws GitException
    {
@@ -850,14 +903,18 @@ public class JGitConnection implements GitConnection
          PushCommand pushCommand = new Git(repository).push();
          String remote = request.getRemote();
          if (request.getRemote() != null)
+         {
             pushCommand.setRemote(remote);
+         }
 
          String[] refSpec = request.getRefSpec();
          if (refSpec != null && refSpec.length > 0)
          {
             List<RefSpec> refSpecInst = new ArrayList<RefSpec>(refSpec.length);
             for (int i = 0; i < refSpec.length; i++)
+            {
                refSpecInst.add(new RefSpec(refSpec[i]));
+            }
             pushCommand.setRefSpecs(refSpecInst);
          }
 
@@ -865,7 +922,9 @@ public class JGitConnection implements GitConnection
 
          int timeout = request.getTimeout();
          if (timeout > 0)
+         {
             pushCommand.setTimeout(timeout);
+         }
 
          Iterable<PushResult> list = pushCommand.call();
          for (PushResult pushResult : list)
@@ -874,7 +933,9 @@ public class JGitConnection implements GitConnection
             for (RemoteRefUpdate remoteRefUpdate : refUpdates)
             {
                if (!remoteRefUpdate.getStatus().equals(Status.OK))
+               {
                   throw new GitException(pushResult.getMessages());
+               }
             }
          }
       }
@@ -882,7 +943,9 @@ public class JGitConnection implements GitConnection
       {
          Throwable cause = e.getCause();
          if (cause != null)
+         {
             throw new GitException(cause.getMessage(), cause);
+         }
          throw new GitException(e.getMessage(), e);
       }
       catch (InvalidRemoteException e)
@@ -891,24 +954,28 @@ public class JGitConnection implements GitConnection
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#remoteAdd(org.exoplatform.ide.git.shared.RemoteAddRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#remoteAdd(org.exoplatform.ide.git.shared.RemoteAddRequest) */
    @Override
    public void remoteAdd(RemoteAddRequest request) throws GitException
    {
       String remoteName = request.getName();
       if (remoteName == null || remoteName.length() == 0)
+      {
          throw new IllegalArgumentException("Remote name required. ");
+      }
 
       StoredConfig config = repository.getConfig();
       Set<String> remoteNames = config.getSubsections("remote");
       if (remoteNames.contains(remoteName))
+      {
          throw new IllegalArgumentException("Remote " + remoteName + " already exists. ");
+      }
 
       String url = request.getUrl();
       if (url == null || url.length() == 0)
+      {
          throw new IllegalArgumentException("Remote url required. ");
+      }
 
       RemoteConfig remoteConfig;
       try
@@ -934,9 +1001,11 @@ public class JGitConnection implements GitConnection
       if (branches != null)
       {
          for (int i = 0; i < branches.length; i++)
+         {
             remoteConfig.addFetchRefSpec( //
                new RefSpec(Constants.R_HEADS + branches[i] + ":" + Constants.R_REMOTES + remoteName + "/" + branches[i])
                   .setForceUpdate(true));
+         }
       }
       else
       {
@@ -956,16 +1025,16 @@ public class JGitConnection implements GitConnection
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#remoteDelete(java.lang.String)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#remoteDelete(java.lang.String) */
    @Override
    public void remoteDelete(String name) throws GitException
    {
       StoredConfig config = repository.getConfig();
       Set<String> remoteNames = config.getSubsections(ConfigConstants.CONFIG_KEY_REMOTE);
       if (!remoteNames.contains(name))
+      {
          throw new IllegalArgumentException("Remote " + name + " not found. ");
+      }
 
       config.unsetSection(ConfigConstants.CONFIG_REMOTE_SECTION, name);
       Set<String> branches = config.getSubsections(ConfigConstants.CONFIG_BRANCH_SECTION);
@@ -989,9 +1058,7 @@ public class JGitConnection implements GitConnection
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#remoteList(org.exoplatform.ide.git.shared.RemoteListRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#remoteList(org.exoplatform.ide.git.shared.RemoteListRequest) */
    @Override
    public List<Remote> remoteList(RemoteListRequest request) throws GitException
    {
@@ -1029,20 +1096,22 @@ public class JGitConnection implements GitConnection
       return result;
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#remoteUpdate(org.exoplatform.ide.git.shared.RemoteUpdateRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#remoteUpdate(org.exoplatform.ide.git.shared.RemoteUpdateRequest) */
    @Override
    public void remoteUpdate(RemoteUpdateRequest request) throws GitException
    {
       String remoteName = request.getName();
       if (remoteName == null || remoteName.length() == 0)
+      {
          throw new IllegalArgumentException("Remote name required. ");
+      }
 
       StoredConfig config = repository.getConfig();
       Set<String> remoteNames = config.getSubsections(ConfigConstants.CONFIG_KEY_REMOTE);
       if (!remoteNames.contains(remoteName))
+      {
          throw new IllegalArgumentException("Remote " + remoteName + " not found. ");
+      }
 
       RemoteConfig remoteConfig;
       try
@@ -1075,9 +1144,11 @@ public class JGitConnection implements GitConnection
 
          // Add new refspec.
          for (int i = 0; i < tmp.length; i++)
+         {
             remoteConfig.addFetchRefSpec( //
                new RefSpec(Constants.R_HEADS + tmp[i] + ":" + Constants.R_REMOTES + remoteName + "/" + tmp[i])
                   .setForceUpdate(true));
+         }
       }
 
       // Remove URLs first.
@@ -1160,15 +1231,15 @@ public class JGitConnection implements GitConnection
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#reset(org.exoplatform.ide.git.shared.ResetRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#reset(org.exoplatform.ide.git.shared.ResetRequest) */
    @Override
    public void reset(ResetRequest request) throws GitException
    {
       String commit = request.getCommit();
       if (commit == null)
+      {
          commit = Constants.HEAD;
+      }
 
       ResetType resetType = request.getType();
       String[] paths = request.getPaths();
@@ -1176,7 +1247,9 @@ public class JGitConnection implements GitConnection
       boolean moveHead = !(paths != null && paths.length > 0);
 
       if (!moveHead && resetType != ResetType.MIXED)
+      {
          throw new IllegalArgumentException("Invalid reset type " + resetType + ". It can't be used with the paths. ");
+      }
 
       DirCache dirCache = null;
       try
@@ -1185,7 +1258,9 @@ public class JGitConnection implements GitConnection
 
          ObjectId objectId = repository.resolve(commit);
          if (objectId == null)
+         {
             throw new IllegalArgumentException("Invalid commit " + request.getCommit());
+         }
 
          RevWalk revWalk = new RevWalk(repository);
          RevCommit revCommit;
@@ -1217,7 +1292,9 @@ public class JGitConnection implements GitConnection
                   DirCacheBuilder cacheBuilder = dirCache.builder();
                   treeWalk.setFilter(PathFilterGroup.createFromStrings(Arrays.asList(paths)));
                   treeWalk.addTree(new DirCacheBuildIterator(cacheBuilder));
-                  while (treeWalk.next());
+                  while (treeWalk.next())
+                  {
+                  }
                   cacheBuilder.commit();
                }
                finally
@@ -1239,7 +1316,9 @@ public class JGitConnection implements GitConnection
             RefUpdate ru = repository.updateRef(Constants.HEAD);
             ru.setNewObjectId(revCommit.getId());
             if (ru.forceUpdate() == RefUpdate.Result.LOCK_FAILURE)
+            {
                throw new GitException("Can't update HEAD to " + commit);
+            }
          }
       }
       catch (AmbiguousObjectException e)
@@ -1269,13 +1348,13 @@ public class JGitConnection implements GitConnection
       finally
       {
          if (dirCache != null)
+         {
             dirCache.unlock();
+         }
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#rm(org.exoplatform.ide.git.shared.RmRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#rm(org.exoplatform.ide.git.shared.RmRequest) */
    @Override
    public void rm(RmRequest request) throws GitException
    {
@@ -1284,7 +1363,9 @@ public class JGitConnection implements GitConnection
       if (files != null)
       {
          for (int i = 0; i < files.length; i++)
+         {
             rmCommand.addFilepattern(files[i]);
+         }
       }
       try
       {
@@ -1296,9 +1377,7 @@ public class JGitConnection implements GitConnection
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#status(org.exoplatform.ide.git.shared.StatusRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#status(org.exoplatform.ide.git.shared.StatusRequest) */
    @Override
    public StatusPage status(StatusRequest request) throws GitException
    {
@@ -1306,7 +1385,9 @@ public class JGitConnection implements GitConnection
       {
          Ref headRef = repository.getRef(Constants.HEAD);
          if (headRef == null)
+         {
             throw new GitException("HEAD reference not found. Seems working directory is not git repository. ");
+         }
          String currentBranch = Repository.shortenRefName(headRef.getLeaf().getName());
 
          List<GitFile> changedNotUpdated = new ArrayList<GitFile>();
@@ -1326,7 +1407,9 @@ public class JGitConnection implements GitConnection
          TreeFilter fileFilter = null;
          String[] rawFileFilter = request.getFileFilter();
          if (rawFileFilter != null && rawFileFilter.length > 0)
+         {
             fileFilter = PathFilterGroup.createFromStrings(Arrays.asList(rawFileFilter));
+         }
 
          try
          {
@@ -1353,9 +1436,13 @@ public class JGitConnection implements GitConnection
             treeWalk.addTree(new DirCacheIterator(dirCache));
             treeWalk.addTree(new FileTreeIterator(repository));
             if (fileFilter != null)
+            {
                treeWalk.setFilter(AndTreeFilter.create(new NotIgnoredFilter(wdTreeN), fileFilter));
+            }
             else
+            {
                treeWalk.setFilter(new NotIgnoredFilter(wdTreeN));
+            }
 
             while (treeWalk.next())
             {
@@ -1367,7 +1454,7 @@ public class JGitConnection implements GitConnection
                   wdMode != FileMode.TYPE_TREE
                      && (idxMode != FileMode.TYPE_MISSING || headMode != FileMode.TYPE_MISSING);
                boolean modified = !treeWalk.idEqual(wdTreeN, headTreeN);
-               boolean commited = treeWalk.idEqual(wdTreeN, idxTreeN);
+               boolean toCommit = treeWalk.idEqual(wdTreeN, idxTreeN);
 
                String path = treeWalk.getPathString();
 
@@ -1379,17 +1466,27 @@ public class JGitConnection implements GitConnection
                {
                   GitFile.FileStatus status;
                   if (headMode == FileMode.TYPE_MISSING && idxMode != FileMode.TYPE_MISSING)
+                  {
                      status = GitFile.FileStatus.NEW;
+                  }
                   else if (wdMode == FileMode.TYPE_MISSING
                      && (idxMode != FileMode.TYPE_MISSING || headMode != FileMode.TYPE_MISSING))
+                  {
                      status = GitFile.FileStatus.DELETED;
+                  }
                   else
+                  {
                      status = GitFile.FileStatus.MODIFIED;
+                  }
 
-                  if (commited)
+                  if (toCommit)
+                  {
                      changedNotCommited.add(new GitFile(path, status));
+                  }
                   else
+                  {
                      changedNotUpdated.add(new GitFile(path, status));
+                  }
                }
             }
          }
@@ -1418,15 +1515,15 @@ public class JGitConnection implements GitConnection
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#tagCreate(org.exoplatform.ide.git.shared.TagCreateRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#tagCreate(org.exoplatform.ide.git.shared.TagCreateRequest) */
    @Override
    public Tag tagCreate(TagCreateRequest request) throws GitException
    {
       String commit = request.getCommit();
       if (commit == null)
+      {
          commit = Constants.HEAD;
+      }
 
       try
       {
@@ -1447,7 +1544,9 @@ public class JGitConnection implements GitConnection
 
          GitUser tagger = getUser();
          if (tagger != null)
+         {
             tagCommand.setTagger(new PersonIdent(tagger.getName(), tagger.getEmail()));
+         }
 
          RevTag revTag = tagCommand.call();
 
@@ -1457,7 +1556,9 @@ public class JGitConnection implements GitConnection
       {
          Throwable cause = e.getCause();
          if (cause != null)
+         {
             throw new GitException(cause.getMessage(), cause);
+         }
          throw new GitException(e.getMessage(), e);
       }
       catch (ConcurrentRefUpdateException e)
@@ -1486,9 +1587,7 @@ public class JGitConnection implements GitConnection
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#tagDelete(org.exoplatform.ide.git.shared.TagDeleteRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#tagDelete(org.exoplatform.ide.git.shared.TagDeleteRequest) */
    @Override
    public void tagDelete(TagDeleteRequest request) throws GitException
    {
@@ -1497,7 +1596,9 @@ public class JGitConnection implements GitConnection
          String tagName = request.getName();
          Ref tagRef = repository.getRef(tagName);
          if (tagRef == null)
+         {
             throw new IllegalArgumentException("Tag " + tagName + " not found. ");
+         }
 
          RefUpdate updateRef = repository.updateRef(tagRef.getName());
          updateRef.setRefLogMessage("tag deleted", false);
@@ -1505,7 +1606,9 @@ public class JGitConnection implements GitConnection
          Result deleteResult;
          deleteResult = updateRef.delete();
          if (deleteResult != Result.FORCED && deleteResult != Result.FAST_FORWARD)
+         {
             throw new GitException("Can't delete tag " + tagName + ". Result " + deleteResult);
+         }
       }
       catch (IOException e)
       {
@@ -1513,9 +1616,7 @@ public class JGitConnection implements GitConnection
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#tagList(org.exoplatform.ide.git.shared.TagListRequest)
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#tagList(org.exoplatform.ide.git.shared.TagListRequest) */
    @Override
    public List<Tag> tagList(TagListRequest request) throws GitException
    {
@@ -1528,9 +1629,13 @@ public class JGitConnection implements GitConnection
          {
             char c = patternStr.charAt(i);
             if (c == '*' || c == '?')
+            {
                sb.append('.');
+            }
             else if (c == '.' || c == '(' || c == ')' || c == '[' || c == ']' || c == '^' || c == '$' || c == '|')
+            {
                sb.append('\\');
+            }
             sb.append(c);
          }
          pattern = Pattern.compile(sb.toString());
@@ -1542,24 +1647,24 @@ public class JGitConnection implements GitConnection
       for (String tagName : tagNames)
       {
          if (pattern == null)
+         {
             tags.add(new Tag(tagName));
+         }
          else if (pattern.matcher(tagName).matches())
+         {
             tags.add(new Tag(tagName));
+         }
       }
       return tags;
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#getUser()
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#getUser() */
    public GitUser getUser()
    {
       return user;
    }
 
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnection#close()
-    */
+   /** @see org.exoplatform.ide.git.server.GitConnection#close() */
    @Override
    public void close()
    {

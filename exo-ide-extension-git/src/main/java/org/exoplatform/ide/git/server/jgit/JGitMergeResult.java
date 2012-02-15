@@ -32,67 +32,61 @@ public class JGitMergeResult implements MergeResult
 {
    private final org.eclipse.jgit.api.MergeResult jgitMergeResult;
 
-   /**
-    * @param jgitMergeResult
-    */
+   /** @param jgitMergeResult */
    public JGitMergeResult(org.eclipse.jgit.api.MergeResult jgitMergeResult)
    {
       this.jgitMergeResult = jgitMergeResult;
    }
 
-   /**
-    * @see org.exoplatform.ide.git.shared.MergeResult#getNewHead()
-    */
+   /** @see org.exoplatform.ide.git.shared.MergeResult#getNewHead() */
    @Override
    public String getNewHead()
    {
       ObjectId newHead = jgitMergeResult.getNewHead();
       if (newHead != null)
+      {
          return newHead.getName();
+      }
       // Merge failed.
       return null;
    }
 
-   /**
-    * @see org.exoplatform.ide.git.shared.MergeResult#getMergeStatus()
-    */
+   /** @see org.exoplatform.ide.git.shared.MergeResult#getMergeStatus() */
    @Override
    public MergeStatus getMergeStatus()
    {
       switch (jgitMergeResult.getMergeStatus())
       {
-         case ALREADY_UP_TO_DATE :
+         case ALREADY_UP_TO_DATE:
             return MergeStatus.ALREADY_UP_TO_DATE;
-         case CONFLICTING :
+         case CONFLICTING:
             return MergeStatus.CONFLICTING;
-         case FAILED :
+         case FAILED:
             return MergeStatus.FAILED;
-         case FAST_FORWARD :
+         case FAST_FORWARD:
             return MergeStatus.FAST_FORWARD;
-         case MERGED :
+         case MERGED:
             return MergeStatus.MERGED;
-         case NOT_SUPPORTED :
+         case NOT_SUPPORTED:
             return MergeStatus.NOT_SUPPORTED;
       }
       throw new IllegalStateException("Unknown merge status " + jgitMergeResult.getMergeStatus());
    }
 
-   /**
-    * @see org.exoplatform.ide.git.shared.MergeResult#getMergedCommits()
-    */
+   /** @see org.exoplatform.ide.git.shared.MergeResult#getMergedCommits() */
    @Override
    public String[] getMergedCommits()
    {
       ObjectId[] jgitMergedCommits = jgitMergeResult.getMergedCommits();
       String[] mergedCommits = new String[jgitMergedCommits.length];
       for (int i = 0; i < jgitMergedCommits.length; i++)
+      {
          mergedCommits[i] = jgitMergedCommits[i].getName();
+      }
       return mergedCommits;
    }
 
-   /**
-    * @see org.exoplatform.ide.git.shared.MergeResult#getConflicts()
-    */
+   /** @see org.exoplatform.ide.git.shared.MergeResult#getConflicts() */
    @Override
    public String[] getConflicts()
    {
@@ -103,14 +97,14 @@ public class JGitMergeResult implements MergeResult
          files = new String[conflicts.size()];
          int i = 0;
          for (String file : conflicts.keySet())
+         {
             files[i++] = file;
+         }
       }
       return files;
    }
 
-   /**
-    * @see java.lang.Object#toString()
-    */
+   /** @see java.lang.Object#toString() */
    @Override
    public String toString()
    {

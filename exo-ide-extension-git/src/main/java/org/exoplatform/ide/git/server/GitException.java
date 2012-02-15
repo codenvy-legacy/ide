@@ -25,18 +25,17 @@ package org.exoplatform.ide.git.server;
 @SuppressWarnings("serial")
 public class GitException extends Exception
 {
-   
-   /**
-    * @param message error message
-    */
+   protected GitException()
+   {
+   }
+
+   /** @param message error message */
    public GitException(String message)
    {
       super(message);
    }
 
-   /**
-    * @param cause cause
-    */
+   /** @param cause cause */
    public GitException(Throwable cause)
    {
       super(cause);

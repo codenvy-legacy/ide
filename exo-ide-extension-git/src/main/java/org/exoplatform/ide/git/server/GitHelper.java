@@ -36,7 +36,9 @@ public class GitHelper
    public static void addToGitIgnore(File dir, String... rules) throws IOException
    {
       if (rules == null || rules.length == 0)
+      {
          return;
+      }
 
       Set<String> toAdd = new LinkedHashSet<String>(Arrays.asList(rules));
 
@@ -51,12 +53,16 @@ public class GitHelper
             {
                r = new BufferedReader(new FileReader(f));
                for (String l = r.readLine(); l != null; l = r.readLine())
+               {
                   toAdd.remove(l.trim());
+               }
             }
             finally
             {
                if (r != null)
+               {
                   r.close();
+               }
             }
 
             w = new FileWriter(f, true);
@@ -67,7 +73,11 @@ public class GitHelper
             w = new FileWriter(f);
          }
 
-         writeIgnore(w, toAdd);
+         for (String l : toAdd)
+         {
+            w.write(l);
+            w.write('\n');
+         }
       }
       finally
       {
@@ -76,15 +86,6 @@ public class GitHelper
             w.flush();
             w.close();
          }
-      }
-   }
-
-   private static void writeIgnore(FileWriter w, Set<String> rules) throws IOException
-   {
-      for (String l : rules)
-      {
-         w.write(l);
-         w.write('\n');
       }
    }
 }

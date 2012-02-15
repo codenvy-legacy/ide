@@ -29,26 +29,32 @@ import javax.ws.rs.core.Application;
  */
 public class GitApplication extends Application
 {
-   private final Set<Object> singletons = new HashSet<Object>();
-   private final Set<Class<?>> classes = new HashSet<Class<?>>();
+   private final Set<Object> singletons;
+   private final Set<Class<?>> classes;
 
    public GitApplication()
    {
+      classes = new HashSet<Class<?>>(2);
       classes.add(GitService.class);
       classes.add(GitRepoService.class);
+
+      singletons = new HashSet<Object>(4);
       singletons.add(new GitExceptionMapper());
+      singletons.add(new InfoPageWriter());
+      singletons.add(new BranchListWriter());
+      singletons.add(new TagListWriter());
    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
+   /** @see javax.ws.rs.core.Application#getClasses() */
    @Override
    public Set<Class<?>> getClasses()
    {
       return classes;
    }
-   
-   /**session
+
+   /**
+    * session
+    *
     * @see javax.ws.rs.core.Application#getSingletons()
     */
    @Override
