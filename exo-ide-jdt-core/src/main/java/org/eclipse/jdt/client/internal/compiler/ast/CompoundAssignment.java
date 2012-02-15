@@ -25,8 +25,6 @@ public class CompoundAssignment extends Assignment implements OperatorIds
 {
    public int operator;
 
-   public int preAssignImplicitConversion;
-
    // var op exp is equivalent to var = (varType) var op exp
    // assignmentImplicitConversion stores the cast needed for the assignment
 
@@ -236,7 +234,6 @@ public class CompoundAssignment extends Assignment implements OperatorIds
       this.lhs.computeConversion(scope, TypeBinding.wellKnownType(scope, (result >>> 16) & 0x0000F), originalLhsType);
       this.expression.computeConversion(scope, TypeBinding.wellKnownType(scope, (result >>> 8) & 0x0000F),
          originalExpressionType);
-      this.preAssignImplicitConversion = (unboxedLhs ? BOXING : 0) | (lhsID << 4) | (result & 0x0000F);
       if (unboxedLhs)
          scope.problemReporter().autoboxing(this, lhsType, originalLhsType);
       if (expressionIsCast)

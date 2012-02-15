@@ -111,7 +111,6 @@ public abstract class ASTNode implements TypeConstants, TypeIds {
 	public int bits = IsReachable; 				// reachable by default
 
 	// for operators
-	public static final int ReturnTypeIDMASK = Bit1|Bit2|Bit3|Bit4;
 	public static final int OperatorSHIFT = 6;	// Bit7 -> Bit12
 	public static final int OperatorMASK = Bit7|Bit8|Bit9|Bit10|Bit11|Bit12; // 6 bits for operator ID
 

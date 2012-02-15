@@ -19,8 +19,6 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 public class JavadocArrayQualifiedTypeReference extends ArrayQualifiedTypeReference
 {
 
-   public int tagSourceStart, tagSourceEnd;
-
    public JavadocArrayQualifiedTypeReference(JavadocQualifiedTypeReference typeRef, int dim)
    {
       super(typeRef.tokens, dim, typeRef.sourcePositions);

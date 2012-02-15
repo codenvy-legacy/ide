@@ -40,12 +40,10 @@ import java.util.Comparator;
 public class CompilationUnitDeclaration extends ASTNode implements ProblemSeverities, ReferenceContext
 {
 
-   private static final Comparator STRING_LITERAL_COMPARATOR = new Comparator()
+   private static final Comparator<StringLiteral> STRING_LITERAL_COMPARATOR = new Comparator<StringLiteral>()
    {
-      public int compare(Object o1, Object o2)
+      public int compare(StringLiteral literal1, StringLiteral literal2)
       {
-         StringLiteral literal1 = (StringLiteral)o1;
-         StringLiteral literal2 = (StringLiteral)o2;
          return literal1.sourceStart - literal2.sourceStart;
       }
    };
@@ -164,17 +162,6 @@ public class CompilationUnitDeclaration extends ASTNode implements ProblemSeveri
 
       this.compilationResult.recoveryScannerData = null; // recovery is already done
 
-      // ClassFile[] classFiles = this.compilationResult.getClassFiles();
-      // for (int i = 0, max = classFiles.length; i < max; i++) {
-      // // clear the classFile back pointer to the bindings
-      // ClassFile classFile = classFiles[i];
-      // // null out the classfile backpointer to a type binding
-      // classFile.referenceBinding = null;
-      // classFile.innerClassesBindings = null;
-      // classFile.missingTypes = null;
-      // classFile.visitedTypes = null;
-      // }
-
       this.suppressWarningAnnotations = null;
    }
 
@@ -226,22 +213,22 @@ public class CompilationUnitDeclaration extends ASTNode implements ProblemSeveri
       this.types[0] = declaration; // Assumes the first slot is meant for this type
    }
 
-   /*
-    * Finds the matching type amoung this compilation unit types. Returns null if no type with this name is found. The type name
-    * is a compound name e.g. if we're looking for X.A.B then a type name would be {X, A, B}
-    */
-   public TypeDeclaration declarationOfType(char[][] typeName)
-   {
-      for (int i = 0; i < this.types.length; i++)
-      {
-         TypeDeclaration typeDecl = this.types[i].declarationOfType(typeName);
-         if (typeDecl != null)
-         {
-            return typeDecl;
-         }
-      }
-      return null;
-   }
+//   /*
+//    * Finds the matching type amoung this compilation unit types. Returns null if no type with this name is found. The type name
+//    * is a compound name e.g. if we're looking for X.A.B then a type name would be {X, A, B}
+//    */
+//   public TypeDeclaration declarationOfType(char[][] typeName)
+//   {
+//      for (int i = 0; i < this.types.length; i++)
+//      {
+//         TypeDeclaration typeDecl = this.types[i].declarationOfType(typeName);
+//         if (typeDecl != null)
+//         {
+//            return typeDecl;
+//         }
+//      }
+//      return null;
+//   }
 
    public void finalizeProblems()
    {
@@ -425,37 +412,6 @@ public class CompilationUnitDeclaration extends ASTNode implements ProblemSeveri
       }
    }
 
-   // /**
-   // * Bytecode generation
-   // */
-   // public void generateCode()
-   // {
-   // if (this.ignoreFurtherInvestigation)
-   // {
-   // if (this.types != null)
-   // {
-   // for (int i = 0, count = this.types.length; i < count; i++)
-   // {
-   // this.types[i].ignoreFurtherInvestigation = true;
-   // // propagate the flag to request problem type creation
-   // this.types[i].generateCode(this.scope);
-   // }
-   // }
-   // return;
-   // }
-   // try
-   // {
-   // if (this.types != null)
-   // {
-   // for (int i = 0, count = this.types.length; i < count; i++)
-   // this.types[i].generateCode(this.scope);
-   // }
-   // }
-   // catch (AbortCompilationUnit e)
-   // {
-   // // ignore
-   // }
-   // }
 
    public char[] getFileName()
    {

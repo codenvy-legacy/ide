@@ -27,8 +27,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
 public class JavadocAllocationExpression extends AllocationExpression
 {
-
-   public int tagSourceStart, tagSourceEnd;
+   public int tagSourceStart;
 
    public int tagValue, memberStart;
 

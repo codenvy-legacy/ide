@@ -34,8 +34,6 @@ public class IntLiteral extends NumberLiteral
 
    private char[] reducedForm; // no underscores
 
-   public int value;
-
    // used for ++ and --
    public static final IntLiteral One = new IntLiteral(new char[]{'1'}, null, 0, 0, 1, IntConstant.fromValue(1));
 
@@ -73,7 +71,6 @@ public class IntLiteral extends NumberLiteral
    {
       super(token, start, end);
       this.reducedForm = reducedForm;
-      this.value = value;
       this.constant = constant;
    }
 
@@ -189,23 +186,6 @@ public class IntLiteral extends NumberLiteral
       }
       return this;
    }
-
-   // /**
-   // * Code generation for long literal
-   // *
-   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   // * @param valueRequired boolean
-   // */
-   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   // {
-   // int pc = codeStream.position;
-   // if (valueRequired)
-   // {
-   // codeStream.generateConstant(this.constant, this.implicitConversion);
-   // }
-   // codeStream.recordPositionsFrom(pc, this.sourceStart);
-   // }
 
    public TypeBinding literalType(BlockScope scope)
    {

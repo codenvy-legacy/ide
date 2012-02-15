@@ -41,8 +41,6 @@ public class ExplicitConstructorCall extends Statement implements InvocationSite
 
    public MethodBinding binding; // exact binding resulting from lookup
 
-   MethodBinding syntheticAccessor; // synthetic accessor for inner-emulation
-
    public int accessMode;
 
    public TypeReference[] typeArguments;
@@ -54,8 +52,6 @@ public class ExplicitConstructorCall extends Statement implements InvocationSite
    public final static int Super = 2;
 
    public final static int This = 3;
-
-   public VariableBinding[][] implicitArguments;
 
    // TODO Remove once DOMParser is activated
    public int typeArgumentsSourceStart;
@@ -249,8 +245,8 @@ public class ExplicitConstructorCall extends Statement implements InvocationSite
             }
             else
             {
-               this.syntheticAccessor =
-                  ((SourceTypeBinding)declaringClass).addSyntheticMethod(codegenBinding, isSuperAccess());
+//               this.syntheticAccessor =
+//                  ((SourceTypeBinding)declaringClass).addSyntheticMethod(codegenBinding, isSuperAccess());
                currentScope.problemReporter().needToEmulateMethodAccess(codegenBinding, this);
             }
          }

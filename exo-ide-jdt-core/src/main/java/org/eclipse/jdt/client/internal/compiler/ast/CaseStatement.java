@@ -12,7 +12,6 @@ package org.eclipse.jdt.client.internal.compiler.ast;
 
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.client.internal.compiler.codegen.BranchLabel;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowContext;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
@@ -27,8 +26,6 @@ public class CaseStatement extends Statement
 {
 
    public Expression constantExpression;
-
-   public BranchLabel targetLabel;
 
    public CaseStatement(Expression constantExpression, int sourceEnd, int sourceStart)
    {
@@ -67,20 +64,6 @@ public class CaseStatement extends Statement
       return output;
    }
 
-   // /**
-   // * Case code generation
-   // *
-   // */
-   // public void generateCode(BlockScope currentScope, CodeStream codeStream)
-   // {
-   // if ((this.bits & ASTNode.IsReachable) == 0)
-   // {
-   // return;
-   // }
-   // int pc = codeStream.position;
-   // this.targetLabel.place();
-   // codeStream.recordPositionsFrom(pc, this.sourceStart);
-   // }
 
    /** No-op : should use resolveCase(...) instead. */
    public void resolve(BlockScope scope)

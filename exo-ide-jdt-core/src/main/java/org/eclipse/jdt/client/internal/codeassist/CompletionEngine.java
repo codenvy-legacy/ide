@@ -2055,8 +2055,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          System.out.println("COMPLETION - Source :"); //$NON-NLS-1$
          System.out.println(sourceUnit.getContents());
       }
-//      if (this.monitor != null)
-//         this.monitor.beginTask(Messages.engine_completing, IProgressMonitor.UNKNOWN);
       this.requestor.beginReporting();
       boolean contextAccepted = false;
       try
@@ -2544,10 +2542,9 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       }
    }
 
-   // TODO
    private void completionOnJavadocAllocationExpression(ASTNode astNode, Binding qualifiedBinding, Scope scope)
    {
-      // setSourceRange(astNode.sourceStart, astNode.sourceEnd, false);
+      setSourceRange(astNode.sourceStart, astNode.sourceEnd, false);
 
       CompletionOnJavadocAllocationExpression allocExpression = (CompletionOnJavadocAllocationExpression)astNode;
       this.javadocTagPosition = allocExpression.tagSourceStart;
@@ -2573,7 +2570,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       }
    }
 
-   // TODO
    private void completionOnJavadocFieldReference(ASTNode astNode, Scope scope)
    {
       this.insideQualifiedReference = true;
@@ -2631,7 +2627,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       }
    }
 
-   // TODO
    private void completionOnJavadocMessageSend(ASTNode astNode, Binding qualifiedBinding, Scope scope)
    {
       CompletionOnJavadocMessageSend messageSend = (CompletionOnJavadocMessageSend)astNode;
@@ -2670,7 +2665,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       }
    }
 
-   // TODO
    private void completionOnJavadocParamNameReference(ASTNode astNode)
    {
       if (!this.requestor.isIgnored(CompletionProposal.JAVADOC_PARAM_REF))
@@ -2682,7 +2676,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       }
    }
 
-   // TODO
    private void completionOnJavadocQualifiedTypeReference(ASTNode astNode, Binding qualifiedBinding, Scope scope)
    {
       this.insideQualifiedReference = true;
@@ -2716,7 +2709,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       }
    }
 
-   // TODO
    private void completionOnJavadocSingleTypeReference(ASTNode astNode, Scope scope)
    {
       CompletionOnJavadocSingleTypeReference typeRef = (CompletionOnJavadocSingleTypeReference)astNode;
@@ -2727,7 +2719,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          (this.assistNodeInJavadoc & CompletionOnJavadoc.BASE_TYPES) != 0, false, new ObjectVector());
    }
 
-   // TODO
    private void completionOnJavadocTag(ASTNode astNode)
    {
       CompletionOnJavadocTag javadocTag = (CompletionOnJavadocTag)astNode;
@@ -2736,7 +2727,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       findJavadocInlineTags(javadocTag);
    }
 
-   // TODO
    private void completionOnJavadocTypeParamReference(ASTNode astNode)
    {
       if (!this.requestor.isIgnored(CompletionProposal.JAVADOC_PARAM_REF))
@@ -7458,54 +7448,54 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       }
    }
 
-//   protected void findFieldsAndMethodsFromAnotherReceiver(char[] token, TypeReference receiverType, Scope scope,
-//      ObjectVector fieldsFound, ObjectVector methodsFound, InvocationSite invocationSite, Scope invocationScope,
-//      boolean implicitCall, boolean superCall, Binding[] missingElements, int[] missingElementsStarts,
-//      int[] missingElementsEnds, boolean missingElementsHaveProblems, char[][] receiverName, int receiverStart,
-//      int receiverEnd)
-//   {
-//
-//      if (receiverType.resolvedType == null)
-//         return;
-//
-//      TypeBinding receiverTypeBinding = receiverType.resolvedType;
-//      char[] castedReceiver = null;
-//
-//      char[] castedTypeChars = CharOperation.concatWith(receiverType.getTypeName(), '.');
-//      if (this.source != null)
-//      {
-//         int memberRefStart = this.startPosition;
-//
-//         char[] receiverChars = CharOperation.subarray(this.source, receiverStart, receiverEnd);
-//         char[] dotChars = CharOperation.subarray(this.source, receiverEnd, memberRefStart);
-//
-//         castedReceiver =
-//            CharOperation.concat(
-//               CharOperation.concat('(',
-//                  CharOperation.concat(CharOperation.concat('(', castedTypeChars, ')'), receiverChars), ')'), dotChars);
-//      }
-//      else
-//      {
-//         castedReceiver =
-//            CharOperation.concat(
-//               CharOperation.concat(
-//                  '(',
-//                  CharOperation.concat(CharOperation.concat('(', castedTypeChars, ')'),
-//                     CharOperation.concatWith(receiverName, '.')), ')'), DOT);
-//      }
-//
-//      if (castedReceiver == null)
-//         return;
-//
-//      int oldStartPosition = this.startPosition;
-//      this.startPosition = receiverStart;
-//
-//      findFieldsAndMethods(token, receiverTypeBinding, scope, fieldsFound, methodsFound, invocationSite,
-//         invocationScope, implicitCall, superCall, missingElements, missingElementsStarts, missingElementsEnds,
-//         missingElementsHaveProblems, castedReceiver, receiverStart, receiverEnd);
-//
-//      this.startPosition = oldStartPosition;
-//   }
+   // protected void findFieldsAndMethodsFromAnotherReceiver(char[] token, TypeReference receiverType, Scope scope,
+   // ObjectVector fieldsFound, ObjectVector methodsFound, InvocationSite invocationSite, Scope invocationScope,
+   // boolean implicitCall, boolean superCall, Binding[] missingElements, int[] missingElementsStarts,
+   // int[] missingElementsEnds, boolean missingElementsHaveProblems, char[][] receiverName, int receiverStart,
+   // int receiverEnd)
+   // {
+   //
+   // if (receiverType.resolvedType == null)
+   // return;
+   //
+   // TypeBinding receiverTypeBinding = receiverType.resolvedType;
+   // char[] castedReceiver = null;
+   //
+   // char[] castedTypeChars = CharOperation.concatWith(receiverType.getTypeName(), '.');
+   // if (this.source != null)
+   // {
+   // int memberRefStart = this.startPosition;
+   //
+   // char[] receiverChars = CharOperation.subarray(this.source, receiverStart, receiverEnd);
+   // char[] dotChars = CharOperation.subarray(this.source, receiverEnd, memberRefStart);
+   //
+   // castedReceiver =
+   // CharOperation.concat(
+   // CharOperation.concat('(',
+   // CharOperation.concat(CharOperation.concat('(', castedTypeChars, ')'), receiverChars), ')'), dotChars);
+   // }
+   // else
+   // {
+   // castedReceiver =
+   // CharOperation.concat(
+   // CharOperation.concat(
+   // '(',
+   // CharOperation.concat(CharOperation.concat('(', castedTypeChars, ')'),
+   // CharOperation.concatWith(receiverName, '.')), ')'), DOT);
+   // }
+   //
+   // if (castedReceiver == null)
+   // return;
+   //
+   // int oldStartPosition = this.startPosition;
+   // this.startPosition = receiverStart;
+   //
+   // findFieldsAndMethods(token, receiverTypeBinding, scope, fieldsFound, methodsFound, invocationSite,
+   // invocationScope, implicitCall, superCall, missingElements, missingElementsStarts, missingElementsEnds,
+   // missingElementsHaveProblems, castedReceiver, receiverStart, receiverEnd);
+   //
+   // this.startPosition = oldStartPosition;
+   // }
 
    private void findFieldsAndMethodsFromCastedReceiver(ASTNode enclosingNode, Binding qualifiedBinding, Scope scope,
       ObjectVector fieldsFound, ObjectVector methodsFound, InvocationSite invocationSite, Scope invocationScope,
@@ -12790,7 +12780,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       char[] fakeSource = CharOperation.concat(prefix.toString().toCharArray(), snippet, "}}".toCharArray());//$NON-NLS-1$
       this.offset = prefix.length();
 
-      String encoding = this.compilerOptions.defaultEncoding;
       BasicCompilationUnit fakeUnit = new BasicCompilationUnit(fakeSource, null, "FakeType.java");
 
       this.actualCompletionPosition = prefix.length() + position - 1;

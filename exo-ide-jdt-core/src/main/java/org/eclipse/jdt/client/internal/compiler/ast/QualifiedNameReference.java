@@ -51,8 +51,6 @@ public class QualifiedNameReference extends NameReference
 
    public int indexOfFirstFieldBinding;// points (into tokens) for the first token that corresponds to first FieldBinding
 
-   public SyntheticMethodBinding syntheticWriteAccessor;
-
    public SyntheticMethodBinding[] syntheticReadAccessors;
 
    public TypeBinding genericCast;
@@ -1359,7 +1357,6 @@ public class QualifiedNameReference extends NameReference
    {
       if (index < 0)
       { // write-access ?
-         this.syntheticWriteAccessor = syntheticAccessor;
       }
       else
       {

@@ -36,13 +36,6 @@ public class ConditionalExpression extends OperatorExpression
 
    public Constant optimizedIfFalseConstant;
 
-   // for local variables table attributes
-   int trueInitStateIndex = -1;
-
-   int falseInitStateIndex = -1;
-
-   int mergedInitStateIndex = -1;
-
    // we compute and store the null status during analyseCode (https://bugs.eclipse.org/324178):
    private int nullStatus = FlowInfo.UNKNOWN;
 
@@ -81,7 +74,6 @@ public class ConditionalExpression extends OperatorExpression
             this.valueIfTrue.complainIfUnreachable(trueFlowInfo, currentScope, initialComplaintLevel);
          }
       }
-      this.trueInitStateIndex = currentScope.methodScope().recordInitializationStates(trueFlowInfo);
       trueFlowInfo = this.valueIfTrue.analyseCode(currentScope, flowContext, trueFlowInfo);
 
       // process the if-false part
@@ -98,7 +90,6 @@ public class ConditionalExpression extends OperatorExpression
             this.valueIfFalse.complainIfUnreachable(falseFlowInfo, currentScope, initialComplaintLevel);
          }
       }
-      this.falseInitStateIndex = currentScope.methodScope().recordInitializationStates(falseFlowInfo);
       falseFlowInfo = this.valueIfFalse.analyseCode(currentScope, flowContext, falseFlowInfo);
 
       // merge if-true & if-false initializations
@@ -169,7 +160,6 @@ public class ConditionalExpression extends OperatorExpression
             FlowInfo.conditional(trueFlowTowardsTrue.mergedWith(falseFlowTowardsTrue),
                trueFlowTowardsFalse.mergedWith(falseFlowTowardsFalse));
       }
-      this.mergedInitStateIndex = currentScope.methodScope().recordInitializationStates(mergedInfo);
       mergedInfo.setReachMode(mode);
       return mergedInfo;
    }

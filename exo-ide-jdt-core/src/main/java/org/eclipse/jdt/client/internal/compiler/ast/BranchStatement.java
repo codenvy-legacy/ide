@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 
-import org.eclipse.jdt.client.internal.compiler.codegen.BranchLabel;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 
 public abstract class BranchStatement extends Statement
@@ -18,11 +17,7 @@ public abstract class BranchStatement extends Statement
 
    public char[] label;
 
-   public BranchLabel targetLabel;
-
    public SubRoutineStatement[] subroutines;
-
-   public int initStateIndex = -1;
 
    /** BranchStatement constructor comment. */
    public BranchStatement(char[] label, int sourceStart, int sourceEnd)
@@ -31,51 +26,6 @@ public abstract class BranchStatement extends Statement
       this.sourceStart = sourceStart;
       this.sourceEnd = sourceEnd;
    }
-
-   // /**
-   // * Branch code generation
-   // *
-   // * generate the finallyInvocationSequence.
-   // */
-   // public void generateCode(BlockScope currentScope, CodeStream codeStream)
-   // {
-   // if ((this.bits & ASTNode.IsReachable) == 0)
-   // {
-   // return;
-   // }
-   // int pc = codeStream.position;
-   //
-   // // generation of code responsible for invoking the finally
-   // // blocks in sequence
-   // if (this.subroutines != null)
-   // {
-   // for (int i = 0, max = this.subroutines.length; i < max; i++)
-   // {
-   // SubRoutineStatement sub = this.subroutines[i];
-   // boolean didEscape =
-   // sub.generateSubRoutineInvocation(currentScope, codeStream, this.targetLabel, this.initStateIndex, null);
-   // if (didEscape)
-   // {
-   // codeStream.recordPositionsFrom(pc, this.sourceStart);
-   // SubRoutineStatement.reenterAllExceptionHandlers(this.subroutines, i, codeStream);
-   // if (this.initStateIndex != -1)
-   // {
-   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.initStateIndex);
-   // codeStream.addDefinitelyAssignedVariables(currentScope, this.initStateIndex);
-   // }
-   // return;
-   // }
-   // }
-   // }
-   // codeStream.goto_(this.targetLabel);
-   // codeStream.recordPositionsFrom(pc, this.sourceStart);
-   // SubRoutineStatement.reenterAllExceptionHandlers(this.subroutines, -1, codeStream);
-   // if (this.initStateIndex != -1)
-   // {
-   // codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.initStateIndex);
-   // codeStream.addDefinitelyAssignedVariables(currentScope, this.initStateIndex);
-   // }
-   // }
 
    public void resolve(BlockScope scope)
    {
