@@ -71,7 +71,6 @@ public abstract class ParserBaseTestGwt extends BaseTestGwt
       unit = (CompilationUnit)ast;
 
       new JavaCodeAssistantService(null, null);
-      CompletionEngine.DEBUG = true;
    }
 
 }

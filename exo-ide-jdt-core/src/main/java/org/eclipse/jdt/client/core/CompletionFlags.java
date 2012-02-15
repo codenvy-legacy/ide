@@ -34,14 +34,4 @@ public final class CompletionFlags
       // Not instantiable
    }
 
-   /**
-    * Returns whether the given integer includes the {@link #StaticImport} flag.
-    * 
-    * @param flags the flags
-    * @return <code>true</code> if the {@link #StaticImport} flag is included
-    */
-   public static boolean isStaticImport(int flags)
-   {
-      return (flags & StaticImport) != 0;
-   }
 }

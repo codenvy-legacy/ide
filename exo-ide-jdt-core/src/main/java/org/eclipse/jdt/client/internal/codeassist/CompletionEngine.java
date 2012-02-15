@@ -16,7 +16,6 @@ import org.eclipse.jdt.client.core.CompletionFlags;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.CompletionRequestor;
 import org.eclipse.jdt.client.core.Flags;
-import org.eclipse.jdt.client.core.IAccessRule;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
@@ -205,7 +204,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
 
       public int extraFlags;
 
-      public int accessibility;
+      // public int accessibility;
 
       public boolean proposeType = false;
 
@@ -216,8 +215,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       public boolean mustBeQualified = false;
 
       public AcceptedConstructor(int modifiers, char[] simpleTypeName, int parameterCount, char[] signature,
-         char[][] parameterTypes, char[][] parameterNames, int typeModifiers, char[] packageName, int extraFlags,
-         int accessibility)
+         char[][] parameterTypes, char[][] parameterNames, int typeModifiers, char[] packageName, int extraFlags)
       {
          this.modifiers = modifiers;
          this.simpleTypeName = simpleTypeName;
@@ -228,7 +226,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          this.typeModifiers = typeModifiers;
          this.packageName = packageName;
          this.extraFlags = extraFlags;
-         this.accessibility = accessibility;
+         // this.accessibility = accessibility;
       }
 
       public String toString()
@@ -253,22 +251,18 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
 
       public int modifiers;
 
-      public int accessibility;
-
       public boolean mustBeQualified = false;
 
       public char[] fullyQualifiedName = null;
 
       public char[] qualifiedTypeName = null;
 
-      public AcceptedType(char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, int modifiers,
-         int accessibility)
+      public AcceptedType(char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, int modifiers)
       {
          this.packageName = packageName;
          this.simpleTypeName = simpleTypeName;
          this.enclosingTypeNames = enclosingTypeNames;
          this.modifiers = modifiers;
-         this.accessibility = accessibility;
       }
 
       public String toString()
@@ -561,8 +555,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
    public HashtableOfObject typeCache;
 
    public int openedBinaryTypes; // used during InternalCompletionProposal#findConstructorParameterNames()
-
-   public static boolean DEBUG = false;
 
    public static boolean PERF = false;
 
@@ -908,34 +900,34 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          }
       }
 
-      int accessibility = IAccessRule.K_ACCESSIBLE;
-      if (accessRestriction != null)
-      {
-         switch (accessRestriction.getProblemId())
-         {
-            case IProblem.ForbiddenReference :
-               if (this.options.checkForbiddenReference)
-               {
-                  return;
-               }
-               accessibility = IAccessRule.K_NON_ACCESSIBLE;
-               break;
-            case IProblem.DiscouragedReference :
-               if (this.options.checkDiscouragedReference)
-               {
-                  return;
-               }
-               accessibility = IAccessRule.K_DISCOURAGED;
-               break;
-         }
-      }
+      // int accessibility = IAccessRule.K_ACCESSIBLE;
+      // if (accessRestriction != null)
+      // {
+      // switch (accessRestriction.getProblemId())
+      // {
+      // case IProblem.ForbiddenReference :
+      // if (this.options.checkForbiddenReference)
+      // {
+      // return;
+      // }
+      // accessibility = IAccessRule.K_NON_ACCESSIBLE;
+      // break;
+      // case IProblem.DiscouragedReference :
+      // if (this.options.checkDiscouragedReference)
+      // {
+      // return;
+      // }
+      // accessibility = IAccessRule.K_DISCOURAGED;
+      // break;
+      // }
+      // }
 
       if (this.acceptedConstructors == null)
       {
          this.acceptedConstructors = new ObjectVector();
       }
       this.acceptedConstructors.add(new AcceptedConstructor(modifiers, simpleTypeName, parameterCount, signature,
-         parameterTypes, parameterNames, typeModifiers, packageName, extraFlags, accessibility));
+         parameterTypes, parameterNames, typeModifiers, packageName, extraFlags));
    }
 
    private void acceptConstructors(Scope scope)
@@ -979,7 +971,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             final char[][] parameterTypes = acceptedConstructor.parameterTypes;
             final char[][] parameterNames = acceptedConstructor.parameterNames;
             final int extraFlags = acceptedConstructor.extraFlags;
-            final int accessibility = acceptedConstructor.accessibility;
+            // final int accessibility = acceptedConstructor.accessibility;
 
             boolean proposeType =
                hasArrayTypeAsExpectedSuperTypes() || (extraFlags & ExtraFlags.HasNonPrivateStaticMemberTypes) != 0;
@@ -1052,8 +1044,8 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                {
                   if (proposeType)
                   {
-                     proposeType(packageName, simpleTypeName, typeModifiers, accessibility, simpleTypeName,
-                        fullyQualifiedName, !CharOperation.equals(fullyQualifiedName, importName[1]), scope);
+                     proposeType(packageName, simpleTypeName, typeModifiers, simpleTypeName, fullyQualifiedName,
+                        !CharOperation.equals(fullyQualifiedName, importName[1]), scope);
                   }
 
                   if (proposeConstructor && !Flags.isEnum(typeModifiers))
@@ -1062,8 +1054,8 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                      if (!isQualified)
                      {
                         proposeConstructor(simpleTypeName, parameterCount, signature, parameterTypes, parameterNames,
-                           modifiers, packageName, typeModifiers, accessibility, simpleTypeName, fullyQualifiedName,
-                           isQualified, scope, extraFlags);
+                           modifiers, packageName, typeModifiers, simpleTypeName, fullyQualifiedName, isQualified,
+                           scope, extraFlags);
                      }
                      else
                      {
@@ -1086,15 +1078,15 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             {
                if (proposeType)
                {
-                  proposeType(packageName, simpleTypeName, typeModifiers, accessibility, simpleTypeName,
-                     fullyQualifiedName, false, scope);
+                  proposeType(packageName, simpleTypeName, typeModifiers, simpleTypeName, fullyQualifiedName, false,
+                     scope);
                }
 
                if (proposeConstructor && !Flags.isEnum(typeModifiers))
                {
                   proposeConstructor(simpleTypeName, parameterCount, signature, parameterTypes, parameterNames,
-                     modifiers, packageName, typeModifiers, accessibility, simpleTypeName, fullyQualifiedName, false,
-                     scope, extraFlags);
+                     modifiers, packageName, typeModifiers, simpleTypeName, fullyQualifiedName, false, scope,
+                     extraFlags);
                }
                continue next;
             }
@@ -1167,8 +1159,8 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                }
                if (proposeType)
                {
-                  proposeType(packageName, simpleTypeName, typeModifiers, accessibility, simpleTypeName,
-                     fullyQualifiedName, true, scope);
+                  proposeType(packageName, simpleTypeName, typeModifiers, simpleTypeName, fullyQualifiedName, true,
+                     scope);
                }
 
                if (proposeConstructor && !Flags.isEnum(typeModifiers))
@@ -1203,8 +1195,8 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                {
                   if (value.proposeType)
                   {
-                     proposeType(value.packageName, value.simpleTypeName, value.typeModifiers, value.accessibility,
-                        value.simpleTypeName, value.fullyQualifiedName, value.mustBeQualified, scope);
+                     proposeType(value.packageName, value.simpleTypeName, value.typeModifiers, value.simpleTypeName,
+                        value.fullyQualifiedName, value.mustBeQualified, scope);
                   }
 
                   if (value.proposeConstructor && !Flags.isEnum(value.modifiers))
@@ -1213,8 +1205,8 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                      {
                         proposeConstructor(value.simpleTypeName, value.parameterCount, value.signature,
                            value.parameterTypes, value.parameterNames, value.modifiers, value.packageName,
-                           value.typeModifiers, value.accessibility, value.simpleTypeName, value.fullyQualifiedName,
-                           value.mustBeQualified, scope, value.extraFlags);
+                           value.typeModifiers, value.simpleTypeName, value.fullyQualifiedName, value.mustBeQualified,
+                           scope, value.extraFlags);
                      }
                      else
                      {
@@ -1249,9 +1241,8 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   proposeConstructor(deferredProposal.simpleTypeName, deferredProposal.parameterCount,
                      deferredProposal.signature, deferredProposal.parameterTypes, deferredProposal.parameterNames,
                      deferredProposal.modifiers, deferredProposal.packageName, deferredProposal.typeModifiers,
-                     deferredProposal.accessibility, deferredProposal.simpleTypeName,
-                     deferredProposal.fullyQualifiedName, deferredProposal.mustBeQualified, scope,
-                     deferredProposal.extraFlags);
+                     deferredProposal.simpleTypeName, deferredProposal.fullyQualifiedName,
+                     deferredProposal.mustBeQualified, scope, deferredProposal.extraFlags);
                }
             }
          }
@@ -1303,7 +1294,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       {
          relevance += computeRelevanceForQualification(true);
       }
-      relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
 
       this.noProposal = false;
       if (!this.requestor.isIgnored(CompletionProposal.PACKAGE_REF))
@@ -1317,10 +1307,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
          proposal.setRelevance(relevance);
          this.requestor.accept(proposal);
-         if (DEBUG)
-         {
-            this.printDebug(proposal);
-         }
       }
    }
 
@@ -1357,27 +1343,27 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          }
       }
 
-      int accessibility = IAccessRule.K_ACCESSIBLE;
-      if (accessRestriction != null)
-      {
-         switch (accessRestriction.getProblemId())
-         {
-            case IProblem.ForbiddenReference :
-               if (this.options.checkForbiddenReference)
-               {
-                  return;
-               }
-               accessibility = IAccessRule.K_NON_ACCESSIBLE;
-               break;
-            case IProblem.DiscouragedReference :
-               if (this.options.checkDiscouragedReference)
-               {
-                  return;
-               }
-               accessibility = IAccessRule.K_DISCOURAGED;
-               break;
-         }
-      }
+      // int accessibility = IAccessRule.K_ACCESSIBLE;
+      // if (accessRestriction != null)
+      // {
+      // switch (accessRestriction.getProblemId())
+      // {
+      // case IProblem.ForbiddenReference :
+      // if (this.options.checkForbiddenReference)
+      // {
+      // return;
+      // }
+      // accessibility = IAccessRule.K_NON_ACCESSIBLE;
+      // break;
+      // case IProblem.DiscouragedReference :
+      // if (this.options.checkDiscouragedReference)
+      // {
+      // return;
+      // }
+      // accessibility = IAccessRule.K_DISCOURAGED;
+      // break;
+      // }
+      // }
 
       if (isForbiddenType(packageName, simpleTypeName, enclosingTypeNames))
       {
@@ -1388,8 +1374,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       {
          this.acceptedTypes = new ObjectVector();
       }
-      this.acceptedTypes
-         .add(new AcceptedType(packageName, simpleTypeName, enclosingTypeNames, modifiers, accessibility));
+      this.acceptedTypes.add(new AcceptedType(packageName, simpleTypeName, enclosingTypeNames, modifiers));
    }
 
    private void acceptTypes(Scope scope)
@@ -1420,7 +1405,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             char[] simpleTypeName = acceptedType.simpleTypeName;
             char[][] enclosingTypeNames = acceptedType.enclosingTypeNames;
             int modifiers = acceptedType.modifiers;
-            int accessibility = acceptedType.accessibility;
 
             char[] typeName;
             char[] flatEnclosingTypeNames;
@@ -1473,13 +1457,12 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                int relevance = computeBaseRelevance();
                relevance += computeRelevanceForResolution();
                relevance += computeRelevanceForInterestingProposal(packageName, fullyQualifiedName);
-               relevance += computeRelevanceForRestrictions(accessibility);
                relevance += computeRelevanceForCaseMatching(this.completionToken, simpleTypeName);
 
                this.noProposal = false;
                if (!this.requestor.isIgnored(CompletionProposal.TYPE_REF))
                {
-                  createTypeProposal(packageName, typeName, modifiers, accessibility, completionName, relevance);
+                  createTypeProposal(packageName, typeName, modifiers, completionName, relevance);
                }
             }
             else
@@ -1494,7 +1477,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   char[][] importName = this.importsCache[j];
                   if (CharOperation.equals(typeName, importName[0]))
                   {
-                     proposeType(packageName, simpleTypeName, modifiers, accessibility, typeName, fullyQualifiedName,
+                     proposeType(packageName, simpleTypeName, modifiers, typeName, fullyQualifiedName,
                         !CharOperation.equals(fullyQualifiedName, importName[1]), scope);
                      continue next;
                   }
@@ -1503,8 +1486,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                if ((enclosingTypeNames == null || enclosingTypeNames.length == 0)
                   && CharOperation.equals(this.currentPackageName, packageName))
                {
-                  proposeType(packageName, simpleTypeName, modifiers, accessibility, typeName, fullyQualifiedName,
-                     false, scope);
+                  proposeType(packageName, simpleTypeName, modifiers, typeName, fullyQualifiedName, false, scope);
                   continue next;
                }
                else
@@ -1594,8 +1576,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                         }
                      }
                   }
-                  proposeType(packageName, simpleTypeName, modifiers, accessibility, typeName, fullyQualifiedName,
-                     true, scope);
+                  proposeType(packageName, simpleTypeName, modifiers, typeName, fullyQualifiedName, true, scope);
                }
             }
          }
@@ -1612,8 +1593,8 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                AcceptedType value = (AcceptedType)values[i];
                if (value != null)
                {
-                  proposeType(value.packageName, value.simpleTypeName, value.modifiers, value.accessibility,
-                     value.qualifiedTypeName, value.fullyQualifiedName, value.mustBeQualified, scope);
+                  proposeType(value.packageName, value.simpleTypeName, value.modifiers, value.qualifiedTypeName,
+                     value.fullyQualifiedName, value.mustBeQualified, scope);
                }
             }
          }
@@ -1631,7 +1612,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       relevance += computeRelevanceForInterestingProposal();
       relevance += computeRelevanceForCaseMatching(this.completionToken, name);
       relevance += computeRelevanceForQualification(false);
-      relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for local variable
       CompletionEngine.this.noProposal = false;
       if (!CompletionEngine.this.requestor.isIgnored(CompletionProposal.LOCAL_VARIABLE_REF))
       {
@@ -1648,10 +1628,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
          proposal.setRelevance(relevance);
          CompletionEngine.this.requestor.accept(proposal);
-         if (DEBUG)
-         {
-            CompletionEngine.this.printDebug(proposal);
-         }
       }
    }
 
@@ -1808,10 +1784,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
 
       buildTokenLocationContext(context, scope, astNode, astNodeParent);
 
-      if (DEBUG)
-      {
-         System.out.println(context.toString());
-      }
       this.requestor.acceptContext(context);
    }
 
@@ -2046,15 +2018,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
    public void complete(ICompilationUnit sourceUnit, int completionPosition, int pos)
    {
 
-      if (DEBUG)
-      {
-         System.out.print("COMPLETION IN "); //$NON-NLS-1$
-         System.out.print(sourceUnit.getFileName());
-         System.out.print(" AT POSITION "); //$NON-NLS-1$
-         System.out.println(completionPosition);
-         System.out.println("COMPLETION - Source :"); //$NON-NLS-1$
-         System.out.println(sourceUnit.getContents());
-      }
       this.requestor.beginReporting();
       boolean contextAccepted = false;
       try
@@ -2074,11 +2037,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          // boolean completionNodeFound = false;
          if (parsedUnit != null)
          {
-            if (DEBUG)
-            {
-               System.out.println("COMPLETION - Diet AST :"); //$NON-NLS-1$
-               System.out.println(parsedUnit.toString());
-            }
 
             // scan the package & import statements first
             if (parsedUnit.currentPackage instanceof CompletionOnPackageReference)
@@ -2092,10 +2050,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                if (this.noProposal && this.problem != null)
                {
                   this.requestor.completionFailure(this.problem);
-                  if (DEBUG)
-                  {
-                     this.printDebug(this.problem);
-                  }
                }
                return;
             }
@@ -2166,10 +2120,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                         if (this.noProposal && this.problem != null)
                         {
                            this.requestor.completionFailure(this.problem);
-                           if (DEBUG)
-                           {
-                              this.printDebug(this.problem);
-                           }
                         }
                      }
                      return;
@@ -2187,10 +2137,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                      if (this.noProposal && this.problem != null)
                      {
                         this.requestor.completionFailure(this.problem);
-                        if (DEBUG)
-                        {
-                           this.printDebug(this.problem);
-                        }
                      }
                      return;
                   }
@@ -2211,11 +2157,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                      this.lookupEnvironment.completeTypeBindings(parsedUnit, true);
                      parsedUnit.scope.faultInTypes();
                      parseBlockStatements(parsedUnit, this.actualCompletionPosition);
-                     if (DEBUG)
-                     {
-                        System.out.println("COMPLETION - AST :"); //$NON-NLS-1$
-                        System.out.println(parsedUnit.toString());
-                     }
                      parsedUnit.resolve();
                   }
                }
@@ -2225,16 +2166,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   if (e.astNode != null)
                   {
                      // if null then we found a problem in the completion node
-                     if (DEBUG)
-                     {
-                        System.out.print("COMPLETION - Completion node : "); //$NON-NLS-1$
-                        System.out.println(e.astNode.toString());
-                        if (this.parser.assistNodeParent != null)
-                        {
-                           System.out.print("COMPLETION - Parent Node : "); //$NON-NLS-1$
-                           System.out.println(this.parser.assistNodeParent);
-                        }
-                     }
                      this.lookupEnvironment.unitBeingCompleted = parsedUnit; // better resilient to further error reporting
                      contextAccepted =
                         complete(e.astNode, this.parser.assistNodeParent, this.parser.enclosingNode, parsedUnit,
@@ -2257,10 +2188,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                this.requestor.acceptContext(context);
             }
             this.requestor.completionFailure(this.problem);
-            if (DEBUG)
-            {
-               this.printDebug(this.problem);
-            }
          }
          /*
           * Ignore package, import, class & interface keywords for now... if (!completionNodeFound) { if (parsedUnit == null ||
@@ -2272,35 +2199,15 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       }
       catch (IndexOutOfBoundsException e)
       { // work-around internal failure - 1GEMF6D
-         if (DEBUG)
-         {
-            System.out.println("Exception caught by CompletionEngine:"); //$NON-NLS-1$
-            e.printStackTrace(System.out);
-         }
       }
       catch (InvalidCursorLocation e)
       { // may eventually report a usefull error
-         if (DEBUG)
-         {
-            System.out.println("Exception caught by CompletionEngine:"); //$NON-NLS-1$
-            e.printStackTrace(System.out);
-         }
       }
       catch (AbortCompilation e)
       { // ignore this exception for now since it typically means we cannot find java.lang.Object
-         if (DEBUG)
-         {
-            System.out.println("Exception caught by CompletionEngine:"); //$NON-NLS-1$
-            e.printStackTrace(System.out);
-         }
       }
       catch (CompletionNodeFound e)
       { // internal failure - bugs 5618
-         if (DEBUG)
-         {
-            System.out.println("Exception caught by CompletionEngine:"); //$NON-NLS-1$
-            e.printStackTrace(System.out);
-         }
       }
       finally
       {
@@ -2823,7 +2730,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                relevance += computeRelevanceForResolution();
                relevance += computeRelevanceForInterestingProposal();
                relevance += computeRelevanceForCaseMatching(this.completionToken, Keywords.INTERFACE);
-               relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for keywords
                relevance += R_ANNOTATION; // this proposal is most relevant than annotation proposals
 
                this.noProposal = false;
@@ -2837,10 +2743,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                   proposal.setRelevance(relevance);
                   this.requestor.accept(proposal);
-                  if (DEBUG)
-                  {
-                     this.printDebug(proposal);
-                  }
                }
             }
          }
@@ -4676,14 +4578,14 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       return 0;
    }
 
-   int computeRelevanceForRestrictions(int accessRuleKind)
-   {
-      if (accessRuleKind == IAccessRule.K_ACCESSIBLE)
-      {
-         return R_NON_RESTRICTED;
-      }
-      return 0;
-   }
+   // int computeRelevanceForRestrictions(int accessRuleKind)
+   // {
+   // if (accessRuleKind == IAccessRule.K_ACCESSIBLE)
+   // {
+   // return R_NON_RESTRICTED;
+   // }
+   // return 0;
+   // }
 
    private int computeRelevanceForStatic(boolean onlyStatic, boolean isStatic)
    {
@@ -5080,10 +4982,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
          proposal.setRelevance(relevance);
          this.requestor.accept(proposal);
-         if (DEBUG)
-         {
-            this.printDebug(proposal);
-         }
       }
 
       // Create javadoc text proposal if necessary
@@ -5104,16 +5002,12 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
          proposal.setRelevance(relevance + R_INLINE_TAG);
          this.requestor.accept(proposal);
-         if (DEBUG)
-         {
-            this.printDebug(proposal);
-         }
       }
    }
 
    /* Create a completion proposal for a type. */
-   private void createTypeProposal(char[] packageName, char[] typeName, int modifiers, int accessibility,
-      char[] completionName, int relevance)
+   private void createTypeProposal(char[] packageName, char[] typeName, int modifiers, char[] completionName,
+      int relevance)
    {
 
       // Create standard type proposal
@@ -5134,12 +5028,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          proposal.setReplaceRange(this.startPosition - this.offset, this.endPosition - this.offset);
          proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
          proposal.setRelevance(relevance);
-         // proposal.setAccessibility(accessibility);
          this.requestor.accept(proposal);
-         if (DEBUG)
-         {
-            this.printDebug(proposal);
-         }
       }
 
       // Create javadoc text proposal if necessary
@@ -5164,19 +5053,14 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          proposal.setReplaceRange(start - this.offset, this.endPosition - this.offset);
          proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
          proposal.setRelevance(relevance + R_INLINE_TAG);
-         // proposal.setAccessibility(accessibility);
          this.requestor.accept(proposal);
-         if (DEBUG)
-         {
-            this.printDebug(proposal);
-         }
       }
    }
 
    /* Create a completion proposal for a member type. */
-   private void createTypeProposal(ReferenceBinding refBinding, char[] typeName, int accessibility,
-      char[] completionName, int relevance, Binding[] missingElements, int[] missingElementsStarts,
-      int[] missingElementsEnds, boolean missingElementsHaveProblems)
+   private void createTypeProposal(ReferenceBinding refBinding, char[] typeName, char[] completionName, int relevance,
+      Binding[] missingElements, int[] missingElementsStarts, int[] missingElementsEnds,
+      boolean missingElementsHaveProblems)
    {
 
       // Create standard type proposal
@@ -5209,10 +5093,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
          proposal.setRelevance(relevance);
          this.requestor.accept(proposal);
-         if (DEBUG)
-         {
-            this.printDebug(proposal);
-         }
       }
 
       // Create javadoc text proposal if necessary
@@ -5238,10 +5118,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
          proposal.setRelevance(relevance + R_INLINE_TAG);
          this.requestor.accept(proposal);
-         if (DEBUG)
-         {
-            this.printDebug(proposal);
-         }
       }
    }
 
@@ -5319,7 +5195,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          relevance += computeRelevanceForInterestingProposal(method);
          relevance += computeRelevanceForCaseMatching(token, method.selector);
          relevance += computeRelevanceForQualification(false);
-         relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
 
          this.noProposal = false;
          if (!this.requestor.isIgnored(CompletionProposal.ANNOTATION_ATTRIBUTE_REF))
@@ -5335,10 +5210,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
             proposal.setRelevance(relevance);
             this.requestor.accept(proposal);
-            if (DEBUG)
-            {
-               this.printDebug(proposal);
-            }
          }
       }
    }
@@ -5351,7 +5222,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       int relevance = computeBaseRelevance();
       relevance += computeRelevanceForResolution();
       relevance += computeRelevanceForInterestingProposal(currentType);
-      relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
+      // relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
 
       if (missingElements != null)
       {
@@ -5432,10 +5303,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                proposal.setRelevance(relevance);
                this.requestor.accept(proposal);
-               if (DEBUG)
-               {
-                  this.printDebug(proposal);
-               }
             }
          }
          else
@@ -5473,10 +5340,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                proposal.setTokenRange(this.tokenEnd - this.offset, this.tokenEnd - this.offset);
                proposal.setRelevance(relevance);
                this.requestor.accept(proposal);
-               if (DEBUG)
-               {
-                  this.printDebug(proposal);
-               }
             }
          }
       }
@@ -5504,7 +5367,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          relevance += computeRelevanceForInterestingProposal();
          relevance += computeRelevanceForCaseMatching(token, classField);
          relevance += computeRelevanceForExpectingType(scope.getJavaLangClass());
-         relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for class field
          relevance += R_NON_INHERITED;
 
          if (missingElements != null)
@@ -5555,10 +5417,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
             proposal.setRelevance(relevance);
             this.requestor.accept(proposal);
-            if (DEBUG)
-            {
-               this.printDebug(proposal);
-            }
          }
       }
    }
@@ -5571,7 +5429,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       int relevance = computeBaseRelevance();
       relevance += computeRelevanceForResolution();
       relevance += computeRelevanceForInterestingProposal();
-      relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
 
       if (missingElements != null)
       {
@@ -5761,10 +5618,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                         if (parameterNames != null)
                            proposal.setParameterNames(parameterNames);
                         this.requestor.accept(proposal);
-                        if (DEBUG)
-                        {
-                           this.printDebug(proposal);
-                        }
                      }
                   }
                   else
@@ -5807,10 +5660,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                         if (parameterNames != null)
                            proposal.setParameterNames(parameterNames);
                         this.requestor.accept(proposal);
-                        if (DEBUG)
-                        {
-                           this.printDebug(proposal);
-                        }
                      }
                   }
                }
@@ -5959,10 +5808,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                         if (parameterNames != null)
                            proposal.setParameterNames(parameterNames);
                         this.requestor.accept(proposal);
-                        if (DEBUG)
-                        {
-                           this.printDebug(proposal);
-                        }
                      }
                   }
                   else
@@ -6007,10 +5852,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                         if (parameterNames != null)
                            proposal.setParameterNames(parameterNames);
                         this.requestor.accept(proposal);
-                        if (DEBUG)
-                        {
-                           this.printDebug(proposal);
-                        }
                      }
                      if ((this.assistNodeInJavadoc & CompletionOnJavadoc.TEXT) != 0
                         && !this.requestor.isIgnored(CompletionProposal.JAVADOC_METHOD_REF))
@@ -6044,10 +5885,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                         if (parameterNames != null)
                            proposal.setParameterNames(parameterNames);
                         this.requestor.accept(proposal);
-                        if (DEBUG)
-                        {
-                           this.printDebug(proposal);
-                        }
                      }
                   }
                }
@@ -6275,7 +6112,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          relevance += computeRelevanceForExpectingType(field.type);
          relevance += computeRelevanceForEnumConstant(field.type);
          relevance += computeRelevanceForQualification(needQualification);
-         relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
 
          this.noProposal = false;
          if (!needQualification)
@@ -6299,10 +6135,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                proposal.setRelevance(relevance);
                this.requestor.accept(proposal);
-               if (DEBUG)
-               {
-                  this.printDebug(proposal);
-               }
             }
 
          }
@@ -6332,10 +6164,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                   proposal.setRelevance(relevance);
                   this.requestor.accept(proposal);
-                  if (DEBUG)
-                  {
-                     this.printDebug(proposal);
-                  }
                }
             }
             else
@@ -6385,10 +6213,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   proposal.setRequiredProposals(new CompletionProposal[]{typeImportProposal});
 
                   this.requestor.accept(proposal);
-                  if (DEBUG)
-                  {
-                     this.printDebug(proposal);
-                  }
                }
             }
          }
@@ -6625,7 +6449,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       relevance += computeRelevanceForInterestingProposal(exceptionType);
       relevance += computeRelevanceForCaseMatching(typeName, exceptionType.sourceName);
       relevance += computeRelevanceForExpectingType(exceptionType);
-      relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
       if (!this.insideQualifiedReference)
       {
          relevance += computeRelevanceForQualification(isQualified);
@@ -6636,8 +6459,8 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       this.noProposal = false;
       if (!this.requestor.isIgnored(CompletionProposal.TYPE_REF))
       {
-         createTypeProposal(exceptionType, exceptionType.qualifiedSourceName(), IAccessRule.K_ACCESSIBLE,
-            completionName, relevance, null, null, null, false);
+         createTypeProposal(exceptionType, exceptionType.qualifiedSourceName(), completionName, relevance, null, null,
+            null, false);
       }
    }
 
@@ -6703,7 +6526,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                relevance += computeRelevanceForResolution();
                relevance += computeRelevanceForInterestingProposal();
                relevance += computeRelevanceForCaseMatching(this.completionToken, name);
-               relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
 
                this.noProposal = false;
                if (!this.requestor.isIgnored(CompletionProposal.METHOD_REF))
@@ -6733,10 +6555,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   if (parameterNames != null)
                      proposal.setParameterNames(parameterNames);
                   this.requestor.accept(proposal);
-                  if (DEBUG)
-                  {
-                     this.printDebug(proposal);
-                  }
                }
             }
          }
@@ -6967,7 +6785,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          relevance += computeRelevanceForStatic(onlyStaticFields, field.isStatic());
          relevance += computeRelevanceForFinal(this.assistNodeIsInsideCase, field.isFinal());
          relevance += computeRelevanceForQualification(prefixRequired);
-         relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
          if (onlyStaticFields && this.insideQualifiedReference)
          {
             relevance += computeRelevanceForInheritance(receiverType, field.declaringClass);
@@ -7010,10 +6827,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                proposal.setRelevance(relevance);
                this.requestor.accept(proposal);
-               if (DEBUG)
-               {
-                  this.printDebug(proposal);
-               }
             }
 
             // Javadoc completions
@@ -7039,10 +6852,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                proposal.setRelevance(relevance + R_INLINE_TAG);
                this.requestor.accept(proposal);
-               if (DEBUG)
-               {
-                  this.printDebug(proposal);
-               }
                // Javadoc value completion for static fields
                if (field.isStatic() && !this.requestor.isIgnored(CompletionProposal.JAVADOC_VALUE_REF))
                {
@@ -7062,10 +6871,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   valueProposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                   valueProposal.setRelevance(relevance + R_VALUE_TAG);
                   this.requestor.accept(valueProposal);
-                  if (DEBUG)
-                  {
-                     this.printDebug(valueProposal);
-                  }
                }
             }
          }
@@ -7101,10 +6906,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                proposal.setRelevance(relevance);
                this.requestor.accept(proposal);
-               if (DEBUG)
-               {
-                  this.printDebug(proposal);
-               }
             }
          }
       }
@@ -7230,7 +7031,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             relevance += computeRelevanceForInterestingProposal();
             relevance += computeRelevanceForCaseMatching(token, lengthField);
             relevance += computeRelevanceForExpectingType(TypeBinding.INT);
-            relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for length field
             if (missingElements != null)
             {
                relevance += computeRelevanceForMissingElements(missingElementsHaveProblems);
@@ -7263,10 +7063,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                   proposal.setRelevance(relevance);
                   this.requestor.accept(proposal);
-                  if (DEBUG)
-                  {
-                     this.printDebug(proposal);
-                  }
                }
             }
             else
@@ -7300,10 +7096,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                   proposal.setRelevance(relevance);
                   this.requestor.accept(proposal);
-                  if (DEBUG)
-                  {
-                     this.printDebug(proposal);
-                  }
                }
             }
          }
@@ -7321,7 +7113,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             relevance += computeRelevanceForExpectingType(objectRef);
             relevance += computeRelevanceForStatic(false, false);
             relevance += computeRelevanceForQualification(false);
-            relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for clone() method
             if (missingElements != null)
             {
                relevance += computeRelevanceForMissingElements(missingElementsHaveProblems);
@@ -7379,10 +7170,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                   proposal.setRelevance(relevance);
                   this.requestor.accept(proposal);
-                  if (DEBUG)
-                  {
-                     this.printDebug(proposal);
-                  }
                }
                methodsFound.add(new Object[]{objectRef.getMethods(cloneMethod)[0], objectRef});
             }
@@ -7420,10 +7207,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                   proposal.setRelevance(relevance);
                   this.requestor.accept(proposal);
-                  if (DEBUG)
-                  {
-                     this.printDebug(proposal);
-                  }
                }
             }
          }
@@ -7970,7 +7753,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          relevance += computeRelevanceForExpectingType(field.type);
          relevance += computeRelevanceForEnumConstant(field.type);
          relevance += computeRelevanceForStatic(true, true);
-         relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
 
          CompilationUnitDeclaration cu = this.unitScope.referenceContext;
          int importStart = cu.types[0].declarationSourceStart;
@@ -8020,10 +7802,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                proposal.setRequiredProposals(new CompletionProposal[]{typeImportProposal});
 
                this.requestor.accept(proposal);
-               if (DEBUG)
-               {
-                  this.printDebug(proposal);
-               }
             }
          }
          else
@@ -8069,10 +7847,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                proposal.setRequiredProposals(new CompletionProposal[]{fieldImportProposal});
 
                this.requestor.accept(proposal);
-               if (DEBUG)
-               {
-                  this.printDebug(proposal);
-               }
             }
          }
       }
@@ -8187,7 +7961,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          relevance += computeRelevanceForResolution();
          relevance += computeRelevanceForInterestingProposal();
          relevance += computeRelevanceForCaseMatching(typeName, memberType.sourceName);
-         relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
 
          if (memberType.isClass())
          {
@@ -8204,8 +7977,8 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          this.noProposal = false;
          if (!this.requestor.isIgnored(CompletionProposal.TYPE_REF))
          {
-            createTypeProposal(memberType, memberType.qualifiedSourceName(), IAccessRule.K_ACCESSIBLE, completionName,
-               relevance, null, null, null, false);
+            createTypeProposal(memberType, memberType.qualifiedSourceName(), completionName, relevance, null, null,
+               null, false);
          }
       }
    }
@@ -8246,7 +8019,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          relevance += computeRelevanceForResolution();
          relevance += computeRelevanceForInterestingProposal();
          relevance += computeRelevanceForCaseMatching(fieldName, field.name);
-         relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
 
          this.noProposal = false;
          if (!this.requestor.isIgnored(CompletionProposal.FIELD_REF))
@@ -8266,10 +8038,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
             proposal.setRelevance(relevance);
             this.requestor.accept(proposal);
-            if (DEBUG)
-            {
-               this.printDebug(proposal);
-            }
          }
       }
    }
@@ -8328,7 +8096,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          relevance += computeRelevanceForResolution();
          relevance += computeRelevanceForInterestingProposal();
          relevance += computeRelevanceForCaseMatching(methodName, method.selector);
-         relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
 
          this.noProposal = false;
          if (!this.requestor.isIgnored(CompletionProposal.METHOD_NAME_REFERENCE))
@@ -8352,10 +8119,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             if (parameterNames != null)
                proposal.setParameterNames(parameterNames);
             this.requestor.accept(proposal);
-            if (DEBUG)
-            {
-               this.printDebug(proposal);
-            }
          }
       }
    }
@@ -8461,7 +8224,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       {
          int relevance = computeBaseRelevance();
          relevance += computeRelevanceForInterestingProposal();
-         relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for keywors
 
          this.noProposal = false;
          if (!this.requestor.isIgnored(CompletionProposal.JAVADOC_BLOCK_TAG))
@@ -8479,10 +8241,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
             proposal.setRelevance(relevance);
             this.requestor.accept(proposal);
-            if (DEBUG)
-            {
-               this.printDebug(proposal);
-            }
          }
       }
    }
@@ -8498,7 +8256,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       {
          int relevance = computeBaseRelevance();
          relevance += computeRelevanceForInterestingProposal();
-         relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for keywors
 
          this.noProposal = false;
          if (!this.requestor.isIgnored(CompletionProposal.JAVADOC_INLINE_TAG))
@@ -8521,10 +8278,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
             proposal.setRelevance(relevance);
             this.requestor.accept(proposal);
-            if (DEBUG)
-            {
-               this.printDebug(proposal);
-            }
          }
       }
    }
@@ -8539,7 +8292,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       // Get relevance
       int relevance = computeBaseRelevance();
       relevance += computeRelevanceForInterestingProposal();
-      relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for param name
       if (!isTypeParam)
          relevance += R_INTERESTING;
 
@@ -8564,10 +8316,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                proposal.setRelevance(--relevance);
                this.requestor.accept(proposal);
-               if (DEBUG)
-               {
-                  this.printDebug(proposal);
-               }
             }
          }
       }
@@ -8593,7 +8341,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                relevance += computeRelevanceForResolution();
                relevance += computeRelevanceForInterestingProposal();
                relevance += computeRelevanceForCaseMatching(keyword, choices[i]);
-               relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for keywords
                if (staticFieldsAndMethodOnly && this.insideQualifiedReference)
                   relevance += R_NON_INHERITED;
 
@@ -8613,10 +8360,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                   proposal.setRelevance(relevance);
                   this.requestor.accept(proposal);
-                  if (DEBUG)
-                  {
-                     this.printDebug(proposal);
-                  }
                }
             }
    }
@@ -8749,7 +8492,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             relevance += computeRelevanceForResolution();
             relevance += computeRelevanceForInterestingProposal();
             relevance += computeRelevanceForCaseMatching(label, choices[i]);
-            relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for keywors
 
             this.noProposal = false;
             if (!this.requestor.isIgnored(CompletionProposal.LABEL_REF))
@@ -8762,10 +8504,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                proposal.setRelevance(relevance);
                this.requestor.accept(proposal);
-               if (DEBUG)
-               {
-                  this.printDebug(proposal);
-               }
             }
          }
       }
@@ -8887,7 +8625,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          relevance += R_METHOD_OVERIDE;
          if (method.isAbstract())
             relevance += R_ABSTRACT_METHOD;
-         relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
 
          this.noProposal = false;
          if (!this.requestor.isIgnored(CompletionProposal.METHOD_DECLARATION))
@@ -8918,10 +8655,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             if (parameterNames != null)
                proposal.setParameterNames(parameterNames);
             this.requestor.accept(proposal);
-            if (DEBUG)
-            {
-               this.printDebug(proposal);
-            }
          }
       }
       methodsFound.addAll(newMethodsFound);
@@ -9209,7 +8942,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          relevance += computeRelevanceForEnumConstant(method.returnType);
          relevance += computeRelevanceForStatic(onlyStaticMethods, method.isStatic());
          relevance += computeRelevanceForQualification(prefixRequired);
-         relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
          if (onlyStaticMethods && this.insideQualifiedReference)
          {
             relevance += computeRelevanceForInheritance(receiverType, method.declaringClass);
@@ -9262,10 +8994,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                if (parameterNames != null)
                   proposal.setParameterNames(parameterNames);
                this.requestor.accept(proposal);
-               if (DEBUG)
-               {
-                  this.printDebug(proposal);
-               }
             }
 
             // Javadoc proposal
@@ -9300,10 +9028,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                if (parameterNames != null)
                   proposal.setParameterNames(parameterNames);
                this.requestor.accept(proposal);
-               if (DEBUG)
-               {
-                  this.printDebug(proposal);
-               }
             }
          }
          else
@@ -9347,10 +9071,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                if (parameterNames != null)
                   proposal.setParameterNames(parameterNames);
                this.requestor.accept(proposal);
-               if (DEBUG)
-               {
-                  this.printDebug(proposal);
-               }
             }
          }
          this.startPosition = previousStartPosition;
@@ -9515,7 +9235,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          relevance += computeRelevanceForEnumConstant(method.returnType);
          relevance += computeRelevanceForStatic(true, method.isStatic());
          relevance += computeRelevanceForQualification(true);
-         relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
 
          CompilationUnitDeclaration cu = this.unitScope.referenceContext;
          int importStart = cu.types[0].declarationSourceStart;
@@ -9556,10 +9275,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                      proposal.setParameterNames(parameterNames);
 
                   this.requestor.accept(proposal);
-                  if (DEBUG)
-                  {
-                     this.printDebug(proposal);
-                  }
                }
             }
             else if (!this.isIgnored(CompletionProposal.METHOD_REF, CompletionProposal.TYPE_IMPORT))
@@ -9611,10 +9326,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                proposal.setRequiredProposals(new CompletionProposal[]{typeImportProposal});
 
                this.requestor.accept(proposal);
-               if (DEBUG)
-               {
-                  this.printDebug(proposal);
-               }
             }
          }
          else
@@ -9675,10 +9386,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                proposal.setRequiredProposals(new CompletionProposal[]{methodImportProposal});
 
                this.requestor.accept(proposal);
-               if (DEBUG)
-               {
-                  this.printDebug(proposal);
-               }
             }
          }
 
@@ -9785,7 +9492,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          relevance += computeRelevanceForEnumConstant(method.returnType);
          relevance += computeRelevanceForStatic(true, method.isStatic());
          relevance += computeRelevanceForQualification(false);
-         relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
 
          this.noProposal = false;
          if (!this.requestor.isIgnored(CompletionProposal.METHOD_REF))
@@ -9814,10 +9520,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             if (parameterNames != null)
                proposal.setParameterNames(parameterNames);
             this.requestor.accept(proposal);
-            if (DEBUG)
-            {
-               this.printDebug(proposal);
-            }
          }
          this.startPosition = previousStartPosition;
          this.tokenStart = previousTokenStart;
@@ -9865,7 +9567,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             relevance += computeRelevanceForResolution();
             relevance += computeRelevanceForInterestingProposal();
             relevance += computeRelevanceForCaseMatching(this.completionToken, Keywords.THIS);
-            relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for keywords
             relevance += R_NON_INHERITED;
 
             this.noProposal = false;
@@ -9879,10 +9580,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                proposal.setRelevance(relevance);
                this.requestor.accept(proposal);
-               if (DEBUG)
-               {
-                  this.printDebug(proposal);
-               }
             }
          }
       }
@@ -10159,7 +9856,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          relevance += computeRelevanceForInterestingProposal(memberType);
          relevance += computeRelevanceForCaseMatching(typeName, memberType.sourceName);
          relevance += computeRelevanceForExpectingType(memberType);
-         relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
          if (!this.insideQualifiedReference)
          {
             relevance += computeRelevanceForQualification(isQualified);
@@ -10201,8 +9897,8 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             || (memberType instanceof SourceTypeBinding && hasMemberTypesInEnclosingScope(
                (SourceTypeBinding)memberType, scope)) || hasArrayTypeAsExpectedSuperTypes())
          {
-            createTypeProposal(memberType, memberType.qualifiedSourceName(), IAccessRule.K_ACCESSIBLE, completionName,
-               relevance, missingElements, missingElementsStarts, missingElementsEnds, missingElementsHaveProblems);
+            createTypeProposal(memberType, memberType.qualifiedSourceName(), completionName, relevance,
+               missingElements, missingElementsStarts, missingElementsEnds, missingElementsHaveProblems);
          }
 
          if (this.assistNodeIsConstructor && allowingLongComputationProposals)
@@ -10558,8 +10254,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                         relevance += computeRelevanceForException(localType.sourceName);
                         relevance += computeRelevanceForClass();
                         relevance += computeRelevanceForQualification(false);
-                        relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for
-                                                                                                // nested type
+                        // nested type
                         relevance += computeRelevanceForAnnotationTarget(localType);
 
                         boolean allowingLongComputationProposals = isAllowingLongComputationProposals();
@@ -10569,8 +10264,8 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                            this.noProposal = false;
                            if (!this.requestor.isIgnored(CompletionProposal.TYPE_REF))
                            {
-                              createTypeProposal(localType, localType.sourceName, IAccessRule.K_ACCESSIBLE,
-                                 localType.sourceName, relevance, null, null, null, false);
+                              createTypeProposal(localType, localType.sourceName, localType.sourceName, relevance,
+                                 null, null, null, false);
                            }
                         }
 
@@ -10621,31 +10316,31 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             && !scope.isDefinedInSameUnit(refBinding))
             return;
 
-         int accessibility = IAccessRule.K_ACCESSIBLE;
-         if (refBinding.hasRestrictedAccess())
-         {
-            AccessRestriction accessRestriction = this.lookupEnvironment.getAccessRestriction(refBinding);
-            if (accessRestriction != null)
-            {
-               switch (accessRestriction.getProblemId())
-               {
-                  case IProblem.ForbiddenReference :
-                     if (this.options.checkForbiddenReference)
-                     {
-                        return;
-                     }
-                     accessibility = IAccessRule.K_NON_ACCESSIBLE;
-                     break;
-                  case IProblem.DiscouragedReference :
-                     if (this.options.checkDiscouragedReference)
-                     {
-                        return;
-                     }
-                     accessibility = IAccessRule.K_DISCOURAGED;
-                     break;
-               }
-            }
-         }
+         // int accessibility = IAccessRule.K_ACCESSIBLE;
+         // if (refBinding.hasRestrictedAccess())
+         // {
+         // AccessRestriction accessRestriction = this.lookupEnvironment.getAccessRestriction(refBinding);
+         // if (accessRestriction != null)
+         // {
+         // switch (accessRestriction.getProblemId())
+         // {
+         // case IProblem.ForbiddenReference :
+         // if (this.options.checkForbiddenReference)
+         // {
+         // return;
+         // }
+         // accessibility = IAccessRule.K_NON_ACCESSIBLE;
+         // break;
+         // case IProblem.DiscouragedReference :
+         // if (this.options.checkDiscouragedReference)
+         // {
+         // return;
+         // }
+         // accessibility = IAccessRule.K_DISCOURAGED;
+         // break;
+         // }
+         // }
+         // }
 
          int relevance = computeBaseRelevance();
          relevance += computeRelevanceForResolution();
@@ -10653,12 +10348,11 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          relevance += computeRelevanceForCaseMatching(refBinding.sourceName, refBinding.sourceName);
          relevance += computeRelevanceForExpectingType(refBinding);
          relevance += computeRelevanceForQualification(false);
-         relevance += computeRelevanceForRestrictions(accessibility); // no access restriction for type in the current unit
 
          if (!this.requestor.isIgnored(CompletionProposal.TYPE_REF))
          {
-            createTypeProposal(refBinding, refBinding.qualifiedSourceName(), IAccessRule.K_ACCESSIBLE,
-               CharOperation.NO_CHAR, relevance, null, null, null, false);
+            createTypeProposal(refBinding, refBinding.qualifiedSourceName(), CharOperation.NO_CHAR, relevance, null,
+               null, null, false);
          }
       }
    }
@@ -10713,7 +10407,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             relevance += computeRelevanceForResolution();
             relevance += computeRelevanceForInterestingProposal();
             relevance += computeRelevanceForCaseMatching(CharOperation.NO_CHAR, choices[i]);
-            relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for keywors
             relevance += computeRelevanceForExpectingType(TypeBinding.BOOLEAN);
             relevance += computeRelevanceForQualification(false);
             relevance += R_TRUE_OR_FALSE;
@@ -10729,10 +10422,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                proposal.setRelevance(relevance);
                this.requestor.accept(proposal);
-               if (DEBUG)
-               {
-                  this.printDebug(proposal);
-               }
             }
          }
       }
@@ -10794,7 +10483,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   computeRelevanceForExpectingType(typeParameter.type == null ? null : typeParameter.type.resolvedType);
                relevance += computeRelevanceForQualification(false);
                relevance += computeRelevanceForException(typeParameter.name);
-               relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction fot type parameter
 
                this.noProposal = false;
                if (!this.requestor.isIgnored(CompletionProposal.TYPE_REF))
@@ -10946,8 +10634,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             relevance += computeRelevanceForCaseMatching(token, sourceType.sourceName);
             relevance += computeRelevanceForExpectingType(sourceType);
             relevance += computeRelevanceForQualification(false);
-            relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for type in the
-                                                                                    // current unit
 
             if (sourceType.isAnnotationType())
             {
@@ -10971,8 +10657,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                      sourceType, scope)) || hasArrayTypeAsExpectedSuperTypes())
             {
                char[] typeName = sourceType.sourceName();
-               createTypeProposal(sourceType, typeName, IAccessRule.K_ACCESSIBLE, typeName, relevance, null, null,
-                  null, false);
+               createTypeProposal(sourceType, typeName, typeName, relevance, null, null, null, false);
             }
 
             if (proposeConstructor)
@@ -11167,31 +10852,31 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                continue;
             if (this.assistNodeIsInterfaceExcludingAnnotation && sourceType.isAnnotationType())
                continue;
-            int accessibility = IAccessRule.K_ACCESSIBLE;
-            if (sourceType.hasRestrictedAccess())
-            {
-               AccessRestriction accessRestriction = this.lookupEnvironment.getAccessRestriction(sourceType);
-               if (accessRestriction != null)
-               {
-                  switch (accessRestriction.getProblemId())
-                  {
-                     case IProblem.ForbiddenReference :
-                        if (this.options.checkForbiddenReference)
-                        {
-                           continue;
-                        }
-                        accessibility = IAccessRule.K_NON_ACCESSIBLE;
-                        break;
-                     case IProblem.DiscouragedReference :
-                        if (this.options.checkDiscouragedReference)
-                        {
-                           continue;
-                        }
-                        accessibility = IAccessRule.K_DISCOURAGED;
-                        break;
-                  }
-               }
-            }
+            // int accessibility = IAccessRule.K_ACCESSIBLE;
+            // if (sourceType.hasRestrictedAccess())
+            // {
+            // AccessRestriction accessRestriction = this.lookupEnvironment.getAccessRestriction(sourceType);
+            // if (accessRestriction != null)
+            // {
+            // switch (accessRestriction.getProblemId())
+            // {
+            // case IProblem.ForbiddenReference :
+            // if (this.options.checkForbiddenReference)
+            // {
+            // continue;
+            // }
+            // accessibility = IAccessRule.K_NON_ACCESSIBLE;
+            // break;
+            // case IProblem.DiscouragedReference :
+            // if (this.options.checkDiscouragedReference)
+            // {
+            // continue;
+            // }
+            // accessibility = IAccessRule.K_DISCOURAGED;
+            // break;
+            // }
+            // }
+            // }
 
             this.knownTypes.put(CharOperation.concat(sourceType.qualifiedPackageName(), sourceType.sourceName(), '.'),
                KNOWN_TYPE_WITH_KNOWN_CONSTRUCTORS);
@@ -11202,7 +10887,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
             relevance += computeRelevanceForCaseMatching(qualifiedName, qualifiedSourceTypeName);
             relevance += computeRelevanceForExpectingType(sourceType);
             relevance += computeRelevanceForQualification(false);
-            relevance += computeRelevanceForRestrictions(accessibility);
 
             if (sourceType.isAnnotationType())
             {
@@ -11225,8 +10909,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                      sourceType, scope)) || hasArrayTypeAsExpectedSuperTypes())
             {
                char[] typeName = sourceType.sourceName();
-               createTypeProposal(sourceType, typeName, IAccessRule.K_ACCESSIBLE, typeName, relevance, null, null,
-                  null, false);
+               createTypeProposal(sourceType, typeName, typeName, relevance, null, null, null, false);
             }
 
             if (proposeConstructor)
@@ -11321,31 +11004,31 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   && !scope.isDefinedInSameUnit(refBinding))
                   continue next;
 
-               int accessibility = IAccessRule.K_ACCESSIBLE;
-               if (refBinding.hasRestrictedAccess())
-               {
-                  AccessRestriction accessRestriction = this.lookupEnvironment.getAccessRestriction(refBinding);
-                  if (accessRestriction != null)
-                  {
-                     switch (accessRestriction.getProblemId())
-                     {
-                        case IProblem.ForbiddenReference :
-                           if (this.options.checkForbiddenReference)
-                           {
-                              continue next;
-                           }
-                           accessibility = IAccessRule.K_NON_ACCESSIBLE;
-                           break;
-                        case IProblem.DiscouragedReference :
-                           if (this.options.checkDiscouragedReference)
-                           {
-                              continue next;
-                           }
-                           accessibility = IAccessRule.K_DISCOURAGED;
-                           break;
-                     }
-                  }
-               }
+               // int accessibility = IAccessRule.K_ACCESSIBLE;
+               // if (refBinding.hasRestrictedAccess())
+               // {
+               // AccessRestriction accessRestriction = this.lookupEnvironment.getAccessRestriction(refBinding);
+               // if (accessRestriction != null)
+               // {
+               // switch (accessRestriction.getProblemId())
+               // {
+               // case IProblem.ForbiddenReference :
+               // if (this.options.checkForbiddenReference)
+               // {
+               // continue next;
+               // }
+               // accessibility = IAccessRule.K_NON_ACCESSIBLE;
+               // break;
+               // case IProblem.DiscouragedReference :
+               // if (this.options.checkDiscouragedReference)
+               // {
+               // continue next;
+               // }
+               // accessibility = IAccessRule.K_DISCOURAGED;
+               // break;
+               // }
+               // }
+               // }
                if (isForbidden(refBinding))
                   continue next;
 
@@ -11409,7 +11092,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   relevance += computeRelevanceForCaseMatching(token, typeName);
                   relevance += computeRelevanceForExpectingType(refBinding);
                   relevance += computeRelevanceForQualification(isQualified);
-                  relevance += computeRelevanceForRestrictions(accessibility);
 
                   if (refBinding.isClass())
                   {
@@ -11445,10 +11127,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                         proposal.setRelevance(relevance);
                         // proposal.setAccessibility(accessibility);
                         this.requestor.accept(proposal);
-                        if (DEBUG)
-                        {
-                           this.printDebug(proposal);
-                        }
                      }
                   }
 
@@ -11501,31 +11179,31 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                         && !(this.options.camelCaseMatch && CharOperation.camelCaseMatch(token, typeBinding.sourceName)))
                         continue next;
 
-                     int accessibility = IAccessRule.K_ACCESSIBLE;
-                     if (typeBinding.hasRestrictedAccess())
-                     {
-                        AccessRestriction accessRestriction = this.lookupEnvironment.getAccessRestriction(typeBinding);
-                        if (accessRestriction != null)
-                        {
-                           switch (accessRestriction.getProblemId())
-                           {
-                              case IProblem.ForbiddenReference :
-                                 if (this.options.checkForbiddenReference)
-                                 {
-                                    continue next;
-                                 }
-                                 accessibility = IAccessRule.K_NON_ACCESSIBLE;
-                                 break;
-                              case IProblem.DiscouragedReference :
-                                 if (this.options.checkDiscouragedReference)
-                                 {
-                                    continue next;
-                                 }
-                                 accessibility = IAccessRule.K_DISCOURAGED;
-                                 break;
-                           }
-                        }
-                     }
+                     // int accessibility = IAccessRule.K_ACCESSIBLE;
+                     // if (typeBinding.hasRestrictedAccess())
+                     // {
+                     // AccessRestriction accessRestriction = this.lookupEnvironment.getAccessRestriction(typeBinding);
+                     // if (accessRestriction != null)
+                     // {
+                     // switch (accessRestriction.getProblemId())
+                     // {
+                     // case IProblem.ForbiddenReference :
+                     // if (this.options.checkForbiddenReference)
+                     // {
+                     // continue next;
+                     // }
+                     // accessibility = IAccessRule.K_NON_ACCESSIBLE;
+                     // break;
+                     // case IProblem.DiscouragedReference :
+                     // if (this.options.checkDiscouragedReference)
+                     // {
+                     // continue next;
+                     // }
+                     // accessibility = IAccessRule.K_DISCOURAGED;
+                     // break;
+                     // }
+                     // }
+                     // }
 
                      if (typesFound.contains(typeBinding))
                         continue next;
@@ -11558,7 +11236,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                      relevance += computeRelevanceForCaseMatching(token, typeBinding.sourceName);
                      relevance += computeRelevanceForExpectingType(typeBinding);
                      relevance += computeRelevanceForQualification(false);
-                     relevance += computeRelevanceForRestrictions(accessibility);
 
                      if (typeBinding.isAnnotationType())
                      {
@@ -11593,10 +11270,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                            proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                            proposal.setRelevance(relevance);
                            this.requestor.accept(proposal);
-                           if (DEBUG)
-                           {
-                              this.printDebug(proposal);
-                           }
                         }
                      }
 
@@ -11676,7 +11349,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                      relevance += computeRelevanceForCaseMatching(token, typeBinding.sourceName);
                      relevance += computeRelevanceForExpectingType(typeBinding);
                      relevance += computeRelevanceForQualification(false);
-                     relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
 
                      if (typeBinding.isClass())
                      {
@@ -11707,10 +11379,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                         proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                         proposal.setRelevance(relevance);
                         this.requestor.accept(proposal);
-                        if (DEBUG)
-                        {
-                           this.printDebug(proposal);
-                        }
                      }
                   }
                }
@@ -11877,8 +11545,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   relevance += R_NAME_FIRST_PREFIX;
                   relevance += R_NAME_FIRST_SUFFIX;
                   relevance += R_NAME_LESS_NEW_CHARACTERS;
-                  relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for variable
-                                                                                          // name
 
                   // accept result
                   CompletionEngine.this.noProposal = false;
@@ -11899,10 +11565,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                         CompletionEngine.this.tokenEnd - CompletionEngine.this.offset);
                      proposal.setRelevance(relevance);
                      CompletionEngine.this.requestor.accept(proposal);
-                     if (DEBUG)
-                     {
-                        CompletionEngine.this.printDebug(proposal);
-                     }
                   }
                   proposedNames.add(name);
                }
@@ -12004,7 +11666,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                relevance += prefixAndSuffixRelevance;
                if (reusedCharacters > 0)
                   relevance += R_NAME_LESS_NEW_CHARACTERS;
-               relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for variable name
 
                // accept result
                CompletionEngine.this.noProposal = false;
@@ -12025,10 +11686,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                      CompletionEngine.this.tokenEnd - CompletionEngine.this.offset);
                   proposal.setRelevance(relevance);
                   CompletionEngine.this.requestor.accept(proposal);
-                  if (DEBUG)
-                  {
-                     CompletionEngine.this.printDebug(proposal);
-                  }
                }
             }
          }
@@ -12222,8 +11879,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                      relevance += computeRelevanceForExpectingType(local.type);
                      relevance += computeRelevanceForEnumConstant(local.type);
                      relevance += computeRelevanceForQualification(false);
-                     relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for local
-                                                                                             // variable
                      relevance += computeRelevanceForFinal(this.assistNodeIsInsideCase, local.isFinal());
                      this.noProposal = false;
                      if (!this.requestor.isIgnored(CompletionProposal.LOCAL_VARIABLE_REF))
@@ -12249,10 +11904,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                         proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                         proposal.setRelevance(relevance);
                         this.requestor.accept(proposal);
-                        if (DEBUG)
-                        {
-                           this.printDebug(proposal);
-                        }
                      }
                   }
                   break;
@@ -12792,174 +12443,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       return (Initializer)fakeAST.types[0].fields[0];
    }
 
-   protected void printDebug(CategorizedProblem error)
-   {
-      if (CompletionEngine.DEBUG)
-      {
-         System.out.print("COMPLETION - completionFailure("); //$NON-NLS-1$
-         System.out.print(error);
-         System.out.println(")"); //$NON-NLS-1$
-      }
-   }
-
-   protected void printDebug(CompletionProposal proposal)
-   {
-      StringBuffer buffer = new StringBuffer();
-      printDebug(proposal, 0, buffer);
-      System.out.println(buffer.toString());
-   }
-
-   private void printDebug(CompletionProposal proposal, int tab, StringBuffer buffer)
-   {
-      printDebugTab(tab, buffer);
-      buffer.append("COMPLETION - "); //$NON-NLS-1$
-      switch (proposal.getKind())
-      {
-         case CompletionProposal.ANONYMOUS_CLASS_DECLARATION :
-            buffer.append("ANONYMOUS_CLASS_DECLARATION"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.FIELD_REF :
-            buffer.append("FIELD_REF"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.FIELD_REF_WITH_CASTED_RECEIVER :
-            buffer.append("FIELD_REF_WITH_CASTED_RECEIVER"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.KEYWORD :
-            buffer.append("KEYWORD"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.LABEL_REF :
-            buffer.append("LABEL_REF"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.LOCAL_VARIABLE_REF :
-            buffer.append("LOCAL_VARIABLE_REF"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.METHOD_DECLARATION :
-            buffer.append("METHOD_DECLARATION"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.METHOD_REF :
-            buffer.append("METHOD_REF"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.METHOD_REF_WITH_CASTED_RECEIVER :
-            buffer.append("METHOD_REF_WITH_CASTED_RECEIVER"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.PACKAGE_REF :
-            buffer.append("PACKAGE_REF"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.TYPE_REF :
-            buffer.append("TYPE_REF"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.VARIABLE_DECLARATION :
-            buffer.append("VARIABLE_DECLARATION"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.POTENTIAL_METHOD_DECLARATION :
-            buffer.append("POTENTIAL_METHOD_DECLARATION"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.METHOD_NAME_REFERENCE :
-            buffer.append("METHOD_NAME_REFERENCE"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.ANNOTATION_ATTRIBUTE_REF :
-            buffer.append("ANNOTATION_ATTRIBUT_REF"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.FIELD_IMPORT :
-            buffer.append("FIELD_IMPORT"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.METHOD_IMPORT :
-            buffer.append("METHOD_IMPORT"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.TYPE_IMPORT :
-            buffer.append("TYPE_IMPORT"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.CONSTRUCTOR_INVOCATION :
-            buffer.append("CONSTRUCTOR_INVOCATION"); //$NON-NLS-1$
-            break;
-         case CompletionProposal.ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION :
-            buffer.append("ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION"); //$NON-NLS-1$
-            break;
-         default :
-            buffer.append("PROPOSAL"); //$NON-NLS-1$
-            break;
-
-      }
-
-      buffer.append("{\n");//$NON-NLS-1$
-      printDebugTab(tab, buffer);
-      buffer
-         .append("\tCompletion[").append(proposal.getCompletion() == null ? "null".toCharArray() : proposal.getCompletion()).append("]\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      printDebugTab(tab, buffer);
-      buffer
-         .append("\tDeclarationSignature[").append(proposal.getDeclarationSignature() == null ? "null".toCharArray() : proposal.getDeclarationSignature()).append("]\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      printDebugTab(tab, buffer);
-      buffer
-         .append("\tDeclarationKey[").append(proposal.getDeclarationKey() == null ? "null".toCharArray() : proposal.getDeclarationKey()).append("]\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      printDebugTab(tab, buffer);
-      buffer
-         .append("\tSignature[").append(proposal.getSignature() == null ? "null".toCharArray() : proposal.getSignature()).append("]\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      printDebugTab(tab, buffer);
-      buffer
-         .append("\tKey[").append(proposal.getKey() == null ? "null".toCharArray() : proposal.getKey()).append("]\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      printDebugTab(tab, buffer);
-      buffer
-         .append("\tName[").append(proposal.getName() == null ? "null".toCharArray() : proposal.getName()).append("]\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-      printDebugTab(tab, buffer);
-      buffer.append("\tFlags[");//$NON-NLS-1$
-      int flags = proposal.getFlags();
-      buffer.append(Flags.toString(flags));
-      if ((flags & Flags.AccInterface) != 0)
-         buffer.append("interface ");//$NON-NLS-1$
-      if ((flags & Flags.AccEnum) != 0)
-         buffer.append("enum ");//$NON-NLS-1$
-      buffer.append("]\n"); //$NON-NLS-1$
-
-      CompletionProposal[] proposals = proposal.getRequiredProposals();
-      if (proposals != null)
-      {
-         printDebugTab(tab, buffer);
-         buffer.append("\tRequiredProposals[");//$NON-NLS-1$
-         for (int i = 0; i < proposals.length; i++)
-         {
-            buffer.append("\n"); //$NON-NLS-1$
-            printDebug(proposals[i], tab + 2, buffer);
-         }
-         printDebugTab(tab, buffer);
-         buffer.append("\n\t]\n"); //$NON-NLS-1$
-      }
-
-      printDebugTab(tab, buffer);
-      buffer.append("\tCompletionLocation[").append(proposal.getCompletionLocation()).append("]\n"); //$NON-NLS-1$ //$NON-NLS-2$
-      int start = proposal.getReplaceStart();
-      int end = proposal.getReplaceEnd();
-      printDebugTab(tab, buffer);
-      buffer.append("\tReplaceStart[").append(start).append("]"); //$NON-NLS-1$ //$NON-NLS-2$
-      buffer.append("-ReplaceEnd[").append(end).append("]\n"); //$NON-NLS-1$ //$NON-NLS-2$
-      start = proposal.getTokenStart();
-      end = proposal.getTokenEnd();
-      printDebugTab(tab, buffer);
-      buffer.append("\tTokenStart[").append(start).append("]"); //$NON-NLS-1$ //$NON-NLS-2$
-      buffer.append("-TokenEnd[").append(end).append("]\n"); //$NON-NLS-1$ //$NON-NLS-2$
-      if (this.source != null)
-      {
-         printDebugTab(tab, buffer);
-         buffer.append("\tReplacedText[").append(this.source, start, end - start).append("]\n"); //$NON-NLS-1$ //$NON-NLS-2$
-      }
-      printDebugTab(tab, buffer);
-      buffer.append("\tTokenStart[").append(proposal.getTokenStart()).append("]"); //$NON-NLS-1$ //$NON-NLS-2$
-      buffer.append("-TokenEnd[").append(proposal.getTokenEnd()).append("]\n"); //$NON-NLS-1$ //$NON-NLS-2$
-      printDebugTab(tab, buffer);
-      buffer.append("\tRelevance[").append(proposal.getRelevance()).append("]\n"); //$NON-NLS-1$ //$NON-NLS-2$
-
-      printDebugTab(tab, buffer);
-      buffer.append("}\n");//$NON-NLS-1$
-   }
-
-   private void printDebugTab(int tab, StringBuffer buffer)
-   {
-      for (int i = 0; i < tab; i++)
-      {
-         buffer.append('\t');
-      }
-   }
-
    private void proposeConstructor(AcceptedConstructor deferredProposal, Scope scope)
    {
       if (deferredProposal.proposeConstructor)
@@ -12967,14 +12450,14 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          proposeConstructor(deferredProposal.simpleTypeName, deferredProposal.parameterCount,
             deferredProposal.signature, deferredProposal.parameterTypes, deferredProposal.parameterNames,
             deferredProposal.modifiers, deferredProposal.packageName, deferredProposal.typeModifiers,
-            deferredProposal.accessibility, deferredProposal.simpleTypeName, deferredProposal.fullyQualifiedName,
-            deferredProposal.mustBeQualified, scope, deferredProposal.extraFlags);
+            deferredProposal.simpleTypeName, deferredProposal.fullyQualifiedName, deferredProposal.mustBeQualified,
+            scope, deferredProposal.extraFlags);
       }
    }
 
    private void proposeConstructor(char[] simpleTypeName, int parameterCount, char[] signature,
       char[][] parameterTypes, char[][] parameterNames, int modifiers, char[] packageName, int typeModifiers,
-      int accessibility, char[] typeName, char[] fullyQualifiedName, boolean isQualified, Scope scope, int extraFlags)
+      char[] typeName, char[] fullyQualifiedName, boolean isQualified, Scope scope, int extraFlags)
    {
       char[] typeCompletion = fullyQualifiedName;
       if (isQualified)
@@ -12991,7 +12474,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       int relevance = computeBaseRelevance();
       relevance += computeRelevanceForResolution();
       relevance += computeRelevanceForInterestingProposal();
-      relevance += computeRelevanceForRestrictions(accessibility);
       relevance += computeRelevanceForCaseMatching(this.completionToken, simpleTypeName);
       relevance += computeRelevanceForExpectingType(packageName, simpleTypeName);
       relevance += computeRelevanceForQualification(isQualified);
@@ -13079,10 +12561,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                   proposal.setRelevance(relevance);
                   this.requestor.accept(proposal);
-                  if (DEBUG)
-                  {
-                     this.printDebug(proposal);
-                  }
                }
             }
             else
@@ -13108,10 +12586,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                   proposal.setRelevance(relevance);
                   this.requestor.accept(proposal);
-                  if (DEBUG)
-                  {
-                     this.printDebug(proposal);
-                  }
                }
             }
             break;
@@ -13142,10 +12616,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                   proposal.setRelevance(relevance);
                   this.requestor.accept(proposal);
-                  if (DEBUG)
-                  {
-                     this.printDebug(proposal);
-                  }
                }
             }
             else
@@ -13171,10 +12641,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                   proposal.setRelevance(relevance);
                   this.requestor.accept(proposal);
-                  if (DEBUG)
-                  {
-                     this.printDebug(proposal);
-                  }
                }
             }
             break;
@@ -13229,10 +12695,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
                   proposal.setRelevance(relevance);
                   this.requestor.accept(proposal);
-                  if (DEBUG)
-                  {
-                     this.printDebug(proposal);
-                  }
                }
             }
             else
@@ -13266,10 +12728,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                   proposal.setRelevance(relevance);
 
                   this.requestor.accept(proposal);
-                  if (DEBUG)
-                  {
-                     this.printDebug(proposal);
-                  }
                }
             }
             break;
@@ -13283,7 +12741,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          int relevance = computeBaseRelevance();
          relevance += computeRelevanceForResolution();
          relevance += computeRelevanceForInterestingProposal();
-         relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for new method
 
          InternalCompletionProposal proposal =
             createProposal(CompletionProposal.POTENTIAL_METHOD_DECLARATION, this.actualCompletionPosition);
@@ -13305,15 +12762,11 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
          proposal.setRelevance(relevance);
          this.requestor.accept(proposal);
-         if (DEBUG)
-         {
-            this.printDebug(proposal);
-         }
       }
    }
 
-   private void proposeType(char[] packageName, char[] simpleTypeName, int modifiers, int accessibility,
-      char[] typeName, char[] fullyQualifiedName, boolean isQualified, Scope scope)
+   private void proposeType(char[] packageName, char[] simpleTypeName, int modifiers, char[] typeName,
+      char[] fullyQualifiedName, boolean isQualified, Scope scope)
    {
       char[] completionName = fullyQualifiedName;
       if (isQualified)
@@ -13364,7 +12817,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       int relevance = computeBaseRelevance();
       relevance += computeRelevanceForResolution();
       relevance += computeRelevanceForInterestingProposal(packageName, fullyQualifiedName);
-      relevance += computeRelevanceForRestrictions(accessibility);
+      // relevance += computeRelevanceForRestrictions(accessibility);
       relevance += computeRelevanceForCaseMatching(this.completionToken, simpleTypeName);
       relevance += computeRelevanceForExpectingType(packageName, simpleTypeName);
       relevance += computeRelevanceForQualification(isQualified);
@@ -13395,7 +12848,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
       this.noProposal = false;
       if (!this.requestor.isIgnored(CompletionProposal.TYPE_REF))
       {
-         createTypeProposal(packageName, typeName, modifiers, accessibility, completionName, relevance);
+         createTypeProposal(packageName, typeName, modifiers, completionName, relevance);
       }
    }
 

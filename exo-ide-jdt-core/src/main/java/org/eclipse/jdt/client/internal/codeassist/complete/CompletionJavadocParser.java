@@ -92,10 +92,6 @@ public class CompletionJavadocParser extends JavadocParser
       this.javadocEnd = this.sourceParser.scanner.commentStops[commentPtr];
       if (this.javadocStart <= this.cursorLocation && this.cursorLocation <= this.javadocEnd)
       {
-         if (CompletionEngine.DEBUG)
-         {
-            System.out.println("COMPLETION in Javadoc:"); //$NON-NLS-1$
-         }
          completionScanner.completionIdentifier = null;
          this.firstTagPosition = 1;
          super.checkDeprecation(commentPtr);
@@ -152,10 +148,6 @@ public class CompletionJavadocParser extends JavadocParser
             this.completionNode =
                new CompletionOnJavadocQualifiedTypeReference((JavadocQualifiedTypeReference)expressionType);
          }
-         if (CompletionEngine.DEBUG)
-         {
-            System.out.println("	completion argument=" + this.completionNode); //$NON-NLS-1$
-         }
          return this.completionNode;
       }
       return expression;
@@ -184,10 +176,6 @@ public class CompletionJavadocParser extends JavadocParser
             name = typeDecl.name;
          }
          this.completionNode = new CompletionOnJavadocFieldReference(fieldRef, this.memberStart, name);
-         if (CompletionEngine.DEBUG)
-         {
-            System.out.println("	completion field=" + this.completionNode); //$NON-NLS-1$
-         }
          return this.completionNode;
       }
       return super.createFieldReference(receiver);
@@ -229,10 +217,6 @@ public class CompletionJavadocParser extends JavadocParser
          {
             this.completionNode =
                new CompletionOnJavadocAllocationExpression((JavadocAllocationExpression)node, this.memberStart);
-         }
-         if (CompletionEngine.DEBUG)
-         {
-            System.out.println("	completion method=" + this.completionNode); //$NON-NLS-1$
          }
          return this.completionNode;
       }
@@ -303,10 +287,6 @@ public class CompletionJavadocParser extends JavadocParser
          }
       }
 
-      if (CompletionEngine.DEBUG)
-      {
-         System.out.println("	completion partial qualified type=" + this.completionNode); //$NON-NLS-1$
-      }
       return this.completionNode;
    }
 
@@ -653,10 +633,6 @@ public class CompletionJavadocParser extends JavadocParser
                this.completionNode =
                   new CompletionOnJavadocParamNameReference(name, namePosition, startPosition, endPosition);
             }
-            if (CompletionEngine.DEBUG)
-            {
-               System.out.println("	completion param=" + this.completionNode); //$NON-NLS-1$
-            }
          }
          else if (this.completionNode instanceof CompletionOnJavadocParamNameReference)
          {
@@ -791,10 +767,6 @@ public class CompletionJavadocParser extends JavadocParser
             {
                this.completionNode = new CompletionOnJavadocParamNameReference((JavadocSingleNameReference)expression);
             }
-            if (CompletionEngine.DEBUG)
-            {
-               System.out.println("	completion param=" + this.completionNode); //$NON-NLS-1$
-            }
          }
          return true;
       }
@@ -861,20 +833,12 @@ public class CompletionJavadocParser extends JavadocParser
                               JavadocMessageSend msgSend = (JavadocMessageSend)member;
                               this.completionNode =
                                  new CompletionOnJavadocMessageSend(msgSend, this.memberStart, flags);
-                              if (CompletionEngine.DEBUG)
-                              {
-                                 System.out.println("	new completion method=" + this.completionNode); //$NON-NLS-1$
-                              }
                            }
                            else if (member instanceof JavadocAllocationExpression)
                            {
                               JavadocAllocationExpression alloc = (JavadocAllocationExpression)member;
                               this.completionNode =
                                  new CompletionOnJavadocAllocationExpression(alloc, this.memberStart, flags);
-                              if (CompletionEngine.DEBUG)
-                              {
-                                 System.out.println("	new completion method=" + this.completionNode); //$NON-NLS-1$
-                              }
                            }
                            else
                            {
@@ -1027,10 +991,6 @@ public class CompletionJavadocParser extends JavadocParser
          new CompletionOnJavadocQualifiedTypeReference(tokens, CharOperation.NO_CHAR, positions, this.tagSourceStart,
             this.tagSourceEnd);
 
-      if (CompletionEngine.DEBUG)
-      {
-         System.out.println("	completion partial qualified type=" + this.completionNode); //$NON-NLS-1$
-      }
       return this.completionNode;
    }
 
@@ -1106,10 +1066,6 @@ public class CompletionJavadocParser extends JavadocParser
          }
          this.completionNode = new CompletionOnJavadocAllocationExpression(allocExp, this.memberStart);
       }
-      if (CompletionEngine.DEBUG)
-      {
-         System.out.println("	completion method=" + this.completionNode); //$NON-NLS-1$
-      }
       return this.completionNode;
    }
 
@@ -1135,10 +1091,6 @@ public class CompletionJavadocParser extends JavadocParser
             allocExp.sourceEnd = this.tokenPreviousPosition - 1;
          }
          this.completionNode = new CompletionOnJavadocAllocationExpression(allocExp, this.memberStart);
-      }
-      if (CompletionEngine.DEBUG)
-      {
-         System.out.println("	completion method=" + this.completionNode); //$NON-NLS-1$
       }
       return this.completionNode;
    }
