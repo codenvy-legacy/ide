@@ -547,6 +547,10 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
          {
             encodedPath += (part.isEmpty()) ? "" : URL.encodePathSegment(part) + "/";
          }
+         if (encodedPath.endsWith("/"))
+         {
+            encodedPath = encodedPath.substring(0, encodedPath.length()-1);
+         }
 
          String fullPath = (base.endsWith("/")) ? base + encodedPath : base + "/" + encodedPath;
 
