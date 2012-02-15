@@ -54,6 +54,16 @@ public interface MethodInfo extends Member
    List<String> getParameterTypes();
 
    String getReturnType();
+   
+   /**
+    * @return the method's descriptor.   
+    */
+   String getDescriptor();
+   
+   /**
+    * return the signature of the method. May be <tt>null</tt>.
+    */
+   String getSignature();
 
    /**
     * @return the isConstructor
@@ -61,8 +71,7 @@ public interface MethodInfo extends Member
    boolean isConstructor();
 
    /**
-    * @param isConstructor
-    *           the isConstructor to set
+    * @param isConstructor the isConstructor to set
     */
    void setConstructor(boolean isConstructor);
 
@@ -71,17 +80,25 @@ public interface MethodInfo extends Member
    void setExceptionTypes(List<String> exceptionTypes);
 
    /**
-    * @param parameterNames
-    *           the parameterNames to set
+    * @param parameterNames the parameterNames to set
     */
    void setParameterNames(List<String> parameterNames);
 
    /**
-    * @param parameterTypes
-    *           the parameterTypes to set
+    * @param parameterTypes the parameterTypes to set
     */
    void setParameterTypes(List<String> parameterTypes);
 
    void setReturnType(String returnType);
+   
+   void setDescriptor(String descriptor);
+   
+   /**
+    * set signature of the method. May be <tt>null</tt>.
+    * @param signature
+    */
+   void setSignature(String signature);
+
+   
 
 }

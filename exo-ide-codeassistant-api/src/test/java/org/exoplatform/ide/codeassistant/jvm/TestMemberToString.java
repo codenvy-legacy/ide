@@ -42,7 +42,7 @@ public class TestMemberToString
    @Test
    public void testFieldInfoToString()
    {
-      FieldInfo fieldInfo = new FieldInfoBean("field", Modifier.PUBLIC, "java.lang.String", "test.TestClass");
+      FieldInfo fieldInfo = new FieldInfoBean("field", Modifier.PUBLIC, "java.lang.String", "test.TestClass", null, null);
 
       assertEquals("public java.lang.String test.TestClass.field", fieldInfo.toString());
    }
@@ -52,7 +52,7 @@ public class TestMemberToString
    {
       MethodInfo methodInfo =
          new MethodInfoBean("method", Modifier.PUBLIC, new ArrayList<String>(), new ArrayList<String>(),
-            Arrays.asList(new String[]{"param1"}), false, "", "test.TestClass");
+            Arrays.asList(new String[]{"param1"}), false, "", "test.TestClass", null, null);
 
       assertEquals("public void test.TestClass.method()", methodInfo.toString());
    }
@@ -60,7 +60,7 @@ public class TestMemberToString
    @Test
    public void testShortTypeInfoToString()
    {
-      ShortTypeInfoBean shortTypeInfo = new ShortTypeInfoBean("test.TestClass", Modifier.PUBLIC, "CLASS");
+      ShortTypeInfoBean shortTypeInfo = new ShortTypeInfoBean("test.TestClass", Modifier.PUBLIC, "CLASS", null);
 
       assertEquals("public CLASS test.TestClass", shortTypeInfo.toString());
    }

@@ -43,6 +43,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
 {
 
+  
+
    private final LuceneCodeAssistantStorage luceneCodeAssistantStorage;
 
    /**

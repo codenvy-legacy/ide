@@ -44,12 +44,12 @@ public class ShortTypeInfoExtractor implements ContentExtractor<ShortTypeInfo>
    {
       Document document =
          reader.document(doc, new MapFieldSelector(new String[]{DataIndexFields.MODIFIERS, DataIndexFields.FQN,
-            DataIndexFields.ENTITY_TYPE}));
+            DataIndexFields.ENTITY_TYPE, DataIndexFields.SIGNATURE}));
 
       int modifier = Integer.valueOf(document.get(DataIndexFields.MODIFIERS));
 
       return new ShortTypeInfoBean(document.get(DataIndexFields.FQN), modifier,
-         document.get(DataIndexFields.ENTITY_TYPE));
+         document.get(DataIndexFields.ENTITY_TYPE),document.get(DataIndexFields.SIGNATURE));
 
    }
 }

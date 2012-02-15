@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Manifest;
@@ -56,9 +57,13 @@ public class JarParser
          while (entry != null)
          {
             String name = entry.getName();
-            if (name.endsWith(".class"))
+            // Make check class not anonymous. I.e ExceptionThrownEventHandler$1.class
+            // so we check that first character after '$' not digit.
+            if (name.endsWith(".class") && !Character.isDigit(name.charAt(name.indexOf("$") + 1)))
             {
-               classes.add(ClassParser.parse(zip));
+                  TypeInfo typeInfo = ClassParser.parse(zip);
+                  if (!Modifier.isPrivate(typeInfo.getModifiers()))
+                   classes.add(typeInfo);
             }
             else if (name.equalsIgnoreCase("MANIFEST.MF"))
             {

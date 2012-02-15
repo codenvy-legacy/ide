@@ -18,13 +18,6 @@
  */
 package org.exoplatform.ide.codeassistant.storage;
 
-import com.thoughtworks.qdox.JavaDocBuilder;
-import com.thoughtworks.qdox.model.DocletTag;
-import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaField;
-import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.JavaParameter;
-
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +26,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import com.thoughtworks.qdox.JavaDocBuilder;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaField;
+import com.thoughtworks.qdox.model.JavaMethod;
 
 /**
  * Class that extracts java docs from sources.
@@ -239,18 +238,9 @@ public class QDoxJavaDocExtractor
          fqnBuilder.append(javaMethod.getName());
       }
 
-      fqnBuilder.append('(');
-      boolean isFirst = true;
-      for (JavaParameter parameter : javaMethod.getParameters())
-      {
-         if (!isFirst)
-         {
-            fqnBuilder.append(',');
-         }
-         fqnBuilder.append(parameter.getType().getGenericValue());
-         isFirst = false;
-      }
-      fqnBuilder.append(')');
+      //Add method signature to FQN its need for search 
+      fqnBuilder.append('@');
+      fqnBuilder.append(SignatureCreator.createMethodSignature(javaMethod));
       return fqnBuilder.toString();
    }
 

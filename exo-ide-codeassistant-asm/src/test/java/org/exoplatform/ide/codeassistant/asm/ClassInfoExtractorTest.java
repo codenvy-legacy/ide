@@ -19,7 +19,10 @@
 package org.exoplatform.ide.codeassistant.asm;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertNotNull;
 
 import junit.framework.Assert;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
@@ -30,6 +33,7 @@ import org.exoplatform.ide.codeassistant.asm.test.B;
 import org.exoplatform.ide.codeassistant.asm.test.E;
 import org.exoplatform.ide.codeassistant.asm.test.Foo;
 import org.exoplatform.ide.codeassistant.asm.test.I;
+import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
@@ -158,6 +162,38 @@ public class ClassInfoExtractorTest
          assertEquals(typeToString(method.getGenericReturnType()), md.getReturnType());
       }
    }
+   
+   @Test
+   public void testExtractClassSignature() throws IOException
+   {
+      TypeInfo cd = ClassParser.parse(List.class);
+      assertEquals("<E:Ljava/lang/Object;>Ljava/lang/Object;Ljava/util/Collection<TE;>;", cd.getSignature());
+     
+   }
+   
+   @Test
+   public void testFieldDescriptor() throws IOException
+   {
+      String[] descriptors = {"Ljava/util/List;", "Ljava/util/Collection;"};
+      String[] signatures = {"Ljava/util/List<Ljava/lang/Boolean;>;", "Ljava/util/Collection<Ljava/lang/Double;>;"};
+      TypeInfo cd = ClassParser.parse(B.class);
+      assertEquals(2, cd.getFields().size());
+      
+      assertEquals(descriptors[0],cd.getFields().get(0).getDescriptor());
+      assertEquals(descriptors[1],cd.getFields().get(1).getDescriptor());
+      
+      assertEquals(signatures[0],cd.getFields().get(0).getSignature());
+      assertEquals(signatures[1],cd.getFields().get(1).getSignature());
+         
+      cd = ClassParser.parse(A.class);
+      
+      for (FieldInfo f : cd.getFields())
+      {
+         
+         assertNull(f.getSignature());
+         assertNotNull(f.getDescriptor());
+      }
+   }
 
    @Test
    public void testEnumExtract() throws IOException
@@ -213,5 +249,5 @@ public class ClassInfoExtractorTest
       Assert.fail("This implementation of java.lang.Type not supported!");
       throw new UnsupportedOperationException("This implementation of java.lang.Type not supported!");
    }
-
+   
 }

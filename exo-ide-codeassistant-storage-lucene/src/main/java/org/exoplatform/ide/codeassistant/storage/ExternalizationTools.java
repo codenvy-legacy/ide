@@ -96,6 +96,8 @@ public class ExternalizationTools
             //Field
             field.setType(readStringUTF(in));
             field.setDeclaringClass(readStringUTF(in));
+            field.setDescriptor(readStringUTF(in));
+            field.setSignature(readStringUTF(in));
             result.add(field);
          }
       }
@@ -137,6 +139,8 @@ public class ExternalizationTools
             method.setParameterNames(readStringUTFList(in));
             method.setReturnType(readStringUTF(in));
             method.setConstructor(in.readBoolean());
+            method.setDescriptor(readStringUTF(in));
+            method.setSignature(readStringUTF(in));
             result.add(method);
 
          }
@@ -242,6 +246,9 @@ public class ExternalizationTools
                //FieldInfo
                writeStringUTF(((FieldInfo)element).getType(), out);
                writeStringUTF(((FieldInfo)element).getDeclaringClass(), out);
+               writeStringUTF(((FieldInfo)element).getDescriptor(), out);
+               writeStringUTF(((FieldInfo)element).getSignature(), out);
+               
             }
             else if (element instanceof MethodInfo)
             {
@@ -252,6 +259,8 @@ public class ExternalizationTools
                writeStringUTFList(((MethodInfo)element).getParameterNames(), out);
                writeStringUTF(((MethodInfo)element).getReturnType(), out);
                out.writeBoolean(((MethodInfo)element).isConstructor());
+               writeStringUTF(((MethodInfo)element).getDescriptor(), out);
+               writeStringUTF(((MethodInfo)element).getSignature(), out);
             }
 
          }
@@ -331,6 +340,7 @@ public class ExternalizationTools
       result.setName(readStringUTF(in));
       // ShortType
       result.setType(readStringUTF(in));
+      result.setSignature(readStringUTF(in));
       // TypeInfo
       result.setSuperClass(readStringUTF(in));
       result.setInterfaces(readStringUTFList(in));
@@ -356,6 +366,7 @@ public class ExternalizationTools
       writeStringUTF(typeInfo.getName(), out);
       // ShortType
       writeStringUTF(typeInfo.getType(), out);
+      writeStringUTF(typeInfo.getSignature(), out);
       // TypeInfo
       writeStringUTF(typeInfo.getSuperClass(), out);
       writeStringUTFList(typeInfo.getInterfaces(), out);

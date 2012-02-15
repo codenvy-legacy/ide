@@ -25,7 +25,9 @@ package org.exoplatform.ide.codeassistant.jvm.shared;
  * "declaringClass": "java.lang.String",
  * "name": "CASE_INSENSITIVE_ORDER",
  * "modifiers": 25,
- * "type": "Comparator"
+ * "type": "Comparator",
+ * "descriptor":"Ljava/util/Comparator;",
+ * "signature : "Ljava/util/Comparator<Ljava/lang/String;>"
  * }
  * </code>
  * 
@@ -38,8 +40,29 @@ public interface FieldInfo extends Member
 
    String getType();
 
+   /**
+    * return the signature of the field. May be <tt>null</tt>.
+    */
+   String getSignature();
+
+   /**
+    * @return the field's descriptor.   
+    */
+   String getDescriptor();
+
    void setDeclaringClass(String declaringClass);
 
    void setType(String type);
+
+   /**
+    * set signature of the field. May be <tt>null</tt>.
+    * @param signature
+    */
+   void setSignature(String signature);
+
+   /**
+    * @param descriptor
+    */
+   void setDescriptor(String descriptor);
 
 }

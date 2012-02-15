@@ -33,16 +33,28 @@ public class FieldInfoBean extends MemberBean implements FieldInfo
     */
    private String declaringClass;
 
+   /**
+    * The field's descriptor 
+    */
+   private String descriptor;
+
+   /**
+    * The field's signature. May be <tt>null</tt>.
+    */
+   private String signature;
+
    public FieldInfoBean()
    {
 
    }
 
-   public FieldInfoBean(String name, int modifiers, String type, String declaringClass)
+   public FieldInfoBean(String name, int modifiers, String type, String declaringClass, String descriptor, String signature)
    {
       super(name, modifiers);
       this.type = type;
       this.declaringClass = declaringClass;
+      this.descriptor = descriptor;
+      this.signature = signature;
    }
 
    /**
@@ -82,6 +94,42 @@ public class FieldInfoBean extends MemberBean implements FieldInfo
    }
 
    /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getSignature()
+   {
+      return signature;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getDescriptor()
+   {
+      return descriptor;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setSignature(String signature)
+   {
+      this.signature = signature;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setDescriptor(String descriptor)
+   {
+      this.descriptor = descriptor;
+   }
+
+   /**
     * @see org.exoplatform.ide.codeassistant.jvm.MemberBean#toString()
     */
    @Override
@@ -100,6 +148,8 @@ public class FieldInfoBean extends MemberBean implements FieldInfo
       int result = super.hashCode();
       result = prime * result + (declaringClass == null ? 0 : declaringClass.hashCode());
       result = prime * result + (type == null ? 0 : type.hashCode());
+      result = prime * result + (signature == null ? 0 : signature.hashCode());
+      result = prime * result + (descriptor == null ? 0 : descriptor.hashCode());
       return result;
    }
 
@@ -141,6 +191,30 @@ public class FieldInfoBean extends MemberBean implements FieldInfo
          }
       }
       else if (!type.equals(other.type))
+      {
+         return false;
+      }
+      
+      if (signature == null)
+      {
+         if (other.signature != null)
+         {
+            return false;
+         }
+      }
+      else if (!signature.equals(other.signature))
+      {
+         return false;
+      }
+      
+      if (descriptor == null)
+      {
+         if (other.descriptor != null)
+         {
+            return false;
+         }
+      }
+      else if (!descriptor.equals(other.descriptor))
       {
          return false;
       }

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.codeassistant.storage;
 
+import static org.junit.Assert.*;
+
 import org.exoplatform.ide.codeassistant.storage.QDoxJavaDocExtractor;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -26,7 +28,13 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FilterInputStream;
+import java.io.InputStreamReader;
 import java.util.Map;
+
+import com.thoughtworks.qdox.JavaDocBuilder;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaMethod;
 
 public class TestQDoxJavaDocExtractor
 {
@@ -84,27 +92,27 @@ public class TestQDoxJavaDocExtractor
    @Test
    public void checkMethodsFromJavaDocClass()
    {
-      Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass(int,java.lang.Integer)"));
+      Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass@(ILjava/lang/Integer;)V"));
       Assert.assertEquals("Constructor java doc with parameters",
-         javaDocs.get("test.javadoc.JavaDocClass(int,java.lang.Integer)"));
+         javaDocs.get("test.javadoc.JavaDocClass@(ILjava/lang/Integer;)V"));
 
-      Assert.assertFalse(javaDocs.containsKey("test.javadoc.JavaDocClass()"));
+      Assert.assertFalse(javaDocs.containsKey("test.javadoc.JavaDocClass()V")); //no java doc
 
-      Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass#method()"));
-      Assert.assertEquals("Method java doc", javaDocs.get("test.javadoc.JavaDocClass#method()"));
+      Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass#method@()V"));
+      Assert.assertEquals("Method java doc", javaDocs.get("test.javadoc.JavaDocClass#method@()V"));
 
-      Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass#method(int)"));
-      Assert.assertEquals("Method with primitive param", javaDocs.get("test.javadoc.JavaDocClass#method(int)"));
+      Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass#method@(I)V"));
+      Assert.assertEquals("Method with primitive param", javaDocs.get("test.javadoc.JavaDocClass#method@(I)V"));
 
-      Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass#method(java.lang.Double)"));
+      Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass#method@(Ljava/lang/Double;)V"));
       Assert.assertEquals("Method with object param",
-         javaDocs.get("test.javadoc.JavaDocClass#method(java.lang.Double)"));
+         javaDocs.get("test.javadoc.JavaDocClass#method@(Ljava/lang/Double;)V"));
 
-      Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass#method(int,java.lang.Double)"));
+      Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass#method@(ILjava/lang/Double;)V"));
       Assert.assertEquals("Method with primitive and object params",
-         javaDocs.get("test.javadoc.JavaDocClass#method(int,java.lang.Double)"));
+         javaDocs.get("test.javadoc.JavaDocClass#method@(ILjava/lang/Double;)V"));
 
-      Assert.assertFalse(javaDocs.containsKey("test.javadoc.JavaDocClass#methodWithoutJavaDocs(java.lang.Object)"));
+      Assert.assertFalse(javaDocs.containsKey("test.javadoc.JavaDocClass#methodWithoutJavaDocs@(Ljava/lang/Object;)V"));
    }
 
    @Test
@@ -113,32 +121,57 @@ public class TestQDoxJavaDocExtractor
       Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass$PrivateClass"));
       Assert.assertEquals("Private class with java doc", javaDocs.get("test.javadoc.JavaDocClass$PrivateClass"));
 
-      Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass$PrivateClass()"));
-      Assert.assertEquals("Constructor of private class", javaDocs.get("test.javadoc.JavaDocClass$PrivateClass()"));
+      Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass$PrivateClass@()V"));
+      Assert.assertEquals("Constructor of private class", javaDocs.get("test.javadoc.JavaDocClass$PrivateClass@()V"));
 
-      Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass$PrivateClass#method()"));
-      Assert.assertEquals("Method of private class", javaDocs.get("test.javadoc.JavaDocClass$PrivateClass#method()"));
+      Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass$PrivateClass#method@()V"));
+      Assert.assertEquals("Method of private class", javaDocs.get("test.javadoc.JavaDocClass$PrivateClass#method@()V"));
 
-      Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass$ClassWithoutJavadoc#method()"));
+      Assert.assertTrue(javaDocs.containsKey("test.javadoc.JavaDocClass$ClassWithoutJavadoc#method@()V"));
       Assert.assertEquals("Method with java docs in uncommented class",
-         javaDocs.get("test.javadoc.JavaDocClass$ClassWithoutJavadoc#method()"));
+         javaDocs.get("test.javadoc.JavaDocClass$ClassWithoutJavadoc#method@()V"));
    }
 
    @Test
    public void checkMethodsFromClassWithGenerics()
    {
-      Assert.assertTrue(javaDocs.containsKey("test.javadoc.ClassWithGenerics#method(T)"));
-      Assert.assertEquals("Method with generics", javaDocs.get("test.javadoc.ClassWithGenerics#method(T)"));
+      Assert.assertTrue(javaDocs.containsKey("test.javadoc.ClassWithGenerics#method@(Ljava/lang/Object;)Ljava/lang/Object;"));
+      Assert.assertEquals("Method with generics", javaDocs.get("test.javadoc.ClassWithGenerics#method@(Ljava/lang/Object;)Ljava/lang/Object;"));
 
       Assert.assertTrue(javaDocs
-         .containsKey("test.javadoc.ClassWithGenerics#method(java.util.List<? extends java.lang.Number>)"));
+         .containsKey("test.javadoc.ClassWithGenerics#method@(Ljava/util/List;)Ljava/lang/Object;"));
       Assert.assertEquals("Method with list as parameter {@link asdf}",
-         javaDocs.get("test.javadoc.ClassWithGenerics#method(java.util.List<? extends java.lang.Number>)"));
+         javaDocs.get("test.javadoc.ClassWithGenerics#method@(Ljava/util/List;)Ljava/lang/Object;"));
 
-      Assert.assertTrue(javaDocs.containsKey("test.javadoc.ClassWithGenerics#method()"));
+      Assert.assertTrue(javaDocs.containsKey("test.javadoc.ClassWithGenerics#method@()V"));
       Assert.assertEquals(
          "Begin\n@see PrivateClass asdf Middle\n@see ClassWithGenerics#method(List)\n@author Author End",
-         javaDocs.get("test.javadoc.ClassWithGenerics#method()"));
+         javaDocs.get("test.javadoc.ClassWithGenerics#method@()V"));
+   }
+   
+   @Test
+   public void testName() throws Exception
+   {
+      FileInputStream stream = new FileInputStream(new File("src/test/java/test/javadoc/JavaDocClass.java"));
+      JavaDocBuilder builder = new JavaDocBuilder();
+      InputStreamReader reader = new InputStreamReader(new FilterInputStream(stream)
+      {
+         @Override
+         public void close()
+         {
+         }
+      });
+      builder.addSource(reader);
+      
+      JavaClass  javaClass = builder.getClasses()[0];
+      JavaMethod[] javaMethods = javaClass.getMethods();
+      for (JavaMethod javaMethod : javaMethods)
+      {
+         System.out.println("TestQDoxJavaDocExtractor.testName()" + javaMethod.getCallSignature());
+         System.out.println("TestQDoxJavaDocExtractor.testName()" + javaMethod.getDeclarationSignature(true));
+      }
+      
+      
    }
 
 }

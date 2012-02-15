@@ -52,8 +52,8 @@ public class JavaCodeAssiatantUtilsTest
          public List<ShortTypeInfo> getTypes()
          {
             List<ShortTypeInfo> infos = new ArrayList<ShortTypeInfo>();
-            infos.add(new ShortTypeInfoBean(JavaCodeAssistantUtils.class.getName(), 10, "CLASS"));
-            infos.add(new ShortTypeInfoBean(this.getClass().getName(), 10, "CLASS"));
+            infos.add(new ShortTypeInfoBean(JavaCodeAssistantUtils.class.getName(), 10, "CLASS", null));
+            infos.add(new ShortTypeInfoBean(this.getClass().getName(), 10, "CLASS", null));
             return infos;
          }
       };

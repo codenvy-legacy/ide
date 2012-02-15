@@ -84,7 +84,7 @@ public class TypeInfoExtractor
          fds.add(new FieldInfoBean(fields[i].getName(),//
             fields[i].getModifiers(),//
             fields[i].getType().getCanonicalName(), //
-            fields[i].getDeclaringClass().getCanonicalName()));
+            fields[i].getDeclaringClass().getCanonicalName(), null, null));
       }
       classDescription.setModifiers(clazz.getModifiers());
       classDescription.setInterfaces(iFaces);

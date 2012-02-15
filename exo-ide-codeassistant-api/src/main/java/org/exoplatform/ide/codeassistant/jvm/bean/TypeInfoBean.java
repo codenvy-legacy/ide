@@ -37,6 +37,8 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
    private String superClass;
 
    private List<String> interfaces;
+   
+   private String signature; 
 
    public TypeInfoBean()
    {
@@ -45,9 +47,9 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
    }
 
    public TypeInfoBean(String name, int modifiers, List<MethodInfo> methods, List<FieldInfo> fields, String superClass,
-      List<String> interfaces, String type)
+      List<String> interfaces, String type, String signature)
    {
-      super(name, modifiers, type);
+      super(name, modifiers, type, signature);
       this.superClass = superClass;
       setMethods(methods);
       setFields(fields);
@@ -152,6 +154,7 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
       result = prime * result + (interfaces == null ? 0 : interfaces.hashCode());
       result = prime * result + (methods == null ? 0 : methods.hashCode());
       result = prime * result + (superClass == null ? 0 : superClass.hashCode());
+      result = prime * result + (signature == null ? 0 : signature.hashCode());
       return result;
    }
 
@@ -218,7 +221,23 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
       {
          return false;
       }
+      else if (!signature.equals(other.signature))
+      {
+         return false;
+      }
       return true;
+   }
+
+   @Override
+   public String getSignature()
+   {
+      return signature;
+   }
+
+   @Override
+   public void setSignature(String signature)
+   {
+      this.signature = signature;
    }
 
 }

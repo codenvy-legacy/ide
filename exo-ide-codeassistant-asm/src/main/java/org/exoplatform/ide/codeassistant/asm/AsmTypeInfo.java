@@ -121,6 +121,15 @@ public class AsmTypeInfo extends AsmMember implements TypeInfo
    }
 
    /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getSignature()
+   {
+      return classNode.signature != null ? classNode.signature : "" ;
+   }
+
+   /**
     * @see org.exoplatform.ide.codeassistant.jvm.TypeInfo#setFields(java.util.List)
     */
    @Override
@@ -162,6 +171,12 @@ public class AsmTypeInfo extends AsmMember implements TypeInfo
     */
    @Override
    public void setType(String type)
+   {
+      throw new UnsupportedOperationException("Set not supported");
+   }
+
+   @Override
+   public void setSignature(String signature)
    {
       throw new UnsupportedOperationException("Set not supported");
    }

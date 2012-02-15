@@ -153,6 +153,24 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
    }
 
    /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getDescriptor()
+   {
+      return methodNode.desc;
+   }
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getSignature()
+   {
+      return methodNode.signature;
+   }
+   
+   /**
     * @see org.exoplatform.ide.codeassistant.jvm.MethodInfo#setConstructor(boolean)
     */
    @Override
@@ -202,6 +220,19 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
     */
    @Override
    public void setReturnType(String returnType)
+   {
+      throw new UnsupportedOperationException("Set not supported");
+   }
+
+
+   @Override
+   public void setDescriptor(String descriptor)
+   {
+      throw new UnsupportedOperationException("Set not supported");
+   }
+
+   @Override
+   public void setSignature(String signature)
    {
       throw new UnsupportedOperationException("Set not supported");
    }

@@ -56,6 +56,16 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
     */
    private boolean isConstructor;
 
+   /**
+    * The method's descriptor. 
+    */
+   public String descriptor;
+
+   /**
+    * The method's signature. May be <tt>null</tt>.
+    */
+   public String signature;
+
    public MethodInfoBean()
    {
       this.parameterTypes = Collections.emptyList();
@@ -70,19 +80,22 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
       List<String> parameterNames,//
       boolean isConstructor, //
       String genericReturnType,//
-      String declaringClass)
+      String declaringClass, //
+      String descriptor, //
+      String signature)
    {
       super(name, modifiers);
       this.isConstructor = isConstructor;
       this.returnType = genericReturnType;
       this.declaringClass = declaringClass;
+      this.descriptor = descriptor;
+      this.signature = signature;
       setExceptionTypes(exceptionTypes);
       setParameterNames(parameterNames);
       setParameterTypes(parameterTypes);
 
    }
 
-  
    /**
     * @see org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo#getDeclaringClass()
     */
@@ -215,6 +228,30 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
       this.returnType = returnType;
    }
 
+   @Override
+   public String getDescriptor()
+   {
+      return descriptor;
+   }
+
+   @Override
+   public String getSignature()
+   {
+      return signature;
+   }
+
+   @Override
+   public void setDescriptor(String descriptor)
+   {
+      this.descriptor = descriptor;
+   }
+
+   @Override
+   public void setSignature(String signature)
+   {
+      this.signature = signature;
+   }
+
    /**
     * @see org.exoplatform.ide.codeassistant.jvm.MemberBean#toString()
     */
@@ -289,6 +326,8 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
       result = prime * result + (parameterNames == null ? 0 : parameterNames.hashCode());
       result = prime * result + (parameterTypes == null ? 0 : parameterTypes.hashCode());
       result = prime * result + (returnType == null ? 0 : returnType.hashCode());
+      result = prime * result + (signature == null ? 0 : signature.hashCode());
+      result = prime * result + (descriptor == null ? 0 : descriptor.hashCode());
       return result;
    }
 

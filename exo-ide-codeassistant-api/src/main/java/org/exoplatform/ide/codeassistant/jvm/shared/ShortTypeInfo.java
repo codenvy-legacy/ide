@@ -30,5 +30,17 @@ public interface ShortTypeInfo extends Member
    String getType();
 
    void setType(String type);
+   
+   /**
+    * return the signature of the class. May be <tt>null</tt>.
+    */
+   String getSignature();
+   
+   
+   /**
+    * set signature of the class. May be <tt>null</tt>.
+    * @param signature
+    */
+   void setSignature(String signature);
 
 }

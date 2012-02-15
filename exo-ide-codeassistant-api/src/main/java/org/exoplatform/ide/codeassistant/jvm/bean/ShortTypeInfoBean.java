@@ -28,14 +28,20 @@ public class ShortTypeInfoBean extends MemberBean implements ShortTypeInfo
     */
    private String type;
 
+   /**
+    * The signature of the class. Mayt be <tt>null</tt>.
+    */
+   public String signature;
+
    public ShortTypeInfoBean()
    {
    }
 
-   public ShortTypeInfoBean(String name, int modifiers, String type)
+   public ShortTypeInfoBean(String name, int modifiers, String type, String siganture)
    {
       super(name, modifiers);
       this.type = type;
+      this.signature = siganture;
    }
 
    /**
@@ -54,6 +60,24 @@ public class ShortTypeInfoBean extends MemberBean implements ShortTypeInfo
    public void setType(String type)
    {
       this.type = type;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getSignature()
+   {
+      return signature;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setSignature(String signature)
+   {
+      this.signature = signature;
    }
 
    /**

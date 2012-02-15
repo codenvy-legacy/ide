@@ -40,16 +40,14 @@ public interface Member
     * @return the name
     */
    String getName();
-
+   
    /**
-    * @param modifiers
-    *           the modifiers to set
+    * @param modifiers the modifiers to set
     */
    void setModifiers(int modifiers);
 
    /**
-    * @param name
-    *           the name to set
+    * @param name the name to set
     */
    void setName(String name);
 

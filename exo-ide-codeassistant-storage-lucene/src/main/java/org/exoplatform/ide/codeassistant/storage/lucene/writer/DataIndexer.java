@@ -22,6 +22,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
+import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.ExternalizationTools;
 import org.exoplatform.ide.codeassistant.storage.lucene.DataIndexFields;
@@ -93,12 +94,14 @@ public class DataIndexer
       typeInfoDocument.add(new Field(DataIndexFields.ENTITY_TYPE, typeInfo.getType(), Store.YES, Index.NOT_ANALYZED));
       typeInfoDocument.add(new Field(DataIndexFields.SUPERCLASS, typeInfo.getSuperClass(), Store.YES,
          Index.NOT_ANALYZED));
+      typeInfoDocument.add(new Field(DataIndexFields.SIGNATURE, typeInfo.getSignature(), Store.YES,
+         Index.NOT_ANALYZED));
 
       for (String string : typeInfo.getInterfaces())
       {
          typeInfoDocument.add(new Field(DataIndexFields.INTERFACES, string, Store.YES, Index.NOT_ANALYZED));
       }
-
+      
       typeInfoDocument.add(new Field(DataIndexFields.TYPE_INFO, ExternalizationTools.externalize(typeInfo), Store.YES));
       return typeInfoDocument;
 

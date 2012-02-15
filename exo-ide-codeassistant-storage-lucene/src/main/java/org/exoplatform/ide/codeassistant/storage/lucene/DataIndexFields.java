@@ -38,7 +38,11 @@ public final class DataIndexFields
    public static final String TYPE_INFO = "type-info";
 
    public static final String JAVA_DOC = "doc";
-
+   
+   public static final String SIGNATURE = "signature";
+   
+//   public static final String DESCRIPTOR = "descriptor";
+   
    private DataIndexFields()
    {
    }

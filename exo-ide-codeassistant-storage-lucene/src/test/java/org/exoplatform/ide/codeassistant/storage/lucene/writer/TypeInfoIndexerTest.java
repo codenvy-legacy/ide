@@ -81,6 +81,7 @@ public class TypeInfoIndexerTest
       //only externalization
       verify(typeInfo).getFields();
       verify(typeInfo).getMethods();
+      verify(typeInfo, times(2)).getSignature();
       verifyNoMoreInteractions(typeInfo);
    }
 

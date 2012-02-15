@@ -222,14 +222,14 @@ public class SearchTest
    @Test
    public void testSearchMethodJavaDoc() throws CodeAssistantException
    {
-      String javaDoc = storage.getClassJavaDoc("test.javadoc.JavaDocClass#method(int,java.lang.Double)");
+      String javaDoc = storage.getClassJavaDoc("test.javadoc.JavaDocClass#method@(ILjava/lang/Double;)V");
       assertEquals("Method with primitive and object params", javaDoc);
    }
 
    @Test
    public void testSearchConstructorJavaDoc() throws CodeAssistantException
    {
-      String javaDoc = storage.getClassJavaDoc("test.javadoc.JavaDocClass(int,java.lang.Integer)");
+      String javaDoc = storage.getClassJavaDoc("test.javadoc.JavaDocClass@(ILjava/lang/Integer;)V");
       assertEquals("Constructor java doc with parameters", javaDoc);
    }
    

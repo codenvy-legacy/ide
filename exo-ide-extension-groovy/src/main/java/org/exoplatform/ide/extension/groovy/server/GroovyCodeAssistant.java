@@ -219,7 +219,7 @@ public class GroovyCodeAssistant extends CodeAssistant
          {
             if (file.getId().equals(i.getId()) || ItemType.FILE != i.getItemType())
                continue;
-            classes.add(new ShortTypeInfoBean(getClassNameOnFileName(i.getName()), 0, "CLASS"));
+            classes.add(new ShortTypeInfoBean(getClassNameOnFileName(i.getName()), 0, "CLASS", null));
          }
       }
       return classes;

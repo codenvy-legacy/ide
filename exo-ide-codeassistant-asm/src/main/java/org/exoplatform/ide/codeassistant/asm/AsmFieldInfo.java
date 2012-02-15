@@ -76,5 +76,33 @@ public class AsmFieldInfo extends AsmMember implements FieldInfo
    {
       throw new UnsupportedOperationException("Set not supported");
    }
+   
+   public String getDescriptor()
+   {
+      return fieldNode.desc;
+   }
+   
+   public String getSignature()
+   {
+      return fieldNode.signature;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setSignature(String signature)
+   {
+      throw new UnsupportedOperationException("Set not supported");
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setDescriptor(String descriptor)
+   {
+      throw new UnsupportedOperationException("Set not supported");
+   }
 
 }
