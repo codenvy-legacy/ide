@@ -278,7 +278,8 @@ public class Search extends AbstractTestModule
          {
             try
             {
-               return (searchResultsView != null && searchResultsView.isDisplayed() && resultTree != null && resultTree.isDisplayed());
+               return (searchResultsView != null && searchResultsView.isDisplayed() && resultTree != null && resultTree
+                  .isDisplayed());
             }
             catch (NoSuchElementException e)
             {
@@ -323,7 +324,6 @@ public class Search extends AbstractTestModule
       return driver().findElements(By.cssSelector(Locators.SEARCH_RESULT_SELECTOR)).size();
    }
 
-  
    /**
     * Generate item id 
     * @param path item's name 
@@ -336,16 +336,16 @@ public class Search extends AbstractTestModule
       itemId = Utils.md5(itemId);
       return TREE_PREFIX_ID + itemId;
    }
-   
-//   /**
-//    * Generate item id in search tree 
-//    * @param href of item 
-//    * @return id of item
-//    */
-//   public String getItemId(String href) throws Exception
-//   {
-//      return TREE_PREFIX_ID + Utils.md5(href);
-//   }
+
+   //   /**
+   //    * Generate item id in search tree 
+   //    * @param href of item 
+   //    * @return id of item
+   //    */
+   //   public String getItemId(String href) throws Exception
+   //   {
+   //      return TREE_PREFIX_ID + Utils.md5(href);
+   //   }
 
    public void doubleClickOnFile(String fileURL) throws Exception
    {
@@ -358,4 +358,12 @@ public class Search extends AbstractTestModule
       selenium().doubleClick(locator);
       IDE().EDITOR.waitTabPresent(0);
    }
+
+   public boolean isFilePresent(String fileURL) throws Exception
+   {
+      String locator = "//div[@id='" + getItemId(fileURL) + "']/div/table/tbody/tr/td[2]";
+      WebElement result = driver().findElement(By.xpath(locator));
+      return result != null && result.isDisplayed();
+   }
+
 }
