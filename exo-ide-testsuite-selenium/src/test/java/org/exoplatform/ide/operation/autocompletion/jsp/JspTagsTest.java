@@ -69,8 +69,7 @@ public class JspTagsTest extends BaseTest
    @Test
    public void testJspTag() throws Exception
    {
-     
-      
+
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
@@ -83,9 +82,10 @@ public class JspTagsTest extends BaseTest
 
       IDE.GOTOLINE.goToLine(10);
 
-     IDE.CODEASSISTANT.openForm();
       IDE.EDITOR.typeTextIntoEditor(0, "<jsp:");
       IDE.CODEASSISTANT.openForm();
+      IDE.CODEASSISTANT.waitForDocPanelOpened();
+
       assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:attribute"));
       assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:body"));
       assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:element"));
@@ -99,20 +99,17 @@ public class JspTagsTest extends BaseTest
       assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:text"));
       assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:useBean"));
 
-      
-      
       IDE.CODEASSISTANT.typeToInput("use");
-      
-    
-     //TODO waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
+      IDE.CODEASSISTANT.waitForDocPanelOpened();
+      //TODO waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
       IDE.CODEASSISTANT.checkDocFormPresent();
       //TODO assertEquals(docMessage, selenium().getText(CodeAssistant.Locators.JAVADOC_DIV)));
       IDE.CODEASSISTANT.insertSelectedItem();
-      
+
       IDE.EDITOR.getTextFromCodeEditor(0).contains("<jsp:useBean id=\"\"></jsp:useBean>");
-      
-     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0));
-    // IDE.EDITOR.closeTabIgnoringChanges(0);
+
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0));
+      // IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    @AfterClass
