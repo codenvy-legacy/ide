@@ -254,6 +254,11 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
       String authorizationPageURL = getAuthorizationPageURL();
       try
       {
+         if (authorizationPageURL == null)
+         {
+            throw new Exception(
+               org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.confMissingVariable("authorizationPageURL"));
+         }
          RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, authorizationPageURL);
          requestBuilder.setCallback(new RequestCallback()
          {
@@ -291,6 +296,11 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
       try
       {
          String securityCheckURL = getSecurityCheckURL();
+         if (securityCheckURL == null)
+         {
+            throw new Exception(
+               org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.confMissingVariable("securityCheckURL"));
+         }
          RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, securityCheckURL);
          requestBuilder.setHeader("Content-type", "application/x-www-form-urlencoded");
          requestBuilder.sendRequest(postBuilder.toString(), new RequestCallback()

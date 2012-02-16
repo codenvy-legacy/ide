@@ -63,6 +63,10 @@ public class IDEConfigurationLoader
       try
       {
          String url = getConfigurationURL();
+         if (url == null)
+         {
+            throw new Exception(IDE.IDE_LOCALIZATION_MESSAGES.confMissingVariable("configurationURL"));
+         }
          AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
       }
       catch (Exception e)

@@ -104,7 +104,12 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                   {
                      controls.initControls(result.getUserInfo().getRoles());
                      
-                     new SettingsServiceImpl(IDE.eventBus(), applicationConfiguration.getRegistryURL(), result.getUserInfo().getName(), IDELoader.getInstance(), applicationConfiguration.getContext());
+                     String registryURLParameter = applicationConfiguration.getRegistryURL();
+                     if (registryURLParameter == null)
+                     {
+                        throw new Exception(org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.confMissingVariable("registryURL"));
+                     }
+                     new SettingsServiceImpl(IDE.eventBus(), registryURLParameter, result.getUserInfo().getName(), IDELoader.getInstance(), applicationConfiguration.getContext());
                      SettingsService.getInstance().restoreFromCookies(applicationSettings);
                      
                      initialOpenedProject = applicationSettings.getValueAsString("opened-project");
@@ -117,7 +122,13 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                      }
                      
                      IDE.fireEvent(new ConfigurationReceivedSuccessfullyEvent(applicationConfiguration));
-                     DirectoryFilter.get().setPattern(applicationConfiguration.getHiddenFiles());
+
+                     String hiddenFilesParameter = applicationConfiguration.getHiddenFiles();
+                     if (hiddenFilesParameter == null)
+                     {
+                        throw new Exception(org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.confMissingVariable("hiddenFiles"));
+                     }
+                     DirectoryFilter.get().setPattern(hiddenFilesParameter);
 
                      IDE.fireEvent(new ApplicationSettingsReceivedEvent(result.getSettings()));
                      IDE.fireEvent(new IsDiscoverableResultReceivedEvent(result.isDiscoverable()));

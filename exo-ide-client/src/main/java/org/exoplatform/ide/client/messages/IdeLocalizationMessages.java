@@ -64,6 +64,12 @@ public interface IdeLocalizationMessages extends Messages
    String configurationInvalidConfiguration(String message);
 
    /*
+    * LoginPresenter IDEConfigurationInitializer IDEConfigurationInitializer
+    */
+   @Key("conf.missingVariable")
+   String confMissingVariable(String variableName);
+
+   /*
     * DeleteItemsPresenter
     */
    @Key("deleteItems.askDeleteOneItem")
