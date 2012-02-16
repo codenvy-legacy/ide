@@ -212,18 +212,6 @@ class DefaultBindingResolver extends BindingResolver
       return null;
    }
 
-   Util.BindingsToNodesMap getBindingsToNodesMap()
-   {
-      return new Util.BindingsToNodesMap()
-      {
-         public org.eclipse.jdt.client.internal.compiler.ast.ASTNode get(Binding binding)
-         {
-            return (org.eclipse.jdt.client.internal.compiler.ast.ASTNode)DefaultBindingResolver.this.newAstToOldAst
-               .get(DefaultBindingResolver.this.bindingsToAstNodes.get(binding));
-         }
-      };
-   }
-
    synchronized org.eclipse.jdt.client.internal.compiler.ast.ASTNode getCorrespondingNode(ASTNode currentNode)
    {
       return (org.eclipse.jdt.client.internal.compiler.ast.ASTNode)this.newAstToOldAst.get(currentNode);
