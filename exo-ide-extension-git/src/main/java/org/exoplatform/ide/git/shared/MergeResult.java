@@ -24,69 +24,70 @@ package org.exoplatform.ide.git.shared;
  */
 public interface MergeResult
 {
-   public enum MergeStatus {
-      FAST_FORWARD {
-         @Override
-         public String toString()
+   public enum MergeStatus
+   {
+      FAST_FORWARD
          {
-            return "Fast-forward";
-         }
-      },
-      ALREADY_UP_TO_DATE {
-         @Override
-         public String toString()
+            @Override
+            public String toString()
+            {
+               return "Fast-forward";
+            }
+         },
+      ALREADY_UP_TO_DATE
          {
-            return "Already up-to-date";
-         }
-      },
-      FAILED {
-         @Override
-         public String toString()
+            @Override
+            public String toString()
+            {
+               return "Already up-to-date";
+            }
+         },
+      FAILED
          {
-            return "Failed";
-         }
-      },
-      MERGED {
-         @Override
-         public String toString()
+            @Override
+            public String toString()
+            {
+               return "Failed";
+            }
+         },
+      MERGED
          {
-            return "Merged";
-         }
-      },
-      CONFLICTING {
-         @Override
-         public String toString()
+            @Override
+            public String toString()
+            {
+               return "Merged";
+            }
+         },
+      CONFLICTING
          {
-            return "Conflicting";
-         }
-      },
-      NOT_SUPPORTED {
-         @Override
-         public String toString()
+            @Override
+            public String toString()
+            {
+               return "Conflicting";
+            }
+         },
+      NOT_SUPPORTED
          {
-            return "Not-yet-supported";
+            @Override
+            public String toString()
+            {
+               return "Not-yet-supported";
+            }
          }
-      }
    }
 
-   /**
-    * @return head after the merge
-    */
+   /** @return head after the merge */
    String getNewHead();
 
-   /**
-    * @return status of merge
-    */
+   /** @return status of merge */
    MergeStatus getMergeStatus();
 
-   /**
-    * @return merged commits
-    */
+   /** @return merged commits */
    String[] getMergedCommits();
 
-   /**
-    * @return files that has conflicts. May return <code>null</code> or empty
-    *         array if there is no conflicts
-    */
+   /** @return files that has conflicts. May return <code>null</code> or empty array if there is no conflicts */
    String[] getConflicts();
+
+   /** @return files that failed to merge (not files that has conflicts). */
+   String[] getFailed();
 }

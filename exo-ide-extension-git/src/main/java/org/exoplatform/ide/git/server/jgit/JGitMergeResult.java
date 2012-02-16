@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.server.jgit;
 
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.merge.ResolveMerger;
 import org.exoplatform.ide.git.shared.MergeResult;
 
 import java.util.Arrays;
@@ -32,7 +33,7 @@ public class JGitMergeResult implements MergeResult
 {
    private final org.eclipse.jgit.api.MergeResult jgitMergeResult;
 
-   /** @param jgitMergeResult */
+   /** @param jgitMergeResult back-end instance of ArrayIndexOutOfBoundsException */
    public JGitMergeResult(org.eclipse.jgit.api.MergeResult jgitMergeResult)
    {
       this.jgitMergeResult = jgitMergeResult;
@@ -100,6 +101,19 @@ public class JGitMergeResult implements MergeResult
          {
             files[i++] = file;
          }
+      }
+      return files;
+   }
+
+   /** @see org.exoplatform.ide.git.shared.MergeResult#getFailed() */
+   @Override
+   public String[] getFailed()
+   {
+      String[] files = null;
+      Map<String, ResolveMerger.MergeFailureReason> failing = jgitMergeResult.getFailingPaths();
+      if (failing != null)
+      {
+         files = failing.keySet().toArray(new String[failing.keySet().size()]);
       }
       return files;
    }

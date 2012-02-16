@@ -208,7 +208,7 @@ public class GitService
    @Path("commit")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
    public Revision commit(CommitRequest request) throws GitException, LocalPathResolveException,
       VirtualFileSystemException
    {
@@ -294,7 +294,7 @@ public class GitService
    @Path("merge")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
    public MergeResult merge(MergeRequest request) throws GitException, LocalPathResolveException,
       VirtualFileSystemException
    {
@@ -393,14 +393,16 @@ public class GitService
    @Path("remote-list")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   public List<Remote> remoteList(RemoteListRequest request) throws GitException, LocalPathResolveException,
+   @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+   public GenericEntity<List<Remote>> remoteList(RemoteListRequest request) throws GitException, LocalPathResolveException,
       VirtualFileSystemException
    {
       GitConnection gitConnection = getGitConnection();
       try
       {
-         return gitConnection.remoteList(request);
+         return new GenericEntity<List<Remote>>(gitConnection.remoteList(request))
+         {
+         };
       }
       finally
       {

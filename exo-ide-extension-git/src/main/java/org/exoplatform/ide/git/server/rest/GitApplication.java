@@ -38,11 +38,14 @@ public class GitApplication extends Application
       classes.add(GitService.class);
       classes.add(GitRepoService.class);
 
-      singletons = new HashSet<Object>(4);
+      singletons = new HashSet<Object>(7);
       singletons.add(new GitExceptionMapper());
       singletons.add(new InfoPageWriter());
       singletons.add(new BranchListWriter());
       singletons.add(new TagListWriter());
+      singletons.add(new RemoteListWriter());
+      singletons.add(new CommitMessageWriter());
+      singletons.add(new MergeResultWriter());
    }
 
    /** @see javax.ws.rs.core.Application#getClasses() */

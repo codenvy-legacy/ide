@@ -49,6 +49,8 @@ public class Merge implements MergeResult
     */
    private String[] conflicts;
 
+   private String[] failed;
+
    /**
     * @see org.exoplatform.ide.git.shared.MergeResult#getNewHead()
     */
@@ -85,6 +87,12 @@ public class Merge implements MergeResult
       return conflicts;
    }
 
+   @Override
+   public String[] getFailed()
+   {
+      return failed;
+   }
+
    /**
     * @param newHead the newHead to set
     */
@@ -115,5 +123,10 @@ public class Merge implements MergeResult
    public void setConflicts(String[] conflicts)
    {
       this.conflicts = conflicts;
+   }
+
+   public void setFailed(String[] failed)
+   {
+      this.failed = failed;
    }
 }

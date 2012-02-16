@@ -60,6 +60,7 @@ import org.eclipse.jgit.errors.UnmergedPathException;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.FileMode;
+import org.eclipse.jgit.lib.NullProgressMonitor;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
@@ -67,7 +68,6 @@ import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.RefUpdate.Result;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
-import org.eclipse.jgit.lib.TextProgressMonitor;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevObject;
 import org.eclipse.jgit.revwalk.RevTag;
@@ -421,7 +421,7 @@ public class JGitConnection implements GitConnection
          FetchResult fetchResult;
          try
          {
-            fetchResult = transport.fetch(new TextProgressMonitor(), null);
+            fetchResult = transport.fetch(NullProgressMonitor.INSTANCE, null);
          }
          finally
          {
@@ -524,7 +524,12 @@ public class JGitConnection implements GitConnection
 
          PersonIdent committerIdentity = commit.getCommitterIdent();
 
-         return new Revision(commit.getId().getName(), commit.getFullMessage(), (long)commit.getCommitTime() * 1000,
+         String branch = Repository.shortenRefName(repository.getRef(Constants.HEAD).getLeaf().getName());
+
+         return new Revision(branch,
+            commit.getId().getName(),
+            commit.getFullMessage(),
+            (long)commit.getCommitTime() * 1000,
             new GitUser(committerIdentity.getName(), committerIdentity.getEmailAddress()));
       }
       catch (NoHeadException e)
@@ -709,9 +714,11 @@ public class JGitConnection implements GitConnection
          {
             RevCommit commit = revIterator.next();
             PersonIdent committerIdentity = commit.getCommitterIdent();
-            commits.add(new Revision(commit.getId().getName(), commit.getFullMessage(),
-               (long)commit.getCommitTime() * 1000, new GitUser(committerIdentity.getName(), committerIdentity
-               .getEmailAddress())));
+            commits.add(new Revision(
+               commit.getId().getName(),
+               commit.getFullMessage(),
+               (long)commit.getCommitTime() * 1000,
+               new GitUser(committerIdentity.getName(), committerIdentity.getEmailAddress())));
          }
          return new LogPage(commits);
       }
