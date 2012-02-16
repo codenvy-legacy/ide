@@ -10,26 +10,16 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 
-import org.eclipse.jdt.client.internal.compiler.codegen.ExceptionLabel;
 
 /** Extra behavior for statements which are generating subroutines */
 public abstract class SubRoutineStatement extends Statement
 {
 
-   ExceptionLabel anyExceptionLabel;
 
    public void exitAnyExceptionHandler()
    {
-      if (this.anyExceptionLabel != null)
-      {
-         this.anyExceptionLabel.placeEnd();
-      }
    }
 
    public abstract boolean isSubRoutineEscaping();
 
-   public void placeAllAnyExceptionHandler()
-   {
-      this.anyExceptionLabel.place();
-   }
 }

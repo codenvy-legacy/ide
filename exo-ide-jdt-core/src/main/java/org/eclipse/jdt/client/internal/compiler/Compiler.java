@@ -74,12 +74,6 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
 
    // number of initial units parsed at once (-1: none)
 
-   /*
-    * Static requestor reserved to listening compilation results in debug mode, so as for example to monitor compiler activity
-    * independantly from a particular builder implementation. It is reset at the end of compilation, and should not persist any
-    * information after having been reset.
-    */
-   public static IDebugRequestor DebugRequestor = null;
 
 //   /**
 //    * Answer a new compiler using the given name environment and compiler options. The environment and options will be in effect
@@ -167,24 +161,7 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
       this.options = options;
 
       // wrap requestor in DebugRequestor if one is specified
-      if (DebugRequestor == null)
-      {
          this.requestor = requestor;
-      }
-      else
-      {
-         this.requestor = new ICompilerRequestor()
-         {
-            public void acceptResult(CompilationResult result)
-            {
-               if (DebugRequestor.isActive())
-               {
-                  DebugRequestor.acceptDebugResult(result);
-               }
-               requestor.acceptResult(result);
-            }
-         };
-      }
       this.problemReporter = new ProblemReporter(policy, this.options, problemFactory);
       this.lookupEnvironment = new LookupEnvironment(this, this.options, this.problemReporter, environment);
       this.stats = new CompilerStats();
@@ -482,11 +459,6 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
             sourceUnits[i] = null; // no longer hold onto the unit
          }
       }
-      if (this.parser.readManager != null)
-      {
-         // this.parser.readManager.shutdown();
-         this.parser.readManager = null;
-      }
       // binding resolution
       this.lookupEnvironment.completeTypeBindings();
    }
@@ -639,8 +611,6 @@ public class Compiler implements ITypeRequestor, ProblemSeverities
       this.lookupEnvironment.reset();
       this.parser.scanner.source = null;
       this.unitsToProcess = null;
-      if (DebugRequestor != null)
-         DebugRequestor.reset();
       this.problemReporter.reset();
    }
 

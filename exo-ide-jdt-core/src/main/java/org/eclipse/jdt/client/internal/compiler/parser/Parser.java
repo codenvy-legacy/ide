@@ -606,8 +606,6 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    // used for recovery
    protected int lastJavadocEnd;
 
-   public org.eclipse.jdt.client.internal.compiler.ReadManager readManager;
-
    public Parser(ProblemReporter problemReporter, boolean optimizeStringLiterals)
    {
 
@@ -10764,8 +10762,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       // real parse of the method....
       CompilationResult compilationResult = unit.compilationResult;
       char[] contents =
-         this.readManager != null ? this.readManager.getContents(compilationResult.compilationUnit)
-            : compilationResult.compilationUnit.getContents();
+         compilationResult.compilationUnit.getContents();
       this.scanner.setSource(contents, compilationResult);
 
       if (this.javadocParser != null && this.javadocParser.checkDocComment)
@@ -11955,7 +11952,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
          char[] contents;
          try
          {
-            contents = this.readManager != null ? this.readManager.getContents(sourceUnit) : sourceUnit.getContents();
+            contents = sourceUnit.getContents();
          }
          catch (AbortCompilationUnit abortException)
          {
