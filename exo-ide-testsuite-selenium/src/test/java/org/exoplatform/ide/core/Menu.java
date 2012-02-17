@@ -80,6 +80,24 @@ public class Menu extends AbstractTestModule
       waitMenuPopUpClosed();
    }
 
+   
+   /**
+    * Run command from top menu.
+    * 
+    * @param topMenuName name of menu
+    * @param commandName command name
+    */
+   public void clickOnCommand(String topMenuName) throws Exception
+   {
+      //Call top menu command:
+      WebElement topMenuItem =
+         driver().findElement(By.xpath(String.format(Locators.TOP_MENU_ITEM_LOCATOR, topMenuName)));
+      waitForTopMenuPresent(topMenuItem);
+      IDE().LOADER.waitClosed();
+      topMenuItem.click();
+      waitMenuPopUp();
+   }
+   
    /**
     * Run command from sub menu.
     * 
@@ -322,7 +340,15 @@ public class Menu extends AbstractTestModule
       }
    }
 
-
+   
+   /**
+    * click for onlock leayer
+    */
+   public void clickOnLockLayer()
+   {
+      lockLayer.click();
+   }
+   
 
    /**
     * Wait appearance Top menu
