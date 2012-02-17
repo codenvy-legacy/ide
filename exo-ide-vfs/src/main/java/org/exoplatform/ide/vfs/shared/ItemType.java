@@ -20,12 +20,13 @@ package org.exoplatform.ide.vfs.shared;
 
 /**
  * Object types.
- * 
+ *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public enum ItemType {
-   FILE("file"), FOLDER("folder");
+public enum ItemType
+{
+   FILE("file"), FOLDER("folder"), PROJECT("project");
 
    private final String value;
 
@@ -34,9 +35,7 @@ public enum ItemType {
       this.value = value;
    }
 
-   /**
-    * @return value of Type
-    */
+   /** @return value of Type */
    public String value()
    {
       return value;
@@ -44,22 +43,25 @@ public enum ItemType {
 
    /**
     * Get Type instance from string value.
-    * 
+    *
     * @param value string value
     * @return Type
     * @throws IllegalArgumentException if there is no corresponded Type for specified <code>value</code>
     */
    public static ItemType fromValue(String value)
    {
+      String v = value.toLowerCase();
       for (ItemType e : ItemType.values())
-         if (e.value.equals(value.toLowerCase()))
+      {
+         if (e.value.equals(v))
+         {
             return e;
+         }
+      }
       throw new IllegalArgumentException(value);
    }
 
-   /**
-    * @see java.lang.Enum#toString()
-    */
+   /** @see java.lang.Enum#toString() */
    @Override
    public String toString()
    {

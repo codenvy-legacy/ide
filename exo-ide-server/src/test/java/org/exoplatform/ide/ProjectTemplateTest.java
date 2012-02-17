@@ -78,7 +78,7 @@ public class ProjectTemplateTest extends BaseTest
          (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
       vfs = vfsRegistry.getProvider("dev-monit").newInstance(null);
 
-      ItemList<Item> children = vfs.getChildren(vfs.getInfo().getRoot().getId(), -1, 0, PropertyFilter.ALL_FILTER);
+      ItemList<Item> children = vfs.getChildren(vfs.getInfo().getRoot().getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
       for (Item i : children.getItems())
       {
          vfs.delete(i.getId(), null);

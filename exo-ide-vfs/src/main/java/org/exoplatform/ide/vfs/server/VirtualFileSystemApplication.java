@@ -62,18 +62,14 @@ public class VirtualFileSystemApplication extends Application
       singletons.add(new GitUrlResolveExceptionMapper());
    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
+   /** @see javax.ws.rs.core.Application#getClasses() */
    @Override
    public Set<Class<?>> getClasses()
    {
       return classes;
    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getSingletons()
-    */
+   /** @see javax.ws.rs.core.Application#getSingletons() */
    @Override
    public Set<Object> getSingletons()
    {

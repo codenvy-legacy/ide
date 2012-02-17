@@ -212,7 +212,7 @@ public class GroovyCodeAssistant extends CodeAssistant
       throws CodeAssistantException, VirtualFileSystemException
    {
       List<ShortTypeInfo> classes = new ArrayList<ShortTypeInfo>();
-      ItemList<Item> children = vfs.getChildren(file.getParentId(), -1, 0, PropertyFilter.ALL_FILTER);
+      ItemList<Item> children = vfs.getChildren(file.getParentId(), -1, 0, null, PropertyFilter.ALL_FILTER);
       for (Item i : children.getItems())
       {
          if (i.getName().endsWith(".grs") || i.getName().endsWith(".groovy") || i.getName().endsWith(".cmtc"))

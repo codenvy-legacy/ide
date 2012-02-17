@@ -116,7 +116,7 @@ public class FileTemplateTest extends BaseTest
    public void after() throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException,
       VirtualFileSystemException
    {
-      ItemList<Item> children = vfs.getChildren(vfs.getInfo().getRoot().getId(), -1, 0, PropertyFilter.NONE_FILTER);
+      ItemList<Item> children = vfs.getChildren(vfs.getInfo().getRoot().getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
       for (Item i : children.getItems())
       {
          if (i.getName().equals("ide-home"))

@@ -45,10 +45,6 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Project;
 
-/**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: $
- */
 @Path("ide/application/java")
 public class JavaService
 {
@@ -62,11 +58,6 @@ public class JavaService
 
    /**
     * Search for projects in Workspace.
-    * 
-    * @param vfsId
-    * @param uriInfo
-    * @return
-    * @throws VirtualFileSystemException
     */
    @GET
    @Path("projects")
@@ -102,12 +93,6 @@ public class JavaService
 
    /**
     * Get root packages of Project.
-    * 
-    * @param vfsId
-    * @param projectId
-    * @param uriInfo
-    * @return
-    * @throws VirtualFileSystemException
     */
    @GET
    @Path("project/packages/root")
@@ -187,7 +172,7 @@ public class JavaService
 
    private Item getItem(VirtualFileSystem vfs, String folderId, String itemName) throws VirtualFileSystemException
    {
-      ItemList<Item> items = vfs.getChildren(folderId, -1, 0, PropertyFilter.ALL_FILTER);
+      ItemList<Item> items = vfs.getChildren(folderId, -1, 0, null, PropertyFilter.ALL_FILTER);
       for (Item item : items.getItems())
       {
          if (itemName.equals(item.getName()))
@@ -212,13 +197,6 @@ public class JavaService
 
    /**
     * Get packages in RootPackage.
-    * 
-    * @param vfsId
-    * @param projectId
-    * @param rootPackage
-    * @param uriInfo
-    * @return
-    * @throws VirtualFileSystemException
     */
    @GET
    @Path("project/packages/list")
@@ -267,7 +245,7 @@ public class JavaService
    private void scanFolder(VirtualFileSystem vfs, Folder folder, boolean canBePackage, List<String> folders)
       throws VirtualFileSystemException
    {
-      ItemList<Item> children = vfs.getChildren(folder.getId(), -1, 0, PropertyFilter.ALL_FILTER);
+      ItemList<Item> children = vfs.getChildren(folder.getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
       if (canBePackage && showInPackageList(children))
       {
          folders.add(folder.getPath());
@@ -333,25 +311,22 @@ public class JavaService
 
       List<AstItem> entries = new ArrayList<AstItem>();
 
-      ItemList<Item> items = vfs.getChildren(sourceDirectory.getId(), -1, 0, PropertyFilter.ALL_FILTER);
+      ItemList<Item> items = vfs.getChildren(sourceDirectory.getId(), -1, 0, "file", PropertyFilter.ALL_FILTER);
       for (Item item : items.getItems())
       {
-         if (item instanceof File)
+         File file = (File)item;
+
+         String mimeType = file.getMimeType();
+         if (mimeType.indexOf(';') > 0)
          {
-            File file = (File)item;
+            mimeType = mimeType.substring(0, mimeType.indexOf(";"));
+         }
 
-            String mimeType = file.getMimeType();
-            if (mimeType.indexOf(";") > 0)
-            {
-               mimeType = mimeType.substring(0, mimeType.indexOf(";"));
-            }
-
-            if ("application/java".equals(mimeType))
-            {
-               CompilationUnit compilationUnit = new CompilationUnit();
-               compilationUnit.setName(file.getName());
-               entries.add(compilationUnit);
-            }
+         if ("application/java".equals(mimeType))
+         {
+            CompilationUnit compilationUnit = new CompilationUnit();
+            compilationUnit.setName(file.getName());
+            entries.add(compilationUnit);
          }
       }
 

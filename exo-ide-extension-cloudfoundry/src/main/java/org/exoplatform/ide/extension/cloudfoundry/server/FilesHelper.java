@@ -236,7 +236,7 @@ class FilesHelper
          String line = r.readLine();
          return line;
       }
-      catch (ItemNotFoundException e)
+      catch (ItemNotFoundException ignored)
       {
       }
       finally
@@ -390,15 +390,15 @@ class FilesHelper
          vfs.getItemByPath(project.getPath() + "/config/environment.rb", null, PropertyFilter.NONE_FILTER);
          return "rails3";
       }
-      catch (ItemNotFoundException e)
+      catch (ItemNotFoundException ignored)
       {
       }
-      List<Item> children = vfs.getChildren(projectId, -1, 0, PropertyFilter.NONE_FILTER).getItems();
+      List<Item> children = vfs.getChildren(projectId, -1, 0, "file", PropertyFilter.NONE_FILTER).getItems();
       Matcher m = null;
       // Check each ruby file to include "sinatra" import. 
       for (Item i : children)
       {
-         if (ItemType.FILE == i.getItemType() && RUBY_FILTER.accept(i.getName()))
+         if (RUBY_FILTER.accept(i.getName()))
          {
             InputStream in = null;
             BufferedReader reader = null;
@@ -432,8 +432,7 @@ class FilesHelper
       // Lookup app.js, index.js or main.js files.
       for (Item i : children)
       {
-         if (ItemType.FILE == i.getItemType() //
-            && ("app.js".equals(i.getName()) || "index.js".equals(i.getName()) || "main.js".equals(i.getName())))
+         if ("app.js".equals(i.getName()) || "index.js".equals(i.getName()) || "main.js".equals(i.getName()))
          {
             return "node";
          }
@@ -462,7 +461,7 @@ class FilesHelper
          }
          if (fis != null)
          {
-            dis.close();
+            fis.close();
          }
       }
    }

@@ -38,7 +38,7 @@ import java.net.URLConnection;
 
 /**
  * Connection to virtual file system. Instances of this class are not safe to be used by multiple concurrent threads.
- * 
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -71,9 +71,7 @@ public final class VirtualFileSystemURLConnection extends URLConnection
       return url;
    }
 
-   /**
-    * @see java.net.URLConnection#connect()
-    */
+   /** @see java.net.URLConnection#connect() */
    @Override
    public void connect() throws IOException
    {
@@ -103,9 +101,7 @@ public final class VirtualFileSystemURLConnection extends URLConnection
       connected = false;
    }
 
-   /**
-    * @see java.net.URLConnection#getContentLength()
-    */
+   /** @see java.net.URLConnection#getContentLength() */
    @Override
    public int getContentLength()
    {
@@ -130,9 +126,7 @@ public final class VirtualFileSystemURLConnection extends URLConnection
       return -1;
    }
 
-   /**
-    * @see java.net.URLConnection#getContentType()
-    */
+   /** @see java.net.URLConnection#getContentType() */
    @Override
    public String getContentType()
    {
@@ -154,9 +148,7 @@ public final class VirtualFileSystemURLConnection extends URLConnection
       return null;
    }
 
-   /**
-    * @see java.net.URLConnection#getLastModified()
-    */
+   /** @see java.net.URLConnection#getLastModified() */
    @Override
    public long getLastModified()
    {
@@ -181,9 +173,7 @@ public final class VirtualFileSystemURLConnection extends URLConnection
       return 0;
    }
 
-   /**
-    * @see java.net.URLConnection#getContent()
-    */
+   /** @see java.net.URLConnection#getContent() */
    @Override
    public Object getContent() throws IOException
    {
@@ -194,9 +184,7 @@ public final class VirtualFileSystemURLConnection extends URLConnection
       return item;
    }
 
-   /**
-    * @see java.net.URLConnection#getContent(java.lang.Class[])
-    */
+   /** @see java.net.URLConnection#getContent(java.lang.Class[]) */
    @SuppressWarnings("rawtypes")
    @Override
    public Object getContent(Class[] classes) throws IOException
@@ -204,9 +192,7 @@ public final class VirtualFileSystemURLConnection extends URLConnection
       throw new UnsupportedOperationException();
    }
 
-   /**
-    * @see java.net.URLConnection#getInputStream()
-    */
+   /** @see java.net.URLConnection#getInputStream() */
    @Override
    public InputStream getInputStream() throws IOException
    {
@@ -222,7 +208,7 @@ public final class VirtualFileSystemURLConnection extends URLConnection
             return content.getStream();
          }
          // Folder. Show plain list of child.
-         ItemList<Item> children = vfs.getChildren(item.getId(), -1, 0, PropertyFilter.NONE_FILTER);
+         ItemList<Item> children = vfs.getChildren(item.getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
          ByteArrayOutputStream out = new ByteArrayOutputStream();
          Writer w = new OutputStreamWriter(out);
          for (Item i : children.getItems())

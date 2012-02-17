@@ -51,7 +51,7 @@ import javax.ws.rs.core.Response;
 
 /**
  * Virtual file system abstraction.
- * 
+ *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
@@ -59,7 +59,7 @@ public interface VirtualFileSystem
 {
    /**
     * Create copy of item <code>id</code> in <code>parentId</code> folder.
-    * 
+    *
     * @param id id of source item
     * @param parentId id of parent for new copy
     * @return newly created copy of item
@@ -77,7 +77,7 @@ public interface VirtualFileSystem
 
    /**
     * Create new File in specified folder.
-    * 
+    *
     * @param parentId id of parent for new File
     * @param name name of File
     * @param mediaType media type of content
@@ -85,10 +85,10 @@ public interface VirtualFileSystem
     * @return newly created file
     * @throws ItemNotFoundException if <code>parentId</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
-    *            <ul>
-    *            <li><code>parentId</code> if not a folder</li>
-    *            <li><code>name</code> is not specified</li>
-    *            </ul>
+    * <ul>
+    * <li><code>parentId</code> if not a folder</li>
+    * <li><code>name</code> is not specified</li>
+    * </ul>
     * @throws ItemAlreadyExistException if <code>parentId</code> already contains item with the same name
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
@@ -102,16 +102,17 @@ public interface VirtualFileSystem
 
    /**
     * Create new folder in specified folder.
-    * 
+    *
     * @param parentId id of parent for new folder
-    * @param name name of new folder. If name is string separated by '/' all nonexistent parent folders must be created.
+    * @param name name of new folder. If name is string separated by '/' all nonexistent parent folders must be
+    * created.
     * @return newly created folder
     * @throws ItemNotFoundException if <code>parentId</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
-    *            <ul>
-    *            <li><code>parentId</code> if not a folder</li>
-    *            <li><code>name</code> is not specified</li>
-    *            </ul>
+    * <ul>
+    * <li><code>parentId</code> if not a folder</li>
+    * <li><code>name</code> is not specified</li>
+    * </ul>
     * @throws ItemAlreadyExistException if <code>parentId</code> already contains item with the same name
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
@@ -124,21 +125,21 @@ public interface VirtualFileSystem
 
    /**
     * Create new project in specified folder.
-    * 
+    * <p/>
     * NOTE: It should NOT be allowable to create project inside project
-    * 
+    *
     * @param parentId parent's folder id
     * @param name project name
     * @param type project type
-    * @param properties
+    * @param properties properties
     * @return newly created project
     * @throws ItemNotFoundException if <code>parentId</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
-    *            <ul>
-    *            <li><code>parentId</code> if not a folder</li>
-    *            <li><code>name</code> is not specified</li>
-    *            <li><code>type</code> is not specified</li>
-    *            </ul>
+    * <ul>
+    * <li><code>parentId</code> if not a folder</li>
+    * <li><code>name</code> is not specified</li>
+    * <li><code>type</code> is not specified</li>
+    * </ul>
     * @throws ItemAlreadyExistException if <code>parentId</code> already contains item with the same name
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
@@ -151,16 +152,17 @@ public interface VirtualFileSystem
       VirtualFileSystemException;
 
    /**
-    * Delete item <code>id</code>. If item is folder then all children of this folder should be removed or ConstraintException
-    * must be thrown.
-    * 
+    * Delete item <code>id</code>. If item is folder then all children of this folder should be removed or
+    * ConstraintException must be thrown.
+    *
     * @param id id of item to be removed
-    * @param lockToken lock token. This lock token will be used if <code>id</code> is locked. Pass <code>null</code> if there is
-    *           no lock token, e.g. item is not locked
+    * @param lockToken lock token. This lock token will be used if <code>id</code> is locked. Pass <code>null</code> if
+    * there is no lock token, e.g. item is not locked
     * @throws ItemNotFoundException if <code>id</code> does not exist
-    * @throws ConstraintException if item is folder which has children and implementation is not supported removing not empty
-    *            folders
-    * @throws LockException if item <code>id</code> is locked and <code>lockToken</code> is <code>null</code> or does not matched
+    * @throws ConstraintException if item is folder which has children and implementation is not supported removing not
+    * empty folders
+    * @throws LockException if item <code>id</code> is locked and <code>lockToken</code> is <code>null</code> or does
+    * not matched
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
     */
@@ -170,19 +172,20 @@ public interface VirtualFileSystem
       PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Get ACL applied to <code>id</code>. If there is no any ACL applied to item this method must return empty list. Example of
+    * Get ACL applied to <code>id</code>. If there is no any ACL applied to item this method must return empty list.
+    * Example of
     * JSON response:
-    * 
+    * <p/>
     * <pre>
     * [{"principal":"john","permissions":["all"]},{"principal":"marry","permissions":["read"]}]
     * </pre>
-    * 
+    * <p/>
     * Such JSON message means:
     * <ul>
     * <li>principal "john" has "all" permissions</li>
     * <li>principal "marry" has "read" permission only</li>
     * </ul>
-    * 
+    *
     * @param id id of item
     * @return ACL applied to item or(and) inherited from its parent
     * @throws NotSupportedException if ACL is not supported
@@ -199,7 +202,7 @@ public interface VirtualFileSystem
 
    /**
     * Get children of specified folder. Example of JSON response:
-    * 
+    * <p/>
     * <pre>
     * {
     *   "hasMoreItems":false,
@@ -219,33 +222,42 @@ public interface VirtualFileSystem
     *   ],
     *   "numItems":1
     * }
-    * 
+    *
     * </pre>
-    * 
+    *
     * @param folderId folder's id
     * @param maxItems max number of items in response. If -1 then no limit of max items in result set
-    * @param skipCount the skip items. Must be equals or greater then 0
+    * @param skipCount skip items. Must be equals or greater then 0
+    * @param itemType item type filter. If not null then only item of specified type returned in result list.
+    * Expected one of type (case insensitive):
+    * <ul>
+    * <li>file</li>
+    * <li>folder</li>
+    * <li>project</li>
+    * </ul>
     * @param propertyFilter only properties which are accepted by filter should be included in response. See
-    *           {@link PropertyFilter#accept(String)}
+    * {@link PropertyFilter#accept(String)}
     * @return list of children of specified folder
     * @throws ItemNotFoundException if <code>folderId</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
-    *            <ul>
-    *            <li><code>folderId</code> if not a folder</li>
-    *            <li><code>skipCount</code> is negative or greater then total number of items</li>
-    *            </ul>
+    * <ul>
+    * <li><code>folderId</code> if not a folder</li>
+    * <li><code>skipCount</code> is negative or greater then total number of items</li>
+    * <li><code>itemType</code> is not <code>null</code> and not one of the known item types</li>
+    * </ul>
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
+    * @see org.exoplatform.ide.vfs.shared.ItemType
     */
    @GET
    @Path("children")
    @Produces({MediaType.APPLICATION_JSON})
-   ItemList<Item> getChildren(String folderId, int maxItems, int skipCount, PropertyFilter propertyFilter)
+   ItemList<Item> getChildren(String folderId, int maxItems, int skipCount, String itemType, PropertyFilter propertyFilter)
       throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
     * Get binary content of File.
-    * 
+    *
     * @param id id of File
     * @return content
     * @throws ItemNotFoundException if <code>id</code> does not exist
@@ -260,7 +272,7 @@ public interface VirtualFileSystem
 
    /**
     * Get binary content of File by path.
-    * 
+    *
     * @param path path of File
     * @param versionId version id for File item. If<code>null</code> content of latest version returned.
     * @return content
@@ -276,7 +288,7 @@ public interface VirtualFileSystem
 
    /**
     * Get information about virtual file system and its capabilities.
-    * 
+    *
     * @return info about this virtual file system
     * @throws VirtualFileSystemException if any errors occur in VFS
     */
@@ -286,7 +298,7 @@ public interface VirtualFileSystem
 
    /**
     * Get item by id. Example of JSON response:
-    * 
+    * <p/>
     * <pre>
     * {
     *   "id":"/folder01/DOCUMENT01.txt",
@@ -301,10 +313,10 @@ public interface VirtualFileSystem
     *   "properties":[],
     * }
     * </pre>
-    * 
+    *
     * @param id id of item
     * @param propertyFilter only properties which are accepted by filter should be included in response. See
-    *           {@link PropertyFilter#accept(String)}
+    * {@link PropertyFilter#accept(String)}
     * @return item
     * @throws ItemNotFoundException if <code>id</code> does not exist
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
@@ -318,11 +330,11 @@ public interface VirtualFileSystem
 
    /**
     * Get item by path.
-    * 
+    *
     * @param path item path
     * @param versionId version id for File item. Must be <code>null</code> for Folders.
     * @param propertyFilter only properties which are accepted by filter should be included in response. See
-    *           {@link PropertyFilter#accept(String)}
+    * {@link PropertyFilter#accept(String)}
     * @return item
     * @throws ItemNotFoundException if <code>path</code> does not exist
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
@@ -336,16 +348,16 @@ public interface VirtualFileSystem
 
    /**
     * Get binary content of version of File item.
-    * 
+    *
     * @param id id of item
     * @param versionId version id
     * @return content response
     * @throws ItemNotFoundException if <code>id</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
-    *            <ul>
-    *            <li><code>id</code> is not File</li>
-    *            <li><code>versionId</code> points to version that does not exist</li>
-    *            </ul>
+    * <ul>
+    * <li><code>id</code> is not File</li>
+    * <li><code>versionId</code> points to version that does not exist</li>
+    * </ul>
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
     */
@@ -355,9 +367,10 @@ public interface VirtualFileSystem
       PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Get list of versions of File. Even if File is not versionable result must contain at least one item (current version of
+    * Get list of versions of File. Even if File is not versionable result must contain at least one item (current
+    * version of
     * File). Example of JSON response:
-    * 
+    * <p/>
     * <pre>
     * {
     *   "hasMoreItems":false,
@@ -402,19 +415,19 @@ public interface VirtualFileSystem
     *   "numItems":1
     * }
     * </pre>
-    * 
+    *
     * @param id id of File
     * @param maxItems max number of items in response. If -1 then no limit of max items in result set
     * @param skipCount the skip items. Must be equals or greater then 0
     * @param propertyFilter only properties which are accepted by filter should be included in response. See
-    *           {@link PropertyFilter#accept(String)}
-    * @return
+    * {@link PropertyFilter#accept(String)}
+    * @return versions of file
     * @throws ItemNotFoundException if <code>id</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
-    *            <ul>
-    *            <li><code>id</code>item is not a File</li>
-    *            <li><code>skipCount</code> is negative or greater then total number of items</li>
-    *            </ul>
+    * <ul>
+    * <li><code>id</code>item is not a File</li>
+    * <li><code>skipCount</code> is negative or greater then total number of items</li>
+    * </ul>
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
     */
@@ -426,11 +439,11 @@ public interface VirtualFileSystem
 
    /**
     * Place lock on File item. Example of JSON response if locking is successful:
-    * 
+    * <p/>
     * <pre>
     * {"lockToken":"f37ed0b2c0a8006600afbefda74c2dac"}
     * </pre>
-    * 
+    *
     * @param id item to be locked
     * @return lock token
     * @throws NotSupportedException if locking is not supported
@@ -449,20 +462,21 @@ public interface VirtualFileSystem
 
    /**
     * Move item <code>id</code> in <code>newparentId</code> folder. Example of JSON response:
-    * 
+    * <p/>
     * <pre>
     * {"id":"/TESTROOT/NEW_PARENT/DOCUMENT01.txt"}
     * </pre>
-    * 
+    *
     * @param id id of item to be moved
     * @param parentId id of new parent
-    * @param lockToken lock token. This lock token will be used if <code>id</code> is locked. Pass <code>null</code> if there is
-    *           no lock token, e.g. item is not locked
+    * @param lockToken lock token. This lock token will be used if <code>id</code> is locked. Pass <code>null</code> if
+    * there is no lock token, e.g. item is not locked @return moved item
     * @return moved item
     * @throws ItemNotFoundException if <code>id</code> or <code>newparentId</code> does not exist
     * @throws ConstraintException if <code>newparentId</code> if not a folder
     * @throws ItemAlreadyExistException if <code>newparentId</code> already contains item with the same name
-    * @throws LockException if item <code>id</code> is locked and <code>lockToken</code> is <code>null</code> or does not matched
+    * @throws LockException if item <code>id</code> is locked and <code>lockToken</code> is <code>null</code> or does
+    * not matched
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
     */
@@ -474,15 +488,17 @@ public interface VirtualFileSystem
 
    /**
     * Rename and(or) set content type for Item.
-    * 
+    *
     * @param id id of Item to be updated
     * @param mediaType new media type. May be not specified if not need to change media type, e.g. need rename only
-    * @param newname new name of Item. May be not specified if not need to change name, e.g. need update media type only
-    * @param lockToken lock token. This lock token will be used if <code>id</code> is locked. Pass <code>null</code> if there is
-    *           no lock token, e.g. item is not locked
+    * @param newname new name of Item. May be not specified if not need to change name, e.g. need update media type
+    * only
+    * @param lockToken lock token. This lock token will be used if <code>id</code> is locked. Pass <code>null</code> if
+    * there is no lock token, e.g. item is not locked
     * @return renamed item
     * @throws ItemNotFoundException if <code>id</code> does not exist
-    * @throws LockException if item <code>id</code> is locked and <code>lockToken</code> is <code>null</code> or does not matched
+    * @throws LockException if item <code>id</code> is locked and <code>lockToken</code> is <code>null</code> or does
+    * not matched
     * @throws ConstraintException if file can't be updated cause to any constraint
     * @throws ItemAlreadyExistException if parent folder already contains item with specified name
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
@@ -497,21 +513,21 @@ public interface VirtualFileSystem
 
    /**
     * Executes a SQL query statement against the contents of virtual file system.
-    * 
-    * @param query set of opaque parameters of query statement. Set of parameters that can be passed by client and how SQL
-    *           statement (in case of SQL storage )created from this parameters is implementation specific
+    *
+    * @param query set of opaque parameters of query statement. Set of parameters that can be passed by client and how
+    * SQL statement (in case of SQL storage )created from this parameters is implementation specific
     * @param maxItems max number of items in response. If -1 then no limit of max items in result set
     * @param skipCount the skip items. Must be equals or greater the 0
     * @param propertyFilter only properties which are accepted by filter should be included in response. See
-    *           {@link PropertyFilter#accept(String)}
+    * {@link PropertyFilter#accept(String)}
     * @return query result
-    * @throws NotSupportedException query is not supported at all or specified query type is not supported, e.g. if full text
-    *            query is not supported but corresponded parameter specified
+    * @throws NotSupportedException query is not supported at all or specified query type is not supported, e.g. if
+    * full text query is not supported but corresponded parameter specified
     * @throws InvalidArgumentException if any of following conditions are met:
-    *            <ul>
-    *            <li>set of parameters is incorrect and as result is not possible to create correct SQL statement</li>
-    *            <li><code>skipCount</code> is negative or greater then total number of items</li>
-    *            </ul>
+    * <ul>
+    * <li>set of parameters is incorrect and as result is not possible to create correct SQL statement</li>
+    * <li><code>skipCount</code> is negative or greater then total number of items</li>
+    * </ul>
     * @throws VirtualFileSystemException if any other errors occur
     * @see VirtualFileSystemInfo#getQueryCapability()
     */
@@ -519,22 +535,22 @@ public interface VirtualFileSystem
    @Path("search")
    @Produces({MediaType.APPLICATION_JSON})
    ItemList<Item> search(MultivaluedMap<String, String> query, int maxItems, int skipCount,
-      PropertyFilter propertyFilter) throws NotSupportedException, InvalidArgumentException, VirtualFileSystemException;
+                         PropertyFilter propertyFilter) throws NotSupportedException, InvalidArgumentException, VirtualFileSystemException;
 
    /**
     * Execute a SQL query statement against the contents of virtual file system.
-    * 
+    *
     * @param statement query statement
     * @param maxItems max number of items in response. If -1 then no limit of max items in result set
     * @param skipCount the skip items. Must be equals or greater the 0
     * @return query result
-    * @throws NotSupportedException if query is not supported at all of specified query type is not supported, e.g. if full text
-    *            query is not supported but CONTAINS clause specified
+    * @throws NotSupportedException if query is not supported at all of specified query type is not supported, e.g. if
+    * full text query is not supported but CONTAINS clause specified
     * @throws InvalidArgumentException if any of following conditions are met:
-    *            <ul>
-    *            <li>query statement syntax is invalid</li>
-    *            <li><code>skipCount</code> is negative or greater then total number of items</li>
-    *            </ul>
+    * <ul>
+    * <li>query statement syntax is invalid</li>
+    * <li><code>skipCount</code> is negative or greater then total number of items</li>
+    * </ul>
     * @throws VirtualFileSystemException if any other errors occur
     * @see VirtualFileSystemInfo#getQueryCapability()
     */
@@ -546,7 +562,7 @@ public interface VirtualFileSystem
 
    /**
     * Remove lock from item.
-    * 
+    *
     * @param id id of item to be unlocked
     * @param lockToken lock token
     * @throws NotSupportedException if locking is not supported
@@ -562,23 +578,26 @@ public interface VirtualFileSystem
 
    /**
     * Update ACL of item. Example of JSON message:
-    * 
+    * <p/>
     * <pre>
     * [{"principal":"john","permissions":["all"]},{"principal":"marry","permissions":["read"]}]
     * </pre>
-    * 
-    * JSON message as above will set "all" permissions for principal "john" and "read" permission only for principal "marry".
-    * 
+    * <p/>
+    * JSON message as above will set "all" permissions for principal "john" and "read" permission only for principal
+    * "marry".
+    *
     * @param id id of item for ACL updates
-    * @param acl ACL to be applied to item. If method {@link AccessControlEntry#getPermissions()} for any principal return empty
-    *           set of permissions then all permissions for this principal will be removed.
-    * @param override if <code>true</code> then previous ACL will be overridden, if <code>false</code> then specified ACL will be
-    *           merged with previous if any. If such parameters is not specified then behavior is implementation specific
-    * @param lockToken lock token. This lock token will be used if <code>id</code> is locked. Pass <code>null</code> if there is
-    *           no lock token, e.g. item is not locked
+    * @param acl ACL to be applied to item. If method {@link AccessControlEntry#getPermissions()} for any principal
+    * return empty set of permissions then all permissions for this principal will be removed.
+    * @param override if <code>true</code> then previous ACL will be overridden, if <code>false</code> then specified
+    * ACL will be merged with previous if any. If such parameters is not specified then behavior is implementation
+    * specific
+    * @param lockToken lock token. This lock token will be used if <code>id</code> is locked. Pass <code>null</code> if
+    * there is no lock token, e.g. item is not locked
     * @throws NotSupportedException if ACL is not supported at all or managing of ACL is not supported
     * @throws ItemNotFoundException if <code>id</code> does not exist
-    * @throws LockException if item <code>id</code> is locked and <code>lockToken</code> is <code>null</code> or does not matched
+    * @throws LockException if item <code>id</code> is locked and <code>lockToken</code> is <code>null</code> or does
+    * not matched
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
     * @see VirtualFileSystemInfo#getAclCapability()
@@ -592,15 +611,16 @@ public interface VirtualFileSystem
 
    /**
     * Update binary content of File.
-    * 
+    *
     * @param id id of File
     * @param mediaType media type of content
     * @param newcontent new content of File
-    * @param lockToken lock token. This lock token will be used if <code>id</code> is locked. Pass <code>null</code> if there is
-    *           no lock token, e.g. item is not locked
+    * @param lockToken lock token. This lock token will be used if <code>id</code> is locked. Pass <code>null</code> if
+    * there is no lock token, e.g. item is not locked
     * @throws ItemNotFoundException if <code>id</code> does not exist
     * @throws InvalidArgumentException if <code>id</code> is not File
-    * @throws LockException if item <code>id</code> is locked and <code>lockToken</code> is <code>null</code> or does not matched
+    * @throws LockException if item <code>id</code> is locked and <code>lockToken</code> is <code>null</code> or does
+    * not matched
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
     */
@@ -612,13 +632,14 @@ public interface VirtualFileSystem
 
    /**
     * Update properties of item.
-    * 
+    *
     * @param id id of item to be updated
     * @param properties new properties
-    * @param lockToken lock token. This lock token will be used if <code>id</code> is locked. Pass <code>null</code> if there is
-    *           no lock token, e.g. item is not locked
+    * @param lockToken lock token. This lock token will be used if <code>id</code> is locked. Pass <code>null</code> if
+    * there is no lock token, e.g. item is not locked
     * @throws ItemNotFoundException if <code>id</code> does not exist
-    * @throws LockException if item <code>id</code> is locked and <code>lockToken</code> is <code>null</code> or does not matched
+    * @throws LockException if item <code>id</code> is locked and <code>lockToken</code> is <code>null</code> or does
+    * not matched
     * @throws ConstraintException if property can't be updated cause to any constraint, e.g. property is read only
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
@@ -631,7 +652,7 @@ public interface VirtualFileSystem
 
    /**
     * Export content of <code>folderId</code> to ZIP archive.
-    * 
+    *
     * @param folderId folder for ZIP
     * @return ZIP as stream
     * @throws ItemNotFoundException if <code>folderId</code> does not exist
@@ -648,11 +669,11 @@ public interface VirtualFileSystem
 
    /**
     * Import ZIP content.
-    * 
+    *
     * @param parentId id of folder to unzip
     * @param in ZIP content
-    * @param overwrite overwrite or not existing files. If such parameters is not specified then behavior is implementation
-    *           specific
+    * @param overwrite overwrite or not existing files. If such parameters is not specified then behavior is
+    * implementation specific
     * @throws ItemNotFoundException if <code>parentId</code> does not exist
     * @throws InvalidArgumentException if <code>parentId</code> item is not a Folder
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
@@ -666,8 +687,9 @@ public interface VirtualFileSystem
       InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException;
 
    /**
-    * Download binary content of File. Response must contains 'Content-Disposition' header to force web browser save file.
-    * 
+    * Download binary content of File. Response must contains 'Content-Disposition' header to force web browser save
+    * file.
+    *
     * @param id id of File
     * @return Response with file content for download.
     * @throws ItemNotFoundException if <code>id</code> does not exist
@@ -681,19 +703,21 @@ public interface VirtualFileSystem
       VirtualFileSystemException;
 
    /**
-    * Upload content of file. Content of file is part of 'multipart/form-data request', e.g. content sent from HTML form.
-    * 
+    * Upload content of file. Content of file is part of 'multipart/form-data request', e.g. content sent from HTML
+    * form.
+    *
     * @param parentId id of parent for new File
-    * @param formData content of file and optional additional form fields. Set of additional field is implementation specific.
+    * @param formData content of file and optional additional form fields. Set of additional field is implementation
+    * specific.
     * @return Response that represents response in HTML format.
     * @throws ItemNotFoundException if <code>parentId</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
-    *            <ul>
-    *            <li><code>parentId</code> if not a folder</li>
-    *            <li>If form does not contain all required fields. Set of fields is implementation specific.</li>
-    *            </ul>
-    * @throws ItemAlreadyExistException if <code>parentId</code> already contains item with the same name. It is possible to
-    *            prevent such type of exception by sending some form parameters that allow to overwrite file content.
+    * <ul>
+    * <li><code>parentId</code> if not a folder</li>
+    * <li>If form does not contain all required fields. Set of fields is implementation specific.</li>
+    * </ul>
+    * @throws ItemAlreadyExistException if <code>parentId</code> already contains item with the same name. It is
+    * possible to prevent such type of exception by sending some form parameters that allow to overwrite file content.
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws IOException if any i/o errors occur
     * @throws VirtualFileSystemException if any other errors occur
@@ -707,9 +731,9 @@ public interface VirtualFileSystem
       IOException;
 
    /**
-    * Download content of <code>folderId</code> as ZIP archive. Response must contains 'Content-Disposition' header to force web
-    * browser save file.
-    * 
+    * Download content of <code>folderId</code> as ZIP archive. Response must contains 'Content-Disposition' header to
+    * force web browser save file.
+    *
     * @param folderId folder for ZIP
     * @return Response with ZIPed content of folder
     * @throws ItemNotFoundException if <code>folderId</code> does not exist
@@ -726,10 +750,10 @@ public interface VirtualFileSystem
 
    /**
     * Import ZIP content. ZIP content is part of 'multipart/form-data request', e.g. content sent from HTML form.
-    * 
+    *
     * @param parentId id of folder to unzip
-    * @param formData contains ZIPed folder and add optional additional form fields. Set of additional field is implementation
-    *           specific.
+    * @param formData contains ZIPed folder and add optional additional form fields. Set of additional field is
+    * implementation specific.
     * @return Response that represents response in HTML format.
     * @throws ItemNotFoundException if <code>parentId</code> does not exist
     * @throws InvalidArgumentException if <code>parentId</code> item is not a Folder

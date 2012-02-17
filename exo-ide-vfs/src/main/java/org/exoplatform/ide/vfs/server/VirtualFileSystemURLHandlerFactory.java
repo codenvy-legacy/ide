@@ -23,7 +23,7 @@ import java.net.URLStreamHandlerFactory;
 
 /**
  * Factory for URLStreamHandler to <code>ide+vfs</code> protocol.
- * 
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -34,8 +34,8 @@ public final class VirtualFileSystemURLHandlerFactory implements URLStreamHandle
    private final VirtualFileSystemRegistry registry;
 
    /**
-    * @param delegate factory which we should ask to create URLStreamHandler if current factory does not support requested
-    *           protocol.
+    * @param delegate factory which we should ask to create URLStreamHandler if current factory does not support
+    * requested protocol.
     * @param registry set of all available virtual file systems
     */
    public VirtualFileSystemURLHandlerFactory(URLStreamHandlerFactory delegate, VirtualFileSystemRegistry registry)
@@ -44,9 +44,7 @@ public final class VirtualFileSystemURLHandlerFactory implements URLStreamHandle
       this.registry = registry;
    }
 
-   /**
-    * @see java.net.URLStreamHandlerFactory#createURLStreamHandler(java.lang.String)
-    */
+   /** @see java.net.URLStreamHandlerFactory#createURLStreamHandler(java.lang.String) */
    @Override
    public URLStreamHandler createURLStreamHandler(String protocol)
    {

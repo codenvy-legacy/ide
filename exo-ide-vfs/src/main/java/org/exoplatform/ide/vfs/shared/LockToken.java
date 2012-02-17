@@ -19,9 +19,10 @@
 package org.exoplatform.ide.vfs.shared;
 
 /**
- * Representation of LockToken used to interaction with client via JSON. A lock token is a opaque token, which identifies a
+ * Representation of LockToken used to interaction with client via JSON. A lock token is a opaque token, which
+ * identifies a
  * particular lock. Is used for replace existed lock or performing actions on locked object.
- * 
+ *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
@@ -40,7 +41,9 @@ public class LockToken
    public LockToken(String token)
    {
       if (token == null)
+      {
          throw new IllegalArgumentException("Lock token may not be null. ");
+      }
       this.token = token;
    }
 
@@ -52,27 +55,29 @@ public class LockToken
    public void setLockToken(String token)
    {
       if (token == null)
+      {
          throw new IllegalArgumentException("Lock token may not be null. ");
+      }
       this.token = token;
    }
 
-   /**
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
+   /** @see java.lang.Object#equals(java.lang.Object) */
    @Override
    public boolean equals(Object obj)
    {
       if (this == obj)
+      {
          return true;
+      }
       if ((obj == null) || (obj.getClass() != this.getClass()) || (token == null))
+      {
          return false;
+      }
       LockToken otherLockToken = (LockToken)obj;
       return token.equals(otherLockToken.token);
    }
 
-   /**
-    * @see java.lang.Object#hashCode()
-    */
+   /** @see java.lang.Object#hashCode() */
    @Override
    public int hashCode()
    {
@@ -81,12 +86,10 @@ public class LockToken
       return hash;
    }
 
-   /**
-    * @see java.lang.Object#toString()
-    */
+   /** @see java.lang.Object#toString() */
    @Override
    public String toString()
    {
-      return "LockToken [token=" + token + "]";
+      return "LockToken [token=" + token + ']';
    }
 }

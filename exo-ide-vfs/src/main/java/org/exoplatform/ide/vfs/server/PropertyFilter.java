@@ -53,18 +53,23 @@ public class PropertyFilter
 
    /**
     * Construct new Property Filter.
-    * 
-    * @param filterString the string that contains either '*' or comma-separated list of properties names. An arbitrary number of
-    *           space allowed before and after each comma. If filterString is 'none' it minds all properties should be rejected by
-    *           filter.
+    *
+    * @param filterString the string that contains either '*' or comma-separated list of properties names. An arbitrary
+    * number of space allowed before and after each comma. If filterString is 'none' it minds all properties should be
+    * rejected by filter.
+    * @return PropertyFilter instance
     * @throws InvalidArgumentException if <code>filterString</code> is invalid
     */
    public static PropertyFilter valueOf(String filterString) throws InvalidArgumentException
    {
       if (filterString == null || filterString.length() == 0 || ALL.equals(filterString = filterString.trim()))
+      {
          return ALL_FILTER;
+      }
       else if (filterString.equalsIgnoreCase(NONE))
+      {
          return NONE_FILTER;
+      }
       return new PropertyFilter(filterString);
    }
 
@@ -82,9 +87,10 @@ public class PropertyFilter
 
    /**
     * Construct new Property Filter.
-    * 
-    * @param filterString the string that contains either '*' or comma-separated list of properties names. An arbitrary number of
-    *           space allowed before and after each comma.
+    *
+    * @param filterString the string that contains either '*' or comma-separated list of properties names. An arbitrary
+    * number of
+    * space allowed before and after each comma.
     * @throws InvalidArgumentException if <code>filterString</code> is invalid
     */
    private PropertyFilter(String filterString) throws InvalidArgumentException
@@ -97,8 +103,10 @@ public class PropertyFilter
             for (char ch : token.toCharArray())
             {
                if (Character.isWhitespace(ch) || ILLEGAL_CHARACTERS.indexOf(ch) != -1)
+               {
                   throw new InvalidArgumentException("Invalid filter '" + filterString
                      + "' contains illegal characters.");
+               }
             }
             this.propertyNames.add(token);
          }

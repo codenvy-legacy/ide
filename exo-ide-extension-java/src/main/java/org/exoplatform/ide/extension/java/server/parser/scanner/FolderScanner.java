@@ -44,10 +44,6 @@ public class FolderScanner
 
    private Set<Filter> filters = new HashSet<Filter>();
 
-   /**
-    * @param folder
-    * @param vfs
-    */
    public FolderScanner(Folder folder, VirtualFileSystem vfs)
    {
       super();
@@ -76,7 +72,7 @@ public class FolderScanner
       {
          try
          {
-            ItemList<Item> children = vfs.getChildren(i.getId(), -1, 0, PropertyFilter.NONE_FILTER);
+            ItemList<Item> children = vfs.getChildren(i.getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
             for (Item item : children.getItems())
             {
                scan(item, v);

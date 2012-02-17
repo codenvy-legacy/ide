@@ -23,7 +23,7 @@ import java.util.Set;
 
 /**
  * Representation of Access Control Entry used to interaction with client via JSON.
- * 
+ *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
@@ -35,16 +35,14 @@ public class AccessControlEntry
    /** Permissions. */
    private Set<String> permissions;
 
-   /**
-    * Empty AccessControlEntry instance. Both principal and permissions are not set.
-    */
+   /** Empty AccessControlEntry instance. Both principal and permissions are not set. */
    public AccessControlEntry()
    {
    }
 
    /**
     * AccessControlEntry instance with specified principal and permissions.
-    * 
+    *
     * @param principal principal
     * @param permissions permissions
     */
@@ -54,46 +52,38 @@ public class AccessControlEntry
       this.permissions = permissions;
    }
 
-   /**
-    * @return principal's permissions
-    */
+   /** @return principal's permissions */
    public Set<String> getPermissions()
    {
       if (permissions == null)
+      {
          permissions = new HashSet<String>();
+      }
       return permissions;
    }
 
-   /**
-    * @param permissions new set of permissions
-    */
+   /** @param permissions new set of permissions */
    public void setPermissions(Set<String> permissions)
    {
       this.permissions = permissions;
    }
 
-   /**
-    * @return principal name
-    */
+   /** @return principal name */
    public String getPrincipal()
    {
       return principal;
    }
 
-   /**
-    * @param principal principal name
-    */
+   /** @param principal principal name */
    public void setPrincipal(String principal)
    {
       this.principal = principal;
    }
 
-   /**
-    * @see java.lang.Object#toString()
-    */
+   /** @see java.lang.Object#toString() */
    @Override
    public String toString()
    {
-      return "AccessControlEntry [principal=" + principal + ", permissions=" + permissions + "]";
+      return "AccessControlEntry [principal=" + principal + ", permissions=" + permissions + ']';
    }
 }

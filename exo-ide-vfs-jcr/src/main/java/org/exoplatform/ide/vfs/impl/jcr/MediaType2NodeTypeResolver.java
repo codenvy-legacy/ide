@@ -19,18 +19,22 @@
 package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.ide.vfs.shared.Project;
+
 import javax.ws.rs.core.MediaType;
 
 /**
  * Provide JCR node types name dependent to specified media type.
- * 
+ *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
 public class MediaType2NodeTypeResolver
 {
    /**
-    * By default return 'nt:file' always.
+    * Get file node type for specified media type. By default return 'nt:file' always.
+    *
+    * @param mediaType media type
+    * @return file node type
     */
    public String getFileNodeType(String mediaType)
    {
@@ -47,7 +51,10 @@ public class MediaType2NodeTypeResolver
    }
 
    /**
-    * By default return 'nt:resource' always.
+    * Get file content node type for specified media type. By default return 'nt:resource' always.
+    *
+    * @param mediaType media type
+    * @return file content node type
     */
    public String getFileContentNodeType(String mediaType)
    {
@@ -65,9 +72,9 @@ public class MediaType2NodeTypeResolver
 
    /**
     * Get mixin for adding to JCR file node.
-    * 
-    * @param mediaType type of file
-    * @return mixins set of mixin node types
+    *
+    * @param mediaType media type
+    * @return set of mixin node types
     */
    public String[] getFileMixins(String mediaType)
    {
@@ -83,8 +90,13 @@ public class MediaType2NodeTypeResolver
       return getFileMixins((mediaType.getType() + "/" + mediaType.getSubtype()));
    }
 
+   //
+
    /**
-    * By default return 'nt:folder' always.
+    * Get folder node type for specified media type. By default return 'nt:folder' always.
+    *
+    * @param mediaType type of folder
+    * @return folder node type
     */
    public String getFolderNodeType(String mediaType)
    {
@@ -102,9 +114,9 @@ public class MediaType2NodeTypeResolver
 
    /**
     * Get mixin for adding to JCR folder node.
-    * 
+    *
     * @param mediaType type of folder
-    * @return mixins set of mixin node types
+    * @return set of mixin node types
     */
    public String[] getFolderMixins(String mediaType)
    {

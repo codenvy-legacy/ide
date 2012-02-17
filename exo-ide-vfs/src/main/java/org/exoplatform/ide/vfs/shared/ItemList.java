@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * Set of abstract items for paging view.
- * 
+ *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
@@ -31,7 +31,7 @@ public class ItemList<T>
 {
    /**
     * Total number of items.
-    * 
+    *
     * @see #getNumItems()
     */
    private int numItems = -1;
@@ -46,21 +46,19 @@ public class ItemList<T>
    {
    }
 
-   /**
-    * @param list the list of items.
-    */
+   /** @param list the list of items. */
    public ItemList(List<T> list)
    {
       this.list = list;
    }
 
-   /**
-    * @return set of items
-    */
+   /** @return set of items */
    public List<T> getItems()
    {
       if (list == null)
+      {
          list = new ArrayList<T>();
+      }
       return list;
    }
 
@@ -70,9 +68,9 @@ public class ItemList<T>
    }
 
    /**
-    * @return total number of items. It is not need to be equals to number of items in current list {@link #getItems()}. It may be
-    *         equals to number of items in current list only if this list contains all requested items and no more pages
-    *         available. This method must return -1 if total number of items in unknown.
+    * @return total number of items. It is not need to be equals to number of items in current list {@link #getItems()}.
+    *         It may be equals to number of items in current list only if this list contains all requested items and no
+    *         more pages available. This method must return -1 if total number of items in unknown.
     */
    public int getNumItems()
    {
@@ -84,9 +82,7 @@ public class ItemList<T>
       this.numItems = numItems;
    }
 
-   /**
-    * @return <code>false</code> if this is last sub-set of items in paging
-    */
+   /** @return <code>false</code> if this is last sub-set of items in paging */
    public boolean isHasMoreItems()
    {
       return hasMoreItems;

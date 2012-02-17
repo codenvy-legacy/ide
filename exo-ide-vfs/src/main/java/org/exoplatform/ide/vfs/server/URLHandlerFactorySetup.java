@@ -29,10 +29,11 @@ import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 
 /**
- * Setup {@link URLStreamHandlerFactory} to be able use URL for access to virtual file system. It is not possible to provide
+ * Setup {@link URLStreamHandlerFactory} to be able use URL for access to virtual file system. It is not possible to
+ * provide
  * correct {@link URLStreamHandler} by system property 'java.protocol.handler.pkgs'. Bug in Oracle JDK:
  * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4648098
- * 
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -63,7 +64,7 @@ public class URLHandlerFactorySetup
 
             if (LOG.isDebugEnabled())
             {
-               LOG.debug("--> Current instance of URLStreamHandlerFactory: " //
+               LOG.debug("--> Current instance of URLStreamHandlerFactory: "
                   + (currentFactory != null ? currentFactory.getClass().getName() : null));
             }
 

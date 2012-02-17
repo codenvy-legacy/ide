@@ -26,7 +26,7 @@ import java.util.Set;
 
 /**
  * Representation of abstract item used to interaction with client via JSON.
- * 
+ *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
@@ -53,24 +53,27 @@ public abstract class Item
    /** Creation date in long format. */
    protected long creationDate;
 
+   /** Properties. */
    @SuppressWarnings("rawtypes")
    protected List<Property> properties;
 
+   /** Links. */
    protected Map<String, Link> links;
 
    /**
     * @param id id of item
-    * @param name the name of item
+    * @param name name of item
     * @param itemType type of item
-    * @param iconHint hint of icon display item on client side
+    * @param mimeType the media type
     * @param path path of item
+    * @param parentId id of parent folder. May be <code>null</code> if current item is root folder
     * @param creationDate creation date in long format
     * @param properties other properties of object
     * @param links hyper-links for retrieved or(and) manage item
     */
    @SuppressWarnings("rawtypes")
    public Item(String id, String name, ItemType itemType, String mimeType, String path, String parentId,
-      long creationDate, List<Property> properties, Map<String, Link> links)
+               long creationDate, List<Property> properties, Map<String, Link> links)
    {
       this.id = id;
       this.name = name;
@@ -88,144 +91,174 @@ public abstract class Item
       this.itemType = itemType;
    }
 
-   /**
-    * @return id of object
-    */
+   /** @return id of object */
    public String getId()
    {
       return id;
    }
 
-   /**
-    * @param id the id of object
-    */
+   /** @param id the id of object */
    public void setId(String id)
    {
       this.id = id;
    }
 
-   /**
-    * @return name of object
-    */
+   /** @return name of object */
    public String getName()
    {
       return name;
    }
 
-   /**
-    * @param name the name of object
-    */
+   /** @param name the name of object */
    public void setName(String name)
    {
       this.name = name;
    }
 
-   /**
-    * @return type of item
-    */
+   /** @return type of item */
    public ItemType getItemType()
    {
       return itemType;
    }
 
-   /**
-    * @return path
-    */
+   /** @return path */
    public String getPath()
    {
       return path;
    }
 
-   /**
-    * @param path the path
-    */
+   /** @param path the path */
    public void setPath(String path)
    {
       this.path = path;
    }
 
-   public final String getParentId()
+   /** @return id of parent folder and <code>null</code> if current item is root folder */
+   public String getParentId()
    {
       return parentId;
    }
 
-   public final void setParentId(String parentId)
+   /** @param parentId id of parent folder and <code>null</code> if current item is root folder */
+   public void setParentId(String parentId)
    {
       this.parentId = parentId;
    }
 
-   /**
-    * @return creation date
-    */
+   /** @return creation date */
    public long getCreationDate()
    {
       return creationDate;
    }
 
-   /**
-    * @param creationDate the creation date
-    */
+   /** @param creationDate the creation date */
    public void setCreationDate(long creationDate)
    {
       this.creationDate = creationDate;
    }
 
-   public final String getMimeType()
+   /** @return media type */
+   public String getMimeType()
    {
       return mimeType;
    }
 
-   public final void setMimeType(String mimeType)
+   /** @param mimeType media type */
+   public void setMimeType(String mimeType)
    {
       this.mimeType = mimeType;
    }
 
    /**
     * Other properties.
-    * 
+    *
     * @return properties. If there is no properties then empty list returned, never <code>null</code>
     */
    @SuppressWarnings("rawtypes")
    public List<Property> getProperties()
    {
       if (properties == null)
+      {
          properties = new ArrayList<Property>();
+      }
       return properties;
    }
 
+   /**
+    * Get single property with specified name.
+    *
+    * @param name name of property
+    * @return property or <code>null</code> if there is not property with specified name
+    */
    @SuppressWarnings("rawtypes")
-   public final Property getProperty(String name)
+   public Property getProperty(String name)
    {
       for (Property p : getProperties())
+      {
          if (p.getName().equals(name))
+         {
             return p;
-
+         }
+      }
       return null;
    }
 
-   public final boolean hasProperty(String name)
+   /**
+    * Check does item has property with specified name.
+    *
+    * @param name name of property
+    * @return <code>true</code> if item has property <code>name</code> and <code>false</code> otherwise
+    */
+   public boolean hasProperty(String name)
    {
       return getProperty(name) != null;
    }
 
+   /**
+    * Get value of property <code>name</code>. It is shortcut for:
+    * <pre>
+    *    String name = ...
+    *    Item item = ...
+    *    Property property = item.getProperty(name);
+    *    Object value;
+    *    if (property != null)
+    *       value = property.getValue().get(0);
+    *    else
+    *       value = null;
+    * </pre>
+    *
+    * @param name property name
+    * @return value of property with specified name or <code>null</code>
+    */
    @SuppressWarnings("rawtypes")
-   public final Object getPropertyValue(String name)
+   public Object getPropertyValue(String name)
    {
       Property p = getProperty(name);
       if (p != null)
+      {
          return p.getValue().get(0);
+      }
       return null;
    }
 
+   /**
+    * Get set of property values
+    *
+    * @param name property name
+    * @return set of property values or <code>null</code> if property does not exists
+    * @see #getPropertyValue(String)
+    */
    @SuppressWarnings({"rawtypes", "unchecked"})
-   public final List getPropertyValues(String name)
+   public List getPropertyValues(String name)
    {
       Property p = getProperty(name);
       if (p != null)
       {
          List values = new ArrayList(p.getValue().size());
          for (Object v : p.getValue())
+         {
             values.add(v);
+         }
          return values;
       }
       return null;
@@ -233,19 +266,19 @@ public abstract class Item
 
    /**
     * Links for retrieved or(and) manage item.
-    * 
+    *
     * @return links map. Never <code>null</code> but empty map instead
     */
    public Map<String, Link> getLinks()
    {
       if (links == null)
+      {
          links = new HashMap<String, Link>();
+      }
       return links;
    }
 
-   /**
-    * @return set of relations
-    */
+   /** @return set of relations */
    public Set<String> getLinkRelations()
    {
       return getLinks().keySet();
@@ -260,12 +293,10 @@ public abstract class Item
       return getLinks().get(rel);
    }
 
-   /**
-    * @see java.lang.Object#toString()
-    */
+   /** @see java.lang.Object#toString() */
    @Override
    public String toString()
    {
-      return "Item [id=" + id + ", name=" + name + ", type=" + itemType + "]";
+      return "Item [id=" + id + ", name=" + name + ", type=" + itemType + ']';
    }
 }

@@ -22,6 +22,7 @@ import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
@@ -227,6 +228,29 @@ public class ChildrenTest extends JcrFileSystemTest
       {
          assertTrue(hasProperty(i, "PropertyA"));
          assertFalse(hasProperty(i, "PropertyB")); // must be excluded
+      }
+   }
+
+   public void testGetChildrenTypeFilter() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      // Get children and apply filter for properties.
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("children/") //
+         .append(folderId) //
+         .append("?") //
+         .append("itemType=") //
+         .append("folder") //
+         .toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+      //log.info(new String(writer.getBody()));
+      assertEquals(200, response.getStatus());
+      ItemList<Item> children = (ItemList<Item>)response.getEntity();
+      assertEquals(2, children.getItems().size());
+      for (Item i : children.getItems())
+      {
+         assertTrue(i.getItemType() == ItemType.FOLDER);
       }
    }
 

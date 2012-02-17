@@ -22,10 +22,8 @@ import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 /**
- * Need for resolving location for file/folders on real-life file system. It can be need for using Git or some other services that
- * work with file system. Implementation depend on VirtualFileSystem implementation.
- * 
- * Created by The eXo Platform SAS.
+ * Need for resolving location for file/folders on real-life file system. It can be need for using Git or some other
+ * services that work with file system. Implementation depend on VirtualFileSystem implementation.
  * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
@@ -38,7 +36,7 @@ public interface LocalPathResolver
     * @param vfs the VirtualFileSystem implementation
     * @param itemId the to id of Item
     * @return absolute path to the item (file or folder) on file system
-    * @throws VirtualFileSystemException, LocalPathResolveException
+    * @throws LocalPathResolveException
     */
    String resolve(VirtualFileSystem vfs, String itemId) throws LocalPathResolveException;
 }

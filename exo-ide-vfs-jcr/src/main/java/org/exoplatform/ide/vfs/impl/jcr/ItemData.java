@@ -65,15 +65,13 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * Wrapper around node to simplify interaction with JCR.
- * 
+ *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
 abstract class ItemData
 {
-   /**
-    * Empty stream. Need it for value of property "jcr:data" of sub-node "jcr:content" of "nt:file" nodes.
-    */
+   /** Empty stream. Need it for value of property "jcr:data" of sub-node "jcr:content" of "nt:file" nodes. */
    static InputStream EMPTY = new InputStream()
    {
       public int read()
@@ -87,29 +85,39 @@ abstract class ItemData
       // eXo WebDAV left node in checked-in state after update.
       // Need change state to checked-out to be able update node. 
       if (node.isNodeType("mix:versionable") && !node.isCheckedOut())
+      {
          node.checkout();
+      }
       if (node.isNodeType("nt:file") && node.getNode("jcr:content").isNodeType("nt:resource"))
+      {
          return new FileData(node, rootNodePath);
+      }
       if (node.isNodeType("nt:resource") && "jcr:content".equals(node.getName()))
+      {
          return new FileData(node.getParent(), rootNodePath);
+      }
       if (node.isNodeType("nt:frozenNode"))
+      {
          return new VersionData(node, rootNodePath);
+      }
       if (node.isNodeType("vfs:project"))
+      {
          return new ProjectData(node, rootNodePath);
+      }
       return new FolderData(node, rootNodePath);
    }
 
    /** Set of known JCR properties that should be skipped. */
-   static final Set<String> SKIPPED_PROPERTIES = new HashSet<String>(Arrays.asList("jcr:primaryType", "jcr:created",
-      "jcr:uuid", "jcr:baseVersion", "jcr:isCheckedOut", "jcr:predecessors", "jcr:versionHistory", "jcr:mixinTypes",
-      "jcr:frozenMixinTypes", "jcr:frozenPrimaryType", "jcr:frozenUuid", "jcr:encoding", "jcr:mimeType", "jcr:data",
-      "jcr:lastModified", "exo:permissions", "exo:owner"));
+   private static final Set<String> SKIPPED_PROPERTIES = new HashSet<String>(Arrays.asList("jcr:primaryType",
+      "jcr:created", "jcr:uuid", "jcr:baseVersion", "jcr:isCheckedOut", "jcr:predecessors", "jcr:versionHistory",
+      "jcr:mixinTypes", "jcr:frozenMixinTypes", "jcr:frozenPrimaryType", "jcr:frozenUuid", "jcr:encoding",
+      "jcr:mimeType", "jcr:data", "jcr:lastModified", "exo:permissions", "exo:owner"));
 
    Node node;
    final ItemType type;
    final String rootNodePath;
 
-   ItemData(Node node, ItemType type, String rootNodePath) throws RepositoryException
+   ItemData(Node node, ItemType type, String rootNodePath)
    {
       this.node = node;
       this.type = type;
@@ -159,7 +167,7 @@ abstract class ItemData
 
    /**
     * Get media type of object.
-    * 
+    *
     * @return type of object
     * @throws PermissionDeniedException if content type can't be retrieved cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
@@ -243,7 +251,7 @@ abstract class ItemData
 
    /**
     * Get set of properties that acceptable by specified <code>filter</code>.
-    * 
+    *
     * @param filter filter
     * @return properties
     * @throws PermissionDeniedException if properties can't be retrieved cause to security restriction
@@ -258,7 +266,7 @@ abstract class ItemData
 
    /**
     * Get set of properties that acceptable by specified <code>filter</code>.
-    * 
+    *
     * @param theNode the node
     * @param filter filter
     * @return properties
@@ -277,7 +285,7 @@ abstract class ItemData
       try
       {
          List<Property> properties = new ArrayList<Property>();
-         for (PropertyIterator i = theNode.getProperties(); i.hasNext();)
+         for (PropertyIterator i = theNode.getProperties(); i.hasNext(); )
          {
             javax.jcr.Property jcrProperty = i.nextProperty();
             String name = jcrProperty.getName();
@@ -306,7 +314,8 @@ abstract class ItemData
       boolean multiple = definition.isMultiple();
       switch (property.getType())
       {
-         case PropertyType.DATE : {
+         case PropertyType.DATE:
+         {
             List<Double> v;
             if (multiple)
             {
@@ -324,7 +333,8 @@ abstract class ItemData
             }
             return new NumberProperty(property.getName(), v);
          }
-         case PropertyType.DOUBLE : {
+         case PropertyType.DOUBLE:
+         {
             List<Double> v;
             if (multiple)
             {
@@ -342,7 +352,8 @@ abstract class ItemData
             }
             return new NumberProperty(property.getName(), v);
          }
-         case PropertyType.LONG : {
+         case PropertyType.LONG:
+         {
             List<Double> v;
             if (multiple)
             {
@@ -350,17 +361,18 @@ abstract class ItemData
                v = new ArrayList<Double>(jcrValues.length);
                for (int i = 0; i < jcrValues.length; i++)
                {
-                  v.add(jcrValues[i].getDouble());
+                  v.add((double)jcrValues[i].getLong());
                }
             }
             else
             {
                v = new ArrayList<Double>(1);
-               v.add(property.getDouble());
+               v.add((double)property.getLong());
             }
             return new NumberProperty(property.getName(), v);
          }
-         case PropertyType.BOOLEAN : {
+         case PropertyType.BOOLEAN:
+         {
             List<Boolean> v;
             if (multiple)
             {
@@ -378,12 +390,13 @@ abstract class ItemData
             }
             return new BooleanProperty(property.getName(), v);
          }
-         case PropertyType.STRING :
-         case PropertyType.BINARY :
-         case PropertyType.NAME :
-         case PropertyType.PATH :
-         case PropertyType.REFERENCE :
-         default : {
+         case PropertyType.STRING:
+         case PropertyType.BINARY:
+         case PropertyType.NAME:
+         case PropertyType.PATH:
+         case PropertyType.REFERENCE:
+         default:
+         {
             List<String> v;
             if (multiple)
             {
@@ -406,25 +419,25 @@ abstract class ItemData
 
    /**
     * Update properties.
-    * 
+    *
     * @param properties set of properties that should be updated.
     * @param addMixinTypes mixin types that must be added to be able set all <code>properties</code>. Should be
-    *           <code>null</code> if there is no additional mixins
+    * <code>null</code> if there is no additional mixins
     * @param removeMixinTypes mixin types that must be removed to be able set all <code>properties</code>. Should be
-    *           <code>null</code> if there is no mixins to remove
-    * @param lockToken lock token. This lock token will be used if item is locked. Pass <code>null</code> if there is no
-    *           lock token
+    * <code>null</code> if there is no mixins to remove
+    * @param lockToken lock token. This lock token will be used if item is locked. Pass <code>null</code> if there is
+    * no lock token
     * @throws ConstraintException if any of following conditions are met:
-    *            <ul>
-    *            <li>at least one of updated properties is read-only</li>
-    *            <li>value of any updated properties is not acceptable</li>
-    *            </ul>
+    * <ul>
+    * <li>at least one of updated properties is read-only</li>
+    * <li>value of any updated properties is not acceptable</li>
+    * </ul>
     * @throws LockException if item is locked and <code>lockToken</code> is <code>null</code> or does not matched
     * @throws PermissionDeniedException if properties can't be updated cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    void updateProperties(List<ConvertibleProperty> properties, String[] addMixinTypes, String[] removeMixinTypes,
-      String lockToken) throws ConstraintException, LockException, PermissionDeniedException,
+                         String lockToken) throws ConstraintException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
       if (properties == null || properties.size() == 0)
@@ -543,7 +556,7 @@ abstract class ItemData
 
    /**
     * Check is item locked or not.
-    * 
+    *
     * @return always <code>false</code>. Will be overridden in FileData
     * @throws VirtualFileSystemException if any errors occurs
     */
@@ -554,9 +567,9 @@ abstract class ItemData
 
    /**
     * Delete item.
-    * 
-    * @param lockToken lock token. This lock token will be used if item is locked. Pass <code>null</code> if there is no
-    *           lock
+    *
+    * @param lockToken lock token. This lock token will be used if item is locked. Pass <code>null</code> if there is
+    * no lock
     * @throws LockException if item is locked and <code>lockToken</code> is <code>null</code> or does not matched
     * @throws PermissionDeniedException if item can't be removed cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
@@ -596,7 +609,7 @@ abstract class ItemData
 
    /**
     * Get ACL applied to item.
-    * 
+    *
     * @return ACL applied to item
     * @throws PermissionDeniedException if ACL can't be retrieved cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
@@ -658,12 +671,13 @@ abstract class ItemData
 
    /**
     * Update ACL applied to item.
-    * 
+    *
     * @param acl ACL
-    * @param override if <code>true</code> then previous ACL replaced by specified. If <code>false</code> then specified
-    *           ACL will be merged with existed
-    * @param lockToken lock token. This lock token will be used if item is locked. Pass <code>null</code> if there is no
-    *           lock token
+    * @param override if <code>true</code> then previous ACL replaced by specified. If <code>false</code> then
+    * specified ACL will be merged with existed
+    * @param lockToken lock token. This lock token will be used if item is locked. Pass <code>null</code> if there is
+    * no
+    * lock token
     * @throws LockException if item is locked and <code>lockToken</code> is <code>null</code> or does not matched
     * @throws PermissionDeniedException if ACL can't be updated cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
@@ -756,7 +770,7 @@ abstract class ItemData
 
    /**
     * Create copy of current item in specified folder.
-    * 
+    *
     * @param folder parent
     * @return newly create copy
     * @throws ItemAlreadyExistException if destination folder already contains item with the same name as current
@@ -793,10 +807,10 @@ abstract class ItemData
 
    /**
     * Move current item in specified folder.
-    * 
+    *
     * @param folder new parent
     * @param lockToken lock token. This lock token will be used if this item is locked. Pass <code>null</code> if there
-    *           is no lock token
+    * is no lock token
     * @return id of moved object
     * @throws ItemAlreadyExistException if destination folder already contains item with the same name as current
     * @throws LockException if this item is locked and <code>lockToken</code> is <code>null</code> or does not matched
@@ -843,23 +857,23 @@ abstract class ItemData
 
    /**
     * Rename and(or) update content type of current object.
-    * 
-    * @param newname new name. May be <code>null</code> if name is unchangeable
+    *
+    * @param newName new name. May be <code>null</code> if name is unchangeable
     * @param mediaType new media type. May be <code>null</code> if content type is unchangeable
     * @param lockToken lock token. This lock token will be used if object is locked. Pass <code>null</code> if there is
-    *           no lock token
+    * no lock token
     * @param addMixinTypes mixin types that must be added. Should be <code>null</code> if there is no additional mixins
     * @param removeMixinTypes mixin types that must be removed. Should be <code>null</code> if there is no mixins to
-    *           remove
+    * remove
     * @return id of renamed object
-    * @throws ConstraintException
+    * @throws ConstraintException if new name violate any constraints
     * @throws ItemAlreadyExistException if parent folder already contains object with the same name as specified
     * @throws LockException if object is locked and <code>lockToken</code> is <code>null</code> or does not matched
     * @throws PermissionDeniedException if object can't be renamed cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   abstract String rename(String newname, MediaType mediaType, String lockToken, String[] addMixinTypes,
-      String[] removeMixinTypes) throws ConstraintException, ItemAlreadyExistException, LockException,
+   abstract String rename(String newName, MediaType mediaType, String lockToken, String[] addMixinTypes,
+                          String[] removeMixinTypes) throws ConstraintException, ItemAlreadyExistException, LockException,
       PermissionDeniedException, VirtualFileSystemException;
 
    final Node getNode()
@@ -867,9 +881,7 @@ abstract class ItemData
       return node;
    }
 
-   /**
-    * @see java.lang.Object#hashCode()
-    */
+   /** @see java.lang.Object#hashCode() */
    @Override
    public int hashCode()
    {
@@ -879,21 +891,19 @@ abstract class ItemData
       return hash;
    }
 
-   /**
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
+   /** @see java.lang.Object#equals(java.lang.Object) */
    @Override
    public boolean equals(Object obj)
    {
       if (this == obj)
+      {
          return true;
+      }
       if (obj == null || getClass() != obj.getClass())
+      {
          return false;
+      }
       ItemData other = (ItemData)obj;
-      if (type != other.type)
-         return false;
-      if (!node.equals(other.node))
-         return false;
-      return true;
+      return type == other.type && node.equals(other.node);
    }
 }

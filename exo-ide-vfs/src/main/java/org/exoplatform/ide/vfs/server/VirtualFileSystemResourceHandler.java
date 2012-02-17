@@ -25,7 +25,7 @@ import java.net.URLStreamHandler;
 
 /**
  * URLStreamHandler for 'ide+vfs' protocol.
- * 
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -33,17 +33,13 @@ public final class VirtualFileSystemResourceHandler extends URLStreamHandler
 {
    private final VirtualFileSystemRegistry registry;
 
-   /**
-    * @param registry virtual file system registry
-    */
+   /** @param registry virtual file system registry */
    public VirtualFileSystemResourceHandler(VirtualFileSystemRegistry registry)
    {
       this.registry = registry;
    }
 
-   /**
-    * @see java.net.URLStreamHandler#openConnection(java.net.URL)
-    */
+   /** @see java.net.URLStreamHandler#openConnection(java.net.URL) */
    @Override
    protected URLConnection openConnection(URL url) throws IOException
    {

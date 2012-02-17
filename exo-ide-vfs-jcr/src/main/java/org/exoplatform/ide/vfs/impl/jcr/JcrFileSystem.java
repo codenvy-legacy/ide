@@ -131,15 +131,15 @@ public class JcrFileSystem implements VirtualFileSystem
 
    protected final Repository repository;
    protected final String workspaceName;
-   private final String rootNodePath;
    protected final MediaType2NodeTypeResolver mediaType2NodeTypeResolver;
    protected final URI baseUri;
+   private final String rootNodePath;
 
    private VirtualFileSystemInfo vfsInfo;
    private final String vfsID;
 
    public JcrFileSystem(Repository repository, String workspaceName, String rootNodePath, String vfsID,
-      MediaType2NodeTypeResolver mediaType2NodeTypeResolver, URI baseUri)
+                        MediaType2NodeTypeResolver mediaType2NodeTypeResolver, URI baseUri)
    {
       this.repository = repository;
       this.workspaceName = workspaceName;
@@ -154,18 +154,16 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    public JcrFileSystem(Repository repository, String workspaceName, String rootNodePath, String id,
-      MediaType2NodeTypeResolver itemType2NodeTypeResolver)
+                        MediaType2NodeTypeResolver itemType2NodeTypeResolver)
    {
       this(repository, workspaceName, rootNodePath, id, itemType2NodeTypeResolver, URI.create(""));
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#copy(java.lang.String, java.lang.String)
-    */
+   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#copy(java.lang.String, java.lang.String) */
    @Path("copy/{id}")
    @Override
    public Item copy(@PathParam("id") String id, //
-      @QueryParam("parentId") String parentId //
+                    @QueryParam("parentId") String parentId //
    ) throws ItemNotFoundException, ConstraintException, ItemAlreadyExistException, PermissionDeniedException,
       VirtualFileSystemException
    {
@@ -178,8 +176,8 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             throw new InvalidArgumentException("Unable copy. Item specified as parent is not a folder. ");
          }
-         ItemData newobject = object.copyTo((FolderData)folder);
-         return fromItemData(newobject, PropertyFilter.ALL_FILTER);
+         ItemData newObject = object.copyTo((FolderData)folder);
+         return fromItemData(newObject, PropertyFilter.ALL_FILTER);
       }
       finally
       {
@@ -194,9 +192,9 @@ public class JcrFileSystem implements VirtualFileSystem
    @Path("file/{parentId}")
    @Override
    public File createFile(@PathParam("parentId") String parentId, //
-      @QueryParam("name") String name, //
-      @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @HeaderParam("Content-Type") MediaType mediaType, //
-      InputStream content //
+                          @QueryParam("name") String name, //
+                          @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @HeaderParam("Content-Type") MediaType mediaType, //
+                          InputStream content //
    ) throws ItemNotFoundException, InvalidArgumentException, ItemAlreadyExistException, PermissionDeniedException,
       VirtualFileSystemException
    {
@@ -209,14 +207,14 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             throw new InvalidArgumentException("Unable create file. Item specified as parent is not a folder. ");
          }
-         FileData newfile = ((FolderData)parentData).createFile(name, //
+         FileData newFile = ((FolderData)parentData).createFile(name, //
             mediaType2NodeTypeResolver.getFileNodeType(mediaType), //
             mediaType2NodeTypeResolver.getFileContentNodeType(mediaType), //
             mediaType, //
             mediaType2NodeTypeResolver.getFileMixins(mediaType), //
             null, //
             content);
-         return (File)fromItemData(newfile, PropertyFilter.ALL_FILTER);
+         return (File)fromItemData(newFile, PropertyFilter.ALL_FILTER);
       }
       finally
       {
@@ -224,13 +222,11 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createFolder(java.lang.String, java.lang.String)
-    */
+   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createFolder(java.lang.String, java.lang.String) */
    @Path("folder/{parentId}")
    @Override
    public Folder createFolder(@PathParam("parentId") String parentId, //
-      @QueryParam("name") String name //
+                              @QueryParam("name") String name //
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       checkName(name);
@@ -242,11 +238,11 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             throw new InvalidArgumentException("Unable create folder. Item specified as parent is not a folder. ");
          }
-         FolderData newfolder = ((FolderData)parentData).createFolder(name, //
+         FolderData newFolder = ((FolderData)parentData).createFolder(name, //
             mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
             mediaType2NodeTypeResolver.getFolderMixins((String)null), //
             null);
-         return (Folder)fromItemData(newfolder, PropertyFilter.ALL_FILTER);
+         return (Folder)fromItemData(newFolder, PropertyFilter.ALL_FILTER);
       }
       finally
       {
@@ -262,9 +258,9 @@ public class JcrFileSystem implements VirtualFileSystem
    @Consumes(MediaType.APPLICATION_JSON)
    @Override
    public Project createProject(@PathParam("parentId") String parentId, //
-      @QueryParam("name") String name, //
-      @QueryParam("type") String type, //
-      List<ConvertibleProperty> properties //
+                                @QueryParam("name") String name, //
+                                @QueryParam("type") String type, //
+                                List<ConvertibleProperty> properties //
    ) throws ItemNotFoundException, InvalidArgumentException, ItemAlreadyExistException, PermissionDeniedException,
       VirtualFileSystemException
    {
@@ -287,11 +283,11 @@ public class JcrFileSystem implements VirtualFileSystem
          }
          properties.add(new ConvertibleProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE));
 
-         FolderData newproject = ((FolderData)parentData).createFolder(name, //
+         FolderData newProject = ((FolderData)parentData).createFolder(name, //
             mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
             mediaType2NodeTypeResolver.getFolderMixins(Project.PROJECT_MIME_TYPE), //
             properties);
-         return (Project)fromItemData(newproject, PropertyFilter.ALL_FILTER);
+         return (Project)fromItemData(newProject, PropertyFilter.ALL_FILTER);
       }
       finally
       {
@@ -299,13 +295,11 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#delete(java.lang.String, java.lang.String)
-    */
+   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#delete(java.lang.String, java.lang.String) */
    @Path("delete/{id}")
    @Override
    public void delete(@PathParam("id") String id, //
-      @QueryParam("lockToken") String lockToken //
+                      @QueryParam("lockToken") String lockToken //
    ) throws ItemNotFoundException, ConstraintException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
@@ -320,9 +314,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getACL(java.lang.String)
-    */
+   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getACL(java.lang.String) */
    @Path("acl/{id}")
    @Override
    public List<AccessControlEntry> getACL(@PathParam("id") String id) throws NotSupportedException,
@@ -340,20 +332,38 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getChildren(java.lang.String, int, int,
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getChildren(java.lang.String, int, int, String,
     *      org.exoplatform.ide.vfs.server.PropertyFilter)
     */
    @Path("children/{id}")
    @Override
    public ItemList<Item> getChildren(@PathParam("id") String folderId, //
-      @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
-      @QueryParam("skipCount") int skipCount, //
-      @DefaultValue(PropertyFilter.NONE) @QueryParam("propertyFilter") PropertyFilter propertyFilter //
+                                     @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
+                                     @QueryParam("skipCount") int skipCount, //
+                                     @QueryParam("itemType") String itemType, //
+                                     @DefaultValue(PropertyFilter.NONE) @QueryParam("propertyFilter") PropertyFilter propertyFilter //
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       if (skipCount < 0)
       {
          throw new InvalidArgumentException("'skipCount' parameter is negative. ");
+      }
+
+      ItemType itemTypeType;
+      if (itemType != null)
+      {
+         try
+         {
+            itemTypeType = ItemType.fromValue(itemType);
+         }
+         catch (IllegalArgumentException e)
+         {
+            throw new InvalidArgumentException("Unknown type: " + itemType);
+         }
+      }
+      else
+      {
+         itemTypeType = null;
       }
 
       Session session = session();
@@ -366,11 +376,13 @@ public class JcrFileSystem implements VirtualFileSystem
          }
 
          FolderData folderData = (FolderData)data;
-         LazyIterator<ItemData> children = folderData.getChildren();
+         LazyIterator<ItemData> children = folderData.getChildren(itemTypeType);
          try
          {
             if (skipCount > 0)
+            {
                children.skip(skipCount);
+            }
          }
          catch (NoSuchElementException nse)
          {
@@ -395,9 +407,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getContent(java.lang.String)
-    */
+   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getContent(java.lang.String) */
    @Path("content/{id}")
    @Override
    public ContentStream getContent(@PathParam("id") String id) throws ItemNotFoundException, InvalidArgumentException,
@@ -412,10 +422,8 @@ public class JcrFileSystem implements VirtualFileSystem
             throw new InvalidArgumentException("Unable get content. Item " + data.getName() + " is not a file. ");
          }
          FileData fileData = (FileData)data;
-         ContentStream stream =
-            new ContentStream(fileData.getName(), fileData.getContent(), fileData.getMediaType().toString(),
-               fileData.getContentLength(), new java.util.Date(fileData.getLastModificationDate()));
-         return stream;
+         return new ContentStream(fileData.getName(), fileData.getContent(), fileData.getMediaType().toString(),
+            fileData.getContentLength(), new Date(fileData.getLastModificationDate()));
       }
       finally
       {
@@ -423,13 +431,11 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getContent(java.lang.String, java.lang.String)
-    */
+   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getContent(java.lang.String, java.lang.String) */
    @Override
    @Path("contentbypath/{path:.*}")
    public ContentStream getContent(@PathParam("path") String path, //
-      @QueryParam("versionId") String versionId //
+                                   @QueryParam("versionId") String versionId //
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       Session session = session();
@@ -444,7 +450,7 @@ public class JcrFileSystem implements VirtualFileSystem
          ContentStream stream;
          if (versionId != null)
          {
-            FileData version = ((FileData)data).getVersion(versionId);
+            FileData version = fileData.getVersion(versionId);
             stream =
                new ContentStream(version.getName(), version.getContent(), version.getMediaType().toString(),
                   version.getContentLength(), new java.util.Date(version.getLastModificationDate()));
@@ -463,40 +469,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   //   /**
-   //    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getContentResponse(java.lang.String)
-   //    */
-   //   @Path("content/{id}")
-   //   public Response getContentResponse(@PathParam("id") String id) throws ItemNotFoundException,
-   //      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
-   //   {
-   //      ContentStream content = getContent(id);
-   //      return Response //
-   //         .ok(content.getStream(), content.getMimeType()) //
-   //         .lastModified(content.getLastModificationDate()) //
-   //         .header("Content-Length", Long.toString(content.getLength())) //
-   //         .header("Content-Disposition", "attachment; filename=\"" + content.getFileName() + "\"") //
-   //         .build();
-   //   }
-   //
-   //   /**
-   //    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getContentResponse(java.lang.String, java.lang.String)
-   //    */
-   //   public Response getContentResponse(@QueryParam("path") String path, //
-   //      @QueryParam("versionId") String versionId //
-   //   ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
-   //   {
-   //      ContentStream content = getContent(path, versionId);
-   //      return Response //
-   //         .ok(content.getStream(), content.getMimeType()) //
-   //         .lastModified(content.getLastModificationDate()) //
-   //         .header("Content-Length", Long.toString(content.getLength())) //
-   //         .build();
-   //   }
-
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getInfo()
-    */
+   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getInfo() */
    @Override
    public VirtualFileSystemInfo getInfo() throws VirtualFileSystemException
    {
@@ -587,7 +560,7 @@ public class JcrFileSystem implements VirtualFileSystem
    @Path("item/{id}")
    @Override
    public Item getItem(@PathParam("id") String id, //
-      @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter //
+                       @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter //
    ) throws ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException
    {
       Session session = session();
@@ -641,7 +614,7 @@ public class JcrFileSystem implements VirtualFileSystem
    @Path("version/{id}/{versionId}")
    @Override
    public ContentStream getVersion(@PathParam("id") String id, //
-      @PathParam("versionId") String versionId //
+                                   @PathParam("versionId") String versionId //
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       Session session = session();
@@ -653,10 +626,8 @@ public class JcrFileSystem implements VirtualFileSystem
             throw new InvalidArgumentException("Object " + data.getName() + " is not a file. ");
          }
          FileData versionData = ((FileData)data).getVersion(versionId);
-         ContentStream stream =
-            new ContentStream(versionData.getName(), versionData.getContent(), versionData.getMediaType().toString(),
-               versionData.getContentLength(), new java.util.Date(versionData.getLastModificationDate()));
-         return stream;
+         return new ContentStream(versionData.getName(), versionData.getContent(), versionData.getMediaType().toString(),
+            versionData.getContentLength(), new Date(versionData.getLastModificationDate()));
       }
       finally
       {
@@ -671,9 +642,9 @@ public class JcrFileSystem implements VirtualFileSystem
    @Path("version-history/{id}")
    @Override
    public ItemList<File> getVersions(@PathParam("id") String id, //
-      @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
-      @QueryParam("skipCount") int skipCount, //
-      @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter //
+                                     @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
+                                     @QueryParam("skipCount") int skipCount, //
+                                     @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter //
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       if (skipCount < 0)
@@ -686,14 +657,18 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          ItemData data = getItemData(session, id);
          if (ItemType.FILE != data.getType())
+         {
             throw new InvalidArgumentException("Object " + data.getName() + " is not a file. ");
+         }
 
          FileData fileData = (FileData)data;
          LazyIterator<FileData> versions = fileData.getAllVersions();
          try
          {
             if (skipCount > 0)
+            {
                versions.skip(skipCount);
+            }
          }
          catch (NoSuchElementException nse)
          {
@@ -718,9 +693,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#lock(java.lang.String)
-    */
+   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#lock(java.lang.String) */
    @Path("lock/{id}")
    @Override
    public LockToken lock(@PathParam("id") String id) throws NotSupportedException, ItemNotFoundException,
@@ -742,14 +715,12 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#move(java.lang.String, java.lang.String, java.lang.String)
-    */
+   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#move(java.lang.String, java.lang.String, java.lang.String) */
    @Path("move/{id}")
    @Override
    public Item move(@PathParam("id") String id, //
-      @QueryParam("parentId") String parentId, //
-      @QueryParam("lockToken") String lockToken //
+                    @QueryParam("parentId") String parentId, //
+                    @QueryParam("lockToken") String lockToken //
    ) throws ItemNotFoundException, ConstraintException, LockException, ItemAlreadyExistException,
       PermissionDeniedException, VirtualFileSystemException
    {
@@ -778,9 +749,9 @@ public class JcrFileSystem implements VirtualFileSystem
    @Path("rename/{id}")
    @Override
    public Item rename(@PathParam("id") String id, //
-      @QueryParam("mediaType") MediaType newMediaType, //
-      @QueryParam("newname") String newname, //
-      @QueryParam("lockToken") String lockToken //
+                      @QueryParam("mediaType") MediaType newMediaType, //
+                      @QueryParam("newname") String newname, //
+                      @QueryParam("lockToken") String lockToken //
    ) throws ItemNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
@@ -811,14 +782,14 @@ public class JcrFileSystem implements VirtualFileSystem
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#search(javax.ws.rs.core.MultivaluedMap, int, int,
-    * org.exoplatform.ide.vfs.server.PropertyFilter)
+    *      org.exoplatform.ide.vfs.server.PropertyFilter)
     */
    @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
    @Override
    public ItemList<Item> search(MultivaluedMap<String, String> query, //
-      @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
-      @QueryParam("skipCount") int skipCount, //
-      @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter //
+                                @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
+                                @QueryParam("skipCount") int skipCount, //
+                                @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter //
    ) throws NotSupportedException, InvalidArgumentException, VirtualFileSystemException
    {
       if (skipCount < 0)
@@ -857,7 +828,9 @@ public class JcrFileSystem implements VirtualFileSystem
          for (int i = 0; i < where.size(); i++)
          {
             if (i > 0)
+            {
                sql.append(" AND ");
+            }
             sql.append(where.get(i));
          }
       }
@@ -873,7 +846,9 @@ public class JcrFileSystem implements VirtualFileSystem
          try
          {
             if (skipCount > 0)
+            {
                nodes.skip(skipCount);
+            }
          }
          catch (NoSuchElementException nse)
          {
@@ -885,17 +860,23 @@ public class JcrFileSystem implements VirtualFileSystem
          if (name != null && name.length() > 0)
          {
             StringBuilder pb = new StringBuilder();
-            pb.append(".*");
+            pb.append('.');
+            pb.append('*');
             for (int i = 0; i < name.length(); i++)
             {
                char c = name.charAt(i);
                if (c == '*' || c == '?')
+               {
                   pb.append('.');
+               }
                if (".()[]^$|".indexOf(c) != -1)
+               {
                   pb.append('\\');
+               }
                pb.append(c);
             }
-            pb.append(".*");
+            pb.append('.');
+            pb.append('*');
             namePattern = Pattern.compile(pb.toString(), Pattern.CASE_INSENSITIVE);
          }
 
@@ -912,7 +893,9 @@ public class JcrFileSystem implements VirtualFileSystem
 
          ItemList<Item> il = new ItemList<Item>(l);
          if (namePattern == null) // Total number is unknown since we apply additional filtering by name. 
+         {
             il.setNumItems((int)nodes.getSize());
+         }
          il.setHasMoreItems(nodes.hasNext());
 
          return il;
@@ -931,13 +914,11 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#search(java.lang.String, int, int)
-    */
+   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#search(java.lang.String, int, int) */
    @Override
    public ItemList<Item> search(@QueryParam("statement") String statement, //
-      @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
-      @QueryParam("skipCount") int skipCount //
+                                @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
+                                @QueryParam("skipCount") int skipCount //
    ) throws NotSupportedException, InvalidArgumentException, VirtualFileSystemException
    {
       if (skipCount < 0)
@@ -954,7 +935,9 @@ public class JcrFileSystem implements VirtualFileSystem
          try
          {
             if (skipCount > 0)
+            {
                nodes.skip(skipCount);
+            }
          }
          catch (NoSuchElementException nse)
          {
@@ -966,9 +949,13 @@ public class JcrFileSystem implements VirtualFileSystem
          for (String n : result.getColumnNames())
          {
             if (SKIPPED_QUERY_PROPERTIES.contains(n))
+            {
                continue;
+            }
             if (propertyFilterBuilder.length() > 0)
+            {
                propertyFilterBuilder.append(',');
+            }
             propertyFilterBuilder.append(n);
          }
          PropertyFilter propertyFilter = PropertyFilter.valueOf(propertyFilterBuilder.toString());
@@ -998,13 +985,11 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#unlock(java.lang.String, java.lang.String)
-    */
+   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#unlock(java.lang.String, java.lang.String) */
    @Path("unlock/{id}")
    @Override
    public void unlock(@PathParam("id") String id, //
-      @QueryParam("lockToken") String lockToken //
+                      @QueryParam("lockToken") String lockToken //
    ) throws NotSupportedException, ItemNotFoundException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
@@ -1031,9 +1016,9 @@ public class JcrFileSystem implements VirtualFileSystem
    @Path("acl/{id}")
    @Override
    public void updateACL(@PathParam("id") String id, //
-      List<AccessControlEntry> acl, //
-      @DefaultValue("false") @QueryParam("override") Boolean override, //
-      @QueryParam("lockToken") String lockToken //
+                         List<AccessControlEntry> acl, //
+                         @DefaultValue("false") @QueryParam("override") Boolean override, //
+                         @QueryParam("lockToken") String lockToken //
    ) throws NotSupportedException, ItemNotFoundException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
@@ -1053,7 +1038,7 @@ public class JcrFileSystem implements VirtualFileSystem
    public void updateContent(
       @PathParam("id") String id, //
       @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @HeaderParam("Content-Type") MediaType mediaType,
-      InputStream newcontent, //
+      InputStream newContent, //
       @QueryParam("lockToken") String lockToken //
    ) throws ItemNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
       VirtualFileSystemException
@@ -1066,7 +1051,7 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             throw new InvalidArgumentException("Object " + data.getName() + " is not file. ");
          }
-         ((FileData)data).setContent(newcontent, mediaType, lockToken);
+         ((FileData)data).setContent(newContent, mediaType, lockToken);
       }
       finally
       {
@@ -1081,8 +1066,8 @@ public class JcrFileSystem implements VirtualFileSystem
    @Path("item/{id}")
    @Override
    public void updateItem(@PathParam("id") String id, //
-      List<ConvertibleProperty> properties, //
-      @QueryParam("lockToken") String lockToken //
+                          List<ConvertibleProperty> properties, //
+                          @QueryParam("lockToken") String lockToken //
    ) throws ItemNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
       Session session = session();
@@ -1123,9 +1108,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#exportZip(java.lang.String)
-    */
+   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#exportZip(java.lang.String) */
    @Path("export/{folderId}")
    @Override
    public ContentStream exportZip(@PathParam("folderId") String folderId) throws ItemNotFoundException,
@@ -1140,8 +1123,8 @@ public class JcrFileSystem implements VirtualFileSystem
             throw new InvalidArgumentException("Unable export to zip. Item is not a folder. ");
          }
          FolderData exportFolder = (FolderData)data;
-         java.io.File fzip = java.io.File.createTempFile("export", ".zip");
-         FileOutputStream out = new FileOutputStream(fzip);
+         java.io.File zipFile = java.io.File.createTempFile("export", ".zip");
+         FileOutputStream out = new FileOutputStream(zipFile);
          try
          {
             ZipOutputStream zipOut = new ZipOutputStream(out);
@@ -1151,7 +1134,7 @@ public class JcrFileSystem implements VirtualFileSystem
             byte[] b = new byte[8192];
             while (!q.isEmpty())
             {
-               LazyIterator<ItemData> children = q.pop().getChildren();
+               LazyIterator<ItemData> children = q.pop().getChildren(null);
                while (children.hasNext())
                {
                   ItemData current = children.next();
@@ -1207,9 +1190,9 @@ public class JcrFileSystem implements VirtualFileSystem
          }
 
          return new ContentStream(exportFolder.getName() + ".zip", //
-            new DeleteOnCloseFileInputStream(fzip), //
+            new DeleteOnCloseFileInputStream(zipFile), //
             "application/zip", //
-            fzip.length(), //
+            zipFile.length(), //
             new Date());
       }
       finally
@@ -1218,9 +1201,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   /**
-    * Delete java.io.File after close.
-    */
+   /** Delete java.io.File after close. */
    private static final class DeleteOnCloseFileInputStream extends FileInputStream
    {
       private final java.io.File file;
@@ -1232,9 +1213,7 @@ public class JcrFileSystem implements VirtualFileSystem
          this.file = file;
       }
 
-      /**
-       * @see java.io.FileInputStream#close()
-       */
+      /** @see java.io.FileInputStream#close() */
       @Override
       public void close() throws IOException
       {
@@ -1252,14 +1231,12 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#importZip(java.lang.String, java.io.InputStream, Boolean)
-    */
+   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#importZip(java.lang.String, java.io.InputStream, Boolean) */
    @Path("import/{parentId}")
    @Override
    public void importZip(@PathParam("parentId") String parentId, //
-      InputStream in, //
-      @DefaultValue("false") @QueryParam("overwrite") Boolean overwrite //
+                         InputStream in, //
+                         @DefaultValue("false") @QueryParam("overwrite") Boolean overwrite //
    ) throws ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException, IOException
    {
       Session session = session();
@@ -1287,7 +1264,7 @@ public class JcrFileSystem implements VirtualFileSystem
             public int read() throws IOException
             {
                int i = super.read();
-               checkComperssionRatio();
+               checkCompressionRatio();
                return i;
             }
 
@@ -1295,7 +1272,7 @@ public class JcrFileSystem implements VirtualFileSystem
             public int read(byte[] b, int off, int len) throws IOException
             {
                int i = super.read(b, off, len);
-               checkComperssionRatio();
+               checkCompressionRatio();
                return i;
             }
 
@@ -1303,7 +1280,7 @@ public class JcrFileSystem implements VirtualFileSystem
             public int read(byte[] b) throws IOException
             {
                int i = super.read(b);
-               checkComperssionRatio();
+               checkCompressionRatio();
                return i;
             }
 
@@ -1311,17 +1288,17 @@ public class JcrFileSystem implements VirtualFileSystem
             public long skip(long length) throws IOException
             {
                long i = super.skip(length);
-               checkComperssionRatio();
+               checkCompressionRatio();
                return i;
             }
 
-            private void checkComperssionRatio()
+            private void checkCompressionRatio()
             {
-               long ubytes = getByteCount(); // number of uncompressed bytes
-               if (ubytes > threshold)
+               long uncompressedBytes = getByteCount(); // number of uncompressed bytes
+               if (uncompressedBytes > threshold)
                {
-                  long cbytes = compressedCounter.getByteCount(); // number of compressed bytes
-                  if (ubytes > (zipRatio * cbytes))
+                  long compressedBytes = compressedCounter.getByteCount(); // number of compressed bytes
+                  if (uncompressedBytes > (zipRatio * compressedBytes))
                   {
                      throw new VirtualFileSystemRuntimeException("Zip bomb detected. ");
                   }
@@ -1419,9 +1396,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   /**
-    * Wrapper for ZipInputStream that make possible read content of ZipEntry but prevent close ZipInputStream.
-    */
+   /** Wrapper for ZipInputStream that make possible read content of ZipEntry but prevent close ZipInputStream. */
    private static final class NotClosableInputStream extends InputStream
    {
       private final InputStream delegate;
@@ -1431,80 +1406,62 @@ public class JcrFileSystem implements VirtualFileSystem
          this.delegate = delegate;
       }
 
-      /**
-       * @see java.io.InputStream#read()
-       */
+      /** @see java.io.InputStream#read() */
       @Override
       public int read() throws IOException
       {
          return delegate.read();
       }
 
-      /**
-       * @see java.io.InputStream#read(byte[])
-       */
+      /** @see java.io.InputStream#read(byte[]) */
       @Override
       public int read(byte[] b) throws IOException
       {
          return delegate.read(b);
       }
 
-      /**
-       * @see java.io.InputStream#read(byte[], int, int)
-       */
+      /** @see java.io.InputStream#read(byte[], int, int) */
       @Override
       public int read(byte[] b, int off, int len) throws IOException
       {
          return delegate.read(b, off, len);
       }
 
-      /**
-       * @see java.io.InputStream#skip(long)
-       */
+      /** @see java.io.InputStream#skip(long) */
       @Override
       public long skip(long n) throws IOException
       {
          return delegate.skip(n);
       }
 
-      /**
-       * @see java.io.InputStream#available()
-       */
+      /** @see java.io.InputStream#available() */
       @Override
       public int available() throws IOException
       {
          return delegate.available();
       }
 
-      /**
-       * @see java.io.InputStream#close()
-       */
+      /** @see java.io.InputStream#close() */
       @Override
       public void close() throws IOException
       {
       }
 
-      /**
-       * @see java.io.InputStream#mark(int)
-       */
+      /** @see java.io.InputStream#mark(int) */
       @Override
       public void mark(int readlimit)
       {
          delegate.mark(readlimit);
       }
 
-      /**
-       * @see java.io.InputStream#reset()
-       */
+      /** @see java.io.InputStream#reset() */
       @Override
       public void reset() throws IOException
       {
          delegate.reset();
       }
 
-      /**
-       * @see java.io.InputStream#markSupported()
-       */
+      /** @see java.io.InputStream#markSupported() */
       @Override
       public boolean markSupported()
       {
@@ -1512,9 +1469,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#downloadFile(java.lang.String)
-    */
+   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#downloadFile(java.lang.String) */
    @Path("downloadfile/{id}")
    @Override
    public Response downloadFile(@PathParam("id") String id) throws ItemNotFoundException, InvalidArgumentException,
@@ -1529,13 +1484,11 @@ public class JcrFileSystem implements VirtualFileSystem
          .build();
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#uploadFile(java.lang.String, java.util.Iterator)
-    */
+   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#uploadFile(java.lang.String, java.util.Iterator) */
    @Path("uploadfile/{parentId}")
    @Override
    public Response uploadFile(@PathParam("parentId") String parentId, //
-      java.util.Iterator<FileItem> formData //
+                              java.util.Iterator<FileItem> formData //
    ) throws ItemNotFoundException, InvalidArgumentException, ItemAlreadyExistException, PermissionDeniedException,
       VirtualFileSystemException, IOException
    {
@@ -1649,9 +1602,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#downloadZip(java.lang.String)
-    */
+   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#downloadZip(java.lang.String) */
    @Path("downloadzip/{folderId}")
    @Override
    public Response downloadZip(@PathParam("folderId") String folderId) throws ItemNotFoundException,
@@ -1666,14 +1617,12 @@ public class JcrFileSystem implements VirtualFileSystem
          .build();
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#uploadZip(java.lang.String, java.util.Iterator)
-    */
+   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#uploadZip(java.lang.String, java.util.Iterator) */
    @Path("uploadzip/{parentId}")
    @Override
    public Response uploadZip(@PathParam("parentId") String parentId, //
-      Iterator<FileItem> formData) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException,
-      IOException, VirtualFileSystemException
+                             Iterator<FileItem> formData) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, IOException, VirtualFileSystemException
    {
       try
       {
@@ -1719,7 +1668,7 @@ public class JcrFileSystem implements VirtualFileSystem
 
    /**
     * Get JCR path from Virtual File System path.
-    * 
+    *
     * @param userID the current user identifier
     * @param vfsPath Virtual File System path
     * @return JCR path
@@ -1748,7 +1697,9 @@ public class JcrFileSystem implements VirtualFileSystem
    private void checkName(String name) throws InvalidArgumentException
    {
       if (name == null || name.trim().length() == 0)
+      {
          throw new InvalidArgumentException("Item's name is not set. ");
+      }
    }
 
    private Item fromItemData(ItemData data, PropertyFilter propertyFilter) throws PermissionDeniedException,
@@ -1759,11 +1710,11 @@ public class JcrFileSystem implements VirtualFileSystem
          FileData fileData = (FileData)data;
          return new File(fileData.getId(), fileData.getName(), fileData.getPath(), fileData.getParentId(),
             fileData.getCreationDate(), fileData.getLastModificationDate(), fileData.getVersionId(), fileData
-               .getMediaType().toString(), fileData.getContentLength(), fileData.isLocked(),
+            .getMediaType().toString(), fileData.getContentLength(), fileData.isLocked(),
             fileData.getProperties(propertyFilter), createFileLinks(fileData));
       }
 
-      if (data instanceof ProjectData)
+      if (data.getType() == ItemType.PROJECT)
       {
          ProjectData projectData = (ProjectData)data;
          MediaType mediaType = projectData.getMediaType();
@@ -1905,7 +1856,9 @@ public class JcrFileSystem implements VirtualFileSystem
       uriBuilder.path(VirtualFileSystemFactory.class, "getFileSystem");
       uriBuilder.path(rel);
       if (id != null)
+      {
          uriBuilder.path(id);
+      }
       if (query != null && query.length > 0)
       {
          for (int i = 0; i < query.length; i++)
@@ -2007,7 +1960,7 @@ public class JcrFileSystem implements VirtualFileSystem
 
    /**
     * Throws WebApplicationException that contains error message in HTML format.
-    * 
+    *
     * @param e exception
     */
    private void sendErrorAsHTML(Exception e)

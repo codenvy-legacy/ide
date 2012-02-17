@@ -27,22 +27,17 @@ import java.util.NoSuchElementException;
  */
 public abstract class LazyIterator<T> implements Iterator<T>
 {
-
    public static LazyIterator<Object> EMPTY_ITEMS_ITERATOR = new EmptyIterator();
 
    private static class EmptyIterator extends LazyIterator<Object>
    {
-      /**
-       * @see org.exoplatform.ide.vfs.server.LazyIterator#fetchNext()
-       */
+      /** @see org.exoplatform.ide.vfs.server.LazyIterator#fetchNext() */
       @Override
       protected void fetchNext()
       {
       }
 
-      /**
-       * @see org.exoplatform.ide.vfs.server.LazyIterator#size()
-       */
+      /** @see org.exoplatform.ide.vfs.server.LazyIterator#size() */
       @Override
       public int size()
       {
@@ -60,34 +55,28 @@ public abstract class LazyIterator<T> implements Iterator<T>
 
    protected T next;
 
-   /**
-    * To fetch next item and set it in field <code>next</code>
-    */
+   /** To fetch next item and set it in field <code>next</code> */
    protected abstract void fetchNext();
 
-   /**
-    * @see java.util.Iterator#hasNext()
-    */
+   /** @see java.util.Iterator#hasNext() */
    public boolean hasNext()
    {
       return next != null;
    }
 
-   /**
-    * @see java.util.Iterator#next()
-    */
+   /** @see java.util.Iterator#next() */
    public T next()
    {
       if (next == null)
+      {
          throw new NoSuchElementException();
+      }
       T n = next;
       fetchNext();
       return n;
    }
 
-   /**
-    * @see java.util.Iterator#remove()
-    */
+   /** @see java.util.Iterator#remove() */
    public void remove()
    {
       throw new UnsupportedOperationException("remove");
@@ -95,7 +84,7 @@ public abstract class LazyIterator<T> implements Iterator<T>
 
    /**
     * Get total number of items in iterator. If not able determine number of items then -1 will be returned.
-    * 
+    *
     * @return number of items or -1
     */
    public int size()
@@ -105,7 +94,7 @@ public abstract class LazyIterator<T> implements Iterator<T>
 
    /**
     * Skip specified number of element in collection.
-    * 
+    *
     * @param skip the number of items to skip
     * @throws NoSuchElementException if skipped past the last item in the iterator
     */
@@ -115,7 +104,9 @@ public abstract class LazyIterator<T> implements Iterator<T>
       {
          fetchNext();
          if (next == null)
+         {
             throw new NoSuchElementException();
+         }
       }
    }
 }

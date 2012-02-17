@@ -131,12 +131,10 @@ public class Link
       this.type = type;
    }
 
-   /**
-    * @see java.lang.Object#toString()
-    */
+   /** @see java.lang.Object#toString() */
    @Override
    public String toString()
    {
-      return "Link [href=" + href + ", type=" + type + ", rel=" + rel + "]";
+      return "Link [href=" + href + ", type=" + type + ", rel=" + rel + ']';
    }
 }

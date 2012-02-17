@@ -39,7 +39,7 @@ public abstract class Property<V>
 
    /**
     * Create single-valued Property. Using this constructor is equivalent to:
-    * 
+    * <p/>
     * <pre>
     * V val = ...;
     * List&lt;V&gt; l = new ArrayList&lt;V&gt;(1);
@@ -47,7 +47,7 @@ public abstract class Property<V>
     * new Property(&quot;MyName&quot;, l) {
     * };
     * </pre>
-    * 
+    *
     * @param name the name of property
     * @param value the value. If <code>value == null</code> it means no value
     */
@@ -78,16 +78,17 @@ public abstract class Property<V>
    // NOTE getter and setter for value must be overridden.
    // Need this for correct work of JSON tool on server side. Implementation of such
    // methods here make impossible to determine type via reflection.
+
    public abstract List<V> getValue();
 
    public abstract void setValue(List<V> value);
 
-   /**
-    * @see java.lang.Object#toString()
-    */
+   // ==================================================
+
+   /** @see java.lang.Object#toString() */
    @Override
    public String toString()
    {
-      return "Property [name=" + name + ", value=" + value + "]";
+      return "Property [name=" + name + ", value=" + value + ']';
    }
 }

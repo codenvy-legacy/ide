@@ -24,6 +24,7 @@ import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.ItemType;
 
 import java.util.List;
 
@@ -35,9 +36,9 @@ import javax.ws.rs.core.MediaType;
 
 class ProjectData extends FolderData
 {
-   ProjectData(Node node, String rootNodePath) throws RepositoryException
+   ProjectData(Node node, String rootNodePath)
    {
-      super(node, rootNodePath);
+      super(node, ItemType.PROJECT, rootNodePath);
    }
 
    final String getProjectType() throws ConstraintException, VirtualFileSystemException
@@ -52,9 +53,7 @@ class ProjectData extends FolderData
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.impl.jcr.FolderData#getMediaType()
-    */
+   /** @see org.exoplatform.ide.vfs.impl.jcr.FolderData#getMediaType() */
    @Override
    final MediaType getMediaType() throws PermissionDeniedException, VirtualFileSystemException
    {
@@ -111,15 +110,15 @@ class ProjectData extends FolderData
       return super.createFolder(name, nodeType, mixinTypes, properties);
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#copyTo(org.exoplatform.ide.vfs.impl.jcr.FolderData)
-    */
+   /** @see org.exoplatform.ide.vfs.impl.jcr.ItemData#copyTo(org.exoplatform.ide.vfs.impl.jcr.FolderData) */
    @Override
    final ItemData copyTo(FolderData folder) throws ConstraintException, PermissionDeniedException,
       VirtualFileSystemException
    {
       if (folder instanceof ProjectData)
+      {
          throw new ConstraintException("Unable copy. Item specified as parent is a project. ");
+      }
       return super.copyTo(folder);
    }
 
@@ -132,7 +131,9 @@ class ProjectData extends FolderData
       PermissionDeniedException, VirtualFileSystemException
    {
       if (folder instanceof ProjectData)
+      {
          throw new ConstraintException("Unable move. Item specified as parent is a project. ");
+      }
       return super.moveTo(folder, lockToken);
    }
 }

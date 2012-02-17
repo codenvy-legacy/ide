@@ -130,7 +130,7 @@ final class VersionData extends FileData
     *      java.lang.String, java.lang.String[], java.lang.String[])
     */
    @Override
-   String rename(String newname, MediaType mediaType, String lockToken, String[] addMixinTypes,
+   String rename(String newName, MediaType mediaType, String lockToken, String[] addMixinTypes,
       String[] removeMixinTypes) throws ConstraintException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {

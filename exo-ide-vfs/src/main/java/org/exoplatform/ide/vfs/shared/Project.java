@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The Project - folder w/ special meaning
+ * The Project - folder w/ special meaning.
  */
 public class Project extends Folder
 {
@@ -40,11 +40,11 @@ public class Project extends Folder
 
    public Project()
    {
-      super();
+      super(ItemType.PROJECT);
       mimeType = PROJECT_MIME_TYPE;
    }
 
-   public final String getProjectType()
+   public String getProjectType()
    {
       return projectType;
    }

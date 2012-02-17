@@ -31,19 +31,19 @@ import java.security.PrivilegedExceptionAction;
 import java.util.List;
 
 /**
- * Input property with possibility to transform it to required types. Values may be transformed to required type via method
+ * Input property with possibility to transform it to required types. Values may be transformed to required type via
+ * method
  * {@link #valueToArray(Class)}.
- * <p>
+ * <p/>
  * Here is example of JSON source for property:
- * 
+ * <p/>
  * <pre>
  * {"name":"mediaType", "value":["text/plain;charset=utf8"]}"
  * </pre>
- * 
- * @see #valueToArray(Class)
- * 
+ *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
+ * @see #valueToArray(Class)
  */
 public class ConvertibleProperty extends StringProperty
 {
@@ -72,7 +72,7 @@ public class ConvertibleProperty extends StringProperty
     * <p>
     * Example:
     * </p>
-    * 
+    * <p/>
     * <pre>
     * ConvertibleInputProperty in = new ConvertibleInputProperty();
     * List&lt;String&gt; vl = new ArrayList&lt;String&gt;();
@@ -82,9 +82,9 @@ public class ConvertibleProperty extends StringProperty
     * Integer[] res = in.valueToArray(Integer[].class);
     * System.out.println(java.util.Arrays.toString(res));
     * </pre>
-    * 
+    * <p/>
     * As result should be: [123, 456]
-    * 
+    *
     * @param toType new array type
     * @return new array of specified type
     * @throws IllegalArgumentException if specified new array type is not as described above
@@ -93,7 +93,9 @@ public class ConvertibleProperty extends StringProperty
    public <O> O[] valueToArray(Class<? extends O[]> toType)
    {
       if (value == null)
+      {
          return null;
+      }
       String[] aValue = this.value.toArray(new String[this.value.size()]);
       final Class<?> componentType = toType.getComponentType();
       // If String then just copy array.
@@ -105,10 +107,10 @@ public class ConvertibleProperty extends StringProperty
       }
 
       // Look up Constructor with String parameter.
-      Constructor<?> stringConstr = null;
+      Constructor<?> stringConstructor = null;
       try
       {
-         stringConstr = AccessController.doPrivileged(new PrivilegedExceptionAction<Constructor<?>>()
+         stringConstructor = AccessController.doPrivileged(new PrivilegedExceptionAction<Constructor<?>>()
          {
             public Constructor<?> run() throws Exception
             {
@@ -120,16 +122,18 @@ public class ConvertibleProperty extends StringProperty
       {
          Throwable cause = e.getCause();
          if (!(cause instanceof NoSuchMethodException))
+         {
             throw new RuntimeException(cause);
+         }
       }
-      if (stringConstr != null)
+      if (stringConstructor != null)
       {
          Object a = Array.newInstance(componentType, aValue.length);
          for (int i = 0; i < aValue.length; i++)
          {
             try
             {
-               Array.set(a, i, stringConstr.newInstance(aValue[i]));
+               Array.set(a, i, stringConstructor.newInstance(aValue[i]));
             }
             catch (InstantiationException e)
             {
@@ -159,13 +163,17 @@ public class ConvertibleProperty extends StringProperty
             }
          });
          if (Modifier.isStatic(temp.getModifiers()))
+         {
             valueOf = temp;
+         }
       }
       catch (PrivilegedActionException e)
       {
          Throwable cause = e.getCause();
          if (!(cause instanceof NoSuchMethodException))
+         {
             throw new RuntimeException(cause);
+         }
       }
       if (valueOf != null)
       {

@@ -190,7 +190,7 @@ public class SshKeyProvider
       }
       catch (ItemNotFoundException e)
       {
-         List<Item> allKeys = vfs.getChildren(sshKeys.getId(), -1, 0, PropertyFilter.NONE_FILTER).getItems();
+         List<Item> allKeys = vfs.getChildren(sshKeys.getId(), -1, 0, "file", PropertyFilter.NONE_FILTER).getItems();
          if (allKeys.size() > 0)
          {
             for (Iterator<Item> i = allKeys.iterator(); i.hasNext() && keyItem == null;)
@@ -331,7 +331,7 @@ public class SshKeyProvider
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
       Folder sshKeys = getKeysParent(vfs);
-      List<Item> allKeys = vfs.getChildren(sshKeys.getId(), -1, 0, PropertyFilter.NONE_FILTER).getItems();
+      List<Item> allKeys = vfs.getChildren(sshKeys.getId(), -1, 0, "file", PropertyFilter.NONE_FILTER).getItems();
       if (allKeys.size() > 0)
       {
          Set<String> hosts = new HashSet<String>(allKeys.size());

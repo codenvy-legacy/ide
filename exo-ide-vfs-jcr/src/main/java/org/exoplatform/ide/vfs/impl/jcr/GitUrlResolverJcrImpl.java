@@ -32,13 +32,13 @@ import javax.ws.rs.core.UriInfo;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class GitUrlResolverJcrImpl implements GitUrlResolver
 {
-
-   private RepositoryService repositoryService;
+   private final RepositoryService repositoryService;
 
    public GitUrlResolverJcrImpl(RepositoryService repositoryService)
    {
@@ -51,16 +51,24 @@ public class GitUrlResolverJcrImpl implements GitUrlResolver
       try
       {
          if (vfs == null)
+         {
             throw new GitUrlResolveException("Can't resolve Git Url : Virtual file system not initialized");
+         }
          if (id == null || id.length() == 0)
+         {
             throw new GitUrlResolveException("Can't resolve Git Url. Item path may not be null or empty");
+         }
          String gitServer = System.getProperty("org.exoplatform.ide.git.server");
          if (gitServer == null)
+         {
             throw new GitUrlResolveException("Can't resolve Git Url. Git server path may not be null.");
+         }
          ManageableRepository repository = repositoryService.getCurrentRepository();
          String repositoryName = repository.getConfiguration().getName();
          if (!gitServer.endsWith("/"))
-            gitServer += "/"; 
+         {
+            gitServer += "/";
+         }
          Item item = null;
          String vfsId = null;
          try
@@ -74,19 +82,19 @@ public class GitUrlResolverJcrImpl implements GitUrlResolver
          }
          StringBuilder result = new StringBuilder();
          result.append(uriInfo.getBaseUri().getScheme())
-               .append("://")
-               .append(uriInfo.getBaseUri().getHost());
+            .append("://")
+            .append(uriInfo.getBaseUri().getHost());
          int port = uriInfo.getBaseUri().getPort();
          if (port != 80 && port != -1)
          {
             result.append(':').append(port);
          }
-         result.append("/")
-               .append(gitServer)
-               .append(repositoryName)
-               .append("/")
-               .append(vfsId)
-               .append(item.getPath());
+         result.append('/')
+            .append(gitServer)
+            .append(repositoryName)
+            .append('/')
+            .append(vfsId)
+            .append(item.getPath());
 
          return result.toString();
       }
@@ -95,5 +103,4 @@ public class GitUrlResolverJcrImpl implements GitUrlResolver
          throw new GitUrlResolveException("Can't resolve  Git Url", e);
       }
    }
-
 }

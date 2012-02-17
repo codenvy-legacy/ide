@@ -73,9 +73,7 @@ class FileData extends ItemData
          fetchNext();
       }
 
-      /**
-       * @see org.exoplatform.ide.vfs.server.LazyIterator#fetchNext()
-       */
+      /** @see org.exoplatform.ide.vfs.server.LazyIterator#fetchNext() */
       @Override
       protected void fetchNext()
       {
@@ -98,6 +96,13 @@ class FileData extends ItemData
             latest = null;
          }
       }
+
+      /** @see org.exoplatform.ide.vfs.server.LazyIterator#size() */
+      @Override
+      public int size()
+      {
+         return (int)i.getSize();
+      }
    }
 
    private static class SingleVersionIterator extends LazyIterator<FileData>
@@ -107,19 +112,24 @@ class FileData extends ItemData
          next = file;
       }
 
-      /**
-       * @see org.exoplatform.ide.vfs.server.LazyIterator#fetchNext()
-       */
+      /** @see org.exoplatform.ide.vfs.server.LazyIterator#fetchNext() */
       @Override
       protected void fetchNext()
       {
          next = null;
       }
+
+      /** @see org.exoplatform.ide.vfs.server.LazyIterator#size() */
+      @Override
+      public int size()
+      {
+         return 1;
+      }
    }
 
    private static final String CURRENT_VERSION_ID = "0";
 
-   FileData(Node node, String rootNodePath) throws RepositoryException
+   FileData(Node node, String rootNodePath)
    {
       super(node, ItemType.FILE, rootNodePath);
    }
@@ -135,7 +145,7 @@ class FileData extends ItemData
 
    /**
     * Get id of latest version.
-    * 
+    *
     * @return latest version's id
     * @throws VirtualFileSystemException if any error occurs
     */
@@ -146,7 +156,7 @@ class FileData extends ItemData
 
    /**
     * Get content of current file.
-    * 
+    *
     * @return content
     * @throws PermissionDeniedException if content can't be retrieved cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
@@ -177,7 +187,7 @@ class FileData extends ItemData
             String encoding = node.getProperty("jcr:content/jcr:encoding").getString();
             type += (";charset=" + encoding);
          }
-         catch (PathNotFoundException e)
+         catch (PathNotFoundException ignored)
          {
          }
          return MediaType.valueOf(type);
@@ -194,7 +204,7 @@ class FileData extends ItemData
 
    /**
     * Get length of content.
-    * 
+    *
     * @return length of content
     * @throws PermissionDeniedException if content length can't be retrieved cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
@@ -217,8 +227,9 @@ class FileData extends ItemData
    }
 
    /**
-    * Get all versions of current file. If file has not any other versions the iterator will contains only current file.
-    * 
+    * Get all versions of current file. If file has not any other versions the iterator will contains only current
+    * file.
+    *
     * @return iterator over file's versions
     * @throws PermissionDeniedException if versions can't be retrieved cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
@@ -280,9 +291,7 @@ class FileData extends ItemData
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#getLastModificationDate()
-    */
+   /** @see org.exoplatform.ide.vfs.impl.jcr.ItemData#getLastModificationDate() */
    @Override
    long getLastModificationDate() throws VirtualFileSystemException
    {
@@ -298,7 +307,7 @@ class FileData extends ItemData
 
    /**
     * Place lock to current file.
-    * 
+    *
     * @return lock token
     * @throws LockException if file already locked
     * @throws PermissionDeniedException if file can't be locked cause to security restriction
@@ -337,7 +346,7 @@ class FileData extends ItemData
 
    /**
     * Remove lock from file.
-    * 
+    *
     * @param lockToken lock token
     * @throws LockException if file is not locked or <code>lockToken</code> is <code>null</code> or does not matched
     * @throws PermissionDeniedException if lock can't be removed cause to security restriction
@@ -375,7 +384,7 @@ class FileData extends ItemData
 
    /**
     * Check is file locked or not.
-    * 
+    *
     * @return <code>true</code> if file is locked and <code>false</code> otherwise
     * @throws VirtualFileSystemException if any errors occurs
     */
@@ -395,11 +404,11 @@ class FileData extends ItemData
     * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#rename(java.lang.String, javax.ws.rs.core.MediaType,
     *      java.lang.String, java.lang.String[], java.lang.String[])
     */
-   String rename(String newname, MediaType mediaType, String lockToken, String[] addMixinTypes,
-      String[] removeMixinTypes) throws ConstraintException, LockException, PermissionDeniedException,
+   String rename(String newName, MediaType mediaType, String lockToken, String[] addMixinTypes,
+                 String[] removeMixinTypes) throws ConstraintException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
-      if ((newname == null || newname.length() == 0) && mediaType == null)
+      if ((newName == null || newName.length() == 0) && mediaType == null)
       {
          return getId();
       }
@@ -411,10 +420,10 @@ class FileData extends ItemData
          {
             session.addLockToken(lockToken);
          }
-         if (newname != null && newname.length() > 0)
+         if (newName != null && newName.length() > 0)
          {
             Node parent = node.getParent();
-            String destinationPath = (parent.getDepth() == 0 ? "/" : (parent.getPath() + "/")) + newname;
+            String destinationPath = (parent.getDepth() == 0 ? "/" : (parent.getPath() + "/")) + newName;
             session.move(node.getPath(), destinationPath);
             node = (Node)session.getItem(destinationPath);
          }
@@ -464,11 +473,12 @@ class FileData extends ItemData
 
    /**
     * Update content of file. Previous state of JCR node saved in version history.
-    * 
+    *
     * @param content new content. If <code>content</code> then content of file will be removed.
     * @param mediaType new content type
-    * @param lockToken lock token. This lock token will be used if file is locked. Pass <code>null</code> if there is no
-    *           lock token
+    * @param lockToken lock token. This lock token will be used if file is locked. Pass <code>null</code> if there is
+    * no
+    * lock token
     * @throws LockException if file is locked and <code>lockToken</code> is <code>null</code> or does not matched
     * @throws PermissionDeniedException if content can't be updated cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
@@ -547,7 +557,7 @@ class FileData extends ItemData
 
    @Override
    final void updateProperties(List<ConvertibleProperty> properties, String[] addMixinTypes, String[] removeMixinTypes,
-      String lockToken) throws ConstraintException, LockException, PermissionDeniedException,
+                               String lockToken) throws ConstraintException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
       if (properties == null || properties.size() == 0)
@@ -658,18 +668,18 @@ class FileData extends ItemData
    private Map<String, PropertyDefinition> buildPropertyDefinitionsMap(Node theNode) throws RepositoryException
    {
       Map<String, PropertyDefinition> map = new HashMap<String, PropertyDefinition>();
-      PropertyDefinition[] ppropertyDefinitions = theNode.getPrimaryNodeType().getPropertyDefinitions();
-      for (int i = 0; i < ppropertyDefinitions.length; i++)
+      PropertyDefinition[] propertyDefinitions = theNode.getPrimaryNodeType().getPropertyDefinitions();
+      for (int i = 0; i < propertyDefinitions.length; i++)
       {
-         map.put(ppropertyDefinitions[i].getName(), ppropertyDefinitions[i]);
+         map.put(propertyDefinitions[i].getName(), propertyDefinitions[i]);
       }
       NodeType[] mixinNodeTypes = theNode.getMixinNodeTypes();
       for (int i = 0; i < mixinNodeTypes.length; i++)
       {
-         PropertyDefinition[] mpropertyDefinitions = mixinNodeTypes[i].getPropertyDefinitions();
-         for (int j = 0; j < mpropertyDefinitions.length; j++)
+         PropertyDefinition[] mixinPropertyDefinitions = mixinNodeTypes[i].getPropertyDefinitions();
+         for (int j = 0; j < mixinPropertyDefinitions.length; j++)
          {
-            map.put(mpropertyDefinitions[j].getName(), mpropertyDefinitions[j]);
+            map.put(mixinPropertyDefinitions[j].getName(), mixinPropertyDefinitions[j]);
          }
       }
       return map;

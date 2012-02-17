@@ -55,18 +55,19 @@ public final class JcrFileSystemInitializer implements Startable
    private final List<JcrFileSystemConfiguration> configurations = new ArrayList<JcrFileSystemConfiguration>();
 
    public JcrFileSystemInitializer(InitParams initParams, RepositoryService repositoryService,
-      MediaType2NodeTypeResolver itemType2NodeTypeResolver, VirtualFileSystemRegistry vfsRegistry)
+                                   MediaType2NodeTypeResolver itemType2NodeTypeResolver, VirtualFileSystemRegistry vfsRegistry)
    {
       this(repositoryService, itemType2NodeTypeResolver, getConfigurations(initParams), vfsRegistry);
    }
 
    /**
-    * Get 'values-param' with <code>name</code> from InitParams instance. If <code>initParams == null</code> or does not
+    * Get 'values-param' with <code>name</code> from InitParams instance. If <code>initParams == null</code> or does
+    * not
     * contains requested 'values-param' this method return empty List never <code>null</code>. The returned List is
     * unmodifiable.
-    * <p>
+    * <p/>
     * If part of configuration looks like:
-    * 
+    * <p/>
     * <pre>
     * ...
     * &lt;init-params&gt;
@@ -78,9 +79,9 @@ public final class JcrFileSystemInitializer implements Startable
     * &lt;/init-params&gt;
     * ...
     * </pre>
-    * 
+    * <p/>
     * It becomes to List: <code>["foo", "bar"]</code>
-    * 
+    *
     * @param initParams the InitParams
     * @param name name of 'values-param'
     * @return unmodifiable List of requested 'values-param' or empty List if requested parameter not found
@@ -97,8 +98,8 @@ public final class JcrFileSystemInitializer implements Startable
          }
       }
       return Collections.emptyList();
-   }   
-   
+   }
+
    private static List<JcrFileSystemConfiguration> getConfigurations(InitParams initParams)
    {
       List<JcrFileSystemConfiguration> configurations = new ArrayList<JcrFileSystemConfiguration>();
@@ -109,16 +110,16 @@ public final class JcrFileSystemInitializer implements Startable
             initParams.getObjectParamValues(JcrFileSystemConfiguration.class);
          if (objectParams != null && objectParams.size() > 0)
          {
-            for (JcrFileSystemConfiguration conf : objectParams)
+            for (JcrFileSystemConfiguration config : objectParams)
             {
-               String vfsId = conf.getId();
+               String vfsId = config.getId();
                if (vfsId == null)
                {
                   // Use workspace name as ID if ID for Virtual File System is not specified in configuration .
-                  vfsId = conf.getWorkspace();
-                  conf.setId(vfsId);
+                  vfsId = config.getWorkspace();
+                  config.setId(vfsId);
                }
-               configurations.add(conf);
+               configurations.add(config);
             }
          }
          // Check 'simple' configuration. Simple configuration should be defined by 'values-param' with name 'workspaces'.
@@ -139,8 +140,9 @@ public final class JcrFileSystemInitializer implements Startable
       return configurations;
    }
 
-   public JcrFileSystemInitializer(InitParams initParams, RepositoryService repositoryService,
-      VirtualFileSystemRegistry vfsRegistry)
+   public JcrFileSystemInitializer(InitParams initParams,
+                                   RepositoryService repositoryService,
+                                   VirtualFileSystemRegistry vfsRegistry)
    {
       this(initParams, repositoryService, new MediaType2NodeTypeResolver(), vfsRegistry);
    }
@@ -148,14 +150,16 @@ public final class JcrFileSystemInitializer implements Startable
    /* ================================================================== */
 
    public JcrFileSystemInitializer(RepositoryService repositoryService,
-      Collection<JcrFileSystemConfiguration> configurations, VirtualFileSystemRegistry vfsRegistry)
+                                   Collection<JcrFileSystemConfiguration> configurations,
+                                   VirtualFileSystemRegistry vfsRegistry)
    {
       this(repositoryService, new MediaType2NodeTypeResolver(), configurations, vfsRegistry);
    }
 
    public JcrFileSystemInitializer(RepositoryService repositoryService,
-      MediaType2NodeTypeResolver mediaType2NodeTypeResolver, Collection<JcrFileSystemConfiguration> configurations,
-      VirtualFileSystemRegistry vfsRegistry)
+                                   MediaType2NodeTypeResolver mediaType2NodeTypeResolver,
+                                   Collection<JcrFileSystemConfiguration> configurations,
+                                   VirtualFileSystemRegistry vfsRegistry)
    {
       this.repositoryService = repositoryService;
       this.vfsRegistry = vfsRegistry;
@@ -170,9 +174,7 @@ public final class JcrFileSystemInitializer implements Startable
       }
    }
 
-   /**
-    * @see org.picocontainer.Startable#start()
-    */
+   /** @see org.picocontainer.Startable#start() */
    @Override
    public void start()
    {
@@ -180,9 +182,7 @@ public final class JcrFileSystemInitializer implements Startable
       initializeProviders();
    }
 
-   /**
-    * @see org.picocontainer.Startable#stop()
-    */
+   /** @see org.picocontainer.Startable#stop() */
    @Override
    public void stop()
    {
@@ -223,8 +223,11 @@ public final class JcrFileSystemInitializer implements Startable
       private final String rootNodePath;
       private final String id;
 
-      JcrFileSystemProvider(RepositoryService repositoryService, MediaType2NodeTypeResolver mediaType2NodeTypeResolver,
-         String workspace, String rootNodePath, String id)
+      JcrFileSystemProvider(RepositoryService repositoryService,
+                            MediaType2NodeTypeResolver mediaType2NodeTypeResolver,
+                            String workspace,
+                            String rootNodePath,
+                            String id)
       {
          this.repositoryService = repositoryService;
          this.mediaType2NodeTypeResolver = mediaType2NodeTypeResolver;

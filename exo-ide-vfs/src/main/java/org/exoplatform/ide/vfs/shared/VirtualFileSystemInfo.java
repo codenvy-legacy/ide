@@ -25,21 +25,18 @@ import java.util.Map;
 
 /**
  * Describe virtual file system and its capabilities.
- * 
+ *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
 public class VirtualFileSystemInfo
 {
-   /**
-    * ACL capabilities.
-    */
-   public enum ACLCapability {
+   /** ACL capabilities. */
+   public enum ACLCapability
+   {
       /** ACL is not supported. */
       NONE("none"),
-      /**
-       * ACL may be only discovered but can't be changed over virtual file system API.
-       */
+      /** ACL may be only discovered but can't be changed over virtual file system API. */
       READ("read"),
       /** ACL may be discovered and managed. */
       MANAGE("manage");
@@ -51,9 +48,7 @@ public class VirtualFileSystemInfo
          this.value = value;
       }
 
-      /**
-       * @return value of ACLCapabilities
-       */
+      /** @return value of ACLCapabilities */
       public String value()
       {
          return value;
@@ -61,7 +56,7 @@ public class VirtualFileSystemInfo
 
       /**
        * Get ACLCapabilities instance from string value.
-       * 
+       *
        * @param value string value
        * @return ACLCapabilities
        * @throws IllegalArgumentException if there is no corresponded ACLCapabilities for specified <code>value</code>
@@ -69,24 +64,25 @@ public class VirtualFileSystemInfo
       public static ACLCapability fromValue(String value)
       {
          for (ACLCapability e : ACLCapability.values())
+         {
             if (e.value.equals(value))
+            {
                return e;
+            }
+         }
          throw new IllegalArgumentException(value);
       }
 
-      /**
-       * @see java.lang.Enum#toString()
-       */
+      /** @see java.lang.Enum#toString() */
       public String toString()
       {
          return value;
       }
    }
 
-   /**
-    * Query capabilities.
-    */
-   public enum QueryCapability {
+   /** Query capabilities. */
+   public enum QueryCapability
+   {
       /** Query is not supported. */
       NONE("none"),
       /** Query supported for properties only. */
@@ -105,9 +101,7 @@ public class VirtualFileSystemInfo
          this.value = value;
       }
 
-      /**
-       * @return value of QueryCapability
-       */
+      /** @return value of QueryCapability */
       public String value()
       {
          return value;
@@ -115,7 +109,7 @@ public class VirtualFileSystemInfo
 
       /**
        * Get QueryCapability instance from string value.
-       * 
+       *
        * @param value string value
        * @return QueryCapability
        * @throws IllegalArgumentException if there is no corresponded QueryCapability for specified <code>value</code>
@@ -123,14 +117,16 @@ public class VirtualFileSystemInfo
       public static QueryCapability fromValue(String value)
       {
          for (QueryCapability e : QueryCapability.values())
+         {
             if (e.value.equals(value))
+            {
                return e;
+            }
+         }
          throw new IllegalArgumentException(value);
       }
 
-      /**
-       * @see java.lang.Enum#toString()
-       */
+      /** @see java.lang.Enum#toString() */
       @Override
       public String toString()
       {
@@ -138,10 +134,9 @@ public class VirtualFileSystemInfo
       }
    }
 
-   /**
-    * Basic permissions.
-    */
-   public enum BasicPermissions {
+   /** Basic permissions. */
+   public enum BasicPermissions
+   {
       /** Read permission. */
       READ("read"),
       /** Write permission. */
@@ -156,9 +151,7 @@ public class VirtualFileSystemInfo
          this.value = value;
       }
 
-      /**
-       * @return value of BasicPermissions
-       */
+      /** @return value of BasicPermissions */
       public String value()
       {
          return value;
@@ -166,7 +159,7 @@ public class VirtualFileSystemInfo
 
       /**
        * Get BasicPermissions instance from string value.
-       * 
+       *
        * @param value string value
        * @return BasicPermissions
        * @throws IllegalArgumentException if there is no corresponded BasicPermissions for specified <code>value</code>
@@ -174,14 +167,16 @@ public class VirtualFileSystemInfo
       public static BasicPermissions fromValue(String value)
       {
          for (BasicPermissions e : BasicPermissions.values())
+         {
             if (e.value.equals(value))
+            {
                return e;
+            }
+         }
          throw new IllegalArgumentException(value);
       }
 
-      /**
-       * @see java.lang.Enum#toString()
-       */
+      /** @see java.lang.Enum#toString() */
       @Override
       public String toString()
       {
@@ -212,10 +207,12 @@ public class VirtualFileSystemInfo
    private String id;
 
    /**
-    * Templates of URL than can be used by client to manage virtual file system. Templates may contains parameters. It is path or
-    * query segments like next: [parameter]. Client should replace parameters by corresponded value or remove it from template if
+    * Templates of URL than can be used by client to manage virtual file system. Templates may contains parameters. It
+    * is path or
+    * query segments like next: [parameter]. Client should replace parameters by corresponded value or remove it from
+    * template if
     * there is now value for it. Example:
-    * 
+    * <p/>
     * <pre>
     * http://localhost/service/vfs/jcr/file/[parentId]?name=[name]&mediaType=[mediaType]
     * become to
@@ -224,9 +221,16 @@ public class VirtualFileSystemInfo
     */
    private Map<String, Link> urlTemplates;
 
-   public VirtualFileSystemInfo(String id, boolean versioningSupported, boolean lockSupported,
-      String anonymousPrincipal, String anyPrincipal, Collection<String> permissions, ACLCapability aclCapability,
-      QueryCapability queryCapability, Map<String, Link> urlTemplates, Folder root)
+   public VirtualFileSystemInfo(String id,
+                                boolean versioningSupported,
+                                boolean lockSupported,
+                                String anonymousPrincipal,
+                                String anyPrincipal,
+                                Collection<String> permissions,
+                                ACLCapability aclCapability,
+                                QueryCapability queryCapability,
+                                Map<String, Link> urlTemplates,
+                                Folder root)
    {
       this.versioningSupported = versioningSupported;
       this.lockSupported = lockSupported;
@@ -242,8 +246,16 @@ public class VirtualFileSystemInfo
 
    public VirtualFileSystemInfo()
    {
-      this("default", false, false, ANONYMOUS_PRINCIPAL, ANY_PRINCIPAL, new ArrayList<String>(), ACLCapability.NONE,
-         QueryCapability.NONE, null, null);
+      this("default",
+         false,
+         false,
+         ANONYMOUS_PRINCIPAL,
+         ANY_PRINCIPAL,
+         new ArrayList<String>(),
+         ACLCapability.NONE,
+         QueryCapability.NONE,
+         null,
+         null);
    }
 
    public String getId()
@@ -326,11 +338,6 @@ public class VirtualFileSystemInfo
       this.queryCapability = queryCapability;
    }
 
-   public void setUrlTemplates(Map<String, Link> uriTemplates)
-   {
-      this.urlTemplates = uriTemplates;
-   }
-
    public Map<String, Link> getUrlTemplates()
    {
       if (urlTemplates == null)
@@ -338,6 +345,11 @@ public class VirtualFileSystemInfo
          urlTemplates = new HashMap<String, Link>();
       }
       return urlTemplates;
+   }
+
+   public void setUrlTemplates(Map<String, Link> uriTemplates)
+   {
+      this.urlTemplates = uriTemplates;
    }
 
    public Folder getRoot()

@@ -65,24 +65,12 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
 
    private VirtualFileSystemRegistry vfsRegistry;
 
-   /**
-    * @param storage
-    */
    public JavaCodeAssistant(CodeAssistantStorage storage, VirtualFileSystemRegistry vfsRegistry)
    {
       super(storage);
       this.vfsRegistry = vfsRegistry;
    }
 
-   /**
-    * @param projectId
-    * @param vfsId
-    * @return
-    * @throws VirtualFileSystemException
-    * @throws ItemNotFoundException
-    * @throws PermissionDeniedException
-    * @throws CodeAssistantException
-    */
    private JavaDocBuilderVfs parseProject(String projectId, String vfsId) throws VirtualFileSystemException,
       ItemNotFoundException, PermissionDeniedException, CodeAssistantException
    {
@@ -114,7 +102,8 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.api.CodeAssistant#getJavaDocFromProject(java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getClassJavaDocFromProject(java.lang.String,
+    * java.lang.String, java.lang.String)
     */
    @Override
    protected String getClassJavaDocFromProject(String fqn, String projectId, String vfsId)
@@ -131,9 +120,6 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
 
    /**
     * Return word until first point like "ClassName" on file name "ClassName.java"
-    * 
-    * @param fileName
-    * @return
     */
    private String getClassNameOnFileName(String fileName)
    {
@@ -145,9 +131,6 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
 
    /**
     * Return possible FQN like "org.exoplatform.example.ClassName" on file path "/org/exoplatform/example/ClassName.java"
-    * 
-    * @param fileName
-    * @return
     */
    private String getFQNByFilePath(File file, Project project)
    {
@@ -168,25 +151,20 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
 
    /**
     * Find classes in package
-    * 
-    * @param fileId
-    * @param vfsId
-    * @return
-    * @throws CodeAssistantException
-    * @throws VirtualFileSystemException
     */
    private List<ShortTypeInfo> findClassesInPackage(File file, Project project, VirtualFileSystem vfs)
       throws CodeAssistantException, VirtualFileSystemException
    {
       List<ShortTypeInfo> classes = new ArrayList<ShortTypeInfo>();
-      ItemList<Item> children = vfs.getChildren(file.getParentId(), -1, 0, PropertyFilter.ALL_FILTER);
+      ItemList<Item> children = vfs.getChildren(file.getParentId(), -1, 0, "file", PropertyFilter.ALL_FILTER);
       for (Item i : children.getItems())
       {
          if (i.getName().endsWith(".java"))
          {
-            if (file.getId().equals(i.getId()) || ItemType.FILE != i.getItemType())
-               continue;
-            classes.add(new ShortTypeInfoBean(getClassNameOnFileName(i.getName()), 0, "CLASS", null));
+            if (!file.getId().equals(i.getId()))
+            {
+               classes.add(new ShortTypeInfoBean(getClassNameOnFileName(i.getName()), 0, "CLASS", null));
+            }
          }
       }
       return classes;
@@ -346,11 +324,6 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
       throw new CodeAssistantException(404, "Not found");
    }
 
-   /**
-    * @param entity
-    * @return
-    * @throws CodeAssistantException
-    */
    private String getJavaDoc(AbstractJavaEntity entity) throws CodeAssistantException
    {
       if (entity.getComment() == null && entity.getTags().length == 0)

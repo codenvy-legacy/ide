@@ -21,7 +21,7 @@ package org.exoplatform.ide.vfs.impl.jcr;
 /**
  * Extended configuration of JCR Virtual File System. It should be used as 'object-param' in configuration of
  * JcrFileSystemInitializer if need to use other than the root node of the workspace as entry point.
- * 
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -34,8 +34,10 @@ public class JcrFileSystemConfiguration
    public JcrFileSystemConfiguration(String id, String workspace, String path)
    {
       if (id == null || workspace == null || path == null)
+      {
          throw new IllegalArgumentException(
             "Workspace name or Virtual File System ID or root node path may not be null. ");
+      }
       this.id = id;
       this.workspace = workspace;
       this.path = path;
@@ -48,13 +50,16 @@ public class JcrFileSystemConfiguration
     * <li>workspace</code> - <i>workspace</i></li>
     * <li>path</code> - <i>/</i></li>
     * </ul>
-    * 
+    *
+    * @param id virtual file system id
     * @param workspace JCR workspace name
     */
    public JcrFileSystemConfiguration(String id, String workspace)
    {
       if (id == null || workspace == null)
+      {
          throw new IllegalArgumentException("Workspace name or Virtual File System ID may not be null. ");
+      }
       this.id = id;
       this.workspace = workspace;
    }
@@ -66,13 +71,15 @@ public class JcrFileSystemConfiguration
     * <li><code>workspace</code> - <i>workspace</i></li>
     * <li><code>path</code> - <i>/</i></li>
     * </ul>
-    * 
+    *
     * @param workspace JCR workspace name
     */
    public JcrFileSystemConfiguration(String workspace)
    {
       if (workspace == null)
+      {
          throw new IllegalArgumentException("Workspace name may not be null. ");
+      }
       this.id = workspace;
       this.workspace = workspace;
    }

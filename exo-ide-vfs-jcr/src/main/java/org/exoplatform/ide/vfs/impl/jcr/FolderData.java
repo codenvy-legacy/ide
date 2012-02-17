@@ -55,17 +55,17 @@ public class FolderData extends ItemData
    {
       private final NodeIterator i;
       private final String rootNodePath;
+      private final ItemType itemType;
 
-      public ChildrenIterator(NodeIterator i, String rootNodePath)
+      public ChildrenIterator(NodeIterator i, String rootNodePath, ItemType itemType)
       {
          this.i = i;
          this.rootNodePath = rootNodePath;
+         this.itemType = itemType;
          fetchNext();
       }
 
-      /**
-       * @see org.exoplatform.ide.vfs.server.LazyIterator#fetchNext()
-       */
+      /** @see org.exoplatform.ide.vfs.server.LazyIterator#fetchNext() */
       @Override
       protected void fetchNext()
       {
@@ -74,7 +74,18 @@ public class FolderData extends ItemData
          {
             try
             {
-               next = ItemData.fromNode(i.nextNode(), rootNodePath);
+               ItemData item = ItemData.fromNode(i.nextNode(), rootNodePath);
+               if (itemType != null)
+               {
+                  if (itemType == item.getType())
+                  {
+                     next = item;
+                  }
+               }
+               else
+               {
+                  next = item;
+               }
             }
             catch (RepositoryException e)
             {
@@ -84,9 +95,14 @@ public class FolderData extends ItemData
       }
    }
 
-   FolderData(Node node, String rootNodePath) throws RepositoryException
+   FolderData(Node node, String rootNodePath)
    {
-      super(node, ItemType.FOLDER, rootNodePath);
+      this(node, ItemType.FOLDER, rootNodePath);
+   }
+
+   FolderData(Node node, ItemType itemType, String rootNodePath)
+   {
+      super(node, itemType, rootNodePath);
    }
 
    final boolean isRootFolder() throws VirtualFileSystemException
@@ -101,9 +117,7 @@ public class FolderData extends ItemData
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#getMediaType()
-    */
+   /** @see org.exoplatform.ide.vfs.impl.jcr.ItemData#getMediaType() */
    @Override
    MediaType getMediaType() throws PermissionDeniedException, VirtualFileSystemException
    {
@@ -130,12 +144,21 @@ public class FolderData extends ItemData
       }
    }
 
-   final LazyIterator<ItemData> getChildren() throws PermissionDeniedException, VirtualFileSystemException
+   /**
+    * Get children of current folder.
+    *
+    * @param itemType if not <code>null</code> then only children of that type must be in result
+    * @return children of current folder
+    * @throws PermissionDeniedException if children cannot be retrieved cause to security restriction
+    * @throws VirtualFileSystemException if any other errors occurs
+    */
+   final LazyIterator<ItemData> getChildren(ItemType itemType) throws PermissionDeniedException,
+      VirtualFileSystemException
    {
       try
       {
          NodeIterator nodes = node.getNodes();
-         return new ChildrenIterator(nodes, rootNodePath);
+         return new ChildrenIterator(nodes, rootNodePath, itemType);
       }
       catch (AccessDeniedException e)
       {
@@ -236,21 +259,22 @@ public class FolderData extends ItemData
 
    /**
     * Create folder node.
-    * 
+    *
     * @param name name of folder
     * @param nodeType primary node type name
     * @param mixinTypes mixin types that must be added. Should be <code>null</code> if there is no additional mixins
     * @param properties set of properties that should be added to newly created node. Should be <code>null</code> if
-    *           there is no properties
+    * there is no properties
     * @return newly created folder item
     * @throws ItemAlreadyExistException if folder already has item with name <code>name</code>
     * @throws ConstraintException if any of following conditions are met:
-    *            <ul>
-    *            <li>at least one of updated properties is read-only</li>
-    *            <li>value of any updated properties is not acceptable</li>
-    *            </ul>
+    * <ul>
+    * <li>at least one of updated properties is read-only</li>
+    * <li>value of any updated properties is not acceptable</li>
+    * </ul>
     * @throws PermissionDeniedException if properties can't be updated cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
+    * @throws InvalidArgumentException
     */
    FolderData createFolder(String name, String nodeType, String[] mixinTypes, List<ConvertibleProperty> properties)
       throws InvalidArgumentException, ConstraintException, ItemAlreadyExistException, PermissionDeniedException,
@@ -329,11 +353,11 @@ public class FolderData extends ItemData
     *      java.lang.String, java.lang.String[], java.lang.String[])
     */
    @Override
-   String rename(String newname, MediaType mediaType, String lockToken, String[] addMixinTypes,
-      String[] removeMixinTypes) throws ConstraintException, LockException, PermissionDeniedException,
+   String rename(String newName, MediaType mediaType, String lockToken, String[] addMixinTypes,
+                 String[] removeMixinTypes) throws ConstraintException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
-      if ((newname == null || newname.length() == 0) && mediaType == null)
+      if ((newName == null || newName.length() == 0) && mediaType == null)
       {
          return getId();
       }
@@ -341,10 +365,10 @@ public class FolderData extends ItemData
       try
       {
          Session session = node.getSession();
-         if (newname != null && newname.length() > 0)
+         if (newName != null && newName.length() > 0)
          {
             Node parent = node.getParent();
-            String destinationPath = (parent.getDepth() == 0 ? "/" : (parent.getPath() + "/")) + newname;
+            String destinationPath = (parent.getDepth() == 0 ? "/" : (parent.getPath() + "/")) + newName;
             session.move(node.getPath(), destinationPath);
             node = (Node)session.getItem(destinationPath);
          }

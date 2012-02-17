@@ -101,8 +101,9 @@ public class MockVirtualFileSystem implements VirtualFileSystem
    }
 
    @Override
-   public ItemList<Item> getChildren(String folderId, int maxItems, int skipCount, PropertyFilter propertyFilter)
-      throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   public ItemList<Item> getChildren(String folderId, int maxItems, int skipCount, String itemType,
+                                     PropertyFilter propertyFilter) throws ItemNotFoundException,
+      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       return null;
    }
