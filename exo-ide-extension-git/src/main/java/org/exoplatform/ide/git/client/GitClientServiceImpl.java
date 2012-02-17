@@ -162,7 +162,7 @@ public class GitClientServiceImpl extends GitClientService
     * @throws RequestException
     * @see org.exoplatform.ide.git.client.GitClientService#init(java.lang.String, boolean)
     */
-   public void init(String vfsId, String projectid, boolean bare, AsyncRequestCallback<String> callback)
+   public void init(String vfsId, String projectid, String projectName, boolean bare, AsyncRequestCallback<String> callback)
       throws RequestException
    {
       String url = restServiceContext + INIT;
@@ -172,7 +172,7 @@ public class GitClientServiceImpl extends GitClientService
       String params = "vfsid=" + vfsId + "&projectid=" + projectid;
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).data(marshaller.marshal())
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).delay(2000)
-         .requestStatusHandler(new InitRequestStatusHandler(projectid)).send(callback);
+         .requestStatusHandler(new InitRequestStatusHandler(projectName)).send(callback);
    }
 
    /**

@@ -216,10 +216,11 @@ public abstract class GitClientService
     * 
     * @param vfsId virtual file system id
     * @param projectid project's id (root of GIT repository)
+    * @param projectName 
     * @param bare to create bare repository or not
     * @param callback callback
     */
-   public abstract void init(String vfsId, String projectid, boolean bare, AsyncRequestCallback<String> callback)
+   public abstract void init(String vfsId, String projectid, String projectName, boolean bare, AsyncRequestCallback<String> callback)
       throws RequestException;
 
    /**
