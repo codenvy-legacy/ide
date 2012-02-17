@@ -38,6 +38,7 @@ import org.exoplatform.ide.core.GoToLine;
 import org.exoplatform.ide.core.InformationDialog;
 import org.exoplatform.ide.core.Input;
 import org.exoplatform.ide.core.Loader;
+import org.exoplatform.ide.core.LockFile;
 import org.exoplatform.ide.core.LogReader;
 import org.exoplatform.ide.core.Login;
 import org.exoplatform.ide.core.Menu;
@@ -169,6 +170,8 @@ public class IDE
 
    public Login LOGIN;
 
+   public LockFile LOCK_FILE;
+   
    public LogReader LOG_READER;
 
    public CustomizeToolbar CUSTOMIZE_TOOLBAR = new CustomizeToolbar();
@@ -227,6 +230,7 @@ public class IDE
       REST_SERVICE = PageFactory.initElements(driver, RESTService.class);
       LOGIN = PageFactory.initElements(driver, Login.class);
       LOG_READER = PageFactory.initElements(driver, LogReader.class);
+      LOCK_FILE = PageFactory.initElements(driver, LockFile.class);
       CUSTOMIZE_TOOLBAR = PageFactory.initElements(driver, CustomizeToolbar.class);
       REST_SERVICE_DISCOVERY = PageFactory.initElements(driver, RESTServiceDiscovery.class);
       PROGRESS_BAR = PageFactory.initElements(driver, ProgressBar.class);
