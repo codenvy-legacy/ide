@@ -18,16 +18,23 @@
  */
 package org.exoplatform.ide.operation.browse.locks;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import com.google.gwt.user.client.Command;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * Check the work of Lock/Unlock feature.
@@ -44,7 +51,9 @@ import org.junit.Test;
 public class LockFileTest extends LockFileAbstract
 {
 
-   private static String FOLDER_NAME = LockFileTest.class.getSimpleName();
+   private static String PROJECT = LockFileTest.class.getSimpleName();
+
+   private static String FOLDER_NAME = LockFileTest.class.getSimpleName() + "_dir";
 
    private static final String FILE_NAME_1 = "file-" + LockFileTest.class.getSimpleName() + "_1";
 
@@ -55,7 +64,8 @@ public class LockFileTest extends LockFileAbstract
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME);
       }
       catch (Exception e)
       {
@@ -68,7 +78,7 @@ public class LockFileTest extends LockFileAbstract
       deleteCookies();
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -78,168 +88,193 @@ public class LockFileTest extends LockFileAbstract
    @Test
    public void testLockFileManually() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, false);
 
-      //----- 1 ------------
-      //open new XML file
+      //--------------------------------------------------------------------------------
+      //step 1 open project, select folder, check state lock menu on toolbar and Edit
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
+
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME);
+      assertFalse(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.LOCK_FILE));
+      IDE.MENU.isCommandVisible(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE);
+
+      //step 2 open xml file and chek state of menu
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitTabPresent(1);
 
-      //check menu and button on toolbar
-      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, false);
+      //need for parsing text in editor and redraw all menu edit
+      Thread.sleep(1000);
+      checkAllLockButonNotActive();
 
-      //----- 2 ------------
-      //save XML file
-      IDE.NAVIGATION.saveFileAs(FILE_NAME_1);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, true);
-      checkFileLocking(WS_URL + FOLDER_NAME + "/"+FILE_NAME_1, false);
+      IDE.EDITOR.clickCloseEditorButton(0);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitTabNotPresent("Welcome");
 
-      //----- 3 ------------
-      //lock XML file
-      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
-      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.UNLOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.UNLOCK_FILE, true);
+      //step 2 save xml file and check button state
+      IDE.EDITOR.saveAs(0, FILE_NAME_1);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_1);
+      checkAllLockButtonIsActive();
 
-      checkFileLocking(WS_URL + FOLDER_NAME + "/"+FILE_NAME_1, false);
+      //step 3 lock file and check state buttons  
+      IDE.TOOLBAR.runCommand(MenuCommands.Edit.LOCK_FILE);
+      IDE.LOADER.waitClosed();
+      IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.Edit.UNLOCK_FILE);
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.UNLOCK_FILE));
+      IDE.MENU.isCommandVisible(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE);
 
-      //----- 4 ------------
-      //open new HTML file
+      //step 4 open html file and chek state of menu
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitTabPresent(1);
+      //need for parsing text in editor and redraw all menu edit
+      Thread.sleep(1000);
+      checkAllLockButonNotActive();
 
-      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, false);
+      //step 5 select XML file and check button state
+      IDE.EDITOR.selectTab(FILE_NAME_1);
 
-      //----- 5 ------------
-      //select XML file tab
-      IDE.EDITOR.selectTab(0);
+      IDE.MENU.clickOnCommand(MenuCommands.Edit.EDIT_MENU);
+      assertTrue(IDE.LOCK_FILE.isUnLockCommandActive());
+      IDE.MENU.clickOnLockLayer();
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.UNLOCK_FILE));
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.UNLOCK_FILE));
 
-      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.UNLOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.UNLOCK_FILE, true);
+      //step 6
+      //      //TODO after fix issue IDE- 1473 ucommit code unlock XML file and check state button ()
+      //      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.UNLOCK_FILE);
+      //      IDE.MENU.clickOnCommand(MenuCommands.Edit.EDIT_MENU);
+      //      assertFalse(IDE.LOCK_FILE.isUnLockCommandActive());
+      //      assertTrue(IDE.LOCK_FILE.isLockCommandActive());
+      //      IDE.MENU.clickOnLockLayer();
+      //      IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.Edit.LOCK_FILE);
+      //      IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.LOCK_FILE);
 
-      //----- 6 ------------
-      //unlock XML file
-      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.UNLOCK_FILE);
-
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, true);
-
-      //----- 7 ------------
-      //select HTML file, save file, lock
+      //step 7 select file, lock check button states and close
       IDE.EDITOR.selectTab(1);
-      IDE.NAVIGATION.saveFileAs(FILE_NAME_2);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
-
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.UNLOCK_FILE, true);
-
-      //----- 8 ------------
-      //close HTML file, open and check, that file is unlocked
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.saveAs(1, FILE_NAME_2);
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_2);
+      IDE.TOOLBAR.runCommand(MenuCommands.Edit.LOCK_FILE);
+      IDE.LOADER.waitClosed();
+      checkAllUnlockStateButtons();
       IDE.EDITOR.closeFile(1);
-      Assert.assertFalse(IDE.EDITOR.isTabPresentInEditorTabset(FILE_NAME_2));
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME_2, false);
+      IDE.EDITOR.waitTabNotPresent(1);
 
-      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, true);
+      //step 8 reopen Html File and check lock     
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_2);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_2);
+      checkAllUnlockStateButtons();
 
-      //----- 9 ------------
-      //lock file
-      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
-
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.UNLOCK_FILE, true);
-
-      //----- 10 ------------
-      //create new file and close it
+      // step 9 create new file and check lock button state
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_TEMPLATE_FILE);
+      IDE.EDITOR.waitTabPresent(2);
+      //need for parsing text in editor and redraw all menu edit
+      Thread.sleep(1000);
+      checkAllLockButonNotActive();
 
-      //check menu and button on toolbar
-      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, false);
+      IDE.EDITOR.forcedClosureFile(2);
+      IDE.EDITOR.waitTabNotPresent(2);
 
-      //      IDE.EDITOR.closeUnsavedFileAndDoNotSave(2);
-      //      waitForElementNotPresent(Locators.EDITOR_TABSET_LOCATOR);
-
-      IDE.EDITOR.closeTabIgnoringChanges(2);
-
-      //----- 11 ------------
-      //check, that HTML file is locked
-      // checkIsEditorTabSelected(FILE_NAME_2, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.UNLOCK_FILE, true);
-
-      //----- 12 ------------
-      //check XML file is unlocked
+      checkAllUnlockStateButtons();
       IDE.EDITOR.selectTab(0);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, true);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_1);
+
+      //unlock after fix issue TODO after fix issue IDE-1473
+      //checkAllLockButtonIsActive();
+
    }
 
    @Test
    public void testLockFileStaysAfterRefresh() throws Exception
    {
+      //step one refresh an open project
       createFileViaWebDav(FILE_NAME_1);
       createFileViaWebDav(FILE_NAME_2);
 
-      refresh();
+      driver.navigate().refresh();
 
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_1);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_2);
 
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      //close welcome tab
+      IDE.EDITOR.clickCloseEditorButton(0);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitTabNotPresent("Welcome");
 
-      //----- 1 ------------
-      //open files
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME_1, false);
+      //step 2 open files
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_1);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_1);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_2);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_2);
 
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, true);
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME_2, false);
-
-      IDE.EDITOR.selectTab(0);
-
-      //----- 2 ------------
-      //lock file
+      //step 3 lock first file and check button state
+      IDE.EDITOR.selectTab(FILE_NAME_1);
+      IDE.LOADER.waitClosed();
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
+      IDE.LOADER.waitClosed();
+      checkAllUnlockStateButtons();
+      
+      //step 4 refresh browser and chek state button of second file
+      driver.navigate().refresh();
+      IDE.EDITOR.waitTabPresent(2);
+      IDE.EDITOR.selectTab(FILE_NAME_2);
+      IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_2);
+      Thread.sleep(1000);
+      checkAllLockButtonIsActive();
 
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
+   }
 
-      //----- 3 ------------
-      //refresh IDE
-      refresh();
-      IDE.WORKSPACE.waitForRootItem();
+   /**
+    * check enabled icon and button on toolbar and Edit menu
+    * @throws Exception
+    */
+   private void checkAllLockButtonIsActive() throws Exception
+   {
+      IDE.MENU.clickOnCommand(MenuCommands.Edit.EDIT_MENU);
+      assertTrue(IDE.LOCK_FILE.isLockCommandActive());
+      IDE.MENU.clickOnLockLayer();
+      IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.Edit.LOCK_FILE);
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.LOCK_FILE));
+      assertFalse(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.UNLOCK_FILE));
+   }
 
-      //TODO After fix problem in IDE-774 should be remove
-      IDE.EDITOR.selectTab(0);
-      //------------------------
+   /**
+    * check disabled icon and button on toolbar and Edit menu
+    * @throws Exception
+    */
+   private void checkAllLockButonNotActive() throws Exception
+   {
+      IDE.MENU.clickOnCommand(MenuCommands.Edit.EDIT_MENU);
+      IDE.LOADER.waitClosed();
+      assertTrue(IDE.LOCK_FILE.isLockCommandNotActive());
+      IDE.MENU.clickOnLockLayer();
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME);
+      IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.LOCK_FILE);
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.LOCK_FILE));
+   }
 
-      Assert.assertTrue(IDE.EDITOR.isEditorTabSelected(FILE_NAME_1));
-
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
-
-      //----- 4 ------------
-      //select second tab and check, that file is not locked
-      IDE.EDITOR.selectTab(1);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, true);
+   /**
+    * check enabled ulock icon and button on toolbar and Edit menu
+    * @throws Exception
+    */
+   private void checkAllUnlockStateButtons() throws Exception
+   {
+      IDE.MENU.clickOnCommand(MenuCommands.Edit.EDIT_MENU);
+      assertTrue(IDE.LOCK_FILE.isUnLockCommandActive());
+      IDE.MENU.clickOnLockLayer();
+      IDE.LOADER.waitClosed();
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.UNLOCK_FILE));
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.UNLOCK_FILE));
    }
 
    private void createFileViaWebDav(String fileName)
@@ -247,7 +282,8 @@ public class LockFileTest extends LockFileAbstract
       final String filePath = "src/test/resources/org/exoplatform/ide/operation/browse/locks/test.html";
       try
       {
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, WS_URL + FOLDER_NAME + "/" + fileName);
+         VirtualFileSystemUtils
+            .put(filePath, MimeType.TEXT_HTML, WS_URL + PROJECT + "/" + FOLDER_NAME + "/" + fileName);
       }
       catch (Exception e)
       {
