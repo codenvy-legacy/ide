@@ -133,10 +133,11 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
    public void initRepository()
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectName = ((ItemContext)selectedItems.get(0)).getProject().getName();
       boolean bare = display.getBareValue().getValue();
       try
       {
-         GitClientService.getInstance().init(vfs.getId(), projectId, bare,
+         GitClientService.getInstance().init(vfs.getId(), projectId, projectName, bare,
             new AsyncRequestCallback<String>()
             {
 
