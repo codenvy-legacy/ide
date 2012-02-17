@@ -131,7 +131,6 @@ public class LockFile extends AbstractTestModule
    {
       try
       {
-         System.out.print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"+BaseTest.BASE_URL + "IDE/ui/popup/check.gif");
          WebElement elem =
             driver().findElement(
                By.xpath(String.format(CHEK_UNLOCK_IMAGE, BaseTest.BASE_URL + "IDE/ui/popup/check.gif")));
