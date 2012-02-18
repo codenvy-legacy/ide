@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.core;
 
+import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -34,30 +35,50 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public class Login extends AbstractTestModule
 {
+
+   private static final String CLOUD_LOGOUT_IDE = "logoutButton";
    
-   private static final String LOGOUT_LOCATOR = "//node()[@id='logoutButton']";
+   private static final String CLOUD_LOGIN_IDE = "loginButton";
+
+   private static final String CLOUD_LOGOUT = "loginButton";
    
    private static final String USERNAME = "j_username";
-   
+
    private static final String PASSWORD = "j_password";
-   
+
    private static final String LOGIN_BUTTON = "//node()[@id='loginButton']";
+
+   private static final String LOGOUT_LOCATOR = "//node()[@id='logoutButton']";
+
+   
    
    @FindBy(xpath = LOGOUT_LOCATOR)
    private WebElement logout;
-   
+
    @FindBy(name = USERNAME)
    private WebElement name;
-   
+
    @FindBy(name = PASSWORD)
    private WebElement password;
-   
+
    @FindBy(xpath = LOGIN_BUTTON)
    private WebElement login;
+
+   @FindBy(id = CLOUD_LOGIN_IDE)
+   private WebElement cloudLoginButton;
+
+   @FindBy(id = CLOUD_LOGOUT_IDE)
+   private WebElement cloudIdeLogOut;
    
    public void logout()
    {
       logout.click();
+   }
+
+   
+   public void logoutCloudIde()
+   {
+      cloudIdeLogOut.click();
    }
    
    public void standaloneLogin(String userName, String password) throws Exception
@@ -67,25 +88,77 @@ public class Login extends AbstractTestModule
       login.click();
       selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
    }
-   
+
    public void waitStandaloneLogin()
    {
       new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
          {
-            @Override
-            public Boolean apply(WebDriver input)
+            try
             {
-               try
-               {
-                  input.findElement(By.name(USERNAME));
-                  return true;
-               }
-               catch (NoSuchElementException e)
-               {
-                  return false;
-               }
+               input.findElement(By.name(USERNAME));
+               return true;
             }
-         });
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   /**
+    * wait login jsp page on cloud-ide
+    */
+   public void waitTenantLoginPage()
+   {
+      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return name != null && name.isDisplayed() && password != null && password.isDisplayed()
+                  && cloudLoginButton != null && cloudLoginButton.isDisplayed();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   /**
+    * click on button Login on cloud page
+    */
+   public void loginInCloud()
+   {
+      cloudLoginButton.click();
+
+   }
+
+   /**
+    * login as invite user on cloud page
+    */
+   public void loginAsUser()
+   {
+      name.sendKeys(BaseTest.NOT_ROOT_USER_NAME);
+      password.sendKeys(BaseTest.NOT_ROOT_USER_PASSWORD);
+      loginInCloud();
+   }
+
+   /**
+    * login as root user on cloud page
+    */
+   public void loginAsRoot()
+   {
+      login.sendKeys(BaseTest.USER_NAME);
+      password.sendKeys(BaseTest.USER_PASSWORD);
+      loginInCloud();
    }
 
 }
