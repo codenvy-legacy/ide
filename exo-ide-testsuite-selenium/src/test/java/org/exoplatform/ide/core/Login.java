@@ -81,6 +81,11 @@ public class Login extends AbstractTestModule
       cloudIdeLogOut.click();
    }
    
+   /**
+    * @param userName
+    * @param password
+    * @throws Exception
+    */
    public void standaloneLogin(String userName, String password) throws Exception
    {
       IDE().INPUT.typeToElement(name, userName, true);
@@ -89,6 +94,9 @@ public class Login extends AbstractTestModule
       selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
    }
 
+   /**
+    * 
+    */
    public void waitStandaloneLogin()
    {
       new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
