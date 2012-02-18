@@ -196,8 +196,8 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING));
       assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING));
 
-      IDE.EDITOR.closeTabIgnoringChanges(1);
-      IDE.EDITOR.closeTabIgnoringChanges(1);
+      IDE.EDITOR.forcedClosureFile(1);
+      IDE.EDITOR.forcedClosureFile(1);
    }
 
    @AfterClass
