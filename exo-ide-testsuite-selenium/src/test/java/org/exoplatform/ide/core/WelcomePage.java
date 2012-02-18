@@ -38,4 +38,13 @@ public class WelcomePage extends AbstractTestModule
        }
    }
 
+   
+   public void waitClose() throws Exception
+   {
+      IDE().EDITOR.waitTabNotPresent("Welcome");
+   }
+   
+   
+   
+   
 }
