@@ -18,13 +18,20 @@
  */
 package org.exoplatform.ide.operation.browse.locks;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * Test that file, locked by another user, became unchangable
@@ -36,6 +43,7 @@ import org.junit.Test;
  */
 public class LocksByUserTest extends LockFileAbstract
 {
+   private static String PROJECT = LockFileTest.class.getSimpleName();
 
    private final static String FOLDER_NAME = LocksByUserTest.class.getSimpleName();
 
@@ -46,10 +54,12 @@ public class LocksByUserTest extends LockFileAbstract
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME);
+
          VirtualFileSystemUtils.put(
             "src/test/resources/org/exoplatform/ide/operation/restservice/RESTServiceGetURL.groovy",
-            MimeType.GROOVY_SERVICE, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+            MimeType.GROOVY_SERVICE, WS_URL + PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       }
       catch (Exception e)
       {
@@ -61,7 +71,7 @@ public class LocksByUserTest extends LockFileAbstract
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -71,38 +81,64 @@ public class LocksByUserTest extends LockFileAbstract
    @Test
    public void testLocksByUser() throws Exception
    {
-      //fix for run tests where new session starts after 7 testcases passed  
-      logout();
-      IDE.LOGIN.standaloneLogin(TestConstants.Users.ROOT, TestConstants.Users.ROOT_PASS);
-      
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
-      //----- 1 --------
-      //open file
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
+      //step 1 open project
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
 
-      //----- 2 --------
-      //lock file
+      //step 2 lock file an logout
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.Editor.LOCK_FILE);
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
+      IDE.LOADER.waitClosed();
+      checkAllUnlockStateButtons();
+      IDE.LOGIN.logoutCloudIde();
 
-      //----- 3 --------
-      //logout
-      logout();
+      //step 3 login as invite user, open an check lock project 
+      IDE.LOGIN.waitTenantLoginPage();
+      IDE.LOGIN.loginAsUser();
 
-      //----- 4 --------
-      //login under another user
-      IDE.LOGIN.standaloneLogin(TestConstants.Users.DEV, TestConstants.Users.DEV_PASS);
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.WELCOME_PAGE.close();
+      IDE.WELCOME_PAGE.waitClose();
 
-      //----- 5 --------
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
 
-      checkFileLocking(WS_URL + FOLDER_NAME + "/" + FILE_NAME, true);
-      //open file
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
+      IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.Editor.LOCK_FILE);
 
-      checkCantSaveLockedFile();
+      //TODO Here failed but after fix issue IDE-1476 should be pass
+      checkAllUnlockStateButtons();
+      IDE.EDITOR.deleteFileContent(0);
+      IDE.EDITOR.typeTextIntoEditor(0, "Change in locked file");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
+      IDE.LOADER.waitClosed();
+      IDE.WARNING_DIALOG.waitOpened();
+      IDE.WARNING_DIALOG.getWarningMessage().contains("423 Locked");
+      IDE.WARNING_DIALOG.clickOk();
+      IDE.WARNING_DIALOG.waitClosed();
+   }
+
+   /**
+    * check enabled ulock icon and button on toolbar and Edit menu
+    * @throws Exception
+    */
+   private void checkAllUnlockStateButtons() throws Exception
+   {
+      IDE.MENU.clickOnCommand(MenuCommands.Edit.EDIT_MENU);
+      assertTrue(IDE.LOCK_FILE.isUnLockCommandActive());
+      IDE.MENU.clickOnLockLayer();
+      IDE.LOADER.waitClosed();
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.UNLOCK_FILE));
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.UNLOCK_FILE));
    }
 
 }
