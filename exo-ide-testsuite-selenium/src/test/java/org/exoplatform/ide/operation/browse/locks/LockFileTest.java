@@ -89,7 +89,6 @@ public class LockFileTest extends LockFileAbstract
    public void testLockFileManually() throws Exception
    {
 
-      //--------------------------------------------------------------------------------
       //step 1 open project, select folder, check state lock menu on toolbar and Edit
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
@@ -141,15 +140,15 @@ public class LockFileTest extends LockFileAbstract
       assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.UNLOCK_FILE));
       assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.UNLOCK_FILE));
 
-      //step 6
-      //      //TODO after fix issue IDE- 1473 ucommit code unlock XML file and check state button ()
-      //      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.UNLOCK_FILE);
-      //      IDE.MENU.clickOnCommand(MenuCommands.Edit.EDIT_MENU);
-      //      assertFalse(IDE.LOCK_FILE.isUnLockCommandActive());
-      //      assertTrue(IDE.LOCK_FILE.isLockCommandActive());
-      //      IDE.MENU.clickOnLockLayer();
-      //      IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.Edit.LOCK_FILE);
-      //      IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.LOCK_FILE);
+      //  step 6
+      //TODO after fix issue IDE-1473 ucommit code unlock XML file and check state button ()
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.UNLOCK_FILE);
+      IDE.MENU.clickOnCommand(MenuCommands.Edit.EDIT_MENU);
+      assertFalse(IDE.LOCK_FILE.isUnLockCommandActive());
+      assertTrue(IDE.LOCK_FILE.isLockCommandActive());
+      IDE.MENU.clickOnLockLayer();
+      IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.Edit.LOCK_FILE);
+      IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.LOCK_FILE);
 
       //step 7 select file, lock check button states and close
       IDE.EDITOR.selectTab(1);
@@ -182,8 +181,8 @@ public class LockFileTest extends LockFileAbstract
       IDE.EDITOR.selectTab(0);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_1);
 
-      //unlock after fix issue TODO after fix issue IDE-1473
-      //checkAllLockButtonIsActive();
+      // after fix issue TODO after IDE-1473 should be pass
+      checkAllLockButtonIsActive();
 
    }
 
@@ -222,7 +221,7 @@ public class LockFileTest extends LockFileAbstract
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
       IDE.LOADER.waitClosed();
       checkAllUnlockStateButtons();
-      
+
       //step 4 refresh browser and chek state button of second file
       driver.navigate().refresh();
       IDE.EDITOR.waitTabPresent(2);
