@@ -22,14 +22,17 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Test for code outline for netvibes files.
@@ -42,12 +45,11 @@ import java.io.IOException;
 public class CodeOutLineNetvibesTest extends BaseTest
 {
 
+   private final static String PROJECT = CodeOutLineNetvibesTest.class.getSimpleName();
+
    private final static String FILE_NAME = "NetvibesCodeOutline.html";
 
-   private final static String FOLDER_NAME = CodeOutLineNetvibesTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
+   private final static String FOLDER_NAME = CodeOutLineNetvibesTest.class.getSimpleName() + "-dir";
 
    @Before
    public void setUp()
@@ -55,8 +57,10 @@ public class CodeOutLineNetvibesTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/NetvibesCodeOutline.html";
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, URL + FOLDER_NAME + "/" + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME);
+         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, WS_URL + PROJECT + "/" + FOLDER_NAME + "/"
+            + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -69,7 +73,7 @@ public class CodeOutLineNetvibesTest extends BaseTest
       deleteCookies();
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {
@@ -78,22 +82,32 @@ public class CodeOutLineNetvibesTest extends BaseTest
 
    // IDE-473 Issue
    @Test
-   @Ignore
    public void testCodeOutLineNetvibes() throws Exception
    {
       //------ 1 ------------
       //open file with text
-      IDE.WORKSPACE.waitForItem(URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(URL + FOLDER_NAME + "/");
-      waitForElementNotPresent(IDE.NAVIGATION.getItemId(URL + FOLDER_NAME + "/" + FILE_NAME));
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME, false);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
 
-      //------ 2 ------------
-      //show Outline
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+
+      //step 2 change memtype as UWA widget
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
+      IDE.RENAME.waitOpened();
+      IDE.RENAME.setMimeType("application/x-uwa-widget");
+      IDE.RENAME.clickRenameButton();
+      IDE.RENAME.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+
+      //step 3 open the file, run outline and check tree
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
-      waitForElementPresent("ideOutlineTreeGrid");
-
-      //------3--------
+      IDE.OUTLINE.waitOpened();
       checkTreeCorrectlyCreated();
 
    }
