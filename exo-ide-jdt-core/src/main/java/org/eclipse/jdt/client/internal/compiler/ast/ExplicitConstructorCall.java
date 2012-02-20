@@ -25,12 +25,10 @@ import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.ProblemMethodBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.RawTypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
-import org.eclipse.jdt.client.internal.compiler.lookup.SourceTypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeConstants;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
-import org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding;
 
 public class ExplicitConstructorCall extends Statement implements InvocationSite
 {

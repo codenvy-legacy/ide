@@ -12,7 +12,6 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
 
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
-import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
 import org.eclipse.jdt.client.internal.compiler.ast.Expression;
 import org.eclipse.jdt.client.internal.compiler.ast.JavadocAllocationExpression;

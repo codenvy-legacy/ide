@@ -29,7 +29,6 @@ import org.eclipse.jdt.client.internal.compiler.lookup.CompilationUnitScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
 import org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.LocalTypeBinding;
-import org.eclipse.jdt.client.internal.compiler.lookup.MemberTypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.NestedTypeBinding;

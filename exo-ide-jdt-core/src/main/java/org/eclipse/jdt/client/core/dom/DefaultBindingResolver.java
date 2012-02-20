@@ -58,7 +58,6 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeConstants;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilation;
-import org.eclipse.jdt.client.internal.core.util.Util;
 
 import java.util.HashMap;
 import java.util.Map;
