@@ -281,7 +281,7 @@ public class JcrFileSystem implements VirtualFileSystem
          }
          if (ItemType.FOLDER != parentData.getType())
          {
-            throw new InvalidArgumentException("Unable to create project. Item specified as parent is not a folder. ");
+            throw new InvalidArgumentException("Unable create project. Item specified as parent is not a folder. ");
          }
          if (properties == null)
          {
