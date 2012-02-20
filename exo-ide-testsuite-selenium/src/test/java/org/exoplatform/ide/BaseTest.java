@@ -90,6 +90,10 @@ public abstract class BaseTest
 
    public static final String USER_PASSWORD = IDE_SETTINGS.getString("ide.user.root.password");
 
+   public static final String NOT_ROOT_USER_NAME = IDE_SETTINGS.getString("ide.user.dev.name");
+
+   public static final String NOT_ROOT_USER_PASSWORD = IDE_SETTINGS.getString("ide.user.dev.password");
+   
    protected static String APPLICATION_URL = BASE_URL + IDE_SETTINGS.getString("ide.app.url");
 
    protected static String LOGIN_URL = BASE_URL + IDE_SETTINGS.getString("ide.login.url");
