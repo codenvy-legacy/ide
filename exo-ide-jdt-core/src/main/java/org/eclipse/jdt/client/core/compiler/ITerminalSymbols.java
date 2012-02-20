@@ -11,8 +11,6 @@
 
 package org.eclipse.jdt.client.core.compiler;
 
-import org.eclipse.jdt.core.compiler.IScanner;
-
 /**
  * Maps each terminal symbol in the java-grammar into a unique integer. This integer is used to represent the terminal when
  * computing a parsing action.
