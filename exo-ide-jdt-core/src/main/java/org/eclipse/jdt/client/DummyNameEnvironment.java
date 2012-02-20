@@ -40,6 +40,7 @@ import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesInfoList;
@@ -304,13 +305,16 @@ public class DummyNameEnvironment implements INameEnvironment
       catch (Exception e)
       {
          e.printStackTrace();
-         IDE.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new OutputEvent(e.getMessage()));
       }
    }
 
    private void addConstructor(BinaryTypeImpl type, final ISearchRequestor requestor)
    {
-      for (IBinaryMethod method : type.getMethods())
+      IBinaryMethod[] methods = type.getMethods();
+      if (methods == null)
+         return;
+      for (IBinaryMethod method : methods)
       {
          if (!method.isConstructor())
             continue;
