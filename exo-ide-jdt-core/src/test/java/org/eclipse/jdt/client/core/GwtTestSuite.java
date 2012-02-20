@@ -42,10 +42,10 @@ public class GwtTestSuite extends TestCase
    public static Test suite()
    {
       GWTTestSuite suite = new GWTTestSuite("All Gwt Tests go in here");
-      suite.addTestSuite(ASTParserTestGwt.class);
-      suite.addTestSuite(ASTVisitorTestGwt.class);
+//      suite.addTestSuite(ASTParserTestGwt.class);
+//      suite.addTestSuite(ASTVisitorTestGwt.class);
       //      suite.addTestSuite(CodeAssistantTestGwt.class);
-      suite.addTestSuite(ASTRewriteTestGwt.class);
+//      suite.addTestSuite(ASTRewriteTestGwt.class);
       suite.addTestSuite(SourceModifierTestGwt.class);
       suite.addTestSuite(ImportRewriteTestGwt.class);
       suite.addTestSuite(ASTRewritingMethodDeclTestGwt.class);

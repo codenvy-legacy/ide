@@ -109,42 +109,12 @@ public class BinaryMethodImpl implements IBinaryMethod
    @Override
    public char[] getGenericSignature()
    {
-      // String returnType = method.get("returnType").isString().stringValue();
-      // boolean isGeneric = false;
-      // if (returnType.length() == 1)
-      // {
-      // isGeneric = true;
-      // }
-      // else
-      // returnType = Signature.createTypeSignature(returnType, true);
-      //
-      // JSONArray array = method.get("parameterTypes").isArray();
-      //
-      // String params[] = new String[array.size()];
-      // for (int i = 0; i < array.size(); i++)
-      // {
-      // String paramType = array.get(i).isString().stringValue();
-      // if (paramType.length() == 1)
-      // {
-      // params[i] = "T" + paramType + ";";
-      // isGeneric = true;
-      // }
-      // else
-      // {
-      // // if (paramType.contains("<"))
-      // // paramType = paramType.substring(0, paramType.indexOf('<'));
-      // // if (paramType.contains("<"))
-      // // {
-      // // pa
-      // // }
-      // // else eTypeSignature(paramType, true)
-      // params[i] = Signature.createTypeParameterSignature(paramType, new String[0]);
-      // }
-      // }
-      // if (isGeneric)
-      // return Signature.createMethodSignature(params, returnType).replaceAll("\\.", "/").toCharArray();
-      // else
-      // TODO Auto-generated method stub
+      if (method.containsKey("signature"))
+      {
+         String stringValue = method.get("signature").isString().stringValue();
+         if (!stringValue.isEmpty())
+            return stringValue.toCharArray();
+      }
       return null;
    }
 
@@ -152,27 +122,7 @@ public class BinaryMethodImpl implements IBinaryMethod
    @Override
    public char[] getMethodDescriptor()
    {
-
-      String returnType = method.get("returnType").isString().stringValue();
-      if (returnType.length() == 1)
-         returnType = "java.lang.Object";
-      JSONArray array = method.get("parameterTypes").isArray();
-      String params[] = new String[array.size()];
-      for (int i = 0; i < array.size(); i++)
-      {
-         String paramType = array.get(i).isString().stringValue();
-         if (paramType.length() == 1)
-            params[i] = new String(ConstantPool.ObjectSignature);
-         else
-         {
-            if (paramType.contains("<"))
-               paramType = paramType.substring(0, paramType.indexOf('<'));
-            params[i] = Signature.createTypeSignature(paramType, true);
-         }
-      }
-
-      return Signature.createMethodSignature(params, Signature.createTypeSignature(returnType, true))
-         .replaceAll("\\.", "/").toCharArray();
+      return method.get("descriptor").isString().stringValue().toCharArray();
    }
 
    /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod#getParameterAnnotations(int) */

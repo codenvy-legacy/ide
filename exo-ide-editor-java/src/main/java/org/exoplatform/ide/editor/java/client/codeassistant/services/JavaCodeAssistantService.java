@@ -25,8 +25,13 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.Marshallable;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypesInfoList;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
+import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.String2ArrayMarshaller;
 import org.exoplatform.ide.editor.java.client.model.Types;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
@@ -44,6 +49,8 @@ public class JavaCodeAssistantService extends CodeAssistantService
    private static JavaCodeAssistantService instance;
 
    private static final String FIND_BY_PROJECT = "/ide/code-assistant/java/find-in-package";
+
+   private static final String TYPES_BY_FQNS = "/ide/code-assistant/java/types-by-fqns";
 
    public JavaCodeAssistantService(String restServiceContext, Loader loader)
    {
@@ -94,6 +101,24 @@ public class JavaCodeAssistantService extends CodeAssistantService
       try
       {
          AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   public void getTypesByFqns(String[] fqns, String projectId, AsyncRequestCallback<TypesInfoList> callback)
+   {
+      String url = restServiceContext + TYPES_BY_FQNS;
+      url += "?vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
+      if(projectId != null)
+         url += "&projecid=" + projectId;
+      try
+      {
+         Marshallable marshallable = new String2ArrayMarshaller(fqns);
+         AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+            .data(marshallable.marshal()).send(callback);
       }
       catch (RequestException e)
       {

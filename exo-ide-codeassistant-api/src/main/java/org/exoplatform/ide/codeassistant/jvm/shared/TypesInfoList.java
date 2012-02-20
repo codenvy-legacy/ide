@@ -16,22 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.test;
+package org.exoplatform.ide.codeassistant.jvm.shared;
+
+import java.util.List;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Jan 17, 2012 11:55:13 AM evgen $
- *
+ * @version $Id: 11:37:40 AM 34360 2009-07-22 23:58:59Z evgen $
+ * 
  */
- 
-public class TestClass
+public interface TypesInfoList
 {
-   private String str;
-   
-   public void printString(String s)
-   {
-      Class<TestClass> = TestClass.class;
-      String[] aa = s.split("\n");
-      str = aa[1];
-      str.replaceAll("dsf", "sdfs").le
-   }
+   void setTypes(List<TypeInfo> types);
+
+   List<TypeInfo> getTypes();
 }

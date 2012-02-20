@@ -112,23 +112,12 @@ public class BinaryTypeImpl implements IBinaryType
    @Override
    public char[] getGenericSignature()
    {
-      // TODO Auto-generated method stub
-      if (jsObj.get("name").isString().stringValue().equals("java.util.Map"))
+      if (jsObj.containsKey("signature"))
       {
-         StringBuilder b = new StringBuilder();
-         // b.append('L');
-         // b.append(getName());
-         // b.append("<TK:Ljava/lang/Object;TV:Ljava/lang/Object;>;");
-         b.append("<K:Ljava/lang/Object;V:Ljava/lang/Object;>Ljava/lang/Object;");
-         return b.toString().toCharArray();
+         String stringValue = jsObj.get("signature").isString().stringValue();
+         if (!stringValue.isEmpty())
+            return stringValue.toCharArray();
       }
-
-      if (jsObj.get("name").isString().stringValue().equals("java.lang.Comparable"))
-         return "<T:Ljava/lang/Object;>Ljava/lang/Object;".toCharArray();
-      if (jsObj.get("name").isString().stringValue().equals("java.lang.Class"))
-         return "<T:Ljava/lang/Object;>Ljava/lang/Object;Ljava/io/Serializable;Ljava/lang/reflect/GenericDeclaration;Ljava/lang/reflect/Type;Ljava/lang/reflect/AnnotatedElement;"
-            .toCharArray();
-
       return null;
    }
 
@@ -200,10 +189,10 @@ public class BinaryTypeImpl implements IBinaryType
    {
       return Signature.getSimpleName(jsObj.get("name").isString().stringValue()).toCharArray();
    }
-   
+
    /**
-    * Answer the resolved name of the type in the source file format:
-    * <code>java.lang.String</code>
+    * Answer the resolved name of the type in the source file format: <code>java.lang.String</code>
+    * 
     * @return
     */
    public char[] getFqn()
@@ -257,9 +246,10 @@ public class BinaryTypeImpl implements IBinaryType
    {
       return null;
    }
-   
+
    /**
     * JSON representation of this object
+    * 
     * @return JSON string
     */
    public String toJsonString()

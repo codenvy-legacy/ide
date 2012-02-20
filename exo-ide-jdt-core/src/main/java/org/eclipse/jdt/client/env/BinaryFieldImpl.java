@@ -20,7 +20,6 @@ package org.eclipse.jdt.client.env;
 
 import com.google.gwt.json.client.JSONObject;
 
-import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryAnnotation;
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryField;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
@@ -72,7 +71,12 @@ public class BinaryFieldImpl implements IBinaryField
    @Override
    public char[] getGenericSignature()
    {
-      // TODO Auto-generated method stub
+      if (field.containsKey("signature"))
+      {
+         String stringValue = field.get("signature").isString().stringValue();
+         if (!stringValue.isEmpty())
+            return stringValue.toCharArray();
+      }
       return null;
    }
 
@@ -87,8 +91,7 @@ public class BinaryFieldImpl implements IBinaryField
    @Override
    public char[] getTypeName()
    {
-      return Signature.createTypeSignature(field.get("type").isString().stringValue(), true).replaceAll("\\.", "/")
-         .toCharArray();
+      return field.get("descriptor").isString().stringValue().toCharArray();
    }
 
 }

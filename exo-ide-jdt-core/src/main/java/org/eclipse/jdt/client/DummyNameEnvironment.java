@@ -18,13 +18,10 @@
  */
 package org.eclipse.jdt.client;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.TextResource;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.Splittable;
@@ -38,11 +35,14 @@ import org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod;
 import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.client.internal.compiler.env.NameEnvironmentAnswer;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypesInfoList;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
 import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
@@ -59,142 +59,65 @@ import java.util.Set;
 public class DummyNameEnvironment implements INameEnvironment
 {
 
-   protected interface JsonClasses extends ClientBundle
-   {
-      @Source("org/eclipse/jdt/client/object.json")
-      TextResource object();
-
-      @Source("org/eclipse/jdt/client/string.json")
-      TextResource string();
-
-      @Source("org/eclipse/jdt/client/system.json")
-      TextResource system();
-
-      @Source("org/eclipse/jdt/client/boolean.json")
-      TextResource booleanClass();
-
-      @Source("org/eclipse/jdt/client/byte.json")
-      TextResource byteClass();
-
-      @Source("org/eclipse/jdt/client/character.json")
-      TextResource character();
-
-      @Source("org/eclipse/jdt/client/class.json")
-      TextResource clazz();
-
-      @Source("org/eclipse/jdt/client/cloneable.json")
-      TextResource cloneable();
-
-      @Source("org/eclipse/jdt/client/double.json")
-      TextResource doubleClass();
-
-      @Source("org/eclipse/jdt/client/error.json")
-      TextResource error();
-
-      @Source("org/eclipse/jdt/client/exception.json")
-      TextResource exception();
-
-      @Source("org/eclipse/jdt/client/float.json")
-      TextResource floatClass();
-
-      @Source("org/eclipse/jdt/client/integer.json")
-      TextResource integer();
-
-      @Source("org/eclipse/jdt/client/long.json")
-      TextResource longClass();
-
-      @Source("org/eclipse/jdt/client/runtimeexception.json")
-      TextResource runtimeException();
-
-      @Source("org/eclipse/jdt/client/serializible.json")
-      TextResource serializible();
-
-      @Source("org/eclipse/jdt/client/short.json")
-      TextResource shortClass();
-
-      @Source("org/eclipse/jdt/client/stringbuffer.json")
-      TextResource stringBuffer();
-
-      @Source("org/eclipse/jdt/client/throwable.json")
-      TextResource throwable();
-
-      @Source("org/eclipse/jdt/client/void.json")
-      TextResource voidClass();
-   }
-
    private static Set<String> packages;
 
    private String projectId;
 
    static
    {
-
-      JsonClasses classes = GWT.create(JsonClasses.class);
-      JSONObject parseLenient = JSONParser.parseLenient(classes.object().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.Object", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.string().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.String", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.system().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.System", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.booleanClass().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.Boolean", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.byteClass().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.Byte", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.character().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.Character", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.clazz().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.Class", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.cloneable().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.Cloneable", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.doubleClass().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.Double", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.error().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.Error", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.exception().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.Exception", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.floatClass().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.Float", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.integer().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.Integer", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.longClass().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.Long", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.runtimeException().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.RuntimeException", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.serializible().getText()).isObject();
-      TypeInfoStorage.get().putType("java.io.Serializable", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.shortClass().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.Short", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.stringBuffer().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.StringBuffer", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.throwable().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.Throwable", parseLenient.toString());
-
-      parseLenient = JSONParser.parseLenient(classes.voidClass().getText()).isObject();
-      TypeInfoStorage.get().putType("java.lang.Void", parseLenient.toString());
-
+      String[] fqns = new String[]{//
+         "java.lang.Object",//
+            "java.lang.String",//
+            "java.lang.System",//
+            "java.lang.Boolean",//
+            "java.lang.Byte",//
+            "java.lang.Character",//
+            "java.lang.Class", "java.lang.Cloneable",//
+            "java.lang.Double",//
+            "java.lang.Error",//
+            "java.lang.Exception",//
+            "java.lang.Float",//
+            "java.lang.Integer",//
+            "java.lang.Long",//
+            "java.lang.RuntimeException",//
+            "java.io.Serializable",//
+            "java.lang.Short",//
+            "java.lang.StringBuffer",//
+            "java.lang.Throwable",//
+            "java.lang.Void"};
+      loadWellKnownClasses(fqns);
       packages = new HashSet<String>();
       packages.add("java");
       packages.add("java.lang");
       packages.add("java.util");
       packages.add("java.io");
+   }
+
+   private static void loadWellKnownClasses(String[] fqns)
+   {
+      final JSONTypesInfoUnmarshaller unmarshaller = new JSONTypesInfoUnmarshaller();
+      JavaCodeAssistantService.get().getTypesByFqns(fqns, null, new AsyncRequestCallback<TypesInfoList>(unmarshaller)
+      {
+
+         @Override
+         protected void onSuccess(TypesInfoList result)
+         {
+            if (unmarshaller.typesInfo != null)
+            {
+               for (int i = 0; i < unmarshaller.typesInfo.size(); i++)
+               {
+                  JSONObject o = unmarshaller.typesInfo.get(i).isObject();
+                  TypeInfoStorage.get().putType(o.get("name").isString().stringValue(), o.toString());
+               }
+            }
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            IDE.fireEvent(new ExceptionThrownEvent(exception));
+         }
+      });
    }
 
    /**
@@ -261,8 +184,7 @@ public class DummyNameEnvironment implements INameEnvironment
             @Override
             protected void onFailure(Throwable exception)
             {
-               // TODO
-               exception.printStackTrace();
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
             }
          });
    }
@@ -308,25 +230,6 @@ public class DummyNameEnvironment implements INameEnvironment
          return false;
       else
          return true;
-
-      // StringBuilder b = new StringBuilder();
-      // for (char[] c : parentPackageName)
-      // {
-      // b.append(c).append('.');
-      // }
-      // b.append(packageName);
-      //
-      // String pack = b.toString();
-      // // for (String fqn : typeStorage.keySet())
-      // // {
-      // // if (fqn.startsWith(pack))
-      // // return true;
-      // // }
-      // return packages.contains(pack)
-
-      // return packages.contains(pack);
-
-      // return false;
    }
 
    /** @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#cleanup() */
@@ -400,8 +303,8 @@ public class DummyNameEnvironment implements INameEnvironment
       }
       catch (Exception e)
       {
-         // TODO: handle exception
          e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -447,7 +350,6 @@ public class DummyNameEnvironment implements INameEnvironment
       final ISearchRequestor requestor, IProgressMonitor monitor)
    {
       AutoBean<TypesList> autoBean = JavaEditorExtension.AUTO_BEAN_FACTORY.types();
-      // AutoBeanUnmarshaller<TypesList> unmarshaller = new AutoBeanUnmarshaller<TypesList>(autoBean);
       String url =
          "/rest/private" + "/ide/code-assistant/java/find-by-prefix/" + new String(qualifiedName) + "?where=className"
             + "&projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
@@ -468,7 +370,7 @@ public class DummyNameEnvironment implements INameEnvironment
       }
       catch (Throwable e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -481,6 +383,30 @@ public class DummyNameEnvironment implements INameEnvironment
    public void findExactTypes(char[] missingSimpleName, boolean b, int type, ISearchRequestor storage)
    {
       // TODO Auto-generated method stub
+
+   }
+
+   public static class JSONTypesInfoUnmarshaller implements Unmarshallable<TypesInfoList>
+   {
+
+      private JSONArray typesInfo;
+
+      /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+      @Override
+      public void unmarshal(Response response) throws UnmarshallerException
+      {
+         if (response.getStatusCode() != 204)
+         {
+            typesInfo = JSONParser.parseLenient(response.getText()).isArray();
+         }
+      }
+
+      /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+      @Override
+      public TypesInfoList getPayload()
+      {
+         return null;
+      }
 
    }
 

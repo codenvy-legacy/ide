@@ -276,7 +276,7 @@
      <init-params>                                                                                                                                                                                             
        <value-param>                                                                                                                                                                                           
             <name>storage-path</name>                                                                                                                                                                          
-            <value>target/code-assistant-index</value>                                                                                                                                                             
+            <value>target/ide-codeassistant-lucene-index</value>                                                                                                                                                             
          </value-param>                                                                                                                                                                                        
      </init-params>                                                                                                                                                                                            
    </component>                                                                                                                                                                                                

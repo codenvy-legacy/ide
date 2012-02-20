@@ -30,11 +30,14 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -87,7 +90,7 @@ public class RestCodeAssistantJava
          LOG.error("Class info for " + fqn + " not found");
       return null;
    }
-   
+
    /**
     * Returns the Classs objects associated with the class or interface with the given simple name prefix.
     * 
@@ -99,8 +102,9 @@ public class RestCodeAssistantJava
    @GET
    @Path("/classes-by-prefix")
    @Produces(MediaType.APPLICATION_JSON)
-   public List<TypeInfo> getTypesByNamePrefix(@QueryParam("prefix") String namePrefix, @QueryParam("projectid") String projectId,
-      @QueryParam("vfsid") String vfsId) throws CodeAssistantException, VirtualFileSystemException
+   public List<TypeInfo> getTypesByNamePrefix(@QueryParam("prefix") String namePrefix,
+      @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException,
+      VirtualFileSystemException
    {
       List<TypeInfo> infos = codeAssistant.getTypeInfoByNamePrefix(namePrefix, projectId, vfsId);
 
@@ -125,9 +129,9 @@ public class RestCodeAssistantJava
    @GET
    @Path("/find-by-prefix/{prefix}")
    @Produces(MediaType.APPLICATION_JSON)
-   public TypesList findFQNsByPrefix(@PathParam("prefix") String prefix,
-      @QueryParam("where") String where, @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId)
-      throws CodeAssistantException, VirtualFileSystemException
+   public TypesList findFQNsByPrefix(@PathParam("prefix") String prefix, @QueryParam("where") String where,
+      @QueryParam("projectid") String projectId, @QueryParam("vfsid") String vfsId) throws CodeAssistantException,
+      VirtualFileSystemException
    {
       if (projectId == null)
          throw new InvalidArgumentException("'projectid' parameter is null.");
@@ -194,13 +198,39 @@ public class RestCodeAssistantJava
    @GET
    @Path("/find-in-package")
    @Produces(MediaType.APPLICATION_JSON)
-   public TypesList findClassesInPackage(@QueryParam("fileid") String fileId,
-      @QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId) throws CodeAssistantException,
-      VirtualFileSystemException
+   public TypesList findClassesInPackage(@QueryParam("fileid") String fileId, @QueryParam("vfsid") String vfsId,
+      @QueryParam("projectid") String projectId) throws CodeAssistantException, VirtualFileSystemException
    {
       if (projectId == null)
          throw new InvalidArgumentException("'projectid' parameter is null.");
       return new TypesListBean(codeAssistant.getClassesFromProject(fileId, projectId, vfsId));
+   }
+
+   /**
+    * Get List of Type info by array of FQNs
+    * 
+    * @param vfsId
+    * @param projectId
+    * @param fqns for types
+    * @return List of types info
+    * @throws CodeAssistantException
+    * @throws VirtualFileSystemException
+    */
+   @POST
+   @Path("/types-by-fqns")
+   @Produces(MediaType.APPLICATION_JSON)
+   @Consumes(MediaType.APPLICATION_JSON)
+   public List<TypeInfo> getTypesDescriptionsList(@QueryParam("vfsid") String vfsId,
+      @QueryParam("projectid") String projectId, String[] fqns) throws CodeAssistantException,
+      VirtualFileSystemException
+   {
+      List<TypeInfo> types = new ArrayList<TypeInfo>();
+      for (String fqn : fqns)
+      {
+         types.add(codeAssistant.getClassByFQN(fqn, projectId, vfsId));
+      }
+
+      return types;
    }
 
 }
