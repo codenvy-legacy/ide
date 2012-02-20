@@ -282,11 +282,6 @@ public class Outline extends AbstractTestModule
    public boolean isItemSelected(int rowNumber)
    {
       int linePositionTop = OUTLINE_TOP_OFFSET_POSITION + (rowNumber - 1) * LINE_HEIGHT;
-      
-      System.out.println("*****************************"+linePositionTop);
-      System.out.println("*****************************"+highlighter.getLocation().y);
-
-      System.out.println("*****************************"+(rowNumber - 1));
       return linePositionTop == highlighter.getLocation().y;
    }
 
