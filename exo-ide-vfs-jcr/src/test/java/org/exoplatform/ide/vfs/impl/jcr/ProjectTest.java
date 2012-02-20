@@ -107,6 +107,8 @@ public class ProjectTest extends JcrFileSystemTest
       ContainerResponse response = launcher.service("POST", path, BASE_URI, h, null, null);
       log.info(response.getEntity());
       assertEquals("Unexpected status " + response.getStatus(), 400, response.getStatus());
+      assertEquals("Unexpected exit code " + response.getHttpHeaders().getFirst("x-exit-code"), "100",
+         response.getHttpHeaders().getFirst("x-exit-code"));
    }
 
    public void testCopyProjectToProject() throws Exception
@@ -136,6 +138,8 @@ public class ProjectTest extends JcrFileSystemTest
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       log.info(response.getEntity());
       assertEquals("Unexpected status " + response.getStatus(), 400, response.getStatus());
+      assertEquals("Unexpected exit code " + response.getHttpHeaders().getFirst("x-exit-code"), "100",
+         response.getHttpHeaders().getFirst("x-exit-code"));
    }
 
    public void testMoveProjectToProject() throws Exception
@@ -165,6 +169,8 @@ public class ProjectTest extends JcrFileSystemTest
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       log.info(response.getEntity());
       assertEquals("Unexpected status " + response.getStatus(), 400, response.getStatus());
+      assertEquals("Unexpected exit code " + response.getHttpHeaders().getFirst("x-exit-code"), "100",
+         response.getHttpHeaders().getFirst("x-exit-code"));
    }
 
    public void testGetProjectItem() throws Exception

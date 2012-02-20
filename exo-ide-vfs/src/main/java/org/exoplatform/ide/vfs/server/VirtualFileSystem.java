@@ -64,7 +64,7 @@ public interface VirtualFileSystem
     * @param parentId id of parent for new copy
     * @return newly created copy of item
     * @throws ItemNotFoundException if <code>source</code> or <code>parentId</code> does not exist
-    * @throws ConstraintException if <code>parentId</code> if not a folder
+    * @throws ConstraintException if <code>parentId</code> is not a folder or project
     * @throws ItemAlreadyExistException if <code>parentId</code> already contains item with the same name
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
@@ -86,7 +86,7 @@ public interface VirtualFileSystem
     * @throws ItemNotFoundException if <code>parentId</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
     * <ul>
-    * <li><code>parentId</code> if not a folder</li>
+    * <li><code>parentId</code> is not a folder or project</li>
     * <li><code>name</code> is not specified</li>
     * </ul>
     * @throws ItemAlreadyExistException if <code>parentId</code> already contains item with the same name
@@ -110,7 +110,7 @@ public interface VirtualFileSystem
     * @throws ItemNotFoundException if <code>parentId</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
     * <ul>
-    * <li><code>parentId</code> if not a folder</li>
+    * <li><code>parentId</code> is not a folder or project</li>
     * <li><code>name</code> is not specified</li>
     * </ul>
     * @throws ItemAlreadyExistException if <code>parentId</code> already contains item with the same name
@@ -136,7 +136,7 @@ public interface VirtualFileSystem
     * @throws ItemNotFoundException if <code>parentId</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
     * <ul>
-    * <li><code>parentId</code> if not a folder</li>
+    * <li><code>parentId</code> is not a folder</li>
     * <li><code>name</code> is not specified</li>
     * <li><code>type</code> is not specified</li>
     * </ul>
@@ -241,7 +241,7 @@ public interface VirtualFileSystem
     * @throws ItemNotFoundException if <code>folderId</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
     * <ul>
-    * <li><code>folderId</code> if not a folder</li>
+    * <li><code>folderId</code> is not a folder or project</li>
     * <li><code>skipCount</code> is negative or greater then total number of items</li>
     * <li><code>itemType</code> is not <code>null</code> and not one of the known item types</li>
     * </ul>
@@ -473,7 +473,7 @@ public interface VirtualFileSystem
     * there is no lock token, e.g. item is not locked @return moved item
     * @return moved item
     * @throws ItemNotFoundException if <code>id</code> or <code>newparentId</code> does not exist
-    * @throws ConstraintException if <code>newparentId</code> if not a folder
+    * @throws ConstraintException if <code>newparentId</code> is not a folder
     * @throws ItemAlreadyExistException if <code>newparentId</code> already contains item with the same name
     * @throws LockException if item <code>id</code> is locked and <code>lockToken</code> is <code>null</code> or does
     * not matched
@@ -656,7 +656,7 @@ public interface VirtualFileSystem
     * @param folderId folder for ZIP
     * @return ZIP as stream
     * @throws ItemNotFoundException if <code>folderId</code> does not exist
-    * @throws InvalidArgumentException if <code>folderId</code> item is not a Folder
+    * @throws InvalidArgumentException if <code>folderId</code> item is not a folder or project
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws IOException if any i/o errors occur
     * @throws VirtualFileSystemException if any other errors occur
@@ -713,7 +713,7 @@ public interface VirtualFileSystem
     * @throws ItemNotFoundException if <code>parentId</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
     * <ul>
-    * <li><code>parentId</code> if not a folder</li>
+    * <li><code>parentId</code> is not a folder or project</li>
     * <li>If form does not contain all required fields. Set of fields is implementation specific.</li>
     * </ul>
     * @throws ItemAlreadyExistException if <code>parentId</code> already contains item with the same name. It is
@@ -737,7 +737,7 @@ public interface VirtualFileSystem
     * @param folderId folder for ZIP
     * @return Response with ZIPed content of folder
     * @throws ItemNotFoundException if <code>folderId</code> does not exist
-    * @throws InvalidArgumentException if <code>folderId</code> item is not a Folder
+    * @throws InvalidArgumentException if <code>folderId</code> item is not a folder or project
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws IOException if any i/o errors occur
     * @throws VirtualFileSystemException if any other errors occur

@@ -392,7 +392,7 @@ public class FolderData extends ItemData
             }
          }
 
-         if (mediaType != null/* && node.isNodeType("vfs:project")*/)
+         if (mediaType != null)
          {
             updateProperty(node,
                new ConvertibleProperty("vfs:mimeType", (mediaType.getType() + "/" + mediaType.getSubtype())));

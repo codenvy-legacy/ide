@@ -75,65 +75,53 @@ class ProjectData extends FolderData
          throw new VirtualFileSystemException("Unable get mime type of folder " + getName() + ". " + e.getMessage(), e);
       }
    }
-
-   /**
-    * @see org.exoplatform.ide.vfs.impl.jcr.FolderData#createFolder(java.lang.String, java.lang.String,
-    *      java.lang.String[], java.util.List)
-    */
-   @Override
-   final FolderData createFolder(String name, String nodeType, String[] mixinTypes, List<ConvertibleProperty> properties)
-      throws InvalidArgumentException, ConstraintException, PermissionDeniedException, VirtualFileSystemException
-   {
-      try
-      {
-         NodeTypeManager nodeTypeManager = node.getSession().getWorkspace().getNodeTypeManager();
-         if (nodeTypeManager.getNodeType(nodeType).isNodeType("vfs:project"))
-         {
-            // If primary node type already has vfs:project mixin.
-            throw new ConstraintException("Can't create new project inside project. ");
-         }
-         if (mixinTypes != null && mixinTypes.length > 0)
-         {
-            for (int i = 0; i < mixinTypes.length; i++)
-            {
-               if (nodeTypeManager.getNodeType(mixinTypes[i]).isNodeType("vfs:project"))
-               {
-                  throw new ConstraintException("Can't create new project inside project. ");
-               }
-            }
-         }
-      }
-      catch (RepositoryException e)
-      {
-         throw new VirtualFileSystemException(e.getMessage(), e);
-      }
-      return super.createFolder(name, nodeType, mixinTypes, properties);
-   }
-
-   /** @see org.exoplatform.ide.vfs.impl.jcr.ItemData#copyTo(org.exoplatform.ide.vfs.impl.jcr.FolderData) */
-   @Override
-   final ItemData copyTo(FolderData folder) throws ConstraintException, PermissionDeniedException,
-      VirtualFileSystemException
-   {
-      if (folder instanceof ProjectData)
-      {
-         throw new ConstraintException("Unable copy. Item specified as parent is a project. ");
-      }
-      return super.copyTo(folder);
-   }
-
-   /**
-    * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#moveTo(org.exoplatform.ide.vfs.impl.jcr.FolderData,
-    *      java.lang.String)
-    */
-   @Override
-   final String moveTo(FolderData folder, String lockToken) throws ConstraintException, LockException,
-      PermissionDeniedException, VirtualFileSystemException
-   {
-      if (folder instanceof ProjectData)
-      {
-         throw new ConstraintException("Unable move. Item specified as parent is a project. ");
-      }
-      return super.moveTo(folder, lockToken);
-   }
+//
+//   /**
+//    * @see org.exoplatform.ide.vfs.impl.jcr.FolderData#createFolder(java.lang.String, java.lang.String,
+//    *      java.lang.String[], java.util.List)
+//    */
+//   @Override
+//   final FolderData createFolder(String name, String nodeType, String[] mixinTypes, List<ConvertibleProperty> properties)
+//      throws InvalidArgumentException, ConstraintException, PermissionDeniedException, VirtualFileSystemException
+//   {
+//      try
+//      {
+//         NodeTypeManager nodeTypeManager = node.getSession().getWorkspace().getNodeTypeManager();
+//         if (nodeTypeManager.getNodeType(nodeType).isNodeType("vfs:project"))
+//         {
+//            // If primary node type already has vfs:project mixin.
+//            throw new ConstraintException("Can't create new project inside project. ");
+//         }
+//         if (mixinTypes != null && mixinTypes.length > 0)
+//         {
+//            for (int i = 0; i < mixinTypes.length; i++)
+//            {
+//               if (nodeTypeManager.getNodeType(mixinTypes[i]).isNodeType("vfs:project"))
+//               {
+//                  throw new ConstraintException("Can't create new project inside project. ");
+//               }
+//            }
+//         }
+//      }
+//      catch (RepositoryException e)
+//      {
+//         throw new VirtualFileSystemException(e.getMessage(), e);
+//      }
+//      return super.createFolder(name, nodeType, mixinTypes, properties);
+//   }
+//
+//   /**
+//    * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#moveTo(org.exoplatform.ide.vfs.impl.jcr.FolderData,
+//    *      java.lang.String)
+//    */
+//   @Override
+//   final String moveTo(FolderData folder, String lockToken) throws ConstraintException, LockException,
+//      PermissionDeniedException, VirtualFileSystemException
+//   {
+//      if (folder instanceof ProjectData)
+//      {
+//         throw new ConstraintException("Unable move. Item specified as parent is a project. ");
+//      }
+//      return super.moveTo(folder, lockToken);
+//   }
 }

@@ -172,6 +172,11 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          ItemData object = getItemData(session, id);
          ItemData folder = getItemData(session, parentId);
+         if (ItemType.PROJECT == folder.getType())
+         {
+            throw new ConstraintException("Unable copy. Item specified as parent is a project. "
+               + "Project cannot contains another project.");
+         }
          if (ItemType.FOLDER != folder.getType())
          {
             throw new InvalidArgumentException("Unable copy. Item specified as parent is not a folder. ");
@@ -203,9 +208,9 @@ public class JcrFileSystem implements VirtualFileSystem
       try
       {
          ItemData parentData = getItemData(session, parentId);
-         if (ItemType.FOLDER != parentData.getType())
+         if (!(ItemType.FOLDER == parentData.getType() || ItemType.PROJECT == parentData.getType()))
          {
-            throw new InvalidArgumentException("Unable create file. Item specified as parent is not a folder. ");
+            throw new InvalidArgumentException("Unable create file. Item specified as parent is not a folder or project. ");
          }
          FileData newFile = ((FolderData)parentData).createFile(name, //
             mediaType2NodeTypeResolver.getFileNodeType(mediaType), //
@@ -234,9 +239,9 @@ public class JcrFileSystem implements VirtualFileSystem
       try
       {
          ItemData parentData = getItemData(session, parentId);
-         if (ItemType.FOLDER != parentData.getType())
+         if (!(ItemType.FOLDER == parentData.getType() || ItemType.PROJECT == parentData.getType()))
          {
-            throw new InvalidArgumentException("Unable create folder. Item specified as parent is not a folder. ");
+            throw new InvalidArgumentException("Unable create folder. Item specified as parent is not a folder or project. ");
          }
          FolderData newFolder = ((FolderData)parentData).createFolder(name, //
             mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
@@ -269,6 +274,11 @@ public class JcrFileSystem implements VirtualFileSystem
       try
       {
          ItemData parentData = getItemData(session, parentId);
+         if (ItemType.PROJECT == parentData.getType())
+         {
+            throw new ConstraintException("Unable create project. Item specified as parent is a project. "
+               + "Project cannot contains another project.");
+         }
          if (ItemType.FOLDER != parentData.getType())
          {
             throw new InvalidArgumentException("Unable to create project. Item specified as parent is not a folder. ");
@@ -370,9 +380,10 @@ public class JcrFileSystem implements VirtualFileSystem
       try
       {
          ItemData data = getItemData(session, folderId);
-         if (ItemType.FOLDER != data.getType())
+         if (!(ItemType.FOLDER == data.getType() || ItemType.PROJECT == data.getType()))
          {
-            throw new InvalidArgumentException("Unable get children. Item " + data.getName() + " is not a folder. ");
+            throw new InvalidArgumentException("Unable get children. Item " + data.getName()
+               + " is not a folder or project. ");
          }
 
          FolderData folderData = (FolderData)data;
@@ -729,6 +740,11 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          ItemData object = getItemData(session, id);
          ItemData folder = getItemData(session, parentId);
+         if (ItemType.PROJECT == folder.getType())
+         {
+            throw new ConstraintException("Unable move. Item specified as parent is not a folder. "+
+            "Project cannot be moved to another one. ");
+         }
          if (ItemType.FOLDER != folder.getType())
          {
             throw new InvalidArgumentException("Unable move. Item specified as parent is not a folder. ");
@@ -1118,9 +1134,9 @@ public class JcrFileSystem implements VirtualFileSystem
       try
       {
          ItemData data = getItemData(session, folderId);
-         if (ItemType.FOLDER != data.getType())
+         if (!(ItemType.FOLDER == data.getType() || ItemType.PROJECT == data.getType()))
          {
-            throw new InvalidArgumentException("Unable export to zip. Item is not a folder. ");
+            throw new InvalidArgumentException("Unable export to zip. Item is not a folder or project. ");
          }
          FolderData exportFolder = (FolderData)data;
          java.io.File zipFile = java.io.File.createTempFile("export", ".zip");
@@ -1496,9 +1512,9 @@ public class JcrFileSystem implements VirtualFileSystem
       try
       {
          ItemData parentData = getItemData(session, parentId);
-         if (ItemType.FOLDER != parentData.getType())
+         if (!(ItemType.FOLDER == parentData.getType() || ItemType.PROJECT == parentData.getType()))
          {
-            throw new InvalidArgumentException("Unable upload file. Item specified as parent is not a folder. ");
+            throw new InvalidArgumentException("Unable upload file. Item specified as parent is not a folder or project. ");
          }
 
          FileItem contentItem = null;
