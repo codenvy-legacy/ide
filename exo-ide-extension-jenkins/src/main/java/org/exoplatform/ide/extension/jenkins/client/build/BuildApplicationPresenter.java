@@ -163,13 +163,13 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
                         return;
                      }
                   }
-                  initRepository(project.getId());
+                  initRepository(project);
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  initRepository(project.getId());
+                  initRepository(project);
                }
             });
       }
@@ -465,11 +465,11 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     * 
     * @param path working directory of the repository
     */
-   private void initRepository(final String projectId)
+   private void initRepository(final ProjectModel project)
    {
       try
       {
-         GitClientService.getInstance().init(vfs.getId(), projectId, false,
+         GitClientService.getInstance().init(vfs.getId(), project.getId(), project.getName(), false,
             new AsyncRequestCallback<String>()
             {
                @Override
