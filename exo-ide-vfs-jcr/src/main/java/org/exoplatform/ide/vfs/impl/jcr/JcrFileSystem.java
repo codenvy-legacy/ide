@@ -827,7 +827,24 @@ public class JcrFileSystem implements VirtualFileSystem
          String text = query.getFirst("text");
          if (text != null && text.length() > 0)
          {
-            where.add("CONTAINS(*, '" + text + "')");
+            StringBuilder escape = new StringBuilder();
+            for (int i = 0; i < text.length(); i++)
+            {
+               char c = text.charAt(i);
+               //Escaping Special Characters
+               //Lucene supports escaping special characters that are part of the query syntax. The current list special characters are
+               //+ - && || ! ( ) { } [ ] ^ " ~ * ? : \
+               //To escape these character use the \ before the character. For example to search for (1+1):2 use the query:
+               //\(1\+1\)\:2
+               // NOTE:  
+               //~ not escape because it escape in JCR code  
+               if ("*+-&!.{}:()[]^$|".indexOf(c) != -1)
+               {
+                  escape.append('\\');
+               }
+               escape.append(c);
+            }
+            where.add("CONTAINS(*, '" + escape.toString() + "')");
          }
          String mediaType = query.getFirst("mediaType");
          if (mediaType != null && mediaType.length() > 0)
