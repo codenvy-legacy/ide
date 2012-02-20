@@ -25,6 +25,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextArea;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.editor.api.CodeLine;
@@ -32,6 +33,7 @@ import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
+import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
@@ -472,15 +474,18 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    private void callAutocompleteHandler(String lineContent, JavaScriptObject currentNode)
    {
+      if(genericMimeType.equals(MimeType.APPLICATION_JAVA))
+      {
+       eventBus.fireEvent(new RunCodeAssistantEvent());
+       return;
+      }  
       int cursorRow = cursorPositionRow;
 
       // calculate cursorOffsetY
       int cursorOffsetY = getCursorOffsetY();
 
       // calculate cursorOffsetX
-      int cursorOffsetX = getCursorOffsetX(); 
-
-     
+      int cursorOffsetX = getCursorOffsetX();
 
       if (needUpdateTokenList)
       {
@@ -518,7 +523,8 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
     */
    public int getCursorOffsetX()
    {
-      int cursorOffsetX = (cursorPositionCol - 2) * characterWidth + getAbsoluteLeft() + firstCharacterOffsetLeft; // 8px per symbol
+      int cursorOffsetX = (cursorPositionCol - 2) * characterWidth + getAbsoluteLeft() + firstCharacterOffsetLeft; // 8px per
+                                                                                                                   // symbol
       if (this.showLineNumbers)
       {
          cursorOffsetX += this.lineNumberFieldWidth;

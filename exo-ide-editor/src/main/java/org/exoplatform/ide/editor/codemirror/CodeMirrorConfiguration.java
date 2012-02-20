@@ -115,7 +115,7 @@ public class CodeMirrorConfiguration
 
    public boolean canBeAutocompleted()
    {
-      return this.parser != null && this.codeAssistant != null;
+      return true; // this.parser != null && this.codeAssistant != null;
    }
 
    // public CodeMirrorConfiguration setCanBeAutocompleted(boolean canBeAutocompleted)

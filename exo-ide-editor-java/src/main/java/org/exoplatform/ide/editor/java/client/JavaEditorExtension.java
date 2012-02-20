@@ -115,8 +115,9 @@ public class JavaEditorExtension extends Extension implements InitializeServices
             JavaClientBundle.INSTANCE.java(), true, new CodeMirrorConfiguration()
                .setGenericParsers("['parsejava.js', 'tokenizejava.js']")
                .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']")
-               .setParser(new JavaParser()).setCanBeOutlined(true).setAutocompleteHelper(new JavaAutocompleteHelper())
-               .setCodeAssistant(javaCodeAssistant).setCodeValidator(javaCodeValidator)));
+               //.setParser( ).setCanBeOutlined(true).setAutocompleteHelper(new JavaAutocompleteHelper())
+               //.setCodeAssistant(javaCodeAssistant).setCodeValidator(javaCodeValidator)
+               ));
 
       IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_JAVA, new JavaOutlineItemCreator());
    }
@@ -152,26 +153,26 @@ public class JavaEditorExtension extends Extension implements InitializeServices
    @Override
    public void onEditorActiveFileChanged(final EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() != null && event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
-      {
-         AutoBean<TypesList> autoBean = JavaEditorExtension.AUTO_BEAN_FACTORY.types();
-         AutoBeanUnmarshaller<TypesList> unmarshaller = new AutoBeanUnmarshaller<TypesList>(autoBean);
-         service.findClassesByProject(event.getFile().getId(), projectId, new AsyncRequestCallback<TypesList>(unmarshaller)
-         {
-            @Override
-            protected void onSuccess(TypesList result)
-            {
-               javaCodeValidator.setClassesFromProject(JavaCodeAssistantUtils.types2tokens(result)); 
-               ((CodeMirror)event.getEditor()).validateCode();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               handleError(exception);
-            }
-         });
-      }
+//      if (event.getFile() != null && event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
+//      {
+//         AutoBean<TypesList> autoBean = JavaEditorExtension.AUTO_BEAN_FACTORY.types();
+//         AutoBeanUnmarshaller<TypesList> unmarshaller = new AutoBeanUnmarshaller<TypesList>(autoBean);
+//         service.findClassesByProject(event.getFile().getId(), projectId, new AsyncRequestCallback<TypesList>(unmarshaller)
+//         {
+//            @Override
+//            protected void onSuccess(TypesList result)
+//            {
+//               javaCodeValidator.setClassesFromProject(JavaCodeAssistantUtils.types2tokens(result)); 
+//               ((CodeMirror)event.getEditor()).validateCode();
+//            }
+//
+//            @Override
+//            protected void onFailure(Throwable exception)
+//            {
+//               handleError(exception);
+//            }
+//         });
+//      }
    }
 
    /**
