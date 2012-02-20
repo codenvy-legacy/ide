@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.core;
 
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -61,10 +60,10 @@ public class Outline extends AbstractTestModule
       String ROW_SELECTOR = "div#" + TREE_ID + " div.gwt-Label";
 
       String ROW_BY_TITLE_LOCATOR = "//div[@id='" + TREE_ID + "']//div[@class='gwt-Label' and text()='%s']";
-      
+
       String BORDER_PREFIX = "//div[@component=\"Border\" and contains(@style, 'color: rgb(182, 204, 232)')]";
-      
-      String HIGHLITER_BORDER = VIEW_LOCATOR + BORDER_PREFIX ;
+
+      String HIGHLITER_BORDER = VIEW_LOCATOR + BORDER_PREFIX;
    }
 
    public static final String NOT_AVAILABLE_TITLE = "An outline is not available.";
@@ -75,13 +74,13 @@ public class Outline extends AbstractTestModule
 
    private static final int LINE_HEIGHT = 31;
 
-   private int OUTLINE_TOP_OFFSET_POSITION = 80;
+   private int OUTLINE_TOP_OFFSET_POSITION = 105;
 
    public Outline()
    {
       if (driver() instanceof ChromeDriver)
       {
-         OUTLINE_TOP_OFFSET_POSITION = 89;
+         OUTLINE_TOP_OFFSET_POSITION = 85;
       }
    }
 
@@ -252,6 +251,7 @@ public class Outline extends AbstractTestModule
     */
    public void selectRow(int rowNumber) throws Exception
    {
+      System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"+rowNumber);
       WebElement row = getVisibleItem(rowNumber);
       row.click();
    }
@@ -282,6 +282,11 @@ public class Outline extends AbstractTestModule
    public boolean isItemSelected(int rowNumber)
    {
       int linePositionTop = OUTLINE_TOP_OFFSET_POSITION + (rowNumber - 1) * LINE_HEIGHT;
+      
+      System.out.println("*****************************"+linePositionTop);
+      System.out.println("*****************************"+highlighter.getLocation().y);
+
+      System.out.println("*****************************"+(rowNumber - 1));
       return linePositionTop == highlighter.getLocation().y;
    }
 
@@ -450,8 +455,6 @@ public class Outline extends AbstractTestModule
       });
    }
 
-   
-   
    /**
     * Returns true if highlight border present
     * @return
@@ -470,8 +473,4 @@ public class Outline extends AbstractTestModule
 
    }
 
-   
-   
-   
-   
 }
