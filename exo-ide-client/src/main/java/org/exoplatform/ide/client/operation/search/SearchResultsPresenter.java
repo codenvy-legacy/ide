@@ -105,7 +105,7 @@ public class SearchResultsPresenter implements ViewVisibilityChangedHandler, Vie
    private void refreshSearchResult()
    {
       // searchResult.setIcon(Images.FileTypes.WORKSPACE);
-      if (searchResult.getChildren() != null && !searchResult.getChildren().getItems().isEmpty())
+      if (searchResult.getChildren() != null)
       {
          // sort items in search result list
          Collections.sort(searchResult.getChildren().getItems(), new Comparator<Item>()
