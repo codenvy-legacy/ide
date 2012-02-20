@@ -250,10 +250,8 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
    {
       try
       {
-         VirtualFileSystem.getInstance().getChildren(
-            project,
-            new AsyncRequestCallback<List<Item>>(
-               new ChildrenUnmarshaller(new ArrayList<Item>()))
+         VirtualFileSystem.getInstance().getChildren(project,
+            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
 
                @Override
@@ -268,13 +266,13 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
                         return;
                      }
                   }
-                  initRepository(project.getId());
+                  initRepository(project);
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  initRepository(project.getId());
+                  initRepository(project);
                }
             });
       }
@@ -288,11 +286,11 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
     * 
     * @param path working directory of the repository
     */
-   private void initRepository(final String projectId)
+   private void initRepository(final ProjectModel project)
    {
       try
       {
-         GitClientService.getInstance().init(vfs.getId(), projectId, false,
+         GitClientService.getInstance().init(vfs.getId(), project.getId(), project.getName(), false,
             new AsyncRequestCallback<String>()
             {
                @Override
