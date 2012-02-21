@@ -20,6 +20,7 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-maven</artifactId>
          <version>${project.version}</version>
+         <type>war</type>
       </dependency>
    </dependencies>
    <build>
