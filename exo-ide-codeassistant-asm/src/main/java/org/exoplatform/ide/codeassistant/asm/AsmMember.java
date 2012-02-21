@@ -84,7 +84,7 @@ public class AsmMember implements Member
    public static String classNameFromType(String type)
    {
       // can be null for Object super class.
-      return type == null ? "" : Type.getObjectType(type).getClassName().replace('$', '.');//replace '$' for name of Inner classes 
+      return type == null ? "" : Type.getObjectType(type).getClassName();
    }
 
 }

@@ -21,45 +21,18 @@ package org.exoplatform.ide.codeassistant.storage.lucene.search;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.MapFieldSelector;
 import org.apache.lucene.index.IndexReader;
-import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
-import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
-import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.ExternalizationTools;
 import org.exoplatform.ide.codeassistant.storage.lucene.DataIndexFields;
-import org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Create TypeInfo from lucene document.
  */
 public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
 {
-
-  
-
-   private final LuceneCodeAssistantStorage luceneCodeAssistantStorage;
-
-   /**
-    * This variable used for caching TypeInfo of java.lang.Object class. It will
-    * be initialized in first query
-    */
-   private static AtomicReference<TypeInfo> objectTypeHolder = new AtomicReference<TypeInfo>();
-
-   /**
-    * @param luceneCodeAssistantStorage
-    */
-   public TypeInfoExtractor(LuceneCodeAssistantStorage luceneCodeAssistantStorage)
-   {
-      this.luceneCodeAssistantStorage = luceneCodeAssistantStorage;
-   }
 
    /**
     * @see org.exoplatform.ide.codeassistant.storage.lucene.search.ContentExtractor#getValue(int)
@@ -70,115 +43,7 @@ public class TypeInfoExtractor implements ContentExtractor<TypeInfo>
 
       Document document = reader.document(doc, new MapFieldSelector(new String[]{DataIndexFields.TYPE_INFO}));
       byte[] contentField = document.getBinaryValue(DataIndexFields.TYPE_INFO);
-      TypeInfo result = ExternalizationTools.readExternal(new ByteArrayInputStream(contentField));
-      if (result.getSuperClass().isEmpty() && result.getInterfaces().isEmpty())
-      {
-         return result;
-      }
-      else
-      {
-         try
-         {
-            if (!result.getSuperClass().isEmpty())
-            {
-               if ("java.lang.Object".equals(result.getSuperClass()))
-               {
-                  if (objectTypeHolder.get() == null)
-                  {
-                     objectTypeHolder.compareAndSet(null,
-                        luceneCodeAssistantStorage.getTypeByFqn(result.getSuperClass()));
-                  }
-                  mergeType(result, objectTypeHolder.get());
-               }
-               else
-               {
-                  mergeType(result, luceneCodeAssistantStorage.getTypeByFqn(result.getSuperClass()));
-               }
-            }
-            for (String interfaceName : result.getInterfaces())
-            {
-               mergeType(result, luceneCodeAssistantStorage.getTypeByFqn(interfaceName));
-            }
-         }
-         catch (CodeAssistantException e)
-         {
-            throw new IOException(e.getLocalizedMessage(), e);
-         }
-      }
-      return result;
-   }
-
-   /**
-    * Merge fields and methods of two TypeInfo
-    * 
-    * @param recipient
-    * @param ancestor
-    */
-   private void mergeType(TypeInfo recipient, TypeInfo ancestor)
-   {
-      if (ancestor != null)
-      {
-         ArrayList<FieldInfo> fields = new ArrayList<FieldInfo>();
-         Set<String> existedFields = new HashSet<String>();
-         for (FieldInfo field : recipient.getFields())
-         {
-            if (Modifier.isPublic(field.getModifiers()))
-            {
-               existedFields.add(field.getName());
-               fields.add(field);
-            }
-         }
-         for (FieldInfo field : ancestor.getFields())
-         {
-            if (Modifier.isPublic(field.getModifiers()) && !existedFields.contains(field.getName()))
-            {
-               existedFields.add(field.getName());
-               fields.add(field);
-            }
-         }
-         recipient.setFields(fields);
-
-         ArrayList<MethodInfo> methods = new ArrayList<MethodInfo>();
-         Set<String> existedMethods = new HashSet<String>();
-         for (MethodInfo method : recipient.getMethods())
-         {
-            if (Modifier.isPublic(method.getModifiers()))
-            {
-               existedMethods.add(getMethodDeclaration(method));
-               methods.add(method);
-            }
-         }
-         for (MethodInfo method : ancestor.getMethods())
-         {
-            String methodDeclaration;
-            if (Modifier.isPublic(method.getModifiers()) && !method.isConstructor()
-               && !existedMethods.contains(methodDeclaration = getMethodDeclaration(method)) && !method.isConstructor())
-            {
-               existedMethods.add(methodDeclaration);
-               methods.add(method);
-            }
-         }
-         recipient.setMethods(methods);
-      }
-   }
-
-   private String getMethodDeclaration(MethodInfo method)
-   {
-      StringBuilder builder = new StringBuilder();
-      builder.append(method.getName());
-      builder.append('(');
-      boolean isFirst = true;
-      for (String parameter : method.getParameterTypes())
-      {
-         if (!isFirst)
-         {
-            builder.append(',');
-         }
-         builder.append(parameter);
-         isFirst = false;
-      }
-      builder.append(')');
-      return builder.toString();
+      return ExternalizationTools.readExternal(new ByteArrayInputStream(contentField));
    }
 
 }

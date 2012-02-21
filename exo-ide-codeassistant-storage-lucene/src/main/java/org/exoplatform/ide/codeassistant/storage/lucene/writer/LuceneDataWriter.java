@@ -101,6 +101,7 @@ public class LuceneDataWriter
          {
             writer.addDocument(indexer.createTypeInfoDocument(typeInfo));
          }
+         
          writer.commit();
       }
       catch (IOException e)

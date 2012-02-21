@@ -26,6 +26,7 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class AsmTypeInfo extends AsmMember implements TypeInfo
       for (Object node : classNode.fields)
       {
          AsmFieldInfo fieldInfo = new AsmFieldInfo((FieldNode)node, this);
-         if ((fieldInfo.getModifiers() & SYNTHETIC) == 0)
+         if (!Modifier.isPrivate(fieldInfo.getModifiers()))
          {
             result.add(fieldInfo);
          }
@@ -94,7 +95,7 @@ public class AsmTypeInfo extends AsmMember implements TypeInfo
       for (Object node : classNode.methods)
       {
          AsmMethodInfo methodInfo = new AsmMethodInfo((MethodNode)node, this);
-         if ((methodInfo.getModifiers() & SYNTHETIC) == 0)
+         if (!Modifier.isPrivate(methodInfo.getModifiers()))
          {
             result.add(methodInfo);
          }

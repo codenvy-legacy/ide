@@ -51,7 +51,7 @@ public class CodeAssistantStorageGenerator
 {
    private static final Logger LOG = LoggerFactory.getLogger(CodeAssistantStorageGenerator.class);
 
-   private static final String DEFAULT_INDEX_DIRECTORY = "code-assistant-index";
+   private static final String DEFAULT_INDEX_DIRECTORY = "ide-codeassistant-lucene-index";
 
    private static final String DEFAULT_JAR_FILES_LIST = "codeassistant/jar-files.txt";
 

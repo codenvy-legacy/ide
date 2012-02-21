@@ -75,7 +75,7 @@ public class ClassInfoExtractorTest
    {
       TypeInfo cd = ClassParser.parse(A.class);
       assertEquals(9, cd.getMethods().size());
-      assertEquals(3, cd.getFields().size());
+      assertEquals(2, cd.getFields().size());
       assertEquals(A.class.getCanonicalName(), cd.getName());
    }
 
@@ -177,13 +177,11 @@ public class ClassInfoExtractorTest
       String[] descriptors = {"Ljava/util/List;", "Ljava/util/Collection;"};
       String[] signatures = {"Ljava/util/List<Ljava/lang/Boolean;>;", "Ljava/util/Collection<Ljava/lang/Double;>;"};
       TypeInfo cd = ClassParser.parse(B.class);
-      assertEquals(2, cd.getFields().size());
+      assertEquals(1, cd.getFields().size());
       
       assertEquals(descriptors[0],cd.getFields().get(0).getDescriptor());
-      assertEquals(descriptors[1],cd.getFields().get(1).getDescriptor());
       
       assertEquals(signatures[0],cd.getFields().get(0).getSignature());
-      assertEquals(signatures[1],cd.getFields().get(1).getSignature());
          
       cd = ClassParser.parse(A.class);
       

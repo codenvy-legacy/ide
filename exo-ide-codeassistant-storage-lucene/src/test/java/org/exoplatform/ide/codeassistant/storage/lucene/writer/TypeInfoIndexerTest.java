@@ -106,7 +106,7 @@ public class TypeInfoIndexerTest
       Document document = indexer.createTypeInfoDocument(expected);
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(document);
 
-      TypeInfo actual = new TypeInfoExtractor(luceneCodeAssistantStorage).getValue(reader, 5);
+      TypeInfo actual = new TypeInfoExtractor().getValue(reader, 5);
 
       assertTypeInfoEquals(expected, actual);
    }

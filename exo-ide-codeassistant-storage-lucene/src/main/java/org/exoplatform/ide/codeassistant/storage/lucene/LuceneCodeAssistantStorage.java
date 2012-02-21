@@ -125,7 +125,7 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    {
 
       List<TypeInfo> searchResult =
-         queryExecutor.executeQuery(new TypeInfoExtractor(this), IndexType.JAVA, eq(DataIndexFields.FQN, fqn), 1, 0);
+         queryExecutor.executeQuery(new TypeInfoExtractor(), IndexType.JAVA, eq(DataIndexFields.FQN, fqn), 1, 0);
       return searchResult.size() == 1 ? searchResult.get(0) : null;
 
    }
@@ -159,7 +159,7 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    @Override
    public List<TypeInfo> getTypesInfoByNamePrefix(String namePrefix) throws CodeAssistantException
    {
-      return queryExecutor.executeQuery(new TypeInfoExtractor(this), IndexType.JAVA,
+      return queryExecutor.executeQuery(new TypeInfoExtractor(), IndexType.JAVA,
          prefix(DataIndexFields.CLASS_NAME, namePrefix), DEFAULT_RESULT_LIMIT, 0);
    }
 

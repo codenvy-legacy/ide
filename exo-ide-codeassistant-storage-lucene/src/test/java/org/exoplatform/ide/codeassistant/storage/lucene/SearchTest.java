@@ -33,6 +33,7 @@ import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneDataWriter;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -146,35 +147,13 @@ public class SearchTest
       TypeInfo typeInfo = storage.getTypeByFqn("test.classes.ATestClass");
 
       assertEquals("test.classes.ATestClass", typeInfo.getName());
-      assertEquals(1, typeInfo.getFields().size());
+      assertEquals(2, typeInfo.getFields().size());
 
-      assertEquals(12, typeInfo.getMethods().size());
+      assertEquals(3, typeInfo.getMethods().size());
+
       assertEquals("java.lang.Object", typeInfo.getSuperClass());
    }
 
-   @Test
-   public void testRemoveDuplicatedAndOverdrivedMethodsFromTypeInfo() throws CodeAssistantException
-   {
-      TypeInfo typeInfo = storage.getTypeByFqn("test.classes.ATestClass2");
-
-      assertEquals("test.classes.ATestClass2", typeInfo.getName());
-      assertEquals(1, typeInfo.getFields().size());
-      assertEquals("FIELD_1", typeInfo.getFields().get(0).getName());
-
-      assertEquals(12, typeInfo.getMethods().size());
-      assertEquals("test.classes.ATestClass", typeInfo.getSuperClass());
-      for (MethodInfo method : typeInfo.getMethods())
-      {
-         if (method.getName().equals("method1"))
-         {
-            assertEquals("test.classes.ATestClass2", method.getDeclaringClass());
-         }
-         if (method.getName().equals("method2"))
-         {
-            assertEquals("test.classes.ATestClass", method.getDeclaringClass());
-         }
-      }
-   }
 
    @Test
    public void testSearchUnexistanceClasses() throws Exception
