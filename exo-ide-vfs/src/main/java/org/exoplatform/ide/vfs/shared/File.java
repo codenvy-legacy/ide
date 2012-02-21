@@ -57,9 +57,10 @@ public class File extends Item
     * @param properties other properties of file
     * @param links hyperlinks for retrieved or(and) manage item
     */
-   @SuppressWarnings({"rawtypes", "unchecked"})
+   @SuppressWarnings("rawtypes")
    public File(String id, String name, String path, String parentId, long creationDate, long lastModificationDate,
-               String versionId, String mimeType, long length, boolean locked, List properties, Map<String, Link> links)
+               String versionId, String mimeType, long length, boolean locked, List<Property> properties,
+               Map<String, Link> links)
    {
       super(id, name, ItemType.FILE, mimeType, path, parentId, creationDate, properties, links);
       this.lastModificationDate = lastModificationDate;

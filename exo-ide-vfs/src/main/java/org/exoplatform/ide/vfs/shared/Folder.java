@@ -43,9 +43,9 @@ public class Folder extends Item
     * @param properties other properties of folder
     * @param links hyperlinks for retrieved or(and) manage item
     */
-   @SuppressWarnings({"unchecked", "rawtypes"})
+   @SuppressWarnings("rawtypes")
    public Folder(String id, String name, String mimeType, String path, String parentId, long creationDate,
-                 List properties, Map<String, Link> links)
+                 List<Property> properties, Map<String, Link> links)
    {
       this(id, name, ItemType.FOLDER, mimeType, path, parentId, creationDate, properties, links);
    }
