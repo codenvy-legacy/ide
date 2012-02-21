@@ -137,52 +137,52 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
    protected interface ParserResources extends ClientBundle
    {
-      @Source("org/eclipse/jdt/client/internal/parser/parser1.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser1.rscjson")
       TextResource parser1();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser2.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser2.rscjson")
       TextResource parser2();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser3.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser3.rscjson")
       TextResource parser3();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser4.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser4.rscjson")
       TextResource parser4();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser5.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser5.rscjson")
       TextResource parser5();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser6.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser6.rscjson")
       TextResource parser6();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser7.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser7.rscjson")
       TextResource parser7();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser8.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser8.rscjson")
       TextResource parser8();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser9.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser9.rscjson")
       TextResource parser9();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser10.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser10.rscjson")
       TextResource parser10();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser11.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser11.rscjson")
       TextResource parser11();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser12.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser12.rscjson")
       TextResource parser12();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser13.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser13.rscjson")
       TextResource parser13();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser14.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser14.rscjson")
       TextResource parser14();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser15.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser15.rscjson")
       TextResource parser15();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser16.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser16.rscjson")
       TextResource parser16();
 
       @Source("org/eclipse/jdt/client/internal/parser/parser17.rsc")
@@ -194,19 +194,19 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
       @Source("org/eclipse/jdt/client/internal/parser/parser19.rsc")
       TextResource parser19();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser20.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser20.rscjson")
       TextResource parser20();
 
       @Source("org/eclipse/jdt/client/internal/parser/parser21.rsc")
       TextResource parser21();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser22.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser22.rscjson")
       TextResource parser22();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser23.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser23.rscjson")
       TextResource parser23();
 
-      @Source("org/eclipse/jdt/client/internal/parser/parser24.rsc")
+      @Source("org/eclipse/jdt/client/internal/parser/parser24.rscjson")
       TextResource parser24();
 
       @Source("org/eclipse/jdt/client/internal/parser/readableNames")
@@ -352,44 +352,44 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
       ParserResources resources = GWT.create(ParserResources.class);
 
-      lhs = resources.parser1().getText().toCharArray();// readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      char[] chars = resources.parser2().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      lhs = JSONUtil.parseArrayToCharArray(resources.parser1().getText());// readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      char[] chars = JSONUtil.parseArrayToCharArray(resources.parser2().getText()); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
       check_table = new short[chars.length];
       for (int c = chars.length; c-- > 0;)
       {
          check_table[c] = (short)(chars[c] - 32768);
       }
-      asb = resources.parser3().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      asr = resources.parser4().getText().toCharArray();// readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      nasb = resources.parser5().getText().toCharArray(); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      nasr = resources.parser6().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      terminal_index = resources.parser7().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      non_terminal_index = resources.parser8().getText().toCharArray(); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      term_action = resources.parser9().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      asb = JSONUtil.parseArrayToCharArray(resources.parser3().getText()); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      asr = JSONUtil.parseArrayToCharArray(resources.parser4().getText());// readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      nasb = JSONUtil.parseArrayToCharArray(resources.parser5().getText()); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      nasr = JSONUtil.parseArrayToCharArray(resources.parser6().getText());//readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      terminal_index = JSONUtil.parseArrayToCharArray(resources.parser7().getText()); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      non_terminal_index = JSONUtil.parseArrayToCharArray(resources.parser8().getText()); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      term_action = JSONUtil.parseArrayToCharArray(resources.parser9().getText());//readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
 
-      scope_prefix = resources.parser10().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      scope_suffix = resources.parser11().getText().toCharArray(); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      scope_lhs = resources.parser12().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      scope_state_set = resources.parser13().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      scope_rhs = resources.parser14().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      scope_state = resources.parser15().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      in_symb = resources.parser16().getText().toCharArray(); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      scope_prefix = JSONUtil.parseArrayToCharArray(resources.parser10().getText()); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      scope_suffix = JSONUtil.parseArrayToCharArray(resources.parser11().getText()); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      scope_lhs = JSONUtil.parseArrayToCharArray(resources.parser12().getText());//readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      scope_state_set = JSONUtil.parseArrayToCharArray(resources.parser13().getText()); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      scope_rhs = JSONUtil.parseArrayToCharArray(resources.parser14().getText());//readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      scope_state = JSONUtil.parseArrayToCharArray(resources.parser15().getText()); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      in_symb = JSONUtil.parseArrayToCharArray(resources.parser16().getText()); // readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
 
       rhs = JSONUtil.parseArrayToByteArray(resources.parser17().getText()); //readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
       term_check = JSONUtil.parseArrayToByteArray(resources.parser18().getText()); // readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
       scope_la = JSONUtil.parseArrayToByteArray(resources.parser19().getText()); //readByteTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
 
-      name = readNameTable(resources.parser20().getText().toCharArray()); //$NON-NLS-1$
+      name = readNameTable(JSONUtil.parseArrayToCharArray(resources.parser20().getText())); //$NON-NLS-1$
 
       rules_compliance = JSONUtil.parseJsonAsLongArray(resources.parser21().getText()); //readLongTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
       readableName = parseJsonArray(resources.readebleNames().getText()); // readReadableNameTable(READABLE_NAMES_FILE_NAME);
 
       reverse_index = computeReverseTable(terminal_index, non_terminal_index, name);
 
-      recovery_templates_index = resources.parser22().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
-      recovery_templates = resources.parser23().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      recovery_templates_index = JSONUtil.parseArrayToCharArray(resources.parser22().getText()); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      recovery_templates = JSONUtil.parseArrayToCharArray(resources.parser23().getText()); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
 
-      statements_recovery_filter = resources.parser24().getText().toCharArray(); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
+      statements_recovery_filter = JSONUtil.parseArrayToCharArray(resources.parser24().getText()); //readTable(prefix + (++i) + ".rsc"); //$NON-NLS-1$
 
       base_action = lhs;
    }

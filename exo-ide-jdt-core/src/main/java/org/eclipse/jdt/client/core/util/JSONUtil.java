@@ -71,4 +71,26 @@ public class JSONUtil
       }
       return result;
    }
+   
+   public static char[] parseArrayToCharArray(String json)
+   {
+      JSONValue value = JSONParser.parseLenient(json);
+      if (value.isArray() == null)
+         throw new IllegalArgumentException("'json' parameter must represent a JSON array");
+      return jsonArrayToCharArray(value.isArray());
+   }
+
+   /**
+    * @param array
+    * @return
+    */
+   private static char[] jsonArrayToCharArray(JSONArray array)
+   {
+      char[] result = new char[array.size()];
+      for (int i = 0; i < array.size(); i++)
+      {
+         result[i] = array.get(i).isString().stringValue().toCharArray()[0];
+      }
+      return result;
+   }
 }
