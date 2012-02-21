@@ -34,4 +34,10 @@ public class BuilderApplication extends Application
    {
       return Collections.<Class<?>>singleton(BuilderService.class);
    }
+
+   @Override
+   public Set<Object> getSingletons()
+   {
+      return Collections.<Object>singleton(new BuilderExceptionMapper());
+   }
 }

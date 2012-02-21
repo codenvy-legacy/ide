@@ -18,40 +18,23 @@
  */
 package org.exoplatform.ide.extension.maven.server;
 
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
+
 /**
- * Thrown if build request was rejected by remote build server.
- *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@SuppressWarnings("serial")
-public class BuilderException extends Exception
+@Provider
+public class BuilderExceptionMapper implements ExceptionMapper<BuilderException>
 {
-   /** HTTP status of response from builder. */
-   private final int responseStatus;
-
-   /** Content type of response from builder. */
-   private final String contentType;
-
-   /**
-    * @param responseStatus HTTP status of response from builder
-    * @param message text message
-    * @param contentType content type of response from builder
-    */
-   public BuilderException(int responseStatus, String message, String contentType)
+   @Override
+   public Response toResponse(BuilderException exception)
    {
-      super(message);
-      this.responseStatus = responseStatus;
-      this.contentType = contentType;
-   }
-
-   public int getResponseStatus()
-   {
-      return responseStatus;
-   }
-
-   public String getContentType()
-   {
-      return contentType;
+      return Response
+         .status(exception.getResponseStatus())
+         .entity(exception.getMessage())
+         .type(exception.getContentType()).build();
    }
 }

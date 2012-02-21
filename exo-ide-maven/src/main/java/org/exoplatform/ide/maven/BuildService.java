@@ -224,14 +224,14 @@ public class BuildService
    /**
     * Start new build.
     *
-    * @param remoteURI the GIT location of source code for build
+    * @param gitURI the GIT location of source code for build
     * @return build task
     */
-   public MavenBuildTask add(final String remoteURI)
+   public MavenBuildTask add(final String gitURI)
    {
-      if (remoteURI == null || remoteURI.isEmpty())
+      if (gitURI == null || gitURI.isEmpty())
       {
-         throw new IllegalArgumentException("Parameter 'remoteURI' may not be null or empty. ");
+         throw new IllegalArgumentException("Parameter 'gituri' may not be null or empty. ");
       }
 
       List<String> theGoals = new ArrayList<String>(goals.length);
@@ -247,7 +247,7 @@ public class BuildService
                {
                   Git.cloneRepository()
                      .setDirectory(projectDirectory)
-                     .setURI(remoteURI)
+                     .setURI(gitURI)
                      .call();
                }
             }

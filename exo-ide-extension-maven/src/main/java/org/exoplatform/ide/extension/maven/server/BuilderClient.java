@@ -30,16 +30,20 @@ import java.net.URI;
 import java.net.URL;
 
 /**
+ * Client to remote build server.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class BuilderClient
 {
+   public static final String BUILD_SERVER_BASE_URL = "exo.ide.builder.build-server-base-url";
+
    private final String baseURL;
 
    public BuilderClient(InitParams initParams)
    {
-      this(readValueParam(initParams, "build-server-base-url", null));
+      this(readValueParam(initParams, "build-server-base-url", System.getProperty(BUILD_SERVER_BASE_URL)));
    }
 
    private static String readValueParam(InitParams initParams, String paramName, String defaultValue)
@@ -64,9 +68,17 @@ public class BuilderClient
       this.baseURL = baseURL;
    }
 
-   public URI build(String remoteURI) throws IOException, BuilderException
+   /**
+    * Send request to start new build at remote build server. Build may be started immediately or add in build queue.
+    *
+    * @param gitURI Git location of project we want to build
+    * @return ID of build task. It may be used as parameter for method {@link #status(String)} .
+    * @throws IOException if any i/o errors occur
+    * @throws BuilderException if build request was rejected by remote build server
+    */
+   public String build(String gitURI) throws IOException, BuilderException
    {
-      URL url = new URL(baseURL + "/builder/maven/build?remoteuri=" + remoteURI);
+      URL url = new URL(baseURL + "/builder/maven/build?gituri=" + gitURI);
       HttpURLConnection http = null;
       try
       {
@@ -78,7 +90,8 @@ public class BuilderClient
          {
             fail(http);
          }
-         return URI.create(http.getHeaderField("location"));
+         String location = http.getHeaderField("location");
+         return location.substring(location.lastIndexOf('/') + 1);
       }
       finally
       {
@@ -89,6 +102,15 @@ public class BuilderClient
       }
    }
 
+   /**
+    * Check status of build.
+    *
+    * @param buildID ID of build need to check
+    * @return string that contains description of current status of build in JSON format. Do nothing with such string
+    *         just re-send result to client
+    * @throws IOException if any i/o errors occur
+    * @throws BuilderException any other errors related to build server internal state or parameter of client request
+    */
    public String status(String buildID) throws IOException, BuilderException
    {
       URL url = new URL(baseURL + "/builder/maven/status/" + buildID);
@@ -123,6 +145,13 @@ public class BuilderClient
       }
    }
 
+   /**
+    * Cancel build.
+    *
+    * @param buildID ID of build to be canceled
+    * @throws IOException if any i/o errors occur
+    * @throws BuilderException any other errors related to build server internal state or parameter of client request
+    */
    public void cancel(String buildID) throws IOException, BuilderException
    {
       URL url = new URL(baseURL + "/builder/maven/cancel/" + buildID);
@@ -147,12 +176,29 @@ public class BuilderClient
       }
    }
 
+   /**
+    * Read log of build.
+    *
+    * @param buildID ID of build
+    * @return stream that contains build log
+    * @throws IOException if any i/o errors occur
+    * @throws BuilderException any other errors related to build server internal state or parameter of client request
+    */
    public InputStream log(String buildID) throws IOException, BuilderException
    {
       // Download build output.
       return doDownload(baseURL + "/builder/maven/log/" + buildID);
    }
 
+   /**
+    * Download result of build, typically result is *.war file. Note this method should not be called before successful
+    * end of build.
+    *
+    * @param buildID ID of build
+    * @return binary stream that contains result of build. Only *.war file expected at the moment.
+    * @throws IOException if any i/o errors occur
+    * @throws BuilderException any other errors related to build server internal state or parameter of client request
+    */
    public InputStream download(String buildID) throws IOException, BuilderException
    {
       // Download artifact.
@@ -192,6 +238,13 @@ public class BuilderClient
       }
    }
 
+   /**
+    * Add authentication info to the request. By default do nothing. May be reimplemented for particular authentication
+    * scheme.
+    *
+    * @param http HTTP connection to add authentication info, e.g. Basic authentication headers.
+    * @throws IOException if any i/o errors occur
+    */
    protected void authenticate(HttpURLConnection http) throws IOException
    {
    }
@@ -248,6 +301,7 @@ public class BuilderClient
       return body;
    }
 
+   /** Stream that automatically close HTTP connection when all data ends. */
    private static class HttpStream extends FilterInputStream
    {
       private final HttpURLConnection http;

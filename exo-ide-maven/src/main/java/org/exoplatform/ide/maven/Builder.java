@@ -63,9 +63,9 @@ public class Builder
 
    @GET
    @Path("build")
-   public Response build(@QueryParam("remoteuri") String remoteURI, @Context UriInfo uriInfo)
+   public Response build(@QueryParam("gituri") String gitURI, @Context UriInfo uriInfo)
    {
-      MavenBuildTask task = tasks.add(remoteURI);
+      MavenBuildTask task = tasks.add(gitURI);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
       return Response
          .status(202)
