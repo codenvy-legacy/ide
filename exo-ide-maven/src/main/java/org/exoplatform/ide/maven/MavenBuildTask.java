@@ -67,7 +67,7 @@ public class MavenBuildTask
    }
 
    /**
-    * Check is build done or not.
+    * Check is build done or not. Note build may be successful or failed.
     *
     * @return <code>true</code> if build is done and <code>false</code> otherwise
     */

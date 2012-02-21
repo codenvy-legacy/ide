@@ -21,13 +21,11 @@ package org.exoplatform.ide.maven;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.MavenInvocationException;
-import org.apache.maven.shared.invoker.SystemOutHandler;
 import org.eclipse.jgit.api.Git;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -292,6 +290,8 @@ public class BuildService
       CacheElement current;
       while ((current = queue.peek()) != null && current.isExpired())
       {
+         // Task must be already stopped. MavenInvoker controls build process and terminated it if build time exceeds
+         // the limit (DEFAULT_BUILDER_TIMEOUT).
          queue.remove(current);
          map.remove(current.id);
          cleanerQueue.offer(current.task.getProjectDirectory());

@@ -77,7 +77,7 @@ public final class BuildHelper
             }
          }
       }
-      return fileOrDirectory.delete();
+      return !fileOrDirectory.exists() || fileOrDirectory.delete();
    }
 
    private BuildHelper()
