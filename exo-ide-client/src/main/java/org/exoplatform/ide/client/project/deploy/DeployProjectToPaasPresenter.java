@@ -149,7 +149,6 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
 
       display.getSelectPaasField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
-
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
@@ -191,7 +190,6 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
 
       display.getBackButton().addClickHandler(new ClickHandler()
       {
-
          @Override
          public void onClick(ClickEvent event)
          {
@@ -233,7 +231,6 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
 
                   IDE.getInstance().closeView(display.asView().getId());
                   IDE.fireEvent(new ProjectCreatedEvent(result));
-
                }
 
                @Override
@@ -286,7 +283,6 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
       display.setPaasValueMap(paases.toArray(new String[paases.size()]));
       paas = null;
       display.getSelectPaasField().setValue("None");
-
    }
 
    private List<String> getPaasValues()

@@ -176,8 +176,11 @@ public class VirtualFileSystem
       url = URL.encode(url);
       loader.setMessage("Creating new project...");
       AsyncRequest.build(RequestBuilder.POST, url)
-         .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(newProject.getProperties()).toString())
-         .header(HTTPHeader.CONTENT_TYPE, "application/json").loader(loader).send(callback);
+         .data(JSONSerializer.PROPERTY_SERIALIZER
+         .fromCollection(newProject.getProperties()).toString())
+         .header(HTTPHeader.CONTENT_TYPE, "application/json")
+         .loader(loader)
+         .send(callback);
    }
 
    /**

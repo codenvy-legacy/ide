@@ -24,14 +24,14 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.extension.samples.client.control.ImportFromGithubControl;
-import org.exoplatform.ide.extension.samples.client.control.LoadSamplesControl;
 import org.exoplatform.ide.extension.samples.client.control.WelcomeControl;
 import org.exoplatform.ide.extension.samples.client.convert.ConvertToProjectPresenter;
 import org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter;
 import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
+import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesControl;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesPresenter;
+import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubControl;
 import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter;
@@ -66,7 +66,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
    public void initialize()
    {
       SamplesClientBundle.INSTANCE.css().ensureInjected();
-      IDE.getInstance().addControl(new LoadSamplesControl());
+      IDE.getInstance().addControl(new ShowSamplesControl());
       IDE.getInstance().addControl(new ImportFromGithubControl());
       IDE.getInstance().addControl(new WelcomeControl());
       IDE.addHandler(InitializeServicesEvent.TYPE, this);

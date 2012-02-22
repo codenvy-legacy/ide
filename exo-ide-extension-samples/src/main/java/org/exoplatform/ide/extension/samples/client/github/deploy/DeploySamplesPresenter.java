@@ -26,6 +26,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -34,6 +35,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -176,7 +178,6 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
             {
                createEmptyProject();
             }
-            
          }
       });
 
@@ -301,7 +302,10 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
    private void closeView()
    {
-      IDE.getInstance().closeView(display.asView().getId());
+      if (display != null)
+      {
+         IDE.getInstance().closeView(display.asView().getId());
+      }
    }
 
    // ---------------projects creation------------------------
@@ -320,7 +324,6 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
             new AsyncRequestCallback<ProjectModel>(
                new ProjectUnmarshaller(model))
             {
-
                @Override
                protected void onSuccess(ProjectModel result)
                {
@@ -351,10 +354,11 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
       try
       {
+         JobManager.get().showJobSeparated();
+         
          GitClientService.getInstance().cloneRepository(vfs.getId(), project, remoteUri, null,
             new AsyncRequestCallback<String>()
             {
-
                @Override
                protected void onSuccess(String result)
                {

@@ -60,11 +60,19 @@ Add shadow to dialog boxes and menus
 	cursor: hand;
 }
 
+.ide-label
+{
+	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	font-style: normal;
+}
+
 /*
 CUSTOMIZE TOOLBAR
 */
 .exo-customizeToolbar-delimiter,.exo-customizeToolbar-spacer,.exo-customizeToolbar-commandGroup
-	{
+{
 	width: 10px;
 	font-family: Verdana, Bitstream Vera Sans, sans-serif;
 	font-size: 11px;

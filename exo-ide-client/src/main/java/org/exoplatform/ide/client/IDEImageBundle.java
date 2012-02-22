@@ -58,6 +58,12 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("bundled-images/yes-disabled.png")
    ImageResource yesDisabled();
+   
+   @Source("bundled-images/hide.png")
+   ImageResource hide();
+
+   @Source("bundled-images/hide-disabled.png")
+   ImageResource hideDisabled();
 
    /*
     * Navigation buttons

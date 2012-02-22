@@ -37,6 +37,7 @@ import org.exoplatform.ide.extension.samples.client.SamplesExtension;
  */
 public class SamplesListGrid extends ListGrid<ProjectData>
 {
+   
    private static final String ID = "ideGithubSamplesGrid";
 
    private static final String REPOSITORY_HEADER = SamplesExtension.LOCALIZATION_CONSTANT.samplesListRepositoryColumn();

@@ -138,10 +138,8 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
-   public void bindDisplay(Display d)
+   public void bindDisplay()
    {
-      display = d;
-
       display.getNameField().addValueChangeHandler(valueChangeHandler);
 
       display.getCancelButton().addClickHandler(closeFormHandler);
@@ -440,9 +438,9 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
    {
       if (display == null)
       {
-         Display d = GWT.create(Display.class);
-         IDE.getInstance().openView(d.asView());
-         bindDisplay(d);
+         display = GWT.create(Display.class);
+         IDE.getInstance().openView(display.asView());
+         bindDisplay();
       }
       else
       {

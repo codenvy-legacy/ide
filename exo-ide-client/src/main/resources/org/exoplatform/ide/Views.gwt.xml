@@ -22,6 +22,10 @@
    <replace-with class="org.exoplatform.ide.client.progress.ui.ProgressView">
       <when-type-is class="org.exoplatform.ide.client.progress.ProgressPresenter.Display" />
    </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.client.progress.SingleJobView">
+      <when-type-is class="org.exoplatform.ide.client.progress.ProgressPresenter.SingleJobDisplay" />
+   </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.createfolder.CreateFolderView">
       <when-type-is class="org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter.Display" />

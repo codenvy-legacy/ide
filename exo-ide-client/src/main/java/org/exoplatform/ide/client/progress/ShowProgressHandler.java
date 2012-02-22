@@ -16,36 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.progress.event;
+package org.exoplatform.ide.client.progress;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 19, 2011 evgen $
  * 
  */
-public class ShowProgressEvent extends GwtEvent<ShowProgressHandler>
+public interface ShowProgressHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<ShowProgressHandler> TYPE = new Type<ShowProgressHandler>();
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowProgressHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowProgressHandler handler)
-   {
-      handler.onShowProgress(this);
-   }
+   void onShowProgress(ShowProgressEvent event);
 
 }

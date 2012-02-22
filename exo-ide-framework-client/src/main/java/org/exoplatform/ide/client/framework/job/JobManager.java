@@ -16,18 +16,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.progress.event;
 
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ide.client.framework.job;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: Sep 19, 2011 evgen $
  * 
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public interface ShowProgressHandler extends EventHandler
+
+public abstract class JobManager
 {
 
-   void onShowProgress(ShowProgressEvent event);
+   private static JobManager instance;
+
+   public static JobManager get()
+   {
+      return instance;
+   }
+
+   protected JobManager()
+   {
+      instance = this;
+   }
+
+   public abstract void showJobSeparated();
 
 }

@@ -28,12 +28,11 @@ import org.exoplatform.ide.client.framework.job.Job;
 import org.exoplatform.ide.client.framework.job.Job.JobStatus;
 import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.job.JobChangeHandler;
+import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.progress.event.ShowProgressEvent;
-import org.exoplatform.ide.client.progress.event.ShowProgressHandler;
 
 import java.util.LinkedHashMap;
 
@@ -42,7 +41,7 @@ import java.util.LinkedHashMap;
  * @version $Id: Sep 16, 2011 evgen $
  * 
  */
-public class ProgressPresenter implements JobChangeHandler, ShowProgressHandler, ViewClosedHandler
+public class ProgressPresenter extends JobManager implements JobChangeHandler, ShowProgressHandler, ViewClosedHandler
 {
 
    public interface Display extends IsView
@@ -55,11 +54,26 @@ public class ProgressPresenter implements JobChangeHandler, ShowProgressHandler,
       HasClickHandlers getRemoveFinishedButton();
    }
 
+   public interface SingleJobDisplay extends IsView
+   {
+
+      void setCurrentJob(Job job);
+
+      Job getCurrentJob();
+
+      HasClickHandlers getHideButton();
+
+   }
+
    private LinkedHashMap<String, Job> jobs = new LinkedHashMap<String, Job>();
 
    private ProgressNotificationControl control;
 
    private Display display;
+
+   private SingleJobDisplay singleJobDisplay;
+
+   private boolean showJobSeparated = false;
 
    /**
     * 
@@ -80,7 +94,6 @@ public class ProgressPresenter implements JobChangeHandler, ShowProgressHandler,
    {
       display.getRemoveFinishedButton().addClickHandler(new ClickHandler()
       {
-
          @Override
          public void onClick(ClickEvent event)
          {
@@ -109,23 +122,58 @@ public class ProgressPresenter implements JobChangeHandler, ShowProgressHandler,
       Job job = event.getJob();
       control.setEnabled(true);
 
-      jobs.put(job.getId(), job);
-      if (job.getStatus() != JobStatus.FINISHED)
+      if (job.getStatus() == JobStatus.STARTED && showJobSeparated)
+      {
+         showJobSeparated = false;
+         showJobInWindow(job);
+         return;
+      }
+
+      if (singleJobDisplay != null && job.getStatus() != JobStatus.STARTED)
+      {
+         singleJobDisplay.setCurrentJob(job);
+         IDE.getInstance().closeView(singleJobDisplay.asView().getId());
+         return;
+      }
+
+      jobs.put(job.getId(), job);      
+      if (job.getStatus() == JobStatus.FINISHED)
+      {
+         control.hide();
+      }
+      else
       {
          control.updateState(job);
          control.show();
       }
-      else
-      {
-         control.hide();
-      }
+
       if (display != null)
       {
          display.updateOrAddJob(job);
       }
    }
 
-   private void showJobs()
+   private void showJobInWindow(Job job)
+   {
+      singleJobDisplay = GWT.create(SingleJobDisplay.class);
+      IDE.getInstance().openView(singleJobDisplay.asView());
+      singleJobDisplay.setCurrentJob(job);
+
+      singleJobDisplay.getHideButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            IDE.getInstance().closeView(singleJobDisplay.asView().getId());
+         }
+      });
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.ShowProgressHandler.event.ShowJobsHandler#onShowProgress(org.exoplatform.ide.client.ShowProgressEvent.event.ShowJobsEvent)
+    */
+   @Override
+   public void onShowProgress(ShowProgressEvent event)
    {
       if (display == null)
       {
@@ -137,16 +185,8 @@ public class ProgressPresenter implements JobChangeHandler, ShowProgressHandler,
       {
          display.asView().activate();
       }
-      display.updateJobs(jobs);
-   }
 
-   /**
-    * @see org.exoplatform.ide.client.ShowProgressHandler.event.ShowJobsHandler#onShowProgress(org.exoplatform.ide.client.ShowProgressEvent.event.ShowJobsEvent)
-    */
-   @Override
-   public void onShowProgress(ShowProgressEvent event)
-   {
-      showJobs();
+      display.updateJobs(jobs);
    }
 
    /**
@@ -159,6 +199,33 @@ public class ProgressPresenter implements JobChangeHandler, ShowProgressHandler,
       {
          display = null;
       }
+
+      else if (event.getView() instanceof SingleJobDisplay)
+      {
+         if (singleJobDisplay.getCurrentJob() != null)
+         {
+            Job job = singleJobDisplay.getCurrentJob();
+
+            control.updateState(job);
+            control.show();
+
+            if (display != null)
+            {
+               display.updateOrAddJob(job);
+               display.asView().activate();
+            }
+
+            singleJobDisplay.setCurrentJob(null);
+         }
+
+         singleJobDisplay = null;
+      }
+   }
+
+   @Override
+   public void showJobSeparated()
+   {
+      showJobSeparated = true;
    }
 
 }

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.control;
+package org.exoplatform.ide.extension.samples.client.github.load;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -26,39 +26,39 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
-import org.exoplatform.ide.extension.samples.client.githubimport.ShowImportFromGithubEvent;
+import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesEvent;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
- * Control to call Import from GitHub form.
+ * Control to call Try Out Samples form.
  * <p/>
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ImportFromGithubControl.java Nov 18, 2011 5:06:02 PM vereshchaka $
  */
 @RolesAllowed({"administrators", "developers"})
-public class ImportFromGithubControl extends SimpleControl implements IDEControl, VfsChangedHandler
+public class ShowSamplesControl extends SimpleControl implements IDEControl, VfsChangedHandler
 {
 
-   private static final String ID = SamplesExtension.LOCALIZATION_CONSTANT.importFromGithubControlId();
+   private static final String ID = SamplesExtension.LOCALIZATION_CONSTANT.loadSamplesControlId();
 
-   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.importFromGithubControlTitle();
+   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.loadSamplesControlTitle();
 
-   private static final String PROMPT = SamplesExtension.LOCALIZATION_CONSTANT.importFromGithubControlPrompt();
+   private static final String PROMPT = SamplesExtension.LOCALIZATION_CONSTANT.loadSamplesControlPrompt();
 
    private VirtualFileSystemInfo vfsInfo;
 
    /**
     * @param id
     */
-   public ImportFromGithubControl()
+   public ShowSamplesControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(SamplesClientBundle.INSTANCE.importFromGithubControl(),
-         SamplesClientBundle.INSTANCE.importFromGithubDisabledControl());
-      setEvent(new ShowImportFromGithubEvent());
+      setImages(SamplesClientBundle.INSTANCE.importSamplesControl(),
+         SamplesClientBundle.INSTANCE.importSamplesDisabledControl());
+      setEvent(new ShowSamplesEvent());
    }
 
    /**

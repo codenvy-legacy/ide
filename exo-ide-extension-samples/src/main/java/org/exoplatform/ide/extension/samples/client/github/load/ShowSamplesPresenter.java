@@ -99,7 +99,6 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    {
       display.getNextButton().addClickHandler(new ClickHandler()
       {
-
          @Override
          public void onClick(ClickEvent event)
          {
@@ -108,6 +107,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
                Dialogs.getInstance().showError(lb.showSamplesErrorSelectRepository());
                return;
             }
+            
             selectedProjectData = selectedProjects.get(0);
             String name = display.getProjectNameField().getValue();
             if (name != null && !name.isEmpty())

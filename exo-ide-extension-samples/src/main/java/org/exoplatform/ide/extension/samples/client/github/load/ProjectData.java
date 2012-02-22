@@ -25,6 +25,7 @@ package org.exoplatform.ide.extension.samples.client.github.load;
  */
 public class ProjectData
 {
+   
    private String name;
 
    private String description;
