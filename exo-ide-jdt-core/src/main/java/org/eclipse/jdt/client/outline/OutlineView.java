@@ -21,15 +21,18 @@ package org.eclipse.jdt.client.outline;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.cellview.client.TreeNode;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.view.client.SingleSelectionModel;
 
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.core.dom.ImportDeclaration;
 import org.exoplatform.gwtframework.ui.client.CellTreeResource;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,11 +62,16 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display
       // TODO Fix view properties
       super("OutlineViewId", ViewType.INFORMATION, "Java Outline");
       selectionModel = new SingleSelectionModel<Object>();
+
       scrollPanel = new ScrollPanel();
 
       outlineTreeViewModel = new OutlineTreeViewModel(selectionModel);
       cellTree = new CellTree(outlineTreeViewModel, null, res);
-      cellTree.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
+
+      // Keyboard is disabled because of the selection problem (when selecting programmatically), if
+      // KeyboardSelectionPolicy.BOUND_TO_SELECTION is set
+      // and because of the focus border, when use KeyboardSelectionPolicy.ENABLED.
+      cellTree.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 
       scrollPanel.add(cellTree);
       add(scrollPanel);
@@ -97,6 +105,7 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display
    public void selectNode(ASTNode node)
    {
       selectionModel.setSelected(node, true);
+      openNode(node);
    }
 
    /**
@@ -118,11 +127,71 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display
    }
 
    /**
-    * @see org.eclipse.jdt.client.outline.OutlinePresenter.Display#openNode(java.lang.Object)
+    * Make the node visible - open all its parent nodes.
+    * 
+    * @param node node to open.
+    */
+   public void openNode(ASTNode node)
+   {
+      ASTNode parent = node;
+      TreeNode treeNode = cellTree.getRootTreeNode();
+
+      // Get the list of node's parents (need to open), sorted from the farthest parent.
+      List<ASTNode> parents = new ArrayList<ASTNode>();
+      while (parent.getParent() != null && !(parent.getParent() instanceof CompilationUnit))
+      {
+         parent = parent.getParent();
+         parents.add(0, parent);
+      }
+
+      // Open node's parents:
+      for (ASTNode p : parents)
+      {
+         // Tree node may be null, if something went wrong on open operation:
+         if (treeNode == null)
+         {
+            continue;
+         }
+         for (int i = 0; i < treeNode.getChildCount(); i++)
+         {
+            if (treeNode.getChildValue(i) instanceof ASTNode && ((ASTNode)treeNode.getChildValue(i)).equals(p))
+            {
+               // Temporary solution to check null state tree node after open operation, we can access child TreeNode only as the
+               // result of the open operation:
+               TreeNode tmp = treeNode.setChildOpen(i, true);
+
+               if (tmp == null)
+               {
+                  // Close node and try to open again:
+                  treeNode.setChildOpen(i, false);
+                  tmp = treeNode.setChildOpen(i, true);
+               }
+               treeNode = tmp;
+               break;
+            }
+         }
+      }
+
+      // Open Imports Group:
+      if (node instanceof ImportDeclaration)
+      {
+         for (int i = 0; i < treeNode.getChildCount(); i++)
+         {
+            if (treeNode.getChildValue(i) instanceof ImportGroupNode)
+            {
+               treeNode = treeNode.setChildOpen(i, true, false);
+               return;
+            }
+         }
+      }
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.outline.OutlinePresenter.Display#getNodes(org.eclipse.jdt.client.core.dom.ASTNode)
     */
    @Override
-   public void openNode(Object object)
+   public List<Object> getNodes(ASTNode parent)
    {
-      //TODO
+      return outlineTreeViewModel.getChildren(parent);
    }
 }

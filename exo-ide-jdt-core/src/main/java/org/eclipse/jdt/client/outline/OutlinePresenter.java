@@ -27,6 +27,11 @@ import org.eclipse.jdt.client.UpdateOutlineEvent;
 import org.eclipse.jdt.client.UpdateOutlineHandler;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.core.dom.FieldDeclaration;
+import org.eclipse.jdt.client.core.dom.ImportDeclaration;
+import org.eclipse.jdt.client.core.dom.MethodDeclaration;
+import org.eclipse.jdt.client.core.dom.TypeDeclaration;
+import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -53,17 +58,46 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
 {
    interface Display extends IsView
    {
+      /**
+       * Update the Outline values.
+       * 
+       * @param cUnit compilation unit to update
+       */
       void updateOutline(CompilationUnit cUnit);
 
+      /**
+       * Returns the selection model of the Outline tree.
+       * 
+       * @return {@link SingleSelectionModel} selection model
+       */
       SingleSelectionModel<Object> getSingleSelectionModel();
 
+      /**
+       * Select node in Outline tree. It is also will be shown, if parent node is closed, then will be expanded.
+       * 
+       * @param node node to select
+       */
       void selectNode(ASTNode node);
 
+      /**
+       * Give focus to the tree.
+       */
       void focusInTree();
 
+      /**
+       * Get root child nodes.
+       * 
+       * @return {@link List} root nodes
+       */
       List<Object> getNodes();
 
-      void openNode(Object object);
+      /**
+       * Get child nodes of the pointed parent.
+       * 
+       * @param parent
+       * @return {@link List} child nodes
+       */
+      List<Object> getNodes(ASTNode parent);
    }
 
    /**
@@ -71,14 +105,34 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
     */
    private Display display;
 
+   /**
+    * Current compilation unit.
+    */
    private CompilationUnit compilationUnit;
 
+   /**
+    * Editor activity must be processed or not.
+    */
    private boolean processEditorActivity = true;
 
+   /**
+    * Current row selected.
+    */
    private int currentRow = -1;
 
+   /**
+    * Outline selection must be processed or not.
+    */
+   private boolean processSelection = true;
+
+   /**
+    * Current editor.
+    */
    private Editor currentEditor;
 
+   /**
+    * Timer for selecting Outline's node.
+    */
    private Timer selectOutlineTimer = new Timer()
    {
       @Override
@@ -86,8 +140,7 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
       {
          if (compilationUnit != null)
          {
-            selectToken(currentRow);
-            currentEditor.setFocus();
+            selectNode(currentRow);
          }
       }
    };
@@ -100,6 +153,9 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
+   /**
+    * Bind display with presenter.
+    */
    public void bindDisplay()
    {
       display.getSingleSelectionModel().addSelectionChangeHandler(new SelectionChangeEvent.Handler()
@@ -108,10 +164,38 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
          @Override
          public void onSelectionChange(SelectionChangeEvent event)
          {
+            if (!processSelection)
+            {
+               processSelection = true;
+               return;
+            }
+
             if (display.getSingleSelectionModel().getSelectedObject() instanceof ASTNode)
             {
                ASTNode node = ((ASTNode)display.getSingleSelectionModel().getSelectedObject());
-               selectEditorLine(compilationUnit.getLineNumber(node.getStartPosition()));
+               int startPosition = node.getStartPosition();
+
+               // Find method's name start position:
+               if (node instanceof MethodDeclaration)
+               {
+                  startPosition = ((MethodDeclaration)node).getName().getStartPosition();
+               }
+               // Find type's name start position:
+               else if (node instanceof TypeDeclaration)
+               {
+                  startPosition = ((TypeDeclaration)node).getName().getStartPosition();
+               }
+               // Find field's name start position:
+               else if (node instanceof FieldDeclaration)
+               {
+                  FieldDeclaration field = (FieldDeclaration)node;
+                  if (field.fragments().iterator().hasNext())
+                  {
+                     startPosition =
+                        ((VariableDeclarationFragment)field.fragments().iterator().next()).getStartPosition();
+                  }
+               }
+               selectEditorLine(compilationUnit.getLineNumber(startPosition));
             }
          }
       });
@@ -125,6 +209,10 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
    {
       compilationUnit = event.getCompilationUnit();
       display.updateOutline(event.getCompilationUnit());
+      if (currentEditor != null)
+      {
+         selectNode(currentEditor.getCursorRow());
+      }
    }
 
    /**
@@ -171,10 +259,74 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
       IDE.fireEvent(new EditorGoToLineEvent(line));
    }
 
-   protected void selectToken(int lineNumber)
+   /**
+    * Select node by it's line number.
+    * 
+    * @param lineNumber line number
+    */
+   public void selectNode(int lineNumber)
    {
-      // TODO
-      compilationUnit.getPosition(lineNumber, 0);
+      ASTNode node = getNodeByLineNumber(lineNumber, display.getNodes());
+      if (node != null)
+      {
+         processSelection = false;
+         display.selectNode(node);
+      }
+   }
+
+   /**
+    * Find node by it's line number.
+    * 
+    * @param lineNumber line number
+    * @param nodes list of nodes to start search
+    * @return {@link ASTNode} found node or <code>null</code>, if not found
+    */
+   protected ASTNode getNodeByLineNumber(int lineNumber, List<Object> nodes)
+   {
+      for (int i = 0; i < nodes.size(); i++)
+      {
+         if (nodes.get(i) instanceof ASTNode)
+         {
+            ASTNode node = (ASTNode)nodes.get(i);
+            
+            int startLineNumber = compilationUnit.getLineNumber(node.getStartPosition());
+            int endLineNumber = compilationUnit.getLineNumber(node.getStartPosition() + node.getLength());
+
+            if (startLineNumber == lineNumber)
+            {
+               return node;
+            }
+            
+            //Check current line is between node's start and end lines:
+            if (startLineNumber <= lineNumber & lineNumber <= endLineNumber)
+            {
+               //If there are no children - return this node
+               if (display.getNodes(node).isEmpty())
+               {
+                  return node;
+               }
+               //Checking line ranges of children, if no proper is found - return parent node:
+               else
+               {
+                  ASTNode foundNode = getNodeByLineNumber(lineNumber, display.getNodes(node));
+                  return (foundNode == null) ? node : foundNode;
+               }
+            }
+         }
+         //Process import group node:
+         else if (nodes.get(i) instanceof ImportGroupNode)
+         {
+            for (Object object : ((ImportGroupNode)nodes.get(i)).getImports())
+            {
+               if (compilationUnit.getLineNumber(((ImportDeclaration)object).getStartPosition()) == lineNumber)
+               {
+                  return (ImportDeclaration)object;
+               }
+            }
+         }
+      }
+      //Nothing was found:
+      return null;
    }
 
    /**
