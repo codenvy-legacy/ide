@@ -141,7 +141,6 @@ public class GoToFolderTest extends BaseTest
       IDE.EDITOR.waitTabNotPresent(FILE_2);
    }
 
-   @Ignore
    @Test
    public void testGoToFolderSearchPanel() throws Exception
    {
@@ -159,11 +158,11 @@ public class GoToFolderTest extends BaseTest
       IDE.SEARCH.doubleClickOnFile(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      //TODO After fix issue-IDE-1458 uncomment the code
-      //      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
-      //      IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + FOLDER_1 + "/" + FILE_1);
-      //      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1);
-      //      
+      //TODO After fix issue-IDE-1458 should be work
+            IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
+            IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + FOLDER_1 + "/" + FILE_1);
+            IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1);
+            
    }
 
 }
