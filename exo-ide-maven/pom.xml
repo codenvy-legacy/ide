@@ -56,7 +56,6 @@
       </dependency>
    </dependencies>
    <build>
-      <finalName>builder</finalName>
       <plugins>
          <plugin>
            <groupId>org.apache.maven.plugins</groupId>
