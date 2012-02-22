@@ -142,6 +142,19 @@ public class VirtualFileSystem
       AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Link.REL_CHILDREN).getHref() + "?" + param)
          .loader(loader).send(callback);
    }
+   
+   /**
+    * Get folder content filtered by item type
+    * 
+    * @param path
+    */
+   public void getChildren(Folder folder, ItemType itemType, AsyncRequestCallback<List<Item>> callback) throws RequestException
+   {
+      String param = "propertyFilter=" + PropertyFilter.ALL+"& itemType=" + itemType.name();
+      loader.setMessage("Loading content...");
+      AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Link.REL_CHILDREN).getHref() + "?" + param)
+         .loader(loader).send(callback);
+   }
 
    /**
     * Create new folder.
