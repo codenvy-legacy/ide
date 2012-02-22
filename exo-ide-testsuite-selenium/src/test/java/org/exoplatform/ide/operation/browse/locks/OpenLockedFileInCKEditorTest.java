@@ -26,6 +26,7 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -69,13 +70,14 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       }
    }
 
+   @Ignore
    @Test
    public void testOpenLockedFile() throws Exception
    {
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
-      
+
       //----- 1 ----------
       //open file
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
@@ -95,7 +97,7 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       //check is file locked
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
-      
+
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       //Thread.sleep(TestConstants.SLEEP_SHORT);
 

@@ -1,4 +1,4 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <Module>
-  <UserPref>name="last_location" datatype="hidden"</<UserPref>
+  <UserPref>name="last_location" datatype="hidden"</UserPref>
 </Module>

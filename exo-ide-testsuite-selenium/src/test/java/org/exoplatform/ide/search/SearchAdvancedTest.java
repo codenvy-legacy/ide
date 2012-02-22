@@ -18,11 +18,15 @@
  */
 package org.exoplatform.ide.search;
 
+import static org.junit.Assert.*;
+
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -35,12 +39,26 @@ import java.io.IOException;
 public class SearchAdvancedTest extends BaseTest
 {
 
+   private static final String PROJECT = SearchAdvancedTest.class.getSimpleName();
+
    private static final String googleGadgetFileName = "Тестовый гаджет.xml";
 
    private final String googleGadgetFileContent =
-
    "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n" + "<ModulePrefs title=\"Hello World!\" />\n"
       + "<Content type=\"html\">\n" + "<![CDATA[ Привет, свет! Test]]></Content></Module>";
+
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+
+      }
+      catch (Exception e)
+      {
+      }
+   }
 
    /**
     * IDE-34:Advanced search test.
@@ -50,69 +68,70 @@ public class SearchAdvancedTest extends BaseTest
    @Test
    public void testAdvancedSearch() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
+      IDE.EDITOR.waitTabPresent(0);
+      IDE.WELCOME_PAGE.close();
+      IDE.WELCOME_PAGE.waitClose();
+
+      //step2
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       IDE.EDITOR.waitTabPresent(0);
       IDE.EDITOR.deleteLinesInEditor(0, 7);
       IDE.EDITOR.typeTextIntoEditor(0, googleGadgetFileContent);
-      IDE.NAVIGATION.saveFileAs(googleGadgetFileName);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.selectItem(WS_URL + googleGadgetFileName);
-      IDE.WORKSPACE.selectRootItem();
+      
+      IDE.EDITOR.saveAs(0, googleGadgetFileName);
 
-      //Step 5
-      IDE.SEARCH.performSearch("/", "text", "");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + googleGadgetFileName);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+
+      //Step 3 Check search with different mismatched parameters
+      IDE.SEARCH.performSearch("/" + PROJECT, "text", "");
       IDE.SEARCH.waitSearchResultsOpened();
-      IDE.NAVIGATION.assertItemNotVisibleInSearchTree(WS_URL + googleGadgetFileName);
+      assertFalse(IDE.SEARCH.isFilePresent(PROJECT + "/" + googleGadgetFileName));
 
-      //Step 6
-      IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
-      IDE.SEARCH.performSearch("/", "", "script/groovy");
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemNotVisibleInSearchTree(WS_URL + googleGadgetFileName);
+      //first mismatched parameter
+      IDE.SEARCH.selectRootItem();
+      IDE.SEARCH.performSearch("/" + PROJECT, "", "script/groovy");
+      IDE.SEARCH.waitSearchResultsOpened();
+      assertFalse(IDE.SEARCH.isFilePresent(PROJECT + "/" + googleGadgetFileName));
 
-      //Step 7
-      IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
-      IDE.SEARCH.performSearch("/", "Привет, свет!", "script/groovy");
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemNotVisibleInSearchTree(WS_URL + googleGadgetFileName);
+      //second  
+      IDE.SEARCH.selectRootItem();
+      IDE.SEARCH.performSearch("/" + PROJECT, "Привет, свет!", "script/groovy");
+      IDE.SEARCH.waitSearchResultsOpened();
+      assertFalse(IDE.SEARCH.isFilePresent(PROJECT + "/" + googleGadgetFileName));
 
-      //Step 8
-      IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
-      IDE.SEARCH.performSearch("/", "", "");
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + googleGadgetFileName);
+      //third mismatched parameter
+      IDE.SEARCH.selectRootItem();
+      IDE.SEARCH.performSearch("/" + PROJECT, "Привет, свет!", "script/groovy");
+      IDE.SEARCH.waitSearchResultsOpened();
+      assertFalse(IDE.SEARCH.isFilePresent(PROJECT + "/" + googleGadgetFileName));
 
-      //Step 9
-      IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
-      IDE.SEARCH.performSearch("/", "Привет, свет!", "");
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + googleGadgetFileName);
+      //Step 3 Check search with different matching parameters
+      IDE.SEARCH.selectRootItem();
+      IDE.SEARCH.performSearch("/" + PROJECT, "", "");
+      IDE.SEARCH.waitSearchResultsOpened();
+      assertTrue(IDE.SEARCH.isFilePresent(PROJECT + "/" + googleGadgetFileName));
 
-      //Step 10
-      IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
-      IDE.SEARCH.performSearch("/", "", "application/x-google-gadget");
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + googleGadgetFileName);
+       
+      IDE.SEARCH.selectRootItem();
+      IDE.SEARCH.performSearch("/" + PROJECT + "/" + googleGadgetFileName, "Привет, свет! ", "");
+      IDE.SEARCH.waitSearchResultsOpened();
+      assertTrue(IDE.SEARCH.isFilePresent(PROJECT + "/" + googleGadgetFileName));
 
-      //Step 11
-      IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
-      IDE.SEARCH.performSearch("/", "Test", "application/x-google-gadget");
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + googleGadgetFileName);
-
-      //Clear test items
-      selectWorkspaceTab();
-      IDE.WORKSPACE.selectItem(WS_URL + googleGadgetFileName);
-      IDE.NAVIGATION.deleteSelectedItems();
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + googleGadgetFileName);
+      IDE.SEARCH.selectRootItem();
+      IDE.SEARCH.performSearch("/" + PROJECT + "/" + googleGadgetFileName, "Test", "application/x-google-gadget\n");
+      
+      IDE.SEARCH.waitSearchResultsOpened();
+      assertTrue(IDE.SEARCH.isFilePresent(PROJECT + "/" + googleGadgetFileName));
    }
 
    @AfterClass
    public static void tearDown() throws IOException
    {
-      VirtualFileSystemUtils.delete(WS_URL + googleGadgetFileName);
+      VirtualFileSystemUtils.delete(WS_URL + PROJECT);
    }
 }

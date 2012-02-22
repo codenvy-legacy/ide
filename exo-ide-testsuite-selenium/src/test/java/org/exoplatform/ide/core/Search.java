@@ -29,6 +29,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -67,6 +68,8 @@ public class Search extends AbstractTestModule
       String SEARCH_RESULT_TREE = "ideSearchResultItemTreeGrid";
 
       String SEARCH_RESULT_SELECTOR = "div#" + SEARCH_RESULT_TREE + " div[id^=" + TREE_PREFIX_ID + "]";
+
+      String SEARCH_ROOT = "div.ide-Tree-item-selected";
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
@@ -92,6 +95,9 @@ public class Search extends AbstractTestModule
 
    @FindBy(id = Locators.SEARCH_RESULT_TREE)
    private WebElement resultTree;
+
+   @FindBy(id = Locators.SEARCH_RESULT_TREE)
+   private WebElement rootFolder;
 
    /**
     * Wait Perform search view opened.
@@ -138,6 +144,30 @@ public class Search extends AbstractTestModule
             catch (NoSuchElementException e)
             {
                return true;
+            }
+         }
+      });
+   }
+
+   /**
+    * Wait containingTextField
+    * 
+    * @throws Exception
+    */
+   public void waitContainingTextValue() throws Exception
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return containingTextField != null && containingTextField.isDisplayed();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
             }
          }
       });
@@ -257,10 +287,14 @@ public class Search extends AbstractTestModule
       waitPerformSearchOpened();
 
       assertEquals(checkPath, getPathValue());
+      waitContainingTextValue();
+      containingTextField.click();
+      //need for set focus in CHROME browser
+      Thread.sleep(500);
       setContainingTextValue(text);
+      mimeTypeField.click();
       setMimeTypeValue(mimeType);
       clickSearchButton();
-
       waitPerformSearchClosed();
    }
 
@@ -347,23 +381,59 @@ public class Search extends AbstractTestModule
    //      return TREE_PREFIX_ID + Utils.md5(href);
    //   }
 
+   /**
+    * Double click on serch three element
+    * @param fileURL
+    * @throws Exception
+    */
    public void doubleClickOnFile(String fileURL) throws Exception
    {
       String locator = "//div[@id='" + getItemId(fileURL) + "']/div/table/tbody/tr/td[2]";
-
-      selenium().mouseDown(locator);
-      selenium().mouseUp(locator);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-
-      selenium().doubleClick(locator);
-      IDE().EDITOR.waitTabPresent(0);
+      WebElement elem = driver().findElement(By.xpath(locator));
+      new Actions(driver()).doubleClick(elem).build().perform();
    }
 
+   /**
+    * Check search item is present
+    * @param fileURL
+    * @return
+    * @throws Exception
+    */
    public boolean isFilePresent(String fileURL) throws Exception
    {
       String locator = "//div[@id='" + getItemId(fileURL) + "']/div/table/tbody/tr/td[2]";
-      WebElement result = driver().findElement(By.xpath(locator));
-      return result != null && result.isDisplayed();
+
+      try
+      {
+         WebElement result = driver().findElement(By.xpath(locator));
+         return result != null && result.isDisplayed();
+      }
+      catch (Exception e)
+      {
+         return false;
+      }
+   }
+
+   /**
+    * Double click on serch three element
+    * @param fileURL
+    * @throws Exception
+    */
+   public void selectItem(String fileURL) throws Exception
+   {
+      String locator = "//div[@id='" + getItemId(fileURL) + "']/div/table/tbody/tr/td[2]";
+      WebElement elem = driver().findElement(By.xpath(locator));
+      elem.click();
+   }
+
+   /**
+    * select root folder
+    * @param fileURL
+    * @throws Exception
+    */
+   public void selectRootItem() throws Exception
+   {
+      rootFolder.click();
    }
 
 }

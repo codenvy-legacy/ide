@@ -24,6 +24,7 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -73,6 +74,7 @@ public class OpenLockedFileTest extends LockFileAbstract
       }
    }
 
+   @Ignore
    @Test
    public void testOpenLockedFile() throws Exception
    {
