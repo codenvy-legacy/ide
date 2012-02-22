@@ -52,7 +52,11 @@ public class GetChildrenVisitor extends ASTVisitor
    public boolean visit(CompilationUnit compilationUnit)
    {
       nodes.clear();
-      nodes.add(compilationUnit.getPackage());
+      if (compilationUnit.getPackage() != null)
+      {
+         nodes.add(compilationUnit.getPackage());
+      }
+
       if (!compilationUnit.imports().isEmpty())
       {
          nodes.add(new ImportGroupNode("import declarations", compilationUnit.imports()));
