@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant;
 
+import com.google.gwt.user.client.ui.Frame;
+
+import com.google.gwt.user.client.ui.Widget;
+
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.runtime.Assert;
 
@@ -20,8 +24,16 @@ import org.eclipse.jdt.client.runtime.Assert;
  */
 public abstract class MemberProposalInfo extends ProposalInfo
 {
-   /* configuration */
-   protected final CompletionProposal fProposal;
+
+   protected CompletionProposal fProposal;
+
+   protected final String projectId;
+
+   protected final String docContext;
+   
+   private boolean isResolved = false;
+   
+   private Frame frame;
 
    /**
     * Creates a new proposal info.
@@ -29,10 +41,32 @@ public abstract class MemberProposalInfo extends ProposalInfo
     * @param project the java project to reference when resolving types
     * @param proposal the proposal to generate information for
     */
-   public MemberProposalInfo(CompletionProposal proposal)
+   public MemberProposalInfo(CompletionProposal proposal, String projectId, String docContext)
    {
+      this.projectId = projectId;
+      this.docContext = docContext;
       Assert.isNotNull(proposal);
-      fProposal = proposal;
+      this.fProposal = proposal;
    }
+
+   /**
+    * @see org.eclipse.jdt.client.codeassistant.ProposalInfo#getInfo()
+    */
+   @Override
+   public Widget getInfo()
+   {
+      if(isResolved)
+         return frame;
+      
+      String url = getURL();
+      isResolved = true;
+      if (url != null)
+      {
+         frame = new Frame(url);
+      }
+      return frame;
+   }
+
+   protected abstract String getURL();
 
 }

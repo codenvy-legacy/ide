@@ -109,13 +109,19 @@ public class CompletionProposalCollector extends CompletionRequestor
 
    private final IDocument document;
 
+   private final String docContext;
+
+   private final String projectId;
+
    public CompletionProposalCollector(CompilationUnit compilationUnit, boolean ignoreAll, IDocument document,
-      int invocationOffset)
+      int invocationOffset, String projectId, String docContext)
    {
       super(ignoreAll);
       this.document = document;
       this.invocationOffset = invocationOffset;
       fCompilationUnit = compilationUnit;
+      this.projectId = projectId;
+      this.docContext = docContext;
 
       fUserReplacementLength = -1;
       if (!ignoreAll)
@@ -124,7 +130,7 @@ public class CompletionProposalCollector extends CompletionRequestor
       }
       getInvocationContext();
    }
-   
+
    /*
     * (non-Javadoc)
     * @see org.eclipse.jdt.core.CompletionRequestor#setIgnored(int, boolean)
@@ -167,10 +173,11 @@ public class CompletionProposalCollector extends CompletionRequestor
    {
       if (fInvocationContext == null)
       {
-         setInvocationContext(new JavaContentAssistInvocationContext(fCompilationUnit, document, invocationOffset));
+         setInvocationContext(new JavaContentAssistInvocationContext(fCompilationUnit, document, invocationOffset,
+            projectId, docContext));
          fInvocationContext.setCollector(this);
       }
-       
+
       return fInvocationContext;
    }
 
@@ -682,7 +689,7 @@ public class CompletionProposalCollector extends CompletionRequestor
       JavaCompletionProposal javaProposal =
          new AnonymousTypeCompletionProposal(invocationContext, start, length, completion, label,
             String.valueOf(proposal.getDeclarationSignature()), (TypeDeclaration)null, relevance);
-      javaProposal.setProposalInfo(new AnonymousTypeProposalInfo(proposal));
+      javaProposal.setProposalInfo(new AnonymousTypeProposalInfo(proposal, projectId, docContext));
       return javaProposal;
    }
 
@@ -699,7 +706,7 @@ public class CompletionProposalCollector extends CompletionRequestor
          new JavaCompletionProposal(completion, start, length, image, label, relevance, getContext().isInJavadoc(),
             getInvocationContext());
       // if (fJavaProject != null)
-      // javaProposal.setProposalInfo(new FieldProposalInfo(fJavaProject, proposal));
+      javaProposal.setProposalInfo(new FieldProposalInfo(proposal, projectId, docContext));
 
       javaProposal.setTriggerCharacters(VAR_TRIGGER);
 
@@ -727,7 +734,7 @@ public class CompletionProposalCollector extends CompletionRequestor
          new JavaFieldWithCastedReceiverCompletionProposal(completion, start, length, image, label, relevance,
             getContext().isInJavadoc(), getInvocationContext(), proposal);
       // if (fJavaProject != null)
-      // javaProposal.setProposalInfo(new FieldProposalInfo(fJavaProject, proposal));
+      javaProposal.setProposalInfo(new FieldProposalInfo(proposal, projectId, docContext));
 
       javaProposal.setTriggerCharacters(VAR_TRIGGER);
 
@@ -817,7 +824,7 @@ public class CompletionProposalCollector extends CompletionRequestor
          new OverrideCompletionProposal(name, paramTypes, start, length, label,
             String.valueOf(proposal.getCompletion()), fInvocationContext);
       javaProposal.setImage(getImage(fLabelProvider.createMethodImageDescriptor(proposal)));
-      // javaProposal.setProposalInfo(new MethodProposalInfo(fJavaProject, proposal));
+      javaProposal.setProposalInfo(new MethodProposalInfo(proposal, projectId, docContext));
       javaProposal.setRelevance(computeRelevance(proposal));
 
       fSuggestedMethodNames.add(new String(name));

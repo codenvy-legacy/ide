@@ -21,6 +21,8 @@ package org.eclipse.jdt.client;
 import org.eclipse.jdt.client.event.ShowAstEvent;
 import org.eclipse.jdt.client.outline.OutlinePresenter;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -29,14 +31,17 @@ import org.exoplatform.ide.client.framework.module.IDE;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 20, 2012 1:08:51 PM evgen $
  */
-public class JdtExtension extends Extension
+public class JdtExtension extends Extension implements InitializeServicesHandler
 {
+
+   static String DOC_CONTEXT;
 
    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
    @Override
    public void initialize()
    {
       IDE.getInstance().addControl(new Con());
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
       // IDE.getInstance().addControl(new CodeAssistCommand(), Docking.TOOLBAR_RIGHT);
       new AstPresenter(IDE.eventBus());
       new CodeAssistantController();
@@ -62,11 +67,17 @@ public class JdtExtension extends Extension
       @Override
       public void initialize()
       {
-         // TODO Auto-generated method stub
-
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
+    */
+   @Override
+   public void onInitializeServices(InitializeServicesEvent event)
+   {
+      DOC_CONTEXT = event.getApplicationConfiguration().getContext() + "/ide/code-assistant/java/class-doc?fqn=";
+   }
    // public static class CodeAssistCommand extends SimpleControl implements IDEControl
    // {
    //

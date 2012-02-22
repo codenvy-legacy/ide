@@ -41,6 +41,10 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
 
    private CompilationUnit compilationUnit;
 
+   private String docContext;
+
+   private String projectId;
+
    /**
     * Creates a new context.
     * 
@@ -55,12 +59,14 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
    /**
     * @param compilationUnit
     */
-   public JavaContentAssistInvocationContext(CompilationUnit compilationUnit, IDocument document, int offset)
+   public JavaContentAssistInvocationContext(CompilationUnit compilationUnit, IDocument document, int offset,
+      String projectId, String docContext)
    {
       this(document, offset);
       this.compilationUnit = compilationUnit;
+      this.projectId = projectId;
+      this.docContext = docContext;
    }
-
 
    // /**
    // * Returns the keyword proposals that are available in this context, possibly none.
@@ -229,6 +235,22 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
    public void setCompilationUnit(CompilationUnit compilationUnit)
    {
       this.compilationUnit = compilationUnit;
+   }
+
+   /**
+    * @return the docContext
+    */
+   public String getDocContext()
+   {
+      return docContext;
+   }
+
+   /**
+    * @return the projectId
+    */
+   public String getProjectId()
+   {
+      return projectId;
    }
 
    // /**

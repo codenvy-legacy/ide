@@ -320,15 +320,6 @@ public class LazyJavaCompletionProposal extends AbstractJavaCompletionProposal
       return fInvocationContext.getLabelProvider().createStyledLabel(fProposal);
    }
 
-   /*
-    * @see ICompletionProposal#getAdditionalProposalInfo()
-    */
-   @Override
-   public final String getAdditionalProposalInfo()
-   {
-      return super.getAdditionalProposalInfo();
-   }
-
    /**
     * Gets the replacement offset.
     * 

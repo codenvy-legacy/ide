@@ -357,9 +357,9 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal
       // if (fCompilationUnit != null) {
       // IJavaProject project= fCompilationUnit.getJavaProject();
       // if (project != null)
-      // return new TypeProposalInfo(project, fProposal);
+      return new TypeProposalInfo(fProposal, fInvocationContext.getProjectId(), fInvocationContext.getDocContext());
       // }
-      return super.computeProposalInfo();
+      // return super.computeProposalInfo();
    }
 
    /*

@@ -81,8 +81,8 @@ public class JavaEditorExtension extends Extension implements InitializeServices
    public void initialize()
    {
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+//      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+//      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
 
       IDE.getInstance().addControl(new NewJavaClassControl());
 
@@ -103,12 +103,12 @@ public class JavaEditorExtension extends Extension implements InitializeServices
       else
          service = JavaCodeAssistantService.get();
 
-      factory =
-         new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
-            + "/ide/code-assistant/java/class-doc?fqn=");
-      javaCodeAssistant = new JavaCodeAssistant(service, factory, this);
+//      factory =
+//         new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
+//            + "/ide/code-assistant/java/class-doc?fqn=");
+//      javaCodeAssistant = new JavaCodeAssistant(service, factory, this);
 
-      javaCodeValidator = new JavaCodeValidator(service, this);
+//      javaCodeValidator = new JavaCodeValidator(service, this);
 
       IDE.getInstance().addEditor(
          new CodeMirrorProducer(MimeType.APPLICATION_JAVA, "CodeMirror Java file editor", "java",
@@ -119,7 +119,7 @@ public class JavaEditorExtension extends Extension implements InitializeServices
                //.setCodeAssistant(javaCodeAssistant).setCodeValidator(javaCodeValidator)
                ));
 
-      IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_JAVA, new JavaOutlineItemCreator());
+//      IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_JAVA, new JavaOutlineItemCreator());
    }
 
    /**
@@ -181,9 +181,9 @@ public class JavaEditorExtension extends Extension implements InitializeServices
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      projectId = event.getProject().getId();
-      javaCodeAssistant.setActiveProjectId(projectId);
-      factory.setProjectId(projectId);
+//      projectId = event.getProject().getId();
+//      javaCodeAssistant.setActiveProjectId(projectId);
+//      factory.setProjectId(projectId);
    }
 
 }

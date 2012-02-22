@@ -27,9 +27,10 @@ public final class FillArgumentNamesCompletionProposalCollector extends Completi
 
    private final boolean fIsGuessArguments;
 
-   public FillArgumentNamesCompletionProposalCollector(CompilationUnit unit, IDocument document, int invocationOffset)
+   public FillArgumentNamesCompletionProposalCollector(CompilationUnit unit, IDocument document, int invocationOffset,
+      String projectId, String docContext)
    {
-      super(unit, false, document, invocationOffset);
+      super(unit, false, document, invocationOffset, projectId, docContext);
       fIsGuessArguments = true;// preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_GUESS_METHOD_ARGUMENTS);
       setRequireExtendedContext(true);
    }
@@ -39,7 +40,8 @@ public final class FillArgumentNamesCompletionProposalCollector extends Completi
     */
    public FillArgumentNamesCompletionProposalCollector(JavaContentAssistInvocationContext invocationContext)
    {
-      this(invocationContext.getCompilationUnit(), invocationContext.getDocument(), invocationContext.getInvocationOffset());
+      this(invocationContext.getCompilationUnit(), invocationContext.getDocument(), invocationContext
+         .getInvocationOffset(), invocationContext.getProjectId(), invocationContext.getDocContext());
       setInvocationContext(invocationContext);
    }
 
@@ -68,7 +70,8 @@ public final class FillArgumentNamesCompletionProposalCollector extends Completi
       String completion = String.valueOf(methodProposal.getCompletion());
       // super class' behavior if this is not a normal completion or has no
       // parameters
-      if ((completion.length() == 0) || ((completion.length() == 1) && completion.charAt(0) == ')') || Signature.getParameterCount(methodProposal.getSignature()) == 0 || getContext().isInJavadoc())
+      if ((completion.length() == 0) || ((completion.length() == 1) && completion.charAt(0) == ')')
+         || Signature.getParameterCount(methodProposal.getSignature()) == 0 || getContext().isInJavadoc())
          return super.createJavaCompletionProposal(methodProposal);
 
       LazyJavaCompletionProposal proposal = null;

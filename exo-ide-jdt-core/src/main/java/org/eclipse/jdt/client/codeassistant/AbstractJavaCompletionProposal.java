@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant;
 
+import com.google.gwt.user.client.ui.Widget;
+
 import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.codeassistant.api.ICompletionProposalExtension;
@@ -28,6 +30,7 @@ import org.eclipse.jdt.client.text.DefaultPositionUpdater;
 import org.eclipse.jdt.client.text.IDocument;
 import org.eclipse.jdt.client.text.IPositionUpdater;
 import org.eclipse.jdt.client.text.Position;
+
 /**
  * 
  * @since 3.2
@@ -217,7 +220,7 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
    {
       fInvocationContext = context;
       compilationUnit = context.getCompilationUnit();
-      //TODO set configurable
+      // TODO set configurable
       fToggleEating = true;
    }
 
@@ -290,10 +293,10 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
     */
    public void apply(IDocument document, char trigger, int offset)
    {
-      int newLength=  fInvocationContext.getInvocationOffset() - getReplacementOffset();
+      int newLength = fInvocationContext.getInvocationOffset() - getReplacementOffset();
       if ((insertCompletion() ^ fToggleEating) && newLength >= 0)
          setReplacementLength(newLength);
-      
+
       if (isSupportingRequiredProposals())
       {
          CompletionProposal coreProposal = ((MemberProposalInfo)getProposalInfo()).fProposal;
@@ -369,7 +372,7 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
             replacement = buffer.toString();
             setReplacementString(replacement);
          }
-       
+
          // reference position just at the end of the document change.
          int referenceOffset = getReplacementOffset() + getReplacementLength();
          final ReferenceTracker referenceTracker = new ReferenceTracker();
@@ -403,9 +406,10 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
       JavaContentAssistInvocationContext invocationContext)
    {
       // if (PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_FILL_ARGUMENT_NAMES))
-      return (LazyJavaCompletionProposal)new FillArgumentNamesCompletionProposalCollector(invocationContext).createJavaCompletionProposal(completionProposal);
+      return (LazyJavaCompletionProposal)new FillArgumentNamesCompletionProposalCollector(invocationContext)
+         .createJavaCompletionProposal(completionProposal);
       // else
-//      return new LazyJavaTypeCompletionProposal(completionProposal, invocationContext);
+      // return new LazyJavaTypeCompletionProposal(completionProposal, invocationContext);
    }
 
    private boolean isSmartTrigger(char trigger)
@@ -555,92 +559,14 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
    /*
     * @see ICompletionProposal#getAdditionalProposalInfo()
     */
-   public String getAdditionalProposalInfo()
+   public Widget getAdditionalProposalInfo()
    {
-      // Object info= getAdditionalProposalInfo(new NullProgressMonitor());
-      // return info == null ? null : info.toString();
-      // TODO
-      return "";
+      if (getProposalInfo() != null)
+      {
+         return getProposalInfo().getInfo();
+      }
+      return null;
    }
-
-   // /*
-   // * @see
-   // org.eclipse.jface.text.contentassist.ICompletionProposalExtension5#getAdditionalProposalInfo(org.eclipse.core.runtime.IProgressMonitor)
-   // */
-   // public Object getAdditionalProposalInfo(IProgressMonitor monitor) {
-   // if (getProposalInfo() != null) {
-   // String info= getProposalInfo().getInfo(monitor);
-   // if (info != null && info.length() > 0) {
-   // StringBuffer buffer= new StringBuffer();
-   // HTMLPrinter.insertPageProlog(buffer, 0, getCSSStyles());
-   //
-   // buffer.append(info);
-   //
-   // IJavaElement element= null;
-   // try {
-   // element= getProposalInfo().getJavaElement();
-   // if (element instanceof IMember) {
-   // String base= JavaDocLocations.getBaseURL((IMember) element);
-   // if (base != null) {
-   //							int endHeadIdx= buffer.indexOf("</head>"); //$NON-NLS-1$
-   //							buffer.insert(endHeadIdx, "\n<base href='" + base + "'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
-   // }
-   // }
-   // } catch (JavaModelException e) {
-   // JavaPlugin.log(e);
-   // }
-   //
-   // HTMLPrinter.addPageEpilog(buffer);
-   // info= buffer.toString();
-   //
-   // return new JavadocBrowserInformationControlInput(null, element, info, 0);
-   // }
-   // }
-   // return null;
-   // }
-
-   // /**
-   // * Returns the style information for displaying HTML (Javadoc) content.
-   // *
-   // * @return the CSS styles
-   // * @since 3.3
-   // */
-   // protected String getCSSStyles() {
-   // if (fgCSSStyles == null) {
-   // Bundle bundle= Platform.getBundle(JavaPlugin.getPluginId());
-   //			URL url= bundle.getEntry("/JavadocHoverStyleSheet.css"); //$NON-NLS-1$
-   // if (url != null) {
-   // BufferedReader reader= null;
-   // try {
-   // url= FileLocator.toFileURL(url);
-   // reader= new BufferedReader(new InputStreamReader(url.openStream()));
-   // StringBuffer buffer= new StringBuffer(200);
-   // String line= reader.readLine();
-   // while (line != null) {
-   // buffer.append(line);
-   // buffer.append('\n');
-   // line= reader.readLine();
-   // }
-   // fgCSSStyles= buffer.toString();
-   // } catch (IOException ex) {
-   // JavaPlugin.log(ex);
-   // } finally {
-   // try {
-   // if (reader != null)
-   // reader.close();
-   // } catch (IOException e) {
-   // }
-   // }
-   //
-   // }
-   // }
-   // String css= fgCSSStyles;
-   // if (css != null) {
-   // FontData fontData= JFaceResources.getFontRegistry().getFontData(PreferenceConstants.APPEARANCE_JAVADOC_FONT)[0];
-   // css= HTMLPrinter.convertTopLevelFont(css, fontData);
-   // }
-   // return css;
-   // }
 
    /*
     * @see ICompletionProposalExtension#getContextInformationPosition()

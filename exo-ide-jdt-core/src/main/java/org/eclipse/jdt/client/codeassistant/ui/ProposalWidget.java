@@ -115,7 +115,7 @@ public class ProposalWidget extends Composite implements HasClickHandlers, HasMo
     */
    public Widget getDecription()
    {
-      return null;
+      return proposal.getAdditionalProposalInfo();
    }
 
    /** Calls when user select this {@link Widget} */

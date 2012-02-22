@@ -176,7 +176,8 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       int completionPosition =
          getCompletionPosition(currentFile.getContent(), currentEditor.getCursorRow(), currentEditor.getCursorCol());
       CompletionProposalCollector collector =
-         new FillArgumentNamesCompletionProposalCollector(unit, document, completionPosition);
+         new FillArgumentNamesCompletionProposalCollector(unit, document, completionPosition, currentFile.getProject()
+            .getId(), JdtExtension.DOC_CONTEXT);
       collector
          .setAllowsRequiredProposals(CompletionProposal.CONSTRUCTOR_INVOCATION, CompletionProposal.TYPE_REF, true);
       collector.setRequireExtendedContext(true);

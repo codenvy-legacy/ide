@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant.api;
 
+import com.google.gwt.user.client.ui.Widget;
+
 import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.text.IDocument;
@@ -97,14 +99,10 @@ public interface ICompletionProposal
    /**
     * Returns optional additional information about the proposal. The additional information will be presented to assist the user
     * in deciding if the selected proposal is the desired choice.
-    * <p>
-    * If {@link ICompletionProposalExtension5} is implemented, this method should not be called any longer. This method may be
-    * deprecated in a future release.
-    * </p>
     * 
     * @return the additional information or <code>null</code>
     */
-   String getAdditionalProposalInfo();
+   Widget getAdditionalProposalInfo();
 
    /**
     * Returns the string to be displayed in the list of completion proposals.

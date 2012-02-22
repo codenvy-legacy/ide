@@ -236,7 +236,7 @@ public class JavaMethodCompletionProposal extends LazyJavaCompletionProposal
    {
       // IJavaProject project= fInvocationContext.getProject();
       // if (project != null)
-      return new MethodProposalInfo(fProposal);
+      return new MethodProposalInfo(fProposal, fInvocationContext.getProjectId(), fInvocationContext.getDocContext());
       // return super.computeProposalInfo();
    }
 
