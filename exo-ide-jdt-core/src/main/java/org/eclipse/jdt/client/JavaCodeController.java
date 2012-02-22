@@ -83,7 +83,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
       parser.setUnitName(activeFile.getName().substring(0, activeFile.getName().lastIndexOf('.')));
       parser.setResolveBindings(true);
-      parser.setNameEnvironment(new DummyNameEnvironment(activeFile.getProject().getId()));
+      parser.setNameEnvironment(new NameEnvironment(activeFile.getProject().getId()));
       ASTNode ast = parser.createAST(null);
       CompilationUnit unit = (CompilationUnit)ast;
       return unit;

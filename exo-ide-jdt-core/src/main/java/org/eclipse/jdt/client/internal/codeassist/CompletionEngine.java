@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.codeassist;
 
-import org.eclipse.jdt.client.DummyNameEnvironment;
+import org.eclipse.jdt.client.NameEnvironment;
 import org.eclipse.jdt.client.core.CompletionContext;
 import org.eclipse.jdt.client.core.CompletionFlags;
 import org.eclipse.jdt.client.core.CompletionProposal;
@@ -834,7 +834,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
     * 
     * @param settings java.util.Map set of options used to configure the code assist engine.
     */
-   public CompletionEngine(DummyNameEnvironment nameEnvironment, CompletionRequestor requestor, Map settings,
+   public CompletionEngine(NameEnvironment nameEnvironment, CompletionRequestor requestor, Map settings,
    // IJavaProject javaProject,
       IProgressMonitor monitor)
    {
@@ -1342,28 +1342,6 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
                return;
          }
       }
-
-      // int accessibility = IAccessRule.K_ACCESSIBLE;
-      // if (accessRestriction != null)
-      // {
-      // switch (accessRestriction.getProblemId())
-      // {
-      // case IProblem.ForbiddenReference :
-      // if (this.options.checkForbiddenReference)
-      // {
-      // return;
-      // }
-      // accessibility = IAccessRule.K_NON_ACCESSIBLE;
-      // break;
-      // case IProblem.DiscouragedReference :
-      // if (this.options.checkDiscouragedReference)
-      // {
-      // return;
-      // }
-      // accessibility = IAccessRule.K_DISCOURAGED;
-      // break;
-      // }
-      // }
 
       if (isForbiddenType(packageName, simpleTypeName, enclosingTypeNames))
       {

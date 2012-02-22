@@ -23,6 +23,9 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.storage.client.Storage;
 
 import org.eclipse.jdt.client.core.Signature;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 
 import java.util.ArrayList;
@@ -37,13 +40,20 @@ import java.util.List;
 public class TypeInfoStorage
 {
 
+   private static final String SHORT_TYPE_INFO = "__SHORT_TYPE_INFO__";
+   
    private static TypeInfoStorage instance;
 
    private Storage storage;
+   
 
    protected TypeInfoStorage()
    {
       storage = Storage.getSessionStorageIfSupported();
+      if (storage == null)
+      {
+         IDE.fireEvent(new OutputEvent("Your browser does not support 'Session Storage'", Type.WARNING));
+      }
    }
 
    public static TypeInfoStorage get()
@@ -66,6 +76,16 @@ public class TypeInfoStorage
    public boolean containsKey(String key)
    {
       return storage.getItem(key) != null;
+   }
+   
+   public String getShortTypesInfo()
+   {
+      return storage.getItem(SHORT_TYPE_INFO);
+   }
+   
+   public void setShortTypesInfo(String info)
+   {
+      storage.setItem(SHORT_TYPE_INFO, info);
    }
 
    public List<JSONObject> getTypesByNamePrefix(String prefix, boolean fqnPart)

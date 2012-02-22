@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.codeassist;
 
-import org.eclipse.jdt.client.DummyNameEnvironment;
+import org.eclipse.jdt.client.NameEnvironment;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
@@ -182,7 +182,7 @@ public class MissingTypesGuesser extends ASTVisitor
 
    private CompletionEngine.CompletionProblemFactory problemFactory;
 
-   private DummyNameEnvironment nameEnvironment;
+   private NameEnvironment nameEnvironment;
 
    private HashMap substituedTypes;
 

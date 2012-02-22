@@ -168,7 +168,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       parser.setSource(document.get().toCharArray());
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
       parser.setUnitName(currentFile.getName().substring(0, currentFile.getName().lastIndexOf('.')));
-      parser.setNameEnvironment(new DummyNameEnvironment(currentFile.getProject().getId()));
+      parser.setNameEnvironment(new NameEnvironment(currentFile.getProject().getId()));
       parser.setResolveBindings(true);
       ASTNode ast = parser.createAST(null);
       org.eclipse.jdt.client.core.dom.CompilationUnit unit = (org.eclipse.jdt.client.core.dom.CompilationUnit)ast;
@@ -183,7 +183,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       collector.setRequireExtendedContext(true);
       char[] fileContent = document.get().toCharArray();
       CompletionEngine e =
-         new CompletionEngine(new DummyNameEnvironment(currentFile.getProject().getId()), collector,
+         new CompletionEngine(new NameEnvironment(currentFile.getProject().getId()), collector,
             JavaCore.getOptions(), new ProgressMonitor());
 
       try

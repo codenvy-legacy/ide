@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.codeassist.impl;
 
-import org.eclipse.jdt.client.DummyNameEnvironment;
+import org.eclipse.jdt.client.NameEnvironment;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.CompilationResult;
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
@@ -48,7 +48,7 @@ public abstract class Engine implements ITypeRequestor
 
    protected CompilationUnitScope unitScope;
 
-   public DummyNameEnvironment nameEnvironment;
+   public NameEnvironment nameEnvironment;
 
    public AssistOptions options;
 

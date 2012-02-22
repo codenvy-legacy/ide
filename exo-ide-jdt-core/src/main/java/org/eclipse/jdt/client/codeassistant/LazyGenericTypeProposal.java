@@ -10,8 +10,13 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant;
 
+import com.google.gwt.json.client.JSONArray;
+
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.ui.Image;
 
+import org.eclipse.jdt.client.TypeInfoStorage;
 import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
 import org.eclipse.jdt.client.codeassistant.api.IContextInformationExtension;
 import org.eclipse.jdt.client.codeassistant.api.Point;
@@ -21,12 +26,14 @@ import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.core.dom.ASTRequestor;
+import org.eclipse.jdt.client.core.dom.IBinding;
 import org.eclipse.jdt.client.core.dom.ITypeBinding;
+import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 import org.eclipse.jdt.client.text.BadLocationException;
 import org.eclipse.jdt.client.text.IDocument;
 import org.eclipse.jdt.client.text.IRegion;
-import org.eclipse.jdt.client.text.Region;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -202,22 +209,21 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
 
       if (onlyAppendArguments || shouldAppendArguments(document, offset, trigger))
       {
-//         TypeArgumentProposal[] typeArgumentProposals = computeTypeArgumentProposals();
-//         if (typeArgumentProposals.length > 0)
-//         {
-//
-//            int[] offsets = new int[typeArgumentProposals.length];
-//            int[] lengths = new int[typeArgumentProposals.length];
+         TypeArgumentProposal[] typeArgumentProposals = computeTypeArgumentProposals();
+         if (typeArgumentProposals.length > 0)
+         {
+
+            int[] offsets = new int[typeArgumentProposals.length];
+            int[] lengths = new int[typeArgumentProposals.length];
             StringBuffer buffer;
 
-//            if (canUseDiamond())
-//            {
+            if (canUseDiamond())
+            {
                buffer = new StringBuffer(getReplacementString());
                buffer.append("<>"); //$NON-NLS-1$
-//            }
-//            else
-//               buffer = createParameterList(typeArgumentProposals, offsets, lengths, onlyAppendArguments);
-               
+            }
+            else
+               buffer = createParameterList(typeArgumentProposals, offsets, lengths, onlyAppendArguments);
 
             // set the generic type as replacement string
             boolean insertClosingParenthesis = trigger == '(' && autocloseBrackets();
@@ -228,21 +234,21 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
             // add import & remove package, update replacement offset
             super.apply(document, '\0', offset);
 
-//            if (hasAmbiguousProposals(typeArgumentProposals))
-//            {
-//               adaptOffsets(offsets, buffer);
-////               installLinkedMode(document, offsets, lengths, typeArgumentProposals, insertClosingParenthesis);
-//            }
-//            else
-//            {
-//               if (insertClosingParenthesis)
-//                  setUpLinkedMode(document, ')');
-//               else
-//                  fSelectedRegion = new Region(getReplacementOffset() + getReplacementString().length(), 0);
-//            }
+            // if (hasAmbiguousProposals(typeArgumentProposals))
+            // {
+            // adaptOffsets(offsets, buffer);
+            // // installLinkedMode(document, offsets, lengths, typeArgumentProposals, insertClosingParenthesis);
+            // }
+            // else
+            // {
+            // if (insertClosingParenthesis)
+            // setUpLinkedMode(document, ')');
+            // else
+            // fSelectedRegion = new Region(getReplacementOffset() + getReplacementString().length(), 0);
+            // }
 
             return;
-//         }
+         }
 
       }
 
@@ -284,85 +290,127 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
       }
    }
 
-//   /**
-//    * Computes the type argument proposals for this type proposals. If there is an expected type binding that is a super type of
-//    * the proposed type, the wildcard type arguments of the proposed type that can be mapped through to type the arguments of the
-//    * expected type binding are bound accordingly.
-//    * <p>
-//    * For type arguments that cannot be mapped to arguments in the expected type, or if there is no expected type, the upper bound
-//    * of the type argument is proposed.
-//    * </p>
-//    * <p>
-//    * The argument proposals have their <code>isAmbiguos</code> flag set to <code>false</code> if the argument can be mapped to a
-//    * non-wildcard type argument in the expected type, otherwise the proposal is ambiguous.
-//    * </p>
-//    * 
-//    * @return the type argument proposals for the proposed type
-//    * @throws JavaModelException if accessing the java model fails
-//    */
-//   private TypeArgumentProposal[] computeTypeArgumentProposals()
-//   {
-//      if (fTypeArgumentProposals == null)
-//      {
-//
-//         IType type = (IType)getJavaElement();
-//         if (type == null)
-//            return new TypeArgumentProposal[0];
-//
-//         ITypeParameter[] parameters = type.getTypeParameters();
-//         if (parameters.length == 0)
-//            return new TypeArgumentProposal[0];
-//
-//         TypeArgumentProposal[] arguments = new TypeArgumentProposal[parameters.length];
-//
-//         ITypeBinding expectedTypeBinding = getExpectedType();
-//         if (expectedTypeBinding != null && expectedTypeBinding.isParameterizedType())
-//         {
-//            // in this case, the type arguments we propose need to be compatible
-//            // with the corresponding type parameters to declared type
-//
-//            IType expectedType = (IType)expectedTypeBinding.getJavaElement();
-//
-//            IType[] path = computeInheritancePath(type, expectedType);
-//            if (path == null)
-//               // proposed type does not inherit from expected type
-//               // the user might be looking for an inner type of proposed type
-//               // to instantiate -> do not add any type arguments
-//               return new TypeArgumentProposal[0];
-//
-//            int[] indices = new int[parameters.length];
-//            for (int paramIdx = 0; paramIdx < parameters.length; paramIdx++)
-//            {
-//               indices[paramIdx] = mapTypeParameterIndex(path, path.length - 1, paramIdx);
-//            }
-//
-//            // for type arguments that are mapped through to the expected type's
-//            // parameters, take the arguments of the expected type
-//            ITypeBinding[] typeArguments = expectedTypeBinding.getTypeArguments();
-//            for (int paramIdx = 0; paramIdx < parameters.length; paramIdx++)
-//            {
-//               if (indices[paramIdx] != -1)
-//               {
-//                  // type argument is mapped through
-//                  ITypeBinding binding = typeArguments[indices[paramIdx]];
-//                  arguments[paramIdx] = computeTypeProposal(binding, parameters[paramIdx]);
-//               }
-//            }
-//         }
-//
-//         // for type arguments that are not mapped through to the expected type,
-//         // take the lower bound of the type parameter
-//         for (int i = 0; i < arguments.length; i++)
-//         {
-//            if (arguments[i] == null)
-//            {
-//               arguments[i] = computeTypeProposal(parameters[i]);
-//            }
-//         }
-//         fTypeArgumentProposals = arguments;
-//      }
-//      return fTypeArgumentProposals;
-//   }
+   /**
+    * Computes the type argument proposals for this type proposals. If there is an expected type binding that is a super type of
+    * the proposed type, the wildcard type arguments of the proposed type that can be mapped through to type the arguments of the
+    * expected type binding are bound accordingly.
+    * <p>
+    * For type arguments that cannot be mapped to arguments in the expected type, or if there is no expected type, the upper bound
+    * of the type argument is proposed.
+    * </p>
+    * <p>
+    * The argument proposals have their <code>isAmbiguos</code> flag set to <code>false</code> if the argument can be mapped to a
+    * non-wildcard type argument in the expected type, otherwise the proposal is ambiguous.
+    * </p>
+    * 
+    * @return the type argument proposals for the proposed type
+    * @throws JavaModelException if accessing the java model fails
+    */
+   private TypeArgumentProposal[] computeTypeArgumentProposals()
+   {
+      if (fTypeArgumentProposals == null)
+      {
+
+         // IType type = (IType)getJavaElement();
+         // if (type == null)
+         // return new TypeArgumentProposal[0];
+         //
+         // ITypeParameter[] parameters = type.getTypeParameters();
+         String signature = getTypeGenerycSignature(new String(Signature.toCharArray(fProposal.getSignature())));
+         if (signature == null)
+            return new TypeArgumentProposal[0];
+         
+         signature = signature.replaceAll("/", ".");
+         String[] parameters = Signature.getTypeParameters(signature);
+         if (parameters.length == 0)
+            return new TypeArgumentProposal[0];
+         TypeArgumentProposal[] arguments = new TypeArgumentProposal[parameters.length];
+
+         // TODO use getExpectedType() method to add types names
+         // ITypeBinding expectedTypeBinding = getExpectedType();
+         // if (expectedTypeBinding != null && expectedTypeBinding.isParameterizedType())
+         // {
+         // // in this case, the type arguments we propose need to be compatible
+         // // with the corresponding type parameters to declared type
+         //
+         // IType expectedType = (IType)expectedTypeBinding.getJavaElement();
+         //
+         // IType[] path = computeInheritancePath(type, expectedType);
+         // if (path == null)
+         // // proposed type does not inherit from expected type
+         // // the user might be looking for an inner type of proposed type
+         // // to instantiate -> do not add any type arguments
+         // return new TypeArgumentProposal[0];
+         //
+         // int[] indices = new int[parameters.length];
+         // for (int paramIdx = 0; paramIdx < parameters.length; paramIdx++)
+         // {
+         // indices[paramIdx] = mapTypeParameterIndex(path, path.length - 1, paramIdx);
+         // }
+         //
+         // // for type arguments that are mapped through to the expected type's
+         // // parameters, take the arguments of the expected type
+         // ITypeBinding[] typeArguments = expectedTypeBinding.getTypeArguments();
+         // for (int paramIdx = 0; paramIdx < parameters.length; paramIdx++)
+         // {
+         // if (indices[paramIdx] != -1)
+         // {
+         // // type argument is mapped through
+         // ITypeBinding binding = typeArguments[indices[paramIdx]];
+         // arguments[paramIdx] = computeTypeProposal(binding, parameters[paramIdx]);
+         // }
+         // }
+         // }
+         //
+
+         // for type arguments that are not mapped through to the expected type,
+         // take the lower bound of the type parameter
+         for (int i = 0; i < arguments.length; i++)
+         {
+            if (arguments[i] == null)
+            {
+               arguments[i] = computeTypeProposal(parameters[i]);
+            }
+         }
+         fTypeArgumentProposals = arguments;
+      }
+      return fTypeArgumentProposals;
+   }
+
+   private String getTypeGenerycSignature(String fqn)
+   {
+      String type = TypeInfoStorage.get().getType(fqn);
+      JSONObject object = null;
+      if (type == null)
+      {
+         String shortTypesInfo = TypeInfoStorage.get().getShortTypesInfo();
+         if (shortTypesInfo == null)
+            return null;
+         JSONArray array = JSONParser.parseLenient(shortTypesInfo).isArray();
+         for (int i = 0; i < array.size(); i++)
+         {
+            JSONObject obj = array.get(i).isObject();
+            if (fqn.equals(obj.get("name").isString().stringValue()))
+            {
+               object = obj;
+               break;
+            }
+         }
+      }
+      else
+      {
+         object = JSONParser.parseLenient(type).isObject();
+      }
+
+      if (object != null && object.containsKey("signature"))
+      {
+         String value = object.get("signature").isString().stringValue();
+         return value.isEmpty() ? null : value;
+      }
+
+      return null;
+
+   }
 
    // /**
    // * Returns a type argument proposal for a given type parameter. The proposal is:
@@ -377,31 +425,31 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
    // * @throws JavaModelException if this element does not exist or if an exception occurs while accessing its corresponding
    // * resource
    // */
-   // private TypeArgumentProposal computeTypeProposal(ITypeParameter parameter) throws JavaModelException
-   // {
-   // String[] bounds = parameter.getBounds();
-   // String elementName = parameter.getElementName();
-   // String displayName = computeTypeParameterDisplayName(parameter, bounds);
-   //      if (bounds.length == 1 && !"java.lang.Object".equals(bounds[0])) //$NON-NLS-1$
-   // return new TypeArgumentProposal(Signature.getSimpleName(bounds[0]), true, displayName);
-   // else
-   // return new TypeArgumentProposal(elementName, true, displayName);
-   // }
-   //
-   // private String computeTypeParameterDisplayName(ITypeParameter parameter, String[] bounds)
-   // {
-   //      if (bounds.length == 0 || bounds.length == 1 && "java.lang.Object".equals(bounds[0])) //$NON-NLS-1$
-   // return parameter.getElementName();
-   // StringBuffer buf = new StringBuffer(parameter.getElementName());
-   //      buf.append(" extends "); //$NON-NLS-1$
-   // for (int i = 0; i < bounds.length; i++)
-   // {
-   // buf.append(Signature.getSimpleName(bounds[i]));
-   // if (i < bounds.length - 1)
-   //            buf.append(" & "); //$NON-NLS-1$
-   // }
-   // return buf.toString();
-   // }
+   private TypeArgumentProposal computeTypeProposal(String parameter)
+   {
+      String[] bounds = Signature.getTypeParameterBounds(parameter);
+      String elementName = Signature.getTypeVariable(parameter);
+      String displayName = computeTypeParameterDisplayName(parameter, bounds);
+      if (bounds.length == 1 && !"java.lang.Object".equals(Signature.toString(bounds[0]))) //$NON-NLS-1$
+         return new TypeArgumentProposal(Signature.getSignatureSimpleName(bounds[0]), true, displayName);
+      else
+         return new TypeArgumentProposal(elementName, true, displayName);
+   }
+
+   private String computeTypeParameterDisplayName(String parameter, String[] bounds)
+   {
+      if (bounds.length == 0 || bounds.length == 1 && "java.lang.Object".equals(Signature.toString(bounds[0]))) //$NON-NLS-1$
+         return parameter;
+      StringBuffer buf = new StringBuffer(parameter);
+      buf.append(" extends "); //$NON-NLS-1$
+      for (int i = 0; i < bounds.length; i++)
+      {
+         buf.append(Signature.getSimpleName(bounds[i]));
+         if (i < bounds.length - 1)
+            buf.append(" & "); //$NON-NLS-1$
+      }
+      return buf.toString();
+   }
 
    // /**
    // * Returns a type argument proposal for a given type binding. The proposal is:
@@ -622,7 +670,7 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
    // }
    //
    // final ASTParser parser = ASTParser.newParser(AST.JLS3);
-   // parser.setProject(fCompilationUnit.getJavaProject());
+   // // parser.setProject(fCompilationUnit.getJavaProject());
    // parser.setResolveBindings(true);
    // parser.setStatementsRecovery(true);
    //
@@ -730,53 +778,53 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
       return buffer;
    }
 
-//   private void installLinkedMode(IDocument document, int[] offsets, int[] lengths,
-//      TypeArgumentProposal[] typeArgumentProposals, boolean withParentheses)
-//   {
-//      int replacementOffset = getReplacementOffset();
-//      String replacementString = getReplacementString();
-//
-//      try
-//      {
-//         LinkedModeModel model = new LinkedModeModel();
-//         for (int i = 0; i != offsets.length; i++)
-//         {
-//            if (typeArgumentProposals[i].isAmbiguous())
-//            {
-//               LinkedPositionGroup group = new LinkedPositionGroup();
-//               group.addPosition(new LinkedPosition(document, replacementOffset + offsets[i], lengths[i]));
-//               model.addGroup(group);
-//            }
-//         }
-//         if (withParentheses)
-//         {
-//            LinkedPositionGroup group = new LinkedPositionGroup();
-//            group.addPosition(new LinkedPosition(document, replacementOffset + getCursorPosition(), 0));
-//            model.addGroup(group);
-//         }
-//
-//         model.forceInstall();
-//         JavaEditor editor = getJavaEditor();
-//         if (editor != null)
-//         {
-//            model.addLinkingListener(new EditorHighlightingSynchronizer(editor));
-//         }
-//
-//         LinkedModeUI ui = new EditorLinkedModeUI(model, getTextViewer());
-//         ui.setExitPolicy(new ExitPolicy(withParentheses ? ')' : '>', document));
-//         ui.setExitPosition(getTextViewer(), replacementOffset + replacementString.length(), 0, Integer.MAX_VALUE);
-//         ui.setDoContextInfo(true);
-//         ui.enter();
-//
-//         fSelectedRegion = ui.getSelectedRegion();
-//
-//      }
-//      catch (BadLocationException e)
-//      {
-//         JavaPlugin.log(e);
-//         openErrorDialog(e);
-//      }
-//   }
+   // private void installLinkedMode(IDocument document, int[] offsets, int[] lengths,
+   // TypeArgumentProposal[] typeArgumentProposals, boolean withParentheses)
+   // {
+   // int replacementOffset = getReplacementOffset();
+   // String replacementString = getReplacementString();
+   //
+   // try
+   // {
+   // LinkedModeModel model = new LinkedModeModel();
+   // for (int i = 0; i != offsets.length; i++)
+   // {
+   // if (typeArgumentProposals[i].isAmbiguous())
+   // {
+   // LinkedPositionGroup group = new LinkedPositionGroup();
+   // group.addPosition(new LinkedPosition(document, replacementOffset + offsets[i], lengths[i]));
+   // model.addGroup(group);
+   // }
+   // }
+   // if (withParentheses)
+   // {
+   // LinkedPositionGroup group = new LinkedPositionGroup();
+   // group.addPosition(new LinkedPosition(document, replacementOffset + getCursorPosition(), 0));
+   // model.addGroup(group);
+   // }
+   //
+   // model.forceInstall();
+   // JavaEditor editor = getJavaEditor();
+   // if (editor != null)
+   // {
+   // model.addLinkingListener(new EditorHighlightingSynchronizer(editor));
+   // }
+   //
+   // LinkedModeUI ui = new EditorLinkedModeUI(model, getTextViewer());
+   // ui.setExitPolicy(new ExitPolicy(withParentheses ? ')' : '>', document));
+   // ui.setExitPosition(getTextViewer(), replacementOffset + replacementString.length(), 0, Integer.MAX_VALUE);
+   // ui.setDoContextInfo(true);
+   // ui.enter();
+   //
+   // fSelectedRegion = ui.getSelectedRegion();
+   //
+   // }
+   // catch (BadLocationException e)
+   // {
+   // JavaPlugin.log(e);
+   // openErrorDialog(e);
+   // }
+   // }
 
    private boolean hasAmbiguousProposals(TypeArgumentProposal[] typeArgumentProposals)
    {

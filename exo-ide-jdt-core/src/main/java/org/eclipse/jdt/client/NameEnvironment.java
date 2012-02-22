@@ -41,6 +41,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesInfoList;
@@ -54,10 +55,13 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Implementation of {@link INameEnvironment} interface, use JavaCodeAssistantService for receiving data and SessionStorage for
+ * cache Java type data in browser
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 13, 2012 3:10:43 PM evgen $
  */
-public class DummyNameEnvironment implements INameEnvironment
+public class NameEnvironment implements INameEnvironment
 {
 
    private static Set<String> packages;
@@ -124,7 +128,7 @@ public class DummyNameEnvironment implements INameEnvironment
    /**
     * 
     */
-   public DummyNameEnvironment(String projectId)
+   public NameEnvironment(String projectId)
    {
       this.projectId = projectId;
    }
@@ -304,8 +308,7 @@ public class DummyNameEnvironment implements INameEnvironment
       }
       catch (Exception e)
       {
-         e.printStackTrace();
-         IDE.fireEvent(new OutputEvent(e.getMessage()));
+         IDE.fireEvent(new OutputEvent(e.getMessage(), Type.ERROR));
       }
    }
 
@@ -363,7 +366,7 @@ public class DummyNameEnvironment implements INameEnvironment
          String typesJson = findTypes(url);
          Splittable data = StringQuoter.split(typesJson);
          AutoBeanCodex.decodeInto(data, autoBean);
-
+         
          for (ShortTypeInfo info : autoBean.as().getTypes())
          {
 
@@ -371,10 +374,11 @@ public class DummyNameEnvironment implements INameEnvironment
                .acceptType(info.getName().substring(0, info.getName().lastIndexOf(".")).toCharArray(), info.getName()
                   .substring(info.getName().lastIndexOf(".") + 1).toCharArray(), null, info.getModifiers(), null);
          }
+         TypeInfoStorage.get().setShortTypesInfo(typesJson);
       }
       catch (Throwable e)
       {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new OutputEvent(e.getMessage(), Type.ERROR));
       }
    }
 
@@ -387,7 +391,7 @@ public class DummyNameEnvironment implements INameEnvironment
    public void findExactTypes(char[] missingSimpleName, boolean b, int type, ISearchRequestor storage)
    {
       // TODO Auto-generated method stub
-
+      System.out.println("NameEnvironment.findExactTypes()");
    }
 
    public static class JSONTypesInfoUnmarshaller implements Unmarshallable<TypesInfoList>
