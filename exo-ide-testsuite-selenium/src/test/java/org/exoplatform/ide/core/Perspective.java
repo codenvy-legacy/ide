@@ -54,6 +54,8 @@ public class Perspective extends AbstractTestModule
       String PANEL_LOCATOR = "//div[id='%s']";
 
       String VIEW_LOCATOR = "//div[@view-id='%s']";
+      
+      String EXPLORE_TABS_LOCATOR = "//div[@class='gwt-TabLayoutPanelTabs']//td[@class='tabTitleText' and text()='%s']";
 
       String ACTIVE_VIEW_ATTRIBUTE = "is-active";
 
@@ -187,4 +189,14 @@ public class Perspective extends AbstractTestModule
    {
       return driver().findElement(By.cssSelector(String.format(Locators.CLOSE_BUTTON_SELECTOR, viewTitle)));
    }
+   
+   /**
+    * select tabs between project explorer and other tabs
+    * for example: between search and project panel
+    * @param tabName
+    */
+   public void selectTabsOnExplorer (String tabName) {
+      WebElement tab = driver().findElement(By.xpath(String.format(Locators.EXPLORE_TABS_LOCATOR, tabName)));
+      tab.click();
+    }
 }

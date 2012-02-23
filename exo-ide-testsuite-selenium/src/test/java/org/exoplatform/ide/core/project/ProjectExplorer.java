@@ -263,4 +263,14 @@ public class ProjectExplorer extends AbstractTestModule
    {
       new Actions(driver()).sendKeys(treeGrid, keys).build().perform();
    }
+
+   /**
+    * click on tab with name of the project
+    * @param nameProject
+    */
+   public void selectProjectTab(String nameProject)
+   {
+      IDE().PERSPECTIVE.selectTabsOnExplorer(nameProject);
+   }
+
 }

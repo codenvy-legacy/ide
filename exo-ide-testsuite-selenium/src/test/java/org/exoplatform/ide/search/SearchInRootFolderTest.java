@@ -56,7 +56,7 @@ public class SearchInRootFolderTest extends BaseTest
    public static void setUp()
    {
       String filePath = "src/test/resources/org/exoplatform/ide/search/Example.groovy";
-      String filePath2 = "src/test/resources/org/exoplatform/ide/search/Copy of Example.groovy";
+
       try
       {
          Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
@@ -66,7 +66,7 @@ public class SearchInRootFolderTest extends BaseTest
             + restFileName);
          VirtualFileSystemUtils.put(filePath, MimeType.TEXT_PLAIN, WS_URL + PROJECT + "/" + FOLDER_2 + "/"
             + restFileName);
-         VirtualFileSystemUtils.put(filePath2, MimeType.TEXT_PLAIN, WS_URL + PROJECT + "/" + FOLDER_2 + "/"
+         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_PLAIN, WS_URL + PROJECT + "/" + FOLDER_2 + "/"
             + copyofRestFileName);
       }
       catch (Exception e)

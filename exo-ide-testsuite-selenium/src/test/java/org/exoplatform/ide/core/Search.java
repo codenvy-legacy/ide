@@ -388,7 +388,7 @@ public class Search extends AbstractTestModule
     */
    public void doubleClickOnFile(String fileURL) throws Exception
    {
-      String locator = "//div[@id='" + getItemId(fileURL) + "']/div/table/tbody/tr/td[2]";
+      String locator = "//div[@id='" + getItemId(fileURL) + "']/div/table/tbody/tr/td[1]";
       WebElement elem = driver().findElement(By.xpath(locator));
       new Actions(driver()).doubleClick(elem).build().perform();
    }
