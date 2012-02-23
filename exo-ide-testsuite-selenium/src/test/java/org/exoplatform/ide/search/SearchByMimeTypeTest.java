@@ -93,47 +93,30 @@ public class SearchByMimeTypeTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME_2);
 
 
-      
+      //step 2 search js file in Test folder and check
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_2);
       IDE.SEARCH.performSearch("/" + PROJECT + "/" + FOLDER_NAME_2, "", MimeType.APPLICATION_JAVASCRIPT);
       IDE.SEARCH.waitSearchResultsOpened();
       IDE.SEARCH.isFilePresent(PROJECT + "/" + FOLDER_NAME_2 + "/" + FILE_NAME_2);
 
-      
+      //step 3 search js files in all project and check search result
       IDE.PROJECT.EXPLORER.selectProjectTab(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME_2);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-
       IDE.SEARCH.performSearch("/" + PROJECT, "", MimeType.APPLICATION_JAVASCRIPT);
-
       IDE.SEARCH.waitSearchResultsOpened();
-
       assertTrue(IDE.SEARCH.isFilePresent(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1));
       assertTrue(IDE.SEARCH.isFilePresent(PROJECT + "/" + FOLDER_NAME_2 + "/" + FILE_NAME_2));
 
+      //step 4 open first file in search tree
       IDE.SEARCH.selectItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
       IDE.SEARCH.doubleClickOnFile(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
-//      Thread.sleep(10000);
-      //      
-      //      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME_2 + "/");
-      //      final String rootFolderName = IDE.NAVIGATION.getRowTitle(1);
-      //
-      //      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_2 + "/");
-      //      IDE.SEARCH.performSearch("/" + FOLDER_NAME_2 + "/", "", MimeType.APPLICATION_JAVASCRIPT);
-      //      IDE.SEARCH.waitSearchResultsOpened();
-      //
-      //      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + FOLDER_NAME_2 + "/" + FILE_NAME_2);
-      //      IDE.NAVIGATION.assertItemNotVisibleInSearchTree(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1);
-      //
-      //      IDE.SEARCH.doubleClickOnFile(WS_URL + FOLDER_NAME_2 + "/" + FILE_NAME_2);
-      //      IDE.EDITOR.waitTabPresent(0);
-      //      assertEquals(rootFolderName + "/" + FOLDER_NAME_2, IDE.STATUSBAR.getNavigationStatus());
    }
 
    @AfterClass
    public static void tearDown() throws IOException
    {
-//      VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      VirtualFileSystemUtils.delete(WS_URL + PROJECT);
    }
 }
