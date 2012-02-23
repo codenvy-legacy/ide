@@ -173,8 +173,8 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       ASTNode ast = parser.createAST(null);
       org.eclipse.jdt.client.core.dom.CompilationUnit unit = (org.eclipse.jdt.client.core.dom.CompilationUnit)ast;
 
-      int completionPosition =
-         getCompletionPosition(currentFile.getContent(), currentEditor.getCursorRow(), currentEditor.getCursorCol());
+      int completionPosition = unit.getPosition(currentEditor.getCursorRow(), currentEditor.getCursorCol() -1);
+//         getCompletionPosition(currentFile.getContent(), currentEditor.getCursorRow(), currentEditor.getCursorCol());
       CompletionProposalCollector collector =
          new FillArgumentNamesCompletionProposalCollector(unit, document, completionPosition, currentFile.getProject()
             .getId(), JdtExtension.DOC_CONTEXT);
@@ -306,20 +306,6 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
          currentEditor = (CodeMirror)event.getEditor();
       else
          currentEditor = null;
-   }
-
-   private int getCompletionPosition(String content, int row, int col)
-   {
-      String[] strings = content.split("\n");
-      if (strings.length < row)
-         IDE.fireEvent(new OutputEvent("content length less than parameter 'row'", Type.ERROR));
-      int pos = 0;
-
-      for (int i = 0; i < row - 1; i++)
-      {
-         pos += strings[i].length() + 1;
-      }
-      return pos + col - 1;
    }
 
    /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onStringSelected(java.lang.String) */

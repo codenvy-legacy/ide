@@ -342,10 +342,19 @@ public class DefaultProblem extends CategorizedProblem
       if (obj instanceof DefaultProblem)
       {
          DefaultProblem p = (DefaultProblem)obj;
-         return (p.getID() == this.getID() && p.getMessage().equals(this.getMessage()) && p.getSourceLineNumber() == this
-            .getSourceLineNumber());
+         return (p.getID() == this.getID() && p.getMessage().equals(this.getMessage())
+            && p.getSourceStart() == this.getSourceStart() && this.getSourceEnd() == p.getSourceEnd());
       }
       else
          return super.equals(obj);
+   }
+
+   /**
+    * @see java.lang.Object#hashCode()
+    */
+   @Override
+   public int hashCode()
+   {
+      return getID() + getMessage().hashCode() + getSourceStart() + getSourceEnd();
    }
 }

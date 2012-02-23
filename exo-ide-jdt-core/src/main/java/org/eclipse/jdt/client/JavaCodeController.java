@@ -38,9 +38,16 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChange
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ide.client.framework.job.Job;
+import org.exoplatform.ide.client.framework.job.JobChangeEvent;
+import org.exoplatform.ide.client.framework.job.Job.JobStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Java code controller is used for getting AST and updating all modules, that depend on the received AST.
@@ -59,9 +66,10 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
    private boolean needReparse = false;
 
-   private int problemCount = 0;
-
    private CodeMirror editor;
+
+   private Map<Integer, IProblem> problems = new HashMap<Integer, IProblem>();
+   
 
    public JavaCodeController()
    {
@@ -116,7 +124,6 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
          editor = null;
       }
    }
-   
 
    private Timer timer = new Timer()
    {
@@ -140,28 +147,36 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             if (needReparse)
             {
                IProblem[] problems = unit.getProblems();
-               if (problems.length == problemCount)
+               if (problems.length == JavaCodeController.this.problems.size())
                {
+                  for(IProblem problem : problems)
+                  {
+                     if(!JavaCodeController.this.problems.containsKey(problem.hashCode()))
+                     {
+                        reparse(problems);
+                        return;
+                     }
+                  }
                   needReparse = false;
-                  problemCount = 0;
+                  JavaCodeController.this.problems.clear();
+                  finishJob();
                }
                else
                {
-                  problemCount = unit.getProblems().length;
-                  timer.schedule(1000);
+                  reparse(problems);
                   return;
                }
 
             }
-            IDE.fireEvent(new UpdateOutlineEvent(unit));
-            if (unit.getProblems().length == 0 || editor == null)
-               return;
-
             int length = activeFile.getContent().split("\n").length;
             for (int i = 1; i <= length; i++)
             {
                editor.clearErrorMark(i);
             }
+            IDE.fireEvent(new UpdateOutlineEvent(unit));
+            if (unit.getProblems().length == 0 || editor == null)
+               return;
+
             for (IProblem p : unit.getProblems())
             {
                int sourceLineNumber = p.getSourceLineNumber();
@@ -169,6 +184,19 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
                   sourceLineNumber = 1;
                editor.setErrorMark(sourceLineNumber, p.getMessage());
             }
+         }
+
+         /**
+          * @param problems
+          */
+         private void reparse(IProblem[] problems)
+         {
+            JavaCodeController.this.problems.clear();
+            for(IProblem problem : problems)
+            {
+               JavaCodeController.this.problems.put(problem.hashCode(), problem);
+            }
+            timer.schedule(2000);
          }
 
          @Override
@@ -186,6 +214,12 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    public void onEditorFileOpened(EditorFileOpenedEvent event)
    {
       needReparse = true;
+      if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
+      {
+         Job job = new Job(event.getFile().getId(), JobStatus.STARTED);
+         job.setStartMessage("Initialize Java tooling for " + event.getFile().getName());
+         IDE.fireEvent(new JobChangeEvent(job));
+      }
    }
 
    /**
@@ -199,7 +233,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
    RepeatingCommand com = new RepeatingCommand()
    {
-      
+
       @Override
       public boolean execute()
       {
@@ -207,6 +241,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
          return false;
       }
    };
+
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler#onEditorFileContentChanged(org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent)
     */
@@ -214,9 +249,21 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
    {
       timer.cancel();
+      needReparse = false;
+      finishJob();
       if (editor != null)
       {
          timer.schedule(2000);
       }
+   }
+
+   /**
+    * 
+    */
+   private void finishJob()
+   {
+      Job job = new Job(activeFile.getId(), JobStatus.FINISHED);
+      job.setFinishMessage("Java Tooling initialized  for " + activeFile.getName());
+      IDE.fireEvent(new JobChangeEvent(job));
    }
 }
