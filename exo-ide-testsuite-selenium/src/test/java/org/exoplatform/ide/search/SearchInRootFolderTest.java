@@ -61,10 +61,10 @@ public class SearchInRootFolderTest extends BaseTest
       {
          Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
          VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_1);
-         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_2);
+         
          VirtualFileSystemUtils.put(filePath, MimeType.TEXT_PLAIN, WS_URL + PROJECT + "/" + FOLDER_1 + "/"
             + restFileName);
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_PLAIN, WS_URL + PROJECT + "/" + FOLDER_2 + "/"
+         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_PLAIN, WS_URL + PROJECT + "/" + FOLDER_1 + "/"
             + restFileName);
          VirtualFileSystemUtils.put(filePath, MimeType.TEXT_PLAIN, WS_URL + PROJECT + "/" + FOLDER_2 + "/"
             + copyofRestFileName);
