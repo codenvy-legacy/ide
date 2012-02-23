@@ -319,7 +319,7 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
          String signature = getTypeGenerycSignature(new String(Signature.toCharArray(fProposal.getSignature())));
          if (signature == null)
             return new TypeArgumentProposal[0];
-         
+
          signature = signature.replaceAll("/", ".");
          String[] parameters = Signature.getTypeParameters(signature);
          if (parameters.length == 0)
@@ -386,14 +386,18 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
          String shortTypesInfo = TypeInfoStorage.get().getShortTypesInfo();
          if (shortTypesInfo == null)
             return null;
-         JSONArray array = JSONParser.parseLenient(shortTypesInfo).isArray();
-         for (int i = 0; i < array.size(); i++)
+         JSONObject jsonObject = JSONParser.parseLenient(shortTypesInfo).isObject();
+         if (jsonObject.containsKey("types"))
          {
-            JSONObject obj = array.get(i).isObject();
-            if (fqn.equals(obj.get("name").isString().stringValue()))
+            JSONArray array = jsonObject.get("types").isArray();
+            for (int i = 0; i < array.size(); i++)
             {
-               object = obj;
-               break;
+               JSONObject obj = array.get(i).isObject();
+               if (fqn.equals(obj.get("name").isString().stringValue()))
+               {
+                  object = obj;
+                  break;
+               }
             }
          }
       }
@@ -402,7 +406,7 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
          object = JSONParser.parseLenient(type).isObject();
       }
 
-      if (object != null && object.containsKey("signature"))
+      if (object != null && object.containsKey("signature") && object.get("signature").isNull() == null)
       {
          String value = object.get("signature").isString().stringValue();
          return value.isEmpty() ? null : value;

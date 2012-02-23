@@ -112,7 +112,7 @@ public class BinaryTypeImpl implements IBinaryType
    @Override
    public char[] getGenericSignature()
    {
-      if (jsObj.containsKey("signature"))
+      if (jsObj.containsKey("signature") && jsObj.get("signature").isNull() == null)
       {
          String stringValue = jsObj.get("signature").isString().stringValue();
          if (!stringValue.isEmpty())

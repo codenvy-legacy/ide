@@ -71,7 +71,7 @@ public class BinaryFieldImpl implements IBinaryField
    @Override
    public char[] getGenericSignature()
    {
-      if (field.containsKey("signature"))
+      if (field.containsKey("signature") && field.get("signature").isNull() == null)
       {
          String stringValue = field.get("signature").isString().stringValue();
          if (!stringValue.isEmpty())

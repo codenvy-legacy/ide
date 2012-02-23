@@ -109,7 +109,7 @@ public class BinaryMethodImpl implements IBinaryMethod
    @Override
    public char[] getGenericSignature()
    {
-      if (method.containsKey("signature"))
+      if (method.containsKey("signature") && method.get("signature").isNull() == null)
       {
          String stringValue = method.get("signature").isString().stringValue();
          if (!stringValue.isEmpty())

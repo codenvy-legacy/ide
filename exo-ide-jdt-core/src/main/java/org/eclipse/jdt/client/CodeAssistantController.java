@@ -339,6 +339,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       catch (Exception e)
       {
          e.printStackTrace();
+         IDE.fireEvent(new OutputEvent(e.getMessage(), Type.ERROR));
       }
    }
 
