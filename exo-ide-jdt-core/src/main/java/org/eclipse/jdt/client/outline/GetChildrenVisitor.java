@@ -85,11 +85,13 @@ public class GetChildrenVisitor extends ASTVisitor
    /**
     * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.EnumDeclaration)
     */
+   @SuppressWarnings("unchecked")
    @Override
    public boolean visit(EnumDeclaration enumDeclaration)
    {
       nodes.clear();
-      nodes.addAll(Arrays.asList(enumDeclaration.enumConstants()));
+      nodes.addAll(enumDeclaration.enumConstants());
+      nodes.addAll(enumDeclaration.bodyDeclarations());
       return true;
    }
 

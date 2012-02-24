@@ -25,6 +25,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.core.dom.ASTVisitor;
+import org.eclipse.jdt.client.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.client.core.dom.EnumDeclaration;
 import org.eclipse.jdt.client.core.dom.FieldDeclaration;
 import org.eclipse.jdt.client.core.dom.ImportDeclaration;
@@ -269,6 +270,26 @@ public class CreateWidgetVisitor extends ASTVisitor
          html.appendHtmlConstant(getTypeElement(node.getType().toString()));
       }
 
+      return true;
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.EnumConstantDeclaration)
+    */
+   @Override
+   public boolean visit(EnumConstantDeclaration node)
+   {
+      html = new SafeHtmlBuilder();
+      
+      //Enum constants are static and final by default:
+      int modifiers = 24;
+      Image image = getMainImage(JavaClientBundle.INSTANCE.publicField());
+
+      html.appendHtmlConstant(image.toString());
+
+      // Add all modifiers container:
+      html.appendHtmlConstant(getModifiersContainer(modifiers));
+      html.appendHtmlConstant(getTitleElement(node.getName().getFullyQualifiedName()).getString());
       return true;
    }
 

@@ -25,6 +25,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.view.client.TreeViewModel;
 
 import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.client.core.dom.EnumDeclaration;
 import org.eclipse.jdt.client.core.dom.FieldDeclaration;
 import org.eclipse.jdt.client.core.dom.ImportDeclaration;
@@ -113,6 +114,10 @@ public class OutlineTreeViewModel implements TreeViewModel
          else if (node instanceof EnumDeclaration)
          {
             createWidgetVisitor.visit((EnumDeclaration)node);
+         }
+         else if (node instanceof EnumConstantDeclaration)
+         {
+            createWidgetVisitor.visit((EnumConstantDeclaration)node);
          }
 
          buf.append(createWidgetVisitor.getHTML().toSafeHtml());
