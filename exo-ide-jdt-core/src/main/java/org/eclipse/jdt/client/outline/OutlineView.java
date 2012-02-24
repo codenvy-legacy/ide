@@ -18,6 +18,8 @@
  */
 package org.eclipse.jdt.client.outline;
 
+import com.google.gwt.user.client.ui.Image;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
@@ -31,6 +33,7 @@ import org.eclipse.jdt.client.core.dom.ImportDeclaration;
 import org.exoplatform.gwtframework.ui.client.CellTreeResource;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +47,8 @@ import java.util.List;
  */
 public class OutlineView extends ViewImpl implements OutlinePresenter.Display
 {
+   private static final String VIEW_ID = "exoJavaOulineView";
+
    /**
     * Scroll panel, which contains tree.
     */
@@ -57,10 +62,13 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display
 
    private SingleSelectionModel<Object> selectionModel;
 
+   private EmptyTreeMessage loadingMessage = new EmptyTreeMessage(new Image(JavaClientBundle.INSTANCE.loader()), "Loading...");
+   
+   private EmptyTreeMessage emptyTreeMessage = new EmptyTreeMessage(null, "");
+   
    public OutlineView()
    {
-      // TODO Fix view properties
-      super("OutlineViewId", ViewType.INFORMATION, "Java Outline");
+      super(VIEW_ID, ViewType.INFORMATION, "Outline", new Image(JavaClientBundle.INSTANCE.outline()));
       selectionModel = new SingleSelectionModel<Object>();
 
       scrollPanel = new ScrollPanel();
@@ -72,6 +80,7 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display
       // KeyboardSelectionPolicy.BOUND_TO_SELECTION is set
       // and because of the focus border, when use KeyboardSelectionPolicy.ENABLED.
       cellTree.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
+      outlineTreeViewModel.getDataProvider().getList().add(loadingMessage);
 
       scrollPanel.add(cellTree);
       add(scrollPanel);
@@ -86,7 +95,15 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display
       outlineTreeViewModel.getDataProvider().getList().clear();
       GetChildrenVisitor visitor = new GetChildrenVisitor();
       visitor.visit(cUnit);
-      outlineTreeViewModel.getDataProvider().getList().addAll(visitor.getNodes());
+
+      if (visitor.getNodes().isEmpty())
+      {
+         outlineTreeViewModel.getDataProvider().getList().add(emptyTreeMessage);
+      }
+      else
+      {
+         outlineTreeViewModel.getDataProvider().getList().addAll(visitor.getNodes());
+      }
    }
 
    /**

@@ -21,6 +21,7 @@ package org.eclipse.jdt.client;
 import com.google.gwt.event.shared.GwtEvent;
 
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Event occurs to update Java Outline. To handle it implement {@link UpdateOutlineHandler}.
@@ -41,13 +42,20 @@ public class UpdateOutlineEvent extends GwtEvent<UpdateOutlineHandler>
     * Compilation unit with info for updating Outline.
     */
    private CompilationUnit compilationUnit;
+   
+   /**
+    * File, that was parsed.
+    */
+   private FileModel file;
 
    /**
     * @param compilationUnit compilation unit with info for updating Outline
+    * @param file file, that was parsed
     */
-   public UpdateOutlineEvent(CompilationUnit compilationUnit)
+   public UpdateOutlineEvent(CompilationUnit compilationUnit, FileModel file)
    {
       this.compilationUnit = compilationUnit;
+      this.file = file;
    }
 
    /**
@@ -74,5 +82,13 @@ public class UpdateOutlineEvent extends GwtEvent<UpdateOutlineHandler>
    public CompilationUnit getCompilationUnit()
    {
       return compilationUnit;
+   }
+
+   /**
+    * @return the file
+    */
+   public FileModel getFile()
+   {
+      return file;
    }
 }

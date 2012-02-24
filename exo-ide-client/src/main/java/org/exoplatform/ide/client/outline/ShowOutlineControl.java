@@ -25,6 +25,8 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.outline.ui.OutlineDisplay;
+import org.exoplatform.ide.client.framework.outline.ui.ShowOutlineEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
@@ -120,7 +122,7 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
    @Override
    public void onViewOpened(ViewOpenedEvent event)
    {
-      if (event.getView() instanceof OutlinePresenter.Display)
+      if (event.getView() instanceof OutlineDisplay)
       {
          outlineViewOpened = true;
          update();
@@ -133,7 +135,7 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (event.getView() instanceof OutlinePresenter.Display)
+      if (event.getView() instanceof OutlineDisplay)
       {
          outlineViewOpened = false;
          update();

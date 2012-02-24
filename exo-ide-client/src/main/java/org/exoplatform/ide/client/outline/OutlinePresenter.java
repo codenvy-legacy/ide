@@ -18,8 +18,17 @@
  */
 package org.exoplatform.ide.client.outline;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.Timer;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.control.Docking;
@@ -27,14 +36,18 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.outline.ui.OutlineDisplay;
+import org.exoplatform.ide.client.framework.outline.ui.ShowOutlineEvent;
+import org.exoplatform.ide.client.framework.outline.ui.ShowOutlineHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
@@ -48,15 +61,7 @@ import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedEvent;
 import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.user.client.Timer;
+import java.util.List;
 
 /**
  * Presenter for Outline Panel.
@@ -68,14 +73,14 @@ import com.google.gwt.user.client.Timer;
  * 
  */
 public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorContentChangedHandler,
-   EditorCursorActivityHandler, ShowOutlineHandler, ViewClosedHandler, ApplicationSettingsReceivedHandler,
-   EditorTokenListPreparedHandler
+   EditorCursorActivityHandler, ShowOutlineHandler, ViewClosedHandler, ViewOpenedHandler,
+   ApplicationSettingsReceivedHandler, EditorTokenListPreparedHandler
 {
 
    /**
     * View for outline panel.
     */
-   public interface Display extends IsView
+   public interface Display extends OutlineDisplay
    {
 
       /**
@@ -136,10 +141,13 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    private ApplicationSettings applicationSettings;
 
+   private boolean isOutlineViewOpened = false;
+
    public OutlinePresenter()
    {
       IDE.addHandler(ShowOutlineEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ViewOpenedEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(EditorContentChangedEvent.TYPE, this);
@@ -166,34 +174,39 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
       if (showOutline)
       {
-         Display d = GWT.create(Display.class);
-         IDE.getInstance().openView((View)d);
-         bindDisplay(d);
+         // TODO temporary solution not to open Outline for Java files, but save settings:
+         if (activeFile != null && !MimeType.APPLICATION_JAVA.equals(activeFile.getMimeType()))
+         {
+            Display d = GWT.create(Display.class);
+            IDE.getInstance().openView((View)d);
+            bindDisplay(d);
+         }
       }
    }
 
    @Override
    public void onShowOutline(ShowOutlineEvent event)
    {
+      applicationSettings.setValue("outline", Boolean.valueOf(event.isShow()), Store.COOKIES);
+      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
       if (event.isShow() && display == null)
       {
-         Display d = GWT.create(Display.class);
-         IDE.getInstance().openView((View)d);
-         bindDisplay(d);
-
-         applicationSettings.setValue("outline", Boolean.valueOf(event.isShow()), Store.COOKIES);
-         SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
-
+         // TODO temporary solution not to open Outline for Java files, but save settings:
+         if (activeFile != null && !MimeType.APPLICATION_JAVA.equals(activeFile.getMimeType()))
+         {
+            Display d = GWT.create(Display.class);
+            IDE.getInstance().openView((View)d);
+            bindDisplay(d);
+         }
          return;
       }
 
-      if (!event.isShow() && display != null)
+      if (!event.isShow())
       {
-         IDE.getInstance().closeView(display.asView().getId());
-         applicationSettings.setValue("outline", Boolean.valueOf(event.isShow()), Store.COOKIES);
-         SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
-
-         return;
+         if (display != null)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
       }
    }
 
@@ -203,6 +216,11 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       if (event.getView() instanceof Display)
       {
          display = null;
+      }
+
+      if (event.getView() instanceof OutlineDisplay)
+      {
+         isOutlineViewOpened = false;
       }
    }
 
@@ -350,10 +368,28 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    {
       activeFile = event.getFile();
       activeEditor = event.getEditor();
+      // TODO temporary solution to close Outline for Java files:
+      if (activeFile != null && MimeType.APPLICATION_JAVA.equals(activeFile.getMimeType()))
+      {
+         if (display != null)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
+         return;
+      }
 
       if (display == null)
       {
-         return;
+         if (isOutlineViewOpened)
+         {
+            Display d = GWT.create(Display.class);
+            IDE.getInstance().openView((View)d);
+            bindDisplay(d);
+         }
+         else
+         {
+            return;
+         }
       }
 
       refreshOutlineTimer.cancel();
@@ -367,7 +403,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       else
       {
          tokens = null;
-         // display.getOutlineTree().setValue(new TokenBeenImpl("An Outline is not available.", null));
          display.setOutlineAvailable(false);
       }
    }
@@ -570,5 +605,17 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
       // restore focus of FileTab
       setElementFocus(lastFocusedElement);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler#onViewOpened(org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent)
+    */
+   @Override
+   public void onViewOpened(ViewOpenedEvent event)
+   {
+      if (event.getView() instanceof OutlineDisplay)
+      {
+         isOutlineViewOpened = true;
+      }
    }
 }

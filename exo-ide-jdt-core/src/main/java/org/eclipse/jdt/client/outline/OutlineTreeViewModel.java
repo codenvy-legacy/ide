@@ -71,7 +71,15 @@ public class OutlineTreeViewModel implements TreeViewModel
             createWidgetVisitor.visit((ImportGroupNode)value);
             sb.append(createWidgetVisitor.getHTML().toSafeHtml());
          }
-
+         else if (value instanceof EmptyTreeMessage)
+         {
+            EmptyTreeMessage emptyTreeMessage = (EmptyTreeMessage)value;
+            if (emptyTreeMessage.getImage() != null)
+            {
+               sb.appendHtmlConstant(emptyTreeMessage.getImage().toString());
+            }
+            sb.appendEscaped(emptyTreeMessage.getMessage());
+         }
       }
 
       /**
@@ -166,6 +174,10 @@ public class OutlineTreeViewModel implements TreeViewModel
       if (value instanceof ASTNode)
       {
          return getChildren((ASTNode)value).isEmpty();
+      }
+      else if (value instanceof EmptyTreeMessage)
+      {
+         return true;
       }
       return false;
    }

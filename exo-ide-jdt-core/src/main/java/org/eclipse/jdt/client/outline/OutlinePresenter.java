@@ -35,15 +35,24 @@ import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.outline.ui.OutlineDisplay;
+import org.exoplatform.ide.client.framework.outline.ui.ShowOutlineEvent;
+import org.exoplatform.ide.client.framework.outline.ui.ShowOutlineHandler;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -54,9 +63,9 @@ import java.util.List;
  * 
  */
 public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler, EditorCursorActivityHandler,
-   EditorActiveFileChangedHandler
+   EditorActiveFileChangedHandler, ShowOutlineHandler, EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {
-   interface Display extends IsView
+   interface Display extends OutlineDisplay
    {
       /**
        * Update the Outline values.
@@ -131,6 +140,21 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
    private Editor currentEditor;
 
    /**
+    * Current active file.
+    */
+   private FileModel activeFile;
+
+   /**
+    * The map of the opened Java files and their compilation units.
+    */
+   private HashMap<String, CompilationUnit> openedFiles = new HashMap<String, CompilationUnit>();
+
+   /**
+    * Application's settings.
+    */
+   private ApplicationSettings applicationSettings;
+
+   /**
     * Timer for selecting Outline's node.
     */
    private Timer selectOutlineTimer = new Timer()
@@ -138,7 +162,7 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
       @Override
       public void run()
       {
-         if (compilationUnit != null)
+         if (compilationUnit != null && display != null)
          {
             selectNode(currentRow);
          }
@@ -151,6 +175,9 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(EditorCursorActivityEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ShowOutlineEvent.TYPE, this);
+      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    /**
@@ -199,6 +226,11 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
             }
          }
       });
+
+      if (compilationUnit != null)
+      {
+         display.updateOutline(compilationUnit);
+      }
    }
 
    /**
@@ -208,10 +240,15 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
    public void onUpdateOutline(UpdateOutlineEvent event)
    {
       compilationUnit = event.getCompilationUnit();
-      display.updateOutline(event.getCompilationUnit());
-      if (currentEditor != null)
+      openedFiles.put(event.getFile().getId(), compilationUnit);
+
+      if (display != null)
       {
-         selectNode(currentEditor.getCursorRow());
+         display.updateOutline(event.getCompilationUnit());
+         if (currentEditor != null)
+         {
+            selectNode(currentEditor.getCursorRow());
+         }
       }
    }
 
@@ -288,7 +325,7 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
          if (nodes.get(i) instanceof ASTNode)
          {
             ASTNode node = (ASTNode)nodes.get(i);
-            
+
             int startLineNumber = compilationUnit.getLineNumber(node.getStartPosition());
             int endLineNumber = compilationUnit.getLineNumber(node.getStartPosition() + node.getLength());
 
@@ -296,16 +333,16 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
             {
                return node;
             }
-            
-            //Check current line is between node's start and end lines:
+
+            // Check current line is between node's start and end lines:
             if (startLineNumber <= lineNumber & lineNumber <= endLineNumber)
             {
-               //If there are no children - return this node
+               // If there are no children - return this node
                if (display.getNodes(node).isEmpty())
                {
                   return node;
                }
-               //Checking line ranges of children, if no proper is found - return parent node:
+               // Checking line ranges of children, if no proper is found - return parent node:
                else
                {
                   ASTNode foundNode = getNodeByLineNumber(lineNumber, display.getNodes(node));
@@ -313,7 +350,7 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
                }
             }
          }
-         //Process import group node:
+         // Process import group node:
          else if (nodes.get(i) instanceof ImportGroupNode)
          {
             for (Object object : ((ImportGroupNode)nodes.get(i)).getImports())
@@ -325,7 +362,7 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
             }
          }
       }
-      //Nothing was found:
+      // Nothing was found:
       return null;
    }
 
@@ -335,22 +372,82 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() != null && MimeType.APPLICATION_JAVA.equals(event.getFile().getMimeType()))
+      this.activeFile = event.getFile();
+
+      if (activeFile != null && MimeType.APPLICATION_JAVA.equals(activeFile.getMimeType()))
       {
          this.currentEditor = event.getEditor();
+         boolean isOutlineOpened = applicationSettings.getValueAsBoolean("outline");
+         if (isOutlineOpened && display == null)
+         {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
+         }
+
+         compilationUnit = openedFiles.get(activeFile.getId());
+         if (compilationUnit != null)
+         {
+            display.updateOutline(compilationUnit);
+         }
+      }
+      else
+      {
+         this.currentEditor = null;
+         if (display != null)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.outline.ui.ShowOutlineHandler#onShowOutline(org.exoplatform.ide.client.framework.outline.ui.ShowOutlineEvent)
+    */
+   @Override
+   public void onShowOutline(ShowOutlineEvent event)
+   {
+      if (event.isShow() && display == null && canShowOutline())
+      {
          if (display == null)
          {
             display = GWT.create(Display.class);
             bindDisplay();
          }
          IDE.getInstance().openView(display.asView());
+         return;
       }
-      else
+
+      if (!event.isShow() && display != null)
       {
-         if (display != null)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
+         IDE.getInstance().closeView(display.asView().getId());
+         return;
       }
+   }
+
+   private boolean canShowOutline()
+   {
+      return (activeFile != null && MimeType.APPLICATION_JAVA.equals(activeFile.getMimeType()));
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent)
+    */
+   @Override
+   public void onEditorFileClosed(EditorFileClosedEvent event)
+   {
+      if (openedFiles.containsKey(event.getFile().getId()))
+      {
+         openedFiles.remove(event.getFile().getId());
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
+    */
+   @Override
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      this.applicationSettings = event.getApplicationSettings();
    }
 }

@@ -39,15 +39,14 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChange
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.job.Job;
-import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.job.Job.JobStatus;
+import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Java code controller is used for getting AST and updating all modules, that depend on the received AST.
@@ -69,7 +68,6 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    private CodeMirror editor;
 
    private Map<Integer, IProblem> problems = new HashMap<Integer, IProblem>();
-   
 
    public JavaCodeController()
    {
@@ -144,14 +142,18 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
          public void onSuccess()
          {
             CompilationUnit unit = parseFile();
+            if (unit == null)
+            {
+               return;
+            }
             if (needReparse)
             {
                IProblem[] problems = unit.getProblems();
                if (problems.length == JavaCodeController.this.problems.size())
                {
-                  for(IProblem problem : problems)
+                  for (IProblem problem : problems)
                   {
-                     if(!JavaCodeController.this.problems.containsKey(problem.hashCode()))
+                     if (!JavaCodeController.this.problems.containsKey(problem.hashCode()))
                      {
                         reparse(problems);
                         return;
@@ -173,7 +175,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             {
                editor.clearErrorMark(i);
             }
-            IDE.fireEvent(new UpdateOutlineEvent(unit));
+            IDE.fireEvent(new UpdateOutlineEvent(unit, activeFile));
             if (unit.getProblems().length == 0 || editor == null)
                return;
 
@@ -192,7 +194,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
          private void reparse(IProblem[] problems)
          {
             JavaCodeController.this.problems.clear();
-            for(IProblem problem : problems)
+            for (IProblem problem : problems)
             {
                JavaCodeController.this.problems.put(problem.hashCode(), problem);
             }

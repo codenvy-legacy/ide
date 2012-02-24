@@ -119,4 +119,9 @@ public interface JavaClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/editor/java/client/images/newJavaclass_wiz_Disabled.gif")
    ImageResource newClassWizzDisabled();
 
+   @Source("org/exoplatform/ide/editor/java/client/images/outline.png")
+   ImageResource outline();
+   
+   @Source("org/exoplatform/ide/editor/java/client/images/loader.gif")
+   ImageResource loader();
 }
