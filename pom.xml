@@ -798,7 +798,7 @@
       <module>exo-ide-site-war</module>
       <module>exo-ide-packaging-shell-war</module>
       
-      <module>exo-ide-packaging-gadget-war</module>
+      <!--module>exo-ide-packaging-gadget-war</module-->
       <module>exo-ide-testsuite-selenium</module>
       <module>exo-ide-shell-testsuite-selenium</module>
       <module>exo-ide-packaging-standalone-tomcat</module>
