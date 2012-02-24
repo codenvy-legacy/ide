@@ -313,6 +313,11 @@
 
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-maven</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-logreader</artifactId>
             </dependency>
 
@@ -561,8 +566,6 @@
                <version>${chromattic.version}</version>
                <scope>runtime</scope>
             </dependency>
-            
-            
          </dependencies>
          <build>
             <plugins>

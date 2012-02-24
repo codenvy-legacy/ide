@@ -1,0 +1,95 @@
+/*
+ * Copyright (C) 2012 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.exoplatform.ide.extension.maven.client;
+
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.extension.maven.shared.BuildStatus;
+
+/**
+ * Client service for Maven builder.
+ * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: MavenService.java Feb 17, 2012 12:36:01 PM azatsarynnyy $
+ *
+ */
+public abstract class BuilderClientService
+{
+
+   /**
+    * Maven builder client service.
+    */
+   private static BuilderClientService instance;
+
+   public static BuilderClientService getInstance()
+   {
+      return instance;
+   }
+
+   protected BuilderClientService()
+   {
+      instance = this;
+   }
+
+   /**
+    * Start new build.
+    * 
+    * @param uri remote location of remote Git repository that contains maven project
+    * @param callback callback
+    * @throws RequestException
+    */
+   public abstract void build(String uri, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+
+   /**
+    * Cancel previously launched build.
+    * 
+    * @param buildid ID of build
+    * @param callback callback
+    * @throws RequestException
+    */
+   public abstract void cancel(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+
+   /**
+    * Check current status of previously launched build.
+    * 
+    * @param buildid ID of build
+    * @param callback callback
+    * @throws RequestException
+    */
+   public abstract void status(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+
+   /**
+    * Get build log.
+    * 
+    * @param buildid ID of build
+    * @param callback callback
+    * @throws RequestException
+    */
+   public abstract void log(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+   
+   /**
+    * Download result of build.
+    * 
+    * @param buildid
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void download(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+}
