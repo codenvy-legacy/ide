@@ -18,18 +18,13 @@
  */
 package org.exoplatform.ide.extension.maven.client.build;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.Timer;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -38,10 +33,10 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.maven.client.BuilderAsyncRequestCallback;
 import org.exoplatform.ide.extension.maven.client.BuilderClientService;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
 import org.exoplatform.ide.extension.maven.client.control.BuildProjectControl;
+import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -50,6 +45,12 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Timer;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
@@ -161,74 +162,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       return false;
    }
 
-   //      try
-   //      {
-   //         VirtualFileSystem.getInstance().getChildren(project,
-   //            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
-   //            {
-   //
-   //               @Override
-   //               protected void onSuccess(List<Item> result)
-   //               {
-   //                  for (Item item : result)
-   //                  {
-   //                     if (".git".equals(item.getName()))
-   //                     {
-   //                        return;
-   //                     }
-   //                  }
-   //                  initRepository(project);
-   //               }
-   //
-   //               @Override
-   //               protected void onFailure(Throwable exception)
-   //               {
-   //                  initRepository(project);
-   //               }
-   //            });
-   //      }
-   //      catch (RequestException e)
-   //      {
-   //      }
-   //   }
-
-   /**
-    * Initialize Git repository.
-    * 
-    * @param project
-    */
-   private void initRepository(final ProjectModel project)
-   {
-      try
-      {
-         GitClientService.getInstance().init(vfs.getId(), project.getId(), project.getName(), false,
-            new AsyncRequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  showBuildMessage(GitExtension.MESSAGES.initSuccess());
-                  IDE.fireEvent(new RefreshBrowserEvent());
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  String errorMessage =
-                     (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                        : GitExtension.MESSAGES.initFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         String errorMessage =
-            (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
-               .initFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-      }
-   }
 
    private void build()
    {
@@ -268,7 +201,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       try
       {
          BuilderClientService.getInstance().build(gitUrl,
-            new BuilderAsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
+            new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
                @Override
                protected void onSuccess(StringBuilder result)
@@ -305,49 +238,51 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       {
          try
          {
+            AutoBean<BuildStatus> buildStatus = BuilderExtension.AUTO_BEAN_FACTORY.create(BuildStatus.class);
+            AutoBeanUnmarshaller<BuildStatus> unmarshaller = new AutoBeanUnmarshaller<BuildStatus>(buildStatus);
             BuilderClientService.getInstance().status(buildID,
-               new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
+               new AsyncRequestCallback<BuildStatus>(unmarshaller)
                {
                   @Override
-                  protected void onSuccess(StringBuilder response)
+                  protected void onSuccess(BuildStatus response)
                   {
-                     String status = "";
-                     if (response.indexOf("SUCCESSFUL") != -1)
-                     {
-                        status = "SUCCESSFUL";
-                     }
-                     else if (response.indexOf("IN_PROGRESS") != -1)
-                     {
-                        status = "IN_PROGRESS";
-                     }
-                     else if (response.indexOf("FAILED") != -1)
-                     {
-                        status = "FAILED";
-                     }
-
-                     updateBuildStatus(status);
-
-                     if (status.equals("IN_PROGRESS"))
-                     {
-                        schedule(delay);
-                     }
-                     else if (status.equals("FAILED"))
-                     {
-                        showBuildMessage("BUILD FAILED!");
-                        showLog();
-                     }
-                     else
-                     {
-                        String downloadUrl =
-                           response.substring(response.indexOf("downloadUrl\":\"") + "downloadUrl\":\"".length(),
-                              response.indexOf("\"}"));
-
-                        StringBuilder message =
-                           new StringBuilder("You can download result of build by <a href=\"").append(downloadUrl)
-                              .append("\">this link</a>");
-
-                        showBuildMessage(message.toString());
-                     }
+//                     String status = "";
+//                     if (response.indexOf("SUCCESSFUL") != -1)
+//                     {
+//                        status = "SUCCESSFUL";
+//                     }
+//                     else if (response.indexOf("IN_PROGRESS") != -1)
+//                     {
+//                        status = "IN_PROGRESS";
+//                     }
+//                     else if (response.indexOf("FAILED") != -1)
+//                     {
+//                        status = "FAILED";
+//                     }
+//
+//                     updateBuildStatus(status);
+//
+//                     if (status.equals("IN_PROGRESS"))
+//                     {
+//                        schedule(delay);
+//                     }
+//                     else if (status.equals("FAILED"))
+//                     {
+//                        showBuildMessage("BUILD FAILED!");
+//                        showLog();
+//                     }
+//                     else
+//                     {
+//                        String downloadUrl =
+//                           response.substring(response.indexOf("downloadUrl\":\"") + "downloadUrl\":\"".length(),
+//                              response.indexOf("\"}"));
+//
+//                        StringBuilder message =
+//                           new StringBuilder("You can download result of build by <a href=\"").append(downloadUrl)
+//                              .append("\">this link</a>");
+//
+//                        showBuildMessage(message.toString());
+//                     }
                   }
 
                   protected void onFailure(Throwable exception)

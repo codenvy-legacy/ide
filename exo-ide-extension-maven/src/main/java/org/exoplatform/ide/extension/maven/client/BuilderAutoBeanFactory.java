@@ -18,21 +18,19 @@
  */
 package org.exoplatform.ide.extension.maven.client;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.extension.maven.shared.BuildStatus;
+
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
 /**
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BuilderAsyncRequestCallback.java Feb 24, 2012 3:41:10 PM azatsarynnyy $
- *
- */
-public abstract class BuilderAsyncRequestCallback<T> extends AsyncRequestCallback<T>
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: $
+*/
+public interface BuilderAutoBeanFactory extends AutoBeanFactory
 {
-
-   public BuilderAsyncRequestCallback(Unmarshallable<T> unmarshaller)
-   {
-      super(unmarshaller);
-      setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-   }
-
+      
+      AutoBean<BuildStatus> buildStatus();
+      
 }

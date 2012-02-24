@@ -18,14 +18,14 @@
  */
 package org.exoplatform.ide.extension.maven.client;
 
-import com.google.gwt.core.client.GWT;
-
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter;
 import org.exoplatform.ide.extension.maven.client.control.BuildProjectControl;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
@@ -34,6 +34,8 @@ import org.exoplatform.ide.extension.maven.client.control.BuildProjectControl;
  */
 public class BuilderExtension extends Extension implements InitializeServicesHandler
 {
+
+   public static final BuilderAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(BuilderAutoBeanFactory.class);
 
    public static final BuilderLocalizationConstant LOCALIZATION_CONSTANT = GWT
       .create(BuilderLocalizationConstant.class);

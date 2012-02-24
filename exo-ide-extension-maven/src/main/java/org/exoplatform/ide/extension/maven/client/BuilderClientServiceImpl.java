@@ -18,14 +18,15 @@
  */
 package org.exoplatform.ide.extension.maven.client;
 
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestException;
-
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.extension.maven.shared.BuildStatus;
+
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
 
 /**
  * Implementation of {@link BuilderClientService} service.
@@ -77,7 +78,7 @@ public class BuilderClientServiceImpl extends BuilderClientService
       final String requesrUrl = restServiceContext + BUILD;
 
       String params = "gituri=" + uri;
-
+      callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
       AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params).loader(loader)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
    }
@@ -96,10 +97,10 @@ public class BuilderClientServiceImpl extends BuilderClientService
    /**
     * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#status(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
-   public void status(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException
+   public void status(String buildid, AsyncRequestCallback<BuildStatus> callback) throws RequestException
    {
       final String requestUrl = restServiceContext + STATUS + "/" + buildid;
-
+      callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
       AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
    }
