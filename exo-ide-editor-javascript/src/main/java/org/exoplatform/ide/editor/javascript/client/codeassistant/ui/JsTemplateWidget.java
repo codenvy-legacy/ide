@@ -32,13 +32,13 @@ import org.exoplatform.ide.editor.javascript.client.JavaScriptEditorExtension;
  * @version $Id: JsTemplateWidtet Feb 24, 2011 2:28:32 PM evgen $
  * 
  */
-public class JsTemplateWidtet extends JSBaseWidget
+public class JsTemplateWidget extends JSBaseWidget
 {
 
    /**
     * @param token
     */
-   public JsTemplateWidtet(Token token)
+   public JsTemplateWidget(Token token)
    {
       super(token);
       grid = new Grid(1, 3);
