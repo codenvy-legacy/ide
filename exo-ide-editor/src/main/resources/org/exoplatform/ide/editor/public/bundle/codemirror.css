@@ -9,3 +9,27 @@
   width: auto;
   height: auto;
 }
+
+@sprite .exo-code-mark-warning
+{
+  gwt-image: "markWarning";
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-attachment: scroll;
+  /* background: transparent url('images/code-error-mark.png') no-repeat scroll center center;  */
+  cursor: pointer;
+  width: auto;
+  height: auto;
+}
+
+@sprite .exo-code-mark-error
+{
+  gwt-image: "markError";
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-attachment: scroll;
+  /* background: transparent url('images/code-error-mark.png') no-repeat scroll center center;  */
+  cursor: pointer;
+  width: auto;
+  height: auto;
+}

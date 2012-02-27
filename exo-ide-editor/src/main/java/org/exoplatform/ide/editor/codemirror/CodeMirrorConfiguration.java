@@ -58,7 +58,7 @@ public class CodeMirrorConfiguration
    private boolean canHaveSeveralMimeTypes = false;
 
    private String codeErrorMarkStyle = CodeMirrorClientBundle.INSTANCE.css().codeErrorMarkStyle();
-
+   
    /**
     * Preset configuration of plain text
     */

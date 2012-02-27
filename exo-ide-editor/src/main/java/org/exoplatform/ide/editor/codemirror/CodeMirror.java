@@ -18,6 +18,16 @@
  */
 package org.exoplatform.ide.editor.codemirror;
 
+import com.google.gwt.user.client.Element;
+
+import com.google.gwt.user.client.ui.Widget;
+
+import com.google.gwt.dom.client.NativeEvent;
+
+import com.google.gwt.event.dom.client.MouseEvent;
+
+import com.google.gwt.event.shared.HandlerRegistration;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
@@ -43,11 +53,20 @@ import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
 import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedEvent;
 import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedHandler;
+import org.exoplatform.ide.editor.notification.Notification;
+import org.exoplatform.ide.editor.problem.Markable;
+import org.exoplatform.ide.editor.problem.Problem;
+import org.exoplatform.ide.editor.problem.ProblemClickEvent;
+import org.exoplatform.ide.editor.problem.ProblemClickHandler;
+import org.w3c.dom.events.Event;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
@@ -55,7 +74,7 @@ import java.util.List;
  * @version $Id: CodeMirror Feb 9, 2011 4:58:14 PM $
  * 
  */
-public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
+public class CodeMirror extends Editor implements EditorTokenListPreparedHandler, Markable
 {
 
    protected String editorId;
@@ -705,25 +724,6 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       }
    }
 
-   void udpateErrorMarks(List<CodeLine> newCodeErrorList)
-   {
-      for (CodeLine lastCodeError : codeErrorList)
-      {
-         clearErrorMark(lastCodeError.getLineNumber());
-      }
-
-      List<CodeLine> lineCodeErrorList;
-      for (CodeLine newCodeError : newCodeErrorList)
-      {
-         // TODO supress repetitevly setting error mark if there are several errors in the one line
-         lineCodeErrorList = CodeValidator.getCodeErrorList(newCodeError.getLineNumber(), newCodeErrorList);
-         setErrorMark(newCodeError.getLineNumber(), CodeValidator.getErrorSummary(lineCodeErrorList));
-      }
-      configuration.getParser().getTokenListInBackground(this.editorId, editorObject, eventBus);
-
-      codeErrorList = newCodeErrorList;
-   }
-
    private void onLineNumberClick(int lineNumber)
    {
       // test if this is line with code error
@@ -872,25 +872,22 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    }
 
    private native void goToPosition(JavaScriptObject editor, int row, int column) /*-{
-                                                                                  if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
-                                                                                  || typeof editor.win.select == 'undefined')
-                                                                                  {
-                                                                                  return;
-                                                                                  }
+      if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
+         || typeof editor.win.select == 'undefined')
+      {
+         return;
+      }
 
-                                                                                  if (column && !isNaN(Number(column)) && row && !isNaN(Number(row))) {
-                                                                                  if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::canGoToLine(I)(row))
-                                                                                  {
-                                                                                  editor.selectLines(editor.nthLine(row), column - 1);
-                                                                                  this.@org.exoplatform.ide.editor.codemirror.CodeMirror::highlightLine(I)(row);
-                                                                                  this.@org.exoplatform.ide.editor.codemirror.CodeMirror::fireEditorCursorActivityEvent(Ljava/lang/String;II)(
-                                                                                  this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getEditorId()(),
-                                                                                  row,
-                                                                                  column
-                                                                                  );
-                                                                                  }
-                                                                                  }
-                                                                                  }-*/;
+      if (column && !isNaN(Number(column)) && row && !isNaN(Number(row)))
+      {
+         if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::canGoToLine(I)(row))
+         {
+            editor.selectLines(editor.nthLine(row), column - 1);
+            this.@org.exoplatform.ide.editor.codemirror.CodeMirror::highlightLine(I)(row);
+            this.@org.exoplatform.ide.editor.codemirror.CodeMirror::fireEditorCursorActivityEvent(Ljava/lang/String;II)(this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getEditorId()(),row,column);
+         }
+      }
+   }-*/;
 
    public native boolean canGoToLine(int lineNumber) /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
@@ -905,27 +902,28 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
     */
    @Override
    public native void deleteCurrentLine() /*-{
-                                          var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-                                          if (editor == null) return;
+      var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+      if (editor == null) {
+         return;
+      }
 
-                                          var currentLineNumber = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::cursorPositionRow;
-                                          var currentLine = editor.nthLine(currentLineNumber);
+      var currentLineNumber = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::cursorPositionRow;
+      var currentLine = editor.nthLine(currentLineNumber);
 
-                                          if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser != @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE
-                                          && 
-                                          this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getLastLineNumber(Ljava/lang/String;)(editor.getCode()) == currentLineNumber) 
-                                          {
-                                          // clear current line
-                                          this.@org.exoplatform.ide.editor.codemirror.CodeMirror::clearLastLine()();
-                                          }
-                                          else 
-                                          {
-                                          editor.removeLine(currentLine);
-                                          }
+      if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser != @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE
+            && this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getLastLineNumber(Ljava/lang/String;)(editor.getCode()) == currentLineNumber) 
+      {
+         // clear current line
+         this.@org.exoplatform.ide.editor.codemirror.CodeMirror::clearLastLine()();
+      }
+      else 
+      {
+         editor.removeLine(currentLine);
+      }
 
-                                          currentLineNumber = editor.lineNumber(currentLine);
-                                          this.@org.exoplatform.ide.editor.codemirror.CodeMirror::goToPosition(II)(currentLineNumber,1);        
-                                          }-*/;
+      currentLineNumber = editor.lineNumber(currentLine);
+      this.@org.exoplatform.ide.editor.codemirror.CodeMirror::goToPosition(II)(currentLineNumber,1);        
+   }-*/;
 
    /**
     * Correct clear the last line of content that the line break is being remained
@@ -1202,36 +1200,6 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 		}
    }-*/;
 
-   /**
-    * Set error mark in lineNumbers field
-    * 
-    * @param lineNumber starting from 1
-    * @param errorSummary text summary of errors within the line
-    */
-   public native void setErrorMark(int lineNumber, String errorSummary) /*-{
-		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-		var fileConfiguration = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::configuration;
-		var codeErrorMarkStyle = fileConfiguration.@org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration::getCodeErrorMarkStyle()();
-		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
-				.setAttribute("class", codeErrorMarkStyle);
-		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
-				.setAttribute("title", errorSummary);
-   }-*/;
-
-   /**
-    * Clear error mark from lineNumbers field
-    * 
-    * @param lineNumber starting from 1
-    */
-   public native void clearErrorMark(int lineNumber) /*-{
-		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-		if (editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]) {
-			editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
-					.removeAttribute('class');
-			editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
-					.removeAttribute('title');
-		}
-   }-*/;
 
    /**
     * @param newText
@@ -1361,4 +1329,262 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
          configuration.getParser().stopParsing();
       }
    }
+   
+   
+   /*********************************************************************************
+    * 
+    * Marking Support
+    * 
+    * public class {@link CodeMirror} implements Makable
+    * 
+    ********************************************************************************/
+   
+   /**
+    * List of {@link Problem}
+    */
+   private List<Problem> problems = new ArrayList<Problem>();
+   
+   /**
+    * Visible notification.
+    */
+   private Notification activeNotification;
+
+   /**
+    * @see org.exoplatform.ide.editor.problem.Markable#markProblem(org.exoplatform.ide.editor.problem.Problem)
+    */
+   @Override
+   public void markProblem(Problem problem)
+   {
+      problems.add(problem);
+
+      boolean hasError = false;
+      List<String> messages = new ArrayList<String>();
+
+      for (Problem p : problems)
+      {
+         if (p.getLineNumber() == problem.getLineNumber())
+         {
+            messages.add(p.getMessage());
+            if (!hasError && p.isError())
+            {
+               hasError = true;
+            }
+         }
+      }
+
+      String message = null;
+      if (messages.size() == 1)
+      {
+         message = problem.getMessage();
+      }
+      else
+      {
+         message = "Multiple markers at this line<br>";
+         for (String m : messages)
+         {
+            message += "&nbsp;&nbsp;&nbsp;-&nbsp;" + m + "<br>";
+         }
+      }
+
+      String markStyle = null;
+      if (messages.size() > 1 && hasError)
+      {
+         markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkError();
+      }
+      else if (problem.isError())
+      {
+         markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkError();
+      }
+      else
+      {
+         markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkWarning();
+      }
+
+      markProblemmeLine(problem.getLineNumber(), message, markStyle);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.problem.Markable#unmarkAllProblems()
+    */
+   @Override
+   public void unmarkAllProblems()
+   {
+      if (activeNotification != null)
+      {
+         activeNotification.destroy();
+         activeNotification = null;
+      }
+
+      for (Problem p : problems)
+      {
+         unmarkNative(p.getLineNumber());
+      }
+
+      problems.clear();
+   }
+   
+   /**
+    * Removes style from mark element ( is line number element )
+    */
+   private native void unmarkNative(int lineNumber) /*-{
+      var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+      editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].setAttribute("class", null);
+      editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].setAttribute("title", null);
+      editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onmouseover = null;
+      editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onmouseout = null;
+      editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onclick = null;
+   }-*/;
+
+   /**
+    * @see org.exoplatform.ide.editor.problem.Markable#addProblemClickHandler(org.exoplatform.ide.editor.problem.ProblemClickHandler)
+    */
+   @Override
+   public HandlerRegistration addProblemClickHandler(ProblemClickHandler handler)
+   {
+      return addHandler(handler, ProblemClickEvent.TYPE);
+   }
+   
+   /**
+    * Handler mouse over event on marker.
+    * 
+    * @param jso
+    */
+   private void markerMouseOver(JavaScriptObject jso)
+   {
+      com.google.gwt.user.client.Event event = jso.cast();
+      Element el = event.getEventTarget().cast();
+
+      if (activeNotification != null)
+      {
+         activeNotification.destroy();
+      }
+
+      activeNotification = new Notification(el);
+   }
+
+   /**
+    * Handler mouse over event on marker.
+    * 
+    * @param jso line number element
+    */
+   private void markerMouseOut(JavaScriptObject jso)
+   {
+      if (activeNotification != null)
+      {
+         activeNotification.destroy();
+      }
+   }
+
+   /**
+    * Handles onclick event on marker.
+    * 
+    * @param jso line number element
+    */
+   private void markerClick(JavaScriptObject jso)
+   {
+      com.google.gwt.user.client.Event event = jso.cast();
+      Element el = event.getEventTarget().cast();
+
+      try
+      {
+         // get line number
+         int lineNumber = Integer.parseInt(el.getInnerHTML());
+
+         // collect all problems on this line
+         ArrayList<Problem> list = new ArrayList<Problem>();
+
+         for (Problem prb : problems)
+         {
+            if (prb.getLineNumber() == lineNumber)
+            {
+               list.add(prb);
+            }
+         }
+
+         fireEvent(new ProblemClickEvent(list.toArray(new Problem[list.size()])));
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
+
+   /**
+    * Marks line as problemme.
+    * 
+    * @param lineNumber
+    * @param errorSummary
+    */
+   public void setErrorMark(int lineNumber, String errorSummary)
+   {
+      markProblemmeLine(lineNumber, errorSummary, configuration.getCodeErrorMarkStyle());
+   }
+   
+   void udpateErrorMarks(List<CodeLine> newCodeErrorList)
+   {
+      for (CodeLine lastCodeError : codeErrorList)
+      {
+         clearErrorMark(lastCodeError.getLineNumber());
+      }
+
+      List<CodeLine> lineCodeErrorList;
+      for (CodeLine newCodeError : newCodeErrorList)
+      {
+         // TODO supress repetitevly setting error mark if there are several errors in the one line
+         lineCodeErrorList = CodeValidator.getCodeErrorList(newCodeError.getLineNumber(), newCodeErrorList);
+         markProblemmeLine(newCodeError.getLineNumber(), CodeValidator.getErrorSummary(lineCodeErrorList), configuration.getCodeErrorMarkStyle());
+      }
+      configuration.getParser().getTokenListInBackground(this.editorId, editorObject, eventBus);
+
+      codeErrorList = newCodeErrorList;
+   }   
+   
+   /**
+    * Marks line as problemme
+    * 
+    * @param lineNumber line number, starts at 1
+    * @param errorSummary
+    * @param markStyle
+    */
+   public native void markProblemmeLine(int lineNumber, String errorSummary, String markStyle) /*-{
+      var instance = this;
+		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+		var fileConfiguration = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::configuration;
+		//var codeErrorMarkStyle = fileConfiguration.@org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration::getCodeErrorMarkStyle()();
+		
+		var over = function(jso){
+		   instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::markerMouseOver(Lcom/google/gwt/core/client/JavaScriptObject;)(jso);
+		};
+		
+		var out = function(jso){
+		   instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::markerMouseOut(Lcom/google/gwt/core/client/JavaScriptObject;)(jso);
+		};
+		
+		var click = function(jso){
+		   instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::markerClick(Lcom/google/gwt/core/client/JavaScriptObject;)(jso);
+		};
+		
+		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].setAttribute("class", markStyle);
+		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].setAttribute("title", errorSummary);
+		
+      editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onmouseover = over;
+      editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onmouseout = out;
+      editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onclick = click;
+   }-*/;
+   
+   /**
+    * Clear error mark from lineNumbers field
+    * 
+    * @param lineNumber starting from 1
+    */
+   public native void clearErrorMark(int lineNumber) /*-{
+		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+		if (editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]) {
+			editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
+					.removeAttribute('class');
+			editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
+					.removeAttribute('title');
+		}
+   }-*/;
+
 }

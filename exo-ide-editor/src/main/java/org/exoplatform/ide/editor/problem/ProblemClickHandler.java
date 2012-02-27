@@ -1,5 +1,5 @@
-/**
- * Copyright (C) 2009 eXo Platform SAS.
+/*
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -15,26 +15,29 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- *
  */
 
-/** Line Number CSS */
-.CodeMirror-line-numbers {
-	width: 48px;
-	color: #aaa;
-	background-color: #eee;
-	text-align: right;
-	padding-right: .3em;
-	font-size: 10pt;
-  	font-family: "DejaVu Sans Mono", courier, monospace;
-	padding-top: .4em;
-	line-height: 16px;
-}
+package org.exoplatform.ide.editor.problem;
 
-.CodeMirror-line-highlighter {
-	width: 100%;
-	height: 16px;
-	background-color: #e8f2fe;
-	position: absolute;
-	z-index: -1;
+import com.google.gwt.event.shared.EventHandler;
+
+/**
+ * Handler for {@link ProblemClickEvent}
+ * 
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
+ */
+
+public interface ProblemClickHandler extends EventHandler
+{
+   
+   /**
+    * Handles Problem Click Event
+    *  
+    * @param event instance of {@link ProblemClickEvent}
+    */
+   void onProblemClick(ProblemClickEvent event);
+
 }

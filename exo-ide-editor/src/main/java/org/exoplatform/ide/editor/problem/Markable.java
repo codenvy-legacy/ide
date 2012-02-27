@@ -16,31 +16,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ImageResource;
+package org.exoplatform.ide.editor.problem;
+
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
- * @version $Id:
+ * This interface determines that its implementor (usually editor) can mark problems.
  * 
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public interface CodeMirrorClientBundle extends ClientBundle
+
+public interface Markable
 {
-   CodeMirrorClientBundle INSTANCE = GWT.create(CodeMirrorClientBundle.class);
+   
+   /**
+    * Marks problem
+    * 
+    * @param problem
+    */
+   void markProblem(Problem problem);
+   
+   /**
+    * Unmarks all problems
+    */
+   void unmarkAllProblems();
+   
+   /**
+    * Adds handler for {@link ProblemClickEvent}
+    * 
+    * @param handler handler of {@link ProblemClickEvent}
+    * @return {@link HandlerRegistration} of {@link ProblemClickHandler}
+    */
+   HandlerRegistration addProblemClickHandler(ProblemClickHandler handler);
 
-   @Source("org/exoplatform/ide/editor/public/bundle/codemirror.css")
-   CodeMirrorCss css();
-
-   @Source("org/exoplatform/ide/editor/public/bundle/images/code-error-mark.png")
-   ImageResource codeErrorMark();
-   
-   @Source("org/exoplatform/ide/editor/public/bundle/images/mark-warning.png")
-   ImageResource markWarning();
-   
-   @Source("org/exoplatform/ide/editor/public/bundle/images/mark-error.png")
-   ImageResource markError();
-   
 }

@@ -37,9 +37,12 @@
       <source path="ckeditor" />      
       <source path="codeassistant" />
       <source path="codevalidator" />
+      <source path="problem" />
+      <source path="notification" />
       
       <!-- Load CodeMirror files. -->
       <stylesheet src='codemirror/css/editor.css' />      
+      <stylesheet src='editor-notifications.css' />
       <script src='codemirror/js/codemirror.js' />
       
       <!-- Load FCKEditor files. -->

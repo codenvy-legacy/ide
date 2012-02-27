@@ -16,25 +16,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror;
 
-import com.google.gwt.resources.client.CssResource;
+package org.exoplatform.ide.client.marking;
+
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.control.IDEControl;
+
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 
 /**
- * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
- * @version $Id:
- *
+ * 
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public interface CodeMirrorCss extends CssResource
+
+public class UnMarkProblemControl extends SimpleControl implements IDEControl
 {
 
-   @ClassName("exo-code-error-mark")
-   String codeErrorMarkStyle();
-   
-   @ClassName("exo-code-mark-warning")
-   String codeMarkWarning();
-   
-   @ClassName("exo-code-mark-error")
-   String codeMarkError();
+   public UnMarkProblemControl()
+   {
+      super("Help/Debug/Unmark Problem");
+      setTitle("Unmark Problem");
+      setPrompt("Unmark Problem");
+      setImages(IDEImageBundle.INSTANCE.remove(), IDEImageBundle.INSTANCE.removeDisabled());
+      setEvent(new MarkProblemEvent(false));
+
+      setEnabled(true);
+      setVisible(true);
+   }
+
+   @Override
+   public void initialize()
+   {
+   }
 
 }
