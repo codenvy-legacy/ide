@@ -323,8 +323,6 @@ public class ShowHistoryTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
       
-      Thread.sleep(15000);
-      
       createFileAndCommit(TEST_FILE1, COMMIT1);
       createFileAndCommit(TEST_FILE2, COMMIT2);
 
