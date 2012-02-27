@@ -32,8 +32,8 @@ import org.junit.Test;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 29, 2011 4:49:44 PM anya $
- *
+ * @version $Id: Jun 29, 2011 4:49:44 PM anya $
+ * 
  */
 public class ShowHistoryTest extends BaseTest
 {
@@ -77,7 +77,8 @@ public class ShowHistoryTest extends BaseTest
 
    /**
     * Test command is not available for show history in not Git repository.
-    * @throws Exception 
+    * 
+    * @throws Exception
     */
    @Test
    public void testShowHistoryCommand() throws Exception
@@ -88,7 +89,7 @@ public class ShowHistoryTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
 
-      //Check show history is available:
+      // Check show history is available:
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY));
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY);
       IDE.GIT.SHOW_HISTORY.waitOpened();
@@ -98,7 +99,8 @@ public class ShowHistoryTest extends BaseTest
 
    /**
     * Test Show history view elements.
-    * @throws Exception 
+    * 
+    * @throws Exception
     */
    @Test
    public void testShowHistoryView() throws Exception
@@ -110,7 +112,7 @@ public class ShowHistoryTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
 
-      //Open Show history view:
+      // Open Show history view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY);
       IDE.GIT.SHOW_HISTORY.waitOpened();
       assertTrue(IDE.GIT.SHOW_HISTORY.isOpened());
@@ -127,7 +129,8 @@ public class ShowHistoryTest extends BaseTest
 
    /**
     * Test Show history for selected resource.
-    * @throws Exception 
+    * 
+    * @throws Exception
     */
    @Test
    public void testRefreshRevisionList() throws Exception
@@ -139,19 +142,19 @@ public class ShowHistoryTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
 
-      //Open Show history view:
+      // Open Show history view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY);
       IDE.GIT.SHOW_HISTORY.waitOpened();
       assertEquals(1, IDE.GIT.SHOW_HISTORY.getRevisionsCount());
 
-      //Make commit:
+      // Make commit:
       createFileAndCommit(TEST_FILE1, COMMIT1);
       assertEquals(1, IDE.GIT.SHOW_HISTORY.getRevisionsCount());
       IDE.GIT.SHOW_HISTORY.clickRefreshRevisionListButton();
       IDE.GIT.SHOW_HISTORY.waitForRevisionsCount(2);
       assertEquals(2, IDE.GIT.SHOW_HISTORY.getRevisionsCount());
 
-      //Make one more commit:
+      // Make one more commit:
       createFileAndCommit(TEST_FILE2, COMMIT2);
       assertEquals(2, IDE.GIT.SHOW_HISTORY.getRevisionsCount());
 
@@ -181,57 +184,57 @@ public class ShowHistoryTest extends BaseTest
       IDE.OUTPUT.clickClearButton();
       createFileAndCommit(TEST_FILE2, COMMIT2);
 
-      //Open Show history view:
+      // Open Show history view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY);
       IDE.GIT.SHOW_HISTORY.waitOpened();
       IDE.GIT.SHOW_HISTORY.waitForRevisionsCount(3);
       assertEquals(3, IDE.GIT.SHOW_HISTORY.getRevisionsCount());
 
-      //Select first file on the first commit:
+      // Select first file on the first commit:
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_FILE1);
       IDE.GIT.SHOW_HISTORY.clickChangesOfResourceButton();
       IDE.LOADER.waitClosed();
       assertTrue(IDE.GIT.SHOW_HISTORY.isChangesOfResourceButtonSelected());
       assertFalse(IDE.GIT.SHOW_HISTORY.isChangesInProjectButtonSelected());
-      //Select second commit:
+      // Select second commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT2);
       String diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       assertTrue(diffContent.isEmpty());
 
-      //Select first commit:
+      // Select first commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT1);
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       assertTrue(diffContent.contains(TEST_FILE1));
       assertFalse(diffContent.contains(TEST_FILE2));
 
-      //Select second file on the second commit:
+      // Select second file on the second commit:
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_FILE2);
       IDE.GIT.SHOW_HISTORY.clickRefreshRevisionListButton();
       IDE.LOADER.waitClosed();
 
-      //Select second commit:
+      // Select second commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT2);
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       assertFalse(diffContent.contains(TEST_FILE1));
       assertTrue(diffContent.contains(TEST_FILE2));
 
-      //Select first commit:
+      // Select first commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT1);
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       assertTrue(diffContent.isEmpty());
 
-      //Changes in whole project
+      // Changes in whole project
       IDE.GIT.SHOW_HISTORY.clickChangesInProjectButton();
       assertFalse(IDE.GIT.SHOW_HISTORY.isChangesOfResourceButtonSelected());
       assertTrue(IDE.GIT.SHOW_HISTORY.isChangesInProjectButtonSelected());
 
-      //Select second commit:
+      // Select second commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT2);
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       assertFalse(diffContent.contains(TEST_FILE1));
       assertTrue(diffContent.contains(TEST_FILE2));
 
-      //Select first commit:
+      // Select first commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT1);
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       assertTrue(diffContent.contains(TEST_FILE1));
@@ -259,47 +262,47 @@ public class ShowHistoryTest extends BaseTest
       IDE.OUTPUT.clickClearButton();
       createFileAndCommit(TEST_FILE2, COMMIT2);
 
-      //Open Show history view:
+      // Open Show history view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY);
       IDE.GIT.SHOW_HISTORY.waitOpened();
       IDE.GIT.SHOW_HISTORY.waitForRevisionsCount(3);
       assertEquals(3, IDE.GIT.SHOW_HISTORY.getRevisionsCount());
-      //Check states of diff modes:
+      // Check states of diff modes:
       assertTrue(IDE.GIT.SHOW_HISTORY.isDiffPrevRevisionButtonSelected());
       assertFalse(IDE.GIT.SHOW_HISTORY.isDiffIndexButtonSelected());
       assertFalse(IDE.GIT.SHOW_HISTORY.isDiffWorkTreeButtonSelected());
 
-      //Select first commit:
+      // Select first commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT1);
       IDE.LOADER.waitClosed();
-      //Test buttons states
+      // Test buttons states
       assertFalse(IDE.GIT.SHOW_HISTORY.isNothingForComparanceState());
       assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithIndexState());
       assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
-      //Check diff content:
+      // Check diff content:
       String diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       assertTrue(diffContent.contains(TEST_FILE1));
       assertFalse(diffContent.contains(TEST_FILE2));
 
-      //Select init commit:
+      // Select init commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(INIT_COMMIT_COMMENT);
       IDE.LOADER.waitClosed();
-      //Test buttons states
+      // Test buttons states
       assertTrue(IDE.GIT.SHOW_HISTORY.isNothingForComparanceState());
       assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithIndexState());
       assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
-      //Check diff content:
+      // Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       assertTrue(diffContent.trim().isEmpty());
 
-      //Select second commit:
+      // Select second commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT2);
       IDE.LOADER.waitClosed();
-      //Test buttons states
+      // Test buttons states
       assertFalse(IDE.GIT.SHOW_HISTORY.isNothingForComparanceState());
       assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithIndexState());
       assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
-      //Check diff content:
+      // Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       assertFalse(diffContent.contains(TEST_FILE1));
       assertTrue(diffContent.contains(TEST_FILE2));
@@ -319,52 +322,53 @@ public class ShowHistoryTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
-
+      
+      Thread.sleep(15000);
+      
       createFileAndCommit(TEST_FILE1, COMMIT1);
-      IDE.OUTPUT.clickClearButton();
       createFileAndCommit(TEST_FILE2, COMMIT2);
 
-      //Open Show history view:
+      // Open Show history view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY);
       IDE.GIT.SHOW_HISTORY.waitOpened();
       IDE.GIT.SHOW_HISTORY.waitForRevisionsCount(3);
       assertEquals(3, IDE.GIT.SHOW_HISTORY.getRevisionsCount());
 
       IDE.GIT.SHOW_HISTORY.clickDiffIndexButton();
-      //Check states of diff modes:
+      // Check states of diff modes:
       assertFalse(IDE.GIT.SHOW_HISTORY.isDiffPrevRevisionButtonSelected());
       assertTrue(IDE.GIT.SHOW_HISTORY.isDiffIndexButtonSelected());
       assertFalse(IDE.GIT.SHOW_HISTORY.isDiffWorkTreeButtonSelected());
 
-      //Select first commit:
+      // Select first commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT1);
       IDE.LOADER.waitClosed();
       assertFalse(IDE.GIT.SHOW_HISTORY.isNothingForComparanceState());
       assertTrue(IDE.GIT.SHOW_HISTORY.isCompareWithIndexState());
       assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
-      //Check diff content:
+      // Check diff content:
       String diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       assertFalse(diffContent.contains(TEST_FILE1));
       assertTrue(diffContent.contains(TEST_FILE2));
 
-      //Select init commit:
+      // Select init commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(INIT_COMMIT_COMMENT);
       IDE.LOADER.waitClosed();
       assertFalse(IDE.GIT.SHOW_HISTORY.isNothingForComparanceState());
       assertTrue(IDE.GIT.SHOW_HISTORY.isCompareWithIndexState());
       assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
-      //Check diff content:
+      // Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       assertTrue(diffContent.contains(TEST_FILE1));
       assertTrue(diffContent.contains(TEST_FILE2));
 
-      //Select second commit:
+      // Select second commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT2);
       IDE.LOADER.waitClosed();
       assertFalse(IDE.GIT.SHOW_HISTORY.isNothingForComparanceState());
       assertTrue(IDE.GIT.SHOW_HISTORY.isCompareWithIndexState());
       assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
-      //Check diff content:
+      // Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       assertTrue(diffContent.isEmpty());
    }
@@ -388,54 +392,55 @@ public class ShowHistoryTest extends BaseTest
       IDE.OUTPUT.clickClearButton();
       createFileAndCommit(TEST_FILE2, COMMIT2);
 
-      //Open Show history view:
+      // Open Show history view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.SHOW_HISTORY);
       IDE.GIT.SHOW_HISTORY.waitOpened();
       IDE.GIT.SHOW_HISTORY.waitForRevisionsCount(3);
       assertEquals(3, IDE.GIT.SHOW_HISTORY.getRevisionsCount());
 
       IDE.GIT.SHOW_HISTORY.clickDiffWorkTreeStatusButton();
-      //Check states of diff modes:
+      // Check states of diff modes:
       assertFalse(IDE.GIT.SHOW_HISTORY.isDiffPrevRevisionButtonSelected());
       assertFalse(IDE.GIT.SHOW_HISTORY.isDiffIndexButtonSelected());
       assertTrue(IDE.GIT.SHOW_HISTORY.isDiffWorkTreeButtonSelected());
 
-      //Select first commit:
+      // Select first commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT1);
       IDE.LOADER.waitClosed();
       assertFalse(IDE.GIT.SHOW_HISTORY.isNothingForComparanceState());
       assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithIndexState());
       assertTrue(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
-      //Check diff content:
+      // Check diff content:
       String diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       assertFalse(diffContent.contains(TEST_FILE1));
       assertTrue(diffContent.contains(TEST_FILE2));
 
-      //Select init commit:
+      // Select init commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(INIT_COMMIT_COMMENT);
       IDE.LOADER.waitClosed();
       assertFalse(IDE.GIT.SHOW_HISTORY.isNothingForComparanceState());
       assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithIndexState());
       assertTrue(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
-      //Check diff content:
+      // Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       assertTrue(diffContent.contains(TEST_FILE1));
       assertTrue(diffContent.contains(TEST_FILE2));
 
-      //Select second commit:
+      // Select second commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT2);
       IDE.LOADER.waitClosed();
       assertFalse(IDE.GIT.SHOW_HISTORY.isNothingForComparanceState());
       assertFalse(IDE.GIT.SHOW_HISTORY.isCompareWithIndexState());
       assertTrue(IDE.GIT.SHOW_HISTORY.isCompareWithWorkingTree());
-      //Check diff content:
+      // Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       assertTrue(diffContent.isEmpty());
    }
 
    /**
     * Creates new file with pointed name..
-    * @throws Exception 
+    * 
+    * @throws Exception
     */
    private void createFileAndCommit(String fileName, String commitMessage) throws Exception
    {
@@ -446,16 +451,17 @@ public class ShowHistoryTest extends BaseTest
       IDE.EDITOR.closeFile(fileName);
       IDE.EDITOR.waitTabNotPresent(fileName);
 
-      //Add to index:
+      // Add to index:
       IDE.GIT.ADD.addToIndex();
-      IDE.OUTPUT.waitForMessageShow(1, 10);
+      IDE.OUTPUT.waitForMessageShow(1, 15);
       String message = IDE.OUTPUT.getOutputMessage(1);
       assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
-      //Commit file:
+      // Commit file:
       IDE.GIT.COMMIT.commit(commitMessage);
-      IDE.OUTPUT.waitForMessageShow(2, 10);
+      IDE.OUTPUT.waitForMessageShow(2, 15);
       message = IDE.OUTPUT.getOutputMessage(2);
       assertTrue(message.startsWith(GIT.Messages.COMMIT_SUCCESS));
+      IDE.OUTPUT.clickClearButton();
    }
 }
