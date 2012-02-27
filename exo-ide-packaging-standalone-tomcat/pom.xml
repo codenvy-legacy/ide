@@ -378,6 +378,11 @@
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-maven</artifactId>
+      </dependency> 
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-samples</artifactId>
          <exclusions>
             <exclusion>

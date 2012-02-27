@@ -179,7 +179,7 @@ public class Util
    }
 
    /**
-    * Convert array type to String array of FQNs
+    * 
     * 
     * @param types
     * @return

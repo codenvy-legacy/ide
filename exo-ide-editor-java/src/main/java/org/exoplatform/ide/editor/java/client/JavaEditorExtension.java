@@ -18,13 +18,8 @@
  */
 package org.exoplatform.ide.editor.java.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.web.bindery.autobean.shared.AutoBean;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -36,20 +31,17 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
-import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistant;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
-import org.exoplatform.ide.editor.java.client.codemirror.JavaAutocompleteHelper;
 import org.exoplatform.ide.editor.java.client.codemirror.JavaCodeValidator;
-import org.exoplatform.ide.editor.java.client.codemirror.JavaOutlineItemCreator;
-import org.exoplatform.ide.editor.java.client.codemirror.JavaParser;
 import org.exoplatform.ide.editor.java.client.create.CreateJavaClassPresenter;
 import org.exoplatform.ide.editor.java.client.create.NewJavaClassControl;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

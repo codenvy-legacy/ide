@@ -218,7 +218,8 @@ public class JavaCodeAssistantUtils
       b.append('(');
       for (int i = 0;; i++)
       {
-         b.append(String.valueOf(a.get(i)));
+         String fqnParam = a.get(i);
+         b.append(String.valueOf(fqnParam.substring(fqnParam.lastIndexOf(".") + 1)));
          if (i == iMax)
             return b.append(')').toString();
          b.append(", ");

@@ -76,6 +76,12 @@ public class SearchTest extends JcrFileSystemTest
       contentNode03.setProperty("jcr:mimeType", "text/plain");
       contentNode03.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode03.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
+      
+      Node fileNode04 = searchTestNode.addNode("SearchTest_FILE04", "nt:file");
+      Node contentNode04 = fileNode04.addNode("jcr:content", "nt:resource");
+      contentNode04.setProperty("jcr:mimeType", "application/java");
+      contentNode04.setProperty("jcr:lastModified", Calendar.getInstance());
+      contentNode04.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
 
       session.save();
    }

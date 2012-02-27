@@ -174,6 +174,7 @@ public class Upload extends AbstractTestModule
             }
             catch (NoSuchElementException e)
             {
+               e.printStackTrace();
                return false;
             }
          }

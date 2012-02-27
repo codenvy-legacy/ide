@@ -76,10 +76,10 @@ public class GroovyObjectCompletionTest extends CodeAssistantBaseTest
       IDE.CODEASSISTANT.typeToInput("con");
       Thread.sleep(2000);
 
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("concat(java.lang.String):java.lang.String"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("contains(java.lang.CharSequence):boolean"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("contentEquals(java.lang.StringBuffer):boolean"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("contentEquals(java.lang.CharSequence):boolean"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("concat(String):java.lang.String"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("contains(CharSequence):boolean"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("contentEquals(StringBuffer):boolean"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("contentEquals(CharSequence):boolean"));
 
       IDE.CODEASSISTANT.moveCursorDown(2);
 

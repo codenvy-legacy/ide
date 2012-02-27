@@ -74,8 +74,9 @@ public class GroovyClassMethodsCompletionTest extends CodeAssistantBaseTest
        * sort(List, Comparator):void
        */
       
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("sort(java.util.List<T>):void"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("sort(java.util.List<T>, java.util.Comparator<? super T>):void"));
+      
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("sort(List<T>):void"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("sort(List<T>, Comparator<? super T>):void"));
 
       /*
        * 6. Select sort(List, Comparator):void element
@@ -90,6 +91,7 @@ public class GroovyClassMethodsCompletionTest extends CodeAssistantBaseTest
       /*
        * Check, that autocomplete form dissapeared, and new text in editor appeared.
        */
+      Thread.sleep(10000);
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("Collections.sort(List<T>, Comparator<? super T>)"));
    }
 

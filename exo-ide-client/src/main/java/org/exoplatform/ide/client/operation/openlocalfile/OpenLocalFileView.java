@@ -89,6 +89,7 @@ public class OpenLocalFileView extends ViewImpl implements
       super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.openLocalFile()), WIDTH, HEIGHT, false);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
+      fileNameField.getElement().setId("ideUploadFormFilenameField");
    }
 
    @Override

@@ -62,6 +62,7 @@ public class ImportStatementInsertionTest extends CodeAssistantBaseTest
    @Test
    public void testServiceFile() throws Exception
    {
+      IDE.WELCOME_PAGE.close();
       //open file
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + SERVICE_FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(projectName + "/" + SERVICE_FILE_NAME);
@@ -93,6 +94,7 @@ public class ImportStatementInsertionTest extends CodeAssistantBaseTest
       IDE.CODEASSISTANT.waitForInput();
       IDE.CODEASSISTANT.typeToInput("itSet\n");
       
+      
       //test import statement
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("// simple groovy script"));
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import javax.ws.rs.Path"));
@@ -107,6 +109,8 @@ public class ImportStatementInsertionTest extends CodeAssistantBaseTest
       IDE.EDITOR.deleteLinesInEditor(0, 1);
       IDE.EDITOR.typeTextIntoEditor(0, " ");
       IDE.CODEASSISTANT.openForm();
+      IDE.CODEASSISTANT.waitForInput();
+      IDE.CODEASSISTANT.setFocusTInput();
       IDE.CODEASSISTANT.typeToInput("HelloWorld");
       IDE.CODEASSISTANT.insertSelectedItem();
 

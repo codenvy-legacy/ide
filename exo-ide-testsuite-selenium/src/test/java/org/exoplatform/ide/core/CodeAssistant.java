@@ -271,6 +271,12 @@ public class CodeAssistant extends AbstractTestModule
       });
    }
 
+   public void setFocusTInput()
+   {
+      if (input != null && input.isDisplayed())
+         input.click();
+   }
+
    /**
     * @param name
     * @throws InterruptedException

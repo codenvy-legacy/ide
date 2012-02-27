@@ -88,8 +88,8 @@ public class GroovyProjectAutocompletionTest extends CodeAssistantBaseTest
       IDE.CODEASSISTANT.openForm();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertTrue(IDE.CODEASSISTANT.isElementPresent("getName():java.lang.String"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("printText(java.lang.String):void"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("setName(java.lang.String):void"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("printText(String):void"));
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("setName(String):void"));
 
       IDE.CODEASSISTANT.typeToInput("pr");
       IDE.CODEASSISTANT.insertSelectedItem();

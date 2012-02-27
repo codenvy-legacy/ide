@@ -57,6 +57,7 @@ public class GroovyClassNameCompletionTest extends CodeAssistantBaseTest
       assertTrue(IDE.CODEASSISTANT.isElementPresent("CollectionCertStore"));
       assertTrue(IDE.CODEASSISTANT.isElementPresent("Collection"));
 
+      IDE.CODEASSISTANT.setFocusTInput(); //insure that focus set to proposal from
       IDE.CODEASSISTANT.moveCursorDown(1);
 
       IDE.CODEASSISTANT.insertSelectedItem();
