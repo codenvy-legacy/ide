@@ -33,16 +33,15 @@ import org.exoplatform.ide.git.client.GitExtension;
 public class InitRequestStatusHandler implements RequestStatusHandler
 {
 
-   private String workDir;
+   private String projectName;
 
    /**
-    * @param workDir
+    * @param projectName project's name
     */
-   public InitRequestStatusHandler(String workDir)
+   public InitRequestStatusHandler(String projectName)
    {
       super();
-      // remove first '/' in workDir
-      this.workDir = workDir.substring(1);
+      this.projectName = projectName;
    }
 
    /**
@@ -52,7 +51,7 @@ public class InitRequestStatusHandler implements RequestStatusHandler
    public void requestInProgress(String id)
    {
       Job job = new Job(id, JobStatus.STARTED);
-      job.setStartMessage(GitExtension.MESSAGES.initStarted(workDir));
+      job.setStartMessage(GitExtension.MESSAGES.initStarted(projectName));
       IDE.fireEvent(new JobChangeEvent(job));
    }
 
@@ -63,7 +62,7 @@ public class InitRequestStatusHandler implements RequestStatusHandler
    public void requestFinished(String id)
    {
       Job job = new Job(id, JobStatus.FINISHED);
-      job.setFinishMessage(GitExtension.MESSAGES.initFinished(workDir));
+      job.setFinishMessage(GitExtension.MESSAGES.initFinished(projectName));
       IDE.fireEvent(new JobChangeEvent(job));
    }
 
