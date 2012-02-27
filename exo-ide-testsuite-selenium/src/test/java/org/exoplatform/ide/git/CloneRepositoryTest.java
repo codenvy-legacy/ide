@@ -60,9 +60,8 @@ public class CloneRepositoryTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.importZipProject(REPOSITORY, ZIP_PATH);
-         Thread.sleep(1000);
          VirtualFileSystemUtils.createDefaultProject(PROJECT);
-         Thread.sleep(1000);
+         Thread.sleep(4000);
       }
       catch (Exception e)
       {
@@ -144,7 +143,6 @@ public class CloneRepositoryTest extends BaseTest
 
       //Check Clone button is disabled, when remote URI field is empty:
       IDE.GIT.CLONE_REPOSITORY.setRemoteUri(GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + REPOSITORY);
-      Thread.sleep(6000);
       IDE.GIT.CLONE_REPOSITORY.clickCloneButton();
       IDE.GIT.CLONE_REPOSITORY.waitClosed();
 

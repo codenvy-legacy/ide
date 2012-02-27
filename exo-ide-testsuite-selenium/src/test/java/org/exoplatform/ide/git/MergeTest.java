@@ -33,12 +33,12 @@ import org.junit.Test;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 22, 2011 12:48:26 PM anya $
- *
+ * @version $Id: Jul 22, 2011 12:48:26 PM anya $
+ * 
  */
 public class MergeTest extends BaseTest
 {
-   private static final String PROJECT = MergeTest.class.getSimpleName();
+   private static final String PROJECT = MergeTest.class.getSimpleName() + "1";
 
    private static final String TEST_FILE = "File.html";
 
@@ -60,7 +60,7 @@ public class MergeTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.importZipProject(PROJECT, "src/test/resources/org/exoplatform/ide/git/merge-test.zip");
-         Thread.sleep(2000);
+         Thread.sleep(3000);
       }
       catch (Exception e)
       {
@@ -73,7 +73,7 @@ public class MergeTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-         Thread.sleep(2000);
+         Thread.sleep(3000);
       }
       catch (Exception e)
       {
@@ -89,13 +89,13 @@ public class MergeTest extends BaseTest
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.LOADER.waitClosed();
-      
+
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
-      
+
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      //Check Merge is available:
+      // Check Merge is available:
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.MERGE));
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.MERGE);
       IDE.GIT.MERGE.waitOpened();
@@ -113,7 +113,7 @@ public class MergeTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
-      
+
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.MERGE);
@@ -131,11 +131,11 @@ public class MergeTest extends BaseTest
       Assert.assertTrue(IDE.GIT.MERGE.isRererencePresent(BRANCH2));
       Assert.assertTrue(IDE.GIT.MERGE.isRererencePresent(BRANCH3));
 
-      //Select branch:
+      // Select branch:
       IDE.GIT.MERGE.selectReference(BRANCH1);
       assertTrue(IDE.GIT.MERGE.isMergeButtonEnabled());
 
-      //Select not the branch:
+      // Select not the branch:
       IDE.GIT.MERGE.selectReference(LOCAL_BRANCHES);
       assertFalse(IDE.GIT.MERGE.isMergeButtonEnabled());
 
@@ -161,7 +161,7 @@ public class MergeTest extends BaseTest
       IDE.GIT.MERGE.doubleClickReference(LOCAL_BRANCHES);
 
       IDE.GIT.MERGE.waitRererenceVisible(BRANCH1);
-      //Select first branch:
+      // Select first branch:
       IDE.GIT.MERGE.selectReference(BRANCH1);
 
       IDE.GIT.MERGE.clickMergeButton();
@@ -173,7 +173,7 @@ public class MergeTest extends BaseTest
       assertTrue(message.contains(Merge.Messages.MERGED_COMMITS));
       assertTrue(message.contains(Merge.Messages.NEW_HEAD_COMMIT));
 
-      //Check file appeared:
+      // Check file appeared:
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
       IDE.LOADER.waitClosed();
@@ -193,10 +193,10 @@ public class MergeTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
-      
+
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE);
 
-      //Modify file:
+      // Modify file:
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FILE);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_FILE);
       IDE.EDITOR.typeTextIntoEditor(0, "some");
@@ -218,7 +218,7 @@ public class MergeTest extends BaseTest
       IDE.GIT.MERGE.doubleClickReference(LOCAL_BRANCHES);
 
       IDE.GIT.MERGE.waitRererenceVisible(BRANCH2);
-      //Select branch:
+      // Select branch:
       IDE.GIT.MERGE.selectReference(BRANCH2);
 
       IDE.GIT.MERGE.clickMergeButton();
@@ -239,7 +239,7 @@ public class MergeTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
-      
+
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.MERGE);
@@ -249,7 +249,7 @@ public class MergeTest extends BaseTest
       IDE.GIT.MERGE.doubleClickReference(LOCAL_BRANCHES);
 
       IDE.GIT.MERGE.waitRererenceVisible(BRANCH3);
-      //Select branch:
+      // Select branch:
       IDE.GIT.MERGE.selectReference(BRANCH3);
 
       IDE.GIT.MERGE.clickMergeButton();

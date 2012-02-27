@@ -182,7 +182,7 @@ public class PullTest extends BaseTest
       //Check pulled message:
       IDE.OUTPUT.waitForMessageShow(1, 15);
       String message = IDE.OUTPUT.getOutputMessage(1);
-      assertEquals(String.format(GIT.Messages.PULL_SUCCESS, "git/" + REPO_NAME + "/" + WS_NAME + "/" + REMOTE), message);
+      assertEquals(String.format(GIT.Messages.PULL_SUCCESS, GIT_PATH  + "/"+ REPO_NAME + "/" + WS_NAME + "/" + REMOTE), message);
 
       //Check file in browser tree
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);

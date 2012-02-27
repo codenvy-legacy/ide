@@ -388,7 +388,7 @@ public class Branches extends AbstractTestModule
     */
    public void waitForBranchesCount(final int count) throws Exception
    {
-      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 6).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)

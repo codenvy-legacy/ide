@@ -88,7 +88,7 @@ public class CommitTest extends BaseTest
 
       //Init repository:
       IDE.GIT.INIT_REPOSITORY.initRepository();
-      IDE.OUTPUT.waitForMessageShow(1, 10);
+      IDE.OUTPUT.waitForMessageShow(1, 15);
       String message = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
       IDE.LOADER.waitClosed();

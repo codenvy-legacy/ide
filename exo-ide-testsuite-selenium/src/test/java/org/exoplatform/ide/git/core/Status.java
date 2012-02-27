@@ -25,24 +25,28 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 24, 2011 11:57:52 AM anya $
- *
+ * @version $Id: Jun 24, 2011 11:57:52 AM anya $
+ * 
  */
 public class Status extends AbstractTestModule
 {
-   public interface Messages
+   public final class Messages
    {
-      String NOT_COMMITED = "Changes to be committed:";
+      public static final String NOT_COMMITED = "Changes to be committed:";
 
-      String UNTRACKED = "Untracked files:";
+      public static final String UNTRACKED = "Untracked files:";
 
-      String NOT_UPDATED = "Changed but not updated:";
+      public static final String NOT_UPDATED = "Changed but not updated:";
 
-      String NEW_FILE = "new file: %s";
-      
-      String MODIFIED = "modified: %s";
+      public static final String NEW_FILE = "new file: %s";
 
-      String NOTHING_TO_COMMIT = "nothing to commit";
+      public static final String MODIFIED = "modified: %s";
+
+      // TODO temporary changed:
+      // public static final String NOTHING_TO_COMMIT = "nothing to commit";
+      public static final String NOTHING_TO_COMMIT = "no changes added to commit";
+
+      public static final String NO_CHANGES_ADDED_TO_COMMIT = "no changes added to commit";
    }
 
    public List<String> getNotCommited(String message)
@@ -126,7 +130,8 @@ public class Status extends AbstractTestModule
             continue;
          }
          else if ((line.startsWith(Messages.NOT_COMMITED) && untracked)
-            || (line.startsWith(Messages.NOT_UPDATED) && untracked))
+            || (line.startsWith(Messages.NOT_UPDATED) && untracked)
+            || (line.startsWith(Messages.NO_CHANGES_ADDED_TO_COMMIT) && untracked))
          {
             return files;
          }

@@ -53,7 +53,7 @@ public class InitRepositoryTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.createDefaultProject(PROJECT);
-         Thread.sleep(2000);
+         Thread.sleep(4000);
       }
       catch (Exception e)
       {
@@ -167,7 +167,7 @@ public class InitRepositoryTest extends BaseTest
       IDE.GIT.INIT_REPOSITORY.clickInitButton();
       IDE.GIT.INIT_REPOSITORY.waitClosed();
 
-      IDE.OUTPUT.waitForMessageShow(1, 10);
+      IDE.OUTPUT.waitForMessageShow(1, 15);
       String message = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
       IDE.LOADER.waitClosed();
