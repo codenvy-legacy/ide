@@ -18,19 +18,24 @@
  */
 package org.exoplatform.ide.extension.maven.client;
 
-import org.exoplatform.ide.extension.maven.shared.BuildStatus;
-
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
+import org.exoplatform.ide.extension.maven.shared.BuildStatus;
+
 /**
+ * The interface for the AutoBean generator.
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
 public interface BuilderAutoBeanFactory extends AutoBeanFactory
 {
-      
-      AutoBean<BuildStatus> buildStatus();
-      
+   /**
+    * A factory method for a status bean.
+    * 
+    * @return an {@link AutoBean} of type {@link BuildStatus}
+    */
+   AutoBean<BuildStatus> buildStatus();
 }

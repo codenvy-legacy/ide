@@ -21,6 +21,8 @@ package org.exoplatform.ide.extension.maven.client;
 import com.google.gwt.i18n.client.Messages;
 
 /**
+ * Localization constants.
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuilderLocalizationConstant.java Feb 21, 2012 3:06:29 PM azatsarynnyy $
  *
@@ -54,7 +56,9 @@ public interface BuilderLocalizationConstant extends Messages
    /*
     * BuildProjectView.
     */
+   @Key("buildProject.id")
+   String buildProjectId();
+
    @Key("buildProject.title")
    String buildProjectTitle();
-
 }

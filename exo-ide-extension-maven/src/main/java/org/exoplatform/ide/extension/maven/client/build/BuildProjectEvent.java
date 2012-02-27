@@ -18,17 +18,22 @@
  */
 package org.exoplatform.ide.extension.maven.client.build;
 
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+
 /**
+ * Event occurs, when user tries to build project by maven builder.
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectEvent.java Feb 17, 2012 4:04:56 PM azatsarynnyy $
  *
  */
 public class BuildProjectEvent extends GwtEvent<BuildProjectHandler>
 {
+   /**
+    * Project for build.
+    */
    private ProjectModel project;
 
    public BuildProjectEvent()
@@ -40,7 +45,10 @@ public class BuildProjectEvent extends GwtEvent<BuildProjectHandler>
    {
       this.project = project;
    }
-   
+
+   /**
+    * Type used to register this event.
+    */
    public static final GwtEvent.Type<BuildProjectHandler> TYPE = new GwtEvent.Type<BuildProjectHandler>();
 
    /**

@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.extension.maven.client;
 
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus;
-
-import com.google.gwt.http.client.RequestException;
 
 /**
  * Client service for Maven builder.
@@ -38,6 +38,11 @@ public abstract class BuilderClientService
     */
    private static BuilderClientService instance;
 
+   /**
+    * Return the instance of {@link BuilderClientService}.
+    * 
+    * @return maven builder client service
+    */
    public static BuilderClientService getInstance()
    {
       return instance;
@@ -83,7 +88,7 @@ public abstract class BuilderClientService
     * @throws RequestException
     */
    public abstract void log(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
-   
+
    /**
     * Download result of build.
     * 

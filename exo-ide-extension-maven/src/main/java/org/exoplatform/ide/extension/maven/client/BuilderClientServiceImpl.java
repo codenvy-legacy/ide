@@ -18,15 +18,15 @@
  */
 package org.exoplatform.ide.extension.maven.client;
 
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus;
-
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestException;
 
 /**
  * Implementation of {@link BuilderClientService} service.
@@ -38,16 +38,34 @@ import com.google.gwt.http.client.RequestException;
 public class BuilderClientServiceImpl extends BuilderClientService
 {
 
+   /**
+    * Base url.
+    */
    private static final String BASE_URL = "/ide/maven";
 
+   /**
+    * Build project method's path.
+    */
    private static final String BUILD = BASE_URL + "/build";
 
+   /**
+    * Cancel building project method's path.
+    */
    private static final String CANCEL = BASE_URL + "/cancel";
 
+   /**
+    * Get status of build method's path.
+    */
    private static final String STATUS = BASE_URL + "/status";
 
+   /**
+    * Get build log method's path.
+    */
    private static final String LOG = BASE_URL + "/log";
 
+   /**
+    * Download result of build method's path.
+    */
    private static final String DOWNLOAD = BASE_URL + "/download";
 
    /**
@@ -61,8 +79,8 @@ public class BuilderClientServiceImpl extends BuilderClientService
    private Loader loader;
 
    /**
-    * @param restContext
-    * @param loader
+    * @param restContext rest context
+    * @param loader loader to show on server request
     */
    public BuilderClientServiceImpl(String restContext, Loader loader)
    {
@@ -71,6 +89,9 @@ public class BuilderClientServiceImpl extends BuilderClientService
    }
 
    /**
+    * Start new build.
+    * 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#build(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    public void build(String uri, AsyncRequestCallback<StringBuilder> callback) throws RequestException
@@ -79,11 +100,14 @@ public class BuilderClientServiceImpl extends BuilderClientService
 
       String params = "gituri=" + uri;
       callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-      AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params).loader(loader)
+      AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**
+    * Cancel previously launched build.
+    * 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#cancel(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    public void cancel(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException
@@ -95,16 +119,25 @@ public class BuilderClientServiceImpl extends BuilderClientService
    }
 
    /**
+    * Check current status of previously launched build.
+    * 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#status(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    public void status(String buildid, AsyncRequestCallback<BuildStatus> callback) throws RequestException
    {
       final String requestUrl = restServiceContext + STATUS + "/" + buildid;
       callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-      AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader)
+      AsyncRequest.build(RequestBuilder.GET, requestUrl)//.loader(loader)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
+   /**
+    * Get build log.
+    * 
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#log(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
    public void log(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException
    {
       final String requestUrl = restServiceContext + LOG + "/" + buildid;
@@ -114,6 +147,9 @@ public class BuilderClientServiceImpl extends BuilderClientService
    }
 
    /**
+    * Download result of build.
+    * 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#download(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    public void download(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException

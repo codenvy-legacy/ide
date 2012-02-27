@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.extension.maven.client.build;
 
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.extension.maven.client.BuilderExtension;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -32,24 +28,43 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.extension.maven.client.BuilderExtension;
+
 /**
+ * View for build project by maven builder.
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectView.java Feb 17, 2012 6:20:16 PM azatsarynnyy $
  *
  */
 public class BuildProjectView extends ViewImpl implements BuildProjectPresenter.Display
 {
+   /**
+    * ID of view.
+    */
+   private static final String ID = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectId();
 
-   private static final String ID = "BuildProjectView";
-
+   /**
+    * Title of view.
+    */
    private static final String TITLE = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectTitle();
 
    private static final int HEIGHT = 450;
 
    private static final int WIDTH = 250;
 
+   /**
+    * Animation of build progress is enabled.
+    */
    private boolean animationEnabled = false;
 
+   private int animationCharIndex = 1;
+
+   /**
+    * Panel for output messages.
+    */
    @UiField
    HTMLPanel buildOutputPanel;
 
@@ -58,7 +73,7 @@ public class BuildProjectView extends ViewImpl implements BuildProjectPresenter.
    }
 
    /**
-    * UIBinder instance
+    * UIBinder instance.
     */
    private static BuildProjectViewUiBinder uiBinder = GWT.create(BuildProjectViewUiBinder.class);
 
@@ -84,6 +99,9 @@ public class BuildProjectView extends ViewImpl implements BuildProjectPresenter.
                                                 this.@org.exoplatform.ide.extension.maven.client.build.BuildProjectView::scrollToBottom()();
                                                 }-*/;
 
+   /**
+    * Scrolling to bottom of buildOutputPanel.
+    */
    private void scrollToBottom()
    {
       int scrollHeight = DOM.getElementPropertyInt(buildOutputPanel.getElement(), "scrollHeight");
@@ -118,8 +136,9 @@ public class BuildProjectView extends ViewImpl implements BuildProjectPresenter.
       animationElement.setInnerHTML("");
    }
 
-   private int animationCharIndex = 1;
-
+   /**
+    * Animate of build progress.
+    */
    private Timer animationTimer = new Timer()
    {
       @Override
@@ -158,5 +177,4 @@ public class BuildProjectView extends ViewImpl implements BuildProjectPresenter.
          }
       }
    };
-
 }

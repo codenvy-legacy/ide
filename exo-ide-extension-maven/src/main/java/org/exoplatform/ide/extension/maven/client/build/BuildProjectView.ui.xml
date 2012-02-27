@@ -11,7 +11,7 @@
       	top: 0px;
       	direction: ltr;
       }
-      
+
       .outtext {
       	font-family: monospace;
       	font-size: 12px;

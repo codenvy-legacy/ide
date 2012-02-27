@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.extension.maven.client.build;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Timer;
+import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
@@ -46,13 +52,9 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.Timer;
-import com.google.web.bindery.autobean.shared.AutoBean;
-
 /**
+ * Presenter for created builder view. The view must be pointed in Views.gwt.xml.
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectPresenter.java Feb 17, 2012 5:39:10 PM azatsarynnyy $
  *
@@ -60,24 +62,6 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelectedHandler, ViewClosedHandler,
    VfsChangedHandler
 {
-
-   private static final String UNABLE_TO_GET_GIT_URL = BuilderExtension.LOCALIZATION_CONSTANT.unableToGetGitUrl();
-
-   private static final String NEED_INITIALIZE_GIT = BuilderExtension.LOCALIZATION_CONSTANT.needInitializeGit();
-
-   private String gitUrl = null;
-
-   private String buildID = null;
-
-   /**
-    * Delay in millisecond between build status request
-    */
-   private static final int delay = 3000;
-
-   private String prevStatus = "";
-
-   private boolean buildInProgress = false;
-
    public interface Display extends IsView
    {
       void output(String text);
@@ -89,6 +73,44 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
    private Display display;
 
+   private static final String UNABLE_TO_GET_GIT_URL = BuilderExtension.LOCALIZATION_CONSTANT.unableToGetGitUrl();
+
+   private static final String NEED_INITIALIZE_GIT = BuilderExtension.LOCALIZATION_CONSTANT.needInitializeGit();
+
+   private static final BuildStatus.Status BUILD_STATUS_SUCCESSFUL = BuildStatus.Status.SUCCESSFUL;
+
+   private static final BuildStatus.Status BUILD_STATUS_FAILED = BuildStatus.Status.FAILED;
+
+   private static final BuildStatus.Status BUILD_STATUS_IN_PROGRESS = BuildStatus.Status.IN_PROGRESS;
+
+   /**
+    * Git repository url of projects.
+    */
+   private String gitUrl = null;
+
+   /**
+    * The build's identifier.
+    */
+   private String buildID = null;
+
+   /**
+    * Delay in millisecond between build status request.
+    */
+   private static final int delay = 3000;
+
+   /**
+    * Status of previously build.
+    */
+   private BuildStatus.Status previousStatus = null;
+
+   /**
+    * Build of another project is performed.
+    */
+   private boolean buildInProgress = false;
+
+   /**
+    * View closed flag.
+    */
    private boolean closed = true;
 
    /**
@@ -124,7 +146,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    {
       if (buildInProgress)
       {
-         String message = BuilderExtension.LOCALIZATION_CONSTANT.buildInProgress(project.getPath().substring(1));
+         String message = BuilderExtension.LOCALIZATION_CONSTANT.buildInProgress(project.getPath());
          Dialogs.getInstance().showError(message);
          return;
       }
@@ -162,7 +184,9 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       return false;
    }
 
-
+   /**
+    * Get the Git repository url and start the build of project.
+    */
    private void build()
    {
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
@@ -196,6 +220,9 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       }
    }
 
+   /**
+    * Start the build of project.
+    */
    private void doBuild()
    {
       try
@@ -210,11 +237,11 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
                   buildInProgress = true;
 
-                  showBuildMessage("Building project <b>" + project.getPath().substring(1) + "</b>");
+                  showBuildMessage("Building project <b>" + project.getPath() + "</b>");
 
                   display.startAnimation();
 
-                  prevStatus = null;
+                  previousStatus = null;
                   refreshBuildStatusTimer.schedule(delay);
                }
 
@@ -231,6 +258,9 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       }
    }
 
+   /**
+    * A timer for periodically sending request of build status.
+    */
    private Timer refreshBuildStatusTimer = new Timer()
    {
       @Override
@@ -240,66 +270,43 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          {
             AutoBean<BuildStatus> buildStatus = BuilderExtension.AUTO_BEAN_FACTORY.create(BuildStatus.class);
             AutoBeanUnmarshaller<BuildStatus> unmarshaller = new AutoBeanUnmarshaller<BuildStatus>(buildStatus);
-            BuilderClientService.getInstance().status(buildID,
-               new AsyncRequestCallback<BuildStatus>(unmarshaller)
+            BuilderClientService.getInstance().status(buildID, new AsyncRequestCallback<BuildStatus>(unmarshaller)
+            {
+               @Override
+               protected void onSuccess(BuildStatus response)
                {
-                  @Override
-                  protected void onSuccess(BuildStatus response)
+                  updateBuildStatus(response);
+
+                  BuildStatus.Status status = response.getStatus();
+                  if (status == BUILD_STATUS_IN_PROGRESS)
                   {
-//                     String status = "";
-//                     if (response.indexOf("SUCCESSFUL") != -1)
-//                     {
-//                        status = "SUCCESSFUL";
-//                     }
-//                     else if (response.indexOf("IN_PROGRESS") != -1)
-//                     {
-//                        status = "IN_PROGRESS";
-//                     }
-//                     else if (response.indexOf("FAILED") != -1)
-//                     {
-//                        status = "FAILED";
-//                     }
-//
-//                     updateBuildStatus(status);
-//
-//                     if (status.equals("IN_PROGRESS"))
-//                     {
-//                        schedule(delay);
-//                     }
-//                     else if (status.equals("FAILED"))
-//                     {
-//                        showBuildMessage("BUILD FAILED!");
-//                        showLog();
-//                     }
-//                     else
-//                     {
-//                        String downloadUrl =
-//                           response.substring(response.indexOf("downloadUrl\":\"") + "downloadUrl\":\"".length(),
-//                              response.indexOf("\"}"));
-//
-//                        StringBuilder message =
-//                           new StringBuilder("You can download result of build by <a href=\"").append(downloadUrl)
-//                              .append("\">this link</a>");
-//
-//                        showBuildMessage(message.toString());
-//                     }
+                     schedule(delay);
                   }
-
-                  protected void onFailure(Throwable exception)
+                  else if (status == BUILD_STATUS_FAILED)
                   {
-                     buildInProgress = false;
-                     IDE.fireEvent(new ExceptionThrownEvent(exception));
-                  };
+                     showLog();
+                  }
+               }
 
-               });
+               protected void onFailure(Throwable exception)
+               {
+                  buildInProgress = false;
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               };
+
+            });
          }
          catch (RequestException e)
          {
+            buildInProgress = false;
             IDE.fireEvent(new ExceptionThrownEvent(e));
          }
       }
    };
 
+   /**
+    * Output a log of build.
+    */
    private void showLog()
    {
       try
@@ -329,44 +336,61 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    /**
     * Check for status and display necessary messages.
     * 
-    * @param status
+    * @param buildStatus status of build
     */
-   private void updateBuildStatus(String status)
+   private void updateBuildStatus(BuildStatus buildStatus)
    {
-      if (status.equals("IN_PROGRESS") && !prevStatus.equals("IN_PROGRESS"))
+      BuildStatus.Status status = buildStatus.getStatus();
+
+      if (status == BUILD_STATUS_IN_PROGRESS && previousStatus != BUILD_STATUS_IN_PROGRESS)
       {
-         setBuildStatusInProgress(status);
+         previousStatus = BUILD_STATUS_IN_PROGRESS;
          return;
       }
 
-      if ((status.equals("SUCCESSFUL") && !prevStatus.equals("SUCCESSFUL"))
-         || (status.equals("FAILED") && !prevStatus.equals("FAILED")))
+      if ((status == BUILD_STATUS_SUCCESSFUL && previousStatus != BUILD_STATUS_SUCCESSFUL)
+         || (status == BUILD_STATUS_FAILED && previousStatus != BUILD_STATUS_FAILED))
       {
-         setBuildStatusFinished(status);
+         afterBuildFinished(buildStatus);
          return;
       }
    }
 
    /**
-    * Sets Building status: IN_PROGRESS
+    * Perform actions after build is finished.
     * 
-    * @param status
+    * @param buildStatus status of build
     */
-   private void setBuildStatusInProgress(String status)
-   {
-      prevStatus = "IN_PROGRESS";
-      //showBuildMessage("Status: " + status);
-   }
-
-   /**
-    * Sets Building status: SUCCESSFUL
-    * 
-    * @param status
-    */
-   private void setBuildStatusFinished(String status)
+   private void afterBuildFinished(BuildStatus buildStatus)
    {
       buildInProgress = false;
+      previousStatus = buildStatus.getStatus();
 
+      StringBuilder message =
+         new StringBuilder("Building project <b>").append(project.getPath())
+            .append("</b> has been finished.\r\nResult: ").append(buildStatus.getStatus());
+
+      if (buildStatus.getStatus() == BUILD_STATUS_SUCCESSFUL)
+      {
+         message.append("\r\nYou can download result of build by <a href=\"").append(buildStatus.getDownloadUrl())
+            .append("\">this link</a>");
+      }
+      else if (buildStatus.getStatus() == BUILD_STATUS_FAILED)
+      {
+         message.append(buildStatus.getError());
+      }
+
+      showBuildMessage(message.toString());
+      display.stopAnimation();
+   }
+
+   /**
+    * Output the message and activate view if necessary.
+    * 
+    * @param message message for output
+    */
+   private void showBuildMessage(String message)
+   {
       if (display != null)
       {
          if (closed)
@@ -377,30 +401,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          else
          {
             display.asView().activate();
-         }
-      }
-
-      //prevStatus = "SUCCESSFUL"; // prevStatus = Status.FAILED;
-
-      String message =
-         "Building project <b>" + project.getPath().substring(1) + "</b> has been finished.\r\nResult: "
-            + ((status.length() == 0) ? "Unknown" : status);
-
-      showBuildMessage(message);
-      display.stopAnimation();
-   }
-
-   /**
-    * @param message
-    */
-   private void showBuildMessage(String message)
-   {
-      if (display != null)
-      {
-         if (closed)
-         {
-            IDE.getInstance().openView(display.asView());
-            closed = false;
          }
       }
       else
@@ -421,7 +421,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    {
       if (event.getView() instanceof Display)
       {
-         display = null;
+         closed = true;
       }
    }
 
@@ -466,6 +466,9 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       return true;
    }
 
+   /**
+    * Deserializer for response's body.
+    */
    private class StringUnmarshaller implements Unmarshallable<StringBuilder>
    {
 

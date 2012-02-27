@@ -21,13 +21,18 @@ package org.exoplatform.ide.extension.maven.client.build;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link BuildProjectEvent} event.
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectHandler.java Feb 17, 2012 4:05:12 PM azatsarynnyy $
  *
  */
 public interface BuildProjectHandler extends EventHandler
 {
-
+   /**
+    * Perform actions, when user tries to build project by maven builder.
+    * 
+    * @param event BuildProjectEvent
+    */
    void onBuildProject(BuildProjectEvent event);
-
 }

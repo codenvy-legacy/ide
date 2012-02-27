@@ -29,6 +29,8 @@ import org.exoplatform.ide.extension.maven.client.BuilderExtension;
 import org.exoplatform.ide.extension.maven.client.build.BuildProjectEvent;
 
 /**
+ * Control for build project by maven builder.
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectControl.java Feb 17, 2012 3:51:08 PM azatsarynnyy $
  *
@@ -36,16 +38,12 @@ import org.exoplatform.ide.extension.maven.client.build.BuildProjectEvent;
 public class BuildProjectControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
    ProjectOpenedHandler
 {
-
    public static final String ID = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectControlId();
 
    private static final String TITLE = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectControlTitle();
 
-   private static final String PROMPT = "Build Project";
+   private static final String PROMPT = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectControlPrompt();
 
-   /**
-    * 
-    */
    public BuildProjectControl()
    {
       super(ID);
@@ -84,5 +82,4 @@ public class BuildProjectControl extends SimpleControl implements IDEControl, Pr
    {
       setEnabled(true);
    }
-
 }
