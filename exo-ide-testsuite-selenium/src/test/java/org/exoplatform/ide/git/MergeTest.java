@@ -38,7 +38,7 @@ import org.junit.Test;
  */
 public class MergeTest extends BaseTest
 {
-   private static final String PROJECT = MergeTest.class.getSimpleName() + "1";
+   private static final String PROJECT = MergeTest.class.getSimpleName();
 
    private static final String TEST_FILE = "File.html";
 
