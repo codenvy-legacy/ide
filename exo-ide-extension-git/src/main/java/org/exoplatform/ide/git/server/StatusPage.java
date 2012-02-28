@@ -132,7 +132,16 @@ public class StatusPage extends Status implements InfoPage
 
       if (changedNotCommited == null || changedNotCommited.isEmpty())
       {
-         writer.println("no changes added to commit");
+         if ((untracked != null && !untracked.isEmpty()) || (changedNotUpdated != null && !changedNotUpdated.isEmpty()))
+         {
+            // If has some changes but they are not in index.
+            writer.println("no changes added to commit");
+         }
+         else
+         {
+            // If there is no changes at all.
+            writer.println("nothing to commit (working directory clean)");
+         }
       }
 
       writer.flush();

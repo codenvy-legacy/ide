@@ -20,10 +20,10 @@ package org.exoplatform.ide.git.server.jgit;
 
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepository;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
+import org.exoplatform.ide.git.server.jgit.jgit_copy.FileRepository_Copy;
 import org.exoplatform.ide.git.shared.GitUser;
 
 import java.io.File;
@@ -50,7 +50,7 @@ public class JGitConnectionFactory extends GitConnectionFactory
    {
       try
       {
-         return new FileRepository(new File(workDir, Constants.DOT_GIT));
+         return new FileRepository_Copy(new File(workDir, Constants.DOT_GIT));
       }
       catch (IOException e)
       {
