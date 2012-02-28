@@ -24,7 +24,6 @@ import com.google.gwt.core.client.RunAsyncCallback;
 import org.eclipse.jdt.client.codeassistant.AbstractJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.CompletionProposalCollector;
 import org.eclipse.jdt.client.codeassistant.FillArgumentNamesCompletionProposalCollector;
-import org.eclipse.jdt.client.codeassistant.TemplateCompletionProposalComputer;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.ui.CodeAssitantForm;
 import org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler;

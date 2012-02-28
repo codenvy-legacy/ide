@@ -36,10 +36,24 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
 
    static String DOC_CONTEXT;
 
+   static String REST_CONTEXT;
+
+   private static JdtExtension instance;
+
+   /**
+    * The code template context type registry for the java editor.
+    * 
+    * @since 3.0
+    */
+//   private ContextTypeRegistry fCodeTemplateContextTypeRegistry;
+
+//   private TemplateStore templateStore;
+
    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
    @Override
    public void initialize()
    {
+      instance = this;
       IDE.getInstance().addControl(new Con());
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
       // IDE.getInstance().addControl(new CodeAssistCommand(), Docking.TOOLBAR_RIGHT);
@@ -76,30 +90,38 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      DOC_CONTEXT = event.getApplicationConfiguration().getContext() + "/ide/code-assistant/java/class-doc?fqn=";
+      REST_CONTEXT = event.getApplicationConfiguration().getContext();
+      DOC_CONTEXT = REST_CONTEXT + "/ide/code-assistant/java/class-doc?fqn=";
    }
-   // public static class CodeAssistCommand extends SimpleControl implements IDEControl
-   // {
-   //
-   // /** @param id */
-   // public CodeAssistCommand()
-   // {
-   // super("View/Run CodeAssist");
-   // setTitle("Run CodeAssist");
-   // setPrompt("Run CodeAssist");
-   // setEvent(new RunCodeAssistantEvent());
-   // setEnabled(true);
-   // setVisible(true);
-   // setImages(JavaClientBundle.INSTANCE.classItem(), JavaClientBundle.INSTANCE.clockItem());
-   // }
-   //
-   // /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
-   // @Override
-   // public void initialize()
-   // {
-   // // TODO Auto-generated method stub
-   //
-   // }
-   // }
+
+   public static JdtExtension get()
+   {
+      return instance;
+   }
+
+//   /**
+//    * @return
+//    */
+//   public ContextTypeRegistry getTemplateContextRegistry()
+//   {
+//      if (fCodeTemplateContextTypeRegistry == null)
+//      {
+//         fCodeTemplateContextTypeRegistry = new ContextTypeRegistry();
+//
+//         CodeTemplateContextType.registerContextTypes(fCodeTemplateContextTypeRegistry);
+//      }
+//
+//      return fCodeTemplateContextTypeRegistry;
+//   }
+//
+//   /**
+//    * @return
+//    */
+//   public TemplateStore getTemplateStore()
+//   {
+//      if (templateStore == null)
+//         templateStore = new TemplateStore();
+//      return templateStore;
+//   }
 
 }
