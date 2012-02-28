@@ -51,6 +51,7 @@ public class CommitTest extends BaseTest
    public static void setUp() throws Exception
    {
       VirtualFileSystemUtils.createDefaultProject(PROJECT);
+      Thread.sleep(3000);
    }
 
    @AfterClass

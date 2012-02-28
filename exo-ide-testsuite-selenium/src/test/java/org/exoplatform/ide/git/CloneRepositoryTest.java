@@ -61,7 +61,7 @@ public class CloneRepositoryTest extends BaseTest
       {
          VirtualFileSystemUtils.importZipProject(REPOSITORY, ZIP_PATH);
          VirtualFileSystemUtils.createDefaultProject(PROJECT);
-         Thread.sleep(4000);
+         Thread.sleep(3000);
       }
       catch (Exception e)
       {
@@ -74,9 +74,7 @@ public class CloneRepositoryTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-         Thread.sleep(1000);
          VirtualFileSystemUtils.delete(WS_URL + REPOSITORY);
-         Thread.sleep(1000);
       }
       catch (Exception e)
       {
@@ -155,7 +153,6 @@ public class CloneRepositoryTest extends BaseTest
 
       driver.navigate().to(WS_URL + PROJECT);
       
-      Thread.sleep(10000);
       new WebDriverWait(driver, 10).until(new ExpectedCondition<Boolean>()
       {
          @Override

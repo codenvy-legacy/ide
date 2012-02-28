@@ -42,9 +42,7 @@ public class Status extends AbstractTestModule
 
       public static final String MODIFIED = "modified: %s";
 
-      // TODO temporary changed:
-      // public static final String NOTHING_TO_COMMIT = "nothing to commit";
-      public static final String NOTHING_TO_COMMIT = "no changes added to commit";
+      public static final String NOTHING_TO_COMMIT = "nothing to commit (working directory clean)";
 
       public static final String NO_CHANGES_ADDED_TO_COMMIT = "no changes added to commit";
    }
