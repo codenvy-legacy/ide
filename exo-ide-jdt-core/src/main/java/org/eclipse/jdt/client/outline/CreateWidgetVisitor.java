@@ -106,7 +106,7 @@ public class CreateWidgetVisitor extends ASTVisitor
          // TODO
          DOM.setStyleAttribute(modifImage.getElement(), "position", "absolute");
          DOM.setStyleAttribute(modifImage.getElement(), "marginLeft", "-10px");
-         DOM.setStyleAttribute(modifImage.getElement(), "marginTop", "8px");
+         DOM.setStyleAttribute(modifImage.getElement(), "marginTop", "10px");
          modifImage.getElement().setAttribute("border", "0");
          html.appendHtmlConstant(modifImage.toString());
       }
@@ -315,7 +315,7 @@ public class CreateWidgetVisitor extends ASTVisitor
       {
 
          String span =
-            "<span style = \"position: absolute; top: -3px; margin-left: -16px; font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 9px; text-align: right;' \">";
+            "<span style = \"position: absolute; top: -4px; margin-left: -14px; font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 9px; text-align: right;' \">";
          span += isConstructor ? "<span class='item-modifier' style='color: #317441; font-weight:bold;'>c</span>" : "";
          span += (Modifier.isTransient(modifiers)) ? "<span class='item-modifier' style='color:#6d0000;'>t</span>" : "";
          span += (Modifier.isVolatile(modifiers)) ? "<span class='item-modifier' style='color:#6d0000'>v</span>" : "";
