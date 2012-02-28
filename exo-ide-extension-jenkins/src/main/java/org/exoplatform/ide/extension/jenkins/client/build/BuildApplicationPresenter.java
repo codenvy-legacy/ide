@@ -146,10 +146,8 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    {
       try
       {
-         VirtualFileSystem.getInstance().getChildren(
-            project,
-            new AsyncRequestCallback<List<Item>>(
-               new ChildrenUnmarshaller(new ArrayList<Item>()))
+         VirtualFileSystem.getInstance().getChildren(project,
+            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
 
                @Override
@@ -254,10 +252,9 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     */
    private void build(String jobName)
    {
-      String projectId = "";
       try
       {
-         JenkinsService.get().buildJob(vfs.getId(), projectId, jobName, new AsyncRequestCallback<Object>()
+         JenkinsService.get().buildJob(vfs.getId(), project.getId(), jobName, new AsyncRequestCallback<Object>()
          {
             @Override
             protected void onSuccess(Object result)
@@ -396,53 +393,58 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       {
          try
          {
-            JenkinsService.get().jobStatus(vfs.getId(), project.getId(), jobName, new AsyncRequestCallback<JobStatus>(new JenkinsJobStatusUnmarshaller(new JobStatus()))
-            {
-               @Override
-               protected void onSuccess(JobStatus status)
+            JenkinsService.get().jobStatus(vfs.getId(), project.getId(), jobName,
+               new AsyncRequestCallback<JobStatus>(new JenkinsJobStatusUnmarshaller(new JobStatus()))
                {
-                  updateJobStatus(status);
-
-                  if (status.getStatus() == Status.END)
+                  @Override
+                  protected void onSuccess(JobStatus status)
                   {
-                     IDE.fireEvent(new ApplicationBuiltEvent(status));
+                     updateJobStatus(status);
 
-                     try
+                     if (status.getStatus() == Status.END)
                      {
-                        JenkinsService.get().getJenkinsOutput(vfs.getId(), project.getId(), jobName,
-                           new AsyncRequestCallback<StringBuilder>(new StringContentUnmarshaller(new StringBuilder()))
-                           {
-                              @Override
-                              protected void onSuccess(StringBuilder result)
-                              {
-                                 showBuildMessage(result.toString());
-                              }
+                        IDE.fireEvent(new ApplicationBuiltEvent(status));
 
-                              @Override
-                              protected void onFailure(Throwable exception)
+                        try
+                        {
+                           JenkinsService.get().getJenkinsOutput(
+                              vfs.getId(),
+                              project.getId(),
+                              jobName,
+                              new AsyncRequestCallback<StringBuilder>(
+                                 new StringContentUnmarshaller(new StringBuilder()))
                               {
-                                 IDE.fireEvent(new ExceptionThrownEvent(exception));
-                              }
-                           });
+                                 @Override
+                                 protected void onSuccess(StringBuilder result)
+                                 {
+                                    showBuildMessage(result.toString());
+                                 }
+
+                                 @Override
+                                 protected void onFailure(Throwable exception)
+                                 {
+                                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                 }
+                              });
+                        }
+                        catch (RequestException e)
+                        {
+                           IDE.fireEvent(new ExceptionThrownEvent(e));
+                        }
                      }
-                     catch (RequestException e)
+                     else
                      {
-                        IDE.fireEvent(new ExceptionThrownEvent(e));
+                        schedule(delay);
                      }
                   }
-                  else
+
+                  protected void onFailure(Throwable exception)
                   {
-                     schedule(delay);
-                  }
-               }
+                     buildInProgress = false;
+                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  };
 
-               protected void onFailure(Throwable exception)
-               {
-                  buildInProgress = false;
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               };
-
-            });
+               });
          }
          catch (RequestException e)
          {
