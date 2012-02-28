@@ -170,21 +170,23 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
                }
 
             }
-            int length = activeFile.getContent().split("\n").length;
-            for (int i = 1; i <= length; i++)
-            {
-               editor.clearErrorMark(i);
-            }
+//            int length = activeFile.getContent().split("\n").length;
+//            for (int i = 1; i <= length; i++)
+//            {
+//               editor.clearErrorMark(i);
+//            }
+            editor.unmarkAllProblems();
             IDE.fireEvent(new UpdateOutlineEvent(unit, activeFile));
             if (unit.getProblems().length == 0 || editor == null)
                return;
 
             for (IProblem p : unit.getProblems())
             {
-               int sourceLineNumber = p.getSourceLineNumber();
-               if (sourceLineNumber == 0)
-                  sourceLineNumber = 1;
-               editor.setErrorMark(sourceLineNumber, p.getMessage());
+               editor.markProblem(new ProblemImpl(p));
+//               int sourceLineNumber = p.getSourceLineNumber();
+//               if (sourceLineNumber == 0)
+//                  sourceLineNumber = 1;
+//               editor.setErrorMark(sourceLineNumber, p.getMessage());
             }
          }
 

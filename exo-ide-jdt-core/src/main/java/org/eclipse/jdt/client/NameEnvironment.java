@@ -29,6 +29,7 @@ import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.client.env.BinaryTypeImpl;
 import org.eclipse.jdt.client.internal.codeassist.ISearchRequestor;
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod;
@@ -42,6 +43,7 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesInfoList;
@@ -281,7 +283,7 @@ public class NameEnvironment implements INameEnvironment
          }
       }
       String url =
-         "/rest/private" + "/ide/code-assistant/java/classes-by-prefix" + "?prefix=" + new String(simpleName)
+               JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/classes-by-prefix" + "?prefix=" + new String(simpleName)
             + "&projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
       try
       {
@@ -346,27 +348,42 @@ public class NameEnvironment implements INameEnvironment
    }-*/;
 
    /**
-    * @param qualifiedName
-    * @param b
-    * @param camelCaseMatch
-    * @param searchFor
-    * @param completionEngine
-    * @param monitor
+    * Must be used only by CompletionEngine. The progress monitor is used to be able to cancel completion operations
+    * 
+    * Find the top-level types that are defined in the current environment and whose name starts with the given prefix. The prefix
+    * is a qualified name separated by periods or a simple name (ex. java.util.V or V).
+    * 
+    * The types found are passed to one of the following methods (if additional information is known about the types):
+    * ISearchRequestor.acceptType(char[][] packageName, char[] typeName) ISearchRequestor.acceptClass(char[][] packageName, char[]
+    * typeName, int modifiers) ISearchRequestor.acceptInterface(char[][] packageName, char[] typeName, int modifiers)
+    * 
+    * This method can not be used to find member types... member types are found relative to their enclosing type.
     */
    public void findTypes(char[] qualifiedName, boolean b, boolean camelCaseMatch, int searchFor,
       final ISearchRequestor requestor, IProgressMonitor monitor)
    {
+      if(qualifiedName.length == 0)
+         return;
       AutoBean<TypesList> autoBean = JavaEditorExtension.AUTO_BEAN_FACTORY.types();
-      String url =
-         "/rest/private" + "/ide/code-assistant/java/find-by-prefix/" + new String(qualifiedName) + "?where=className"
-            + "&projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
+      String searchType = convertSearchFilterToModelFilter(searchFor);
+      String url = null;
+      if (searchType == null)
+         url =
+            JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/find-by-prefix/" + new String(qualifiedName)
+               + "?where=className" + "&projectid=" + projectId + "&vfsid="
+               + VirtualFileSystem.getInstance().getInfo().getId();
+      else
+         url =
+            JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/find-by-type/" + searchType + "?prefix="
+               + new String(qualifiedName) + "&projectid=" + projectId + "&vfsid="
+               + VirtualFileSystem.getInstance().getInfo().getId();
       try
       {
 
          String typesJson = findTypes(url);
          Splittable data = StringQuoter.split(typesJson);
          AutoBeanCodex.decodeInto(data, autoBean);
-         
+
          for (ShortTypeInfo info : autoBean.as().getTypes())
          {
 
@@ -379,6 +396,28 @@ public class NameEnvironment implements INameEnvironment
       catch (Throwable e)
       {
          IDE.fireEvent(new OutputEvent(e.getMessage(), Type.ERROR));
+      }
+   }
+
+   private static String convertSearchFilterToModelFilter(int searchFilter)
+   {
+      switch (searchFilter)
+      {
+         case IJavaSearchConstants.CLASS :
+            return JavaType.CLASS.name();
+         case IJavaSearchConstants.INTERFACE :
+            return JavaType.INTERFACE.name();
+         case IJavaSearchConstants.ENUM :
+            return JavaType.ENUM.name();
+         case IJavaSearchConstants.ANNOTATION_TYPE :
+            return JavaType.ANNOTATION.name();
+            // TODO
+            // case IJavaSearchConstants.CLASS_AND_ENUM:
+            // return NameLookup.ACCEPT_CLASSES | NameLookup.ACCEPT_ENUMS;
+            // case IJavaSearchConstants.CLASS_AND_INTERFACE:
+            // return NameLookup.ACCEPT_CLASSES | NameLookup.ACCEPT_INTERFACES;
+         default :
+            return null;
       }
    }
 

@@ -24,6 +24,7 @@ import com.google.gwt.core.client.RunAsyncCallback;
 import org.eclipse.jdt.client.codeassistant.AbstractJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.CompletionProposalCollector;
 import org.eclipse.jdt.client.codeassistant.FillArgumentNamesCompletionProposalCollector;
+import org.eclipse.jdt.client.codeassistant.TemplateCompletionProposalComputer;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.ui.CodeAssitantForm;
 import org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler;
@@ -123,6 +124,8 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
    private String beforeToken;
 
    private int currentLineNumber;
+   
+//   private TemplateCompletionProposalComputer templateCompletionProposalComputer = new TemplateCompletionProposalComputer();
 
    /**
     * 
@@ -201,6 +204,14 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
          int posX = currentEditor.getCursorOffsetX() - tokenToComplete.length() * 8 + 8;
          int posY = currentEditor.getCursorOffsetY() + 4;
          IJavaCompletionProposal[] javaCompletionProposals = collector.getJavaCompletionProposals();
+         
+//         List<IJavaCompletionProposal> templateProposals = templateCompletionProposalComputer.computeCompletionProposals(collector.getInvocationContext(), null);
+//         IJavaCompletionProposal[] array = templateProposals.toArray(new IJavaCompletionProposal[templateProposals.size()]);
+//         IJavaCompletionProposal[] proposals =
+//            new IJavaCompletionProposal[javaCompletionProposals.length + array.length];
+//         System.arraycopy(javaCompletionProposals, 0, proposals, 0, javaCompletionProposals.length);
+//         System.arraycopy(array, 0, proposals, javaCompletionProposals.length, array.length);
+         
          Arrays.sort(javaCompletionProposals, comparator);
          new CodeAssitantForm(posX, posY, tokenToComplete, javaCompletionProposals, this);
       }
@@ -268,6 +279,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
             case '<' :
             case '>' :
             case ',' :
+            case '@' :
                beforeToken = tokenLine.substring(0, i + 1);
                tokenToComplete = tokenLine.substring(i + 1);
                return;

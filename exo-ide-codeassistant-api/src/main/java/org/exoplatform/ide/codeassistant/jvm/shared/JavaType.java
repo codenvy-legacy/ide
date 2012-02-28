@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.codeassistant.jvm.shared;
 
-import java.lang.reflect.Modifier;
 
 /**
  * Created by The eXo Platform SAS.
@@ -38,7 +37,7 @@ public enum JavaType {
       {
          return ANNOTATION;
       }
-      else if (Modifier.isInterface(attr))
+      else if ((0x00000200 & attr) != 0)
       {
          return INTERFACE;
       }

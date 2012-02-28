@@ -763,10 +763,10 @@ public class CompletionProposalLabelProvider
       final int flags = proposal.getFlags();
       if (Flags.isEnum(flags))
          return JavaClientBundle.INSTANCE.enumItem();
-      else if (Flags.isInterface(flags))
-         return JavaClientBundle.INSTANCE.interfaceItem();
       else if (Flags.isAnnotation(flags))
          return JavaClientBundle.INSTANCE.annotationItem();
+      else if (Flags.isInterface(flags))
+         return JavaClientBundle.INSTANCE.interfaceItem();
       else
          return JavaClientBundle.INSTANCE.classItem();
    }
