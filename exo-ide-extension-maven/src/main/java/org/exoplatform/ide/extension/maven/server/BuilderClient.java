@@ -189,21 +189,6 @@ public class BuilderClient
       return doDownload(baseURL + "/builder/maven/log/" + buildID);
    }
 
-   /**
-    * Download result of build, typically result is *.war file. Note this method should not be called before successful
-    * end of build.
-    *
-    * @param buildID ID of build
-    * @return binary stream that contains result of build. Only *.war file expected at the moment.
-    * @throws IOException if any i/o errors occur
-    * @throws BuilderException any other errors related to build server internal state or parameter of client request
-    */
-   public InputStream download(String buildID) throws IOException, BuilderException
-   {
-      // Download artifact.
-      return doDownload(baseURL + "/builder/maven/download/" + buildID);
-   }
-
    private InputStream doDownload(String downloadURL) throws IOException, BuilderException
    {
       URL url = new URL(downloadURL);

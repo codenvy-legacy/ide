@@ -174,7 +174,9 @@ public class Builder
                if (0 == result.getExitCode())
                {
                   File artifact = result.getArtifacts()[0];
-                  return Response.ok(artifact, "application/zip").build();
+                  return Response.ok(artifact, "application/zip")
+                     .header("Content-Disposition", "attachment; filename=\"" + artifact.getName() + "\"")
+                     .build();
                }
 
                // Build is failed - nothing for download.

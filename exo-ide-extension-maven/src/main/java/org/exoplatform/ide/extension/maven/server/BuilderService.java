@@ -112,21 +112,4 @@ public class BuilderService
    {
       return builder.log(buildID);
    }
-
-   /**
-    * Download result of build, typically result is *.war file. Note this method should not be called before successful
-    * end of build. Client must check status with method {@link #status(String)} and if status is 'successful' call this
-    * method to get result of build.
-    *
-    * @param buildID ID of build
-    * @return binary stream that contains result of build. Only *.war file expected at the moment.
-    * @throws IOException if any i/o errors occur
-    * @throws BuilderException any other errors related to build server internal state or parameter of client request
-    */
-   @GET
-   @Path("download/{buildid}")
-   public InputStream download(@PathParam("buildid") String buildID) throws BuilderException, IOException
-   {
-      return builder.download(buildID);
-   }
 }
