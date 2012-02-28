@@ -33,17 +33,11 @@ import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
-import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectCreatedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -70,7 +64,6 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -80,9 +73,8 @@ import java.util.Set;
  * @version $Id: Jan 6, 2011 $
  * 
  */
-public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSourceToBuildPathHandler,
-   ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler, EditorFileOpenedHandler, VfsChangedHandler,
-   ConfigureClasspathHandler, ProjectOpenedHandler, ProjectClosedHandler
+public class ConfigureBuildPathPresenter implements AddSourceToBuildPathHandler, ItemsSelectedHandler,
+   VfsChangedHandler, ConfigureClasspathHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
    /**
     * 
@@ -150,19 +142,9 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
    private FileModel classPathFile;
 
    /**
-    * REST context.
-    */
-   private String restContext;
-
-   /**
     * Selected items in browser tree.
     */
    private Item selectedItem;
-
-   /**
-    * Opened file in editor.
-    */
-   private Map<String, FileModel> openedFiles;
 
    private VirtualFileSystemInfo vfsInfo;
 
@@ -173,10 +155,7 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
     */
    public ConfigureBuildPathPresenter()
    {
-      IDE.addHandler(ProjectCreatedEvent.TYPE, this);
-      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(AddSourceToBuildPathEvent.TYPE, this);
       IDE.addHandler(ConfigureClasspathEvent.TYPE, this);
@@ -257,14 +236,6 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
       List<GroovyClassPathEntry> groovyClassPathEntries = display.getClassPathEntryListGrid().getValue();
       groovyClassPathEntries.removeAll(itemsToRemove);
       display.getClassPathEntryListGrid().setValue(groovyClassPathEntries);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.event.ProjectCreatedHandler.groovy.event.ConfigureBuildPathHandler#onProjectCreated(org.exoplatform.ide.client.framework.event.ProjectCreatedEvent.groovy.event.ConfigureBuildPathEvent)
-    */
-   public void onProjectCreated(ProjectCreatedEvent event)
-   {
-      tryShowClasspathForProject(event.getProject());
    }
 
    @Override
@@ -528,14 +499,6 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent)
-    */
-   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
-   {
-      restContext = event.getConfiguration().getContext();
-   }
-
-   /**
     * Check remove button enable state.
     */
    private void checkRemoveButtonState()
@@ -553,14 +516,6 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
       {
          selectedItem = event.getSelectedItems().get(0);
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
-    */
-   public void onEditorFileOpened(EditorFileOpenedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
    }
 
    /**
@@ -582,7 +537,7 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
          display = GWT.create(Display.class);
          bindDisplay();
       }
-
+      display.asView().setTitle(GroovyExtension.LOCALIZATION_CONSTANT.configureBuildPathTitle(currentProject.getName()));
       IDE.getInstance().openView(display.asView());
 
       display.getClassPathEntryListGrid().setValue(new ArrayList<GroovyClassPathEntry>());

@@ -34,7 +34,7 @@ public interface GroovyLocalizationConstant extends Messages
    String chooseSourcePathViewTitle();
 
    @Key("view.title.configureBuildPath")
-   String configureBuildPathTitle();
+   String configureBuildPathTitle(String projectName);
 
    /*
     * Buttons

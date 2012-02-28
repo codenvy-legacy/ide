@@ -28,7 +28,6 @@ import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.extension.groovy.client.GroovyExtension;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
 
 import java.util.List;
@@ -98,7 +97,7 @@ public class ConfigureBuildPathView extends ViewImpl implements ConfigureBuildPa
     */
    public ConfigureBuildPathView()
    {
-      super(ID, ViewType.MODAL, GroovyExtension.LOCALIZATION_CONSTANT.configureBuildPathTitle(), null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, "", null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
 
       // rewrite default width 200px defined in org.exoplatform.gwtframework.ui.client.component.ListGrid
