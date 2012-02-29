@@ -24,6 +24,7 @@ import org.exoplatform.ide.core.AboutDialog;
 import org.exoplatform.ide.core.AskDialog;
 import org.exoplatform.ide.core.AskForValueDialog;
 import org.exoplatform.ide.core.AvailableDependencies;
+import org.exoplatform.ide.core.Build;
 import org.exoplatform.ide.core.Button;
 import org.exoplatform.ide.core.CodeAssistant;
 import org.exoplatform.ide.core.CustomizeHotkeys;
@@ -185,6 +186,8 @@ public class IDE
    public OpenFileByURL OPEN_FILE_BY_URL;
 
    public WelcomePage WELCOME_PAGE;
+   
+   public Build BUILD;
 
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
@@ -197,6 +200,7 @@ public class IDE
       ASK_DIALOG = PageFactory.initElements(driver, AskDialog.class);
       ASK_FOR_VALUE_DIALOG = PageFactory.initElements(driver, AskForValueDialog.class);
       AVAILABLE_DEPENDENCIES = PageFactory.initElements(driver, AvailableDependencies.class);
+      BUILD = PageFactory.initElements(driver, Build.class);
       BUTTON = PageFactory.initElements(driver, Button.class);
       CODEASSISTANT = PageFactory.initElements(driver, CodeAssistant.class);
       DELETE = PageFactory.initElements(driver, Delete.class);

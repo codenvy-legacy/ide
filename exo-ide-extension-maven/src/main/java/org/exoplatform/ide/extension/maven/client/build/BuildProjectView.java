@@ -42,7 +42,7 @@ import org.exoplatform.ide.extension.maven.client.BuilderExtension;
 public class BuildProjectView extends ViewImpl implements BuildProjectPresenter.Display
 {
    /**
-    * ID of view.
+    * Identifier of view.
     */
    private static final String ID = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectId();
 

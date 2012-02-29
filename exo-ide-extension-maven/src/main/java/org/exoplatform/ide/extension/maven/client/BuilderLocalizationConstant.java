@@ -53,6 +53,12 @@ public interface BuilderLocalizationConstant extends Messages
    @Key("messages.buildInProgress")
    String buildInProgress(String project);
 
+   @Key("messages.build_success")
+   String buildSuccess();
+
+   @Key("messages.build_failed")
+   String buildFailed();
+
    /*
     * BuildProjectView.
     */
@@ -61,4 +67,11 @@ public interface BuilderLocalizationConstant extends Messages
 
    @Key("buildProject.title")
    String buildProjectTitle();
+
+   // ----InitRequestHandler
+   @Key("build.started")
+   String buildStarted(String project);
+
+   @Key("build.finished")
+   String buildFinished(String project);
 }

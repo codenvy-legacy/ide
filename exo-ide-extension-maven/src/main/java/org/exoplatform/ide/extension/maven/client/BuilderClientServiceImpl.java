@@ -32,7 +32,7 @@ import org.exoplatform.ide.extension.maven.shared.BuildStatus;
  * Implementation of {@link BuilderClientService} service.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: MavenClientServiceImpl.java Feb 21, 2012 12:44:05 PM azatsarynnyy $
+ * @version $Id: BuilderClientServiceImpl.java Feb 21, 2012 12:44:05 PM azatsarynnyy $
  *
  */
 public class BuilderClientServiceImpl extends BuilderClientService
@@ -62,11 +62,6 @@ public class BuilderClientServiceImpl extends BuilderClientService
     * Get build log method's path.
     */
    private static final String LOG = BASE_URL + "/log";
-
-   /**
-    * Download result of build method's path.
-    */
-   private static final String DOWNLOAD = BASE_URL + "/download";
 
    /**
     * REST service context.
@@ -128,8 +123,8 @@ public class BuilderClientServiceImpl extends BuilderClientService
    {
       final String requestUrl = restServiceContext + STATUS + "/" + buildid;
       callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-      AsyncRequest.build(RequestBuilder.GET, requestUrl)//.loader(loader)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+         .send(callback);
    }
 
    /**
@@ -141,20 +136,6 @@ public class BuilderClientServiceImpl extends BuilderClientService
    public void log(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException
    {
       final String requestUrl = restServiceContext + LOG + "/" + buildid;
-
-      AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
-   }
-
-   /**
-    * Download result of build.
-    * 
-    * @throws RequestException
-    * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#download(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-   public void download(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException
-   {
-      final String requestUrl = restServiceContext + DOWNLOAD + "/" + buildid;
 
       AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);

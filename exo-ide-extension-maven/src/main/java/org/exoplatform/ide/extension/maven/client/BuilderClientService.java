@@ -27,7 +27,7 @@ import org.exoplatform.ide.extension.maven.shared.BuildStatus;
  * Client service for Maven builder.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: MavenService.java Feb 17, 2012 12:36:01 PM azatsarynnyy $
+ * @version $Id: BuilderClientService.java Feb 17, 2012 12:36:01 PM azatsarynnyy $
  *
  */
 public abstract class BuilderClientService
@@ -88,13 +88,4 @@ public abstract class BuilderClientService
     * @throws RequestException
     */
    public abstract void log(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
-
-   /**
-    * Download result of build.
-    * 
-    * @param buildid
-    * @param callback
-    * @throws RequestException
-    */
-   public abstract void download(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 }

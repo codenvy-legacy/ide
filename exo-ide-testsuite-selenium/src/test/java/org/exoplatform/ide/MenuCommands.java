@@ -119,7 +119,7 @@ public interface MenuCommands
       String VIEW = "View";
 
       String OUTLINE = "Outline";
-      
+
       String GO_TO_FOLDER = "Go to Folder";
 
       String GET_URL = "Get URL...";
@@ -149,7 +149,7 @@ public interface MenuCommands
       public static final String OPEN_LOCAL_FILE = "Open Local File...";
 
       public static final String OPEN_FILE_BY_PATH = "Open File By Path...";
-      
+
       public static final String OPEN_FILE_BY_URL = "Open by URL...";
 
       public static final String DOWNLOAD = "Download...";
@@ -175,7 +175,7 @@ public interface MenuCommands
       public static final String RESTORE_VERSION = "Restore to Version";
 
       public static final String REFRESH_TOOLBAR = "Refresh Selected Folder";
-      
+
       public static final String CONFIGURE_CLASS_PATH = "Configure Classpath...";
 
    }
@@ -299,12 +299,14 @@ public interface MenuCommands
       String CLOSE_PROJECT = "Close";
 
       String EMPTY_PROJECT = "Empty Project...";
-      
+
       String CREATE_PROJECT = "Create Project...";
 
       String FROM_TEMPLATE = "From Template...";
-      
-      String CONFIGURE_CLASS_PATH = "Configure Classpath...";      
+
+      String CONFIGURE_CLASS_PATH = "Configure Classpath...";
+
+      String BUILD_PROJECT = "Build";
    }
 
    public interface PaaS

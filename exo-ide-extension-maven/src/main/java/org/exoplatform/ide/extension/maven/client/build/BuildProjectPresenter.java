@@ -27,6 +27,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
@@ -76,6 +77,10 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    private static final String UNABLE_TO_GET_GIT_URL = BuilderExtension.LOCALIZATION_CONSTANT.unableToGetGitUrl();
 
    private static final String NEED_INITIALIZE_GIT = BuilderExtension.LOCALIZATION_CONSTANT.needInitializeGit();
+
+   private static final String BUILD_SUCCESS = BuilderExtension.LOCALIZATION_CONSTANT.buildSuccess();
+
+   private static final String BUILD_FAILED = BuilderExtension.LOCALIZATION_CONSTANT.buildFailed();
 
    private static final BuildStatus.Status BUILD_STATUS_SUCCESSFUL = BuildStatus.Status.SUCCESSFUL;
 
@@ -128,6 +133,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     */
    private ProjectModel project;
 
+   protected RequestStatusHandler statusHandler;
+
    public BuildProjectPresenter()
    {
       IDE.getInstance().addControl(new BuildProjectControl());
@@ -146,7 +153,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    {
       if (buildInProgress)
       {
-         String message = BuilderExtension.LOCALIZATION_CONSTANT.buildInProgress(project.getPath());
+         String message = BuilderExtension.LOCALIZATION_CONSTANT.buildInProgress(project.getPath().substring(1));
          Dialogs.getInstance().showError(message);
          return;
       }
@@ -156,6 +163,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       {
          project = ((ItemContext)selectedItems.get(0)).getProject();
       }
+
+      statusHandler = new BuildRequestStatusHandler(project.getPath());
 
       if (isGitRepository(project))
       {
@@ -199,6 +208,9 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                protected void onSuccess(StringBuilder result)
                {
                   gitUrl = result.toString();
+
+                  statusHandler.requestInProgress(gitUrl);
+
                   doBuild();
                }
 
@@ -237,17 +249,20 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
                   buildInProgress = true;
 
-                  showBuildMessage("Building project <b>" + project.getPath() + "</b>");
+                  showBuildMessage("Building project <b>" + project.getPath().substring(1) + "</b>");
 
                   display.startAnimation();
 
                   previousStatus = null;
+
                   refreshBuildStatusTimer.schedule(delay);
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
+                  statusHandler.requestError(gitUrl, exception);
+
                   IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.INFO));
                }
             });
@@ -367,17 +382,31 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       previousStatus = buildStatus.getStatus();
 
       StringBuilder message =
-         new StringBuilder("Building project <b>").append(project.getPath())
+         new StringBuilder("Building project <b>").append(project.getPath().substring(1))
             .append("</b> has been finished.\r\nResult: ").append(buildStatus.getStatus());
 
       if (buildStatus.getStatus() == BUILD_STATUS_SUCCESSFUL)
       {
+         IDE.fireEvent(new OutputEvent(BUILD_SUCCESS, Type.INFO));
+
+         statusHandler.requestFinished(gitUrl);
+
          message.append("\r\nYou can download result of build by <a href=\"").append(buildStatus.getDownloadUrl())
             .append("\">this link</a>");
       }
       else if (buildStatus.getStatus() == BUILD_STATUS_FAILED)
       {
-         message.append(buildStatus.getError());
+         IDE.fireEvent(new OutputEvent(BUILD_FAILED, Type.ERROR));
+
+         String errorMessage = buildStatus.getError();
+         String exceptionMessage = "Building of project failed";
+         if (!errorMessage.equals("null"))
+         {
+            message.append("\r\n" + errorMessage);
+            exceptionMessage += ": " + errorMessage;
+         }
+
+         statusHandler.requestError(gitUrl, new Exception(exceptionMessage));
       }
 
       showBuildMessage(message.toString());
