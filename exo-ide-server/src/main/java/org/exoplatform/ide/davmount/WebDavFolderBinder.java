@@ -200,6 +200,11 @@ public class WebDavFolderBinder
    public void cleanGitDirectory(String repositoryName, String fsWsDirName)
    {
       File fsWsDir = new File(fsWsDirName);
+      
+      if (!fsWsDir.exists())
+      {
+    	  LOG.warn("Unable to clean webdav dir {}, its not exists", fsWsDirName); 
+      }
 
       if (fsWsDir.list().length == 0 && fsWsDir.delete())
       {
