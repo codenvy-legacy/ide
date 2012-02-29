@@ -16,20 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.settings.event;
+package org.exoplatform.ide.client.framework.settings;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Created by The eXo Platform SAS .
+ * Created by The eXo Platform SAS.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @version $Id: $
  */
 
-public interface ApplicationSettingsSavedHandler extends EventHandler
+public interface SaveApplicationSettingsHandler extends EventHandler
 {
 
-   void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event);
+   void onSaveApplicationSettings(SaveApplicationSettingsEvent event);
 
 }

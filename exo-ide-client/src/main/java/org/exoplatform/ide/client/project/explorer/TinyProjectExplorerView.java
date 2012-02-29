@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.project.explorer;
 
+import com.google.gwt.event.dom.client.HasClickHandlers;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -27,7 +29,10 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.gwtframework.ui.client.component.IconButton;
+import org.exoplatform.gwtframework.ui.client.component.Toolbar;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.ItemTree;
@@ -71,63 +76,104 @@ public class TinyProjectExplorerView extends ViewImpl implements ProjectExplorer
 
    @UiField
    HTMLPanel projectNotOpenedPanel;
+   
+   @UiField
+   Toolbar toolbar;
+   
+   private IconButton linkWithEditorButton;
 
    private static final String TITLE = "Project Explorer";
+   
+   private static final String LINK_WITH_EDITOR = IDE.IDE_LOCALIZATION_CONSTANT.projectExplorerLinkWithEditor();
 
    public TinyProjectExplorerView()
    {
       super(ID, "navigation", TITLE, new Image(IDEImageBundle.INSTANCE.projectExplorer()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
+      
+      Image linkWithEditorNormal = new Image(IDEImageBundle.INSTANCE.linkWithEditor());
+      Image linkWithEditorDisabled = new Image(IDEImageBundle.INSTANCE.linkWithEditorDisabled());
+      
+      linkWithEditorButton = new IconButton(linkWithEditorNormal, linkWithEditorDisabled);
+      linkWithEditorButton.setTitle(LINK_WITH_EDITOR);
+      toolbar.addItem(linkWithEditorButton, true);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#getBrowserTree()
+    */
    @Override
    public TreeGridItem<Item> getBrowserTree()
    {
       return treeGrid;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#getSelectedItems()
+    */
    @Override
    public List<Item> getSelectedItems()
    {
       return treeGrid.getSelectedItems();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#selectItem(java.lang.String)
+    */
    @Override
    public boolean selectItem(String path)
    {
       return treeGrid.selectItem(path);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#deselectItem(java.lang.String)
+    */
    @Override
    public void deselectItem(String path)
    {
       treeGrid.deselectItem(path);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#updateItemState(org.exoplatform.ide.vfs.client.model.FileModel)
+    */
    @Override
    public void updateItemState(FileModel file)
    {
       treeGrid.updateFileState(file);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#setLockTokens(java.util.Map)
+    */
    @Override
    public void setLockTokens(Map<String, String> locktokens)
    {
       treeGrid.setLocktokens(locktokens);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#addItemsIcons(java.util.Map)
+    */
    @Override
    public void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons)
    {
       treeGrid.addItemsIcons(itemsIcons);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#removeItemIcons(java.util.Map)
+    */
    @Override
    public void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons)
    {
       treeGrid.removeItemIcons(itemsIcons);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#setProjectExplorerTreeVisible(boolean)
+    */
    @Override
    public void setProjectExplorerTreeVisible(boolean visible)
    {
@@ -135,10 +181,40 @@ public class TinyProjectExplorerView extends ViewImpl implements ProjectExplorer
       projectNotOpenedPanel.setVisible(!visible);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#setUpdateTreeValue(boolean)
+    */
    @Override
    public void setUpdateTreeValue(boolean updateTreeValue)
    {
       treeGrid.setUpdateValue(updateTreeValue);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#getLinkWithEditorButton()
+    */
+   @Override
+   public HasClickHandlers getLinkWithEditorButton()
+   {
+      return linkWithEditorButton;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#setLinkWithEditorButtonEnabled(boolean)
+    */
+   @Override
+   public void setLinkWithEditorButtonEnabled(boolean enabled)
+   {
+      linkWithEditorButton.setEnabled(enabled);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#setLinkWithEditorButtonSelected(boolean)
+    */
+   @Override
+   public void setLinkWithEditorButtonSelected(boolean selected)
+   {
+      linkWithEditorButton.setSelected(selected);
    }
 
 }

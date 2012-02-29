@@ -137,6 +137,9 @@ public interface IdeLocalizationConstant extends Constants
    @Key("output.clear")
    String outputClear();
 
+   @Key("projectExplorer.linkWithEditor")
+   String projectExplorerLinkWithEditor();
+
    /*
     * OutlineViewExtended
     */

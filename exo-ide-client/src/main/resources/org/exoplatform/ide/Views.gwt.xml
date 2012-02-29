@@ -95,7 +95,7 @@
       <when-type-is class="org.exoplatform.ide.client.editor.custom.OpenFileWithPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.output.OutputViewEx">
+   <replace-with class="org.exoplatform.ide.client.output.OutputView">
       <when-type-is class="org.exoplatform.ide.client.output.OutputPresenter.Display" />
    </replace-with>
 

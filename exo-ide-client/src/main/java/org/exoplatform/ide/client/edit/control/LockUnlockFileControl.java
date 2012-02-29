@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.client.edit.control;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -30,8 +27,8 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.vfs.client.event.ItemLockedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemLockedHandler;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
@@ -39,6 +36,9 @@ import org.exoplatform.ide.vfs.client.event.ItemUnlockedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Control for manual lock or unlock file.

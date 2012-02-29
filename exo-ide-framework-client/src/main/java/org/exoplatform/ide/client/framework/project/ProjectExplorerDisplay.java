@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.framework.project;
 
+import com.google.gwt.event.dom.client.HasClickHandlers;
+
 import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
@@ -92,13 +94,38 @@ public interface ProjectExplorerDisplay extends IsView
    void setLockTokens(Map<String, String> locktokens);
 
    /**
-    * Add info icons to main item icon
+    * Add info icons to main item icon.
     */
    void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons);
 
    /**
-    * Remove info icon from item
+    * Remove info icon from item.
     */
    void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
+   
+   /*
+    * Linking with Editor
+    */
+   
+   /**
+    * Returns Link with Editor button.
+    * 
+    * @return Link with Editor button
+    */
+   HasClickHandlers getLinkWithEditorButton();
+   
+   /**
+    * Enables or disables Link with Editor button.
+    * 
+    * @param enabled <b>true</b> makes Link with Editor button enabled, <b>false</b> makes disabled
+    */
+   void setLinkWithEditorButtonEnabled(boolean enabled);
+   
+   /**
+    * Adds or removes selection of Link with Editor button.
+    * 
+    * @param selected <b>true</b> makes button selected, <b>false</b> otherwise
+    */
+   void setLinkWithEditorButtonSelected(boolean selected);
 
 }

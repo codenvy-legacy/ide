@@ -45,8 +45,8 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;

@@ -34,6 +34,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -51,6 +52,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -218,7 +220,6 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
       defaultEditors = new LinkedHashMap<String, String>();
       defaultEditors.putAll(applicationSettings.getValueAsMap(Settings.DEFAULT_EDITORS));
 
-      
    }
 
    protected void lazyRestoreOpenedFiles()
@@ -336,18 +337,18 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
       }
    }
 
-   private void changeActiveFile()
-   {
-      if (activeFileURL != null)
-      {
-         FileModel activeFile = openedFiles.get(activeFileURL);
-         if (activeFile != null)
-         {
-            eventBus.fireEvent(new EditorChangeActiveFileEvent(activeFile));
+   private FileModel getFileByPath(String path) {
+      Iterator<FileModel> fileIter = openedFiles.values().iterator();
+      while (fileIter.hasNext()) {
+         FileModel file = fileIter.next();
+         if (file.getPath().equals(path)) {
+            return file;
          }
       }
+      
+      return null;
    }
-
+   
    public void onError(ExceptionThrownEvent event)
    {
       if (isLoadingOpenedFiles)
@@ -371,5 +372,28 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
          return;
       }
    }
+   
+   /**
+    * Final step - Changing the active file.
+    */
+   private void changeActiveFile()
+   {
+      if (activeFileURL != null)
+      {
+         FileModel file = getFileByPath(initialActiveFile);
+         if (file != null) {
+            eventBus.fireEvent(new EditorChangeActiveFileEvent(file));
+         }         
+      }
+      
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            IDE.fireEvent(new IDELoadCompleteEvent());
+         }
+      });      
+   }   
 
 }

@@ -44,7 +44,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
  * @version $
  */
 
-public class OutputViewEx extends ViewImpl implements org.exoplatform.ide.client.output.OutputPresenter.Display
+public class OutputView extends ViewImpl implements org.exoplatform.ide.client.output.OutputPresenter.Display
 {
 
    private static final String ID = "ideOutputView";
@@ -61,7 +61,7 @@ public class OutputViewEx extends ViewImpl implements org.exoplatform.ide.client
 
    private static final String CLEAR_OUTPUT = IDE.IDE_LOCALIZATION_CONSTANT.outputClear();
 
-   interface OutputViewExUiBinder extends UiBinder<Widget, OutputViewEx>
+   interface OutputViewExUiBinder extends UiBinder<Widget, OutputView>
    {
    }
 
@@ -78,7 +78,7 @@ public class OutputViewEx extends ViewImpl implements org.exoplatform.ide.client
 
    private boolean odd = true;
 
-   public OutputViewEx()
+   public OutputView()
    {
       super(ID, ViewType.OPERATION, TITLE, new Image(IDEImageBundle.INSTANCE.output()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));

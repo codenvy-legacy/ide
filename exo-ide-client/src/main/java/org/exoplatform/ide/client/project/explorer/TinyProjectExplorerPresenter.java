@@ -18,9 +18,13 @@
  */
 package org.exoplatform.ide.client.project.explorer;
 
+import com.google.gwt.user.client.Window;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -42,9 +46,17 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.AllFilesClosedEvent;
 import org.exoplatform.ide.client.framework.event.AllFilesClosedHandler;
 import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
+import org.exoplatform.ide.client.framework.event.FileOpenedHandler;
+import org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent;
+import org.exoplatform.ide.client.framework.event.IDELoadCompleteHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserHandler;
@@ -67,15 +79,19 @@ import org.exoplatform.ide.client.framework.project.OpenProjectHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettingsSavedEvent;
+import org.exoplatform.ide.client.framework.settings.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.operation.cutcopy.CopyItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.CutItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.PasteItemsEvent;
@@ -103,6 +119,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -116,7 +133,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
    ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowProjectExplorerHandler,
    ItemsSelectedHandler, ViewActivatedHandler, OpenProjectHandler, VfsChangedHandler, CloseProjectHandler,
-   AllFilesClosedHandler, GoToFolderHandler, EditorActiveFileChangedHandler
+   AllFilesClosedHandler, GoToFolderHandler, EditorActiveFileChangedHandler, IDELoadCompleteHandler, EditorFileOpenedHandler, EditorFileClosedHandler
 {
 
    private static final String DEFAULT_TITLE = "Project Explorer";
@@ -137,6 +154,12 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    private List<Item> navigatorSelectedItems = new ArrayList<Item>();
 
    private ProjectModel openedProject;
+   
+   private FileModel editorActiveFile;
+   
+   private ApplicationSettings applicationSettings;
+   
+   private boolean ideLoadComplete = false;   
 
    public TinyProjectExplorerPresenter()
    {
@@ -162,6 +185,9 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       IDE.addHandler(SelectItemEvent.TYPE, this);
       IDE.addHandler(GoToFolderEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(IDELoadCompleteEvent.TYPE, this);
+      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
    }
 
    private void ensureProjectExplorerDisplayCreated()
@@ -218,6 +244,9 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
             onKeyPressed(event.getNativeEvent().getKeyCode(), event.isControlKeyDown());
          }
       });
+      
+      display.getLinkWithEditorButton().addClickHandler(linkWithEditorButtonClickHandler);
+      display.setLinkWithEditorButtonSelected(linkingWithEditor);
    }
 
    /**
@@ -244,24 +273,23 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
     */
    protected void onItemSelected()
    {
-      updateSelectionTimer.cancel();
-      updateSelectionTimer.schedule(1);
-   }
-
-   private Timer updateSelectionTimer = new Timer()
-   {
-      @Override
-      public void run()
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
-         if (display == null)
+         @Override
+         public void execute()
          {
-            return;
-         }
+            if (display == null)
+            {
+               return;
+            }
 
-         selectedItems = display.getSelectedItems();
-         IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
-      }
-   };
+            selectedItems = display.getSelectedItems();
+            IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
+            
+            changeActiveFileOnSelection();
+         }
+      });      
+   }
 
    /**
     * Handling of mouse double clicking
@@ -481,26 +509,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       refreshNextFolder();
    }
 
-   // /**
-   // * Removes items for not to be displayed, if they are system ones
-   // * (for example, ".groovyclasspath" file).
-   // * To known system item or not call {@link Item} method: boolean isSystem().
-   // *
-   // * @param items
-   // */
-   // private void removeSystemItems(List<Item> items)
-   // {
-   // List<Item> itemsToRemove = new ArrayList<Item>();
-   // for (Item item : items)
-   // {
-   // if (item.getName().startsWith("."))
-   // {
-   // itemsToRemove.add(item);
-   // }
-   // }
-   // items.removeAll(itemsToRemove);
-   // }
-
    /**
     * Comparator for comparing items in received directory.
     */
@@ -568,17 +576,28 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
     */
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-      if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
+      applicationSettings = event.getApplicationSettings();
+      
+      if (applicationSettings.getValueAsMap("lock-tokens") == null)
       {
-         event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+         applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-
-      if (display != null)
+      
+      if (applicationSettings.getValueAsBoolean("project-explorer-linked-with-editor") == null)
       {
-         display.setLockTokens(event.getApplicationSettings().getValueAsMap("lock-tokens"));
+         applicationSettings.setValue("project-explorer-linked-with-editor", Boolean.FALSE, Store.COOKIES);
       }
+      linkingWithEditor = applicationSettings.getValueAsBoolean("project-explorer-linked-with-editor");
 
       ensureProjectExplorerDisplayCreated();
+      
+      display.setLockTokens(applicationSettings.getValueAsMap("lock-tokens"));
+      display.setLinkWithEditorButtonSelected(linkingWithEditor);
+      
+      if (openedProject == null)
+      {
+         display.setLinkWithEditorButtonEnabled(false);
+      }
    }
 
    // keyboard keys doesn't work within the TreeGrid in the Internet Explorer 8.0, Safari 5.0.2 and Google Chrome 7.0.5
@@ -704,6 +723,9 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
       IDE.fireEvent(new ProjectOpenedEvent(openedProject));
 
+      display.setLinkWithEditorButtonEnabled(true);
+      display.setLinkWithEditorButtonSelected(linkingWithEditor);
+
       navigatorSelectedItems.clear();
       navigatorSelectedItems.add(openedProject);
 
@@ -800,6 +822,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          display.getBrowserTree().setValue(null);
          display.asView().setTitle(DEFAULT_TITLE);
          display.setProjectExplorerTreeVisible(false);
+         display.setLinkWithEditorButtonEnabled(false);
       }
 
       selectedItems.clear();
@@ -815,33 +838,30 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       });
    }
 
-   private FileModel activeFile;
-
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      activeFile = event.getFile();
-   }
-
    @Override
    public void onGoToFolder(GoToFolderEvent event)
    {
-      if (display == null || openedProject == null || activeFile == null)
+      goToFolder();
+   }
+   
+   private void goToFolder() 
+   {
+      if (display == null || openedProject == null || editorActiveFile == null)
       {
          return;
       }
 
-      if (!activeFile.getPath().startsWith(openedProject.getPath()))
+      if (!editorActiveFile.getPath().startsWith(openedProject.getPath()))
       {
          return;
       }
 
-      if (display.selectItem(activeFile.getId()))
+      if (display.selectItem(editorActiveFile.getId()))
       {
          return;
       }
 
-      String expandPath = activeFile.getPath().substring(openedProject.getPath().length());
+      String expandPath = editorActiveFile.getPath().substring(openedProject.getPath().length());
       itemsToBeOpened.clear();
       itemsToBeOpened.add(openedProject.getPath());
 
@@ -923,5 +943,119 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
+   
+   /*
+    * Linking With Editor functionality
+    */
+   
+   /**
+    * Enabled or disabled Linking with Editor.
+    */
+   private boolean linkingWithEditor = false;
+   
+   /**
+    * Opened files.
+    */
+   private Map<String, FileModel> openedFiles;
+   
+   /**
+    * Link with Editor button click handler.
+    */
+   private ClickHandler linkWithEditorButtonClickHandler = new ClickHandler()
+   {
+      @Override
+      public void onClick(ClickEvent event)
+      {
+         linkingWithEditor = !linkingWithEditor;
+         display.setLinkWithEditorButtonSelected(linkingWithEditor);
+
+         applicationSettings.setValue("project-explorer-linked-with-editor", new Boolean(linkingWithEditor),
+            Store.COOKIES);
+
+         SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
+         /*
+          * fire event for show-hide line numbers command be able to update state.
+          */
+         IDE.fireEvent(new ApplicationSettingsSavedEvent(applicationSettings, SaveType.COOKIES));
+
+         if (linkingWithEditor)
+         {
+            goToFolder();
+         }
+      }
+   };
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      editorActiveFile = event.getFile();
+
+      if (ideLoadComplete && linkingWithEditor)
+      {
+         if (selectedItems.size() == 1 && editorActiveFile != null
+            && editorActiveFile.getId().equals(selectedItems.get(0).getId()))
+         {
+            return;
+         }
+
+         goToFolder();
+      }
+   }
+   
+   /**
+    * Changes the active file in Editor just after item selected in the Tree.
+    */
+   private void changeActiveFileOnSelection()
+   {
+      if (!ideLoadComplete || !linkingWithEditor || selectedItems.size() != 1)
+      {
+         return;
+      }
+
+      Item selectedItem = selectedItems.get(0);
+      FileModel file = openedFiles.get(selectedItem.getId());
+      if (file != null && editorActiveFile != null)
+      {
+         if (!file.getId().equals(editorActiveFile.getId()))
+         {
+            IDE.fireEvent(new EditorChangeActiveFileEvent(file));
+         }
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.event.IDELoadCompleteHandler#onIDELoadComplete(org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent)
+    */
+   @Override
+   public void onIDELoadComplete(IDELoadCompleteEvent event)
+   {
+      ideLoadComplete = true;
+
+      if (linkingWithEditor)
+      {
+         goToFolder();
+      }
+   }
+ 
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent)
+    */
+   @Override
+   public void onEditorFileClosed(EditorFileClosedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
+    */
+   @Override
+   public void onEditorFileOpened(EditorFileOpenedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+   }   
 
 }

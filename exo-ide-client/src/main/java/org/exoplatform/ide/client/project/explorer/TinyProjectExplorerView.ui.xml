@@ -15,13 +15,33 @@
 	</ui:style>
 
 	<c:Border margin="1">
+		<c:layer>
+         <g:LayoutPanel>
+            <g:layer top="0" height="28px">
+               <c:Toolbar height="28px" ui:field="toolbar"></c:Toolbar>
+            </g:layer>
+            <g:layer top="28px" bottom="0">
+				<g:ScrollPanel width="100%" height="100%">
+					<g:FlowPanel>
+						<n:ItemTree visible="false" styleName="{style.itemsTree}" ui:field="treeGrid" prefixId="navigation-" treeGridId="ideProjectExplorerItemTreeGrid"></n:ItemTree>
+						<g:HTMLPanel ui:field="projectNotOpenedPanel" width="100%" height="100%">
+                   			<table style="width:100%; height:100%;">
+	                      		<tr style="vertical-align:middle;">
+    	                     		<td style="text-align:center;">Project is not opened.</td>
+        	              		</tr>
+                   			</table>
+                		</g:HTMLPanel>
+					</g:FlowPanel>			
+				</g:ScrollPanel>
+            </g:layer>
+         </g:LayoutPanel>
+         </c:layer>
+	
+	<!-- 
       <c:layer>
 		<g:ScrollPanel>
-
 			<g:FlowPanel>
-				
 				<n:ItemTree visible="false" styleName="{style.itemsTree}" ui:field="treeGrid" prefixId="navigation-" treeGridId="ideProjectExplorerItemTreeGrid"></n:ItemTree>
-
                 <g:HTMLPanel ui:field="projectNotOpenedPanel" width="100%" height="100%">
                    <table style="width:100%; height:100%;">
                       <tr style="vertical-align:middle;">
@@ -29,11 +49,11 @@
                       </tr>
                    </table>
                 </g:HTMLPanel>
-                
 			</g:FlowPanel>
-			
 		</g:ScrollPanel>
       </c:layer>
+	 -->
+      
 	</c:Border>
 
 </ui:UiBinder>

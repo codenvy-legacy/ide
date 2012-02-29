@@ -18,8 +18,7 @@
  */
 package org.exoplatform.ide.client.documentation;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.documentation.RegisterDocumentationEvent;
@@ -29,8 +28,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -39,7 +38,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.core.client.GWT;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
