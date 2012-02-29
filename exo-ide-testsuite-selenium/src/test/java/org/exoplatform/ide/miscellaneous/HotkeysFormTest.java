@@ -44,6 +44,8 @@ import java.io.IOException;
  */
 public class HotkeysFormTest extends BaseTest
 {
+   private final static String PRODUCTION_SERVICE_PREFIX = "production/ide-home/users/" + USER_NAME
+      + "/settings/userSettings";
 
    private final static String PROJECT = HotkeysFormTest.class.getSimpleName();
 
@@ -53,7 +55,8 @@ public class HotkeysFormTest extends BaseTest
       deleteCookies();
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         VirtualFileSystemUtils.delete(ENTRY_POINT_URL + PROJECT);
+         VirtualFileSystemUtils.delete(ENTRY_POINT_URL_IDE + PRODUCTION_SERVICE_PREFIX);
       }
       catch (IOException e)
       {
@@ -77,6 +80,7 @@ public class HotkeysFormTest extends BaseTest
    {
       //step 1 create new project, open Customize Hotkey form
       //select CSS file and checks status of buttons 
+
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);

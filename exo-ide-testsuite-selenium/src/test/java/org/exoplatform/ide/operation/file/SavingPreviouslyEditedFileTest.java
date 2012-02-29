@@ -127,7 +127,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.EDITOR.closeFile(1);
 
-      refresh();
+      driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);

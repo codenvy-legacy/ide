@@ -151,6 +151,7 @@ public class RunRestServiceCommandTest extends BaseTest
       String msg = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(msg.contains("[ERROR] " + NON_VALID_FILE_NAME + " validation failed."));
 
+      
       IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
       IDE.EDITOR.waitFileContentModificationMark(NON_VALID_FILE_NAME);
 
