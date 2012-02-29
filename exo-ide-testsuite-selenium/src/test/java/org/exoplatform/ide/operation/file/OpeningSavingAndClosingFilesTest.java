@@ -73,7 +73,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       "//simple groovy script\n\nimport javax.ws.rs.Path\nimport javax.ws.rs.GET\nimport javax.ws.rs.PathParam\n\n@Path (\"/\")\npublic class HelloWorld{\n@Get\n@Path (\"helloworld/{name}\")\npublic String hello(PathParam(\"name\")String name){\n  return \"Hello\"+name\n  }\n  }";
 
    private static String DEFAULT_CONTENT_XML_FILE =
-      "<?xml version='1.0' encoding='UTF-8'?>\n<Module>\n  <UserPref>name=\"last_location\" datatype=\"hidden\"</<UserPref>\n</Module>";
+      "<?xml version='1.0' encoding='UTF-8'?>\n<Module>\n  <UserPref>name=\"last_location\" datatype=\"hidden\"</UserPref>\n</Module>";
 
    private static String DEFAULT_CONTENT_TXT_FILE = "text content";
 
