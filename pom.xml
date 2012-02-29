@@ -25,7 +25,7 @@
       <org.exoplatform.kernel.version>2.3.6-GA</org.exoplatform.kernel.version>
       <org.exoplatform.core.version>2.4.6-GA</org.exoplatform.core.version>
       <org.exoplatform.ws.version>2.2.6-GA</org.exoplatform.ws.version>
-      <org.exoplatform.gwtframework.version>1.2.0-M6-SNAPSHOT</org.exoplatform.gwtframework.version>
+      <org.exoplatform.gwtframework.version>1.2.0-M7-SNAPSHOT</org.exoplatform.gwtframework.version>
       <!-- CodeAssistant DataBase -->
        <ide.codeassistant.lucene.index.version>20120220</ide.codeassistant.lucene.index.version>
       <!-- Third parties -->
