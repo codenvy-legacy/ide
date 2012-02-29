@@ -19,56 +19,50 @@
 package org.exoplatform.ide.search;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
- *	
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:   ${date} ${time}
- *
+ * @version $Id: ${date} ${time}
+ * 
  */
 public class SearchInRootFolderTest extends BaseTest
 {
-   private static final String FOLDER_1 = "Users";
-
-   private static final String FOLDER_2 = "Test";
-
    private static final String PROJECT = SearchInRootFolderTest.class.getSimpleName();
 
-   private final static String restFileName = "Example.groovy";
+   private static final String folder1Name = "Users";
+
+   private static final String folder2Name = "Test";
+
+   private final String restFileName = "Example.groovy";
 
    private final String restFileMimeType = MimeType.TEXT_PLAIN;
 
-   private final static String copyofRestFileName = "CopyofExample.groovy";
+   private final String copyofRestFileName = "Copy Of Example.groovy";
+
+   private final String restFileContent = "// simple groovy script\n" + "import javax.ws.rs.Path\n"
+      + "import javax.ws.rs.GET\n" + "import javax.ws.rs.PathParam\n" + "@Path(\"/\")\n"
+      + "public class HelloWorld {\n" + "@GET\n" + "@Path(\"helloworld/{name}\")\n"
+      + "public String hello(@PathParam(\"name\") String name) {\n" + "return \"Hello \" + name\n" + "}\n" + "}\n";
 
    @BeforeClass
    public static void setUp()
    {
-      String filePath = "src/test/resources/org/exoplatform/ide/search/Example.groovy";
-
       try
       {
-         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
-         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_1);
-         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_2);
-         
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_PLAIN, WS_URL + PROJECT + "/" + FOLDER_1 + "/"
-            + restFileName);
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_PLAIN, WS_URL + PROJECT + "/" + FOLDER_2 + "/"
-            + restFileName);
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_PLAIN, WS_URL + PROJECT + "/" + FOLDER_2 + "/"
-            + copyofRestFileName);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (Exception e)
       {
@@ -76,44 +70,61 @@ public class SearchInRootFolderTest extends BaseTest
    }
 
    /**
+    * IDE-31:Searching file from root folder test.
+    * 
     * @throws Exception
     */
    @Test
    public void testSearchInRootFolder() throws Exception
    {
-      //step 1 open project an folders
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2);
+      IDE.FOLDER.createFolder(folder1Name);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + folder1Name);
 
-      //step 1 first search and check results
+      // Create and save
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + folder1Name + "/Untitled file.txt");
+      IDE.EDITOR.deleteFileContent(0);
+      IDE.EDITOR.typeTextIntoEditor(0, restFileContent);
+      IDE.EDITOR.saveAs(1, restFileName);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + folder1Name + "/" + restFileName);
+
+      // Create second folder
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      IDE.SEARCH.performSearch("/" + PROJECT, "Hello", "text/html\n");
-      IDE.SEARCH.waitSearchResultsOpened();
-      assertEquals(1, IDE.SEARCH.getResultsCount());
+      IDE.FOLDER.createFolder(folder2Name);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + folder2Name);
+      // Save in second folder first time
+      IDE.EDITOR.saveAs(1, copyofRestFileName);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + folder2Name + "/" + copyofRestFileName);
 
-      //step 2 return to project explorer and run new search. Check search results
-      IDE.PROJECT.EXPLORER.selectProjectTab(PROJECT);
+      // Save in second folder second time
+      IDE.EDITOR.saveAs(1, restFileName);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + folder2Name + "/" + restFileName);
+
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      IDE.SEARCH.performSearch("/" + PROJECT, "Hello", restFileMimeType + "\n");
-      IDE.SEARCH.waitSearchResultsOpened();
-      assertEquals(4, IDE.SEARCH.getResultsCount());
-      IDE.SEARCH.isFilePresent(PROJECT + "/" + FOLDER_1 + "/" + restFileName);
-      IDE.SEARCH.isFilePresent(PROJECT + "/" + FOLDER_2 + "/" + restFileName);
-      IDE.SEARCH.isFilePresent(PROJECT + "/" + FOLDER_2 + "/" + copyofRestFileName);
 
-      //step 3 open files from search three and check opening
-      IDE.SEARCH.selectItem(PROJECT + "/" + FOLDER_1 + "/" + restFileName);
-      IDE.SEARCH.doubleClickOnFile(PROJECT + "/" + FOLDER_1 + "/" + restFileName);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_1 + "/" + restFileName);
-      IDE.PERSPECTIVE.selectTabsOnExplorer("Search");
-      IDE.SEARCH.waitSearchResultsOpened();
-      IDE.SEARCH.selectItem(PROJECT + "/" + FOLDER_2 + "/" + copyofRestFileName);
-      IDE.SEARCH.doubleClickOnFile(PROJECT + "/" + FOLDER_2 + "/" + copyofRestFileName);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_2 + "/" + copyofRestFileName);
+      IDE.SEARCH.performSearch("/" + PROJECT, "Hello", "text/html");
+      IDE.SEARCH_RESULT.waitOpened();
+      IDE.SEARCH_RESULT.waitForItem(PROJECT);
+
+      assertEquals(1, IDE.SEARCH_RESULT.getResultCount());
+      IDE.SEARCH_RESULT.close();
+      IDE.SEARCH_RESULT.waitClosed();
+
+      IDE.SEARCH.performSearch("/" + PROJECT, "Hello", restFileMimeType);
+      IDE.SEARCH_RESULT.waitOpened();
+      IDE.SEARCH_RESULT.waitForItem(PROJECT);
+
+      assertEquals(4, IDE.SEARCH_RESULT.getResultCount());
+
+      assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + folder1Name + "/" + restFileName));
+      assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + folder2Name + "/" + restFileName));
+      assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + folder2Name + "/" + copyofRestFileName));
    }
 
    @AfterClass

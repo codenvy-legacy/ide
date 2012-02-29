@@ -18,20 +18,16 @@
  */
 package org.exoplatform.ide.operation.browse;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Map;
@@ -143,10 +139,10 @@ public class ItemOrderingTest extends BaseTest
       IDE.SEARCH.setMimeTypeValue(MimeType.TEXT_XML);
       IDE.SEARCH.setMimeTypeValue("\n");
       IDE.SEARCH.clickSearchButton();
-      IDE.SEARCH.waitSearchResultsOpened();
-      assertTrue(IDE.SEARCH.isFilePresent(PROJECT + "/" + TEST_FILE_1_2));
-      IDE.SEARCH.isFilePresent(PROJECT + "/" + UPPERCASE_TEST_FILE_1);
-      IDE.SEARCH.isFilePresent(PROJECT + "/" + TEST_FILE_1);
+      IDE.SEARCH_RESULT.waitOpened();
+      assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + TEST_FILE_1_2));
+      assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + UPPERCASE_TEST_FILE_1));
+      assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + TEST_FILE_1));
    }
 
    private void checkItemOrderingInNavigationPanel() throws Exception

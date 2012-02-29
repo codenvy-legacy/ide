@@ -31,9 +31,10 @@ import org.junit.Test;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class DeleteFolderTest extends BaseTest
 {
    private final static String PROJECT = DeleteFolderTest.class.getSimpleName();
@@ -65,10 +66,10 @@ public class DeleteFolderTest extends BaseTest
    public void testDeleteFolderFromToolbar() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
 
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
 
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME_TOOLBAR);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_TOOLBAR);
@@ -91,11 +92,11 @@ public class DeleteFolderTest extends BaseTest
    @Test
    public void testDeleteFolderFromMainMenu() throws Exception
    {
-      selenium.refresh();
+      driver.navigate().refresh();
 
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME_MENU);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_MENU);
 
@@ -103,7 +104,7 @@ public class DeleteFolderTest extends BaseTest
       IDE.DELETE.waitOpened();
       IDE.DELETE.clickOkButton();
       IDE.DELETE.waitClosed();
-      
+
       IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + FOLDER_NAME_MENU);
       Assert.assertFalse(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + FOLDER_NAME_MENU));
       assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_NAME_MENU).getStatusCode());

@@ -38,13 +38,13 @@ import java.util.Map;
  * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 
 public class GroovyTemplatePreviewTest extends BaseTest
 {
 
    private static final String PROJECT = GroovyTemplatePreviewTest.class.getSimpleName();
-   
+
    private final static String FILE_NAME = "GroovyTemplatePreviewTest.gtmpl";
 
    private static String GTMPL = "<html><body><% import org.exoplatform.services.security.Identity\n"
@@ -67,7 +67,7 @@ public class GroovyTemplatePreviewTest extends BaseTest
       {
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -87,29 +87,29 @@ public class GroovyTemplatePreviewTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-      
-      //open file
+
+      // open file
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
       IDE.EDITOR.waitTabPresent(1);
-      
+
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GROOVY_TEMPLATE_PREVIEW);
       IDE.PREVIEW.waitGtmplPreviewOpened();
       IDE.PREVIEW.selectPreviewIFrame();
-      assertTrue(selenium().isTextPresent("root"));
+      assertTrue(IDE.PREVIEW.getPreviewContent().contains(USER_NAME));
       IDE.selectMainFrame();
-      //XXX Switch frames doesn't work with Google Chrome WebDriver without sleep.
-      //Issue - http://code.google.com/p/selenium/issues/detail?id=1969
+      // XXX Switch frames doesn't work with Google Chrome WebDriver without sleep.
+      // Issue - http://code.google.com/p/selenium/issues/detail?id=1969
       Thread.sleep(500);
-      
-      //close preview tab and open again
+
+      // close preview tab and open again
       IDE.PREVIEW.closeView();
       IDE.PREVIEW.waitGtmplPreviewClosed();
       assertFalse(IDE.PREVIEW.isGtmplPreviewOpened());
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GROOVY_TEMPLATE_PREVIEW);
       IDE.PREVIEW.waitGtmplPreviewOpened();
       IDE.PREVIEW.selectPreviewIFrame();
-      assertTrue(selenium().isTextPresent("root"));
+      assertTrue(IDE.PREVIEW.getPreviewContent().contains(USER_NAME));
       IDE.selectMainFrame();
    }
 

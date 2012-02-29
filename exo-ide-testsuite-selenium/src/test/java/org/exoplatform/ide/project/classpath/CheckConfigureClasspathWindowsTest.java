@@ -32,18 +32,17 @@ import org.junit.Test;
 import java.io.IOException;
 
 /**
- * Check, that Configure Classpath and Choose source dialog windows
- * work correctly: buttons actions work correctly, and new entries 
- * are added to .groovyclasspath file of project.
+ * Check, that Configure Classpath and Choose source dialog windows work correctly: buttons actions work correctly, and new
+ * entries are added to .groovyclasspath file of project.
  * 
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Jan 13, 2011 $
- *
+ * 
  */
 public class CheckConfigureClasspathWindowsTest extends BaseTest
 {
    private static final String PROJECT = CheckConfigureClasspathWindowsTest.class.getSimpleName();
-   
+
    private static final String PROJECT_2 = CheckConfigureClasspathWindowsTest.class.getSimpleName() + "-2";
 
    @Before
@@ -51,11 +50,11 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
    {
       try
       {
-         //create exo-app project with .groovyclasspath file
+         // create exo-app project with .groovyclasspath file
          String projectPath = "src/test/resources/org/exoplatform/ide/project/exo-app.zip";
          VirtualFileSystemUtils.importZipProject(PROJECT, projectPath);
-         
-         //create default project with no .groovyclasspath file
+
+         // create default project with no .groovyclasspath file
          VirtualFileSystemUtils.createDefaultProject(PROJECT_2);
       }
       catch (Exception e)
@@ -82,20 +81,20 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT_2);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT_2);
-      
-      assertFalse(IDE.MENU.isCommandVisible(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH));
-      
+
+      assertFalse(IDE.MENU.isCommandVisible(MenuCommands.Project.PROJECT, MenuCommands.Project.CONFIGURE_CLASS_PATH));
+
       IDE.MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.CLOSE_PROJECT);
 
       IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT_2);
-      
-      //open project to configure classpath
+
+      // open project to configure classpath
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      assertTrue(IDE.MENU.isCommandVisible(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH));
-      
-      //call configure classpath form
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
+      assertTrue(IDE.MENU.isCommandVisible(MenuCommands.Project.PROJECT, MenuCommands.Project.CONFIGURE_CLASS_PATH));
+
+      // call configure classpath form
+      IDE.MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.CONFIGURE_CLASS_PATH);
       IDE.PROJECT.CLASSPATH.waitOpened();
 
       /*
@@ -106,9 +105,9 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       assertTrue(IDE.PROJECT.CLASSPATH.isAddButtonEnabled());
       assertFalse(IDE.PROJECT.CLASSPATH.isRemoveButtonEnabled());
       assertTrue(IDE.PROJECT.CLASSPATH.isPathPresent(WS_NAME + "#/" + PROJECT + "/"));
-      
-      /*PROJECT.
-       * Click "Add..." button and check "Choose source path" dialog
+
+      /*
+       * PROJECT. Click "Add..." button and check "Choose source path" dialog
        */
       IDE.PROJECT.CLASSPATH.clickAddButton();
       IDE.PROJECT.CLASSPATH_SOURCE.waitOpened();
@@ -117,29 +116,28 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       assertTrue(IDE.PROJECT.CLASSPATH_SOURCE.isTreeVisible());
       assertTrue(IDE.PROJECT.CLASSPATH_SOURCE.isPathPresent(PROJECT));
       assertTrue(IDE.PROJECT.CLASSPATH_SOURCE.isPathPresent(PROJECT_2));
-      //select not root item
+      // select not root item
       IDE.PROJECT.CLASSPATH_SOURCE.selectItem(PROJECT_2);
       IDE.PROJECT.CLASSPATH_SOURCE.waitOkButtonEnabled(true);
-      //click ok button
+      // click ok button
       IDE.PROJECT.CLASSPATH_SOURCE.clickOkButton();
-      //"Choose source" window dissapeared.
+      // "Choose source" window dissapeared.
       IDE.PROJECT.CLASSPATH_SOURCE.waitClosed();
-      //New item in Configure Classpath list grid appeared.
+      // New item in Configure Classpath list grid appeared.
       assertTrue(IDE.PROJECT.CLASSPATH.isPathPresent(WS_NAME + "#/" + PROJECT + "/"));
       assertTrue(IDE.PROJECT.CLASSPATH.isPathPresent(WS_NAME + "#/" + PROJECT_2 + "/"));
-      
-      //Select folder path and check, that remove button is enabled
+
+      // Select folder path and check, that remove button is enabled
       IDE.PROJECT.CLASSPATH.selectPath(WS_NAME + "#/" + PROJECT_2 + "/");
       assertTrue(IDE.PROJECT.CLASSPATH.isRemoveButtonEnabled());
       assertTrue(IDE.PROJECT.CLASSPATH.isSaveButtonEnabled());
-      
-      //Click remove button and check, that element was removed
+
+      // Click remove button and check, that element was removed
       IDE.PROJECT.CLASSPATH.clickRemoveButton();
       IDE.PROJECT.CLASSPATH.waitPathRemoved(WS_NAME + "#/" + PROJECT_2 + "/");
-      
+
       /*
-       * Add element to list grid. Than click cancel button 
-       * to check, that all changes will be canceled.
+       * Add element to list grid. Than click cancel button to check, that all changes will be canceled.
        */
       IDE.PROJECT.CLASSPATH.clickAddButton();
       IDE.PROJECT.CLASSPATH_SOURCE.waitOpened();
@@ -154,7 +152,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       /*
        * Open form and check, that only one element is present
        */
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.CONFIGURE_CLASS_PATH);
+      IDE.MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.CONFIGURE_CLASS_PATH);
       IDE.PROJECT.CLASSPATH.waitOpened();
 
       assertTrue(IDE.PROJECT.CLASSPATH.isPathPresent(WS_NAME + "#/" + PROJECT + "/"));
@@ -169,12 +167,12 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       IDE.PROJECT.CLASSPATH_SOURCE.waitOkButtonEnabled(true);
       IDE.PROJECT.CLASSPATH_SOURCE.clickOkButton();
       IDE.PROJECT.CLASSPATH_SOURCE.waitClosed();
-      //New item in Configure Classpath list grid appeared.
+      // New item in Configure Classpath list grid appeared.
       assertTrue(IDE.PROJECT.CLASSPATH.isPathPresent(WS_NAME + "#/" + PROJECT_2 + "/"));
       IDE.PROJECT.CLASSPATH.clickSaveButton();
       IDE.PROJECT.CLASSPATH.waitClosed();
-      
-      //Check file .groovyclasspath, that entry was added.
+
+      // Check file .groovyclasspath, that entry was added.
       Response response = VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + ".groovyclasspath");
       assertTrue(response.getData().contains(WS_NAME + "#/" + PROJECT_2 + "/"));
    }

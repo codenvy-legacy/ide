@@ -33,39 +33,40 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public class Preview extends AbstractTestModule
 {
-   
+
    private static final String GROOVY_TEMPLATE_PREVIEW = "//div[@view-id='Preview']";
 
    private static final String GADGET_PREVIEW = "//div[@view-id='gadgetpreview']";
 
    private static final String HTML_PREVIEW = "//div[@view-id='idePreviewHTMLView']";
 
-   //XXX: only for groovy template and netvibes preview
+   // XXX: only for groovy template and netvibes preview
    private static final String PREVIEW_FRAME_ID = "eXo-IDE-preview-frame";
-   
+
    private static final String PREVIEW_HTML_FRAME_ID = "//iframe[@class='gwt-Frame']";
-   
+
    private static final String GADGET_PREVIEW_IFRAME = GADGET_PREVIEW + "//iframe";
 
    private static final String VIEW_TITLE = "Preview";
-   
+
    @FindBy(xpath = HTML_PREVIEW)
    private WebElement htmlPreview;
 
    @FindBy(xpath = PREVIEW_HTML_FRAME_ID)
    private WebElement htmlIframePreview;
-   
+
    @FindBy(xpath = GADGET_PREVIEW)
    private WebElement gadgetPreview;
-   
+
    @FindBy(xpath = GADGET_PREVIEW_IFRAME)
    private WebElement gadgetIframe;
 
    @FindBy(xpath = GROOVY_TEMPLATE_PREVIEW)
    private WebElement gtmplPreview;
 
-   
-   
+   @FindBy(tagName = "body")
+   private WebElement body;
+
    /**
     * Wait for HTML preview view opened.
     * 
@@ -215,26 +216,26 @@ public class Preview extends AbstractTestModule
          }
       });
    }
-   
+
    public void waitForCloseButton()
    {
       new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
-         {
+      {
 
-            @Override
-            public Boolean apply(WebDriver input)
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
             {
-               try
-               {
-                  WebElement closeButton = IDE().PERSPECTIVE.getCloseViewButton(VIEW_TITLE);
-                  return closeButton != null && closeButton.isDisplayed() && closeButton.isEnabled();
-               }
-               catch (NoSuchElementException e)
-               {
-                  return false;
-               }
+               WebElement closeButton = IDE().PERSPECTIVE.getCloseViewButton(VIEW_TITLE);
+               return closeButton != null && closeButton.isDisplayed() && closeButton.isEnabled();
             }
-         });
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
@@ -253,7 +254,7 @@ public class Preview extends AbstractTestModule
          return false;
       }
    }
-   
+
    /**
     * Returns opened state of Gadget preview view.
     * 
@@ -270,7 +271,7 @@ public class Preview extends AbstractTestModule
          return false;
       }
    }
-   
+
    /**
     * Returns opened state of GTMPL preview view.
     * 
@@ -297,7 +298,7 @@ public class Preview extends AbstractTestModule
    {
       return IDE().PERSPECTIVE.isViewActive(htmlPreview);
    }
-   
+
    /**
     * Returns active state of GTMPL preview view.
     * 
@@ -307,7 +308,7 @@ public class Preview extends AbstractTestModule
    {
       return IDE().PERSPECTIVE.isViewActive(gtmplPreview);
    }
-   
+
    /**
     * Returns active state of Gadget preview view.
     * 
@@ -325,9 +326,11 @@ public class Preview extends AbstractTestModule
    {
       driver().switchTo().frame(PREVIEW_FRAME_ID);
    }
-   
 
-   
+   public String getPreviewContent()
+   {
+      return body.getText();
+   }
 
    /**
     * Select preview HTML frame.
@@ -337,8 +340,6 @@ public class Preview extends AbstractTestModule
       driver().switchTo().frame(htmlIframePreview);
    }
 
-   
-   
    public void selectGadgetPreviewIframe()
    {
       driver().switchTo().frame(gadgetIframe);

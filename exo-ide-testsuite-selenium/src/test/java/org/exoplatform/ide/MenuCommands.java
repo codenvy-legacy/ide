@@ -176,8 +176,6 @@ public interface MenuCommands
 
       public static final String REFRESH_TOOLBAR = "Refresh Selected Folder";
 
-      public static final String CONFIGURE_CLASS_PATH = "Configure Classpath...";
-
    }
 
    public interface Edit

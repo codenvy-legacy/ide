@@ -18,29 +18,27 @@
  */
 package org.exoplatform.ide.search;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class SearchByMimeTypeTest extends BaseTest
 {
 
-   private static final String PROJECT = SearchInRootFolderTest.class.getSimpleName();
+   private static final String PROJECT = SearchByMimeTypeTest.class.getSimpleName();
 
    private static final String FOLDER_NAME_1 = "Users";
 
@@ -51,24 +49,25 @@ public class SearchByMimeTypeTest extends BaseTest
    private static final String FILE_NAME_2 = "CopyOfExample.js";
 
    private static final String FILE_CONTENT = "// CodeMirror main module"
-      + "var CodeMirrorConfig = window.CodeMirrorConfig || {};\n" + "var CodeMirror = (function(){\n"
-      + "function setDefaults(object, defaults) {\n" + "for (var option in defaults) {\n"
-      + "if (!object.hasOwnProperty(option))\n" + "object[option] = defaults[option];\n" + "}\n" + "}\n"
-      + "function forEach(array, action) {\n" + "for (var i = 0; i < array.length; i++)\n" + "action(array[i]);\n"
-      + "}";
+      + "var CodeMirrorConfig = window.CodeMirrorConfig || {};\n"
+
+      + "var CodeMirror = (function(){\n" + "function setDefaults(object, defaults) {\n"
+      + "for (var option in defaults) {\n" + "if (!object.hasOwnProperty(option))\n"
+      + "object[option] = defaults[option];\n" + "}\n" + "}\n" + "function forEach(array, action) {\n"
+      + "for (var i = 0; i < array.length; i++)\n" + "action(array[i]);\n" + "}";
 
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
-         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME_1);
-         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME_2);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
 
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME_1);
          VirtualFileSystemUtils.put(FILE_CONTENT.getBytes(), MimeType.APPLICATION_JAVASCRIPT, WS_URL + PROJECT + "/"
             + FOLDER_NAME_1 + "/" + FILE_NAME_1);
 
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME_2);
          VirtualFileSystemUtils.put(FILE_CONTENT.getBytes(), MimeType.APPLICATION_JAVASCRIPT, WS_URL + PROJECT + "/"
             + FOLDER_NAME_2 + "/" + FILE_NAME_2);
       }
@@ -79,44 +78,42 @@ public class SearchByMimeTypeTest extends BaseTest
 
    /**
     * IDE-32:Searching file by Mime Type from subfolder test.
-    *  
+    * 
     */
    @Test
    public void testSearchByMimeType() throws Exception
    {
-      //step 1 open project an folders
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME_1);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME_2);
 
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_1);
 
-      //step 2 search js file in Test folder and check
-      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_2);
-      IDE.SEARCH.performSearch("/" + PROJECT + "/" + FOLDER_NAME_2, "", MimeType.APPLICATION_JAVASCRIPT);
-      IDE.SEARCH.waitSearchResultsOpened();
-      IDE.SEARCH.isFilePresent(PROJECT + "/" + FOLDER_NAME_2 + "/" + FILE_NAME_2);
+      IDE.SEARCH.performSearch("/" + PROJECT + "/" + FOLDER_NAME_1, "", MimeType.APPLICATION_JAVASCRIPT);
+      IDE.SEARCH_RESULT.waitOpened();
+      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
+      assertFalse(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + FOLDER_NAME_2 + "/" + FILE_NAME_2));
 
-      //step 3 search js files in all project and check search result
-      IDE.PROJECT.EXPLORER.selectProjectTab(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME_2);
+      IDE.SEARCH_RESULT.openItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
+
+      IDE.SEARCH_RESULT.close();
+      IDE.SEARCH_RESULT.waitClosed();
+
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.SEARCH.performSearch("/" + PROJECT, "", MimeType.APPLICATION_JAVASCRIPT);
-      IDE.SEARCH.waitSearchResultsOpened();
-      assertTrue(IDE.SEARCH.isFilePresent(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1));
-      assertTrue(IDE.SEARCH.isFilePresent(PROJECT + "/" + FOLDER_NAME_2 + "/" + FILE_NAME_2));
 
-      //step 4 open first file in search tree
-      IDE.SEARCH.selectItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
-      IDE.SEARCH.doubleClickOnFile(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
+      IDE.SEARCH_RESULT.waitOpened();
+      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
+      assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + FOLDER_NAME_2 + "/" + FILE_NAME_2));
    }
 
    @AfterClass
    public static void tearDown() throws IOException
    {
-      VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME_1);
+      VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME_2);
    }
 }

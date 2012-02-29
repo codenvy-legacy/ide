@@ -152,7 +152,7 @@ public class CreateProject extends AbstractTestModule
     */
    public void createProject(String name) throws Exception
    {
-      // not working yet 
+      //TODO not working yet 
 //      IDE().MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.NEW, MenuCommands.Project.CREATE_PROJECT);
 //      waitOpened();
 //      setProjectName(name);

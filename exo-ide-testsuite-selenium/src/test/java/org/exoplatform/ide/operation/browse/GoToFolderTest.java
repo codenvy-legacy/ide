@@ -21,12 +21,10 @@ package org.exoplatform.ide.operation.browse;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Map;
@@ -153,9 +151,9 @@ public class GoToFolderTest extends BaseTest
       IDE.TOOLBAR.runCommand(MenuCommands.File.SEARCH);
       IDE.SEARCH.waitPerformSearchOpened();
       IDE.SEARCH.clickSearchButton();
-      IDE.SEARCH.waitSearchResultsOpened();
+      IDE.SEARCH_RESULT.waitOpened();
 
-      IDE.SEARCH.doubleClickOnFile(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
+      IDE.SEARCH_RESULT.openItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       //TODO After fix issue-IDE-1458 should be work

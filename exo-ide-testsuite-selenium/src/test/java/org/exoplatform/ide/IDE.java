@@ -59,6 +59,7 @@ import org.exoplatform.ide.core.RESTServiceDiscovery;
 import org.exoplatform.ide.core.Rename;
 import org.exoplatform.ide.core.SaveAsTemplate;
 import org.exoplatform.ide.core.Search;
+import org.exoplatform.ide.core.SearchResult;
 import org.exoplatform.ide.core.SelectWorkspace;
 import org.exoplatform.ide.core.Statusbar;
 import org.exoplatform.ide.core.Templates;
@@ -148,6 +149,8 @@ public class IDE
 
    public Search SEARCH;
 
+   public SearchResult SEARCH_RESULT;
+
    public Output OUTPUT;
 
    public Properties PROPERTIES;
@@ -173,7 +176,7 @@ public class IDE
    public Login LOGIN;
 
    public LockFile LOCK_FILE;
-   
+
    public LogReader LOG_READER;
 
    public CustomizeToolbar CUSTOMIZE_TOOLBAR = new CustomizeToolbar();
@@ -185,11 +188,11 @@ public class IDE
    public CustomizeHotkeys CUSTOMIZE_HOTKEYS;
 
    public OpenFileByURL OPEN_FILE_BY_URL;
-   
+
    public OpenFileByPath OPEN_FILE_BY_PATH;
 
    public WelcomePage WELCOME_PAGE;
-   
+
    public Build BUILD;
 
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
@@ -229,6 +232,7 @@ public class IDE
       SAVE_AS_TEMPLATE = PageFactory.initElements(driver, SaveAsTemplate.class);
       SELECT_WORKSPACE = PageFactory.initElements(driver, SelectWorkspace.class);
       SEARCH = PageFactory.initElements(driver, Search.class);
+      SEARCH_RESULT = PageFactory.initElements(driver, SearchResult.class);
       STATUSBAR = PageFactory.initElements(driver, Statusbar.class);
       TOOLBAR = PageFactory.initElements(driver, Toolbar.class);
       TEMPLATES = PageFactory.initElements(driver, Templates.class);

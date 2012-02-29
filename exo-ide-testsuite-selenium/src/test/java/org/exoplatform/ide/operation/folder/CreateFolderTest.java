@@ -19,12 +19,14 @@
 package org.exoplatform.ide.operation.folder;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -38,7 +40,19 @@ public class CreateFolderTest extends BaseTest
    private static String FOLDER_NAME_DEFAULT = "New Folder";
 
    private static String PROJECT = CreateFolderTest.class.getSimpleName();
-
+   
+   @Before
+   public void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+      }
+      catch (Exception e)
+      {
+      }
+   }
+   
    @Test
    public void testCreateFolderNotInProject() throws Exception
    {
@@ -55,13 +69,12 @@ public class CreateFolderTest extends BaseTest
    @Test
    public void testCreateFolder() throws Exception
    {
-      selenium.refresh();
-
       IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.CREATE.createProject(PROJECT);
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      Assert.assertTrue(IDE.TOOLBAR.isButtonFromNewPopupMenuEnabled(MenuCommands.New.FOLDER));
+      assertTrue(IDE.TOOLBAR.isButtonFromNewPopupMenuEnabled(MenuCommands.New.FOLDER));
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
       IDE.FOLDER.waitOpened();
@@ -81,7 +94,7 @@ public class CreateFolderTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + PROJECT + "/");
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {

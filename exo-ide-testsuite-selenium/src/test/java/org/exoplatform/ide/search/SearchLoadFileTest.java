@@ -97,11 +97,11 @@ public class SearchLoadFileTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER);
       IDE.SEARCH.performSearch("/" + PROJECT, "", MimeType.APPLICATION_GROOVY);
 
-      IDE.SEARCH.waitSearchResultsOpened();
+   /*   IDE.SEARCH.waitSearchResultsOpened();
       IDE.SEARCH.isFilePresent(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);
       IDE.SEARCH.selectItem(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);
       IDE.SEARCH.doubleClickOnFile(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);*/
 
       assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.DELETE));
       assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM));

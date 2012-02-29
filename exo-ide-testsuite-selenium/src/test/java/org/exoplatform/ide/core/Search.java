@@ -20,16 +20,14 @@ package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertEquals;
 
-import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.Utils;
-
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -51,10 +49,6 @@ public class Search extends AbstractTestModule
 
       String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
-      String SEARCH_RESULTS_VIEW_ID = "ideSearchResultView";
-
-      String SEARCH_RESULTS_VIEW_LOCATOR = "//div[@view-id='" + SEARCH_RESULTS_VIEW_ID + "']";
-
       String PATH_FIELD_ID = "ideSearchFormPathField";
 
       String CONTAINING_TEXT_FIELD_ID = "ideSearchFormContentField";
@@ -64,19 +58,10 @@ public class Search extends AbstractTestModule
       String SEARCH_BUTTON_ID = "ideSearchFormSearchButton";
 
       String CANCEL_BUTTON_ID = "ideSearchFormCancelButton";
-
-      String SEARCH_RESULT_TREE = "ideSearchResultItemTreeGrid";
-
-      String SEARCH_RESULT_SELECTOR = "div#" + SEARCH_RESULT_TREE + " div[id^=" + TREE_PREFIX_ID + "]";
-
-      String SEARCH_ROOT = "div.ide-Tree-item-selected";
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
    private WebElement performSearchView;
-
-   @FindBy(xpath = Locators.SEARCH_RESULTS_VIEW_LOCATOR)
-   private WebElement searchResultsView;
 
    @FindBy(name = Locators.PATH_FIELD_ID)
    private WebElement pathField;
@@ -93,12 +78,6 @@ public class Search extends AbstractTestModule
    @FindBy(id = Locators.CANCEL_BUTTON_ID)
    private WebElement cancelButton;
 
-   @FindBy(id = Locators.SEARCH_RESULT_TREE)
-   private WebElement resultTree;
-
-   @FindBy(id = Locators.SEARCH_RESULT_TREE)
-   private WebElement rootFolder;
-
    /**
     * Wait Perform search view opened.
     * 
@@ -106,7 +85,7 @@ public class Search extends AbstractTestModule
     */
    public void waitPerformSearchOpened() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -144,30 +123,6 @@ public class Search extends AbstractTestModule
             catch (NoSuchElementException e)
             {
                return true;
-            }
-         }
-      });
-   }
-
-   /**
-    * Wait containingTextField
-    * 
-    * @throws Exception
-    */
-   public void waitContainingTextValue() throws Exception
-   {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               return containingTextField != null && containingTextField.isDisplayed();
-            }
-            catch (NoSuchElementException e)
-            {
-               return false;
             }
          }
       });
@@ -254,7 +209,7 @@ public class Search extends AbstractTestModule
     */
    public void setMimeTypeValue(String value) throws InterruptedException
    {
-      IDE().INPUT.typeToElement(mimeTypeField, value, true);
+      IDE().INPUT.typeToElement(mimeTypeField, value+ Keys.ENTER);
    }
 
    /**
@@ -287,153 +242,20 @@ public class Search extends AbstractTestModule
       waitPerformSearchOpened();
 
       assertEquals(checkPath, getPathValue());
-      waitContainingTextValue();
-      containingTextField.click();
-      //need for set focus in CHROME browser
-      Thread.sleep(500);
       setContainingTextValue(text);
-      mimeTypeField.click();
       setMimeTypeValue(mimeType);
       clickSearchButton();
+
       waitPerformSearchClosed();
    }
 
    /**
-    * Wait Search results view opened.
-    * 
-    * @throws Exception
-    */
-   public void waitSearchResultsOpened() throws Exception
-   {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               return (searchResultsView != null && searchResultsView.isDisplayed() && resultTree != null && resultTree
-                  .isDisplayed());
-            }
-            catch (NoSuchElementException e)
-            {
-               return false;
-            }
-         }
-      });
-   }
-
-   /**
-    * Wait Search results view closed.
-    * 
-    * @throws Exception
-    */
-   public void waitSearchResultsClosed() throws Exception
-   {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               input.findElement(By.xpath(Locators.SEARCH_RESULTS_VIEW_LOCATOR));
-               return false;
-            }
-            catch (NoSuchElementException e)
-            {
-               return true;
-            }
-         }
-      });
-   }
-
-   /**
-    * Get the number of found results.
-    * 
-    * @return number of the found results
-    */
-   public int getResultsCount()
-   {
-      return driver().findElements(By.cssSelector(Locators.SEARCH_RESULT_SELECTOR)).size();
-   }
-
-   /**
-    * Generate item id 
-    * @param path item's name 
+    * Generate item id in search tree 
+    * @param href of item 
     * @return id of item
     */
-   public String getItemId(String path) throws Exception
+   public String getItemId(String href) throws Exception
    {
-      path = (path.startsWith(BaseTest.WS_URL)) ? path.replace(BaseTest.WS_URL, "") : path;
-      String itemId = (path.startsWith("/")) ? path : "/" + path;
-      itemId = Utils.md5(itemId);
-      return TREE_PREFIX_ID + itemId;
+      return TREE_PREFIX_ID + Utils.md5(href);
    }
-
-   //   /**
-   //    * Generate item id in search tree 
-   //    * @param href of item 
-   //    * @return id of item
-   //    */
-   //   public String getItemId(String href) throws Exception
-   //   {
-   //      return TREE_PREFIX_ID + Utils.md5(href);
-   //   }
-
-   /**
-    * Double click on serch three element
-    * @param fileURL
-    * @throws Exception
-    */
-   public void doubleClickOnFile(String fileURL) throws Exception
-   {
-      String locator = "//div[@id='" + getItemId(fileURL) + "']/div/table/tbody/tr/td[1]";
-      WebElement elem = driver().findElement(By.xpath(locator));
-      new Actions(driver()).doubleClick(elem).build().perform();
-   }
-
-   /**
-    * Check search item is present
-    * @param fileURL
-    * @return
-    * @throws Exception
-    */
-   public boolean isFilePresent(String fileURL) throws Exception
-   {
-      String locator = "//div[@id='" + getItemId(fileURL) + "']/div/table/tbody/tr/td[2]";
-
-      try
-      {
-         WebElement result = driver().findElement(By.xpath(locator));
-         return result != null && result.isDisplayed();
-      }
-      catch (Exception e)
-      {
-         return false;
-      }
-   }
-
-   /**
-    * Double click on serch three element
-    * @param fileURL
-    * @throws Exception
-    */
-   public void selectItem(String fileURL) throws Exception
-   {
-      String locator = "//div[@id='" + getItemId(fileURL) + "']/div/table/tbody/tr/td[2]";
-      WebElement elem = driver().findElement(By.xpath(locator));
-      elem.click();
-   }
-
-   /**
-    * select root folder
-    * @param fileURL
-    * @throws Exception
-    */
-   public void selectRootItem() throws Exception
-   {
-      rootFolder.click();
-   }
-
 }

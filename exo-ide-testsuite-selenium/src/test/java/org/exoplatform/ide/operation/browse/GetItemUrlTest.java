@@ -157,7 +157,7 @@ public class GetItemUrlTest extends BaseTest
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.SEARCH.performSearch("/" + PROJECT, "", "");
-      IDE.SEARCH.waitSearchResultsOpened();
+      IDE.SEARCH_RESULT.waitOpened();
 
       // TODO end the test when search is ready
    }

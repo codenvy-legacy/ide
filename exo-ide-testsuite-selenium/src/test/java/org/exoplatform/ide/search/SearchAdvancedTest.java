@@ -18,12 +18,10 @@
  */
 package org.exoplatform.ide.search;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -34,16 +32,16 @@ import java.io.IOException;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class SearchAdvancedTest extends BaseTest
 {
-
    private static final String PROJECT = SearchAdvancedTest.class.getSimpleName();
 
    private static final String googleGadgetFileName = "Тестовый гаджет.xml";
 
    private final String googleGadgetFileContent =
+
    "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n" + "<ModulePrefs title=\"Hello World!\" />\n"
       + "<Content type=\"html\">\n" + "<![CDATA[ Привет, свет! Test]]></Content></Module>";
 
@@ -53,7 +51,6 @@ public class SearchAdvancedTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.createDefaultProject(PROJECT);
-
       }
       catch (Exception e)
       {
@@ -69,64 +66,68 @@ public class SearchAdvancedTest extends BaseTest
    public void testAdvancedSearch() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.WELCOME_PAGE.close();
-      IDE.WELCOME_PAGE.waitClose();
-
-      //step2
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.EDITOR.deleteLinesInEditor(0, 7);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.gadget");
+      IDE.EDITOR.deleteFileContent(0);
       IDE.EDITOR.typeTextIntoEditor(0, googleGadgetFileContent);
-      
-      IDE.EDITOR.saveAs(0, googleGadgetFileName);
-
+      IDE.EDITOR.saveAs(1, googleGadgetFileName);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + googleGadgetFileName);
+
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
-      //Step 3 Check search with different mismatched parameters
+      // Step 5
       IDE.SEARCH.performSearch("/" + PROJECT, "text", "");
-      IDE.SEARCH.waitSearchResultsOpened();
-      assertFalse(IDE.SEARCH.isFilePresent(PROJECT + "/" + googleGadgetFileName));
+      IDE.LOADER.waitClosed();
+      IDE.SEARCH_RESULT.waitOpened();
+      IDE.SEARCH_RESULT.waitForItem(PROJECT);
+      assertFalse(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + googleGadgetFileContent));
+      IDE.SEARCH_RESULT.close();
+      IDE.SEARCH_RESULT.waitClosed();
 
-      //first mismatched parameter
-      IDE.SEARCH.selectRootItem();
+      // Step 6
       IDE.SEARCH.performSearch("/" + PROJECT, "", "script/groovy");
-      IDE.SEARCH.waitSearchResultsOpened();
-      assertFalse(IDE.SEARCH.isFilePresent(PROJECT + "/" + googleGadgetFileName));
+      IDE.LOADER.waitClosed();
+      IDE.SEARCH_RESULT.waitForItem(PROJECT);
+      assertFalse(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + googleGadgetFileContent));
+      IDE.SEARCH_RESULT.close();
+      IDE.SEARCH_RESULT.waitClosed();
 
-      //second  
-      IDE.SEARCH.selectRootItem();
-      IDE.SEARCH.performSearch("/" + PROJECT, "Привет, свет!", "script/groovy");
-      IDE.SEARCH.waitSearchResultsOpened();
-      assertFalse(IDE.SEARCH.isFilePresent(PROJECT + "/" + googleGadgetFileName));
+      // Step 7
+      IDE.SEARCH.performSearch("/" + PROJECT, "Привет, свет", "script/groovy");
+      IDE.LOADER.waitClosed();
+      IDE.SEARCH_RESULT.waitForItem(PROJECT);
+      assertFalse(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + googleGadgetFileContent));
+      IDE.SEARCH_RESULT.close();
+      IDE.SEARCH_RESULT.waitClosed();
 
-      //third mismatched parameter
-      IDE.SEARCH.selectRootItem();
-      IDE.SEARCH.performSearch("/" + PROJECT, "Привет, свет!", "script/groovy");
-      IDE.SEARCH.waitSearchResultsOpened();
-      assertFalse(IDE.SEARCH.isFilePresent(PROJECT + "/" + googleGadgetFileName));
-
-      //Step 3 Check search with different matching parameters
-      IDE.SEARCH.selectRootItem();
+      // Step 8
       IDE.SEARCH.performSearch("/" + PROJECT, "", "");
-      IDE.SEARCH.waitSearchResultsOpened();
-      assertTrue(IDE.SEARCH.isFilePresent(PROJECT + "/" + googleGadgetFileName));
+      IDE.LOADER.waitClosed();
+      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + googleGadgetFileName);
+      IDE.SEARCH_RESULT.close();
+      IDE.SEARCH_RESULT.waitClosed();
 
-       
-      IDE.SEARCH.selectRootItem();
-      IDE.SEARCH.performSearch("/" + PROJECT + "/" + googleGadgetFileName, "Привет, свет! ", "");
-      IDE.SEARCH.waitSearchResultsOpened();
-      assertTrue(IDE.SEARCH.isFilePresent(PROJECT + "/" + googleGadgetFileName));
+      // Step 9
+      IDE.SEARCH.performSearch("/" + PROJECT, "Привет, свет", "");
+      IDE.LOADER.waitClosed();
+      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + googleGadgetFileName);
+      IDE.SEARCH_RESULT.close();
+      IDE.SEARCH_RESULT.waitClosed();
 
-      IDE.SEARCH.selectRootItem();
-      IDE.SEARCH.performSearch("/" + PROJECT + "/" + googleGadgetFileName, "Test", "application/x-google-gadget\n");
-      
-      IDE.SEARCH.waitSearchResultsOpened();
-      assertTrue(IDE.SEARCH.isFilePresent(PROJECT + "/" + googleGadgetFileName));
+      // Step 10
+      IDE.SEARCH.performSearch("/" + PROJECT, "", "application/x-google-gadget");
+      IDE.LOADER.waitClosed();
+      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + googleGadgetFileName);
+      IDE.SEARCH_RESULT.close();
+      IDE.SEARCH_RESULT.waitClosed();
+
+      // Step 11
+      IDE.SEARCH.performSearch("/" + PROJECT, "Test", "application/x-google-gadget");
+      IDE.LOADER.waitClosed();
+      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + googleGadgetFileName);
    }
 
    @AfterClass
