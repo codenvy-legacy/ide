@@ -203,7 +203,8 @@ public class WebDavFolderBinder
       
       if (!fsWsDir.exists())
       {
-    	  LOG.warn("Unable to clean webdav dir {}, its not exists", fsWsDirName); 
+    	  LOG.warn("Unable to clean webdav dir {}, its not exists", fsWsDirName);
+    	  return;
       }
 
       if (fsWsDir.list().length == 0 && fsWsDir.delete())
