@@ -39,6 +39,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.eclipse.jdt.client.codeassistant.AbstractJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.core.dom.Modifier;
+import org.eclipse.jdt.client.templates.TemplateProposal;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
@@ -105,6 +106,8 @@ public class ProposalWidget extends Composite implements HasClickHandlers, HasMo
    {
       if (proposal instanceof AbstractJavaCompletionProposal)
          return ((AbstractJavaCompletionProposal)proposal).getSortString();
+      if (proposal instanceof TemplateProposal)
+         return ((TemplateProposal)proposal).getTemplate().getName();
       return proposal.getDisplayString();
    }
 

@@ -24,6 +24,7 @@ import com.google.gwt.core.client.RunAsyncCallback;
 import org.eclipse.jdt.client.codeassistant.AbstractJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.CompletionProposalCollector;
 import org.eclipse.jdt.client.codeassistant.FillArgumentNamesCompletionProposalCollector;
+import org.eclipse.jdt.client.codeassistant.TemplateCompletionProposalComputer;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.ui.CodeAssitantForm;
 import org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler;
@@ -37,6 +38,7 @@ import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.event.CancelParseEvent;
 import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
+import org.eclipse.jdt.client.templates.TemplateProposal;
 import org.eclipse.jdt.client.text.Document;
 import org.eclipse.jdt.client.text.IDocument;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -51,6 +53,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -123,8 +126,11 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
    private String beforeToken;
 
    private int currentLineNumber;
-   
-//   private TemplateCompletionProposalComputer templateCompletionProposalComputer = new TemplateCompletionProposalComputer();
+
+   private int completionPosition;
+
+   private TemplateCompletionProposalComputer templateCompletionProposalComputer =
+      new TemplateCompletionProposalComputer();
 
    /**
     * 
@@ -175,8 +181,8 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       ASTNode ast = parser.createAST(null);
       org.eclipse.jdt.client.core.dom.CompilationUnit unit = (org.eclipse.jdt.client.core.dom.CompilationUnit)ast;
 
-      int completionPosition = unit.getPosition(currentEditor.getCursorRow(), currentEditor.getCursorCol() -1);
-//         getCompletionPosition(currentFile.getContent(), currentEditor.getCursorRow(), currentEditor.getCursorCol());
+      completionPosition = unit.getPosition(currentEditor.getCursorRow(), currentEditor.getCursorCol() - 1);
+      // getCompletionPosition(currentFile.getContent(), currentEditor.getCursorRow(), currentEditor.getCursorCol());
       CompletionProposalCollector collector =
          new FillArgumentNamesCompletionProposalCollector(unit, document, completionPosition, currentFile.getProject()
             .getId(), JdtExtension.DOC_CONTEXT);
@@ -185,8 +191,8 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       collector.setRequireExtendedContext(true);
       char[] fileContent = document.get().toCharArray();
       CompletionEngine e =
-         new CompletionEngine(new NameEnvironment(currentFile.getProject().getId()), collector,
-            JavaCore.getOptions(), new ProgressMonitor());
+         new CompletionEngine(new NameEnvironment(currentFile.getProject().getId()), collector, JavaCore.getOptions(),
+            new ProgressMonitor());
 
       try
       {
@@ -203,16 +209,18 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
          int posX = currentEditor.getCursorOffsetX() - tokenToComplete.length() * 8 + 8;
          int posY = currentEditor.getCursorOffsetY() + 4;
          IJavaCompletionProposal[] javaCompletionProposals = collector.getJavaCompletionProposals();
-         
-//         List<IJavaCompletionProposal> templateProposals = templateCompletionProposalComputer.computeCompletionProposals(collector.getInvocationContext(), null);
-//         IJavaCompletionProposal[] array = templateProposals.toArray(new IJavaCompletionProposal[templateProposals.size()]);
-//         IJavaCompletionProposal[] proposals =
-//            new IJavaCompletionProposal[javaCompletionProposals.length + array.length];
-//         System.arraycopy(javaCompletionProposals, 0, proposals, 0, javaCompletionProposals.length);
-//         System.arraycopy(array, 0, proposals, javaCompletionProposals.length, array.length);
-         
-         Arrays.sort(javaCompletionProposals, comparator);
-         new CodeAssitantForm(posX, posY, tokenToComplete, javaCompletionProposals, this);
+
+         List<IJavaCompletionProposal> templateProposals =
+            templateCompletionProposalComputer.computeCompletionProposals(collector.getInvocationContext(), null);
+         IJavaCompletionProposal[] array =
+            templateProposals.toArray(new IJavaCompletionProposal[templateProposals.size()]);
+         IJavaCompletionProposal[] proposals =
+            new IJavaCompletionProposal[javaCompletionProposals.length + array.length];
+         System.arraycopy(javaCompletionProposals, 0, proposals, 0, javaCompletionProposals.length);
+         System.arraycopy(array, 0, proposals, javaCompletionProposals.length, array.length);
+
+         Arrays.sort(proposals, comparator);
+         new CodeAssitantForm(posX, posY, tokenToComplete, proposals, this);
       }
       catch (Exception ex)
       {
@@ -336,16 +344,24 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
          IDocument document = new Document(currentEditor.getText());
          proposal.apply(document);
          currentEditor.setText(document.get());
+         int cursorPosition = completionPosition;
+         int replacementOffset = 0;
          if (proposal instanceof AbstractJavaCompletionProposal)
          {
             AbstractJavaCompletionProposal proposal2 = (AbstractJavaCompletionProposal)proposal;
-            int cursorPosition = proposal2.getCursorPosition();
-            int replacementOffset = proposal2.getReplacementOffset();
-            String string = document.get(0, replacementOffset + cursorPosition);
-            String[] split = string.split("\n");
-            currentEditor.goToPosition(split.length, split[split.length - 1].length() + 1);
-            currentEditor.setFocus();
+            cursorPosition = proposal2.getCursorPosition();
+            replacementOffset = proposal2.getReplacementOffset();
          }
+         else if (proposal instanceof TemplateProposal)
+         {
+            cursorPosition = ((TemplateProposal)proposal).getCursorPosition();
+            replacementOffset = completionPosition;
+
+         }
+         String string = document.get(0, replacementOffset + cursorPosition);
+         String[] split = string.split("\n");
+         currentEditor.goToPosition(split.length, split[split.length - 1].length() + 1);
+         currentEditor.setFocus();
       }
       catch (Exception e)
       {

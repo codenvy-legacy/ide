@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
+import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.NamingConventions;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.dom.ArrayType;
@@ -866,26 +867,28 @@ public class StubUtility
    // }
    // return null;
    // }
-   //
-   // public static String getTodoTaskTag(IJavaProject project) {
-   // String markers= null;
-   // if (project == null) {
-   // markers= JavaCore.getOption(JavaCore.COMPILER_TASK_TAGS);
-   // } else {
-   // markers= project.getOption(JavaCore.COMPILER_TASK_TAGS, true);
-   // }
-   //
-   // if (markers != null && markers.length() > 0) {
-   // int idx= markers.indexOf(',');
-   // if (idx == -1) {
-   // return markers;
-   // } else {
-   // return markers.substring(0, idx);
-   // }
-   // }
-   // return null;
-   // }
-   //
+
+   public static String getTodoTaskTag()
+   {
+      String markers = null;
+
+      markers = JavaCore.getOption(JavaCore.COMPILER_TASK_TAGS);
+
+      if (markers != null && markers.length() > 0)
+      {
+         int idx = markers.indexOf(',');
+         if (idx == -1)
+         {
+            return markers;
+         }
+         else
+         {
+            return markers.substring(0, idx);
+         }
+      }
+      return null;
+   }
+
    private static String removeTypeArguments(String baseName)
    {
       int idx = baseName.indexOf('<');
@@ -1588,11 +1591,12 @@ public class StubUtility
     * 
     * @see ImportRewrite#create(CompilationUnit, boolean)
     */
-   public static ImportRewrite createImportRewrite(IDocument document, CompilationUnit astRoot, boolean restoreExistingImports)
+   public static ImportRewrite createImportRewrite(IDocument document, CompilationUnit astRoot,
+      boolean restoreExistingImports)
    {
       ImportRewrite rewrite = ImportRewrite.create(document, astRoot, true);
-      rewrite .setOnDemandImportThreshold(99);
-      rewrite .setStaticOnDemandImportThreshold(99);
+      rewrite.setOnDemandImportThreshold(99);
+      rewrite.setStaticOnDemandImportThreshold(99);
       if (astRoot.getAST().hasResolvedBindings())
       {
          rewrite.setUseContextToFilterImplicitImports(true);

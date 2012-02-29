@@ -13,6 +13,7 @@ package org.eclipse.jdt.client.codeassistant;
 import org.eclipse.jdt.client.codeassistant.api.ContentAssistInvocationContext;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.core.CompletionContext;
+import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.text.IDocument;
 
@@ -68,29 +69,33 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
       this.docContext = docContext;
    }
 
-   // /**
-   // * Returns the keyword proposals that are available in this context, possibly none.
-   // * <p>
-   // * <strong>Note:</strong> This method may run
-   // * {@linkplain ICodeAssist#codeComplete(int, org.eclipse.jdt.core.CompletionRequestor) codeComplete}
-   // * on the compilation unit.
-   // * </p>
-   // *
-   // * @return the available keyword proposals
-   // */
-   // public IJavaCompletionProposal[] getKeywordProposals() {
-   // if (fKeywordProposals == null) {
-   // if (fCollector != null && !fCollector.isIgnored(CompletionProposal.KEYWORD) && fCollector.getContext() != null) {
-   // // use the existing collector if it exists, collects keywords, and has already been invoked
-   // fKeywordProposals= fCollector.getKeywordCompletionProposals();
-   // } else {
-   // // otherwise, retrieve keywords ourselves
-   // computeKeywordsAndContext();
-   // }
-   // }
-   //
-   // return fKeywordProposals;
-   // }
+   /**
+    * Returns the keyword proposals that are available in this context, possibly none.
+    * <p>
+    * <strong>Note:</strong> This method may run
+    * {@linkplain ICodeAssist#codeComplete(int, org.eclipse.jdt.core.CompletionRequestor) codeComplete} on the compilation unit.
+    * </p>
+    * 
+    * @return the available keyword proposals
+    */
+   public IJavaCompletionProposal[] getKeywordProposals()
+   {
+      if (fKeywordProposals == null)
+      {
+         if (fCollector != null && !fCollector.isIgnored(CompletionProposal.KEYWORD) && fCollector.getContext() != null)
+         {
+            // use the existing collector if it exists, collects keywords, and has already been invoked
+            fKeywordProposals = fCollector.getKeywordCompletionProposals();
+         }
+//         else
+//         {
+//            // otherwise, retrieve keywords ourselves
+//            computeKeywordsAndContext();
+//         }
+      }
+
+      return fKeywordProposals;
+   }
 
    /**
     * Returns the {@link CompletionContext core completion context} if available, <code>null</code> otherwise.
@@ -253,39 +258,43 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
       return projectId;
    }
 
-   // /**
-   // * Fallback to retrieve a core context and keyword proposals when no collector is available.
-   // * Runs code completion on the cu and collects keyword proposals. {@link #fKeywordProposals} is
-   // * non-<code>null</code> after this call.
-   // *
-   // * @since 3.3
-   // */
-   // private void computeKeywordsAndContext() {
-   // ICompilationUnit cu= getCompilationUnit();
-   // if (cu == null) {
-   // if (fKeywordProposals == null)
-   // fKeywordProposals= new IJavaCompletionProposal[0];
-   // return;
-   // }
-   //
-   // CompletionProposalCollector collector= new CompletionProposalCollector(cu, true);
-   // collector.setIgnored(CompletionProposal.KEYWORD, false);
-   //
-   // try {
-   // cu.codeComplete(getInvocationOffset(), collector);
-   // if (fCoreContext == null)
-   // fCoreContext= collector.getContext();
-   // if (fKeywordProposals == null)
-   // fKeywordProposals= collector.getKeywordCompletionProposals();
-   // if (fLabelProvider == null)
-   // fLabelProvider= collector.getLabelProvider();
-   // } catch (JavaModelException x) {
-   // if (!x.isDoesNotExist() || cu.getJavaProject() == null || cu.getJavaProject().isOnClasspath(cu))
-   // JavaPlugin.log(x);
-   // if (fKeywordProposals == null)
-   // fKeywordProposals= new IJavaCompletionProposal[0];
-   // }
-   // }
+//   /**
+//    * Fallback to retrieve a core context and keyword proposals when no collector is available. Runs code completion on the cu and
+//    * collects keyword proposals. {@link #fKeywordProposals} is non-<code>null</code> after this call.
+//    * 
+//    * @since 3.3
+//    */
+//   private void computeKeywordsAndContext()
+//   {
+//      CompilationUnit cu = getCompilationUnit();
+//      if (cu == null)
+//      {
+//         if (fKeywordProposals == null)
+//            fKeywordProposals = new IJavaCompletionProposal[0];
+//         return;
+//      }
+//
+//      CompletionProposalCollector collector = new CompletionProposalCollector(cu, true);
+//      collector.setIgnored(CompletionProposal.KEYWORD, false);
+//
+//      try
+//      {
+//         cu.codeComplete(getInvocationOffset(), collector);
+//         if (fCoreContext == null)
+//            fCoreContext = collector.getContext();
+//         if (fKeywordProposals == null)
+//            fKeywordProposals = collector.getKeywordCompletionProposals();
+//         if (fLabelProvider == null)
+//            fLabelProvider = collector.getLabelProvider();
+//      }
+//      catch (JavaModelException x)
+//      {
+//         if (!x.isDoesNotExist() || cu.getJavaProject() == null || cu.getJavaProject().isOnClasspath(cu))
+//            JavaPlugin.log(x);
+//         if (fKeywordProposals == null)
+//            fKeywordProposals = new IJavaCompletionProposal[0];
+//      }
+//   }
 
    /*
     * Implementation note: There is no need to override hashCode and equals, as we only add cached values shared across one assist

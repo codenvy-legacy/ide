@@ -42,23 +42,27 @@ public class GwtTestSuite extends TestCase
    public static Test suite()
    {
       GWTTestSuite suite = new GWTTestSuite("All Gwt Tests go in here");
-//      suite.addTestSuite(ASTParserTestGwt.class);
-//      suite.addTestSuite(ASTVisitorTestGwt.class);
-      //      suite.addTestSuite(CodeAssistantTestGwt.class);
-//      suite.addTestSuite(ASTRewriteTestGwt.class);
+      // suite.addTestSuite(ASTParserTestGwt.class);
+      // suite.addTestSuite(ASTVisitorTestGwt.class);
+      // suite.addTestSuite(CodeAssistantTestGwt.class);
+      // suite.addTestSuite(ASTRewriteTestGwt.class);
       suite.addTestSuite(SourceModifierTestGwt.class);
       suite.addTestSuite(ImportRewriteTestGwt.class);
       suite.addTestSuite(ASTRewritingMethodDeclTestGwt.class);
       suite.addTestSuite(ASTRewritingTypeDeclTestGwt.class);
       suite.addTestSuite(ASTRewritingExpressionsTestGwt.class);
       suite.addTestSuite(ASTRewritingGroupNodeTestGwt.class);
-      //suite.addTestSuite(ASTRewritingJavadocTestGwt.class);
+      // suite.addTestSuite(ASTRewritingJavadocTestGwt.class);
       suite.addTestSuite(ASTRewritingMoveCodeTestGwt.class);
       suite.addTestSuite(ASTRewritingRevertTestGwt.class);
-      //suite.addTestSuite(ASTRewritingStatementsTestGwt.class);
+      // suite.addTestSuite(ASTRewritingStatementsTestGwt.class);
       suite.addTestSuite(ASTRewritingTrackingTestGwt.class);
-      //suite.addTestSuite(ASTRewritingWithStatementsRecoveryTestGwt.class);
+      // suite.addTestSuite(ASTRewritingWithStatementsRecoveryTestGwt.class);
       suite.addTestSuite(LineCommentOffsetsTestGwt.class);
+
+      suite.addTestSuite(TemplateContributionTestGwt.class);
+      suite.addTestSuite(TemplateTranslatorTestGwt.class);
+      suite.addTestSuite(CharOperationGwtTest.class);
       return suite;
    }
 }

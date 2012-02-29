@@ -169,7 +169,7 @@ public class CompletionProposalCollector extends CompletionRequestor
     * @return invocationContext the invocation context
     * @since 3.2
     */
-   protected final JavaContentAssistInvocationContext getInvocationContext()
+   public final JavaContentAssistInvocationContext getInvocationContext()
    {
       if (fInvocationContext == null)
       {

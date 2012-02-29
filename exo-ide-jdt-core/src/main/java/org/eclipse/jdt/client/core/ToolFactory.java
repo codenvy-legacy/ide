@@ -13,6 +13,10 @@ package org.eclipse.jdt.client.core;
 import org.eclipse.jdt.client.core.formatter.CodeFormatter;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatter;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
+import org.eclipse.jdt.client.core.compiler.IScanner;
+import org.eclipse.jdt.client.internal.core.util.PublicScanner;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -351,60 +355,55 @@ public class ToolFactory
    // return new org.eclipse.jdt.internal.formatter.old.CodeFormatter(options);
    // }
 
-   // /**
-   // * Create a scanner, indicating the level of detail requested for tokenizing. The scanner can then be
-   // * used to tokenize some source in a Java aware way.
-   // * Here is a typical scanning loop:
-   // *
-   // * <code>
-   // * <pre>
-   // * IScanner scanner = ToolFactory.createScanner(false, false, false, false);
-   // * scanner.setSource("int i = 0;".toCharArray());
-   // * while (true) {
-   // * int token = scanner.getNextToken();
-   // * if (token == ITerminalSymbols.TokenNameEOF) break;
-   // * System.out.println(token + " : " + new String(scanner.getCurrentTokenSource()));
-   // * }
-   // * </pre>
-   // * </code>
-   // *
-   // * <p>By default the compliance used to create the scanner is the workspace's compliance when running inside the IDE
-   // * or 1.4 if running from outside of a headless eclipse.
-   // * </p>
-   // *
-   // * @param tokenizeComments if set to <code>false</code>, comments will be silently consumed
-   // * @param tokenizeWhiteSpace if set to <code>false</code>, white spaces will be silently consumed,
-   // * @param assertMode if set to <code>false</code>, occurrences of 'assert' will be reported as identifiers
-   // * ({@link ITerminalSymbols#TokenNameIdentifier}), whereas if set to <code>true</code>, it
-   // * would report assert keywords ({@link ITerminalSymbols#TokenNameassert}). Java 1.4 has introduced
-   // * a new 'assert' keyword.
-   // * @param recordLineSeparator if set to <code>true</code>, the scanner will record positions of encountered line
-   // * separator ends. In case of multi-character line separators, the last character position is considered. These positions
-   // * can then be extracted using {@link IScanner#getLineEnds()}. Only non-unicode escape sequences are
-   // * considered as valid line separators.
-   // * @return a scanner
-   // * @see org.eclipse.jdt.core.compiler.IScanner
-   // * @see #createScanner(boolean, boolean, boolean, String, String)
-   // */
-   // public static IScanner createScanner(boolean tokenizeComments, boolean tokenizeWhiteSpace, boolean assertMode, boolean
-   // recordLineSeparator){
-   // // use default workspace compliance
-   // long complianceLevelValue = CompilerOptions.versionToJdkLevel(JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
-   // if (complianceLevelValue == 0) complianceLevelValue = ClassFileConstants.JDK1_4; // fault-tolerance
-   // PublicScanner scanner =
-   // new PublicScanner(
-   // tokenizeComments,
-   // tokenizeWhiteSpace,
-   // false/*nls*/,
-   // assertMode ? ClassFileConstants.JDK1_4 : ClassFileConstants.JDK1_3/*sourceLevel*/,
-   // complianceLevelValue,
-   // null/*taskTags*/,
-   // null/*taskPriorities*/,
-   // true/*taskCaseSensitive*/);
-   // scanner.recordLineSeparator = recordLineSeparator;
-   // return scanner;
-   // }
-   //
+   /**
+    * Create a scanner, indicating the level of detail requested for tokenizing. The scanner can then be used to tokenize some
+    * source in a Java aware way. Here is a typical scanning loop:
+    * 
+    * <code>
+    * <pre>
+    * IScanner scanner = ToolFactory.createScanner(false, false, false, false);
+    * scanner.setSource("int i = 0;".toCharArray());
+    * while (true) {
+    * int token = scanner.getNextToken();
+    * if (token == ITerminalSymbols.TokenNameEOF) break;
+    * System.out.println(token + " : " + new String(scanner.getCurrentTokenSource()));
+    * }
+    * </pre>
+    * </code>
+    * 
+    * <p>
+    * By default the compliance used to create the scanner is the workspace's compliance when running inside the IDE or 1.4 if
+    * running from outside of a headless eclipse.
+    * </p>
+    * 
+    * @param tokenizeComments if set to <code>false</code>, comments will be silently consumed
+    * @param tokenizeWhiteSpace if set to <code>false</code>, white spaces will be silently consumed,
+    * @param assertMode if set to <code>false</code>, occurrences of 'assert' will be reported as identifiers (
+    *           {@link ITerminalSymbols#TokenNameIdentifier}), whereas if set to <code>true</code>, it would report assert
+    *           keywords ({@link ITerminalSymbols#TokenNameassert}). Java 1.4 has introduced a new 'assert' keyword.
+    * @param recordLineSeparator if set to <code>true</code>, the scanner will record positions of encountered line separator
+    *           ends. In case of multi-character line separators, the last character position is considered. These positions can
+    *           then be extracted using {@link IScanner#getLineEnds()}. Only non-unicode escape sequences are considered as valid
+    *           line separators.
+    * @return a scanner
+    * @see org.eclipse.jdt.core.compiler.IScanner
+    * @see #createScanner(boolean, boolean, boolean, String, String)
+    */
+   public static IScanner createScanner(boolean tokenizeComments, boolean tokenizeWhiteSpace, boolean assertMode,
+      boolean recordLineSeparator)
+   {
+      // use default workspace compliance
+      long complianceLevelValue = CompilerOptions.versionToJdkLevel(JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
+      if (complianceLevelValue == 0)
+         complianceLevelValue = ClassFileConstants.JDK1_4; // fault-tolerance
+      PublicScanner scanner =
+         new PublicScanner(tokenizeComments, tokenizeWhiteSpace, false/* nls */, assertMode ? ClassFileConstants.JDK1_4
+            : ClassFileConstants.JDK1_3/* sourceLevel */, complianceLevelValue, null/* taskTags */,
+            null/* taskPriorities */, true/* taskCaseSensitive */);
+      scanner.recordLineSeparator = recordLineSeparator;
+      return scanner;
+   }
+
    // /**
    // * Create a scanner, indicating the level of detail requested for tokenizing. The scanner can then be
    // * used to tokenize some source in a Java aware way.

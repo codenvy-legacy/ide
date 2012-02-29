@@ -1,25 +1,16 @@
-/*
- * Copyright (C) 2012 eXo Platform SAS.
+/*******************************************************************************
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- */
-package org.eclipse.jdt.client;
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package org.eclipse.jdt.client.core;
 
-import org.eclipse.jdt.client.event.ShowAstEvent;
-import org.eclipse.jdt.client.outline.OutlinePresenter;
+import org.eclipse.jdt.client.JdtExtension;
 import org.eclipse.jdt.client.templates.CodeTemplateContextType;
 import org.eclipse.jdt.client.templates.ContextTypeRegistry;
 import org.eclipse.jdt.client.templates.ElementTypeResolver;
@@ -36,83 +27,51 @@ import org.eclipse.jdt.client.templates.TemplateStore;
 import org.eclipse.jdt.client.templates.TypeResolver;
 import org.eclipse.jdt.client.templates.TypeVariableResolver;
 import org.eclipse.jdt.client.templates.VarResolver;
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.module.Extension;
-import org.exoplatform.ide.client.framework.module.IDE;
+import org.eclipse.jdt.client.templates.api.Template;
+import org.eclipse.jdt.client.templates.api.TemplateBuffer;
+import org.eclipse.jdt.client.templates.api.TemplateContextType;
+import org.eclipse.jdt.client.templates.api.TemplateException;
+import org.eclipse.jdt.client.templates.api.TemplateTranslator;
+import org.eclipse.jdt.client.templates.api.TemplateVariable;
+import org.eclipse.jdt.client.templates.api.TemplateVariableResolver;
+
+import java.util.Iterator;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}: Jan 20, 2012 1:08:51 PM evgen $
+ * Template contribution tests.
+ * 
+ * @since 3.4
  */
-public class JdtExtension extends Extension implements InitializeServicesHandler
+public class TemplateContributionTestGwt extends BaseTestGwt
 {
 
-   static String DOC_CONTEXT;
-
-   static String REST_CONTEXT;
-
-   private static JdtExtension instance;
-
-   /**
-    * The code template context type registry for the java editor.
-    * 
-    * @since 3.0
-    */
    private ContextTypeRegistry fCodeTemplateContextTypeRegistry;
 
-   private TemplateStore templateStore;
-
-   /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
-   @Override
-   public void initialize()
+   private void checkContribution(String resolverContextTypeId, String contextTypeId) throws TemplateException
    {
-      instance = this;
-      IDE.getInstance().addControl(new Con());
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
-      // IDE.getInstance().addControl(new CodeAssistCommand(), Docking.TOOLBAR_RIGHT);
-      new AstPresenter(IDE.eventBus());
-      new CodeAssistantController();
-      new JavaCodeController();
-      new OutlinePresenter();
-   }
+      ContextTypeRegistry registry = getTemplateContextRegistry();
+      TemplateContextType context = registry.getContextType(resolverContextTypeId);
 
-   public static class Con extends SimpleControl implements IDEControl
-   {
+      TemplateStore templateStore = new TemplateStore();
+      Template[] templates = templateStore.getTemplates(contextTypeId);
 
-      /** @param id */
-      public Con()
+      for (int i = 0; i < templates.length; i++)
       {
-         super("View/Show AST");
-         setTitle("Show Ast");
-         setPrompt("Show Ast");
-         setEvent(new ShowAstEvent());
-         setEnabled(true);
-         setVisible(true);
+         Template template = templates[i];
+         TemplateTranslator translator = new TemplateTranslator();
+         TemplateBuffer buffer = translator.translate(template);
+         TemplateVariable[] variables = buffer.getVariables();
+         for (int j = 0; j < variables.length; j++)
+         {
+            TemplateVariable variable = variables[j];
+            if (!variable.getType().equals(variable.getName()))
+            {
+               assertTrue(
+                  "No resolver found for variable '" + variable.getType() + "' in template '" + template.getName()
+                     + "'\n\n" + template.getPattern(), canHandle(context, variable));
+            }
+         }
       }
-
-      /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
-      @Override
-      public void initialize()
-      {
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
-    */
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      REST_CONTEXT = event.getApplicationConfiguration().getContext();
-      DOC_CONTEXT = REST_CONTEXT + "/ide/code-assistant/java/class-doc?fqn=";
-   }
-
-   public static JdtExtension get()
-   {
-      return instance;
    }
 
    /**
@@ -175,14 +134,38 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       return fCodeTemplateContextTypeRegistry;
    }
 
-   /**
-    * @return
-    */
-   public TemplateStore getTemplateStore()
+   public void testJavaContribution() throws Exception
    {
-      if (templateStore == null)
-         templateStore = new TemplateStore();
-      return templateStore;
+      checkContribution(JavaContextType.ID_ALL, JavaContextType.ID_ALL);
+      //TODO HtmlUnit has a bug with RegExp emulation
+//      checkContribution(JavaContextType.ID_ALL, JavaContextType.ID_MEMBERS);
+//      checkContribution(JavaContextType.ID_ALL, JavaContextType.ID_STATEMENTS);
+//      checkContribution(JavaContextType.ID_MEMBERS, JavaContextType.ID_MEMBERS);
+//      checkContribution(JavaContextType.ID_STATEMENTS, JavaContextType.ID_STATEMENTS);
+   }
+
+   public void testJavaDocContribution() throws Exception
+   {
+      checkContribution(JavaDocContextType.ID, JavaDocContextType.ID);
+   }
+
+   // public void testSWTContributionAll() throws Exception {
+   // checkContribution(SWTContextType.ID_ALL, SWTContextType.ID_ALL);
+   // checkContribution(SWTContextType.ID_ALL, SWTContextType.ID_MEMBERS);
+   // checkContribution(SWTContextType.ID_ALL, SWTContextType.ID_STATEMENTS);
+   // checkContribution(SWTContextType.ID_MEMBERS, SWTContextType.ID_MEMBERS);
+   // checkContribution(SWTContextType.ID_STATEMENTS, SWTContextType.ID_STATEMENTS);
+   // }
+
+   private boolean canHandle(TemplateContextType context, TemplateVariable variable)
+   {
+      for (Iterator iterator = context.resolvers(); iterator.hasNext();)
+      {
+         TemplateVariableResolver resolver = (TemplateVariableResolver)iterator.next();
+         if (variable.getType().equals(resolver.getType()))
+            return true;
+      }
+      return false;
    }
 
 }

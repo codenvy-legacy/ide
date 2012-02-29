@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,27 +16,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.java.client;
+package org.eclipse.jdt.client.codeassistant.ui;
 
-import com.google.gwt.resources.client.CssResource;
+import org.eclipse.jdt.client.codeassistant.ui.StyledString.Styler;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: $
+ * @version $Id: 12:30:04 PM 34360 2009-07-22 23:58:59Z evgen $
  * 
  */
-public interface JavaCss extends CssResource
+public class DefaultStyler extends Styler
 {
 
-   @ClassName("exo-autocomplete-list-item-selected")
-   String selectedItem();
+   private String className;
 
-   @ClassName("exo-autocomplete-list-item")
-   String item();
+   /**
+    * @param className
+    */
+   public DefaultStyler(String className)
+   {
+      super();
+      this.className = className;
+   }
 
-   @ClassName("exo-autocomplete-fqn")
-   String fqnStyle();
+   /**
+    * @see org.eclipse.jdt.client.codeassistant.ui.StyledString.Styler#applyStyles(java.lang.String)
+    */
+   @Override
+   public String applyStyles(String text)
+   {
+      StringBuilder b = new StringBuilder();
+      b.append("<span ").append("class=\"").append(className).append("\">");
+      b.append(text).append("</span>");
+      return b.toString();
+   }
 
-   @ClassName("exo-codeassistant-counter")
-   String counter();
 }

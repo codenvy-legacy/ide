@@ -18,6 +18,7 @@
  */
 package org.eclipse.jdt.client.codeassistant.ui;
 
+import org.eclipse.jdt.client.codeassistant.ui.StyledString.Styler;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
@@ -35,7 +36,9 @@ public class StyledString
 
    }
 
-   public static Styler QUALIFIER_STYLER = new QualifierStyler();
+   public static Styler QUALIFIER_STYLER = new DefaultStyler(JavaClientBundle.INSTANCE.css().fqnStyle());
+   
+   public static Styler COUNTER_STYLER = new DefaultStyler(JavaClientBundle.INSTANCE.css().counter());
 
    private StringBuilder builder;
 
@@ -63,6 +66,16 @@ public class StyledString
    {
       this();
       append(cs);
+   }
+
+   /**
+    * @param name
+    * @param styler
+    */
+   public StyledString(String name, Styler styler)
+   {
+      this();
+      append(name, styler);
    }
 
    /**
@@ -119,23 +132,6 @@ public class StyledString
    public void append(char[] declaration, Styler styler)
    {
       builder.append(styler.applyStyles(new String(declaration)));
-   }
-
-   private static class QualifierStyler extends Styler
-   {
-
-      /**
-       * @see org.eclipse.jdt.client.codeassistant.ui.StyledString.Styler#applyStyles(java.lang.String)
-       */
-      @Override
-      public String applyStyles(String text)
-      {
-         StringBuilder b = new StringBuilder();
-         b.append("<span ").append("class=\"").append(JavaClientBundle.INSTANCE.css().fqnStyle()).append("\">");
-         b.append(text).append("</span>");
-         return b.toString();
-      }
-
    }
 
 }

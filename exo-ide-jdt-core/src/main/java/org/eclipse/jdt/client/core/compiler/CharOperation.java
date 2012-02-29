@@ -657,13 +657,13 @@ public final class CharOperation
 
    public static native boolean isJavaIdentifierPart(char ch)/*-{
       var str = String.fromCharCode(ch);
-		var pat = /[\p{L}\p{N}\p{Sc}_]/;
+		var pat = /[_$a-zA-Z0-9\xA0-\uFFFF]/;
 		return str.match(pat) != null;
    }-*/;
 
    public static native boolean isJavaIdentifierStart(char ch)/*-{
       var str = String.fromCharCode(ch);
-		var pat = /[\p{L}_\p{Sc}]/;
+		var pat = /[_$a-zA-Z\xA0-\uFFFF]/;
 		return str.match(pat) != null;
    }-*/;
 
