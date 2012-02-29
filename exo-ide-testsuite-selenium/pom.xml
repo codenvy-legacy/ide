@@ -149,6 +149,7 @@
                               <exclude>**/*StoreOpenedFilesHistoryTest.java</exclude>
                               <exclude>**/*AbstractHotkeysTest.java</exclude>
                               <exclude>**/*WorkspaceTest.java</exclude>
+                              <exclude>**/*BaseTest.java</exclude>
                            </excludes>
                         </configuration>
                      </execution>

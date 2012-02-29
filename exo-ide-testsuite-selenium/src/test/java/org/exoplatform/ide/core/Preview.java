@@ -43,6 +43,8 @@ public class Preview extends AbstractTestModule
    //XXX: only for groovy template and netvibes preview
    private static final String PREVIEW_FRAME_ID = "eXo-IDE-preview-frame";
    
+   private static final String PREVIEW_HTML_FRAME_ID = "//iframe[@class='gwt-Frame']";
+   
    private static final String GADGET_PREVIEW_IFRAME = GADGET_PREVIEW + "//iframe";
 
    private static final String VIEW_TITLE = "Preview";
@@ -50,6 +52,9 @@ public class Preview extends AbstractTestModule
    @FindBy(xpath = HTML_PREVIEW)
    private WebElement htmlPreview;
 
+   @FindBy(xpath = PREVIEW_HTML_FRAME_ID)
+   private WebElement htmlIframePreview;
+   
    @FindBy(xpath = GADGET_PREVIEW)
    private WebElement gadgetPreview;
    
@@ -59,6 +64,8 @@ public class Preview extends AbstractTestModule
    @FindBy(xpath = GROOVY_TEMPLATE_PREVIEW)
    private WebElement gtmplPreview;
 
+   
+   
    /**
     * Wait for HTML preview view opened.
     * 
@@ -318,6 +325,19 @@ public class Preview extends AbstractTestModule
    {
       driver().switchTo().frame(PREVIEW_FRAME_ID);
    }
+   
+
+   
+
+   /**
+    * Select preview HTML frame.
+    */
+   public void selectPreviewHtmlIFrame()
+   {
+      driver().switchTo().frame(htmlIframePreview);
+   }
+
+   
    
    public void selectGadgetPreviewIframe()
    {

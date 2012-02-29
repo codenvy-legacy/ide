@@ -115,7 +115,7 @@ public class PreviewHtmlFileTest extends BaseTest
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.SHOW_PREVIEW);
       IDE.PREVIEW.waitHtmlPreviewOpened();
       
-      IDE.PREVIEW.selectPreviewIFrame();
+      IDE.PREVIEW.selectPreviewHtmlIFrame();
 
       assertTrue(driver.findElements(By.xpath("//p/b/i[text()='Changed Content.']")).size()>0);
       assertTrue(driver.findElements(By.xpath("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']")).size()>0);
@@ -151,7 +151,7 @@ public class PreviewHtmlFileTest extends BaseTest
        * 10. Check "Preview" again.
        */
       assertTrue(IDE.PREVIEW.isHtmlPreviewOpened());
-      IDE.PREVIEW.selectPreviewIFrame();
+      IDE.PREVIEW.selectPreviewHtmlIFrame();
       assertTrue(driver.findElements(By.xpath("//p/b/i[text()='Changed Content.']")).size()>0);
       assertTrue(driver.findElements(By.xpath("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']")).size()>0);
       IDE.selectMainFrame();
