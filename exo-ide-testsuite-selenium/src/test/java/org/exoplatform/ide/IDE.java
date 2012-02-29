@@ -44,6 +44,7 @@ import org.exoplatform.ide.core.LogReader;
 import org.exoplatform.ide.core.Login;
 import org.exoplatform.ide.core.Menu;
 import org.exoplatform.ide.core.Navigation;
+import org.exoplatform.ide.core.OpenFileByPath;
 import org.exoplatform.ide.core.OpenFileByURL;
 import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Output;
@@ -184,6 +185,8 @@ public class IDE
    public CustomizeHotkeys CUSTOMIZE_HOTKEYS;
 
    public OpenFileByURL OPEN_FILE_BY_URL;
+   
+   public OpenFileByPath OPEN_FILE_BY_PATH;
 
    public WelcomePage WELCOME_PAGE;
    
@@ -216,6 +219,7 @@ public class IDE
       OUTLINE = PageFactory.initElements(driver, Outline.class);
       OUTPUT = PageFactory.initElements(driver, Output.class);
       OPEN_FILE_BY_URL = PageFactory.initElements(driver, OpenFileByURL.class);
+      OPEN_FILE_BY_PATH = PageFactory.initElements(driver, OpenFileByPath.class);
       PREVIEW = PageFactory.initElements(driver, Preview.class);
       PREVIEW_NODE_TYPE = PageFactory.initElements(driver, PreviewNodeType.class);
       PERSPECTIVE = PageFactory.initElements(driver, Perspective.class);

@@ -19,29 +19,63 @@
 package org.exoplatform.ide.operation.upload;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS .
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 28, 2010 $
- *
+ * 
  */
 public class UploadMimeTypeAutoCompletionTest extends BaseTest
 {
+   private static final String PROJECT = UploadMimeTypeAutoCompletionTest.class.getSimpleName();
+
    private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.html";
+
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+      }
+      catch (IOException e)
+      {
+      }
+   }
+
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      }
+      catch (IOException e)
+      {
+      }
+   }
 
    @Test
    public void testMimeTypeAutoCompletion() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE);
       IDE.UPLOAD.waitOpened();
@@ -53,10 +87,16 @@ public class UploadMimeTypeAutoCompletionTest extends BaseTest
       catch (Exception e)
       {
       }
+      IDE.UPLOAD.typeToMimeTypeField("application/");
+      assertTrue(IDE.UPLOAD.isMimeTypeContainsProposes("application/javascript", "application/java"));
+      assertFalse(IDE.UPLOAD.isMimeTypeContainsProposes("text/javascript"));
 
-      IDE.UPLOAD.setMimeType("text/");
-      assertTrue(IDE.UPLOAD.isMimeTypeContainsProposes("text/any", "text/html", "text/css", "text/plain", "text/xml"));
-      String mimeTypeToSelect = "text/richtext";
+      IDE.UPLOAD.typeToMimeTypeField("text/");
+      assertTrue(IDE.UPLOAD.isMimeTypeContainsProposes("text/javascript", "text/html", "text/css", "text/plain",
+         "text/xml"));
+      assertFalse(IDE.UPLOAD.isMimeTypeContainsProposes("application/javascript"));
+
+      String mimeTypeToSelect = "text/html";
       IDE.UPLOAD.selectMimeTypeByName(mimeTypeToSelect);
 
       assertEquals(mimeTypeToSelect, IDE.UPLOAD.getMimeTypeValue());

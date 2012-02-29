@@ -24,6 +24,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -86,7 +87,7 @@ public class Upload extends AbstractTestModule
    @FindBy(xpath = Locators.OPEN_LOCAL_FILE_VIEW_LOCATOR)
    WebElement openLocalFileView;
 
-   @FindBy(name = Locators.FILE_NAME_FIELD_ID)
+   @FindBy(how = How.ID_OR_NAME, using = Locators.FILE_NAME_FIELD_ID)
    WebElement fileNameField;
 
    @FindBy(name = Locators.MIME_TYPE_FIELD_ID)
@@ -168,15 +169,7 @@ public class Upload extends AbstractTestModule
          @Override
          public Boolean apply(WebDriver input)
          {
-            try
-            {
-               return isOpenLocalFileViewOpened();
-            }
-            catch (NoSuchElementException e)
-            {
-               e.printStackTrace();
-               return false;
-            }
+            return isOpenLocalFileViewOpened();
          }
       });
    }
@@ -208,9 +201,17 @@ public class Upload extends AbstractTestModule
 
    public boolean isOpenLocalFileViewOpened()
    {
-      return (openLocalFileView != null && openLocalFileView.isDisplayed() && uploadButton != null
-         && uploadButton.isDisplayed() && cancelButton != null && cancelButton.isDisplayed() && fileNameField != null && fileNameField
-         .isDisplayed());
+      try
+      {
+         return (openLocalFileView != null && openLocalFileView.isDisplayed() && uploadButton != null
+            && uploadButton.isDisplayed() && cancelButton != null && cancelButton.isDisplayed()
+            && fileNameField != null && fileNameField.isDisplayed());
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+         return false;
+      }
    }
 
    public void open(String formName, String filePath, String mimeType) throws Exception
@@ -295,6 +296,11 @@ public class Upload extends AbstractTestModule
    public void setMimeType(String mimeType) throws InterruptedException
    {
       IDE().INPUT.setComboboxValue(mimeTypeField, mimeType);
+   }
+   
+   public void typeToMimeTypeField(String mimeType) throws InterruptedException
+   {
+      IDE().INPUT.typeToElement(mimeTypeField, mimeType, true);
    }
 
    /**

@@ -29,8 +29,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Nov 2, 2011 12:18:42 PM evgen $
- *
+ * @version $Id: Nov 2, 2011 12:18:42 PM evgen $
+ * 
  */
 public class Input extends AbstractTestModule
 {
@@ -44,11 +44,12 @@ public class Input extends AbstractTestModule
    }
 
    /**
-    * Type text to element, optional clear it. 
+    * Type text to element, optional clear it.
+    * 
     * @param element WebElement MUST point or input or textarea Html element
     * @param text to type
     * @param isClear is clear element before typing
-    * @throws InterruptedException 
+    * @throws InterruptedException
     */
    public void typeToElement(WebElement element, String text, boolean isClear) throws InterruptedException
    {
@@ -61,10 +62,11 @@ public class Input extends AbstractTestModule
    }
 
    /**
-    *  Type text to element
+    * Type text to element
+    * 
     * @param element WebElement, MUST point or input or textarea Html element
     * @param text Text to type
-    * @throws InterruptedException 
+    * @throws InterruptedException
     */
    public void typeToElement(WebElement element, String text) throws InterruptedException
    {
@@ -130,8 +132,16 @@ public class Input extends AbstractTestModule
 
    public void selectComboboxValue(WebElement combobox, String value)
    {
-      driver().findElement(By.cssSelector(Locators.ARROW_SELECTOR)).click();
-      waitSuggestBoxShow();
+      try
+      {
+         driver().findElement(By.id(Locators.SUGGEST_BOX_ID));
+      }
+      catch (NoSuchElementException e)
+      {
+         driver().findElement(By.cssSelector(Locators.ARROW_SELECTOR)).click();
+         waitSuggestBoxShow();
+      }
+
       WebElement item = driver().findElement(By.xpath(String.format(Locators.COMBOBOX_VALUE_LOCATOR, value)));
       item.click();
       waitSuggestBoxHide();
@@ -140,8 +150,17 @@ public class Input extends AbstractTestModule
    public boolean isComboboxValuePresent(WebElement combobox, String value)
    {
       WebElement arrow = driver().findElement(By.cssSelector(Locators.ARROW_SELECTOR));
-      arrow.click();
-      waitSuggestBoxShow();
+      boolean closeSuggestBox = true;
+      try
+      {
+         driver().findElement(By.id(Locators.SUGGEST_BOX_ID));
+         closeSuggestBox = false;
+      }
+      catch (NoSuchElementException e)
+      {
+         arrow.click();
+         waitSuggestBoxShow();
+      }
       try
       {
          WebElement item = driver().findElement(By.xpath(String.format(Locators.COMBOBOX_VALUE_LOCATOR, value)));
@@ -153,8 +172,11 @@ public class Input extends AbstractTestModule
       }
       finally
       {
-         new Actions(driver()).contextClick(arrow).build().perform();
-         waitSuggestBoxHide();
+         if (closeSuggestBox)
+         {
+            new Actions(driver()).contextClick(arrow).build().perform();
+            waitSuggestBoxHide();
+         }
       }
    }
 
