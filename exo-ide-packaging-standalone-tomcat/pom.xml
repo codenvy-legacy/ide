@@ -379,6 +379,16 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-maven</artifactId>
+          <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency> 
 
       <dependency>
