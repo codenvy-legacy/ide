@@ -55,7 +55,7 @@ public class TemplateProposal implements IJavaCompletionProposal, ICompletionPro
    private StyledString fDisplayString;
 
    private InclusivePositionUpdater fUpdater;
-   
+
    private int cursorPosition;
 
    /**
@@ -201,7 +201,7 @@ public class TemplateProposal implements IJavaCompletionProposal, ICompletionPro
             // endCompoundChange(viewer);
          }
 
-         //TODO
+         // TODO
          // translate positions
          // LinkedModeModel model= new LinkedModeModel();
          // TemplateVariable[] variables= templateBuffer.getVariables();
@@ -606,7 +606,7 @@ public class TemplateProposal implements IJavaCompletionProposal, ICompletionPro
       }
       return false;
    }
-   
+
    public int getCursorPosition()
    {
       return cursorPosition;

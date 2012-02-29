@@ -61,12 +61,12 @@ public class JavaContextType extends AbstractJavaContextType
          context.addCompatibleContextType(JavaContextType.ID_ALL);
       }
    }
-   
+
    public void initializeResolvers(JavaContextType superType)
    {
       for (java.util.Iterator iterator = superType.resolvers(); iterator.hasNext();)
       {
-          addResolver((TemplateVariableResolver)iterator.next());
+         addResolver((TemplateVariableResolver)iterator.next());
       }
    }
 

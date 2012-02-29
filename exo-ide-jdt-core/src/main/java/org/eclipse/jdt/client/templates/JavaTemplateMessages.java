@@ -24,13 +24,13 @@ import com.google.gwt.i18n.client.Messages;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  4:52:06 PM 34360 2009-07-22 23:58:59Z evgen $
- *
+ * @version $Id: 4:52:06 PM 34360 2009-07-22 23:58:59Z evgen $
+ * 
  */
 public interface JavaTemplateMessages extends Messages
 {
    JavaTemplateMessages INSTANCE = GWT.create(JavaTemplateMessages.class);
-   
+
    @Key("CodeTemplateContextType_variable_description_tags")
    String CodeTemplateContextType_variable_description_tags();
 
@@ -121,5 +121,4 @@ public interface JavaTemplateMessages extends Messages
    @Key("CompilationUnitContextType_variable_description_enclosing_type")
    String CompilationUnitContextType_variable_description_enclosing_type();
 
-   
 }

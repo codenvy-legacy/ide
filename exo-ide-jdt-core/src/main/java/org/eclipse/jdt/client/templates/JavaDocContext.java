@@ -21,198 +21,214 @@ import org.eclipse.jdt.client.text.BadLocationException;
 import org.eclipse.jdt.client.text.IDocument;
 import org.eclipse.jdt.client.text.Position;
 
-
 /**
  * A context for javadoc.
  */
-public class JavaDocContext extends CompilationUnitContext {
+public class JavaDocContext extends CompilationUnitContext
+{
 
-	// tags
-	private static final char HTML_TAG_BEGIN= '<';
-	private static final char HTML_TAG_END= '>';
-	private static final char JAVADOC_TAG_BEGIN= '@';
+   // tags
+   private static final char HTML_TAG_BEGIN = '<';
 
-	/**
-	 * Creates a javadoc template context.
-	 *
-	 * @param type the context type.
-	 * @param document the document.
-	 * @param completionOffset the completion offset within the document.
-	 * @param completionLength the completion length within the document.
-	 * @param compilationUnit the compilation unit (may be <code>null</code>).
-	 */
-	public JavaDocContext(TemplateContextType type, IDocument document, int completionOffset, int completionLength, CompilationUnit compilationUnit) {
-		super(type, document, completionOffset, completionLength, compilationUnit);
-	}
+   private static final char HTML_TAG_END = '>';
 
-	/**
-	 * Creates a javadoc template context.
-	 *
-	 * @param type the context type.
-	 * @param document the document.
-	 * @param completionPosition the position defining the completion offset and length
-	 * @param compilationUnit the compilation unit (may be <code>null</code>).
-	 * @since 3.2
-	 */
-	public JavaDocContext(TemplateContextType type, IDocument document, Position completionPosition, CompilationUnit compilationUnit) {
-		super(type, document, completionPosition, compilationUnit);
-	}
+   private static final char JAVADOC_TAG_BEGIN = '@';
 
-	/*
-	 * @see TemplateContext#canEvaluate(Template templates)
-	 */
-	@Override
-	public boolean canEvaluate(Template template) {
-		String key= getKey();
+   /**
+    * Creates a javadoc template context.
+    * 
+    * @param type the context type.
+    * @param document the document.
+    * @param completionOffset the completion offset within the document.
+    * @param completionLength the completion length within the document.
+    * @param compilationUnit the compilation unit (may be <code>null</code>).
+    */
+   public JavaDocContext(TemplateContextType type, IDocument document, int completionOffset, int completionLength,
+      CompilationUnit compilationUnit)
+   {
+      super(type, document, completionOffset, completionLength, compilationUnit);
+   }
 
-		if (fForceEvaluation)
-			return true;
+   /**
+    * Creates a javadoc template context.
+    * 
+    * @param type the context type.
+    * @param document the document.
+    * @param completionPosition the position defining the completion offset and length
+    * @param compilationUnit the compilation unit (may be <code>null</code>).
+    * @since 3.2
+    */
+   public JavaDocContext(TemplateContextType type, IDocument document, Position completionPosition,
+      CompilationUnit compilationUnit)
+   {
+      super(type, document, completionPosition, compilationUnit);
+   }
 
-		return
-			template.matches(key, getContextType().getId()) &&
-			(key.length() != 0) && template.getName().toLowerCase().startsWith(key.toLowerCase());
-	}
+   /*
+    * @see TemplateContext#canEvaluate(Template templates)
+    */
+   @Override
+   public boolean canEvaluate(Template template)
+   {
+      String key = getKey();
 
-	/*
-	 * @see DocumentTemplateContext#getStart()
-	 */
-	@Override
-	public int getStart() {
-		if (fIsManaged && getCompletionLength() > 0)
-			return super.getStart();
+      if (fForceEvaluation)
+         return true;
 
-		try {
-			IDocument document= getDocument();
+      return template.matches(key, getContextType().getId()) && (key.length() != 0)
+         && template.getName().toLowerCase().startsWith(key.toLowerCase());
+   }
 
-			if (getCompletionLength() == 0) {
-				int start= getCompletionOffset();
+   /*
+    * @see DocumentTemplateContext#getStart()
+    */
+   @Override
+   public int getStart()
+   {
+      if (fIsManaged && getCompletionLength() > 0)
+         return super.getStart();
 
-				if ((start != 0) && (document.getChar(start - 1) == HTML_TAG_END))
-					start--;
+      try
+      {
+         IDocument document = getDocument();
 
-				while ((start != 0) && CharOperation.isJavaIdentifierPart(document.getChar(start - 1)))
-					start--;
+         if (getCompletionLength() == 0)
+         {
+            int start = getCompletionOffset();
 
-				if ((start != 0) && CharOperation.isJavaIdentifierStart(document.getChar(start - 1)))
-					start--;
+            if ((start != 0) && (document.getChar(start - 1) == HTML_TAG_END))
+               start--;
 
-				// include html and javadoc tags
-				if ((start != 0) && (
-					(document.getChar(start - 1) == HTML_TAG_BEGIN) ||
-					(document.getChar(start - 1) == JAVADOC_TAG_BEGIN)))
-				{
-					start--;
-				}
+            while ((start != 0) && CharOperation.isJavaIdentifierPart(document.getChar(start - 1)))
+               start--;
 
-				return start;
+            if ((start != 0) && CharOperation.isJavaIdentifierStart(document.getChar(start - 1)))
+               start--;
 
-			}
+            // include html and javadoc tags
+            if ((start != 0)
+               && ((document.getChar(start - 1) == HTML_TAG_BEGIN) || (document.getChar(start - 1) == JAVADOC_TAG_BEGIN)))
+            {
+               start--;
+            }
 
-			int start= getCompletionOffset();
-			int end= getCompletionOffset() + getCompletionLength();
+            return start;
 
-			while (start != 0 && CharOperation.isJavaIdentifierPart(document.getChar(start - 1)))
-				start--;
+         }
 
-			while (start != end && CharOperation.isWhitespace(document.getChar(start)))
-				start++;
+         int start = getCompletionOffset();
+         int end = getCompletionOffset() + getCompletionLength();
 
-			if (start == end)
-				start= getCompletionOffset();
+         while (start != 0 && CharOperation.isJavaIdentifierPart(document.getChar(start - 1)))
+            start--;
 
-			return start;
+         while (start != end && CharOperation.isWhitespace(document.getChar(start)))
+            start++;
 
+         if (start == end)
+            start = getCompletionOffset();
 
-		} catch (BadLocationException e) {
-			return getCompletionOffset();
-		}
-	}
+         return start;
 
-	/*
-	 * @see org.eclipse.jdt.internal.corext.template.DocumentTemplateContext#getEnd()
-	 */
-	@Override
-	public int getEnd() {
+      }
+      catch (BadLocationException e)
+      {
+         return getCompletionOffset();
+      }
+   }
 
-		if (fIsManaged || getCompletionLength() == 0)
-			return super.getEnd();
+   /*
+    * @see org.eclipse.jdt.internal.corext.template.DocumentTemplateContext#getEnd()
+    */
+   @Override
+   public int getEnd()
+   {
 
-		try {
-			IDocument document= getDocument();
+      if (fIsManaged || getCompletionLength() == 0)
+         return super.getEnd();
 
-			int start= getCompletionOffset();
-			int end= getCompletionOffset() + getCompletionLength();
+      try
+      {
+         IDocument document = getDocument();
 
-			while (start != end && CharOperation.isWhitespace(document.getChar(end - 1)))
-				end--;
+         int start = getCompletionOffset();
+         int end = getCompletionOffset() + getCompletionLength();
 
-			return end;
+         while (start != end && CharOperation.isWhitespace(document.getChar(end - 1)))
+            end--;
 
-		} catch (BadLocationException e) {
-			return super.getEnd();
-		}
-	}
+         return end;
 
-	/*
-	 * @see org.eclipse.jdt.internal.corext.template.DocumentTemplateContext#getKey()
-	 */
-	@Override
-	public String getKey() {
+      }
+      catch (BadLocationException e)
+      {
+         return super.getEnd();
+      }
+   }
 
-		if (getCompletionLength() == 0)
-			return super.getKey();
+   /*
+    * @see org.eclipse.jdt.internal.corext.template.DocumentTemplateContext#getKey()
+    */
+   @Override
+   public String getKey()
+   {
 
-		try {
-			IDocument document= getDocument();
+      if (getCompletionLength() == 0)
+         return super.getKey();
 
-			int start= getStart();
-			int end= getCompletionOffset();
-			return start <= end
-				? document.get(start, end - start)
-				: ""; //$NON-NLS-1$
+      try
+      {
+         IDocument document = getDocument();
 
-		} catch (BadLocationException e) {
-			return super.getKey();
-		}
-	}
+         int start = getStart();
+         int end = getCompletionOffset();
+         return start <= end ? document.get(start, end - start) : ""; //$NON-NLS-1$
 
-	/*
-	 * @see TemplateContext#evaluate(Template)
-	 */
-	@Override
-	public TemplateBuffer evaluate(Template template) throws BadLocationException, TemplateException {
-		TemplateTranslator translator= new TemplateTranslator();
-		TemplateBuffer buffer= translator.translate(template);
+      }
+      catch (BadLocationException e)
+      {
+         return super.getKey();
+      }
+   }
 
-		getContextType().resolve(buffer, this);
+   /*
+    * @see TemplateContext#evaluate(Template)
+    */
+   @Override
+   public TemplateBuffer evaluate(Template template) throws BadLocationException, TemplateException
+   {
+      TemplateTranslator translator = new TemplateTranslator();
+      TemplateBuffer buffer = translator.translate(template);
 
-		//TODO
-		//IPreferenceStore prefs= JavaPlugin.getDefault().getPreferenceStore();
-		boolean useCodeFormatter= true;// prefs.getBoolean(PreferenceConstants.TEMPLATES_USE_CODEFORMATTER);
+      getContextType().resolve(buffer, this);
 
-//		IJavaProject project= getJavaProject();
-//		JavaFormatter formatter= new JavaFormatter(TextUtilities.getDefaultLineDelimiter(getDocument()), getIndentation(), useCodeFormatter);
-//		formatter.format(buffer, this);
+      // TODO
+      // IPreferenceStore prefs= JavaPlugin.getDefault().getPreferenceStore();
+      boolean useCodeFormatter = true;// prefs.getBoolean(PreferenceConstants.TEMPLATES_USE_CODEFORMATTER);
 
-		return buffer;
-	}
+      // IJavaProject project= getJavaProject();
+      // JavaFormatter formatter= new JavaFormatter(TextUtilities.getDefaultLineDelimiter(getDocument()), getIndentation(),
+      // useCodeFormatter);
+      // formatter.format(buffer, this);
 
-//	/**
-//	 * Returns the indentation level at the position of code completion.
-//	 *
-//	 * @return the indentation level at the position of the code completion
-//	 */
-//	private int getIndentation() {
-//		int start= getStart();
-//		IDocument document= getDocument();
-//		try {
-//			IRegion region= document.getLineInformationOfOffset(start);
-//			String lineContent= document.get(region.getOffset(), region.getLength());
-////			IJavaProject project= getJavaProject();
-//			return Strings.computeIndentUnits(lineContent, project);
-//		} catch (BadLocationException e) {
-//			return 0;
-//		}
-//	}
+      return buffer;
+   }
+
+   // /**
+   // * Returns the indentation level at the position of code completion.
+   // *
+   // * @return the indentation level at the position of the code completion
+   // */
+   // private int getIndentation() {
+   // int start= getStart();
+   // IDocument document= getDocument();
+   // try {
+   // IRegion region= document.getLineInformationOfOffset(start);
+   // String lineContent= document.get(region.getOffset(), region.getLength());
+   // // IJavaProject project= getJavaProject();
+   // return Strings.computeIndentUnits(lineContent, project);
+   // } catch (BadLocationException e) {
+   // return 0;
+   // }
+   // }
 }
-

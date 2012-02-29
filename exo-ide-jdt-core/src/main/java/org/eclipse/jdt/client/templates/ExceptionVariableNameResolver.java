@@ -13,25 +13,26 @@ package org.eclipse.jdt.client.templates;
 import org.eclipse.jdt.client.templates.api.TemplateContext;
 import org.eclipse.jdt.client.templates.api.TemplateVariableResolver;
 
-
 /**
- *  Variable resolver for variable <code>exception_variable_name</code>. Resolves to
- *  an unused exception name.
- *
- *  @since 3.4
+ * Variable resolver for variable <code>exception_variable_name</code>. Resolves to an unused exception name.
+ * 
+ * @since 3.4
  */
-public class ExceptionVariableNameResolver extends TemplateVariableResolver {
+public class ExceptionVariableNameResolver extends TemplateVariableResolver
+{
 
-	@Override
-	protected String[] resolveAll(TemplateContext context) {
-		if (context instanceof JavaContext) {
-		   //TODO
-//			JavaContext jc= (JavaContext) context;
-//			IJavaProject javaProject= jc.getJavaProject();
-//			String exceptionVariableName= StubUtility.getExceptionVariableName();
-//			return StubUtility.getLocalNameSuggestions(jc.getJavaProject(), exceptionVariableName, 0, jc.computeExcludes());
-		}
-		return new String[0];
-	}
+   @Override
+   protected String[] resolveAll(TemplateContext context)
+   {
+      if (context instanceof JavaContext)
+      {
+         // TODO
+         // JavaContext jc= (JavaContext) context;
+         // IJavaProject javaProject= jc.getJavaProject();
+         // String exceptionVariableName= StubUtility.getExceptionVariableName();
+         // return StubUtility.getLocalNameSuggestions(jc.getJavaProject(), exceptionVariableName, 0, jc.computeExcludes());
+      }
+      return new String[0];
+   }
 
 }

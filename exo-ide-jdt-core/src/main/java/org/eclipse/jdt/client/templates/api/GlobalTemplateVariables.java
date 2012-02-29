@@ -195,7 +195,7 @@ public class GlobalTemplateVariables
        */
       protected String resolve(TemplateContext context)
       {
-         //TODO read user name
+         // TODO read user name
          return "user.name"; //$NON-NLS-1$
       }
    }

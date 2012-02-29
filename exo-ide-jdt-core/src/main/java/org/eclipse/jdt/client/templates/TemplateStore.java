@@ -72,7 +72,7 @@ public class TemplateStore
       JSONObject jsonObject = JSONParser.parseLenient(templatesText.templatesText().getText()).isObject();
       JSONArray templatesJson = jsonObject.get("templates").isArray();
       templates = new Template[templatesJson.size()];
-      String name,description,contextTypeId,pattern = null;
+      String name, description, contextTypeId, pattern = null;
       boolean isAutoInsertable = false;
       for (int i = 0; i < templatesJson.size(); i++)
       {
@@ -93,18 +93,18 @@ public class TemplateStore
     */
    public Template[] getTemplates(String contextTypeId)
    {
-      List<Template> temList  = new ArrayList<Template>();
+      List<Template> temList = new ArrayList<Template>();
       if (templates == null)
       {
          parseTemplates();
       }
-      
-      for(Template t: templates)
+
+      for (Template t : templates)
       {
-         if(t.getContextTypeId().equals(contextTypeId))
+         if (t.getContextTypeId().equals(contextTypeId))
             temList.add(t);
       }
-      
+
       return temList.toArray(new Template[temList.size()]);
    }
 

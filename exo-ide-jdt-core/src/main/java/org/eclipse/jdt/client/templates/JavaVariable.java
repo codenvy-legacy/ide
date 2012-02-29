@@ -13,40 +13,43 @@ package org.eclipse.jdt.client.templates;
 import org.eclipse.jdt.client.templates.CompilationUnitCompletion.Variable;
 import org.eclipse.jdt.client.templates.api.TemplateVariableType;
 
+public final class JavaVariable extends MultiVariable
+{
+   private String fParamType;
 
+   public JavaVariable(TemplateVariableType type, String name, int[] offsets)
+   {
+      super(type, name, offsets);
+   }
 
-public final class JavaVariable extends MultiVariable {
-	private String fParamType;
+   /*
+    * @see org.eclipse.jdt.internal.ui.text.template.contentassist.MultiVariable#toString(java.lang.Object)
+    * @since 3.3
+    */
+   @Override
+   public String toString(Object object)
+   {
+      if (object instanceof Variable)
+         return ((Variable)object).getName();
+      return super.toString(object);
+   }
 
-	public JavaVariable(TemplateVariableType type, String name, int[] offsets) {
-		super(type, name, offsets);
-	}
+   /**
+    * Returns the type given as parameter to this variable.
+    * 
+    * @return the type given as parameter to this variable
+    */
+   public String getParamType()
+   {
+      return fParamType;
+   }
 
-	/*
-	 * @see org.eclipse.jdt.internal.ui.text.template.contentassist.MultiVariable#toString(java.lang.Object)
-	 * @since 3.3
-	 */
-	@Override
-	public String toString(Object object) {
-		if (object instanceof Variable)
-			return ((Variable) object).getName();
-		return super.toString(object);
-	}
-
-	/**
-	 * Returns the type given as parameter to this variable.
-	 *
-	 * @return the type given as parameter to this variable
-	 */
-	public String getParamType() {
-		return fParamType;
-	}
-
-	/**
-	 * @param paramType the paramType
-	 * @since 3.3
-	 */
-	public void setParamType(String paramType) {
-		fParamType= paramType;
-	}
+   /**
+    * @param paramType the paramType
+    * @since 3.3
+    */
+   public void setParamType(String paramType)
+   {
+      fParamType = paramType;
+   }
 }

@@ -17,84 +17,97 @@ import org.eclipse.jdt.client.templates.api.TemplateContext;
 import org.eclipse.jdt.client.text.IDocument;
 import org.eclipse.jdt.client.text.Position;
 
-
-
 /**
  * The context type for templates inside Javadoc.
  */
-public class JavaDocContextType extends CompilationUnitContextType {
+public class JavaDocContextType extends CompilationUnitContextType
+{
 
-	/**
-	 * The word selection variable determines templates that work on a full
-	 * lines selection.
-	 * <p>
-	 * This class contains additional description that tells about the
-	 * 'Source &gt; Surround With > ...' menu.</p>
-	 * 
-	 * @since 3.7
-	 * @see org.eclipse.jface.text.templates.GlobalTemplateVariables.WordSelection
-	 */
-	protected static class SurroundWithWordSelection extends SimpleTemplateVariableResolver {
-	
-		/**
-		 * Creates a new word selection variable
-		 */
-		public SurroundWithWordSelection() {
-			super(org.eclipse.jdt.client.templates.api.GlobalTemplateVariables.WordSelection.NAME, "The selected word<br><br>Javadoc templates that contain this variable will also be shown in the 'Source &gt; Surround With > ...' menu.");
-		}
-		@Override
-		protected String resolve(TemplateContext context) {
-			String selection= context.getVariable(org.eclipse.jdt.client.templates.api.GlobalTemplateVariables.SELECTION);
-			if (selection == null)
-				return ""; //$NON-NLS-1$
-			return selection;
-		}
-	}
+   /**
+    * The word selection variable determines templates that work on a full lines selection.
+    * <p>
+    * This class contains additional description that tells about the 'Source &gt; Surround With > ...' menu.
+    * </p>
+    * 
+    * @since 3.7
+    * @see org.eclipse.jface.text.templates.GlobalTemplateVariables.WordSelection
+    */
+   protected static class SurroundWithWordSelection extends SimpleTemplateVariableResolver
+   {
 
-	/**
-	 * The id under which this context type is registered
-	 */
-	public static final String ID= "javadoc"; //$NON-NLS-1$
+      /**
+       * Creates a new word selection variable
+       */
+      public SurroundWithWordSelection()
+      {
+         super(
+            org.eclipse.jdt.client.templates.api.GlobalTemplateVariables.WordSelection.NAME,
+            "The selected word<br><br>Javadoc templates that contain this variable will also be shown in the 'Source &gt; Surround With > ...' menu.");
+      }
 
-	/**
-	 * Creates a java context type.
-	 */
-	public JavaDocContextType() {
-    super(ID);
-		// global
-		addResolver(new GlobalTemplateVariables.Cursor());
-//		addResolver(new SurroundWithLineSelection());
-		addResolver(new SurroundWithWordSelection());
-		addResolver(new GlobalTemplateVariables.Dollar());
-		addResolver(new GlobalTemplateVariables.Date());
-		addResolver(new GlobalTemplateVariables.Year());
-		addResolver(new GlobalTemplateVariables.Time());
-		addResolver(new GlobalTemplateVariables.User());
-//TODO
-//		// compilation unit
-//		addResolver(new File());
-//		addResolver(new PrimaryTypeName());
-//		addResolver(new Method());
-//		addResolver(new ReturnType());
-//		addResolver(new Arguments());
-//		addResolver(new Type());
-//		addResolver(new Package());
-//		addResolver(new Project());
-	}
+      @Override
+      protected String resolve(TemplateContext context)
+      {
+         String selection = context.getVariable(org.eclipse.jdt.client.templates.api.GlobalTemplateVariables.SELECTION);
+         if (selection == null)
+            return ""; //$NON-NLS-1$
+         return selection;
+      }
+   }
 
-	/*
-	 * @see org.eclipse.jdt.internal.corext.template.java.CompilationUnitContextType#createContext(org.eclipse.jface.text.IDocument, int, int, org.eclipse.jdt.core.ICompilationUnit)
-	 */
-	@Override
-	public CompilationUnitContext createContext(IDocument document, int offset, int length, CompilationUnit compilationUnit) {
-		return new JavaDocContext(this, document, offset, length, compilationUnit);
-	}
+   /**
+    * The id under which this context type is registered
+    */
+   public static final String ID = "javadoc"; //$NON-NLS-1$
 
-	/*
-	 * @see org.eclipse.jdt.internal.corext.template.java.CompilationUnitContextType#createContext(org.eclipse.jface.text.IDocument, org.eclipse.jface.text.Position, org.eclipse.jdt.core.ICompilationUnit)
-	 */
-	@Override
-	public CompilationUnitContext createContext(IDocument document, Position completionPosition, CompilationUnit compilationUnit) {
-		return new JavaDocContext(this, document, completionPosition, compilationUnit);
-	}
+   /**
+    * Creates a java context type.
+    */
+   public JavaDocContextType()
+   {
+      super(ID);
+      // global
+      addResolver(new GlobalTemplateVariables.Cursor());
+      // addResolver(new SurroundWithLineSelection());
+      addResolver(new SurroundWithWordSelection());
+      addResolver(new GlobalTemplateVariables.Dollar());
+      addResolver(new GlobalTemplateVariables.Date());
+      addResolver(new GlobalTemplateVariables.Year());
+      addResolver(new GlobalTemplateVariables.Time());
+      addResolver(new GlobalTemplateVariables.User());
+      // TODO
+      // // compilation unit
+      // addResolver(new File());
+      // addResolver(new PrimaryTypeName());
+      // addResolver(new Method());
+      // addResolver(new ReturnType());
+      // addResolver(new Arguments());
+      // addResolver(new Type());
+      // addResolver(new Package());
+      // addResolver(new Project());
+   }
+
+   /*
+    * @see
+    * org.eclipse.jdt.internal.corext.template.java.CompilationUnitContextType#createContext(org.eclipse.jface.text.IDocument,
+    * int, int, org.eclipse.jdt.core.ICompilationUnit)
+    */
+   @Override
+   public CompilationUnitContext createContext(IDocument document, int offset, int length,
+      CompilationUnit compilationUnit)
+   {
+      return new JavaDocContext(this, document, offset, length, compilationUnit);
+   }
+
+   /*
+    * @see
+    * org.eclipse.jdt.internal.corext.template.java.CompilationUnitContextType#createContext(org.eclipse.jface.text.IDocument,
+    * org.eclipse.jface.text.Position, org.eclipse.jdt.core.ICompilationUnit)
+    */
+   @Override
+   public CompilationUnitContext createContext(IDocument document, Position completionPosition,
+      CompilationUnit compilationUnit)
+   {
+      return new JavaDocContext(this, document, completionPosition, compilationUnit);
+   }
 }

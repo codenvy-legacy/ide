@@ -17,75 +17,83 @@ import org.eclipse.jdt.client.runtime.Assert;
  * <p>
  * Clients may instantiate this class.
  * </p>
- *
+ * 
  * @since 3.0
  */
-public final class TemplateBuffer {
+public final class TemplateBuffer
+{
 
-	/** The string of the template buffer */
-	private String fString;
-	/** The variable positions of the template buffer */
-	private TemplateVariable[] fVariables;
+   /** The string of the template buffer */
+   private String fString;
 
-	/**
-	 * Creates a template buffer.
-	 *
-	 * @param string the string
-	 * @param variables the variable positions
-	 */
-    public TemplateBuffer(String string, TemplateVariable[] variables) {
-		setContent(string, variables);
-    }
+   /** The variable positions of the template buffer */
+   private TemplateVariable[] fVariables;
 
-	/**
-	 * Sets the content of the template buffer.
-	 *
-	 * @param string the string
-	 * @param variables the variable positions
-	 */
-	public final void setContent(String string, TemplateVariable[] variables) {
-		Assert.isNotNull(string);
-		Assert.isNotNull(variables);
+   /**
+    * Creates a template buffer.
+    * 
+    * @param string the string
+    * @param variables the variable positions
+    */
+   public TemplateBuffer(String string, TemplateVariable[] variables)
+   {
+      setContent(string, variables);
+   }
 
-		// XXX: assert non-overlapping variable properties
+   /**
+    * Sets the content of the template buffer.
+    * 
+    * @param string the string
+    * @param variables the variable positions
+    */
+   public final void setContent(String string, TemplateVariable[] variables)
+   {
+      Assert.isNotNull(string);
+      Assert.isNotNull(variables);
 
-		fString= string;
-		fVariables= copy(variables);
-	}
+      // XXX: assert non-overlapping variable properties
 
-	/**
-	 * Returns a copy of the given array.
-	 *
-	 * @param array the array to be copied
-	 * @return a copy of the given array or <code>null</code> when <code>array</code> is <code>null</code>
-	 * @since 3.1
-	 */
-	private static TemplateVariable[] copy(TemplateVariable[] array) {
-		if (array != null) {
-			TemplateVariable[] copy= new TemplateVariable[array.length];
-			System.arraycopy(array, 0, copy, 0, array.length);
-			return copy;
-		}
-		return null;
-	}
+      fString = string;
+      fVariables = copy(variables);
+   }
 
-	/**
-	 * Returns the string of the template buffer.
-	 *
-	 * @return the string representation of the template buffer
-	 */
-	public final String getString() {
-		return fString;
-	}
+   /**
+    * Returns a copy of the given array.
+    * 
+    * @param array the array to be copied
+    * @return a copy of the given array or <code>null</code> when <code>array</code> is <code>null</code>
+    * @since 3.1
+    */
+   private static TemplateVariable[] copy(TemplateVariable[] array)
+   {
+      if (array != null)
+      {
+         TemplateVariable[] copy = new TemplateVariable[array.length];
+         System.arraycopy(array, 0, copy, 0, array.length);
+         return copy;
+      }
+      return null;
+   }
 
-	/**
-	 * Returns the variable positions of the template buffer. The returned array is
-	 * owned by this variable and must not be modified.
-	 *
-	 * @return the variable positions of the template buffer
-	 */
-	public final TemplateVariable[] getVariables() {
-		return fVariables;
-	}
+   /**
+    * Returns the string of the template buffer.
+    * 
+    * @return the string representation of the template buffer
+    */
+   public final String getString()
+   {
+      return fString;
+   }
+
+   /**
+    * Returns the variable positions of the template buffer. The returned array is owned by this variable and must not be
+    * modified.
+    * 
+    * @return the variable positions of the template buffer
+    */
+   public final TemplateVariable[] getVariables()
+   {
+      return fVariables;
+   }
 
 }
