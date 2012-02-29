@@ -171,17 +171,17 @@ public class JcrFileSystem implements VirtualFileSystem
       try
       {
          ItemData object = getItemData(session, id);
-         ItemData folder = getItemData(session, parentId);
-         if (ItemType.PROJECT == folder.getType())
+         ItemData parent = getItemData(session, parentId);
+         if (!(ItemType.PROJECT == parent.getType() || ItemType.FOLDER == parent.getType()))
+         {
+            throw new InvalidArgumentException("Unable copy. Item specified as parent is not a folder or project. ");
+         }
+         if (ItemType.PROJECT == parent.getType() && ItemType.PROJECT == object.getType())
          {
             throw new ConstraintException("Unable copy. Item specified as parent is a project. "
                + "Project cannot contains another project.");
          }
-         if (ItemType.FOLDER != folder.getType())
-         {
-            throw new InvalidArgumentException("Unable copy. Item specified as parent is not a folder. ");
-         }
-         ItemData newObject = object.copyTo((FolderData)folder);
+         ItemData newObject = object.copyTo((FolderData)parent);
          return fromItemData(newObject, PropertyFilter.ALL_FILTER);
       }
       finally
@@ -739,17 +739,17 @@ public class JcrFileSystem implements VirtualFileSystem
       try
       {
          ItemData object = getItemData(session, id);
-         ItemData folder = getItemData(session, parentId);
-         if (ItemType.PROJECT == folder.getType())
+         ItemData parent = getItemData(session, parentId);
+         if (!(ItemType.PROJECT == parent.getType() || ItemType.FOLDER == parent.getType()))
+         {
+            throw new InvalidArgumentException("Unable move. Item specified as parent is not a folder or project. ");
+         }
+         if (ItemType.PROJECT == parent.getType() && ItemType.PROJECT == object.getType())
          {
             throw new ConstraintException("Unable move. Item specified as parent is not a folder. "+
             "Project cannot be moved to another one. ");
          }
-         if (ItemType.FOLDER != folder.getType())
-         {
-            throw new InvalidArgumentException("Unable move. Item specified as parent is not a folder. ");
-         }
-         String movedId = object.moveTo((FolderData)folder, lockToken);
+         String movedId = object.moveTo((FolderData)parent, lockToken);
          return fromItemData(getItemData(session, movedId), PropertyFilter.ALL_FILTER);
       }
       finally
@@ -1272,16 +1272,17 @@ public class JcrFileSystem implements VirtualFileSystem
                          @DefaultValue("false") @QueryParam("overwrite") Boolean overwrite //
    ) throws ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException, IOException
    {
-      Session session = session();
+      Session session = null;
       ZipInputStream zip = null;
       try
       {
-         ItemData data = getItemData(session, parentId);
-         if (ItemType.FOLDER != data.getType())
+         session = session();
+         ItemData parentData = getItemData(session, parentId);
+         if (!(ItemType.FOLDER == parentData.getType() || ItemType.PROJECT == parentData.getType()))
          {
-            throw new InvalidArgumentException("Unable import from zip. Item specified as parent is not a folder. ");
+            throw new InvalidArgumentException("Unable import from zip. Item specified as parent is not a folder or project. ");
          }
-         // Counts numbers of compressed data.  
+         // Counts numbers of compressed data.
          final CountingInputStream compressedCounter = new CountingInputStream(in);
          zip = new ZipInputStream(compressedCounter);
          // The threshold after that checking of ZIP ratio started. 
@@ -1342,7 +1343,7 @@ public class JcrFileSystem implements VirtualFileSystem
          // and it can read content of current ZipEntry but not able to close original
          // stream of ZIPed data.
          InputStream noCloseZip = new NotClosableInputStream(uncompressedCounter);
-         FolderData parentFolder = (FolderData)data;
+         FolderData parentFolder = (FolderData)parentData;
          ZipEntry zipEntry;
          while ((zipEntry = zip.getNextEntry()) != null)
          {
@@ -1421,7 +1422,10 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       finally
       {
-         session.logout();
+         if (session != null)
+         {
+            session.logout();
+         }
          if (zip != null)
          {
             zip.close();
@@ -1970,7 +1974,6 @@ public class JcrFileSystem implements VirtualFileSystem
 
    private Session session() throws VirtualFileSystemException
    {
-      // TODO improve Session usage 
       try
       {
          return repository.login(workspaceName);
