@@ -288,7 +288,7 @@ public class JcrFileSystem implements VirtualFileSystem
          }
          if (properties == null)
          {
-            properties = new ArrayList<ConvertibleProperty>();
+            properties = new ArrayList<ConvertibleProperty>(2);
          }
          if (type != null)
          {
