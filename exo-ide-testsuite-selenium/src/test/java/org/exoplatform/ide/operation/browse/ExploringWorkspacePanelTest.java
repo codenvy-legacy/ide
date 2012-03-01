@@ -18,26 +18,22 @@
  */
 package org.exoplatform.ide.operation.browse;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Map;
-
 /**
  * Created by The eXo Platform SAS.
- *	
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:   ${date} ${time}
- *
+ * @version $Id: ${date} ${time}
+ * 
  */
 public class ExploringWorkspacePanelTest extends BaseTest
 {
@@ -61,7 +57,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
    {
       try
       {
-         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
          VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_1 + "/");
          VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1);
          VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_2);
@@ -90,7 +86,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
    }
 
    /**
-    *  IDE-2 Exploring "Workspace" panel
+    * IDE-2 Exploring "Workspace" panel
     * 
     * @throws Exception
     */
@@ -104,7 +100,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2);
 
-      //step1. Open folder 2. Check visible subfolders of folder #2. Check subfolders folder #1 is not visible.
+      // step1. Open folder 2. Check visible subfolders of folder #2. Check subfolders folder #1 is not visible.
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_2);
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_1);
@@ -112,8 +108,8 @@ public class ExploringWorkspacePanelTest extends BaseTest
       assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_1));
       assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_2));
 
-      //step2. Close folder 2. Check not visible subfolders of folder #2. 
-      //Open folder one and check visible subfolders of of folder#1.
+      // step2. Close folder 2. Check not visible subfolders of folder #2.
+      // Open folder one and check visible subfolders of of folder#1.
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_2);
       assertFalse(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_1));
       assertFalse(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_2));
@@ -124,7 +120,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
       assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1));
       assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_2));
 
-      //step 3 collapse all folders and check their
+      // step 3 collapse all folders and check their
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_2);
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_1);
@@ -137,7 +133,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
       assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1));
       assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_2));
 
-      //step 4 Roll up project folder and checking - workspace is empty  
+      // step 4 Roll up project folder and checking - workspace is empty
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT);
       IDE.LOADER.waitClosed();
       assertFalse(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1));
@@ -147,7 +143,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
       assertFalse(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1));
       assertFalse(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_2));
 
-      //step 5 Collapse project and check all folders present
+      // step 5 Collapse project and check all folders present
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT);
       Thread.sleep(3000);
       assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1));

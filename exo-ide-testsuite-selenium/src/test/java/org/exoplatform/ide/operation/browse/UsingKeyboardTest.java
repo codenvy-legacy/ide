@@ -19,6 +19,7 @@
 package org.exoplatform.ide.operation.browse;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -34,10 +35,10 @@ import org.openqa.selenium.Keys;
 
 /**
  * Created by The eXo Platform SAS.
- *	
+ * 
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
- * @version $Id:   ${date} ${time}
- *
+ * @version $Id: ${date} ${time}
+ * 
  */
 public class UsingKeyboardTest extends BaseTest
 {
@@ -66,6 +67,7 @@ public class UsingKeyboardTest extends BaseTest
 
    /**
     * Keyboard works in the TreeGrid only within the Mozilla Firefox browser with SmartGWT 2.2, 2.3
+    * 
     * @throws Exception
     */
    @Test
@@ -79,16 +81,15 @@ public class UsingKeyboardTest extends BaseTest
       IDE.PROJECT.EXPLORER.typeKeys(Keys.ARROW_UP.toString() + Keys.ARROW_LEFT);
       IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + TEST_SUBFOLDER);
 
-      // test java.awt.event.KeyEvent.VK_RIGHT,java.awt.event.KeyEvent.VK_DOWNT      
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.PROJECT.EXPLORER.typeKeys(Keys.ARROW_RIGHT.toString() + Keys.ARROW_DOWN);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_SUBFOLDER);
 
       // test keyboard with opened Content Panel
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_SUBFOLDER + "/Untitled file.xml");
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_SUBFOLDER + "/Untitled file.gadget");
 
-      // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT      
+      // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_SUBFOLDER);
       IDE.PROJECT.EXPLORER.typeKeys(Keys.ARROW_UP.toString() + Keys.ARROW_LEFT);
       IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + TEST_SUBFOLDER);
@@ -98,6 +99,7 @@ public class UsingKeyboardTest extends BaseTest
 
    /**
     * Keyboard works in the TreeGrid only within the Mozilla Firefox browser with SmartGWT 2.2, 2.3
+    * 
     * @throws Exception
     */
    @Test
@@ -108,33 +110,32 @@ public class UsingKeyboardTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_SUBFOLDER);
 
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_SUBFOLDER);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_SUBFOLDER + "/Untitled file.xml");
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_SUBFOLDER + "/Untitled file.gadget");
       IDE.EDITOR.saveAndCloseFile(1, TEST_FILE);
 
-      IDE.SEARCH.performSearch(PROJECT, "", MimeType.GOOGLE_GADGET);
-      IDE.NAVIGATION.assertItemVisibleInSearchTree(PROJECT + "/" + TEST_FILE);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.SEARCH.performSearch("/" + PROJECT, "", MimeType.GOOGLE_GADGET);
+      IDE.SEARCH_RESULT.waitOpened();
+      assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + TEST_FILE));
 
-      // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT
-      IDE.NAVIGATION.selectItemInSearchTree(PROJECT + "/" + TEST_FILE);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      IDE.SEARCH_RESULT.selectItem(PROJECT + "/" + TEST_FILE);
+      IDE.SEARCH_RESULT.typeKeys(Keys.UP.toString());
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
+      IDE.SEARCH_RESULT.typeKeys(Keys.LEFT.toString());
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.NAVIGATION.assertItemNotVisibleInSearchTree(PROJECT + "/" + TEST_FILE);
+      assertFalse(IDE.SEARCH_RESULT.isItemVisible(PROJECT + "/" + TEST_FILE));
 
-      // test java.awt.event.KeyEvent.VK_RIGHT,java.awt.event.KeyEvent.VK_DOWNT      
-      IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
-      Thread.sleep(TestConstants.SLEEP);
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      //IDE.NAVIGATION.selectItemInSerchTree(WS_URL);
-
-      IDE.NAVIGATION.assertItemVisibleInSearchTree(PROJECT + "/" + TEST_FILE);
+      IDE.SEARCH_RESULT.selectItem(PROJECT);
+      IDE.SEARCH_RESULT.typeKeys(Keys.RIGHT.toString());
+      IDE.SEARCH_RESULT.typeKeys(Keys.DOWN.toString());
+      assertTrue(IDE.SEARCH_RESULT.isItemVisible(PROJECT + "/" + TEST_FILE));
    }
 
    /**
     * Keyboard works in the TreeGrid only within the Mozilla Firefox browser with SmartGWT 2.2, 2.3
+    * 
     * @throws Exception
     */
    @Test
@@ -159,7 +160,7 @@ public class UsingKeyboardTest extends BaseTest
       assertTrue(IDE.OUTLINE.isItemPresent("Module"));
       assertTrue(IDE.OUTLINE.isItemPresent("ModulePrefs"));
       assertTrue(IDE.OUTLINE.isItemPresent("Content"));
-      //IDE.OUTLINE.assertElementNotPresentOutlineTree("CDATA");
+      // IDE.OUTLINE.assertElementNotPresentOutlineTree("CDATA");
 
       // verify keyboard key pressing within the outline
       IDE.OUTLINE.selectItem("Module");

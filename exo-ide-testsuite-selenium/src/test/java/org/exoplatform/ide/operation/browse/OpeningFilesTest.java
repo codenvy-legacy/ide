@@ -18,27 +18,25 @@
  */
 package org.exoplatform.ide.operation.browse;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.util.Map;
 
 /**
  * IDE-14 Opening file if some files were deleted from the same folder.
  * 
  * Created by The eXo Platform SAS.
- *	
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:   ${date} ${time}
- *
+ * @version $Id: ${date} ${time}
+ * 
  */
 public class OpeningFilesTest extends BaseTest
 {
@@ -57,7 +55,7 @@ public class OpeningFilesTest extends BaseTest
    {
       try
       {
-         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
          VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + folderName);
       }
       catch (Exception e)
@@ -83,34 +81,34 @@ public class OpeningFilesTest extends BaseTest
    @Test
    public void testDeleteFileAndOpenFromOneFolder() throws Exception
    {
-      //open project and check
+      // open project and check
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + folderName);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + folderName);
 
-      //close welcome tab for easy numbered tabs and editors
+      // close welcome tab for easy numbered tabs and editors
       IDE.EDITOR.clickCloseEditorButton(0);
       IDE.LOADER.waitClosed();
       IDE.EDITOR.waitTabNotPresent(0);
-    
-      //create txt file. Change content
+
+      // create txt file. Change content
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.waitTabPresent(0);
       IDE.EDITOR.typeTextIntoEditor(0, file1Content);
       IDE.EDITOR.saveAs(0, file1Name);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + folderName+"/" + file1Name);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + folderName + "/" + file1Name);
       IDE.EDITOR.closeFile(file1Name);
 
-      //create html file. Change content
+      // create html file. Change content
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       IDE.EDITOR.waitTabPresent(0);
       IDE.EDITOR.saveAs(0, file2Name);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + folderName+"/" + file2Name);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + folderName + "/" + file2Name);
       IDE.EDITOR.closeFile(0);
-      
-      //Delete second file and check
+
+      // Delete second file and check
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + folderName + "/" + file2Name);
       IDE.TOOLBAR.runCommand("Delete Item(s)...");
       IDE.DELETE.waitOpened();
@@ -118,7 +116,7 @@ public class OpeningFilesTest extends BaseTest
       IDE.DELETE.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + folderName + "/" + file2Name);
 
-      //open first file and check the saved content
+      // open first file and check the saved content
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + folderName + "/" + file1Name);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + folderName + "/" + file1Name);
       assertEquals(file1Content, IDE.EDITOR.getTextFromCodeEditor(2));

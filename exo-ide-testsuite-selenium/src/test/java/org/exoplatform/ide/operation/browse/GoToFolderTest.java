@@ -22,21 +22,18 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.util.Map;
 
 /**
  * IDE-96 Go to folder test
  * 
  * Created by The eXo Platform SAS.
- *	
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:   ${date} ${time}
- *
+ * @version $Id: ${date} ${time}
+ * 
  */
 public class GoToFolderTest extends BaseTest
 {
@@ -57,7 +54,7 @@ public class GoToFolderTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/file/empty.xml";
       try
       {
-         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
 
          VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_1);
          VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_2);
@@ -91,7 +88,7 @@ public class GoToFolderTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2);
 
-      //Open first folder and file in it
+      // Open first folder and file in it
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_1);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_1);
@@ -100,17 +97,17 @@ public class GoToFolderTest extends BaseTest
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_1);
       IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + FOLDER_1 + "/" + FILE_1);
 
-      //Select second file
+      // Select second file
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_2);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
-      //Go to folder and go
+      // Go to folder and go
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_1);
 
-      //close all folders, refresh Project Explorer Three. And reproduce goto folder operations with
-      //second file 
+      // close all folders, refresh Project Explorer Three. And reproduce goto folder operations with
+      // second file
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.TOOLBAR.runCommand(MenuCommands.File.REFRESH_TOOLBAR);
@@ -142,7 +139,7 @@ public class GoToFolderTest extends BaseTest
    @Test
    public void testGoToFolderSearchPanel() throws Exception
    {
-      
+
       driver.navigate().refresh();
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1);
@@ -156,11 +153,11 @@ public class GoToFolderTest extends BaseTest
       IDE.SEARCH_RESULT.openItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      //TODO After fix issue-IDE-1458 should be work
-            IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
-            IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + FOLDER_1 + "/" + FILE_1);
-            IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1);
-            
+      // TODO After fix issue-IDE-1458 should be work
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
+      IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + FOLDER_1 + "/" + FILE_1);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1);
+
    }
 
 }

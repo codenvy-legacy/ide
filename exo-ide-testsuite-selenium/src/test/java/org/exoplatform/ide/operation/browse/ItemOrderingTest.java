@@ -25,19 +25,16 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
  * 
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
- * @version $Id:   ${date} ${time}
- *
+ * @version $Id: ${date} ${time}
+ * 
  */
 public class ItemOrderingTest extends BaseTest
 {
@@ -61,8 +58,7 @@ public class ItemOrderingTest extends BaseTest
    {
       try
       {
-         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
-
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
       catch (Exception e)
       {
@@ -94,7 +90,7 @@ public class ItemOrderingTest extends BaseTest
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      //close welcome tab for easy numbered tabs and editors
+      // close welcome tab for easy numbered tabs and editors
       IDE.EDITOR.clickCloseEditorButton(0);
       IDE.LOADER.waitClosed();
       IDE.EDITOR.waitTabNotPresent(0);
@@ -129,10 +125,15 @@ public class ItemOrderingTest extends BaseTest
       IDE.FOLDER.createFolder(TEST_FOLDER_1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER_1);
 
-      //check all elements in explorer
-      checkItemOrderingInNavigationPanel();
-
-      //serch all xml files and check
+      // check all elements in explorer
+      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + TEST_FILE_1_2));
+      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + UPPERCASE_TEST_FILE_1));
+      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + TEST_FILE_1));
+      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + TEST_FOLDER_1_2));
+      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + UPPERCASE_TEST_FOLDER_1));
+      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + TEST_FOLDER_1));
+      
+      // search all xml files and check
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.TOOLBAR.runCommand(MenuCommands.File.SEARCH);
       IDE.SEARCH.waitPerformSearchOpened();
@@ -145,17 +146,6 @@ public class ItemOrderingTest extends BaseTest
       assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + TEST_FILE_1));
    }
 
-   private void checkItemOrderingInNavigationPanel() throws Exception
-   {
-      IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + TEST_FILE_1_2);
-      IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + UPPERCASE_TEST_FILE_1);
-      IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + TEST_FILE_1);
-      IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + TEST_FOLDER_1_2);
-      IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + UPPERCASE_TEST_FOLDER_1);
-      IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + TEST_FOLDER_1);
-   }
-
-   
    @AfterClass
    public static void tearDown() throws Exception
    {

@@ -29,7 +29,7 @@ import org.junit.Test;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class LogReaderTest extends BaseTest
 {
@@ -38,15 +38,23 @@ public class LogReaderTest extends BaseTest
    public void testLogReaderOpen() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
-      
-      
+
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.LOG_READER);
       IDE.LOG_READER.waitOpened();
 
       String log = IDE.LOG_READER.getLogContent();
 
       assertNotNull(log);
-      assertFalse(log.isEmpty());
+
+      if (log.isEmpty())
+      {
+         assertFalse(IDE.LOG_READER.isPreviousButtonEnabled());
+         assertFalse(IDE.LOG_READER.isNextButtonEnabled());
+      }
+      else
+      {
+         assertFalse(IDE.LOG_READER.isNextButtonEnabled());
+      }
    }
 
    @Test
@@ -54,23 +62,22 @@ public class LogReaderTest extends BaseTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
-      
+
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.LOG_READER);
       IDE.LOG_READER.waitOpened();
 
       String log = IDE.LOG_READER.getLogContent();
-      assertTrue(IDE.LOG_READER.isPreviousButtonEnabled());
       assertFalse(IDE.LOG_READER.isNextButtonEnabled());
-
-      IDE.LOG_READER.clickPrevButton();
-      IDE.LOADER.waitClosed();
-      
-      assertFalse(log.equals(IDE.LOG_READER.getLogContent()));
-      log = IDE.LOG_READER.getLogContent();
-      assertTrue(IDE.LOG_READER.isNextButtonEnabled());
-
-      IDE.LOG_READER.clickNextButton();
-      assertFalse(log.equals(IDE.LOG_READER.getLogContent()));
+      if (IDE.LOG_READER.isPreviousButtonEnabled())
+      {
+         IDE.LOG_READER.clickPrevButton();
+         IDE.LOADER.waitClosed();
+         assertFalse(log.equals(IDE.LOG_READER.getLogContent()));
+         log = IDE.LOG_READER.getLogContent();
+         assertTrue(IDE.LOG_READER.isNextButtonEnabled());
+         IDE.LOG_READER.clickNextButton();
+         assertFalse(log.equals(IDE.LOG_READER.getLogContent()));
+      }
    }
 
 }

@@ -44,6 +44,8 @@ public class SearchResult extends AbstractTestModule
 
       public static final String SEARCH_RESULT_TREE = "ideSearchResultItemTreeGrid";
 
+      public static final String TREE_GRID_ID = "ideSearchResultItemTreeGrid";
+
       public static final String SEARCH_RESULT_SELECTOR = "div#" + SEARCH_RESULT_TREE + " div[id^=" + TREE_PREFIX + "]";
    }
 
@@ -51,6 +53,9 @@ public class SearchResult extends AbstractTestModule
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
    private WebElement view;
+
+   @FindBy(id = Locators.TREE_GRID_ID)
+   private WebElement treeGrid;
 
    /**
     * @throws InterruptedException
@@ -125,6 +130,26 @@ public class SearchResult extends AbstractTestModule
    }
 
    /**
+    * Is item visible in search results tree.
+    * 
+    * @param path item's path
+    * @return <code>true</code> if item is present.
+    * @throws Exception
+    */
+   public boolean isItemVisible(String path) throws Exception
+   {
+      try
+      {
+         WebElement item = driver().findElement(By.id(getItemId(path)));
+         return (item != null && item.isDisplayed());
+      }
+      catch (NoSuchElementException e)
+      {
+         return false;
+      }
+   }
+
+   /**
     * Open item (make double click) in Search results tree.
     * 
     * @param path item's path
@@ -135,6 +160,23 @@ public class SearchResult extends AbstractTestModule
       WebElement item = driver().findElement(By.id(getItemId(path)));
       item.click();
       new Actions(driver()).doubleClick(item).build().perform();
+   }
+
+   /**
+    * Select item in Search results tree.
+    * 
+    * @param path item's path
+    * @throws Exception
+    */
+   public void selectItem(String path) throws Exception
+   {
+      WebElement item = driver().findElement(By.id(getItemId(path)));
+      new Actions(driver()).moveToElement(item, 1, 1).click().perform();
+   }
+
+   public void typeKeys(String keys)
+   {
+      new Actions(driver()).sendKeys(treeGrid, keys).build().perform();
    }
 
    /**

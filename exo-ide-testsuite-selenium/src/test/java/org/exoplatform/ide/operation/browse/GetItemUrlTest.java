@@ -48,15 +48,13 @@ public class GetItemUrlTest extends BaseTest
 
    private final String content1 = "<p> Hello!!! </p>";
 
-   private final String searchPhrase = "Hello!!!";
+   private final String searchPhrase = "Hello";
 
    private final String file1Name = "gadget.txt";
 
    private final String folderName = "myFolder";
 
    private static final String PROJECT = GetItemUrlTest.class.getSimpleName();
-
-   private final String entrypoint = WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
 
    @BeforeClass
    public static void setUp()
@@ -156,9 +154,35 @@ public class GetItemUrlTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      IDE.SEARCH.performSearch("/" + PROJECT, "", "");
-      IDE.SEARCH_RESULT.waitOpened();
 
-      // TODO end the test when search is ready
+      IDE.SEARCH.performSearch("/" + PROJECT, searchPhrase, "");
+      IDE.SEARCH_RESULT.waitOpened();
+      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + file1Name);
+      IDE.SEARCH_RESULT.selectItem(PROJECT + "/" + file1Name);
+
+      String url = IDE.GET_URL.getURL();
+
+      driver.navigate().to(url);
+
+      new WebDriverWait(driver, 5).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               WebElement hello = driver.findElement(By.xpath("//body[contains(.,'<p> Hello!!! </p>')]"));
+               return hello != null && hello.isDisplayed();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+
+      driver.navigate().back();
+      IDE.PROJECT.EXPLORER.waitOpened();
+
    }
 }

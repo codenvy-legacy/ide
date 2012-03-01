@@ -26,13 +26,11 @@ import org.junit.runners.Suite.SuiteClasses;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 @RunWith(Suite.class)
 @SuiteClasses({ExploringWorkspacePanelTest.class, GetItemUrlTest.class, GoToFolderTest.class, OpeningFilesTest.class,
-   WorkspaceTest.class, UsingKeyboardTest.class, ItemOrderingTest.class, OpenFileByURLTest.class,
-   MoveCursorInEditBox.class
-   })
+   UsingKeyboardTest.class, ItemOrderingTest.class, OpenFileByURLTest.class})
 public class BrowseTestSuite
 {
 
