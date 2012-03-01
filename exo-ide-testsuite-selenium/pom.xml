@@ -149,6 +149,11 @@
                               <exclude>**/*StoreOpenedFilesHistoryTest.java</exclude>
                               <exclude>**/*AbstractHotkeysTest.java</exclude>
                               <exclude>**/*WorkspaceTest.java</exclude>
+                              <exclude>**/ViewVersionListTest.java</exclude>
+                              <exclude>**/*ViewVersionHistoryTest.java</exclude>
+                              <exclude>**/*VersioningTestSuite</exclude>
+                              <exclude>**/*RestoreVersionTest</exclude>
+                              <exclude>**/*NavigateVersionsTest</exclude>
                               <exclude>**/*BaseTest.java</exclude>
                            </excludes>
                         </configuration>
