@@ -28,8 +28,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 26, 2011 12:39:21 PM anya $
- *
+ * @version $Id: Dec 26, 2011 12:39:21 PM anya $
+ * 
  */
 public class AvailableDependencies extends AbstractTestModule
 {
@@ -45,8 +45,11 @@ public class AvailableDependencies extends AbstractTestModule
 
       static final String OK_BUTTON_ID = "ideAvailableDependenciesOkButton";
 
-      static final String DEPENDENCY_LOCATOR = "//table[@id='" + DEPENDENCIES_GRID_ID
+      static final String DEPENDENCY_BY_NAME_LOCATOR = "//table[@id='" + DEPENDENCIES_GRID_ID
          + "']//div/span[contains(text(), '%s')]";
+
+      static final String DEPENDENCY_BY_POSITION_SELECTOR = "table#" + DEPENDENCIES_GRID_ID
+         + " tbody:first-of-type>tr:nth-of-type(%s) span";
 
       static final String DEPENDENCY_SELECTOR = "table#" + DEPENDENCIES_GRID_ID + " tbody:first-of-type>tr";
 
@@ -181,7 +184,26 @@ public class AvailableDependencies extends AbstractTestModule
       try
       {
          WebElement dependencyElement =
-            driver().findElement(By.xpath(String.format(Locators.DEPENDENCY_LOCATOR, dependency)));
+            driver().findElement(By.xpath(String.format(Locators.DEPENDENCY_BY_NAME_LOCATOR, dependency)));
+         dependencyElement.click();
+      }
+      catch (NoSuchElementException e)
+      {
+      }
+   }
+
+   /**
+    * Select dependency by its position (starts from 1) in the dependency list.
+    * 
+    * @param dependencyPosition dependency position in list of dependecies
+    */
+   public void selectDependency(int dependencyPosition)
+   {
+      try
+      {
+         WebElement dependencyElement =
+            driver().findElement(
+               By.cssSelector(String.format(Locators.DEPENDENCY_BY_POSITION_SELECTOR, dependencyPosition)));
          dependencyElement.click();
       }
       catch (NoSuchElementException e)
