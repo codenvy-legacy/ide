@@ -39,7 +39,7 @@ import java.util.UUID;
  * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class CopyFoldersAndFilesTest extends BaseTest
 {
@@ -62,14 +62,8 @@ public class CopyFoldersAndFilesTest extends BaseTest
    private static final String RANDOM_CONTENT_2 = UUID.randomUUID().toString();
 
    /**
-    * BeforeClass create such structure:
-    * PROJECT
-    *   FOLDER_1
-    *     FILE_GADGET - file with sample content
-    *     FILE_GROOVY - file with sample content
-    *     FOLDER_1_1
-    *     FOLDER_1_2
-    *   FOLDER_2
+    * BeforeClass create such structure: PROJECT FOLDER_1 FILE_GADGET - file with sample content FILE_GROOVY - file with sample
+    * content FOLDER_1_1 FOLDER_1_2 FOLDER_2
     */
    @BeforeClass
    public static void setUp()
@@ -110,14 +104,14 @@ public class CopyFoldersAndFilesTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1);
 
-      //Open files:
+      // Open files:
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_GADGET);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_1 + "/" + FILE_GADGET);
-      
-      IDE.WORKSPACE.selectItem(PROJECT  + "/"+ FOLDER_1);
+
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_1);
 
       assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.PASTE_TOOLBAR));
       assertFalse(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR));
@@ -137,6 +131,8 @@ public class CopyFoldersAndFilesTest extends BaseTest
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_2);
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2 + "/" + FOLDER_1);
 
       checkFilesAndFoldersOnServer();
 
@@ -153,14 +149,18 @@ public class CopyFoldersAndFilesTest extends BaseTest
    private void checkFilesAndFoldersOnServer() throws Exception
    {
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_1).getStatusCode());
-      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_1 + "/" + FOLDER_1_2)
-         .getStatusCode());
-      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_1 + "/" + FILE_GROOVY)
-         .getStatusCode());
-      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_1 + "/" + FILE_GADGET)
-         .getStatusCode());
-      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_1 + "/" + FOLDER_1_1)
-         .getStatusCode());
+      assertEquals(200,
+         VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_1 + "/" + FOLDER_1_2)
+            .getStatusCode());
+      assertEquals(200,
+         VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_1 + "/" + FILE_GROOVY)
+            .getStatusCode());
+      assertEquals(404,
+         VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_1 + "/" + FILE_GADGET)
+            .getStatusCode());
+      assertEquals(404,
+         VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_1 + "/" + FOLDER_1_1)
+            .getStatusCode());
 
       Response response = VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
       assertEquals(200, response.getStatusCode());

@@ -751,7 +751,7 @@ public class Editor extends AbstractTestModule
    public void waitActiveFile(String path) throws Exception
    {
       final String location = (path.startsWith("/")) ? path : "/" + path;
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 7).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
