@@ -38,6 +38,8 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectCreatedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -74,7 +76,7 @@ import java.util.Set;
  * 
  */
 public class ConfigureBuildPathPresenter implements AddSourceToBuildPathHandler, ItemsSelectedHandler,
-   VfsChangedHandler, ConfigureClasspathHandler, ProjectOpenedHandler, ProjectClosedHandler
+   VfsChangedHandler, ConfigureClasspathHandler, ProjectOpenedHandler, ProjectClosedHandler, ProjectCreatedHandler
 {
    /**
     * 
@@ -161,6 +163,7 @@ public class ConfigureBuildPathPresenter implements AddSourceToBuildPathHandler,
       IDE.addHandler(ConfigureClasspathEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ProjectCreatedEvent.TYPE, this);
    }
 
    /**
@@ -270,7 +273,7 @@ public class ConfigureBuildPathPresenter implements AddSourceToBuildPathHandler,
     * @param projectModel - folder of project (encoded)
     * @return {@link File} classpath file
     */
-   private FileModel createClasspathFile(ProjectModel projectModel)
+   private FileModel formClasspathFile(ProjectModel projectModel)
    {
       String path = VirtualFileSystem.getInstance().getInfo().getId() + "#" + projectModel.getPath();
       if (!path.endsWith("/"))
@@ -344,12 +347,12 @@ public class ConfigureBuildPathPresenter implements AddSourceToBuildPathHandler,
                   {
                      if (i.getName().equals(GROOVYCLASSPATH))
                      {
-                        classPathFile((FileModel)i);
+                        displayClasspath((FileModel)i);
                         return;
                      }
                   }
                   // classpath not found
-                  createClassPathFile(project);
+                  createClassPath(project, true);
                }
 
                @Override
@@ -368,9 +371,9 @@ public class ConfigureBuildPathPresenter implements AddSourceToBuildPathHandler,
    /**
     * @param projectModel
     */
-   private void createClassPathFile(ProjectModel projectModel)
+   private void createClassPath(ProjectModel projectModel, final boolean showClassPath)
    {
-      final FileModel classpath = createClasspathFile(projectModel);
+      final FileModel classpath = formClasspathFile(projectModel);
       try
       {
          VirtualFileSystem.getInstance().createFile(projectModel,
@@ -380,7 +383,10 @@ public class ConfigureBuildPathPresenter implements AddSourceToBuildPathHandler,
                @Override
                protected void onSuccess(FileModel result)
                {
-                  classPathFile(result);
+                  if (showClassPath)
+                  {
+                     displayClasspath(result);
+                  }
                }
 
                @Override
@@ -530,14 +536,15 @@ public class ConfigureBuildPathPresenter implements AddSourceToBuildPathHandler,
    /**
     * @param result
     */
-   private void classPathFile(FileModel file)
+   private void displayClasspath(FileModel file)
    {
       if (display == null)
       {
          display = GWT.create(Display.class);
          bindDisplay();
       }
-      display.asView().setTitle(GroovyExtension.LOCALIZATION_CONSTANT.configureBuildPathTitle(currentProject.getName()));
+      display.asView()
+         .setTitle(GroovyExtension.LOCALIZATION_CONSTANT.configureBuildPathTitle(currentProject.getName()));
       IDE.getInstance().openView(display.asView());
 
       display.getClassPathEntryListGrid().setValue(new ArrayList<GroovyClassPathEntry>());
@@ -554,6 +561,18 @@ public class ConfigureBuildPathPresenter implements AddSourceToBuildPathHandler,
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       currentProject = event.getProject();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectCreatedHandler#onProjectCreated(org.exoplatform.ide.client.framework.project.ProjectCreatedEvent)
+    */
+   @Override
+   public void onProjectCreated(ProjectCreatedEvent event)
+   {
+      if (projectTypes.contains(event.getProject().getProjectType()))
+      {
+         createClassPath(event.getProject(), false);
+      }
    }
 
 }
