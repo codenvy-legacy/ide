@@ -57,9 +57,12 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
 import org.exoplatform.services.jcr.core.ExtendedSession;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -746,8 +749,8 @@ public class JcrFileSystem implements VirtualFileSystem
          }
          if (ItemType.PROJECT == parent.getType() && ItemType.PROJECT == object.getType())
          {
-            throw new ConstraintException("Unable move. Item specified as parent is not a folder. "+
-            "Project cannot be moved to another one. ");
+            throw new ConstraintException("Unable move. Item specified as parent is not a folder. " +
+               "Project cannot be moved to another one. ");
          }
          String movedId = object.moveTo((FolderData)parent, lockToken);
          return fromItemData(getItemData(session, movedId), PropertyFilter.ALL_FILTER);
@@ -1204,7 +1207,7 @@ public class JcrFileSystem implements VirtualFileSystem
                      }
                      catch (JsonException e)
                      {
-                        throw new RuntimeException(e.getMessage(), e);
+                        throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
                      }
                   }
                   else
@@ -1261,6 +1264,7 @@ public class JcrFileSystem implements VirtualFileSystem
                deleted = file.delete();
             }
          }
+         //System.out.println("---> " + file.getAbsolutePath() + ", exists : " + file.exists());
       }
    }
 
@@ -1280,69 +1284,22 @@ public class JcrFileSystem implements VirtualFileSystem
          ItemData parentData = getItemData(session, parentId);
          if (!(ItemType.FOLDER == parentData.getType() || ItemType.PROJECT == parentData.getType()))
          {
-            throw new InvalidArgumentException("Unable import from zip. Item specified as parent is not a folder or project. ");
+            throw new InvalidArgumentException("Unable import from zip. "
+               + "Item specified as parent is not a folder or project. ");
          }
-         // Counts numbers of compressed data.
-         final CountingInputStream compressedCounter = new CountingInputStream(in);
-         zip = new ZipInputStream(compressedCounter);
-         // The threshold after that checking of ZIP ratio started. 
-         final long threshold = 1000000;
-         // Max compression ratio. If the number of bytes uncompressed data is exceed the number
-         // of bytes of compressed stream more than this ratio (and number of uncompressed data
-         // is more than threshold) then VirtualFileSystemRuntimeException is thrown.
-         final int zipRatio = 100;
-         // Counts number of uncompressed data.
-         CountingInputStream uncompressedCounter = new CountingInputStream(zip)
+
+         final ZipContent zipContent = spoolZipStream(in);
+
+         if (zipContent.isProject && ItemType.PROJECT == parentData.getType())
          {
-            @Override
-            public int read() throws IOException
-            {
-               int i = super.read();
-               checkCompressionRatio();
-               return i;
-            }
+            throw new ConstraintException("Unable import from zip. Project cannot be imported to another one. ");
+         }
 
-            @Override
-            public int read(byte[] b, int off, int len) throws IOException
-            {
-               int i = super.read(b, off, len);
-               checkCompressionRatio();
-               return i;
-            }
-
-            @Override
-            public int read(byte[] b) throws IOException
-            {
-               int i = super.read(b);
-               checkCompressionRatio();
-               return i;
-            }
-
-            @Override
-            public long skip(long length) throws IOException
-            {
-               long i = super.skip(length);
-               checkCompressionRatio();
-               return i;
-            }
-
-            private void checkCompressionRatio()
-            {
-               long uncompressedBytes = getByteCount(); // number of uncompressed bytes
-               if (uncompressedBytes > threshold)
-               {
-                  long compressedBytes = compressedCounter.getByteCount(); // number of compressed bytes
-                  if (uncompressedBytes > (zipRatio * compressedBytes))
-                  {
-                     throw new VirtualFileSystemRuntimeException("Zip bomb detected. ");
-                  }
-               }
-            }
-         };
+         zip = new ZipInputStream(zipContent.data);
          // Wrap zip stream to prevent close it. We can pass stream to other method
          // and it can read content of current ZipEntry but not able to close original
          // stream of ZIPed data.
-         InputStream noCloseZip = new NotClosableInputStream(uncompressedCounter);
+         InputStream noCloseZip = new NotClosableInputStream(zip);
          FolderData parentFolder = (FolderData)parentData;
          ZipEntry zipEntry;
          while ((zipEntry = zip.getNextEntry()) != null)
@@ -1394,7 +1351,7 @@ public class JcrFileSystem implements VirtualFileSystem
                }
                catch (JsonException e)
                {
-                  throw new RuntimeException(e.getMessage(), e);
+                  throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
                }
                current.updateProperties(properties, null, null, null);
             }
@@ -1434,48 +1391,11 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /** Wrapper for ZipInputStream that make possible read content of ZipEntry but prevent close ZipInputStream. */
-   private static final class NotClosableInputStream extends InputStream
+   private static final class NotClosableInputStream extends FilterInputStream
    {
-      private final InputStream delegate;
-
       public NotClosableInputStream(InputStream delegate)
       {
-         this.delegate = delegate;
-      }
-
-      /** @see java.io.InputStream#read() */
-      @Override
-      public int read() throws IOException
-      {
-         return delegate.read();
-      }
-
-      /** @see java.io.InputStream#read(byte[]) */
-      @Override
-      public int read(byte[] b) throws IOException
-      {
-         return delegate.read(b);
-      }
-
-      /** @see java.io.InputStream#read(byte[], int, int) */
-      @Override
-      public int read(byte[] b, int off, int len) throws IOException
-      {
-         return delegate.read(b, off, len);
-      }
-
-      /** @see java.io.InputStream#skip(long) */
-      @Override
-      public long skip(long n) throws IOException
-      {
-         return delegate.skip(n);
-      }
-
-      /** @see java.io.InputStream#available() */
-      @Override
-      public int available() throws IOException
-      {
-         return delegate.available();
+         super(delegate);
       }
 
       /** @see java.io.InputStream#close() */
@@ -1483,26 +1403,163 @@ public class JcrFileSystem implements VirtualFileSystem
       public void close() throws IOException
       {
       }
+   }
 
-      /** @see java.io.InputStream#mark(int) */
-      @Override
-      public void mark(int readlimit)
+   /** Memory threshold. If zip stream over this size it spooled in file. */
+   private static final int BUFFER = 102400; // 100k
+   /** The threshold after that checking of ZIP ratio started. */
+   private static final long ZIP_THRESHOLD = 1000000;
+   /**
+    * Max compression ratio. If the number of bytes uncompressed data is exceed the number
+    * of bytes of compressed stream more than this ratio (and number of uncompressed data
+    * is more than threshold) then VirtualFileSystemRuntimeException is thrown.
+    */
+   private static final int ZIP_RATIO = 100;
+
+   /**
+    * Spool content of zip in memory or in file.
+    *
+    * @param src source zip
+    * @return spool zip
+    * @throws IOException if any i/o error occur
+    */
+   private ZipContent spoolZipStream(InputStream src) throws IOException
+   {
+      java.io.File file = null;
+      byte[] inMemory = null;
+
+      int count = 0;
+      ByteArrayOutputStream inMemorySpool = new ByteArrayOutputStream(BUFFER);
+
+      int bytes;
+      byte[] buff = new byte[8192];
+      while (count <= BUFFER && (bytes = src.read(buff)) != -1)
       {
-         delegate.mark(readlimit);
+         inMemorySpool.write(buff, 0, bytes);
+         count += bytes;
       }
 
-      /** @see java.io.InputStream#reset() */
-      @Override
-      public void reset() throws IOException
+      InputStream in;
+      if (count > BUFFER)
       {
-         delegate.reset();
+         file = java.io.File.createTempFile("import", ".zip");
+         FileOutputStream fileSpool = new FileOutputStream(file);
+         try
+         {
+            inMemorySpool.writeTo(fileSpool);
+            while ((bytes = src.read(buff)) != -1)
+            {
+               fileSpool.write(buff, 0, bytes);
+            }
+         }
+         finally
+         {
+            fileSpool.close();
+         }
+         in = new FileInputStream(file);
+      }
+      else
+      {
+         inMemory = inMemorySpool.toByteArray();
+         in = new ByteArrayInputStream(inMemory);
       }
 
-      /** @see java.io.InputStream#markSupported() */
-      @Override
-      public boolean markSupported()
+      ZipInputStream zip = null;
+      try
       {
-         return delegate.markSupported();
+         // Counts numbers of compressed data.
+         final CountingInputStream compressedCounter = new CountingInputStream(in);
+         zip = new ZipInputStream(compressedCounter);
+         // Counts number of uncompressed data.
+         CountingInputStream uncompressedCounter = new CountingInputStream(zip)
+         {
+            @Override
+            public int read() throws IOException
+            {
+               int i = super.read();
+               checkCompressionRatio();
+               return i;
+            }
+
+            @Override
+            public int read(byte[] b, int off, int len) throws IOException
+            {
+               int i = super.read(b, off, len);
+               checkCompressionRatio();
+               return i;
+            }
+
+            @Override
+            public int read(byte[] b) throws IOException
+            {
+               int i = super.read(b);
+               checkCompressionRatio();
+               return i;
+            }
+
+            @Override
+            public long skip(long length) throws IOException
+            {
+               long i = super.skip(length);
+               checkCompressionRatio();
+               return i;
+            }
+
+            private void checkCompressionRatio()
+            {
+               long uncompressedBytes = getByteCount(); // number of uncompressed bytes
+               if (uncompressedBytes > ZIP_THRESHOLD)
+               {
+                  long compressedBytes = compressedCounter.getByteCount(); // number of compressed bytes
+                  if (uncompressedBytes > (ZIP_RATIO * compressedBytes))
+                  {
+                     throw new VirtualFileSystemRuntimeException("Zip bomb detected. ");
+                  }
+               }
+            }
+         };
+
+         boolean isProject = false;
+
+         ZipEntry zipEntry;
+         while ((zipEntry = zip.getNextEntry()) != null)
+         {
+            if (".project".equals(zipEntry.getName()))
+            {
+               isProject = true;
+            }
+            else if (!zipEntry.isDirectory())
+            {
+               while (uncompressedCounter.read(buff) != -1)
+               {
+                  // Read full data from stream to be able detect zip-bomb.
+               }
+            }
+         }
+
+         return new ZipContent(
+            inMemory != null ? new ByteArrayInputStream(inMemory) : new DeleteOnCloseFileInputStream(file),
+            isProject
+         );
+      }
+      finally
+      {
+         if (zip != null)
+         {
+            zip.close();
+         }
+      }
+   }
+
+   private static final class ZipContent
+   {
+      final InputStream data;
+      final boolean isProject;
+
+      ZipContent(InputStream data, boolean isProject)
+      {
+         this.data = data;
+         this.isProject = isProject;
       }
    }
 
@@ -1626,11 +1683,13 @@ public class JcrFileSystem implements VirtualFileSystem
       catch (VirtualFileSystemException e)
       {
          sendErrorAsHTML(e);
+         // never thrown
          throw e;
       }
       catch (IOException e)
       {
          sendErrorAsHTML(e);
+         // never thrown
          throw e;
       }
       finally
@@ -1694,11 +1753,13 @@ public class JcrFileSystem implements VirtualFileSystem
       catch (VirtualFileSystemException e)
       {
          sendErrorAsHTML(e);
+         // never thrown
          throw e;
       }
       catch (IOException e)
       {
          sendErrorAsHTML(e);
+         // never thrown
          throw e;
       }
    }
