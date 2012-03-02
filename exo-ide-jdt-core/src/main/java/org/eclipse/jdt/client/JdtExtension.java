@@ -77,6 +77,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       new CodeAssistantController();
       new JavaCodeController();
       new OutlinePresenter();
+      new TypeInfoUpdater();
    }
 
    public static class Con extends SimpleControl implements IDEControl

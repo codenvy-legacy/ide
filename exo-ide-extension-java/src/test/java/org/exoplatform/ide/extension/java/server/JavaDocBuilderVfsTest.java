@@ -73,6 +73,7 @@ public class JavaDocBuilderVfsTest extends JavaDocBase
       Assert.assertNotNull(info.getType());
       Assert.assertNotNull(info.getDeclaringClass());
       Assert.assertNotNull(info.getModifiers());
+      Assert.assertNotNull(info.getDescriptor());
    }
 
    @Test
@@ -91,4 +92,5 @@ public class JavaDocBuilderVfsTest extends JavaDocBase
       Assert.assertNotNull(methodInfo.getParameterTypes());
       Assert.assertNotNull(methodInfo.getDeclaringClass());
    }
+
 }

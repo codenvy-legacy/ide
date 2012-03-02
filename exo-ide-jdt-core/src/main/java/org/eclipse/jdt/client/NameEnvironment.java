@@ -66,7 +66,7 @@ import java.util.Set;
 public class NameEnvironment implements INameEnvironment
 {
 
-   private static Set<String> packages;
+//   private static Set<String> packages;
 
    private String projectId;
 
@@ -93,11 +93,11 @@ public class NameEnvironment implements INameEnvironment
             "java.lang.Throwable",//
             "java.lang.Void"};
       loadWellKnownClasses(fqns);
-      packages = new HashSet<String>();
-      packages.add("java");
-      packages.add("java.lang");
-      packages.add("java.util");
-      packages.add("java.io");
+//      packages = new HashSet<String>();
+//      packages.add("java");
+//      packages.add("java.lang");
+//      packages.add("java.util");
+//      packages.add("java.io");
    }
 
    private static void loadWellKnownClasses(String[] fqns)
@@ -155,7 +155,7 @@ public class NameEnvironment implements INameEnvironment
       if (projectId != null)
       {
 
-         loadClassInfo(key);
+         loadTypeInfo(key, projectId);
       }
       return null;
    }
@@ -169,11 +169,15 @@ public class NameEnvironment implements INameEnvironment
       return builder.toString();
    }
 
-   /** @param key */
-   private void loadClassInfo(final String key)
+   /**
+    * Load and store in TypeInfoStorage type info
+    * @param fqn of the type
+    * @param projectId project
+    */
+   public static void loadTypeInfo(final String fqn, String projectId)
    {
       final JSONTypeInfoUnmarshaller jsonTypeInfoUnmarshaller = new JSONTypeInfoUnmarshaller();
-      JavaCodeAssistantService.get().getClassDescription(key, projectId,
+      JavaCodeAssistantService.get().getClassDescription(fqn, projectId,
          new AsyncRequestCallback<TypeInfo>(jsonTypeInfoUnmarshaller)
 
          {
@@ -183,8 +187,8 @@ public class NameEnvironment implements INameEnvironment
             {
                if (jsonTypeInfoUnmarshaller.typeInfo != null)
                {
-                  TypeInfoStorage.get().putType(key, jsonTypeInfoUnmarshaller.typeInfo.toString());
-                  packages.add(key.substring(0, key.lastIndexOf('.')));
+                  TypeInfoStorage.get().putType(fqn, jsonTypeInfoUnmarshaller.typeInfo.toString());
+//                  packages.add(key.substring(0, key.lastIndexOf('.')));
                }
             }
 
@@ -219,7 +223,7 @@ public class NameEnvironment implements INameEnvironment
       }
       if (projectId != null)
       {
-         loadClassInfo(key);
+         loadTypeInfo(key, projectId);
       }
       return null;
    }

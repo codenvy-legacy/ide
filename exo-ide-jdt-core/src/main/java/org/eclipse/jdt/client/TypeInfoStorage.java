@@ -87,6 +87,11 @@ public class TypeInfoStorage
    {
       storage.setItem(SHORT_TYPE_INFO, info);
    }
+   
+   public void removeTypeInfo(String key)
+   {
+      storage.removeItem(key);
+   }
 
    public List<JSONObject> getTypesByNamePrefix(String prefix, boolean fqnPart)
    {

@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.extension.java.server.parser;
 
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaField;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.Type;
+
 import org.exoplatform.ide.codeassistant.jvm.bean.FieldInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.MethodInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.ShortTypeInfoBean;
@@ -29,15 +35,7 @@ import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-
-import com.thoughtworks.qdox.model.DocletTag;
-import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaField;
-import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.Type;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -80,6 +78,7 @@ public class Util
       type.setFields(toFieldInfo(clazz.getFields()));
       JavaMethod[] methods = clazz.getMethods(true);
       type.setMethods(toMethods(methods));
+//      type.setSignature(SignatureCreator.createTypeSignature(clazz.getFullyQualifiedName(), true).replaceAll("\\.", "/"));
       return type;
    }
 
@@ -111,6 +110,7 @@ public class Util
          i.setParameterTypes(toParameters(parameterTypes));
          i.setName(m.getName());
          i.setDeclaringClass(m.getParentClass().getFullyQualifiedName());
+         i.setDescriptor(SignatureCreator.createMethodSignature(m));
 
          if (!m.isConstructor())
          {
@@ -156,6 +156,7 @@ public class Util
          info.setType(f.getType().getValue());
          info.setName(f.getName());
          info.setModifiers(modifiersToInteger(f.getModifiers()));
+         info.setDescriptor(SignatureCreator.createTypeSignature(f).replaceAll("\\.", "/"));
          fi.add(info);
       }
 
