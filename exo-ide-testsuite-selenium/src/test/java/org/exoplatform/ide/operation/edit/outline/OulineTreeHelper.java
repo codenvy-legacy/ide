@@ -34,6 +34,7 @@ import java.util.Set;
 
 /**
  * This class helps to verify code outline tree grid.
+ * 
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
  */
@@ -44,7 +45,7 @@ public class OulineTreeHelper extends BaseTest
    static int outlineTreeInfoIndex = 0;
 
    /**
-    * Set outlineTreeInfoIndex = 0 
+    * Set outlineTreeInfoIndex = 0
     */
    public static void init()
    {
@@ -53,6 +54,7 @@ public class OulineTreeHelper extends BaseTest
 
    /**
     * Add item to into the outlineTreeInfo list
+    * 
     * @param itemRowNumber starting from 1
     * @param itemLabel
     * @param fileLineNumber number of line with this item in the code starting from 1
@@ -64,9 +66,10 @@ public class OulineTreeHelper extends BaseTest
 
    /**
     * Add item to into the outlineTreeInfo list with index starting from 1
+    * 
     * @param itemLabel
     * @param fileLineNumber number of line with this item in the code starting from 1
-    * @param TokenType type of token displayed as item 
+    * @param TokenType type of token displayed as item
     */
    protected void addOutlineItem(String itemLabel, int fileLineNumber, TokenType tokenType)
    {
@@ -75,6 +78,7 @@ public class OulineTreeHelper extends BaseTest
 
    /**
     * Add item to into the outlineTreeInfo list with index starting from 1
+    * 
     * @param itemLabel
     * @param fileLineNumber number of line with this item in the code starting from 1
     */
@@ -85,6 +89,7 @@ public class OulineTreeHelper extends BaseTest
 
    /**
     * Add item to into the outlineTreeInfo list
+    * 
     * @param itemRowNumber starting from 1
     * @param itemLabel
     * @param fileLineNumber number of line with this item in the code starting from 1
@@ -97,10 +102,11 @@ public class OulineTreeHelper extends BaseTest
 
    /**
     * Add item to into the outlineTreeInfo list
+    * 
     * @param itemLabel
     * @param fileLineNumber number of line with this item in the code starting from 1
     * @param TokenType type of token displayed as item
-    * @param itemName represent token's name 
+    * @param itemName represent token's name
     */
    protected void addOutlineItem(String itemLabel, int fileLineNumber, TokenType tokenType, String itemName)
    {
@@ -109,9 +115,11 @@ public class OulineTreeHelper extends BaseTest
 
    /**
     * Add item to into the outlineTreeInfo list
+    * 
     * @param itemLabel
     * @param fileLineNumber number of line with this item in the code starting from 1
-    * @param checkFromFile = default <b>true</b> outline item be checked from outline panel and then from file, <b>false</b> - only from outline panel 
+    * @param checkFromFile = default <b>true</b> outline item be checked from outline panel and then from file, <b>false</b> -
+    *           only from outline panel
     * @param TokenType type of token displayed as item
     * @param itemName represent token's name
     */
@@ -123,9 +131,11 @@ public class OulineTreeHelper extends BaseTest
 
    /**
     * Add item to into the outlineTreeInfo list with index starting from 1
+    * 
     * @param itemLabel
     * @param fileLineNumber number of line with this item in the code starting from 1
-    * @param checkFromFile = default <b>true</b> outline item be checked from outline panel and then from file, <b>false</b> - only from outline panel
+    * @param checkFromFile = default <b>true</b> outline item be checked from outline panel and then from file, <b>false</b> -
+    *           only from outline panel
     */
    protected void addOutlineItem(String itemLabel, int fileLineNumber, boolean checkFromFile)
    {
@@ -134,10 +144,12 @@ public class OulineTreeHelper extends BaseTest
 
    /**
     * Add item to into the outlineTreeInfo list with index starting from 1
+    * 
     * @param itemLabel
     * @param fileLineNumber number of line with this item in the code starting from 1
-    * @param checkFromFile = default <b>true</b> outline item be checked from outline panel and then from file, <b>false</b> - only from outline panel
-    * @param TokenType type of token displayed as item 
+    * @param checkFromFile = default <b>true</b> outline item be checked from outline panel and then from file, <b>false</b> -
+    *           only from outline panel
+    * @param TokenType type of token displayed as item
     */
    protected void addOutlineItem(String itemLabel, int fileLineNumber, boolean checkFromFile, TokenType tokenType)
    {
@@ -149,7 +161,8 @@ public class OulineTreeHelper extends BaseTest
     * @param itemRowNumber starting from 0
     * @param itemLabel
     * @param fileLineNumber starting from 1
-    * @param checkFromFile = default <b>true</b> outline item be checked from outline panel and then from file, <b>false</b> - only from outline panel
+    * @param checkFromFile = default <b>true</b> outline item be checked from outline panel and then from file, <b>false</b> -
+    *           only from outline panel
     */
    protected void addOutlineItem(int itemRowNumber, String itemLabel, int fileLineNumber, boolean checkFromFile)
    {
@@ -161,8 +174,9 @@ public class OulineTreeHelper extends BaseTest
     * @param itemRowNumber starting from 1. If itemRowNumber=0 then outlineTreeInfoIndex value will be used
     * @param itemLabel
     * @param fileLineNumber starting from 1
-    * @param checkFromFile = default <b>true</b> outline item be checked from outline panel and then from file, <b>false</b> - only from outline panel
-    * @param TokenType type of token displayed as item 
+    * @param checkFromFile = default <b>true</b> outline item be checked from outline panel and then from file, <b>false</b> -
+    *           only from outline panel
+    * @param TokenType type of token displayed as item
     */
    protected void addOutlineItem(int itemRowNumber, String itemLabel, int fileLineNumber, boolean checkFromFile,
       TokenType tokenType, String itemName)
@@ -185,8 +199,9 @@ public class OulineTreeHelper extends BaseTest
       this.outlineTreeInfo.clear();
    }
 
-   /** 
+   /**
     * Check outline item from outline panel and then from file based on each outline item info from outlineTreeInfo
+    * 
     * @throws InterruptedException
     * @throws Exception
     */
@@ -228,6 +243,7 @@ public class OulineTreeHelper extends BaseTest
 
    /**
     * Check item present by checking its id like "a:PROPERTY:23"
+    * 
     * @param itemId item's id
     */
    private void checkItemPresent(String itemId)
@@ -238,7 +254,8 @@ public class OulineTreeHelper extends BaseTest
 
    /**
     * Expand outline tree by goto from the first line to the last in the file tab. Then cursor will be returned to the line 1.
-    * @throws Exception 
+    * 
+    * @throws Exception
     */
    protected void expandOutlineTree() throws Exception
    {
@@ -251,7 +268,7 @@ public class OulineTreeHelper extends BaseTest
       // go to the end of file
       do
       {
-         // Press down key on keyboard.         
+         // Press down key on keyboard.
          IDE.EDITOR.moveCursorDown(0, 1);
          Thread.sleep(Outline.SELECT_OUTLINE_DELAY * 2);
       }
@@ -263,11 +280,13 @@ public class OulineTreeHelper extends BaseTest
 
    // Updated
    /**
-    * Check outline item by clicking in outline panel on row with <b>itemRowNumber</b> and verifying <b>fileLineNumber</b> in the Status Bar   
+    * Check outline item by clicking in outline panel on row with <b>itemRowNumber</b> and verifying <b>fileLineNumber</b> in the
+    * Status Bar
+    * 
     * @param itemRowNumber starting from 0
     * @param fileLineNumber starting from 1
-    * @throws Exception 
-    * @throws Exception 
+    * @throws Exception
+    * @throws Exception
     */
    private void checkOutlineItemFromOutlinePanel(Integer itemRowNumber, String itemLabel, int fileLineNumber)
       throws Exception
@@ -280,23 +299,26 @@ public class OulineTreeHelper extends BaseTest
    }
 
    /**
-    * Check outline item by goto <b>fileLineNumber</b> line in the file and verifying is <b>itemRowNumber</b> is selected in the Outline Panel   
+    * Check outline item by goto <b>fileLineNumber</b> line in the file and verifying is <b>itemRowNumber</b> is selected in the
+    * Outline Panel
+    * 
     * @param itemRowNumber starting from 0
     * @param itemLabel
     * @param fileLineNumber starting from 1
-    * @throws Exception 
+    * @throws Exception
     */
    private void checkOutlineItemFromFile(int itemRowNumber, String itemLabel, int fileLineNumber) throws Exception
    {
       IDE.GOTOLINE.goToLine(fileLineNumber);
+
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       assertTrue("Verifing if is selected an outline item with row number = " + itemRowNumber,
          IDE.OUTLINE.isItemSelected(itemRowNumber));
    }
 
    /**
-    * TODO must be checked
-    * check icon near outline item
+    * TODO must be checked check icon near outline item
+    * 
     * @param rowNumber starting from 0
     * @param iconText
     * @param isSelected row
@@ -319,8 +341,8 @@ public class OulineTreeHelper extends BaseTest
    }
 
    /**
-    * TODO must be checked
-    * click the outline item node
+    * TODO must be checked click the outline item node
+    * 
     * @param rowNumber startign from 0
     * @throws Exception
     */
@@ -334,15 +356,15 @@ public class OulineTreeHelper extends BaseTest
 }
 
 /**
- * Info about item within the code outline tree grid
- * Created by The eXo Platform SAS.
+ * Info about item within the code outline tree grid Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id
  */
 class OutlineItemInfo
 {
    /**
-    * Full label including parameters and element type 
+    * Full label including parameters and element type
     */
    private String label;
 
@@ -359,7 +381,7 @@ class OutlineItemInfo
    private TokenType tokenType;
 
    /**
-    * <b>true</b> outline item be checked from outline panel and then from file, <b>false</b> - only from outline panel 
+    * <b>true</b> outline item be checked from outline panel and then from file, <b>false</b> - only from outline panel
     */
    private boolean checkItemFromFile = true;
 
@@ -374,6 +396,7 @@ class OutlineItemInfo
 
    /**
     * Get item's id in pattern like "a:METHOD:26"
+    * 
     * @return item's id or null, if (name == null or tokenType == null)
     */
    public String getId()

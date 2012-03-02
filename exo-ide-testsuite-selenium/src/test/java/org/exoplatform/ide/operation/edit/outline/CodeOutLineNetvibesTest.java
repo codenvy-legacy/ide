@@ -25,22 +25,19 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * Test for code outline for netvibes files.
  * 
  * @author <a href="mailto:njusha.exo@gmail.com">Nadia Zavalko</a>
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id:   ${date} ${time}
- *
+ * @version $Id: ${date} ${time}
+ * 
  */
 public class CodeOutLineNetvibesTest extends BaseTest
 {
@@ -57,7 +54,7 @@ public class CodeOutLineNetvibesTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/NetvibesCodeOutline.html";
       try
       {
-         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
          VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME);
          VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, WS_URL + PROJECT + "/" + FOLDER_NAME + "/"
             + FILE_NAME);
@@ -84,8 +81,8 @@ public class CodeOutLineNetvibesTest extends BaseTest
    @Test
    public void testCodeOutLineNetvibes() throws Exception
    {
-      //------ 1 ------------
-      //open file with text
+      // ------ 1 ------------
+      // open file with text
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
@@ -94,7 +91,7 @@ public class CodeOutLineNetvibesTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
 
-      //step 2 change memtype as UWA widget
+      // step 2 change memtype as UWA widget
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       IDE.RENAME.waitOpened();
       IDE.RENAME.setMimeType("application/x-uwa-widget");
@@ -102,7 +99,7 @@ public class CodeOutLineNetvibesTest extends BaseTest
       IDE.RENAME.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
 
-      //step 3 open the file, run outline and check tree
+      // step 3 open the file, run outline and check tree
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE);
@@ -114,10 +111,10 @@ public class CodeOutLineNetvibesTest extends BaseTest
 
    private void checkTreeCorrectlyCreated() throws Exception
    {
-      //check html node
+      // check html node
       assertTrue(IDE.OUTLINE.isItemPresentById("html:TAG:4"));
 
-      //check head tag and subnodes head
+      // check head tag and subnodes head
       assertTrue(IDE.OUTLINE.isItemPresentById("head:TAG:6"));
       assertTrue(IDE.OUTLINE.isItemPresentById("meta:TAG:7"));
       assertTrue(IDE.OUTLINE.isItemPresentById("meta:TAG:8"));
@@ -131,13 +128,13 @@ public class CodeOutLineNetvibesTest extends BaseTest
       assertTrue(IDE.OUTLINE.isItemPresentById("widget:preferences:TAG:20"));
       assertTrue(IDE.OUTLINE.isItemPresentById("style:TAG:22"));
 
-      //check script tag and subnodes script
+      // check script tag and subnodes script
       assertTrue(IDE.OUTLINE.isItemPresentById("script:TAG:26"));
       assertTrue(IDE.OUTLINE.isItemPresentById("YourWidgetName:VARIABLE:31"));
       assertTrue(IDE.OUTLINE.isItemPresentById("function:FUNCTION:37"));
       assertTrue(IDE.OUTLINE.isItemPresentById("function:FUNCTION:44"));
 
-      //check body tag and subnodes body
+      // check body tag and subnodes body
       assertTrue(IDE.OUTLINE.isItemPresentById("body:TAG:50"));
       assertTrue(IDE.OUTLINE.isItemPresentById("p:TAG:51"));
 

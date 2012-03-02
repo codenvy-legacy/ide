@@ -18,21 +18,14 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Outline.TokenType;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
-import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import java.util.Map;
 
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a> 
@@ -60,7 +53,7 @@ public class CodeOutLinePhpTest extends CodeAssistantBaseTest
       try
       {
 
-         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
 
          VirtualFileSystemUtils.put(PATH, MimeType.APPLICATION_PHP, WS_URL + PROJECT + "/" + FILE_NAME);
       }

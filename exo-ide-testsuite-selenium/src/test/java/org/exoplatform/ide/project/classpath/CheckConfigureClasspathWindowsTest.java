@@ -123,9 +123,10 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       IDE.PROJECT.CLASSPATH_SOURCE.clickOkButton();
       // "Choose source" window dissapeared.
       IDE.PROJECT.CLASSPATH_SOURCE.waitClosed();
+      IDE.LOADER.waitClosed();
       // New item in Configure Classpath list grid appeared.
+      IDE.PROJECT.CLASSPATH.waitPathPresent(WS_NAME + "#/" + PROJECT_2 + "/");
       assertTrue(IDE.PROJECT.CLASSPATH.isPathPresent(WS_NAME + "#/" + PROJECT + "/"));
-      assertTrue(IDE.PROJECT.CLASSPATH.isPathPresent(WS_NAME + "#/" + PROJECT_2 + "/"));
 
       // Select folder path and check, that remove button is enabled
       IDE.PROJECT.CLASSPATH.selectPath(WS_NAME + "#/" + PROJECT_2 + "/");
@@ -167,8 +168,9 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       IDE.PROJECT.CLASSPATH_SOURCE.waitOkButtonEnabled(true);
       IDE.PROJECT.CLASSPATH_SOURCE.clickOkButton();
       IDE.PROJECT.CLASSPATH_SOURCE.waitClosed();
+      IDE.LOADER.waitClosed();
       // New item in Configure Classpath list grid appeared.
-      assertTrue(IDE.PROJECT.CLASSPATH.isPathPresent(WS_NAME + "#/" + PROJECT_2 + "/"));
+      IDE.PROJECT.CLASSPATH.waitPathPresent(WS_NAME + "#/" + PROJECT_2 + "/");
       IDE.PROJECT.CLASSPATH.clickSaveButton();
       IDE.PROJECT.CLASSPATH.waitClosed();
 

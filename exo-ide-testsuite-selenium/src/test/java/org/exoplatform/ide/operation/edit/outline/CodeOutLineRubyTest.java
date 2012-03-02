@@ -28,7 +28,6 @@ import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -52,7 +51,7 @@ public class CodeOutLineRubyTest extends CodeAssistantBaseTest
    {
       try
       {
-         createProject(CodeOutLineChromatticTest.class.getSimpleName());
+         createProject(CodeOutLineRubyTest.class.getSimpleName());
          VirtualFileSystemUtils.createFileFromLocal(project.get(Link.REL_CREATE_FILE), FILE_NAME,
             MimeType.APPLICATION_RUBY,
             "src/test/resources/org/exoplatform/ide/operation/edit/outline/" + FILE_NAME);
@@ -65,13 +64,13 @@ public class CodeOutLineRubyTest extends CodeAssistantBaseTest
    @Before
    public void openFile() throws Exception
    {
+      openProject();
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
    }
 
    @Test
-   @Ignore
    public void testCodeOutLineRuby() throws Exception
    {     
       // open outline panel

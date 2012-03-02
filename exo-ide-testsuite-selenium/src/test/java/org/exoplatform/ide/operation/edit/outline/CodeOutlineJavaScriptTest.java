@@ -76,6 +76,7 @@ public class CodeOutlineJavaScriptTest extends CodeAssistantBaseTest
    @Before
    public void openFile() throws Exception
    {
+      openProject();
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);

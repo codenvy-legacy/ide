@@ -26,7 +26,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -34,36 +33,38 @@ import java.io.IOException;
 
 /**
  * Test for deleting user file template.
- *	
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:   ${date} ${time}
- *
+ * @version $Id: ${date} ${time}
+ * 
  */
 public class RemoveNonDefaultFileTemplatesTest extends BaseTest
 {
    private final static String PROJECT = RemoveNonDefaultFileTemplatesTest.class.getSimpleName();
-   
+
    private static final String FILE_TEMPLATE_NAME_1 = "test template";
-   
+
    /**
     * File, where users templates are stored.
     */
    public static final String FILE_TEMPLATES_STORE = ENTRY_POINT_URL + WS_NAME_2 + "/ide-home/templates/fileTemplates";
-   
+
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         final String filePath ="src/test/resources/org/exoplatform/ide/operation/templates/RemoveNonDefaultFileTemplatesTest";
+         final String filePath =
+            "src/test/resources/org/exoplatform/ide/operation/templates/RemoveNonDefaultFileTemplatesTest";
          VirtualFileSystemUtils.put(filePath, MimeType.TEXT_PLAIN, FILE_TEMPLATES_STORE);
          VirtualFileSystemUtils.createDefaultProject(PROJECT);
       }
-      catch (IOException e)
+      catch (Exception e)
       {
+         e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -76,14 +77,8 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       {
       }
    }
-   
+
    /**
-    * Test added to Igore, because we don't use registry service.
-    * We must put file with template to 
-    * http://localhost:8080/IDE/rest/private/jcr/repository/production/ide-home/users/templates/fileTemplates
-    * or
-    * http://localhost:8080/IDE/rest/private/jcr/repository/production/ide-home/users/templates/projectTemplates
-    * file.
     * @throws Exception
     */
    @Test
@@ -92,100 +87,37 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      
-      //------ 1 ----------
-      //Click on "File->New->From Template..." topmenu item.
-      Assert.assertTrue(IDE.TOOLBAR.isButtonFromNewPopupMenuEnabled(MenuCommands.New.FILE_FROM_TEMPLATE));
+
+      // ------ 1 ----------
+      // Click on "File->New->From Template..." topmenu item.
+      assertTrue(IDE.TOOLBAR.isButtonFromNewPopupMenuEnabled(MenuCommands.New.FILE_FROM_TEMPLATE));
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       IDE.TEMPLATES.waitOpened();
-      
+
       // check "Create file" dialog window
       assertTrue(IDE.TEMPLATES.isOpened());
-      
-      //------ 2 ----------
+
+      // ------ 2 ----------
       // In window select "test template", then click "Delete" button.
       IDE.TEMPLATES.selectTemplate(FILE_TEMPLATE_NAME_1);
-      
-      //click Delete button
+
+      // click Delete button
       IDE.TEMPLATES.clickDeleteButton();
-      
+
       // check warning dialog appeared
       IDE.ASK_DIALOG.waitOpened();
-      
-      //------ 3 ----------
-      //Click on button "Yes".
+
+      // ------ 3 ----------
+      // Click on button "Yes".
       IDE.ASK_DIALOG.clickYes();
       IDE.LOADER.waitClosed();
       IDE.ASK_DIALOG.waitClosed();
       IDE.TEMPLATES.waitForTemplateDeleted(FILE_TEMPLATE_NAME_1);
-      Thread.sleep(5000);
-      
+
       assertFalse(IDE.TEMPLATES.isTemplatePresent(FILE_TEMPLATE_NAME_1));
-      
-      //------ 4 ----------
+
+      // ------ 4 ----------
       // Close "Create file" window, and all opened tabs in content panel.
       IDE.TEMPLATES.clickCancelButton();
    }
-   
-   //TODO: if we will not use project templates feature, then remove this code.
-   //Otherwise, fix this test.
-//   /**
-//    * Test added to Igore, because we don't use registry service.
-//    * We must put file with template to 
-//    * http://localhost:8080/IDE/rest/private/jcr/repository/production/ide-home/users/templates/fileTemplates
-//    * or
-//    * http://localhost:8080/IDE/rest/private/jcr/repository/production/ide-home/users/templates/projectTemplates
-//    * file.
-//    * @throws Exception
-//    */
-//   @Test
-//   public void testDeleteFileTemplateWhichUsedInProjectTemplate() throws Exception
-//   {
-//      putFileTemplateWithProjectTemplateToRegistry();
-//      refresh();
-//      IDE.WORKSPACE.waitForItem(WS_URL);
-//      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
-//      
-//      //------ 1 --------
-//      //Click on "File->New->From Template..." topmenu item.
-//      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
-//      IDE.TEMPLATES.waitOpened();
-//      
-//      // check "Create file" dialog window
-//      assertTrue(IDE.TEMPLATES.isOpened());
-//      assertTrue(IDE.TEMPLATES.isCancelButtonEnabled());
-//      assertFalse(IDE.TEMPLATES.isCreateButtonEnabled());
-//      assertFalse(IDE.TEMPLATES.isDeleteButtonEnabled());
-//      
-//      //------ 2 --------
-//      // In "Create file"  window select "test template", then click "Delete" button.
-//      IDE.TEMPLATES.selectTemplate(FILE_TEMPLATE_NAME_2);
-//      
-//      //click Delete button
-//      IDE.TEMPLATES.clickDeleteButton();
-//      // check warning dialog appeared
-//      IDE.ASK_DIALOG.waitOpened();
-//      
-//      //------ 3 --------
-//      //Click on button "Yes".
-//      selenium().click("//div[@id='exoAskDialog']//div[@id='YesButton']");
-//      
-//      //------ 4 --------
-//      //check warn dialog, that this template is used in project template
-//      final String msg = "File template " + FILE_TEMPLATE_NAME_2 + " is used in Test Project Template project template(s)";
-//      IDE.ASK_DIALOG.waitOpened();
-//      assertEquals(msg, IDE.ASK_DIALOG.getQuestion());
-//      IDE.ASK_DIALOG.clickYes();
-//      IDE.ASK_DIALOG.waitClosed();
-//      
-//      IDE.TEMPLATES.waitForTemplateDeleted(FILE_TEMPLATE_NAME_2);
-//      
-//      //"Create file" window should contain only default("red") templates.
-//      assertFalse(IDE.TEMPLATES.isTemplatePresent(FILE_TEMPLATE_NAME_2));
-//      
-//      //------ 5 --------
-//      // Close "Create file" window, and all opened tabs in content panel.
-//      IDE.TEMPLATES.clickCancelButton();
-//   }
-   
 }

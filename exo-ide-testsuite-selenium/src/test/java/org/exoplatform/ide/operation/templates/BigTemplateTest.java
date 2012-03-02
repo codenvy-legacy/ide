@@ -23,21 +23,21 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Test for creating template from big file.
  * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class BigTemplateTest extends BaseTest
 {
@@ -45,10 +45,9 @@ public class BigTemplateTest extends BaseTest
 
    private final static String TEMPLATE_NAME = "Calc";
 
-   private final static String FOLDER = BigTemplateTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + FOLDER + "/";
+   private final static String PROJECT = BigTemplateTest.class.getSimpleName();
+   
+   public static final String FILE_TEMPLATES_STORE = ENTRY_POINT_URL + WS_NAME_2 + "/ide-home/templates/fileTemplates";
 
    @BeforeClass
    public static void setUp()
@@ -57,8 +56,9 @@ public class BigTemplateTest extends BaseTest
       String filePath = "src/test/resources/org/exoplatform/ide/operation/file/Calculator.xml";
       try
       {
-         VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, URL + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GOOGLE_GADGET, filePath);
       }
       catch (IOException e)
       {
@@ -68,16 +68,13 @@ public class BigTemplateTest extends BaseTest
    @Test
    public void testBigTemplate() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL);
-      IDE.WORKSPACE.selectRootItem();
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/" + FILE_NAME);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER + "/" + FILE_NAME, false);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
 
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);
       IDE.SAVE_AS_TEMPLATE.waitOpened();
@@ -88,25 +85,22 @@ public class BigTemplateTest extends BaseTest
 
       IDE.INFORMATION_DIALOG.waitOpened("Template created successfully!");
 
-      //click OK button
+      // click OK button
       IDE.INFORMATION_DIALOG.clickOk();
       IDE.INFORMATION_DIALOG.waitClosed();
 
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(FILE_NAME);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       IDE.TEMPLATES.waitOpened();
 
       // check "Create file" dialog window
       assertTrue(IDE.TEMPLATES.isOpened());
       IDE.TEMPLATES.selectTemplate(TEMPLATE_NAME);
-      //click Create button
+      // click Create button
       IDE.TEMPLATES.clickCreateButton();
       IDE.TEMPLATES.waitClosed();
-      
-      IDE.EDITOR.waitTabPresent(0);
 
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.gadget");
    }
 
    @AfterClass
@@ -114,7 +108,8 @@ public class BigTemplateTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         VirtualFileSystemUtils.delete(FILE_TEMPLATES_STORE);
       }
       catch (IOException e)
       {

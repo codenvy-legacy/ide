@@ -66,13 +66,14 @@ public class CodeOutLineRESTServiceTest extends CodeAssistantBaseTest
    @Before
    public void openFile() throws Exception
    {
+      openProject();
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
    }
 
-   //TODO Issue IDE - 486    
    //TODO Issue IDE - 466 
+   //TODO Issue IDE-1499
    @Test
    public void testCodeOutLineRestService() throws Exception
    {     

@@ -36,7 +36,7 @@ import java.util.List;
  * 
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Dec 22, 2010 $
- *
+ * 
  */
 public class Outline extends AbstractTestModule
 {
@@ -72,9 +72,9 @@ public class Outline extends AbstractTestModule
 
    public static final int SELECT_OUTLINE_DELAY = 100; // msec
 
-   private static final int LINE_HEIGHT = 31;
+   private static final int LINE_HEIGHT = 29;
 
-   private int OUTLINE_TOP_OFFSET_POSITION = 105;
+   private int OUTLINE_TOP_OFFSET_POSITION = 80;
 
    public Outline()
    {
@@ -95,7 +95,7 @@ public class Outline extends AbstractTestModule
       TAG,
 
       /**
-       * HTML or XML attribute; 
+       * HTML or XML attribute;
        */
       ATTRIBUTE, CDATA,
 
@@ -166,8 +166,7 @@ public class Outline extends AbstractTestModule
    }
 
    /**
-    * Returns the label of the visible item in Outline tree.
-    * Index starts from <code>1</code>.
+    * Returns the label of the visible item in Outline tree. Index starts from <code>1</code>.
     * 
     * @param rowNumber
     * @return
@@ -179,8 +178,7 @@ public class Outline extends AbstractTestModule
    }
 
    /**
-    * Returns row element by pointed <b>visible</b> row number.
-    * Row number starts from <code>1</code>. 
+    * Returns row element by pointed <b>visible</b> row number. Row number starts from <code>1</code>.
     * 
     * @param rowNumber
     * @return
@@ -216,8 +214,7 @@ public class Outline extends AbstractTestModule
    }
 
    /**
-    * Double click the item at pointed row number.
-    * Row number starts from <code>1</code>. 
+    * Double click the item at pointed row number. Row number starts from <code>1</code>.
     * 
     * @param rowNumber row number
     * @throws Exception
@@ -243,15 +240,14 @@ public class Outline extends AbstractTestModule
    }
 
    /**
-    * Select row in outline tree.
-    * Row number starts from <code>1</code>.
+    * Select row in outline tree. Row number starts from <code>1</code>.
     * 
     * @param row - number of row (from 1).
     * @throws Exception
     */
    public void selectRow(int rowNumber) throws Exception
    {
-      System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"+rowNumber);
+      System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + rowNumber);
       WebElement row = getVisibleItem(rowNumber);
       row.click();
    }
@@ -274,15 +270,16 @@ public class Outline extends AbstractTestModule
    }
 
    /**
-    * Returns the outline's item selection state.
-    * Row number starts from <code>1</code>.
+    * Returns the outline's item selection state. Row number starts from <code>1</code>.
     * 
     * @param rowNumber number of the row
     */
    public boolean isItemSelected(int rowNumber)
    {
       int linePositionTop = OUTLINE_TOP_OFFSET_POSITION + (rowNumber - 1) * LINE_HEIGHT;
-      return linePositionTop == highlighter.getLocation().y;
+      // Find delta:
+      int delta = Math.abs(linePositionTop - highlighter.getLocation().y);
+      return delta <= LINE_HEIGHT / 2;
    }
 
    /**
@@ -318,7 +315,7 @@ public class Outline extends AbstractTestModule
    /**
     * Wait for Outline tree visibility.
     * 
-    * @throws Exception 
+    * @throws Exception
     */
    public void waitOutlineTreeVisible() throws Exception
    {
@@ -351,7 +348,7 @@ public class Outline extends AbstractTestModule
 
    /**
     * Returns, whether element is present in outline tree.
-    *  
+    * 
     * @param id item's id
     * @return {@link Boolean} <code>true</code> if element is present
     */
@@ -368,8 +365,9 @@ public class Outline extends AbstractTestModule
    }
 
    /**
-    *  Method close Outline codehelper
-    * @throws InterruptedException 
+    * Method close Outline codehelper
+    * 
+    * @throws InterruptedException
     */
    public void closeOutline() throws InterruptedException
    {
@@ -405,8 +403,7 @@ public class Outline extends AbstractTestModule
    }
 
    /**
-    * Type keys with Outline tree.
-    * Is used for navigation (up, down, left or right).
+    * Type keys with Outline tree. Is used for navigation (up, down, left or right).
     * 
     * @param keys keys to type
     */
@@ -452,6 +449,7 @@ public class Outline extends AbstractTestModule
 
    /**
     * Returns true if highlight border present
+    * 
     * @return
     */
    public boolean isHiglightBorderPresent()

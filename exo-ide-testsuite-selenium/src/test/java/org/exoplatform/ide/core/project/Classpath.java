@@ -32,7 +32,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Project.java May 12, 2011 12:35:39 PM vereshchaka $
- *
+ * 
  */
 public class Classpath extends AbstractTestModule
 {
@@ -98,7 +98,7 @@ public class Classpath extends AbstractTestModule
    {
       removeButton.click();
    }
-   
+
    public void clickSaveButton()
    {
       saveButton.click();
@@ -159,6 +159,18 @@ public class Classpath extends AbstractTestModule
             {
                return true;
             }
+         }
+      });
+   }
+
+   public void waitPathPresent(final String path)
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return isPathPresent(path);
          }
       });
    }
