@@ -29,6 +29,8 @@ import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedS
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -39,6 +41,10 @@ import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Project;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -62,7 +68,7 @@ import com.google.gwt.user.client.ui.HasValue;
  */
 
 public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedHandler,
-   ConfigurationReceivedSuccessfullyHandler
+   ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler
 {
 
    public interface Display extends IsView
@@ -100,6 +106,8 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
 
    private String fileMimeType;
 
+   private List<Item> selectedItems;
+
    public OpenLocalFilePresenter()
    {
       IDE.getInstance().addControl(new OpenLocalFileCommand());
@@ -107,6 +115,7 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
       IDE.addHandler(OpenLocalFileEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    @Override
@@ -354,9 +363,44 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
     */
    private void openFile(String submittedFileContent)
    {
-      FileModel submittedFile = new FileModel(fileName, fileMimeType, submittedFileContent, new FolderModel());
+      FolderModel parent = new FolderModel();
+      ProjectModel project = null;
+      if (selectedItems != null && selectedItems.size() != 0)
+      {
+         Item item = selectedItems.get(0);
+
+         if (item instanceof FileModel)
+         {
+            parent = ((FileModel)item).getParent();
+         }
+         else if (item instanceof FolderModel)
+         {
+            parent = (FolderModel)item;
+         }
+         else if (item instanceof ProjectModel)
+         {
+            parent = new FolderModel((Project)item);
+         }
+
+         if (item instanceof ItemContext)
+         {
+            project = ((ItemContext)item).getProject();
+         }
+      }
+
+      FileModel submittedFile = new FileModel(fileName, fileMimeType, submittedFileContent, parent);
+      submittedFile.setProject(project);
       submittedFile.setContentChanged(true);
       IDE.fireEvent(new OpenFileEvent(submittedFile));
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      this.selectedItems = event.getSelectedItems();
    }
 
 }
