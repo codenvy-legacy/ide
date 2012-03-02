@@ -30,8 +30,7 @@ import org.junit.runners.Suite.SuiteClasses;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({BuildPerformedTest.class, BuildSuccessedTest.class, BuildFailedTest.class})
+@SuiteClasses({BuildSuccessedTest.class, BuildFailedTest.class, BuildPerformedTest.class})
 public class BuildTestSuite
 {
-
 }

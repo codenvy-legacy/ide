@@ -20,13 +20,10 @@ package org.exoplatform.ide.extension.maven.client;
 
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Build;
-import org.exoplatform.ide.git.core.GIT;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
 import org.junit.Before;
@@ -43,8 +40,6 @@ public class BuildSuccessedTest extends BaseTest
 {
    private static final String PROJECT = BuildSuccessedTest.class.getSimpleName();
 
-   private static final String PATH_TO_POM = "src/test/resources/org/exoplatform/ide/miscellaneous/pom.xml";
-
    protected static Map<String, Link> project;
 
    @Before
@@ -54,7 +49,7 @@ public class BuildSuccessedTest extends BaseTest
       {
          project =
             VirtualFileSystemUtils.importZipProject(PROJECT,
-               "src/test/resources/org/exoplatform/ide/project/classpath.zip");
+               "src/test/resources/org/exoplatform/ide/extension/maven/TestSpringProjectWithPOM.zip");
 
          Thread.sleep(2000);
       }
@@ -87,38 +82,25 @@ public class BuildSuccessedTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
 
-      // Add pom.xml
-      VirtualFileSystemUtils.createFileFromLocal(project.get(Link.REL_CREATE_FILE), "pom.xml",
-         MimeType.APPLICATION_XML, PATH_TO_POM);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-
-      // Init Git repository
-      IDE.GIT.INIT_REPOSITORY.initRepository();
-      IDE.OUTPUT.waitForMessageShow(1, 15);
-      String initSuccessMessage = IDE.OUTPUT.getOutputMessage(1);
-      assertTrue(initSuccessMessage.endsWith(GIT.Messages.INIT_SUCCESS));
-      IDE.LOADER.waitClosed();
+      // Necessary because davfs working slowly and several
+      // tests which run in test suite not work correctly.
+      Thread.sleep(40 * 1000);
 
       // Building of project is started
       IDE.MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.BUILD_PROJECT);
       IDE.BUILD.waitOpened();
       String builderMessage = IDE.BUILD.getOutputMessage();
       assertTrue(builderMessage.startsWith(Build.Messages.BUILDING_PROJECT));
-      Thread.sleep(10000); // building
+
+      // Wait until building is finished.
+      Thread.sleep(10000);
+
+      // Close Build project view because Output view is not visible
+      selenium().click("//div[@class='gwt-TabLayoutPanelTabs']//div[@tab-title='Build project']");
 
       // Get success message
-      // close Build project view
-      selenium().click("//div[@class='gwt-TabLayoutPanelTabs']//div[@tab-title='Build project']");
-      IDE.OUTPUT.waitForMessageShow(2, 15);
-      String buildSuccessMessage = IDE.OUTPUT.getOutputMessage(2);
+      IDE.OUTPUT.waitForMessageShow(1, 15);
+      String buildSuccessMessage = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(buildSuccessMessage.endsWith(Build.Messages.BUILD_SUCCESS));
-      
-      // Delete Git repository
-      IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.DELETE);
-      IDE.ASK_DIALOG.waitOpened();
-      IDE.ASK_DIALOG.clickYes();
-      IDE.OUTPUT.waitForMessageShow(3, 15);
-      String message = IDE.OUTPUT.getOutputMessage(3);
-      assertTrue(message.endsWith(GIT.Messages.DELETE_SUCCESS));
    }
 }
