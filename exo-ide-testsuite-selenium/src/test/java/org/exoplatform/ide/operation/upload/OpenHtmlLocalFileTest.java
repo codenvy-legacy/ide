@@ -38,7 +38,7 @@ import java.io.IOException;
  */
 public class OpenHtmlLocalFileTest extends BaseTest
 {
-   private static String HTML_NAME = "file.html";
+   private static String HTML_NAME = "Example.html";
 
    private static String PROJECT = OpenHtmlLocalFileTest.class.getSimpleName();
 
@@ -66,8 +66,8 @@ public class OpenHtmlLocalFileTest extends BaseTest
       IDE.LOADER.waitClosed();
 
       IDE.UPLOAD.open(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH, MimeType.TEXT_HTML);
-      IDE.EDITOR.waitTabPresent(1);
-
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_NAME);
+      
       String text = IDE.EDITOR.getTextFromCodeEditor(0);
 
       assertTrue(text.length() > 0);

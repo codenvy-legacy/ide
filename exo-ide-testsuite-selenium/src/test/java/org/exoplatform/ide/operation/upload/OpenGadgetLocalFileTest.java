@@ -67,8 +67,7 @@ public class OpenGadgetLocalFileTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       IDE.UPLOAD.open(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH, MimeType.GOOGLE_GADGET);
-
-      IDE.EDITOR.waitTabPresent(1);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_NAME);
 
       String text = IDE.EDITOR.getTextFromCodeEditor(0);
 

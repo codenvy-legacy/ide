@@ -66,7 +66,7 @@ public class OpenGroovyLocalFileTest extends BaseTest
       IDE.LOADER.waitClosed();
 
       IDE.UPLOAD.open(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH, MimeType.GROOVY_SERVICE);
-      IDE.EDITOR.waitTabPresent(1);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GROOVY_NAME);
 
       String text = IDE.EDITOR.getTextFromCodeEditor(0);
 

@@ -95,7 +95,7 @@ public class OpenLocalFileTest extends BaseTest
       IDE.UPLOAD.clickUploadButton();
       IDE.UPLOAD.waitClosed();
 
-      IDE.EDITOR.waitTabPresent(1);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + fileName);
    }
 
    @After
