@@ -28,6 +28,7 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -105,6 +106,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       }
    }
 
+   @Ignore
    @Test
    public void testDeployFormSteps() throws Exception
    {
@@ -188,6 +190,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkDeployFormPresent(false);
    }
 
+   @Ignore
    @Test
    public void testDeployFormStepsNavigation() throws Exception
    {

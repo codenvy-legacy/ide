@@ -30,6 +30,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.operation.file.CreatingAndSavingAsNewFileTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -75,6 +76,7 @@ public class NetvibesDocumentationTest extends BaseTest
       }
    }
 
+   @Ignore
    @Test
    public void testNetvibesDocumentation() throws Exception
    {
