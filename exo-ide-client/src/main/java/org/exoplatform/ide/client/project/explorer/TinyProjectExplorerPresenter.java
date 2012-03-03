@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.project.explorer;
 
-import com.google.gwt.user.client.Window;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -37,7 +35,6 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -54,7 +51,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.event.AllFilesClosedEvent;
 import org.exoplatform.ide.client.framework.event.AllFilesClosedHandler;
 import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
-import org.exoplatform.ide.client.framework.event.FileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent;
 import org.exoplatform.ide.client.framework.event.IDELoadCompleteHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
@@ -133,7 +129,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
    ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowProjectExplorerHandler,
    ItemsSelectedHandler, ViewActivatedHandler, OpenProjectHandler, VfsChangedHandler, CloseProjectHandler,
-   AllFilesClosedHandler, GoToFolderHandler, EditorActiveFileChangedHandler, IDELoadCompleteHandler, EditorFileOpenedHandler, EditorFileClosedHandler
+   AllFilesClosedHandler, GoToFolderHandler, EditorActiveFileChangedHandler, IDELoadCompleteHandler,
+   EditorFileOpenedHandler, EditorFileClosedHandler
 {
 
    private static final String DEFAULT_TITLE = "Project Explorer";
@@ -154,12 +151,12 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    private List<Item> navigatorSelectedItems = new ArrayList<Item>();
 
    private ProjectModel openedProject;
-   
+
    private FileModel editorActiveFile;
-   
+
    private ApplicationSettings applicationSettings;
-   
-   private boolean ideLoadComplete = false;   
+
+   private boolean ideLoadComplete = false;
 
    public TinyProjectExplorerPresenter()
    {
@@ -244,7 +241,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
             onKeyPressed(event.getNativeEvent().getKeyCode(), event.isControlKeyDown());
          }
       });
-      
+
       display.getLinkWithEditorButton().addClickHandler(linkWithEditorButtonClickHandler);
       display.setLinkWithEditorButtonSelected(linkingWithEditor);
    }
@@ -285,10 +282,10 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
             selectedItems = display.getSelectedItems();
             IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
-            
+
             changeActiveFileOnSelection();
          }
-      });      
+      });
    }
 
    /**
@@ -577,12 +574,12 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
-      
+
       if (applicationSettings.getValueAsMap("lock-tokens") == null)
       {
          applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-      
+
       if (applicationSettings.getValueAsBoolean("project-explorer-linked-with-editor") == null)
       {
          applicationSettings.setValue("project-explorer-linked-with-editor", Boolean.FALSE, Store.COOKIES);
@@ -590,10 +587,10 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       linkingWithEditor = applicationSettings.getValueAsBoolean("project-explorer-linked-with-editor");
 
       ensureProjectExplorerDisplayCreated();
-      
+
       display.setLockTokens(applicationSettings.getValueAsMap("lock-tokens"));
       display.setLinkWithEditorButtonSelected(linkingWithEditor);
-      
+
       if (openedProject == null)
       {
          display.setLinkWithEditorButtonEnabled(false);
@@ -843,8 +840,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    {
       goToFolder();
    }
-   
-   private void goToFolder() 
+
+   private void goToFolder()
    {
       if (display == null || openedProject == null || editorActiveFile == null)
       {
@@ -856,11 +853,22 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          return;
       }
 
-      if (display.selectItem(editorActiveFile.getId()))
+      // If project explorer is not visible then display.selectItem() finds item in tree but does not selects it.
+      if (display.asView().isViewVisible())
       {
-         return;
+         if (display.selectItem(editorActiveFile.getId()))
+         {
+            return;
+         }
+      }
+      else
+      {
+         // First we need activate project explorer because
+         // code below do not select item in tree.
+         display.asView().activate();
       }
 
+      // If we do not find item in tree then try to find item in VFS.
       String expandPath = editorActiveFile.getPath().substring(openedProject.getPath().length());
       itemsToBeOpened.clear();
       itemsToBeOpened.add(openedProject.getPath());
@@ -943,21 +951,21 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
-   
+
    /*
     * Linking With Editor functionality
     */
-   
+
    /**
     * Enabled or disabled Linking with Editor.
     */
    private boolean linkingWithEditor = false;
-   
+
    /**
     * Opened files.
     */
    private Map<String, FileModel> openedFiles;
-   
+
    /**
     * Link with Editor button click handler.
     */
@@ -1004,7 +1012,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          goToFolder();
       }
    }
-   
+
    /**
     * Changes the active file in Editor just after item selected in the Tree.
     */
@@ -1039,7 +1047,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          goToFolder();
       }
    }
- 
+
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent)
     */
@@ -1056,6 +1064,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    public void onEditorFileOpened(EditorFileOpenedEvent event)
    {
       openedFiles = event.getOpenedFiles();
-   }   
+   }
 
 }
