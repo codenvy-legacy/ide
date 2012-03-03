@@ -206,8 +206,8 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
 
          parseTokenLine(lineContent, currentEditor.getCursorCol());
 
-         int posX = currentEditor.getCursorOffsetX() - tokenToComplete.length() * 8 + 8;
-         int posY = currentEditor.getCursorOffsetY() + 4;
+         int posX = currentEditor.getCursorOffsetX() - tokenToComplete.length() * 8 + 23;
+         int posY = currentEditor.getCursorOffsetY();
          IJavaCompletionProposal[] javaCompletionProposals = collector.getJavaCompletionProposals();
 
          List<IJavaCompletionProposal> templateProposals =

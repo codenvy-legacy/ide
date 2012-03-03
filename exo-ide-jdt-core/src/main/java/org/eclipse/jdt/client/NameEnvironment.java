@@ -52,9 +52,7 @@ import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Implementation of {@link INameEnvironment} interface, use JavaCodeAssistantService for receiving data and SessionStorage for
@@ -65,8 +63,6 @@ import java.util.Set;
  */
 public class NameEnvironment implements INameEnvironment
 {
-
-//   private static Set<String> packages;
 
    private String projectId;
 
@@ -93,11 +89,6 @@ public class NameEnvironment implements INameEnvironment
             "java.lang.Throwable",//
             "java.lang.Void"};
       loadWellKnownClasses(fqns);
-//      packages = new HashSet<String>();
-//      packages.add("java");
-//      packages.add("java.lang");
-//      packages.add("java.util");
-//      packages.add("java.io");
    }
 
    private static void loadWellKnownClasses(String[] fqns)
@@ -188,7 +179,6 @@ public class NameEnvironment implements INameEnvironment
                if (jsonTypeInfoUnmarshaller.typeInfo != null)
                {
                   TypeInfoStorage.get().putType(fqn, jsonTypeInfoUnmarshaller.typeInfo.toString());
-//                  packages.add(key.substring(0, key.lastIndexOf('.')));
                }
             }
 
@@ -306,7 +296,7 @@ public class NameEnvironment implements INameEnvironment
             {
                JSONObject object = typesFromServer.get(i).isObject();
                BinaryTypeImpl type = new BinaryTypeImpl(object);
-               TypeInfoStorage.get().putType(new String(type.getSourceName()), type.toJsonString());
+               TypeInfoStorage.get().putType(new String(type.getFqn()), type.toJsonString());
                addConstructor(type, requestor);
             }
          }

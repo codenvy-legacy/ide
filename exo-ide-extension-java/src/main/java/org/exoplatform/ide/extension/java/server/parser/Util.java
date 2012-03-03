@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.extension.java.server.parser;
 
+
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameter;
 import com.thoughtworks.qdox.model.Type;
 
 import org.exoplatform.ide.codeassistant.jvm.bean.FieldInfoBean;
@@ -76,8 +78,8 @@ public class Util
 
       type.setInterfaces(toListFqn(clazz.getImplements()));
       type.setFields(toFieldInfo(clazz.getFields()));
-      JavaMethod[] methods = clazz.getMethods(true);
-      type.setMethods(toMethods(methods));
+      JavaMethod[] methods = clazz.getMethods();
+      type.setMethods(toMethods(clazz, methods));
 //      type.setSignature(SignatureCreator.createTypeSignature(clazz.getFullyQualifiedName(), true).replaceAll("\\.", "/"));
       return type;
    }
@@ -98,9 +100,10 @@ public class Util
     * @param methods
     * @return
     */
-   private static List<MethodInfo> toMethods(JavaMethod[] methods)
+   private static List<MethodInfo> toMethods(JavaClass clazz, JavaMethod[] methods)
    {
       List<MethodInfo> con = new ArrayList<MethodInfo>();
+      boolean hasConstructor = false;
       for (JavaMethod m : methods)
       {
          MethodInfo i = new MethodInfoBean();
@@ -108,9 +111,11 @@ public class Util
          i.setModifiers(modifiersToInteger(m.getModifiers()));
          Type[] parameterTypes = m.getParameterTypes(true);
          i.setParameterTypes(toParameters(parameterTypes));
+         i.setParameterNames(toParametersName(m.getParameters()));
          i.setName(m.getName());
          i.setDeclaringClass(m.getParentClass().getFullyQualifiedName());
          i.setDescriptor(SignatureCreator.createMethodSignature(m));
+
 
          if (!m.isConstructor())
          {
@@ -121,10 +126,35 @@ public class Util
          else
          {
             i.setConstructor(true);
+            hasConstructor = true;
          }
          con.add(i);
       }
+      //if class don't has constructor - add default
+      if(!hasConstructor)
+      {
+         MethodInfo defaultConstructor = new MethodInfoBean();
+         defaultConstructor.setDeclaringClass(clazz.getFullyQualifiedName());
+         defaultConstructor.setDescriptor("()V;");
+         defaultConstructor.setModifiers(Modifier.PUBLIC.value());
+         defaultConstructor.setConstructor(true);
+         con.add(defaultConstructor);
+      }
       return con;
+   }
+
+   /**
+    * @param parameters
+    * @return
+    */
+   private static List<String> toParametersName(JavaParameter[] parameters)
+   {
+      List<String> paramsNames = new ArrayList<String>(parameters.length);
+      for(JavaParameter p : parameters)
+      {
+         paramsNames.add(p.getName());
+      }
+      return paramsNames;
    }
 
    /**

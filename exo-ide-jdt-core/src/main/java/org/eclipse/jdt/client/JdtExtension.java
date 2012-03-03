@@ -18,7 +18,6 @@
  */
 package org.eclipse.jdt.client;
 
-import org.eclipse.jdt.client.event.ShowAstEvent;
 import org.eclipse.jdt.client.outline.OutlinePresenter;
 import org.eclipse.jdt.client.templates.CodeTemplateContextType;
 import org.eclipse.jdt.client.templates.ContextTypeRegistry;
@@ -36,10 +35,8 @@ import org.eclipse.jdt.client.templates.TemplateStore;
 import org.eclipse.jdt.client.templates.TypeResolver;
 import org.eclipse.jdt.client.templates.TypeVariableResolver;
 import org.eclipse.jdt.client.templates.VarResolver;
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 
@@ -70,36 +67,13 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
    public void initialize()
    {
       instance = this;
-      IDE.getInstance().addControl(new Con());
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
-      // IDE.getInstance().addControl(new CodeAssistCommand(), Docking.TOOLBAR_RIGHT);
-      new AstPresenter(IDE.eventBus());
       new CodeAssistantController();
       new JavaCodeController();
       new OutlinePresenter();
       new TypeInfoUpdater();
    }
 
-   public static class Con extends SimpleControl implements IDEControl
-   {
-
-      /** @param id */
-      public Con()
-      {
-         super("View/Show AST");
-         setTitle("Show Ast");
-         setPrompt("Show Ast");
-         setEvent(new ShowAstEvent());
-         setEnabled(true);
-         setVisible(true);
-      }
-
-      /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
-      @Override
-      public void initialize()
-      {
-      }
-   }
 
    /**
     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)

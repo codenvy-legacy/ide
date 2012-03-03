@@ -52,7 +52,7 @@ public class JavaDocBuilderVfsTest extends JavaDocBase
          if (methodInfo.isConstructor())
             constructors.add(methodInfo);
       }
-      Assert.assertEquals(2, constructors.size());
+      Assert.assertEquals(1, constructors.size());
       MethodInfo info = constructors.get(0);
       Assert.assertEquals("AutoCompletionManager", info.getName());
       Assert.assertEquals("org.exoplatform.ide.client.autocompletion.AutoCompletionManager", info.getDeclaringClass());
@@ -85,12 +85,25 @@ public class JavaDocBuilderVfsTest extends JavaDocBase
 
       List<MethodInfo> methods = clazz.getMethods();
       Assert.assertNotNull(methods);
-      Assert.assertEquals(18, methods.size());
+      Assert.assertEquals(7, methods.size());
       MethodInfo methodInfo = methods.get(0);
       Assert.assertNotNull(methodInfo.getName());
       Assert.assertNotNull(methodInfo.getModifiers());
       Assert.assertNotNull(methodInfo.getParameterTypes());
       Assert.assertNotNull(methodInfo.getDeclaringClass());
+   }
+   
+   @Test
+   public void classWithDafaultConstructor() throws Exception
+   {
+      TypeInfo clazz = javaCa.getClassByFqnFromProject("org.exoplatform.ide.client.IDEShell", project.getId(), VFS_ID);
+      List<MethodInfo> constructors = new ArrayList<MethodInfo>();
+      for (MethodInfo methodInfo : clazz.getMethods())
+      {
+         if (methodInfo.isConstructor())
+            constructors.add(methodInfo);
+      }
+      Assert.assertEquals(1, constructors.size());
    }
 
 }

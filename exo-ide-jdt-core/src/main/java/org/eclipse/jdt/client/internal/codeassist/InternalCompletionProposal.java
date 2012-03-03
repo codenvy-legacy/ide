@@ -19,9 +19,13 @@ import org.eclipse.jdt.client.core.Flags;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod;
+import org.eclipse.jdt.client.internal.compiler.env.IBinaryType;
+import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.client.internal.compiler.env.NameEnvironmentAnswer;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
+
+import java.util.Arrays;
 
 /**
  * Internal completion proposal
@@ -50,7 +54,7 @@ public class InternalCompletionProposal extends CompletionProposal
 
    protected char[] originalSignature;
 
-   private boolean hasNoParameterNamesFromIndex = false;
+   // private boolean hasNoParameterNamesFromIndex = false;
 
    private boolean updateCompletion = false;
 
@@ -159,78 +163,43 @@ public class InternalCompletionProposal extends CompletionProposal
       char[] tName = CharOperation.concat(declaringTypePackageName, declaringTypeName, '.');
       Object cachedType = this.completionEngine.typeCache.get(tName);
 
-      // IType type = null;
-      // if(cachedType != null) {
-      // if(cachedType != NO_ATTACHED_SOURCE && cachedType instanceof BinaryType) {
-      // type = (BinaryType)cachedType;
-      // }
-      // } else {
-      // // TODO (david) shouldn't it be NameLookup.ACCEPT_ALL ?
-      // NameLookup.Answer answer = this.nameLookup.findType(new String(declaringTypeName),
-      // new String(declaringTypePackageName),
-      // false,
-      // NameLookup.ACCEPT_CLASSES & NameLookup.ACCEPT_INTERFACES,
-      // true/* consider secondary types */,
-      // false/* do NOT wait for indexes */,
-      // false/*don't check restrictions*/,
-      // null);
-      // type = answer == null ? null : answer.type;
-      // if(type instanceof BinaryType){
-      // this.completionEngine.typeCache.put(tName, type);
-      // } else {
-      // type = null;
-      // }
-      // }
-      //
-      // if(type != null) {
-      // // https://bugs.eclipse.org/bugs/show_bug.cgi?id=316937
-      // // BinaryType#getMethod() creates a new instance of BinaryMethod, which is a dummy.
-      // // Instead we have to use IType#findMethods() to get a handle to the method of our interest.
-      // try {
-      // IMethod method = findMethod(type, selector, paramTypeNames);
-      // if (this.hasNoParameterNamesFromIndex) {
-      //
-      // IPackageFragmentRoot packageFragmentRoot = (IPackageFragmentRoot)type.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
-      // if (packageFragmentRoot.isArchive() ||
-      // this.completionEngine.openedBinaryTypes < getOpenedBinaryTypesThreshold()) {
-      // SourceMapper mapper = ((JavaElement)method).getSourceMapper();
-      // if (mapper != null) {
-      // char[][] paramNames = mapper.getMethodParameterNames(method);
-      //
-      // // map source and try to find parameter names
-      // if(paramNames == null) {
-      // if (!packageFragmentRoot.isArchive()) this.completionEngine.openedBinaryTypes++;
-      // IBinaryType info = (IBinaryType) ((BinaryType) type).getElementInfo();
-      // char[] source = mapper.findSource(type, info);
-      // if (source != null){
-      // mapper.mapSource(type, source, info);
-      // }
-      // paramNames = mapper.getMethodParameterNames(method);
-      // }
-      //
-      // if(paramNames != null) {
-      // parameters = paramNames;
-      // }
-      // }
-      // }
-      // } else {
-      // IBinaryMethod info = (IBinaryMethod) ((JavaElement)method).getElementInfo();
-      // char[][] argumentNames = info.getArgumentNames();
-      // if (argumentNames != null && argumentNames.length == length) {
-      // parameters = argumentNames;
-      // return parameters;
-      // }
-      //
-      // parameters = new char[length][];
-      // String[] params = method.getParameterNames();
-      // for(int i = 0; i< length ; i++){
-      // parameters[i] = params[i].toCharArray();
-      // }
-      // }
-      // } catch(JavaModelException e){
-      // parameters = null;
-      // }
-      // }
+      IBinaryType type = null;
+      if (cachedType != null)
+      {
+         if (cachedType != NO_ATTACHED_SOURCE && cachedType instanceof IBinaryType)
+         {
+            type = (IBinaryType)cachedType;
+         }
+      }
+      else
+      {
+         NameEnvironmentAnswer answer =
+            this.nameLookup.findType(declaringTypeName, CharOperation.splitOn('.', declaringTypePackageName));
+
+         if (answer.getBinaryType() != null)
+         {
+            type = answer.getBinaryType();
+            this.completionEngine.typeCache.put(tName, type);
+         }
+         else
+         {
+            type = null;
+         }
+      }
+
+      if (type != null)
+      {
+         IBinaryMethod method = findMethod(type, selector, paramTypeNames);
+         if (method != null)
+         {
+            char[][] argumentNames = method.getArgumentNames();
+            if (argumentNames != null && argumentNames.length == length)
+            {
+               parameters = argumentNames;
+               return parameters;
+            }
+         }
+      }
 
       // default parameters name
       if (parameters == null)
@@ -253,55 +222,47 @@ public class InternalCompletionProposal extends CompletionProposal
       char[] tName = CharOperation.concat(declaringTypePackageName, declaringTypeName, '.');
       Object cachedType = this.completionEngine.typeCache.get(tName);
 
-      // // IType type = null;
-      // if(cachedType != null) {
-      // if(cachedType != NO_ATTACHED_SOURCE && cachedType instanceof BinaryType) {
-      // type = (BinaryType)cachedType;
-      // }
-      // } else {
-      // // TODO (david) shouldn't it be NameLookup.ACCEPT_ALL ?
-      NameEnvironmentAnswer answer =
-         this.nameLookup.findType(declaringTypeName, CharOperation.splitOn('.', declaringTypePackageName));
-      if (answer.getBinaryType() != null)
+      IBinaryType type = null;
+      if (cachedType != null)
       {
-         go : for (IBinaryMethod method : answer.getBinaryType().getMethods())
+         if (cachedType != NO_ATTACHED_SOURCE && cachedType instanceof IBinaryType)
          {
-            if (method.getSelector().equals(selector))
-            {
-               char[][] parameterTypes = Signature.getParameterTypes(method.getMethodDescriptor());
-               for (int i = 0; i < parameterTypes.length; i++)
-               {
-                  if (!paramTypeNames[i].equals(Signature.getSignatureSimpleName(parameterTypes[i])))
-                     break go;
-               }
-               paramTypeNames = method.getArgumentNames();
-               break;
-            }
+            type = (IBinaryType)cachedType;
          }
       }
-      // type = answer == null ? null : answer.type;
-      // if(type instanceof BinaryType){
-      // this.completionEngine.typeCache.put(tName, type);
-      // } else {
-      // type = null;
-      // }
-      // }
-      //
-      // if(type != null) {
-      // // https://bugs.eclipse.org/bugs/show_bug.cgi?id=316937
-      // // BinaryType#getMethod() creates a new instance of BinaryMethod, which is a dummy.
-      // // Instead we have to use IType#findMethods() to get a handle to the method of our interest.
-      // try{
-      // IMethod method = findMethod(type, selector, paramTypeNames);
-      // parameters = new char[length][];
-      // String[] params = method.getParameterNames();
-      // for(int i = 0; i< length ; i++){
-      // parameters[i] = params[i].toCharArray();
-      // }
-      // } catch(JavaModelException e){
-      // parameters = null;
-      // }
-      // }
+      else
+      {
+         NameEnvironmentAnswer answer =
+            this.nameLookup.findType(declaringTypeName, CharOperation.splitOn('.', declaringTypePackageName));
+         if (answer.getBinaryType() != null)
+         {
+            type = answer.getBinaryType();
+            this.completionEngine.typeCache.put(tName, type);
+         }
+         else
+         {
+            type = null;
+         }
+      }
+
+      if (type != null)
+      {
+         // https://bugs.eclipse.org/bugs/show_bug.cgi?id=316937
+         // BinaryType#getMethod() creates a new instance of BinaryMethod, which is a dummy.
+         // Instead we have to use IType#findMethods() to get a handle to the method of our interest.
+         IBinaryMethod method = findMethod(type, selector, paramTypeNames);
+         if (method != null && method.getArgumentNames() != null)
+         {
+            parameters = new char[length][];
+            char[][] params = method.getArgumentNames();
+            for (int i = 0; i < length; i++)
+            {
+               parameters[i] = params[i];
+            }
+         }
+         else
+            parameters = null;
+      }
 
       // default parameters name
       if (parameters == null)
@@ -312,68 +273,33 @@ public class InternalCompletionProposal extends CompletionProposal
       return parameters;
    }
 
-   // private IMethod findMethod(IType type, char[] selector, char[][] paramTypeNames) throws JavaModelException {
-   // IMethod method = null;
-   // int startingIndex = 0;
-   // String[] args;
-   // IType enclosingType = type.getDeclaringType();
-   // // If the method is a constructor of a non-static inner type, add the enclosing type as an
-   // // additional parameter to the constructor
-   // if (enclosingType != null
-   // && CharOperation.equals(type.getElementName().toCharArray(), selector)
-   // && !Flags.isStatic(type.getFlags())) {
-   // args = new String[paramTypeNames.length+1];
-   // startingIndex = 1;
-   // args[0] = Signature.createTypeSignature(enclosingType.getFullyQualifiedName(), true);
-   // } else {
-   // args = new String[paramTypeNames.length];
-   // }
-   // int length = args.length;
-   // for(int i = startingIndex; i< length ; i++){
-   // args[i] = new String(paramTypeNames[i-startingIndex]);
-   // }
-   // method = type.getMethod(new String(selector), args);
-   //
-   // IMethod[] methods = type.findMethods(method);
-   // if (methods != null && methods.length > 0) {
-   // method = methods[0];
-   // }
-   // return method;
-   // }
+   private IBinaryMethod findMethod(IBinaryType type, char[] selector, char[][] paramTypeNames)
+   {
+      go : for (IBinaryMethod method : type.getMethods())
+      {
 
-   // protected char[] getDeclarationPackageName()
-   // {
-   // return this.declarationPackageName;
-   // }
-   //
-   // protected char[] getDeclarationTypeName()
-   // {
-   // return this.declarationTypeName;
-   // }
-   //
-   // // private int getOpenedBinaryTypesThreshold() {
-   // // return JavaModelManager.getJavaModelManager().getOpenableCacheSize() / 10;
-   // // }
-   //
-   // protected char[] getPackageName()
-   // {
-   // return this.packageName;
-   // }
-   //
-   // protected char[] getTypeName()
-   // {
-   // return this.typeName;
-   // }
-   //
-   // protected char[][] getParameterPackageNames()
-   // {
-   // return this.parameterPackageNames;
-   // }
-   //
-   // protected char[][] getParameterTypeNames()
-   // {
-   // return this.parameterTypeNames;
-   // }
+         char[] methodSelector = null;
+         if (method.isConstructor()) 
+            methodSelector = type.getSourceName();
+         else
+            methodSelector = method.getSelector();
+
+         if (Arrays.equals(methodSelector, selector))
+         {
+            char[] methodDescriptor = method.getMethodDescriptor();
+            CharOperation.replace(methodDescriptor, '/', '.');
+            char[][] parameterTypes = Signature.getParameterTypes(methodDescriptor);
+            for (int i = 0; i < parameterTypes.length; i++)
+            {
+               if (!Arrays.equals(paramTypeNames[i], parameterTypes[i]))
+                  break go;
+            }
+            return method;
+         }
+
+      }
+      return null;
+   }
 
    protected void setDeclarationPackageName(char[] declarationPackageName)
    {
@@ -404,10 +330,6 @@ public class InternalCompletionProposal extends CompletionProposal
    {
       this.parameterTypeNames = parameterTypeNames;
    }
-
-   // protected void setAccessibility(int kind) {
-   // this.accessibility = kind;
-   // }
 
    protected void setIsContructor(boolean isConstructor)
    {
@@ -1163,7 +1085,7 @@ public class InternalCompletionProposal extends CompletionProposal
 
    public void setHasNoParameterNamesFromIndex(boolean hasNoParameterNamesFromIndex)
    {
-      this.hasNoParameterNamesFromIndex = hasNoParameterNamesFromIndex;
+      // this.hasNoParameterNamesFromIndex = hasNoParameterNamesFromIndex;
    }
 
    /**
