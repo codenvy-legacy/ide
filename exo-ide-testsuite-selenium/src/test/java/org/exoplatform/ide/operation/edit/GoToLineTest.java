@@ -28,7 +28,6 @@ import org.exoplatform.ide.core.GoToLine;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.Keys;
 
 /**
  * @author <a href="mailto:roman.iyvshyn@exoplatform.com">Roman Iyvshyn</a>
@@ -63,7 +62,6 @@ public class GoToLineTest extends BaseTest
       }
    }
 
-   //IDE-152
    @Test
    public void goToLine() throws Exception
    {
@@ -124,8 +122,7 @@ public class GoToLineTest extends BaseTest
       // Go to menu and click "View->Go To Line".
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
       IDE.GOTOLINE.waitOpened();
-      IDE.GOTOLINE.typeIntoLineNumberField("1");
-      IDE.GOTOLINE.typeIntoLineNumberField(Keys.ENTER.toString());
+      IDE.GOTOLINE.typeIntoLineNumberField("1\n");
       IDE.GOTOLINE.waitClosed();
       IDE.STATUSBAR.waitCursorPositionControl();
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());

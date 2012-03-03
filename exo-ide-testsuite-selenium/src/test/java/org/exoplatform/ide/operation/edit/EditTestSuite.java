@@ -25,12 +25,12 @@ import org.junit.runners.Suite.SuiteClasses;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 @RunWith(Suite.class)
 @SuiteClasses({GoToLineTest.class, FormatOfTextInTheContentPanelTest.class, UndoRedoEditingInCodeEditorTest.class,
    DeleteCurrentLineTest.class, UndoRedoEditingInWysiwygEditorTest.class, EditFileInWysiwygEditorTest.class,
-   FindReplaceTest.class, HighlightCurrentLineTest.class, JavaTypeValidationAndFixingTest.class})
+   FindReplaceTest.class, JavaTypeValidationAndFixingTest.class})
 public class EditTestSuite
 {
 
