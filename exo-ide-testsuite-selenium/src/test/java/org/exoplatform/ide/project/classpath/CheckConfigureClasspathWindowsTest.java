@@ -111,6 +111,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
        */
       IDE.PROJECT.CLASSPATH.clickAddButton();
       IDE.PROJECT.CLASSPATH_SOURCE.waitOpened();
+      IDE.LOADER.waitClosed();
       assertFalse(IDE.PROJECT.CLASSPATH_SOURCE.isOkButtonEnabled());
       assertTrue(IDE.PROJECT.CLASSPATH_SOURCE.isCancelButtonEnabled());
       assertTrue(IDE.PROJECT.CLASSPATH_SOURCE.isTreeVisible());
@@ -142,6 +143,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
        */
       IDE.PROJECT.CLASSPATH.clickAddButton();
       IDE.PROJECT.CLASSPATH_SOURCE.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.CLASSPATH_SOURCE.selectItem(PROJECT_2);
       IDE.PROJECT.CLASSPATH_SOURCE.waitOkButtonEnabled(true);
       IDE.PROJECT.CLASSPATH_SOURCE.clickOkButton();
@@ -164,6 +166,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
        */
       IDE.PROJECT.CLASSPATH.clickAddButton();
       IDE.PROJECT.CLASSPATH_SOURCE.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.CLASSPATH_SOURCE.selectItem(PROJECT_2);
       IDE.PROJECT.CLASSPATH_SOURCE.waitOkButtonEnabled(true);
       IDE.PROJECT.CLASSPATH_SOURCE.clickOkButton();
