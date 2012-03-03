@@ -244,7 +244,7 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
 
       if (display != null)
       {
-         display.updateOutline(event.getCompilationUnit());
+         display.updateOutline(compilationUnit);
          if (currentEditor != null)
          {
             selectNode(currentEditor.getCursorRow());
@@ -386,10 +386,7 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
          }
 
          compilationUnit = openedFiles.get(activeFile.getId());
-         if (compilationUnit != null)
-         {
-            display.updateOutline(compilationUnit);
-         }
+         display.updateOutline(compilationUnit);
       }
       else
       {
@@ -438,7 +435,11 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
    {
       if (openedFiles.containsKey(event.getFile().getId()))
       {
-         openedFiles.remove(event.getFile().getId());
+         CompilationUnit cUnit = openedFiles.remove(event.getFile().getId());
+         if (compilationUnit != null && compilationUnit.equals(cUnit))
+         {
+            compilationUnit = null;
+         }
       }
    }
 

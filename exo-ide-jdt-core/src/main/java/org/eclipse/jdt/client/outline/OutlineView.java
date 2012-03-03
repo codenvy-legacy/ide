@@ -62,10 +62,11 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display
 
    private SingleSelectionModel<Object> selectionModel;
 
-   private EmptyTreeMessage loadingMessage = new EmptyTreeMessage(new Image(JavaClientBundle.INSTANCE.loader()), "Loading...");
-   
+   private EmptyTreeMessage loadingMessage = new EmptyTreeMessage(new Image(JavaClientBundle.INSTANCE.loader()),
+      "Loading...");
+
    private EmptyTreeMessage emptyTreeMessage = new EmptyTreeMessage(null, "");
-   
+
    public OutlineView()
    {
       super(VIEW_ID, ViewType.INFORMATION, "Outline", new Image(JavaClientBundle.INSTANCE.outline()));
@@ -93,6 +94,11 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display
    public void updateOutline(CompilationUnit cUnit)
    {
       outlineTreeViewModel.getDataProvider().getList().clear();
+      if (cUnit == null)
+      {
+         outlineTreeViewModel.getDataProvider().getList().add(loadingMessage);
+         return;
+      }
       GetChildrenVisitor visitor = new GetChildrenVisitor();
       visitor.visit(cUnit);
 
