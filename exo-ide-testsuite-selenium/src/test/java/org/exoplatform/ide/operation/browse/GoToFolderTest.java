@@ -153,7 +153,7 @@ public class GoToFolderTest extends BaseTest
       IDE.SEARCH_RESULT.openItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      // TODO After fix issue-IDE-1458 should be work
+      
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
       IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + FOLDER_1 + "/" + FILE_1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1);
