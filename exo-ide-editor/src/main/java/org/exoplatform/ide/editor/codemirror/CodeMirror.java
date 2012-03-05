@@ -1428,8 +1428,8 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
     */
    private native void unmarkNative(int lineNumber) /*-{
       var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-      editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].setAttribute("class", null);
-      editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].setAttribute("title", null);
+      editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].removeAttribute("class");
+      editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].removeAttribute("title");
       editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onmouseover = null;
       editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onmouseout = null;
       editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onclick = null;
