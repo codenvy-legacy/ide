@@ -72,6 +72,8 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       new JavaCodeController();
       new OutlinePresenter();
       new TypeInfoUpdater();
+      new CleanProjectCommandHandler();
+      IDE.getInstance().addControl(new CleanProjectControl());
    }
 
 

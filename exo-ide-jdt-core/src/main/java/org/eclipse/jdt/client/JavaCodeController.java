@@ -31,6 +31,8 @@ import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.event.CancelParseEvent;
 import org.eclipse.jdt.client.event.CancelParseHandler;
+import org.eclipse.jdt.client.event.ParseActiveFileEvent;
+import org.eclipse.jdt.client.event.ParseActiveFileHandler;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -56,7 +58,7 @@ import java.util.Map;
  * 
  */
 public class JavaCodeController implements EditorFileContentChangedHandler, EditorActiveFileChangedHandler,
-   CancelParseHandler, EditorFileOpenedHandler
+   CancelParseHandler, EditorFileOpenedHandler, ParseActiveFileHandler
 {
    /**
     * Active file in editor.
@@ -76,6 +78,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
       IDE.addHandler(CancelParseEvent.TYPE, this);
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.addHandler(ParseActiveFileEvent.TYPE, this);
 
    }
 
@@ -170,11 +173,6 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
                }
 
             }
-//            int length = activeFile.getContent().split("\n").length;
-//            for (int i = 1; i <= length; i++)
-//            {
-//               editor.clearErrorMark(i);
-//            }
             editor.unmarkAllProblems();
             IDE.fireEvent(new UpdateOutlineEvent(unit, activeFile));
             if (unit.getProblems().length == 0 || editor == null)
@@ -183,10 +181,6 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             for (IProblem p : unit.getProblems())
             {
                editor.markProblem(new ProblemImpl(p));
-//               int sourceLineNumber = p.getSourceLineNumber();
-//               if (sourceLineNumber == 0)
-//                  sourceLineNumber = 1;
-//               editor.setErrorMark(sourceLineNumber, p.getMessage());
             }
          }
 
@@ -220,10 +214,18 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
       needReparse = true;
       if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
       {
-         Job job = new Job(event.getFile().getId(), JobStatus.STARTED);
-         job.setStartMessage("Initialize Java tooling for " + event.getFile().getName());
-         IDE.fireEvent(new JobChangeEvent(job));
+         startJob(event.getFile());
       }
+   }
+
+   /**
+    * @param event
+    */
+   private void startJob(FileModel file)
+   {
+      Job job = new Job(file.getId(), JobStatus.STARTED);
+      job.setStartMessage("Initialize Java tooling for " + file.getName());
+      IDE.fireEvent(new JobChangeEvent(job));
    }
 
    /**
@@ -269,5 +271,17 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
       Job job = new Job(activeFile.getId(), JobStatus.FINISHED);
       job.setFinishMessage("Java Tooling initialized  for " + activeFile.getName());
       IDE.fireEvent(new JobChangeEvent(job));
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.event.ParseActiveFileHandler#onPaerseActiveFile(org.eclipse.jdt.client.event.ParseActiveFileEvent)
+    */
+   @Override
+   public void onPaerseActiveFile(ParseActiveFileEvent event)
+   {
+      needReparse = true;
+      startJob(activeFile);
+      timer.cancel();
+      timer.schedule(2000);
    }
 }

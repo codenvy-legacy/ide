@@ -114,4 +114,12 @@ public class TypeInfoStorage
       return res;
 
    }
+   
+   /**
+    * Remove all items from storage
+    */
+   public void clear()
+   {
+      storage.clear();
+   }
 }
