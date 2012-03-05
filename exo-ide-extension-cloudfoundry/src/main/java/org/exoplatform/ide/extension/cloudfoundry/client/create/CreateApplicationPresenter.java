@@ -491,6 +491,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                @Override
                protected void onSuccess(CloudfoundryApplication result)
                {
+                  warUrl = null;
                   String msg = lb.applicationCreatedSuccessfully(result.getName());
                   if ("STARTED".equals(result.getState()))
                   {

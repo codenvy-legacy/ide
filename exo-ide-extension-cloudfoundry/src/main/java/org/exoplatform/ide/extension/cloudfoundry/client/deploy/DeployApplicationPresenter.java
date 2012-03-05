@@ -213,6 +213,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
                @Override
                protected void onSuccess(CloudfoundryApplication result)
                {
+                  warUrl = null;
                   String msg = lb.applicationCreatedSuccessfully(result.getName());
                   IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
                   IDE.fireEvent(new RefreshBrowserEvent(project));
