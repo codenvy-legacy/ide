@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.progress.ui;
 
+import com.google.gwt.dom.client.Style.Unit;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -29,6 +31,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.IconButton;
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
+import org.exoplatform.gwtframework.ui.client.component.Toolbar.ToolbarItem;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.job.Job;
@@ -87,8 +90,9 @@ public class ProgressView extends ViewImpl implements Display
       removeAllFinishedButton = new IconButton(normalIcon, disabledIcon);
       removeAllFinishedButton.setTitle(IDE.IDE_LOCALIZATION_CONSTANT.progressRemoveAllFinished());
 
-      toolbar.addItem(removeAllFinishedButton, true);
-
+      ToolbarItem toolbarItem = toolbar.addItem(removeAllFinishedButton, true);
+      toolbarItem.getElement().getStyle().setPaddingTop(2, Unit.PX);
+      toolbarItem.getElement().getStyle().setPaddingRight(2, Unit.PX);
    }
 
    /**

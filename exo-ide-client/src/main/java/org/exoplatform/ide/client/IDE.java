@@ -168,7 +168,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new DocumentationPresenter();
 
       new PreferencesModule();
-
+      
       // initialize extensions
       for (Extension ext : extensions())
       {

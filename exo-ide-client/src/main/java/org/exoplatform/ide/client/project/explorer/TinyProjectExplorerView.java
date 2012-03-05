@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.project.explorer;
 
+import com.google.gwt.dom.client.Style.Unit;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 
 import com.google.gwt.core.client.GWT;
@@ -31,6 +33,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IconButton;
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
+import org.exoplatform.gwtframework.ui.client.component.Toolbar.ToolbarItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -96,7 +99,9 @@ public class TinyProjectExplorerView extends ViewImpl implements ProjectExplorer
       
       linkWithEditorButton = new IconButton(linkWithEditorNormal, linkWithEditorDisabled);
       linkWithEditorButton.setTitle(LINK_WITH_EDITOR);
-      toolbar.addItem(linkWithEditorButton, true);
+      ToolbarItem toolbarItem = toolbar.addItem(linkWithEditorButton, true);
+      toolbarItem.getElement().getStyle().setPaddingTop(2, Unit.PX);
+      toolbarItem.getElement().getStyle().setPaddingRight(2, Unit.PX);
    }
 
    /**

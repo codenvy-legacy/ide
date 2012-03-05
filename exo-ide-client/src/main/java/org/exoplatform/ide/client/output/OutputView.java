@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.output;
 
+import com.google.gwt.dom.client.Style.Unit;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -29,6 +31,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.IconButton;
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
+import org.exoplatform.gwtframework.ui.client.component.Toolbar.ToolbarItem;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -88,7 +91,9 @@ public class OutputView extends ViewImpl implements org.exoplatform.ide.client.o
       clearOutputButton = new IconButton(normalIcon, disabledIcon);
       clearOutputButton.setTitle(CLEAR_OUTPUT);
 
-      toolbar.addItem(clearOutputButton, true);
+      ToolbarItem toolbarItem = toolbar.addItem(clearOutputButton, true);
+      toolbarItem.getElement().getStyle().setPaddingTop(2, Unit.PX);
+      toolbarItem.getElement().getStyle().setPaddingRight(2, Unit.PX);
 
       contentPanel.getElement().setId(CONTENT_ID);
    }

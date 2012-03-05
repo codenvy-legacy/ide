@@ -459,24 +459,31 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    {
       for (Item i : result)
       {
-         if (i instanceof ItemContext)
-         {
-            FolderModel parent = new FolderModel(folder);
-            if (((ItemContext)folder).getProject() != null)
-            {
-               parent.setProject(((ItemContext)folder).getProject());
-            }
-            ((ItemContext)i).setParent(parent);
-         }
+         
+//         if (i instanceof ItemContext)
+//         {
+//            FolderModel parent = new FolderModel(folder);
+//            if (((ItemContext)folder).getProject() != null)
+//            {
+//               parent.setProject(((ItemContext)folder).getProject());
+//            }
+//            ((ItemContext)i).setParent(parent);
+//         }
+//
+//         if (folder instanceof ProjectModel)
+//         {
+//            ((ItemContext)i).setProject((ProjectModel)folder);
+//         }
+//         else if (folder instanceof ItemContext && ((ItemContext)folder).getProject() != null)
+//         {
+//            ((ItemContext)i).setProject(((ItemContext)folder).getProject());
+//         }
 
-         if (folder instanceof ProjectModel)
-         {
-            ((ItemContext)i).setProject((ProjectModel)folder);
-         }
-         else if (folder instanceof ItemContext && ((ItemContext)folder).getProject() != null)
-         {
-            ((ItemContext)i).setProject(((ItemContext)folder).getProject());
-         }
+         if (i instanceof ItemContext) {
+            ItemContext contect = (ItemContext)i;
+            contect.setParent(new FolderModel(folder));
+            contect.setProject(openedProject);
+         }         
       }
 
       if (folder instanceof FolderModel)
@@ -852,21 +859,31 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       {
          return;
       }
-
-      // If project explorer is not visible then display.selectItem() finds item in tree but does not selects it.
-      if (display.asView().isViewVisible())
+      
+      if (!display.asView().isViewVisible())
       {
-         if (display.selectItem(editorActiveFile.getId()))
-         {
-            return;
-         }
-      }
-      else
-      {
-         // First we need activate project explorer because
-         // code below do not select item in tree.
          display.asView().activate();
       }
+      
+      if (display.selectItem(editorActiveFile.getId()))
+      {
+         return;
+      }
+
+//      // If project explorer is not visible then display.selectItem() finds item in tree but does not selects it.
+//      if (display.asView().isViewVisible())
+//      {
+//         if (display.selectItem(editorActiveFile.getId()))
+//         {
+//            return;
+//         }
+//      }
+//      else
+//      {
+//         // First we need activate project explorer because
+//         // code below do not select item in tree.
+//         display.asView().activate();
+//      }
 
       // If we do not find item in tree then try to find item in VFS.
       String expandPath = editorActiveFile.getPath().substring(openedProject.getPath().length());
@@ -917,7 +934,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
                protected void onSuccess(ItemWrapper result)
                {
                   itemsToBeOpened.remove(0);
-
+                  
                   if (result.getItem() instanceof ProjectModel)
                   {
                      foldersToRefresh.add((ProjectModel)result.getItem());
@@ -928,6 +945,11 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
                   }
                   else if (result.getItem() instanceof FileModel)
                   {
+                     FileModel file = (FileModel)result.getItem();
+                     if (file instanceof ItemContext && openedProject != null) {
+                        ((ItemContext)file).setProject(openedProject);
+                     }
+                     
                      itemToSelect = result.getItem().getId();
                   }
 
