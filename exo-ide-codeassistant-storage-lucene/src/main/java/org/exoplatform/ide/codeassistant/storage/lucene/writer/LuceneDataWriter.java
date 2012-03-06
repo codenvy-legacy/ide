@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Add javadoc or TypeInfo information to Lucene index.
@@ -102,6 +103,50 @@ public class LuceneDataWriter
             writer.addDocument(indexer.createTypeInfoDocument(typeInfo));
          }
          
+         writer.commit();
+      }
+      catch (IOException e)
+      {
+         throw new SaveDataIndexException(e.getLocalizedMessage(), e);
+      }
+      finally
+      {
+         try
+         {
+            writer.close();
+         }
+         catch (IOException e)
+         {
+            throw new SaveDataIndexException(e.getLocalizedMessage(), e);
+         }
+      }
+   }
+   
+   /**
+    * Add packages to index.
+    * Packages format:
+    * <pre>
+    * java
+    * java.lang
+    * java.util
+    * org
+    * org.exoplatform
+    * org.exoplatform.ide
+    * </pre>
+    * 
+    * @param packages
+    * @throws SaveDataIndexException
+    */
+   public void addPackages(Set<String> packages) throws SaveDataIndexException
+   {
+      IndexWriter writer = null;
+      try
+      {
+         writer = new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
+         for(String pack : packages)
+         {
+            writer.addDocument(indexer.createPackageDocument(pack));
+         }
          writer.commit();
       }
       catch (IOException e)

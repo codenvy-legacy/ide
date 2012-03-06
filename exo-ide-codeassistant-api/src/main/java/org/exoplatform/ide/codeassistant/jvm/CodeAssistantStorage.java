@@ -137,4 +137,13 @@ public interface CodeAssistantStorage
     * @throws CodeAssistantException
     */
    List<TypeInfo> getTypesInfoByNamePrefix(String namePrefix) throws CodeAssistantException;
+   
+   /**
+    * Return sets of Strings, associated with the package names
+    * @param packagePrefix 
+    *                    the string for matching package name
+    * @return List of strings
+    * @throws CodeAssistantException
+    */
+   List<String> getPackages(String packagePrefix) throws CodeAssistantException;
 }

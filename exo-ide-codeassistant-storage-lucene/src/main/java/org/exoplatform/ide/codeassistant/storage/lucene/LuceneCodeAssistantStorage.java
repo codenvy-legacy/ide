@@ -30,6 +30,7 @@ import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.JavaDocExtractor;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneQueryExecutor;
+import org.exoplatform.ide.codeassistant.storage.lucene.search.PackageExtractor;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.ShortTypeInfoExtractor;
 import org.exoplatform.ide.codeassistant.storage.lucene.search.TypeInfoExtractor;
 import org.slf4j.Logger;
@@ -161,6 +162,16 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    {
       return queryExecutor.executeQuery(new TypeInfoExtractor(), IndexType.JAVA,
          prefix(DataIndexFields.CLASS_NAME, namePrefix), DEFAULT_RESULT_LIMIT, 0);
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getPackages(java.lang.String)
+    */
+   @Override
+   public List<String> getPackages(String packagePrefix) throws CodeAssistantException
+   {
+      return queryExecutor.executeQuery(new PackageExtractor(), IndexType.PACKAGE,
+         prefix(DataIndexFields.PACKAGE, packagePrefix), DEFAULT_RESULT_LIMIT, 0);
    }
 
 }

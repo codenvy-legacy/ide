@@ -20,6 +20,7 @@ package org.exoplatform.ide.codeassistant.storage.lucene;
 
 import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.PackageParser;
 import org.exoplatform.ide.codeassistant.storage.QDoxJavaDocExtractor;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneDataWriter;
 
@@ -29,6 +30,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Class for storing classes info and java docs info to lucene storage
@@ -58,12 +61,15 @@ public class DataStorageWriter
          luceneInfoStorage = new LuceneInfoStorage(pathToIndex);
          LuceneDataWriter writer = new LuceneDataWriter(luceneInfoStorage);
 
+         Set<String> packages = new TreeSet<String>();
          for (String jar : jars)
          {
             File jarFile = new File(jar);
             List<TypeInfo> typeInfos = JarParser.parse(jarFile);
+            packages.addAll(PackageParser.parse(jarFile));
             writer.addTypeInfo(typeInfos);
          }
+         writer.addPackages(packages);
       }
       finally
       {
