@@ -59,6 +59,13 @@ public class JarsCollector
    {
       String pathSeparator = System.getProperty("path.separator");
 
+      File currentDir = new File(".");
+      String absoluteServerPath = currentDir.getAbsolutePath();
+      absoluteServerPath = absoluteServerPath.substring(0, absoluteServerPath.lastIndexOf("/"));
+      absoluteServerPath = absoluteServerPath.substring(0, absoluteServerPath.lastIndexOf("/"));
+      absoluteServerPath += "/lib";
+      getJarsFromClasspath(absoluteServerPath, pathSeparator);      
+
       String javaClassPath = System.getProperty("java.class.path");
       getJarsFromClasspath(javaClassPath, pathSeparator);
 
@@ -121,13 +128,15 @@ public class JarsCollector
                   return pathname.getName().endsWith(".jar");
                }
             });
+
             if (files != null && files.length > 0)
             {
                for (int k = 0; k < files.length; k++)
                {
-                  if (files[k].exists())
+                  File jarFile = files[k];
+                  if (jarFile.exists())
                   {
-                     jars.put(file.getAbsolutePath(), makeJar(files[k]));
+                     jars.put(jarFile.getAbsolutePath(), makeJar(jarFile));
                   }
                }
             }
