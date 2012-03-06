@@ -233,4 +233,25 @@ public class RestCodeAssistantJava
       return types;
    }
 
+   /**
+    * Get list of package names
+    * 
+    * @param vfsId
+    * @param projectId
+    * @param packagePrefix
+    * @return
+    * @throws CodeAssistantException
+    * @throws VirtualFileSystemException
+    */
+   @GET
+   @Path("/fing-packages")
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<String> getPackages(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
+      @QueryParam("package") String packagePrefix) throws CodeAssistantException, VirtualFileSystemException
+   {
+      if (projectId == null)
+         throw new InvalidArgumentException("'projectid' parameter is null.");
+      return codeAssistant.getPackagesByPrefix(packagePrefix, projectId, vfsId);
+   }
+
 }

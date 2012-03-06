@@ -348,4 +348,14 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
       }
       return typeInfos;
    }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getPackagesByPrefixFromProject(java.lang.String, java.lang.String, java.lang.String)
+    */
+   @Override
+   protected List<String> getPackagesByPrefixFromProject(String prefix, String projectId, String vfsId)
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
 }

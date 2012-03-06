@@ -128,7 +128,7 @@ public abstract class CodeAssistant
             if (projectId != null)
                return getClassByFqnFromProject(fqn, projectId, vfsId);
             else
-               //return null if project not specified
+               // return null if project not specified
                return null;
          }
          catch (ItemNotFoundException e)
@@ -325,6 +325,38 @@ public abstract class CodeAssistant
          searchResult.addAll(list);
       return searchResult;
    }
+
+   /**
+    * Return sets of Strings, associated with the package names
+    * @param prefix  the string for matching package name
+    * @param projectId Id of current project
+    * @param vfsId If of the VitrualFileSystem
+    * @return {@link List} of package names
+    * @throws CodeAssistantException
+    * @throws VirtualFileSystemException
+    */
+   public List<String> getPackagesByPrefix(String prefix, String projectId, String vfsId)
+      throws CodeAssistantException, VirtualFileSystemException
+   {
+      List<String> packages = storage.getPackages(prefix);
+      List<String> packagesFromProject = getPackagesByPrefixFromProject(prefix, projectId, vfsId);
+      if (packagesFromProject != null)
+      {
+         packages.addAll(packagesFromProject);
+      }
+      return packages;
+   }
+
+   /**
+    * Return sets of Strings, associated with the package names
+    * @param prefix  the string for matching package name
+    * @param projectId Id of current project
+    * @param vfsId If of the VitrualFileSystem
+    * @return {@link List} of package names
+    * @throws CodeAssistantException
+    * @throws VirtualFileSystemException
+    */
+   protected abstract List<String> getPackagesByPrefixFromProject(String prefix, String projectId, String vfsId);
 
    /**
     * Return sets of {@link TypeInfo} object associated with the class or interface matched to name. (means Class simple name
