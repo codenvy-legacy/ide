@@ -57,6 +57,32 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
     */
    public static final OpenShiftLocalizationConstant LOCALIZATION_CONSTANT = GWT
       .create(OpenShiftLocalizationConstant.class);
+   
+   /* Useful constants */
+   public static final String LOGIN = "rhlogin";
+
+   public static final String PASSWORD = "password";
+
+   /* Application information */
+
+   public static final String NAME = "name";
+
+   public static final String TYPE = "type";
+
+   public static final String GIT_URL = "gitUrl";
+
+   public static final String PUBLIC_URL = "publicUrl";
+
+   public static final String CREATION_DATE = "creationTime";
+
+   /* User info */
+   public static final String DOMAIN = "rhcDomain";
+
+   public static final String UUID = "uuid";
+
+   public static final String NAMESPACE = "namespace";
+
+   public static final String APPS = "apps";
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()

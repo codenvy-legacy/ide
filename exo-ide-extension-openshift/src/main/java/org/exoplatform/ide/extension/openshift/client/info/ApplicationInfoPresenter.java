@@ -41,6 +41,7 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
+import org.exoplatform.ide.extension.openshift.client.marshaller.AppInfoUmarshaller;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -127,9 +128,8 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
       try
       {
          OpenShiftClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
-            new AsyncRequestCallback<AppInfo>()
+            new AsyncRequestCallback<AppInfo>(new AppInfoUmarshaller(new AppInfo()))
             {
-
                @Override
                protected void onSuccess(AppInfo result)
                {

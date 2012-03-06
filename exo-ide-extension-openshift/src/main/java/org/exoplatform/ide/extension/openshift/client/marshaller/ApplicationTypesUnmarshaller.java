@@ -18,15 +18,15 @@
  */
 package org.exoplatform.ide.extension.openshift.client.marshaller;
 
-import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONParser;
-
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 
 import java.util.List;
+
+import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONParser;
 
 /**
  * Unmarshaller for application types response.
@@ -35,7 +35,7 @@ import java.util.List;
  * @version $Id: Jul 7, 2011 1:03:13 PM anya $
  * 
  */
-public class ApplicationTypesUnmarshaller implements Unmarshallable<List<String>>, Constants
+public class ApplicationTypesUnmarshaller implements Unmarshallable<List<String>>
 {
 
    /**

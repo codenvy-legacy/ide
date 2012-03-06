@@ -18,18 +18,19 @@
  */
 package org.exoplatform.ide.extension.openshift.client.marshaller;
 
-import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 
 /**
  * Unmarshaller for getting user information from response in JSON format.
@@ -38,7 +39,7 @@ import java.util.List;
  * @version $Id: Jun 7, 2011 11:54:18 AM anya $
  * 
  */
-public class RHUserInfoUnmarshaller implements Unmarshallable<RHUserInfo>, Constants
+public class RHUserInfoUnmarshaller implements Unmarshallable<RHUserInfo>
 {
    /**
     * User information.
@@ -71,23 +72,23 @@ public class RHUserInfoUnmarshaller implements Unmarshallable<RHUserInfo>, Const
       for (String key : jsonObject.keySet())
       {
          String value = (jsonObject.get(key).isString() != null) ? jsonObject.get(key).isString().stringValue() : "";
-         if (LOGIN.equals(key))
+         if (OpenShiftExtension.LOGIN.equals(key))
          {
             userInfo.setRhlogin(value);
          }
-         else if (DOMAIN.equals(key))
+         else if (OpenShiftExtension.DOMAIN.equals(key))
          {
             userInfo.setRhcDomain(value);
          }
-         else if (NAMESPACE.equals(key))
+         else if (OpenShiftExtension.NAMESPACE.equals(key))
          {
             userInfo.setNamespace(value);
          }
-         else if (UUID.equals(key))
+         else if (OpenShiftExtension.UUID.equals(key))
          {
             userInfo.setUuid(value);
          }
-         else if (APPS.equals(key))
+         else if (OpenShiftExtension.APPS.equals(key))
          {
             userInfo.setApps(getApplications(jsonObject.get(key).isArray()));
          }
@@ -112,23 +113,23 @@ public class RHUserInfoUnmarshaller implements Unmarshallable<RHUserInfo>, Const
          for (String key : jsonApp.keySet())
          {
             String value = (jsonApp.get(key).isString() != null) ? jsonApp.get(key).isString().stringValue() : "";
-            if (NAME.equals(key))
+            if (OpenShiftExtension.NAME.equals(key))
             {
                appInfo.setName(value);
             }
-            else if (GIT_URL.equals(key))
+            else if (OpenShiftExtension.GIT_URL.equals(key))
             {
                appInfo.setGitUrl(value);
             }
-            else if (PUBLIC_URL.equals(key))
+            else if (OpenShiftExtension.PUBLIC_URL.equals(key))
             {
                appInfo.setPublicUrl(value);
             }
-            else if (TYPE.equals(key))
+            else if (OpenShiftExtension.TYPE.equals(key))
             {
                appInfo.setType(value);
             }
-            else if (CREATION_DATE.equals(key))
+            else if (OpenShiftExtension.CREATION_DATE.equals(key))
             {
                long date =
                   (long)((jsonApp.get(key).isNumber() != null) ? jsonApp.get(key).isNumber().doubleValue() : 0);

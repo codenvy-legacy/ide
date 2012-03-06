@@ -18,10 +18,11 @@
  */
 package org.exoplatform.ide.extension.openshift.client.marshaller;
 
+import org.exoplatform.gwtframework.commons.rest.Marshallable;
+import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
+
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
-
-import org.exoplatform.gwtframework.commons.rest.Marshallable;
 
 /**
  * Marshaller for login request in JSON format.
@@ -30,7 +31,7 @@ import org.exoplatform.gwtframework.commons.rest.Marshallable;
  * @version $Id: Jun 6, 2011 5:59:09 PM anya $
  * 
  */
-public class CredentialsMarshaller implements Marshallable, Constants
+public class CredentialsMarshaller implements Marshallable
 {
    /**
     * User's login.
@@ -59,8 +60,8 @@ public class CredentialsMarshaller implements Marshallable, Constants
    public String marshal()
    {
       JSONObject jsonObject = new JSONObject();
-      jsonObject.put(LOGIN, new JSONString(login));
-      jsonObject.put(PASSWORD, new JSONString(password));
+      jsonObject.put(OpenShiftExtension.LOGIN, new JSONString(login));
+      jsonObject.put(OpenShiftExtension.PASSWORD, new JSONString(password));
       return jsonObject.toString();
    }
 

@@ -18,13 +18,14 @@
  */
 package org.exoplatform.ide.extension.openshift.client.marshaller;
 
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
+import org.exoplatform.ide.extension.openshift.shared.AppInfo;
+
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 
 /**
  * Unmarshaller for application information response.
@@ -33,7 +34,7 @@ import org.exoplatform.ide.extension.openshift.shared.AppInfo;
  * @version $Id: Jun 7, 2011 11:08:05 AM anya $
  * 
  */
-public class AppInfoUmarshaller implements Unmarshallable<AppInfo>, Constants
+public class AppInfoUmarshaller implements Unmarshallable<AppInfo>
 {
    /**
     * Application information.
@@ -63,23 +64,23 @@ public class AppInfoUmarshaller implements Unmarshallable<AppInfo>, Constants
       for (String key : jsonObject.keySet())
       {
          String value = (jsonObject.get(key).isString() != null) ? jsonObject.get(key).isString().stringValue() : "";
-         if (NAME.equals(key))
+         if (OpenShiftExtension.NAME.equals(key))
          {
             appInfo.setName(value);
          }
-         else if (GIT_URL.equals(key))
+         else if (OpenShiftExtension.GIT_URL.equals(key))
          {
             appInfo.setGitUrl(value);
          }
-         else if (PUBLIC_URL.equals(key))
+         else if (OpenShiftExtension.PUBLIC_URL.equals(key))
          {
             appInfo.setPublicUrl(value);
          }
-         else if (TYPE.equals(key))
+         else if (OpenShiftExtension.TYPE.equals(key))
          {
             appInfo.setType(value);
          }
-         else if (CREATION_DATE.equals(key))
+         else if (OpenShiftExtension.CREATION_DATE.equals(key))
          {
             long date =
                (long)((jsonObject.get(key).isNumber() != null) ? jsonObject.get(key).isNumber().doubleValue() : 0);
