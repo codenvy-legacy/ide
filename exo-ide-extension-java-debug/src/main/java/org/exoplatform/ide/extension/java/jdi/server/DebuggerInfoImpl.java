@@ -104,4 +104,16 @@ public class DebuggerInfoImpl implements DebuggerInfo
    {
       this.vmVersion = vmVersion;
    }
+
+   @Override
+   public String toString()
+   {
+      return "DebuggerInfoImpl{" +
+         "host='" + host + '\'' +
+         ", port=" + port +
+         ", id='" + id + '\'' +
+         ", vmName='" + vmName + '\'' +
+         ", vmVersion='" + vmVersion + '\'' +
+         '}';
+   }
 }

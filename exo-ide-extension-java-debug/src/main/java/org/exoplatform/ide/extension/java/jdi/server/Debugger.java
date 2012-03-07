@@ -18,14 +18,28 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
+import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.Bootstrap;
+import com.sun.jdi.ClassNotPreparedException;
+import com.sun.jdi.Location;
+import com.sun.jdi.ReferenceType;
 import com.sun.jdi.VirtualMachine;
 import com.sun.jdi.connect.AttachingConnector;
 import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.IllegalConnectorArgumentsException;
+import com.sun.jdi.event.BreakpointEvent;
+import com.sun.jdi.event.Event;
+import com.sun.jdi.event.EventSet;
+import com.sun.jdi.request.BreakpointRequest;
+import com.sun.jdi.request.EventRequest;
+import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 /**
  * Connects to JVM over Java Debug Wire Protocol handle its events.
@@ -61,6 +75,8 @@ public class Debugger
 
    /** Target Java VM representation. */
    private final VirtualMachine vm;
+   private final Queue<BreakpointEvent> breakpointEvents;
+   private final EventCollector eventCollector;
 
    private Debugger(String host, int port) throws IOException, IllegalConnectorArgumentsException
    {
@@ -78,12 +94,128 @@ public class Debugger
       arguments.get("hostname").setValue(host);
       ((Connector.IntegerArgument)arguments.get("port")).setValue(port);
       vm = connector.attach(arguments);
+      breakpointEvents = new LinkedList<BreakpointEvent>();
+      eventCollector = new EventCollector(vm.eventQueue(), new EventHandler()
+      {
+         @Override
+         public void handleEvents(EventSet events)
+         {
+            boolean resume = true;
+            for (Event event : events)
+            {
+               if (event instanceof BreakpointEvent)
+               {
+                  breakpointEvents.offer((BreakpointEvent)event);
+                  resume = false;
+               }
+            }
+            // Resume target Java VM. We are interesting (at the moment) for breakpoints events only.
+            if (resume)
+            {
+               events.resume();
+            }
+         }
+      });
    }
 
    /** Close connection to the target JVM. */
    public void disconnect()
    {
+      eventCollector.stop();
       vm.dispose();
+   }
+
+   /**
+    * Add new break point.
+    *
+    * @param breakPoint break point description
+    * @throws InvalidBreakPoint if description of break point is invalid (specified line number or class name is
+    * invalid)
+    */
+   public void addBreakPoint(BreakPoint breakPoint) throws InvalidBreakPoint
+   {
+      List<ReferenceType> classes = vm.classesByName(breakPoint.getClassName());
+      if (classes.isEmpty())
+      {
+         throw new InvalidBreakPoint("Class " + breakPoint.getClassName() + " not found. ");
+      }
+      ReferenceType clazz = classes.get(0);
+      List<Location> locations;
+      try
+      {
+         locations = clazz.locationsOfLine(breakPoint.getLineNumber());
+      }
+      catch (AbsentInformationException e)
+      {
+         throw new InvalidBreakPoint(e.getMessage(), e);
+      }
+      catch (ClassNotPreparedException e)
+      {
+         throw new IllegalStateException(e.getMessage(), e);
+      }
+
+      if (locations.isEmpty())
+      {
+         throw new InvalidBreakPoint("Line " + breakPoint.getLineNumber()
+            + " not found in class " + breakPoint.getClassName());
+      }
+
+      Location location = locations.get(0);
+      if (location.method() == null)
+      {
+         // Line is out of method.
+         throw new InvalidBreakPoint("Invalid line " + breakPoint.getLineNumber()
+            + " in class " + breakPoint.getClassName());
+      }
+
+      EventRequest breakPointRequest = vm.eventRequestManager().createBreakpointRequest(location);
+      breakPointRequest.setSuspendPolicy(EventRequest.SUSPEND_ALL);
+      breakPointRequest.setEnabled(breakPoint.isEnabled());
+   }
+
+   /**
+    * Get break points.
+    *
+    * @return list of break points
+    */
+   public List<BreakPoint> getBreakPoints()
+   {
+      List<BreakpointRequest> breakpointRequests = vm.eventRequestManager().breakpointRequests();
+      List<BreakPoint> breakPoints = new ArrayList<BreakPoint>(breakpointRequests.size());
+      for (BreakpointRequest breakpointRequest : breakpointRequests)
+      {
+         Location location = breakpointRequest.location();
+         breakPoints.add(new BreakPointImpl(
+            location.declaringType().name(),
+            location.lineNumber(),
+            breakpointRequest.isEnabled())
+         );
+      }
+      return breakPoints;
+   }
+
+   /**
+    * Switch enable status of break point.
+    *
+    * @param breakPoint break point description
+    */
+   public void switchBreakPoint(BreakPoint breakPoint)
+   {
+      for (BreakpointRequest breakpointRequest : vm.eventRequestManager().breakpointRequests())
+      {
+         Location location = breakpointRequest.location();
+         if (location.declaringType().name().equals(breakPoint.getClassName())
+            && location.lineNumber() == breakPoint.getLineNumber())
+         {
+            breakpointRequest.setEnabled(breakPoint.isEnabled());
+            break;
+         }
+      }
+   }
+
+   public void resume()
+   {
+      vm.resume();
    }
 
    /**
