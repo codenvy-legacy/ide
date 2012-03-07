@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,14 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide;
+package org.exoplatform.ide.shell.server.rest;
 
 import org.everrest.core.impl.provider.json.ArrayValue;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectValue;
-import org.exoplatform.ide.conversationstate.IdeUser;
+import org.exoplatform.ide.shell.conversationstate.ShellUser;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -64,14 +64,16 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: May 23, 2011 evgen $
+ * Configuration service for shell.
+ * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: ShellConfigurationService.java Mar 6, 2012 4:46:36 PM azatsarynnyy $
  * 
  */
-@Path("/ide/configuration")
-public class IDEConfigurationService
+@Path("/ide/shell/configuration")
+public class ShellConfigurationService
 {
-   private static Log LOG = ExoLogger.getLogger(IDEConfigurationService.class);
+   private static Log LOG = ExoLogger.getLogger(ShellConfigurationService.class);
 
    private VirtualFileSystemRegistry vfsRegistry;
 
@@ -90,7 +92,7 @@ public class IDEConfigurationService
     * @param workspace
     * @param config
     */
-   public IDEConfigurationService(VirtualFileSystemRegistry vfsRegistry, String entryPoint, boolean discoverable,
+   public ShellConfigurationService(VirtualFileSystemRegistry vfsRegistry, String entryPoint, boolean discoverable,
       String workspace, String config)
    {
       super();
@@ -121,7 +123,7 @@ public class IDEConfigurationService
          if (curentState != null)
          {
             Identity identity = curentState.getIdentity();
-            IdeUser user = new IdeUser(identity.getUserId(), identity.getGroups(), identity.getRoles());
+            ShellUser user = new ShellUser(identity.getUserId(), identity.getGroups(), identity.getRoles());
             if (LOG.isDebugEnabled())
                LOG.info("Getting user identity: " + identity.getUserId());
             result.put("user", user);

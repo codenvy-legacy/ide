@@ -28,11 +28,6 @@ import org.everrest.core.tools.DummySecurityContext;
 import org.everrest.test.mock.MockPrincipal;
 import org.exoplatform.commons.utils.IOUtil;
 import org.exoplatform.ide.conversationstate.IdeUser;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.security.Authenticator;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Credential;
@@ -59,26 +54,12 @@ import javax.ws.rs.core.SecurityContext;
  */
 public class ConfigurationServiceTest extends BaseTest
 {
-
-   private SessionProviderService sessionProviderService;
-
-   private RepositoryService repositoryService;
-
    private SecurityContext securityContext;
 
    @Before
    public void setUp() throws Exception
    {
       super.setUp();
-      repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
-      ManageableRepository repository = repositoryService.getDefaultRepository();
-      sessionProviderService =
-         (SessionProviderService)container.getComponentInstanceOfType(ThreadLocalSessionProviderService.class);
-      ConversationState state = new ConversationState(new Identity("root"));
-      SessionProvider sessionProvider = new SessionProvider(state);
-      ConversationState.setCurrent(state);
-      sessionProvider.setCurrentRepository(repository);
-      sessionProviderService.setSessionProvider(null, sessionProvider);
 
       Authenticator authr = (Authenticator)container.getComponentInstanceOfType(Authenticator.class);
       String validUser =
@@ -105,6 +86,7 @@ public class ConfigurationServiceTest extends BaseTest
       Assert.assertEquals(200, cres.getStatus());
 
       Assert.assertNotNull(cres.getEntity());
+      @SuppressWarnings("unchecked")
       Map<String, Object> entity = (Map<String, Object>)cres.getEntity();
 
       ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -221,7 +203,6 @@ public class ConfigurationServiceTest extends BaseTest
    @Test
    public void getExistingUserSettings() throws Exception
    {
-
       Set<String> userRoles = new HashSet<String>();
       userRoles.add("users");
       securityContext = new DummySecurityContext(new MockPrincipal("root"), userRoles);
@@ -239,5 +220,4 @@ public class ConfigurationServiceTest extends BaseTest
       Assert.assertNotNull(userSettingsMap.get("toolbar-items"));
       Assert.assertNotNull(userSettingsMap.get("default-editors"));
    }
-
 }

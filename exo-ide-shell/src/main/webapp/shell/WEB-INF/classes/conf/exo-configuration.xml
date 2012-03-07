@@ -118,6 +118,24 @@
 
    <component>
       <type>org.exoplatform.ide.shell.server.rest.ShellApplication</type>
+      <init-params>
+         <value-param>
+            <name>defaultEntryPoint</name>
+            <value>dev-monit</value>
+         </value-param>
+         <value-param>
+            <name>discoverable</name>
+            <value>true</value>
+         </value-param>
+         <value-param>
+            <name>workspace</name>
+            <value>production</value>
+         </value-param>
+         <value-param>
+            <name>user-config</name>
+            <value>/ide-home/users/</value>
+         </value-param>
+      </init-params>
    </component>
 
    <component>

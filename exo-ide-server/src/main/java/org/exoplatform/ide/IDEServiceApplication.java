@@ -24,6 +24,7 @@ import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
 import org.exoplatform.ide.template.TemplatesRestService;
 import org.exoplatform.ide.upload.LoopbackContentService;
 import org.exoplatform.ide.upload.UploadServiceExceptionMapper;
+import org.exoplatform.ide.utils.ExoConfigurationHelper;
 import org.exoplatform.ide.vfs.server.RequestContextResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -50,17 +51,15 @@ public class IDEServiceApplication extends Application
    public IDEServiceApplication(RepositoryService repositoryService, VirtualFileSystemRegistry vfsRegistry,
       InitParams initParams)
    {
-      String entryPoint = Utils.readValueParam(initParams, "defaultEntryPoint");
-      boolean discoverable = Boolean.parseBoolean(Utils.readValueParam(initParams, "discoverable"));
-      String workspace = Utils.readValueParam(initParams, "workspace");
-      String config = Utils.readValueParam(initParams, "config");
-      String templateConfig = Utils.readValueParam(initParams, "template-config");
+      String entryPoint = ExoConfigurationHelper.readValueParam(initParams, "defaultEntryPoint");
+      boolean discoverable = Boolean.parseBoolean(ExoConfigurationHelper.readValueParam(initParams, "discoverable"));
+      String workspace = ExoConfigurationHelper.readValueParam(initParams, "workspace");
+      String config = ExoConfigurationHelper.readValueParam(initParams, "config");
+      String templateConfig = ExoConfigurationHelper.readValueParam(initParams, "template-config");
 
-      // objects.add(new RepositoryDiscoveryService(repositoryService, entryPoint, discoverable));
       objects.add(new RepositoryDiscoveryService(repositoryService, entryPoint, discoverable));
       objects.add(new UploadServiceExceptionMapper());
-
-      objects.add(new IDEConfigurationService(repositoryService, entryPoint, discoverable, workspace, config));
+      objects.add(new IDEConfigurationService(vfsRegistry, entryPoint, discoverable, workspace, config));
       objects.add(new TemplatesRestService(workspace, templateConfig, vfsRegistry));
 
       classes.add(LoopbackContentService.class);
@@ -85,5 +84,4 @@ public class IDEServiceApplication extends Application
    {
       return objects;
    }
-
 }

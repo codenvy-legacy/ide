@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.shell.server.rest;
 
+import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.container.xml.ValueParam;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,14 +34,19 @@ import javax.ws.rs.core.Application;
  */
 public class ShellApplication extends Application
 {
-
    private Set<Class<?>> classes = new HashSet<Class<?>>();
 
-   /**
-    * 
-    */
-   public ShellApplication()
+   private final Set<Object> objects = new HashSet<Object>();
+
+   public ShellApplication(VirtualFileSystemRegistry vfsRegistry, InitParams initParams)
    {
+      String entryPoint = readValueParam(initParams, "defaultEntryPoint");
+      boolean discoverable = Boolean.parseBoolean(readValueParam(initParams, "discoverable"));
+      String workspace = readValueParam(initParams, "workspace");
+      String config = readValueParam(initParams, "config");
+
+      objects.add(new ShellConfigurationService(vfsRegistry, entryPoint, discoverable, workspace, config));
+
       classes.add(CRaSHService.class);
       classes.add(CLIResourcesService.class);
    }
@@ -49,6 +58,33 @@ public class ShellApplication extends Application
    public Set<Class<?>> getClasses()
    {
       return classes;
+   }
+
+   /**
+    * @see javax.ws.rs.core.Application#getSingletons()
+    */
+   @Override
+   public Set<Object> getSingletons()
+   {
+      return objects;
+   }
+
+   /**
+    * Read value param from init params.
+    * 
+    * @param initParams
+    * @param paramName
+    * @return value param or null if value not found.
+    */
+   private static String readValueParam(InitParams initParams, String paramName)
+   {
+      if (initParams != null)
+      {
+         ValueParam vp = initParams.getValueParam(paramName);
+         if (vp != null)
+            return vp.getValue();
+      }
+      return null;
    }
 
 }
