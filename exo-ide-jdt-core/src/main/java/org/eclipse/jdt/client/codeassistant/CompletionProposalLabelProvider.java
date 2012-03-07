@@ -791,7 +791,7 @@ public class CompletionProposalLabelProvider
 
    ImageResource createPackageImageDescriptor(CompletionProposal proposal)
    {
-      return JavaClientBundle.INSTANCE.java();
+      return JavaClientBundle.INSTANCE.packageItem();
    }
 
    // /**

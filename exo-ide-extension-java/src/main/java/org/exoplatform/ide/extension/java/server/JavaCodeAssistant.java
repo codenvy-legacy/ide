@@ -33,6 +33,9 @@ import org.exoplatform.ide.extension.java.server.parser.JavaDocBuilderErrorHandl
 import org.exoplatform.ide.extension.java.server.parser.JavaDocBuilderVfs;
 import org.exoplatform.ide.extension.java.server.parser.Util;
 import org.exoplatform.ide.extension.java.server.parser.VfsClassLibrary;
+import org.exoplatform.ide.extension.java.server.parser.scanner.FileSuffixFilter;
+import org.exoplatform.ide.extension.java.server.parser.scanner.FolderFilter;
+import org.exoplatform.ide.extension.java.server.parser.scanner.FolderScanner;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -76,13 +79,29 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
 
-      Item item = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
-      Project project = null;
-      if (item instanceof Project)
-         project = (Project)item;
-      else
-         throw new CodeAssistantException(400, "'projectId' is not project Id");
+      Project project = getProject(projectId, vfs);
 
+      Folder sourceFolder = getSourceFolder(vfs, project);
+
+      JavaDocBuilderVfs builder = new JavaDocBuilderVfs(vfs, new VfsClassLibrary(vfs));
+      builder.getClassLibrary().addClassLoader(ClassLoader.getSystemClassLoader());
+      builder.setErrorHandler(new JavaDocBuilderErrorHandler());
+      builder.addSourceTree(sourceFolder);
+      return builder;
+   }
+
+   /**
+    * @param vfs
+    * @param project
+    * @return
+    * @throws ItemNotFoundException
+    * @throws PermissionDeniedException
+    * @throws VirtualFileSystemException
+    * @throws CodeAssistantException
+    */
+   private Folder getSourceFolder(VirtualFileSystem vfs, Project project) throws ItemNotFoundException,
+      PermissionDeniedException, VirtualFileSystemException, CodeAssistantException
+   {
       String sourcePath = null;
       if (project.hasProperty("sourceFolder"))
          sourcePath = (String)project.getPropertyValue("sourceFolder");
@@ -93,17 +112,33 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
 
       if (sourceFolder.getItemType() != ItemType.FOLDER)
          throw new CodeAssistantException(500, "Can't find project source, in " + sourcePath);
-
-      JavaDocBuilderVfs builder = new JavaDocBuilderVfs(vfs, new VfsClassLibrary(vfs));
-      builder.getClassLibrary().addClassLoader(ClassLoader.getSystemClassLoader());
-      builder.setErrorHandler(new JavaDocBuilderErrorHandler());
-      builder.addSourceTree((Folder)sourceFolder);
-      return builder;
+      return (Folder)sourceFolder;
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getClassJavaDocFromProject(java.lang.String,
-    * java.lang.String, java.lang.String)
+    * @param projectId
+    * @param vfs
+    * @return
+    * @throws ItemNotFoundException
+    * @throws PermissionDeniedException
+    * @throws VirtualFileSystemException
+    * @throws CodeAssistantException
+    */
+   private Project getProject(String projectId, VirtualFileSystem vfs) throws ItemNotFoundException,
+      PermissionDeniedException, VirtualFileSystemException, CodeAssistantException
+   {
+      Item item = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+      Project project = null;
+      if (item instanceof Project)
+         project = (Project)item;
+      else
+         throw new CodeAssistantException(400, "'projectId' is not project Id");
+      return project;
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getClassJavaDocFromProject(java.lang.String, java.lang.String,
+    *      java.lang.String)
     */
    @Override
    protected String getClassJavaDocFromProject(String fqn, String projectId, String vfsId)
@@ -333,7 +368,8 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getTypeInfoByNamePrefixFromProject(java.lang.String, java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getTypeInfoByNamePrefixFromProject(java.lang.String,
+    *      java.lang.String, java.lang.String)
     */
    @Override
    protected List<TypeInfo> getTypeInfoByNamePrefixFromProject(String namePrefix, String projectId, String vfsId)
@@ -341,21 +377,41 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    {
       JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
       List<TypeInfo> typeInfos = new ArrayList<TypeInfo>();
-      for(JavaClass clazz : builder.getClasses())
+      for (JavaClass clazz : builder.getClasses())
       {
-         if(clazz.getName().startsWith(namePrefix))
+         if (clazz.getName().startsWith(namePrefix))
             typeInfos.add(Util.convert(clazz));
       }
       return typeInfos;
    }
 
    /**
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getPackagesByPrefixFromProject(java.lang.String, java.lang.String, java.lang.String)
+    * @throws VirtualFileSystemException
+    * @throws CodeAssistantException
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getPackagesByPrefixFromProject(java.lang.String, java.lang.String,
+    *      java.lang.String)
     */
    @Override
    protected List<String> getPackagesByPrefixFromProject(String prefix, String projectId, String vfsId)
+      throws VirtualFileSystemException, CodeAssistantException
    {
-      // TODO Auto-generated method stub
-      return null;
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+
+      Project project = getProject(projectId, vfs);
+      Folder sourceFolder = getSourceFolder(vfs, project);
+
+      FolderScanner scanner = new FolderScanner(sourceFolder, vfs);
+      scanner.addFilter(new FolderFilter());
+      List<Item> list = scanner.scan();
+      List<String> pakages = new ArrayList<String>();
+      String sourcePath = sourceFolder.getPath();
+      for (Item i : list)
+      {
+         String substring = i.getPath().substring(sourcePath.length() + 1);
+         substring = substring.replaceAll("/", ".");
+         if (substring.startsWith(prefix))
+            pakages.add(substring);
+      }
+      return pakages;
    }
 }

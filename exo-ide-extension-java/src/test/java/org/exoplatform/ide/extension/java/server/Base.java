@@ -117,7 +117,6 @@ public class Base
       binder = (ResourceBinder)container.getComponentInstanceOfType(ResourceBinder.class);
       resourceNumber = binder.getSize();
       RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
-      System.out.println("Base.setUp()" + handler);
       launcher = new ResourceLauncher(handler);
       sessionProviderService =
          (SessionProviderService)container.getComponentInstanceOfType(ThreadLocalSessionProviderService.class);

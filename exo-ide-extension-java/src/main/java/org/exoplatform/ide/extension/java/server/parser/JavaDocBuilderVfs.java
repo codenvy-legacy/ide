@@ -81,7 +81,7 @@ public class JavaDocBuilderVfs extends JavaDocBuilder
       return null;
    }
 
-   public void addSourceTree(Folder folder)
+   public void addSourceTree(Folder folder) throws VirtualFileSystemException
    {
       FolderScanner scanner = new FolderScanner(folder, vfs);
       scanner.addFilter(new FileSuffixFilter(".java"));

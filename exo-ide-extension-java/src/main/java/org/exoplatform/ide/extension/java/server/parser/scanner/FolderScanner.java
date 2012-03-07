@@ -20,6 +20,9 @@ package org.exoplatform.ide.extension.java.server.parser.scanner;
 
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -51,10 +54,10 @@ public class FolderScanner
       this.vfs = vfs;
    }
 
-   public List<Item> scan()
+   public List<Item> scan() throws VirtualFileSystemException
    {
       final List<Item> items = new ArrayList<Item>();
-      scan(folder, new ItemVisitor()
+      ItemVisitor visitor = new ItemVisitor()
       {
 
          @Override
@@ -62,35 +65,49 @@ public class FolderScanner
          {
             items.add(item);
          }
-      });
+      };
+      ItemList<Item> children;
+
+      children = vfs.getChildren(folder.getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
+      for (Item item : children.getItems())
+      {
+         scan(item, visitor);
+      }
+
       return items;
    }
 
-   private void scan(Item i, ItemVisitor v)
+   private void scan(Item i, ItemVisitor v) throws VirtualFileSystemException
    {
       if (i.getItemType() == ItemType.FOLDER)
       {
-         try
+         applyFilters(i, v);
+
+         ItemList<Item> children = vfs.getChildren(i.getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
+         for (Item item : children.getItems())
          {
-            ItemList<Item> children = vfs.getChildren(i.getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
-            for (Item item : children.getItems())
-            {
-               scan(item, v);
-            }
+            scan(item, v);
          }
-         catch (VirtualFileSystemException e)
-         {
-         }
+
       }
       else
       {
-         for (Filter f : filters)
-         {
-            if (!f.filter(i))
-               return;
-         }
-         v.visit(i);
+         applyFilters(i, v);
       }
+   }
+
+   /**
+    * @param i
+    * @param v
+    */
+   private void applyFilters(Item i, ItemVisitor v)
+   {
+      for (Filter f : filters)
+      {
+         if (!f.filter(i))
+            return;
+      }
+      v.visit(i);
    }
 
    public void addFilter(Filter filter)

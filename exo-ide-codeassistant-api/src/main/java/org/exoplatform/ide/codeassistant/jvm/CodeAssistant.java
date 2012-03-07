@@ -356,7 +356,7 @@ public abstract class CodeAssistant
     * @throws CodeAssistantException
     * @throws VirtualFileSystemException
     */
-   protected abstract List<String> getPackagesByPrefixFromProject(String prefix, String projectId, String vfsId);
+   protected abstract List<String> getPackagesByPrefixFromProject(String prefix, String projectId, String vfsId) throws VirtualFileSystemException, CodeAssistantException;
 
    /**
     * Return sets of {@link TypeInfo} object associated with the class or interface matched to name. (means Class simple name

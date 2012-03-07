@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
+import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -33,6 +34,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -139,6 +141,17 @@ public class RestCodeAssistantJavaTest extends JavaDocBase
       assertNotNull(types);
       assertEquals(1, types.getTypes().size());
       assertEquals("Product", types.getTypes().get(0).getName());
+   }
+   
+   @Test
+   public void findPackage() throws Exception
+   {
+      ContainerResponse cres =
+               launcher.service("GET", "/ide/code-assistant/java/fing-packages?projectid="
+                  + project.getId() + "&vfsid=ws" + "&package=org.exoplatform.ide", "", null, null, null, null);
+      assertEquals(HTTPStatus.OK, cres.getStatus());
+      List<String> packages = (List<String>)cres.getEntity();
+      assertThat(packages).contains("org.exoplatform.ide.client", "org.exoplatform.ide.client.autocompletion");
    }
 
 }

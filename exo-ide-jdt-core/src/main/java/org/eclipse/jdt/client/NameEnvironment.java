@@ -162,6 +162,7 @@ public class NameEnvironment implements INameEnvironment
 
    /**
     * Load and store in TypeInfoStorage type info
+    * 
     * @param fqn of the type
     * @param projectId project
     */
@@ -277,7 +278,7 @@ public class NameEnvironment implements INameEnvironment
          }
       }
       String url =
-               JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/classes-by-prefix" + "?prefix=" + new String(simpleName)
+         JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/classes-by-prefix" + "?prefix=" + new String(simpleName)
             + "&projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
       try
       {
@@ -287,7 +288,7 @@ public class NameEnvironment implements INameEnvironment
          {
             addConstructor(new BinaryTypeImpl(object), requestor);
          }
-         String typesJson = findTypes(url);
+         String typesJson = runSyncReques(url);
          JSONArray typesFromServer = null;
          if (typesJson != null)
          {
@@ -331,10 +332,19 @@ public class NameEnvironment implements INameEnvironment
     */
    public void findPackages(char[] qualifiedName, ISearchRequestor requestor)
    {
-      // TODO Auto-generated method stub
+      String url =
+         JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/fing-packages" + "?package=" + new String(qualifiedName)
+            + "&projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
+      String findPackage = runSyncReques(url);
+      JSONArray jsonArray = JSONParser.parseLenient(findPackage).isArray();
+      for (int i = 0; i < jsonArray.size(); i++)
+      {
+         requestor.acceptPackage(jsonArray.get(i).isString().stringValue().toCharArray());
+      }
+
    }
 
-   private native String findTypes(String url)/*-{
+   private native String runSyncReques(String url)/*-{
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.open("GET", url, false);
 		xmlhttp.send();
@@ -356,16 +366,28 @@ public class NameEnvironment implements INameEnvironment
    public void findTypes(char[] qualifiedName, boolean b, boolean camelCaseMatch, int searchFor,
       final ISearchRequestor requestor, IProgressMonitor monitor)
    {
-      if(qualifiedName.length == 0)
+      if (qualifiedName.length == 0)
          return;
       AutoBean<TypesList> autoBean = JavaEditorExtension.AUTO_BEAN_FACTORY.types();
       String searchType = convertSearchFilterToModelFilter(searchFor);
       String url = null;
       if (searchType == null)
+      {
+         int lastDotIndex = CharOperation.lastIndexOf('.', qualifiedName);
+         String typeSearch;
+         if (lastDotIndex < 0)
+         {
+            typeSearch = "className";
+         }
+         else
+         {
+            typeSearch="fqn";
+         }
          url =
             JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/find-by-prefix/" + new String(qualifiedName)
-               + "?where=className" + "&projectid=" + projectId + "&vfsid="
+               + "?where=" + typeSearch + "&projectid=" + projectId + "&vfsid="
                + VirtualFileSystem.getInstance().getInfo().getId();
+      }
       else
          url =
             JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/find-by-type/" + searchType + "?prefix="
@@ -374,7 +396,7 @@ public class NameEnvironment implements INameEnvironment
       try
       {
 
-         String typesJson = findTypes(url);
+         String typesJson = runSyncReques(url);
          Splittable data = StringQuoter.split(typesJson);
          AutoBeanCodex.decodeInto(data, autoBean);
 
