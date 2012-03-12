@@ -20,9 +20,15 @@ package org.exoplatform.ide.extension.java.jdi.server;
 
 import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.Bootstrap;
+import com.sun.jdi.ClassNotLoadedException;
 import com.sun.jdi.ClassNotPreparedException;
+import com.sun.jdi.Field;
+import com.sun.jdi.IncompatibleThreadStateException;
+import com.sun.jdi.LocalVariable;
 import com.sun.jdi.Location;
+import com.sun.jdi.ObjectReference;
 import com.sun.jdi.ReferenceType;
+import com.sun.jdi.StackFrame;
 import com.sun.jdi.VirtualMachine;
 import com.sun.jdi.connect.AttachingConnector;
 import com.sun.jdi.connect.Connector;
@@ -33,6 +39,7 @@ import com.sun.jdi.event.EventSet;
 import com.sun.jdi.request.BreakpointRequest;
 import com.sun.jdi.request.EventRequest;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
+import org.exoplatform.ide.extension.java.jdi.shared.Dump;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -129,15 +136,16 @@ public class Debugger
     * Add new break point.
     *
     * @param breakPoint break point description
-    * @throws InvalidBreakPoint if description of break point is invalid (specified line number or class name is
-    * invalid)
+    * @throws InvalidBreakPointException if description of break point is invalid (specified line number or class name
+    * is invalid)
+    * @throws IllegalStateException if cannot set breakpoint because target class is not properly loaded
     */
-   public void addBreakPoint(BreakPoint breakPoint) throws InvalidBreakPoint
+   public void addBreakPoint(BreakPoint breakPoint) throws InvalidBreakPointException
    {
       List<ReferenceType> classes = vm.classesByName(breakPoint.getClassName());
       if (classes.isEmpty())
       {
-         throw new InvalidBreakPoint("Class " + breakPoint.getClassName() + " not found. ");
+         throw new InvalidBreakPointException("Class " + breakPoint.getClassName() + " not found. ");
       }
       ReferenceType clazz = classes.get(0);
       List<Location> locations;
@@ -147,7 +155,7 @@ public class Debugger
       }
       catch (AbsentInformationException e)
       {
-         throw new InvalidBreakPoint(e.getMessage(), e);
+         throw new IllegalStateException(e.getMessage(), e);
       }
       catch (ClassNotPreparedException e)
       {
@@ -156,7 +164,7 @@ public class Debugger
 
       if (locations.isEmpty())
       {
-         throw new InvalidBreakPoint("Line " + breakPoint.getLineNumber()
+         throw new InvalidBreakPointException("Line " + breakPoint.getLineNumber()
             + " not found in class " + breakPoint.getClassName());
       }
 
@@ -164,7 +172,7 @@ public class Debugger
       if (location.method() == null)
       {
          // Line is out of method.
-         throw new InvalidBreakPoint("Invalid line " + breakPoint.getLineNumber()
+         throw new InvalidBreakPointException("Invalid line " + breakPoint.getLineNumber()
             + " in class " + breakPoint.getClassName());
       }
 
@@ -213,9 +221,71 @@ public class Debugger
       }
    }
 
+   /** Resume suspended JVM. */
    public void resume()
    {
       vm.resume();
+   }
+
+   /**
+    * Get dump of fields and local variable of current object and current frame.
+    *
+    * @return dump
+    * @throws IllegalStateException if any of the following conditions are met:
+    * <ul>
+    * <li>Target JVM is not suspended</li>
+    * <li>Cannot get access to the info about local variable or field in 'current' object. It may happen if class is
+    * not
+    * loaded properly by target JVM.</li>
+    * </ul>
+    */
+   public Dump getDump()
+   {
+      BreakpointEvent event = breakpointEvents.poll();
+      DumpImpl dump = new DumpImpl();
+      if (event != null)
+      {
+         StackFrame frame;
+         try
+         {
+            frame = event.thread().frame(0);
+         }
+         catch (IncompatibleThreadStateException e)
+         {
+            // Looks like should never happen since we have break point in the queue.
+            throw new IllegalStateException("Unable get dump. Target Java VM is not suspended. ");
+         }
+
+         try
+         {
+            ObjectReference object = frame.thisObject();
+            List<Field> fields = object.referenceType().fields();
+            for (Field field : fields)
+            {
+               dump.addField(new ValueImpl(field.name(),
+                  object.getValue(field).toString(),
+                  field.type().name())
+               );
+            }
+            List<LocalVariable> vars = frame.visibleVariables();
+            for (LocalVariable var : vars)
+            {
+               dump.addLocalVariable(new ValueImpl(var.name(),
+                  frame.getValue(var).toString(),
+                  var.type().name())
+               );
+            }
+         }
+         catch (AbsentInformationException e)
+         {
+            throw new IllegalStateException(e.getMessage(), e);
+         }
+         catch (ClassNotLoadedException e)
+         {
+            throw new IllegalStateException(e.getMessage(), e);
+         }
+      }
+      return dump;
    }
 
    /**

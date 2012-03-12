@@ -56,7 +56,7 @@ public class DebuggerService
    @POST
    @Path("breakpoints/add/{id}")
    @Consumes(MediaType.APPLICATION_JSON)
-   public void addBreakPoint(@PathParam("id") String id, BreakPoint breakPoint) throws InvalidBreakPoint
+   public void addBreakPoint(@PathParam("id") String id, BreakPoint breakPoint) throws InvalidBreakPointException
    {
       debuggerRegistry.get(id).addBreakPoint(breakPoint);
    }
@@ -72,7 +72,7 @@ public class DebuggerService
    @POST
    @Path("breakpoints/switch/{id}")
    @Consumes(MediaType.APPLICATION_JSON)
-   public void switchBreakPoint(@PathParam("id") String id, BreakPoint breakPoint) throws InvalidBreakPoint
+   public void switchBreakPoint(@PathParam("id") String id, BreakPoint breakPoint) throws InvalidBreakPointException
    {
       debuggerRegistry.get(id).switchBreakPoint(breakPoint);
    }

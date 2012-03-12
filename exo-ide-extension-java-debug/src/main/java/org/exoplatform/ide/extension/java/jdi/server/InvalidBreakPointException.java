@@ -22,14 +22,14 @@ package org.exoplatform.ide.extension.java.jdi.server;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class InvalidBreakPoint extends Exception
+public class InvalidBreakPointException extends Exception
 {
-   public InvalidBreakPoint(String message)
+   public InvalidBreakPointException(String message)
    {
       super(message);
    }
 
-   public InvalidBreakPoint(String message, Throwable cause)
+   public InvalidBreakPointException(String message, Throwable cause)
    {
       super(message, cause);
    }
