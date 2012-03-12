@@ -49,14 +49,19 @@ public class GetItemURLView extends ViewImpl implements
 
    private static final int DEFAULT_WIDTH = 500;
 
-   private static final int DEFAULT_HEIGHT = 170;
+   private static final int DEFAULT_HEIGHT = 220;
 
-   public static final String URL_FIELD = "ideGetItemURLFormURLField";
+   public static final String PRIVATE_URL_FIELD = "ideGetItemURLFormPrivateURLField";
+
+   public static final String PUBLIC_URL_FIELD = "ideGetItemURLFormPublicURLField";
 
    public static final String ID_OK_BUTTON = "ideGetItemURLFormOkButton";
 
    @UiField
-   TextBox urlField;
+   TextBox privateUrlField;
+
+   @UiField
+   TextBox publicUrlField;
 
    @UiField
    ImageButton okButton;
@@ -76,15 +81,17 @@ public class GetItemURLView extends ViewImpl implements
 
       add(uiBinder.createAndBindUi(this));
       okButton.setButtonId(ID_OK_BUTTON);
-      urlField.setName(URL_FIELD);
+      privateUrlField.setName(PRIVATE_URL_FIELD);
+      publicUrlField.setName(PUBLIC_URL_FIELD);
 
       new Timer()
       {
          @Override
          public void run()
          {
-            urlField.selectAll();
-            urlField.setFocus(true);
+            privateUrlField.selectAll();
+            publicUrlField.selectAll();
+            publicUrlField.setFocus(true);
          }
       }.schedule(500);
    }
@@ -96,9 +103,14 @@ public class GetItemURLView extends ViewImpl implements
    }
 
    @Override
-   public HasValue<String> getURLField()
+   public HasValue<String> getPrivateURLField()
    {
-      return urlField;
+      return privateUrlField;
    }
 
+   @Override
+   public HasValue<String> getPublicURLField()
+   {
+      return publicUrlField;
+   }
 }

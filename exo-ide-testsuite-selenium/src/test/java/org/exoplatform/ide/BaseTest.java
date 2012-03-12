@@ -342,16 +342,16 @@ public abstract class BaseTest
    {
       final String getItemUrlFormLocator = "//div[@view-id='ideGetItemURLForm']";
       final String okButtonId = "ideGetItemURLFormOkButton";
-      final String urlFieldName = "ideGetItemURLFormURLField";
+      final String privateUrlFieldName = "ideGetItemPrivateURLFormURLField";
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);
 
       Thread.sleep(TestConstants.SLEEP);
       waitForElementPresent(getItemUrlFormLocator);
       assertTrue(selenium().isElementPresent(getItemUrlFormLocator));
       assertTrue(selenium().isElementPresent(okButtonId));
-      assertTrue(selenium().isElementPresent(urlFieldName));
+      assertTrue(selenium().isElementPresent(privateUrlFieldName));
 
-      final String url = selenium().getValue(urlFieldName);
+      final String url = selenium().getValue(privateUrlFieldName);
 
       //Close form
       selenium().click(okButtonId);

@@ -82,7 +82,7 @@ public class GetItemUrlTest extends BaseTest
    }
 
    @Test
-   public void testGetFileUrl() throws Exception
+   public void testGetFilePrivateUrl() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.LOADER.waitClosed();
@@ -117,9 +117,46 @@ public class GetItemUrlTest extends BaseTest
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + file1Name);
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GET_URL));
 
-      String url = IDE.GET_URL.getURL();
+      String privateUrl = IDE.GET_URL.getPrivateURL();
 
-      driver.navigate().to(url);
+      driver.navigate().to(privateUrl);
+
+      new WebDriverWait(driver, 5).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               WebElement hello = driver.findElement(By.xpath("//body[contains(.,'<p> Hello!!! </p>')]"));
+               return hello != null && hello.isDisplayed();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+
+      driver.navigate().back();
+      IDE.PROJECT.EXPLORER.waitOpened();
+   }
+
+   @Test
+   public void testGetFileUrl() throws Exception
+   {
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + file1Name);
+      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GET_URL));
+
+      String publicUrl = IDE.GET_URL.getPublicURL();
+
+      driver.navigate().to(publicUrl);
 
       new WebDriverWait(driver, 5).until(new ExpectedCondition<Boolean>()
       {
@@ -146,7 +183,7 @@ public class GetItemUrlTest extends BaseTest
     * @throws Exception
     */
    @Test
-   public void testGetFileUrlWithSearch() throws Exception
+   public void testGetFilePrivateUrlWithSearch() throws Exception
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
@@ -160,9 +197,10 @@ public class GetItemUrlTest extends BaseTest
       IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + file1Name);
       IDE.SEARCH_RESULT.selectItem(PROJECT + "/" + file1Name);
 
-      String url = IDE.GET_URL.getURL();
+      // Test private URL
+      String privateUrl = IDE.GET_URL.getPrivateURL();
 
-      driver.navigate().to(url);
+      driver.navigate().to(privateUrl);
 
       new WebDriverWait(driver, 5).until(new ExpectedCondition<Boolean>()
       {
@@ -183,6 +221,49 @@ public class GetItemUrlTest extends BaseTest
 
       driver.navigate().back();
       IDE.PROJECT.EXPLORER.waitOpened();
+   }
 
+   /**
+    * @throws Exception
+    */
+   @Test
+   public void testGetFilePublicUrlWithSearch() throws Exception
+   {
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+
+      IDE.SEARCH.performSearch("/" + PROJECT, searchPhrase, "");
+      IDE.SEARCH_RESULT.waitOpened();
+      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + file1Name);
+      IDE.SEARCH_RESULT.selectItem(PROJECT + "/" + file1Name);
+
+      // Test public URL
+      String publicUrl = IDE.GET_URL.getPublicURL();
+
+      driver.navigate().to(publicUrl);
+
+      new WebDriverWait(driver, 5).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               WebElement hello = driver.findElement(By.xpath("//body[contains(.,'<p> Hello!!! </p>')]"));
+               return hello != null && hello.isDisplayed();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+
+      driver.navigate().back();
+      IDE.PROJECT.EXPLORER.waitOpened();
    }
 }

@@ -51,7 +51,9 @@ public class GetItemURLPresenter implements GetItemURLHandler, ItemsSelectedHand
 
       HasClickHandlers getOkButton();
 
-      HasValue<String> getURLField();
+      HasValue<String> getPrivateURLField();
+
+      HasValue<String> getPublicURLField();
 
    }
 
@@ -72,7 +74,7 @@ public class GetItemURLPresenter implements GetItemURLHandler, ItemsSelectedHand
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
-      updateURLField();
+      updateURLFields();
    }
 
    @Override
@@ -86,7 +88,7 @@ public class GetItemURLPresenter implements GetItemURLHandler, ItemsSelectedHand
       }
    }
 
-   private void updateURLField()
+   private void updateURLFields()
    {
       if (display != null && !selectedItems.isEmpty())
       {
@@ -94,8 +96,11 @@ public class GetItemURLPresenter implements GetItemURLHandler, ItemsSelectedHand
          Link link = item.getLinkByRelation(Link.REL_CONTENT_BY_PATH);
          if (link != null)
          {
-            String url = link.getHref();
-            display.getURLField().setValue(url);
+            String privateUrl = link.getHref();
+            display.getPrivateURLField().setValue(privateUrl);
+
+            String publicUrl = privateUrl.replace("/IDE/rest/private/ide/vfs", "/IDE/rest/ide/vfs");
+            display.getPublicURLField().setValue(publicUrl);
          }
       }
    }
@@ -111,7 +116,7 @@ public class GetItemURLPresenter implements GetItemURLHandler, ItemsSelectedHand
          }
       });
 
-      updateURLField();
+      updateURLFields();
    }
 
    @Override

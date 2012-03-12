@@ -74,7 +74,7 @@ public class OpenFileByURLTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FILE_NAME);
-      fileUrl = IDE.GET_URL.getURL();
+      fileUrl = IDE.GET_URL.getPrivateURL();
 
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_URL);
       IDE.OPEN_FILE_BY_URL.waitOpened();

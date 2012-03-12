@@ -83,8 +83,11 @@ public interface IdeNavigationLocalizationConstant extends Messages
    /*
     * GetItemURLView
     */
-   @Key("getItemUrl.webdavItemsUrl")
-   String getItemUrlWebdavItemsUrl();
+   @Key("getItemUrl.webdavItemsPrivateUrl")
+   String getItemUrlWebdavItemsPrivateUrl();
+
+   @Key("getItemUrl.webdavItemsPublicUrl")
+   String getItemUrlWebdavItemsPublicUrl();
 
    @Key("getItemUrl.title")
    String getItemUrlTitle();

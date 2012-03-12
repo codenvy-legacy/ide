@@ -74,7 +74,7 @@ public class OpenFileByPathTest extends BaseTest
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FILE_NAME);
 
-      String fileUrl = IDE.GET_URL.getURL();
+      String fileUrl = IDE.GET_URL.getPrivateURL();
 
       // Call Open File By Path form
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);

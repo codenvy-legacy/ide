@@ -30,6 +30,7 @@
       }
       
       .label {
+      	margin-top: 5px;
       	margin-bottom: 5px;
       	cursor: default;
       	font-family: Verdana, Bitstream Vera Sans, sans-serif;
@@ -42,9 +43,13 @@
    <f:Border margin="20" borderColor="transparent">
       <f:layer>
          <g:FlowPanel>
-            <g:Label text="{locale.getItemUrlWebdavItemsUrl}" styleName="{style.label}"></g:Label>
+            <g:Label text="{locale.getItemUrlWebdavItemsPrivateUrl}" styleName="{style.label}"></g:Label>
             <g:FlowPanel width="100%">
-               <g:TextBox ui:field="urlField" width="100%" height="20"></g:TextBox>
+               <g:TextBox ui:field="privateUrlField" width="100%" height="20"></g:TextBox>
+            </g:FlowPanel>
+            <g:Label text="{locale.getItemUrlWebdavItemsPublicUrl}" styleName="{style.label}"></g:Label>
+            <g:FlowPanel width="100%">
+               <g:TextBox ui:field="publicUrlField" width="100%" height="20"></g:TextBox>
             </g:FlowPanel>
             <g:HorizontalPanel width="100%" spacing="5" styleName="{style.spacing}">
                <g:cell horizontalAlignment='ALIGN_CENTER' verticalAlignment="ALIGN_MIDDLE">

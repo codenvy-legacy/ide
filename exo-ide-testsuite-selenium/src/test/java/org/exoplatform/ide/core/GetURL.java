@@ -42,14 +42,19 @@ public class GetURL extends AbstractTestModule
 
       public static final String OK_BUTTON_ID = "ideGetItemURLFormOkButton";
 
-      public static final String URL_FIELD_ID = "ideGetItemURLFormURLField";
+      public static final String PRIVATE_URL_FIELD_ID = "ideGetItemURLFormPrivateURLField";
+
+      public static final String PUBLIC_URL_FIELD_ID = "ideGetItemURLFormPublicURLField";
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
    WebElement view;
 
-   @FindBy(name = Locators.URL_FIELD_ID)
-   WebElement urlField;
+   @FindBy(name = Locators.PRIVATE_URL_FIELD_ID)
+   WebElement privateUrlField;
+
+   @FindBy(name = Locators.PUBLIC_URL_FIELD_ID)
+   WebElement publicUrlField;
 
    @FindBy(id = Locators.OK_BUTTON_ID)
    WebElement okButton;
@@ -110,8 +115,9 @@ public class GetURL extends AbstractTestModule
     */
    public boolean isOpened()
    {
-      return (view != null && view.isDisplayed() && okButton != null && okButton.isDisplayed() && urlField != null && urlField
-         .isDisplayed());
+      return (view != null && view.isDisplayed() && okButton != null && okButton.isDisplayed()
+         && privateUrlField != null && privateUrlField.isDisplayed() && publicUrlField != null && publicUrlField
+            .isDisplayed());
    }
 
    /**
@@ -123,20 +129,40 @@ public class GetURL extends AbstractTestModule
    }
 
    /**
-    * Get the value of the URL field.
+    * Get the value of the private URL field.
     * 
-    * @return {@link String} URL value
+    * @return {@link String} private URL value
     */
-   public String getURLValue()
+   public String getPrivateURLValue()
    {
-      return IDE().INPUT.getValue(urlField);
+      return IDE().INPUT.getValue(privateUrlField);
    }
 
-   public String getURL() throws Exception
+   /**
+    * Get the value of the public URL field.
+    * 
+    * @return {@link String} public URL value
+    */
+   public String getPublicURLValue()
+   {
+      return IDE().INPUT.getValue(publicUrlField);
+   }
+
+   public String getPrivateURL() throws Exception
    {
       IDE().MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);
       waitOpened();
-      String url = IDE().INPUT.getValue(urlField);
+      String url = IDE().INPUT.getValue(privateUrlField);
+      clickOkButton();
+      waitClosed();
+      return url;
+   }
+
+   public String getPublicURL() throws Exception
+   {
+      IDE().MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);
+      waitOpened();
+      String url = IDE().INPUT.getValue(publicUrlField);
       clickOkButton();
       waitClosed();
       return url;
