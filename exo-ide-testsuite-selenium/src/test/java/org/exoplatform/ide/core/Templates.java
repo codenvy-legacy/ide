@@ -37,7 +37,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class Templates extends AbstractTestModule
 {
    // Template names
-   public static final String GADGET_TEMPLATE = "Google Gadget";
+   public static final String GADGET_TEMPLATE = "OpenSocial Gadget";
    
    // Locators
    private static final String VIEW_ID = "ideCreateFileFromTemplateForm";

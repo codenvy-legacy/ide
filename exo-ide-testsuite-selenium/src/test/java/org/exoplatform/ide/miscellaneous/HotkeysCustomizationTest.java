@@ -122,7 +122,7 @@ public class HotkeysCustomizationTest extends BaseTest
       // step 2 tabs and check in first tab new hotkeys. Selecting second tab, and checking new hotkey here
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       IDE.EDITOR.waitTabPresent(1);
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
       IDE.EDITOR.waitTabPresent(2);
       IDE.EDITOR.selectTab(1);
       IDE.EDITOR.typeTextIntoEditor(1, Keys.ALT.toString() + "n");
@@ -177,7 +177,7 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.New.NEW);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       IDE.EDITOR.waitTabPresent(1);
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
       IDE.EDITOR.waitTabPresent(2);
 
       //  driver.navigate().refresh();

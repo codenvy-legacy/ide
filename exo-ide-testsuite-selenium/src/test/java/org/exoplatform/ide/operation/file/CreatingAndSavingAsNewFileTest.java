@@ -105,7 +105,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       createFileAndSaveAs(MenuCommands.New.HTML_FILE, "html", HTML_FILE_NAME);
       createFileAndSaveAs(MenuCommands.New.JAVASCRIPT_FILE, "js", JS_FILE_NAME);
       createFileAndSaveAs(MenuCommands.New.CSS_FILE, "css", CSS_FILE_NAME);
-      createFileAndSaveAs(MenuCommands.New.GOOGLE_GADGET_FILE, "gadget", GADGET_FILE_NAME);
+      createFileAndSaveAs(MenuCommands.New.OPENSOCIAL_GADGET_FILE, "gadget", GADGET_FILE_NAME);
       createFileAndSaveAs(MenuCommands.New.GROOVY_TEMPLATE_FILE, "gtmpl", GROOVY_TEMPLATE_FILE_NANE);
       createFileAndSaveAs(MenuCommands.New.GROOVY_SCRIPT_FILE, "groovy", GROOVY_FILE_NAME);
       createFileAndSaveAs(MenuCommands.New.CHROMATTIC, "cmtc", CHROMATTIC_FILE_NAME);

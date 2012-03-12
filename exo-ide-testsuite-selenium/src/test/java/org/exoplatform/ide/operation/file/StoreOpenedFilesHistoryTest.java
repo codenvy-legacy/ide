@@ -128,7 +128,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + HTML_FILE);
 
       //create google gadget file
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
       saveAsUsingToolbarButton(GADGET_FILE);
       IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + GADGET_FILE);
 

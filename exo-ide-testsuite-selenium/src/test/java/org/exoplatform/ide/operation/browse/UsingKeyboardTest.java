@@ -86,7 +86,7 @@ public class UsingKeyboardTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_SUBFOLDER);
 
       // test keyboard with opened Content Panel
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_SUBFOLDER + "/Untitled file.gadget");
 
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT
@@ -111,7 +111,7 @@ public class UsingKeyboardTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_SUBFOLDER);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_SUBFOLDER);
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_SUBFOLDER + "/Untitled file.gadget");
       IDE.EDITOR.saveAndCloseFile(1, TEST_FILE);
 

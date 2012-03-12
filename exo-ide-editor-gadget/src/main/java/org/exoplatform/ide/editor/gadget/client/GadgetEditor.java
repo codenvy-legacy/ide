@@ -47,7 +47,7 @@ public class GadgetEditor extends Extension
    {
       CodeMirrorProducer producer = new CodeMirrorProducer(
          MimeType.GOOGLE_GADGET,
-         "CodeMirror Google Gadget editor",
+         "CodeMirror OpenSocial Gadget editor",
          "gadget",
          Images.INSTANCE.gadgetImage(),
          true,
@@ -63,13 +63,13 @@ public class GadgetEditor extends Extension
             setCanHaveSeveralMimeTypes(true)
       );
       
-      IDE.getInstance().addEditor(new CKEditorProducer(MimeType.GOOGLE_GADGET, "CKEditor Google Gadget editor", "gadget", Images.INSTANCE.gadgetImage(), false,
+      IDE.getInstance().addEditor(new CKEditorProducer(MimeType.GOOGLE_GADGET, "CKEditor OpenSocial Gadget editor", "gadget", Images.INSTANCE.gadgetImage(), false,
          new CKEditorConfiguration()));
       
       IDE.getInstance().addEditor(producer);
 
-      IDE.getInstance().addControl(new NewItemControl("File/New/New Google Gadget", "Google Gadget",
-         "Create New Google Gadget", Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET));
+      IDE.getInstance().addControl(new NewItemControl("File/New/New OpenSocial Gadget", "OpenSocial Gadget",
+         "Create New OpenSocial Gadget", Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET));
       
       IDE.getInstance().addOutlineItemCreator(MimeType.GOOGLE_GADGET, new HtmlOutlineItemCreator());
    }

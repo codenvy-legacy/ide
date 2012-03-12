@@ -171,7 +171,7 @@ public class SearchLoadFileTest extends BaseTest
       //
       //      IDE.EDITOR.closeFile(0);
       //
-      //      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      //      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
       //      IDE.EDITOR.waitTabPresent(0);
       //
       //      IDE.EDITOR.deleteLinesInEditor(0, 7);

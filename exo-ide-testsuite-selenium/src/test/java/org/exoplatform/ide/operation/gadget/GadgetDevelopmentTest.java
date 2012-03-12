@@ -79,7 +79,7 @@ public class GadgetDevelopmentTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       IDE.TEMPLATES.waitOpened();
 
-      //Select "Google Gadget" in the central column, change "File Name" field text on "Test Gadget File" name, click on "Create" button.
+      //Select "OpenSocial Gadget" in the central column, change "File Name" field text on "Test Gadget File" name, click on "Create" button.
       IDE.TEMPLATES.selectTemplate(Templates.GADGET_TEMPLATE);
 
       IDE.TEMPLATES.setFileName(FILE_NAME);

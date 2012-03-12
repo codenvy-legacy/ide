@@ -51,7 +51,7 @@ public class CreateFileFromTemplateTest extends BaseTest
 
    private static final String EMPTY_TEXT = "Empty TEXT";
 
-   private static final String GOOGLE_GADGET = "Google Gadget";
+   private static final String OPENSOCIAL_GADGET = "OpenSocial Gadget";
 
    private static final String GROOVY_FILE_NAME = "Test Groovy File.groovy";
 
@@ -61,7 +61,7 @@ public class CreateFileFromTemplateTest extends BaseTest
 
    private static final String TEXT_FILE_NAME = "Test Text File.txt";
 
-   private static final String GOOGLE_GADGET_FILE_NAME = "Test Gadget File.xml";
+   private static final String OPENSOCIAL_GADGET_FILE_NAME = "Test Gadget File.xml";
 
    private static final String NETVIBES_WIDGET = "Netvibes Widget";
 
@@ -103,10 +103,10 @@ public class CreateFileFromTemplateTest extends BaseTest
       testTemplate(GROOVY_REST_SERVICE, GROOVY_FILE_NAME);
 
       // -------- 3 ----------
-      // Repeat step 2 with items "Empty XML", "Empty HTML", "Empty TEXT", "Google Gadget" item of left panel.
+      // Repeat step 2 with items "Empty XML", "Empty HTML", "Empty TEXT", "OpenSocial Gadget" item of left panel.
       testTemplate(EMPTY_XML, XML_FILE_NAME);
       testTemplate(EMPTY_HTML, HTML_FILE_NAME);
-      testTemplate(GOOGLE_GADGET, GOOGLE_GADGET_FILE_NAME);
+      testTemplate(OPENSOCIAL_GADGET, OPENSOCIAL_GADGET_FILE_NAME);
       testTemplate(EMPTY_TEXT, TEXT_FILE_NAME);
    }
 

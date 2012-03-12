@@ -41,7 +41,7 @@ public interface MenuCommands
 
       String CSS_FILE = "CSS";
 
-      String GOOGLE_GADGET_FILE = "Google Gadget";
+      String OPENSOCIAL_GADGET_FILE = "OpenSocial Gadget";
 
       String REST_SERVICE_FILE = "REST Service";
 

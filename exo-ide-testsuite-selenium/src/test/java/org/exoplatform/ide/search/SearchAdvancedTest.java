@@ -38,9 +38,9 @@ public class SearchAdvancedTest extends BaseTest
 {
    private static final String PROJECT = SearchAdvancedTest.class.getSimpleName();
 
-   private static final String googleGadgetFileName = "Тестовый гаджет.xml";
+   private static final String openSocialGadgetFileName = "Тестовый гаджет.xml";
 
-   private final String googleGadgetFileContent =
+   private final String openSocialGadgetFileContent =
 
    "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n" + "<ModulePrefs title=\"Hello World!\" />\n"
       + "<Content type=\"html\">\n" + "<![CDATA[ Привет, свет! Test]]></Content></Module>";
@@ -69,12 +69,12 @@ public class SearchAdvancedTest extends BaseTest
       IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
 
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
       IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.gadget");
       IDE.EDITOR.deleteFileContent(0);
-      IDE.EDITOR.typeTextIntoEditor(0, googleGadgetFileContent);
-      IDE.EDITOR.saveAs(1, googleGadgetFileName);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + googleGadgetFileName);
+      IDE.EDITOR.typeTextIntoEditor(0, openSocialGadgetFileContent);
+      IDE.EDITOR.saveAs(1, openSocialGadgetFileName);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + openSocialGadgetFileName);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
@@ -83,7 +83,7 @@ public class SearchAdvancedTest extends BaseTest
       IDE.LOADER.waitClosed();
       IDE.SEARCH_RESULT.waitOpened();
       IDE.SEARCH_RESULT.waitForItem(PROJECT);
-      assertFalse(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + googleGadgetFileContent));
+      assertFalse(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + openSocialGadgetFileContent));
       IDE.SEARCH_RESULT.close();
       IDE.SEARCH_RESULT.waitClosed();
 
@@ -91,7 +91,7 @@ public class SearchAdvancedTest extends BaseTest
       IDE.SEARCH.performSearch("/" + PROJECT, "", "script/groovy");
       IDE.LOADER.waitClosed();
       IDE.SEARCH_RESULT.waitForItem(PROJECT);
-      assertFalse(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + googleGadgetFileContent));
+      assertFalse(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + openSocialGadgetFileContent));
       IDE.SEARCH_RESULT.close();
       IDE.SEARCH_RESULT.waitClosed();
 
@@ -99,35 +99,35 @@ public class SearchAdvancedTest extends BaseTest
       IDE.SEARCH.performSearch("/" + PROJECT, "Привет, свет", "script/groovy");
       IDE.LOADER.waitClosed();
       IDE.SEARCH_RESULT.waitForItem(PROJECT);
-      assertFalse(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + googleGadgetFileContent));
+      assertFalse(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + openSocialGadgetFileContent));
       IDE.SEARCH_RESULT.close();
       IDE.SEARCH_RESULT.waitClosed();
 
       // Step 8
       IDE.SEARCH.performSearch("/" + PROJECT, "", "");
       IDE.LOADER.waitClosed();
-      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + googleGadgetFileName);
+      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + openSocialGadgetFileName);
       IDE.SEARCH_RESULT.close();
       IDE.SEARCH_RESULT.waitClosed();
 
       // Step 9
       IDE.SEARCH.performSearch("/" + PROJECT, "Привет, свет", "");
       IDE.LOADER.waitClosed();
-      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + googleGadgetFileName);
+      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + openSocialGadgetFileName);
       IDE.SEARCH_RESULT.close();
       IDE.SEARCH_RESULT.waitClosed();
 
       // Step 10
       IDE.SEARCH.performSearch("/" + PROJECT, "", "application/x-google-gadget");
       IDE.LOADER.waitClosed();
-      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + googleGadgetFileName);
+      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + openSocialGadgetFileName);
       IDE.SEARCH_RESULT.close();
       IDE.SEARCH_RESULT.waitClosed();
 
       // Step 11
       IDE.SEARCH.performSearch("/" + PROJECT, "Test", "application/x-google-gadget");
       IDE.LOADER.waitClosed();
-      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + googleGadgetFileName);
+      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + openSocialGadgetFileName);
    }
 
    @AfterClass

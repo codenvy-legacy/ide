@@ -143,11 +143,11 @@ public class HotkeysInFCKEditorTest extends BaseTest
       //      //----- 4 ------------
       //      //Press Ctrl+S to check file saving
       //      //check tab title is marked by *
-      //      assertEquals(GOOGLE_GADGET_FILE + " *", IDE.EDITOR.getTabTitle(0));
+      //      assertEquals(OPENSOCIAL_GADGET_FILE + " *", IDE.EDITOR.getTabTitle(0));
       //      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "s");
       //      Thread.sleep(TestConstants.SLEEP);
       //      //check tab title is not marked by *
-      //      assertEquals(GOOGLE_GADGET_FILE, IDE.EDITOR.getTabTitle(0));
+      //      assertEquals(OPENSOCIAL_GADGET_FILE, IDE.EDITOR.getTabTitle(0));
    }
 
    /**
@@ -164,7 +164,7 @@ public class HotkeysInFCKEditorTest extends BaseTest
 
       //----- 1 ------------
       //open file in WYDIWYG editor
-      //  IDE.WORKSPACE.doubleClickOnFile(WS_URL +  private static final String PROJECT = HotkeysInCodeMirrorTest.class.getSimpleName(); + "/" + GOOGLE_GADGET_FILE);
+      //  IDE.WORKSPACE.doubleClickOnFile(WS_URL +  private static final String PROJECT = HotkeysInCodeMirrorTest.class.getSimpleName(); + "/" + OPENSOCIAL_GADGET_FILE);
       IDE.EDITOR.clickDesignButton();
       //check Ctrl+F
       IDE.EDITOR.selectIFrameWithEditor(0);
@@ -227,7 +227,7 @@ public class HotkeysInFCKEditorTest extends BaseTest
 
       //----- 1 ------------
       //open file in WYDIWYG editor
-      //  IDE.WORKSPACE.doubleClickOnFile(WS_URL +  private static final String PROJECT = HotkeysInCodeMirrorTest.class.getSimpleName(); + "/" + GOOGLE_GADGET_FILE);
+      //  IDE.WORKSPACE.doubleClickOnFile(WS_URL +  private static final String PROJECT = HotkeysInCodeMirrorTest.class.getSimpleName(); + "/" + OPENSOCIAL_GADGET_FILE);
       IDE.EDITOR.clickDesignButton();
       //select all
       IDE.EDITOR.selectIFrameWithEditor(0);
@@ -323,7 +323,7 @@ public class HotkeysInFCKEditorTest extends BaseTest
       //checkCreateFileFromTemplateFormAndClose();
 
       //open FCK editor
-      //   IDE.WORKSPACE.doubleClickOnFile(WS_URL +  private static final String PROJECT = HotkeysInCodeMirrorTest.class.getSimpleName(); + "/" + GOOGLE_GADGET_FILE);
+      //   IDE.WORKSPACE.doubleClickOnFile(WS_URL +  private static final String PROJECT = HotkeysInCodeMirrorTest.class.getSimpleName(); + "/" + OPENSOCIAL_GADGET_FILE);
       IDE.EDITOR.clickDesignButton();
 
       IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "n");

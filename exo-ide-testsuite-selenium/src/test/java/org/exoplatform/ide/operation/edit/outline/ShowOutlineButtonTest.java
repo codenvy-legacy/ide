@@ -81,8 +81,8 @@ public class ShowOutlineButtonTest extends BaseTest
       assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE));
 
       //---- 4 ------
-      //open google gadget file
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      //open OpenSocial gadget file
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
       IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.gadget");
       assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE));
 

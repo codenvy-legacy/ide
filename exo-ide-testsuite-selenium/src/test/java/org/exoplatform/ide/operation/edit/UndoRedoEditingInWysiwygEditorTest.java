@@ -261,7 +261,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       assertEquals("1\n2", revertedText7);
 
       //step 21
-      createSaveAndCloseFile(MenuCommands.New.GOOGLE_GADGET_FILE, googleGadgetFile, 1);
+      createSaveAndCloseFile(MenuCommands.New.OPENSOCIAL_GADGET_FILE, googleGadgetFile, 1);
       Thread.sleep(TestConstants.SLEEP / 3);
 
       //open with WYSIWYG editor

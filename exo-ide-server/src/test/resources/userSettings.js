@@ -56,6 +56,6 @@
     "Run/Deploy node type"
   ],
   "default-editors": {
-    "application/x-google-gadget": "CKEditor Google Gadget editor"
+    "application/x-google-gadget": "CKEditor OpenSocial Gadget editor"
   }
 }

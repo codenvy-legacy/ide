@@ -56,7 +56,7 @@ public class AutoCompletionHTMLTest extends CodeAssistantBaseTest
    @Test
    public void testGoogleGadget() throws InterruptedException, Exception
    {
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
       IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.gadget");
       IDE.EDITOR.moveCursorDown(0, 4);
 

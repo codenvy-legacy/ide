@@ -139,11 +139,11 @@ public interface IdeTemplateLocalizationConstant extends Constants
    @Key("template.emptyText.description")
    String templateEmptyTextDescription();
 
-   @Key("template.googleGadget.name")
-   String templateGoogleGadgetName();
+   @Key("template.openSocialGadget.name")
+   String templateOpenSocialGadgetName();
 
-   @Key("template.googleGadget.description")
-   String templateGoogleGadgetDescription();
+   @Key("template.openSocialGadget.description")
+   String templateOpenSocialGadgetDescription();
 
    @Key("template.groovyRestService.name")
    String templateGroovyRestServiceName();

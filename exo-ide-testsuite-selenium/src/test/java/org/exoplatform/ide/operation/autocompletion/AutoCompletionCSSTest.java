@@ -51,7 +51,7 @@ public class AutoCompletionCSSTest extends CodeAssistantBaseTest
    @Test
    public void testGoogleGadget() throws Exception
    {
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
       IDE.EDITOR.waitActiveFile(AutoCompletionCSSTest.class.getSimpleName() + "/Untitled file.gadget");
       IDE.EDITOR.moveCursorDown(0, 4);
       IDE.EDITOR.moveCursorRight(0, 16);

@@ -371,7 +371,7 @@ public class CustomizeToolbar extends AbstractTestModule
          Arrays.asList("File", "New * [Popup]", "Upload File...", "Upload Zipped Folder...", "Open Local File...",
             "Open File By Path...", "Open by URL...", "Download File...", "Download Zipped Folder...", "Save",
             "Save As...", "Save All", "Save As Template...", "Rename...", "Delete...", "Search...",
-            "Refresh Selected Folder", "File / New", "Create Folder...", "New TEXT", "New Google Gadget",
+            "Refresh Selected Folder", "File / New", "Create Folder...", "New TEXT", "New OpenSocial Gadget",
             "New Netvibes Widget", "New XML", "New Java Script", "New HTML", "New CSS", "New REST Service", "New POGO",
             "New Template", "New Data Object", "New Java Class", "New JSP File", "New Ruby File", "New PHP File",
             "Create File From Template...", "Project / New", "Create Project...", "Create Project...",

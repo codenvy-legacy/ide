@@ -66,9 +66,10 @@ public class TemplateServiceImpl extends TemplateService
 
       public static final String EMPTY_TEXT_DESCRIPTION = IDE.TEMPLATE_CONSTANT.templateEmptyTextDescription();
 
-      public static final String GOOGLE_GADGET = IDE.TEMPLATE_CONSTANT.templateGoogleGadgetName();
+      public static final String OPENSOCIAL_GADGET = IDE.TEMPLATE_CONSTANT.templateOpenSocialGadgetName();
 
-      public static final String GOOGLE_GADGET_DESCRIPTION = IDE.TEMPLATE_CONSTANT.templateGoogleGadgetDescription();
+      public static final String OPENSOCIAL_GADGET_DESCRIPTION = IDE.TEMPLATE_CONSTANT
+         .templateOpenSocialGadgetDescription();
 
       public static final String GROOVY_REST_SERVICE = IDE.TEMPLATE_CONSTANT.templateGroovyRestServiceName();
 
@@ -295,8 +296,10 @@ public class TemplateServiceImpl extends TemplateService
       fileTemplates.add(new FileTemplate(MimeType.TEXT_PLAIN, DefaultFileTemplates.EMPTY_TEXT,
          DefaultFileTemplates.EMPTY_TEXT_DESCRIPTION, FileTemplates.getTemplateFor(MimeType.TEXT_PLAIN), true));
 
-      fileTemplates.add(new FileTemplate(MimeType.GOOGLE_GADGET, DefaultFileTemplates.GOOGLE_GADGET,
-         DefaultFileTemplates.GOOGLE_GADGET_DESCRIPTION, FileTemplates.getTemplateFor(MimeType.GOOGLE_GADGET), true));
+      fileTemplates
+         .add(new FileTemplate(MimeType.GOOGLE_GADGET, DefaultFileTemplates.OPENSOCIAL_GADGET,
+            DefaultFileTemplates.OPENSOCIAL_GADGET_DESCRIPTION, FileTemplates.getTemplateFor(MimeType.GOOGLE_GADGET),
+            true));
 
       fileTemplates.add(new FileTemplate(MimeType.GROOVY_SERVICE, DefaultFileTemplates.GROOVY_REST_SERVICE,
          DefaultFileTemplates.GROOVY_REST_SERVICE_DESCRIPTION, FileTemplates.getTemplateFor(MimeType.GROOVY_SERVICE),
@@ -337,8 +340,7 @@ public class TemplateServiceImpl extends TemplateService
     */
    @Override
    public void createProjectFromTemplate(String vfsId, String parentId, String name, String templateName,
-      AsyncRequestCallback<ProjectModel> callback)
-      throws RequestException
+      AsyncRequestCallback<ProjectModel> callback) throws RequestException
    {
       String url = restContext + "/ide/templates/project/create";
       url += "?vfsid=" + vfsId;

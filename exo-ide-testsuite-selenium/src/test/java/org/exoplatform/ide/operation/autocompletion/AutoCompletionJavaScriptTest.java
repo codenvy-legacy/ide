@@ -59,7 +59,7 @@ public class AutoCompletionJavaScriptTest extends CodeAssistantBaseTest
    public void testGoogleGadget() throws InterruptedException, Exception
    {
       closeWelcomePage();
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
       IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.gadget");
       IDE.EDITOR.moveCursorDown(0, 4);
       IDE.EDITOR.moveCursorRight(0, 10);

@@ -64,7 +64,7 @@ public class ChangeHighlightTest extends BaseTest
       IDE.EDITOR.waitTabNotPresent(0);
       
       //Open new file:
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
       IDE.EDITOR.waitTabPresent(0);
       assertTrue(IDE.EDITOR.isActive(0));
       assertFalse(IDE.PROJECT.EXPLORER.isActive());
@@ -79,7 +79,7 @@ public class ChangeHighlightTest extends BaseTest
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       assertTrue(IDE.PROJECT.EXPLORER.isActive());
 
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
       IDE.EDITOR.waitTabPresent(0);
       IDE.EDITOR.saveAs(0, FILE_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);

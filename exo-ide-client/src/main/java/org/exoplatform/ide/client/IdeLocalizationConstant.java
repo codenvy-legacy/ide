@@ -495,8 +495,8 @@ public interface IdeLocalizationConstant extends Constants
    @Key("menu.New")
    String newMenu();
 
-   @Key("menu.new.googleGadget")
-   String googleGadgetNewMenu();
+   @Key("menu.new.openSocialGadget")
+   String openSocialGadgetNewMenu();
 
    @Key("menu.new.restService")
    String restServiceNewMenu();
