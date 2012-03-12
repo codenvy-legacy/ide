@@ -172,7 +172,7 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
    private void codecomplete()
    {
       ASTParser parser = ASTParser.newParser(AST.JLS3);
-      IDocument document = new Document(currentEditor.getText());
+      IDocument document = currentEditor.getDocument();
       parser.setSource(document.get().toCharArray());
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
       parser.setUnitName(currentFile.getName().substring(0, currentFile.getName().lastIndexOf('.')));
@@ -341,9 +341,8 @@ public class CodeAssistantController implements RunCodeAssistantHandler, EditorA
       try
       {
          IJavaCompletionProposal proposal = value.getProposal();
-         IDocument document = new Document(currentEditor.getText());
+         IDocument document = currentEditor.getDocument();
          proposal.apply(document);
-         currentEditor.setText(document.get());
          int cursorPosition = completionPosition;
          int replacementOffset = 0;
          if (proposal instanceof AbstractJavaCompletionProposal)
