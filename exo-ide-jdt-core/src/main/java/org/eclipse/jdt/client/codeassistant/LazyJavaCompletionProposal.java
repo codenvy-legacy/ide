@@ -18,8 +18,8 @@ import org.eclipse.jdt.client.codeassistant.ui.StyledString;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
-import org.eclipse.jdt.client.runtime.Assert;
-import org.eclipse.jdt.client.text.IDocument;
+import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.text.IDocument;
 
 public class LazyJavaCompletionProposal extends AbstractJavaCompletionProposal
 {

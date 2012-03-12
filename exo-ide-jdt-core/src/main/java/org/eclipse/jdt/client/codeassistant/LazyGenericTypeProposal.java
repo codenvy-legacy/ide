@@ -29,9 +29,9 @@ import org.eclipse.jdt.client.core.dom.ASTRequestor;
 import org.eclipse.jdt.client.core.dom.IBinding;
 import org.eclipse.jdt.client.core.dom.ITypeBinding;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
-import org.eclipse.jdt.client.text.BadLocationException;
-import org.eclipse.jdt.client.text.IDocument;
-import org.eclipse.jdt.client.text.IRegion;
+import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.IRegion;
 
 import java.util.HashMap;
 import java.util.Map;

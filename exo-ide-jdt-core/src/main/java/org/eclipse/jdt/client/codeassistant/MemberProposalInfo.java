@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.eclipse.jdt.client.core.CompletionProposal;
-import org.eclipse.jdt.client.runtime.Assert;
+import org.exoplatform.ide.editor.runtime.Assert;
 
 /**
  * Proposal info that computes the javadoc lazily when it is queried.

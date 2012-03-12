@@ -60,10 +60,10 @@ import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.client.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.client.core.dom.WhileStatement;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
-import org.eclipse.jdt.client.runtime.Assert;
-import org.eclipse.jdt.client.text.BadLocationException;
-import org.eclipse.jdt.client.text.Document;
-import org.eclipse.jdt.client.text.edits.TextEdit;
+import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.Document;
+import org.exoplatform.ide.editor.text.edits.TextEdit;
 
 import java.util.ArrayList;
 import java.util.List;

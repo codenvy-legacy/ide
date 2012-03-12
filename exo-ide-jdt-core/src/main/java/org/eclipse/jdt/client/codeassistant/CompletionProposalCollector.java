@@ -24,8 +24,8 @@ import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.eclipse.jdt.client.core.formatter.CodeFormatter;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
-import org.eclipse.jdt.client.runtime.Assert;
-import org.eclipse.jdt.client.text.IDocument;
+import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.text.IDocument;
 
 import java.util.ArrayList;
 import java.util.HashSet;

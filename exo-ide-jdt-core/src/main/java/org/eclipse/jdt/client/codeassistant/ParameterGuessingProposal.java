@@ -17,11 +17,11 @@ import org.eclipse.jdt.client.core.CompletionContext;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.internal.corext.util.SignatureUtil;
-import org.eclipse.jdt.client.text.BadPositionCategoryException;
-import org.eclipse.jdt.client.text.IDocument;
-import org.eclipse.jdt.client.text.IPositionUpdater;
-import org.eclipse.jdt.client.text.IRegion;
-import org.eclipse.jdt.client.text.Position;
+import org.exoplatform.ide.editor.text.BadPositionCategoryException;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.IPositionUpdater;
+import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.editor.text.Position;
 
 /**
  * This is a which includes templates that represent the best guess completion for each parameter of a method.

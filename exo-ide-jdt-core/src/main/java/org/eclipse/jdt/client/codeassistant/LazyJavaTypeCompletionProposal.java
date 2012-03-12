@@ -21,9 +21,9 @@ import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.client.internal.corext.util.ModelUtil;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
-import org.eclipse.jdt.client.text.BadLocationException;
-import org.eclipse.jdt.client.text.IDocument;
-import org.eclipse.jdt.client.text.edits.TextEdit;
+import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.edits.TextEdit;
 
 /**
  * If passed compilation unit is not null, the replacement string will be seen as a qualified type name.

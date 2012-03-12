@@ -16,9 +16,9 @@ import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.formatter.CodeFormatter;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
-import org.eclipse.jdt.client.text.BadLocationException;
-import org.eclipse.jdt.client.text.IDocument;
-import org.eclipse.jdt.client.text.TextUtilities;
+import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.TextUtilities;
 
 public class JavaMethodCompletionProposal extends LazyJavaCompletionProposal
 {

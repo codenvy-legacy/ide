@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.templates.api;
 
-import org.eclipse.jdt.client.runtime.Assert;
+import org.exoplatform.ide.editor.runtime.Assert;
 
 /**
  * A <code>TemplateVariableResolver</code> resolves <code>TemplateVariables</code> of a certain type inside a

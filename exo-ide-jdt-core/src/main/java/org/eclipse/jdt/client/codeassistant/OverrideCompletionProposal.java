@@ -37,15 +37,15 @@ import org.eclipse.jdt.client.internal.corext.codemanipulation.ContextSensitiveI
 import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility2;
 import org.eclipse.jdt.client.internal.corext.dom.Bindings;
-import org.eclipse.jdt.client.runtime.Assert;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
-import org.eclipse.jdt.client.text.BadLocationException;
-import org.eclipse.jdt.client.text.Document;
-import org.eclipse.jdt.client.text.IDocument;
-import org.eclipse.jdt.client.text.IRegion;
-import org.eclipse.jdt.client.text.TextUtilities;
-import org.eclipse.jdt.client.text.edits.MalformedTreeException;
+import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.Document;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.editor.text.TextUtilities;
+import org.exoplatform.ide.editor.text.edits.MalformedTreeException;
 
 public class OverrideCompletionProposal extends JavaTypeCompletionProposal implements ICompletionProposalExtension4
 {

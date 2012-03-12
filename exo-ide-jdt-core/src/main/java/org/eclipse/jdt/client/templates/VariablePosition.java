@@ -11,9 +11,9 @@
 package org.eclipse.jdt.client.templates;
 
 import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
-import org.eclipse.jdt.client.runtime.Assert;
-import org.eclipse.jdt.client.text.IDocument;
-import org.eclipse.jdt.client.text.Position;
+import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.Position;
 
 /**
  *

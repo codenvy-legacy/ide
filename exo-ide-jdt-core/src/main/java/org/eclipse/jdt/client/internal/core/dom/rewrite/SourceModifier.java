@@ -11,8 +11,8 @@
 package org.eclipse.jdt.client.internal.core.dom.rewrite;
 
 import org.eclipse.jdt.client.core.formatter.IndentManipulation;
-import org.eclipse.jdt.client.text.edits.ISourceModifier;
-import org.eclipse.jdt.client.text.edits.ReplaceEdit;
+import org.exoplatform.ide.editor.text.edits.ISourceModifier;
+import org.exoplatform.ide.editor.text.edits.ReplaceEdit;
 
 import java.util.ArrayList;
 import java.util.List;

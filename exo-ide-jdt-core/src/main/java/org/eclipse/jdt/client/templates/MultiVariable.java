@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.templates;
 
-import org.eclipse.jdt.client.runtime.Assert;
 import org.eclipse.jdt.client.templates.api.TemplateVariable;
 import org.eclipse.jdt.client.templates.api.TemplateVariableType;
+import org.exoplatform.ide.editor.runtime.Assert;
 
 import java.util.Arrays;
 import java.util.HashMap;

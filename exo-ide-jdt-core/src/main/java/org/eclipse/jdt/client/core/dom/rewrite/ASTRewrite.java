@@ -26,11 +26,11 @@ import org.eclipse.jdt.client.internal.core.dom.rewrite.RewriteEventStore;
 import org.eclipse.jdt.client.internal.core.dom.rewrite.RewriteEventStore.CopySourceInfo;
 import org.eclipse.jdt.client.internal.core.dom.rewrite.RewriteEventStore.PropertyLocation;
 import org.eclipse.jdt.client.internal.core.dom.rewrite.TrackedNodePosition;
-import org.eclipse.jdt.client.text.IDocument;
-import org.eclipse.jdt.client.text.TextUtilities;
-import org.eclipse.jdt.client.text.edits.MultiTextEdit;
-import org.eclipse.jdt.client.text.edits.TextEdit;
-import org.eclipse.jdt.client.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.TextUtilities;
+import org.exoplatform.ide.editor.text.edits.MultiTextEdit;
+import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.text.edits.TextEditGroup;
 
 import java.util.HashMap;
 import java.util.Iterator;

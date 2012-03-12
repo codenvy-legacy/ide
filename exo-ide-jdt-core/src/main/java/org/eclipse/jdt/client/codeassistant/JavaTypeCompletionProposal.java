@@ -19,9 +19,9 @@ import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
-import org.eclipse.jdt.client.text.BadLocationException;
-import org.eclipse.jdt.client.text.IDocument;
-import org.eclipse.jdt.client.text.edits.TextEdit;
+import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.edits.TextEdit;
 
 import java.util.List;
 

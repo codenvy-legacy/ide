@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant.api;
 
-import org.eclipse.jdt.client.text.IDocument;
+import org.exoplatform.ide.editor.text.IDocument;
 
 /**
  * Extends {@link org.eclipse.jface.text.contentassist.ICompletionProposal} with the following functions:

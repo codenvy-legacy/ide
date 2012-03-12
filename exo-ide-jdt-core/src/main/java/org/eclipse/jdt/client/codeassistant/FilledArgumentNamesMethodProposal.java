@@ -12,8 +12,8 @@ package org.eclipse.jdt.client.codeassistant;
 
 import org.eclipse.jdt.client.codeassistant.api.Point;
 import org.eclipse.jdt.client.core.CompletionProposal;
-import org.eclipse.jdt.client.text.IDocument;
-import org.eclipse.jdt.client.text.IRegion;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.IRegion;
 
 /**
  * A method proposal with filled in argument names.

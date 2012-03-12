@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.runtime;
 
+import org.exoplatform.ide.editor.runtime.Assert;
+
 /**
  * A concrete status implementation, suitable either for instantiating or subclassing.
  * <p>

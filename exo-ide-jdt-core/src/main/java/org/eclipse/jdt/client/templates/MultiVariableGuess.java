@@ -15,10 +15,10 @@ import com.google.gwt.user.client.ui.Widget;
 import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
 import org.eclipse.jdt.client.codeassistant.api.Point;
-import org.eclipse.jdt.client.runtime.Assert;
-import org.eclipse.jdt.client.text.BadLocationException;
-import org.eclipse.jdt.client.text.DocumentEvent;
-import org.eclipse.jdt.client.text.IDocument;
+import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.DocumentEvent;
+import org.exoplatform.ide.editor.text.IDocument;
 
 import com.google.gwt.user.client.ui.Image;
 

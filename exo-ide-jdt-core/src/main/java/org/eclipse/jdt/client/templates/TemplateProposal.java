@@ -19,7 +19,6 @@ import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.Point;
 import org.eclipse.jdt.client.codeassistant.ui.StyledString;
-import org.eclipse.jdt.client.runtime.Assert;
 import org.eclipse.jdt.client.templates.api.DocumentTemplateContext;
 import org.eclipse.jdt.client.templates.api.GlobalTemplateVariables;
 import org.eclipse.jdt.client.templates.api.Template;
@@ -27,12 +26,13 @@ import org.eclipse.jdt.client.templates.api.TemplateBuffer;
 import org.eclipse.jdt.client.templates.api.TemplateContext;
 import org.eclipse.jdt.client.templates.api.TemplateException;
 import org.eclipse.jdt.client.templates.api.TemplateVariable;
-import org.eclipse.jdt.client.text.BadLocationException;
-import org.eclipse.jdt.client.text.BadPositionCategoryException;
-import org.eclipse.jdt.client.text.Document;
-import org.eclipse.jdt.client.text.DocumentEvent;
-import org.eclipse.jdt.client.text.IDocument;
-import org.eclipse.jdt.client.text.IRegion;
+import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.BadPositionCategoryException;
+import org.exoplatform.ide.editor.text.Document;
+import org.exoplatform.ide.editor.text.DocumentEvent;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.IRegion;
 
 /**
  * A template proposal.

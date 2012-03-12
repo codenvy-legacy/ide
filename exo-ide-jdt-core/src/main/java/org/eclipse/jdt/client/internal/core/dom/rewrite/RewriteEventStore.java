@@ -15,7 +15,7 @@ import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.Block;
 import org.eclipse.jdt.client.core.dom.StructuralPropertyDescriptor;
 import org.eclipse.jdt.client.core.dom.rewrite.TargetSourceRangeComputer;
-import org.eclipse.jdt.client.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.text.edits.TextEditGroup;
 
 import java.util.ArrayList;
 import java.util.Arrays;

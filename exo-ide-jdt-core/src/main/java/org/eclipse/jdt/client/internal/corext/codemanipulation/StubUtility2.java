@@ -41,8 +41,8 @@ import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite.ImportRewriteContex
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodeFactory;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.corext.dom.Bindings;
-import org.eclipse.jdt.client.runtime.Assert;
 import org.eclipse.jdt.client.runtime.CoreException;
+import org.exoplatform.ide.editor.runtime.Assert;
 
 import java.util.ArrayList;
 import java.util.Arrays;

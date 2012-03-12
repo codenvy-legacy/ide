@@ -13,8 +13,8 @@ package org.eclipse.jdt.client.codeassistant;
 import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.codeassistant.ui.StyledString;
-import org.eclipse.jdt.client.runtime.Assert;
-import org.eclipse.jdt.client.text.IDocument;
+import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.text.IDocument;
 
 public class JavaCompletionProposal extends AbstractJavaCompletionProposal
 {

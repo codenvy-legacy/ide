@@ -39,6 +39,8 @@
       <source path="codevalidator" />
       <source path="problem" />
       <source path="notification" />
+      <source path="runtime" />
+      <source path="text" />
       
       <!-- Load CodeMirror files. -->
       <stylesheet src='codemirror/css/editor.css' />      

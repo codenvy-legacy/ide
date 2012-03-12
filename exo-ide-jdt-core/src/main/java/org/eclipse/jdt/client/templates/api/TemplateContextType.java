@@ -17,17 +17,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jdt.client.runtime.Assert;
 
-import org.eclipse.jdt.client.text.edits.MalformedTreeException;
-import org.eclipse.jdt.client.text.edits.MultiTextEdit;
-import org.eclipse.jdt.client.text.edits.RangeMarker;
-import org.eclipse.jdt.client.text.edits.ReplaceEdit;
-import org.eclipse.jdt.client.text.edits.TextEdit;
 
-import org.eclipse.jdt.client.text.BadLocationException;
-import org.eclipse.jdt.client.text.Document;
-import org.eclipse.jdt.client.text.IDocument;
+import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.Document;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.edits.MalformedTreeException;
+import org.exoplatform.ide.editor.text.edits.MultiTextEdit;
+import org.exoplatform.ide.editor.text.edits.RangeMarker;
+import org.exoplatform.ide.editor.text.edits.ReplaceEdit;
+import org.exoplatform.ide.editor.text.edits.TextEdit;
 
 /**
  * A context type defines a context within which templates are resolved. It stores a number of

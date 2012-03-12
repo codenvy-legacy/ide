@@ -12,11 +12,11 @@ package org.eclipse.jdt.client.core.formatter;
 
 import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
-import org.eclipse.jdt.client.text.BadLocationException;
-import org.eclipse.jdt.client.text.DefaultLineTracker;
-import org.eclipse.jdt.client.text.ILineTracker;
-import org.eclipse.jdt.client.text.IRegion;
-import org.eclipse.jdt.client.text.edits.ReplaceEdit;
+import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.DefaultLineTracker;
+import org.exoplatform.ide.editor.text.ILineTracker;
+import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.editor.text.edits.ReplaceEdit;
 
 import java.util.ArrayList;
 import java.util.Arrays;

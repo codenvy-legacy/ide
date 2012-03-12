@@ -104,7 +104,7 @@ import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.client.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.client.core.dom.WhileStatement;
 import org.eclipse.jdt.client.core.dom.WildcardType;
-import org.eclipse.jdt.client.runtime.Assert;
+import org.exoplatform.ide.editor.runtime.Assert;
 
 import java.util.Iterator;
 import java.util.List;

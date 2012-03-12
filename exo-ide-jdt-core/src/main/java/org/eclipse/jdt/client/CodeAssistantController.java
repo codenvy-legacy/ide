@@ -39,8 +39,6 @@ import org.eclipse.jdt.client.event.CancelParseEvent;
 import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.templates.TemplateProposal;
-import org.eclipse.jdt.client.text.Document;
-import org.eclipse.jdt.client.text.IDocument;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -49,6 +47,8 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantHandler;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
+import org.exoplatform.ide.editor.text.Document;
+import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.Arrays;

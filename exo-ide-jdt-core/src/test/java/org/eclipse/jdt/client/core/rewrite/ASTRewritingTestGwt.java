@@ -23,8 +23,8 @@ import org.eclipse.jdt.client.core.dom.*;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
-import org.eclipse.jdt.client.text.Document;
-import org.eclipse.jdt.client.text.edits.TextEdit;
+import org.exoplatform.ide.editor.text.Document;
+import org.exoplatform.ide.editor.text.edits.TextEdit;
 
 /**
   */

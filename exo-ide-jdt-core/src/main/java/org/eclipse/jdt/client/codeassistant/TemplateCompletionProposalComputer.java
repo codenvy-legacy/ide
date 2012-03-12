@@ -12,15 +12,15 @@ package org.eclipse.jdt.client.codeassistant;
 
 import org.eclipse.jdt.client.JdtExtension;
 import org.eclipse.jdt.client.core.CompletionContext;
-import org.eclipse.jdt.client.runtime.Assert;
 import org.eclipse.jdt.client.templates.ContextTypeRegistry;
 import org.eclipse.jdt.client.templates.JavaContextType;
 import org.eclipse.jdt.client.templates.JavaDocContextType;
 import org.eclipse.jdt.client.templates.TemplateEngine;
 import org.eclipse.jdt.client.templates.api.TemplateContextType;
-import org.eclipse.jdt.client.text.BadLocationException;
-import org.eclipse.jdt.client.text.IJavaPartitions;
-import org.eclipse.jdt.client.text.TextUtilities;
+import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.IJavaPartitions;
+import org.exoplatform.ide.editor.text.TextUtilities;
 
 /**
  * Computer computing template proposals for Java and Javadoc context type.

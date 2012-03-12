@@ -42,7 +42,7 @@ import org.eclipse.jdt.client.core.dom.StructuralPropertyDescriptor;
 import org.eclipse.jdt.client.core.dom.SuperFieldAccess;
 import org.eclipse.jdt.client.core.dom.SuperMethodInvocation;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
-import org.eclipse.jdt.client.runtime.Assert;
+import org.exoplatform.ide.editor.runtime.Assert;
 
 import java.util.ArrayList;
 import java.util.Collections;

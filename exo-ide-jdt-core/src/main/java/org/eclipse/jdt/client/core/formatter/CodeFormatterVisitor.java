@@ -115,8 +115,8 @@ import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
 import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 import org.eclipse.jdt.client.internal.core.util.CodeSnippetParsingUtil;
-import org.eclipse.jdt.client.text.IRegion;
-import org.eclipse.jdt.client.text.edits.TextEdit;
+import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.editor.text.edits.TextEdit;
 
 import java.util.ArrayList;
 import java.util.Map;

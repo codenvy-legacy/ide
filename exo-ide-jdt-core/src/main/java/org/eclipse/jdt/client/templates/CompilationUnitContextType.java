@@ -20,8 +20,8 @@ import org.eclipse.jdt.client.templates.api.TemplateContextType;
 import org.eclipse.jdt.client.templates.api.TemplateException;
 import org.eclipse.jdt.client.templates.api.TemplateVariable;
 import org.eclipse.jdt.client.templates.api.TemplateVariableResolver;
-import org.eclipse.jdt.client.text.IDocument;
-import org.eclipse.jdt.client.text.Position;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.Position;
 
 /**
  * Compilation unit context type.

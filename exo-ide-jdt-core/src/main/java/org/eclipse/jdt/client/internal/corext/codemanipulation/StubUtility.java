@@ -39,7 +39,7 @@ import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.corext.dom.Bindings;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.eclipse.jdt.client.text.IDocument;
+import org.exoplatform.ide.editor.text.IDocument;
 
 import java.util.AbstractList;
 import java.util.ArrayList;

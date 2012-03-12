@@ -23,12 +23,12 @@ import org.eclipse.jdt.client.core.formatter.CodeFormatter;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jdt.client.core.formatter.IndentManipulation;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
-import org.eclipse.jdt.client.runtime.Assert;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.eclipse.jdt.client.text.BadLocationException;
-import org.eclipse.jdt.client.text.IDocument;
-import org.eclipse.jdt.client.text.IRegion;
-import org.eclipse.jdt.client.text.TextUtilities;
+import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.editor.text.TextUtilities;
 
 import java.util.Map;
 

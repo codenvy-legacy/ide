@@ -23,13 +23,13 @@ import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
-import org.eclipse.jdt.client.runtime.Assert;
-import org.eclipse.jdt.client.text.BadLocationException;
-import org.eclipse.jdt.client.text.BadPositionCategoryException;
-import org.eclipse.jdt.client.text.DefaultPositionUpdater;
-import org.eclipse.jdt.client.text.IDocument;
-import org.eclipse.jdt.client.text.IPositionUpdater;
-import org.eclipse.jdt.client.text.Position;
+import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.BadPositionCategoryException;
+import org.exoplatform.ide.editor.text.DefaultPositionUpdater;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.IPositionUpdater;
+import org.exoplatform.ide.editor.text.Position;
 
 /**
  * 

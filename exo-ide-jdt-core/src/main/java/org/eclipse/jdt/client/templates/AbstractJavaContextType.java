@@ -18,8 +18,8 @@ import org.eclipse.jdt.client.templates.api.GlobalTemplateVariables;
 import org.eclipse.jdt.client.templates.api.TemplateContext;
 import org.eclipse.jdt.client.templates.api.TemplateVariable;
 import org.eclipse.jdt.client.templates.api.TemplateVariableResolver;
-import org.eclipse.jdt.client.text.IDocument;
-import org.eclipse.jdt.client.text.Position;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.Position;
 
 /**
  * An abstract context type for templates inside Java code.

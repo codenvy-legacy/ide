@@ -15,7 +15,7 @@ import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.core.CompletionContext;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
-import org.eclipse.jdt.client.text.IDocument;
+import org.exoplatform.ide.editor.text.IDocument;
 
 /**
  * Describes the context of a content assist invocation in a Java editor.

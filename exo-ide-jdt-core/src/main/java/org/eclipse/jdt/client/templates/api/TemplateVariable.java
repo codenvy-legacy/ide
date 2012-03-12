@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.templates.api;
 
-import org.eclipse.jdt.client.runtime.Assert;
 
-import org.eclipse.jdt.client.text.TextUtilities;
+import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.text.TextUtilities;
 
 /**
  * A <code>TemplateVariable</code> represents a set of positions into a <code>TemplateBuffer</code> with identical content each.

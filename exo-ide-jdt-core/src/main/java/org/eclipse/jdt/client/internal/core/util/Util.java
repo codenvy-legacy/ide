@@ -26,7 +26,7 @@ import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
 import org.eclipse.jdt.client.internal.compiler.ast.UnionTypeReference;
 import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
 import org.eclipse.jdt.client.internal.compiler.util.SuffixConstants;
-import org.eclipse.jdt.client.runtime.Assert;
+import org.exoplatform.ide.editor.runtime.Assert;
 
 import java.util.ArrayList;
 import java.util.Arrays;
