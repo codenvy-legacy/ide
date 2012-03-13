@@ -17,18 +17,6 @@
 
 package org.exoplatform.ide.shell.client.cli;
 
-import org.exoplatform.ide.shell.client.cli.CommandLine;
-import org.exoplatform.ide.shell.client.cli.CommandLineParser;
-import org.exoplatform.ide.shell.client.cli.MissingArgumentException;
-import org.exoplatform.ide.shell.client.cli.MissingOptionException;
-import org.exoplatform.ide.shell.client.cli.Option;
-import org.exoplatform.ide.shell.client.cli.OptionGroup;
-import org.exoplatform.ide.shell.client.cli.Options;
-import org.exoplatform.ide.shell.client.cli.ParseException;
-import org.exoplatform.ide.shell.client.cli.Properties;
-import org.exoplatform.ide.shell.client.cli.UnrecognizedOptionException;
-import org.exoplatform.ide.shell.client.cli.Util;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -37,7 +25,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * <code>Parser</code> creates {@link CommandLine}s.
+ * <code>Parser</code> creates {@link CommandLine}.
  * 
  * @author John Keyes (john at integralsource.com)
  * @version $Revision: 680644 $, $Date: 2008-07-29 01:13:48 -0700 (Tue, 29 Jul 2008) $
@@ -199,6 +187,10 @@ public abstract class Parser implements CommandLineParser
             {
                processOption(t, iterator);
             }
+         }
+         else if (getOptions().hasOption(t))
+         {
+            processOption(t, iterator);
          }
 
          // the value is an argument
