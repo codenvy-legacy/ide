@@ -34,10 +34,10 @@ public class BaseCommandTest extends BaseTest
    @Test
    public void helpCommand() throws Exception
    {
-      assertThat(shell.getText()).contains("Welcome to eXo Cloud Shell");
+      assertThat(shell.getContent()).contains("Welcome to eXo Cloud Shell");
       shell.type("help");
       shell.executeCommand();
-      assertThat(shell.getText().split("\n")).contains(
+      assertThat(shell.getContent().split("\n")).contains(
          "  cat            Concatenate files and print on the console.",
          "  cd             Changes the current folder.",
          "  clear          Clear the shell screen.",
@@ -63,6 +63,8 @@ public class BaseCommandTest extends BaseTest
          "  jcr ws login   To view command help try : [command] -h",
          "  jcr ws logout  To view command help try : [command] -h",
          "  jcr xpath      To view command help try : [command] -h",
+         "  jobs           List out the background jobs.",
+         "  kill           Cancels the job.",
          "  ls             List information about the files and folders.", 
          "  mkdir          Create new folder.",
          "  pwd            Print current folder path.", 
@@ -82,10 +84,11 @@ public class BaseCommandTest extends BaseTest
    @Test
    public void clearCommand() throws Exception
    {
-      assertThat(shell.getText()).contains("Welcome to eXo Cloud Shell");
+      assertThat(shell.getContent()).contains("Welcome to eXo Cloud Shell");
       shell.type("clear");
       shell.executeCommand();
-      assertThat(shell.getText()).isEqualTo(USER_NAME + ":" +"/$  ");
+      assertThat(shell.getContent()).isEmpty();
+      assertThat(shell.getTerm()).isEqualTo(USER_NAME + ":" +"/$  ");
    }
 
 }

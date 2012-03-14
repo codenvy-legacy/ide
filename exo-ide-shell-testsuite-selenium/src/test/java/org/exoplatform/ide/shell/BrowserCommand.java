@@ -24,7 +24,7 @@ package org.exoplatform.ide.shell;
  * <br />Command "*iexplore" had been commented because of Selenium doesn't perform selenium.type(), selenium.typeKeys() and selenium.keyPressNative() methods properly in the CodeMirror and TextItems of DynamicForms. Use IE_EXPLORE_PROXY("*iexploreproxy") instead.
  */
 public enum BrowserCommand {
-   FIREFOX("*firefox"), GOOGLE_CHROME("*googlechrome"), SAFARI("*safari"), IE("*ie");
+   FIREFOX("*firefox"), CHROME("*chrome"), GOOGLE_CHROME("*googlechrome"), SAFARI("*safari"), IE("*ie");
 
    /**
     * Value. 

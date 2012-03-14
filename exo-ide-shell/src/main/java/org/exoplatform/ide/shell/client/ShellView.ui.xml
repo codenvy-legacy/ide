@@ -13,5 +13,4 @@
       <s:TermText ui:field="termText" styleName="{resource.css.term}"></s:TermText>
    </g:FlowPanel>
 
-
 </ui:UiBinder> 

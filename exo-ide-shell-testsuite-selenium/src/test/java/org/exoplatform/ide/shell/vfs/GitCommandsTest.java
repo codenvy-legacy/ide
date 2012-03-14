@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.shell.vfs;
 
-import static org.junit.Assert.*;
-import static org.fest.assertions.Assertions.*;
+import static org.fest.assertions.Assertions.assertThat;
+
 import org.exoplatform.ide.shell.BaseTest;
 import org.exoplatform.ide.shell.VfsUtils;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -32,8 +32,8 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Dec 27, 2011 12:27:34 PM evgen $
- *
+ * @version ${Id}: Dec 27, 2011 12:27:34 PM evgen $
+ * 
  */
 public class GitCommandsTest extends BaseTest
 {
@@ -67,14 +67,14 @@ public class GitCommandsTest extends BaseTest
    {
       shell.executeCommand("cd " + MAIN_FOLDER);
       shell.executeCommand("git status");
-      assertThat(shell.getText()).contains("HEAD reference not found. Seems working directory is not git repository.");
+      assertThat(shell.getContent()).contains("HEAD reference not found. Seems working directory is not git repository.");
       shell.executeCommand("clear");
 
       shell.executeCommand("git init");
       Thread.sleep(1000);
       shell.executeCommand("git status");
       Thread.sleep(1000);
-      assertThat(shell.getText()).doesNotContain(
+      assertThat(shell.getContent()).doesNotContain(
          "HEAD reference not found. Seems working directory is not git repository.").contains("# On branch master");
 
       shell.executeCommand("cd /" + GIT_MAIN_FOLDER);
@@ -82,19 +82,17 @@ public class GitCommandsTest extends BaseTest
       shell.executeCommand("clear");
       shell.executeCommand("git status");
       Thread.sleep(1000);
-      assertThat(shell.getText()).doesNotContain(
-         "HEAD reference not found. Seems working directory is not git repository.").contains(
-         "modified:").contains("TestFile1.txt");
+      assertThat(shell.getContent())
+         .doesNotContain("HEAD reference not found. Seems working directory is not git repository.")
+         .contains("modified:").contains("TestFile1.txt");
       shell.executeCommand("git add TestFile1.txt");
-      
+
       shell.executeCommand("git commit -m \"test commit\"");
       Thread.sleep(1000);
-      assertThat(shell.getText()).contains("\"committer\"").contains("\"commitTime\"").contains("\"id\"");
-      
+      assertThat(shell.getContent()).contains("\"test commit\"");
+
       shell.executeCommand("clear");
       shell.executeCommand("git status");
-      
-      
    }
 
 }

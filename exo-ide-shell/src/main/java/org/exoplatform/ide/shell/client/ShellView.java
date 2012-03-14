@@ -66,8 +66,9 @@ public class ShellView extends Composite implements ShellPresenter.Display
    {
       ShellClientBundle.INSTANCE.css().ensureInjected();
       initWidget(uiBinder.createAndBindUi(this));
+      content.setId( "shellContent");
       RootPanel.get().add(this);
-
+      
       focusInConsole();
       getElement().setTabIndex(0);
       sinkEvents(Event.ONFOCUS);

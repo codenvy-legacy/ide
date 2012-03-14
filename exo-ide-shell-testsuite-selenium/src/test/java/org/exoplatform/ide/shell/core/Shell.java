@@ -29,45 +29,54 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}:  Dec 26, 2011 3:12:07 PM evgen $
- *
+ * @version ${Id}: Dec 26, 2011 3:12:07 PM evgen $
+ * 
  */
 public class Shell
 {
-   private static final String className = "shell-container";
+   private static final String SHELL_CONTENT_ID = "shellContent";
 
-   @FindBy(className = className)
+   private static final String TERM_CONTENT_ID = "termContent";
+
+   @FindBy(id = SHELL_CONTENT_ID)
    public WebElement shell;
 
-   @FindBy(className = "crash-term")
-   public WebElement shellPre;
+   @FindBy(id = TERM_CONTENT_ID)
+   public WebElement term;
 
-   public String getText()
-   {
-      return shell.getText();
-   }
 
    public Shell()
    {
-      new WebDriverWait(BaseTest.driver, 3000).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(BaseTest.driver, 10).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
          public Boolean apply(WebDriver input)
          {
-            return input.findElement(By.className(className)) != null;
+            return input.findElement(By.id(SHELL_CONTENT_ID)) != null
+               && input.findElement(By.id(TERM_CONTENT_ID)) != null;
          }
 
       });
    }
 
+   public String getContent()
+   {
+      return shell.getText();
+   }
+   
+   public String getTerm()
+   {
+      return term.getText();
+   }
+   
    /**
     * @param command
-    * @throws InterruptedException 
+    * @throws InterruptedException
     */
    public void type(CharSequence command) throws InterruptedException
    {
-      shellPre.sendKeys(command);
+      term.sendKeys(command);
       Thread.sleep(500);
    }
 
@@ -77,8 +86,8 @@ public class Shell
    public void executeCommand()
    {
       final int contentLenth = shell.getText().length();
-      shellPre.sendKeys(Keys.RETURN);
-      new WebDriverWait(BaseTest.driver, 3000).until(new ExpectedCondition<Boolean>()
+      term.sendKeys(Keys.RETURN);
+      new WebDriverWait(BaseTest.driver, 3).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -92,7 +101,7 @@ public class Shell
             {
                e.printStackTrace();
             }
-            return input.findElement(By.className(className)).getText().length() != contentLenth;
+            return shell.getText().length() != contentLenth;
          }
 
       });
@@ -101,7 +110,7 @@ public class Shell
 
    /**
     * @param string
-    * @throws InterruptedException 
+    * @throws InterruptedException
     */
    public void executeCommand(String command) throws InterruptedException
    {

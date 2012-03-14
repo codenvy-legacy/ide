@@ -19,6 +19,8 @@
 
 package org.exoplatform.ide.shell.client;
 
+import com.google.gwt.dom.client.PreElement;
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -36,6 +38,13 @@ import com.google.gwt.user.client.ui.FocusWidget;
  */
 final class TermText extends FocusWidget
 {
+   private static PreElement preElement = Document.get().createPreElement();
+
+   static
+   {
+      preElement.setId("termContent");
+   }
+
    /** Text entered by user. */
    private final StringBuilder buffer;
 
@@ -81,7 +90,7 @@ final class TermText extends FocusWidget
 
    TermText()
    {
-      super(Document.get().createPreElement());
+      super(preElement);
 
       this.state = new StringBuilder();
       this.on = false;
