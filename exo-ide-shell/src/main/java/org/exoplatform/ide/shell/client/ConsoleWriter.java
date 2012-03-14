@@ -25,25 +25,41 @@ package org.exoplatform.ide.shell.client;
  */
 public interface ConsoleWriter
 {
+   /**
+    * Print string to console.
+    * 
+    * @param str
+    */
    void print(String str);
 
+   /**
+    * Print string to console and move cursor on new line.
+    * 
+    * @param str
+    */
    void println(String str);
 
    /**
-    * Print to console buffer(without add prompt on each call this method)
+    * Print to console buffer(without add prompt on each call this method).
     * 
     * @param str
     */
    void printToBuffer(String str);
 
    /**
-    * Refresh console
+    * Refresh console.
     */
    void flush();
 
+   /**
+    * Print console's prompt.
+    */
    void printPrompt();
 
+   /**
+    * Clear console.
+    */
    void clearConsole();
 
-   int getLengts();
+   int getLength();
 }

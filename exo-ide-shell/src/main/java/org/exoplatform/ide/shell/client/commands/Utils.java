@@ -178,7 +178,7 @@ public class Utils
             if (in > currentMaxLenght)
                currentMaxLenght = in;
          }
-         if (currentMaxLenght > CloudShell.console().getLengts())
+         if (currentMaxLenght > CloudShell.console().getLength())
          {
             formatComplete = true;
             splitCount++;

@@ -19,19 +19,22 @@
 package org.exoplatform.ide.shell.client;
 
 /**
+ * The available environment variables.
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Aug 11, 2011 evgen $
  * 
  */
-public interface EnvironmentVariables
+public final class EnvironmentVariables
 {
-   String CURRENT_FOLDER_ID = "projectid";
+   public static final String CURRENT_FOLDER_ID = "projectid";
 
-   String ENTRY_POINT = "ENTRY_POINT";
+   public static final String VFS_ID = "vfsid";
 
-   String USER_NAME = "USER_NAME";
+   public static final String ENTRY_POINT = "ENTRY_POINT";
 
-   String COMMAND_BUFFER = "COMMAND_BUFFER";
+   public static final String USER_NAME = "USER_NAME";
 
-   String VFS_ID = "vfsid";
+   public static final String COMMAND_BUFFER = "COMMAND_BUFFER";
+
 }

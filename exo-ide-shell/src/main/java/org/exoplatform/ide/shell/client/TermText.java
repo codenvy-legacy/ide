@@ -20,49 +20,76 @@
 package org.exoplatform.ide.shell.client;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FocusWidget;
 
-import org.exoplatform.gwtframework.commons.util.BrowserResolver;
-import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
-
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHandler
+final class TermText extends FocusWidget
 {
-
-   /** . */
+   /** Text entered by user. */
    private final StringBuilder buffer;
 
-   /** The state. */
+   /** The state of the term (prompt and entered text). */
    private final StringBuilder state;
 
+   /**
+    * Text righter after cursor.
+    */
    private String afterCursor = "";
 
    /** The blinking. */
    private boolean on;
 
+   /**
+    * The focused state.
+    */
    private boolean isFocused = false;
+
+   /**
+    * Cursor element.
+    */
+   private Element cursor;
+
+   /**
+    * Timer for blinking cursor.
+    */
+   private Timer timer = new Timer()
+   {
+      public void run()
+      {
+         on = !on;
+         if (on && isFocused)
+         {
+            addStyleName(ShellClientBundle.INSTANCE.css().blink());
+         }
+         else
+         {
+            removeStyleName(ShellClientBundle.INSTANCE.css().blink());
+         }
+      }
+   };
 
    TermText()
    {
-      super(Document.get().createElement("pre"));
+      super(Document.get().createPreElement());
 
-      //
+      this.state = new StringBuilder();
+      this.on = false;
+      this.buffer = new StringBuilder();
+      cursor = Document.get().createSpanElement();
+      cursor.setId("crashCursor");
+      cursor.setClassName(ShellClientBundle.INSTANCE.css().cursor());
+
       addMouseDownHandler(new MouseDownHandler()
       {
          public void onMouseDown(MouseDownEvent event)
@@ -90,83 +117,66 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
             isFocused = true;
          }
       });
-
-      if (BrowserResolver.CURRENT_BROWSER == Browser.FIREFOX)
-         addKeyPressHandler(this);
-      else
-         addKeyDownHandler(this);
-
-      //
-      setStyleName("crash-term");
-
-      //
-      this.state = new StringBuilder();
-      this.on = false;
-      this.buffer = new StringBuilder();
    }
 
+   /**
+    * @see com.google.gwt.user.client.ui.FocusWidget#onAttach()
+    */
    @Override
    protected void onAttach()
    {
       super.onAttach();
 
-      // Blinking cursor
-      Timer t = new Timer()
-      {
-         public void run()
-         {
-            on = !on;
-            if (on && isFocused)
-            {
-               addStyleName("crash-blink");
-            }
-            else
-            {
-               removeStyleName("crash-blink");
-            }
-         }
-      };
-
-      //
-      t.scheduleRepeating(500);
+      timer.scheduleRepeating(500);
    }
 
+   /**
+    * Clear the term.
+    */
    void clear()
    {
-      int index = state.lastIndexOf("\n");
-      if (index >= 0)
-      {
-         state.delete(0, index + 1);
-      }
+      state.setLength(0);
    }
 
+   /**
+    * @return {@link String} buffer's value
+    */
    String getBuffer()
    {
       return buffer.length() > 0 ? buffer.toString() : "";
    }
 
+   /**
+    * Append string to buffer.
+    * 
+    * @param s string to append
+    */
    void bufferAppend(CharSequence s)
    {
       buffer.append(s);
       state.append(s);
    }
 
+   /**
+    * Append char to buffer.
+    * 
+    * @param c char to append
+    */
    void bufferAppend(char c)
    {
       buffer.append(c);
       state.append(c);
    }
 
+   /**
+    * Remove symbol from buffer.
+    */
    void bufferDrop()
    {
       if (buffer.length() > 0)
       {
-
-         //
          buffer.setLength(buffer.length() - 1);
 
-         // Buffer could be zero because of reset button
-         // anyway better safe than sorry
          if (state.length() > 0)
          {
             state.setLength(state.length() - 1);
@@ -174,6 +184,9 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
       }
    }
 
+   /**
+    * Clear buffer value.
+    */
    void bufferClear()
    {
       if (buffer.length() > 0)
@@ -188,6 +201,11 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
       }
    }
 
+   /**
+    * Submit buffer.
+    * 
+    * @return String buffer's value.
+    */
    String bufferSubmit()
    {
       String s = buffer.toString() + afterCursor;
@@ -197,50 +215,22 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
       return s;
    }
 
-   void print(char c)
-   {
-      state.append(c);
-      printPrompt();
-   }
-
-   void print(CharSequence text)
-   {
-      state.append(text);
-      printPrompt();
-   }
-
-   void printToBuffer(String text)
+   /**
+    * Print text to term.
+    * 
+    * @param text
+    */
+   void printToTerm(String text)
    {
       state.append(text);
    }
 
-   void printPrompt()
-   {
-      String path = "";
-      if (Environment.get().getCurrentFolder() != null)
-      {
-
-         path = Environment.get().getCurrentFolder().getPath();
-         if (!path.equals("/"))
-         {
-            path = path.substring(path.lastIndexOf("/") + 1, path.length());
-         }
-
-         path = Environment.get().getValue(EnvironmentVariables.USER_NAME) + ":" + path;
-      }
-      else
-      {
-         path = Environment.get().getValue(EnvironmentVariables.USER_NAME);
-      }
-      state.append(path + "$ ");
-   }
-
+   /**
+    * Redraw term.
+    */
    void repaint()
    {
-
-      //
       StringBuilder markup = new StringBuilder();
-
       int from = 0;
       while (true)
       {
@@ -256,7 +246,6 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
             from = to + 1;
          }
       }
-
       // The cursor
       String c = "&nbsp;";
       String after = afterCursor;
@@ -266,88 +255,94 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
          after = afterCursor.substring(1);
       }
 
-      markup.append("<span id=\"crash-cursor\" class=\"crash-cursor\">" + c + "</span>");
+      cursor.setInnerHTML(c);
+      markup.append(cursor.getString());
       markup.append(after);
 
       getElement().setInnerHTML(markup.toString());
       Document.get().setScrollTop(Document.get().getScrollHeight());
    }
 
-   private void handleKeyEvent(int keyCode, DomEvent<?> event)
+   /**
+    * Move cursor to the left.
+    */
+   public void moveLeft()
    {
-      if (keyCode == KeyCodes.KEY_LEFT)
+      if (buffer.length() > 0)
       {
-         if (buffer.length() > 0)
-         {
-            buffer.deleteCharAt(buffer.length() - 1);
-            afterCursor = state.charAt(state.length() - 1) + afterCursor;
-            state.deleteCharAt(state.length() - 1);
-            repaint();
-         }
-         event.stopPropagation();
-         event.preventDefault();
-      }
-      else if (keyCode == KeyCodes.KEY_RIGHT)
-      {
-         if (!afterCursor.isEmpty())
-         {
-            String c = afterCursor.substring(0, 1);
-            buffer.append(c);
-            state.append(c);
-            afterCursor = afterCursor.substring(1);
-            repaint();
-         }
-         event.stopPropagation();
-         event.preventDefault();
-      }
-      else if (keyCode == KeyCodes.KEY_DELETE)
-      {
-         if (!afterCursor.isEmpty())
-         {
-            afterCursor = afterCursor.substring(1);
-            repaint();
-         }
-         event.stopPropagation();
-         event.preventDefault();
-      }
-      else if (keyCode == KeyCodes.KEY_HOME)
-      {
-         afterCursor = buffer.toString() + afterCursor;
-         state.delete(state.length() - buffer.length(), state.length());
-         buffer.setLength(0);
+         buffer.deleteCharAt(buffer.length() - 1);
+         afterCursor = state.charAt(state.length() - 1) + afterCursor;
+         state.deleteCharAt(state.length() - 1);
          repaint();
-         event.stopPropagation();
-         event.preventDefault();
-      }
-      else if (keyCode == KeyCodes.KEY_END)
-      {
-         buffer.append(afterCursor);
-         state.append(afterCursor);
-         afterCursor = "";
-         repaint();
-         event.stopPropagation();
-         event.preventDefault();
       }
    }
 
    /**
-    * @see com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt.event.dom.client.KeyDownEvent)
+    * Move cursor to the right.
     */
-   @Override
-   public void onKeyDown(KeyDownEvent event)
+   public void moveRight()
    {
-      int code = event.getNativeKeyCode();
-      handleKeyEvent(code, event);
+      if (!afterCursor.isEmpty())
+      {
+         String c = afterCursor.substring(0, 1);
+         buffer.append(c);
+         state.append(c);
+         afterCursor = afterCursor.substring(1);
+         repaint();
+      }
    }
 
    /**
-    * @see com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google.gwt.event.dom.client.KeyPressEvent)
+    * Delete symbol.
     */
-   @Override
-   public void onKeyPress(KeyPressEvent event)
+   public void deleteSymbol()
    {
-      int code = event.getNativeEvent().getKeyCode();
-      handleKeyEvent(code, event);
+      if (!afterCursor.isEmpty())
+      {
+         afterCursor = afterCursor.substring(1);
+         repaint();
+      }
    }
 
+   /**
+    * Move cursor to home of the line.
+    */
+   public void moveHome()
+   {
+      afterCursor = buffer.toString() + afterCursor;
+      state.delete(state.length() - buffer.length(), state.length());
+      buffer.setLength(0);
+      repaint();
+   }
+
+   /**
+    * Move cursor to the end of the line.
+    */
+   public void moveEnd()
+   {
+      buffer.append(afterCursor);
+      state.append(afterCursor);
+      afterCursor = "";
+      repaint();
+   }
+
+   /**
+    * Returns the term's state.
+    * 
+    * @return {@link String} term's state
+    */
+   public String getState()
+   {
+      return state.toString();
+   }
+
+   /**
+    * Returns cursor's element.
+    * 
+    * @return {@link Element} cursors element
+    */
+   public Element getCursor()
+   {
+      return cursor;
+   }
 }

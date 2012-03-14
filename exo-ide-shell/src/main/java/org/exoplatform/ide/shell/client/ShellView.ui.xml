@@ -1,0 +1,17 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.dom.client"
+   xmlns:s="urn:import:org.exoplatform.ide.shell.client">
+   <ui:with field='resource' type='org.exoplatform.ide.shell.client.ShellClientBundle' />
+   <ui:style>
+      
+   </ui:style>
+
+   <g:FlowPanel styleName="{resource.css.shellContainer}">
+      <g:HTMLPanel styleName="{resource.css.content}">
+         <pre ui:field="content"></pre>
+      </g:HTMLPanel>
+      <s:TermText ui:field="termText" styleName="{resource.css.term}"></s:TermText>
+   </g:FlowPanel>
+
+
+</ui:UiBinder> 

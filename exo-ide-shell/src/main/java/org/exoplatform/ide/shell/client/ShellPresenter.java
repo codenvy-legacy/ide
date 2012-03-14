@@ -33,6 +33,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
 
+import org.exoplatform.gwtframework.commons.exception.JobNotFoundException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
@@ -50,6 +51,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Presenter for Shell console.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Aug 2, 2011 11:03:32 AM anya $
  * 
@@ -58,39 +61,119 @@ public class ShellPresenter
 {
    interface Display extends ConsoleWriter
    {
+      /**
+       * Get key press handler.
+       * 
+       * @return {@link HasKeyPressHandlers} handler
+       */
       HasKeyPressHandlers getKeyPressHandler();
 
+      /**
+       * Get key down handler.
+       * 
+       * @return {@link HasKeyDownHandlers} handler
+       */
       HasKeyDownHandlers getKeyDownHandler();
 
+      /**
+       * Append symbol to typed buffer.
+       * 
+       * @param c char to append
+       */
       void appendBuffer(char c);
 
+      /**
+       * Append symbols to typed buffer.
+       * 
+       * @param c symbols
+       */
       void appendBuffer(CharSequence c);
 
+      /**
+       * Remove last symbol from typed buffer.
+       */
       void removeFromBuffer();
 
+      /**
+       * Clear typed buffer value.
+       */
       void clearBuffer();
 
+      /**
+       * Submit typed buffer's value.
+       * 
+       * @return {@link String} submitted line
+       */
       String submitBuffer();
 
+      /**
+       * Refresh console.
+       */
       void refreshConsole();
 
+      /**
+       * Get the value of typed buffer.
+       * 
+       * @return {@link String}
+       */
       String getBuffer();
 
+      /**
+       * Focus in console.
+       */
       void focusInConsole();
 
-      void printPrompt();
-
+      /**
+       * Prepare for paste operation.
+       */
       void preparePaste();
 
+      /**
+       * Finish paste operation.
+       */
       void finishPaste();
+
+      /**
+       * Move cursor to the left.
+       */
+      void moveLeft();
+
+      /**
+       * Move cursor the right.
+       */
+      void moveRight();
+
+      /**
+       * Move cursor to the home of the input.
+       */
+      void moveHome();
+
+      /**
+       * Move cursor to the end of the input.
+       */
+      void moveEnd();
+
+      /**
+       * Delete symbol after cursor.
+       */
+      void deleteSymbol();
    }
 
    private Display display;
 
+   /**
+    * Buffer of Shell commands.
+    */
    private ShellComandBuffer buffer;
 
+   /**
+    * Last pressed key.
+    */
    private int lastKeyPressed;
 
+   /**
+    * Is TAB key pressed.
+    */
    private boolean isTabPressed;
 
    public ShellPresenter(Display display)
@@ -163,10 +246,27 @@ public class ShellPresenter
             }
             else if (code == KeyCodes.KEY_LEFT)
             {
+               display.moveLeft();
                handled = true;
             }
             else if (code == KeyCodes.KEY_RIGHT)
             {
+               display.moveRight();
+               handled = true;
+            }
+            else if (code == KeyCodes.KEY_HOME)
+            {
+               display.moveHome();
+               handled = true;
+            }
+            else if (code == KeyCodes.KEY_END)
+            {
+               display.moveEnd();
+               handled = true;
+            }
+            else if (code == KeyCodes.KEY_DELETE)
+            {
+               display.deleteSymbol();
                handled = true;
             }
             else
@@ -238,6 +338,32 @@ public class ShellPresenter
                   performComplete();
                   handled = true;
                }
+               else if (code == KeyCodes.KEY_LEFT)
+               {
+                  display.moveLeft();
+                  handled = true;
+               }
+               else if (code == KeyCodes.KEY_RIGHT)
+               {
+                  display.moveRight();
+                  handled = true;
+               }
+               else if (code == KeyCodes.KEY_HOME)
+               {
+                  display.moveHome();
+                  handled = true;
+               }
+               else if (code == KeyCodes.KEY_END)
+               {
+                  display.moveEnd();
+                  handled = true;
+               }
+               else if (code == KeyCodes.KEY_DELETE)
+               {
+                  display.deleteSymbol();
+                  handled = true;
+               }
+
                lastKeyPressed = code;
                if (handled)
                {
@@ -248,7 +374,6 @@ public class ShellPresenter
             }
          }
       });
-
    }
 
    /**
@@ -256,13 +381,15 @@ public class ShellPresenter
     * 
     * @param command
     */
-   public void processCommand(String command)
+   public void processCommand(final String command)
    {
       buffer.add(command);
-      ShellService.getService().processCommand(command,
+      AsyncRequestCallback<StringBuilder> asyncRequestCallback =
          new AsyncRequestCallback<StringBuilder>(new GenericJsonUnmarshaller(new StringBuilder()))
          {
-
+            /**
+             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onSuccess(java.lang.Object)
+             */
             @Override
             protected void onSuccess(StringBuilder result)
             {
@@ -277,11 +404,26 @@ public class ShellPresenter
             @Override
             protected void onFailure(Throwable exception)
             {
-               // TODO
-               display.print((exception.getMessage() != null) ? exception.getMessage() + "\n"
-                  : "Unknown error in processing the command.\n");
+               if (exception instanceof JobNotFoundException)
+               {
+                  return;
+               }
+
+               String message =
+                  (exception.getMessage() != null) ? exception.getMessage()
+                     : "Unknown error in processing the command.\n";
+               message = (message.endsWith("\n")) ? message : message + "\n";
+               display.print(message);
             }
-         });
+         };
+
+      ShellService.getService().processCommand(command, asyncRequestCallback);
+
+      // TODO check command is asynchronous:
+      if (command.trim().endsWith("&"))
+      {
+         display.print("");
+      }
    }
 
    /**
@@ -337,7 +479,7 @@ public class ShellPresenter
    }
 
    /**
-    * 
+    * Complete folder's name.
     */
    private void performFolderNameComplete()
    {

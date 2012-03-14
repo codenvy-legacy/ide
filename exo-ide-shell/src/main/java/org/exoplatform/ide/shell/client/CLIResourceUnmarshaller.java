@@ -33,14 +33,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Unmarshaller for set of {@link CLIResource}.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Aug 4, 2011 4:34:11 PM anya $
  * 
  */
 public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>, Constants
 {
+   /**
+    * CLI resources.
+    */
    private Set<CLIResource> resources;
 
+   /**
+    * @param resources resources
+    */
    public CLIResourceUnmarshaller(Set<CLIResource> resources)
    {
       this.resources = resources;
@@ -95,6 +103,12 @@ public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>
       }
    }
 
+   /**
+    * Get the set of {@link String} from {@link JSONArray}
+    * 
+    * @param array JSON array
+    * @return {@link Set} 
+    */
    private Set<String> getStringSet(JSONArray array)
    {
       Set<String> set = new HashSet<String>();
@@ -110,6 +124,12 @@ public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>
       return set;
    }
 
+   /**
+    * Get the {@link Set} of {@link CLIResourceParameter} from JSON representation.
+    * 
+    * @param array JSON array of resource's parameters
+    * @return {@link Set}
+    */
    private Set<CLIResourceParameter> getParams(JSONArray array)
    {
       Set<CLIResourceParameter> set = new HashSet<CLIResourceParameter>();

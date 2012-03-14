@@ -20,6 +20,7 @@ package org.exoplatform.ide.shell.shared;
 
 import org.exoplatform.ide.shell.shared.CLIResourceParameter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class CLIResourceParameter
@@ -81,6 +82,10 @@ public class CLIResourceParameter
 
    public Set<String> getOptions()
    {
+      if (options == null)
+      {
+         options = new HashSet<String>();
+      }
       return options;
    }
 

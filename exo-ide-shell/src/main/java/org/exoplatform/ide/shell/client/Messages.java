@@ -55,6 +55,21 @@ public interface Messages extends com.google.gwt.i18n.client.Messages
    @Key("clear.help")
    String clearHelp();
 
+   @Key("jobs.help")
+   String jobsHelp();
+
+   @Key("jobs.error")
+   String jobsError();
+
+   @Key("kill.help")
+   String killHelp();
+   
+   @Key("kill.usage")
+   String killUsage();
+   
+   @Key("kill.error")
+   String killError();
+
    @Key("help.help")
    String helpHelp();
 
@@ -118,4 +133,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages
 
    @Key("required.property.not.set")
    String requiredPropertyNotSet(String property);
+
+   @Key("kill.success")
+   String killJobSuccess();
+   
+   @Key("welcome.message")
+   String welcomeMessage();
 }

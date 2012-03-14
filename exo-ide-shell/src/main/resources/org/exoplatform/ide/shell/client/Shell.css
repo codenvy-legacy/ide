@@ -1,0 +1,75 @@
+/** Add css rules here for your application. */
+/** Example rules used by the template application (remove for your app) */
+h1 {
+	font-size: 2em;
+	font-weight: bold;
+	color: #777777;
+	margin: 40px 0px 70px;
+	text-align: center;
+}
+
+html,body {
+	background: #000000 none repeat scroll 0 0;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	font-size: 12px;
+}
+
+.serverResponseLabelError {
+	color: red;
+}
+
+.content {
+	outline: 0;
+	width: 100%;
+	margin: 0;
+	float: left;
+}
+
+.content pre {
+	margin: 0px;
+}
+
+.term {
+	outline: 0;
+	width: 100%;
+	margin: 0;
+	float: left;
+}
+
+.term span pre {
+	font-family: courier, monospace;
+	font-size: 12px;
+	outline: 0;
+}
+
+#pasteBox {
+	padding: 0px;
+	border: none;
+	height: 1px;
+}
+
+.shellContainer {
+	background: #000000;
+	color: #1FBE1F;
+	font-family: courier, monospace;
+	font-size: 12px;
+	min-height: 100%;
+	display: block;
+	width: 99%;
+	margin: auto;
+}
+
+.blink .cursor {
+	background: #1FBE1F;
+	color: black;
+}
+
+.crashAutocomplete {
+	font-family: monospace !important;
+}
+
+.crashAutocomplete:hover {
+	font-weight: bold;
+}

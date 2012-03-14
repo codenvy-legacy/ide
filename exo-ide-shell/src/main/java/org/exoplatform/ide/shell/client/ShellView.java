@@ -18,39 +18,56 @@
  */
 package org.exoplatform.ide.shell.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.PreElement;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
-import com.google.gwt.user.client.DOM;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * Shell view.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Aug 2, 2011 11:03:40 AM anya $
  * 
  */
-public class ShellView extends FlowPanel implements ShellPresenter.Display
+public class ShellView extends Composite implements ShellPresenter.Display
 {
-   public static final int HEIGHT = 500;
+   private static ShellViewUiBinder uiBinder = GWT.create(ShellViewUiBinder.class);
 
-   public static final int BUTTON_WIDTH = 90;
+   interface ShellViewUiBinder extends UiBinder<Widget, ShellView>
+   {
+   }
 
-   public static final int BUTTON_HEIGHT = 22;
+   /**
+    * Content of the console.
+    */
+   @UiField
+   PreElement content;
 
-   public TermText termText;
+   /**
+    * Text of the term.
+    */
+   @UiField
+   TermText termText;
 
+   /**
+    * 
+    */
    private TextBox textBox;
 
    public ShellView()
    {
-      setWidth("100%");
-      setStyleName("shell-container");
-
-      termText = new TermText();
-      add(termText);
+      ShellClientBundle.INSTANCE.css().ensureInjected();
+      initWidget(uiBinder.createAndBindUi(this));
       RootPanel.get().add(this);
+
       focusInConsole();
       getElement().setTabIndex(0);
       sinkEvents(Event.ONFOCUS);
@@ -72,8 +89,9 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    @Override
    public void print(String str)
    {
-      termText.print(str);
-      termText.repaint();
+      content.setInnerHTML(content.getInnerText() + str);
+      termText.clear();
+      printPrompt();
    }
 
    /**
@@ -82,8 +100,7 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    @Override
    public void clearConsole()
    {
-      termText.clear();
-      termText.repaint();
+      content.setInnerHTML("");
    }
 
    /**
@@ -137,7 +154,10 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    @Override
    public String submitBuffer()
    {
-      return termText.bufferSubmit();
+      String buffer = termText.bufferSubmit();
+      content.setInnerHTML(content.getInnerText() + termText.getState());
+      termText.clear();
+      return buffer;
    }
 
    /**
@@ -182,7 +202,7 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    @Override
    public void printPrompt()
    {
-      termText.printPrompt();
+      termText.printToTerm(getPrompt());
       termText.repaint();
    }
 
@@ -193,7 +213,7 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    public void preparePaste()
    {
       textBox = new TextBox();
-      textBox.getElement().setId("paste-box");
+      textBox.getElement().setId("pasteBox");
       RootPanel.get().add(textBox, -1000, getElement().getOffsetHeight() - 2);
       textBox.setFocus(true);
    }
@@ -216,7 +236,7 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    @Override
    public void printToBuffer(String str)
    {
-      termText.printToBuffer(str);
+      termText.printToTerm(str);
    }
 
    /**
@@ -225,8 +245,7 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    @Override
    public void flush()
    {
-      termText.printPrompt();
-      termText.repaint();
+      printPrompt();
    }
 
    /**
@@ -235,16 +254,83 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    @Override
    public void println(String str)
    {
-      termText.print(str + "\n");
-      termText.repaint();
+      print(str + "\n");
    }
 
    /**
-    * @see org.exoplatform.ide.shell.client.ConsoleWriter#getLengts()
+    * @see org.exoplatform.ide.shell.client.ConsoleWriter#getLength()
     */
    @Override
-   public int getLengts()
+   public int getLength()
    {
-      return termText.getOffsetWidth() / DOM.getElementById("crash-cursor").getOffsetWidth();
+      int cursorWidth = termText.getCursor().getOffsetWidth();
+      cursorWidth = (cursorWidth > 0) ? cursorWidth : 1;
+      return termText.getOffsetWidth() / cursorWidth;
+   }
+
+   public String getPrompt()
+   {
+      String path = "";
+      if (Environment.get().getCurrentFolder() != null)
+      {
+
+         path = Environment.get().getCurrentFolder().getPath();
+         if (!path.equals("/"))
+         {
+            path = path.substring(path.lastIndexOf("/") + 1, path.length());
+         }
+
+         path = Environment.get().getValue(EnvironmentVariables.USER_NAME) + ":" + path;
+      }
+      else
+      {
+         path = Environment.get().getValue(EnvironmentVariables.USER_NAME);
+      }
+      return path + "$ ";
+   }
+
+   /**
+    * @see org.exoplatform.ide.shell.client.ShellPresenter.Display#moveLeft()
+    */
+   @Override
+   public void moveLeft()
+   {
+      termText.moveLeft();
+   }
+
+   /**
+    * @see org.exoplatform.ide.shell.client.ShellPresenter.Display#moveRight()
+    */
+   @Override
+   public void moveRight()
+   {
+      termText.moveRight();
+   }
+
+   /**
+    * @see org.exoplatform.ide.shell.client.ShellPresenter.Display#moveHome()
+    */
+   @Override
+   public void moveHome()
+   {
+      termText.moveHome();
+   }
+
+   /**
+    * @see org.exoplatform.ide.shell.client.ShellPresenter.Display#moveEnd()
+    */
+   @Override
+   public void moveEnd()
+   {
+      termText.moveEnd();
+   }
+
+   /**
+    * @see org.exoplatform.ide.shell.client.ShellPresenter.Display#deleteSymbol()
+    */
+   @Override
+   public void deleteSymbol()
+   {
+      termText.deleteSymbol();
    }
 }

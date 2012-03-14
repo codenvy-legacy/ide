@@ -19,15 +19,14 @@
 package org.exoplatform.ide.shell.client;
 
 /**
+ * Exception is thrown, when mandatory parameter not found.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Aug 5, 2011 3:32:00 PM anya $
  * 
  */
 public class MandatoryParameterNotFoundException extends Exception
 {
-   /**
-    * 
-    */
    private static final long serialVersionUID = 1L;
 
    public MandatoryParameterNotFoundException(String message, Throwable cause)

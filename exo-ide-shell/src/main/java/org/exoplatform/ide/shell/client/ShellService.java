@@ -35,7 +35,6 @@ import org.exoplatform.ide.shell.client.cli.GnuParser;
 import org.exoplatform.ide.shell.client.cli.Parser;
 import org.exoplatform.ide.shell.client.cli.Util;
 import org.exoplatform.ide.shell.client.marshal.LoginMarshaller;
-import org.exoplatform.ide.shell.client.marshal.ShellConfigurationUnmarshaller;
 import org.exoplatform.ide.shell.client.model.ClientCommand;
 import org.exoplatform.ide.shell.client.model.ShellConfiguration;
 import org.exoplatform.ide.shell.shared.CLIResource;
@@ -48,6 +47,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Shell service.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Aug 4, 2011 4:31:13 PM anya $
  * 
@@ -56,10 +57,19 @@ public class ShellService
 {
    private static ShellService service;
 
+   /**
+    * REST context.
+    */
    private final String REST_CONTEXT = "rest/private";
 
+   /**
+    * Path to the list of the resources.
+    */
    private final String RESOURCES_PATH = "ide/cli/resources";
 
+   /**
+    * @return {@link ShellService} shell service
+    */
    public static ShellService getService()
    {
       if (service == null)
@@ -69,29 +79,37 @@ public class ShellService
       return service;
    }
 
+   /**
+    * Returns the list of available commands in JSON format.
+    * 
+    * @param callback callback
+    * @throws RequestException
+    */
    public void getCommands(AsyncRequestCallback<Set<CLIResource>> callback) throws RequestException
    {
       String url = REST_CONTEXT + "/" + RESOURCES_PATH;
 
-      // Set<CLIResource> resources = new HashSet<CLIResource>();
-      //
-      // CLIResourceUnmarshaller unmarshaller = new CLIResourceUnmarshaller(resources);
-      // callback.setResult(resources);
-      // callback.setPayload(unmarshaller);
-
       AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
 
+   /**
+    * Load application's configuration.
+    * 
+    * @param url configuration location
+    * @param callback
+    * @throws RequestException
+    */
    public void loadConfiguration(String url, AsyncRequestCallback<ShellConfiguration> callback) throws RequestException
    {
-      ShellConfiguration conf = new ShellConfiguration();
-      ShellConfigurationUnmarshaller unmarshaller = new ShellConfigurationUnmarshaller(conf);
-      // callback.setPayload(unmarshaller);
-      // callback.setResult(conf);
-      // callback.setEventBus(CloudShell.EVENT_BUS);
       AsyncRequest.build(RequestBuilder.GET, url).send(callback);
    }
 
+   /**
+    * Process user's command and execute it.
+    * 
+    * @param cmd command to process
+    * @param callback
+    */
    public void processCommand(String cmd, AsyncRequestCallback<StringBuilder> callback)
    {
       List<CLIResource> appropriateCommands = findAppropriateCommands(cmd);
@@ -118,14 +136,15 @@ public class ShellService
                   (resource.getPath().startsWith("/")) ? REST_CONTEXT + resource.getPath() : REST_CONTEXT + "/"
                      + resource.getPath();
 
-               AsyncRequest asyncRequest = createAsyncRequest(resource.getMethod(), url);
+               AsyncRequest asyncRequest = createAsyncRequest(resource.getMethod(), url, false);
                if (canParseOptions(resource, cmd, asyncRequest))
                {
                   CommandLine commandLine = CLIResourceUtil.parseCommandLine(cmd, resource.getParams());
                   String query = formQueryString(resource, commandLine, cmd);
                   url = (query != null && !query.isEmpty()) ? url + "?" + query : url;
+                  boolean runAsync = commandLine.hasOption("&");
                   // Recreate, because of the URL:
-                  asyncRequest = createAsyncRequest(resource.getMethod(), url);
+                  asyncRequest = createAsyncRequest(resource.getMethod(), url, runAsync);
 
                   setHeaderParameters(asyncRequest, resource.getParams(), commandLine);
                   setBody(resource, commandLine, cmd, asyncRequest);
@@ -141,7 +160,6 @@ public class ShellService
          }
          catch (Exception e)
          {
-            // TODO
             CloudShell.console().print(CloudShell.messages.syntaxtError(cmd));
          }
       }
@@ -153,9 +171,16 @@ public class ShellService
    }
 
    /**
-    * @param resource
-    * @param cmd
-    * @param asyncRequest
+    * Returns whether options can be parsed. Returns <code>false</code> when:
+    * 
+    * <ol>
+    * <li>resource doesn't have any parameters</li>
+    * <li>only one parameter is specified and its type is BODY</li>
+    * </ol>
+    * 
+    * @param resource CLI resource
+    * @param cmd command
+    * @param asyncRequest asynchronous request
     * @return {@link Boolean}
     */
    protected boolean canParseOptions(CLIResource resource, String cmd, AsyncRequest asyncRequest)
@@ -179,11 +204,17 @@ public class ShellService
       return true;
    }
 
+   /**
+    * Perform login.
+    * 
+    * @param command
+    * @param callback
+    * @throws RequestException
+    */
    public void login(String command, AsyncRequestCallback<StringBuilder> callback) throws RequestException
    {
       String url = REST_CONTEXT + "/ide/crash/command";
       LoginMarshaller marshaller = new LoginMarshaller(command);
-      // callback.setPayload(new StringUnmarshaller(callback));
 
       AsyncRequest.build(RequestBuilder.POST, url).data(marshaller.marshal())
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
@@ -314,21 +345,22 @@ public class ShellService
     * 
     * @param method HTTP Method
     * @param url
+    * @param runAsync
     * @return {@link AsyncRequest} build asynchronous request
     */
-   protected AsyncRequest createAsyncRequest(String method, String url)
+   protected AsyncRequest createAsyncRequest(String method, String url, boolean runAsync)
    {
       if (HTTPMethod.POST.equalsIgnoreCase(method))
       {
-         return AsyncRequest.build(RequestBuilder.POST, url);
+         return AsyncRequest.build(RequestBuilder.POST, url, runAsync);
       }
       else if (HTTPMethod.GET.equalsIgnoreCase(method))
       {
-         return AsyncRequest.build(RequestBuilder.GET, url);
+         return AsyncRequest.build(RequestBuilder.GET, url, runAsync);
       }
       else
       {
-         return AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, method);
+         return AsyncRequest.build(RequestBuilder.GET, url, runAsync).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, method);
       }
    }
 

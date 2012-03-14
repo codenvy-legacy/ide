@@ -28,6 +28,8 @@ import org.exoplatform.ide.shell.client.commands.CatCommand;
 import org.exoplatform.ide.shell.client.commands.CdCommand;
 import org.exoplatform.ide.shell.client.commands.ClearCommand;
 import org.exoplatform.ide.shell.client.commands.HelpCommand;
+import org.exoplatform.ide.shell.client.commands.JobsCommand;
+import org.exoplatform.ide.shell.client.commands.KillJobCommand;
 import org.exoplatform.ide.shell.client.commands.LsCommand;
 import org.exoplatform.ide.shell.client.commands.MkdirCommand;
 import org.exoplatform.ide.shell.client.commands.PwdCommand;
@@ -35,6 +37,7 @@ import org.exoplatform.ide.shell.client.commands.RmCommand;
 import org.exoplatform.ide.shell.client.marshal.ShellConfigurationUnmarshaller;
 import org.exoplatform.ide.shell.client.model.ShellConfiguration;
 import org.exoplatform.ide.shell.shared.CLIResource;
+import org.exoplatform.ide.shell.shared.CLIResourceParameter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.VFSInfoUnmarshaller;
@@ -132,8 +135,13 @@ public class ShellInitializer
       CloudShell.getCommands().add(new CdCommand());
       CloudShell.getCommands().add(new RmCommand());
       CloudShell.getCommands().add(new CatCommand());
+      CloudShell.getCommands().add(new KillJobCommand());
+      CloudShell.getCommands().add(new JobsCommand());
    }
 
+   /**
+    * Get the list of available commands.
+    */
    private void getCommands()
    {
       try
@@ -144,8 +152,19 @@ public class ShellInitializer
                @Override
                protected void onSuccess(Set<CLIResource> result)
                {
+                  // TODO think how to add async parameter to all resources.
+                  CLIResourceParameter asyncParameter = new CLIResourceParameter();
+                  asyncParameter.setName("async");
+                  asyncParameter.setHasArg(false);
+                  asyncParameter.setMandatory(false);
+                  asyncParameter.getOptions().add("&");
+
+                  for (CLIResource resource : result)
+                  {
+                     resource.getParams().add(asyncParameter);
+                  }
                   CloudShell.getCommands().addAll(result);
-                  CloudShell.console().println("Welcome to eXo Cloud Shell");
+                  CloudShell.console().println(CloudShell.messages.welcomeMessage());
                }
 
                @Override
@@ -162,6 +181,11 @@ public class ShellInitializer
 
    }
 
+   /**
+    * Update the current directory value.
+    * 
+    * @param root
+    */
    private void updateCurrentDir(final Folder root)
    {
       String id = Location.getParameter("workdir");
@@ -214,7 +238,7 @@ public class ShellInitializer
    }
 
    /**
-    * 
+    * Create Shell view.
     */
    private void createShell()
    {

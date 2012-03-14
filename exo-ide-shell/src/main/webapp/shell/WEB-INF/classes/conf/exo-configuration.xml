@@ -61,6 +61,7 @@
    <component>
       <type>org.everrest.exoplatform.EverrestInitializer</type>
    </component>
+   
    <component>
       <key>org.everrest.core.ResourceBinder</key>
       <type>org.everrest.core.impl.ResourceBinderImpl</type>
@@ -129,7 +130,7 @@
          </value-param>
          <value-param>
             <name>workspace</name>
-            <value>production</value>
+            <value>dev-monit</value>
          </value-param>
          <value-param>
             <name>user-config</name>
@@ -285,6 +286,20 @@
 
    <component>
       <type>org.exoplatform.services.rest.ext.service.RestServicesListApplication</type>
+   </component>
+   
+   <component>
+      <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
+   </component>
+
+   <component>
+      <key>org.exoplatform.ide.vfs.server.LocalPathResolver</key>
+      <type>org.exoplatform.ide.vfs.impl.jcr.LocalPathResolverJcrImpl</type>
+   </component>
+   
+    <component>
+      <key>org.exoplatform.ide.vfs.server.GitUrlResolver</key>
+      <type>org.exoplatform.ide.vfs.impl.jcr.GitUrlResolverJcrImpl</type>
    </component>
 
    <external-component-plugins>
