@@ -807,6 +807,5 @@
       <module>exo-ide-maven</module>
       <module>exo-ide-extension-maven</module>
       <module>exo-ide-packaging-maven-builder</module>
-    <module>exo-ide-extension-java-debug2</module>
   </modules>
 </project>
