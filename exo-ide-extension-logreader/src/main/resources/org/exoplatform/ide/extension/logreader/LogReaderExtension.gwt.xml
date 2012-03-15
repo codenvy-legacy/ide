@@ -37,4 +37,5 @@
     <entry-point class='org.exoplatform.ide.extension.logreader.client.LogReaderExtension' />
    
    <source path="client" />
+   <source path="shared" />
 </module>
