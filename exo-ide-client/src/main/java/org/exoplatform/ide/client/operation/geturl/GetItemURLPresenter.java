@@ -99,7 +99,7 @@ public class GetItemURLPresenter implements GetItemURLHandler, ItemsSelectedHand
             String privateUrl = link.getHref();
             display.getPrivateURLField().setValue(privateUrl);
 
-            String publicUrl = privateUrl.replace("/IDE/rest/private/ide/vfs", "/IDE/rest/ide/vfs");
+            String publicUrl = privateUrl.replaceFirst("/IDE/rest/private/ide/vfs", "/IDE/rest/ide/vfs");
             display.getPublicURLField().setValue(publicUrl);
          }
       }
