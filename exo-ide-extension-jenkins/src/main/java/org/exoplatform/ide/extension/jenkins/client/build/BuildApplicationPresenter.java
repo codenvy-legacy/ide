@@ -23,9 +23,11 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -43,12 +45,10 @@ import org.exoplatform.ide.extension.jenkins.client.JobResult;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationHandler;
-import org.exoplatform.ide.extension.jenkins.client.marshal.JenkinsJobStatusUnmarshaller;
-import org.exoplatform.ide.extension.jenkins.client.marshal.JenkinsJobUnmarshaller;
 import org.exoplatform.ide.extension.jenkins.client.marshal.StringContentUnmarshaller;
 import org.exoplatform.ide.extension.jenkins.shared.Job;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
-import org.exoplatform.ide.extension.jenkins.shared.JobStatus.Status;
+import org.exoplatform.ide.extension.jenkins.shared.JobStatusBean.Status;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
@@ -205,9 +205,11 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       String uName = userInfo.getName().split("@")[0];// Jenkins don't alow in job name '@' character
       try
       {
+         AutoBean<Job> job = JenkinsExtension.AUTO_BEAN_FACTORY.create(Job.class);
+         AutoBeanUnmarshaller<Job> marshaller = new AutoBeanUnmarshaller<Job>(job);
          JenkinsService.get().createJenkinsJob(
             uName + "-" + getProjectName() + "-" + Random.nextInt(Integer.MAX_VALUE), uName, mail, vfs.getId(),
-            project.getId(), new AsyncRequestCallback<Job>(new JenkinsJobUnmarshaller(new Job()))
+            project.getId(), new AsyncRequestCallback<Job>(marshaller)
             {
                @Override
                protected void onSuccess(Job result)
@@ -393,8 +395,10 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       {
          try
          {
+            AutoBean<JobStatus> jobStatus = JenkinsExtension.AUTO_BEAN_FACTORY.create(JobStatus.class);
+            AutoBeanUnmarshaller<JobStatus> unmarshaller = new AutoBeanUnmarshaller<JobStatus>(jobStatus);
             JenkinsService.get().jobStatus(vfs.getId(), project.getId(), jobName,
-               new AsyncRequestCallback<JobStatus>(new JenkinsJobStatusUnmarshaller(new JobStatus()))
+               new AsyncRequestCallback<JobStatus>(unmarshaller)
                {
                   @Override
                   protected void onSuccess(JobStatus status)

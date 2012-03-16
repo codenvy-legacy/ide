@@ -94,7 +94,8 @@ public class JenkinsService
     * @param callback
     * @throws RequestException 
     */
-   public void buildJob(String vfsId, String projectId, String jobName, AsyncRequestCallback<Object> callback) throws RequestException
+   public void buildJob(String vfsId, String projectId, String jobName, AsyncRequestCallback<Object> callback)
+      throws RequestException
    {
       String url = restContext + JENKINS + "/job/build?name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;
       AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
@@ -107,14 +108,16 @@ public class JenkinsService
     * @param callback
     * @throws RequestException 
     */
-   public void jobStatus(String vfsId, String projectId, String jobName, AsyncRequestCallback<JobStatus> callback) throws RequestException
+   public void jobStatus(String vfsId, String projectId, String jobName, AsyncRequestCallback<JobStatus> callback)
+      throws RequestException
    {
       String url =
          restContext + JENKINS + "/job/status?name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;
       AsyncRequest.build(RequestBuilder.GET, url).send(callback);
    }
 
-   public void getJenkinsOutput(String vfsId, String projectId, String jobName, AsyncRequestCallback<StringBuilder> callback) throws RequestException
+   public void getJenkinsOutput(String vfsId, String projectId, String jobName,
+      AsyncRequestCallback<StringBuilder> callback) throws RequestException
    {
       String url =
          restContext + JENKINS + "/job/console-output?name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;

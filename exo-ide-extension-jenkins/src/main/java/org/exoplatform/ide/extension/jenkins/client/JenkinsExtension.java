@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.jenkins.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -35,6 +36,11 @@ import org.exoplatform.ide.extension.jenkins.client.build.BuildApplicationPresen
  */
 public class JenkinsExtension extends Extension implements InitializeServicesHandler
 {
+
+   /**
+    * The generator of an {@link AutoBean}.
+    */
+   public static final JenkinsAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(JenkinsAutoBeanFactory.class);
 
    public static final JenkinsMessages MESSAGES = GWT.create(JenkinsMessages.class);
 

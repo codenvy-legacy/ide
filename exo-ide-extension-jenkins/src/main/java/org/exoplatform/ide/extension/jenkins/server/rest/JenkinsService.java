@@ -84,7 +84,7 @@ public class JenkinsService
       jenkins.createJob(name, git, user, email, vfs, projectId);
       String buildUrl = uriInfo.getBaseUriBuilder().path(getClass(), "build").build(name).toString();
       String statusUrl = uriInfo.getBaseUriBuilder().path(getClass(), "jobStatus").build(name).toString();
-      return new Job(name, buildUrl, statusUrl);
+      return new JobBean(name, buildUrl, statusUrl);
    }
 
    @Path("job/build")
@@ -105,8 +105,8 @@ public class JenkinsService
       @QueryParam("projectid") String projectId, //
       @QueryParam("vfsid") String vfsId) throws IOException, JenkinsException, VirtualFileSystemException
    {
-      return jenkins.jobStatus(jobName, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null)
-         : null, projectId);
+      return jenkins.jobStatus(jobName, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         projectId);
    }
 
    @Path("job/console-output")

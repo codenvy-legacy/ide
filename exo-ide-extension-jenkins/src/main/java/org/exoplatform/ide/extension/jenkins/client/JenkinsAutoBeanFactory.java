@@ -16,57 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.jenkins.shared;
+package org.exoplatform.ide.extension.jenkins.client;
+
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanFactory;
+
+import org.exoplatform.ide.extension.jenkins.shared.Job;
+import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 
 /**
- * Build job info.
+ * The interface for the AutoBean generator.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: Job.java Mar 15, 2012 3:14:27 PM azatsarynnyy $
+ * @version $Id: JenkinsAutoBeanFactory.java Mar 15, 2012 3:35:51 PM azatsarynnyy $
  *
  */
-public interface Job
+public interface JenkinsAutoBeanFactory extends AutoBeanFactory
 {
    /**
-    * Get name of the job.
+    * A factory method for a job info bean.
     * 
-    * @return name of the job.
+    * @return an {@link AutoBean} of type {@link Job}
     */
-   public String getName();
+   AutoBean<Job> job();
 
    /**
-    * Set the job name.
+    * A factory method for a job status bean.
     * 
-    * @param name name of the job.
+    * @return an {@link AutoBean} of type {@link JobStatus}
     */
-   public void setName(String name);
-
-   /**
-    * Get the url of the build job.
-    * 
-    * @return url of the build job.
-    */
-   public String getBuildUrl();
-
-   /**
-    * Set the url for build job.
-    * 
-    * @param buildUrl of the build job.
-    */
-   public void setBuildUrl(String buildUrl);
-
-   /**
-    * Get the url for check status of the build job.
-    * 
-    * @return url for check status of the build job.
-    */
-   public String getStatusUrl();
-
-   /**
-    * Set the url for check status of the build job.
-    * 
-    * @param statusUrl url for check status of the build job.
-    */
-   public void setStatusUrl(String statusUrl);
-
+   AutoBean<JobStatus> jobStatus();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,102 +18,72 @@
  */
 package org.exoplatform.ide.extension.jenkins.shared;
 
+import org.exoplatform.ide.extension.jenkins.shared.JobStatusBean.Status;
+
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: $
+ * Build job status.
+ * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: JobStatus.java Mar 15, 2012 4:04:15 PM azatsarynnyy $
+ *
  */
-public class JobStatus
+public interface JobStatus
 {
-   public enum Status {
-      QUEUE("In queue..."), //
-      BUILD("Building..."), //
-      END("End."); //
-
-      private final String value;
-
-      private Status(String value)
-      {
-         this.value = value;
-      }
-
-      @Override
-      public String toString()
-      {
-         return value;
-      }
-   }
-
-   /** Job name. */
-   private String name;
-
-   /** Current job status. */
-   private Status status;
-
-   /** Result of last build. Should be always <code>null</code> if {@link #status} other then {@link Status#END}. */
-   private String lastBuildResult;
 
    /**
-    * URL to download artifact. Should be always <code>null</code> if {@link #status} other then {@link Status#END} and
-    * {@link #lastBuildResult} other then 'SUCCESS'.
+    * Get the name of the build job.
+    * 
+    * @return name of the build job.
     */
-   private String artifactUrl;
+   public String getName();
 
-   public JobStatus(String name, Status status, String lastBuildResult, String artifactUrl)
-   {
-      this.name = name;
-      this.status = status;
-      this.lastBuildResult = lastBuildResult;
-      this.artifactUrl = artifactUrl;
-   }
+   /**
+    * Set the job name.
+    * 
+    * @param job name.
+    */
+   public void setName(String name);
 
-   public JobStatus()
-   {
-   }
+   /**
+    * Get the current status of the build job.
+    * 
+    * @return status of the build job.
+    */
+   public Status getStatus();
 
-   public String getName()
-   {
-      return name;
-   }
+   /**
+    * Set the current status of the build job.
+    * 
+    * @param status status of the build job.
+    */
+   public void setStatus(Status status);
 
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+   /**
+    * Get result of the last build job.
+    * 
+    * @return result of the last build job.
+    */
+   public String getLastBuildResult();
 
-   public Status getStatus()
-   {
-      return status;
-   }
+   /**
+    * Set result of the last build job.
+    * 
+    * @param lastBuildResult result of the last build job.
+    */
+   public void setLastBuildResult(String lastBuildResult);
 
-   public void setStatus(Status status)
-   {
-      this.status = status;
-   }
+   /**
+    * Get the URL to download artifact.
+    * 
+    * @return URL to download artifact.
+    */
+   public String getArtifactUrl();
 
-   public String getLastBuildResult()
-   {
-      return lastBuildResult;
-   }
+   /**
+    * Set the URL to download artifact.
+    * 
+    * @param artifactUrl URL to download artifact.
+    */
+   public void setArtifactUrl(String artifactUrl);
 
-   public void setLastBuildResult(String lastBuildResult)
-   {
-      this.lastBuildResult = lastBuildResult;
-   }
-
-   public String getArtifactUrl()
-   {
-      return artifactUrl;
-   }
-
-   public void setArtifactUrl(String artifactUrl)
-   {
-      this.artifactUrl = artifactUrl;
-   }
-
-   @Override
-   public String toString()
-   {
-      return "JobStatus [name=" + name + ", status=" + status + ", lastBuildResult=" + lastBuildResult
-         + ", artifactUrl=" + artifactUrl + "]";
-   }
 }

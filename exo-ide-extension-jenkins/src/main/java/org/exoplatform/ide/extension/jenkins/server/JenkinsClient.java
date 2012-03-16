@@ -19,6 +19,8 @@
 package org.exoplatform.ide.extension.jenkins.server;
 
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
+import org.exoplatform.ide.extension.jenkins.shared.JobStatusBean;
+import org.exoplatform.ide.extension.jenkins.shared.JobStatusBean.Status;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -66,7 +68,9 @@ public abstract class JenkinsClient
    protected static class HttpStream extends InputStream
    {
       private final HttpURLConnection http;
+
       private InputStream in;
+
       private boolean closed;
 
       public HttpStream(HttpURLConnection http)
@@ -373,7 +377,7 @@ public abstract class JenkinsClient
             try
             {
                JobStatus lastJobStatus = jobStatus(lastJob, null, null);
-               if (JobStatus.Status.END == lastJobStatus.getStatus())
+               if (Status.END == lastJobStatus.getStatus())
                {
                   userState.removeAttribute("org.exoplatform.ide.jenkins.job");
                }
@@ -433,7 +437,7 @@ public abstract class JenkinsClient
 
       if (inQueue(jobName))
       {
-         return new JobStatus(jobName, JobStatus.Status.QUEUE, null, null);
+         return new JobStatusBean(jobName, Status.QUEUE, null, null);
       }
 
       HttpURLConnection http = null;
@@ -458,7 +462,7 @@ public abstract class JenkinsClient
          {
             // May be newly created job. Such job does not have last build yet.
             getJob(jobName); // Check job exists or not.
-            return new JobStatus(jobName, JobStatus.Status.END, null, null);
+            return new JobStatusBean(jobName, Status.END, null, null);
          }
          else if (responseCode != 200)
          {
@@ -491,7 +495,7 @@ public abstract class JenkinsClient
                if (Boolean.parseBoolean(building))
                {
                   // Building in progress.
-                  return new JobStatus(jobName, JobStatus.Status.BUILD, null, null);
+                  return new JobStatusBean(jobName, Status.BUILD, null, null);
                }
 
                String result = xpath.evaluate("/" + root + "/result", doc);
@@ -508,11 +512,11 @@ public abstract class JenkinsClient
                   {
                      // Good, only one artifact tag.
                      String relativePath = xpath.evaluate("/" + root + "/artifact/relativePath", doc);
-                     return new JobStatus(jobName, JobStatus.Status.END, result, buildUrl + "artifact/" + relativePath);
+                     return new JobStatusBean(jobName, Status.END, result, buildUrl + "artifact/" + relativePath);
                   }
                }
                // Cannot provide URL for download, e.g. build failed, canceled, etc.
-               return new JobStatus(jobName, JobStatus.Status.END, result, null);
+               return new JobStatusBean(jobName, Status.END, result, null);
             }
             catch (SAXException e)
             {
@@ -588,7 +592,7 @@ public abstract class JenkinsClient
          jobName = readJenkinsJobName(vfs, projectId);
       }
 
-      if (jobStatus(jobName, vfs, projectId).getStatus() != JobStatus.Status.END)
+      if (jobStatus(jobName, vfs, projectId).getStatus() != Status.END)
       {
          return null; // Do not show output if job in queue for build or building now.
       }
