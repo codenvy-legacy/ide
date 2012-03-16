@@ -21,7 +21,7 @@ package org.exoplatform.ide.extension.cloudfoundry.client;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 
@@ -74,7 +74,7 @@ public abstract class CloudFoundryClientService
     */
    public abstract void create(String server, String name, String type, String url, int instances, int memory,
       boolean nostart, String vfsId, String projectId, String war,
-      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback) throws RequestException;
+      CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException;
 
    /**
     * Log in CloudFoundry account.
@@ -105,7 +105,7 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement
     */
    public abstract void getApplicationInfo(String vfsId, String projectId, String appId, String server,
-      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback) throws RequestException;
+      CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException;
 
    /**
     * Delete application from CloudFoundry.
@@ -130,7 +130,7 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to receive response from server.
     */
    public abstract void startApplication(String vfsId, String projectId, String name, String server,
-      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback) throws RequestException;
+      CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException;
 
    /**
     * Stop application.
@@ -154,7 +154,7 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to receive response from server.
     */
    public abstract void restartApplication(String vfsId, String projectId, String name, String server,
-      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback) throws RequestException;
+      CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException;
 
    /**
     * Update existing application.
@@ -250,7 +250,7 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to handle response from server.
     */
    public abstract void getApplicationList(String server,
-      CloudFoundryAsyncRequestCallback<List<CloudfoundryApplication>> callback) throws RequestException;
+      CloudFoundryAsyncRequestCallback<List<CloudFoundryApplication>> callback) throws RequestException;
 
    /**
     * Get Cloud Foundry system information.

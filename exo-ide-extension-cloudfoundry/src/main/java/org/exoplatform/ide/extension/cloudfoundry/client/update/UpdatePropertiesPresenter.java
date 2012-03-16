@@ -20,8 +20,10 @@ package org.exoplatform.ide.extension.cloudfoundry.client.update;
 
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -30,9 +32,8 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncReques
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CloudfoundryApplicationUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -91,16 +92,22 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       try
       {
+         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+            CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+
+         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+            new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+
          CloudFoundryClientService.getInstance().getApplicationInfo(
             vfs.getId(),
             projectId,
             null,
             null,
-            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
-               new CloudfoundryApplication()), getOldMemoryValueLoggedInHandler, null)
+            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
+               getOldMemoryValueLoggedInHandler, null)
             {
                @Override
-               protected void onSuccess(CloudfoundryApplication result)
+               protected void onSuccess(CloudFoundryApplication result)
                {
                   askForNewMemoryValue(result.getResources().getMemory());
                }
@@ -205,16 +212,22 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
 
       try
       {
+         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+            CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+
+         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+            new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+
          CloudFoundryClientService.getInstance().getApplicationInfo(
             vfs.getId(),
             projectId,
             null,
             null,
-            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
-               new CloudfoundryApplication()), getOldInstancesValueLoggedInHandler, null)
+            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
+               getOldInstancesValueLoggedInHandler, null)
             {
                @Override
-               protected void onSuccess(CloudfoundryApplication result)
+               protected void onSuccess(CloudFoundryApplication result)
                {
                   askForInstancesNumber(result.getInstances());
                }
@@ -292,16 +305,17 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
                {
                   try
                   {
-                     CloudFoundryClientService.getInstance().getApplicationInfo(
-                        vfs.getId(),
-                        projectId,
-                        null,
-                        null,
-                        new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(
-                           new CloudfoundryApplicationUnmarshaller(new CloudfoundryApplication()), null, null)
+                     AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+                        CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+
+                     AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+                        new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+
+                     CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
+                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, null, null)
                         {
                            @Override
-                           protected void onSuccess(CloudfoundryApplication result)
+                           protected void onSuccess(CloudFoundryApplication result)
                            {
                               String msg =
                                  CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesSuccess(String

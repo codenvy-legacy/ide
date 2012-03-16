@@ -27,7 +27,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CredentailsMarshaller;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 
@@ -110,13 +110,14 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     */
    @Override
    public void create(String server, String name, String type, String url, int instances, int memory, boolean nostart,
-      String vfsId, String projectId, String war, CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback) throws RequestException
+      String vfsId, String projectId, String war, CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback)
+      throws RequestException
    {
       final String requestUrl = restServiceContext + CREATE;
 
       if (server != null && !server.startsWith("http"))
          server = "http://" + server;
-      
+
       String params = "name=" + name;
       params += (server == null) ? "" : "&server=" + server;
       params += (type != null) ? "&type=" + type : "";
@@ -138,19 +139,19 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#login(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void login(String server, String email, String password, AsyncRequestCallback<String> callback) throws RequestException
+   public void login(String server, String email, String password, AsyncRequestCallback<String> callback)
+      throws RequestException
    {
       String url = restServiceContext + LOGIN;
 
       HashMap<String, String> credentials = new HashMap<String, String>();
       if (server != null && !server.startsWith("http://"))
          server = "http://" + server;
-      
+
       credentials.put("server", server);
       credentials.put("email", email);
       credentials.put("password", password);
       CredentailsMarshaller marshaller = new CredentailsMarshaller(credentials);
-
 
       AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(marshaller.marshal())
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
@@ -165,7 +166,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    public void logout(String server, AsyncRequestCallback<String> callback) throws RequestException
    {
       String url = restServiceContext + LOGOUT;
-      
+
       if (server != null && !server.startsWith("http"))
          server = "http://" + server;
 
@@ -180,13 +181,13 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     */
    @Override
    public void getApplicationInfo(String vfsId, String projectId, String appId, String server,
-      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback) throws RequestException
+      CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException
    {
       final String url = restServiceContext + APPS_INFO;
 
       if (server != null && !server.startsWith("http"))
          server = "http://" + server;
-      
+
       String params = (appId != null) ? "name=" + appId : "";
       params += (vfsId != null) ? "&vfsid=" + vfsId : "";
       params += (projectId != null) ? "&projectid=" + projectId : "";
@@ -209,7 +210,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
       if (server != null && !server.startsWith("http"))
          server = "http://" + server;
-      
+
       String params = (appId != null) ? "name=" + appId + "&" : "";
       params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
       params += (projectId != null) ? "projectid=" + projectId + "&" : "";
@@ -229,8 +230,8 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       final String url = restServiceContext + FRAMEWORKS;
 
-      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**
@@ -239,13 +240,13 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     */
    @Override
    public void startApplication(String vfsId, String projectId, String name, String server,
-      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback) throws RequestException
+      CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException
    {
       final String url = restServiceContext + START;
 
       if (server != null && !server.startsWith("http"))
          server = "http://" + server;
-      
+
       String params = (name != null) ? "name=" + name : "";
       params += (vfsId != null) ? "&vfsid=" + vfsId : "";
       params += (projectId != null) ? "&projectid=" + projectId : "";
@@ -268,7 +269,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
       if (server != null && !server.startsWith("http"))
          server = "http://" + server;
-      
+
       String params = (name != null) ? "name=" + name : "";
       params += (vfsId != null) ? "&vfsid=" + vfsId : "";
       params += (projectId != null) ? "&projectid=" + projectId : "";
@@ -285,13 +286,13 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     */
    @Override
    public void restartApplication(String vfsId, String projectId, String name, String server,
-      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback) throws RequestException
+      CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException
    {
       final String url = restServiceContext + RESTART;
 
       if (server != null && !server.startsWith("http"))
          server = "http://" + server;
-      
+
       String params = (name != null) ? "name=" + name : "";
       params += (vfsId != null) ? "&vfsid=" + vfsId : "";
       params += (projectId != null) ? "&projectid=" + projectId : "";
@@ -314,7 +315,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
       if (server != null && !server.startsWith("http"))
          server = "http://" + server;
-      
+
       String params = (name != null) ? "name=" + name : "";
       params += (vfsId != null) ? "&vfsid=" + vfsId : "";
       params += (projectId != null) ? "&projectid=" + projectId : "";
@@ -338,7 +339,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
       if (server != null && !server.startsWith("http"))
          server = "http://" + server;
-      
+
       String params = (name != null) ? "name=" + name + "&" : "";
       params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
       params += (projectId != null) ? "projectid=" + projectId + "&" : "";
@@ -361,7 +362,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
       if (server != null && !server.startsWith("http"))
          server = "http://" + server;
-      
+
       String params = (name != null) ? "name=" + name + "&" : "";
       params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
       params += (projectId != null) ? "projectid=" + projectId + "&" : "";
@@ -384,7 +385,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
       if (server != null && !server.startsWith("http"))
          server = "http://" + server;
-      
+
       String params = (name != null) ? "name=" + name + "&" : "";
       params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
       params += (projectId != null) ? "projectid=" + projectId + "&" : "";
@@ -407,7 +408,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
       if (server != null && !server.startsWith("http"))
          server = "http://" + server;
-      
+
       String params = (name != null) ? "name=" + name + "&" : "";
       params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
       params += (projectId != null) ? "projectid=" + projectId + "&" : "";
@@ -430,7 +431,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
       if (server != null && !server.startsWith("http"))
          server = "http://" + server;
-      
+
       String params = (name != null) ? "name=" + name + "&" : "";
       params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
       params += (projectId != null) ? "projectid=" + projectId + "&" : "";
@@ -447,10 +448,11 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     */
    @Override
    public void validateAction(String action, String server, String appName, String framework, String url, String vfsId,
-      String projectId, int instances, int memory, boolean nostart, CloudFoundryAsyncRequestCallback<String> callback) throws RequestException
+      String projectId, int instances, int memory, boolean nostart, CloudFoundryAsyncRequestCallback<String> callback)
+      throws RequestException
    {
       final String postUrl = restServiceContext + VALIDATE_ACTION;
-      
+
       if (server != null && !server.startsWith("http"))
          server = "http://" + server;
 
@@ -479,11 +481,11 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
       if (server != null && !server.startsWith("http"))
          server = "http://" + server;
-      
+
       String params = (server == null) ? "" : "?server=" + server;
 
-      AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**
@@ -492,13 +494,13 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     */
    @Override
    public void getApplicationList(String server,
-      CloudFoundryAsyncRequestCallback<List<CloudfoundryApplication>> callback) throws RequestException
+      CloudFoundryAsyncRequestCallback<List<CloudFoundryApplication>> callback) throws RequestException
    {
       String url = restServiceContext + APPS;
 
       if (server != null && !server.startsWith("http"))
          server = "http://" + server;
-      
+
       if (server != null && !server.isEmpty())
       {
          url += "?server=" + server;

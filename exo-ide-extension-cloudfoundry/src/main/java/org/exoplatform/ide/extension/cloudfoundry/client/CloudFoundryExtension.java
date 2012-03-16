@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.cloudfoundry.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -59,6 +60,11 @@ import org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter;
 public class CloudFoundryExtension extends Extension implements InitializeServicesHandler
 {
 
+   /**
+    * The generator of an {@link AutoBean}.
+    */
+   public static final CloudFoundryAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(CloudFoundryAutoBeanFactory.class);
+
    public static final CloudFoundryLocalizationConstant LOCALIZATION_CONSTANT = GWT
       .create(CloudFoundryLocalizationConstant.class);
 
@@ -73,8 +79,7 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new CloudFoundryClientServiceImpl(event.getApplicationConfiguration().getContext(),
-         event.getLoader());
+      new CloudFoundryClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
    /**
@@ -103,7 +108,7 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       IDE.getInstance().addControl(new UpdateInstancesControl());
       IDE.getInstance().addControl(new SwitchAccountControl());
       IDE.getInstance().addControl(new ApplicationsControl());
-      
+
       new DeployApplicationPresenter();
       new CreateApplicationPresenter();
       new LoginPresenter();

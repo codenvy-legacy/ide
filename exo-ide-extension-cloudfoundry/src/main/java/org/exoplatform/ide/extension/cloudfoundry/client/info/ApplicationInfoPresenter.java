@@ -18,9 +18,15 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.info;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -29,16 +35,11 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CloudfoundryApplicationUnmarshaller;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 
 /**
  * Presenter for showing application info.
@@ -119,13 +120,14 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
    {
       try
       {
-         CloudFoundryClientService.getInstance().getApplicationInfo(
-            vfs.getId(),
-            projectId,
-            null,
-            null,
-            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
-               new CloudfoundryApplication()), new LoggedInHandler()
+         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+            CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+
+         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+            new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+
+         CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
+            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, new LoggedInHandler()
             {
                @Override
                public void onLoggedIn()
@@ -135,7 +137,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
             }, null)
             {
                @Override
-               protected void onSuccess(CloudfoundryApplication result)
+               protected void onSuccess(CloudFoundryApplication result)
                {
                   if (display == null)
                   {

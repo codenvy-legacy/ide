@@ -19,17 +19,18 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.start;
 
 import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CloudfoundryApplicationUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -137,16 +138,20 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
       try
       {
+         AutoBean<CloudFoundryApplication> CloudFoundryApplication =
+            CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+            new AutoBeanUnmarshaller<CloudFoundryApplication>(CloudFoundryApplication);
          CloudFoundryClientService.getInstance().getApplicationInfo(
             vfs.getId(),
             project.getId(),
             null,
             null,
-            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
-               new CloudfoundryApplication()), checkIsStartedLoggedInHandler, null)
+            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, checkIsStartedLoggedInHandler,
+               null)
             {
                @Override
-               protected void onSuccess(CloudfoundryApplication result)
+               protected void onSuccess(CloudFoundryApplication result)
                {
                   if ("STARTED".equals(result.getState()))
                   {
@@ -173,17 +178,23 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
       try
       {
+         AutoBean<CloudFoundryApplication> CloudFoundryApplication =
+            CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+
+         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+            new AutoBeanUnmarshaller<CloudFoundryApplication>(CloudFoundryApplication);
+
          CloudFoundryClientService.getInstance().getApplicationInfo(
             vfs.getId(),
             project.getId(),
             null,
             null,
-            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
-               new CloudfoundryApplication()), checkIsStoppedLoggedInHandler, null)
+            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, checkIsStoppedLoggedInHandler,
+               null)
             {
 
                @Override
-               protected void onSuccess(CloudfoundryApplication result)
+               protected void onSuccess(CloudFoundryApplication result)
                {
                   if ("STOPPED".equals(result.getState()))
                   {
@@ -212,16 +223,17 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
       try
       {
-         CloudFoundryClientService.getInstance().startApplication(
-            vfs.getId(),
-            projectId,
-            name,
-            null,
-            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
-               new CloudfoundryApplication()), startLoggedInHandler, null)
+         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+            CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+
+         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+            new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+
+         CloudFoundryClientService.getInstance().startApplication(vfs.getId(), projectId, name, null,
+            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, startLoggedInHandler, null)
             {
                @Override
-               protected void onSuccess(CloudfoundryApplication result)
+               protected void onSuccess(CloudFoundryApplication result)
                {
                   if (!"STARTED".equals(result.getState()))
                   {
@@ -252,7 +264,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
       }
    }
 
-   private String getAppUrisAsString(CloudfoundryApplication application)
+   private String getAppUrisAsString(CloudFoundryApplication application)
    {
       String appUris = "";
       for (String uri : application.getUris())
@@ -287,16 +299,17 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                {
                   try
                   {
-                     CloudFoundryClientService.getInstance().getApplicationInfo(
-                        vfs.getId(),
-                        projectId,
-                        name,
-                        null,
-                        new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(
-                           new CloudfoundryApplicationUnmarshaller(new CloudfoundryApplication()), null, null)
+                     AutoBean<CloudFoundryApplication> CloudFoundryApplication =
+                        CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+
+                     AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+                        new AutoBeanUnmarshaller<CloudFoundryApplication>(CloudFoundryApplication);
+
+                     CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, name, null,
+                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, null, null)
                         {
                            @Override
-                           protected void onSuccess(CloudfoundryApplication result)
+                           protected void onSuccess(CloudFoundryApplication result)
                            {
                               final String msg =
                                  CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStopped(result.getName());
@@ -346,11 +359,17 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
       try
       {
+         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+            CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+
+         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+            new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+
          CloudFoundryClientService.getInstance().restartApplication(vfs.getId(), projectId, name, null,
-            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(new CloudfoundryApplication()), restartLoggedInHandler, null)
+            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, restartLoggedInHandler, null)
             {
                @Override
-               protected void onSuccess(CloudfoundryApplication result)
+               protected void onSuccess(CloudFoundryApplication result)
                {
                   final String appUris = getAppUrisAsString(result);
                   String msg = "";
@@ -360,7 +379,8 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                   }
                   else
                   {
-                     msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationRestartedUris(result.getName(), appUris);
+                     msg =
+                        CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationRestartedUris(result.getName(), appUris);
                   }
                   IDE.fireEvent(new OutputEvent(msg));
                   IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));

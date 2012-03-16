@@ -48,7 +48,7 @@ public interface Constants
    /* List */
    String ENV = "env";
 
-   /* {@link CloudfoundryApplicationResources} */
+   /* {@link CloudFoundryApplicationResources} */
    String RESOURCES = "resources";
 
    /* {@link Staging} */
@@ -65,13 +65,13 @@ public interface Constants
    String MODEL = "model";
 
    String STACK = "stack";
-   
+
    String DISPLAY_NAME = "displayName";
-   
+
    String TYPE = "type";
-   
+
    String DESCRIPTION = "description";
-   
+
    String LIMITS = "limits";
 
    String USAGE = "usage";

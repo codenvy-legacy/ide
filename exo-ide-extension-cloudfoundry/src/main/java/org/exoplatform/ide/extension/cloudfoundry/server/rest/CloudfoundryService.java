@@ -20,12 +20,12 @@ package org.exoplatform.ide.extension.cloudfoundry.server.rest;
 
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
-import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -106,7 +106,7 @@ public class CloudfoundryService
    @Path("apps/info")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public CloudfoundryApplication applicationInfo( //
+   public CloudFoundryApplication applicationInfo( //
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
@@ -120,7 +120,7 @@ public class CloudfoundryService
    @Path("apps/create")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
-   public CloudfoundryApplication createApplication( //
+   public CloudFoundryApplication createApplication( //
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("type") String framework, //
@@ -140,7 +140,7 @@ public class CloudfoundryService
    @Path("apps/start")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
-   public CloudfoundryApplication startApplication( //
+   public CloudFoundryApplication startApplication( //
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
@@ -167,7 +167,7 @@ public class CloudfoundryService
    @Path("apps/restart")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
-   public CloudfoundryApplication restartApplication( //
+   public CloudFoundryApplication restartApplication( //
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
@@ -322,7 +322,7 @@ public class CloudfoundryService
    @Path("apps")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public CloudfoundryApplication[] listApplications(@QueryParam("server") String server) throws IOException,
+   public CloudFoundryApplication[] listApplications(@QueryParam("server") String server) throws IOException,
       ParsingResponseException, CloudfoundryException, VirtualFileSystemException
    {
       return cloudfoundry.listApplications(server);

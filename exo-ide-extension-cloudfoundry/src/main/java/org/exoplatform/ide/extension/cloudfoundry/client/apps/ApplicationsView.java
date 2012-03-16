@@ -18,14 +18,11 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.apps;
 
-import com.google.gwt.user.client.ui.HasValue;
-
-import com.google.gwt.uibinder.client.UiField;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -34,7 +31,7 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -88,7 +85,7 @@ public class ApplicationsView extends ViewImpl implements ApplicationsPresenter.
     * @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#getAppsGrid()
     */
    @Override
-   public ListGridItem<CloudfoundryApplication> getAppsGrid()
+   public ListGridItem<CloudFoundryApplication> getAppsGrid()
    {
       return applicationsGrid;
    }

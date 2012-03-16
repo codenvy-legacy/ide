@@ -26,9 +26,11 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -43,10 +45,9 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientServi
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CloudfoundryApplicationUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.FrameworksUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
@@ -474,6 +475,10 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       try
       {
+         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+            CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+            new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
          CloudFoundryClientService.getInstance().create(
             app.server,
             app.name,
@@ -485,11 +490,11 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
             vfs.getId(),
             project.getId(),
             warUrl,
-            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
-               new CloudfoundryApplication()), createAppHandler, null, app.server)
+            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, createAppHandler, null,
+               app.server)
             {
                @Override
-               protected void onSuccess(CloudfoundryApplication result)
+               protected void onSuccess(CloudFoundryApplication result)
                {
                   warUrl = null;
                   String msg = lb.applicationCreatedSuccessfully(result.getName());
@@ -579,7 +584,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       IDE.getInstance().closeView(display.asView().getId());
    }
 
-   private String getAppUrlsAsString(CloudfoundryApplication application)
+   private String getAppUrlsAsString(CloudFoundryApplication application)
    {
       String appUris = "";
       for (String uri : application.getUris())
@@ -675,10 +680,8 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
    {
       try
       {
-         VirtualFileSystem.getInstance().getChildren(
-            project,
-            new AsyncRequestCallback<List<Item>>(
-               new ChildrenUnmarshaller(new ArrayList<Item>()))
+         VirtualFileSystem.getInstance().getChildren(project,
+            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
 
                @Override

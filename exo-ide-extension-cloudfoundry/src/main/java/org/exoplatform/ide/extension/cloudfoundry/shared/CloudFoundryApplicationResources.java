@@ -19,69 +19,41 @@
 package org.exoplatform.ide.extension.cloudfoundry.shared;
 
 /**
- * Framework info.
+ * Cloud Foundry application info.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: Framework.java Mar 16, 2012 5:14:15 PM azatsarynnyy $
+ * @version $Id: CloudFoundryApplicationResources.java Mar 16, 2012 2:14:15 PM azatsarynnyy $
  *
  */
-public interface Framework
+public interface CloudFoundryApplicationResources
 {
 
    /**
-    * Get the framework type.
+    * Get amount of memory available for application (in MB).
     * 
-    * @return framework type.
-    */
-   public String getType();
-
-   /**
-    * Set the framework type.
-    * 
-    * @param type framework type.
-    */
-   public void setType(String type);
-
-   /**
-    * Get framework name that was displayed.
-    * 
-    * @return displayed name of framework.
-    */
-   public String getDisplayName();
-
-   /**
-    * Set framework name that was displayed.
-    * 
-    * @param displayName displayed name of framework.
-    */
-   public void setDisplayName(String displayName);
-
-   /**
-    * Get default memory size in megabytes.
-    * 
-    * @return memory size
+    * @return amount of memory.
     */
    public int getMemory();
 
    /**
-    * Set default memory size in megabytes.
+    * Set amount of memory available for application (in MB).
     * 
-    * @param memory
+    * @param memory amount of memory.
     */
    public void setMemory(int memory);
 
    /**
-    * Get framework description.
+    * Get amount disk space available for application (in MB).
     * 
-    * @return framework description
+    * @return amount of disk space.
     */
-   public String getDescription();
+   public int getDisk();
 
    /**
-    * Set framework description.
+    * Set amount disk space available for application (in MB).
     * 
-    * @param description framework description.
+    * @param disk amount of disk space.
     */
-   public void setDescription(String description);
+   public void setDisk(int disk);
 
 }

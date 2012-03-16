@@ -46,7 +46,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmar
 import org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StopApplicationEvent;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
 
       HasClickHandlers getShowButton();
 
-      ListGridItem<CloudfoundryApplication> getAppsGrid();
+      ListGridItem<CloudFoundryApplication> getAppsGrid();
 
       HasApplicationsActions getActions();
 
@@ -122,41 +122,41 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
          }
       });
 
-      display.getActions().addStopApplicationHandler(new SelectionHandler<CloudfoundryApplication>()
+      display.getActions().addStopApplicationHandler(new SelectionHandler<CloudFoundryApplication>()
       {
 
          @Override
-         public void onSelection(SelectionEvent<CloudfoundryApplication> event)
+         public void onSelection(SelectionEvent<CloudFoundryApplication> event)
          {
             IDE.fireEvent(new StopApplicationEvent(event.getSelectedItem().getName()));
          }
       });
 
-      display.getActions().addStartApplicationHandler(new SelectionHandler<CloudfoundryApplication>()
+      display.getActions().addStartApplicationHandler(new SelectionHandler<CloudFoundryApplication>()
       {
 
          @Override
-         public void onSelection(SelectionEvent<CloudfoundryApplication> event)
+         public void onSelection(SelectionEvent<CloudFoundryApplication> event)
          {
             IDE.fireEvent(new StartApplicationEvent(event.getSelectedItem().getName()));
          }
       });
 
-      display.getActions().addRestartApplicationHandler(new SelectionHandler<CloudfoundryApplication>()
+      display.getActions().addRestartApplicationHandler(new SelectionHandler<CloudFoundryApplication>()
       {
 
          @Override
-         public void onSelection(SelectionEvent<CloudfoundryApplication> event)
+         public void onSelection(SelectionEvent<CloudFoundryApplication> event)
          {
             IDE.fireEvent(new RestartApplicationEvent(event.getSelectedItem().getName()));
          }
       });
 
-      display.getActions().addDeleteApplicationHandler(new SelectionHandler<CloudfoundryApplication>()
+      display.getActions().addDeleteApplicationHandler(new SelectionHandler<CloudFoundryApplication>()
       {
 
          @Override
-         public void onSelection(SelectionEvent<CloudfoundryApplication> event)
+         public void onSelection(SelectionEvent<CloudFoundryApplication> event)
          {
             IDE.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getName()));
          }
@@ -243,8 +243,8 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
       {
          CloudFoundryClientService.getInstance().getApplicationList(
             server,
-            new CloudFoundryAsyncRequestCallback<List<CloudfoundryApplication>>(new ApplicationListUnmarshaller(
-               new ArrayList<CloudfoundryApplication>()), new LoggedInHandler()//
+            new CloudFoundryAsyncRequestCallback<List<CloudFoundryApplication>>(new ApplicationListUnmarshaller(
+               new ArrayList<CloudFoundryApplication>()), new LoggedInHandler()//
                {
                   @Override
                   public void onLoggedIn()
@@ -255,7 +255,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
             {
 
                @Override
-               protected void onSuccess(List<CloudfoundryApplication> result)
+               protected void onSuccess(List<CloudFoundryApplication> result)
                {
                   display.getAppsGrid().setValue(result);
                   display.getServerSelectField().setValue(server);

@@ -24,8 +24,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -37,12 +39,12 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CloudfoundryApplicationUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StopApplicationEvent;
@@ -50,7 +52,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateApplicatio
 import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateInstancesEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateMemoryEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlEvent;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -282,13 +284,14 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
    {
       try
       {
-         CloudFoundryClientService.getInstance().getApplicationInfo(
-            vfs.getId(),
-            project.getId(),
-            null,
-            null,
-            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
-               new CloudfoundryApplication()), new LoggedInHandler()
+         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+            CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+
+         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+            new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+
+         CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), project.getId(), null, null,
+            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, new LoggedInHandler()
             {
                @Override
                public void onLoggedIn()
@@ -298,7 +301,7 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
             }, null)
             {
                @Override
-               protected void onSuccess(CloudfoundryApplication result)
+               protected void onSuccess(CloudFoundryApplication result)
                {
                   displayApplicationProperties(result);
                }
@@ -327,7 +330,7 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
       }
    }
 
-   protected void displayApplicationProperties(CloudfoundryApplication application)
+   protected void displayApplicationProperties(CloudFoundryApplication application)
    {
       display.getApplicationName().setValue(application.getName());
       display.getApplicationInstances().setValue(String.valueOf(application.getInstances()));

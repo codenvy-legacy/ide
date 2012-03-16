@@ -19,9 +19,11 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.update;
 
 import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -29,8 +31,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncReques
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CloudfoundryApplicationUnmarshaller;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
@@ -98,17 +99,18 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
                {
                   try
                   {
-                     CloudFoundryClientService.getInstance().getApplicationInfo(
-                        vfs.getId(),
-                        projectId,
-                        null,
-                        null,
-                        new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(
-                           new CloudfoundryApplicationUnmarshaller(new CloudfoundryApplication()), null, null)
+                     AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+                        CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+
+                     AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+                        new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+
+                     CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
+                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, null, null)
                         {
 
                            @Override
-                           protected void onSuccess(CloudfoundryApplication result)
+                           protected void onSuccess(CloudFoundryApplication result)
                            {
                               IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
                                  .updateApplicationSuccess(result.getName()), Type.INFO));
@@ -184,10 +186,8 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
 
       try
       {
-         VirtualFileSystem.getInstance().getChildren(
-            project,
-            new AsyncRequestCallback<List<Item>>(
-               new ChildrenUnmarshaller(new ArrayList<Item>()))
+         VirtualFileSystem.getInstance().getChildren(project,
+            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
 
                @Override

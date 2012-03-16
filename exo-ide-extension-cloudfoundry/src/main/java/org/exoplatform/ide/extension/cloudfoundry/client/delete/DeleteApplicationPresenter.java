@@ -18,15 +18,16 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.delete;
 
-import com.google.gwt.http.client.RequestException;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -38,8 +39,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncReques
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CloudfoundryApplicationUnmarshaller;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -149,16 +149,17 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       try
       {
-         CloudFoundryClientService.getInstance().getApplicationInfo(
-            vfs.getId(),
-            projectId,
-            null,
-            null,
-            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(new CloudfoundryApplicationUnmarshaller(
-               new CloudfoundryApplication()), appInfoLoggedInHandler, null)
+         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+            CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+
+         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+            new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+
+         CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
+            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, appInfoLoggedInHandler, null)
             {
                @Override
-               protected void onSuccess(CloudfoundryApplication result)
+               protected void onSuccess(CloudFoundryApplication result)
                {
                   appName = result.getName();
                   showDeleteDialog(appName);
@@ -203,8 +204,8 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
                protected void onSuccess(String result)
                {
                   closeView();
-                  IDE.fireEvent(new OutputEvent(
-                     CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationDeletedMsg(appName), Type.INFO));
+                  IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
+                     .applicationDeletedMsg(appName), Type.INFO));
                   IDE.fireEvent(new ApplicationDeletedEvent(appName));
                }
             });

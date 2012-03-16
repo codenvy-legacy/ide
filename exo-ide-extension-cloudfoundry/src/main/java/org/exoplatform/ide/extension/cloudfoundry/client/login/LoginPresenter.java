@@ -26,11 +26,13 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -42,8 +44,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
-import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.SystemInfoUnmarshaller;
-import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.SystemInfoUnmarshaller.MyFactory;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 
@@ -234,11 +234,12 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
     */
    protected void getSystemInformation()
    {
-      MyFactory factory = GWT.create(SystemInfoUnmarshaller.MyFactory.class);
       try
       {
+         AutoBean<SystemInfo> systemInfo = CloudFoundryExtension.AUTO_BEAN_FACTORY.create(SystemInfo.class);
+         AutoBeanUnmarshaller<SystemInfo> unmarshaller = new AutoBeanUnmarshaller<SystemInfo>(systemInfo);
          CloudFoundryClientService.getInstance().getSystemInfo(server,
-            new AsyncRequestCallback<SystemInfo>(new SystemInfoUnmarshaller(factory.systemInfo().as()))
+            new AsyncRequestCallback<SystemInfo>(unmarshaller)
             {
                @Override
                protected void onSuccess(SystemInfo result)

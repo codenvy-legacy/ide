@@ -31,7 +31,7 @@ import com.google.gwt.text.shared.SafeHtmlRenderer;
 import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 
 import java.util.List;
 
@@ -40,25 +40,25 @@ import java.util.List;
  * @version $Id:  Aug 18, 2011 evgen $
  *
  */
-public class ApplicationsListGrid extends ListGrid<CloudfoundryApplication> implements HasApplicationsActions
+public class ApplicationsListGrid extends ListGrid<CloudFoundryApplication> implements HasApplicationsActions
 {
-   private Column<CloudfoundryApplication, String> nameColumn;
+   private Column<CloudFoundryApplication, String> nameColumn;
 
-   private Column<CloudfoundryApplication, Number> instancesColumn;
+   private Column<CloudFoundryApplication, Number> instancesColumn;
 
-   private Column<CloudfoundryApplication, String> stateColumn;
+   private Column<CloudFoundryApplication, String> stateColumn;
 
-   private Column<CloudfoundryApplication, List<String>> urlColumn;
+   private Column<CloudFoundryApplication, List<String>> urlColumn;
 
-   private Column<CloudfoundryApplication, String> servicesColumn;
+   private Column<CloudFoundryApplication, String> servicesColumn;
 
-   private Column<CloudfoundryApplication, String> startColumn;
+   private Column<CloudFoundryApplication, String> startColumn;
 
-   private Column<CloudfoundryApplication, String> stopColumn;
+   private Column<CloudFoundryApplication, String> stopColumn;
 
-   private Column<CloudfoundryApplication, String> restartColumn;
+   private Column<CloudFoundryApplication, String> restartColumn;
 
-   private Column<CloudfoundryApplication, String> deleteColumn;
+   private Column<CloudFoundryApplication, String> deleteColumn;
 
    /**
     * 
@@ -68,51 +68,51 @@ public class ApplicationsListGrid extends ListGrid<CloudfoundryApplication> impl
       setID("applicationsListGrid");
       
       TextCell textCell = new TextCell();
-      nameColumn = new Column<CloudfoundryApplication, String>(textCell)
+      nameColumn = new Column<CloudFoundryApplication, String>(textCell)
       {
 
          @Override
-         public String getValue(CloudfoundryApplication object)
+         public String getValue(CloudFoundryApplication object)
          {
             return object.getName();
          }
       };
 
-      instancesColumn = new Column<CloudfoundryApplication, Number>(new NumberCell())
+      instancesColumn = new Column<CloudFoundryApplication, Number>(new NumberCell())
       {
 
          @Override
-         public Integer getValue(CloudfoundryApplication object)
+         public Integer getValue(CloudFoundryApplication object)
          {
             return object.getInstances();
          }
       };
 
-      stateColumn = new Column<CloudfoundryApplication, String>(new TextCell())
+      stateColumn = new Column<CloudFoundryApplication, String>(new TextCell())
       {
 
          @Override
-         public String getValue(CloudfoundryApplication object)
+         public String getValue(CloudFoundryApplication object)
          {
             return object.getState();
          }
       };
 
-      urlColumn = new Column<CloudfoundryApplication, List<String>>(new ListLink())
+      urlColumn = new Column<CloudFoundryApplication, List<String>>(new ListLink())
       {
 
          @Override
-         public List<String> getValue(CloudfoundryApplication object)
+         public List<String> getValue(CloudFoundryApplication object)
          {
             return object.getUris();
          }
       };
 
-      servicesColumn = new Column<CloudfoundryApplication, String>(new TextCell())
+      servicesColumn = new Column<CloudFoundryApplication, String>(new TextCell())
       {
 
          @Override
-         public String getValue(CloudfoundryApplication object)
+         public String getValue(CloudFoundryApplication object)
          {
             StringBuilder b = new StringBuilder();
             for (String s : object.getServices())
@@ -123,41 +123,41 @@ public class ApplicationsListGrid extends ListGrid<CloudfoundryApplication> impl
          }
       };
 
-      startColumn = new Column<CloudfoundryApplication, String>(new ButtonCell())
+      startColumn = new Column<CloudFoundryApplication, String>(new ButtonCell())
       {
 
          @Override
-         public String getValue(CloudfoundryApplication object)
+         public String getValue(CloudFoundryApplication object)
          {
             return "Start";
          }
       };
 
-      stopColumn = new Column<CloudfoundryApplication, String>(new ButtonCell())
+      stopColumn = new Column<CloudFoundryApplication, String>(new ButtonCell())
       {
 
          @Override
-         public String getValue(CloudfoundryApplication object)
+         public String getValue(CloudFoundryApplication object)
          {
             return "Stop";
          }
       };
 
-      restartColumn = new Column<CloudfoundryApplication, String>(new ButtonCell())
+      restartColumn = new Column<CloudFoundryApplication, String>(new ButtonCell())
       {
 
          @Override
-         public String getValue(CloudfoundryApplication object)
+         public String getValue(CloudFoundryApplication object)
          {
             return "Restart";
          }
       };
 
-      deleteColumn = new Column<CloudfoundryApplication, String>(new ButtonCell())
+      deleteColumn = new Column<CloudFoundryApplication, String>(new ButtonCell())
       {
 
          @Override
-         public String getValue(CloudfoundryApplication object)
+         public String getValue(CloudFoundryApplication object)
          {
             return "Delete";
          }
@@ -242,13 +242,13 @@ public class ApplicationsListGrid extends ListGrid<CloudfoundryApplication> impl
     * @see org.exoplatform.ide.extension.cloudfoundry.client.apps.HasApplicationsActions#addStartApplicationHandler(com.google.gwt.event.logical.shared.SelectionHandler)
     */
    @Override
-   public void addStartApplicationHandler(final SelectionHandler<CloudfoundryApplication> handler)
+   public void addStartApplicationHandler(final SelectionHandler<CloudFoundryApplication> handler)
    {
-      startColumn.setFieldUpdater(new FieldUpdater<CloudfoundryApplication, String>()
+      startColumn.setFieldUpdater(new FieldUpdater<CloudFoundryApplication, String>()
       {
 
          @Override
-         public void update(int index, CloudfoundryApplication object, String value)
+         public void update(int index, CloudFoundryApplication object, String value)
          {
             handler.onSelection(new SelectionEventImpl(object));
          }
@@ -259,13 +259,13 @@ public class ApplicationsListGrid extends ListGrid<CloudfoundryApplication> impl
     * @see org.exoplatform.ide.extension.cloudfoundry.client.apps.HasApplicationsActions#addStopApplicationHandler(com.google.gwt.event.logical.shared.SelectionHandler)
     */
    @Override
-   public void addStopApplicationHandler(final SelectionHandler<CloudfoundryApplication> handler)
+   public void addStopApplicationHandler(final SelectionHandler<CloudFoundryApplication> handler)
    {
-      stopColumn.setFieldUpdater(new FieldUpdater<CloudfoundryApplication, String>()
+      stopColumn.setFieldUpdater(new FieldUpdater<CloudFoundryApplication, String>()
       {
 
          @Override
-         public void update(int index, CloudfoundryApplication object, String value)
+         public void update(int index, CloudFoundryApplication object, String value)
          {
             handler.onSelection(new SelectionEventImpl(object));
          }
@@ -276,13 +276,13 @@ public class ApplicationsListGrid extends ListGrid<CloudfoundryApplication> impl
     * @see org.exoplatform.ide.extension.cloudfoundry.client.apps.HasApplicationsActions#addRestartApplicationHandler(com.google.gwt.event.logical.shared.SelectionHandler)
     */
    @Override
-   public void addRestartApplicationHandler(final SelectionHandler<CloudfoundryApplication> handler)
+   public void addRestartApplicationHandler(final SelectionHandler<CloudFoundryApplication> handler)
    {
-      restartColumn.setFieldUpdater(new FieldUpdater<CloudfoundryApplication, String>()
+      restartColumn.setFieldUpdater(new FieldUpdater<CloudFoundryApplication, String>()
       {
 
          @Override
-         public void update(int index, CloudfoundryApplication object, String value)
+         public void update(int index, CloudFoundryApplication object, String value)
          {
             handler.onSelection(new SelectionEventImpl(object));
          }
@@ -293,25 +293,25 @@ public class ApplicationsListGrid extends ListGrid<CloudfoundryApplication> impl
     * @see org.exoplatform.ide.extension.cloudfoundry.client.apps.HasApplicationsActions#addDeleteApplicationHandler(com.google.gwt.event.logical.shared.SelectionHandler)
     */
    @Override
-   public void addDeleteApplicationHandler(final SelectionHandler<CloudfoundryApplication> handler)
+   public void addDeleteApplicationHandler(final SelectionHandler<CloudFoundryApplication> handler)
    {
-      deleteColumn.setFieldUpdater(new FieldUpdater<CloudfoundryApplication, String>()
+      deleteColumn.setFieldUpdater(new FieldUpdater<CloudFoundryApplication, String>()
       {
 
          @Override
-         public void update(int index, CloudfoundryApplication object, String value)
+         public void update(int index, CloudFoundryApplication object, String value)
          {
             handler.onSelection(new SelectionEventImpl(object));
          }
       });
    }
 
-   private class SelectionEventImpl extends SelectionEvent<CloudfoundryApplication>
+   private class SelectionEventImpl extends SelectionEvent<CloudFoundryApplication>
    {
       /**
        * @param selectedItem
        */
-      protected SelectionEventImpl(CloudfoundryApplication selectedItem)
+      protected SelectionEventImpl(CloudFoundryApplication selectedItem)
       {
          super(selectedItem);
       }

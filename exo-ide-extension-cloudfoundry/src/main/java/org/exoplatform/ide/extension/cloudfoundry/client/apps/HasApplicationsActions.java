@@ -20,7 +20,7 @@ package org.exoplatform.ide.extension.cloudfoundry.client.apps;
 
 import com.google.gwt.event.logical.shared.SelectionHandler;
 
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -29,11 +29,11 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication
  */
 public interface HasApplicationsActions
 {
-   void addStartApplicationHandler(SelectionHandler<CloudfoundryApplication> handler);
+   void addStartApplicationHandler(SelectionHandler<CloudFoundryApplication> handler);
 
-   void addStopApplicationHandler(SelectionHandler<CloudfoundryApplication> handler);
+   void addStopApplicationHandler(SelectionHandler<CloudFoundryApplication> handler);
 
-   void addRestartApplicationHandler(SelectionHandler<CloudfoundryApplication> handler);
+   void addRestartApplicationHandler(SelectionHandler<CloudFoundryApplication> handler);
 
-   void addDeleteApplicationHandler(SelectionHandler<CloudfoundryApplication> handler);
+   void addDeleteApplicationHandler(SelectionHandler<CloudFoundryApplication> handler);
 }

@@ -22,10 +22,12 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 
 import java.util.List;
@@ -52,55 +54,33 @@ public class FrameworksUnmarshaller implements Unmarshallable<List<Framework>>, 
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
-
-      if (jsonArray == null)
+      try
       {
-         return;
+         if (response.getText() == null || response.getText().isEmpty())
+         {
+            return;
+         }
+
+         JSONArray array = JSONParser.parseLenient(response.getText()).isArray();
+
+         if (array == null)
+         {
+            return;
+         }
+
+         for (int i = 0; i < array.size(); i++)
+         {
+            JSONObject jsonObject = array.get(i).isObject();
+            String value = (jsonObject.isObject() != null) ? jsonObject.isObject().toString() : "";
+
+            AutoBean<Framework> framework =
+               AutoBeanCodex.decode(CloudFoundryExtension.AUTO_BEAN_FACTORY, Framework.class, value);
+            frameworks.add(framework.as());
+         }
       }
-
-      for (int i = 0; i < jsonArray.size(); i++)
+      catch (Exception e)
       {
-         JSONValue value = jsonArray.get(i);
-         Framework framework = new Framework();
-         parseObject(value.isObject(), framework);
-         frameworks.add(framework);
-      }
-   }
-
-   private void parseObject(JSONObject jsonObject, Framework framework)
-   {
-      for (String key : jsonObject.keySet())
-      {
-         JSONValue jsonValue = jsonObject.get(key);
-         if (key.equals(MEMORY))
-         {
-            if (jsonValue.isNumber() != null)
-            {
-               framework.setMemory((int)jsonValue.isNumber().doubleValue());
-            }
-         }
-         else if (key.equals(DISPLAY_NAME))
-         {
-            if (jsonValue.isString() != null)
-            {
-               framework.setDisplayName(jsonValue.isString().stringValue());
-            }
-         }
-         else if (key.equals(TYPE))
-         {
-            if (jsonValue.isString() != null)
-            {
-               framework.setType(jsonValue.isString().stringValue());
-            }
-         }
-         else if (key.equals(DESCRIPTION))
-         {
-            if (jsonValue.isString() != null)
-            {
-               framework.setDescription(jsonValue.isString().stringValue());
-            }
-         }
+         throw new UnmarshallerException("Can't parse applications information.");
       }
    }
 
