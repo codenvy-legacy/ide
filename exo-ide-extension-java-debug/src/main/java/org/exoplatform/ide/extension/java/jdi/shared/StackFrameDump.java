@@ -18,35 +18,19 @@
  */
 package org.exoplatform.ide.extension.java.jdi.shared;
 
+import java.util.List;
+
 /**
- * Summary of debugger information.
- *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface DebuggerInfo
+public interface StackFrameDump
 {
-   boolean isConnected();
+   List<Field> getFields();
 
-   String getHost();
+   List<Variable> getLocalVariables();
 
-   int getPort();
+   void setFields(List<Field> fields);
 
-   String getId();
-
-   String getVmName();
-
-   String getVmVersion();
-
-   void setConnected(boolean connected);
-
-   void setHost(String host);
-
-   void setPort(int port);
-
-   void setId(String id);
-
-   void setVmName(String vmName);
-
-   void setVmVersion(String vmVersion);
+   void setLocalVariables(List<Variable> localVariables);
 }

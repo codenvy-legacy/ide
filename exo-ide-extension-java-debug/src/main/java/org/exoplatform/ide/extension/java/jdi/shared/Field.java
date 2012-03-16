@@ -19,34 +19,24 @@
 package org.exoplatform.ide.extension.java.jdi.shared;
 
 /**
- * Summary of debugger information.
- *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface DebuggerInfo
+public interface Field extends Variable
 {
-   boolean isConnected();
+   boolean isFinal();
 
-   String getHost();
+   boolean isStatic();
 
-   int getPort();
+   boolean isTransient();
 
-   String getId();
+   boolean isVolatile();
 
-   String getVmName();
+   void setFinal(boolean value);
 
-   String getVmVersion();
+   void setStatic(boolean value);
 
-   void setConnected(boolean connected);
+   void setTransient(boolean value);
 
-   void setHost(String host);
-
-   void setPort(int port);
-
-   void setId(String id);
-
-   void setVmName(String vmName);
-
-   void setVmVersion(String vmVersion);
+   void setVolatile(boolean value);
 }

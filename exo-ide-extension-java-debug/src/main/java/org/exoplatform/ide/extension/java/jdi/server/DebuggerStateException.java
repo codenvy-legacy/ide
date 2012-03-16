@@ -18,13 +18,16 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
-import com.sun.jdi.event.EventSet;
-
 /**
+ * Thrown if Debugger is in inappropriate state to execute requested operation.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface EventHandler
+public final class DebuggerStateException extends DebuggerException
 {
-   void handleEvents(EventSet events);
+   public DebuggerStateException(String message)
+   {
+      super(message);
+   }
 }

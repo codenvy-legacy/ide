@@ -18,54 +18,68 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
-import com.sun.jdi.VMDisconnectedException;
-import com.sun.jdi.event.EventQueue;
+import com.sun.jdi.ArrayReference;
+import com.sun.jdi.PrimitiveValue;
+import com.sun.jdi.Value;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-final class EventCollector implements Runnable
+public class JdiArrayElementImpl implements JdiArrayElement
 {
-   private final EventHandler handler;
-   private final EventQueue queue;
+   private final int index;
+   private final Value value;
+   private final String name;
 
-   private final Thread thread;
-   private volatile boolean running;
-
-   EventCollector(EventQueue queue, EventHandler handler)
+   public JdiArrayElementImpl(int index, Value value)
    {
-      this.queue = queue;
-      this.handler = handler;
-
-      thread = new Thread(this);
-      running = true;
-      thread.start();
+      this.index = index;
+      this.value = value;
+      this.name = "[" + index + "]";
    }
 
    @Override
-   public void run()
+   public int getIndex()
    {
-      while (running)
-      {
-         try
-         {
-            handler.handleEvents(queue.remove());
-         }
-         catch (VMDisconnectedException e)
-         {
-            break;
-         }
-         catch (InterruptedException e)
-         {
-            // Thread interrupted with method stop().
-         }
-      }
+      return index;
    }
 
-   void stop()
+   @Override
+   public String getName()
    {
-      running = false;
-      thread.interrupt();
+      return name;
+   }
+
+   @Override
+   public boolean isArray()
+   {
+      return value instanceof ArrayReference;
+   }
+
+   @Override
+   public boolean isPrimitive()
+   {
+      return value instanceof PrimitiveValue;
+   }
+
+   @Override
+   public JdiValue getValue()
+   {
+      if (value == null)
+      {
+         return new JdiNullValue();
+      }
+      return new JdiValueImpl(value);
+   }
+
+   @Override
+   public String getTypeName()
+   {
+      if (value == null)
+      {
+         return "null";
+      }
+      return value.type().name();
    }
 }

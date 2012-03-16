@@ -16,37 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.shared;
+package org.exoplatform.ide.extension.java.jdi.server;
 
 /**
- * Summary of debugger information.
+ * Main exception to throw my Debugger. Used as wrapper for JDI (Java Debug Interface) exceptions.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface DebuggerInfo
+public class DebuggerException extends Exception
 {
-   boolean isConnected();
+   public DebuggerException(String message)
+   {
+      super(message);
+   }
 
-   String getHost();
-
-   int getPort();
-
-   String getId();
-
-   String getVmName();
-
-   String getVmVersion();
-
-   void setConnected(boolean connected);
-
-   void setHost(String host);
-
-   void setPort(int port);
-
-   void setId(String id);
-
-   void setVmName(String vmName);
-
-   void setVmVersion(String vmVersion);
+   public DebuggerException(String message, Throwable cause)
+   {
+      super(message, cause);
+   }
 }

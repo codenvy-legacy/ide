@@ -16,21 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.shared;
-
-import java.util.List;
+package org.exoplatform.ide.extension.java.jdi.server;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Dump
+public interface JdiLocalVariable extends JdiVariable
 {
-   List<Value> getFields();
-
-   List<Value> getLocalVariables();
-
-   void setFields(List<Value> fields);
-
-   void setLocalVariables(List<Value> localVariables);
 }

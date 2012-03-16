@@ -22,7 +22,7 @@ package org.exoplatform.ide.extension.java.jdi.server;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class InvalidBreakPointException extends Exception
+public final class InvalidBreakPointException extends DebuggerException
 {
    public InvalidBreakPointException(String message)
    {

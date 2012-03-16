@@ -16,74 +16,74 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.server;
+package org.exoplatform.ide.extension.java.jdi.server.model;
 
-import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
+import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class BreakPointImpl implements BreakPoint
+public class VariableImpl implements Variable
 {
-   private String className;
-   private int lineNumber;
-   private boolean enabled;
+   private String name;
+   private String value;
+   private String type;
 
-   public BreakPointImpl(String className, int lineNumber, boolean enabled)
+   public VariableImpl(String name, String value, String type)
    {
-      this.className = className;
-      this.lineNumber = lineNumber;
-      this.enabled = enabled;
+      this.name = name;
+      this.value = value;
+      this.type = type;
    }
 
-   public BreakPointImpl()
+   public VariableImpl()
    {
-   }
-
-   @Override
-   public String getClassName()
-   {
-      return className;
    }
 
    @Override
-   public int getLineNumber()
+   public String getName()
    {
-      return lineNumber;
+      return name;
    }
 
    @Override
-   public boolean isEnabled()
+   public void setName(String name)
    {
-      return enabled;
+      this.name = name;
    }
 
    @Override
-   public void setClassName(String className)
+   public String getValue()
    {
-      this.className = className;
+      return value;
    }
 
    @Override
-   public void setLineNumber(int lineNumber)
+   public void setValue(String value)
    {
-      this.lineNumber = lineNumber;
+      this.value = value;
    }
 
    @Override
-   public void setEnabled(boolean enabled)
+   public String getType()
    {
-      this.enabled = enabled;
+      return type;
+   }
+
+   @Override
+   public void setType(String type)
+   {
+      this.type = type;
    }
 
    @Override
    public String toString()
    {
-      return "BreakPointImpl{" +
-         "className='" + className + '\'' +
-         ", lineNumber=" + lineNumber +
-         ", enabled=" + enabled +
+      return "VariableImpl{" +
+         "name='" + name + '\'' +
+         ", value='" + value + '\'' +
+         ", type='" + type + '\'' +
          '}';
    }
 }

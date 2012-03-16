@@ -18,72 +18,27 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
-import org.exoplatform.ide.extension.java.jdi.shared.Value;
-
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ValueImpl implements Value
+public final class JdiNullValue implements JdiValue
 {
-   private String name;
-   private String value;
-   private String type;
-
-   public ValueImpl(String name, String value, String type)
+   @Override
+   public String getAsString() throws DebuggerException
    {
-      this.name = name;
-      this.value = value;
-      this.type = type;
-   }
-
-   public ValueImpl()
-   {
+      return "null";
    }
 
    @Override
-   public String getName()
+   public JdiVariable[] getVariables() throws DebuggerException
    {
-      return name;
+      return new JdiVariable[0];
    }
 
    @Override
-   public void setName(String name)
+   public JdiVariable getVariableByName(String name) throws DebuggerException
    {
-      this.name = name;
-   }
-
-   @Override
-   public String getValue()
-   {
-      return value;
-   }
-
-   @Override
-   public void setValue(String value)
-   {
-      this.value = value;
-   }
-
-   @Override
-   public String getType()
-   {
-      return type;
-   }
-
-   @Override
-   public void setType(String type)
-   {
-      this.type = type;
-   }
-
-   @Override
-   public String toString()
-   {
-      return "ValueImpl{" +
-         "name='" + name + '\'' +
-         ", value='" + value + '\'' +
-         ", type='" + type + '\'' +
-         '}';
+      return null;
    }
 }

@@ -19,7 +19,7 @@
 package org.exoplatform.ide.extension.java.jdi.shared;
 
 /**
- * Description of debug break point. Described with interface to be able use GWT auto-bean feature.
+ * Description of debug break point.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $

@@ -16,37 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.shared;
+package org.exoplatform.ide.extension.java.jdi.server;
 
 /**
- * Summary of debugger information.
- *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface DebuggerInfo
+public interface JdiArrayElement extends JdiVariable
 {
-   boolean isConnected();
-
-   String getHost();
-
-   int getPort();
-
-   String getId();
-
-   String getVmName();
-
-   String getVmVersion();
-
-   void setConnected(boolean connected);
-
-   void setHost(String host);
-
-   void setPort(int port);
-
-   void setId(String id);
-
-   void setVmName(String vmName);
-
-   void setVmVersion(String vmVersion);
+   int getIndex() throws DebuggerException;
 }

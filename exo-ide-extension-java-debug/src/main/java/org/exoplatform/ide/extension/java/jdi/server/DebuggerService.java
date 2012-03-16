@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
+import org.exoplatform.ide.extension.java.jdi.server.model.DebuggerInfoImpl;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 
@@ -25,6 +26,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -44,19 +46,39 @@ public class DebuggerService
    private DebuggerRegistry debuggerRegistry;
 
    @GET
-   @Path("connect")
+   @Path("create")
    @Produces(MediaType.APPLICATION_JSON)
-   public DebuggerInfo connect(@QueryParam("host") String host, @QueryParam("port") int port) throws VMConnectException
+   public DebuggerInfo create(@QueryParam("host") String host,
+                              @QueryParam("port") int port,
+                              @DefaultValue("true") @QueryParam("connect") boolean connect) throws DebuggerException
    {
-      final Debugger d = Debugger.connect(host, port);
+      final Debugger d = new Debugger(host, port);
       final String key = debuggerRegistry.add(d);
-      return new DebuggerInfoImpl(host, port, key, d.getVmName(), d.getVmVersion());
+      if (connect)
+      {
+         d.connect();
+         return new DebuggerInfoImpl(true, host, port, key, d.getVmName(), d.getVmVersion());
+      }
+      return new DebuggerInfoImpl(false, host, port, key, null, null);
+   }
+
+   @GET
+   @Path("connect/{id}")
+   @Produces(MediaType.APPLICATION_JSON)
+   public DebuggerInfo connect(@PathParam("id") String id) throws DebuggerException
+   {
+      Debugger d = debuggerRegistry.get(id);
+      if (!d.isConnected())
+      {
+         d.connect();
+      }
+      return new DebuggerInfoImpl(true, d.getHost(), d.getPort(), id, d.getVmName(), d.getVmVersion());
    }
 
    @POST
    @Path("breakpoints/add/{id}")
    @Consumes(MediaType.APPLICATION_JSON)
-   public void addBreakPoint(@PathParam("id") String id, BreakPoint breakPoint) throws InvalidBreakPointException
+   public void addBreakPoint(@PathParam("id") String id, BreakPoint breakPoint) throws DebuggerException
    {
       debuggerRegistry.get(id).addBreakPoint(breakPoint);
    }
@@ -64,7 +86,7 @@ public class DebuggerService
    @GET
    @Path("breakpoints/{id}")
    @Produces(MediaType.APPLICATION_JSON)
-   public List<BreakPoint> getBreakPoints(@PathParam("id") String id)
+   public List<BreakPoint> getBreakPoints(@PathParam("id") String id) throws DebuggerException
    {
       return debuggerRegistry.get(id).getBreakPoints();
    }
@@ -72,7 +94,7 @@ public class DebuggerService
    @POST
    @Path("breakpoints/switch/{id}")
    @Consumes(MediaType.APPLICATION_JSON)
-   public void switchBreakPoint(@PathParam("id") String id, BreakPoint breakPoint) throws InvalidBreakPointException
+   public void switchBreakPoint(@PathParam("id") String id, BreakPoint breakPoint) throws DebuggerException
    {
       debuggerRegistry.get(id).switchBreakPoint(breakPoint);
    }
