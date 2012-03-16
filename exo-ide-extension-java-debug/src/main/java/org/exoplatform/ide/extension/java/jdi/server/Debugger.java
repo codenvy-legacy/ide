@@ -35,6 +35,7 @@ import com.sun.jdi.event.Event;
 import com.sun.jdi.event.EventSet;
 import com.sun.jdi.request.BreakpointRequest;
 import com.sun.jdi.request.EventRequest;
+import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.request.InvalidRequestStateException;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.FieldImpl;
@@ -49,6 +50,7 @@ import org.exoplatform.services.log.Log;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -280,8 +282,11 @@ public class Debugger
          breakPoints.add(
             new BreakPointImpl(location.declaringType().name(), location.lineNumber(), breakpointRequest.isEnabled()));
       }
+      Collections.sort(breakPoints, BREAKPOINT_COMPARATOR);
       return breakPoints;
    }
+
+   private static final Comparator<BreakPoint> BREAKPOINT_COMPARATOR = new BreakPointComparator();
 
    /**
     * Switch enable status of break point.
@@ -300,7 +305,6 @@ public class Debugger
                && location.lineNumber() == breakPoint.getLineNumber())
             {
                breakpointRequest.setEnabled(breakPoint.isEnabled());
-               break;
             }
          }
       }
@@ -313,6 +317,42 @@ public class Debugger
          throw new DebuggerException(e.getMessage(), e);
       }
       catch (IllegalThreadStateException e)
+      {
+         throw new DebuggerException(e.getMessage(), e);
+      }
+   }
+
+   /**
+    * Delete break point.
+    *
+    * @param breakPoint break point to be removed
+    * @throws DebuggerException when any JDI errors occurs when try to delete break point
+    */
+   public void deleteBreakPoint(BreakPoint breakPoint) throws DebuggerException
+   {
+      EventRequestManager requestManager;
+      try
+      {
+         requestManager = vm.eventRequestManager();
+      }
+      catch (VMCannotBeModifiedException e)
+      {
+         throw new DebuggerException(e.getMessage(), e);
+      }
+      List<BreakpointRequest> snapshot = new ArrayList<BreakpointRequest>(requestManager.breakpointRequests());
+      try
+      {
+         for (BreakpointRequest breakpointRequest : snapshot)
+         {
+            Location location = breakpointRequest.location();
+            if (location.declaringType().name().equals(breakPoint.getClassName())
+               && location.lineNumber() == breakPoint.getLineNumber())
+            {
+               requestManager.deleteEventRequest(breakpointRequest);
+            }
+         }
+      }
+      catch (VMCannotBeModifiedException e)
       {
          throw new DebuggerException(e.getMessage(), e);
       }

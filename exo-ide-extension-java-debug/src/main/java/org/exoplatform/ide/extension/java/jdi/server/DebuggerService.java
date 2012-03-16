@@ -105,4 +105,12 @@ public class DebuggerService
    {
       debuggerRegistry.get(id).switchBreakPoint(breakPoint);
    }
+
+   @POST
+   @Path("breakpoints/delete/{id}")
+   @Consumes(MediaType.APPLICATION_JSON)
+   public void deleteBreakPoint(@PathParam("id") String id, BreakPoint breakPoint) throws DebuggerException
+   {
+      debuggerRegistry.get(id).deleteBreakPoint(breakPoint);
+   }
 }

@@ -78,6 +78,31 @@ public class BreakPointImpl implements BreakPoint
    }
 
    @Override
+   public int hashCode()
+   {
+      int hash = 7;
+      hash = 31 * hash + (className == null ? 0 : className.hashCode());
+      hash = 31 * hash + lineNumber;
+      return hash;
+   }
+
+   @Override
+   public boolean equals(Object o)
+   {
+      if (this == o)
+      {
+         return true;
+      }
+      if (o == null || getClass() != o.getClass())
+      {
+         return false;
+      }
+      BreakPointImpl other = (BreakPointImpl)o;
+      return lineNumber == other.lineNumber
+         && (className == null ? other.className == null : className.equals(other.className));
+   }
+
+   @Override
    public String toString()
    {
       return "BreakPointImpl{" +
