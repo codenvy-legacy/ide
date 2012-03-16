@@ -18,7 +18,6 @@
  */
 package org.eclipse.jdt.client.codeassistant.ui;
 
-import org.eclipse.jdt.client.codeassistant.ui.StyledString.Styler;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
@@ -91,7 +90,7 @@ public class StyledString
     */
    public void append(char[] completion)
    {
-      builder.append(completion);
+      builder.append(htmlEncode(new String(completion)));
    }
 
    /**
@@ -132,6 +131,22 @@ public class StyledString
    public void append(char[] declaration, Styler styler)
    {
       builder.append(styler.applyStyles(new String(declaration)));
+   }
+   
+   /**
+    * HTML-encode a string. This simple method only replaces the five characters &, <, >, ", and '.
+    * 
+    * @param input the String to convert
+    * @return a new String with HTML encoded characters
+    */
+   public static String htmlEncode(String input)
+   {
+      String output = input.replaceAll("&", "&amp;");
+      output = output.replaceAll("<", "&lt;");
+      output = output.replaceAll(">", "&gt;");
+      output = output.replaceAll("\"", "&quot;");
+      output = output.replaceAll("'", "&#039;");
+      return output;
    }
 
 }
