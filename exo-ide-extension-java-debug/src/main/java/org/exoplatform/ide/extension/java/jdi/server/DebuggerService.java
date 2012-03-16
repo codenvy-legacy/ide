@@ -75,6 +75,13 @@ public class DebuggerService
       return new DebuggerInfoImpl(true, d.getHost(), d.getPort(), id, d.getVmName(), d.getVmVersion());
    }
 
+   @GET
+   @Path("disconnect/{id}")
+   public void disconnect(@PathParam("id") String id) throws DebuggerException
+   {
+      debuggerRegistry.get(id).disconnect();
+   }
+
    @POST
    @Path("breakpoints/add/{id}")
    @Consumes(MediaType.APPLICATION_JSON)
