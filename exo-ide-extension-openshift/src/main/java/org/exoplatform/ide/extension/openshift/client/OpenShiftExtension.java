@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.openshift.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -44,7 +45,7 @@ import org.exoplatform.ide.extension.openshift.client.project.OpenShiftProjectPr
 import org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter;
 
 /**
- * OpenShift extenstion to be added to IDE.
+ * OpenShift extension to be added to IDE.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 6, 2011 2:21:00 PM anya $
@@ -53,11 +54,16 @@ import org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter;
 public class OpenShiftExtension extends Extension implements InitializeServicesHandler
 {
    /**
+    * The generator of an {@link AutoBean}.
+    */
+   public static final OpenShiftAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(OpenShiftAutoBeanFactory.class);
+
+   /**
     * Localization constants.
     */
    public static final OpenShiftLocalizationConstant LOCALIZATION_CONSTANT = GWT
       .create(OpenShiftLocalizationConstant.class);
-   
+
    /* Useful constants */
    public static final String LOGIN = "rhlogin";
 
@@ -125,7 +131,6 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new OpenShiftClientServiceImpl(event.getApplicationConfiguration().getContext(),
-         event.getLoader());
+      new OpenShiftClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 }

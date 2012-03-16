@@ -147,7 +147,8 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void destroyApplication(String name, String vfsId, String projectId, AsyncRequestCallback<String> callback) throws RequestException
+   public void destroyApplication(String name, String vfsId, String projectId, AsyncRequestCallback<String> callback)
+      throws RequestException
    {
       String url = restServiceContext + DESTROY_APPLICATION;
       String params = "?name=" + name + "&vfsid=" + vfsId;

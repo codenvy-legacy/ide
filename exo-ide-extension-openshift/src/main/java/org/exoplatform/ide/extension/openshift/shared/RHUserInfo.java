@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -21,83 +21,82 @@ package org.exoplatform.ide.extension.openshift.shared;
 import java.util.List;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: $
+ * RedHat user info.
+ * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: RHUserInfo.java Mar 14, 2012 3:33:57 PM azatsarynnyy $
+ *
  */
-public class RHUserInfo
+public interface RHUserInfo
 {
-   private String rhcDomain;
-   private String uuid;
-   private String rhlogin;
-   private String namespace;
-   private List<AppInfo> apps;
 
-   public RHUserInfo(String rhcDomain, String uuid, String rhlogin, String namespace)
-   {
-      this.rhcDomain = rhcDomain;
-      this.uuid = uuid;
-      this.rhlogin = rhlogin;
-      this.namespace = namespace;
-   }
+   /**
+    * Get the domain name of RedHat cloud.
+    * 
+    * @return RedHat cloud domain name.
+    */
+   public String getRhcDomain();
 
-   public RHUserInfo()
-   {
-   }
+   /**
+    * Set the domain name of RedHat cloud.
+    * 
+    * @param rhcDomain RedHat cloud domain name.
+    */
+   public void setRhcDomain(String rhcDomain);
 
-   public String getRhcDomain()
-   {
-      return rhcDomain;
-   }
+   /**
+    * Get the user id.
+    * 
+    * @return use id.
+    */
+   public String getUuid();
 
-   public void setRhcDomain(String rhcDomain)
-   {
-      this.rhcDomain = rhcDomain;
-   }
+   /**
+    * Set the user id.
+    * @param uuid user id.
+    */
+   public void setUuid(String uuid);
 
-   public String getUuid()
-   {
-      return uuid;
-   }
+   /**
+    * Get the login name of user.
+    * 
+    * @return login name of user.
+    */
+   public String getRhlogin();
 
-   public void setUuid(String uuid)
-   {
-      this.uuid = uuid;
-   }
+   /**
+    * Set the login name of user.
+    * 
+    * @param rhlogin login name of user.
+    */
+   public void setRhlogin(String rhlogin);
 
-   public String getRhlogin()
-   {
-      return rhlogin;
-   }
+   /**
+    * Get the namespace.
+    * 
+    * @return namespace.
+    */
+   public String getNamespace();
 
-   public void setRhlogin(String rhlogin)
-   {
-      this.rhlogin = rhlogin;
-   }
+   /**
+    * Set the namespace.
+    * 
+    * @param namespace namespace.
+    */
+   public void setNamespace(String namespace);
 
-   public String getNamespace()
-   {
-      return namespace;
-   }
+   /**
+    * Return the list of the user's applications.
+    * 
+    * @return list of the applications.
+    */
+   public List<AppInfo> getApps();
 
-   public void setNamespace(String namespace)
-   {
-      this.namespace = namespace;
-   }
+   /**
+    * Set the list of the user's applications.
+    * 
+    * @param apps list of the applications.
+    */
+   public void setApps(List<AppInfo> apps);
 
-   public List<AppInfo> getApps()
-   {
-      return apps;
-   }
-
-   public void setApps(List<AppInfo> apps)
-   {
-      this.apps = apps;
-   }
-
-   @Override
-   public String toString()
-   {
-      return "RHUserInfo [rhcDomain=" + rhcDomain + ", uuid=" + uuid + ", rhlogin=" + rhlogin + ", namespace="
-         + namespace + "]";
-   }
 }

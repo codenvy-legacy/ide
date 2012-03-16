@@ -20,9 +20,11 @@ package org.exoplatform.ide.extension.openshift.client.preview;
 
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Image;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -78,8 +80,10 @@ public class PreviewApplicationPresenter extends GitPresenter implements Preview
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       try
       {
+         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.create(AppInfo.class);
+         AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
          OpenShiftClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
-            new AsyncRequestCallback<AppInfo>()
+            new AsyncRequestCallback<AppInfo>(unmarshaller)
             {
 
                @Override

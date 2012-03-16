@@ -25,9 +25,11 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -41,7 +43,6 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
-import org.exoplatform.ide.extension.openshift.client.marshaller.AppInfoUmarshaller;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -127,8 +128,10 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       try
       {
+         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.create(AppInfo.class);
+         AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
          OpenShiftClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
-            new AsyncRequestCallback<AppInfo>(new AppInfoUmarshaller(new AppInfo()))
+            new AsyncRequestCallback<AppInfo>(unmarshaller)
             {
                @Override
                protected void onSuccess(AppInfo result)
@@ -151,7 +154,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
                      .getGitUrl()));
                   String time =
                      DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(
-                        new Date(result.getCreationTime()));
+                        new Date((long)result.getCreationTime()));
                   properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationCreationTime(), time));
                   display.getApplicationInfoGrid().setValue(properties);
                }

@@ -104,9 +104,13 @@ public class Express
       .compile("ssh://(\\w+)@(\\w+)-(\\w+)\\.rhcloud\\.com/\\~/git/(\\w+)\\.git/");
 
    private SshKeyProvider keyProvider;
+
    private String workspace;
+
    private String config = "/ide-home/users/";
+
    private final boolean debug = false;
+
    private final VirtualFileSystemRegistry vfsRegistry;
 
    public Express(VirtualFileSystemRegistry vfsRegistry, SshKeyProvider keyProvider, InitParams initParams)
@@ -534,7 +538,7 @@ public class Express
             jsonParser.parse(new StringReader(resultSrc));
 
             JsonValue userInfoJson = jsonParser.getJsonObject().getElement("user_info");
-            RHUserInfo rhUserInfo = new RHUserInfo( //
+            RHUserInfo rhUserInfo = new RHUserInfoBean( //
                userInfoJson.getElement("rhc_domain").getStringValue(), //
                userInfoJson.getElement("uuid").getStringValue(), //
                userInfoJson.getElement("rhlogin").getStringValue(), //
@@ -557,7 +561,7 @@ public class Express
                      String type = appData.getElement("framework").getStringValue();
                      String uuid = appData.getElement("uuid").getStringValue();
                      Calendar created = parseDate(appData.getElement("creation_time").getStringValue());
-                     l.add(new AppInfo( //
+                     l.add(new AppInfoBean( //
                         app, //
                         type, //
                         gitUrl(rhUserInfo, app, uuid), //

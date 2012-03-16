@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,84 +19,87 @@
 package org.exoplatform.ide.extension.openshift.shared;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: $
+ * Application info.
+ * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: AppInfo.java Mar 13, 2012 4:11:11 PM azatsarynnyy $
+ *
  */
-public class AppInfo
+public interface AppInfo
 {
-   private String name;
-   private String type;
-   private String gitUrl;
-   private String publicUrl;
-   private long creationTime;
+   /**
+    * Get name of the application.
+    * 
+    * @return application name.
+    */
+   String getName();
 
-   public AppInfo(String name, String type, String gitUrl, String publicUrl, long creationTime)
-   {
-      this.name = name;
-      this.type = type;
-      this.gitUrl = gitUrl;
-      this.publicUrl = publicUrl;
-      this.creationTime = creationTime;
-   }
+   /**
+    * Set the application name.
+    * 
+    * @param application name.
+    */
+   void setName(String name);
 
-   public AppInfo()
-   {
-   }
+   /**
+    * Return the application type.
+    * 
+    * @return application type.
+    */
+   String getType();
 
-   public String getName()
-   {
-      return name;
-   }
+   /**
+    * Set type of the application.
+    * 
+    * @param type application type.
+    */
+   void setType(String type);
 
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+   /**
+    * Get url of the application Git-repository.
+    * 
+    * @return url of the application Git-repository.
+    */
+   String getGitUrl();
 
-   public String getType()
-   {
-      return type;
-   }
+   /**
+    * Set the url of the application Git-repository.
+    * 
+    * @param gitUrl url of the application Git-repository.
+    */
+   void setGitUrl(String gitUrl);
 
-   public void setType(String type)
-   {
-      this.type = type;
-   }
+   /**
+    * Return the public url of the application.
+    * 
+    * @return public url of the application.
+    */
+   String getPublicUrl();
 
-   public String getGitUrl()
-   {
-      return gitUrl;
-   }
+   /**
+    * Set the public url for application.
+    * 
+    * @param publicUrl public url of the application.
+    */
+   void setPublicUrl(String publicUrl);
 
-   public void setGitUrl(String gitUrl)
-   {
-      this.gitUrl = gitUrl;
-   }
+   /**
+    * Return time when application was created.
+    * 
+    * Time returned as double-value because the Java long type cannot be represented in JavaScript as a numeric type.
+    * http://code.google.com/intl/ru/webtoolkit/doc/latest/DevGuideCodingBasicsCompatibility.html
+    * 
+    * @return time of creation the application.
+    */
+   double getCreationTime();
 
-   public String getPublicUrl()
-   {
-      return publicUrl;
-   }
-
-   public void setPublicUrl(String publicUrl)
-   {
-      this.publicUrl = publicUrl;
-   }
-
-   public long getCreationTime()
-   {
-      return creationTime;
-   }
-
-   public void setCreationTime(long creationTime)
-   {
-      this.creationTime = creationTime;
-   }
-
-   @Override
-   public String toString()
-   {
-      return "AppInfo [name=" + name + ", type=" + type + ", gitUrl=" + gitUrl + ", publicUrl=" + publicUrl
-         + ", creationTime=" + creationTime + "]";
-   }
+   /**
+    * Set the time when application was created.
+    * 
+    * Time returned as double-value because the Java long type cannot be represented in JavaScript as a numeric type.
+    * http://code.google.com/intl/ru/webtoolkit/doc/latest/DevGuideCodingBasicsCompatibility.html
+    * 
+    * @param creationTime time of creation the application.
+    */
+   void setCreationTime(double creationTime);
 }

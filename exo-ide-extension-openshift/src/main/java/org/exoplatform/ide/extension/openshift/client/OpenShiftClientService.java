@@ -60,7 +60,8 @@ public abstract class OpenShiftClientService
     * @param password user's password
     * @param callback callback
     */
-   public abstract void login(String login, String password, AsyncRequestCallback<String> callback) throws RequestException;
+   public abstract void login(String login, String password, AsyncRequestCallback<String> callback)
+      throws RequestException;
 
    /**
     * Creates new domain name. A domain name is a requirement for each new application that you create in the cloud and is part of
@@ -70,7 +71,8 @@ public abstract class OpenShiftClientService
     * @param alter alter namespace (will change urls) and/or ssh key
     * @param callback callback
     */
-   public abstract void createDomain(String name, boolean alter, AsyncRequestCallback<String> callback) throws RequestException;
+   public abstract void createDomain(String name, boolean alter, AsyncRequestCallback<String> callback)
+      throws RequestException;
 
    /**
     * Creates OpenShift application.
@@ -102,7 +104,8 @@ public abstract class OpenShiftClientService
     * @param appsInfo if <code>true</code>, then list applications
     * @param callback callback
     */
-   public abstract void getUserInfo(boolean appsInfo, AsyncRequestCallback<RHUserInfo> callback) throws RequestException;
+   public abstract void getUserInfo(boolean appsInfo, AsyncRequestCallback<RHUserInfo> callback)
+      throws RequestException;
 
    /**
     * Get application's information.

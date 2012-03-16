@@ -24,9 +24,11 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -47,7 +49,6 @@ import org.exoplatform.ide.extension.openshift.client.info.ShowApplicationInfoEv
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
-import org.exoplatform.ide.extension.openshift.client.marshaller.AppInfoUmarshaller;
 import org.exoplatform.ide.extension.openshift.client.preview.PreviewApplicationEvent;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
@@ -191,8 +192,10 @@ public class OpenShiftProjectPresenter extends GitPresenter implements ProjectOp
    {
       try
       {
+         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.create(AppInfo.class);
+         AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
          OpenShiftClientService.getInstance().getApplicationInfo(null, vfs.getId(), openedProject.getId(),
-            new AsyncRequestCallback<AppInfo>(new AppInfoUmarshaller(new AppInfo()))
+            new AsyncRequestCallback<AppInfo>(unmarshaller)
             {
 
                @Override

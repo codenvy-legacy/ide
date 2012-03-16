@@ -19,9 +19,11 @@
 package org.exoplatform.ide.extension.openshift.client.key;
 
 import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -33,7 +35,6 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
-import org.exoplatform.ide.extension.openshift.client.marshaller.RHUserInfoUnmarshaller;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 
 /**
@@ -71,42 +72,42 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
    {
       try
       {
-         OpenShiftClientService.getInstance().getUserInfo(false,
-            new AsyncRequestCallback<RHUserInfo>(new RHUserInfoUnmarshaller(new RHUserInfo()))
+         AutoBean<RHUserInfo> rhUserInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.create(RHUserInfo.class);
+         AutoBeanUnmarshaller<RHUserInfo> unmarhaller = new AutoBeanUnmarshaller<RHUserInfo>(rhUserInfo);
+         OpenShiftClientService.getInstance().getUserInfo(false, new AsyncRequestCallback<RHUserInfo>(unmarhaller)
+         {
+
+            @Override
+            protected void onSuccess(RHUserInfo result)
             {
+               doUpdatePublicKey(result.getNamespace());
+            }
 
-               @Override
-               protected void onSuccess(RHUserInfo result)
+            /**
+             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+             */
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               if (exception instanceof ServerException)
                {
-                  doUpdatePublicKey(result.getNamespace());
-               }
-
-               /**
-                * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-                */
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  if (exception instanceof ServerException)
+                  ServerException serverException = (ServerException)exception;
+                  if (HTTPStatus.OK == serverException.getHTTPStatus()
+                     && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
                   {
-                     ServerException serverException = (ServerException)exception;
-                     if (HTTPStatus.OK == serverException.getHTTPStatus()
-                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
-                     {
-                        addLoggedInHandler();
-                        IDE.fireEvent(new LoginEvent());
-                        return;
-                     }
+                     addLoggedInHandler();
+                     IDE.fireEvent(new LoginEvent());
+                     return;
                   }
-                  IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-                     .getUserInfoFail()));
                }
-            });
+               IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+                  .getUserInfoFail()));
+            }
+         });
       }
       catch (RequestException e)
       {
-         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
-            .getUserInfoFail()));
+         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT.getUserInfoFail()));
       }
    }
 
@@ -146,7 +147,8 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
             @Override
             protected void onSuccess(String result)
             {
-               IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.updatePublicKeySuccess(), Type.INFO));
+               IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.updatePublicKeySuccess(),
+                  Type.INFO));
             }
 
             /**
