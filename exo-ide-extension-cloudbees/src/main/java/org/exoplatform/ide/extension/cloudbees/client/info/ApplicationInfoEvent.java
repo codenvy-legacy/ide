@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.cloudbees.client.info;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
+
 /**
  * Event, which set to control to show application info.
  * 

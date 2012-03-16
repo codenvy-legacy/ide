@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,21 +16,26 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.cloudbees.client.list;
+package org.exoplatform.ide.extension.cloudbees.client;
 
-import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: Sep 22, 2011 evgen $
+ * The interface for the AutoBean generator.
  * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: CloudBeesAutoBeanFactory.java Mar 15, 2012 10:38:48 AM azatsarynnyy $
+ *
  */
-public interface HasApplicationListActions extends ListGridItem<ApplicationInfo>
+public interface CloudBeesAutoBeanFactory extends AutoBeanFactory
 {
-   void addDeleteHandler(SelectionHandler<ApplicationInfo> handler);
-
-   void addInfoHandler(SelectionHandler<ApplicationInfo> handler);
+   /**
+    * A factory method for an application info bean.
+    * 
+    * @return an {@link AutoBean} of type {@link ApplicationInfo}
+    */
+   AutoBean<ApplicationInfo> applicationInfo();
 }

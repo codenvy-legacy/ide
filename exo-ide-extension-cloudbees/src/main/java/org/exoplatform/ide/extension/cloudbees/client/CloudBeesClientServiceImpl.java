@@ -26,8 +26,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfo;
 import org.exoplatform.ide.extension.cloudbees.client.marshaller.CredentailsMarshaller;
+import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;

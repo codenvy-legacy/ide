@@ -19,7 +19,6 @@
 package org.exoplatform.ide.extension.cloudbees.client.list.ui;
 
 import com.google.gwt.cell.client.ButtonCell;
-
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -31,8 +30,8 @@ import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
-import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfo;
 import org.exoplatform.ide.extension.cloudbees.client.list.HasApplicationListActions;
+import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

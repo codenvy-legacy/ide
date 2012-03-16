@@ -18,14 +18,11 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.info;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -36,15 +33,19 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
+import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudbees.client.marshaller.DeployWarUnmarshaller;
+import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Presenter for showing application info.
@@ -97,7 +98,22 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
    {
       if (event.getAppInfo() != null)
       {
-         showAppInfo(event.getAppInfo().toMap());
+         ApplicationInfo appinfo = event.getAppInfo();
+         Map<String, String> map = new HashMap<String, String>();
+         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridId(), appinfo.getId());
+         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridTitle(), appinfo.getTitle());
+         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridServerPool(), appinfo.getServerPool());
+         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridStatus(), appinfo.getStatus());
+         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridContainer(), appinfo.getContainer());
+         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridIdleTimeout(),
+            appinfo.getIdleTimeout());
+         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridMaxMemory(), appinfo.getMaxMemory());
+         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridSecurityMode(),
+            appinfo.getSecurityMode());
+         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridClusterSize(),
+            appinfo.getClusterSize());
+         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridUrl(), appinfo.getUrl());
+         showAppInfo(map);
       }
       else if (makeSelectionCheck())
       {

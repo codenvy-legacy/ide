@@ -18,10 +18,14 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.list;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.RequestException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -33,18 +37,13 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.delete.DeleteApplicationEvent;
-import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfo;
 import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoEvent;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudbees.client.marshaller.ApplicationListUnmarshaller;
+import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

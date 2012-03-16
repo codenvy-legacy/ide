@@ -154,6 +154,39 @@ public interface CloudBeesLocalizationConstant extends Messages
    String applicationInfoTitle();
 
    /*
+    * ApplicationInfoPresenter
+    */
+   @Key("appInfo.listGrid.id")
+   String applicationInfoListGridId();
+
+   @Key("appInfo.listGrid.title")
+   String applicationInfoListGridTitle();
+
+   @Key("appInfo.listGrid.serverPool")
+   String applicationInfoListGridServerPool();
+
+   @Key("appInfo.listGrid.status")
+   String applicationInfoListGridStatus();
+
+   @Key("appInfo.listGrid.container")
+   String applicationInfoListGridContainer();
+
+   @Key("appInfo.listGrid.idleTimeout")
+   String applicationInfoListGridIdleTimeout();
+
+   @Key("appInfo.listGrid.maxMemory")
+   String applicationInfoListGridMaxMemory();
+
+   @Key("appInfo.listGrid.securityMode")
+   String applicationInfoListGridSecurityMode();
+
+   @Key("appInfo.listGrid.clusterSize")
+   String applicationInfoListGridClusterSize();
+
+   @Key("appInfo.listGrid.url")
+   String applicationInfoListGridUrl();
+
+   /*
     * ApplicationInfoGrid
     */
    @Key("appInfo.listGrid.field.name")

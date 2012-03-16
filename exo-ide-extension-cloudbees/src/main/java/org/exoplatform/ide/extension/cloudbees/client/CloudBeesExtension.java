@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.cloudbees.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -49,6 +50,11 @@ import org.exoplatform.ide.extension.cloudbees.client.update.UpdateApplicationPr
 public class CloudBeesExtension extends Extension implements InitializeServicesHandler
 {
 
+   /**
+    * The generator of an {@link AutoBean}.
+    */
+   public static final CloudBeesAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(CloudBeesAutoBeanFactory.class);
+
    public static final CloudBeesLocalizationConstant LOCALIZATION_CONSTANT = GWT
       .create(CloudBeesLocalizationConstant.class);
 
@@ -58,8 +64,7 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new CloudBeesClientServiceImpl(event.getApplicationConfiguration().getContext(),
-         event.getLoader());
+      new CloudBeesClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
    /**
