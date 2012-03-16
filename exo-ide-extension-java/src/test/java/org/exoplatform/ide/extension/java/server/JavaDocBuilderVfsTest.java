@@ -92,7 +92,7 @@ public class JavaDocBuilderVfsTest extends JavaDocBase
       Assert.assertNotNull(methodInfo.getParameterTypes());
       Assert.assertNotNull(methodInfo.getDeclaringClass());
    }
-   
+
    @Test
    public void classWithDafaultConstructor() throws Exception
    {

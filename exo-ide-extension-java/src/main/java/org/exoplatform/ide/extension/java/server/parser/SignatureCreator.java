@@ -272,7 +272,10 @@ public class SignatureCreator
    
    public static String createTypeSignature(JavaField field)
    {
+      if(field.getType().getFullyQualifiedName().contains("."))
       return createTypeSignature(field.getType().getGenericValue(), true);
+      else
+         return ObjectSignature;
    }
    
    
@@ -359,6 +362,36 @@ public class SignatureCreator
    {
       return createTypeSignature(typeName == null ? null : typeName.toCharArray(), isResolved);
    }
+   
+   /**
+    * Creates a new type signature from the given type name. If the type name is qualified, then it is expected to be dot-based.
+    * The type name may contain primitive types or array types. However, parameterized types are not supported.
+    * <p>
+    * For example:
+    * 
+    * <pre>
+    * <code>
+    * createTypeSignature("int", hucairz) -> "I"
+    * createTypeSignature("java.lang.String", true) -> "Ljava/lang/String;"
+    * createTypeSignature("String", false) -> "QString;"
+    * createTypeSignature("java.lang.String", false) -> "Qjava/lang/String;"
+    * createTypeSignature("int []", false) -> "[I"
+    * </code>
+    * </pre>
+    * 
+    * </p>
+    * 
+    * @param typeName the possibly qualified type name
+    * @param isResolved <code>true</code> if the type name is to be considered resolved (for example, a type name from a binary
+    *           class file), and <code>false</code> if the type name is to be considered unresolved (for example, a type name
+    *           found in source code)
+    * @return the encoded type signature
+    */
+   public static String createByteCodeTypeSignature(String typeName)
+   {
+      return createTypeSignature(typeName == null ? null : typeName.toCharArray(), true).replaceAll("\\.", "/");
+   }
+   
 
    /**
     * Creates a new type signature from the given type name encoded as a character array. The type name may contain primitive

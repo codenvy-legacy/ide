@@ -31,9 +31,8 @@ import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.extension.java.server.parser.JavaDocBuilderErrorHandler;
 import org.exoplatform.ide.extension.java.server.parser.JavaDocBuilderVfs;
-import org.exoplatform.ide.extension.java.server.parser.Util;
+import org.exoplatform.ide.extension.java.server.parser.JavaTypeToTypeInfoConverter;
 import org.exoplatform.ide.extension.java.server.parser.VfsClassLibrary;
-import org.exoplatform.ide.extension.java.server.parser.scanner.FileSuffixFilter;
 import org.exoplatform.ide.extension.java.server.parser.scanner.FolderFilter;
 import org.exoplatform.ide.extension.java.server.parser.scanner.FolderScanner;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
@@ -165,26 +164,6 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    }
 
    /**
-    * Return possible FQN like "org.exoplatform.example.ClassName" on file path "/org/exoplatform/example/ClassName.java"
-    */
-   private String getFQNByFilePath(File file, Project project)
-   {
-      String sourceFolderPath = (String)project.getPropertyValue("sourceFolder");
-      if (sourceFolderPath == null)
-      {
-         sourceFolderPath = DEFAULT_SOURCE_FOLDER;
-      }
-      String fqn = file.getPath().substring((project.getPath() + "/" + sourceFolderPath).length() + 1);
-      // remove file extension from path like ".java" from path "org/exoplatform/example/ClassName.java"
-      if (fqn.matches(".*[.][^/]*$"))
-         fqn = fqn.substring(0, fqn.lastIndexOf("."));
-      // replace "/" on "."
-      fqn = fqn.replaceAll("/", ".");
-
-      return fqn;
-   }
-
-   /**
     * Find classes in package
     */
    private List<ShortTypeInfo> findClassesInPackage(File file, Project project, VirtualFileSystem vfs)
@@ -219,7 +198,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
       if (clazz == null)
          return null;
 
-      return Util.convert(clazz);
+      return new JavaTypeToTypeInfoConverter(storage).convert(clazz);
    }
 
    /**
@@ -232,10 +211,11 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    {
       JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
       List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
+      JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage);
       for (JavaClass clazz : builder.getClasses())
       {
          if (clazz.getName().startsWith(className))
-            types.add(Util.toShortTypeInfo(clazz));
+            types.add(converter.toShortTypeInfo(clazz));
       }
       return types;
    }
@@ -250,10 +230,11 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    {
       JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
       List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
+      JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage);
       for (JavaClass clazz : builder.getClasses())
       {
          if (clazz.getFullyQualifiedName().startsWith(prefix))
-            types.add(Util.toShortTypeInfo(clazz));
+            types.add(converter.toShortTypeInfo(clazz));
       }
       return types;
    }
@@ -268,13 +249,14 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    {
       JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
       List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
+      JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage);
       if (prefix == null || prefix.isEmpty())
       {
          for (JavaClass clazz : builder.getClasses())
          {
-            if (type == Util.getType(clazz))
+            if (type == JavaTypeToTypeInfoConverter.getType(clazz))
             {
-               types.add(Util.toShortTypeInfo(clazz));
+               types.add(converter.toShortTypeInfo(clazz));
             }
          }
       }
@@ -282,9 +264,9 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
       {
          for (JavaClass clazz : builder.getClasses())
          {
-            if (type == Util.getType(clazz) && clazz.getName().startsWith(prefix))
+            if (type == JavaTypeToTypeInfoConverter.getType(clazz) && clazz.getName().startsWith(prefix))
             {
-               types.add(Util.toShortTypeInfo(clazz));
+               types.add(converter.toShortTypeInfo(clazz));
             }
          }
       }
@@ -338,7 +320,8 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
       {
          for (JavaMethod method : clazz.getMethods())
          {
-            if ((method.getName() + Util.toParameters(method.getParameterTypes(true))).equals(memberFqn))
+            if ((method.getName() + JavaTypeToTypeInfoConverter.toParameters(method.getParameterTypes(true)))
+               .equals(memberFqn))
             {
                return getJavaDoc(method);
             }
@@ -364,7 +347,8 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
       if (entity.getComment() == null && entity.getTags().length == 0)
          throw new CodeAssistantException(404, "Not found");
 
-      return (entity.getComment() == null ? "" : entity.getComment()) + Util.tagsToString(entity.getTags());
+      return (entity.getComment() == null ? "" : entity.getComment())
+         + JavaTypeToTypeInfoConverter.tagsToString(entity.getTags());
    }
 
    /**
@@ -377,10 +361,11 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    {
       JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
       List<TypeInfo> typeInfos = new ArrayList<TypeInfo>();
+      JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage);
       for (JavaClass clazz : builder.getClasses())
       {
          if (clazz.getName().startsWith(namePrefix))
-            typeInfos.add(Util.convert(clazz));
+            typeInfos.add(converter.convert(clazz));
       }
       return typeInfos;
    }
