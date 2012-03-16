@@ -76,7 +76,7 @@ public interface HerokuLocalizationConstant extends Messages
    @DefaultMessage("Logged in Heroku successfully.")
    @Key("loginSuccess")
    String loginSuccess();
-   
+
    @Key("loginFailed")
    String loginFailed();
 
@@ -102,6 +102,15 @@ public interface HerokuLocalizationConstant extends Messages
    @DefaultMessage("Deploy public key on Heroku...")
    @Key("control.addKey.prompt")
    String addKeyControlPrompt();
+
+   @Key("control.listApp.id")
+   String listApplicationsControlId();
+
+   @Key("control.listApp.title")
+   String listApplicationsControlTitle();
+
+   @Key("control.listApp.prompt")
+   String listApplicationsControlPrompt();
 
    @DefaultMessage("PaaS/Heroku/Remove public keys...")
    @Key("control.clearKeys.id")
@@ -228,6 +237,31 @@ public interface HerokuLocalizationConstant extends Messages
    @DefaultMessage("Value")
    @Key("applicationInfoGid.field.value")
    String applicationInfoGridValueField();
+
+   /* Manage Applications View */
+   @Key("manageApplicationsView.title")
+   String manageApplicationsViewTitle();
+
+   @Key("applicationsListGrid.field.name")
+   String applicationsListGridFieldName();
+
+   @Key("applicationsListGrid.field.url")
+   String applicationsListGridFieldUrl();
+
+   @Key("applicationsListGrid.field.stack")
+   String applicationsListGridFieldStack();
+
+   @Key("applicationsListGrid.button.delete")
+   String applicationsListGridButtonDelete();
+
+   @Key("applicationsListGrid.button.rename")
+   String applicationsListGridButtonRename();
+
+   @Key("applicationsListGrid.button.change")
+   String applicationsListGridButtonChange();
+
+   @Key("applicationsListGrid.button.info")
+   String applicationsListGridButtonInfo();
 
    /* Messages */
    @Key("createApplicationSuccess")

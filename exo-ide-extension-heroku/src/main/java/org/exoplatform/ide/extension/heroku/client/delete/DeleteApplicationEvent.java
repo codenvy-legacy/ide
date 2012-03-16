@@ -35,6 +35,24 @@ public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler>
    public static final GwtEvent.Type<DeleteApplicationHandler> TYPE = new GwtEvent.Type<DeleteApplicationHandler>();
 
    /**
+    * Application to delete.
+    */
+   private String application;
+
+   /**
+    * @param application application to delete, may be <code>null</code>
+    */
+   public DeleteApplicationEvent(String application)
+   {
+      this.application = application;
+   }
+
+   public DeleteApplicationEvent()
+   {
+      this.application = null;
+   }
+
+   /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
@@ -52,4 +70,11 @@ public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler>
       handler.onDeleteApplication(this);
    }
 
+   /**
+    * @return the application application to delete, may be <code>null</code>
+    */
+   public String getApplication()
+   {
+      return application;
+   }
 }

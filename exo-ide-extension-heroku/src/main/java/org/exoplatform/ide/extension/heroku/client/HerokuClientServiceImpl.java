@@ -61,6 +61,8 @@ public class HerokuClientServiceImpl extends HerokuClientService
 
    private static final String APPLICATION_INFO = "/ide/heroku/apps/info";
 
+   private static final String LIST_APPLICATIONS = "/ide/heroku/apps";
+
    private static final String GET_STACKS = "/ide/heroku/apps/stack";
 
    private static final String STACK_MIGRATE = "/ide/heroku/apps/stack-migrate";
@@ -204,7 +206,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
       String url = restServiceContext + RENAME_APPLICATION;
 
       String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
-      params = (newName != null) ? "newname=" + newName + "&" : "";
+      params += (newName != null) ? "newname=" + newName + "&" : "";
       params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
       params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
 
@@ -305,6 +307,18 @@ public class HerokuClientServiceImpl extends HerokuClientService
       params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
 
       AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#listApplications(org.exoplatform.ide.extension.heroku.client.ApplicationListAsyncRequestCallback)
+    */
+   @Override
+   public void listApplications(ApplicationListAsyncRequestCallback callback) throws RequestException
+   {
+      String url = restServiceContext + LIST_APPLICATIONS;
+
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .send(callback);
    }
 
 }

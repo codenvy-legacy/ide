@@ -44,13 +44,12 @@ import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
 
 /**
- * Presenter for rename application on Heroku. The view must be pointed in Views.gwt.xml. Performs following actions on rename: 1.
- * Gets the Git working directory location. 2. Gets application name (application info) by Git working directory location. 3.
- * Opens view for rename with pointed old name. 4. When user clicks "Rename" button - performs rename application.
+ * Presenter for rename application on Heroku. The view must be pointed in Views.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 2, 2011 11:54:59 AM anya $
@@ -171,6 +170,21 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
    @Override
    public void onRenameApplication(RenameApplicationEvent event)
    {
+      applicationName = event.getApplication();
+      if (applicationName != null && !applicationName.isEmpty())
+      {
+         if (display == null)
+         {
+            display = GWT.create(Display.class);
+            bindDisplay();
+            IDE.getInstance().openView(display.asView());
+         }
+         display.getRenameField().setValue(applicationName);
+         display.selectValueInRenameField();
+         display.enableRenameButton(false);
+         return;
+      }
+
       if (makeSelectionCheck())
       {
          getApplicationInfo();
@@ -247,10 +261,11 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
    public void doRenameApplication()
    {
       final String newName = display.getRenameField().getValue();
-      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      final String projectId = detectProjectId();
+
       try
       {
-         HerokuClientService.getInstance().renameApplication(null, vfs.getId(), projectId, newName,
+         HerokuClientService.getInstance().renameApplication(applicationName, vfs.getId(), projectId, newName,
             new HerokuAsyncRequestCallback(this)
             {
                @Override
@@ -259,7 +274,7 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
                   IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationSuccess(
                      applicationName, newName), Type.INFO));
                   IDE.getInstance().closeView(display.asView().getId());
-                  IDE.fireEvent(new ApplicationRenamedEvent(projectId, properties));
+                  IDE.fireEvent(new ApplicationRenamedEvent(properties, applicationName));
                }
             });
       }
@@ -267,5 +282,25 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
+   }
+
+   /**
+    * Detects project's id by Heroku application name, if opened project is the following Heroku application.
+    * 
+    * @return {@link String} project's id or <code>null</code> if not found
+    */
+   private String detectProjectId()
+   {
+      String projectId = null;
+      if (selectedItems.size() > 0 && selectedItems.get(0) instanceof ItemContext)
+      {
+         ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+         if (project != null && project.getPropertyValue("heroku-application") != null
+            && applicationName.equals((String)project.getPropertyValue("heroku-application")))
+         {
+            projectId = project.getId();
+         }
+      }
+      return projectId;
    }
 }

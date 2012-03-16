@@ -24,6 +24,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.extension.heroku.client.apps.ManageApplicationsPresenter;
 import org.exoplatform.ide.extension.heroku.client.control.AddKeyControl;
 import org.exoplatform.ide.extension.heroku.client.control.ChangeApplicationStackConrol;
 import org.exoplatform.ide.extension.heroku.client.control.CreateApplicationControl;
@@ -100,9 +101,10 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       new RakeCommandPresenter();
       new ChangeStackPresenter();
       new LogsPresenter();
-
+      
       new DeployApplicationPresenter();
       new HerokuProjectPresenter();
+      new ManageApplicationsPresenter();
    }
 
 }

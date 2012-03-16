@@ -35,6 +35,24 @@ public class ShowApplicationInfoEvent extends GwtEvent<ShowApplicationInfoHandle
    public static final GwtEvent.Type<ShowApplicationInfoHandler> TYPE = new GwtEvent.Type<ShowApplicationInfoHandler>();
 
    /**
+    * Application's name.
+    */
+   private String applicationName;
+
+   public ShowApplicationInfoEvent()
+   {
+      this.applicationName = null;
+   }
+
+   /**
+    * @param applicationName application's name to display properties, may be null
+    */
+   public ShowApplicationInfoEvent(String applicationName)
+   {
+      this.applicationName = applicationName;
+   }
+
+   /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
@@ -50,5 +68,13 @@ public class ShowApplicationInfoEvent extends GwtEvent<ShowApplicationInfoHandle
    protected void dispatch(ShowApplicationInfoHandler handler)
    {
       handler.onShowApplicationInfo(this);
+   }
+
+   /**
+    * @return the applicationName application's name to display properties
+    */
+   public String getApplicationName()
+   {
+      return applicationName;
    }
 }

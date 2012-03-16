@@ -45,17 +45,17 @@ public class ApplicationRenamedEvent extends GwtEvent<ApplicationRenamedHandler>
    private List<Property> properties;
 
    /**
-    * Project's id.
+    * Previous application's name.
     */
-   private String projectId;
+   private String oldName;
 
    /**
-    * @param projectId project's id
+    * @param oldName previous application's name
     * @param properties application properties after rename
     */
-   public ApplicationRenamedEvent(String projectId, List<Property> properties)
+   public ApplicationRenamedEvent(List<Property> properties, String oldName)
    {
-      this.projectId = projectId;
+      this.oldName = oldName;
       this.properties = properties;
    }
 
@@ -86,10 +86,10 @@ public class ApplicationRenamedEvent extends GwtEvent<ApplicationRenamedHandler>
    }
 
    /**
-    * @return the projectId project's id
+    * @return {@link String} previous application's name
     */
-   public String getProjectId()
+   public String getOldName()
    {
-      return projectId;
+      return oldName;
    }
 }

@@ -59,6 +59,8 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
     */
    private static List<String> order;
 
+   private String applicationName;
+
    /**
     * Set the properties order.
     */
@@ -142,6 +144,13 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
    @Override
    public void onShowApplicationInfo(ShowApplicationInfoEvent event)
    {
+      applicationName = event.getApplicationName();
+      if (event.getApplicationName() != null && !event.getApplicationName().isEmpty())
+      {
+         getApplicationInfo();
+         return;
+      }
+
       if (makeSelectionCheck())
       {
          getApplicationInfo();
@@ -165,10 +174,11 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
     */
    public void getApplicationInfo()
    {
-      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      final String projectId =
+         (applicationName == null) ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null;
       try
       {
-         HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId, false,
+         HerokuClientService.getInstance().getApplicationInfo(applicationName, vfs.getId(), projectId, false,
             new HerokuAsyncRequestCallback(this)
             {
 

@@ -35,6 +35,24 @@ public class RenameApplicationEvent extends GwtEvent<RenameApplicationHandler>
    public static final GwtEvent.Type<RenameApplicationHandler> TYPE = new GwtEvent.Type<RenameApplicationHandler>();
 
    /**
+    * Application to rename.
+    */
+   private String application;
+
+   /**
+    * @param application application to rename, may be <code>null</code>
+    */
+   public RenameApplicationEvent(String application)
+   {
+      this.application = application;
+   }
+
+   public RenameApplicationEvent()
+   {
+      this.application = null;
+   }
+
+   /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
@@ -52,4 +70,11 @@ public class RenameApplicationEvent extends GwtEvent<RenameApplicationHandler>
       handler.onRenameApplication(this);
    }
 
+   /**
+    * @return the application application to rename, may be <code>null</code>
+    */
+   public String getApplication()
+   {
+      return application;
+   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,41 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.heroku.client.delete;
+package org.exoplatform.ide.extension.heroku.client.apps;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * Event occurs, when user tries to view the list of Heroku applications.
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Dec 8, 2011 2:39:55 PM anya $
+ * @version $Id: Mar 14, 2012 5:03:07 PM anya $
  * 
  */
-public class ApplicationDeletedEvent extends GwtEvent<ApplicationDeletedHandler>
+public class ManageApplicationsEvent extends GwtEvent<ManageApplicationsHandler>
 {
 
    /**
-    * Type used to register event.
+    * Type used to register this event.
     */
-   public static final GwtEvent.Type<ApplicationDeletedHandler> TYPE = new GwtEvent.Type<ApplicationDeletedHandler>();
-
-   /**
-    * Name of the deleted application.
-    */
-   private String applicationName;
-
-   /**
-    * @param applicationName deleted application's name
-    */
-   public ApplicationDeletedEvent(String applicationName)
-   {
-      this.applicationName = applicationName;
-   }
+   public static final GwtEvent.Type<ManageApplicationsHandler> TYPE = new GwtEvent.Type<ManageApplicationsHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ApplicationDeletedHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ManageApplicationsHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -59,16 +48,9 @@ public class ApplicationDeletedEvent extends GwtEvent<ApplicationDeletedHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(ApplicationDeletedHandler handler)
+   protected void dispatch(ManageApplicationsHandler handler)
    {
-      handler.onApplicationDeleted(this);
+      handler.onManageApplications(this);
    }
 
-   /**
-    * @return {@link String} deleted application's name
-    */
-   public String getApplicationName()
-   {
-      return applicationName;
-   }
 }

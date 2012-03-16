@@ -1,0 +1,28 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+   xmlns:e="urn:import:org.exoplatform.ide.extension.heroku.client.apps">
+   <ui:with field='resource' type='org.exoplatform.ide.extension.heroku.client.HerokuClientBundle' />
+   <ui:with field="locale" type="org.exoplatform.ide.extension.heroku.client.HerokuLocalizationConstant"></ui:with>
+   <ui:style>
+      .left {
+      	margin-left: auto;
+      }
+   </ui:style>
+   <f:Border margin="15" borderColor="transparent">
+      <f:layer top="0" bottom="40">
+         <f:Border>
+            <f:layer>
+               <g:ScrollPanel>
+                  <e:ApplicationsListGrid width="100%" ui:field="applicationsGrid"></e:ApplicationsListGrid>
+               </g:ScrollPanel>
+            </f:layer>
+         </f:Border>
+      </f:layer>
+      <f:layer bottom="0" height="22px">
+         <g:FlowPanel height="22px" width="90px" styleName="{style.left}">
+            <f:ImageButton ui:field="closeButton" width="90" height="22" text="{locale.closeButton}" imageResource="{resource.cancelButton}"
+               disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
+         </g:FlowPanel>
+      </f:layer>
+   </f:Border>
+</ui:UiBinder> 

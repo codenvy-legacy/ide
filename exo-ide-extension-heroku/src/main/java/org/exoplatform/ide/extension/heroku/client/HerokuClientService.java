@@ -117,6 +117,14 @@ public abstract class HerokuClientService
       HerokuAsyncRequestCallback callback) throws RequestException;
 
    /**
+    * Get the list of Heroku applications.
+    * 
+    * @param callback callback
+    * @throws RequestException
+    */
+   public abstract void listApplications(ApplicationListAsyncRequestCallback callback) throws RequestException;
+
+   /**
     * Rename Heroku application, pointed by application's name or Git work directory location.
     * 
     * @param applicationName application's name

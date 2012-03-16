@@ -75,6 +75,12 @@ public interface HerokuClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/heroku/images/controls/heroku_Disabled.png")
    ImageResource herokuDisabled();
 
+   @Source("org/exoplatform/ide/extension/heroku/images/controls/apps-list.png")
+   ImageResource applicationsList();
+   
+   @Source("org/exoplatform/ide/extension/heroku/images/controls/apps-list_Disabled.png")
+   ImageResource applicationsListDisabled();
+   
    @Source("org/exoplatform/ide/extension/heroku/images/controls/addKeys.png")
    ImageResource addKeys();
 

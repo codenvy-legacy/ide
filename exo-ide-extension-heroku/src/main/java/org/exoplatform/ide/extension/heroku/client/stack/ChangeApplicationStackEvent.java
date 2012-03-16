@@ -36,6 +36,24 @@ public class ChangeApplicationStackEvent extends GwtEvent<ChangeApplicationStack
       new GwtEvent.Type<ChangeApplicationStackHandler>();
 
    /**
+    * Application, for which to change stack.
+    */
+   private String application;
+
+   /**
+    * @param application application, for which to change stack, may be <code>null</code>
+    */
+   public ChangeApplicationStackEvent(String application)
+   {
+      this.application = application;
+   }
+
+   public ChangeApplicationStackEvent()
+   {
+      this.application = null;
+   }
+
+   /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
@@ -51,5 +69,13 @@ public class ChangeApplicationStackEvent extends GwtEvent<ChangeApplicationStack
    protected void dispatch(ChangeApplicationStackHandler handler)
    {
       handler.onChangeApplicationStack(this);
+   }
+
+   /**
+    * @return the application
+    */
+   public String getApplication()
+   {
+      return application;
    }
 }

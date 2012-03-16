@@ -159,6 +159,15 @@ public class HerokuService
          (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
    }
 
+   @Path("apps")
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<String> appsList() throws HerokuException, ParsingResponseException, IOException,
+      VirtualFileSystemException
+   {
+      return heroku.listApplications();
+   }
+
    @Path("apps/rename")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
@@ -170,11 +179,14 @@ public class HerokuService
          heroku.renameApplication(appName, newname,
             (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
 
-      // Update VFS properties. Need it to uniform client.
-      ConvertibleProperty p = new ConvertibleProperty("heroku-application", application.get("name"));
-      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
-      properties.add(p);
-      vfs.updateItem(projectId, properties, null);
+      if (projectId != null)
+      {
+         // Update VFS properties. Need it to uniform client.
+         ConvertibleProperty p = new ConvertibleProperty("heroku-application", application.get("name"));
+         List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+         properties.add(p);
+         vfs.updateItem(projectId, properties, null);
+      }
 
       return application;
    }

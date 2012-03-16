@@ -68,7 +68,9 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
 
       Stack getSelectedStack();
    }
-
+   
+   private String herokuApplication = null;
+   
    /**
     * Presenter's view.
     */
@@ -125,6 +127,14 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
    @Override
    public void onChangeApplicationStack(ChangeApplicationStackEvent event)
    {
+      herokuApplication = event.getApplication();
+      
+      if (event.getApplication() != null && !event.getApplication().isEmpty())
+      {
+         getStacks();
+         return;
+      }
+      
       if (makeSelectionCheck())
       {
          getStacks();
@@ -145,10 +155,10 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
 
    public void getStacks()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = (herokuApplication == null) ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null;
       try
       {
-         HerokuClientService.getInstance().getStackList(null, vfs.getId(), projectId,
+         HerokuClientService.getInstance().getStackList(herokuApplication, vfs.getId(), projectId,
             new StackListAsyncRequestCallback(this)
             {
                @Override
@@ -192,10 +202,10 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
       Stack stack = display.getSelectedStack();
       if (stack == null)
          return;
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = (herokuApplication == null) ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null;
       try
       {
-         HerokuClientService.getInstance().migrateStack(null, vfs.getId(), projectId, stack.getName(),
+         HerokuClientService.getInstance().migrateStack(herokuApplication, vfs.getId(), projectId, stack.getName(),
             new StackMigrationAsyncRequestCallback(this)
             {
 

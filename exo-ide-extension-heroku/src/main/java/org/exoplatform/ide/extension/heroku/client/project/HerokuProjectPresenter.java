@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
@@ -267,9 +268,13 @@ public class HerokuProjectPresenter extends GitPresenter implements ProjectOpene
    @Override
    public void onApplicationRenamed(ApplicationRenamedEvent event)
    {
-      if (openedProject != null && openedProject.getId() == event.getProjectId() && display != null)
+      if (event.getOldName() != null && openedProject != null
+         && event.getOldName().equals((String)openedProject.getPropertyValue("heroku-application")))
       {
-         displayProperties(event.getProperties());
+         if (display != null)
+         {
+            displayProperties(event.getProperties());
+         }
       }
    }
 
@@ -303,10 +308,14 @@ public class HerokuProjectPresenter extends GitPresenter implements ProjectOpene
    @Override
    public void onApplicationDeleted(ApplicationDeletedEvent event)
    {
-      if (display != null && vfs.getId().equals(event.getVfsId()) && openedProject != null
-         && openedProject.getId().equals(event.getProjectId()))
+      if (event.getApplicationName() != null && openedProject != null
+         && event.getApplicationName().equals((String)openedProject.getPropertyValue("heroku-application")))
       {
-         IDE.getInstance().closeView(display.asView().getId());
+         if (display != null)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
+         IDE.fireEvent(new RefreshBrowserEvent(openedProject));
       }
    }
 }
