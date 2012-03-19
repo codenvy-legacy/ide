@@ -18,12 +18,13 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
+import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointListImpl;
+import org.exoplatform.ide.extension.java.jdi.server.model.DebuggerEventListImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.DebuggerInfoImpl;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
-import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
+import org.exoplatform.ide.extension.java.jdi.shared.BreakPointList;
+import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
-
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -94,9 +95,9 @@ public class DebuggerService
    @GET
    @Path("breakpoints/{id}")
    @Produces(MediaType.APPLICATION_JSON)
-   public List<BreakPoint> getBreakPoints(@PathParam("id") String id) throws DebuggerException
+   public BreakPointList getBreakPoints(@PathParam("id") String id) throws DebuggerException
    {
-      return debuggerRegistry.get(id).getBreakPoints();
+      return new BreakPointListImpl(debuggerRegistry.get(id).getBreakPoints());
    }
 
    @POST
@@ -118,8 +119,8 @@ public class DebuggerService
    @GET
    @Path("events/{id}")
    @Produces(MediaType.APPLICATION_JSON)
-   public List<DebuggerEvent> getEvents(@PathParam("id") String id) throws DebuggerException
+   public DebuggerEventList getEvents(@PathParam("id") String id) throws DebuggerException
    {
-      return debuggerRegistry.get(id).getEvents();
+      return new DebuggerEventListImpl(debuggerRegistry.get(id).getEvents());
    }
 }
