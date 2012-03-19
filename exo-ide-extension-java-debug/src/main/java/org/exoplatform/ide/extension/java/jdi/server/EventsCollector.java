@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.java.jdi.server;
 
 import com.sun.jdi.VMDisconnectedException;
 import com.sun.jdi.event.EventQueue;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -27,6 +29,8 @@ import com.sun.jdi.event.EventQueue;
  */
 final class EventsCollector implements Runnable
 {
+   private static final Log LOG = ExoLogger.getLogger(EventsCollector.class);
+
    private final EventsHandler handler;
    private final EventQueue queue;
 
@@ -54,8 +58,7 @@ final class EventsCollector implements Runnable
          }
          catch (DebuggerException e)
          {
-            e.printStackTrace();
-            break;    // TODO
+            LOG.error(e.getMessage(), e);
          }
          catch (VMDisconnectedException e)
          {

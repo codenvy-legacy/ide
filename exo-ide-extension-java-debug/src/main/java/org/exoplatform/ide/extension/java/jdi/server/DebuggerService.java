@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.java.jdi.server;
 
 import org.exoplatform.ide.extension.java.jdi.server.model.DebuggerInfoImpl;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
+import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 
 import java.util.List;
@@ -112,5 +113,13 @@ public class DebuggerService
    public void deleteBreakPoint(@PathParam("id") String id, BreakPoint breakPoint) throws DebuggerException
    {
       debuggerRegistry.get(id).deleteBreakPoint(breakPoint);
+   }
+
+   @GET
+   @Path("events/{id}")
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<DebuggerEvent> getEvents(@PathParam("id") String id) throws DebuggerException
+   {
+      return debuggerRegistry.get(id).getEvents();
    }
 }

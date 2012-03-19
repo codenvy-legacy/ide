@@ -30,18 +30,17 @@ import com.sun.jdi.VirtualMachine;
 import com.sun.jdi.connect.AttachingConnector;
 import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.IllegalConnectorArgumentsException;
-import com.sun.jdi.event.BreakpointEvent;
-import com.sun.jdi.event.Event;
-import com.sun.jdi.event.EventSet;
 import com.sun.jdi.request.BreakpointRequest;
 import com.sun.jdi.request.EventRequest;
 import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.request.InvalidRequestStateException;
+import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointEventImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.FieldImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.StackFrameDumpImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.VariableImpl;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
+import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 import org.exoplatform.services.log.ExoLogger;
@@ -68,6 +67,7 @@ public class Debugger
 
    private final String host;
    private final int port;
+   private final List<DebuggerEvent> events = new ArrayList<DebuggerEvent>();
 
    /** Target Java VM representation. */
    private VirtualMachine vm;
@@ -113,29 +113,42 @@ public class Debugger
          eventsCollector = new EventsCollector(vm.eventQueue(), new EventsHandler()
          {
             @Override
-            public void handleEvents(EventSet events) throws DebuggerException
+            public void handleEvents(com.sun.jdi.event.EventSet eventSet) throws DebuggerException
             {
                boolean resume = true;
-               for (Event event : events)
+               try
                {
-                  LOG.debug("New event: {}", event);
-                  if (event instanceof BreakpointEvent)
+                  for (com.sun.jdi.event.Event event : eventSet)
                   {
-                     try
+                     LOG.debug("New event: {}", event);
+                     if (event instanceof com.sun.jdi.event.BreakpointEvent)
                      {
-                        stackFrame = new JdiStackFrameImpl(((BreakpointEvent)event).thread().frame(0));
+                        try
+                        {
+                           com.sun.jdi.event.BreakpointEvent jdiBreakpointEvent = (com.sun.jdi.event.BreakpointEvent)event;
+                           stackFrame = new JdiStackFrameImpl(jdiBreakpointEvent.thread().frame(0));
+                           Location location = jdiBreakpointEvent.location();
+                           synchronized (events)
+                           {
+                              events.add(new BreakPointEventImpl(new BreakPointImpl(location.declaringType().name(),
+                                 location.lineNumber(), true)));
+                           }
+                           // Lets target JVM to be in suspend state.
+                           resume = false;
+                        }
+                        catch (IncompatibleThreadStateException e)
+                        {
+                           throw new DebuggerException(e.getMessage(), e);
+                        }
                      }
-                     catch (IncompatibleThreadStateException e)
-                     {
-                        throw new DebuggerException(e.getMessage(), e);
-                     }
-                     resume = false;
                   }
                }
-               // Resume target Java VM. We are interesting (at the moment) for breakpoints events only.
-               if (resume)
+               finally
                {
-                  events.resume();
+                  if (resume)
+                  {
+                     eventSet.resume();
+                  }
                }
             }
          });
@@ -289,7 +302,7 @@ public class Debugger
    private static final Comparator<BreakPoint> BREAKPOINT_COMPARATOR = new BreakPointComparator();
 
    /**
-    * Switch enable status of break point.
+    * Switch break point to enabled|disabled status.
     *
     * @param breakPoint break point description
     * @throws DebuggerException when any JDI errors occurs when try to update break point
@@ -356,6 +369,27 @@ public class Debugger
       {
          throw new DebuggerException(e.getMessage(), e);
       }
+   }
+
+   /**
+    * Get next set of debugger events.
+    *
+    * @return set of the debugger's events which occurred after last visit this method
+    * @throws VMConnectException if Debugger id not connected yet
+    */
+   public List<DebuggerEvent> getEvents() throws VMConnectException
+   {
+      if (!isConnected())
+      {
+         throw new VMConnectException("Debugger is not connected to target JVM.");
+      }
+      List<DebuggerEvent> eventsSnapshot;
+      synchronized (events)
+      {
+         eventsSnapshot = new ArrayList<DebuggerEvent>(events);
+         events.clear();
+      }
+      return eventsSnapshot;
    }
 
    /**
