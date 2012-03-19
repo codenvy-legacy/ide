@@ -33,6 +33,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
+
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Jan 17, 2011 2:27:36 PM vereshchaka $
@@ -98,17 +100,17 @@ public class CodeAssistant extends AbstractTestModule
       typeToInput(text);
    }
 
-   /**
-    * Check, that element <code>elementTitle</code> is present in autocomplete panel.
-    * 
-    * @param elementTitle - the title of element
-    */
-   @Deprecated
-   public void checkElementPresent(String elementTitle)
-   {
-
-      assertTrue(selenium().isElementPresent(PANEL + "//div[text()='" + elementTitle + "']"));
-   }
+   // /**
+   // * Check, that element <code>elementTitle</code> is present in autocomplete panel.
+   // *
+   // * @param elementTitle - the title of element
+   // */
+   // @Deprecated
+   // public void checkElementPresent(String elementTitle)
+   // {
+   //
+   // assertTrue(selenium().isElementPresent(PANEL + "//div[text()='" + elementTitle + "']"));
+   // }
 
    public boolean isElementPresent(String elementTitle)
    {
@@ -121,6 +123,26 @@ public class CodeAssistant extends AbstractTestModule
       {
          return false;
       }
+   }
+
+   public String[] getFormProposalsText()
+   {
+      List<WebElement> elements =
+         driver().findElements(By.cssSelector("table#exo-ide-autocomplete-panel div>div>div table"));
+      String[] texts = new String[elements.size()];
+      for (int i = 0; i < elements.size(); i++)
+      {
+         WebElement el = elements.get(i);
+         String elementText = el.getText();
+         if (elementText.contains("\n"))
+         {
+            texts[i] = elementText.split("\n")[1];
+         }
+         else
+            texts[i] = elementText;
+      }
+
+      return texts;
    }
 
    public void checkElementNotPresent(String elementTitle)
@@ -289,5 +311,42 @@ public class CodeAssistant extends AbstractTestModule
       Action sel = a.doubleClick(im).build();
       sel.perform();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+
+   /**
+    * @param name
+    * @throws InterruptedException
+    */
+   public void selectProposal(String name, String afterDash) throws InterruptedException
+   {
+      WebElement im =
+         driver().findElement(
+            By.xpath("//div[@class='gwt-HTML' and contains(text(),'" + name + "')]/span[contains(text(),'" + afterDash
+               + "')]"));
+      Actions a = new Actions(driver());
+      im.click();
+      Action sel = a.doubleClick(im).build();
+      sel.perform();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+
+   /**
+    * 
+    */
+   public void waitForJavaToolingInitialized(String fileName)
+   {
+      final String title = "Initialize Java tooling for " + fileName;
+      new WebDriverWait(driver(), 10000).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            WebElement element =
+               driver.findElement(By.xpath("//div[@control-id='__request-notification-control' and @title='" + title
+                  + "']"));
+            return !element.isDisplayed();
+         }
+      });
    }
 }
