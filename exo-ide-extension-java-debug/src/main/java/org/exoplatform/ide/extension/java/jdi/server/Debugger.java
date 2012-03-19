@@ -254,7 +254,7 @@ public class Debugger
       {
          throw new DebuggerException(e.getMessage(), e);
       }
-      LOG.debug("Add breakpoint: {}", breakPoint);
+      //LOG.debug("Add breakpoint: {}", breakPoint);
    }
 
    /**
