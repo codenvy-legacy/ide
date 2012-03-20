@@ -146,7 +146,7 @@
 		<dependency>
 			<groupId>com.thoughtworks.qdox</groupId>
 			<artifactId>qdox</artifactId>
-			<version>1.12</version>
+			<version>1.12-eXo01</version>
 		</dependency>
 		<dependency>
 			<groupId>org.easytesting</groupId>
