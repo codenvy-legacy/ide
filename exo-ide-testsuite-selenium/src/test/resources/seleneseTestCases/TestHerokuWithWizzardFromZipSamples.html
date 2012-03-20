@@ -1,0 +1,1073 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8080/" />
+<title>HerokuWithWizzardFromZipSamples</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">New Test</td></tr>
+</thead><tbody>
+<!--Open login page-->
+<tr>
+	<td>open</td>
+	<td>/site/index.html</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=loginButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=loginButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>5000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[8]/div/div[2]/table/tr/td/div/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[2]</td>
+	<td></td>
+</tr>
+<!--Generate New SSH Key-->
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='Window']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[6]/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[3]/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Generate Key')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[3]/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Generate Key')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Ok')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/table/tbody/tr/td/div/input</td>
+	<td>heroku.com</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td[contains(.,'Ok')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>5000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr/td/div[contains(.,'heroku.com')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[5]/table/tbody/tr/td[contains(.,'Close')]</td>
+	<td></td>
+</tr>
+<!--Login to Heroku-->
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='PaaS']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[3]/td[2]/nobr</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr[11]/td[2]/nobr</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/input[@name=&quot;ideLoginViewEmailField&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/input</td>
+	<td>eos.roman@gmail.com</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/input[@name=&quot;ideLoginViewPasswordField&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/input[2]</td>
+	<td>logitech</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/*[contains(.,'Logged in Heroku successfully.')]</td>
+	<td></td>
+</tr>
+<!--Deploy public key-->
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='PaaS']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[3]/td[2]/nobr</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr[10]/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/*[contains(.,'Public keys are successfully deployed on Heroku.')]</td>
+	<td></td>
+</tr>
+<!--Create Ruby heroku app via wizzard-->
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='Project']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=nobr</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='menu-lock-layer-id']/div[3]/table/tbody/tr/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//*[.=contains(.,'Standart RoR Project')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=span[title=&quot;Standart RoR Project&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//input[@class=&quot;gwt-TextBox&quot;]</td>
+	<td>javascript{Math.floor(Math.random()*13341) + &quot;-MyPrj-&quot; + Math.floor(Math.random()*1441)}</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='ideCreateNewProjectNextButton']/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Next')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[3]/select/option[contains(.,'Heroku')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>css=select.gwt-ListBox</td>
+	<td>label=Heroku</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[5]/div/div[4]/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Finish')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>120000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/*[contains(.,'gitUrl : git@heroku.com:')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/*[contains(.,'is successfully created.')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[5]/div[2]/div/div[3]/div/div[12]/div[@title=&quot;Refresh Selected Folder&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>10000</td>
+	<td></td>
+</tr>
+<!--Push to heroku repository-->
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='Git']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[12]/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Push')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>5000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/select/option[contains(.,'heroku')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>120000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/*[contains(.,'Successfully pushed to remote repository git@heroku.com')]</td>
+	<td></td>
+</tr>
+<!--Rename application-->
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='PaaS']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[3]/td[2]/nobr</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr[3]/td[2]/nobr[contains(.,'Rename application...')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div/input[@name=&quot;ideRenameApplicationViewNameField&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div/input[@name=&quot;ideRenameApplicationViewNameField&quot;]</td>
+	<td>my-new-project2</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div[2]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Rename')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div[2]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Rename')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/*[contains(.,'is successfully renamed to my-new-project2.')]</td>
+	<td></td>
+</tr>
+<!--Open pushed projeckt-->
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='Project']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[2]/td[2]/nobr[contains(.,'PaaS')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr/td[2]/nobr[contains(.,'Heroku')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/a[contains(.,'http://my-new-project2.heroku.com/')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>http://my-new-project2.heroku.com/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>10000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div/div[2]/div/h1[contains(.,'Welcome aboard')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>goBackAndWait</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[8]/div/div[2]/table/tr/td/div/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[5]/div[2]/div/div[3]/div/div[12]/div[@title=&quot;Refresh Selected Folder&quot;]</td>
+	<td></td>
+</tr>
+<!--heroku application info-->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//*[.='PaaS']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='PaaS']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[3]/td[2]/nobr</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr[5]/td[2]/nobr[contains(.,'Application info...')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr/td[2]/div[contains(.,'my-new-project2')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr[4]/td[2]/div[contains(.,'eos.roman@gmail.com')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Ok')]</td>
+	<td></td>
+</tr>
+<!--heroku logs-->
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='PaaS']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[3]/td[2]/nobr</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr[6]/td[2]/nobr[contains(.,'Logs...')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[2]/table/tr/td/div/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Logs')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr/td/div[contains(.,'Max number of log lines')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr/td[2]/input[@name=&quot;ideLogsViewLogLinesField&quot;]</td>
+	<td>2</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div[@enabled=&quot;true&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/img[@class=&quot;exoIconButtonIcon&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div[contains(.,'heroku')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>5000</td>
+	<td></td>
+</tr>
+<!--rake commands-->
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='PaaS']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[3]/td[2]/nobr</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr[8]/td[2]/nobr[contains(.,'Rake...')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div/div[5]/input[@name=&quot;ideRakeCommandViewCommandField&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div/div[5]/input[@name=&quot;ideRakeCommandViewCommandField&quot;]</td>
+	<td>--help</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div/div[4]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Run')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div[3]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Close')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[2]/table/tr/td/div/div[2]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Output')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/table/tbody/tr/td/font[@color=&quot;#000088&quot; and contains(.,'{options}')]</td>
+	<td></td>
+</tr>
+<!--Change project index page-->
+<tr>
+	<td>pause</td>
+	<td>5000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/div/div[7]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'public')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/div/div[7]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'public')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>doubleClick</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/div/div[7]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'public')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForVisible</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/div/div[7]/div/div[8]/div/table/tbody/tr/td[2]/div[contains(.,'index.html')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/div/div[7]/div/div[8]/div/table/tbody/tr/td[2]/div[contains(.,'index.html')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/div/div[7]/div/div[8]/div/table/tbody/tr/td[2]/div[contains(.,'index.html')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>doubleClick</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/div/div[7]/div/div[8]/div/table/tbody/tr/td[2]/div[contains(.,'index.html')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[8]/div/div[2]/table/tr/td/div/div[2]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[2]/span[contains(.,'index.html')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body[@class=&quot;editbox&quot;]/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[4]/div/div[2]/div/table/tbody/tr/td[2]/nobr</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[5]/div[2]/div/div[4]/div/div[2]/div/table/tbody/tr/td[2]/nobr</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/input[@name=&quot;ideGoToLineFormLineNumberField&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/input[@name=&quot;ideGoToLineFormLineNumberField&quot;]</td>
+	<td>206</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Go')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Go')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>typeKeys</td>
+	<td>//html/body/span[@class=&quot;xml-text&quot; and text()='Welcome aboard']</td>
+	<td>TEST CHANGES</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body[@class=&quot;editbox&quot; and contains(.,'TEST CHANGES')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[3]/div/div[4]/div[@enabled=&quot;true&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[3]/div/div[4]/div[@title=&quot;Save&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[5]/div[2]/div/div[3]/div/div[4]/div[@title=&quot;Save&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[3]/div/div[4]/div[@enabled=&quot;false&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[8]/div/div[2]/table/tr/td/div/div[2]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[3]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[8]/div/div[2]/table/tr/td/div/div[2]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[3]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[5]/div[2]/div/div[3]/div/div[12]/div[@title=&quot;Refresh Selected Folder&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>15000</td>
+	<td></td>
+</tr>
+<!--Add to git index after changes-->
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='Git']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[5]/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[5]/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Add')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>10000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/*[contains(.,'Successfully added to index.')]</td>
+	<td></td>
+</tr>
+<!--commit changes-->
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='Git']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[9]/td[2]/nobr[contains(.,'Commit')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[9]/td[2]/nobr[contains(.,'Commit')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/textarea[@name=&quot;ideCommitViewMessageField&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/textarea[@name=&quot;ideCommitViewMessageField&quot;]</td>
+	<td>changed index page</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Commit')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Commit')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>10000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/*[contains(.,'Commited with revision #')]</td>
+	<td></td>
+</tr>
+<!--Changing environment-->
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='PaaS']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[3]/td[2]/nobr</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr[4]/td[2]/nobr[contains(.,'Change environment')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr[4]/td[2]/nobr[contains(.,'Change environment')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr/td[2]/div/div/div[contains(.,'Change deployment')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr[2]/td/div/*[contains(.,'bamboo')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr[3]/td/div[contains(.,'bamboo')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr[3]/td/div[contains(.,'bamboo')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Change')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Change')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//*[@id=&quot;ideOutputContent&quot;]/*[contains(.,'You must specify ALL gems (including Rails) in manifest')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//*[@id=&quot;ideOutputContent&quot;]/*[contains(.,'-----&gt; Migration prepared.')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>5000</td>
+	<td></td>
+</tr>
+<!--Push to heroku repository-->
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='Git']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[12]/td[2]/nobr[contains(.,'Remote')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[12]/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Push')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>5000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/select/option[contains(.,'heroku')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>120000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/*[contains(.,'Successfully pushed to remote repository git@heroku.com')]</td>
+	<td></td>
+</tr>
+<!--Check changes of pushed projeckt-->
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='Project']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[2]/td[2]/nobr[contains(.,'PaaS')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr/td[2]/nobr[contains(.,'Heroku')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/a[contains(.,'http://my-new-project2.heroku.com/')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>http://my-new-project2.heroku.com/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>refresh</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>12000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div/div[2]/div/h1[contains(.,'TEST CHANGES')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>goBackAndWait</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[8]/div/div[2]/table/tr/td/div/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[5]/div[2]/div/div[3]/div/div[12]/div[@title=&quot;Refresh Selected Folder&quot;]</td>
+	<td></td>
+</tr>
+<!--delete heroku application-->
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='PaaS']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[3]/td[2]/nobr</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr[2]/td[2]/nobr[contains(.,'Delete application...')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr/td[2]/div/div/div[contains(.,'Delete application from Heroku')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Yes')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Yes')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/*[contains(.,'Application is successfully deleted on Heroku.')]</td>
+	<td></td>
+</tr>
+<!--switch heroku account-->
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='PaaS']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[3]/td[2]/nobr</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr[11]/td[2]/nobr</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/input[@name=&quot;ideLoginViewEmailField&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/input</td>
+	<td>riuvshin@exoplatform.com</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/input[@name=&quot;ideLoginViewPasswordField&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/input[2]</td>
+	<td>logitech</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/*[contains(.,'Logged in Heroku successfully.')]</td>
+	<td></td>
+</tr>
+<!--close current application-->
+<tr>
+	<td>mouseDown</td>
+	<td>//html/body/div[5]/div[2]/div/div[2]/div/table/tbody/tr/td[contains(.,'Project')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[4]/td[2]/nobr[contains(.,'Close')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[4]/td[2]/nobr[contains(.,'Close')]</td>
+	<td></td>
+</tr>
+<!--delete ssh key-->
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='Window']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[6]/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr/td[3]/div[contains(.,'Delete')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr/td[3]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Yes')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[5]/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Close')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>5000</td>
+	<td></td>
+</tr>
+<!--logout-->
+<tr>
+	<td>click</td>
+	<td>//*[@id=&quot;logoutButton&quot;]</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

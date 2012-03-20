@@ -235,6 +235,34 @@
 				</plugins>
 			</build>
 		</profile>
-	</profiles>
 
+		<profile>
+			<id>launch-Selenese</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>selenium-maven-plugin</artifactId>
+						<configuration>
+							<browser>*firefox</browser>
+							<suite>src/test/resources/seleneseTestCases/PaaSTestSuite.html</suite>
+							<startURL>http://localhost:8080/</startURL>
+						</configuration>
+						<executions>
+							<execution>
+								<id>test</id>
+								<phase>test</phase>
+								<goals>
+									<goal>selenese</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
