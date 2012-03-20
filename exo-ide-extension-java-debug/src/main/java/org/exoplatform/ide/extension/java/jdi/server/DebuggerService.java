@@ -25,6 +25,9 @@ import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
+import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
+import org.exoplatform.ide.extension.java.jdi.shared.Variable;
+import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -122,5 +125,21 @@ public class DebuggerService
    public DebuggerEventList getEvents(@PathParam("id") String id) throws DebuggerException
    {
       return new DebuggerEventListImpl(debuggerRegistry.get(id).getEvents());
+   }
+
+   @GET
+   @Path("dump/{id}")
+   @Produces(MediaType.APPLICATION_JSON)
+   public StackFrameDump getStackFrameDump(@PathParam("id") String id) throws DebuggerException
+   {
+      return debuggerRegistry.get(id).dumpStackFrame();
+   }
+
+   @POST
+   @Path("variable/{id}")
+   @Produces(MediaType.APPLICATION_JSON)
+   public Variable getVariable(@PathParam("id") String id, VariablePath path) throws DebuggerException
+   {
+      return debuggerRegistry.get(id).getVariable(path.getPath());
    }
 }

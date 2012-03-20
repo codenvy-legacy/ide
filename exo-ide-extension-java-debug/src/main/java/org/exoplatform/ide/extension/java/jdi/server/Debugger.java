@@ -56,7 +56,7 @@ import java.util.Map;
 /**
  * Connects to JVM over Java Debug Wire Protocol handle its events. All methods of this class may throws
  * DebuggerException. Typically such exception caused by errors in underlying JDI (Java Debug Interface), e.g.
- * connection errors
+ * connection errors. Instance of Debugger is not thread-safe.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
