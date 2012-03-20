@@ -18,17 +18,18 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.initialize;
 
-import com.google.gwt.http.client.RequestException;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -40,8 +41,8 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallb
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.cloudbees.client.marshaller.DeployWarUnmarshaller;
 import org.exoplatform.ide.extension.cloudbees.client.marshaller.DomainsUnmarshaller;
+import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
@@ -50,11 +51,7 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -215,28 +212,46 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
       final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       try
       {
+         AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
          CloudBeesClientService.getInstance().initializeApplication(
             applicationId,
             vfs.getId(),
             project.getId(),
             warUrl,
             null,
-            new CloudBeesAsyncRequestCallback<Map<String, String>>(new DeployWarUnmarshaller(
-               new HashMap<String, String>()), deployWarLoggedInHandler, null)
+            new CloudBeesAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
+               deployWarLoggedInHandler, null)
             {
                @Override
-               protected void onSuccess(final Map<String, String> deployResult)
+               protected void onSuccess(final ApplicationInfo appInfo)
                {
-                  String output = CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationSuccess() + "<br>";
-                  output += CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationInfo() + "<br>";
+                  StringBuilder output =
+                     new StringBuilder(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationSuccess())
+                        .append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationInfo()).append("<br>");
 
-                  Iterator<Entry<String, String>> it = deployResult.entrySet().iterator();
-                  while (it.hasNext())
-                  {
-                     Entry<String, String> entry = (Entry<String, String>)it.next();
-                     output += entry.getKey() + " : " + entry.getValue() + "<br>";
-                  }
-                  IDE.fireEvent(new OutputEvent(output, Type.INFO));
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridId()).append(" : ")
+                     .append(appInfo.getId()).append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridTitle()).append(" : ")
+                     .append(appInfo.getTitle()).append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridServerPool())
+                     .append(" : ").append(appInfo.getServerPool()).append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridStatus()).append(" : ")
+                     .append(appInfo.getStatus()).append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridContainer())
+                     .append(" : ").append(appInfo.getContainer()).append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridIdleTimeout())
+                     .append(" : ").append(appInfo.getIdleTimeout()).append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridMaxMemory())
+                     .append(" : ").append(appInfo.getMaxMemory()).append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridSecurityMode())
+                     .append(" : ").append(appInfo.getSecurityMode()).append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridClusterSize())
+                     .append(" : ").append(appInfo.getClusterSize()).append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridUrl()).append(" : ")
+                     .append(appInfo.getUrl()).append("<br>");
+
+                  IDE.fireEvent(new OutputEvent(output.toString(), Type.INFO));
                   IDE.fireEvent(new RefreshBrowserEvent(project));
                }
 

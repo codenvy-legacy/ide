@@ -16,29 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.cloudbees.client;
+package org.exoplatform.ide.extension.heroku.client;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
-import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
-import org.exoplatform.ide.extension.cloudbees.shared.Credentials;
+import org.exoplatform.ide.extension.heroku.shared.Credentials;
+import org.exoplatform.ide.extension.heroku.shared.RakeCommandResult;
+import org.exoplatform.ide.extension.heroku.shared.Stack;
 
 /**
- * The interface for the AutoBean generator.
+ * The interface for the {@link AutoBean} generator.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: CloudBeesAutoBeanFactory.java Mar 15, 2012 10:38:48 AM azatsarynnyy $
+ * @version $Id: HerokuAutoBeanFactory.java Mar 19, 2012 11:27:42 AM azatsarynnyy $
  *
  */
-public interface CloudBeesAutoBeanFactory extends AutoBeanFactory
+public interface HerokuAutoBeanFactory extends AutoBeanFactory
 {
    /**
-    * A factory method for an application info bean.
+    * A factory method for a Heroku stack bean.
     * 
-    * @return an {@link AutoBean} of type {@link ApplicationInfo}
+    * @return an {@link AutoBean} of type {@link Stack}
     */
-   AutoBean<ApplicationInfo> applicationInfo();
+   AutoBean<Stack> stack();
 
    /**
     * A factory method for a credentials bean.
@@ -46,4 +47,11 @@ public interface CloudBeesAutoBeanFactory extends AutoBeanFactory
     * @return an {@link AutoBean} of type {@link Credentials}
     */
    AutoBean<Credentials> credentials();
+
+   /**
+    * A factory method for a rake command result bean.
+    * 
+    * @return an {@link AutoBean} of type {@link RakeCommandResult}
+    */
+   AutoBean<RakeCommandResult> rakeCommandResult();
 }

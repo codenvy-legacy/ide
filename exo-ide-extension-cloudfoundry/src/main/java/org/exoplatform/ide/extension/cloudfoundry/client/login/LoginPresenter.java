@@ -236,7 +236,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
    {
       try
       {
-         AutoBean<SystemInfo> systemInfo = CloudFoundryExtension.AUTO_BEAN_FACTORY.create(SystemInfo.class);
+         AutoBean<SystemInfo> systemInfo = CloudFoundryExtension.AUTO_BEAN_FACTORY.systemInfo();
          AutoBeanUnmarshaller<SystemInfo> unmarshaller = new AutoBeanUnmarshaller<SystemInfo>(systemInfo);
          CloudFoundryClientService.getInstance().getSystemInfo(server,
             new AsyncRequestCallback<SystemInfo>(unmarshaller)

@@ -198,7 +198,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
       try
       {
          AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-            CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+            CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
 
          AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
             new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);

@@ -24,8 +24,10 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -43,8 +45,8 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesLocalizationConstant;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoginCanceledHandler;
-import org.exoplatform.ide.extension.cloudbees.client.marshaller.DeployWarUnmarshaller;
 import org.exoplatform.ide.extension.cloudbees.client.marshaller.DomainsUnmarshaller;
+import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
@@ -53,11 +55,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -214,28 +212,46 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
 
       try
       {
+         AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
          CloudBeesClientService.getInstance().initializeApplication(
             domain + "/" + name,
             vfs.getId(),
             project.getId(),
             warUrl,
             null,
-            new CloudBeesAsyncRequestCallback<Map<String, String>>(new DeployWarUnmarshaller(
-               new HashMap<String, String>()), createAppHandler, null)
+            new CloudBeesAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
+               createAppHandler, null)
             {
                @Override
-               protected void onSuccess(Map<String, String> result)
+               protected void onSuccess(ApplicationInfo appInfo)
                {
-                  String output = CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationSuccess() + "<br>";
-                  output += CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationInfo() + "<br>";
+                  StringBuilder output =
+                     new StringBuilder(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationSuccess())
+                        .append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationInfo()).append("<br>");
 
-                  Iterator<Entry<String, String>> it = result.entrySet().iterator();
-                  while (it.hasNext())
-                  {
-                     Entry<String, String> entry = (Entry<String, String>)it.next();
-                     output += entry.getKey() + " : " + entry.getValue() + "<br>";
-                  }
-                  IDE.fireEvent(new OutputEvent(output, Type.INFO));
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridId()).append(" : ")
+                     .append(appInfo.getId()).append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridTitle()).append(" : ")
+                     .append(appInfo.getTitle()).append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridServerPool())
+                     .append(" : ").append(appInfo.getServerPool()).append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridStatus()).append(" : ")
+                     .append(appInfo.getStatus()).append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridContainer())
+                     .append(" : ").append(appInfo.getContainer()).append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridIdleTimeout())
+                     .append(" : ").append(appInfo.getIdleTimeout()).append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridMaxMemory())
+                     .append(" : ").append(appInfo.getMaxMemory()).append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridSecurityMode())
+                     .append(" : ").append(appInfo.getSecurityMode()).append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridClusterSize())
+                     .append(" : ").append(appInfo.getClusterSize()).append("<br>");
+                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridUrl()).append(" : ")
+                     .append(appInfo.getUrl()).append("<br>");
+
+                  IDE.fireEvent(new OutputEvent(output.toString(), Type.INFO));
                   IDE.fireEvent(new RefreshBrowserEvent(project));
                }
 

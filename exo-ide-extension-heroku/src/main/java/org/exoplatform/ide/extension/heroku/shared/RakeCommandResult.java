@@ -16,34 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.cloudbees.client;
-
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanFactory;
-
-import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
-import org.exoplatform.ide.extension.cloudbees.shared.Credentials;
+package org.exoplatform.ide.extension.heroku.shared;
 
 /**
- * The interface for the AutoBean generator.
+ * Interface describing result of the rake command.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: CloudBeesAutoBeanFactory.java Mar 15, 2012 10:38:48 AM azatsarynnyy $
+ * @version $Id: RakeCommandResult.java Mar 19, 2012 2:57:20 PM azatsarynnyy $
  *
  */
-public interface CloudBeesAutoBeanFactory extends AutoBeanFactory
+public interface RakeCommandResult
 {
-   /**
-    * A factory method for an application info bean.
-    * 
-    * @return an {@link AutoBean} of type {@link ApplicationInfo}
-    */
-   AutoBean<ApplicationInfo> applicationInfo();
 
    /**
-    * A factory method for a credentials bean.
+    * Returns the result result of the rake command.
     * 
-    * @return an {@link AutoBean} of type {@link Credentials}
+    * @return {@link String} rake command result.
     */
-   AutoBean<Credentials> credentials();
+   public String getResult();
+
+   /**
+    * Change the result of the rake command.
+    * 
+    * @param result rake command result.
+    */
+   public void setResult(String result);
+
 }

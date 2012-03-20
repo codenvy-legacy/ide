@@ -23,8 +23,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -35,7 +37,6 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallb
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.cloudbees.client.marshaller.DeployWarUnmarshaller;
 import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -98,22 +99,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
    {
       if (event.getAppInfo() != null)
       {
-         ApplicationInfo appinfo = event.getAppInfo();
-         Map<String, String> map = new HashMap<String, String>();
-         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridId(), appinfo.getId());
-         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridTitle(), appinfo.getTitle());
-         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridServerPool(), appinfo.getServerPool());
-         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridStatus(), appinfo.getStatus());
-         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridContainer(), appinfo.getContainer());
-         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridIdleTimeout(),
-            appinfo.getIdleTimeout());
-         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridMaxMemory(), appinfo.getMaxMemory());
-         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridSecurityMode(),
-            appinfo.getSecurityMode());
-         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridClusterSize(),
-            appinfo.getClusterSize());
-         map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridUrl(), appinfo.getUrl());
-         showAppInfo(map);
+         showAppInfo(event.getAppInfo());
       }
       else if (makeSelectionCheck())
       {
@@ -126,22 +112,23 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
    {
       try
       {
+         AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
          CloudBeesClientService.getInstance().getApplicationInfo(
             null,
             vfs.getId(),
             projectId,
-            new CloudBeesAsyncRequestCallback<Map<String, String>>(new DeployWarUnmarshaller(
-               new HashMap<String, String>()), new LoggedInHandler()
-            {
-               @Override
-               public void onLoggedIn()
+            new CloudBeesAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
+               new LoggedInHandler()
                {
-                  showApplicationInfo(projectId);
-               }
-            }, null)
+                  @Override
+                  public void onLoggedIn()
+                  {
+                     showApplicationInfo(projectId);
+                  }
+               }, null)
             {
                @Override
-               protected void onSuccess(Map<String, String> result)
+               protected void onSuccess(ApplicationInfo result)
                {
                   showAppInfo(result);
                }
@@ -153,7 +140,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
       }
    }
 
-   private void showAppInfo(Map<String, String> map)
+   private void showAppInfo(ApplicationInfo appInfo)
    {
       if (display == null)
       {
@@ -161,6 +148,18 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
          bindDisplay();
          IDE.getInstance().openView(display.asView());
       }
+
+      Map<String, String> map = new HashMap<String, String>();
+      map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridId(), appInfo.getId());
+      map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridTitle(), appInfo.getTitle());
+      map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridServerPool(), appInfo.getServerPool());
+      map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridStatus(), appInfo.getStatus());
+      map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridContainer(), appInfo.getContainer());
+      map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridIdleTimeout(), appInfo.getIdleTimeout());
+      map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridMaxMemory(), appInfo.getMaxMemory());
+      map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridSecurityMode(), appInfo.getSecurityMode());
+      map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridClusterSize(), appInfo.getClusterSize());
+      map.put(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridUrl(), appInfo.getUrl());
 
       Iterator<Entry<String, String>> it = map.entrySet().iterator();
       List<Entry<String, String>> valueList = new ArrayList<Map.Entry<String, String>>();

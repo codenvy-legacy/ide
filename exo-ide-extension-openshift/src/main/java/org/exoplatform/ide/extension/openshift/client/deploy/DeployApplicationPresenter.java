@@ -170,7 +170,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
    {
       try
       {
-         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.create(AppInfo.class);
+         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
          AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
          OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(),
             applicationType, new AsyncRequestCallback<AppInfo>(unmarshaller)

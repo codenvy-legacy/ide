@@ -68,9 +68,9 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
 
       Stack getSelectedStack();
    }
-   
+
    private String herokuApplication = null;
-   
+
    /**
     * Presenter's view.
     */
@@ -128,13 +128,13 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
    public void onChangeApplicationStack(ChangeApplicationStackEvent event)
    {
       herokuApplication = event.getApplication();
-      
+
       if (event.getApplication() != null && !event.getApplication().isEmpty())
       {
          getStacks();
          return;
       }
-      
+
       if (makeSelectionCheck())
       {
          getStacks();

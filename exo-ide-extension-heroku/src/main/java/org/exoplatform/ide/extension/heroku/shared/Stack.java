@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -21,115 +21,67 @@ package org.exoplatform.ide.extension.heroku.shared;
 /**
  * Heroku stack - deployment variable.
  * 
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 28, 2011 4:09:51 PM anya $
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: Stack.java Mar 19, 2012 11:53:45 AM azatsarynnyy $
  *
  */
-public class Stack
+public interface Stack
 {
-   /**
-    * Stack's name.
-    */
-   private String name;
 
    /**
-    * Beta version. If <code>true</code> the stack version is beta. 
-    */
-   private boolean beta;
-
-   /**
-    * If <code>true</code> the stack is current for the application.
-    */
-   private boolean current;
-
-   /**
+    * Returns the stack's name.
     * 
+    * @return the name stack's name.
     */
-   private boolean requested;
+   public String getName();
 
    /**
-    * Default constructor.
+    * Changes the name of this stack to be equal to the argument <code>name</code>.
+    * 
+    * @param name the new name of this stack.
     */
-   public Stack()
-   {
-      
-   }
-   
-   /**
-    * @param name stack's name
-    * @param current if <code>true</code> the stack is current for the application
-    * @param beta if <code>true</code> the stack version is beta
-    * @param requested f <code>true</code> the stack version is requested
-    */
-   public Stack(String name, boolean current, boolean beta, boolean requested)
-   {
-      this.name = name;
-      this.beta = beta;
-      this.current = current;
-      this.requested = requested;
-   }
+   public void setName(String name);
 
    /**
-    * @return the name stack's name
+    * Returns <code>true</code> if the stack version is beta.
+    * 
+    * @return <code>true</code> when the stack version is beta.
     */
-   public String getName()
-   {
-      return name;
-   }
+   public boolean isBeta();
 
    /**
-    * @param name stack's name
+    * Set the stack version is beta.
+    * 
+    * @param beta, if <code>true</code> the stack version is beta.
     */
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+   public void setBeta(boolean beta);
 
    /**
-    * @return the beta, if <code>true</code> the stack version is beta
-    */
-   public boolean isBeta()
-   {
-      return beta;
-   }
-
-   /**
-    * @param beta, if <code>true</code> the stack version is beta
-    */
-   public void setBeta(boolean beta)
-   {
-      this.beta = beta;
-   }
-
-   /**
+    * Test if this stack is a current stack for the application.
+    * 
     * @return the current if <code>true</code> the stack is current for the application
-    */ 
-   public boolean isCurrent()
-   {
-      return current;
-   }
+    */
+   public boolean isCurrent();
 
    /**
+    * Set the stack is current the the application.
+    * 
     * @param current if <code>true</code> the stack is current for the application
     */
-   public void setCurrent(boolean current)
-   {
-      this.current = current;
-   }
+   public void setCurrent(boolean current);
 
    /**
-    * @return the requested
+    * Returns <code>true</code> if the stack is requested.
+    * 
+    * @return <code>true</code> if the stack is requested
     */
-   public boolean isRequested()
-   {
-      return requested;
-   }
+   public boolean isRequested();
 
    /**
-    * @param requested the requested to set
+    * If the argument value is <code>true</code> set the stack is requested.
+    * 
+    * @param requested if <code>true</code> the stack is requested.
     */
-   public void setRequested(boolean requested)
-   {
-      this.requested = requested;
-   }
+   public void setRequested(boolean requested);
+
 }

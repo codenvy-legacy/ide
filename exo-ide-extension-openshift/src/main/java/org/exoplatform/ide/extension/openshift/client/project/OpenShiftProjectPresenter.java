@@ -192,7 +192,7 @@ public class OpenShiftProjectPresenter extends GitPresenter implements ProjectOp
    {
       try
       {
-         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.create(AppInfo.class);
+         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
          AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
          OpenShiftClientService.getInstance().getApplicationInfo(null, vfs.getId(), openedProject.getId(),
             new AsyncRequestCallback<AppInfo>(unmarshaller)

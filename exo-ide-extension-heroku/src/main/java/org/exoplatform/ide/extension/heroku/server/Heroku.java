@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.heroku.server;
 
+import static org.apache.commons.codec.binary.Base64.encodeBase64;
+
 import org.eclipse.jgit.transport.URIish;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
@@ -66,8 +68,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-
-import static org.apache.commons.codec.binary.Base64.encodeBase64;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -876,7 +876,7 @@ public class Heroku
             boolean current = Boolean.valueOf((String)xpath.evaluate("current", stackElement, XPathConstants.STRING));
             boolean requested = Boolean.valueOf((String)xpath.evaluate("requested", stackElement, XPathConstants.STRING));
             boolean beta = Boolean.valueOf((String)xpath.evaluate("beta", stackElement, XPathConstants.STRING));
-            stacks.add(new Stack(stackName, current, beta, requested));
+            stacks.add(new StackBean(stackName, current, beta, requested));
          }
       }
       catch (ParserConfigurationException pce)

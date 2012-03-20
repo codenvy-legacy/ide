@@ -20,17 +20,18 @@ package org.exoplatform.ide.extension.cloudbees.client;
 
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.extension.cloudbees.client.marshaller.CredentailsMarshaller;
 import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
+import org.exoplatform.ide.extension.cloudbees.shared.Credentials;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -107,8 +108,8 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    {
       final String url = restServiceContext + DOMAINS;
 
-      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**
@@ -120,12 +121,12 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    {
       String url = restServiceContext + LOGIN;
 
-      HashMap<String, String> credentials = new HashMap<String, String>();
-      credentials.put("email", email);
-      credentials.put("password", password);
-      CredentailsMarshaller marshaller = new CredentailsMarshaller(credentials);
+      Credentials credentialsBean = CloudBeesExtension.AUTO_BEAN_FACTORY.credentials().as();
+      credentialsBean.setEmail(email);
+      credentialsBean.setPassword(password);
+      String credentials = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(credentialsBean)).getPayload();
 
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(marshaller.marshal())
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(credentials)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
@@ -149,7 +150,7 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
     */
    @Override
    public void getApplicationInfo(String appId, String vfsId, String projectId,
-      CloudBeesAsyncRequestCallback<Map<String, String>> callback) throws RequestException
+      CloudBeesAsyncRequestCallback<ApplicationInfo> callback) throws RequestException
    {
       final String url = restServiceContext + APPS_INFO;
 
@@ -208,7 +209,7 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
     */
    @Override
    public void initializeApplication(String appId, String vfsId, String projectId, String warFile, String message,
-      CloudBeesAsyncRequestCallback<Map<String, String>> callback) throws RequestException
+      CloudBeesAsyncRequestCallback<ApplicationInfo> callback) throws RequestException
    {
       final String url = restServiceContext + INITIALIZE;
 
@@ -231,7 +232,7 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    public void applicationList(CloudBeesAsyncRequestCallback<List<ApplicationInfo>> callback) throws RequestException
    {
       final String url = restServiceContext + APP_LIST;
-      
+
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
 
@@ -243,7 +244,7 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
     */
    @Override
    public void updateApplication(String appId, String vfsId, String projectId, String warFile, String message,
-      CloudBeesAsyncRequestCallback<Map<String, String>> callback) throws RequestException
+      CloudBeesAsyncRequestCallback<ApplicationInfo> callback) throws RequestException
    {
       final String url = restServiceContext + APPS_UPDATE;
 

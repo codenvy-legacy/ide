@@ -19,8 +19,10 @@
 package org.exoplatform.ide.extension.cloudbees.client.delete;
 
 import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -30,13 +32,10 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallb
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.cloudbees.client.marshaller.DeployWarUnmarshaller;
+import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Presenter for deleting application from CloudBees. Performs following actions on delete: 1. Gets application id (application
@@ -85,27 +84,26 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       try
       {
+         AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
          CloudBeesClientService.getInstance().getApplicationInfo(
             null,
             vfs.getId(),
             projectId,
-            new CloudBeesAsyncRequestCallback<Map<String, String>>(new DeployWarUnmarshaller(
-               new HashMap<String, String>()), new LoggedInHandler()
-            {
-               @Override
-               public void onLoggedIn()
+            new CloudBeesAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
+               new LoggedInHandler()
                {
-                  getApplicationInfo();
-               }
-            }, null)
+                  @Override
+                  public void onLoggedIn()
+                  {
+                     getApplicationInfo();
+                  }
+               }, null)
             {
 
                @Override
-               protected void onSuccess(Map<String, String> result)
+               protected void onSuccess(ApplicationInfo appInfo)
                {
-                  String appId = result.get("id");
-                  String appTitle = result.get("title");
-                  askForDelete(appId, appTitle);
+                  askForDelete(appInfo.getId(), appInfo.getTitle());
                }
             });
       }

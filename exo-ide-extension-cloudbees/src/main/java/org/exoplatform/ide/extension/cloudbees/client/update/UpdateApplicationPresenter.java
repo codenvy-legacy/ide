@@ -19,8 +19,10 @@
 package org.exoplatform.ide.extension.cloudbees.client.update;
 
 import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -31,15 +33,12 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesLocalizationConstant;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.cloudbees.client.marshaller.DeployWarUnmarshaller;
+import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Presenter for updating application on CloudBees.
@@ -127,26 +126,27 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       try
       {
+         AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
          CloudBeesClientService.getInstance().getApplicationInfo(
             null,
             vfs.getId(),
             projectId,
-            new CloudBeesAsyncRequestCallback<Map<String, String>>(new DeployWarUnmarshaller(
-               new HashMap<String, String>()), new LoggedInHandler()
-            {
-               @Override
-               public void onLoggedIn()
+            new CloudBeesAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
+               new LoggedInHandler()
                {
-                  getApplicationInfo();
-               }
-            }, null)
+                  @Override
+                  public void onLoggedIn()
+                  {
+                     getApplicationInfo();
+                  }
+               }, null)
             {
 
                @Override
-               protected void onSuccess(Map<String, String> result)
+               protected void onSuccess(ApplicationInfo appInfo)
                {
-                  appId = result.get("id");
-                  appTitle = result.get("title");
+                  appId = appInfo.getId();
+                  appTitle = appInfo.getTitle();
                   askForMessage();
                }
             });
@@ -167,26 +167,27 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
 
       try
       {
+         AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
          CloudBeesClientService.getInstance().updateApplication(
             appId,
             vfs.getId(),
             projectId,
             warUrl,
             updateMessage,
-            new CloudBeesAsyncRequestCallback<Map<String, String>>(new DeployWarUnmarshaller(
-               new HashMap<String, String>()), new LoggedInHandler()
-            {
-
-               @Override
-               public void onLoggedIn()
+            new CloudBeesAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
+               new LoggedInHandler()
                {
-                  doUpdate();
-               }
-            }, null)
+
+                  @Override
+                  public void onLoggedIn()
+                  {
+                     doUpdate();
+                  }
+               }, null)
             {
 
                @Override
-               protected void onSuccess(Map<String, String> result)
+               protected void onSuccess(ApplicationInfo appInfo)
                {
                   IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
                      .applicationUpdatedMsg(appTitle), Type.INFO));

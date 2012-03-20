@@ -139,7 +139,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
       try
       {
          AutoBean<CloudFoundryApplication> CloudFoundryApplication =
-            CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+            CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
          AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
             new AutoBeanUnmarshaller<CloudFoundryApplication>(CloudFoundryApplication);
          CloudFoundryClientService.getInstance().getApplicationInfo(
@@ -179,7 +179,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
       try
       {
          AutoBean<CloudFoundryApplication> CloudFoundryApplication =
-            CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+            CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
 
          AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
             new AutoBeanUnmarshaller<CloudFoundryApplication>(CloudFoundryApplication);
@@ -224,7 +224,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
       try
       {
          AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-            CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+            CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
 
          AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
             new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
@@ -300,7 +300,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                   try
                   {
                      AutoBean<CloudFoundryApplication> CloudFoundryApplication =
-                        CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+                        CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
 
                      AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                         new AutoBeanUnmarshaller<CloudFoundryApplication>(CloudFoundryApplication);
@@ -360,7 +360,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
       try
       {
          AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-            CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+            CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
 
          AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
             new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);

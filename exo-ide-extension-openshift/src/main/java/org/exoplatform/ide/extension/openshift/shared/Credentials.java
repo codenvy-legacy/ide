@@ -16,34 +16,42 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.cloudbees.client;
-
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanFactory;
-
-import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
-import org.exoplatform.ide.extension.cloudbees.shared.Credentials;
+package org.exoplatform.ide.extension.openshift.shared;
 
 /**
- * The interface for the AutoBean generator.
+ * Authentication credentials.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: CloudBeesAutoBeanFactory.java Mar 15, 2012 10:38:48 AM azatsarynnyy $
+ * @version $Id: Credentials.java Mar 20, 2012 9:32:20 AM azatsarynnyy $
  *
  */
-public interface CloudBeesAutoBeanFactory extends AutoBeanFactory
+public interface Credentials
 {
    /**
-    * A factory method for an application info bean.
+    * Returns the RedHat login.
     * 
-    * @return an {@link AutoBean} of type {@link ApplicationInfo}
+    * @return e-mail.
     */
-   AutoBean<ApplicationInfo> applicationInfo();
+   public String getRhlogin();
 
    /**
-    * A factory method for a credentials bean.
+    * Set the RedHat login.
     * 
-    * @return an {@link AutoBean} of type {@link Credentials}
+    * @param email
     */
-   AutoBean<Credentials> credentials();
+   public void setRhlogin(String email);
+
+   /**
+    * Returns the password.
+    * 
+    * @return password.
+    */
+   public String getPassword();
+
+   /**
+    * Set the password.
+    * 
+    * @param password password.
+    */
+   public void setPassword(String password);
 }

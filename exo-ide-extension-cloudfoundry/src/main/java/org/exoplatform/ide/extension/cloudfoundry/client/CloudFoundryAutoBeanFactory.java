@@ -22,6 +22,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.Credentials;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
@@ -56,11 +57,18 @@ public interface CloudFoundryAutoBeanFactory extends AutoBeanFactory
     * @return an {@link AutoBean} of type {@link SystemResources}
     */
    AutoBean<SystemResources> systemResources();
-   
+
    /**
     * A factory method for a system resources bean.
     * 
     * @return an {@link AutoBean} of type {@link Framework}
     */
    AutoBean<Framework> framework();
+
+   /**
+    * A factory method for a credentials bean.
+    * 
+    * @return an {@link AutoBean} of type {@link Credentials}
+    */
+   AutoBean<Credentials> credentials();
 }

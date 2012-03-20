@@ -16,34 +16,56 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.cloudbees.client;
-
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanFactory;
-
-import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
-import org.exoplatform.ide.extension.cloudbees.shared.Credentials;
+package org.exoplatform.ide.extension.cloudfoundry.shared;
 
 /**
- * The interface for the AutoBean generator.
+ * Authentication credentials.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: CloudBeesAutoBeanFactory.java Mar 15, 2012 10:38:48 AM azatsarynnyy $
+ * @version $Id: Credentials.java Mar 20, 2012 9:17:20 AM azatsarynnyy $
  *
  */
-public interface CloudBeesAutoBeanFactory extends AutoBeanFactory
+public interface Credentials
 {
    /**
-    * A factory method for an application info bean.
+    * Returns the server name.
     * 
-    * @return an {@link AutoBean} of type {@link ApplicationInfo}
+    * @return the server name.
     */
-   AutoBean<ApplicationInfo> applicationInfo();
+   public String getServer();
 
    /**
-    * A factory method for a credentials bean.
+    * Set the server name.
     * 
-    * @return an {@link AutoBean} of type {@link Credentials}
+    * @param server the server name
     */
-   AutoBean<Credentials> credentials();
+   public void setServer(String server);
+
+   /**
+    * Returns the e-mail.
+    * 
+    * @return e-mail.
+    */
+   public String getEmail();
+
+   /**
+    * Set the e-mail.
+    * 
+    * @param email
+    */
+   public void setEmail(String email);
+   
+   /**
+    * Returns the password.
+    * 
+    * @return password.
+    */
+   public String getPassword();
+
+   /**
+    * Set the password.
+    * 
+    * @param password password.
+    */
+   public void setPassword(String password);
 }

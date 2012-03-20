@@ -59,7 +59,7 @@ public abstract class CloudBeesClientService
     * @param callback callback
     */
    public abstract void initializeApplication(String appId, String vfsId, String projectId, String warFile,
-      String message, CloudBeesAsyncRequestCallback<Map<String, String>> callback) throws RequestException;
+      String message, CloudBeesAsyncRequestCallback<ApplicationInfo> callback) throws RequestException;
 
    /**
     * Get the available domains.
@@ -75,7 +75,8 @@ public abstract class CloudBeesClientService
     * @param password user's password
     * @param callback callback
     */
-   public abstract void login(String email, String password, AsyncRequestCallback<String> callback) throws RequestException;
+   public abstract void login(String email, String password, AsyncRequestCallback<String> callback)
+      throws RequestException;
 
    /**
     * Logout CloudBees.
@@ -93,7 +94,7 @@ public abstract class CloudBeesClientService
     * @param callback callback
     */
    public abstract void getApplicationInfo(String appId, String vfsId, String projectId,
-      CloudBeesAsyncRequestCallback<Map<String, String>> callback) throws RequestException;
+      CloudBeesAsyncRequestCallback<ApplicationInfo> callback) throws RequestException;
 
    /**
     * Delete application from CloudBees.
@@ -117,7 +118,7 @@ public abstract class CloudBeesClientService
     * @param callback callback
     */
    public abstract void updateApplication(String appId, String vfsId, String projectId, String warFile, String message,
-      CloudBeesAsyncRequestCallback<Map<String, String>> callback) throws RequestException;
+      CloudBeesAsyncRequestCallback<ApplicationInfo> callback) throws RequestException;
 
    /**
     * Deploy war with the application.
@@ -133,6 +134,7 @@ public abstract class CloudBeesClientService
    /**
     * Receive all CB applications for this account.
     */
-   public abstract void applicationList(CloudBeesAsyncRequestCallback<List<ApplicationInfo>> callback) throws RequestException;
+   public abstract void applicationList(CloudBeesAsyncRequestCallback<List<ApplicationInfo>> callback)
+      throws RequestException;
 
 }

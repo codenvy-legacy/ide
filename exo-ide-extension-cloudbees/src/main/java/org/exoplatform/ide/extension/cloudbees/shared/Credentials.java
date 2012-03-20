@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,34 +16,43 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.heroku.client.marshaller;
+package org.exoplatform.ide.extension.cloudbees.shared;
 
 /**
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: May 25, 2011 3:00:16 PM anya $
+ * Authentication credentials.
  * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: Credentials.java Mar 20, 2012 9:17:20 AM azatsarynnyy $
+ *
  */
-public interface Constants
+public interface Credentials
 {
-   public static final String COMMAND = "command";
 
-   public static final String OPTIONS = "options";
+   /**
+    * Returns the e-mail.
+    * 
+    * @return e-mail.
+    */
+   public String getEmail();
 
-   public static final String ARGS = "args";
+   /**
+    * Set the e-mail.
+    * 
+    * @param email
+    */
+   public void setEmail(String email);
 
-   public static final String WORK_DIR = "workDir";
+   /**
+    * Returns the password.
+    * 
+    * @return password.
+    */
+   public String getPassword();
 
-   public static final String EMAIL = "email";
-
-   public static final String PASSWORD = "password";
-
-   public static final String REMOTE = "--remote";
-
-   public static final String NAME = "name";
-
-   public static final String BETA = "beta";
-
-   public static final String CURRENT = "current";
-
-   public static final String REQUESTED = "requested";
+   /**
+    * Set the password.
+    * 
+    * @param password password.
+    */
+   public void setPassword(String password);
 }

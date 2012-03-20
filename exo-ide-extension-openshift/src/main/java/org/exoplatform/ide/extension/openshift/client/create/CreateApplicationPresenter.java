@@ -232,7 +232,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       try
       {
-         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.create(AppInfo.class);
+         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
          AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
          OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), projectId, type,
             new AsyncRequestCallback<AppInfo>(unmarshaller)

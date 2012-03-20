@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.heroku.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -51,6 +52,11 @@ import org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter;
  */
 public class HerokuExtension extends Extension implements InitializeServicesHandler
 {
+
+   /**
+    * The generator for an {@link AutoBean}
+    */
+   public static final HerokuAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(HerokuAutoBeanFactory.class);
 
    public static final HerokuLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(HerokuLocalizationConstant.class);
 

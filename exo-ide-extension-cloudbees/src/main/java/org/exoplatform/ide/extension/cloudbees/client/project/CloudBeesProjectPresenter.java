@@ -24,8 +24,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -37,22 +39,16 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
+import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.delete.ApplicationDeletedEvent;
 import org.exoplatform.ide.extension.cloudbees.client.delete.ApplicationDeletedHandler;
 import org.exoplatform.ide.extension.cloudbees.client.delete.DeleteApplicationEvent;
 import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoEvent;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.cloudbees.client.marshaller.DeployWarUnmarshaller;
 import org.exoplatform.ide.extension.cloudbees.client.update.UpdateApplicationEvent;
+import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * Presenter for managing project, deployed on CloudBeess.
@@ -191,24 +187,25 @@ public class CloudBeesProjectPresenter extends GitPresenter implements ProjectOp
    {
       try
       {
+         AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
          CloudBeesClientService.getInstance().getApplicationInfo(
             null,
             vfs.getId(),
             project.getId(),
-            new CloudBeesAsyncRequestCallback<Map<String, String>>(new DeployWarUnmarshaller(
-               new HashMap<String, String>()), new LoggedInHandler()
+            new CloudBeesAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
+               new LoggedInHandler()
+               {
+                  @Override
+                  public void onLoggedIn()
+                  {
+                     getApplicationInfo(project);
+                  }
+               }, null)
             {
                @Override
-               public void onLoggedIn()
+               protected void onSuccess(ApplicationInfo appInfo)
                {
-                  getApplicationInfo(project);
-               }
-            }, null)
-            {
-               @Override
-               protected void onSuccess(Map<String, String> result)
-               {
-                  showAppInfo(result);
+                  showAppInfo(appInfo);
                }
             });
       }
@@ -223,19 +220,12 @@ public class CloudBeesProjectPresenter extends GitPresenter implements ProjectOp
     * 
     * @param map
     */
-   private void showAppInfo(Map<String, String> map)
+   private void showAppInfo(ApplicationInfo appInfo)
    {
-      Iterator<Entry<String, String>> it = map.entrySet().iterator();
-      List<Entry<String, String>> valueList = new ArrayList<Map.Entry<String, String>>();
-      while (it.hasNext())
-      {
-         valueList.add(it.next());
-      }
-
-      display.getApplicationName().setValue(map.get("title"));
-      display.getApplicationStatus().setValue(map.get("status"));
-      display.getApplicationInstances().setValue(map.get("clusterSize"));
-      display.setApplicationURL(map.get("url"));
+      display.getApplicationName().setValue(appInfo.getTitle());
+      display.getApplicationStatus().setValue(appInfo.getStatus());
+      display.getApplicationInstances().setValue(appInfo.getClusterSize());
+      display.setApplicationURL(appInfo.getUrl());
    }
 
    /**

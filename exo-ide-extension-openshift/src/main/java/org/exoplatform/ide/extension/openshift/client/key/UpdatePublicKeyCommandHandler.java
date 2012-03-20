@@ -72,7 +72,7 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
    {
       try
       {
-         AutoBean<RHUserInfo> rhUserInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.create(RHUserInfo.class);
+         AutoBean<RHUserInfo> rhUserInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.rhUserInfo();
          AutoBeanUnmarshaller<RHUserInfo> unmarhaller = new AutoBeanUnmarshaller<RHUserInfo>(rhUserInfo);
          OpenShiftClientService.getInstance().getUserInfo(false, new AsyncRequestCallback<RHUserInfo>(unmarhaller)
          {

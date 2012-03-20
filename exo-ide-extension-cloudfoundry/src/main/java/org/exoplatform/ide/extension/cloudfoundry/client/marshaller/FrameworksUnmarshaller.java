@@ -39,7 +39,7 @@ import java.util.List;
  * @version $Id: FrameworksUnmarshaller.java Jul 8, 2011 11:12:16 AM vereshchaka $
  * 
  */
-public class FrameworksUnmarshaller implements Unmarshallable<List<Framework>>, Constants
+public class FrameworksUnmarshaller implements Unmarshallable<List<Framework>>
 {
    private List<Framework> frameworks;
 

@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.extension.heroku.client.stack;
 
-import org.exoplatform.gwtframework.ui.client.component.ListGrid;
-import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
-import org.exoplatform.ide.extension.heroku.shared.Stack;
-
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
+
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
+import org.exoplatform.ide.extension.heroku.shared.Stack;
 
 /**
  * Grid for displaying application's stacks.

@@ -22,6 +22,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
+import org.exoplatform.ide.extension.openshift.shared.Credentials;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 
 /**
@@ -46,4 +47,11 @@ public interface OpenShiftAutoBeanFactory extends AutoBeanFactory
     * @return a {@link AutoBean} of type {@link RHUserInfo}
     */
    AutoBean<RHUserInfo> rhUserInfo();
+
+   /**
+    * A factory method for a credentials bean.
+    * 
+    * @return an {@link AutoBean} of type {@link Credentials}
+    */
+   AutoBean<Credentials> credentials();
 }

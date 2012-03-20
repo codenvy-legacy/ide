@@ -100,7 +100,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
                   try
                   {
                      AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-                        CloudFoundryExtension.AUTO_BEAN_FACTORY.create(CloudFoundryApplication.class);
+                        CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
 
                      AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                         new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);

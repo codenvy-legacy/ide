@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.heroku.client;
 
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -27,10 +29,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.extension.heroku.client.create.CreateRequestHandler;
-import org.exoplatform.ide.extension.heroku.client.marshaller.Constants;
-import org.exoplatform.ide.extension.heroku.client.marshaller.CredentailsMarshaller;
-
-import java.util.HashMap;
+import org.exoplatform.ide.extension.heroku.shared.Credentials;
 
 /**
  * Implementation of {@link HerokuClientService} service.
@@ -96,12 +95,12 @@ public class HerokuClientServiceImpl extends HerokuClientService
    {
       String url = restServiceContext + LOGIN_PATH;
 
-      HashMap<String, String> credentials = new HashMap<String, String>();
-      credentials.put(Constants.EMAIL, login);
-      credentials.put(Constants.PASSWORD, password);
-      CredentailsMarshaller marshaller = new CredentailsMarshaller(credentials);
+      Credentials credentialsBean = HerokuExtension.AUTO_BEAN_FACTORY.credentials().as();
+      credentialsBean.setEmail(login);
+      credentialsBean.setPassword(password);
+      String credentials = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(credentialsBean)).getPayload();
 
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(marshaller.marshal())
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(credentials)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }

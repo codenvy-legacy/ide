@@ -22,6 +22,8 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
@@ -37,7 +39,7 @@ import java.util.List;
  * @version $Id: Jul 28, 2011 5:38:08 PM anya $
  * 
  */
-public class StackListUnmarshaller implements Unmarshallable<List<Stack>>, Constants
+public class StackListUnmarshaller implements Unmarshallable<List<Stack>>
 {
 
    /**
@@ -65,11 +67,9 @@ public class StackListUnmarshaller implements Unmarshallable<List<Stack>>, Const
          for (int i = 0; i < jsonArray.size(); i++)
          {
             JSONObject jsonObject = jsonArray.get(i).isObject();
-            String name = jsonObject.get(NAME).isString().stringValue();
-            boolean current = jsonObject.get(CURRENT).isBoolean().booleanValue();
-            boolean beta = jsonObject.get(BETA).isBoolean().booleanValue();
-            boolean requested = jsonObject.get(REQUESTED).isBoolean().booleanValue();
-            stackList.add(new Stack(name, current, beta, requested));
+            AutoBean<Stack> stack =
+               AutoBeanCodex.decode(HerokuExtension.AUTO_BEAN_FACTORY, Stack.class, jsonObject.toString());
+            stackList.add(stack.as());
          }
       }
       catch (Exception e)

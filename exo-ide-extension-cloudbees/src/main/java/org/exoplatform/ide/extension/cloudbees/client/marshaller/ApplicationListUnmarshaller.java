@@ -19,7 +19,7 @@
 package org.exoplatform.ide.extension.cloudbees.client.marshaller;
 
 import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -60,18 +60,19 @@ public class ApplicationListUnmarshaller implements Unmarshallable<List<Applicat
          return;
       }
 
-      JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
-      if (jsonObject == null)
+      JSONArray value = JSONParser.parseLenient(response.getText()).isArray();
+
+      if (value == null)
       {
          return;
       }
 
-      for (String key : jsonObject.keySet())
+      for (int i = 0; i < value.size(); i++)
       {
-         String value = (jsonObject.get(key).isString() != null) ? jsonObject.get(key).isString().stringValue() : "";
-
+         String payload = value.get(i).isObject().toString();
+         
          AutoBean<ApplicationInfo> appInfoBean =
-            AutoBeanCodex.decode(CloudBeesExtension.AUTO_BEAN_FACTORY, ApplicationInfo.class, value);
+            AutoBeanCodex.decode(CloudBeesExtension.AUTO_BEAN_FACTORY, ApplicationInfo.class, payload);
          apps.add(appInfoBean.as());
       }
    }
