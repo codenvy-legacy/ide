@@ -137,6 +137,7 @@ public class DebuggerService
 
    @POST
    @Path("variable/{id}")
+   @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    public Variable getVariable(@PathParam("id") String id, VariablePath path) throws DebuggerException
    {
