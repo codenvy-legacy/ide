@@ -40,7 +40,6 @@ public class CreateApplicationControl extends AbstractOpenShiftControl
       setImages(OpenShiftClientBundle.INSTANCE.createApplicationControl(),
          OpenShiftClientBundle.INSTANCE.createApplicationControlDisabled());
       setEvent(new CreateApplicationEvent());
-      setDelimiterBefore(true);
    }
 
 }

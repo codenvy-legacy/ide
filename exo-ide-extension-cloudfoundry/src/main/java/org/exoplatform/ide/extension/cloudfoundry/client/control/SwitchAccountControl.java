@@ -51,7 +51,6 @@ public class SwitchAccountControl extends AbstractCloudFoundryControl
       setImages(CloudFoundryClientBundle.INSTANCE.switchAccount(),
          CloudFoundryClientBundle.INSTANCE.switchAccountDisabled());
       setEvent(new LoginEvent(null, null));
-      setDelimiterBefore(true);
    }
 
    @Override

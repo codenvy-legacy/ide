@@ -42,7 +42,6 @@ public class ShowUserInfoControl extends AbstractOpenShiftControl
       setImages(OpenShiftClientBundle.INSTANCE.userInfoControl(),
          OpenShiftClientBundle.INSTANCE.userInfoControlDisabled());
       setEvent(new ShowUserInfoEvent());
-      setDelimiterBefore(true);
    }
 
    /**

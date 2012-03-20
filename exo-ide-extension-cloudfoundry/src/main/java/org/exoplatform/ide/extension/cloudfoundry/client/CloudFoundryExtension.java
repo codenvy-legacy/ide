@@ -26,19 +26,10 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter;
-import org.exoplatform.ide.extension.cloudfoundry.client.control.ApplicationInfoControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.ApplicationsControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.CloudFoundryControlGroup;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.CreateApplicationControl;
-import org.exoplatform.ide.extension.cloudfoundry.client.control.DeleteApplicationControl;
-import org.exoplatform.ide.extension.cloudfoundry.client.control.RestartApplicationControl;
-import org.exoplatform.ide.extension.cloudfoundry.client.control.StartApplicationControl;
-import org.exoplatform.ide.extension.cloudfoundry.client.control.StopApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.SwitchAccountControl;
-import org.exoplatform.ide.extension.cloudfoundry.client.control.UnmapUrlControl;
-import org.exoplatform.ide.extension.cloudfoundry.client.control.UpdateApplicationControl;
-import org.exoplatform.ide.extension.cloudfoundry.client.control.UpdateInstancesControl;
-import org.exoplatform.ide.extension.cloudfoundry.client.control.UpdateMemoryControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter;
@@ -55,7 +46,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryExtension.java Jul 7, 2011 5:00:41 PM vereshchaka $
- *
+ * 
  */
 public class CloudFoundryExtension extends Extension implements InitializeServicesHandler
 {
@@ -92,22 +83,9 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
 
       IDE.getInstance().addControl(new CloudFoundryControlGroup());
       IDE.getInstance().addControl(new CreateApplicationControl());
-      IDE.getInstance().addControl(new UpdateApplicationControl());
-      IDE.getInstance().addControl(new DeleteApplicationControl());
-      //rename doesn't work
-      //      IDE.getInstance().addControl(new RenameApplicationControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new ApplicationInfoControl());
 
-      IDE.getInstance().addControl(new StartApplicationControl());
-      IDE.getInstance().addControl(new StopApplicationControl());
-      IDE.getInstance().addControl(new RestartApplicationControl());
-
-      IDE.getInstance().addControl(new UnmapUrlControl());
-
-      IDE.getInstance().addControl(new UpdateMemoryControl());
-      IDE.getInstance().addControl(new UpdateInstancesControl());
-      IDE.getInstance().addControl(new SwitchAccountControl());
       IDE.getInstance().addControl(new ApplicationsControl());
+      IDE.getInstance().addControl(new SwitchAccountControl());
 
       new DeployApplicationPresenter();
       new CreateApplicationPresenter();
@@ -115,7 +93,6 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       new StartApplicationPresenter();
       new ApplicationInfoPresenter();
       new UpdateApplicationPresenter();
-      //      new RenameApplicationPresenter();
       new DeleteApplicationPresenter();
       new UnmapUrlPresenter();
       new UpdatePropertiesPresenter();
