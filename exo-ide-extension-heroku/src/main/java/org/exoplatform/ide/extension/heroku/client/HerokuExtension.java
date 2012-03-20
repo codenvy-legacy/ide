@@ -26,18 +26,13 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.heroku.client.apps.ManageApplicationsPresenter;
 import org.exoplatform.ide.extension.heroku.client.control.AddKeyControl;
-import org.exoplatform.ide.extension.heroku.client.control.ChangeApplicationStackConrol;
 import org.exoplatform.ide.extension.heroku.client.control.CreateApplicationControl;
-import org.exoplatform.ide.extension.heroku.client.control.DeleteApplicationControl;
 import org.exoplatform.ide.extension.heroku.client.control.HerokuControlsGroup;
-import org.exoplatform.ide.extension.heroku.client.control.RakeControl;
-import org.exoplatform.ide.extension.heroku.client.control.RenameApplicationControl;
-import org.exoplatform.ide.extension.heroku.client.control.ShowApplicationInfoControl;
-import org.exoplatform.ide.extension.heroku.client.control.ShowLogsControl;
 import org.exoplatform.ide.extension.heroku.client.control.SwitchAccountControl;
 import org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationCommandHandler;
 import org.exoplatform.ide.extension.heroku.client.deploy.DeployApplicationPresenter;
+import org.exoplatform.ide.extension.heroku.client.imports.ImportApplicationPresenter;
 import org.exoplatform.ide.extension.heroku.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.heroku.client.key.KeysPresenter;
 import org.exoplatform.ide.extension.heroku.client.login.LoginPresenter;
@@ -81,18 +76,10 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       // Add controls
       IDE.getInstance().addControl(new HerokuControlsGroup());
       IDE.getInstance().addControl(new CreateApplicationControl());
-      IDE.getInstance().addControl(new DeleteApplicationControl());
-      IDE.getInstance().addControl(new RenameApplicationControl());
-      IDE.getInstance().addControl(new ChangeApplicationStackConrol());
-      IDE.getInstance().addControl(new ShowApplicationInfoControl());
-      IDE.getInstance().addControl(new ShowLogsControl());
-      IDE.getInstance().addControl(new RakeControl());
-      IDE.getInstance().addControl(new AddKeyControl());
-      IDE.getInstance().addControl(new SwitchAccountControl());
-      // IDE.getInstance().addControl(new ClearKeysControl(), DockTarget.NONE, false);
 
       // Add presenters
       new CreateApplicationPresenter();
+      new ManageApplicationsPresenter();
       new DeleteApplicationCommandHandler();
       new ApplicationInfoPresenter();
       new RenameApplicationPresenter();
@@ -101,10 +88,13 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       new RakeCommandPresenter();
       new ChangeStackPresenter();
       new LogsPresenter();
-      
+
       new DeployApplicationPresenter();
       new HerokuProjectPresenter();
-      new ManageApplicationsPresenter();
+      new ImportApplicationPresenter();
+
+      IDE.getInstance().addControl(new AddKeyControl());
+      IDE.getInstance().addControl(new SwitchAccountControl());
    }
 
 }

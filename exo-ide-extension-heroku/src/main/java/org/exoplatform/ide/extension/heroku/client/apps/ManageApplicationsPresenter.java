@@ -37,6 +37,7 @@ import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.delete.ApplicationDeletedEvent;
 import org.exoplatform.ide.extension.heroku.client.delete.ApplicationDeletedHandler;
 import org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationEvent;
+import org.exoplatform.ide.extension.heroku.client.imports.ImportApplicationEvent;
 import org.exoplatform.ide.extension.heroku.client.info.ShowApplicationInfoEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
@@ -134,6 +135,17 @@ public class ManageApplicationsPresenter implements ManageApplicationsHandler, V
          public void onSelection(SelectionEvent<String> event)
          {
             IDE.fireEvent(new DeleteApplicationEvent(event.getSelectedItem()));
+         }
+      });
+
+      display.getActions().addImportApplicationHandler(new SelectionHandler<String>()
+      {
+
+         @Override
+         public void onSelection(SelectionEvent<String> event)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+            IDE.fireEvent(new ImportApplicationEvent(event.getSelectedItem()));
          }
       });
    }

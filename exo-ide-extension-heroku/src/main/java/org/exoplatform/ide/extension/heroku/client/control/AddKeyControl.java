@@ -41,7 +41,6 @@ public class AddKeyControl extends AbstractHerokuControl
       setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.addKeyControlPrompt());
       setEvent(new AddKeyEvent());
       setImages(HerokuClientBundle.INSTANCE.addKeys(), HerokuClientBundle.INSTANCE.addKeysDisabled());
-      setDelimiterBefore(true);
    }
 
    /**

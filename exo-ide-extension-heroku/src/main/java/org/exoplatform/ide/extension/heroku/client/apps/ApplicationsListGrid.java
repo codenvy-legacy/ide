@@ -65,6 +65,11 @@ public class ApplicationsListGrid extends ListGrid<String> implements HasApplica
    private Column<String, String> infoColumn;
 
    /**
+    * Column to import application.
+    */
+   private Column<String, String> importColumn;
+
+   /**
     * 
     */
    public ApplicationsListGrid()
@@ -102,6 +107,16 @@ public class ApplicationsListGrid extends ListGrid<String> implements HasApplica
          }
       };
 
+      importColumn = new Column<String, String>(new ButtonCell())
+      {
+
+         @Override
+         public String getValue(String object)
+         {
+            return HerokuExtension.LOCALIZATION_CONSTANT.applicationsListGridButtonImport();
+         }
+      };
+
       environmentChangeColumn = new Column<String, String>(new ButtonCell())
       {
 
@@ -127,18 +142,23 @@ public class ApplicationsListGrid extends ListGrid<String> implements HasApplica
       getCellTable().addColumn(deleteColumn, HerokuExtension.LOCALIZATION_CONSTANT.applicationsListGridButtonDelete());
       deleteColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       getCellTable().setColumnWidth(deleteColumn, "80px");
-      
+
       getCellTable().addColumn(renameColumn, HerokuExtension.LOCALIZATION_CONSTANT.applicationsListGridButtonRename());
       renameColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       getCellTable().setColumnWidth(renameColumn, "80px");
 
-      getCellTable().addColumn(environmentChangeColumn, "Environment");
+      getCellTable().addColumn(environmentChangeColumn,
+         HerokuExtension.LOCALIZATION_CONSTANT.applicationsListGridFieldEnvironment());
       environmentChangeColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       getCellTable().setColumnWidth(environmentChangeColumn, "80px");
 
       getCellTable().addColumn(infoColumn, HerokuExtension.LOCALIZATION_CONSTANT.applicationsListGridButtonInfo());
       infoColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       getCellTable().setColumnWidth(infoColumn, "80px");
+
+      getCellTable().addColumn(importColumn, HerokuExtension.LOCALIZATION_CONSTANT.applicationsListGridButtonImport());
+      importColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      getCellTable().setColumnWidth(importColumn, "80px");
    }
 
    private class SelectionEventImpl extends SelectionEvent<String>
@@ -211,6 +231,23 @@ public class ApplicationsListGrid extends ListGrid<String> implements HasApplica
    public void addApplicationInfoHandler(final SelectionHandler<String> handler)
    {
       infoColumn.setFieldUpdater(new FieldUpdater<String, String>()
+      {
+
+         @Override
+         public void update(int index, String object, String value)
+         {
+            handler.onSelection(new SelectionEventImpl(object));
+         }
+      });
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.heroku.client.apps.HasApplicationsActions#addImportApplicationHandler(com.google.gwt.event.logical.shared.SelectionHandler)
+    */
+   @Override
+   public void addImportApplicationHandler(final SelectionHandler<String> handler)
+   {
+      importColumn.setFieldUpdater(new FieldUpdater<String, String>()
       {
 
          @Override

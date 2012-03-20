@@ -59,4 +59,8 @@
    <replace-with class="org.exoplatform.ide.extension.heroku.client.apps.ManageApplicationsView">
       <when-type-is class="org.exoplatform.ide.extension.heroku.client.apps.ManageApplicationsPresenter.Display" />
    </replace-with>
+
+   <replace-with class="org.exoplatform.ide.extension.heroku.client.imports.ImportApplicationView">
+      <when-type-is class="org.exoplatform.ide.extension.heroku.client.imports.ImportApplicationPresenter.Display" />
+   </replace-with>
 </module>

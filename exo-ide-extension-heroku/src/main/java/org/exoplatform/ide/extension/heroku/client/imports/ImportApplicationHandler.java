@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,26 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.heroku.client.apps;
+package org.exoplatform.ide.extension.heroku.client.imports;
 
-import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Application actions handlers.
+ * Handler for {@link ImportApplicationEvent} event.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Mar 15, 2012 10:43:13 AM anya $
- * 
+ * @version $Id:  Mar 19, 2012 10:59:08 AM anya $
+ *
  */
-public interface HasApplicationsActions
+public interface ImportApplicationHandler extends EventHandler
 {
-   void addDeleteApplicationHandler(SelectionHandler<String> handler);
-
-   void addRenameApplicationHandler(SelectionHandler<String> handler);
-
-   void addChangeEnvironmentHandler(SelectionHandler<String> handler);
-
-   void addApplicationInfoHandler(SelectionHandler<String> handler);
-   
-   void addImportApplicationHandler(SelectionHandler<String> handler);
+   /**
+    * Perform actions, when user tries to import application from Heroku.
+    * 
+    * @param event event
+    */
+   void onImportApplication(ImportApplicationEvent event); 
 }

@@ -73,6 +73,9 @@ public interface HerokuLocalizationConstant extends Messages
    @Key("logsButton")
    String logsButton();
 
+   @Key("importButton")
+   String importButton();
+
    @DefaultMessage("Logged in Heroku successfully.")
    @Key("loginSuccess")
    String loginSuccess();
@@ -90,6 +93,9 @@ public interface HerokuLocalizationConstant extends Messages
 
    @Key("deleteApplicationSuccess")
    String deleteApplicationSuccess();
+
+   @Key("importApplicationSuccess")
+   String importApplicationSuccess(String application);
 
    @DefaultMessage("PaaS/Heroku/Deploy public key")
    @Key("control.addKey.id")
@@ -238,6 +244,19 @@ public interface HerokuLocalizationConstant extends Messages
    @Key("applicationInfoGid.field.value")
    String applicationInfoGridValueField();
 
+   /* Import Application view */
+   @Key("importApplicationView.title")
+   String importApplicationViewTitle();
+
+   @Key("importApplicationView.field.application")
+   String importApplicationViewApplicationField();
+
+   @Key("importApplicationView.field.project")
+   String importApplicationViewProjectField();
+
+   @Key("importApplicationView.field.deploy")
+   String importApplicationViewDeployField();
+
    /* Manage Applications View */
    @Key("manageApplicationsView.title")
    String manageApplicationsViewTitle();
@@ -251,6 +270,9 @@ public interface HerokuLocalizationConstant extends Messages
    @Key("applicationsListGrid.field.stack")
    String applicationsListGridFieldStack();
 
+   @Key("applicationsListGrid.field.environment")
+   String applicationsListGridFieldEnvironment();
+
    @Key("applicationsListGrid.button.delete")
    String applicationsListGridButtonDelete();
 
@@ -262,6 +284,9 @@ public interface HerokuLocalizationConstant extends Messages
 
    @Key("applicationsListGrid.button.info")
    String applicationsListGridButtonInfo();
+
+   @Key("applicationsListGrid.button.import")
+   String applicationsListGridButtonImport();
 
    /* Messages */
    @Key("createApplicationSuccess")
