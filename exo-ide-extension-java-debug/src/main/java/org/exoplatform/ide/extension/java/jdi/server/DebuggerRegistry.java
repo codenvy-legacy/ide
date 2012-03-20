@@ -42,6 +42,16 @@ public final class DebuggerRegistry
       return d;
    }
 
+   public Debugger remove(String key)
+   {
+      Debugger d = all.remove(key);
+      if (d == null)
+      {
+         throw new IllegalArgumentException("Debugger " + key + " not found. ");
+      }
+      return d;
+   }
+
    public String add(Debugger debugger)
    {
       final String key = Long.toString(counter.getAndIncrement());

@@ -131,7 +131,7 @@ public class Debugger
                            synchronized (events)
                            {
                               events.add(new BreakPointEventImpl(new BreakPointImpl(location.declaringType().name(),
-                                 location.lineNumber(), true)));
+                                 location.lineNumber())));
                            }
                            // Lets target JVM to be in suspend state.
                            resume = false;
@@ -249,7 +249,7 @@ public class Debugger
       {
          EventRequest breakPointRequest = vm.eventRequestManager().createBreakpointRequest(location);
          breakPointRequest.setSuspendPolicy(EventRequest.SUSPEND_ALL);
-         breakPointRequest.setEnabled(breakPoint.isEnabled());
+         breakPointRequest.setEnabled(true);
       }
       catch (VMCannotBeModifiedException e)
       {
@@ -292,48 +292,13 @@ public class Debugger
       for (BreakpointRequest breakpointRequest : breakpointRequests)
       {
          Location location = breakpointRequest.location();
-         breakPoints.add(
-            new BreakPointImpl(location.declaringType().name(), location.lineNumber(), breakpointRequest.isEnabled()));
+         breakPoints.add(new BreakPointImpl(location.declaringType().name(), location.lineNumber()));
       }
       Collections.sort(breakPoints, BREAKPOINT_COMPARATOR);
       return breakPoints;
    }
 
    private static final Comparator<BreakPoint> BREAKPOINT_COMPARATOR = new BreakPointComparator();
-
-   /**
-    * Switch break point to enabled|disabled status.
-    *
-    * @param breakPoint break point description
-    * @throws DebuggerException when any JDI errors occurs when try to update break point
-    */
-   public void switchBreakPoint(BreakPoint breakPoint) throws DebuggerException
-   {
-      try
-      {
-         for (BreakpointRequest breakpointRequest : vm.eventRequestManager().breakpointRequests())
-         {
-            Location location = breakpointRequest.location();
-            if (location.declaringType().name().equals(breakPoint.getClassName())
-               && location.lineNumber() == breakPoint.getLineNumber())
-            {
-               breakpointRequest.setEnabled(breakPoint.isEnabled());
-            }
-         }
-      }
-      catch (VMCannotBeModifiedException e)
-      {
-         throw new DebuggerException(e.getMessage(), e);
-      }
-      catch (InvalidRequestStateException e)
-      {
-         throw new DebuggerException(e.getMessage(), e);
-      }
-      catch (IllegalThreadStateException e)
-      {
-         throw new DebuggerException(e.getMessage(), e);
-      }
-   }
 
    /**
     * Delete break point.

@@ -30,11 +30,7 @@ public interface BreakPoint
 
    int getLineNumber();
 
-   boolean isEnabled();
-
    void setClassName(String className);
 
    void setLineNumber(int lineNumber);
-
-   void setEnabled(boolean enabled);
 }

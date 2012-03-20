@@ -84,7 +84,14 @@ public class DebuggerService
    @Path("disconnect/{id}")
    public void disconnect(@PathParam("id") String id) throws DebuggerException
    {
-      debuggerRegistry.get(id).disconnect();
+      debuggerRegistry.remove(id).disconnect();
+   }
+
+   @GET
+   @Path("resume/{id}")
+   public void resume(@PathParam("id") String id) throws DebuggerException
+   {
+      debuggerRegistry.get(id).resume();
    }
 
    @POST
@@ -101,14 +108,6 @@ public class DebuggerService
    public BreakPointList getBreakPoints(@PathParam("id") String id) throws DebuggerException
    {
       return new BreakPointListImpl(debuggerRegistry.get(id).getBreakPoints());
-   }
-
-   @POST
-   @Path("breakpoints/switch/{id}")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void switchBreakPoint(@PathParam("id") String id, BreakPoint breakPoint) throws DebuggerException
-   {
-      debuggerRegistry.get(id).switchBreakPoint(breakPoint);
    }
 
    @POST

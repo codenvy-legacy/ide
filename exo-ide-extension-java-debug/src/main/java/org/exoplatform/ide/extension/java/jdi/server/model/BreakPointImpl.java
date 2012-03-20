@@ -28,13 +28,11 @@ public class BreakPointImpl implements BreakPoint
 {
    private String className;
    private int lineNumber;
-   private boolean enabled;
 
-   public BreakPointImpl(String className, int lineNumber, boolean enabled)
+   public BreakPointImpl(String className, int lineNumber)
    {
       this.className = className;
       this.lineNumber = lineNumber;
-      this.enabled = enabled;
    }
 
    public BreakPointImpl()
@@ -54,12 +52,6 @@ public class BreakPointImpl implements BreakPoint
    }
 
    @Override
-   public boolean isEnabled()
-   {
-      return enabled;
-   }
-
-   @Override
    public void setClassName(String className)
    {
       this.className = className;
@@ -69,12 +61,6 @@ public class BreakPointImpl implements BreakPoint
    public void setLineNumber(int lineNumber)
    {
       this.lineNumber = lineNumber;
-   }
-
-   @Override
-   public void setEnabled(boolean enabled)
-   {
-      this.enabled = enabled;
    }
 
    @Override
@@ -108,7 +94,6 @@ public class BreakPointImpl implements BreakPoint
       return "BreakPointImpl{" +
          "className='" + className + '\'' +
          ", lineNumber=" + lineNumber +
-         ", enabled=" + enabled +
          '}';
    }
 }
