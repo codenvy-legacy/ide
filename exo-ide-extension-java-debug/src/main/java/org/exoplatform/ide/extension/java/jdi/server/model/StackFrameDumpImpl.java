@@ -49,12 +49,20 @@ public class StackFrameDumpImpl implements StackFrameDump
    @Override
    public List<Field> getFields()
    {
+      if (fields == null)
+      {
+         fields = new ArrayList<Field>();
+      }
       return fields;
    }
 
    @Override
    public List<Variable> getLocalVariables()
    {
+      if (localVariables == null)
+      {
+         localVariables = new ArrayList<Variable>();
+      }
       return localVariables;
    }
 
@@ -68,26 +76,6 @@ public class StackFrameDumpImpl implements StackFrameDump
    public void setLocalVariables(List<Variable> localVariables)
    {
       this.localVariables = localVariables;
-   }
-
-   //
-
-   public void addLocalVariable(Variable variable)
-   {
-      if (localVariables == null)
-      {
-         localVariables = new ArrayList<Variable>();
-      }
-      localVariables.add(variable);
-   }
-
-   public void addField(Field field)
-   {
-      if (fields == null)
-      {
-         fields = new ArrayList<Field>();
-      }
-      fields.add(field);
    }
 
    @Override

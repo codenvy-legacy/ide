@@ -31,16 +31,13 @@ public class DebuggerInfoImpl implements DebuggerInfo
    private String id;
    private String vmName;
    private String vmVersion;
-   private boolean connected;
 
-   public DebuggerInfoImpl(boolean connected,
-                           String host,
+   public DebuggerInfoImpl(String host,
                            int port,
                            String id,
                            String vmName,
                            String vmVersion)
    {
-      this.connected = connected;
       this.host = host;
       this.port = port;
       this.id = id;
@@ -50,12 +47,6 @@ public class DebuggerInfoImpl implements DebuggerInfo
 
    public DebuggerInfoImpl()
    {
-   }
-
-   @Override
-   public boolean isConnected()
-   {
-      return connected;
    }
 
    @Override
@@ -86,12 +77,6 @@ public class DebuggerInfoImpl implements DebuggerInfo
    public String getVmVersion()
    {
       return vmVersion;
-   }
-
-   @Override
-   public void setConnected(boolean connected)
-   {
-      this.connected = connected;
    }
 
    @Override

@@ -26,12 +26,10 @@ import org.exoplatform.ide.extension.java.jdi.shared.BreakPointList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
-import org.exoplatform.ide.extension.java.jdi.shared.Variable;
+import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
 
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -47,51 +45,28 @@ import javax.ws.rs.core.MediaType;
 @Path("ide/java/debug")
 public class DebuggerService
 {
-   @Inject
-   private DebuggerRegistry debuggerRegistry;
-
    @GET
-   @Path("create")
+   @Path("connect")
    @Produces(MediaType.APPLICATION_JSON)
    public DebuggerInfo create(@QueryParam("host") String host,
-                              @QueryParam("port") int port,
-                              @DefaultValue("true") @QueryParam("connect") boolean connect) throws DebuggerException
+                              @QueryParam("port") int port) throws DebuggerException
    {
-      final Debugger d = new Debugger(host, port);
-      final String key = debuggerRegistry.add(d);
-      if (connect)
-      {
-         d.connect();
-         return new DebuggerInfoImpl(true, host, port, key, d.getVmName(), d.getVmVersion());
-      }
-      return new DebuggerInfoImpl(false, host, port, key, null, null);
-   }
-
-   @GET
-   @Path("connect/{id}")
-   @Produces(MediaType.APPLICATION_JSON)
-   public DebuggerInfo connect(@PathParam("id") String id) throws DebuggerException
-   {
-      Debugger d = debuggerRegistry.get(id);
-      if (!d.isConnected())
-      {
-         d.connect();
-      }
-      return new DebuggerInfoImpl(true, d.getHost(), d.getPort(), id, d.getVmName(), d.getVmVersion());
+      Debugger d = Debugger.newInstance(host, port);
+      return new DebuggerInfoImpl(d.getHost(), d.getPort(), d.id, d.getVmName(), d.getVmVersion());
    }
 
    @GET
    @Path("disconnect/{id}")
    public void disconnect(@PathParam("id") String id) throws DebuggerException
    {
-      debuggerRegistry.remove(id).disconnect();
+      Debugger.getInstance(id).disconnect();
    }
 
    @GET
    @Path("resume/{id}")
    public void resume(@PathParam("id") String id) throws DebuggerException
    {
-      debuggerRegistry.get(id).resume();
+      Debugger.getInstance(id).resume();
    }
 
    @POST
@@ -99,7 +74,7 @@ public class DebuggerService
    @Consumes(MediaType.APPLICATION_JSON)
    public void addBreakPoint(@PathParam("id") String id, BreakPoint breakPoint) throws DebuggerException
    {
-      debuggerRegistry.get(id).addBreakPoint(breakPoint);
+      Debugger.getInstance(id).addBreakPoint(breakPoint);
    }
 
    @GET
@@ -107,7 +82,7 @@ public class DebuggerService
    @Produces(MediaType.APPLICATION_JSON)
    public BreakPointList getBreakPoints(@PathParam("id") String id) throws DebuggerException
    {
-      return new BreakPointListImpl(debuggerRegistry.get(id).getBreakPoints());
+      return new BreakPointListImpl(Debugger.getInstance(id).getBreakPoints());
    }
 
    @POST
@@ -115,7 +90,7 @@ public class DebuggerService
    @Consumes(MediaType.APPLICATION_JSON)
    public void deleteBreakPoint(@PathParam("id") String id, BreakPoint breakPoint) throws DebuggerException
    {
-      debuggerRegistry.get(id).deleteBreakPoint(breakPoint);
+      Debugger.getInstance(id).deleteBreakPoint(breakPoint);
    }
 
    @GET
@@ -123,7 +98,7 @@ public class DebuggerService
    @Produces(MediaType.APPLICATION_JSON)
    public DebuggerEventList getEvents(@PathParam("id") String id) throws DebuggerException
    {
-      return new DebuggerEventListImpl(debuggerRegistry.get(id).getEvents());
+      return new DebuggerEventListImpl(Debugger.getInstance(id).getEvents());
    }
 
    @GET
@@ -131,15 +106,15 @@ public class DebuggerService
    @Produces(MediaType.APPLICATION_JSON)
    public StackFrameDump getStackFrameDump(@PathParam("id") String id) throws DebuggerException
    {
-      return debuggerRegistry.get(id).dumpStackFrame();
+      return Debugger.getInstance(id).dumpStackFrame();
    }
 
    @POST
-   @Path("variable/{id}")
+   @Path("value/{id}")
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public Variable getVariable(@PathParam("id") String id, VariablePath path) throws DebuggerException
+   public Value getValue(@PathParam("id") String id, VariablePath path) throws DebuggerException
    {
-      return debuggerRegistry.get(id).getVariable(path.getPath());
+      return Debugger.getInstance(id).getValue(path.getPath());
    }
 }

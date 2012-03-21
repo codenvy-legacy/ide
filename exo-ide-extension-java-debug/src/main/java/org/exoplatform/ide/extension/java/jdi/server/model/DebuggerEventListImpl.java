@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.java.jdi.server.model;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,6 +40,10 @@ public class DebuggerEventListImpl implements DebuggerEventList
    @Override
    public List<DebuggerEvent> getEvents()
    {
+      if (events == null)
+      {
+         events = new ArrayList<DebuggerEvent>();
+      }
       return events;
    }
 

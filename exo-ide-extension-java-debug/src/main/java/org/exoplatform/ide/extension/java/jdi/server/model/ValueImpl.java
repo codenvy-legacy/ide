@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server.model;
 
-import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
-import org.exoplatform.ide.extension.java.jdi.shared.BreakPointList;
+import org.exoplatform.ide.extension.java.jdi.shared.Value;
+import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,28 +28,55 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class BreakPointListImpl implements BreakPointList
+public class ValueImpl implements Value
 {
-   private List<BreakPoint> breakPoints;
+   private List<Variable> variables;
+   private String value;
 
-   public BreakPointListImpl(List<BreakPoint> breakPoints)
+   public ValueImpl(List<Variable> variables, String value)
    {
-      this.breakPoints = breakPoints;
+      this.variables = variables;
+      this.value = value;
+   }
+
+   public ValueImpl()
+   {
    }
 
    @Override
-   public List<BreakPoint> getBreakPoints()
+   public List<Variable> getVariables()
    {
-      if (breakPoints == null)
+      if (variables == null)
       {
-         breakPoints = new ArrayList<BreakPoint>();
+         variables = new ArrayList<Variable>();
       }
-      return breakPoints;
+      return variables;
    }
 
    @Override
-   public void setBreakPoints(List<BreakPoint> breakPoints)
+   public void setVariables(List<Variable> variables)
    {
-      this.breakPoints = breakPoints;
+      this.variables = variables;
+   }
+
+   @Override
+   public String getValue()
+   {
+      return value;
+   }
+
+   @Override
+   public void setValue(String value)
+   {
+      this.value = value;
+   }
+
+   @Override
+   public String toString()
+   {
+      return "ValueImpl{" +
+         "variables=" + variables +
+         ", value='" + value + '\'' +
+         '}';
    }
 }

@@ -16,40 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.server.model;
+package org.exoplatform.ide.extension.java.jdi.shared;
 
-import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
-import org.exoplatform.ide.extension.java.jdi.shared.BreakPointList;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class BreakPointListImpl implements BreakPointList
+public interface Value
 {
-   private List<BreakPoint> breakPoints;
+   List<Variable> getVariables();
 
-   public BreakPointListImpl(List<BreakPoint> breakPoints)
-   {
-      this.breakPoints = breakPoints;
-   }
+   void setVariables(List<Variable> variables);
 
-   @Override
-   public List<BreakPoint> getBreakPoints()
-   {
-      if (breakPoints == null)
-      {
-         breakPoints = new ArrayList<BreakPoint>();
-      }
-      return breakPoints;
-   }
+   String getValue();
 
-   @Override
-   public void setBreakPoints(List<BreakPoint> breakPoints)
-   {
-      this.breakPoints = breakPoints;
-   }
+   void setValue(String value);
 }

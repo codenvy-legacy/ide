@@ -67,8 +67,10 @@ final class EventsCollector implements Runnable
          catch (InterruptedException e)
          {
             // Thread interrupted with method stop().
+            LOG.debug("EventsCollector terminated");
          }
       }
+      LOG.debug("EventsCollector stopped");
    }
 
    void stop()

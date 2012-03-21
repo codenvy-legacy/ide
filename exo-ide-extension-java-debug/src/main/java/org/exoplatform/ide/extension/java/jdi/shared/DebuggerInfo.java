@@ -26,8 +26,6 @@ package org.exoplatform.ide.extension.java.jdi.shared;
  */
 public interface DebuggerInfo
 {
-   boolean isConnected();
-
    String getHost();
 
    int getPort();
@@ -37,8 +35,6 @@ public interface DebuggerInfo
    String getVmName();
 
    String getVmVersion();
-
-   void setConnected(boolean connected);
 
    void setHost(String host);
 

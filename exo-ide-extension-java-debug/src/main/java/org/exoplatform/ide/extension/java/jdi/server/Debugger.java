@@ -38,11 +38,12 @@ import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointEventImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.FieldImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.StackFrameDumpImpl;
+import org.exoplatform.ide.extension.java.jdi.server.model.ValueImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.VariableImpl;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
-import org.exoplatform.ide.extension.java.jdi.shared.Variable;
+import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -52,6 +53,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Connects to JVM over Java Debug Wire Protocol handle its events. All methods of this class may throws
@@ -61,10 +65,30 @@ import java.util.Map;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class Debugger
+public class Debugger implements EventsHandler
 {
    private static final Log LOG = ExoLogger.getLogger(Debugger.class);
+   private static final AtomicLong counter = new AtomicLong(1);
+   private static final ConcurrentMap<String, Debugger> instances = new ConcurrentHashMap<String, Debugger>();
 
+   public static Debugger newInstance(String host, int port) throws VMConnectException
+   {
+      Debugger d = new Debugger(host, port);
+      instances.put(d.id, d);
+      return d;
+   }
+
+   public static Debugger getInstance(String name)
+   {
+      Debugger d = instances.get(name);
+      if (d == null)
+      {
+         throw new IllegalArgumentException("Debugger " + name + " not found. ");
+      }
+      return d;
+   }
+
+   final String id = Long.toString(counter.getAndIncrement());
    private final String host;
    private final int port;
    private final List<DebuggerEvent> events = new ArrayList<DebuggerEvent>();
@@ -80,11 +104,13 @@ public class Debugger
     *
     * @param host the host where JVM running
     * @param port the Java Debug Wire Protocol (JDWP) port
+    * @throws VMConnectException when connection to Java VM is not established
     */
-   public Debugger(String host, int port)
+   private Debugger(String host, int port) throws VMConnectException
    {
       this.host = host;
       this.port = port;
+      connect();
    }
 
    /**
@@ -93,12 +119,8 @@ public class Debugger
     *
     * @throws VMConnectException when connection to Java VM is not established
     */
-   public void connect() throws VMConnectException
+   private void connect() throws VMConnectException
    {
-      if (isConnected())
-      {
-         return;
-      }
       AttachingConnector connector = connector();
       if (connector == null)
       {
@@ -110,48 +132,7 @@ public class Debugger
       try
       {
          vm = connector.attach(arguments);
-         eventsCollector = new EventsCollector(vm.eventQueue(), new EventsHandler()
-         {
-            @Override
-            public void handleEvents(com.sun.jdi.event.EventSet eventSet) throws DebuggerException
-            {
-               boolean resume = true;
-               try
-               {
-                  for (com.sun.jdi.event.Event event : eventSet)
-                  {
-                     LOG.debug("New event: {}", event);
-                     if (event instanceof com.sun.jdi.event.BreakpointEvent)
-                     {
-                        try
-                        {
-                           com.sun.jdi.event.BreakpointEvent jdiBreakpointEvent = (com.sun.jdi.event.BreakpointEvent)event;
-                           stackFrame = new JdiStackFrameImpl(jdiBreakpointEvent.thread().frame(0));
-                           Location location = jdiBreakpointEvent.location();
-                           synchronized (events)
-                           {
-                              events.add(new BreakPointEventImpl(new BreakPointImpl(location.declaringType().name(),
-                                 location.lineNumber())));
-                           }
-                           // Lets target JVM to be in suspend state.
-                           resume = false;
-                        }
-                        catch (IncompatibleThreadStateException e)
-                        {
-                           throw new DebuggerException(e.getMessage(), e);
-                        }
-                     }
-                  }
-               }
-               finally
-               {
-                  if (resume)
-                  {
-                     eventSet.resume();
-                  }
-               }
-            }
-         });
+         eventsCollector = new EventsCollector(vm.eventQueue(), this);
       }
       catch (IOException ioe)
       {
@@ -161,6 +142,7 @@ public class Debugger
       {
          throw new VMConnectException(e.getMessage(), e);
       }
+      LOG.debug("Connect {}:{}", host, port);
    }
 
    private AttachingConnector connector()
@@ -176,30 +158,14 @@ public class Debugger
    }
 
    /**
-    * Check is debugger already connected to the target JVM.
-    *
-    * @return <code>true</code> if debugger established and <code>false</code>  otherwise
-    * @see #connect()
-    */
-   public boolean isConnected()
-   {
-      return vm != null;
-   }
-
-   /**
     * Close connection to the target JVM.
     *
     * @throws DebuggerException when failed to close connection
     */
    public void disconnect() throws DebuggerException
    {
-      if (isConnected())
-      {
-         eventsCollector.stop();
-         vm.dispose();
-         vm = null;
-         LOG.debug("Close connection");
-      }
+      vm.dispose();
+      LOG.debug("Close connection");
    }
 
    /**
@@ -234,8 +200,8 @@ public class Debugger
 
       if (locations.isEmpty())
       {
-         throw new InvalidBreakPointException("Line " + breakPoint.getLineNumber()
-            + " not found in class " + breakPoint.getClassName());
+         throw new InvalidBreakPointException("Line " + breakPoint.getLineNumber() + " not found in class "
+            + breakPoint.getClassName());
       }
 
       Location location = locations.get(0);
@@ -247,6 +213,15 @@ public class Debugger
       }
       try
       {
+         for (BreakpointRequest breakpointRequest : vm.eventRequestManager().breakpointRequests())
+         {
+            if (location.equals(breakpointRequest.location()))
+            {
+               LOG.debug("Breakpoint at {} already set", location);
+               return;
+            }
+         }
+
          EventRequest breakPointRequest = vm.eventRequestManager().createBreakpointRequest(location);
          breakPointRequest.setSuspendPolicy(EventRequest.SUSPEND_ALL);
          breakPointRequest.setEnabled(true);
@@ -267,7 +242,7 @@ public class Debugger
       {
          throw new DebuggerException(e.getMessage(), e);
       }
-      //LOG.debug("Add breakpoint: {}", breakPoint);
+      LOG.debug("Add breakpoint: {}", location);
    }
 
    /**
@@ -327,6 +302,7 @@ public class Debugger
                && location.lineNumber() == breakPoint.getLineNumber())
             {
                requestManager.deleteEventRequest(breakpointRequest);
+               LOG.debug("Delete breakpoint: {}", location);
             }
          }
       }
@@ -340,14 +316,10 @@ public class Debugger
     * Get next set of debugger events.
     *
     * @return set of the debugger's events which occurred after last visit this method
-    * @throws VMConnectException if Debugger id not connected yet
+    * @throws DebuggerException when any JDI errors occurs when try to get events
     */
-   public List<DebuggerEvent> getEvents() throws VMConnectException
+   public List<DebuggerEvent> getEvents() throws DebuggerException
    {
-      if (!isConnected())
-      {
-         throw new VMConnectException("Debugger is not connected to target JVM.");
-      }
       List<DebuggerEvent> eventsSnapshot;
       synchronized (events)
       {
@@ -360,15 +332,10 @@ public class Debugger
    /**
     * Resume suspended JVM.
     *
-    * @throws VMConnectException if Debugger id not connected yet
     * @throws DebuggerException when failed to resume target JVM
     */
-   public void resume() throws VMConnectException, DebuggerException
+   public void resume() throws DebuggerException
    {
-      if (!isConnected())
-      {
-         throw new VMConnectException("Debugger is not connected to target JVM.");
-      }
       try
       {
          vm.resume();
@@ -388,16 +355,11 @@ public class Debugger
     * Get dump of fields and local variable of current object and current frame.
     *
     * @return dump of current stack frame
-    * @throws VMConnectException if Debugger id not connected yet
     * @throws DebuggerStateException when target JVM is not suspended
     * @throws DebuggerException when any other errors occur when try to access the current state of target JVM
     */
-   public StackFrameDump dumpStackFrame() throws VMConnectException, DebuggerException
+   public StackFrameDump dumpStackFrame() throws DebuggerStateException, DebuggerException
    {
-      if (!isConnected())
-      {
-         throw new VMConnectException("Debugger is not connected to target JVM.");
-      }
       if (stackFrame == null)
       {
          throw new DebuggerStateException("Unable get dump. Target Java VM is not suspended. ");
@@ -405,18 +367,18 @@ public class Debugger
       StackFrameDumpImpl dump = new StackFrameDumpImpl();
       for (JdiField f : stackFrame.getFields())
       {
-         dump.addField(new FieldImpl(f.getName(), f.getValue().getAsString(), f.getTypeName(), f.isFinal(),
+         dump.getFields().add(new FieldImpl(f.getName(), f.getValue().getAsString(), f.getTypeName(), f.isFinal(),
             f.isStatic(), f.isTransient(), f.isVolatile()));
       }
       for (JdiLocalVariable var : stackFrame.getLocalVariables())
       {
-         dump.addLocalVariable(new VariableImpl(var.getName(), var.getValue().getAsString(), var.getTypeName()));
+         dump.getLocalVariables().add(new VariableImpl(var.getName(), var.getValue().getAsString(), var.getTypeName()));
       }
       return dump;
    }
 
    /**
-    * Get variable with specified path. Each item in path is name of variable.
+    * Get value of variable with specified path. Each item in path is name of variable.
     * <p/>
     * Path must be specified according to the following rules:
     * <ol>
@@ -454,25 +416,20 @@ public class Debugger
     *
     * @param variablePath path to variable
     * @return variable or <code>null</code> if variable not found
-    * @throws VMConnectException if Debugger id not connected yet
     * @throws DebuggerStateException when target JVM is not suspended
     * @throws DebuggerException when any other errors occur when try to access the variable
     */
-   public Variable getVariable(String[] variablePath) throws VMConnectException, DebuggerException
+   public Value getValue(String[] variablePath) throws DebuggerStateException, DebuggerException
    {
       if (variablePath == null || variablePath.length == 0)
       {
          throw new IllegalArgumentException("Path to variable may not be null or empty. ");
       }
-      if (!isConnected())
-      {
-         throw new VMConnectException("Debugger is not connected to target JVM.");
-      }
       if (stackFrame == null)
       {
          throw new DebuggerStateException("Unable get variable. Target Java VM is not suspended. ");
       }
-      JdiVariable variable = null;
+      JdiVariable variable;
       int offset;
       if ("this".equals(variablePath[0]) || "static".equals(variablePath[0]))
       {
@@ -499,28 +456,33 @@ public class Debugger
          return null;
       }
 
-      if (variable instanceof JdiField)
+      ValueImpl value = new ValueImpl();
+      value.setValue(variable.getValue().getAsString());
+      for (JdiVariable ch : variable.getValue().getVariables())
       {
-         JdiField field = (JdiField)variable;
-         return new FieldImpl(field.getName(), field.getValue().getAsString(), field.getTypeName(), field.isFinal(),
-            field.isStatic(), field.isTransient(), field.isVolatile());
+         if (ch instanceof JdiField)
+         {
+            JdiField field = (JdiField)ch;
+            value.getVariables().add(new FieldImpl(field.getName(), field.getValue().getAsString(), field.getTypeName(),
+               field.isFinal(), field.isStatic(), field.isTransient(), field.isVolatile()));
+         }
+         else
+         {
+            // Array element.
+            value.getVariables().add(new VariableImpl(ch.getName(), ch.getValue().getAsString(), ch.getTypeName()));
+         }
       }
-      return new VariableImpl(variable.getName(), variable.getValue().getAsString(), variable.getTypeName());
+      return value;
    }
 
    /**
     * Returns the name of the target Java VM.
     *
     * @return JVM name
-    * @throws DebuggerStateException when target JVM is not suspended
     * @throws DebuggerException when any other JDI errors occur
     */
-   public String getVmName() throws DebuggerStateException, DebuggerException
+   public String getVmName() throws DebuggerException
    {
-      if (!isConnected())
-      {
-         throw new VMConnectException("Debugger is not connected to target JVM.");
-      }
       return vm.name();
    }
 
@@ -528,15 +490,10 @@ public class Debugger
     * Returns the version of the target Java VM.
     *
     * @return JVM version
-    * @throws DebuggerStateException when target JVM is not suspended
     * @throws DebuggerException when any other JDI errors occur
     */
-   public String getVmVersion() throws DebuggerStateException, DebuggerException
+   public String getVmVersion() throws DebuggerException
    {
-      if (!isConnected())
-      {
-         throw new VMConnectException("Debugger is not connected to target JVM.");
-      }
       return vm.version();
    }
 
@@ -548,5 +505,50 @@ public class Debugger
    public int getPort()
    {
       return port;
+   }
+
+   @Override
+   public void handleEvents(com.sun.jdi.event.EventSet eventSet) throws DebuggerException
+   {
+      boolean resume = true;
+      try
+      {
+         for (com.sun.jdi.event.Event event : eventSet)
+         {
+            LOG.debug("New event: {}", event);
+            if (event instanceof com.sun.jdi.event.BreakpointEvent)
+            {
+               try
+               {
+                  com.sun.jdi.event.BreakpointEvent jdiBreakpointEvent = (com.sun.jdi.event.BreakpointEvent)event;
+                  stackFrame = new JdiStackFrameImpl(jdiBreakpointEvent.thread().frame(0));
+                  Location location = jdiBreakpointEvent.location();
+                  synchronized (events)
+                  {
+                     events.add(new BreakPointEventImpl(new BreakPointImpl(location.declaringType().name(),
+                        location.lineNumber())));
+                  }
+                  // Lets target JVM to be in suspend state.
+                  resume = false;
+               }
+               catch (IncompatibleThreadStateException e)
+               {
+                  throw new DebuggerException(e.getMessage(), e);
+               }
+            }
+            else if (event instanceof com.sun.jdi.event.VMDisconnectEvent)
+            {
+               eventsCollector.stop();
+               instances.remove(id);
+            }
+         }
+      }
+      finally
+      {
+         if (resume)
+         {
+            eventSet.resume();
+         }
+      }
    }
 }
