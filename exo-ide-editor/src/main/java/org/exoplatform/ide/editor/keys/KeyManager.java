@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,21 +16,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.codeassistant.ui;
+package org.exoplatform.ide.editor.keys;
 
-import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * Created by The eXo Platform SAS.
+ * KeyManager must be implemented by editor that need support new code assistant form.
+ * This interface need for control editors keys handle and suppress handling:
+ * <ul>
+ * <li>Arrow Up
+ * <li>Arrow Down
+ * <li>Enter
+ * <li>Esc
+ * </ul>
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id: 11:53:36 AM Mar 20, 2012 evgen $
  * 
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 25, 2010 5:01:51 PM evgen $
  */
-public interface ProposalSelectedHandler
+public interface KeyManager
 {
-
-   void onTokenSelected(IJavaCompletionProposal proposal, boolean editorHasFocus);
-
-   void onCancelAutoComplete(boolean editorHasFocus);
-
+   HandlerRegistration addHandler(KeyHandler handler);
 }

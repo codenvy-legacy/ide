@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,21 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.codeassistant.ui;
+package org.exoplatform.ide.editor.keys;
 
-import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
+import com.google.gwt.user.client.Event;
 
 /**
- * Created by The eXo Platform SAS.
  * 
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 25, 2010 5:01:51 PM evgen $
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id: 11:53:50 AM Mar 20, 2012 evgen $
+ * 
  */
-public interface ProposalSelectedHandler
+public interface KeyHandler
 {
-
-   void onTokenSelected(IJavaCompletionProposal proposal, boolean editorHasFocus);
-
-   void onCancelAutoComplete(boolean editorHasFocus);
-
+   /**
+    * Handle Native browser event
+    * @param event
+    * @return a boolean, where true means the event should be routed to the callback, and false leaves the key to perform its
+    *         normal behavior.
+    */
+   boolean handleEvent(Event event);
 }

@@ -41,6 +41,7 @@
       <source path="notification" />
       <source path="runtime" />
       <source path="text" />
+      <source path="keys" />
       
       <!-- Load CodeMirror files. -->
       <stylesheet src='codemirror/css/editor.css' />      

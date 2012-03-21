@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.editor.codemirror;
 
+import com.google.gwt.user.client.Event;
+
+import com.google.gwt.dom.client.NativeEvent;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -45,6 +49,8 @@ import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
 import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedEvent;
 import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedHandler;
+import org.exoplatform.ide.editor.keys.KeyHandler;
+import org.exoplatform.ide.editor.keys.KeyManager;
 import org.exoplatform.ide.editor.notification.Notification;
 import org.exoplatform.ide.editor.problem.Markable;
 import org.exoplatform.ide.editor.problem.Problem;
@@ -67,7 +73,8 @@ import java.util.List;
  * @version $Id: CodeMirror Feb 9, 2011 4:58:14 PM $
  * 
  */
-public class CodeMirror extends Editor implements EditorTokenListPreparedHandler, Markable, IDocumentListener
+public class CodeMirror extends Editor implements EditorTokenListPreparedHandler, Markable, IDocumentListener,
+   KeyManager
 {
 
    protected String editorId;
@@ -92,7 +99,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    private CodeMirrorConfiguration configuration;
 
-   private int lineNumberFieldWidth = 31; // width of left field with line numbers
+   private int lineNumberFieldWidth = 48; // width of left field with line numbers
 
    private static int characterWidth = 8; // width of character in the CodeMirror in px
 
@@ -385,7 +392,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
                                                  function (keyCode, event){
                                                  // filter key pressed without ctrl or alt or event type not "keypress"                  
                                                  if (! (event.ctrlKey || event.altKey) || (event.type != "keydown")) 
-                                                 return false;
+                                                 return instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::handleKey(Lcom/google/gwt/user/client/Event;)(event);
 
                                                  var fileConfiguration = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::configuration;
                                                  if (fileConfiguration.@org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration::canBeAutocompleted()())
@@ -463,6 +470,14 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    private List<String> getHotKeyList()
    {
       return (List<String>)params.get(EditorParameters.HOT_KEY_LIST);
+   }
+
+   public boolean handleKey(Event event)
+   {
+      if (Event.ONKEYDOWN != event.getTypeInt() || handler == null)
+         return false;
+
+      return handler.handleEvent(event);
    }
 
    /**
@@ -1347,6 +1362,8 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
     */
    private Notification activeNotification;
 
+   private KeyHandler handler;
+
    /**
     * @see org.exoplatform.ide.editor.problem.Markable#markProblem(org.exoplatform.ide.editor.problem.Problem)
     */
@@ -1608,7 +1625,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    @Override
    public void documentAboutToBeChanged(DocumentEvent event)
    {
-      //Nothing to do
+      // Nothing to do
    }
 
    private native void updateLineContent(int line, String text)/*-{
@@ -1628,7 +1645,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
          IDocument document = event.getDocument();
          int lineNumber = document.getLineOfOffset(event.getOffset());
          int col = event.getOffset() - document.getLineOffset(lineNumber);
-         //lineNumber start from 0, but editor store lines starting form 1
+         // lineNumber start from 0, but editor store lines starting form 1
          lineNumber++;
          StringBuilder b = new StringBuilder(getLineNumber(editorObject, lineNumber));
          b.replace(col, col + event.getLength(), event.getText());
@@ -1638,6 +1655,24 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       {
          e.printStackTrace();
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.keys.KeyManager#addHandler(org.exoplatform.ide.editor.keys.KeyHandler)
+    */
+   @Override
+   public HandlerRegistration addHandler(KeyHandler handler)
+   {
+      this.handler = handler;
+      return new HandlerRegistration()
+      {
+
+         @Override
+         public void removeHandler()
+         {
+            CodeMirror.this.handler = null;
+         }
+      };
    }
 
 }

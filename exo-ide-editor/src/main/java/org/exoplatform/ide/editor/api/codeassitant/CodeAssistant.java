@@ -96,7 +96,7 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
     */
    protected void openForm(List<Token> tokens, TokenWidgetFactory factory, TokenSelectedHandler handler)
    {
-      posX = posX - tokenToComplete.length() * 8 + 23;
+      posX = posX - tokenToComplete.length() * 8 + 8;
       new AutocompletionForm(posX, posY, tokenToComplete, tokens, factory, handler);
    }
 

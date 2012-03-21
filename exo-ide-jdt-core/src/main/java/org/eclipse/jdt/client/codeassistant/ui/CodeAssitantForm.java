@@ -18,19 +18,11 @@
  */
 package org.eclipse.jdt.client.codeassistant.ui;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -46,10 +38,9 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.eclipse.jdt.client.CodeAssistantPresenter.Display;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
@@ -68,7 +59,7 @@ import java.util.List;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 25, 2010 4:18:55 PM evgen $
  */
-public class CodeAssitantForm extends Composite implements ChangeHandler, ResizeHandler
+public class CodeAssitantForm extends Composite implements ResizeHandler, Display
 {
    private static final String PANEL_ID = "exo-ide-autocomplete-panel";
 
@@ -90,27 +81,21 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
 
    private MousHandler mousHandler;
 
-   private TextBox textBox;
-
    private ProposalWidget selectedWidget;
 
    private AutoCompleteFormKeyboardManager keyboardManager;
 
    private HandlerRegistration keyboardManagerRegistration;
 
-   private VerticalPanel panel;
-
    private ProposalSelectedHandler handler;
 
-   private List<ProposalWidget> widgets;
-
-   private List<ProposalWidget> allWidgets;
+   private List<ProposalWidget> widgets = new ArrayList<ProposalWidget>();
 
    private HandlerRegistration resizeHandler;
 
-   private boolean isTextBoxHasFocus = true;
+   private boolean editorHasFocus = true;
 
-   public CodeAssitantForm(int left, int top, String prefix, IJavaCompletionProposal[] items, ProposalSelectedHandler handler)
+   public CodeAssitantForm(int left, int top, IJavaCompletionProposal[] items, ProposalSelectedHandler handler)
    {
       this.handler = handler;
 
@@ -134,30 +119,6 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
       blockMouseEventsPanel.setHeight("" + Window.getClientHeight() + "px");
       lockLayer.add(blockMouseEventsPanel, 0, 0);
 
-      textBox = new TextBox();
-      textBox.setWidth("100%");
-      textBox.setText(prefix);
-      textBox.setStyleName(CodeAssistantClientBundle.INSTANCE.css().edit());
-      textBox.getElement().setId(INPUT_ID);
-
-      textBox.addFocusHandler(new FocusHandler()
-      {
-
-         public void onFocus(FocusEvent event)
-         {
-            isTextBoxHasFocus = true;
-         }
-      });
-
-      textBox.addBlurHandler(new BlurHandler()
-      {
-
-         public void onBlur(BlurEvent event)
-         {
-            isTextBoxHasFocus = false;
-         }
-      });
-
       flowPanel = new FlowPanel();
 
       scrollPanel = new CodeAssistantScrollPanel();
@@ -167,78 +128,45 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
       mousHandler = new MousHandler();
       flowPanel.setWidth("100%");
 
-      // scrollPanel.addMouseOutHandler(mousHandler);
-
       scrollPanel.setHeight("195px");
       scrollPanel.setWidth("300px");
 
-      panel = new VerticalPanel();
-      panel.getElement().setId(PANEL_ID);
+      scrollPanel.getElement().setId(PANEL_ID);
 
       int clientHeight = Window.getClientHeight();
-      if (top + 220 < clientHeight)
+      if (top + 220 > clientHeight)
       {
-         panel.add(textBox);
-         panel.add(scrollPanel);
-      }
-      else
-      {
-         panel.add(scrollPanel);
-         panel.add(textBox);
-         top = top - 200;
+         top = top - 214;
       }
 
-      panel.setStyleName(CodeAssistantClientBundle.INSTANCE.css().panelStyle());
+      scrollPanel.setStyleName(CodeAssistantClientBundle.INSTANCE.css().panelStyle());
 
-      lockLayer.add(panel, left, top);
+      lockLayer.add(scrollPanel, left, top);
 
       keyboardManager = new AutoCompleteFormKeyboardManager();
 
       keyboardManagerRegistration = Event.addNativePreviewHandler(keyboardManager);
 
-      widgets = new ArrayList<ProposalWidget>();
-      allWidgets = new ArrayList<ProposalWidget>();
-      for (IJavaCompletionProposal t : items)
+      addProposalsToPanel(items);
+
+   }
+
+   private void addProposalsToPanel(IJavaCompletionProposal[] proposals)
+   {
+      flowPanel.clear();
+      widgets.clear();
+      if (proposals.length == 0)
+      {
+         flowPanel.add(new Label("No Proposals"));
+         return;
+      }
+      for (IJavaCompletionProposal t : proposals)
       {
          ProposalWidget w = new ProposalWidget(t);
          w.addClickHandler(mousHandler);
          w.addDoubleClickHandler(mousHandler);
-         allWidgets.add(w);
-      }
-      flowPanel.add(new Label("No Proposals"));
-
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-
-         @Override
-         public void execute()
-         {
-            textBox.setFocus(true);
-            textBox.setCursorPos(textBox.getText().length());
-            filterListToken();
-         }
-      });
-
-   }
-
-   private void filterListToken()
-   {
-      if (allWidgets.isEmpty())
-      {
-         return;
-      }
-      String editText = textBox.getText();
-      editText = editText.substring(0, textBox.getCursorPos());
-
-      widgets.clear();
-      flowPanel.clear();
-      for (ProposalWidget w : allWidgets)
-      {
-         if (w.getName().toLowerCase().startsWith(editText.toLowerCase()))
-         {
-            widgets.add(w);
-            flowPanel.add(w);
-         }
+         widgets.add(w);
+         flowPanel.add(w);
       }
       if (!widgets.isEmpty())
       {
@@ -255,55 +183,9 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
       }
    }
 
-   /** @see com.google.gwt.event.dom.client.ChangeHandler#onChange(com.google.gwt.event.dom.client.ChangeEvent) */
-   public void onChange(ChangeEvent event)
-   {
-      if (widgets.size() > 0)
-      {
-         textBox.setValue(selectedWidget.getName());
-      }
-   }
-
-   /**
-    * 
-    */
-   public void listBoxDown()
-   {
-      if (selectedWidget == null)
-         return;
-      int i = widgets.indexOf(selectedWidget);
-      if (widgets.size() - 1 > i)
-      {
-         selectWidget(i + 1);
-      }
-      else
-      {
-         selectWidget(0);
-      }
-   }
-
-   /**
-    * 
-    */
-   public void listBoxUP()
-   {
-      if (selectedWidget == null)
-         return;
-
-      int i = widgets.indexOf(selectedWidget);
-      if (0 < i)
-      {
-         selectWidget(i - 1);
-      }
-      else
-      {
-         selectWidget(widgets.size() - 1);
-      }
-   }
-
    private native void scroll(Element scroll, int pos)/*-{
-                                                      scroll.scrollTop = scroll.scrollTop + pos;
-                                                      }-*/;
+		scroll.scrollTop = scroll.scrollTop + pos;
+   }-*/;
 
    private void selectWidget(int i)
    {
@@ -377,48 +259,19 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
             int width = 300;
             descriptionPanel.getElement().setId(DOC_ID);
             descriptionPanel.setWidth(width + "px");
-            descriptionPanel.setHeight((panel.getOffsetHeight() - 2) + "px");
+            descriptionPanel.setHeight((scrollPanel.getOffsetHeight() - 2) + "px");
 
             descriptionPanel.setStyleName(CodeAssistantClientBundle.INSTANCE.css().description());
             int clientWidth = Window.getClientWidth();
 
-            if (clientWidth < panel.getAbsoluteLeft() + panel.getOffsetWidth() + 3 + width)
-               lockLayer.add(descriptionPanel, panel.getAbsoluteLeft() - width - 4, panel.getAbsoluteTop());
+            if (clientWidth < scrollPanel.getAbsoluteLeft() + scrollPanel.getOffsetWidth() + 3 + width)
+               lockLayer.add(descriptionPanel, scrollPanel.getAbsoluteLeft() - width - 4, scrollPanel.getAbsoluteTop());
             else
-               lockLayer.add(descriptionPanel, panel.getAbsoluteLeft() + panel.getOffsetWidth() + 3,
-                  panel.getAbsoluteTop());
+               lockLayer.add(descriptionPanel, scrollPanel.getAbsoluteLeft() + scrollPanel.getOffsetWidth() + 3,
+                  scrollPanel.getAbsoluteTop());
          }
       }
    };
-
-   /**
-    * 
-    */
-   private void cancelAutocomplete()
-   {
-      timer.cancel();
-      removeHandlers();
-      handler.onCancelAutoComplete();
-      lockLayer.removeFromParent();
-   }
-
-   /**
-    * 
-    */
-   public void tokenSelected()
-   {
-      timer.cancel();
-      removeHandlers();
-      if (selectedWidget == null)
-      {
-         handler.onStringSelected(textBox.getText());
-      }
-      else
-      {
-         handler.onTokenSelected(selectedWidget);
-      }
-      lockLayer.removeFromParent();
-   }
 
    /**
     * 
@@ -441,7 +294,6 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
       public void onPreviewNativeEvent(NativePreviewEvent event)
       {
          NativeEvent nativeEvent = event.getNativeEvent();
-
          int type = event.getTypeInt();
          int typeEvent = Event.ONKEYDOWN;
          if (BrowserResolver.CURRENT_BROWSER.equals(Browser.FIREFOX))
@@ -455,38 +307,21 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
             {
                case KeyCodes.KEY_DOWN :
                   event.cancel();
-                  listBoxDown();
+                  moveSelectionDown();
                   break;
 
                case KeyCodes.KEY_UP :
                   event.cancel();
-                  listBoxUP();
+                  moveSelectionUp();
                   break;
 
                case KeyCodes.KEY_ENTER :
                   event.cancel();
-                  tokenSelected();
+                  proposalSelected();
                   break;
 
                case KeyCodes.KEY_ESCAPE :
-                  cancelAutocomplete();
-                  break;
-
-               case KeyCodes.KEY_LEFT :
-               case KeyCodes.KEY_RIGHT :
-                  if (!isTextBoxHasFocus)
-                     break;
-
-               default :
-                  new Timer()
-                  {
-
-                     @Override
-                     public void run()
-                     {
-                        filterListToken();
-                     }
-                  }.schedule(10);
+                  cancelCodeAssistant();
                   break;
             }
          }
@@ -501,12 +336,14 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
       {
          ProposalWidget t = (ProposalWidget)event.getSource();
          selectToken(t);
+         editorHasFocus = false;
       }
 
       /** @see com.google.gwt.event.dom.client.DoubleClickHandler#onDoubleClick(com.google.gwt.event.dom.client.DoubleClickEvent) */
       public void onDoubleClick(DoubleClickEvent event)
       {
-         tokenSelected();
+         proposalSelected();
+         editorHasFocus = false;
       }
 
    }
@@ -526,7 +363,7 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
          switch (DOM.eventGetType(event))
          {
             case Event.ONMOUSEDOWN :
-               cancelAutocomplete();
+               cancelCodeAssistant();
                break;
 
          }
@@ -538,7 +375,82 @@ public class CodeAssitantForm extends Composite implements ChangeHandler, Resize
    @Override
    public void onResize(ResizeEvent event)
    {
-      cancelAutocomplete();
+      cancelCodeAssistant();
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.codeassistant.api.CodeAssistantDisplay#moveSelectionUp()
+    */
+   @Override
+   public void moveSelectionUp()
+   {
+      if (selectedWidget == null)
+         return;
+
+      int i = widgets.indexOf(selectedWidget);
+      if (0 < i)
+      {
+         selectWidget(i - 1);
+      }
+      else
+      {
+         selectWidget(widgets.size() - 1);
+      }
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.codeassistant.api.CodeAssistantDisplay#moveSelectionDown()
+    */
+   @Override
+   public void moveSelectionDown()
+   {
+      if (selectedWidget == null)
+         return;
+      int i = widgets.indexOf(selectedWidget);
+      if (widgets.size() - 1 > i)
+      {
+         selectWidget(i + 1);
+      }
+      else
+      {
+         selectWidget(0);
+      }
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.codeassistant.api.CodeAssistantDisplay#proposalSelected()
+    */
+   @Override
+   public void proposalSelected()
+   {
+      timer.cancel();
+      removeHandlers();
+      if (selectedWidget != null)
+      {
+         handler.onTokenSelected(selectedWidget.getProposal(), editorHasFocus);
+      }
+      lockLayer.removeFromParent();
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.codeassistant.api.CodeAssistantDisplay#cancelCodeAssistant()
+    */
+   @Override
+   public void cancelCodeAssistant()
+   {
+      timer.cancel();
+      removeHandlers();
+      handler.onCancelAutoComplete(editorHasFocus);
+      lockLayer.removeFromParent();
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.codeassistant.api.CodeAssistantDisplay#setNewProposals(org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal[])
+    */
+   @Override
+   public void setNewProposals(IJavaCompletionProposal[] proposals)
+   {
+      addProposalsToPanel(proposals);
    }
 
 }
