@@ -368,11 +368,12 @@ public class Debugger implements EventsHandler
       for (JdiField f : stackFrame.getFields())
       {
          dump.getFields().add(new FieldImpl(f.getName(), f.getValue().getAsString(), f.getTypeName(), f.isFinal(),
-            f.isStatic(), f.isTransient(), f.isVolatile()));
+            f.isStatic(), f.isTransient(), f.isVolatile(), f.isPrimitive()));
       }
       for (JdiLocalVariable var : stackFrame.getLocalVariables())
       {
-         dump.getLocalVariables().add(new VariableImpl(var.getName(), var.getValue().getAsString(), var.getTypeName()));
+         dump.getLocalVariables().add(new VariableImpl(var.getName(), var.getValue().getAsString(), var.getTypeName(),
+            var.isPrimitive()));
       }
       return dump;
    }
@@ -462,14 +463,15 @@ public class Debugger implements EventsHandler
       {
          if (ch instanceof JdiField)
          {
-            JdiField field = (JdiField)ch;
-            value.getVariables().add(new FieldImpl(field.getName(), field.getValue().getAsString(), field.getTypeName(),
-               field.isFinal(), field.isStatic(), field.isTransient(), field.isVolatile()));
+            JdiField f = (JdiField)ch;
+            value.getVariables().add(new FieldImpl(f.getName(), f.getValue().getAsString(), f.getTypeName(),
+               f.isFinal(), f.isStatic(), f.isTransient(), f.isVolatile(), f.isPrimitive()));
          }
          else
          {
             // Array element.
-            value.getVariables().add(new VariableImpl(ch.getName(), ch.getValue().getAsString(), ch.getTypeName()));
+            value.getVariables().add(new VariableImpl(ch.getName(), ch.getValue().getAsString(), ch.getTypeName(),
+               ch.isPrimitive()));
          }
       }
       return value;

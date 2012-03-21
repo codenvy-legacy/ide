@@ -35,4 +35,8 @@ public interface Variable
    String getType();
 
    void setType(String type);
+
+   boolean isPrimitive();
+
+   void setPrimitive(boolean primitive);
 }

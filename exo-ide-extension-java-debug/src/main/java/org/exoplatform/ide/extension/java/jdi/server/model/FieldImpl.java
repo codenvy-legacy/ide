@@ -37,9 +37,10 @@ public class FieldImpl extends VariableImpl implements Field
                     boolean isFinal,
                     boolean isStatic,
                     boolean isTransient,
-                    boolean isVolatile)
+                    boolean isVolatile,
+                    boolean primitive)
    {
-      super(name, value, type);
+      super(name, value, type, primitive);
       this.isFinal = isFinal;
       this.isStatic = isStatic;
       this.isTransient = isTransient;
@@ -109,6 +110,7 @@ public class FieldImpl extends VariableImpl implements Field
          ", static=" + isStatic +
          ", transient=" + isTransient +
          ", volatile=" + isVolatile +
+         ", primitive=" + isPrimitive() +
          '}';
    }
 }

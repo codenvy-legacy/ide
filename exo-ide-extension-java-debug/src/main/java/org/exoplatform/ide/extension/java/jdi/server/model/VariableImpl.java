@@ -29,12 +29,14 @@ public class VariableImpl implements Variable
    private String name;
    private String value;
    private String type;
+   private boolean primitive;
 
-   public VariableImpl(String name, String value, String type)
+   public VariableImpl(String name, String value, String type, boolean primitive)
    {
       this.name = name;
       this.value = value;
       this.type = type;
+      this.primitive = primitive;
    }
 
    public VariableImpl()
@@ -78,12 +80,25 @@ public class VariableImpl implements Variable
    }
 
    @Override
+   public boolean isPrimitive()
+   {
+      return primitive;
+   }
+
+   @Override
+   public void setPrimitive(boolean primitive)
+   {
+      this.primitive = primitive;
+   }
+
+   @Override
    public String toString()
    {
       return "VariableImpl{" +
          "name='" + name + '\'' +
          ", value='" + value + '\'' +
          ", type='" + type + '\'' +
+         ", primitive=" + primitive +
          '}';
    }
 }
