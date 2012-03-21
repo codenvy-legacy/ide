@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.extension.ssh.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -28,8 +31,6 @@ import org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKeyEvent;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKeyHandler;
 
-import com.google.gwt.core.client.GWT;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshExtension May 17, 2011 5:00:33 PM evgen $
@@ -37,6 +38,11 @@ import com.google.gwt.core.client.GWT;
  */
 public class SshKeyExtension extends Extension implements InitializeServicesHandler, ShowPublicSshKeyHandler
 {
+
+   /**
+    * The generator of an {@link AutoBean}.
+    */
+   public static final SshAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(SshAutoBeanFactory.class);
 
    public static final SshLocalizationConstant CONSTANTS = GWT.create(SshLocalizationConstant.class);
 

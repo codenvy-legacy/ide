@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,58 +19,55 @@
 package org.exoplatform.ide.extension.ssh.shared;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: $
+ * Interface describe a request for generate a SSH-key.
+ * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: GenKeyRequest.java Mar 21, 2012 6:14:27 PM azatsarynnyy $
+ *
  */
-public class GenKeyRequest
+public interface GenKeyRequest
 {
-   /** Remote host name for which generate key. */
-   private String host;
-   
-   /** Comment for public key. */
-   private String comment;
-   
-   /** Passphrase for private key. */
-   private String passphrase;
 
-   public GenKeyRequest(String host, String comment, String passphrase)
-   {
-      this.host = host;
-      this.comment = comment;
-      this.passphrase = passphrase;
-   }
+   /**
+    * Returns remote host name for which generate key.
+    * 
+    * @return host name
+    */
+   public String getHost();
 
-   public GenKeyRequest()
-   {
-   }
+   /**
+    * Change remote host name for which generate key.
+    * 
+    * @param host host name
+    */
+   public void setHost(String host);
 
-   public String getHost()
-   {
-      return host;
-   }
+   /**
+    * Returns comment for public key.
+    * 
+    * @return comment
+    */
+   public String getComment();
 
-   public void setHost(String host)
-   {
-      this.host = host;
-   }
+   /**
+    * Set comment for public key.
+    * 
+    * @param comment comment
+    */
+   public void setComment(String comment);
 
-   public String getComment()
-   {
-      return comment;
-   }
+   /**
+    * Returns passphrase for private key.
+    * 
+    * @return passphrase
+    */
+   public String getPassphrase();
 
-   public void setComment(String comment)
-   {
-      this.comment = comment;
-   }
+   /**
+    * Set passphrase for private key.
+    * 
+    * @param passphrase passphrase
+    */
+   public void setPassphrase(String passphrase);
 
-   public String getPassphrase()
-   {
-      return passphrase;
-   }
-
-   public void setPassphrase(String passphrase)
-   {
-      this.passphrase = passphrase;
-   }
 }
