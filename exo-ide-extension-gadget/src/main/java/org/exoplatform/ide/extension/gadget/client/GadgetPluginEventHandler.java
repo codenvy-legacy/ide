@@ -20,9 +20,11 @@ package org.exoplatform.ide.extension.gadget.client;
 
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Image;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -33,15 +35,16 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetEvent;
 import org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetHandler;
-import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetService;
-import org.exoplatform.ide.extension.gadget.client.service.TokenRequest;
-import org.exoplatform.ide.extension.gadget.client.service.TokenResponse;
-import org.exoplatform.ide.extension.gadget.client.service.marshal.GadgetMetadataUnmarshaler;
-import org.exoplatform.ide.extension.gadget.client.service.marshal.TokenResponseUnmarshal;
 import org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane;
+import org.exoplatform.ide.extension.gadget.shared.Gadget;
+import org.exoplatform.ide.extension.gadget.shared.GadgetMetadata;
+import org.exoplatform.ide.extension.gadget.shared.TokenRequest;
+import org.exoplatform.ide.extension.gadget.shared.TokenResponse;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Link;
+
+import java.util.Iterator;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -94,11 +97,20 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
       String href = activeFile.getLinkByRelation(Link.REL_CONTENT_BY_PATH).getHref();
       href = href.replace(applicationConfiguration.getContext(), applicationConfiguration.getPublicContext());
 
-      TokenRequest tokenRequest = new TokenRequest(href, owner, viewer, moduleId, container, domain);
+      TokenRequest tokenRequestBean = GadgetExtension.AUTO_BEAN_FACTORY.tokenRequest().as();
+      tokenRequestBean.setGadgetURL(href);
+      tokenRequestBean.setOwner(owner);
+      tokenRequestBean.setViewer(viewer);
+      tokenRequestBean.setModuleId(moduleId);
+      tokenRequestBean.setContainer(container);
+      tokenRequestBean.setDomain(domain);
+
       try
       {
-         GadgetService.getInstance().getSecurityToken(tokenRequest,
-            new AsyncRequestCallback<TokenResponse>(new TokenResponseUnmarshal(new TokenResponse()))
+         AutoBean<TokenResponse> autoBean = GadgetExtension.AUTO_BEAN_FACTORY.tokenResponse();
+         AutoBeanUnmarshaller<TokenResponse> unmarshaller = new AutoBeanUnmarshaller<TokenResponse>(autoBean);
+         GadgetService.getInstance().getSecurityToken(tokenRequestBean,
+            new AsyncRequestCallback<TokenResponse>(unmarshaller)
             {
 
                @Override
@@ -125,44 +137,47 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
     */
    private void getGadgetMetadata(TokenResponse tokenResponse)
    {
-      GadgetMetadata metadata = new GadgetMetadata();
-      metadata.setSecurityToken(tokenResponse.getSecurityToken());
       try
       {
-         GadgetService.getInstance().getGadgetMetadata(tokenResponse,
-            new AsyncRequestCallback<GadgetMetadata>(new GadgetMetadataUnmarshaler(metadata))
+         AutoBean<Gadget> autoBean = GadgetExtension.AUTO_BEAN_FACTORY.gadget();
+         AutoBeanUnmarshaller<Gadget> unmarshaller = new AutoBeanUnmarshaller<Gadget>(autoBean);
+
+         GadgetService.getInstance().getGadgetMetadata(tokenResponse, new AsyncRequestCallback<Gadget>(unmarshaller)
+         {
+            @Override
+            protected void onSuccess(Gadget result)
             {
-
-               @Override
-               protected void onSuccess(GadgetMetadata result)
+               if (gadgetPreviewPane == null)
                {
-                  if (gadgetPreviewPane == null)
+                  gadgetPreviewPane = new GadgetPreviewPane();
+                  gadgetPreviewPane.setIcon(new Image(GadgetClientBundle.INSTANCE.preview()));
+                  IDE.getInstance().openView(gadgetPreviewPane);
+               }
+               else
+               {
+                  if (!gadgetPreviewPane.isViewVisible())
                   {
-                     gadgetPreviewPane = new GadgetPreviewPane();
-                     gadgetPreviewPane.setIcon(new Image(GadgetClientBundle.INSTANCE.preview()));
-                     IDE.getInstance().openView(gadgetPreviewPane);
+                     gadgetPreviewPane.setViewVisible();
                   }
-                  else
-                  {
-                     if (!gadgetPreviewPane.isViewVisible())
-                     {
-                        gadgetPreviewPane.setViewVisible();
-                     }
-                  }
+               }
 
-                  gadgetPreviewPane.setConfiguration(applicationConfiguration);
-                  gadgetPreviewPane.setMetadata(result);
+               gadgetPreviewPane.setConfiguration(applicationConfiguration);
+
+               Iterator<GadgetMetadata> iterator = result.getGadgets().iterator();
+               if (iterator.hasNext())
+               {
+                  gadgetPreviewPane.setMetadata(iterator.next());
                   gadgetPreviewPane.showGadget();
-
                   previewOpened = true;
                }
+            }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+         });
       }
       catch (RequestException e)
       {

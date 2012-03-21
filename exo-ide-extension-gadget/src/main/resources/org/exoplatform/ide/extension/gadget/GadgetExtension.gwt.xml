@@ -34,5 +34,5 @@
    <entry-point class='org.exoplatform.ide.extension.gadget.client.GadgetExtension' />
    
    <source path="client" />
-
+   <source path="shared" />
 </module>

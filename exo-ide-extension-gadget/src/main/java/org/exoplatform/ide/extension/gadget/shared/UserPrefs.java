@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,33 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.gadget.client.service.marshal;
-
-import org.exoplatform.gwtframework.commons.rest.Marshallable;
-import org.exoplatform.ide.extension.gadget.client.service.TokenRequest;
+package org.exoplatform.ide.extension.gadget.shared;
 
 /**
- * Created by The eXo Platform SAS.
+ * Interface describes prefernces of user.
  * 
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @version $Id: $
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: UserPrefs.java Mar 20, 2012 7:04:13 PM azatsarynnyy $
+ *
  */
-public class TokenRequestMarshaler implements Marshallable
+public interface UserPrefs
 {
-
-   private TokenRequest tokenRequest;
-
-   public TokenRequestMarshaler(TokenRequest tokenRequest)
-   {
-      this.tokenRequest = tokenRequest;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public String marshal()
-   {
-      return tokenRequest.toString();
-   }
-
 }

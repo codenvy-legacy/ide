@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.extension.gadget.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.Docking;
@@ -33,6 +36,10 @@ import org.exoplatform.ide.extension.gadget.client.service.GadgetServiceImpl;
  */
 public class GadgetExtension extends Extension implements InitializeServicesHandler
 {
+   /**
+    * The generator of an {@link AutoBean}.
+    */
+   public static final GadgetAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(GadgetAutoBeanFactory.class);
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)

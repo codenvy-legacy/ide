@@ -18,20 +18,19 @@
  */
 package org.exoplatform.ide.extension.gadget.client.ui;
 
-import com.google.gwt.user.client.ui.FlowPanel;
-
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window.Location;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.ui.PreviewFrame;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
+import org.exoplatform.ide.extension.gadget.shared.GadgetMetadata;
 
 /**
  * Created by The eXo Platform SAS.
