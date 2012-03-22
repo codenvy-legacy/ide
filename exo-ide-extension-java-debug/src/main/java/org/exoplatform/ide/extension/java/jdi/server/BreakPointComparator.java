@@ -31,8 +31,8 @@ final class BreakPointComparator implements Comparator<BreakPoint>
    @Override
    public int compare(BreakPoint o1, BreakPoint o2)
    {
-      String className1 = o1.getClassName();
-      String className2 = o2.getClassName();
+      String className1 = o1.getLocation().getClassName();
+      String className2 = o2.getLocation().getClassName();
       if (className1 == null && className2 == null)
       {
          return 0;
@@ -48,7 +48,7 @@ final class BreakPointComparator implements Comparator<BreakPoint>
       int result = className1.compareTo(className2);
       if (result == 0)
       {
-         result = o1.getLineNumber() - o2.getLineNumber();
+         result = o1.getLocation().getLineNumber() - o2.getLocation().getLineNumber();
       }
       return result;
    }

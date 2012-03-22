@@ -18,50 +18,58 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server.model;
 
-import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import org.exoplatform.ide.extension.java.jdi.shared.Location;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class BreakPointImpl implements BreakPoint
+public class LocationImpl implements Location
 {
-   private Location location;
-   // Always enable at the moment. Managing states of breakpoint is not supported for now.
-   private boolean enabled = true;
+   private String className;
+   private int lineNumber;
 
-   public BreakPointImpl(Location location)
+   public LocationImpl(String className, int lineNumber)
    {
-      this.location = location;
+      this.className = className;
+      this.lineNumber = lineNumber;
    }
 
-   public BreakPointImpl()
+   public LocationImpl()
    {
-   }
-
-   @Override
-   public Location getLocation()
-   {
-      return location;
    }
 
    @Override
-   public void setLocation(Location location)
+   public String getClassName()
    {
-      this.location = location;
+      return className;
    }
 
    @Override
-   public boolean isEnabled()
+   public int getLineNumber()
    {
-      return enabled;
+      return lineNumber;
    }
 
    @Override
-   public void setEnabled(boolean enabled)
+   public void setClassName(String className)
    {
-      this.enabled = enabled;
+      this.className = className;
+   }
+
+   @Override
+   public void setLineNumber(int lineNumber)
+   {
+      this.lineNumber = lineNumber;
+   }
+
+   @Override
+   public int hashCode()
+   {
+      int hash = 7;
+      hash = 31 * hash + (className == null ? 0 : className.hashCode());
+      hash = 31 * hash + lineNumber;
+      return hash;
    }
 
    @Override
@@ -75,24 +83,17 @@ public class BreakPointImpl implements BreakPoint
       {
          return false;
       }
-      BreakPointImpl other = (BreakPointImpl)o;
-      return location == null ? other.location == null : location.equals(other.location);
-   }
-
-   @Override
-   public int hashCode()
-   {
-      int hash = 7;
-      hash = 31 * hash + (location == null ? 0 : location.hashCode());
-      return hash;
+      LocationImpl other = (LocationImpl)o;
+      return lineNumber == other.lineNumber
+         && (className == null ? other.className == null : className.equals(other.className));
    }
 
    @Override
    public String toString()
    {
-      return "BreakPointImpl{" +
-         "location=" + location +
-         ", enabled=" + enabled +
+      return "LocationImpl{" +
+         "className='" + className + '\'' +
+         ", lineNumber=" + lineNumber +
          '}';
    }
 }

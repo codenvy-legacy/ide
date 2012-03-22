@@ -19,18 +19,12 @@
 package org.exoplatform.ide.extension.java.jdi.shared;
 
 /**
- * Description of debug break point.
- *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface BreakPoint
+public interface StepEvent extends DebuggerEvent
 {
    Location getLocation();
 
    void setLocation(Location location);
-
-   boolean isEnabled();
-
-   void setEnabled(boolean enabled);
 }

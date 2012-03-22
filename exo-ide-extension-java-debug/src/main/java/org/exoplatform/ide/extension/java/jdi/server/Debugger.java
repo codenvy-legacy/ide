@@ -22,9 +22,9 @@ import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.Bootstrap;
 import com.sun.jdi.ClassNotPreparedException;
 import com.sun.jdi.IncompatibleThreadStateException;
-import com.sun.jdi.Location;
 import com.sun.jdi.NativeMethodException;
 import com.sun.jdi.ReferenceType;
+import com.sun.jdi.ThreadReference;
 import com.sun.jdi.VMCannotBeModifiedException;
 import com.sun.jdi.VirtualMachine;
 import com.sun.jdi.connect.AttachingConnector;
@@ -34,10 +34,13 @@ import com.sun.jdi.request.BreakpointRequest;
 import com.sun.jdi.request.EventRequest;
 import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.request.InvalidRequestStateException;
+import com.sun.jdi.request.StepRequest;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointEventImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.FieldImpl;
+import org.exoplatform.ide.extension.java.jdi.server.model.LocationImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.StackFrameDumpImpl;
+import org.exoplatform.ide.extension.java.jdi.server.model.StepEventImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.ValueImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.VariableImpl;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
@@ -96,7 +99,10 @@ public class Debugger implements EventsHandler
    /** Target Java VM representation. */
    private VirtualMachine vm;
    private EventsCollector eventsCollector;
-   /** Current stack frame. Initialized when break point is reached and set to <code>null</code> if JVM is resumed. */
+
+   /** Current thread. Not <code>null</code> is thread suspended, e.g breakpoint reached. */
+   private ThreadReference thread;
+   /** Current stack frame. Not <code>null</code> is thread suspended, e.g breakpoint reached. */
    private JdiStackFrame stackFrame;
 
    /**
@@ -165,7 +171,7 @@ public class Debugger implements EventsHandler
    public void disconnect() throws DebuggerException
    {
       vm.dispose();
-      LOG.debug("Close connection");
+      LOG.debug("Close connection to {}:{}", host, port);
    }
 
    /**
@@ -178,16 +184,18 @@ public class Debugger implements EventsHandler
     */
    public void addBreakPoint(BreakPoint breakPoint) throws InvalidBreakPointException, DebuggerException
    {
-      List<ReferenceType> classes = vm.classesByName(breakPoint.getClassName());
+      final String className = breakPoint.getLocation().getClassName();
+      final int lineNumber = breakPoint.getLocation().getLineNumber();
+      List<ReferenceType> classes = vm.classesByName(className);
       if (classes.isEmpty())
       {
-         throw new InvalidBreakPointException("Class " + breakPoint.getClassName() + " not found. ");
+         throw new InvalidBreakPointException("Class " + className + " not found. ");
       }
       ReferenceType clazz = classes.get(0);
-      List<Location> locations;
+      List<com.sun.jdi.Location> locations;
       try
       {
-         locations = clazz.locationsOfLine(breakPoint.getLineNumber());
+         locations = clazz.locationsOfLine(lineNumber);
       }
       catch (AbsentInformationException e)
       {
@@ -200,35 +208,32 @@ public class Debugger implements EventsHandler
 
       if (locations.isEmpty())
       {
-         throw new InvalidBreakPointException("Line " + breakPoint.getLineNumber() + " not found in class "
-            + breakPoint.getClassName());
+         throw new InvalidBreakPointException("Line " + lineNumber + " not found in class " + className);
       }
 
-      Location location = locations.get(0);
+      com.sun.jdi.Location location = locations.get(0);
       if (location.method() == null)
       {
          // Line is out of method.
-         throw new InvalidBreakPointException("Invalid line " + breakPoint.getLineNumber()
-            + " in class " + breakPoint.getClassName());
+         throw new InvalidBreakPointException("Invalid line " + lineNumber + " in class " + className);
       }
+
+      // Ignore new breakpoint if already have breakpoint at the same location.
+      EventRequestManager events = getEventManager();
+      for (BreakpointRequest breakpointRequest : events.breakpointRequests())
+      {
+         if (location.equals(breakpointRequest.location()))
+         {
+            LOG.debug("Breakpoint at {} already set", location);
+            return;
+         }
+      }
+
       try
       {
-         for (BreakpointRequest breakpointRequest : vm.eventRequestManager().breakpointRequests())
-         {
-            if (location.equals(breakpointRequest.location()))
-            {
-               LOG.debug("Breakpoint at {} already set", location);
-               return;
-            }
-         }
-
-         EventRequest breakPointRequest = vm.eventRequestManager().createBreakpointRequest(location);
+         EventRequest breakPointRequest = events.createBreakpointRequest(location);
          breakPointRequest.setSuspendPolicy(EventRequest.SUSPEND_ALL);
          breakPointRequest.setEnabled(true);
-      }
-      catch (VMCannotBeModifiedException e)
-      {
-         throw new DebuggerException(e.getMessage(), e);
       }
       catch (NativeMethodException e)
       {
@@ -256,18 +261,23 @@ public class Debugger implements EventsHandler
       List<BreakpointRequest> breakpointRequests;
       try
       {
-         breakpointRequests = vm.eventRequestManager().breakpointRequests();
+         breakpointRequests = getEventManager().breakpointRequests();
       }
-      catch (VMCannotBeModifiedException e)
+      catch (DebuggerException e)
       {
-         // If target VM in read-only state then list of break point always empty.
-         return Collections.emptyList();
+         Throwable cause = e.getCause();
+         if (cause instanceof VMCannotBeModifiedException)
+         {
+            // If target VM in read-only state then list of break point always empty.
+            return Collections.emptyList();
+         }
+         throw e;
       }
       List<BreakPoint> breakPoints = new ArrayList<BreakPoint>(breakpointRequests.size());
       for (BreakpointRequest breakpointRequest : breakpointRequests)
       {
-         Location location = breakpointRequest.location();
-         breakPoints.add(new BreakPointImpl(location.declaringType().name(), location.lineNumber()));
+         com.sun.jdi.Location location = breakpointRequest.location();
+         breakPoints.add(new BreakPointImpl(new LocationImpl(location.declaringType().name(), location.lineNumber())));
       }
       Collections.sort(breakPoints, BREAKPOINT_COMPARATOR);
       return breakPoints;
@@ -283,32 +293,18 @@ public class Debugger implements EventsHandler
     */
    public void deleteBreakPoint(BreakPoint breakPoint) throws DebuggerException
    {
-      EventRequestManager requestManager;
-      try
-      {
-         requestManager = vm.eventRequestManager();
-      }
-      catch (VMCannotBeModifiedException e)
-      {
-         throw new DebuggerException(e.getMessage(), e);
-      }
+      final String className = breakPoint.getLocation().getClassName();
+      final int lineNumber = breakPoint.getLocation().getLineNumber();
+      EventRequestManager requestManager = getEventManager();
       List<BreakpointRequest> snapshot = new ArrayList<BreakpointRequest>(requestManager.breakpointRequests());
-      try
+      for (BreakpointRequest breakpointRequest : snapshot)
       {
-         for (BreakpointRequest breakpointRequest : snapshot)
+         com.sun.jdi.Location location = breakpointRequest.location();
+         if (location.declaringType().name().equals(className) && location.lineNumber() == lineNumber)
          {
-            Location location = breakpointRequest.location();
-            if (location.declaringType().name().equals(breakPoint.getClassName())
-               && location.lineNumber() == breakPoint.getLineNumber())
-            {
-               requestManager.deleteEventRequest(breakpointRequest);
-               LOG.debug("Delete breakpoint: {}", location);
-            }
+            requestManager.deleteEventRequest(breakpointRequest);
+            LOG.debug("Delete breakpoint: {}", location);
          }
-      }
-      catch (VMCannotBeModifiedException e)
-      {
-         throw new DebuggerException(e.getMessage(), e);
       }
    }
 
@@ -347,7 +343,7 @@ public class Debugger implements EventsHandler
       }
       finally
       {
-         stackFrame = null;
+         resetCurrentThread();
       }
    }
 
@@ -481,7 +477,7 @@ public class Debugger implements EventsHandler
     * Returns the name of the target Java VM.
     *
     * @return JVM name
-    * @throws DebuggerException when any other JDI errors occur
+    * @throws DebuggerException when any JDI errors occur
     */
    public String getVmName() throws DebuggerException
    {
@@ -492,7 +488,7 @@ public class Debugger implements EventsHandler
     * Returns the version of the target Java VM.
     *
     * @return JVM version
-    * @throws DebuggerException when any other JDI errors occur
+    * @throws DebuggerException when any JDI errors occur
     */
    public String getVmVersion() throws DebuggerException
    {
@@ -520,28 +516,19 @@ public class Debugger implements EventsHandler
             LOG.debug("New event: {}", event);
             if (event instanceof com.sun.jdi.event.BreakpointEvent)
             {
-               try
-               {
-                  com.sun.jdi.event.BreakpointEvent jdiBreakpointEvent = (com.sun.jdi.event.BreakpointEvent)event;
-                  stackFrame = new JdiStackFrameImpl(jdiBreakpointEvent.thread().frame(0));
-                  Location location = jdiBreakpointEvent.location();
-                  synchronized (events)
-                  {
-                     events.add(new BreakPointEventImpl(new BreakPointImpl(location.declaringType().name(),
-                        location.lineNumber())));
-                  }
-                  // Lets target JVM to be in suspend state.
-                  resume = false;
-               }
-               catch (IncompatibleThreadStateException e)
-               {
-                  throw new DebuggerException(e.getMessage(), e);
-               }
+               processBreakPointEvent((com.sun.jdi.event.BreakpointEvent)event);
+               // Lets target JVM to be in suspend state.
+               resume = false;
+            }
+            else if (event instanceof com.sun.jdi.event.StepEvent)
+            {
+               processBreakStepEvent((com.sun.jdi.event.StepEvent)event);
+               // Lets target JVM to be in suspend state.
+               resume = false;
             }
             else if (event instanceof com.sun.jdi.event.VMDisconnectEvent)
             {
-               eventsCollector.stop();
-               instances.remove(id);
+               processDisconnectEvent((com.sun.jdi.event.VMDisconnectEvent)event);
             }
          }
       }
@@ -551,6 +538,127 @@ public class Debugger implements EventsHandler
          {
             eventSet.resume();
          }
+      }
+   }
+
+   private void processBreakPointEvent(com.sun.jdi.event.BreakpointEvent event) throws DebuggerException
+   {
+      setCurrentThread(event.thread());
+      com.sun.jdi.Location location = event.location();
+      synchronized (events)
+      {
+         events.add(new BreakPointEventImpl(
+            new BreakPointImpl(
+               new LocationImpl(location.declaringType().name(), location.lineNumber())
+            )
+         ));
+      }
+   }
+
+   private void processBreakStepEvent(com.sun.jdi.event.StepEvent event) throws DebuggerException
+   {
+      setCurrentThread(event.thread());
+      com.sun.jdi.Location location = event.location();
+      synchronized (events)
+      {
+         events.add(new StepEventImpl(new LocationImpl(location.declaringType().name(), location.lineNumber())));
+      }
+   }
+
+   private void processDisconnectEvent(com.sun.jdi.event.VMDisconnectEvent event)
+   {
+      eventsCollector.stop();
+      instances.remove(id);
+   }
+
+   /**
+    * Step to the next line.
+    *
+    * @throws DebuggerStateException when target JVM is not suspended
+    * @throws DebuggerException when any other JDI errors occur
+    */
+   public void stepNext() throws DebuggerException
+   {
+      doStep(StepRequest.STEP_OVER);
+   }
+
+   /**
+    * Step out of the current frame.
+    *
+    * @throws DebuggerStateException when target JVM is not suspended
+    * @throws DebuggerException when any other JDI errors occur
+    */
+   public void stepOut() throws DebuggerException
+   {
+      doStep(StepRequest.STEP_OUT);
+   }
+
+   /**
+    * Step to the next frame.
+    *
+    * @throws DebuggerStateException when target JVM is not suspended
+    * @throws DebuggerException when any other JDI errors occur
+    */
+   public void stepInto() throws DebuggerException
+   {
+      doStep(StepRequest.STEP_INTO);
+   }
+
+   private void doStep(int depth) throws DebuggerException
+   {
+      if (thread == null)
+      {
+         throw new DebuggerStateException("Target Java VM is not suspended. ");
+      }
+      clearSteps();
+      StepRequest request = getEventManager().createStepRequest(thread, StepRequest.STEP_LINE, depth);
+      request.addCountFilter(1);
+      request.enable();
+      resume();
+   }
+
+   private void clearSteps() throws DebuggerException
+   {
+      List<StepRequest> snapshot = new ArrayList<StepRequest>(getEventManager().stepRequests());
+      for (StepRequest stepRequest : snapshot)
+      {
+         if (stepRequest.thread().equals(thread))
+         {
+            getEventManager().deleteEventRequest(stepRequest);
+         }
+      }
+   }
+
+   private void setCurrentThread(ThreadReference t) throws DebuggerException
+   {
+      try
+      {
+         this.stackFrame = new JdiStackFrameImpl(t.frame(0));
+         this.thread = t;
+      }
+      catch (IncompatibleThreadStateException e)
+      {
+         throw new DebuggerException(e.getMessage(), e);
+      }
+   }
+
+   private void resetCurrentThread()
+   {
+      this.stackFrame = null;
+      this.thread = null;
+   }
+
+   //
+
+   private EventRequestManager getEventManager() throws DebuggerException
+   {
+      try
+      {
+         return vm.eventRequestManager();
+      }
+      catch (VMCannotBeModifiedException e)
+      {
+         throw new DebuggerException(e.getMessage(), e);
       }
    }
 }

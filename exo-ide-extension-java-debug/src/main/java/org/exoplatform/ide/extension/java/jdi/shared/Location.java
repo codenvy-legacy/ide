@@ -19,18 +19,16 @@
 package org.exoplatform.ide.extension.java.jdi.shared;
 
 /**
- * Description of debug break point.
- *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface BreakPoint
+public interface Location
 {
-   Location getLocation();
+   String getClassName();
 
-   void setLocation(Location location);
+   int getLineNumber();
 
-   boolean isEnabled();
+   void setClassName(String className);
 
-   void setEnabled(boolean enabled);
+   void setLineNumber(int lineNumber);
 }

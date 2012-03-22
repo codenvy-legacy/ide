@@ -16,21 +16,45 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.shared;
+package org.exoplatform.ide.extension.java.jdi.server.model;
+
+import org.exoplatform.ide.extension.java.jdi.shared.Location;
+import org.exoplatform.ide.extension.java.jdi.shared.StepEvent;
 
 /**
- * Description of debug break point.
- *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface BreakPoint
+public class StepEventImpl implements StepEvent
 {
-   Location getLocation();
+   private Location location;
 
-   void setLocation(Location location);
+   public StepEventImpl(Location location)
+   {
+      this.location = location;
+   }
 
-   boolean isEnabled();
+   public StepEventImpl()
+   {
+   }
 
-   void setEnabled(boolean enabled);
+   @Override
+   public Location getLocation()
+   {
+      return location;
+   }
+
+   @Override
+   public void setLocation(Location location)
+   {
+      this.location = location;
+   }
+
+   @Override
+   public String toString()
+   {
+      return "StepEventImpl{" +
+         "location=" + location +
+         '}';
+   }
 }
