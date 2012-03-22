@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.java.jdi.server.model;
 
 import org.exoplatform.ide.extension.java.jdi.shared.Field;
+import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -34,13 +35,14 @@ public class FieldImpl extends VariableImpl implements Field
    public FieldImpl(String name,
                     String value,
                     String type,
+                    VariablePath variablePath,
                     boolean isFinal,
                     boolean isStatic,
                     boolean isTransient,
                     boolean isVolatile,
                     boolean primitive)
    {
-      super(name, value, type, primitive);
+      super(name, value, type, variablePath, primitive);
       this.isFinal = isFinal;
       this.isStatic = isStatic;
       this.isTransient = isTransient;
@@ -106,6 +108,7 @@ public class FieldImpl extends VariableImpl implements Field
          "name='" + getName() + '\'' +
          ", value='" + getValue() + '\'' +
          ", type='" + getType() + '\'' +
+         ", variablePath=" + getVariablePath() +
          ", final=" + isFinal +
          ", static=" + isStatic +
          ", transient=" + isTransient +

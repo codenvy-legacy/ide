@@ -43,10 +43,12 @@ import org.exoplatform.ide.extension.java.jdi.server.model.StackFrameDumpImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.StepEventImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.ValueImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.VariableImpl;
+import org.exoplatform.ide.extension.java.jdi.server.model.VariablePathImpl;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
 import org.exoplatform.ide.extension.java.jdi.shared.Value;
+import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -363,13 +365,26 @@ public class Debugger implements EventsHandler
       StackFrameDumpImpl dump = new StackFrameDumpImpl();
       for (JdiField f : stackFrame.getFields())
       {
-         dump.getFields().add(new FieldImpl(f.getName(), f.getValue().getAsString(), f.getTypeName(), f.isFinal(),
-            f.isStatic(), f.isTransient(), f.isVolatile(), f.isPrimitive()));
+         dump.getFields().add(
+            new FieldImpl(f.getName(),
+               f.getValue().getAsString(),
+               f.getTypeName(),
+               new VariablePathImpl(Collections.singletonList(f.getName())),
+               f.isFinal(),
+               f.isStatic(),
+               f.isTransient(),
+               f.isVolatile(),
+               f.isPrimitive())
+         );
       }
       for (JdiLocalVariable var : stackFrame.getLocalVariables())
       {
-         dump.getLocalVariables().add(new VariableImpl(var.getName(), var.getValue().getAsString(), var.getTypeName(),
-            var.isPrimitive()));
+         dump.getLocalVariables().add(
+            new VariableImpl(var.getName(),
+               var.getValue().getAsString(),
+               var.getTypeName(),
+               new VariablePathImpl(Collections.singletonList(var.getName())),
+               var.isPrimitive()));
       }
       return dump;
    }
@@ -416,11 +431,12 @@ public class Debugger implements EventsHandler
     * @throws DebuggerStateException when target JVM is not suspended
     * @throws DebuggerException when any other errors occur when try to access the variable
     */
-   public Value getValue(String[] variablePath) throws DebuggerStateException, DebuggerException
+   public Value getValue(VariablePath variablePath) throws DebuggerStateException, DebuggerException
    {
-      if (variablePath == null || variablePath.length == 0)
+      List<String> path = variablePath.getPath();
+      if (path.size() == 0)
       {
-         throw new IllegalArgumentException("Path to variable may not be null or empty. ");
+         throw new IllegalArgumentException("Path to value may not be empty. ");
       }
       if (stackFrame == null)
       {
@@ -428,24 +444,24 @@ public class Debugger implements EventsHandler
       }
       JdiVariable variable;
       int offset;
-      if ("this".equals(variablePath[0]) || "static".equals(variablePath[0]))
+      if ("this".equals(path.get(0)) || "static".equals(path.get(0)))
       {
-         if (variablePath.length < 2)
+         if (path.size() < 2)
          {
             throw new IllegalArgumentException("Name of field required. ");
          }
-         variable = stackFrame.getFieldByName(variablePath[1]);
+         variable = stackFrame.getFieldByName(path.get(1));
          offset = 2;
       }
       else
       {
-         variable = stackFrame.getLocalVariableByName(variablePath[0]);
+         variable = stackFrame.getLocalVariableByName(path.get(0));
          offset = 1;
       }
 
-      for (int i = offset; variable != null && i < variablePath.length; i++)
+      for (int i = offset; variable != null && i < path.size(); i++)
       {
-         variable = variable.getValue().getVariableByName(variablePath[i]);
+         variable = variable.getValue().getVariableByName(path.get(i));
       }
 
       if (variable == null)
@@ -457,17 +473,32 @@ public class Debugger implements EventsHandler
       value.setValue(variable.getValue().getAsString());
       for (JdiVariable ch : variable.getValue().getVariables())
       {
+         VariablePath chPath = new VariablePathImpl(new ArrayList<String>(path));
+         chPath.getPath().add(ch.getName());
          if (ch instanceof JdiField)
          {
             JdiField f = (JdiField)ch;
-            value.getVariables().add(new FieldImpl(f.getName(), f.getValue().getAsString(), f.getTypeName(),
-               f.isFinal(), f.isStatic(), f.isTransient(), f.isVolatile(), f.isPrimitive()));
+            value.getVariables().add(
+               new FieldImpl(f.getName(),
+                  f.getValue().getAsString(),
+                  f.getTypeName(),
+                  chPath,
+                  f.isFinal(),
+                  f.isStatic(),
+                  f.isTransient(),
+                  f.isVolatile(),
+                  f.isPrimitive())
+            );
          }
          else
          {
             // Array element.
-            value.getVariables().add(new VariableImpl(ch.getName(), ch.getValue().getAsString(), ch.getTypeName(),
-               ch.isPrimitive()));
+            value.getVariables().add(
+               new VariableImpl(ch.getName(),
+                  ch.getValue().getAsString(),
+                  ch.getTypeName(),
+                  chPath,
+                  ch.isPrimitive()));
          }
       }
       return value;

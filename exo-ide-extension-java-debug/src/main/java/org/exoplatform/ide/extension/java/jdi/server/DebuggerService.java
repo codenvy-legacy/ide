@@ -27,7 +27,7 @@ import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
 import org.exoplatform.ide.extension.java.jdi.shared.Value;
-import org.exoplatform.ide.extension.java.jdi.shared.ValuePath;
+import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -113,9 +113,9 @@ public class DebuggerService
    @Path("value/{id}")
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public Value getValue(@PathParam("id") String id, ValuePath path) throws DebuggerException
+   public Value getValue(@PathParam("id") String id, VariablePath path) throws DebuggerException
    {
-      return Debugger.getInstance(id).getValue(path.getPath());
+      return Debugger.getInstance(id).getValue(path);
    }
 
    @GET

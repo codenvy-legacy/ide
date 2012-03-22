@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server.model;
 
+import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 
 /**
@@ -29,13 +30,19 @@ public class VariableImpl implements Variable
    private String name;
    private String value;
    private String type;
+   private VariablePath variablePath;
    private boolean primitive;
 
-   public VariableImpl(String name, String value, String type, boolean primitive)
+   public VariableImpl(String name,
+                       String value,
+                       String type,
+                       VariablePath variablePath,
+                       boolean primitive)
    {
       this.name = name;
       this.value = value;
       this.type = type;
+      this.variablePath = variablePath;
       this.primitive = primitive;
    }
 
@@ -80,6 +87,18 @@ public class VariableImpl implements Variable
    }
 
    @Override
+   public VariablePath getVariablePath()
+   {
+      return variablePath;
+   }
+
+   @Override
+   public void setVariablePath(VariablePath variablePath)
+   {
+      this.variablePath = variablePath;
+   }
+
+   @Override
    public boolean isPrimitive()
    {
       return primitive;
@@ -98,6 +117,7 @@ public class VariableImpl implements Variable
          "name='" + name + '\'' +
          ", value='" + value + '\'' +
          ", type='" + type + '\'' +
+         ", variablePath=" + variablePath +
          ", primitive=" + primitive +
          '}';
    }

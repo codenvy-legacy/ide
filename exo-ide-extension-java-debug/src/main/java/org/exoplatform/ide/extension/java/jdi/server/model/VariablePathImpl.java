@@ -16,15 +16,51 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.shared;
+package org.exoplatform.ide.extension.java.jdi.server.model;
+
+import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ValuePath
+public class VariablePathImpl implements VariablePath
 {
-   String[] getPath();
+   private List<String> path;
 
-   void setPath(String[] path);
+   public VariablePathImpl(List<String> path)
+   {
+      this.path = path;
+   }
+
+   public VariablePathImpl()
+   {
+   }
+
+   @Override
+   public List<String> getPath()
+   {
+      if (path == null)
+      {
+         path = new ArrayList<String>();
+      }
+      return path;
+   }
+
+   @Override
+   public void setPath(List<String> path)
+   {
+      this.path = path;
+   }
+
+   @Override
+   public String toString()
+   {
+      return "VariablePathImpl{" +
+         "path=" + path +
+         '}';
+   }
 }

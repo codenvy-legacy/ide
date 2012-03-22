@@ -18,29 +18,15 @@
  */
 package org.exoplatform.ide.extension.java.jdi.shared;
 
+import java.util.List;
+
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Variable
+public interface VariablePath
 {
-   String getName();
+   List<String> getPath();
 
-   void setName(String name);
-
-   String getValue();
-
-   void setValue(String value);
-
-   String getType();
-
-   void setType(String type);
-
-   VariablePath getVariablePath();
-
-   void setVariablePath(VariablePath variablePath);
-
-   boolean isPrimitive();
-
-   void setPrimitive(boolean primitive);
+   void setPath(List<String> path);
 }
