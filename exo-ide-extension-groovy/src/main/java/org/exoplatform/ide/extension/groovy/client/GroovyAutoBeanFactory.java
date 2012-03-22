@@ -16,45 +16,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.groovy.shared;
+package org.exoplatform.ide.extension.groovy.client;
 
-import java.util.List;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanFactory;
+
+import org.exoplatform.ide.extension.groovy.shared.Attribute;
+import org.exoplatform.ide.extension.groovy.shared.Jar;
 
 /**
- * Interface describes the JAR file.
+ * The interface for the AutoBean generator.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: Jar.java Mar 22, 2012 10:31:44 AM azatsarynnyy $
+ * @version $Id: GroovyAutoBeanFactory.java Mar 16, 2012 12:27:47 PM azatsarynnyy $
  *
  */
-public interface Jar
+public interface GroovyAutoBeanFactory extends AutoBeanFactory
 {
 
    /**
-    * Returns path to the JAR file.
+    * A factory method for a jar bean.
     * 
-    * @return path to the JAR file
+    * @return an {@link AutoBean} of type {@link Jar}
     */
-   public String getPath();
+   AutoBean<Jar> jar();
 
    /**
-    * Sets new path of this JAR file.
+    * A factory method for a jar attribute bean.
     * 
-    * @param path new path of this JAR file
+    * @return an {@link AutoBean} of type {@link Attribute}
     */
-   public void setPath(String path);
-
-   /**
-    * Gets the list of attributes.
-    * 
-    * @return list of attributes
-    */
-   public List<Attribute> getAttributes();
-
-   /**
-    * Sets new list of attributes.
-    * 
-    * @param attributes list of attributes
-    */
-   public void setAttributes(Attribute attributes);
+   AutoBean<Attribute> attribute();
 }

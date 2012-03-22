@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
-import org.exoplatform.ide.extension.groovy.shared.Attribute;
 import org.exoplatform.ide.extension.groovy.shared.Jar;
 
 import java.io.File;
@@ -64,7 +63,7 @@ public class JarsCollector
       absoluteServerPath = absoluteServerPath.substring(0, absoluteServerPath.lastIndexOf("/"));
       absoluteServerPath = absoluteServerPath.substring(0, absoluteServerPath.lastIndexOf("/"));
       absoluteServerPath += "/lib";
-      getJarsFromClasspath(absoluteServerPath, pathSeparator);      
+      getJarsFromClasspath(absoluteServerPath, pathSeparator);
 
       String javaClassPath = System.getProperty("java.class.path");
       getJarsFromClasspath(javaClassPath, pathSeparator);
@@ -147,7 +146,7 @@ public class JarsCollector
    /** Create JAR description. */
    private Jar makeJar(File file) throws IOException
    {
-      Jar jar = new Jar(file.getAbsolutePath());
+      Jar jar = new JarBean(file.getAbsolutePath());
       JarFile jarfile = new JarFile(file);
       ZipEntry manifestZipEntry = jarfile.getEntry("META-INF/MANIFEST.MF");
       if (manifestZipEntry != null)
@@ -180,7 +179,7 @@ public class JarsCollector
             if (key != null)
             {
                Object value = e.getValue();
-               jar.getAttributes().add(new Attribute(key.toString(), value != null ? value.toString() : null));
+               jar.getAttributes().add(new AttributeBean(key.toString(), value != null ? value.toString() : null));
             }
          }
       }

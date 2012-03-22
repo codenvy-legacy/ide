@@ -20,12 +20,13 @@ package org.exoplatform.ide.extension.groovy.client.service.groovy.marshal;
 
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.extension.groovy.shared.Attribute;
+import org.exoplatform.ide.extension.groovy.client.GroovyExtension;
 import org.exoplatform.ide.extension.groovy.shared.Jar;
 
 import java.util.List;
@@ -58,22 +59,10 @@ public class JarListUnmarshaller implements Unmarshallable<List<Jar>>
 
       for (int i = 0; i < jsonArray.size(); i++)
       {
-         JSONObject jarJSONObj = jsonArray.get(i).isObject();
+         String payload = jsonArray.get(i).isObject().toString();
 
-         String jarPath = jarJSONObj.get("path").isString().stringValue();
-         Jar jar = new Jar(jarPath);
-         jarList.add(jar);
-
-         JSONArray propertiesArray = jarJSONObj.get("attributes").isArray();
-         for (int pi = 0; pi < propertiesArray.size(); pi++)
-         {
-            JSONObject propertyObject = propertiesArray.get(pi).isObject();
-            String name = propertyObject.get("name").isString().stringValue();
-            String value = propertyObject.get("value").isString().stringValue();
-
-            Attribute jarProperty = new Attribute(name, value);
-            jar.getAttributes().add(jarProperty);
-         }
+         AutoBean<Jar> jarBean = AutoBeanCodex.decode(GroovyExtension.AUTO_BEAN_FACTORY, Jar.class, payload);
+         jarList.add(jarBean.as());
       }
    }
 

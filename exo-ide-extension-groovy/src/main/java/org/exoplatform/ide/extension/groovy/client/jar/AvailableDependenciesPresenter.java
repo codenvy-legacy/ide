@@ -152,25 +152,26 @@ public class AvailableDependenciesPresenter implements ShowAvailableDependencies
    {
       try
       {
-         GroovyService.getInstance().getAvailableJarLibraries(new AsyncRequestCallback<List<Jar>>(new JarListUnmarshaller(new ArrayList<Jar>()))
-         {
-            @Override
-            protected void onSuccess(List<Jar> result)
+         GroovyService.getInstance().getAvailableJarLibraries(
+            new AsyncRequestCallback<List<Jar>>(new JarListUnmarshaller(new ArrayList<Jar>()))
             {
-               jars = result;
-               Collections.sort(jars, jarsComparator);
+               @Override
+               protected void onSuccess(List<Jar> result)
+               {
+                  jars = result;
+                  Collections.sort(jars, jarsComparator);
 
-               display.getJarsListGrid().setValue(jars);
-               display.getAttributesGrid().setValue(new ArrayList<Attribute>());
-            }
+                  display.getJarsListGrid().setValue(jars);
+                  display.getAttributesGrid().setValue(new ArrayList<Attribute>());
+               }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               String message = "Can't get list of JAR packages.";
-               IDE.fireEvent(new ExceptionThrownEvent(message));
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String message = "Can't get list of JAR packages.";
+                  IDE.fireEvent(new ExceptionThrownEvent(message));
+               }
+            });
       }
       catch (RequestException e)
       {

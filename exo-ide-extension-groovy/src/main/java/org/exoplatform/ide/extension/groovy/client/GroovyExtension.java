@@ -22,6 +22,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Image;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
@@ -80,6 +81,11 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    InitializeServicesHandler, ApplicationSettingsReceivedHandler, EditorActiveFileChangedHandler,
    PreviewGroovyTemplateHandler, ViewClosedHandler
 {
+
+   /**
+    * The generator of an {@link AutoBean}.
+    */
+   public static final GroovyAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(GroovyAutoBeanFactory.class);
 
    /**
     * Used to remove handlers when they are no longer needed.

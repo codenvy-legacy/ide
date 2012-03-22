@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,84 +19,41 @@
 package org.exoplatform.ide.extension.groovy.shared;
 
 /**
- * This class describes attribute that are contained in MANIFEST.MF
+ * Interface describes attribute that are contained in MANIFEST.MF.
  * 
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: Attribute.java Mar 22, 2012 10:30:59 AM azatsarynnyy $
+ *
  */
-
-public class Attribute
+public interface Attribute
 {
-
-   /**
-    * Name of attribute.
-    */
-   private String name;
-
-   /**
-    * Value of attribute.
-    */
-   private String value;
-
-   /**
-    * Creates an empty attribute.
-    */
-   public Attribute()
-   {
-   }
-
-   /**
-    * Creates attribute with specified parameters.
-    * 
-    * @param name name of attribute
-    * @param value value of attribute
-    */
-   public Attribute(String name, String value)
-   {
-      this.name = name;
-      this.value = value;
-   }
 
    /**
     * Gets name of attribute.
     * 
     * @return name of attribute
     */
-   public String getName()
-   {
-      return name;
-   }
+   public String getName();
 
    /**
     * Sets a new name of attribute.
     * 
     * @param name new name of attribute
     */
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+   public void setName(String name);
 
    /**
     * Gets value of attribute.
     * 
     * @return value of attribute
     */
-   public String getValue()
-   {
-      return value;
-   }
+   public String getValue();
 
    /**
     * Sets a new value of attribute.
     * 
     * @param value new value of attribute
     */
-   public void setValue(String value)
-   {
-      this.value = value;
-   }
+   public void setValue(String value);
 
 }
