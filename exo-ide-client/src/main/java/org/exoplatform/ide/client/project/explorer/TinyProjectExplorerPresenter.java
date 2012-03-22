@@ -148,8 +148,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
-   private List<Item> navigatorSelectedItems = new ArrayList<Item>();
-
    private ProjectModel openedProject;
 
    private FileModel editorActiveFile;
@@ -160,9 +158,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
    public TinyProjectExplorerPresenter()
    {
-      IDE.getInstance().addControl(new ShowProjectExplorerControl());
-      IDE.getInstance().addControl(new CloseProjectControl());
-
       IDE.addHandler(ShowProjectExplorerEvent.TYPE, this);
 
       IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -459,26 +454,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    {
       for (Item i : result)
       {
-         
-//         if (i instanceof ItemContext)
-//         {
-//            FolderModel parent = new FolderModel(folder);
-//            if (((ItemContext)folder).getProject() != null)
-//            {
-//               parent.setProject(((ItemContext)folder).getProject());
-//            }
-//            ((ItemContext)i).setParent(parent);
-//         }
-//
-//         if (folder instanceof ProjectModel)
-//         {
-//            ((ItemContext)i).setProject((ProjectModel)folder);
-//         }
-//         else if (folder instanceof ItemContext && ((ItemContext)folder).getProject() != null)
-//         {
-//            ((ItemContext)i).setProject(((ItemContext)folder).getProject());
-//         }
-
          if (i instanceof ItemContext) {
             ItemContext contect = (ItemContext)i;
             contect.setParent(new FolderModel(folder));
@@ -686,13 +661,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      navigatorSelectedItems.clear();
-      navigatorSelectedItems.addAll(event.getSelectedItems());
-
-      if (display == null)
-      {
-         return;
-      }
    }
 
    private String lastNavigatorId = null;
@@ -729,9 +697,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
       display.setLinkWithEditorButtonEnabled(true);
       display.setLinkWithEditorButtonSelected(linkingWithEditor);
-
-      navigatorSelectedItems.clear();
-      navigatorSelectedItems.add(openedProject);
 
       // Folder folder = (Folder)navigatorSelectedItems.get(0);
       foldersToRefresh.clear();

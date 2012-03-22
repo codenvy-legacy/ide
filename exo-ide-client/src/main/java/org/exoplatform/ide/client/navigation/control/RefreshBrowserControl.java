@@ -32,6 +32,7 @@ import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
@@ -103,7 +104,7 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
    public void onViewActivated(ViewActivatedEvent event)
    {
       browserPanelSelected =
-         (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay);
+         (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay || event.getView() instanceof ProjectExplorerPresenter.Display);
       updateState();
    }
 

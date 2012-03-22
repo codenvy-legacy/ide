@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -93,7 +94,8 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
       }
 
       if (selectedItems.size() == 1
-         && (selectedItems.get(0) instanceof FolderModel || selectedItems.get(0) instanceof ProjectModel))
+         && (selectedItems.get(0) instanceof FolderModel ||
+                  selectedItems.get(0) instanceof ProjectModel))
       {
          setEnabled(true);
       }
@@ -111,7 +113,9 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    {
       selectedItems = event.getSelectedItems();
 
-      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay)
+      if (event.getView() instanceof NavigatorDisplay ||
+               event.getView() instanceof ProjectExplorerDisplay ||
+               event.getView() instanceof ProjectExplorerPresenter.Display)
       {
          browserPanelSelected = true;
       }
