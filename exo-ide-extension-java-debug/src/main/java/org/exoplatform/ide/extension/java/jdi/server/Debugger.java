@@ -583,17 +583,6 @@ public class Debugger implements EventsHandler
    }
 
    /**
-    * Step out of the current frame.
-    *
-    * @throws DebuggerStateException when target JVM is not suspended
-    * @throws DebuggerException when any other JDI errors occur
-    */
-   public void stepOut() throws DebuggerException
-   {
-      doStep(StepRequest.STEP_OUT);
-   }
-
-   /**
     * Step to the next frame.
     *
     * @throws DebuggerStateException when target JVM is not suspended
@@ -602,6 +591,17 @@ public class Debugger implements EventsHandler
    public void stepInto() throws DebuggerException
    {
       doStep(StepRequest.STEP_INTO);
+   }
+
+   /**
+    * Step out of the current frame.
+    *
+    * @throws DebuggerStateException when target JVM is not suspended
+    * @throws DebuggerException when any other JDI errors occur
+    */
+   public void stepOut() throws DebuggerException
+   {
+      doStep(StepRequest.STEP_OUT);
    }
 
    private void doStep(int depth) throws DebuggerException

@@ -117,4 +117,25 @@ public class DebuggerService
    {
       return Debugger.getInstance(id).getValue(path.getPath());
    }
+
+   @GET
+   @Path("step/next")
+   public void stepNext(@PathParam("id") String id) throws DebuggerException
+   {
+      Debugger.getInstance(id).stepNext();
+   }
+
+   @GET
+   @Path("step/into")
+   public void stepInto(@PathParam("id") String id) throws DebuggerException
+   {
+      Debugger.getInstance(id).stepInto();
+   }
+
+   @GET
+   @Path("step/out")
+   public void stepOut(@PathParam("id") String id) throws DebuggerException
+   {
+      Debugger.getInstance(id).stepOut();
+   }
 }
