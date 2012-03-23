@@ -54,6 +54,7 @@ import org.exoplatform.services.log.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -369,7 +370,7 @@ public class Debugger implements EventsHandler
             new FieldImpl(f.getName(),
                f.getValue().getAsString(),
                f.getTypeName(),
-               new VariablePathImpl(Collections.singletonList(f.getName())),
+               new VariablePathImpl(Arrays.asList(f.isStatic() ? "static" : "this", f.getName())),
                f.isFinal(),
                f.isStatic(),
                f.isTransient(),
