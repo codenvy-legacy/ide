@@ -18,16 +18,21 @@
  */
 package org.exoplatform.ide.client.outline.ui;
 
+import com.google.gwt.user.cellview.client.TreeNode;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.cellview.client.CellTree;
+import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.SingleSelectionModel;
 
-import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.gwtframework.ui.client.CellTreeResource;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -58,12 +63,18 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
     */
    private static final int HEIGHT = 450;
 
-   private static final String REFRESHING_MARK = " <span title="
-      + org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_CONSTANT.outlineTitleRefreshingMarkTitle()
-      + " style='position: relative; top: 2px' width='20px;'><img width='15px;' src='" + UIHelper.getGadgetImagesURL()
-      + GWTLoader.LOADER_PROGRESSIMAGE + "'></img></span>";
-
    private static OutlineViewUiBinder uiBinder = GWT.create(OutlineViewUiBinder.class);
+
+   private CellTree.Resources res = GWT.create(CellTreeResource.class);
+
+   private SingleSelectionModel<Object> selectionModel;
+
+   private OutlineTreeViewModel outlineTreeViewModel;
+
+   private EmptyTreeMessage loadingMessage = new EmptyTreeMessage(new Image(GWTLoader.LOADER_PROGRESSIMAGE),
+      "Loading...");
+
+   private EmptyTreeMessage emptyTreeMessage = new EmptyTreeMessage(null, "");
 
    interface OutlineViewUiBinder extends UiBinder<Widget, OutlineView>
    {
@@ -72,13 +83,12 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
    @UiField
    HTMLPanel outlineDisabledPanel;
 
+   @UiField
+   FlowPanel mainPanel;
+
    private boolean outlineAvailable = false;
 
-   // @UiField
-   // Border outlineTreeGridPanel;
-
-   @UiField
-   OutlineTreeGrid outlineTreeGrid;
+   private CellTree outlineTree;
 
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.outlineTitle();
 
@@ -86,12 +96,21 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
    {
       super(ID, "information", TITLE, new Image(IDEImageBundle.INSTANCE.outline()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
-   }
 
-   @Override
-   public TreeGridItem<TokenBeenImpl> getOutlineTree()
-   {
-      return outlineTreeGrid;
+      selectionModel = new SingleSelectionModel<Object>();
+
+      outlineTreeViewModel = new OutlineTreeViewModel(selectionModel);
+      outlineTree = new CellTree(outlineTreeViewModel, null, res);
+
+      // Keyboard is disabled because of the selection problem (when selecting programmatically), if
+      // KeyboardSelectionPolicy.BOUND_TO_SELECTION is set
+      // and because of the focus border, when use KeyboardSelectionPolicy.ENABLED.
+      outlineTree.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
+
+      outlineTree.getElement().setId("ideOutlineTreeGrid");
+      mainPanel.add(outlineTree);
+      outlineTreeViewModel.getDataProvider().getList().add(loadingMessage);
+      outlineTree.setVisible(false);
    }
 
    @Override
@@ -99,14 +118,52 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
    {
       if (token != null)
       {
-         outlineTreeGrid.selectToken(token);
+         selectionModel.setSelected(token, true);
+         openNode(token);
       }
    }
 
-   @Override
-   public List<TokenBeenImpl> getSelectedTokens()
+   public void openNode(TokenBeenImpl token)
    {
-      return outlineTreeGrid.getSelectedTokens();
+      TokenBeenImpl parent = token;
+      TreeNode treeNode = outlineTree.getRootTreeNode();
+
+      // Get the list of node's parents (need to open), sorted from the farthest parent.
+      List<TokenBeenImpl> parents = new ArrayList<TokenBeenImpl>();
+      while (parent.getParentToken() != null && parent.getParentToken().getName() != null && parent.getParentToken().getType() != null)
+      {
+         parent = parent.getParentToken();
+         parents.add(0, parent);
+      }
+
+      // Open node's parents:
+      for (TokenBeenImpl p : parents)
+      {
+         // Tree node may be null, if something went wrong on open operation:
+         if (treeNode == null)
+         {
+            continue;
+         }
+         for (int i = 0; i < treeNode.getChildCount(); i++)
+         {
+            if (treeNode.getChildValue(i) instanceof TokenBeenImpl
+               && ((TokenBeenImpl)treeNode.getChildValue(i)).equals(p))
+            {
+               // Temporary solution to check null state tree node after open operation, we can access child TreeNode only as the
+               // result of the open operation:
+               TreeNode tmp = treeNode.setChildOpen(i, true);
+
+               if (tmp == null)
+               {
+                  // Close node and try to open again:
+                  treeNode.setChildOpen(i, false);
+                  tmp = treeNode.setChildOpen(i, true);
+               }
+               treeNode = tmp;
+               break;
+            }
+         }
+      }
    }
 
    @Override
@@ -116,58 +173,67 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
       {
          return;
       }
-
       outlineAvailable = available;
 
-      if (available)
-      {
-         outlineDisabledPanel.setVisible(false);
-         // outlineTreeGridPanel.setVisible(true);
-         outlineTreeGrid.setVisible(true);
-      }
-      else
-      {
-         outlineTreeGrid.setVisible(false);
-         // outlineTreeGridPanel.setVisible(false);
-         outlineDisabledPanel.setVisible(true);
-      }
+      outlineDisabledPanel.setVisible(!available);
+      outlineTree.setVisible(available);
    }
 
    @Override
    public void deselectAllTokens()
    {
-      outlineTreeGrid.deselectAllTokens();
-   }
-
-   /**
-    * Add refrehing outline mark in outline panel title;
-    * 
-    * @see org.exoplatform.ide.client.outline.OutlinePresenter.Display#setRefreshingMarkInTitle()
-    */
-   public void setRefreshingMarkInTitle()
-   {
-      if (!asView().getTitle().contains(REFRESHING_MARK))
+      if (selectionModel.getSelectedObject() != null)
       {
-         asView().setTitle(asView().getTitle() + REFRESHING_MARK);
+         selectionModel.setSelected(selectionModel.getSelectedObject(), false);
       }
    }
 
    /**
-    * Remove refrehing outline mark from outline panel title;
-    * 
-    * @see org.exoplatform.ide.client.outline.OutlinePresenter.Display#removeRefreshingMarkFromTitle()
+    * @see org.exoplatform.ide.client.outline.OutlinePresenter.Display#setValue(java.util.List)
     */
-   public void removeRefreshingMarkFromTitle()
+   @Override
+   public void setValue(List<TokenBeenImpl> tokens)
    {
-      asView().setTitle(asView().getTitle().replace(REFRESHING_MARK, ""));
+      outlineTreeViewModel.getDataProvider().getList().clear();
+      if (tokens == null)
+      {
+         outlineTreeViewModel.getDataProvider().getList().add(loadingMessage);
+      }
+      else
+      {
+         if (tokens.isEmpty())
+         {
+            outlineTreeViewModel.getDataProvider().getList().add(emptyTreeMessage);
+         }
+         else
+         {
+            for (TokenBeenImpl token : tokens)
+            {
+               if (token.getName() != null && token.getType() != null)
+               {
+                  outlineTreeViewModel.getDataProvider().getList().add(token);
+               }
+            }
+         }
+      }
    }
 
-   public void clearOutlineTree()
+   /**
+    * @see org.exoplatform.ide.client.outline.OutlinePresenter.Display#getSingleSelectionModel()
+    */
+   @Override
+   public SingleSelectionModel<Object> getSingleSelectionModel()
    {
-      TokenBeenImpl emptyToken = new TokenBeenImpl();
-      emptyToken.setSubTokenList(new ArrayList<TokenBeenImpl>());
+      return selectionModel;
+   }
 
-      getOutlineTree().setValue(emptyToken);
+   /**
+    * @see org.exoplatform.ide.client.outline.OutlinePresenter.Display#focusInTree()
+    */
+   @Override
+   public void focusInTree()
+   {
+      outlineTree.setFocus(true);
    }
 
 }

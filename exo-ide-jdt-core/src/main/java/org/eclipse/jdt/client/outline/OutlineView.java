@@ -47,7 +47,7 @@ import java.util.List;
  */
 public class OutlineView extends ViewImpl implements OutlinePresenter.Display
 {
-   private static final String VIEW_ID = "exoJavaOulineView";
+   private static final String VIEW_ID = "exoJavaOutlineView";
 
    /**
     * Scroll panel, which contains tree.

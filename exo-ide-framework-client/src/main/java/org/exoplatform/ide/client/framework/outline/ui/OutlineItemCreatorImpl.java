@@ -18,20 +18,19 @@
  */
 package org.exoplatform.ide.client.framework.outline.ui;
 
-import java.util.List;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.commons.util.StringEscapeUtils;
 import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
+import java.util.List;
 
 /**
  * This implementation of interface OutlineItemCreatorImpl which is used to create code outline item widget from OutlineTreeGrid
@@ -47,23 +46,28 @@ public abstract class OutlineItemCreatorImpl implements OutlineItemCreator
 {
    public Widget getOutlineItemWidget(Token token)
    {
-      Grid grid = new Grid(1, 2);
-      grid.setWidth("100%");
+      FlowPanel flowPanel = new FlowPanel();
+      flowPanel.setWidth("100%");
+      DOM.setStyleAttribute(flowPanel.getElement(), "display", "inline");
+      DOM.setStyleAttribute(flowPanel.getElement(), "cssFloat", "left");
+      DOM.setStyleAttribute(flowPanel.getElement(), "overflow", "hidden");
+      DOM.setStyleAttribute(flowPanel.getElement(), "whiteSpace", "nowrap");
 
-      Image i = new Image(getTokenIcon((TokenBeenImpl)token));
-      i.setHeight("16px");
-      grid.setWidget(0, 0, i);
+      ImageResource imageResource = getTokenIcon((TokenBeenImpl)token);
+      if (imageResource != null)
+      {
+         Image i = new Image(imageResource);
+         DOM.setStyleAttribute(i.getElement(), "cssFloat", "left");
+         DOM.setStyleAttribute(i.getElement(), "marginRight", "5px");
+         flowPanel.add(i);
+      }
       Label l = new Label();
+      DOM.setStyleAttribute(l.getElement(), "position", "relative");
       l.getElement().setInnerHTML(getTokenDisplayTitle((TokenBeenImpl)token));
       l.setWordWrap(false);
-      grid.setWidget(0, 1, l);
+      flowPanel.add(l);
 
-      grid.getCellFormatter().setWidth(0, 0, "16px");
-      grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setWidth(0, 1, "100%");
-      DOM.setStyleAttribute(grid.getElement(), "display", "block");
-      return grid;
+      return flowPanel;
    }
 
    /**

@@ -20,16 +20,11 @@ package org.exoplatform.ide.client.outline;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -52,7 +47,6 @@ import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
-import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
@@ -84,25 +78,11 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    {
 
       /**
-       * Get outline tree grid
-       * 
-       * @return {@link TreeGridItem}
-       */
-      TreeGridItem<TokenBeenImpl> getOutlineTree();
-
-      /**
        * Select row with token in outline tree.
        * 
        * @param token - token to select
        */
       void selectToken(TokenBeenImpl token);
-
-      /**
-       * Get the list of selected tokens.
-       * 
-       * @return {@link List}
-       */
-      List<TokenBeenImpl> getSelectedTokens();
 
       /**
        * Sets is outline available
@@ -116,11 +96,11 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
        */
       void deselectAllTokens();
 
-      void setRefreshingMarkInTitle();
+      void setValue(List<TokenBeenImpl> tokens);
 
-      void removeRefreshingMarkFromTitle();
+      SingleSelectionModel<Object> getSingleSelectionModel();
 
-      void clearOutlineTree();
+      void focusInTree();
    }
 
    private Display display;
@@ -129,19 +109,37 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    private int currentRow;
 
-   private TokenBeenImpl currentToken;
-
    private FileModel activeFile;
 
    private Editor activeEditor;
 
-   private boolean onItemClicked = false;
+   /**
+    * Outline selection must be processed or not.
+    */
+   private boolean processSelection = true;
+
+   /**
+    * Editor activity must be processed or not.
+    */
+   private boolean processEditorActivity = true;
 
    JavaScriptObject lastFocusedElement;
 
    private ApplicationSettings applicationSettings;
 
    private boolean isOutlineViewOpened = false;
+
+   private Timer selectOutlineTimer = new Timer()
+   {
+      @Override
+      public void run()
+      {
+         if (tokens != null && !tokens.isEmpty())
+         {
+            selectToken(currentRow);
+         }
+      }
+   };
 
    public OutlinePresenter()
    {
@@ -228,27 +226,22 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    {
       display = d;
 
-      display.getOutlineTree().addSelectionHandler(new SelectionHandler<TokenBeenImpl>()
+      display.getSingleSelectionModel().addSelectionChangeHandler(new SelectionChangeEvent.Handler()
       {
-         public void onSelection(SelectionEvent<TokenBeenImpl> event)
-         {
-            onItemSelected(event.getSelectedItem());
-         }
-      });
 
-      display.getOutlineTree().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
+         @Override
+         public void onSelectionChange(SelectionChangeEvent event)
          {
-            onItemClicked();
-         }
-      });
+            if (!processSelection)
+            {
+               processSelection = true;
+               return;
+            }
 
-      display.getOutlineTree().addKeyPressHandler(new KeyPressHandler()
-      {
-         public void onKeyPress(KeyPressEvent event)
-         {
-            onItemClicked();
+            if (display.getSingleSelectionModel().getSelectedObject() instanceof TokenBeenImpl)
+            {
+               selectEditorLine(((TokenBeenImpl)display.getSingleSelectionModel().getSelectedObject()).getLineNumber());
+            }
          }
       });
 
@@ -266,33 +259,10 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       }
    }
 
-   private void onItemSelected(TokenBeenImpl selectedItem)
+   public void selectEditorLine(int line)
    {
-      if (!onItemClicked || currentToken != null && selectedItem.getName().equals(currentToken.getName())
-         && selectedItem.getLineNumber() == currentToken.getLineNumber())
-      {
-         return;
-      }
-
-      currentToken = selectedItem;
-
-      setEditorCursorPosition(selectedItem.getLineNumber());
-
-      onItemClicked = false;
-   }
-
-   /**
-    * Update cursor position in editor
-    */
-   private void onItemClicked()
-   {
-      onItemClicked = true;
-
-      if (display.getSelectedTokens().size() > 0)
-      {
-         currentToken = display.getSelectedTokens().get(0);
-         setEditorCursorPosition(currentToken.getLineNumber());
-      }
+      processEditorActivity = false;
+      IDE.fireEvent(new EditorGoToLineEvent(line));
    }
 
    /**
@@ -306,23 +276,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       {
          return;
       }
-
-      display.setRefreshingMarkInTitle();
       activeEditor.getTokenListInBackground();
-   }
-
-   /**
-    * Set cursor within the Editor Line into the line with lineNumber and then return focus to the Outline Tree Grid
-    * 
-    * @param lineNumber
-    */
-   private void setEditorCursorPosition(int lineNumber)
-   {
-      int maxLineNumber = activeFile.getContent().split("\n").length;
-
-      // restore focus on OutlinePanel
-      lastFocusedElement = getActiveElement();
-      IDE.fireEvent(new EditorGoToLineEvent(lineNumber < maxLineNumber ? lineNumber : maxLineNumber));
    }
 
    public void onEditorContentChanged(EditorContentChangedEvent event)
@@ -396,8 +350,8 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
       if (canShowOutline())
       {
-         display.clearOutlineTree();
          display.setOutlineAvailable(true);
+         display.setValue(null);
          refreshOutlineTree();
       }
       else
@@ -407,111 +361,47 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       }
    }
 
-   private boolean selectTokenByRow(List<TokenBeenImpl> tokens)
+   private void selectToken(int lineNumber)
    {
-      if (tokens == null || tokens.isEmpty())
+      TokenBeenImpl token = getNodeByLineNumber(lineNumber, tokens);
+      if (token != null)
       {
-         return false;
-      }
-
-      for (int i = 0; i < tokens.size(); i++)
-      {
-         TokenBeenImpl token = tokens.get(i);
-         if (currentRow < token.getLineNumber() || !shouldBeDisplayed(token))
-         {
-            continue;
-         }
-
-         TokenBeenImpl next = null;
-         if ((i + 1) != tokens.size())
-         {
-            next = tokens.get(i + 1);
-         }
-
-         if (isCurrentToken(currentRow, token, next))
-         {
-            if (selectTokenByRow(token.getSubTokenList()))
-            {
-               return true;
-            }
-            else
-            {
-               selectToken(token);
-               return true;
-            }
-         }
-      }
-
-      return false;
-   }
-
-   /**
-    * Test if current line within the token's area (currentLineNumber >= token.lineNumber) and (currentLineNumber <=
-    * token.lastLineNumber) or current line is before nextToken or current line is after last token
-    * 
-    * @param currentLineNumber
-    * @param token
-    * @return
-    */
-   private boolean isCurrentToken(int currentLineNumber, TokenBeenImpl token, TokenBeenImpl nextToken)
-   {
-      if (currentLineNumber == token.getLineNumber())
-      {
-         return true;
-      }
-
-      if (token.getLastLineNumber() != 0)
-      {
-         return currentLineNumber >= token.getLineNumber() && currentLineNumber <= token.getLastLineNumber();
-      }
-
-      // test if currentLineNumber before nextToken
-      if (nextToken != null)
-      {
-         return currentLineNumber < nextToken.getLineNumber();
-      }
-
-      return currentLineNumber >= token.getLineNumber();
-   }
-
-   /**
-    * Test should token be displayed in outline tree.
-    * 
-    * @param token
-    * @return true only if token should be displayed in outline tree
-    */
-   private boolean shouldBeDisplayed(TokenBeenImpl token)
-   {
-      return !(token.getType().equals(TokenType.IMPORT));
-   }
-
-   private void selectToken(TokenBeenImpl token)
-   {
-      if (!isCurrentTokenSelected(token))
-      {
+         processSelection = false;
          display.selectToken(token);
       }
    }
 
-   /**
-    * Check, is token is current and is it selected.
-    * 
-    * @param token token to check
-    * @return boolean
-    */
-   private boolean isCurrentTokenSelected(TokenBeenImpl token)
+   protected TokenBeenImpl getNodeByLineNumber(int lineNumber, List<TokenBeenImpl> tokens)
    {
-      if (currentToken == null)
+      for (TokenBeenImpl token : tokens)
       {
-         return false;
-      }
+         int startLineNumber = token.getLineNumber();
+         int endLineNumber = token.getLastLineNumber();
 
-      if (token == null || token.getName() == null)
-      {
-         return false;
-      }
+         if (startLineNumber == lineNumber)
+         {
+            return token;
+         }
 
-      return token.getName().equals(currentToken.getName()) && token.getLineNumber() == currentToken.getLineNumber();
+         // Check current line is between node's start and end lines:
+         if (startLineNumber <= lineNumber && lineNumber <= endLineNumber)
+         {
+
+            // If there are no children - return this node
+            if (token.getSubTokenList() == null || token.getSubTokenList().isEmpty())
+            {
+               return token;
+            }
+            // Checking line ranges of children, if no proper is found - return parent node:
+            else
+            {
+               TokenBeenImpl foundToken = getNodeByLineNumber(lineNumber, token.getSubTokenList());
+               return (foundToken == null) ? token : foundToken;
+            }
+         }
+      }
+      // Nothing was found:
+      return null;
    }
 
    /**
@@ -523,61 +413,23 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       {
          return;
       }
-
-      if (!onItemClicked)
+      if (!processEditorActivity)
       {
-         if (currentRow == event.getRow())
-         {
-            return;
-         }
-
-         currentRow = event.getRow();
-
-         selectOutlineTimer.cancel();
-         selectOutlineTimer.schedule(100);
+         display.focusInTree();
+         processEditorActivity = true;
+         return;
       }
-      else
+
+      if (currentRow == event.getRow())
       {
-         // restore focus on OutlinePanel
-         if (lastFocusedElement != null)
-         {
-            setElementFocus(lastFocusedElement);
-         }
-
-         onItemClicked = false;
+         return;
       }
+      currentRow = event.getRow();
+      selectOutlineTimer.cancel();
+      selectOutlineTimer.schedule(100);
    }
 
-   private Timer selectOutlineTimer = new Timer()
-   {
-      @Override
-      public void run()
-      {
-         if (tokens != null && !tokens.isEmpty())
-         {
-            // restore focus of FileTab
-            JavaScriptObject lastFocusedElement = getActiveElement();
-
-            if (!selectTokenByRow(tokens))
-            {
-               display.deselectAllTokens();
-            }
-            else
-            {
-               setElementFocus(lastFocusedElement);
-            }
-         }
-      }
-   };
-
-   private native JavaScriptObject getActiveElement() /*-{
-                                                      return $doc.activeElement;
-                                                      }-*/;
-
-   private native void setElementFocus(JavaScriptObject element) /*-{
-                                                                 element.focus();
-                                                                 }-*/;
-
+   @SuppressWarnings("unchecked")
    public void onEditorTokenListPrepared(EditorTokenListPreparedEvent event)
    {
       if (event.getTokenList() == null || display == null || !activeEditor.getEditorId().equals(event.getEditorId()))
@@ -585,26 +437,12 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          return;
       }
 
-      display.removeRefreshingMarkFromTitle();
-
       tokens = (List<TokenBeenImpl>)event.getTokenList();
-
-      // restore focus of FileTab
-      JavaScriptObject lastFocusedElement = getActiveElement();
-
-      TokenBeenImpl token = new TokenBeenImpl();
-      token.setSubTokenList(tokens);
-      display.getOutlineTree().setValue(token);
-      currentRow = activeEditor.getCursorRow();
-      currentToken = null;
-
-      if (!selectTokenByRow(tokens))
+      display.setValue(tokens);
+      if (activeEditor != null)
       {
-         display.deselectAllTokens();
+         selectToken(activeEditor.getCursorRow());
       }
-
-      // restore focus of FileTab
-      setElementFocus(lastFocusedElement);
    }
 
    /**
