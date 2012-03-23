@@ -18,54 +18,36 @@
  */
 package org.exoplatform.ide.editor.java.client;
 
+import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
-import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistant;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler;
-import org.exoplatform.ide.editor.java.client.codeassistant.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
-import org.exoplatform.ide.editor.java.client.codemirror.JavaCodeValidator;
 import org.exoplatform.ide.editor.java.client.create.CreateJavaClassPresenter;
 import org.exoplatform.ide.editor.java.client.create.NewJavaClassControl;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyEditorExtension Mar 10, 2011 3:48:59 PM evgen $
  * 
  */
-public class JavaEditorExtension extends Extension implements InitializeServicesHandler, JavaCodeAssistantErrorHandler,
-   EditorActiveFileChangedHandler, ProjectOpenedHandler
+public class JavaEditorExtension extends Extension implements InitializeServicesHandler, JavaCodeAssistantErrorHandler
 {
 
    public static final JavaConstants MESSAGES = GWT.create(JavaConstants.class);
 
    public static final JavaCodeAssistantAutoBeanFactory AUTO_BEAN_FACTORY = GWT
       .create(JavaCodeAssistantAutoBeanFactory.class);
-
-   private JavaCodeAssistant javaCodeAssistant;
-
-   private JavaCodeValidator javaCodeValidator;
-
-   private JavaTokenWidgetFactory factory;
-
-   private JavaCodeAssistantService service;
-
-   private String projectId;
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
@@ -74,8 +56,6 @@ public class JavaEditorExtension extends Extension implements InitializeServices
    public void initialize()
    {
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
-      // IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      // IDE.addHandler(ProjectOpenedEvent.TYPE, this);
 
       IDE.getInstance().addControl(new NewJavaClassControl());
 
@@ -92,27 +72,15 @@ public class JavaEditorExtension extends Extension implements InitializeServices
    {
 
       if (JavaCodeAssistantService.get() == null)
-         service = new JavaCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
-      else
-         service = JavaCodeAssistantService.get();
-
-      // factory =
-      // new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
-      // + "/ide/code-assistant/java/class-doc?fqn=");
-      // javaCodeAssistant = new JavaCodeAssistant(service, factory, this);
-
-      // javaCodeValidator = new JavaCodeValidator(service, this);
+         new JavaCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
 
       IDE.getInstance().addEditor(
          new CodeMirrorProducer(MimeType.APPLICATION_JAVA, "CodeMirror Java file editor", "java",
             JavaClientBundle.INSTANCE.java(), true, new CodeMirrorConfiguration()
                .setGenericParsers("['parsejava.js', 'tokenizejava.js']")
-               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']").setCanBeOutlined(true)
-         // .setParser( ).setCanBeOutlined(true).setAutocompleteHelper(new JavaAutocompleteHelper())
-         // .setCodeAssistant(javaCodeAssistant).setCodeValidator(javaCodeValidator)
-         ));
+               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']").setCanBeOutlined(true),
+            true)); 
 
-      // IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_JAVA, new JavaOutlineItemCreator());
    }
 
    /**
@@ -138,45 +106,6 @@ public class JavaEditorExtension extends Extension implements InitializeServices
       {
          IDE.fireEvent(new ExceptionThrownEvent(exc.getMessage()));
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(final EditorActiveFileChangedEvent event)
-   {
-      // if (event.getFile() != null && event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
-      // {
-      // AutoBean<TypesList> autoBean = JavaEditorExtension.AUTO_BEAN_FACTORY.types();
-      // AutoBeanUnmarshaller<TypesList> unmarshaller = new AutoBeanUnmarshaller<TypesList>(autoBean);
-      // service.findClassesByProject(event.getFile().getId(), projectId, new AsyncRequestCallback<TypesList>(unmarshaller)
-      // {
-      // @Override
-      // protected void onSuccess(TypesList result)
-      // {
-      // javaCodeValidator.setClassesFromProject(JavaCodeAssistantUtils.types2tokens(result));
-      // ((CodeMirror)event.getEditor()).validateCode();
-      // }
-      //
-      // @Override
-      // protected void onFailure(Throwable exception)
-      // {
-      // handleError(exception);
-      // }
-      // });
-      // }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      // projectId = event.getProject().getId();
-      // javaCodeAssistant.setActiveProjectId(projectId);
-      // factory.setProjectId(projectId);
    }
 
 }

@@ -53,4 +53,9 @@ public interface EditorParameters
     * Key for content mime type
     */
    String MIME_TYPE = "mime_type";
+   
+   /**
+    * Key for {@link Boolean}, set show/hide Overview panel
+    */
+   String IS_SHOW_OVERVIEW_PANEL = "is_show_overview_panel";
 }

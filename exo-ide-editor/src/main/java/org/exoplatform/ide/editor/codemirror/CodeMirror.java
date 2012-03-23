@@ -18,15 +18,18 @@
  */
 package org.exoplatform.ide.editor.codemirror;
 
-import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 
-import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style.Unit;
+
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextArea;
@@ -52,6 +55,7 @@ import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedHandler;
 import org.exoplatform.ide.editor.keys.KeyHandler;
 import org.exoplatform.ide.editor.keys.KeyManager;
 import org.exoplatform.ide.editor.notification.Notification;
+import org.exoplatform.ide.editor.notification.OverviewRuler;
 import org.exoplatform.ide.editor.problem.Markable;
 import org.exoplatform.ide.editor.problem.Problem;
 import org.exoplatform.ide.editor.problem.ProblemClickEvent;
@@ -138,13 +142,24 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
          params = new HashMap<String, Object>();
       }
 
+      DockLayoutPanel doc = new DockLayoutPanel(Unit.PX);
+      doc.setSize("100%", "100%");
+      add(doc);
+      if (params.get(EditorParameters.IS_SHOW_OVERVIEW_PANEL) != null
+         && (Boolean)params.get(EditorParameters.IS_SHOW_OVERVIEW_PANEL) == Boolean.TRUE)
+      {
+         overviewRuler = new OverviewRuler(this);
+         doc.addEast(overviewRuler, 13);
+      }
+      absPanel = new AbsolutePanel();
+      doc.add(absPanel);
       textArea = new TextArea();
       DOM.setElementAttribute(textArea.getElement(), "id", getEditorId());
-      add(textArea);
+      absPanel.add(textArea);
 
       lineHighlighter = getLineHighlighter();
-      add(lineHighlighter);
-      setWidgetPosition(lineHighlighter, 0, 5);
+      absPanel.add(lineHighlighter);
+      absPanel.setWidgetPosition(lineHighlighter, 0, 5);
 
       if (params.get(EditorParameters.CONFIGURATION) != null)
          configuration = (CodeMirrorConfiguration)params.get(EditorParameters.CONFIGURATION);
@@ -296,7 +311,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
       if (BrowserResolver.CURRENT_BROWSER == Browser.IE)
       {
-         if (getLastLineNumber(getText()) == 1)
+         if (getLastLineNumber() == 1)
          {
             cursorPositionRow = 1;
          }
@@ -323,7 +338,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
          fixCodeMirrorIframeTransparencyInIE();
       }
 
-      setWidgetPosition(lineHighlighter, 0, 5 + getCursorOffsetY(lineNumber));
+      absPanel.setWidgetPosition(lineHighlighter, 0, 5 + getCursorOffsetY(lineNumber));
    }
 
    /**
@@ -926,7 +941,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       var currentLine = editor.nthLine(currentLineNumber);
 
       if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser != @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE
-            && this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getLastLineNumber(Ljava/lang/String;)(editor.getCode()) == currentLineNumber) 
+            && this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getLastLineNumber()() == currentLineNumber) 
       {
          // clear current line
          this.@org.exoplatform.ide.editor.codemirror.CodeMirror::clearLastLine()();
@@ -949,8 +964,8 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 			return;
 
 		var content = editor.getCode();
-		var lastLineHandler = editor
-				.nthLine(this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getLastLineNumber(Ljava/lang/String;)(content));
+		var lastLineHandler = editor.lastLine();
+//				.nthLine(this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getLastLineNumber(Ljava/lang/String;)(content));
 
 		if (content.charAt(content.length - 1) == "\n") {
 			editor.setLineContent(lastLineHandler, "");
@@ -962,24 +977,11 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    /**
     * returns line quantity in the content
     * 
-    * @param content
     * @return
     */
-   private native int getLastLineNumber(String content) /*-{
-		if (!content)
-			return 1;
-
-		// test if content is not ended with line break
-		if (content.charAt(content.length - 1) !== "\n") {
-			return content.split("\n").length;
-		}
-
-		// in the Internet Explorer editor.setCode("\n") is displayed as 2 lines 
-		if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) {
-			return content.split("\n").length;
-		}
-
-		return content.split("\n").length - 1;
+   public native int getLastLineNumber() /*-{
+      var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+      return editor.lineNumber(editor.lastLine());
    }-*/;
 
    /**
@@ -1364,6 +1366,10 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    private KeyHandler handler;
 
+   private AbsolutePanel absPanel;
+
+   private OverviewRuler overviewRuler;
+
    /**
     * @see org.exoplatform.ide.editor.problem.Markable#markProblem(org.exoplatform.ide.editor.problem.Problem)
     */
@@ -1414,7 +1420,8 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       {
          markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkWarning();
       }
-
+      if(overviewRuler != null)
+         overviewRuler.addProblem(problem, message);
       markProblemmeLine(problem.getLineNumber(), message, markStyle);
    }
 
@@ -1436,6 +1443,8 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       }
 
       problems.clear();
+      if(overviewRuler != null)
+         overviewRuler.clearProblems();
    }
 
    /**

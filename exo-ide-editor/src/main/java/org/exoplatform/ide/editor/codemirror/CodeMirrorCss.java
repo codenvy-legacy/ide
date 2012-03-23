@@ -36,5 +36,20 @@ public interface CodeMirrorCss extends CssResource
    
    @ClassName("exo-code-mark-error")
    String codeMarkError();
+   
+   @ClassName("overview-panel")
+   String overviewPanel();
+   
+   @ClassName("overview-mark-error")
+   String overviewMarkError();
+   
+   @ClassName("overview-mark-warning")
+   String overviewMarkWarning();
+   
+   @ClassName("overview-bottom-mark-error")
+   String overviewBottomMarkError();
+   
+   @ClassName("overview-bottom-mark-warning")
+   String overviewBottomMarkWarning();
 
 }

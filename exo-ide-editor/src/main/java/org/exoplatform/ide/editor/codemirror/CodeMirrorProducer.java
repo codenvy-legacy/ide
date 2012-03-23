@@ -56,6 +56,13 @@ public class CodeMirrorProducer extends EditorProducer
       this(mimeType, description, ext, icon, isDefault);
       params.put(EditorParameters.CONFIGURATION, configuration);
    }
+   
+   public CodeMirrorProducer(String mimeType, String description, String ext, ImageResource icon, boolean isDefault,
+      CodeMirrorConfiguration configuration, boolean isShowOverviewPanel)
+   {
+      this(mimeType, description, ext, icon, isDefault, configuration);
+      params.put(EditorParameters.IS_SHOW_OVERVIEW_PANEL, Boolean.valueOf(isShowOverviewPanel));
+   }
 
    /**
     * @see org.exoplatform.ide.editor.api.EditorProducer#createEditor(org.exoplatform.ide.client.framework.vfs.File,

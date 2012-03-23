@@ -33,7 +33,6 @@ import org.eclipse.jdt.client.codeassistant.TemplateCompletionProposalComputer;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.ui.CodeAssitantForm;
 import org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler;
-import org.eclipse.jdt.client.codeassistant.ui.ProposalWidget;
 import org.eclipse.jdt.client.compiler.batch.CompilationUnit;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.JavaCore;
@@ -149,8 +148,6 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
    private HandlerRegistration keyHandler;
 
    private Display display;
-
-   private boolean editorHasFocus;
 
    /**
     * 
@@ -364,7 +361,6 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
    @Override
    public boolean handleEvent(Event event)
    {
-      editorHasFocus = true;
       switch (event.getKeyCode())
       {
          case KeyCodes.KEY_DOWN :

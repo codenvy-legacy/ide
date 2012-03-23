@@ -19,6 +19,8 @@
 
 package org.exoplatform.ide.editor.notification;
 
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Unit;
@@ -90,8 +92,14 @@ public class Notification
          //int top = targetElement.getAbsoluteTop() - notificationPanel.getOffsetHeight();
          notificationPanel.getElement().getStyle().setTop(top, Unit.PX);
       }
-
       notificationPanel.getElement().getStyle().setVisibility(Visibility.VISIBLE);
+      
+      if(notificationPanel.getAbsoluteLeft() + notificationPanel.getOffsetWidth() > Window.getClientWidth())
+      {
+         notificationPanel.getElement().getStyle().clearLeft();
+         notificationPanel.getElement().getStyle().setRight(Window.getClientWidth() - targetElement.getAbsoluteLeft() + 10, Unit.PX);
+      }
+
    }
 
 }
