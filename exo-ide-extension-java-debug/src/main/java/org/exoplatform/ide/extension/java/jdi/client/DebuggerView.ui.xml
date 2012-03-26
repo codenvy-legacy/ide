@@ -1,0 +1,39 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
+   xmlns:tp="urn:import:org.exoplatform.gwtframework.ui.client.tablayout">
+
+   <ui:with field='resource' type='org.exoplatform.ide.extension.java.jdi.client.DebuggerClientBundle' />
+
+   <g:LayoutPanel>
+      <g:layer>
+         <g:DockLayoutPanel unit="PCT" width="100%" height="100%">
+            <g:west size="30">
+               <g:VerticalPanel spacing="5">
+                  <g:Label text="Host:"></g:Label>
+                  <g:TextBox ui:field="host" readOnly="true"></g:TextBox>
+                  <g:Label text="Port:"></g:Label>
+                  <g:TextBox ui:field="port" readOnly="true"></g:TextBox>
+                  <c:ImageButton ui:field="runDebugButton" width="22px" buttonId="runDebugButton" imageResource="{resource.runDebugButton}"></c:ImageButton>
+                  <c:ImageButton ui:field="addBreakPointButton" width="22px" buttonId="addBreakPointButton" imageResource="{resource.addBreakPointButton}"></c:ImageButton>
+                  <c:ImageButton ui:field="resumeButton" width="22px" buttonId="resumeButton" imageResource="{resource.resumeButton}"></c:ImageButton>
+                  <c:ImageButton ui:field="disconnectButton" width="22px" buttonId="disconnectButton" imageResource="{resource.disconnectButton}"></c:ImageButton>
+                  <c:ImageButton ui:field="removeAllBreakpointsButton" width="22px" buttonId="removeAllBreakpointsButton" imageResource="{resource.removeAllBreakpointsButton}"></c:ImageButton>
+                  <c:ImageButton ui:field="getBreakPointsButton" width="22px" buttonId="getBreakpointsButton" imageResource="{resource.getBreakPointsButton}"></c:ImageButton>
+                  <c:ImageButton ui:field="checkEventsButton" width="22px" buttonId="checkEventsButton" imageResource="{resource.checkEvents}"></c:ImageButton>
+                  <g:Label text="FQN"></g:Label>
+                  <g:TextBox ui:field="fqn"></g:TextBox>
+                  <g:Label text="Line Number"></g:Label>
+                  <g:TextBox ui:field="lineNumber"></g:TextBox>
+               </g:VerticalPanel>
+            </g:west>
+            <g:east size="70">
+               <c:Border margin="5" borderColor="transparent">
+                  <c:layer>
+                     <tp:TabPanel ui:field="debugPanel"></tp:TabPanel>
+                  </c:layer>
+               </c:Border>
+            </g:east>
+         </g:DockLayoutPanel>
+      </g:layer>
+   </g:LayoutPanel>
+</ui:UiBinder>
