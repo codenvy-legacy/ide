@@ -185,6 +185,12 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-java</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-gadget</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -421,11 +427,6 @@
             <version>${project.version}</version>
          </dependency>
          <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-vfs-webdav-client</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-         <dependency>
            <groupId>org.exoplatform.ide</groupId>
            <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
            <version>${project.version}</version>
@@ -436,6 +437,13 @@
           <version>${ide.codeassistant.lucene.index.version}</version>
           <type>zip</type>
         </dependency>
+      
+        <dependency>
+            <groupId>org.exoplatform.log-reader</groupId>
+             <artifactId>log-reader-service</artifactId>
+             <version>1.0-M5</version>
+         </dependency>
+      
       
          <dependency>
             <groupId>com.google.gwt</groupId>
