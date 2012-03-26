@@ -32,7 +32,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 public interface Markable
 {
-   
+
    /**
     * Marks problem
     * 
@@ -40,11 +40,19 @@ public interface Markable
     */
    void markProblem(Problem problem);
    
+   
+   /**
+    * Remove problem
+    * 
+    * @param problem
+    */
+   void unmarkProblem(Problem problem);
+
    /**
     * Unmarks all problems
     */
    void unmarkAllProblems();
-   
+
    /**
     * Adds handler for {@link ProblemClickEvent}
     * 
@@ -52,5 +60,13 @@ public interface Markable
     * @return {@link HandlerRegistration} of {@link ProblemClickHandler}
     */
    HandlerRegistration addProblemClickHandler(ProblemClickHandler handler);
+
+   /**
+    * Adds handler for {@link LineNumberDoubleClickEvent}
+    * 
+    * @param handler handler of {@link LineNumberDoubleClickEvent}
+    * @return {@link HandlerRegistration}
+    */
+   HandlerRegistration addLineNumberDoubleClickHandler(LineNumberDoubleClickHandler handler);
 
 }

@@ -277,7 +277,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
     * @see org.eclipse.jdt.client.event.ParseActiveFileHandler#onPaerseActiveFile(org.eclipse.jdt.client.event.ParseActiveFileEvent)
     */
    @Override
-   public void onPaerseActiveFile(ParseActiveFileEvent event)
+   public void onParseActiveFile(ParseActiveFileEvent event)
    {
       needReparse = true;
       startJob(activeFile);

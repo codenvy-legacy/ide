@@ -81,6 +81,9 @@ public class OverviewRuler extends Composite implements MouseDownHandler
     */
    public void addProblem(Problem problem, String message)
    {
+      if (problem.isBreakpoint())
+         return;
+
       int lastLineNumber = codeMirror.getLastLineNumber();
       int problemY = (100 * problem.getLineNumber()) / lastLineNumber;
 
@@ -188,7 +191,7 @@ public class OverviewRuler extends Composite implements MouseDownHandler
       @Override
       public void onMouseOver(MouseOverEvent event)
       {
-         if(widget.getElement().hasAttribute("title") && widget.getElement().getAttribute("title").isEmpty())
+         if (widget.getElement().hasAttribute("title") && widget.getElement().getAttribute("title").isEmpty())
             return;
          if (notification == null)
             notification = new Notification(getElement());

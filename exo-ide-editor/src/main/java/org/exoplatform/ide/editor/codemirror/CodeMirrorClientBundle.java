@@ -43,4 +43,6 @@ public interface CodeMirrorClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/editor/public/bundle/images/mark-error.png")
    ImageResource markError();
    
+   @Source("org/exoplatform/ide/editor/public/bundle/images/breakpoint.png")
+   ImageResource breakpoint();
 }

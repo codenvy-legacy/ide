@@ -105,4 +105,13 @@ public class ProblemImpl implements Problem
       return problem.isWarning();
    }
 
+   /**
+    * @see org.exoplatform.ide.editor.problem.Problem#isBreakpoint()
+    */
+   @Override
+   public boolean isBreakpoint()
+   {
+      return false;
+   }
+
 }

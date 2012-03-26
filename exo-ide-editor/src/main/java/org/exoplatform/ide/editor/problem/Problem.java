@@ -93,5 +93,11 @@ public interface Problem
     * @return true if the Error bit is not set for the severity, false otherwise
     */
    boolean isWarning();
+   
+   /**
+    * Checks the severity to see if this is Breakpoint
+    * @return true if this is breakpoint
+    */
+   boolean isBreakpoint();
 
 }

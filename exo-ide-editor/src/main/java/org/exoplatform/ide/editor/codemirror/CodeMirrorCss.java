@@ -51,5 +51,8 @@ public interface CodeMirrorCss extends CssResource
    
    @ClassName("overview-bottom-mark-warning")
    String overviewBottomMarkWarning();
+   
+   @ClassName("exo-code-mark-breakpoint")
+   String codeMarkBreakpoint();
 
 }

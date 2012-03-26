@@ -80,7 +80,8 @@ public class Notification
 
    public void destroy()
    {
-      targetElement.setAttribute("title", title);
+      if (!targetElement.hasAttribute("title") || targetElement.getAttribute("title").isEmpty())
+         targetElement.setAttribute("title", title);
       notificationPanel.removeFromParent();
    }
 
@@ -89,17 +90,28 @@ public class Notification
       if (notificationPanel.getAbsoluteTop() + notificationPanel.getOffsetHeight() > Window.getClientHeight())
       {
          int top = Window.getClientHeight() - notificationPanel.getOffsetHeight();
-         //int top = targetElement.getAbsoluteTop() - notificationPanel.getOffsetHeight();
+         // int top = targetElement.getAbsoluteTop() - notificationPanel.getOffsetHeight();
          notificationPanel.getElement().getStyle().setTop(top, Unit.PX);
       }
       notificationPanel.getElement().getStyle().setVisibility(Visibility.VISIBLE);
-      
-      if(notificationPanel.getAbsoluteLeft() + notificationPanel.getOffsetWidth() > Window.getClientWidth())
+
+      if (notificationPanel.getAbsoluteLeft() + notificationPanel.getOffsetWidth() > Window.getClientWidth())
       {
          notificationPanel.getElement().getStyle().clearLeft();
-         notificationPanel.getElement().getStyle().setRight(Window.getClientWidth() - targetElement.getAbsoluteLeft() + 10, Unit.PX);
+         notificationPanel.getElement().getStyle()
+            .setRight(Window.getClientWidth() - targetElement.getAbsoluteLeft() + 10, Unit.PX);
       }
 
+   }
+
+   /**
+    * 
+    */
+   public void update()
+   {
+      title = targetElement.getAttribute("title");
+      targetElement.setAttribute("title", null);
+      notificationPanel.getElement().setInnerHTML(title);
    }
 
 }

@@ -16,36 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.event;
+package org.exoplatform.ide.editor.problem;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 10:56:59 AM Mar 5, 2012 evgen $
- * 
+ * @version $Id:  11:32:21 AM Mar 26, 2012 evgen $
+ *
  */
-public class ParseActiveFileEvent extends GwtEvent<ParseActiveFileHandler>
+public interface LineNumberDoubleClickHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<ParseActiveFileHandler> TYPE = new Type<ParseActiveFileHandler>();
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ParseActiveFileHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ParseActiveFileHandler handler)
-   {
-      handler.onParseActiveFile(this);
-   }
-
+   void onLineNumberDoubleClick(LineNumberDoubleClickEvent event);
+   
 }
