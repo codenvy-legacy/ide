@@ -42,7 +42,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 public class RunDebuggerPresenter implements ViewClosedHandler
 
 {
-   interface Display extends IsView
+   public interface Display extends IsView
    {
       /**
        * Get create button's click handler.

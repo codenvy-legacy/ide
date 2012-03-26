@@ -6,7 +6,6 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.java.jdi.client.DebuggerExtension;
 import org.exoplatform.ide.extension.java.jdi.client.RunDebuggerPresenter;
-import org.exoplatform.ide.extension.java.jdi.client.RunDebuggerPresenter.Display;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
