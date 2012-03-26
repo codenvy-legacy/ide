@@ -2,6 +2,8 @@ package org.exoplatform.ide.extension.java.jdi.client;
 
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.LaunchDebuggerEvent;
 
 import com.google.gwt.core.client.GWT;
 

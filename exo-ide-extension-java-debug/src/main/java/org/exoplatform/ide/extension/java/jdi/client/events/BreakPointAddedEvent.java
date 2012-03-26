@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,16 +16,44 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.client;
+package org.exoplatform.ide.extension.java.jdi.client.events;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public interface AddBreakPointHandler extends EventHandler
+public class BreakPointAddedEvent extends GwtEvent<BreakPointAddedHandler>
 {
-   void onAddBreakPoint(AddBreakPointEvent event);
+
+   private BreakPoint breakPoint;
+
+   public BreakPointAddedEvent(BreakPoint breakPoint)
+   {
+      this.breakPoint = breakPoint;
+   }
+
+   public static final GwtEvent.Type<BreakPointAddedHandler> TYPE = new GwtEvent.Type<BreakPointAddedHandler>();
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<BreakPointAddedHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(BreakPointAddedHandler handler)
+   {
+      handler.onAddBreakPoint(this);
+   }
+
+   public BreakPoint getBreakPoint()
+   {
+      return breakPoint;
+   }
+
 }

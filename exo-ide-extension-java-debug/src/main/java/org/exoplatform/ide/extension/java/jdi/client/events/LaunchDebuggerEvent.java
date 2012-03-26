@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,16 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.client;
+package org.exoplatform.ide.extension.java.jdi.client.events;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public interface BreakPointAddedHandler extends EventHandler
+public class LaunchDebuggerEvent extends GwtEvent<LaunchDebuggerHandler>
 {
-   void onAddBreakPoint(BreakPointAddedEvent event);
+
+     public static final GwtEvent.Type<LaunchDebuggerHandler> TYPE = new GwtEvent.Type<LaunchDebuggerHandler>();
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<LaunchDebuggerHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(LaunchDebuggerHandler handler)
+   {
+      handler.onLaunchDebugger(this);
+   }
+
 }

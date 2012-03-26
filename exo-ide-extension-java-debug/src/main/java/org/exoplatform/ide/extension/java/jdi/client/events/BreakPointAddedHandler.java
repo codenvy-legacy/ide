@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.client;
+package org.exoplatform.ide.extension.java.jdi.client.events;
 
 import com.google.gwt.event.shared.EventHandler;
 
@@ -25,7 +25,7 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public interface LaunchDebuggerHandler extends EventHandler
+public interface BreakPointAddedHandler extends EventHandler
 {
-   void onLaunchDebugger(LaunchDebuggerEvent event);
+   void onAddBreakPoint(BreakPointAddedEvent event);
 }
