@@ -19,20 +19,13 @@ public class DebuggerExtension extends Extension{
     */
    public static final DebuggerLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(DebuggerLocalizationConstant.class);
 
-//   @Override
-//   public void onModuleLoad()
-//   {
-//      DebuggerView debugWindow = new DebuggerView();
-//      DebuggerPresenter debugPresenter = new DebuggerPresenter();
-//      debugPresenter.bindDisplay(debugWindow);
-//      RootPanel.get().add(debugWindow);
-//   }
    @Override
    public void initialize()
    {
       IDE.getInstance().addControl(new LaunchDebuggerControl());
       DebuggerPresenter debuggerPresenter = new DebuggerPresenter();
       IDE.addHandler(LaunchDebuggerEvent.TYPE, debuggerPresenter);
+      IDE.addHandler(DebuggerConnectedEvent.TYPE, debuggerPresenter);
    }
 
    

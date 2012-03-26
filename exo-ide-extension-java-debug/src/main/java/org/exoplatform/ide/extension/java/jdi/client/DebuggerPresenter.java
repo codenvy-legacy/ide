@@ -23,6 +23,9 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.RunDebuggerPresenter.Display;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointList;
@@ -48,7 +51,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebuggerHandler
+public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebuggerHandler, ViewClosedHandler
 {
    private Display display;
 
@@ -56,8 +59,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
 
    interface Display extends IsView
    {
-
-      HasClickHandlers getRunDebugButton();
 
       HasClickHandlers getResumeButton();
 
@@ -78,10 +79,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
       HasValue<String> getFqn();
 
       HasValue<String> getLine();
-
-      void setPort(String port);
-
-      void setHost(String host);
 
       void cleare();
 
@@ -354,12 +351,13 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
    {
       if (display == null)
       {
-         display = GWT.create(Display.class);
+         display = new DebuggerView();
          bindDisplay(display);
          IDE.getInstance().openView(display.asView());
+         
          DebuggerInfo debuggerInfo = event.getDebuggerInfo();
-         display.setHost(debuggerInfo.getHost());
-         display.setPort(String.valueOf(debuggerInfo.getPort()));
+         DebuggerExtension.DEBUG_ID = event.getDebuggerInfo().getId();
+         id = event.getDebuggerInfo().getId();
          checkDebugEventsTimer.scheduleRepeating(3000);
       }
    }
@@ -378,7 +376,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
             new AutoBeanUnmarshaller<BreakPointEventList>(breakPointEvents);
          try
          {
-            DebuggerClientService.getInstance().checkEvents(id,
+            DebuggerClientService.getInstance().checkEvents(DebuggerExtension.DEBUG_ID,
                new AsyncRequestCallback<BreakPointEventList>(unmarshaller)
                {
 
@@ -412,5 +410,14 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
       RunDebuggerView view = new RunDebuggerView();
       runDebuggerPresenter.bindDisplay(view);
       IDE.getInstance().openView(view.asView());
+   }
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+      }
    }
 }

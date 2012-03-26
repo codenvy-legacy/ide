@@ -21,7 +21,8 @@ package org.exoplatform.ide.extension.java.jdi.client;
 import org.exoplatform.gwtframework.ui.client.CellTreeResource;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.tablayout.TabPanel;
-import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointList;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
@@ -37,7 +38,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.CellTree;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -50,8 +50,10 @@ import com.google.gwt.view.client.SingleSelectionModel;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class DebuggerView extends Composite implements DebuggerPresenter.Display
+public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
 {
+   
+   private static final String ID = "ideDebuggerView";
 
    private static DebugWindowUiBinder uiBinder = GWT.create(DebugWindowUiBinder.class);
 
@@ -72,9 +74,6 @@ public class DebuggerView extends Composite implements DebuggerPresenter.Display
    ImageButton removeAllBreakpointsButton;
 
    @UiField
-   ImageButton runDebugButton;
-
-   @UiField
    ImageButton addBreakPointButton;
 
    @UiField
@@ -89,12 +88,6 @@ public class DebuggerView extends Composite implements DebuggerPresenter.Display
    @UiField
    TextBox lineNumber;
    
-   @UiField
-   TextBox port;
-
-   @UiField
-   TextBox host;
-
    CellList<BreakPoint> breakpointsContainer;
 
    CellTree frameTree;
@@ -110,9 +103,10 @@ public class DebuggerView extends Composite implements DebuggerPresenter.Display
    public DebuggerView()
    {
 
-      initWidget(uiBinder.createAndBindUi(this));
-      setWidth("500px");
-      setHeight("500px");
+      super(ID, ViewType.OPERATION, DebuggerExtension.LOCALIZATION_CONSTANT.debug());
+      add(uiBinder.createAndBindUi(this));
+//      setWidth("500px");
+//      setHeight("500px");
 
       frameTreeViewModel = new FrameTreeViewModel(selectionModel);
       frameTree = new CellTree(frameTreeViewModel, null, res);
@@ -128,6 +122,8 @@ public class DebuggerView extends Composite implements DebuggerPresenter.Display
       debugPanel.addTab("tabId1", null, "Frame", scrollPanel, false);
       fqn.setValue("org.exoplatform.services.jcr.webdav.WebDavServiceImpl");
       lineNumber.setValue(645 + "");
+      
+      
    }
 
    static class BreakpointCell extends AbstractCell<BreakPoint>
@@ -168,12 +164,6 @@ public class DebuggerView extends Composite implements DebuggerPresenter.Display
    public HasClickHandlers getDisconnectButton()
    {
       return disconnectButton;
-   }
-
-   @Override
-   public HasClickHandlers getRunDebugButton()
-   {
-      return runDebugButton;
    }
 
    @Override
@@ -229,24 +219,6 @@ public class DebuggerView extends Composite implements DebuggerPresenter.Display
    public ListDataProvider<Variable> getDataProvider()
    {
       return frameTreeViewModel.getDataProvider();
-   }
-
-   @Override
-   public View asView()
-   {
-      return null;
-   }
-
-   @Override
-   public void setPort(String port)
-   {
-      this.port.setText(port);
-   }
-
-   @Override
-   public void setHost(String host)
-   {
-      this.host.setText(host);
    }
 
 }

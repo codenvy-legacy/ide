@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
@@ -12,6 +11,62 @@
    <name>eXo IDE :: Extension :: Java :: Debug</name>
 
    <dependencies>
+      <!-- Client side dependencies -->
+      
+       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-jdt-core</artifactId>
+      </dependency>
+       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-java</artifactId>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-framework-client</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-commons</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-ui</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.google.gwt</groupId>
+         <artifactId>gwt-servlet</artifactId>
+         <scope>runtime</scope>
+      </dependency>
+      <dependency>
+         <groupId>com.google.gwt</groupId>
+         <artifactId>gwt-user</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>javax.validation</groupId>
+         <artifactId>validation-api</artifactId>
+         <version>1.0.0.GA</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>javax.validation</groupId>
+         <artifactId>validation-api</artifactId>
+         <version>1.0.0.GA</version>
+         <classifier>sources</classifier>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.json</groupId>
+         <artifactId>json</artifactId>
+         <version>20070829</version>
+      </dependency>
+      <!-- End client-side dependencies -->
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-core</artifactId>
+      </dependency>
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.commons</artifactId>
@@ -31,6 +86,11 @@
       </dependency>
       <dependency>
          <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-log4j12</artifactId>
+         <scope>runtime</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.slf4j</groupId>
          <artifactId>slf4j-api</artifactId>
          <scope>runtime</scope>
       </dependency>
@@ -45,6 +105,73 @@
          <version>1.6.0</version>
          <scope>system</scope>
          <systemPath>${java.home}/../lib/tools.jar</systemPath>
-    </dependency>
+      </dependency>
    </dependencies>
+
+   <profiles>
+      <profile>
+         <id>std</id>
+         <activation>
+            <activeByDefault>false</activeByDefault>
+         </activation>
+         <build>
+            <!-- Generate compiled stuff in the folder used for developing mode -->
+            <!-- outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory -->
+
+            <plugins>
+
+               <!-- GWT Maven Plugin -->
+               <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>gwt-maven-plugin</artifactId>
+                  <version>2.4.0</version>
+                  <executions>
+                     <execution>
+                        <goals>
+                           <goal>compile</goal>
+                           <goal>test</goal>
+                           <!-- goal>i18n</goal-->
+                           <goal>generateAsync</goal>
+                        </goals>
+                     </execution>
+                  </executions>
+                  <!-- Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org -->
+                  <configuration>
+                     <runTarget>JavaDebugExtension.html</runTarget>
+                     <hostedWebapp>${webappDirectory}</hostedWebapp>
+                     <i18nMessagesBundle>org.exoplatform.ide.extension.java.jdi.client.DebugLocalizationConstant</i18nMessagesBundle>
+                  </configuration>
+               </plugin>
+
+               <!-- Copy static web files before executing gwt:run -->
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-war-plugin</artifactId>
+                  <version>2.1.1</version>
+                  <executions>
+                     <execution>
+                        <phase>compile</phase>
+                        <goals>
+                           <goal>exploded</goal>
+                        </goals>
+                     </execution>
+                  </executions>
+                  <configuration>
+                     <webappDirectory>${webappDirectory}</webappDirectory>
+                  </configuration>
+               </plugin>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-compiler-plugin</artifactId>
+                  <version>2.3.2</version>
+                  <configuration>
+                     <source>1.6</source>
+                     <target>1.6</target>
+                  </configuration>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
+   </profiles>
+
 </project>

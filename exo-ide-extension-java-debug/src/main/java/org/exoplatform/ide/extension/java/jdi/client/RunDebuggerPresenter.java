@@ -84,7 +84,7 @@ public class RunDebuggerPresenter implements ViewClosedHandler
 
    private String host;
 
-   private String port;
+   private int port;
 
    public RunDebuggerPresenter()
    {
@@ -103,7 +103,9 @@ public class RunDebuggerPresenter implements ViewClosedHandler
          @Override
          public void onClick(ClickEvent event)
          {
-//            IDE.getInstance().closeView(display.);
+            host = display.getHostField().getValue();
+            port = Integer.parseInt(display.getPortField().getValue());
+            IDE.getInstance().closeView(display.asView().getId());
             doRunDebugger();
          }
       });
@@ -114,7 +116,7 @@ public class RunDebuggerPresenter implements ViewClosedHandler
          @Override
          public void onClick(ClickEvent event)
          {
-//            IDE.getInstance().closeView(display.asView().getId());
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
    }
@@ -141,24 +143,24 @@ public class RunDebuggerPresenter implements ViewClosedHandler
       try
       {
 
-         DebuggerClientService.getInstance().create("localhost", 8001,
-            new AsyncRequestCallback<DebuggerInfo>(unmarshaller)
+         DebuggerClientService.getInstance().create(host, port, new AsyncRequestCallback<DebuggerInfo>(unmarshaller)
+         {
+            @Override
+            public void onSuccess(DebuggerInfo result)
             {
-               @Override
-               public void onSuccess(DebuggerInfo result)
-               {
-                  DebuggerExtension.DEBUG_ID = result.getId();
-               }
+               DebuggerExtension.DEBUG_ID = result.getId();
+               IDE.eventBus().fireEvent(new DebuggerConnectedEvent(result));
+            }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  exception.printStackTrace();
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               exception.printStackTrace();
 
-                  System.err.println("--------------------------------------");
+               System.err.println("--------------------------------------");
 
-               }
-            });
+            }
+         });
       }
       catch (RequestException e)
       {
@@ -167,6 +169,4 @@ public class RunDebuggerPresenter implements ViewClosedHandler
 
    }
 
-  
-   
 }
