@@ -18,17 +18,6 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-
 import org.exoplatform.ide.extension.java.shared.ast.AstItem;
 import org.exoplatform.ide.extension.java.shared.ast.CompilationUnit;
 import org.exoplatform.ide.extension.java.shared.ast.JavaProject;
@@ -44,6 +33,17 @@ import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Project;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 @Path("ide/application/java")
 public class JavaService
@@ -81,7 +81,7 @@ public class JavaService
          {
             Project p = (Project)item;
 
-            JavaProject project = new JavaProject();
+            JavaProject project = new JavaProjectBean();
             project.setId(p.getId());
             project.setName(p.getName());
             projects.add(project);
@@ -158,7 +158,7 @@ public class JavaService
             item = getItem(vfs, item.getId(), name);
          }
 
-         RootPackage rootPackage = new RootPackage();
+         RootPackage rootPackage = new RootPackageBean();
          rootPackage.setSource(source);
          rootPackage.setId(item.getId());
          rootPackage.setProjectId(projectId);
@@ -231,7 +231,7 @@ public class JavaService
       String pathPrefix = projectItem.getPath() + "/" + source;
       for (String folder : folders)
       {
-         Package p = new Package();
+         Package p = new PackageBean();
          p.setProjectId(projectId);
          p.setSource(source);
          String name = folder.substring(pathPrefix.length() + 1);

@@ -16,47 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.exoplatform.ide.extension.java.shared.ast;
 
-import com.google.gwt.json.client.JSONObject;
-
 /**
+ * Interface describe item of AST.
  * 
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: AstItem.java Mar 26, 2012 12:55:23 AM azatsarynnyy $
+ *
  */
-
-public class AstItem
+public interface AstItem
 {
 
-   private String type;
+   /**
+    * Returns type of the item.
+    * 
+    * @return the item type
+    */
+   public String getType();
 
-   public AstItem(String type)
-   {
-      this.type = type;
-   }
-
-   public AstItem(JSONObject itemObject)
-   {
-      init(itemObject);
-   }
-
-   public void init(JSONObject itemObject)
-   {
-      type = itemObject.get("type").isString().stringValue();
-   }
-
-   public String getType()
-   {
-      return type;
-   }
-
-   public void setType(String type)
-   {
-      this.type = type;
-   }
+   /**
+    * Set type of the item.
+    * 
+    * @param type the item type
+    */
+   public void setType(String type);
 
 }

@@ -29,7 +29,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.extension.java.client.marshaller.MavenResponseUnmarshaller.Constants;
 import org.exoplatform.ide.extension.java.shared.MavenResponse;
 
 /**
@@ -41,6 +40,8 @@ import org.exoplatform.ide.extension.java.shared.MavenResponse;
  */
 public abstract class MavenResponseCallback extends AsyncRequestCallback<MavenResponse>
 {
+   public static final String OUTPUT = "output";
+
    private HandlerManager eventBus;
 
    public MavenResponseCallback(HandlerManager eventBus)
@@ -78,10 +79,9 @@ public abstract class MavenResponseCallback extends AsyncRequestCallback<MavenRe
             return;
          }
 
-         if (jsonObject != null && jsonObject.containsKey(Constants.OUTPUT)
-            && jsonObject.get(Constants.OUTPUT).isString() != null)
+         if (jsonObject != null && jsonObject.containsKey(OUTPUT) && jsonObject.get(OUTPUT).isString() != null)
          {
-            String output = jsonObject.get(Constants.OUTPUT).isString().stringValue();
+            String output = jsonObject.get(OUTPUT).isString().stringValue();
             output = output.replace("\n", "<br>");
             eventBus.fireEvent(new OutputEvent(output, Type.OUTPUT));
          }

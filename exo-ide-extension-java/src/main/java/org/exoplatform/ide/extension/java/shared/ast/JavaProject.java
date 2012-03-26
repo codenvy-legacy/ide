@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,82 +16,60 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.exoplatform.ide.extension.java.shared.ast;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.json.client.JSONObject;
-
 /**
+ * Interface describe the java project.
  * 
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: JavaProject.java Mar 26, 2012 1:24:53 AM azatsarynnyy $
+ *
  */
-
-public class JavaProject extends AstItem
+public interface JavaProject extends AstItem
 {
 
-   private String id;
+   /**
+    * Returns the project ID.
+    * 
+    * @return project ID
+    */
+   public String getId();
 
-   private String name;
+   /**
+    * Set the project ID.
+    * 
+    * @param id the project ID
+    */
+   public void setId(String id);
 
-   private List<RootPackage> rootPackages;
+   /**
+    * Returns the project name.
+    * 
+    * @return the project name
+    */
+   public String getName();
 
-   public JavaProject()
-   {
-      super(Types.PROJECT);
-   }
+   /**
+    * Set the project name.
+    * 
+    * @param name the project name
+    */
+   public void setName(String name);
 
-   public JavaProject(JSONObject itemObject)
-   {
-      super(itemObject);
-   }
+   /**
+    * Returns the list of root packages.
+    * 
+    * @return the list of packages
+    */
+   public List<RootPackage> getRootPackages();
 
-   public String getId()
-   {
-      return id;
-   }
-
-   public void setId(String id)
-   {
-      this.id = id;
-   }
-
-   public String getName()
-   {
-      return name;
-   }
-
-   public void setName(String name)
-   {
-      this.name = name;
-   }
-
-   public List<RootPackage> getRootPackages()
-   {
-      if (rootPackages == null)
-      {
-         rootPackages = new ArrayList<RootPackage>();
-      }
-
-      return rootPackages;
-   }
-
-   public void setRootPackages(List<RootPackage> rootPackages)
-   {
-      this.rootPackages = rootPackages;
-   }
-
-   public void init(JSONObject itemObject)
-   {
-      super.init(itemObject);
-
-      id = itemObject.get("id").isString().stringValue();
-      name = itemObject.get("name").isString().stringValue();
-   }
+   /**
+    * Set the list of root packages.
+    * 
+    * @param rootPackages the list of root packages
+    */
+   public void setRootPackages(List<RootPackage> rootPackages);
 
 }

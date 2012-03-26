@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -21,55 +21,54 @@ package org.exoplatform.ide.extension.java.shared;
 import java.util.Map;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: $
+ * Interface describe maven response.
+ * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: MavenResponse.java Mar 25, 2012 11:51:16 PM azatsarynnyy $
+ *
  */
-public class MavenResponse
+public interface MavenResponse
 {
-   private int exitCode;
 
-   private String output;
+   /**
+    * Returns exit code.
+    * 
+    * @return exit code
+    */
+   public int getExitCode();
 
-   private Map<String, String> result;
+   /**
+    * Set exit code.
+    * 
+    * @param exitCode exit code
+    */
+   public void setExitCode(int exitCode);
 
-   public MavenResponse(int exitCode, String output, Map<String, String> result)
-   {
-      this.exitCode = exitCode;
-      this.output = output;
-      this.result = result;
-   }
+   /**
+    * Returns the output message.
+    * 
+    * @return the outout message
+    */
+   public String getOutput();
 
-   public MavenResponse()
-   {
-   }
+   /**
+    * Change the output message.
+    * 
+    * @param output the output message
+    */
+   public void setOutput(String output);
 
-   public int getExitCode()
-   {
-      return exitCode;
-   }
+   /**
+    * Returns the result.
+    * 
+    * @return the result
+    */
+   public Map<String, String> getResult();
 
-   public void setExitCode(int exitCode)
-   {
-      this.exitCode = exitCode;
-   }
-
-   public String getOutput()
-   {
-      return output;
-   }
-
-   public void setOutput(String output)
-   {
-      this.output = output;
-   }
-
-   public Map<String, String> getResult()
-   {
-      return result;
-   }
-
-   public void setResult(Map<String, String> result)
-   {
-      this.result = result;
-   }
+   /**
+    * Change the result.
+    * 
+    * @param result the result
+    */
+   public void setResult(Map<String, String> result);
 }

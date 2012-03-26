@@ -29,34 +29,42 @@ import com.google.gwt.json.client.JSONObject;
  * @version $
  */
 
-public abstract class Unit extends AstItemBean
+public class AstItemBean implements AstItem
 {
 
-   private String name;
+   private String type;
 
-   public Unit(String type)
+   public AstItemBean(String type)
    {
-      super(type);
+      this.type = type;
    }
 
-   public Unit(JSONObject itemObject)
+   public AstItemBean(JSONObject itemObject)
    {
-      super(itemObject);
+      init(itemObject);
    }
 
    public void init(JSONObject itemObject)
    {
-      name = itemObject.get("name").isString().stringValue();
+      type = itemObject.get("type").isString().stringValue();
    }
 
-   public String getName()
+   /**
+    * @see org.exoplatform.ide.extension.java.shared.ast.AstItem#getType()
+    */
+   @Override
+   public String getType()
    {
-      return name;
+      return type;
    }
 
-   public void setName(String name)
+   /**
+    * @see org.exoplatform.ide.extension.java.shared.ast.AstItem#setType(java.lang.String)
+    */
+   @Override
+   public void setType(String type)
    {
-      this.name = name;
+      this.type = type;
    }
 
 }

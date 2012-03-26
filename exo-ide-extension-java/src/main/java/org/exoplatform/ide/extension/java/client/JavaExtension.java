@@ -18,12 +18,13 @@
  */
 package org.exoplatform.ide.extension.java.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * Java extention for IDE.
@@ -34,6 +35,11 @@ import com.google.gwt.core.client.GWT;
  */
 public class JavaExtension extends Extension implements InitializeServicesHandler
 {
+
+   /**
+    * The generator for an {@link AutoBean}
+    */
+   public static final JavaAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(JavaAutoBeanFactory.class);
 
    public static final JavaLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(JavaLocalizationConstant.class);
 

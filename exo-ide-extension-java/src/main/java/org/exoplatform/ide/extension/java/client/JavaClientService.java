@@ -152,7 +152,8 @@ public class JavaClientService
     * @param callback
     * @throws RequestException 
     */
-   public void getRootPackages(String vfsId, String projectId, AsyncRequestCallback<List<RootPackage>> callback) throws RequestException
+   public void getRootPackages(String vfsId, String projectId, AsyncRequestCallback<List<RootPackage>> callback)
+      throws RequestException
    {
       final String url = restServiceContext + ROOT_PACKAGES + "?vfsId=" + vfsId + "&projectId=" + projectId;
 
@@ -168,7 +169,8 @@ public class JavaClientService
     * @param callback
     * @throws RequestException 
     */
-   public void getPackages(String vfsId, String projectId, String source, AsyncRequestCallback<List<Package>> callback) throws RequestException
+   public void getPackages(String vfsId, String projectId, String source, AsyncRequestCallback<List<Package>> callback)
+      throws RequestException
    {
       String url = restServiceContext + PACKAGES + "?vfsId=" + vfsId + "&projectId=" + projectId + "&source=" + source;
 

@@ -23,9 +23,12 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.extension.java.client.JavaExtension;
 import org.exoplatform.ide.extension.java.shared.ast.Package;
 
 import java.util.List;
@@ -59,8 +62,9 @@ public class PackagesUnmarshaller implements Unmarshallable<List<Package>>
          JSONArray itemsArray = jsonValue.isArray();
          for (int i = 0; i < itemsArray.size(); i++)
          {
-            Package p = new Package(itemsArray.get(i).isObject());
-            packages.add(p);
+            String payload = itemsArray.get(i).isObject().toString();
+            AutoBean<Package> autoBean = AutoBeanCodex.decode(JavaExtension.AUTO_BEAN_FACTORY, Package.class, payload);
+            packages.add(autoBean.as());
          }
       }
       catch (Exception exc)

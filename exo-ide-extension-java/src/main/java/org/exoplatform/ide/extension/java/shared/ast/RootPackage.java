@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,95 +16,74 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.exoplatform.ide.extension.java.shared.ast;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.json.client.JSONObject;
-
 /**
+ * Interface describe root package of AST.
  * 
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: RootPackage.java Mar 26, 2012 1:16:37 AM azatsarynnyy $
+ *
  */
-
-public class RootPackage extends AstItem
+public interface RootPackage extends AstItem
 {
 
-   private String source;
+   /**
+    * Returns the source.
+    * 
+    * @return the source
+    */
+   public String getSource();
 
-   private String id;
+   /**
+    * Set the source.
+    * 
+    * @param source the source
+    */
+   public void setSource(String source);
 
-   private String projectId;
+   /**
+    * Returns the identifier.
+    * 
+    * @return the identifier
+    */
+   public String getId();
 
-   private List<Package> packages;
+   /**
+    * Set the identifier.
+    * 
+    * @param id the identifier
+    */
+   public void setId(String id);
 
-   public RootPackage()
-   {
-      super(Types.ROOT_PACKAGE);
-   }
+   /**
+    * Returns the identifier of project.
+    * 
+    * @return project ID
+    */
+   public String getProjectId();
 
-   public RootPackage(JSONObject itemObject)
-   {
-      super(itemObject);
-   }
+   /**
+    * Set the identifier of project.
+    * 
+    * @param projectId project ID
+    */
+   public void setProjectId(String projectId);
 
-   public void init(JSONObject itemObject)
-   {
-      super.init(itemObject);
+   /**
+    * Returns the list of the packages.
+    * 
+    * @return list of the packages
+    */
+   public List<Package> getPackages();
 
-      id = itemObject.get("id").isString().stringValue();
-      projectId = itemObject.get("projectId").isString().stringValue();
-      source = itemObject.get("source").isString().stringValue();
-   }
-
-   public String getSource()
-   {
-      return source;
-   }
-
-   public void setSource(String source)
-   {
-      this.source = source;
-   }
-
-   public String getId()
-   {
-      return id;
-   }
-
-   public void setId(String id)
-   {
-      this.id = id;
-   }
-
-   public String getProjectId()
-   {
-      return projectId;
-   }
-
-   public void setProjectId(String projectId)
-   {
-      this.projectId = projectId;
-   }
-
-   public List<Package> getPackages()
-   {
-      if (packages == null)
-      {
-         packages = new ArrayList<Package>();
-      }
-
-      return packages;
-   }
-
-   public void setPackages(List<Package> packages)
-   {
-      this.packages = packages;
-   }
+   /**
+    * Set the list of the packages.
+    * 
+    * @param packages the list of the packages
+    */
+   public void setPackages(List<Package> packages);
 
 }

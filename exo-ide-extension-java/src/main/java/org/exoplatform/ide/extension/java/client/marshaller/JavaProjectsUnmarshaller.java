@@ -22,9 +22,12 @@ package org.exoplatform.ide.extension.java.client.marshaller;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.extension.java.client.JavaExtension;
 import org.exoplatform.ide.extension.java.shared.ast.JavaProject;
 
 import java.util.List;
@@ -61,8 +64,10 @@ public class JavaProjectsUnmarshaller implements Unmarshallable<List<JavaProject
          }
          for (int i = 0; i < itemsArray.size(); i++)
          {
-            JavaProject javaProject = new JavaProject(itemsArray.get(i).isObject());
-            javaProjects.add(javaProject);
+            String payload = itemsArray.get(i).isObject().toString();
+            AutoBean<JavaProject> autoBean =
+               AutoBeanCodex.decode(JavaExtension.AUTO_BEAN_FACTORY, JavaProject.class, payload);
+            javaProjects.add(autoBean.as());
          }
       }
       catch (Exception exc)
