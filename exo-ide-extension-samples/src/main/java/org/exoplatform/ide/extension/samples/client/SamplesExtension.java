@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.samples.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -28,8 +29,8 @@ import org.exoplatform.ide.extension.samples.client.control.WelcomeControl;
 import org.exoplatform.ide.extension.samples.client.convert.ConvertToProjectPresenter;
 import org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter;
 import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
-import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesControl;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
+import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesControl;
 import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesPresenter;
 import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubControl;
 import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter;
@@ -46,6 +47,11 @@ import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter
 public class SamplesExtension extends Extension implements InitializeServicesHandler
 {
 
+   /**
+    * The generator of an {@link AutoBean}.
+    */
+   public static final SamplesAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(SamplesAutoBeanFactory.class);
+
    public static final SamplesLocalizationConstant LOCALIZATION_CONSTANT = GWT
       .create(SamplesLocalizationConstant.class);
 
@@ -53,7 +59,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
     */
    @Override
-   public void onInitializeServices(InitializeServicesEvent event) 
+   public void onInitializeServices(InitializeServicesEvent event)
    {
       new SamplesClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
       IDE.fireEvent(new OpenStartPageEvent());

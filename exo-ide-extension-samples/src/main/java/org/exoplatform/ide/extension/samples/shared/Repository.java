@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -21,311 +21,173 @@ package org.exoplatform.ide.extension.samples.shared;
 import java.util.Date;
 
 /**
- * Stores data about github repository.
+ * Interface describe GitHub repository.
  * 
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: Repository.java Aug 29, 2011 10:52:37 AM vereshchaka $
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: Repository.java Mar 25, 2012 11:25:43 PM azatsarynnyy $
+ *
  */
-public class Repository
+public interface Repository
 {
-
-   private String name;
-
-   private String description;
-
-   private boolean isPrivate;
-
-   private String url;
-
-   private String owner;
-
-   private String homepage;
-
-   private boolean hasWiki;
-
-   private int openIssues;
-
-   private boolean hasIssues;
-
-   private Date pushed;
-
-   private Date created;
-
-   private int watchers;
-
-   private int forks;
-
-   private boolean fork;
-
-   private int size;
-
-   private boolean hasDownloads;
-
-   public Repository()
-   {
-   }
-
-   public Repository(String name, String description, String url)
-   {
-      this.name = name;
-      this.description = description;
-      this.url = url;
-   }
 
    /**
     * @return the description
     */
-   public String getDescription()
-   {
-      return description;
-   }
+   public String getDescription();
 
    /**
     * @param description the description to set
     */
-   public void setDescription(String description)
-   {
-      this.description = description;
-   }
+   public void setDescription(String description);
 
    /**
     * @return the isPrivate
     */
-   public boolean isPrivate()
-   {
-      return isPrivate;
-   }
+   public boolean isPrivate();
 
    /**
     * @param isPrivate the isPrivate to set
     */
-   public void setPrivate(boolean isPrivate)
-   {
-      this.isPrivate = isPrivate;
-   }
+   public void setPrivate(boolean isPrivate);
 
    /**
     * @return the url
     */
-   public String getUrl()
-   {
-      return url;
-   }
+   public String getUrl();
 
    /**
     * @param url the url to set
     */
-   public void setUrl(String url)
-   {
-      this.url = url;
-   }
+   public void setUrl(String url);
 
    /**
     * @return the owner
     */
-   public String getOwner()
-   {
-      return owner;
-   }
+   public String getOwner();
 
    /**
     * @param owner the owner to set
     */
-   public void setOwner(String owner)
-   {
-      this.owner = owner;
-   }
+   public void setOwner(String owner);
 
    /**
     * @return the homepage
     */
-   public String getHomepage()
-   {
-      return homepage;
-   }
+   public String getHomepage();
 
    /**
     * @param homepage the homepage to set
     */
-   public void setHomepage(String homepage)
-   {
-      this.homepage = homepage;
-   }
+   public void setHomepage(String homepage);
 
    /**
     * @return the hasWiki
     */
-   public boolean isHasWiki()
-   {
-      return hasWiki;
-   }
+   public boolean isHasWiki();
 
    /**
     * @param hasWiki the hasWiki to set
     */
-   public void setHasWiki(boolean hasWiki)
-   {
-      this.hasWiki = hasWiki;
-   }
+   public void setHasWiki(boolean hasWiki);
 
    /**
     * @return the openIssues
     */
-   public int getOpenIssues()
-   {
-      return openIssues;
-   }
+   public int getOpenIssues();
 
    /**
     * @param openIssues the openIssues to set
     */
-   public void setOpenIssues(int openIssues)
-   {
-      this.openIssues = openIssues;
-   }
+   public void setOpenIssues(int openIssues);
 
    /**
     * @return the hasIssues
     */
-   public boolean isHasIssues()
-   {
-      return hasIssues;
-   }
+   public boolean isHasIssues();
 
    /**
     * @param hasIssues the hasIssues to set
     */
-   public void setHasIssues(boolean hasIssues)
-   {
-      this.hasIssues = hasIssues;
-   }
+   public void setHasIssues(boolean hasIssues);
 
    /**
     * @return the pushed
     */
-   public Date getPushed()
-   {
-      return pushed;
-   }
+   public Date getPushed();
 
    /**
     * @param pushed the pushed to set
     */
-   public void setPushed(Date pushed)
-   {
-      this.pushed = pushed;
-   }
+   public void setPushed(Date pushed);
 
    /**
     * @return the created
     */
-   public Date getCreated()
-   {
-      return created;
-   }
+   public Date getCreated();
 
    /**
     * @param created the created to set
     */
-   public void setCreated(Date created)
-   {
-      this.created = created;
-   }
+   public void setCreated(Date created);
 
    /**
     * @return the watchers
     */
-   public int getWatchers()
-   {
-      return watchers;
-   }
+   public int getWatchers();
 
    /**
     * @param watchers the watchers to set
     */
-   public void setWatchers(int watchers)
-   {
-      this.watchers = watchers;
-   }
+   public void setWatchers(int watchers);
 
    /**
     * @return the forks
     */
-   public int getForks()
-   {
-      return forks;
-   }
+   public int getForks();
 
    /**
     * @param forks the forks to set
     */
-   public void setForks(int forks)
-   {
-      this.forks = forks;
-   }
+   public void setForks(int forks);
 
    /**
     * @return the fork
     */
-   public boolean isFork()
-   {
-      return fork;
-   }
+   public boolean isFork();
 
    /**
     * @param fork the fork to set
     */
-   public void setFork(boolean fork)
-   {
-      this.fork = fork;
-   }
+   public void setFork(boolean fork);
 
    /**
     * @return the size
     */
-   public int getSize()
-   {
-      return size;
-   }
+   public int getSize();
 
    /**
     * @param size the size to set
     */
-   public void setSize(int size)
-   {
-      this.size = size;
-   }
+   public void setSize(int size);
 
    /**
     * @return the name
     */
-   public String getName()
-   {
-      return name;
-   }
+   public String getName();
 
    /**
     * @param name the name to set
     */
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+   public void setName(String name);
 
    /**
     * @return the hasDownloads
     */
-   public boolean isHasDownloads()
-   {
-      return hasDownloads;
-   }
+   public boolean isHasDownloads();
 
    /**
     * @param hasDownloads the hasDownloads to set
     */
-   public void setHasDownloads(boolean hasDownloads)
-   {
-      this.hasDownloads = hasDownloads;
-   }
+   public void setHasDownloads(boolean hasDownloads);
 
 }

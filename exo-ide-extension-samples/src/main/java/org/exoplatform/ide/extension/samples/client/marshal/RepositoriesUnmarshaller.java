@@ -19,17 +19,17 @@
 package org.exoplatform.ide.extension.samples.client.marshal;
 
 import com.google.gwt.http.client.Response;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 
-import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -62,93 +62,11 @@ public class RepositoriesUnmarshaller implements Unmarshallable<List<Repository>
       for (int i = 0; i < jsonArray.size(); i++)
       {
          JSONValue value = jsonArray.get(i);
-
-         Repository repository;
-         try
-         {
-            repository = parseObject(value.isObject());
-            repositories.add(repository);
-         }
-         catch (ParseException e)
-         {
-            throw new UnmarshallerException(e.getMessage());
-         }
+         String payload = value.isObject().toString();
+         AutoBean<Repository> autoBean =
+            AutoBeanCodex.decode(SamplesExtension.AUTO_BEAN_FACTORY, Repository.class, payload);
+         repositories.add(autoBean.as());
       }
-   }
-
-   private Repository parseObject(JSONObject jsonObject) throws ParseException
-   {
-      DateTimeFormat dtf = DateTimeFormat.getFormat("yyyy/MM/dd HH:mm:ss Z");
-      Repository repo = new Repository();
-      for (String key : jsonObject.keySet())
-      {
-         JSONValue jsonValue = jsonObject.get(key);
-         if (key.equals("name") && jsonValue.isString() != null)
-         {
-            repo.setName(jsonValue.isString().stringValue());
-         }
-         else if (key.equals("description") && jsonValue.isString() != null)
-         {
-            repo.setDescription(jsonValue.isString().stringValue());
-         }
-         else if (key.equals("url") && jsonValue.isString() != null)
-         {
-            repo.setUrl(jsonValue.isString().stringValue());
-         }
-         else if (key.equals("owner") && jsonValue.isString() != null)
-         {
-            repo.setOwner(jsonValue.isString().stringValue());
-         }
-         else if (key.equals("homepage") && jsonValue.isString() != null)
-         {
-            repo.setHomepage(jsonValue.isString().stringValue());
-         }
-         else if (key.equals("hasWiki") && jsonValue.isBoolean() != null)
-         {
-            repo.setHasWiki(jsonValue.isBoolean().booleanValue());
-         }
-         else if (key.equals("openIssues") && jsonValue.isNumber() != null)
-         {
-            repo.setOpenIssues((int)jsonValue.isNumber().doubleValue());
-         }
-         else if (key.equals("hasIssues") && jsonValue.isBoolean() != null)
-         {
-            repo.setHasIssues(jsonValue.isBoolean().booleanValue());
-         }
-         else if (key.equals("pushed") && jsonValue.isString() != null)
-         {
-            repo.setPushed(dtf.parseStrict(jsonValue.isString().stringValue()));
-         }
-         else if (key.equals("created") && jsonValue.isString() != null)
-         {
-            repo.setCreated(dtf.parseStrict(jsonValue.isString().stringValue()));
-         }
-         else if (key.equals("watchers") && jsonValue.isNumber() != null)
-         {
-            repo.setWatchers((int)jsonValue.isNumber().doubleValue());
-         }
-         else if (key.equals("forks") && jsonValue.isNumber() != null)
-         {
-            repo.setForks((int)jsonValue.isNumber().doubleValue());
-         }
-         else if (key.equals("fork") && jsonValue.isBoolean() != null)
-         {
-            repo.setFork(jsonValue.isBoolean().booleanValue());
-         }
-         else if (key.equals("size") && jsonValue.isNumber() != null)
-         {
-            repo.setSize((int)jsonValue.isNumber().doubleValue());
-         }
-         else if (key.equals("hasDownloads") && jsonValue.isBoolean() != null)
-         {
-            repo.setHasDownloads(jsonValue.isBoolean().booleanValue());
-         }
-         else if (key.equals("isPrivate") && jsonValue.isBoolean() != null)
-         {
-            repo.setPrivate(jsonValue.isBoolean().booleanValue());
-         }
-      }
-      return repo;
    }
 
    /**
