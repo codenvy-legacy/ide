@@ -325,4 +325,8 @@
    <component>
       <type>org.exoplatform.ide.extension.groovy.server.GroovyCodeAssistant</type>
    </component>
+   
+   <component>
+      <type>org.exoplatform.ide.extension.java.jdi.server.DebuggerApplication</type>
+   </component>
 </configuration>

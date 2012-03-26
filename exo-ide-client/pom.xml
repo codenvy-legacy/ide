@@ -150,7 +150,7 @@
       <profile>
          <id>shell</id>
          <activation>
-            <activeByDefault>false</activeByDefault>
+            <activeByDefault>true</activeByDefault>
          </activation>
 
          <properties>
@@ -259,6 +259,12 @@
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-java</artifactId>
             </dependency>
+            
+             <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-java-debug</artifactId>
+               <version>1.2.0-M7-SNAPSHOT</version>
+            </dependency>
 
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
@@ -324,7 +330,6 @@
             <dependency>
                <groupId>org.exoplatform.log-reader</groupId>
                <artifactId>log-reader-service</artifactId>
-               <version>1.0-M5-SNAPSHOT</version>
             </dependency>
 
             <dependency>
@@ -566,6 +571,13 @@
                <version>${chromattic.version}</version>
                <scope>runtime</scope>
             </dependency>
+            <dependency>
+               <groupId>sun.jdk</groupId>
+               <artifactId>tools</artifactId>
+               <version>1.6.0</version>
+               <scope>system</scope>
+               <systemPath>${java.home}/../lib/tools.jar</systemPath>
+            </dependency>
          </dependencies>
          <build>
             <plugins>
@@ -648,7 +660,6 @@
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <skipTests>${gwt.test.skip}</skipTests>
                      <!-- <port>${gwt.port}</port> -->
-                     <bindAddress>0.0.0.0</bindAddress>
                      <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Dorg.exoplatform.ide.server.fs-root-path=target/git  -Dorg.exoplatform.ide.git.server=git -Dorg.exoplatform.mimetypes=conf/mimetypes.properties</extraJvmArgs>
                   </configuration>
                </plugin>
