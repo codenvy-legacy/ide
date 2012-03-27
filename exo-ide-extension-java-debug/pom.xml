@@ -12,16 +12,16 @@
 
    <dependencies>
       <!-- Client side dependencies -->
-      
-       <dependency>
+
+      <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-jdt-core</artifactId>
       </dependency>
-       <dependency>
+      <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-java</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
@@ -108,70 +108,82 @@
       </dependency>
    </dependencies>
 
-   <profiles>
-      <profile>
-         <id>std</id>
-         <activation>
-            <activeByDefault>false</activeByDefault>
-         </activation>
-         <build>
-            <!-- Generate compiled stuff in the folder used for developing mode -->
-            <!-- outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory -->
+   <build>
+      <resources>
+         <resource>
+            <directory>src/main/java</directory>
+         </resource>
+         <resource>
+            <directory>src/main/resources</directory>
+         </resource>
+      </resources>
+      <sourceDirectory>src/main/java</sourceDirectory>
+      <outputDirectory>target/classes</outputDirectory>
+  </build>
 
-            <plugins>
+      <profiles>
+         <profile>
+            <id>std</id>
+            <activation>
+               <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+               <!-- Generate compiled stuff in the folder used for developing mode -->
+               <!-- outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory -->
 
-               <!-- GWT Maven Plugin -->
-               <plugin>
-                  <groupId>org.codehaus.mojo</groupId>
-                  <artifactId>gwt-maven-plugin</artifactId>
-                  <version>2.4.0</version>
-                  <executions>
-                     <execution>
-                        <goals>
-                           <goal>compile</goal>
-                           <goal>test</goal>
-                           <!-- goal>i18n</goal-->
-                           <goal>generateAsync</goal>
-                        </goals>
-                     </execution>
-                  </executions>
-                  <!-- Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org -->
-                  <configuration>
-                     <runTarget>JavaDebugExtension.html</runTarget>
-                     <hostedWebapp>${webappDirectory}</hostedWebapp>
-                     <i18nMessagesBundle>org.exoplatform.ide.extension.java.jdi.client.DebugLocalizationConstant</i18nMessagesBundle>
-                  </configuration>
-               </plugin>
+               <plugins>
 
-               <!-- Copy static web files before executing gwt:run -->
-               <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-war-plugin</artifactId>
-                  <version>2.1.1</version>
-                  <executions>
-                     <execution>
-                        <phase>compile</phase>
-                        <goals>
-                           <goal>exploded</goal>
-                        </goals>
-                     </execution>
-                  </executions>
-                  <configuration>
-                     <webappDirectory>${webappDirectory}</webappDirectory>
-                  </configuration>
-               </plugin>
-               <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-compiler-plugin</artifactId>
-                  <version>2.3.2</version>
-                  <configuration>
-                     <source>1.6</source>
-                     <target>1.6</target>
-                  </configuration>
-               </plugin>
-            </plugins>
-         </build>
-      </profile>
-   </profiles>
+                  <!-- GWT Maven Plugin -->
+                  <plugin>
+                     <groupId>org.codehaus.mojo</groupId>
+                     <artifactId>gwt-maven-plugin</artifactId>
+                     <version>2.4.0</version>
+                     <executions>
+                        <execution>
+                           <goals>
+                              <goal>compile</goal>
+                              <goal>test</goal>
+                              <!-- goal>i18n</goal -->
+                              <goal>generateAsync</goal>
+                           </goals>
+                        </execution>
+                     </executions>
+                     <!-- Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org -->
+                     <configuration>
+                        <runTarget>JavaDebugExtension.html</runTarget>
+                        <hostedWebapp>${webappDirectory}</hostedWebapp>
+                        <i18nMessagesBundle>org.exoplatform.ide.extension.java.jdi.client.DebugLocalizationConstant</i18nMessagesBundle>
+                     </configuration>
+                  </plugin>
 
+                  <!-- Copy static web files before executing gwt:run -->
+                  <plugin>
+                     <groupId>org.apache.maven.plugins</groupId>
+                     <artifactId>maven-war-plugin</artifactId>
+                     <version>2.1.1</version>
+                     <executions>
+                        <execution>
+                           <phase>compile</phase>
+                           <goals>
+                              <goal>exploded</goal>
+                           </goals>
+                        </execution>
+                     </executions>
+                     <configuration>
+                        <webappDirectory>${webappDirectory}</webappDirectory>
+                     </configuration>
+                  </plugin>
+                  <plugin>
+                     <groupId>org.apache.maven.plugins</groupId>
+                     <artifactId>maven-compiler-plugin</artifactId>
+                     <version>2.3.2</version>
+                     <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                     </configuration>
+                  </plugin>
+               </plugins>
+            </build>
+         </profile>
+      </profiles>
 </project>
