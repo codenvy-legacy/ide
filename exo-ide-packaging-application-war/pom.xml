@@ -101,6 +101,11 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-java</artifactId>
       </dependency>
+      
+       <dependency>
+          <groupId>org.exoplatform.ide</groupId>
+          <artifactId>exo-ide-extension-java-debug</artifactId>
+       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
