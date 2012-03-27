@@ -217,7 +217,9 @@ public class Menu extends AbstractTestModule
          {
             try
             {
-               return driver.findElement(By.cssSelector(Locators.POPUP_SELECTOR)).isDisplayed();
+               WebElement menuPopup = driver.findElement(By.cssSelector(Locators.POPUP_SELECTOR));
+               
+               return ! menuPopup.isDisplayed();
             }
             catch (NoSuchElementException e)
             {
