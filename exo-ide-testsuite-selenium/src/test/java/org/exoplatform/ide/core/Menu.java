@@ -48,7 +48,7 @@ public class Menu extends AbstractTestModule
 
       String MENU_ITEM_LOCATOR = "//td[contains(@class,'exo-popupMenuTitleField')]//nobr[text()='%s']";
 
-      String POPUP_SELECTOR = "table.exo-popupMenuTable";
+      String POPUP_SELECTOR = "div.exo-popupMenuMain";
 
       String MENU_ITEM_ROW_LOCATOR = "//table[@class='exo-popupMenuTable']//tr[contains(., '%s')]";
 
@@ -193,7 +193,8 @@ public class Menu extends AbstractTestModule
          {
             try
             {
-               return driver.findElement(By.cssSelector(Locators.POPUP_SELECTOR)) != null;
+               return driver.findElement(By.cssSelector(Locators.POPUP_SELECTOR)) != null
+                     && driver.findElement(By.cssSelector(Locators.POPUP_SELECTOR)).isDisplayed();
             }
             catch (NoSuchElementException e)
             {
@@ -216,8 +217,7 @@ public class Menu extends AbstractTestModule
          {
             try
             {
-               driver.findElement(By.cssSelector(Locators.POPUP_SELECTOR));
-               return false;
+               return driver.findElement(By.cssSelector(Locators.POPUP_SELECTOR)).isDisplayed();
             }
             catch (NoSuchElementException e)
             {
