@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.client.output;
 
-import com.google.gwt.dom.client.Style.Unit;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -31,7 +30,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.IconButton;
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
-import org.exoplatform.gwtframework.ui.client.component.Toolbar.ToolbarItem;
+import org.exoplatform.gwtframework.ui.client.component.ToolbarItem;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;

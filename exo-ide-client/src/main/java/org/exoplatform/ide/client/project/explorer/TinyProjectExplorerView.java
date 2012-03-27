@@ -18,11 +18,8 @@
  */
 package org.exoplatform.ide.client.project.explorer;
 
-import com.google.gwt.dom.client.Style.Unit;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -32,10 +29,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IconButton;
-import org.exoplatform.gwtframework.ui.client.component.Toolbar;
-import org.exoplatform.gwtframework.ui.client.component.Toolbar.ToolbarItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
-import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.ItemTree;
@@ -81,27 +75,14 @@ public class TinyProjectExplorerView extends ViewImpl implements ProjectExplorer
    HTMLPanel projectNotOpenedPanel;
    
    @UiField
-   Toolbar toolbar;
-   
-   private IconButton linkWithEditorButton;
+   IconButton linkWithEditorButton;
 
    private static final String TITLE = "Project Explorer";
    
-   private static final String LINK_WITH_EDITOR = IDE.IDE_LOCALIZATION_CONSTANT.projectExplorerLinkWithEditor();
-
    public TinyProjectExplorerView()
    {
       super(ID, "navigation", TITLE, new Image(IDEImageBundle.INSTANCE.projectExplorer()), WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
-      
-      Image linkWithEditorNormal = new Image(IDEImageBundle.INSTANCE.linkWithEditor());
-      Image linkWithEditorDisabled = new Image(IDEImageBundle.INSTANCE.linkWithEditorDisabled());
-      
-      linkWithEditorButton = new IconButton(linkWithEditorNormal, linkWithEditorDisabled);
-      linkWithEditorButton.setTitle(LINK_WITH_EDITOR);
-      ToolbarItem toolbarItem = toolbar.addItem(linkWithEditorButton, true);
-      toolbarItem.getElement().getStyle().setPaddingTop(2, Unit.PX);
-      toolbarItem.getElement().getStyle().setPaddingRight(2, Unit.PX);
+      add(uiBinder.createAndBindUi(this));      
    }
 
    /**
