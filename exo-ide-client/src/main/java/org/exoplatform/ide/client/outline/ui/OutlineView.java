@@ -18,13 +18,12 @@
  */
 package org.exoplatform.ide.client.outline.ui;
 
-import com.google.gwt.user.cellview.client.TreeNode;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.cellview.client.TreeNode;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -32,7 +31,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SingleSelectionModel;
 
 import org.exoplatform.gwtframework.ui.client.CellTreeResource;
-import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -71,7 +69,7 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
 
    private OutlineTreeViewModel outlineTreeViewModel;
 
-   private EmptyTreeMessage loadingMessage = new EmptyTreeMessage(new Image(GWTLoader.LOADER_PROGRESSIMAGE),
+   private EmptyTreeMessage loadingMessage = new EmptyTreeMessage(new Image(IDEImageBundle.INSTANCE.loader()),
       "Loading...");
 
    private EmptyTreeMessage emptyTreeMessage = new EmptyTreeMessage(null, "");
@@ -130,7 +128,8 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
 
       // Get the list of node's parents (need to open), sorted from the farthest parent.
       List<TokenBeenImpl> parents = new ArrayList<TokenBeenImpl>();
-      while (parent.getParentToken() != null && parent.getParentToken().getName() != null && parent.getParentToken().getType() != null)
+      while (parent.getParentToken() != null && parent.getParentToken().getName() != null
+         && parent.getParentToken().getType() != null)
       {
          parent = parent.getParentToken();
          parents.add(0, parent);
@@ -149,10 +148,9 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
             if (treeNode.getChildValue(i) instanceof TokenBeenImpl
                && ((TokenBeenImpl)treeNode.getChildValue(i)).equals(p))
             {
-               // Temporary solution to check null state tree node after open operation, we can access child TreeNode only as the
-               // result of the open operation:
+               // Temporary solution to check null state tree node after open operation, we can access child TreeNode only as
+               // the result of the open operation:
                TreeNode tmp = treeNode.setChildOpen(i, true);
-
                if (tmp == null)
                {
                   // Close node and try to open again:
@@ -216,6 +214,7 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
             }
          }
       }
+
    }
 
    /**

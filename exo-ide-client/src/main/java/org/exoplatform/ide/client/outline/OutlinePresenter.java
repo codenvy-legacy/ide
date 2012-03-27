@@ -20,6 +20,8 @@ package org.exoplatform.ide.client.outline;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -47,6 +49,7 @@ import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
+import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
@@ -136,7 +139,23 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       {
          if (tokens != null && !tokens.isEmpty())
          {
-            selectToken(currentRow);
+            selectTokenByRow(tokens);
+         }
+      }
+   };
+
+   private Timer refreshOutlineTimer = new Timer()
+   {
+      @Override
+      public void run()
+      {
+         try
+         {
+            refreshOutlineTree();
+         }
+         catch (Throwable e)
+         {
+            Dialogs.getInstance().showError(e.getMessage());
          }
       }
    };
@@ -302,22 +321,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       return activeEditor.isCapable(EditorCapability.CAN_BE_OUTLINED);
    }
 
-   private Timer refreshOutlineTimer = new Timer()
-   {
-      @Override
-      public void run()
-      {
-         try
-         {
-            refreshOutlineTree();
-         }
-         catch (Throwable e)
-         {
-            Dialogs.getInstance().showError(e.getMessage());
-         }
-      }
-   };
-
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
@@ -361,9 +364,8 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       }
    }
 
-   private void selectToken(int lineNumber)
+   private void selectToken(TokenBeenImpl token)
    {
-      TokenBeenImpl token = getNodeByLineNumber(lineNumber, tokens);
       if (token != null)
       {
          processSelection = false;
@@ -439,9 +441,23 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
       tokens = (List<TokenBeenImpl>)event.getTokenList();
       display.setValue(tokens);
+
+      // TODO Solution for updating tree (flush, refresh doesn't help):
+      if (tokens != null && !tokens.isEmpty())
+      {
+         selectToken(tokens.get(0));
+      }
+
       if (activeEditor != null)
       {
-         selectToken(activeEditor.getCursorRow());
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               selectTokenByRow(tokens);
+            }
+         });
       }
    }
 
@@ -456,4 +472,83 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          isOutlineViewOpened = true;
       }
    }
+
+   private boolean selectTokenByRow(List<TokenBeenImpl> tokens)
+   {
+      if (tokens == null || tokens.isEmpty())
+      {
+         return false;
+      }
+
+      for (int i = 0; i < tokens.size(); i++)
+      {
+         TokenBeenImpl token = tokens.get(i);
+         if (currentRow < token.getLineNumber() || !shouldBeDisplayed(token))
+         {
+            continue;
+         }
+
+         TokenBeenImpl next = null;
+         if ((i + 1) != tokens.size())
+         {
+            next = tokens.get(i + 1);
+         }
+
+         if (isCurrentToken(currentRow, token, next))
+         {
+            if (selectTokenByRow(token.getSubTokenList()))
+            {
+               return true;
+            }
+            else
+            {
+               selectToken(token);
+               return true;
+            }
+         }
+      }
+
+      return false;
+   }
+
+   /**
+    * Test if current line within the token's area (currentLineNumber >= token.lineNumber) and (currentLineNumber <=
+    * token.lastLineNumber) or current line is before nextToken or current line is after last token
+    * 
+    * @param currentLineNumber
+    * @param token
+    * @return
+    */
+   private boolean isCurrentToken(int currentLineNumber, TokenBeenImpl token, TokenBeenImpl nextToken)
+   {
+      if (currentLineNumber == token.getLineNumber())
+      {
+         return true;
+      }
+
+      if (token.getLastLineNumber() != 0)
+      {
+         return currentLineNumber >= token.getLineNumber() && currentLineNumber <= token.getLastLineNumber();
+      }
+
+      // test if currentLineNumber before nextToken
+      if (nextToken != null)
+      {
+         return currentLineNumber < nextToken.getLineNumber();
+      }
+
+      return currentLineNumber >= token.getLineNumber();
+   }
+
+   /**
+    * Test should token be displayed in outline tree.
+    * 
+    * @param token
+    * @return true only if token should be displayed in outline tree
+    */
+   private boolean shouldBeDisplayed(TokenBeenImpl token)
+   {
+      return !(token.getType().equals(TokenType.IMPORT));
+   }
+
 }

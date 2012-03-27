@@ -404,7 +404,10 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/outline/outline_Disabled.png")
    ImageResource outlineDisabled();
-
+   
+   @Source("bundled-images/loader.gif")
+   ImageResource loader();
+   
    /*
     * OUTPUT
     */
