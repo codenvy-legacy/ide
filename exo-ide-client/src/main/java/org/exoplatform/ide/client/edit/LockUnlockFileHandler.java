@@ -19,9 +19,11 @@
 package org.exoplatform.ide.client.edit;
 
 import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.edit.event.LockFileEvent;
@@ -37,7 +39,6 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemLockedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
-import org.exoplatform.ide.vfs.client.marshal.LockUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.shared.LockToken;
@@ -131,24 +132,25 @@ public class LockUnlockFileHandler implements LockFileHandler, EditorActiveFileC
       {
          try
          {
-            VirtualFileSystem.getInstance().lock(activeFile,
-               new AsyncRequestCallback<LockToken>(new LockUnmarshaller(new LockToken()))
+            AutoBean<LockToken> autoBean = IDE.AUTO_BEAN_FACTORY.lockToken();
+            AutoBeanUnmarshaller<LockToken> unmarshaller = new AutoBeanUnmarshaller<LockToken>(autoBean);
+            VirtualFileSystem.getInstance().lock(activeFile, new AsyncRequestCallback<LockToken>(unmarshaller)
+            {
+
+               @Override
+               protected void onSuccess(LockToken result)
                {
+                  IDE.fireEvent(new ItemLockedEvent(activeFile, result));
+                  updateLockFileState(activeFile);
+               }
 
-                  @Override
-                  protected void onSuccess(LockToken result)
-                  {
-                     IDE.fireEvent(new ItemLockedEvent(activeFile, result));
-                     updateLockFileState(activeFile);
-                  }
-
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     Dialogs.getInstance().showError(
-                        IDE.IDE_LOCALIZATION_MESSAGES.lockUnlockFileCantLockFile(activeFile.getName()));
-                  }
-               });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  Dialogs.getInstance().showError(
+                     IDE.IDE_LOCALIZATION_MESSAGES.lockUnlockFileCantLockFile(activeFile.getName()));
+               }
+            });
          }
          catch (RequestException e)
          {

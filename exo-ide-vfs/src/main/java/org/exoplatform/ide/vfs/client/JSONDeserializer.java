@@ -28,8 +28,9 @@ import com.google.gwt.json.client.JSONValue;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.BooleanProperty;
 import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.LockToken;
+import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.shared.LockTokenBean;
 import org.exoplatform.ide.vfs.shared.NumberProperty;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.StringProperty;
@@ -252,7 +253,7 @@ public abstract class JSONDeserializer<O>
          JSONObject jsonObject = json.isObject();
          if (jsonObject == null)
             return null;
-         return new LockToken(STRING_DESERIALIZER.toObject(jsonObject.get("token")));
+         return new LockTokenBean(STRING_DESERIALIZER.toObject(jsonObject.get("token")));
       }
 
       // not used, just to complete impl.

@@ -45,11 +45,12 @@ import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.ExitCodes;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.exoplatform.ide.vfs.shared.LockToken;
+import org.exoplatform.ide.vfs.shared.LockTokenBean;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
@@ -721,7 +722,7 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             throw new InvalidArgumentException("Locking allowed for Files only. ");
          }
-         return new LockToken(((FileData)itemData).lock());
+         return new LockTokenBean(((FileData)itemData).lock());
       }
       finally
       {

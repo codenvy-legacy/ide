@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.vfs.client.event;
 
-import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.LockToken;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.event.shared.GwtEvent;
 

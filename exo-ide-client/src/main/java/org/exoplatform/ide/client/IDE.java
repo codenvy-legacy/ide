@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
@@ -81,6 +82,11 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    private List<Paas> paasRegistration;
 
    private IDEPresenter presenter;
+
+   /**
+    * The generator of an {@link AutoBean}.
+    */
+   public static final IDEAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(IDEAutoBeanFactory.class);
 
    /**
     * Initialize constants for UI
@@ -168,7 +174,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new DocumentationPresenter();
 
       new PreferencesModule();
-      
+
       // initialize extensions
       for (Extension ext : extensions())
       {

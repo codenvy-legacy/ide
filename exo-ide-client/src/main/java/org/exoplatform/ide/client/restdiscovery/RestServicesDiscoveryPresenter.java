@@ -34,7 +34,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -49,13 +48,13 @@ import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.gwtframework.commons.wadl.WadlProcessor;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.discovery.IRestService;
 import org.exoplatform.ide.client.framework.discovery.RestDiscoveryService;
 import org.exoplatform.ide.client.framework.discovery.RestService;
 import org.exoplatform.ide.client.framework.discovery.RestServicesList;
-import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -116,24 +115,6 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
    private String restContext;
 
    private Map<String, IRestService> services = new TreeMap<String, IRestService>();
-
-   /**
-    * The interface for the {@link AutoBean} generator.
-    */
-   public static interface DiscoveryAutoBeanFactory extends AutoBeanFactory
-   {
-      /**
-       * A factory method for a REST-services list bean.
-       * 
-       * @return an {@link AutoBean} of type {@link RestServicesList}
-       */
-      AutoBean<RestServicesList> restServicesList();
-   }
-
-   /**
-    * The generator for an {@link AutoBean}
-    */
-   private static DiscoveryAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(DiscoveryAutoBeanFactory.class);
 
    public RestServicesDiscoveryPresenter()
    {
@@ -415,7 +396,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
    {
       try
       {
-         AutoBean<RestServicesList> autoBean = AUTO_BEAN_FACTORY.restServicesList();
+         AutoBean<RestServicesList> autoBean = IDE.AUTO_BEAN_FACTORY.restServicesList();
          AutoBeanUnmarshaller<RestServicesList> unmarshaller = new AutoBeanUnmarshaller<RestServicesList>(autoBean);
          RestDiscoveryService.getInstance().getRestServices(new AsyncRequestCallback<RestServicesList>(unmarshaller)
          {
