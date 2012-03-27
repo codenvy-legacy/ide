@@ -26,6 +26,7 @@ import org.exoplatform.gwtframework.commons.wadl.Request;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.ui.client.component.Tree;
 import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.discovery.IRestService;
 import org.exoplatform.ide.client.framework.discovery.RestService;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.restdiscovery.UntypedTreeGrid;
@@ -200,7 +201,7 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
                   m.getRequest().getParam().addAll(res.getParam());
                m.setHref(((Resource)re).getPath());
             }
-            else if (re instanceof RestService)
+            else if (re instanceof IRestService)
             {
                m.setHref(((RestService)re).getFullPath());
             }
@@ -248,7 +249,7 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
    {
 
       Object o = parent.getUserObject();
-      if (o != null && o instanceof RestService)
+      if (o != null && o instanceof IRestService)
       {
          if (((RestService)o).getFullPath().equals(name))
          {
@@ -260,7 +261,7 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
          TreeItem child = parent.getChild(i);
          if (child.getUserObject() == null)
             continue;
-         if (!(child.getUserObject() instanceof RestService))
+         if (!(child.getUserObject() instanceof IRestService))
             continue;
          if (((RestService)child.getUserObject()).getFullPath().equals(name))
          {

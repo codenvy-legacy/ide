@@ -26,8 +26,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 
-import java.util.List;
-
 /**
  * Discovery service for REST services.
  * 
@@ -66,7 +64,7 @@ public class RestDiscoveryService
     * @param callback callback
     * @throws RequestException
     */
-   public void getRestServices(AsyncRequestCallback<List<RestService>> callback) throws RequestException
+   public void getRestServices(AsyncRequestCallback<RestServicesList> callback) throws RequestException
    {
       String url = restServiceContext;
       if (!url.endsWith("/"))

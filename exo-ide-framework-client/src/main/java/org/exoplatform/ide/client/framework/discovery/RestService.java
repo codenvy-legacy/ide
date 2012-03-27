@@ -29,7 +29,7 @@ import java.util.Map;
  * @version $Id: Dec 21, 2010 5:15:05 PM evgen $
  * 
  */
-public class RestService
+public class RestService implements IRestService
 {
    private String fqn;
 
@@ -60,48 +60,54 @@ public class RestService
    }
 
    /**
-    * @return the fqn
+    * @see org.exoplatform.ide.client.framework.discovery.IRestService#getFqn()
     */
+   @Override
    public String getFqn()
    {
       return fqn;
    }
 
    /**
-    * @param fqn the fqn to set
+    * @see org.exoplatform.ide.client.framework.discovery.IRestService#setFqn(java.lang.String)
     */
+   @Override
    public void setFqn(String fqn)
    {
       this.fqn = fqn;
    }
 
    /**
-    * @return the path
+    * @see org.exoplatform.ide.client.framework.discovery.IRestService#getPath()
     */
+   @Override
    public String getPath()
    {
       return path;
    }
 
    /**
-    * @param path the path to set
+    * @see org.exoplatform.ide.client.framework.discovery.IRestService#setPath(java.lang.String)
     */
+   @Override
    public void setPath(String path)
    {
       this.path = path;
    }
 
    /**
-    * @return the regex
+    * @see org.exoplatform.ide.client.framework.discovery.IRestService#getRegex()
     */
+   @Override
    public String getRegex()
    {
       return regex;
    }
 
    /**
-    * @param regex the regex to set
+    * @see org.exoplatform.ide.client.framework.discovery.IRestService#setRegex(java.lang.String)
     */
+   @Override
    public void setRegex(String regex)
    {
       this.regex = regex;
