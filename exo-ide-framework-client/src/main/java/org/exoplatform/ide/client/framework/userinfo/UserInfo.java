@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,87 +18,62 @@
  */
 package org.exoplatform.ide.client.framework.userinfo;
 
-import java.util.ArrayList;
+import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
+
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
+ * Interface describe information about user.
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: UserInfo.java Mar 28, 2012 14:55:45 PM azatsarynnyy $
+ *
  */
-
-public class UserInfo
+public interface UserInfo
 {
 
-   public static final String DEFAULT_USER_NAME = "DefaultUser";
-
-   private String name;
-
-   private List<String> groups;
-
-   private List<String> roles;
-
-   public UserInfo()
-   {
-   }
-
-   public UserInfo(String name)
-   {
-      this.name = name;
-   }
-
-   public UserInfo(String name, List<String> groups, List<String> roles)
-   {
-      this.name = name;
-      this.groups = groups;
-      this.roles = roles;
-   }
-
-   public String getName()
-   {
-      return name;
-   }
-
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+   /**
+    * Returns the user's name.
+    * 
+    * @return user's name
+    */
+   @PropertyName(value = "userId")
+   public String getName();
 
    /**
-    * @return the groups
+    * Change the user's name.
+    * 
+    * @param name user's name
     */
-   public List<String> getGroups()
-   {
-      if (groups == null)
-         groups = new ArrayList<String>();
-      return groups;
-   }
+   @PropertyName(value = "userId")
+   public void setName(String name);
 
    /**
-    * @param groups the groups to set
+    * Returns the list of the user's groups.
+    * 
+    * @return the user's groups
     */
-   public void setGroups(List<String> groups)
-   {
-      this.groups = groups;
-   }
+   public List<String> getGroups();
 
    /**
-    * @return the roles
+    * Sets the list of the user's groups.
+    * 
+    * @param groups the user's groups
     */
-   public List<String> getRoles()
-   {
-      if (roles == null)
-         roles = new ArrayList<String>();
-      return roles;
-   }
+   public void setGroups(List<String> groups);
 
    /**
-    * @param roles the roles to set
+    * Returns the list of the user's roles.
+    * 
+    * @return the user's roles
     */
-   public void setRoles(List<String> roles)
-   {
-      this.roles = roles;
-   }
+   public List<String> getRoles();
+
+   /**
+    * Sets the list of the user's roles.
+    * 
+    * @param roles the user's roles
+    */
+   public void setRoles(List<String> roles);
 
 }

@@ -23,6 +23,8 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window.Location;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
@@ -129,9 +131,9 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializ
 
             if (object.containsKey(USER))
             {
-               UserInfo userInfo = new UserInfo();
-               initializationConfiguration.setUserInfo(userInfo);
-               new UserInfoUnmarshaller(userInfo).parseUserInfo(object.get(USER).isObject());
+               String payload = object.get(USER).isObject().toString();
+               AutoBean<UserInfo> autoBean = AutoBeanCodex.decode(IDE.AUTO_BEAN_FACTORY, UserInfo.class, payload);
+               initializationConfiguration.setUserInfo(autoBean.as());
             }
 
          }
