@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.shell.client.model;
 
+import org.exoplatform.ide.shell.shared.UserInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +30,7 @@ import java.util.List;
  * @version $
  */
 
-public class UserInfo
+public class UserInfoBean implements UserInfo
 {
 
    public static final String DEFAULT_USER_NAME = "DefaultUser";
@@ -39,35 +41,44 @@ public class UserInfo
 
    private List<String> roles;
 
-   public UserInfo()
+   public UserInfoBean()
    {
    }
 
-   public UserInfo(String name)
+   public UserInfoBean(String name)
    {
       this.name = name;
    }
 
-   public UserInfo(String name, List<String> groups, List<String> roles)
+   public UserInfoBean(String name, List<String> groups, List<String> roles)
    {
       this.name = name;
       this.groups = groups;
       this.roles = roles;
    }
 
+   /**
+    * @see org.exoplatform.ide.shell.shared.UserInfo#getName()
+    */
+   @Override
    public String getName()
    {
       return name;
    }
 
+   /**
+    * @see org.exoplatform.ide.shell.shared.UserInfo#setName(java.lang.String)
+    */
+   @Override
    public void setName(String name)
    {
       this.name = name;
    }
 
    /**
-    * @return the groups
+    * @see org.exoplatform.ide.shell.shared.UserInfo#getGroups()
     */
+   @Override
    public List<String> getGroups()
    {
       if (groups == null)
@@ -76,16 +87,18 @@ public class UserInfo
    }
 
    /**
-    * @param groups the groups to set
+    * @see org.exoplatform.ide.shell.shared.UserInfo#setGroups(java.util.List)
     */
+   @Override
    public void setGroups(List<String> groups)
    {
       this.groups = groups;
    }
 
    /**
-    * @return the roles
+    * @see org.exoplatform.ide.shell.shared.UserInfo#getRoles()
     */
+   @Override
    public List<String> getRoles()
    {
       if (roles == null)
@@ -94,8 +107,9 @@ public class UserInfo
    }
 
    /**
-    * @param roles the roles to set
+    * @see org.exoplatform.ide.shell.shared.UserInfo#setRoles(java.util.List)
     */
+   @Override
    public void setRoles(List<String> roles)
    {
       this.roles = roles;

@@ -18,12 +18,15 @@
  */
 package org.exoplatform.ide.shell.client.model;
 
+import org.exoplatform.ide.shell.shared.ShellConfiguration;
+import org.exoplatform.ide.shell.shared.UserInfo;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Aug 12, 2011 evgen $
  * 
  */
-public class ShellConfiguration
+public class ShellConfigurationBean implements ShellConfiguration
 {
    private UserInfo userInfo;
 
@@ -32,7 +35,7 @@ public class ShellConfiguration
    /**
     * 
     */
-   public ShellConfiguration()
+   public ShellConfigurationBean()
    {
    }
 
@@ -40,7 +43,7 @@ public class ShellConfiguration
     * @param userInfo
     * @param entryPoint
     */
-   public ShellConfiguration(UserInfo userInfo, String entryPoint)
+   public ShellConfigurationBean(UserInfo userInfo, String entryPoint)
    {
       super();
       this.userInfo = userInfo;
@@ -48,32 +51,36 @@ public class ShellConfiguration
    }
 
    /**
-    * @return the userInfo
+    * @see org.exoplatform.ide.shell.shared.ShellConfiguration#getUserInfo()
     */
+   @Override
    public UserInfo getUserInfo()
    {
       return userInfo;
    }
 
    /**
-    * @param userInfo the userInfo to set
+    * @see org.exoplatform.ide.shell.shared.ShellConfiguration#setUserInfo(org.exoplatform.ide.shell.shared.UserInfo)
     */
+   @Override
    public void setUserInfo(UserInfo userInfo)
    {
       this.userInfo = userInfo;
    }
 
    /**
-    * @return the entryPoint
+    * @see org.exoplatform.ide.shell.shared.ShellConfiguration#getEntryPoint()
     */
+   @Override
    public String getEntryPoint()
    {
       return entryPoint;
    }
 
    /**
-    * @param entryPoint the entryPoint to set
+    * @see org.exoplatform.ide.shell.shared.ShellConfiguration#setEntryPoint(java.lang.String)
     */
+   @Override
    public void setEntryPoint(String entryPoint)
    {
       this.entryPoint = entryPoint;

@@ -24,6 +24,8 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -34,12 +36,12 @@ import org.exoplatform.ide.shell.client.cli.CommandLine;
 import org.exoplatform.ide.shell.client.cli.GnuParser;
 import org.exoplatform.ide.shell.client.cli.Parser;
 import org.exoplatform.ide.shell.client.cli.Util;
-import org.exoplatform.ide.shell.client.marshal.LoginMarshaller;
 import org.exoplatform.ide.shell.client.model.ClientCommand;
-import org.exoplatform.ide.shell.client.model.ShellConfiguration;
 import org.exoplatform.ide.shell.shared.CLIResource;
 import org.exoplatform.ide.shell.shared.CLIResourceParameter;
 import org.exoplatform.ide.shell.shared.CLIResourceParameter.Type;
+import org.exoplatform.ide.shell.shared.Login;
+import org.exoplatform.ide.shell.shared.ShellConfiguration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -214,9 +216,12 @@ public class ShellService
    public void login(String command, AsyncRequestCallback<StringBuilder> callback) throws RequestException
    {
       String url = REST_CONTEXT + "/ide/crash/command";
-      LoginMarshaller marshaller = new LoginMarshaller(command);
 
-      AsyncRequest.build(RequestBuilder.POST, url).data(marshaller.marshal())
+      Login loginBean = ShellAutoBeanFactory.AUTO_BEAN_FACTORY.login().as();
+      loginBean.setCmd(command);
+      String payload = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(loginBean)).getPayload();
+
+      AsyncRequest.build(RequestBuilder.POST, url).data(payload)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
 
    }

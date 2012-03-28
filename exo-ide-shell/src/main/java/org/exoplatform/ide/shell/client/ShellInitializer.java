@@ -21,8 +21,10 @@ package org.exoplatform.ide.shell.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window.Location;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.shell.client.ShellPresenter.Display;
 import org.exoplatform.ide.shell.client.commands.CatCommand;
 import org.exoplatform.ide.shell.client.commands.CdCommand;
@@ -34,10 +36,9 @@ import org.exoplatform.ide.shell.client.commands.LsCommand;
 import org.exoplatform.ide.shell.client.commands.MkdirCommand;
 import org.exoplatform.ide.shell.client.commands.PwdCommand;
 import org.exoplatform.ide.shell.client.commands.RmCommand;
-import org.exoplatform.ide.shell.client.marshal.ShellConfigurationUnmarshaller;
-import org.exoplatform.ide.shell.client.model.ShellConfiguration;
 import org.exoplatform.ide.shell.shared.CLIResource;
 import org.exoplatform.ide.shell.shared.CLIResourceParameter;
+import org.exoplatform.ide.shell.shared.ShellConfiguration;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.VFSInfoUnmarshaller;
@@ -64,8 +65,10 @@ public class ShellInitializer
    {
       try
       {
+         AutoBean<ShellConfiguration> autoBean = ShellAutoBeanFactory.AUTO_BEAN_FACTORY.shellConfiguration();
+         AutoBeanUnmarshaller<ShellConfiguration> unmarshaller = new AutoBeanUnmarshaller<ShellConfiguration>(autoBean);
          ShellService.getService().loadConfiguration(getConfigurationURL(),
-            new AsyncRequestCallback<ShellConfiguration>(new ShellConfigurationUnmarshaller(new ShellConfiguration()))
+            new AsyncRequestCallback<ShellConfiguration>(unmarshaller)
             {
 
                @Override
