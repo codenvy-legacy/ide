@@ -102,9 +102,11 @@ public class HotkeysCustomizationTest extends BaseTest
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+
       //step 1 create new hotkey for create html file (Ctrl+H) and file from template (Alt+N)
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
+
       //This action (maximize)need for select rows of customize hotkey form in FF v.4.0 and higher.
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("New HTML");
