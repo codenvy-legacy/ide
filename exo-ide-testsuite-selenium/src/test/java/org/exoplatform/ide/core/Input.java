@@ -20,6 +20,7 @@ package org.exoplatform.ide.core;
 
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -175,6 +176,7 @@ public class Input extends AbstractTestModule
          if (closeSuggestBox)
          {
             new Actions(driver()).contextClick(arrow).build().perform();
+            new Actions(driver()).sendKeys(Keys.ESCAPE.toString()).build().perform();
             waitSuggestBoxHide();
          }
       }
