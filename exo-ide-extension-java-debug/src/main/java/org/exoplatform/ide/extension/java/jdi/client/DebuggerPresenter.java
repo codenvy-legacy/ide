@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.LaunchDebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.LaunchDebuggerHandler;
 import org.exoplatform.ide.extension.java.jdi.client.ui.DebuggerView;
@@ -45,7 +46,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
@@ -79,10 +79,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
 
       void setBreakPoints(BreakPointList breakPoints);
 
-      HasValue<String> getFqn();
-
-      HasValue<String> getLine();
-
       void cleare();
 
       ListDataProvider<Variable> getDataProvider();
@@ -113,14 +109,14 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
                   @Override
                   protected void onFailure(Throwable exception)
                   {
-                     exception.printStackTrace();
+                     IDE.fireEvent(new ExceptionThrownEvent(exception));
                   }
 
                });
             }
             catch (RequestException e)
             {
-               e.printStackTrace();
+               IDE.fireEvent(new ExceptionThrownEvent(e));
             }
          }
 
@@ -149,7 +145,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
                      @Override
                      protected void onFailure(Throwable exception)
                      {
-                        Window.alert(exception.getMessage());
+                        IDE.fireEvent(new ExceptionThrownEvent(exception));
                      }
 
                   });
@@ -175,26 +171,25 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
                   @Override
                   protected void onSuccess(Object result)
                   {
+                     IDE.eventBus().fireEvent(new DebuggerDisconnectedEvent());
                      checkDebugEventsTimer.cancel();
                   }
 
                   @Override
                   protected void onFailure(Throwable exception)
                   {
-                     Window.alert(exception.getMessage());
+                     IDE.fireEvent(new ExceptionThrownEvent(exception));
                   }
                });
 
             }
             catch (RequestException e)
             {
-               e.printStackTrace();
+               IDE.fireEvent(new ExceptionThrownEvent(e));
             }
 
          }
       });
-
-      display.getFqn().getValue();
 
       display.getAddBreakPointButton().addClickHandler(new ClickHandler()
       {
@@ -207,8 +202,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
 
             AutoBean<Location> autoBeanlocation = DebuggerExtension.AUTO_BEAN_FACTORY.create(Location.class);
             final Location location = autoBeanlocation.as();
-            location.setClassName(display.getFqn().getValue());
-            location.setLineNumber(Integer.parseInt(display.getLine().getValue()));
+
+            location.setClassName("org.exoplatform.services.jcr.webdav.WebDavServiceImpl");
+            location.setLineNumber(645);
+
             breakPoint.setLocation(location);
             breakPoint.setEnabled(true);
 
@@ -226,46 +223,13 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
                   @Override
                   protected void onFailure(Throwable exception)
                   {
-                     Window.alert("fail");
-                     System.err.println(exception.getMessage());
-                     exception.printStackTrace();
+                     IDE.fireEvent(new ExceptionThrownEvent(exception));
                   }
                });
             }
             catch (RequestException e)
             {
-               e.printStackTrace();
-            }
-         }
-      });
-
-      display.getDisconnectButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            try
-            {
-               DebuggerClientService.getInstance().disconnect(id, new AsyncRequestCallback()
-               {
-
-                  @Override
-                  protected void onSuccess(Object result)
-                  {
-                     Window.alert("Disconect");
-                  }
-
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     exception.printStackTrace();
-                  }
-               });
-            }
-            catch (RequestException e)
-            {
-               e.printStackTrace();
+               IDE.fireEvent(new ExceptionThrownEvent(e));
             }
          }
       });
@@ -357,7 +321,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
          display = new DebuggerView();
          bindDisplay(display);
          IDE.getInstance().openView(display.asView());
-         
+
          DebuggerInfo debuggerInfo = event.getDebuggerInfo();
          DebuggerExtension.DEBUG_ID = event.getDebuggerInfo().getId();
          id = event.getDebuggerInfo().getId();
@@ -395,6 +359,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
                   @Override
                   protected void onFailure(Throwable exception)
                   {
+                     cancel();
                      IDE.fireEvent(new ExceptionThrownEvent(exception));
                   }
                });

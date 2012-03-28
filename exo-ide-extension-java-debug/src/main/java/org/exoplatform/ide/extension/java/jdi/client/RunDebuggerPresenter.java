@@ -98,6 +98,10 @@ public class RunDebuggerPresenter implements ViewClosedHandler
    public void bindDisplay(Display d)
    {
       display = d;
+      
+      display.getHostField().setValue("localhost");
+      display.getPortField().setValue("8000");
+      
       display.getRunButton().addClickHandler(new ClickHandler()
       {
 

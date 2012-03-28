@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.java.jdi.client.ui;
 
 import org.exoplatform.gwtframework.ui.client.CellTreeResource;
+import org.exoplatform.gwtframework.ui.client.component.IconButton;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.tablayout.TabPanel;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -64,7 +65,11 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
    }
 
    @UiField
-   TabPanel debugPanel;
+   TabPanel variabelsPanel;
+   
+   @UiField
+   TabPanel breakPointsPanel;
+
 
    @UiField
    ImageButton resumeButton;
@@ -84,11 +89,11 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
    @UiField
    ImageButton checkEventsButton;
 
-   @UiField
-   TextBox fqn;
-
-   @UiField
-   TextBox lineNumber;
+//   @UiField
+//   TextBox fqn;
+//
+//   @UiField
+//   TextBox lineNumber;
    
    CellList<BreakPoint> breakpointsContainer;
 
@@ -107,8 +112,6 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
 
       super(ID, ViewType.OPERATION, DebuggerExtension.LOCALIZATION_CONSTANT.debug());
       add(uiBinder.createAndBindUi(this));
-//      setWidth("500px");
-//      setHeight("500px");
 
       frameTreeViewModel = new FrameTreeViewModel(selectionModel);
       frameTree = new CellTree(frameTreeViewModel, null, res);
@@ -119,13 +122,11 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
       breakpointsContainer.setWidth("100%");
       breakpoints = new ArrayList<BreakPoint>();
       breakpointsContainer.setRowData(breakpoints);
-      debugPanel.addTab("tabId", null, "breakpoints", breakpointsContainer, false);
+      breakPointsPanel.addTab("tabId", null, "breakpoints", breakpointsContainer, false);
+      breakPointsPanel.setWidth("100%");
+      breakPointsPanel.setHeight("100%");
       ScrollPanel scrollPanel = new ScrollPanel(frameTree);
-      debugPanel.addTab("tabId1", null, "Frame", scrollPanel, false);
-      fqn.setValue("org.exoplatform.services.jcr.webdav.WebDavServiceImpl");
-      lineNumber.setValue(645 + "");
-      
-      
+      variabelsPanel.addTab("tabId1", null, "Frame", scrollPanel, false);
    }
 
    static class BreakpointCell extends AbstractCell<BreakPoint>
@@ -181,17 +182,17 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
       breakpointsContainer.setRowData(breakpoints);
    }
 
-   @Override
-   public HasValue<String> getFqn()
-   {
-      return fqn;
-   }
+//   @Override
+//   public HasValue<String> getFqn()
+//   {
+//      return fqn;
+//   }
 
-   @Override
-   public HasValue<String> getLine()
-   {
-      return lineNumber;
-   }
+//   @Override
+//   public HasValue<String> getLine()
+//   {
+//      return lineNumber;
+//   }
 
    @Override
    public HasClickHandlers getBreakPointsButton()
