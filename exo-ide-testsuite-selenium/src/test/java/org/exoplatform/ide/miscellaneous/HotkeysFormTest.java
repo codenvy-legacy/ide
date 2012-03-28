@@ -25,6 +25,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.miscellaneous.AbstractHotkeysTest.Commands;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,9 +57,20 @@ public class HotkeysFormTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(ENTRY_POINT_URL + PROJECT);
-         VirtualFileSystemUtils.delete(ENTRY_POINT_URL_IDE + PRODUCTION_SERVICE_PREFIX);
       }
       catch (IOException e)
+      {
+      }
+   }
+
+   @After
+   public void restoreDefault()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(ENTRY_POINT_URL_IDE + PRODUCTION_SERVICE_PREFIX);
+      }
+      catch (Exception e)
       {
       }
    }
