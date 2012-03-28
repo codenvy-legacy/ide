@@ -87,7 +87,6 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
 
       IDE.REST_SERVICE.isValuePresentInPathList("/testAnnotationInheritance");
       IDE.REST_SERVICE.isValuePresentInPathList("/testAnnotationInheritance/InnerPath/{pathParam}");
-      IDE.REST_SERVICE.isValuePresentInPathList("/testAnnotationInheritance/InnerPath/{pathParam}");
       IDE.REST_SERVICE.typeToPathField("/testAnnotationInheritance/InnerPath/test");
       assertParameters();
 
