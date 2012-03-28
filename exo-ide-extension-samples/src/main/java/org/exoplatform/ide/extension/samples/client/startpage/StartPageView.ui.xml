@@ -68,9 +68,21 @@
       }
       
       .welcomeBox {
-      padding-top: 40px;
+      	padding-top: 40px;
       }
       
+      .fbLikePanel
+      {
+			position: absolute;
+			width: 100px;
+			height: 25px;
+			background: none;
+			border: none;
+			top: 28px;
+			right: 0px;
+			overflow: hidden;
+      }
+
    </ui:style>
 
    <f:Border margin="1">
@@ -81,7 +93,10 @@
                <g:Image resource="{resource.ideLogo}" styleName="{resource.css.welcomeHeaderLogo}"></g:Image>
             </g:west>
             <g:center>
-               <g:Label text="{locale.aboutIde}" styleName="{resource.css.welcomeHeaderText}"></g:Label>
+               <g:HTMLPanel>
+               		<g:Label text="{locale.aboutIde}" styleName="{resource.css.welcomeHeaderText}"></g:Label>
+           		    <iframe class="{style.fbLikePanel}" src="/IDE/fblike.html" frameborder="0" marginheight="0px" marginwidth="0px;" style="overflow:hidden;" allowtransparency="true"></iframe>
+               </g:HTMLPanel>
             </g:center>
          </g:DockLayoutPanel>
       </f:layer>
@@ -181,7 +196,9 @@
                         </g:west>
                         <g:center>
                            <g:FlowPanel height="100%" width="100%">
-                              <g:Button ui:field="supportLink" text="{locale.supportTitle}" styleName="{style.button-link}"></g:Button>
+                              <!-- g:Button ui:field="supportLink" text="{locale.supportTitle}" styleName="{style.button-link}"></g:Button-->
+                              <g:Anchor ui:field="supportLink" text="{locale.supportTitle}" target="_blank" styleName="{style.a}"
+                                 href="http://community.exoplatform.org/portal/public/classic/forum/cloud-ide/ForumService"></g:Anchor>
                               <g:Label text="{locale.supportText}" styleName="{style.linkText} {style.welcomaLabel}"></g:Label>
                            </g:FlowPanel>
                         </g:center>

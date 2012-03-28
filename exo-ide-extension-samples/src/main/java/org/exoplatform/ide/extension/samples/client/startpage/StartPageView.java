@@ -83,7 +83,7 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    Anchor documentationLink;
 
    @UiField
-   Button supportLink;
+   Anchor supportLink;
 
    @UiField
    Anchor surveyLink;
@@ -101,7 +101,7 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
          {
             supportAndFeedback();
          }
-      });
+      });      
    }
 
    /**
@@ -141,7 +141,7 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    }
 
    private static native void supportAndFeedback() /*-{
-                                                   $wnd.showContactUsForm();
-                                                   }-*/;
+      $wnd.showContactUsForm();
+   }-*/;
 
 }
