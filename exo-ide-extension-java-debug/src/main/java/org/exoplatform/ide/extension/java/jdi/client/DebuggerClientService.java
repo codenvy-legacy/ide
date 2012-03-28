@@ -39,9 +39,10 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class DebuggerClientService
 {
 
@@ -52,6 +53,8 @@ public class DebuggerClientService
    private static final String DISCONNECT = "/disconnect";
 
    private static final String BREAKPOINT_ADD = "/breakpoints/add";
+
+   private static final String BREACPOINT_DELETE = "/breakpoints/delete/";
 
    private static final String BREAKPOINT = "/breakpoints";
 
@@ -95,6 +98,15 @@ public class DebuggerClientService
       AutoBean<BreakPoint> ab = DebuggerExtension.AUTO_BEAN_FACTORY.breakPoint(breakPoint);
       String json = AutoBeanCodex.encode(ab).getPayload();
       AsyncRequest.build(RequestBuilder.POST, BASE_URL + BREAKPOINT_ADD + "/" + id).data(json)
+         .header("Content-Type", "application/json").loader(new EmptyLoader()).send(callback);
+   }
+
+   public void deleteBreakPoint(String id, BreakPoint breakPoint, AsyncRequestCallback<BreakPoint> callback)
+      throws RequestException
+   {
+      AutoBean<BreakPoint> ab = DebuggerExtension.AUTO_BEAN_FACTORY.breakPoint(breakPoint);
+      String json = AutoBeanCodex.encode(ab).getPayload();
+      AsyncRequest.build(RequestBuilder.POST, BASE_URL + BREACPOINT_DELETE + id).data(json)
          .header("Content-Type", "application/json").loader(new EmptyLoader()).send(callback);
    }
 

@@ -23,6 +23,7 @@
    
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
    
+      <inherits name="org.exoplatform.ide.editor.Editor" />
    <inherits name="org.exoplatform.ide.editor.java.JavaEditorExtension" />
    <inherits name="org.eclipse.jdt.IdeJdt" />
 

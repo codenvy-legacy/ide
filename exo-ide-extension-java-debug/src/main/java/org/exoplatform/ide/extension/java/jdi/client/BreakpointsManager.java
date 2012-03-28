@@ -1,0 +1,256 @@
+/*
+ * Copyright (C) 2012 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.exoplatform.ide.extension.java.jdi.client;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
+
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.editor.problem.LineNumberDoubleClickEvent;
+import org.exoplatform.ide.editor.problem.LineNumberDoubleClickHandler;
+import org.exoplatform.ide.editor.problem.Markable;
+import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedHandler;
+import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
+import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
+import org.exoplatform.ide.extension.java.jdi.shared.Location;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id: 4:36:51 PM Mar 26, 2012 evgen $
+ * 
+ */
+public class BreakpointsManager implements EditorActiveFileChangedHandler, LineNumberDoubleClickHandler,
+   DebuggerConnectedHandler, DebuggerDisconnectedHandler
+{
+   /**
+    * Default Maven 'sourceDirectory' value
+    */
+   private static final String DEFAULT_SOURCE_FOLDER = "src/main/java";
+
+   private HandlerManager eventBus;
+
+   private Markable markable;
+
+   private DebuggerClientService service;
+
+   private DebuggerInfo debuggerInfo;
+
+   private final DebuggerAutoBeanFactory autoBeanFactory;
+
+   private FileModel javaFile;
+
+   private Map<String, Set<EditorBreakPoint>> breakPoints;
+
+   /**
+    * @param eventBus
+    */
+   public BreakpointsManager(HandlerManager eventBus, DebuggerClientService service,
+      DebuggerAutoBeanFactory autoBeanFactory)
+   {
+      super();
+      this.eventBus = eventBus;
+      this.service = service;
+      this.autoBeanFactory = autoBeanFactory;
+      breakPoints = new HashMap<String, Set<EditorBreakPoint>>();
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(DebuggerConnectedEvent.TYPE, this);
+      eventBus.addHandler(DebuggerDisconnectedEvent.TYPE, this);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      if (event.getFile() == null)
+         return;
+
+      if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
+      {
+         if (event.getEditor() instanceof Markable)
+         {
+            javaFile = event.getFile();
+            markable = (Markable)event.getEditor();
+            markable.addLineNumberDoubleClickHandler(this);
+         }
+      }
+   }
+
+   private void addProblem(BreakPoint breakPoint)
+   {
+      EditorBreakPoint problem = new EditorBreakPoint(breakPoint, "Breakpoint");
+      markable.markProblem(problem);
+      if (!breakPoints.containsKey(javaFile.getId()))
+         breakPoints.put(javaFile.getId(), new HashSet<EditorBreakPoint>());
+      breakPoints.get(javaFile.getId()).add(problem);
+
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.problem.LineNumberDoubleClickHandler#onLineNumberDoubleClick(org.exoplatform.ide.editor.problem.LineNumberDoubleClickEvent)
+    */
+   @Override
+   public void onLineNumberDoubleClick(final LineNumberDoubleClickEvent event)
+   {
+      if (debuggerInfo == null)
+         return;
+
+      EditorBreakPoint breakPoint = isBreakpointExist(event.getLineNumber());
+      if (breakPoint != null)
+         removeBreakpoint(breakPoint);
+      else
+         addBreakpoint(event.getLineNumber());
+      eventBus.fireEvent(new BreakPointsUpdatedEvent(breakPoints));
+   }
+
+   /**
+    * @param lineNumber
+    * @return
+    */
+   private EditorBreakPoint isBreakpointExist(int lineNumber)
+   {
+      if (!breakPoints.containsKey(javaFile.getId()))
+         return null;
+
+      for (EditorBreakPoint p : breakPoints.get(javaFile.getId()))
+      {
+         if (p.getLineNumber() == lineNumber)
+            return p;
+      }
+      return null;
+   }
+
+   private void removeBreakpoint(final EditorBreakPoint breakPoint)
+   {
+      try
+      {
+         markable.unmarkProblem(breakPoint);
+         service.deleteBreakPoint(debuggerInfo.getId(), breakPoint.getBreakPoint(), new AsyncRequestCallback<BreakPoint>()
+         {
+
+            @Override
+            protected void onSuccess(BreakPoint result)
+            {
+               breakPoints.get(javaFile.getId()).remove(breakPoint);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               eventBus.fireEvent(new OutputEvent("Can't delete breakpoint at " + breakPoint.getLineNumber(), Type.ERROR));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
+   }
+
+   /**
+    * @param event
+    */
+   private void addBreakpoint(final int lineNumber)
+   {
+      AutoBean<BreakPoint> autoBean = autoBeanFactory.create(BreakPoint.class);
+      AutoBean<Location> autoBeanlocation = autoBeanFactory.create(Location.class);
+      final BreakPoint point = autoBean.as();
+
+      final Location location = autoBeanlocation.as();
+      location.setLineNumber(lineNumber);
+      location.setClassName(getFQN());
+      point.setLocation(location);
+      point.setEnabled(true);
+      // TODO
+      try
+      {
+         service.addBreakPoint(debuggerInfo.getId(), point, new AsyncRequestCallback<BreakPoint>()
+         {
+
+            @Override
+            protected void onSuccess(BreakPoint result)
+            {
+               addProblem(point);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               eventBus.fireEvent(new OutputEvent("Can't add breakpoint at " + lineNumber, Type.WARNING));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+   }
+
+   /**
+    * @return
+    */
+   private String getFQN()
+   {
+      ProjectModel project = javaFile.getProject();
+      String sourcePath =
+         project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder") : DEFAULT_SOURCE_FOLDER;
+      String pack = javaFile.getParent().getPath().substring((project.getPath() + "/" + sourcePath + "/").length() - 1);
+      pack = pack.replaceAll("/", ".");
+      pack += "." + javaFile.getName().substring(0, javaFile.getName().lastIndexOf('.'));
+      return pack;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedHandler#onDebuggerConnected(org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent)
+    */
+   @Override
+   public void onDebuggerConnected(DebuggerConnectedEvent event)
+   {
+      debuggerInfo = event.getDebuggerInfo();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedHandler#onDebuggerDisconnected(org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedEvent)
+    */
+   @Override
+   public void onDebuggerDisconnected(DebuggerDisconnectedEvent event)
+   {
+      debuggerInfo = null;
+   }
+
+}

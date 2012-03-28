@@ -31,6 +31,7 @@ public class DebuggerExtension extends Extension
 
       IDE.addHandler(LaunchDebuggerEvent.TYPE, debuggerPresenter);
       IDE.addHandler(DebuggerConnectedEvent.TYPE, debuggerPresenter);
+      new BreakpointsManager(IDE.eventBus(), DebuggerClientService.getInstance(), AUTO_BEAN_FACTORY);
    }
 
 }
