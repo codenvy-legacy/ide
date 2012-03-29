@@ -77,7 +77,7 @@ public class ProgressView extends ViewImpl implements Display
 
    private boolean odd;
 
-   private Map<String, Widget> jobs = new HashMap<String, Widget>();;
+   private Map<String, Widget> jobs = new HashMap<String, Widget>();
 
    public ProgressView()
    {

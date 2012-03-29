@@ -121,6 +121,7 @@ public class ProgressPresenter extends JobManager implements JobChangeHandler, S
    {
       Job job = event.getJob();
       control.setEnabled(true);
+      jobs.put(job.getId(), job);
 
       if (job.getStatus() == JobStatus.STARTED && showJobSeparated)
       {
@@ -136,7 +137,6 @@ public class ProgressPresenter extends JobManager implements JobChangeHandler, S
          return;
       }
 
-      jobs.put(job.getId(), job);      
       if (job.getStatus() == JobStatus.FINISHED)
       {
          control.hide();
