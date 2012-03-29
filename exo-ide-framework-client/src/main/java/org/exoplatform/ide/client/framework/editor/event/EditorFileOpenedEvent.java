@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.framework.editor.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.Map;
@@ -38,14 +39,14 @@ public class EditorFileOpenedEvent extends GwtEvent<EditorFileOpenedHandler>
 
    private FileModel file;
 
-   private String editorDescription;
+   private Editor editor;
 
    private Map<String, FileModel> openedFiles;
 
-   public EditorFileOpenedEvent(FileModel file, String editorDescription, Map<String, FileModel> openedFiles)
+   public EditorFileOpenedEvent(FileModel file, Editor editor, Map<String, FileModel> openedFiles)
    {
       this.file = file;
-      this.editorDescription = editorDescription;
+      this.editor = editor;
       this.openedFiles = openedFiles;
    }
 
@@ -59,9 +60,9 @@ public class EditorFileOpenedEvent extends GwtEvent<EditorFileOpenedHandler>
       return openedFiles;
    }
 
-   public String getEditorDescription()
+   public Editor getEditor()
    {
-      return editorDescription;
+      return editor;
    }
 
    @Override

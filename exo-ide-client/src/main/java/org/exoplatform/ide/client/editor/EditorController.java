@@ -456,7 +456,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
 
       activeFile = file;
 
-      IDE.fireEvent(new EditorFileOpenedEvent(file, event.getEditorProducer().getDescription(), openedFiles));
+      IDE.fireEvent(new EditorFileOpenedEvent(file, editorView.getEditor(), openedFiles));
    }
 
    /**
