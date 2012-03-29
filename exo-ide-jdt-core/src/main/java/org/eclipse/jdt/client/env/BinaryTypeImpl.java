@@ -149,9 +149,6 @@ public class BinaryTypeImpl implements IBinaryType
    @Override
    public IBinaryMethod[] getMethods()
    {
-      if (jsObj.get("type").isString().stringValue().equals("ANNOTATION"))
-         return null;
-
       JSONArray array = jsObj.get("methods").isArray();
       if (array.size() == 0)
          return null;

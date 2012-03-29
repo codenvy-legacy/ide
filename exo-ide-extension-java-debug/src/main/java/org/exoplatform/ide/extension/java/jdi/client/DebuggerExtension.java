@@ -1,11 +1,14 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
+import com.google.gwt.core.client.GWT;
+
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.LaunchDebuggerEvent;
-
-import com.google.gwt.core.client.GWT;
+import org.exoplatform.ide.extension.java.jdi.client.fqn.FqnResolverFactory;
+import org.exoplatform.ide.extension.java.jdi.client.fqn.JavaFqnResolver;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -31,7 +34,10 @@ public class DebuggerExtension extends Extension
 
       IDE.addHandler(LaunchDebuggerEvent.TYPE, debuggerPresenter);
       IDE.addHandler(DebuggerConnectedEvent.TYPE, debuggerPresenter);
-      new BreakpointsManager(IDE.eventBus(), DebuggerClientService.getInstance(), AUTO_BEAN_FACTORY);
+      FqnResolverFactory resolverFactory = new FqnResolverFactory();
+      resolverFactory.addResolver(MimeType.APPLICATION_JAVA, new JavaFqnResolver());
+      
+      new BreakpointsManager(IDE.eventBus(), DebuggerClientService.getInstance(), AUTO_BEAN_FACTORY, resolverFactory);
    }
 
 }

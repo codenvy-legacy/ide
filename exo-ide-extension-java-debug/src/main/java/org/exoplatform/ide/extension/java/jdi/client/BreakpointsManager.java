@@ -18,12 +18,13 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
+import com.google.gwt.event.shared.HandlerRegistration;
+
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestException;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -36,11 +37,11 @@ import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEve
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.fqn.FqnResolverFactory;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Location;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -55,10 +56,6 @@ import java.util.Set;
 public class BreakpointsManager implements EditorActiveFileChangedHandler, LineNumberDoubleClickHandler,
    DebuggerConnectedHandler, DebuggerDisconnectedHandler
 {
-   /**
-    * Default Maven 'sourceDirectory' value
-    */
-   private static final String DEFAULT_SOURCE_FOLDER = "src/main/java";
 
    private HandlerManager eventBus;
 
@@ -70,20 +67,25 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
 
    private final DebuggerAutoBeanFactory autoBeanFactory;
 
-   private FileModel javaFile;
+   private FileModel file;
 
    private Map<String, Set<EditorBreakPoint>> breakPoints;
+
+   private final FqnResolverFactory resolverFactory;
+
+   private HandlerRegistration handlerRegistration;
 
    /**
     * @param eventBus
     */
    public BreakpointsManager(HandlerManager eventBus, DebuggerClientService service,
-      DebuggerAutoBeanFactory autoBeanFactory)
+      DebuggerAutoBeanFactory autoBeanFactory, FqnResolverFactory resolverFactory)
    {
       super();
       this.eventBus = eventBus;
       this.service = service;
       this.autoBeanFactory = autoBeanFactory;
+      this.resolverFactory = resolverFactory;
       breakPoints = new HashMap<String, Set<EditorBreakPoint>>();
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(DebuggerConnectedEvent.TYPE, this);
@@ -99,13 +101,15 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
       if (event.getFile() == null)
          return;
 
-      if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
+      if (resolverFactory.isResolverExist(event.getFile().getMimeType()))
       {
          if (event.getEditor() instanceof Markable)
          {
-            javaFile = event.getFile();
+            file = event.getFile();
             markable = (Markable)event.getEditor();
-            markable.addLineNumberDoubleClickHandler(this);
+            if (handlerRegistration != null)
+               handlerRegistration.removeHandler();
+            handlerRegistration = markable.addLineNumberDoubleClickHandler(this);
          }
       }
    }
@@ -114,9 +118,9 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
    {
       EditorBreakPoint problem = new EditorBreakPoint(breakPoint, "Breakpoint");
       markable.markProblem(problem);
-      if (!breakPoints.containsKey(javaFile.getId()))
-         breakPoints.put(javaFile.getId(), new HashSet<EditorBreakPoint>());
-      breakPoints.get(javaFile.getId()).add(problem);
+      if (!breakPoints.containsKey(file.getId()))
+         breakPoints.put(file.getId(), new HashSet<EditorBreakPoint>());
+      breakPoints.get(file.getId()).add(problem);
 
    }
 
@@ -143,10 +147,10 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
     */
    private EditorBreakPoint isBreakpointExist(int lineNumber)
    {
-      if (!breakPoints.containsKey(javaFile.getId()))
+      if (!breakPoints.containsKey(file.getId()))
          return null;
 
-      for (EditorBreakPoint p : breakPoints.get(javaFile.getId()))
+      for (EditorBreakPoint p : breakPoints.get(file.getId()))
       {
          if (p.getLineNumber() == lineNumber)
             return p;
@@ -159,21 +163,23 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
       try
       {
          markable.unmarkProblem(breakPoint);
-         service.deleteBreakPoint(debuggerInfo.getId(), breakPoint.getBreakPoint(), new AsyncRequestCallback<BreakPoint>()
-         {
-
-            @Override
-            protected void onSuccess(BreakPoint result)
+         service.deleteBreakPoint(debuggerInfo.getId(), breakPoint.getBreakPoint(),
+            new AsyncRequestCallback<BreakPoint>()
             {
-               breakPoints.get(javaFile.getId()).remove(breakPoint);
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               eventBus.fireEvent(new OutputEvent("Can't delete breakpoint at " + breakPoint.getLineNumber(), Type.ERROR));
-            }
-         });
+               @Override
+               protected void onSuccess(BreakPoint result)
+               {
+                  breakPoints.get(file.getId()).remove(breakPoint);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  eventBus.fireEvent(new OutputEvent("Can't delete breakpoint at " + breakPoint.getLineNumber(),
+                     Type.ERROR));
+               }
+            });
       }
       catch (RequestException e)
       {
@@ -192,10 +198,9 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
 
       final Location location = autoBeanlocation.as();
       location.setLineNumber(lineNumber);
-      location.setClassName(getFQN());
+      location.setClassName(resolverFactory.getResolver(file.getMimeType()).resolveFqn(file));
       point.setLocation(location);
       point.setEnabled(true);
-      // TODO
       try
       {
          service.addBreakPoint(debuggerInfo.getId(), point, new AsyncRequestCallback<BreakPoint>()
@@ -219,20 +224,6 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
          // TODO Auto-generated catch block
          e.printStackTrace();
       }
-   }
-
-   /**
-    * @return
-    */
-   private String getFQN()
-   {
-      ProjectModel project = javaFile.getProject();
-      String sourcePath =
-         project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder") : DEFAULT_SOURCE_FOLDER;
-      String pack = javaFile.getParent().getPath().substring((project.getPath() + "/" + sourcePath + "/").length() - 1);
-      pack = pack.replaceAll("/", ".");
-      pack += "." + javaFile.getName().substring(0, javaFile.getName().lastIndexOf('.'));
-      return pack;
    }
 
    /**
