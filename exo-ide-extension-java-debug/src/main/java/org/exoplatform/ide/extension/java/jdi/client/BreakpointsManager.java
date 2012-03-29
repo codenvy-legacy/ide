@@ -24,9 +24,12 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestException;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
+import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.editor.problem.LineNumberDoubleClickEvent;
@@ -54,7 +57,7 @@ import java.util.Set;
  * 
  */
 public class BreakpointsManager implements EditorActiveFileChangedHandler, LineNumberDoubleClickHandler,
-   DebuggerConnectedHandler, DebuggerDisconnectedHandler
+   DebuggerConnectedHandler, DebuggerDisconnectedHandler, EditorFileOpenedHandler
 {
 
    private HandlerManager eventBus;
@@ -90,6 +93,7 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(DebuggerConnectedEvent.TYPE, this);
       eventBus.addHandler(DebuggerDisconnectedEvent.TYPE, this);
+      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
    }
 
    /**
@@ -105,11 +109,22 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
       {
          if (event.getEditor() instanceof Markable)
          {
-            file = event.getFile();
-            markable = (Markable)event.getEditor();
             if (handlerRegistration != null)
                handlerRegistration.removeHandler();
+            markable = (Markable)event.getEditor();
             handlerRegistration = markable.addLineNumberDoubleClickHandler(this);
+            file = event.getFile();
+            if (debuggerInfo == null)
+            {
+               if (breakPoints.containsKey(event.getFile().getId()))
+               {
+                  for (EditorBreakPoint b : breakPoints.get(event.getFile().getId()))
+                  {
+                     markable.unmarkProblem(b);
+                  }
+                  breakPoints.get(event.getFile().getId()).clear();
+               }
+            }
          }
       }
    }
@@ -121,7 +136,7 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
       if (!breakPoints.containsKey(file.getId()))
          breakPoints.put(file.getId(), new HashSet<EditorBreakPoint>());
       breakPoints.get(file.getId()).add(problem);
-
+      eventBus.fireEvent(new BreakPointsUpdatedEvent(breakPoints));
    }
 
    /**
@@ -138,7 +153,6 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
          removeBreakpoint(breakPoint);
       else
          addBreakpoint(event.getLineNumber());
-      eventBus.fireEvent(new BreakPointsUpdatedEvent(breakPoints));
    }
 
    /**
@@ -171,11 +185,22 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
                protected void onSuccess(BreakPoint result)
                {
                   breakPoints.get(file.getId()).remove(breakPoint);
+                  eventBus.fireEvent(new BreakPointsUpdatedEvent(breakPoints));
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
+                  if (exception instanceof ServerException)
+                  {
+                     ServerException e = (ServerException)exception;
+                     if (e.isErrorMessageProvided())
+                     {
+                        eventBus.fireEvent(new OutputEvent(e.getMessage(), Type.ERROR));
+                        return;
+                     }
+                  }
+
                   eventBus.fireEvent(new OutputEvent("Can't delete breakpoint at " + breakPoint.getLineNumber(),
                      Type.ERROR));
                }
@@ -215,6 +240,15 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
             @Override
             protected void onFailure(Throwable exception)
             {
+               if (exception instanceof ServerException)
+               {
+                  ServerException e = (ServerException)exception;
+                  if (e.isErrorMessageProvided())
+                  {
+                     eventBus.fireEvent(new OutputEvent(e.getMessage(), Type.ERROR));
+                     return;
+                  }
+               }
                eventBus.fireEvent(new OutputEvent("Can't add breakpoint at " + lineNumber, Type.WARNING));
             }
          });
@@ -242,6 +276,38 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
    public void onDebuggerDisconnected(DebuggerDisconnectedEvent event)
    {
       debuggerInfo = null;
+      if (breakPoints.containsKey(file.getId()))
+      {
+         for (EditorBreakPoint p : breakPoints.get(file.getId()))
+         {
+            markable.unmarkProblem(p);
+         }
+         breakPoints.get(file.getId()).clear();
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
+    */
+   @Override
+   public void onEditorFileOpened(EditorFileOpenedEvent event)
+   {
+      if (breakPoints.containsKey(event.getFile().getId()))
+      {
+         if (debuggerInfo == null)
+         {
+            breakPoints.get(event.getFile().getId()).clear();
+            return;
+         }
+         if (event.getEditor() instanceof Markable)
+         {
+            Markable m = (Markable)event.getEditor();
+            for (EditorBreakPoint p : breakPoints.get(event.getFile().getId()))
+            {
+               m.markProblem(p);
+            }
+         }
+      }
    }
 
 }
