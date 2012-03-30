@@ -23,6 +23,7 @@ import com.sun.jdi.ClassNotLoadedException;
 import com.sun.jdi.Field;
 import com.sun.jdi.ObjectReference;
 import com.sun.jdi.PrimitiveType;
+import com.sun.jdi.ReferenceType;
 import com.sun.jdi.Value;
 
 /**
@@ -32,12 +33,21 @@ import com.sun.jdi.Value;
 public class JdiFieldImpl implements JdiField, Comparable<JdiFieldImpl>
 {
    private final Field field;
+   private final ReferenceType type;
    private final ObjectReference object;
 
    public JdiFieldImpl(Field field, ObjectReference object)
    {
       this.field = field;
       this.object = object;
+      this.type = null;
+   }
+
+   public JdiFieldImpl(Field field, ReferenceType type)
+   {
+      this.field = field;
+      this.type = type;
+      this.object = null;
    }
 
    @Override
@@ -99,7 +109,7 @@ public class JdiFieldImpl implements JdiField, Comparable<JdiFieldImpl>
    @Override
    public JdiValue getValue()
    {
-      Value value = object.getValue(field);
+      Value value = object == null ? type.getValue(field) : object.getValue(field);
       if (value == null)
       {
          return new JdiNullValue();

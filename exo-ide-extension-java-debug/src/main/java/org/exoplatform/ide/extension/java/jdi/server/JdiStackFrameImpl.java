@@ -24,6 +24,7 @@ import com.sun.jdi.InvalidStackFrameException;
 import com.sun.jdi.LocalVariable;
 import com.sun.jdi.NativeMethodException;
 import com.sun.jdi.ObjectReference;
+import com.sun.jdi.ReferenceType;
 import com.sun.jdi.StackFrame;
 
 import java.util.Arrays;
@@ -52,15 +53,28 @@ public class JdiStackFrameImpl implements JdiStackFrame
          try
          {
             ObjectReference object = stackFrame.thisObject();
-            List<Field> targetFields = object == null
-               ? stackFrame.location().declaringType().allFields()
-               : object.referenceType().allFields();
-            fields = new JdiField[targetFields.size()];
-            int i = 0;
-            for (Field f : targetFields)
+            if (object == null)
             {
-               fields[i++] = new JdiFieldImpl(f, object);
+               ReferenceType type = stackFrame.location().declaringType();
+               List<Field> fs = stackFrame.location().declaringType().allFields();
+               fields = new JdiField[fs.size()];
+               int i = 0;
+               for (Field f : fs)
+               {
+                  fields[i++] = new JdiFieldImpl(f, type);
+               }
             }
+            else
+            {
+               List<Field> fs = object.referenceType().allFields();
+               fields = new JdiField[fs.size()];
+               int i = 0;
+               for (Field f : fs)
+               {
+                  fields[i++] = new JdiFieldImpl(f, object);
+               }
+            }
+
             Arrays.sort(fields);
          }
          catch (InvalidStackFrameException e)
