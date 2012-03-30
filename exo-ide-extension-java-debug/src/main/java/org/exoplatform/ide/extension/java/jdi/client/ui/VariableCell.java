@@ -44,28 +44,16 @@ public class VariableCell extends AbstractCell<Variable>
       if (value instanceof Field)
       {
          Field f = (Field)value;
-
-         Image image = null;
-
-         // Get the access modifier icon:
-
-         image = getMainImage(JavaClientBundle.INSTANCE.privateField());
-
+         Image image = getMainImage(JavaClientBundle.INSTANCE.privateField());
          sb.appendHtmlConstant(image.toString());
          // Add all modifiers container:
          sb.appendHtmlConstant(getModifiersContainer(f));
-
          sb.appendHtmlConstant(getName(f.getName()).getString());
          sb.appendHtmlConstant(getType(f.getValue()).toString());
       }
       else
       {
-         Image image = null;
-
-         // Get the access modifier icon:
-
-         image = getMainImage(JavaClientBundle.INSTANCE.variable());
-
+         Image image = getMainImage(JavaClientBundle.INSTANCE.variable());
          sb.appendHtmlConstant(image.toString());
          // Add all modifiers container:
          sb.appendHtmlConstant(getName(value.getName()).getString());

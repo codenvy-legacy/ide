@@ -3,21 +3,13 @@
    xmlns:tp="urn:import:org.exoplatform.gwtframework.ui.client.tablayout">
 
    <ui:with field='resource' type='org.exoplatform.ide.extension.java.jdi.client.DebuggerClientBundle' />
-
-   <ui:style>
-      .borderPanel {
-      	border: 1px solid #bbb;
-      }
-   </ui:style>
+   <ui:with field='locale' type='org.exoplatform.ide.extension.java.jdi.client.DebuggerLocalizationConstant'/>
 
    <c:Border margin="1">
       <c:layer>
          <g:LayoutPanel>
             <g:layer top="0" height="28px">
                <c:Toolbar height="28px">
-                  <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="addBreakPointButton" width="22px" buttonId="addBreakPointButton" imageResource="{resource.addBreakPointButton}"></c:ImageButton>
-                  </c:ToolbarItem>
                   <c:ToolbarItem rightDocked="false" paddingRight="2">
                      <c:ImageButton ui:field="resumeButton" width="22px" buttonId="resumeButton" imageResource="{resource.resumeButton}"></c:ImageButton>
                   </c:ToolbarItem>
@@ -28,11 +20,8 @@
                      <c:ImageButton ui:field="removeAllBreakpointsButton" width="22px" buttonId="removeAllBreakpointsButton"
                         imageResource="{resource.removeAllBreakpointsButton}"></c:ImageButton>
                   </c:ToolbarItem>
-                  <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="getBreakPointsButton" width="22px" buttonId="getBreakpointsButton" imageResource="{resource.getBreakPointsButton}"></c:ImageButton>
-                  </c:ToolbarItem>
-                  <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="checkEventsButton" width="22px" buttonId="checkEventsButton" imageResource="{resource.checkEvents}"></c:ImageButton>
+                  <c:ToolbarItem rightDocked="true" paddingRight="2">
+                     <c:Label ui:field="vmName" width="280px" wordWrap="false" title="{locale.vmName}"></c:Label>
                   </c:ToolbarItem>
                </c:Toolbar>
             </g:layer>
@@ -54,19 +43,6 @@
                </c:Border>
             </g:layer>
          </g:LayoutPanel>
-
-
-         <!-- <c:Border margin="5" borderColor="transparent"> <c:layer> <g:HorizontalPanel width="100%" height="100%"> <tp:TabPanel ui:field="variabelsPanel"></tp:TabPanel> 
-            <tp:TabPanel ui:field="breakPointsPanel"></tp:TabPanel> </g:HorizontalPanel> </c:layer> </c:Border> </g:layer> </g:LayoutPanel> -->
       </c:layer>
    </c:Border>
-
-   <!-- <c:Border margin="1"> <c:layer> <g:LayoutPanel> <g:layer top="0" height="28px"> <c:Toolbar height="28px"> <c:ToolbarItem rightDocked="true" paddingTop="2" 
-      paddingRight="2"> <c:IconButton ui:field="linkWithEditorButton" imageName="link-with-editor" title="{ideLocale.projectExplorerLinkWithEditor}"></c:IconButton> 
-      </c:ToolbarItem> </c:Toolbar> </g:layer> <g:layer top="28px" bottom="0"> <g:ScrollPanel width="100%" height="100%"> <g:FlowPanel> <n:ItemTree visible="false" 
-      styleName="{style.itemsTree}" ui:field="treeGrid" prefixId="navigation-" treeGridId="ideProjectExplorerItemTreeGrid"></n:ItemTree> <g:HTMLPanel ui:field="projectNotOpenedPanel" 
-      width="100%" height="100%"> <table style="width:100%; height:100%;"> <tr style="vertical-align:middle;"> <td style="text-align:center;">Project is not 
-      opened.</td> </tr> </table> </g:HTMLPanel> </g:FlowPanel> </g:ScrollPanel> </g:layer> </g:LayoutPanel> </c:layer> </c:Border> <g:FlowPanel> <g:Label text="FQN"></g:Label> 
-      <g:TextBox ui:field="fqn"></g:TextBox> <g:Label text="Line Number"></g:Label> <g:TextBox ui:field="lineNumber"></g:TextBox> </g:FlowPanel> -->
-
 </ui:UiBinder>

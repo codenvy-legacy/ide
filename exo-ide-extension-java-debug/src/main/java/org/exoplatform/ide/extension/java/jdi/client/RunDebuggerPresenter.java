@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -44,39 +45,15 @@ public class RunDebuggerPresenter implements ViewClosedHandler
 {
    public interface Display extends IsView
    {
-      /**
-       * Get create button's click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
+      
       HasClickHandlers getRunButton();
 
-      /**
-       * Get cancel button's click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
       HasClickHandlers getCancelButton();
-
-      /**
-       * Get application name field.
-       * 
-       * @return {@link HasValue}
-       */
+      
       HasValue<String> getHostField();
-
-      /**
-       * Get remote repository name field.
-       * 
-       * @return {@link HasValue}
-       */
+      
       HasValue<String> getPortField();
-
-      /**
-       * Change the enable state of the create button.
-       * 
-       * @param enable
-       */
+      
       void enableRunButton(boolean enable);
 
    }
@@ -138,38 +115,31 @@ public class RunDebuggerPresenter implements ViewClosedHandler
       }
    }
 
-   /**
-    * Perform creation of application on Heroku.
-    */
+  
    protected void doRunDebugger()
    {
       AutoBean<DebuggerInfo> debuggerInfo = DebuggerExtension.AUTO_BEAN_FACTORY.create(DebuggerInfo.class);
       AutoBeanUnmarshaller<DebuggerInfo> unmarshaller = new AutoBeanUnmarshaller<DebuggerInfo>(debuggerInfo);
       try
       {
-
          DebuggerClientService.getInstance().create(host, port, new AsyncRequestCallback<DebuggerInfo>(unmarshaller)
          {
             @Override
             public void onSuccess(DebuggerInfo result)
             {
-               DebuggerExtension.DEBUG_ID = result.getId();
                IDE.eventBus().fireEvent(new DebuggerConnectedEvent(result));
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
-               exception.printStackTrace();
-
-               System.err.println("--------------------------------------");
-
+              IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
             }
          });
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
       }
 
    }

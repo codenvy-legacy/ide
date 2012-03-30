@@ -50,12 +50,17 @@ public interface DebuggerClientBundle extends ClientBundle
    ImageResource addBreakPointButton();
    
    @Source("org/exoplatform/ide/extension/java/jdi/images/export_brkpts.gif")
-   ImageResource getBreakPointsButton();
+   ImageResource breakPointsIcon();
    
    @Source("org/exoplatform/ide/extension/java/jdi/images/update.gif")
    ImageResource checkEvents();
    
    @Source("org/exoplatform/ide/extension/java/jdi/images/cancel.png")
    ImageResource cancelButton();
-      
+   
+   @Source("org/exoplatform/ide/extension/java/jdi/images/variable.gif")
+   ImageResource variable();
+   
+   @Source("org/exoplatform/ide/extension/java/jdi/images/breakpoint.gif")
+   ImageResource breakpoint();
 }

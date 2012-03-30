@@ -25,20 +25,26 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.LaunchDebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.LaunchDebuggerHandler;
 import org.exoplatform.ide.extension.java.jdi.client.ui.DebuggerView;
 import org.exoplatform.ide.extension.java.jdi.client.ui.RunDebuggerView;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEventList;
-import org.exoplatform.ide.extension.java.jdi.shared.BreakPointList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
-import org.exoplatform.ide.extension.java.jdi.shared.Location;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -54,11 +60,12 @@ import com.google.web.bindery.autobean.shared.AutoBean;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebuggerHandler, ViewClosedHandler
+public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisconnectedHandler, LaunchDebuggerHandler,
+   ViewClosedHandler, BreakPointsUpdatedHandler
 {
    private Display display;
 
-   private String id;
+   private DebuggerInfo debuggerInfo;
 
    public interface Display extends IsView
    {
@@ -69,17 +76,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
 
       HasClickHandlers getDisconnectButton();
 
-      HasClickHandlers getAddBreakPointButton();
+      void setBreakPoints(List<BreakPoint> breakPoints);
 
-      HasClickHandlers getBreakPointsButton();
-
-      HasClickHandlers getCheckEventsButton();
-
-      void addBreakPoint(BreakPoint breakPoint);
-
-      void setBreakPoints(BreakPointList breakPoints);
-
-      void cleare();
+      void cleareVariabels();
 
       ListDataProvider<Variable> getDataProvider();
 
@@ -91,19 +90,18 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
 
       display.getResumeButton().addClickHandler(new ClickHandler()
       {
-
          @Override
          public void onClick(ClickEvent event)
          {
             try
             {
-               DebuggerClientService.getInstance().resume(id, new AsyncRequestCallback()
+               DebuggerClientService.getInstance().resume(debuggerInfo.getId(), new AsyncRequestCallback<String>()
                {
 
                   @Override
-                  protected void onSuccess(Object result)
+                  protected void onSuccess(String result)
                   {
-
+                     display.getDataProvider().getList().clear();
                   }
 
                   @Override
@@ -122,56 +120,21 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
 
       });
 
-      display.getBreakPointsButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            AutoBean<BreakPointList> autoBean = DebuggerExtension.AUTO_BEAN_FACTORY.create(BreakPointList.class);
-            AutoBeanUnmarshaller<BreakPointList> unmarshaller = new AutoBeanUnmarshaller<BreakPointList>(autoBean);
-            try
-            {
-               DebuggerClientService.getInstance().getBreakPoints(id,
-                  new AsyncRequestCallback<BreakPointList>(unmarshaller)
-                  {
-
-                     @Override
-                     protected void onSuccess(BreakPointList result)
-                     {
-                        display.setBreakPoints(result);
-                     }
-
-                     @Override
-                     protected void onFailure(Throwable exception)
-                     {
-                        IDE.fireEvent(new ExceptionThrownEvent(exception));
-                     }
-
-                  });
-            }
-            catch (RequestException e)
-            {
-               e.printStackTrace();
-            }
-         }
-      });
-
       display.getDisconnectButton().addClickHandler(new ClickHandler()
       {
-
          @Override
          public void onClick(ClickEvent event)
          {
             try
             {
-               DebuggerClientService.getInstance().disconnect(id, new AsyncRequestCallback()
+               DebuggerClientService.getInstance().disconnect(debuggerInfo.getId(), new AsyncRequestCallback<String>()
                {
 
                   @Override
-                  protected void onSuccess(Object result)
+                  protected void onSuccess(String result)
                   {
                      IDE.eventBus().fireEvent(new DebuggerDisconnectedEvent());
+                     debuggerInfo = null;
                      checkDebugEventsTimer.cancel();
                   }
 
@@ -191,96 +154,12 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
          }
       });
 
-      display.getAddBreakPointButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            AutoBean<BreakPoint> autoBean = DebuggerExtension.AUTO_BEAN_FACTORY.create(BreakPoint.class);
-            final BreakPoint breakPoint = autoBean.as();
-
-            AutoBean<Location> autoBeanlocation = DebuggerExtension.AUTO_BEAN_FACTORY.create(Location.class);
-            final Location location = autoBeanlocation.as();
-
-            location.setClassName("org.exoplatform.services.jcr.webdav.WebDavServiceImpl");
-            location.setLineNumber(645);
-
-            breakPoint.setLocation(location);
-            breakPoint.setEnabled(true);
-
-            try
-            {
-               DebuggerClientService.getInstance().addBreakPoint(id, breakPoint, new AsyncRequestCallback<BreakPoint>()
-               {
-
-                  @Override
-                  protected void onSuccess(BreakPoint result)
-                  {
-                     display.addBreakPoint(breakPoint);
-                  }
-
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     IDE.fireEvent(new ExceptionThrownEvent(exception));
-                  }
-               });
-            }
-            catch (RequestException e)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(e));
-            }
-         }
-      });
-
       display.getRemoveAllBreakpointsButton().addClickHandler(new ClickHandler()
       {
-
          @Override
          public void onClick(ClickEvent event)
          {
-            display.cleare();
-         }
-      });
-
-      display.getCheckEventsButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            AutoBean<BreakPointEventList> breakPointEvents =
-               DebuggerExtension.AUTO_BEAN_FACTORY.create(BreakPointEventList.class);
-            AutoBeanUnmarshaller<BreakPointEventList> unmarshaller =
-               new AutoBeanUnmarshaller<BreakPointEventList>(breakPointEvents);
-            try
-            {
-               DebuggerClientService.getInstance().checkEvents(id,
-                  new AsyncRequestCallback<BreakPointEventList>(unmarshaller)
-                  {
-
-                     @Override
-                     protected void onSuccess(BreakPointEventList result)
-                     {
-                        if (result != null && result.getEvents().size() > 0)
-                        {
-                           doGetDump();
-                        }
-                     }
-
-                     @Override
-                     protected void onFailure(Throwable exception)
-                     {
-                        exception.printStackTrace();
-                        Window.alert(exception.getMessage());
-                     }
-                  });
-            }
-            catch (RequestException e)
-            {
-               e.printStackTrace();
-            }
+            Window.alert("Not implement yet");
          }
       });
    }
@@ -291,25 +170,30 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
       AutoBeanUnmarshaller<StackFrameDump> unmarshaller = new AutoBeanUnmarshaller<StackFrameDump>(autoBean);
       try
       {
-         DebuggerClientService.getInstance().dump(id, new AsyncRequestCallback<StackFrameDump>(unmarshaller)
+         DebuggerClientService.getInstance().dump(debuggerInfo.getId(), new AsyncRequestCallback<StackFrameDump>(unmarshaller)
          {
 
             @Override
             protected void onSuccess(StackFrameDump result)
             {
+//               display.cleareVariabels();
+               display.getDataProvider().getList().clear();
+               //
                display.getDataProvider().getList().addAll(result.getFields());
                display.getDataProvider().getList().addAll(result.getLocalVariables());
+               display.getDataProvider().flush();
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
+               IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
             }
          });
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -318,13 +202,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
    {
       if (display == null)
       {
-         display = new DebuggerView();
+         debuggerInfo = event.getDebuggerInfo();
+         display = new DebuggerView(debuggerInfo);
          bindDisplay(display);
          IDE.getInstance().openView(display.asView());
-
-         DebuggerInfo debuggerInfo = event.getDebuggerInfo();
-         DebuggerExtension.DEBUG_ID = event.getDebuggerInfo().getId();
-         id = event.getDebuggerInfo().getId();
          checkDebugEventsTimer.scheduleRepeating(3000);
       }
    }
@@ -343,10 +224,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
             new AutoBeanUnmarshaller<BreakPointEventList>(breakPointEvents);
          try
          {
-            DebuggerClientService.getInstance().checkEvents(DebuggerExtension.DEBUG_ID,
+            DebuggerClientService.getInstance().checkEvents(debuggerInfo.getId(),
                new AsyncRequestCallback<BreakPointEventList>(unmarshaller)
                {
-
                   @Override
                   protected void onSuccess(BreakPointEventList result)
                   {
@@ -386,6 +266,30 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, LaunchDebugg
       if (event.getView() instanceof Display)
       {
          display = null;
+      }
+   }
+
+   @Override
+   public void onDebuggerDisconnected(DebuggerDisconnectedEvent event)
+   {
+      IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   @Override
+   public void onBreakPointsUpdated(BreakPointsUpdatedEvent event)
+   {
+      if (event.getBreakPoints() != null)
+      {
+         List<BreakPoint> breakPoints = new ArrayList<BreakPoint>();
+         Collection<Set<EditorBreakPoint>> values = event.getBreakPoints().values();
+         for (Set<EditorBreakPoint> ebps : values)
+         {
+            for (EditorBreakPoint editorBreakPoint : ebps)
+            {
+               breakPoints.add(editorBreakPoint.getBreakPoint());
+            }
+         }
+         display.setBreakPoints(breakPoints);
       }
    }
 }

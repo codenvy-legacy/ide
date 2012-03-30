@@ -91,6 +91,25 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
   @DefaultMessage("Port")
   @Key("port")
   String port();
+  
+  
+  /**
+   * Translated "VM Version".
+   * 
+   * @return translated ""
+   */
+  @DefaultMessage("VM Version")
+  @Key("vmVersion")
+  String vmVersion();
+  
+  /**
+   * Translated "VM Name".
+   * 
+   * @return translated "VM Name"
+   */
+  @DefaultMessage("VM Name")
+  @Key("vmName")
+  String vmName();
 
   /**
    * Translated "Remove All BreakPoints".

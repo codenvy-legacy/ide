@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client.ui;
 
+import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Field;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 
@@ -35,10 +36,13 @@ public class FrameTreeViewModel implements TreeViewModel
    private SingleSelectionModel<Variable> selectionModel;
 
    private ListDataProvider<Variable> dataProvider = new ListDataProvider<Variable>();
+
+   private DebuggerInfo debuggerInfo;
    
-   public FrameTreeViewModel(SingleSelectionModel<Variable> selectionModel)
+   public FrameTreeViewModel(SingleSelectionModel<Variable> selectionModel, DebuggerInfo debuggerInfo)
    {
       this.selectionModel = selectionModel;
+      this.debuggerInfo = debuggerInfo;
    }
 
    @Override
@@ -51,11 +55,11 @@ public class FrameTreeViewModel implements TreeViewModel
 
       if (value instanceof Field)
       {
-         return new DefaultNodeInfo<Variable>(new ValueDataProvider((Field)value), new VariableCell(), selectionModel, null);
+         return new DefaultNodeInfo<Variable>(new ValueDataProvider((Field)value, debuggerInfo), new VariableCell(), selectionModel, null);
       }
       else
       {
-         return new DefaultNodeInfo<Variable>(new ValueDataProvider((Variable)value), new VariableCell(), selectionModel, null);
+         return new DefaultNodeInfo<Variable>(new ValueDataProvider((Variable)value, debuggerInfo), new VariableCell(), selectionModel, null);
       }
 
    }
