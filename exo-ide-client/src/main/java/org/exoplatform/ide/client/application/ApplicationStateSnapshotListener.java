@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.client.application;
 
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -294,6 +298,28 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
          case COOKIES :
             SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
             break;
+         case SERVER :
+            try
+            {
+               SettingsService.getInstance().saveSettingsToServer(applicationSettings,
+                  new AsyncRequestCallback<ApplicationSettings>()
+                  {
+                     @Override
+                     protected void onSuccess(ApplicationSettings result)
+                     {
+                     }
+
+                     @Override
+                     protected void onFailure(Throwable exception)
+                     {
+                        IDE.fireEvent(new ExceptionThrownEvent(exception));
+                     }
+                  });
+            }
+            catch (RequestException e)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
          default :
             // TODO
             break;
