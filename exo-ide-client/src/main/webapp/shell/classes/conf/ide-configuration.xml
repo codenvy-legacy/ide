@@ -12,11 +12,11 @@
    <component>
       <type>org.chromattic.dataobject.DataObjectService</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyCompiler</type>
    </component>
@@ -24,7 +24,7 @@
    <component>
       <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyClassLoaderProvider</type>
    </component>
-   
+
    <component>
       <type>org.chromattic.dataobject.runtime.ChromatticSessionProvider</type>
       <init-params>
@@ -42,15 +42,15 @@
          </value-param>
       </init-params>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
    </component>
 
-    <component>
+   <component>
       <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyCompiler</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyClassLoaderProvider</type>
    </component>
@@ -86,10 +86,10 @@
    </component>
 
    <component>
-     <type>org.exoplatform.ide.extension.maven.server.BuilderApplication</type>
+      <type>org.exoplatform.ide.extension.maven.server.BuilderApplication</type>
    </component>
-   
-    <component>
+
+   <component>
       <type>org.exoplatform.ide.shell.server.rest.ShellApplication</type>
       <init-params>
          <value-param>
@@ -129,22 +129,22 @@
          </value-param>
       </init-params>
    </component>
-   
+
    <component>
-     <type>org.exoplatform.ide.extension.maven.server.BuilderClient</type>
-     <init-params>
-        <value-param>
-        <name>build-server-base-url</name>
-        <value>http://localhost:8081/builder</value>
-        </value-param>
-     </init-params>
+      <type>org.exoplatform.ide.extension.maven.server.BuilderClient</type>
+      <init-params>
+         <value-param>
+            <name>build-server-base-url</name>
+            <value>http://localhost:8081/builder</value>
+         </value-param>
+      </init-params>
    </component>
-   
+
    <component>
       <type>org.exoplatform.logreader.LogReaderServiceApplication</type>
    </component>
 
-    <component>
+   <component>
       <key>org.exoplatform.logreader.LogPathProvider</key>
       <type>org.exoplatform.logreader.SystemLogPathProvider</type>
    </component>
@@ -168,9 +168,19 @@
    </component>
 
    <component>
+      <type>org.exoplatform.ide.extension.samples.server.GitHubAuthenticator</type>
+      <init-params>
+         <value-param>
+            <name>workspace</name>
+            <value>production</value>
+         </value-param>
+      </init-params>
+   </component>
+
+   <component>
       <type>org.exoplatform.ide.extension.cloudbees.server.rest.CloudBeesApplication</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.cloudbees.server.CloudBees</type>
       <init-params>
@@ -197,7 +207,7 @@
       <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
    </component>
 
-  
+
    <component>
       <key>org.exoplatform.ide.extension.netvibes.server.NetvibesServiceApplication</key>
       <type>org.exoplatform.ide.extension.netvibes.server.NetvibesServiceApplication</type>
@@ -215,8 +225,8 @@
       <key>org.exoplatform.ide.vfs.server.LocalPathResolver</key>
       <type>org.exoplatform.ide.vfs.impl.jcr.LocalPathResolverJcrImpl</type>
    </component>
-   
-    <component>
+
+   <component>
       <key>org.exoplatform.ide.vfs.server.GitUrlResolver</key>
       <type>org.exoplatform.ide.vfs.impl.jcr.GitUrlResolverJcrImpl</type>
    </component>
@@ -302,30 +312,30 @@
          </values-param>
       </init-params>
    </component>
-   
-   <component>                                                                                                                                                                                                 
-     <type>org.exoplatform.ide.codeassistant.storage.lucene.ExoFsLuceneInfoStorage</type>                                                                                                                      
-     <init-params>                                                                                                                                                                                             
-       <value-param>                                                                                                                                                                                           
-            <name>storage-path</name>                                                                                                                                                                          
-            <value>target/ide-codeassistant-lucene-index</value>                                                                                                                                                             
-         </value-param>                                                                                                                                                                                        
-     </init-params>                                                                                                                                                                                            
-   </component>                                                                                                                                                                                                
-                                                                                                                                                                                                               
-   <component>                                                                                                                                                                                                 
-     <key>org.exoplatform.ide.codeassistant.api.CodeAssistantStorage</key>                                                                                                                                     
-     <type>org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage</type>                                                                                                                  
-   </component>                                                                                                                                                                                                
-                                                                                                                                                                                                               
-    <component>                                                                                                                                                                                                
-      <type>org.exoplatform.ide.extension.java.server.JavaCodeAssistant</type>                                                                                                                                 
+
+   <component>
+      <type>org.exoplatform.ide.codeassistant.storage.lucene.ExoFsLuceneInfoStorage</type>
+      <init-params>
+         <value-param>
+            <name>storage-path</name>
+            <value>target/ide-codeassistant-lucene-index</value>
+         </value-param>
+      </init-params>
    </component>
-   
+
+   <component>
+      <key>org.exoplatform.ide.codeassistant.api.CodeAssistantStorage</key>
+      <type>org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.extension.java.server.JavaCodeAssistant</type>
+   </component>
+
    <component>
       <type>org.exoplatform.ide.extension.groovy.server.GroovyCodeAssistant</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.java.jdi.server.DebuggerApplication</type>
    </component>
