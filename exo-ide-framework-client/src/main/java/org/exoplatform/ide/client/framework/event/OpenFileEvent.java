@@ -38,6 +38,8 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
    private String fileId;
 
    private String editor;
+   
+   private CursorPosition cursorPosition;
 
    private int ignoreErrorsCount = 0;
 
@@ -48,7 +50,14 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
 
    public OpenFileEvent(FileModel file)
    {
+      this(file, new CursorPosition(1, 1));
+   }
+   
+   public OpenFileEvent(FileModel file, CursorPosition cursorPosition)
+   {
       this.file = file;
+      this.cursorPosition= cursorPosition; 
+      
    }
 
    public OpenFileEvent(FileModel file, boolean lockFile)
@@ -117,6 +126,11 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
    public int getIgnoreErrorsCount()
    {
       return ignoreErrorsCount;
+   }
+   
+   public CursorPosition getCursorPosition()
+   {
+      return cursorPosition;
    }
 
 }

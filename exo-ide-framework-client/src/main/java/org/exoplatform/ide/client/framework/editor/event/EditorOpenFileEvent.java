@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.framework.editor.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.client.framework.event.CursorPosition;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
@@ -37,11 +38,19 @@ public class EditorOpenFileEvent extends GwtEvent<EditorOpenFileHandler>
    private FileModel file;
 
    private EditorProducer editorProducer;
+   
+   private CursorPosition cursorPosition;
 
    public EditorOpenFileEvent(FileModel file, EditorProducer editorProducer)
    {
+      this(file, editorProducer, new CursorPosition(1,1));
+   }
+   
+   public EditorOpenFileEvent(FileModel file, EditorProducer editorProducer, CursorPosition cursorPosition)
+   {
       this.file = file;
       this.editorProducer = editorProducer;
+      this.cursorPosition = cursorPosition;
    }
 
    public FileModel getFile()
@@ -55,6 +64,11 @@ public class EditorOpenFileEvent extends GwtEvent<EditorOpenFileHandler>
    public EditorProducer getEditorProducer()
    {
       return editorProducer;
+   }
+   
+   public CursorPosition getCursorPosition()
+   {
+      return cursorPosition;
    }
 
    @Override
