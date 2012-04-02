@@ -130,32 +130,32 @@ public class LockUnlockFileHandler implements LockFileHandler, EditorActiveFileC
    {
       if (event.isLockFile())
       {
-         try
-         {
-            AutoBean<LockToken> autoBean = IDE.AUTO_BEAN_FACTORY.lockToken();
-            AutoBeanUnmarshaller<LockToken> unmarshaller = new AutoBeanUnmarshaller<LockToken>(autoBean);
-            VirtualFileSystem.getInstance().lock(activeFile, new AsyncRequestCallback<LockToken>(unmarshaller)
-            {
-
-               @Override
-               protected void onSuccess(LockToken result)
-               {
-                  IDE.fireEvent(new ItemLockedEvent(activeFile, result));
-                  updateLockFileState(activeFile);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  Dialogs.getInstance().showError(
-                     IDE.IDE_LOCALIZATION_MESSAGES.lockUnlockFileCantLockFile(activeFile.getName()));
-               }
-            });
-         }
-         catch (RequestException e)
-         {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
-         }
+//         try
+//         {
+//            AutoBean<LockToken> autoBean = IDE.AUTO_BEAN_FACTORY.lockToken();
+//            AutoBeanUnmarshaller<LockToken> unmarshaller = new AutoBeanUnmarshaller<LockToken>(autoBean);
+//            VirtualFileSystem.getInstance().lock(activeFile, new AsyncRequestCallback<LockToken>(unmarshaller)
+//            {
+//
+//               @Override
+//               protected void onSuccess(LockToken result)
+//               {
+//                  IDE.fireEvent(new ItemLockedEvent(activeFile, result));
+//                  updateLockFileState(activeFile);
+//               }
+//
+//               @Override
+//               protected void onFailure(Throwable exception)
+//               {
+//                  Dialogs.getInstance().showError(
+//                     IDE.IDE_LOCALIZATION_MESSAGES.lockUnlockFileCantLockFile(activeFile.getName()));
+//               }
+//            });
+//         }
+//         catch (RequestException e)
+//         {
+//            IDE.fireEvent(new ExceptionThrownEvent(e));
+//         }
       }
       else
       {

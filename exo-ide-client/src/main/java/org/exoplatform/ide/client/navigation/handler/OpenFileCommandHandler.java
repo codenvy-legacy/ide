@@ -48,6 +48,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.framework.event.CursorPosition;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -79,6 +80,8 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
 
    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
+   private CursorPosition cursorPosition;
+
    public OpenFileCommandHandler()
    {
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
@@ -93,6 +96,8 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
    public void onOpenFile(OpenFileEvent event)
    {
       selectedEditor = event.getEditor();
+
+      cursorPosition = event.getCursorPosition();
 
       FileModel file = event.getFile();
       if (file != null)
@@ -187,7 +192,14 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
          }
 
          EditorProducer producer = EditorFactory.getEditorProducer(file.getMimeType(), selectedEditor);
-         IDE.fireEvent(new EditorOpenFileEvent(file, producer));
+         if (cursorPosition != null)
+         {
+            IDE.fireEvent(new EditorOpenFileEvent(file, producer, cursorPosition));
+         }
+         else
+         {
+            IDE.fireEvent(new EditorOpenFileEvent(file, producer));
+         }
       }
       catch (EditorNotFoundException e)
       {

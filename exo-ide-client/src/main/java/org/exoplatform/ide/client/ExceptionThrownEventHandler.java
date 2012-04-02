@@ -80,6 +80,7 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler, Enab
 
       Throwable error = event.getException();
       Log.info(event.getErrorMessage());
+      error.printStackTrace();
 
       if (error instanceof UnauthorizedException)
       {

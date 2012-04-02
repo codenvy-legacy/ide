@@ -430,6 +430,10 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
          }
 
          openedFileEditorView.setViewVisible();
+         if (event.getCursorPosition() != null)
+         {
+            openedFileEditorView.getEditor().goToPosition(event.getCursorPosition().getRow(), event.getCursorPosition().getColumn());
+         }
          return;
       }
 
@@ -455,7 +459,10 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       }
 
       activeFile = file;
-
+      if (event.getCursorPosition() != null)
+      {
+         editorView.getEditor().goToPosition(event.getCursorPosition().getRow(), event.getCursorPosition().getColumn());
+      }
       IDE.fireEvent(new EditorFileOpenedEvent(file, editorView.getEditor(), openedFiles));
    }
 
@@ -684,7 +691,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
             IDE.fireEvent(new EditorActiveFileChangedEvent(null, null));
             return;
          }
-         
+
          final EditorView editorView = (EditorView)event.getView();
          activeFile = editorView.getFile();
          Timer timer = new Timer()
