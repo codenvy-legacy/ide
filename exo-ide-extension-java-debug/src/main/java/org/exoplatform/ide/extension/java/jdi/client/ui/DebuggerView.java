@@ -99,6 +99,8 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
    private FrameTreeViewModel frameTreeViewModel;
 
    private CellTree.Resources res = GWT.create(CellTreeResource.class);
+   
+   private DebuggerInfo debuggerInfo;
 
    public DebuggerView(DebuggerInfo debuggerInfo)
    {
@@ -106,6 +108,8 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
       super(ID, ViewType.OPERATION, DebuggerExtension.LOCALIZATION_CONSTANT.debug());
       add(uiBinder.createAndBindUi(this));
 
+      this.debuggerInfo = debuggerInfo;
+      
       frameTreeViewModel = new FrameTreeViewModel(selectionModel, debuggerInfo);
       frameTree = new CellTree(frameTreeViewModel, null, res);
 
@@ -154,8 +158,8 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
    @Override
    public void cleareVariabels()
    {
-      frameTreeViewModel.getDataProvider().setList(Collections.<Variable>emptyList());
-      frameTreeViewModel.getDataProvider().flush();
+      frameTreeViewModel = new FrameTreeViewModel(selectionModel, debuggerInfo); 
+      frameTree = new CellTree(frameTreeViewModel, null, res);
    }
 
    @Override

@@ -1,8 +1,9 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
-import com.google.gwt.core.client.GWT;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -12,6 +13,8 @@ import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnected
 import org.exoplatform.ide.extension.java.jdi.client.events.LaunchDebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.client.fqn.FqnResolverFactory;
 import org.exoplatform.ide.extension.java.jdi.client.fqn.JavaFqnResolver;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -31,17 +34,22 @@ public class DebuggerExtension extends Extension
    public void initialize()
    {
       IDE.getInstance().addControl(new LaunchDebuggerControl());
-      DebuggerPresenter debuggerPresenter = new DebuggerPresenter();
+      FqnResolverFactory resolverFactory = new FqnResolverFactory();
+      resolverFactory.addResolver(MimeType.APPLICATION_JAVA, new JavaFqnResolver());
+      
+      BreakpointsManager breakpointsManager = new BreakpointsManager(IDE.eventBus(), DebuggerClientService.getInstance(), AUTO_BEAN_FACTORY, resolverFactory);
+      
+      DebuggerPresenter debuggerPresenter = new DebuggerPresenter(breakpointsManager);
 
       IDE.addHandler(LaunchDebuggerEvent.TYPE, debuggerPresenter);
       IDE.addHandler(DebuggerConnectedEvent.TYPE, debuggerPresenter);
       IDE.addHandler(DebuggerDisconnectedEvent.TYPE, debuggerPresenter);
       IDE.addHandler(BreakPointsUpdatedEvent.TYPE, debuggerPresenter);
       IDE.addHandler(ViewClosedEvent.TYPE, debuggerPresenter);
-      FqnResolverFactory resolverFactory = new FqnResolverFactory();
-      resolverFactory.addResolver(MimeType.APPLICATION_JAVA, new JavaFqnResolver());
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, debuggerPresenter);
+      IDE.addHandler(EditorFileOpenedEvent.TYPE, debuggerPresenter);
+      IDE.addHandler(EditorFileClosedEvent.TYPE, debuggerPresenter);
       
-      new BreakpointsManager(IDE.eventBus(), DebuggerClientService.getInstance(), AUTO_BEAN_FACTORY, resolverFactory);
    }
 
 }

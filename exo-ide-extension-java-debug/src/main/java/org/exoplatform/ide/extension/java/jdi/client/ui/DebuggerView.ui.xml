@@ -5,6 +5,14 @@
    <ui:with field='resource' type='org.exoplatform.ide.extension.java.jdi.client.DebuggerClientBundle' />
    <ui:with field='locale' type='org.exoplatform.ide.extension.java.jdi.client.DebuggerLocalizationConstant'/>
 
+   <ui:style>
+     .bpPanel
+     {
+	     font-size: 14px;
+	   }
+   
+   </ui:style>
+
    <c:Border margin="1">
       <c:layer>
          <g:LayoutPanel>

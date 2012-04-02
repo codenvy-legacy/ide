@@ -21,6 +21,8 @@ package org.exoplatform.ide.extension.java.jdi.client;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.ide.client.framework.event.CursorPosition;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -36,13 +38,16 @@ import org.exoplatform.ide.extension.java.jdi.client.events.LaunchDebuggerHandle
 import org.exoplatform.ide.extension.java.jdi.client.ui.DebuggerView;
 import org.exoplatform.ide.extension.java.jdi.client.ui.RunDebuggerView;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
+import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -67,6 +72,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    private DebuggerInfo debuggerInfo;
 
+   private BreakpointsManager breakpointsManager;
+
    public interface Display extends IsView
    {
 
@@ -82,6 +89,11 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
       ListDataProvider<Variable> getDataProvider();
 
+   }
+
+   public DebuggerPresenter(BreakpointsManager breakpointsManager)
+   {
+      this.breakpointsManager = breakpointsManager;
    }
 
    void bindDisplay(Display d)
@@ -101,7 +113,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   @Override
                   protected void onSuccess(String result)
                   {
-                     display.getDataProvider().getList().clear();
+                     display.getDataProvider().setList(Collections.<Variable> emptyList());
                   }
 
                   @Override
@@ -170,26 +182,25 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       AutoBeanUnmarshaller<StackFrameDump> unmarshaller = new AutoBeanUnmarshaller<StackFrameDump>(autoBean);
       try
       {
-         DebuggerClientService.getInstance().dump(debuggerInfo.getId(), new AsyncRequestCallback<StackFrameDump>(unmarshaller)
-         {
-
-            @Override
-            protected void onSuccess(StackFrameDump result)
+         DebuggerClientService.getInstance().dump(debuggerInfo.getId(),
+            new AsyncRequestCallback<StackFrameDump>(unmarshaller)
             {
-//               display.cleareVariabels();
-               display.getDataProvider().getList().clear();
-               //
-               display.getDataProvider().getList().addAll(result.getFields());
-               display.getDataProvider().getList().addAll(result.getLocalVariables());
-               display.getDataProvider().flush();
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
+               @Override
+               protected void onSuccess(StackFrameDump result)
+               {
+                  List<Variable> variables = new ArrayList<Variable>(result.getFields());
+                  variables.addAll(result.getLocalVariables());
+                  display.getDataProvider().setList(variables);
+                  display.getDataProvider().refresh();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
       }
       catch (RequestException e)
       {
@@ -232,6 +243,11 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   {
                      if (result != null && result.getEvents().size() > 0)
                      {
+                        BreakPointEvent breakPointEvent = result.getEvents().get(0);
+                        String fqn = breakPointEvent.getBreakPoint().getLocation().getClassName();
+                        int lineNumber = breakPointEvent.getBreakPoint().getLocation().getLineNumber();
+                        FileModel fileModel = breakpointsManager.getFileWithBreakPoints().get(fqn);
+                        IDE.eventBus().fireEvent(new OpenFileEvent(fileModel, new CursorPosition(lineNumber)));
                         doGetDump();
                      }
                   }

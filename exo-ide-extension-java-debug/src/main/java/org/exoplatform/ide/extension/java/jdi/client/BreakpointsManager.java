@@ -73,6 +73,8 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
    private FileModel file;
 
    private Map<String, Set<EditorBreakPoint>> breakPoints;
+   
+   private Map<String, FileModel> fileWithBreakPoints;
 
    private final FqnResolverFactory resolverFactory;
 
@@ -90,6 +92,7 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
       this.autoBeanFactory = autoBeanFactory;
       this.resolverFactory = resolverFactory;
       breakPoints = new HashMap<String, Set<EditorBreakPoint>>();
+      fileWithBreakPoints = new HashMap<String, FileModel>();
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(DebuggerConnectedEvent.TYPE, this);
       eventBus.addHandler(DebuggerDisconnectedEvent.TYPE, this);
@@ -136,6 +139,9 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
       if (!breakPoints.containsKey(file.getId()))
          breakPoints.put(file.getId(), new HashSet<EditorBreakPoint>());
       breakPoints.get(file.getId()).add(problem);
+      
+      fileWithBreakPoints.put(resolverFactory.getResolver(file.getMimeType()).resolveFqn(file), file);
+      
       eventBus.fireEvent(new BreakPointsUpdatedEvent(breakPoints));
    }
 
@@ -308,6 +314,11 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
             }
          }
       }
+   }
+   
+   public Map<String, FileModel> getFileWithBreakPoints()
+   {
+      return fileWithBreakPoints;
    }
 
 }
