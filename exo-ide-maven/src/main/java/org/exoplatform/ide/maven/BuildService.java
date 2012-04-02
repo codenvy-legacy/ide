@@ -21,9 +21,10 @@ package org.exoplatform.ide.maven;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.MavenInvocationException;
-import org.eclipse.jgit.api.Git;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -222,38 +223,21 @@ public class BuildService
    /**
     * Start new build.
     *
-    * @param gitURI the GIT location of source code for build
+    * @param data the zipped of source code for build
     * @return build task
+    * @throws java.io.IOException if i/o error occur when try to unzip project
     */
-   public MavenBuildTask add(final String gitURI)
+   public MavenBuildTask add(final InputStream data) throws IOException
    {
-      if (gitURI == null || gitURI.isEmpty())
-      {
-         throw new IllegalArgumentException("Parameter 'gituri' may not be null or empty. ");
-      }
-
       List<String> theGoals = new ArrayList<String>(goals.length);
       Collections.addAll(theGoals, goals);
 
-      final File projectDirectory = BuildHelper.makeProjectDirectory(repository);
-
-      final MavenInvoker invoker = new MavenInvoker()
-         .addPreBuildTask(
-            new Runnable()
-            {
-               public void run()
-               {
-                  Git.cloneRepository()
-                     .setDirectory(projectDirectory)
-                     .setURI(gitURI)
-                     .call();
-               }
-            }
-         ).setTimeout(timeoutMillis);
-
+      File projectDirectory = BuildHelper.makeProjectDirectory(repository);
+      BuildHelper.unzip(data, projectDirectory);
       File logFile = new File(projectDirectory.getParentFile(), projectDirectory.getName() + ".log");
       TaskLogger taskLogger = new TaskLogger(logFile/*, new SystemOutHandler()*/);
 
+      final MavenInvoker invoker = new MavenInvoker().setTimeout(timeoutMillis);
       final InvocationRequest request = new DefaultInvocationRequest()
          .setBaseDirectory(projectDirectory)
          .setGoals(theGoals)

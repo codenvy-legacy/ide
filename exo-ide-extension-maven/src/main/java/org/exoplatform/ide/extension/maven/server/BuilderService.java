@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.extension.maven.server;
 
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -43,24 +47,31 @@ public class BuilderService
    @Inject
    private BuilderClient builder;
 
+   @Inject
+   private VirtualFileSystemRegistry virtualFileSystemRegistry;
+
    /**
     * Start new build at remote build server. Build may be started immediately or add in build queue. Client should
     * check location given in response header to current get status of build.
     *
-    * @param gitURI Git location of project we want to build
+    * @param vfsId identifier of virtual file system
+    * @param projectId identifier of project we want to send for build
     * @param uriInfo context info about current request
     * @return response with status 202 if request for build is accepted. Client get location of resource that it should
     *         check to see the current status of build.
     * @throws BuilderException if request for new build was rejected by remote build server
     * @throws IOException if any i/o errors occur
-    * @see BuilderClient#build(String)
+    * @throws VirtualFileSystemException if any error in VFS
+    * @see BuilderClient#build(org.exoplatform.ide.vfs.server.VirtualFileSystem, String)
     */
    @GET
    @Path("build")
-   public Response build(@QueryParam("gituri") String gitURI, @Context UriInfo uriInfo) throws BuilderException,
-      IOException
+   public Response build(@QueryParam("projectid") String projectId, //
+                         @QueryParam("vfsid") String vfsId, //
+                         @Context UriInfo uriInfo) throws BuilderException, IOException, VirtualFileSystemException
    {
-      final String buildID = builder.build(gitURI);
+      VirtualFileSystem vfs = virtualFileSystemRegistry.getProvider(vfsId).newInstance(null);
+      final String buildID = builder.build(vfs, projectId);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
       return Response.status(202).location(location).entity(location.toString()).build();
    }

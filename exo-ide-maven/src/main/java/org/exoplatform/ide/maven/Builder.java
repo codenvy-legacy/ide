@@ -23,10 +23,13 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
@@ -61,11 +64,12 @@ public class Builder
       }
    }
 
-   @GET
+   @POST
    @Path("build")
-   public Response build(@QueryParam("gituri") String gitURI, @Context UriInfo uriInfo)
+   @Consumes("application/zip")
+   public Response build(@Context UriInfo uriInfo, InputStream data) throws IOException
    {
-      MavenBuildTask task = tasks.add(gitURI);
+      MavenBuildTask task = tasks.add(data);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
       return Response
          .status(202)

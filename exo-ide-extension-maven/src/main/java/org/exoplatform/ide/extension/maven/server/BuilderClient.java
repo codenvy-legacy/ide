@@ -20,11 +20,15 @@ package org.exoplatform.ide.extension.maven.server;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
+import org.exoplatform.ide.vfs.server.ContentStream;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -70,20 +74,50 @@ public class BuilderClient
    /**
     * Send request to start new build at remote build server. Build may be started immediately or add in build queue.
     *
-    * @param gitURI Git location of project we want to build
+    * @param vfs virtual file system
+    * @param projectId identifier of project we want to send for build
     * @return ID of build task. It may be used as parameter for method {@link #status(String)} .
     * @throws IOException if any i/o errors occur
     * @throws BuilderException if build request was rejected by remote build server
+    * @throws VirtualFileSystemException if any error in VFS
     */
-   public String build(String gitURI) throws IOException, BuilderException
+   public String build(VirtualFileSystem vfs, String projectId) throws IOException, BuilderException, VirtualFileSystemException
    {
-      URL url = new URL(baseURL + "/builder/maven/build?gituri=" + gitURI);
+      ContentStream zippedProject = vfs.exportZip(projectId);
+
+      URL url = new URL(baseURL + "/builder/maven/build");
       HttpURLConnection http = null;
       try
       {
          http = (HttpURLConnection)url.openConnection();
-         http.setRequestMethod("GET");
+         http.setRequestMethod("POST");
+         http.setRequestProperty("content-type", zippedProject.getMimeType());
          authenticate(http);
+         http.setDoOutput(true);
+         byte[] buff = new byte[8192];
+         InputStream data = null;
+         OutputStream out = null;
+         try
+         {
+            data = zippedProject.getStream();
+            out = http.getOutputStream();
+            int r;
+            while ((r = data.read(buff)) != -1)
+            {
+               out.write(buff, 0, r);
+            }
+         }
+         finally
+         {
+            if (data != null)
+            {
+               data.close();
+            }
+            if (out != null)
+            {
+               out.close();
+            }
+         }
          int responseCode = http.getResponseCode();
          if (responseCode != 202) // 202 (Accepted) response is expected.
          {

@@ -19,8 +19,13 @@
 package org.exoplatform.ide.maven;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.SecureRandom;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -78,6 +83,62 @@ public final class BuildHelper
          }
       }
       return !fileOrDirectory.exists() || fileOrDirectory.delete();
+   }
+
+   /**
+    * Unzip content of input stream in directory.
+    *
+    * @param in zipped content
+    * @param targetDir target directory
+    * @throws IOException if any i/o error occurs
+    */
+   public static void unzip(InputStream in, File targetDir) throws IOException
+   {
+      ZipInputStream zipIn = null;
+      try
+      {
+         zipIn = new ZipInputStream(in);
+         byte[] b = new byte[8192];
+         ZipEntry zipEntry;
+         while ((zipEntry = zipIn.getNextEntry()) != null)
+         {
+            File file = new File(targetDir, zipEntry.getName());
+            if (!zipEntry.isDirectory())
+            {
+               File parent = file.getParentFile();
+               if (!parent.exists())
+               {
+                  parent.mkdirs();
+               }
+               FileOutputStream fos = new FileOutputStream(file);
+               try
+               {
+                  int r;
+                  while ((r = zipIn.read(b)) != -1)
+                  {
+                     fos.write(b, 0, r);
+                  }
+               }
+               finally
+               {
+                  fos.close();
+               }
+            }
+            else
+            {
+               file.mkdirs();
+            }
+            zipIn.closeEntry();
+         }
+      }
+      finally
+      {
+         if (zipIn != null)
+         {
+            zipIn.close();
+         }
+         in.close();
+      }
    }
 
    private BuildHelper()
