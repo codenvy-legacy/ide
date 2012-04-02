@@ -126,8 +126,8 @@ public class DebuggerService
    }
 
    @GET
-   @Path("step/next")
-   public void stepNext(@PathParam("id") String id) throws DebuggerException
+   @Path("step/over")
+   public void stepOver(@PathParam("id") String id) throws DebuggerException
    {
       Debugger.getInstance(id).stepNext();
    }
@@ -136,7 +136,7 @@ public class DebuggerService
    @Path("step/into")
    public void stepInto(@PathParam("id") String id) throws DebuggerException
    {
-      Debugger.getInstance(id).stepInto();
+      Debugger.getInstance(id).stepOver();
    }
 
    @GET
