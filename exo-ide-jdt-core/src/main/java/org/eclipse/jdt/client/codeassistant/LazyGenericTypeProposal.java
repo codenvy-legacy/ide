@@ -11,7 +11,6 @@
 package org.eclipse.jdt.client.codeassistant;
 
 import com.google.gwt.json.client.JSONArray;
-
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.ui.Image;
@@ -23,18 +22,9 @@ import org.eclipse.jdt.client.codeassistant.api.Point;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
-import org.eclipse.jdt.client.core.dom.AST;
-import org.eclipse.jdt.client.core.dom.ASTParser;
-import org.eclipse.jdt.client.core.dom.ASTRequestor;
-import org.eclipse.jdt.client.core.dom.IBinding;
-import org.eclipse.jdt.client.core.dom.ITypeBinding;
-import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.IRegion;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Proposal for generic types.

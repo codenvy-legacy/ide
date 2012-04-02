@@ -22,12 +22,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 
-import org.eclipse.jdt.client.NameEnvironment;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
-import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
+import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
+import org.eclipse.jdt.client.internal.compiler.env.NameEnvironmentAnswer;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
 
 /**
@@ -63,14 +63,59 @@ public abstract class ParserBaseTestGwt extends BaseTestGwt
 
       ASTParser parser = ASTParser.newParser(AST.JLS3);
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
-      parser.setUnitName("CreateJavaClassPresenter");
+      parser.setUnitName("/P/org/test/CreateJavaClassPresenter.java");
       parser.setSource(javaFiles);
-      parser.setNameEnvironment(new NameEnvironment(null));
-      parser.setEnvironment(null, new String[]{"/my/path"}, new String[]{"UTF-8"}, true);
+      parser.setNameEnvironment(new MockNameEnv());
       ASTNode ast = parser.createAST(null);
       unit = (CompilationUnit)ast;
 
       new JavaCodeAssistantService(null, null);
    }
+   
+   private class MockNameEnv implements INameEnvironment
+   {
+
+      /**
+       * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findType(char[][])
+       */
+      @Override
+      public NameEnvironmentAnswer findType(char[][] compoundTypeName)
+      {
+         // TODO Auto-generated method stub
+         return null;
+      }
+
+      /**
+       * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findType(char[], char[][])
+       */
+      @Override
+      public NameEnvironmentAnswer findType(char[] typeName, char[][] packageName)
+      {
+         // TODO Auto-generated method stub
+         return null;
+      }
+
+      /**
+       * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#isPackage(char[][], char[])
+       */
+      @Override
+      public boolean isPackage(char[][] parentPackageName, char[] packageName)
+      {
+         // TODO Auto-generated method stub
+         return false;
+      }
+
+      /**
+       * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#cleanup()
+       */
+      @Override
+      public void cleanup()
+      {
+         // TODO Auto-generated method stub
+         
+      }
+      
+   }
+   
 
 }

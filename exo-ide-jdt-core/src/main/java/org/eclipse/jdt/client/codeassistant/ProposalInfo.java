@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant;
 
+import org.eclipse.jdt.client.core.IJavaElement;
+
 import com.google.gwt.user.client.ui.Widget;
 
 public abstract class ProposalInfo
@@ -21,5 +23,11 @@ public abstract class ProposalInfo
     * @return the additional info text
     */
    public abstract Widget getInfo();
+
+   /**
+    * Returns the Java element.
+    * 
+    */
+   public abstract IJavaElement getJavaElement();
 
 }

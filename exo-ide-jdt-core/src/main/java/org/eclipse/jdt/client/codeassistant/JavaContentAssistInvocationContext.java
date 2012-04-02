@@ -10,11 +10,16 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant;
 
+import org.eclipse.jdt.client.JdtExtension;
+import org.eclipse.jdt.client.TypeInfoStorage;
+import org.eclipse.jdt.client.codeassistant.ContentAssistHistory.RHSHistory;
 import org.eclipse.jdt.client.codeassistant.api.ContentAssistInvocationContext;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.core.CompletionContext;
 import org.eclipse.jdt.client.core.CompletionProposal;
+import org.eclipse.jdt.client.core.IType;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.internal.corext.util.SignatureUtil;
 import org.exoplatform.ide.editor.text.IDocument;
 
 /**
@@ -32,6 +37,8 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
 
    private boolean fCUComputed = false;
 
+   private RHSHistory fRHSHistory;
+
    private CompletionProposalLabelProvider fLabelProvider;
 
    private CompletionProposalCollector fCollector;
@@ -45,6 +52,8 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
    private String docContext;
 
    private String projectId;
+
+   private IType fType;
 
    /**
     * Creates a new context.
@@ -87,11 +96,11 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
             // use the existing collector if it exists, collects keywords, and has already been invoked
             fKeywordProposals = fCollector.getKeywordCompletionProposals();
          }
-//         else
-//         {
-//            // otherwise, retrieve keywords ourselves
-//            computeKeywordsAndContext();
-//         }
+         // else
+         // {
+         // // otherwise, retrieve keywords ourselves
+         // computeKeywordsAndContext();
+         // }
       }
 
       return fKeywordProposals;
@@ -125,74 +134,75 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
       return fCoreContext;
    }
 
-   // /**
-   // * Returns an float in [0.0,&nbsp;1.0] based on whether the type has been recently used as a
-   // * right hand side for the type expected in the current context. 0 signals that the
-   // * <code>qualifiedTypeName</code> does not match the expected type, while 1.0 signals that
-   // * <code>qualifiedTypeName</code> has most recently been used in a similar context.
-   // * <p>
-   // * <strong>Note:</strong> This method may run
-   // * {@linkplain ICodeAssist#codeComplete(int, org.eclipse.jdt.core.CompletionRequestor) codeComplete}
-   // * on the compilation unit.
-   // * </p>
-   // *
-   // * @param qualifiedTypeName the type name of the type of interest
-   // * @return a relevance in [0.0,&nbsp;1.0] based on previous content assist invocations
-   // */
-   // public float getHistoryRelevance(String qualifiedTypeName) {
-   // return getRHSHistory().getRank(qualifiedTypeName);
-   // }
+   /**
+    * Returns an float in [0.0,&nbsp;1.0] based on whether the type has been recently used as a right hand side for the type
+    * expected in the current context. 0 signals that the <code>qualifiedTypeName</code> does not match the expected type, while
+    * 1.0 signals that <code>qualifiedTypeName</code> has most recently been used in a similar context.
+    * <p>
+    * <strong>Note:</strong> This method may run
+    * {@linkplain ICodeAssist#codeComplete(int, org.eclipse.jdt.core.CompletionRequestor) codeComplete} on the compilation unit.
+    * </p>
+    * 
+    * @param qualifiedTypeName the type name of the type of interest
+    * @return a relevance in [0.0,&nbsp;1.0] based on previous content assist invocations
+    */
+   public float getHistoryRelevance(String qualifiedTypeName)
+   {
+      return getRHSHistory().getRank(qualifiedTypeName);
+   }
 
-   // /**
-   // * Returns the content assist type history for the expected type.
-   // *
-   // * @return the content assist type history for the expected type
-   // */
-   // private RHSHistory getRHSHistory() {
-   // if (fRHSHistory == null) {
-   // CompletionContext context= getCoreContext();
-   // if (context != null) {
-   // char[][] expectedTypes= context.getExpectedTypesSignatures();
-   // if (expectedTypes != null && expectedTypes.length > 0) {
-   // String expected= SignatureUtil.stripSignatureToFQN(String.valueOf(expectedTypes[0]));
-   // fRHSHistory= JavaPlugin.getDefault().getContentAssistHistory().getHistory(expected);
-   // }
-   // }
-   // if (fRHSHistory == null)
-   // fRHSHistory= JavaPlugin.getDefault().getContentAssistHistory().getHistory(null);
-   // }
-   // return fRHSHistory;
-   // }
+   /**
+    * Returns the content assist type history for the expected type.
+    * 
+    * @return the content assist type history for the expected type
+    */
+   private RHSHistory getRHSHistory()
+   {
+      if (fRHSHistory == null)
+      {
+         CompletionContext context = getCoreContext();
+         if (context != null)
+         {
+            char[][] expectedTypes = context.getExpectedTypesSignatures();
+            if (expectedTypes != null && expectedTypes.length > 0)
+            {
+               String expected = SignatureUtil.stripSignatureToFQN(String.valueOf(expectedTypes[0]));
+               fRHSHistory = JdtExtension.get().getContentAssistHistory().getHistory(expected);
+            }
+         }
+         if (fRHSHistory == null)
+            fRHSHistory = JdtExtension.get().getContentAssistHistory().getHistory(null);
+      }
+      return fRHSHistory;
+   }
 
-   // /**
-   // * Returns the expected type if any, <code>null</code> otherwise.
-   // * <p>
-   // * <strong>Note:</strong> This method may run
-   // * {@linkplain ICodeAssist#codeComplete(int, org.eclipse.jdt.core.CompletionRequestor) codeComplete}
-   // * on the compilation unit.
-   // * </p>
-   // *
-   // * @return the expected type if any, <code>null</code> otherwise
-   // */
-   // public IType getExpectedType() {
-   // if (fType == null && getCompilationUnit() != null) {
-   // CompletionContext context= getCoreContext();
-   // if (context != null) {
-   // char[][] expectedTypes= context.getExpectedTypesSignatures();
-   // if (expectedTypes != null && expectedTypes.length > 0) {
-   // IJavaProject project= getCompilationUnit().getJavaProject();
-   // if (project != null) {
-   // try {
-   // fType= project.findType(SignatureUtil.stripSignatureToFQN(String.valueOf(expectedTypes[0])));
-   // } catch (JavaModelException x) {
-   // JavaPlugin.log(x);
-   // }
-   // }
-   // }
-   // }
-   // }
-   // return fType;
-   // }
+   /**
+    * Returns the expected type if any, <code>null</code> otherwise.
+    * <p>
+    * <strong>Note:</strong> This method may run
+    * {@linkplain ICodeAssist#codeComplete(int, org.eclipse.jdt.core.CompletionRequestor) codeComplete} on the compilation unit.
+    * </p>
+    * 
+    * @return the expected type if any, <code>null</code> otherwise
+    */
+   public IType getExpectedType()
+   {
+      if (fType == null && getCompilationUnit() != null)
+      {
+         CompletionContext context = getCoreContext();
+         if (context != null)
+         {
+            char[][] expectedTypes = context.getExpectedTypesSignatures();
+            if (expectedTypes != null && expectedTypes.length > 0)
+            {
+               fType =
+                  TypeInfoStorage.get().getTypeByFqn(
+                     SignatureUtil.stripSignatureToFQN(String.valueOf(expectedTypes[0])));
+            }
+         }
+      }
+      return fType;
+   }
 
    /**
     * Returns a label provider that can be used to compute proposal labels.
@@ -258,43 +268,44 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
       return projectId;
    }
 
-//   /**
-//    * Fallback to retrieve a core context and keyword proposals when no collector is available. Runs code completion on the cu and
-//    * collects keyword proposals. {@link #fKeywordProposals} is non-<code>null</code> after this call.
-//    * 
-//    * @since 3.3
-//    */
-//   private void computeKeywordsAndContext()
-//   {
-//      CompilationUnit cu = getCompilationUnit();
-//      if (cu == null)
-//      {
-//         if (fKeywordProposals == null)
-//            fKeywordProposals = new IJavaCompletionProposal[0];
-//         return;
-//      }
-//
-//      CompletionProposalCollector collector = new CompletionProposalCollector(cu, true);
-//      collector.setIgnored(CompletionProposal.KEYWORD, false);
-//
-//      try
-//      {
-//         cu.codeComplete(getInvocationOffset(), collector);
-//         if (fCoreContext == null)
-//            fCoreContext = collector.getContext();
-//         if (fKeywordProposals == null)
-//            fKeywordProposals = collector.getKeywordCompletionProposals();
-//         if (fLabelProvider == null)
-//            fLabelProvider = collector.getLabelProvider();
-//      }
-//      catch (JavaModelException x)
-//      {
-//         if (!x.isDoesNotExist() || cu.getJavaProject() == null || cu.getJavaProject().isOnClasspath(cu))
-//            JavaPlugin.log(x);
-//         if (fKeywordProposals == null)
-//            fKeywordProposals = new IJavaCompletionProposal[0];
-//      }
-//   }
+   // /**
+   // * Fallback to retrieve a core context and keyword proposals when no collector is available. Runs code completion on the cu
+   // and
+   // * collects keyword proposals. {@link #fKeywordProposals} is non-<code>null</code> after this call.
+   // *
+   // * @since 3.3
+   // */
+   // private void computeKeywordsAndContext()
+   // {
+   // CompilationUnit cu = getCompilationUnit();
+   // if (cu == null)
+   // {
+   // if (fKeywordProposals == null)
+   // fKeywordProposals = new IJavaCompletionProposal[0];
+   // return;
+   // }
+   //
+   // CompletionProposalCollector collector = new CompletionProposalCollector(cu, true);
+   // collector.setIgnored(CompletionProposal.KEYWORD, false);
+   //
+   // try
+   // {
+   // cu.codeComplete(getInvocationOffset(), collector);
+   // if (fCoreContext == null)
+   // fCoreContext = collector.getContext();
+   // if (fKeywordProposals == null)
+   // fKeywordProposals = collector.getKeywordCompletionProposals();
+   // if (fLabelProvider == null)
+   // fLabelProvider = collector.getLabelProvider();
+   // }
+   // catch (JavaModelException x)
+   // {
+   // if (!x.isDoesNotExist() || cu.getJavaProject() == null || cu.getJavaProject().isOnClasspath(cu))
+   // JavaPlugin.log(x);
+   // if (fKeywordProposals == null)
+   // fKeywordProposals = new IJavaCompletionProposal[0];
+   // }
+   // }
 
    /*
     * Implementation note: There is no need to override hashCode and equals, as we only add cached values shared across one assist

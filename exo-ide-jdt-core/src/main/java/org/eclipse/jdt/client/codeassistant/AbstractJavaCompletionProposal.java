@@ -10,9 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant;
 
-import com.google.gwt.user.client.ui.Widget;
-
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Widget;
 
 import org.eclipse.jdt.client.codeassistant.api.ICompletionProposalExtension;
 import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
@@ -20,6 +19,7 @@ import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.Point;
 import org.eclipse.jdt.client.codeassistant.ui.StyledString;
 import org.eclipse.jdt.client.core.CompletionProposal;
+import org.eclipse.jdt.client.core.IJavaElement;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
@@ -1131,20 +1131,17 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
       return getDisplayString();
    }
 
-   // /**
-   // * Returns the java element proposed by the receiver, possibly <code>null</code>.
-   // *
-   // * @return the java element proposed by the receiver, possibly <code>null</code>
-   // */
-   // public IJavaElement getJavaElement() {
-   // if (getProposalInfo() != null)
-   // try {
-   // return getProposalInfo().getJavaElement();
-   // } catch (JavaModelException x) {
-   // JavaPlugin.log(x);
-   // }
-   // return null;
-   // }
+   /**
+    * Returns the java element proposed by the receiver, possibly <code>null</code>.
+    * 
+    * @return the java element proposed by the receiver, possibly <code>null</code>
+    */
+   public IJavaElement getJavaElement()
+   {
+      if (getProposalInfo() != null)
+         return getProposalInfo().getJavaElement();
+      return null;
+   }
 
    /**
     * Tells whether required proposals are supported by this proposal.

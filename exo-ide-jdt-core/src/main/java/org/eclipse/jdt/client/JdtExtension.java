@@ -18,6 +18,13 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.Window;
+
+import org.eclipse.jdt.client.codeassistant.ContentAssistHistory;
+import org.eclipse.jdt.client.codeassistant.QualifiedTypeNameHistory;
 import org.eclipse.jdt.client.outline.OutlinePresenter;
 import org.eclipse.jdt.client.templates.CodeTemplateContextType;
 import org.eclipse.jdt.client.templates.ContextTypeRegistry;
@@ -39,12 +46,18 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.userinfo.UserInfo;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 20, 2012 1:08:51 PM evgen $
  */
-public class JdtExtension extends Extension implements InitializeServicesHandler
+public class JdtExtension extends Extension implements InitializeServicesHandler, UserInfoReceivedHandler,
+   CloseHandler<Window>, ProjectClosedHandler
 {
 
    static String DOC_CONTEXT;
@@ -52,6 +65,8 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
    static String REST_CONTEXT;
 
    private static JdtExtension instance;
+
+   private ContentAssistHistory contentAssistHistory;
 
    /**
     * The code template context type registry for the java editor.
@@ -62,20 +77,24 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
 
    private TemplateStore templateStore;
 
+   private UserInfo userInfo;
+
    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
    @Override
    public void initialize()
    {
       instance = this;
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
       new CodeAssistantPresenter();
       new JavaCodeController();
       new OutlinePresenter();
       new TypeInfoUpdater();
       new CleanProjectCommandHandler();
       IDE.getInstance().addControl(new CleanProjectControl());
+      Window.addCloseHandler(this);
    }
-
 
    /**
     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
@@ -160,6 +179,54 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       if (templateStore == null)
          templateStore = new TemplateStore();
       return templateStore;
+   }
+
+   /**
+    * @return
+    */
+   public ContentAssistHistory getContentAssistHistory()
+   {
+      if (contentAssistHistory == null)
+      {
+         Preferences preferences = GWT.create(Preferences.class);
+         contentAssistHistory =
+            ContentAssistHistory.load(preferences, Preferences.CODEASSIST_LRU_HISTORY + userInfo.getName());
+
+         if (contentAssistHistory == null)
+            contentAssistHistory = new ContentAssistHistory();
+      }
+
+      return contentAssistHistory;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent)
+    */
+   @Override
+   public void onUserInfoReceived(UserInfoReceivedEvent event)
+   {
+      userInfo = event.getUserInfo();
+   }
+
+   /**
+    * @see com.google.gwt.event.logical.shared.CloseHandler#onClose(com.google.gwt.event.logical.shared.CloseEvent)
+    */
+   @Override
+   public void onClose(CloseEvent<Window> event)
+   {
+      Preferences preferences = GWT.create(Preferences.class);
+      ContentAssistHistory.store(contentAssistHistory, preferences,
+         Preferences.CODEASSIST_LRU_HISTORY + userInfo.getName());
+      QualifiedTypeNameHistory.getDefault().save();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      TypeInfoStorage.get().clear();
    }
 
 }

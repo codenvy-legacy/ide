@@ -29,13 +29,18 @@ import com.google.gwt.user.client.ui.IsWidget;
 import org.eclipse.jdt.client.codeassistant.AbstractJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.CompletionProposalCollector;
 import org.eclipse.jdt.client.codeassistant.FillArgumentNamesCompletionProposalCollector;
+import org.eclipse.jdt.client.codeassistant.JavaContentAssistInvocationContext;
+import org.eclipse.jdt.client.codeassistant.LazyGenericTypeProposal;
 import org.eclipse.jdt.client.codeassistant.TemplateCompletionProposalComputer;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.ui.CodeAssitantForm;
 import org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler;
 import org.eclipse.jdt.client.compiler.batch.CompilationUnit;
 import org.eclipse.jdt.client.core.CompletionProposal;
+import org.eclipse.jdt.client.core.IJavaElement;
+import org.eclipse.jdt.client.core.IType;
 import org.eclipse.jdt.client.core.JavaCore;
+import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTParser;
@@ -57,9 +62,13 @@ import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -207,12 +216,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
          e1.printStackTrace();
       }
       // unit.getPosition(currentEditor.getCursorRow(), currentEditor.getCursorCol() - 1);
-      CompletionProposalCollector collector =
-         new FillArgumentNamesCompletionProposalCollector(unit, document, completionPosition, currentFile.getProject()
-            .getId(), JdtExtension.DOC_CONTEXT);
-      collector
-         .setAllowsRequiredProposals(CompletionProposal.CONSTRUCTOR_INVOCATION, CompletionProposal.TYPE_REF, true);
-      collector.setRequireExtendedContext(true);
+      CompletionProposalCollector collector = createCollector(document);
       char[] fileContent = document.get().toCharArray();
       CompletionEngine e =
          new CompletionEngine(new NameEnvironment(currentFile.getProject().getId()), collector, JavaCore.getOptions(),
@@ -225,11 +229,53 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
             completionPosition, 0);
 
          IJavaCompletionProposal[] javaCompletionProposals = collector.getJavaCompletionProposals();
+         List<IJavaCompletionProposal> types =
+            new ArrayList<IJavaCompletionProposal>(Arrays.asList(javaCompletionProposals));
+         if (types.size() > 0 && collector.getInvocationContext().computeIdentifierPrefix().length() == 0)
+         {
+            IType expectedType = collector.getInvocationContext().getExpectedType();
+            if (expectedType != null)
+            {
+               // empty prefix completion - insert LRU types if known, but prune if they already occur in the core list
+
+               // compute minmimum relevance and already proposed list
+               int relevance = Integer.MAX_VALUE;
+               Set<String> proposed = new HashSet<String>();
+               for (Iterator<IJavaCompletionProposal> it = types.iterator(); it.hasNext();)
+               {
+                  AbstractJavaCompletionProposal p = (AbstractJavaCompletionProposal)it.next();
+                  IJavaElement element = p.getJavaElement();
+                  if (element instanceof IType)
+                     proposed.add(((IType)element).getFullyQualifiedName());
+                  relevance = Math.min(relevance, p.getRelevance());
+               }
+
+               // insert history types
+               List<String> history =
+                  JdtExtension.get().getContentAssistHistory().getHistory(expectedType.getFullyQualifiedName())
+                     .getTypes();
+               relevance -= history.size() + 1;
+               for (Iterator<String> it = history.iterator(); it.hasNext();)
+               {
+                  String type = it.next();
+                  if (proposed.contains(type))
+                     continue;
+
+                  IJavaCompletionProposal proposal =
+                     createTypeProposal(relevance, type, collector.getInvocationContext());
+
+                  if (proposal != null)
+                     types.add(proposal);
+                  relevance++;
+               }
+            }
+         }
 
          List<IJavaCompletionProposal> templateProposals =
             templateCompletionProposalComputer.computeCompletionProposals(collector.getInvocationContext(), null);
          IJavaCompletionProposal[] array =
             templateProposals.toArray(new IJavaCompletionProposal[templateProposals.size()]);
+         javaCompletionProposals = types.toArray(new IJavaCompletionProposal[0]);
          IJavaCompletionProposal[] proposals =
             new IJavaCompletionProposal[javaCompletionProposals.length + array.length];
          System.arraycopy(javaCompletionProposals, 0, proposals, 0, javaCompletionProposals.length);
@@ -251,6 +297,59 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
          IDE.fireEvent(new OutputEvent(st, Type.ERROR));
       }
       return new IJavaCompletionProposal[0];
+   }
+
+   private IJavaCompletionProposal createTypeProposal(int relevance, String fullyQualifiedType,
+      JavaContentAssistInvocationContext context)
+   {
+      IType type = TypeInfoStorage.get().getTypeByFqn(fullyQualifiedType);
+      
+      if (type == null)
+         return null;
+
+      CompletionProposal proposal =
+         CompletionProposal.create(CompletionProposal.TYPE_REF, context.getInvocationOffset());
+      proposal.setCompletion(fullyQualifiedType.toCharArray());
+      proposal.setDeclarationSignature(Signature.getQualifier(type.getFullyQualifiedName().toCharArray()));
+      proposal.setFlags(type.getFlags());
+      proposal.setRelevance(relevance);
+      proposal.setReplaceRange(context.getInvocationOffset(), context.getInvocationOffset());
+      proposal.setSignature(Signature.createTypeSignature(fullyQualifiedType, true).toCharArray());
+
+      return new LazyGenericTypeProposal(proposal, context);
+
+   }
+
+   /**
+    * @param document
+    * @return
+    */
+   private CompletionProposalCollector createCollector(IDocument document)
+   {
+      CompletionProposalCollector collector =
+         new FillArgumentNamesCompletionProposalCollector(unit, document, completionPosition, currentFile.getProject()
+            .getId(), JdtExtension.DOC_CONTEXT);
+      collector
+         .setAllowsRequiredProposals(CompletionProposal.CONSTRUCTOR_INVOCATION, CompletionProposal.TYPE_REF, true);
+      collector.setIgnored(CompletionProposal.ANNOTATION_ATTRIBUTE_REF, false);
+      collector.setIgnored(CompletionProposal.ANONYMOUS_CLASS_DECLARATION, false);
+      collector.setIgnored(CompletionProposal.ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION, false);
+      collector.setIgnored(CompletionProposal.FIELD_REF, false);
+      collector.setIgnored(CompletionProposal.FIELD_REF_WITH_CASTED_RECEIVER, false);
+      collector.setIgnored(CompletionProposal.KEYWORD, false);
+      collector.setIgnored(CompletionProposal.LABEL_REF, false);
+      collector.setIgnored(CompletionProposal.LOCAL_VARIABLE_REF, false);
+      collector.setIgnored(CompletionProposal.METHOD_DECLARATION, false);
+      collector.setIgnored(CompletionProposal.METHOD_NAME_REFERENCE, false);
+      collector.setIgnored(CompletionProposal.METHOD_REF, false);
+      collector.setIgnored(CompletionProposal.CONSTRUCTOR_INVOCATION, false);
+      collector.setIgnored(CompletionProposal.METHOD_REF_WITH_CASTED_RECEIVER, false);
+      collector.setIgnored(CompletionProposal.PACKAGE_REF, false);
+      collector.setIgnored(CompletionProposal.POTENTIAL_METHOD_DECLARATION, false);
+      collector.setIgnored(CompletionProposal.VARIABLE_DECLARATION, false);
+      collector.setIgnored(CompletionProposal.TYPE_REF, false);
+      collector.setRequireExtendedContext(true);
+      return collector;
    }
 
    /**

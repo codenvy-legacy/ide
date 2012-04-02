@@ -18,11 +18,14 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.storage.client.Storage;
 
+import org.eclipse.jdt.client.core.IType;
 import org.eclipse.jdt.client.core.Signature;
+import org.eclipse.jdt.client.env.TypeImpl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -32,8 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Local storage for Java types info.
- * Key is FQN of Java Type. Value JSON representation of {@link TypeInfo} class
+ * Local storage for Java types info. Key is FQN of Java Type. Value JSON representation of {@link TypeInfo} class
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 24, 2012 4:31:23 PM evgen $
  */
@@ -41,11 +44,10 @@ public class TypeInfoStorage
 {
 
    private static final String SHORT_TYPE_INFO = "__SHORT_TYPE_INFO__";
-   
+
    private static TypeInfoStorage instance;
 
    private Storage storage;
-   
 
    protected TypeInfoStorage()
    {
@@ -77,20 +79,54 @@ public class TypeInfoStorage
    {
       return storage.getItem(key) != null;
    }
-   
+
    public String getShortTypesInfo()
    {
       return storage.getItem(SHORT_TYPE_INFO);
    }
-   
+
    public void setShortTypesInfo(String info)
    {
       storage.setItem(SHORT_TYPE_INFO, info);
    }
-   
+
    public void removeTypeInfo(String key)
    {
       storage.removeItem(key);
+   }
+
+   public IType getTypeByFqn(String fqn)
+   {
+      String type = getType(fqn);
+      JSONObject object = null;
+      if (type == null)
+      {
+         String shortTypesInfo = TypeInfoStorage.get().getShortTypesInfo();
+         if (shortTypesInfo == null)
+            return null;
+         JSONObject jsonObject = JSONParser.parseLenient(shortTypesInfo).isObject();
+         if (jsonObject.containsKey("types"))
+         {
+            JSONArray array = jsonObject.get("types").isArray();
+            for (int i = 0; i < array.size(); i++)
+            {
+               JSONObject obj = array.get(i).isObject();
+               if (fqn.equals(obj.get("name").isString().stringValue()))
+               {
+                  object = obj;
+                  break;
+               }
+            }
+         }
+      }
+      else
+      {
+         object = JSONParser.parseLenient(type).isObject();
+      }
+      if (object == null)
+         return null;
+      return new TypeImpl(object);
+
    }
 
    public List<JSONObject> getTypesByNamePrefix(String prefix, boolean fqnPart)
@@ -114,7 +150,7 @@ public class TypeInfoStorage
       return res;
 
    }
-   
+
    /**
     * Remove all items from storage
     */

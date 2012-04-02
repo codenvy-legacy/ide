@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant;
 
+import org.eclipse.jdt.client.JdtExtension;
 import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
 import org.eclipse.jdt.client.core.CompletionProposal;
+import org.eclipse.jdt.client.core.IType;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
@@ -248,13 +250,11 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal
     */
    protected final void rememberSelection()
    {
-      // TODO
-      // IType lhs= fInvocationContext.getExpectedType();
-      // IType rhs= (IType) getJavaElement();
-      // if (lhs != null && rhs != null)
-      // JavaPlugin.getDefault().getContentAssistHistory().remember(lhs, rhs);
-      //
-      // QualifiedTypeNameHistory.remember(getQualifiedTypeName());
+      IType lhs = fInvocationContext.getExpectedType();
+      IType rhs = (IType)getJavaElement();
+      if (lhs != null && rhs != null)
+         JdtExtension.get().getContentAssistHistory().remember(lhs, rhs);
+      QualifiedTypeNameHistory.remember(getQualifiedTypeName());
    }
 
    /**
@@ -385,16 +385,14 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal
        * factor (of either the RHS or general history) is less important, it should not override other relevance factors such as
        * if the type is already imported etc.
        */
-      // TODO
-      // float rhsHistoryRank= fInvocationContext.getHistoryRelevance(getQualifiedTypeName());
-      // float typeHistoryRank= QualifiedTypeNameHistory.getDefault().getNormalizedPosition(getQualifiedTypeName());
+      float rhsHistoryRank = fInvocationContext.getHistoryRelevance(getQualifiedTypeName());
+      float typeHistoryRank = QualifiedTypeNameHistory.getDefault().getNormalizedPosition(getQualifiedTypeName());
 
-      // int recencyBoost= Math.round((rhsHistoryRank + typeHistoryRank) * 5);
-      // int rhsBoost= rhsHistoryRank > 0.0f ? 50 : 0;
-      // int baseRelevance= super.computeRelevance();
-      //
-      // return baseRelevance + rhsBoost + recencyBoost;
-      return super.computeRelevance();
+      int recencyBoost = Math.round((rhsHistoryRank + typeHistoryRank) * 5);
+      int rhsBoost = rhsHistoryRank > 0.0f ? 50 : 0;
+      int baseRelevance = super.computeRelevance();
+
+      return baseRelevance + rhsBoost + recencyBoost;
    }
 
    /**

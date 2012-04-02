@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant;
 
+import org.eclipse.jdt.client.TypeInfoStorage;
 import org.eclipse.jdt.client.core.CompletionProposal;
+import org.eclipse.jdt.client.core.IJavaElement;
 import org.eclipse.jdt.client.core.Signature;
+import org.eclipse.jdt.client.internal.corext.util.SignatureUtil;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 /**
@@ -39,9 +42,19 @@ public final class TypeProposalInfo extends MemberProposalInfo
    @Override
    protected String getURL()
    {
-      return docContext + Signature.toString(new String(fProposal.getSignature())) + "&projectid=" + projectId + "&vfsid="
-         + VirtualFileSystem.getInstance().getInfo().getId() + "&isclass=true";
+      return docContext + Signature.toString(new String(fProposal.getSignature())) + "&projectid=" + projectId
+         + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId() + "&isclass=true";
 
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.codeassistant.MemberProposalInfo#getJavaElement()
+    */
+   @Override
+   public IJavaElement getJavaElement()
+   {
+      String fqn = String.valueOf(SignatureUtil.stripSignatureToFQN(String.valueOf(fProposal.getSignature())));
+      return TypeInfoStorage.get().getTypeByFqn(fqn);
    }
 
 }

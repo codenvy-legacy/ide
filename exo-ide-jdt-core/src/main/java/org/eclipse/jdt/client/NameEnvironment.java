@@ -33,6 +33,7 @@ import org.eclipse.jdt.client.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.client.env.BinaryTypeImpl;
 import org.eclipse.jdt.client.internal.codeassist.ISearchRequestor;
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod;
+import org.eclipse.jdt.client.internal.compiler.env.IBinaryType;
 import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.client.internal.compiler.env.NameEnvironmentAnswer;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
@@ -52,7 +53,9 @@ import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Implementation of {@link INameEnvironment} interface, use JavaCodeAssistantService for receiving data and SessionStorage for
@@ -286,7 +289,8 @@ public class NameEnvironment implements INameEnvironment
             TypeInfoStorage.get().getTypesByNamePrefix(new String(prefix), qualification != null);
          for (JSONObject object : typesByNamePrefix)
          {
-            addConstructor(new BinaryTypeImpl(object), requestor);
+            BinaryTypeImpl type = new BinaryTypeImpl(object);
+            addConstructor(type, requestor);
          }
          String typesJson = runSyncReques(url);
          JSONArray typesFromServer = null;
@@ -297,6 +301,8 @@ public class NameEnvironment implements INameEnvironment
             {
                JSONObject object = typesFromServer.get(i).isObject();
                BinaryTypeImpl type = new BinaryTypeImpl(object);
+               if (TypeInfoStorage.get().containsKey(String.valueOf(type.getFqn())))
+                  continue;
                TypeInfoStorage.get().putType(new String(type.getFqn()), type.toJsonString());
                addConstructor(type, requestor);
             }
@@ -345,11 +351,11 @@ public class NameEnvironment implements INameEnvironment
    }
 
    private native String runSyncReques(String url)/*-{
-		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.open("GET", url, false);
-		xmlhttp.send();
-		return xmlhttp.responseText;
-   }-*/;
+                                                  var xmlhttp = new XMLHttpRequest();
+                                                  xmlhttp.open("GET", url, false);
+                                                  xmlhttp.send();
+                                                  return xmlhttp.responseText;
+                                                  }-*/;
 
    /**
     * Must be used only by CompletionEngine. The progress monitor is used to be able to cancel completion operations
@@ -381,7 +387,7 @@ public class NameEnvironment implements INameEnvironment
          }
          else
          {
-            typeSearch="fqn";
+            typeSearch = "fqn";
          }
          url =
             JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/find-by-prefix/" + new String(qualifiedName)

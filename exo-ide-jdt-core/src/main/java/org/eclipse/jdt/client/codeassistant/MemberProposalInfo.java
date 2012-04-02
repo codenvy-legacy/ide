@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.eclipse.jdt.client.core.CompletionProposal;
+import org.eclipse.jdt.client.core.IJavaElement;
 import org.exoplatform.ide.editor.runtime.Assert;
 
 /**
@@ -65,6 +66,12 @@ public abstract class MemberProposalInfo extends ProposalInfo
          frame = new Frame(url);
       }
       return frame;
+   }
+
+   @Override
+   public IJavaElement getJavaElement()
+   {
+      return null;
    }
 
    protected abstract String getURL();
