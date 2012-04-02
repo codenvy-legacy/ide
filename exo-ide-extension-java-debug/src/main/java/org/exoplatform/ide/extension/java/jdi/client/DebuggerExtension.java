@@ -1,9 +1,6 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -46,10 +43,6 @@ public class DebuggerExtension extends Extension
       IDE.addHandler(DebuggerDisconnectedEvent.TYPE, debuggerPresenter);
       IDE.addHandler(BreakPointsUpdatedEvent.TYPE, debuggerPresenter);
       IDE.addHandler(ViewClosedEvent.TYPE, debuggerPresenter);
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, debuggerPresenter);
-      IDE.addHandler(EditorFileOpenedEvent.TYPE, debuggerPresenter);
-      IDE.addHandler(EditorFileClosedEvent.TYPE, debuggerPresenter);
-      
    }
 
 }
