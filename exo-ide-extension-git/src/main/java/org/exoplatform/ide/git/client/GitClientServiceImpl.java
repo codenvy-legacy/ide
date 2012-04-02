@@ -25,7 +25,6 @@ import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.git.client.add.AddRequestHandler;
 import org.exoplatform.ide.git.client.clone.CloneRequestStatusHandler;
@@ -118,8 +117,6 @@ public class GitClientServiceImpl extends GitClientService
    public static final String MERGE = "/ide/git/merge";
 
    public static final String STATUS = "/ide/git/status";
-
-   public static final String WORKDIR = "/ide/git-repo/workdir";
 
    public static final String RO_URL = "/ide/git/read-only-url";
 
@@ -603,21 +600,7 @@ public class GitClientServiceImpl extends GitClientService
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   /**
-    * @throws RequestException
-    * @see org.exoplatform.ide.git.client.GitClientService#deleteWorkDir(java.lang.String,
-    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-   @Override
-   public void deleteWorkDir(String vfsId, String projectid, AsyncRequestCallback<String> callback)
-      throws RequestException
-   {
-      String url = restServiceContext + WORKDIR;
-      url += "?vfsid=" + vfsId + "&projectid=" + projectid;
-
-      AsyncRequest.build(RequestBuilder.GET, url).loader(loader)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.DELETE).send(callback);
-   }
+  
 
    /**
     * @throws RequestException

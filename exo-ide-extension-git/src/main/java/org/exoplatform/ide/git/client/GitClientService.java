@@ -97,8 +97,7 @@ public abstract class GitClientService
     * @throws RequestException
     */
    public abstract void fetch(String vfsId, ProjectModel project, String remote, String[] refspec,
-      boolean removeDeletedRefs, AsyncRequestCallback<String> callback)
-      throws RequestException;
+      boolean removeDeletedRefs, AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Get the list of the branches. For now, all branches cannot be returned at once, so the parameter <code>remote</code> tells
@@ -216,12 +215,12 @@ public abstract class GitClientService
     * 
     * @param vfsId virtual file system id
     * @param projectid project's id (root of GIT repository)
-    * @param projectName 
+    * @param projectName
     * @param bare to create bare repository or not
     * @param callback callback
     */
-   public abstract void init(String vfsId, String projectid, String projectName, boolean bare, AsyncRequestCallback<String> callback)
-      throws RequestException;
+   public abstract void init(String vfsId, String projectid, String projectName, boolean bare,
+      AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Pull(fetch and merge) changes from remote repository to local one.
@@ -393,15 +392,5 @@ public abstract class GitClientService
     * @throws RequestException
     */
    public abstract void getGitReadOnlyUrl(String vfsId, String projectid, AsyncRequestCallback<StringBuilder> callback)
-      throws RequestException;
-
-   /**
-    * Get the Git work directory (where ".git" folder is located) for the pointed item's location and delete it.
-    * 
-    * @param vfsId virtual file system's id
-    * @param projectid project's id (root of GIT repository)
-    * @param callback callback
-    */
-   public abstract void deleteWorkDir(String vfsId, String projectid, AsyncRequestCallback<String> callback)
       throws RequestException;
 }

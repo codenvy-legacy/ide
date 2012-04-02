@@ -34,9 +34,8 @@ public class GitApplication extends Application
 
    public GitApplication()
    {
-      classes = new HashSet<Class<?>>(2);
+      classes = new HashSet<Class<?>>(1);
       classes.add(GitService.class);
-      classes.add(GitRepoService.class);
 
       singletons = new HashSet<Object>(7);
       singletons.add(new GitExceptionMapper());

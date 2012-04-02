@@ -19,7 +19,6 @@
 package org.exoplatform.ide.git.client.delete;
 
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.URL;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -29,10 +28,16 @@ import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Delete repository command handler, performs deleting Git repository.
@@ -90,20 +95,78 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
     */
    public void doDeleteRepository()
    {
-      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      if (projectId == null || projectId.isEmpty())
+      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      if (project == null)
          return;
+      getChildren(project);
+   }
+
+   /**
+    * Get the project's content.
+    * 
+    * @param project
+    */
+   private void getChildren(ProjectModel project)
+   {
+      if (!project.getChildren().getItems().isEmpty())
+      {
+         for (Item item : project.getChildren().getItems())
+         {
+            if (".git".equals(item.getName()))
+            {
+               deleteItem(item);
+               return;
+            }
+         }
+      }
+
       try
       {
-         GitClientService.getInstance().deleteWorkDir(vfs.getId(), projectId, new AsyncRequestCallback<String>()
+         VirtualFileSystem.getInstance().getChildren(project,
+            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
+            {
+
+               @Override
+               protected void onSuccess(List<Item> result)
+               {
+                  for (Item item : result)
+                  {
+                     if (".git".equals(item.getName()))
+                     {
+                        deleteItem(item);
+                     }
+                  }
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   /**
+    * Delete item.
+    * 
+    * @param item item to delete
+    */
+   private void deleteItem(Item item)
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().delete(item, new AsyncRequestCallback<String>()
          {
+
             @Override
             protected void onSuccess(String result)
             {
                IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.deleteGitRepositorySuccess(), Type.INFO));
-               String href = URL.decode(projectId);
-               // TODO to fix this with encoding symbol "@"
-               href = href.replaceAll("@", "%40");
                IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
             }
 
@@ -118,14 +181,5 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
-   }
-
-   public String getParentFolder(String child)
-   {
-      String href = child.endsWith("/") ? child.substring(0, child.lastIndexOf("/")) : child;
-      href = href.substring(0, href.lastIndexOf("/") + 1);
-      href = URL.encode(href);
-      // TODO to fix this with encoding symbol "@"
-      return href.replaceAll("@", "%40");
    }
 }
