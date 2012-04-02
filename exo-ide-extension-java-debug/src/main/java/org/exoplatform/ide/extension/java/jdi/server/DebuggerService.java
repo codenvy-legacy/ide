@@ -93,6 +93,13 @@ public class DebuggerService
       Debugger.getInstance(id).deleteBreakPoint(breakPoint);
    }
 
+   @POST
+   @Path("breakpoints/delete_all/{id}")
+   public void deleteAllBreakPoint(@PathParam("id") String id) throws DebuggerException
+   {
+      Debugger.getInstance(id).deleteAllBreakPoints();
+   }
+
    @GET
    @Path("events/{id}")
    @Produces(MediaType.APPLICATION_JSON)

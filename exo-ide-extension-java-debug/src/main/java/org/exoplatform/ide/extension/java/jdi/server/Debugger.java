@@ -321,6 +321,16 @@ public class Debugger implements EventsHandler
    }
 
    /**
+    * Delete all break point.
+    *
+    * @throws DebuggerException when any JDI errors occurs when try to delete break point
+    */
+   public void deleteAllBreakPoints() throws DebuggerException
+   {
+      getEventManager().deleteAllBreakpoints();
+   }
+
+   /**
     * Get next set of debugger events.
     *
     * @return set of the debugger's events which occurred after last visit this method
