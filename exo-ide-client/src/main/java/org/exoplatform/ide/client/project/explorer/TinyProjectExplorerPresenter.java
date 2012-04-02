@@ -88,6 +88,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.model.settings.SettingsService;
+import org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent;
+import org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler;
 import org.exoplatform.ide.client.operation.cutcopy.CopyItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.CutItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.PasteItemsEvent;
@@ -130,7 +132,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowProjectExplorerHandler,
    ItemsSelectedHandler, ViewActivatedHandler, OpenProjectHandler, VfsChangedHandler, CloseProjectHandler,
    AllFilesClosedHandler, GoToFolderHandler, EditorActiveFileChangedHandler, IDELoadCompleteHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler
+   EditorFileOpenedHandler, EditorFileClosedHandler, ShowHideHiddenFilesHandler
 {
 
    private static final String DEFAULT_TITLE = "Project Explorer";
@@ -180,6 +182,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       IDE.addHandler(IDELoadCompleteEvent.TYPE, this);
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+      IDE.addHandler(ShowHideHiddenFilesEvent.TYPE, this);
    }
 
    private void ensureProjectExplorerDisplayCreated()
@@ -454,11 +457,12 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    {
       for (Item i : result)
       {
-         if (i instanceof ItemContext) {
+         if (i instanceof ItemContext)
+         {
             ItemContext contect = (ItemContext)i;
             contect.setParent(new FolderModel(folder));
             contect.setProject(openedProject);
-         }         
+         }
       }
 
       if (folder instanceof FolderModel)
@@ -483,7 +487,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       Collections.sort(children, comparator);
 
       display.getBrowserTree().setValue(folder);
-      display.asView().setViewVisible();
+      //display.asView().setViewVisible();
 
       refreshNextFolder();
    }
@@ -824,31 +828,31 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       {
          return;
       }
-      
+
       if (!display.asView().isViewVisible())
       {
          display.asView().activate();
       }
-      
+
       if (display.selectItem(editorActiveFile.getId()))
       {
          return;
       }
 
-//      // If project explorer is not visible then display.selectItem() finds item in tree but does not selects it.
-//      if (display.asView().isViewVisible())
-//      {
-//         if (display.selectItem(editorActiveFile.getId()))
-//         {
-//            return;
-//         }
-//      }
-//      else
-//      {
-//         // First we need activate project explorer because
-//         // code below do not select item in tree.
-//         display.asView().activate();
-//      }
+      //      // If project explorer is not visible then display.selectItem() finds item in tree but does not selects it.
+      //      if (display.asView().isViewVisible())
+      //      {
+      //         if (display.selectItem(editorActiveFile.getId()))
+      //         {
+      //            return;
+      //         }
+      //      }
+      //      else
+      //      {
+      //         // First we need activate project explorer because
+      //         // code below do not select item in tree.
+      //         display.asView().activate();
+      //      }
 
       // If we do not find item in tree then try to find item in VFS.
       String expandPath = editorActiveFile.getPath().substring(openedProject.getPath().length());
@@ -899,7 +903,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
                protected void onSuccess(ItemWrapper result)
                {
                   itemsToBeOpened.remove(0);
-                  
+
                   if (result.getItem() instanceof ProjectModel)
                   {
                      foldersToRefresh.add((ProjectModel)result.getItem());
@@ -911,10 +915,11 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
                   else if (result.getItem() instanceof FileModel)
                   {
                      FileModel file = (FileModel)result.getItem();
-                     if (file instanceof ItemContext && openedProject != null) {
+                     if (file instanceof ItemContext && openedProject != null)
+                     {
                         ((ItemContext)file).setProject(openedProject);
                      }
-                     
+
                      itemToSelect = result.getItem().getId();
                   }
 
@@ -1053,4 +1058,17 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       openedFiles = event.getOpenedFiles();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler#onShowHideHiddenFiles(org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent)
+    */
+   @Override
+   public void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event)
+   {
+      if (display != null)
+      {
+         foldersToRefresh.clear();
+         foldersToRefresh.add(openedProject);
+         refreshNextFolder();
+      }
+   }
 }

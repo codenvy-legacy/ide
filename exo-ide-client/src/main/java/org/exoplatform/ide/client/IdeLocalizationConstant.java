@@ -245,6 +245,12 @@ public interface IdeLocalizationConstant extends Constants
    @Key("control.output.prompt")
    String outputPromptControl();
 
+   @Key("control.showHiddenFiles.show")
+   String showHiddenFilesShowControl();
+
+   @Key("control.showHiddenFiles.hide")
+   String showHiddenFilesHideControl();
+
    /*
     * DOWNLOAD CONTROL
     */

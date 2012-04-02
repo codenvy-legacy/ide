@@ -46,4 +46,5 @@ public interface Settings
 
    public static final String DEFAULT_EDITORS = "default-editors";
 
+   public static final String SHOW_HIDDEN_FILES = "project-explorer-show-hidden-files";
 }

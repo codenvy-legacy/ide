@@ -37,6 +37,7 @@ import org.exoplatform.ide.client.navigation.handler.OpenFileCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveAllFilesCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveFileAsCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveFileCommandHandler;
+import org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesCommandHandler;
 import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter;
 import org.exoplatform.ide.client.navigator.NavigatorPresenter;
 import org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter;
@@ -124,6 +125,8 @@ public class NavigationModule implements InitializeServicesHandler
       new SearchResultsPresenter();
 
       IDE.getInstance().addControl(new RefreshBrowserControl(), Docking.TOOLBAR);
+
+      new ShowHideHiddenFilesCommandHandler();
 
       new GoToFolderCommandHandler();
 

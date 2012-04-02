@@ -63,6 +63,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent;
+import org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler;
 import org.exoplatform.ide.client.operation.cutcopy.CopyItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.CutItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.PasteItemsEvent;
@@ -99,7 +101,8 @@ import java.util.List;
  */
 public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHandler, ViewVisibilityChangedHandler,
    ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler, ViewClosedHandler,
-   AddItemTreeIconHandler, RemoveItemTreeIconHandler, ViewActivatedHandler, ShowNavigatorHandler, VfsChangedHandler
+   AddItemTreeIconHandler, RemoveItemTreeIconHandler, ViewActivatedHandler, ShowNavigatorHandler, VfsChangedHandler,
+   ShowHideHiddenFilesHandler
 {
 
    private static final String RECEIVE_CHILDREN_ERROR_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
@@ -130,6 +133,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
       IDE.addHandler(RemoveItemTreeIconEvent.TYPE, this);
       IDE.addHandler(ShowNavigatorEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ShowHideHiddenFilesEvent.TYPE, this);
 
       IDE.getInstance().addControl(new ShowNavigatorControl());
    }
@@ -421,7 +425,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
 
       display.getBrowserTree().setValue(folder);
 
-      display.asView().setViewVisible();
+      //display.asView().setViewVisible();
 
       if (itemToSelect != null)
       {
@@ -658,6 +662,20 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
          openRootFolder();
       }
 
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler#onShowHideHiddenFiles(org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent)
+    */
+   @Override
+   public void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event)
+   {
+      if (display != null)
+      {
+         foldersToRefresh.clear();
+         foldersToRefresh.add(rootFolder);
+         refreshNextFolder();
+      }
    }
 
 }

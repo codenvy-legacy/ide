@@ -52,6 +52,7 @@ public class ViewControlsFormatter implements ControlsFormatter
       controlIdsOrder.add("View/Progress");
       controlIdsOrder.add("View/Output");
       controlIdsOrder.add("View/Log");
+      controlIdsOrder.add("View/Show \\ Hide Hidden Files");
    }
 
    /**

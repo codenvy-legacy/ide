@@ -45,6 +45,8 @@ import org.exoplatform.ide.client.framework.settings.SaveApplicationSettingsEven
 import org.exoplatform.ide.client.framework.settings.SaveApplicationSettingsHandler;
 import org.exoplatform.ide.client.model.settings.Settings;
 import org.exoplatform.ide.client.model.settings.SettingsService;
+import org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent;
+import org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
 import org.exoplatform.ide.vfs.client.event.ItemLockedEvent;
@@ -72,7 +74,7 @@ import java.util.Map;
 public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler, EditorFileClosedHandler,
    EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler, VfsChangedHandler, EditorReplaceFileHandler,
    ItemLockedHandler, ItemUnlockedHandler, ItemDeletedHandler, ItemMovedHandler, ProjectOpenedHandler,
-   ProjectClosedHandler, SaveApplicationSettingsHandler
+   ProjectClosedHandler, SaveApplicationSettingsHandler, ShowHideHiddenFilesHandler
 {
 
    private Map<String, FileModel> openedFiles = new LinkedHashMap<String, FileModel>();
@@ -97,6 +99,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(SaveApplicationSettingsEvent.TYPE, this);
+      IDE.addHandler(ShowHideHiddenFilesEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -284,6 +287,16 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       applicationSettings.setValue(Settings.OPENED_PROJECT, event.getProject().getId(), Store.COOKIES);
+      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler#onShowHideHiddenFiles(org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent)
+    */
+   @Override
+   public void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event)
+   {
+      applicationSettings.setValue(Settings.SHOW_HIDDEN_FILES, new Boolean(event.isFilesShown()), Store.COOKIES);
       SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
    }
 
