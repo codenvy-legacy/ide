@@ -254,6 +254,16 @@
          </value-param>
       </init-params>
    </component>
+   
+   <component>
+      <type>org.exoplatform.ide.extension.samples.server.GitHubAuthenticator</type>
+      <init-params>
+         <value-param>
+            <name>workspace</name>
+            <value>production</value>
+         </value-param>
+      </init-params>
+   </component>
 
    <component>
       <type>org.exoplatform.ide.extension.gadget.server.rest.GadgetExtenshionApplication</type>
