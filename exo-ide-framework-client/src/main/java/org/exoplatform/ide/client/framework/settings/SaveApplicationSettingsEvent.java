@@ -33,7 +33,7 @@ public class SaveApplicationSettingsEvent extends GwtEvent<SaveApplicationSettin
 {
 
    public enum SaveType {
-      COOKIES, REGISTRY, BOTH
+      COOKIES, SERVER, BOTH
    }
 
    public static final GwtEvent.Type<SaveApplicationSettingsHandler> TYPE =
