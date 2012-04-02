@@ -24,4 +24,8 @@ package org.exoplatform.ide.extension.java.jdi.shared;
  */
 public interface DebuggerEvent
 {
+   int BREAKPOINT = 1;
+   int STEP = 2;
+
+   int getType();
 }

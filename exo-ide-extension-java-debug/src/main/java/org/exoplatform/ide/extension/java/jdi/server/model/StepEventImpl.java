@@ -57,4 +57,10 @@ public class StepEventImpl implements StepEvent
          "location=" + location +
          '}';
    }
+
+   @Override
+   public final int getType()
+   {
+      return STEP;
+   }
 }

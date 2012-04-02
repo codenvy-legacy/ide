@@ -35,12 +35,12 @@ import com.sun.jdi.request.EventRequest;
 import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.request.InvalidRequestStateException;
 import com.sun.jdi.request.StepRequest;
-
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.exoplatform.ide.extension.java.jdi.server.expression.Evaluator;
+import org.exoplatform.ide.extension.java.jdi.server.expression.ExpressionException;
 import org.exoplatform.ide.extension.java.jdi.server.expression.JavaLexer;
 import org.exoplatform.ide.extension.java.jdi.server.expression.JavaParser;
 import org.exoplatform.ide.extension.java.jdi.server.expression.JavaTreeParser;
@@ -658,31 +658,26 @@ public class Debugger implements EventsHandler
       }
    }
 
-   public void expression(String expr) throws Exception
+   public String expression(String expr) throws DebuggerStateException
    {
-      JavaLexer lex = new JavaLexer(new ANTLRStringStream(
-         expr
-      ));
-      CommonTokenStream tokens = new CommonTokenStream(lex);
-
-
-      JavaParser parser = new JavaParser(tokens);
-      JavaParser.expression_return r = parser.expression();
-
-      CommonTreeNodeStream nodes = new CommonTreeNodeStream(r.getTree());
-
-      JavaTreeParser walker = new JavaTreeParser(nodes, new Evaluator(vm, getCurrentThread()));
       try
       {
-         walker.eval();
+         JavaLexer lex = new JavaLexer(new ANTLRStringStream(expr));
+         CommonTokenStream tokens = new CommonTokenStream(lex);
+         JavaParser parser = new JavaParser(tokens);
+         CommonTreeNodeStream nodes = new CommonTreeNodeStream(parser.expression().getTree());
+         JavaTreeParser walker = new JavaTreeParser(nodes, new Evaluator(vm, getCurrentThread()));
+         return walker.eval().toString();
       }
       catch (RecognitionException e)
       {
-         e.printStackTrace();
-      } finally {
+         throw new ExpressionException(e.getMessage(), e);
+      }
+      finally
+      {
+         // Evaluation of expression may update state of frame.
          resetCurrentFrame();
       }
-
    }
 
    private ThreadReference getCurrentThread() throws DebuggerStateException

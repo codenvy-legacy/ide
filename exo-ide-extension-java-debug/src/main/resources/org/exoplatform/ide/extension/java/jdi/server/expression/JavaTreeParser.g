@@ -526,11 +526,12 @@ forUpdater
 
 // EXPRESSIONS
 
-eval
+eval returns [com.sun.jdi.Value value]
   :
   expression 
              {
-               System.out.printf("RESULT: \%s\%n", $expression.value.getValue());
+               //System.out.printf("RESULT: \%s\%n", $expression.value.getValue());
+               $value = $expression.value.getValue();
              }
   ;
 
@@ -597,16 +598,25 @@ expr returns [ExpressionValue value]
                                 $value = ev.operation($a.value, $b.value, $MOD_ASSIGN.type);
                               }
   |
-  ^(BIT_SHIFT_RIGHT_ASSIGN expr expr)
+  ^(BIT_SHIFT_RIGHT_ASSIGN a=expr b=expr)
+                              {
+                                $value = ev.operation($a.value, $b.value, $BIT_SHIFT_RIGHT_ASSIGN.type);
+                              }
   |
-  ^(SHIFT_RIGHT_ASSIGN expr expr)
+  ^(SHIFT_RIGHT_ASSIGN a=expr b=expr)
+                              {
+                                $value = ev.operation($a.value, $b.value, $SHIFT_RIGHT_ASSIGN.type);
+                              }
   |
-  ^(SHIFT_LEFT_ASSIGN expr expr)
+  ^(SHIFT_LEFT_ASSIGN a=expr b=expr)
+                              {
+                                $value = ev.operation($a.value, $b.value, $SHIFT_LEFT_ASSIGN.type);
+                              }
   |
   ^(QUESTION test=expr a=expr b=expr)
                               {
-                                throw new ExpressionException("Ternary operator is not supported yet. ");
-                                //$value = ev.ternaryOperator($test.value, $a.value, $b.value);
+                                //throw new ExpressionException("Ternary operator is not supported yet. ");
+                                $value = ev.ternaryOperator($test.value, $a.value, $b.value);
                               }
   |
   ^(LOGICAL_OR a=expr b=expr)

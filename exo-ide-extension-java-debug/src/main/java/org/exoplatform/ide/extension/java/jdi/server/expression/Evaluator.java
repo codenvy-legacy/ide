@@ -254,7 +254,7 @@ public class Evaluator
          LocalVariable var = frame.visibleVariableByName(text);
          if (var != null)
          {
-            return new LocalValue(frame, var);
+            return new LocalValue(thread, var);
          }
       }
       catch (IncompatibleThreadStateException e)
@@ -766,6 +766,15 @@ public class Evaluator
             case JavaParser.AND_ASSIGN:
                leftExpression.setValue(vm.mirrorOf(lp.longValue() & rp.longValue()));
                return leftExpression;
+            case JavaParser.SHIFT_LEFT_ASSIGN:
+               leftExpression.setValue(vm.mirrorOf(lp.longValue() << rp.longValue()));
+               return leftExpression;
+            case JavaParser.SHIFT_RIGHT_ASSIGN:
+               leftExpression.setValue(vm.mirrorOf(lp.longValue() >> rp.longValue()));
+               return leftExpression;
+            case JavaParser.BIT_SHIFT_RIGHT_ASSIGN:
+               leftExpression.setValue(vm.mirrorOf(lp.longValue() >>> rp.longValue()));
+               return leftExpression;
             default:
                throw new ExpressionException("Unsupported operation " + JavaParser.tokenNames[op] + " for " + leftValue
                   + " and " + rightValue);
@@ -815,6 +824,15 @@ public class Evaluator
             return leftExpression;
          case JavaParser.AND_ASSIGN:
             leftExpression.setValue(vm.mirrorOf(lp.intValue() & rp.intValue()));
+            return leftExpression;
+         case JavaParser.SHIFT_LEFT_ASSIGN:
+            leftExpression.setValue(vm.mirrorOf(lp.intValue() << rp.intValue()));
+            return leftExpression;
+         case JavaParser.SHIFT_RIGHT_ASSIGN:
+            leftExpression.setValue(vm.mirrorOf(lp.intValue() >> rp.intValue()));
+            return leftExpression;
+         case JavaParser.BIT_SHIFT_RIGHT_ASSIGN:
+            leftExpression.setValue(vm.mirrorOf(lp.intValue() >>> rp.intValue()));
             return leftExpression;
          default:
             throw new ExpressionException("Unsupported operation " + JavaParser.tokenNames[op] + " for " + leftValue

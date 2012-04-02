@@ -53,4 +53,10 @@ public class BreakPointEventImpl implements BreakPointEvent
          "breakPoint=" + breakPoint +
          '}';
    }
+
+   @Override
+   public final int getType()
+   {
+      return BREAKPOINT;
+   }
 }

@@ -138,4 +138,13 @@ public class DebuggerService
    {
       Debugger.getInstance(id).stepOut();
    }
+
+   @POST
+   @Path("expression")
+   @Consumes(MediaType.TEXT_PLAIN)
+   @Produces(MediaType.TEXT_PLAIN)
+   public String expression(@PathParam("id") String id, String expr) throws DebuggerException
+   {
+      return Debugger.getInstance(id).expression(expr);
+   }
 }

@@ -19,10 +19,11 @@
 package org.exoplatform.ide.extension.java.jdi.server.expression;
 
 import com.sun.jdi.ClassNotLoadedException;
+import com.sun.jdi.IncompatibleThreadStateException;
 import com.sun.jdi.InvalidStackFrameException;
 import com.sun.jdi.InvalidTypeException;
 import com.sun.jdi.LocalVariable;
-import com.sun.jdi.StackFrame;
+import com.sun.jdi.ThreadReference;
 import com.sun.jdi.Value;
 
 /**
@@ -31,13 +32,13 @@ import com.sun.jdi.Value;
  */
 public class LocalValue implements ExpressionValue
 {
-   private final StackFrame frame;
+   private final ThreadReference thread;
    private final LocalVariable variable;
    private Value value;
 
-   public LocalValue(StackFrame frame, LocalVariable variable)
+   public LocalValue(ThreadReference thread, LocalVariable variable)
    {
-      this.frame = frame;
+      this.thread = thread;
       this.variable = variable;
    }
 
@@ -48,7 +49,11 @@ public class LocalValue implements ExpressionValue
       {
          try
          {
-            value = frame.getValue(variable);
+            value = thread.frame(0).getValue(variable);
+         }
+         catch (IncompatibleThreadStateException e)
+         {
+            throw new ExpressionException(e.getMessage(), e);
          }
          catch (IllegalArgumentException e)
          {
@@ -67,7 +72,11 @@ public class LocalValue implements ExpressionValue
    {
       try
       {
-         frame.setValue(variable, value);
+         thread.frame(0).setValue(variable, value);
+      }
+      catch (IncompatibleThreadStateException e)
+      {
+         throw new ExpressionException(e.getMessage(), e);
       }
       catch (InvalidTypeException e)
       {
