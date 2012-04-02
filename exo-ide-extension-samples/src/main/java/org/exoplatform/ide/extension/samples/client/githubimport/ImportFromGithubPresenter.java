@@ -24,14 +24,15 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
@@ -40,82 +41,180 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.framework.settings.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.settings.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
-import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
 import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
-import org.exoplatform.ide.extension.samples.client.marshal.RepositoriesUnmarshaller;
-import org.exoplatform.ide.extension.samples.shared.Repository;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.extension.samples.client.marshal.RepositoriesExtUnmarshaller;
+import org.exoplatform.ide.extension.samples.shared.RepositoryExt;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
+ * Presenter for importing user's GitHub project to IDE.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ImportFromGithubPresenter.java Dec 7, 2011 3:37:11 PM vereshchaka $
  * 
  */
-public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, ViewClosedHandler, VfsChangedHandler,
+public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, ViewClosedHandler,
    GithubStep<ProjectData>, ApplicationSettingsReceivedHandler
 {
    public interface Display extends IsView
    {
+      /**
+       * Returns login field.
+       * 
+       * @return {@link HasValue} login field
+       */
+      HasValue<String> getLoginField();
 
-      HasClickHandlers getCancelButton();
+      /**
+       * Returns password field.
+       * 
+       * @return {@link HasValue} password field
+       */
+      HasValue<String> getPasswordField();
 
+      /**
+       * Returns login result label.
+       * 
+       * @return {@link HasValue} login result label
+       */
+      HasValue<String> getLoginResult();
+
+      /**
+       * Returns project's type field.
+       * 
+       * @return {@link HasValue} project's type field
+       */
       HasValue<String> getProjectTypeField();
 
-      HasValue<String> getNotifyLabel();
-
-      HasValue<String> getGitHubName();
-
-      HasClickHandlers getGetButton();
-
-      HasClickHandlers getNextButton();
-
+      /**
+       * Returns project's name field.
+       * 
+       * @return {@link HasValue} project's name field
+       */
       HasValue<String> getProjectNameField();
 
+      /**
+       * Returns read only mode of the Git repository field.
+       * 
+       * @return {@link HasValue} read only mode of the Git repository
+       */
+      HasValue<Boolean> getReadOnlyModeField();
+
+      /**
+       * Returns next button's click handler.
+       * 
+       * @return {@link HasClickHandlers} button's click handler
+       */
+      HasClickHandlers getNextButton();
+
+      /**
+       * Returns back button's click handler.
+       * 
+       * @return {@link HasClickHandlers} button's click handler
+       */
+      HasClickHandlers getBackButton();
+
+      /**
+       * Returns cancel button's click handler.
+       * 
+       * @return {@link HasClickHandlers} button's click handler
+       */
+      HasClickHandlers getCancelButton();
+
+      /**
+       * Set the project's types.
+       * 
+       * @param values project's types
+       */
       void setProjectTypeValues(String[] values);
 
-      ListGridItem<ProjectData> getSamplesListGrid();
+      /**
+       * Returns repositories list grid.
+       * 
+       * @return {@link ListGridItem} repositories list grid
+       */
+      ListGridItem<ProjectData> getRepositoriesGrid();
 
+      /**
+       * Set the enabled state of the next button.
+       * 
+       * @param enabled enabled state of the next button
+       */
       void setNextButtonEnabled(boolean enabled);
 
+      /**
+       * Give focus to login field.
+       */
+      void focusInLoginField();
+
+      /**
+       * Show/hide the login step.
+       * 
+       * @param show
+       */
+      void showLoginStep(boolean show);
+
+      /**
+       * Show/hide the import step.
+       * 
+       * @param show
+       */
+      void showImportStep(boolean show);
    }
 
-   private static final SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
+   private final String GITHUB_USER = "GitHubUser";
 
+   /**
+    * Presenter's display.
+    */
    private Display display;
 
-   // private String gitUrl;
-   //
-   // private String projectType;
-   //
-   // private String projectName;
-   //
-   private VirtualFileSystemInfo vfs;
-
+   /**
+    * Next step.
+    */
    private GithubStep<ProjectData> nextStep;
 
+   /**
+    * Selected project (Git repository).
+    */
    private ProjectData selectedProjectData;
 
+   /**
+    * Application settings.
+    */
    private ApplicationSettings appSettings;
+
+   /**
+    * If <code>true</code> then current step is login.
+    */
+   private boolean isLoginStep = true;
+
+   /**
+    * Map of read-only URLs. Key is ssh Git URL - value is read-only Git URL.
+    */
+   private HashMap<String, String> readonlyUrls = new HashMap<String, String>();
 
    public ImportFromGithubPresenter()
    {
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ShowImportFromGithubEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
+   /**
+    * Bind display with presenter.
+    */
    private void bindDisplay()
    {
       display.getCancelButton().addClickHandler(new ClickHandler()
@@ -123,23 +222,21 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
          @Override
          public void onClick(ClickEvent event)
          {
-            closeView();
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
 
-      display.getGetButton().addClickHandler(new ClickHandler()
+      display.getBackButton().addClickHandler(new ClickHandler()
       {
 
          @Override
          public void onClick(ClickEvent event)
          {
-            appSettings.setValue("GitHubUserName", display.getGitHubName().getValue(), Store.COOKIES);
-            IDE.fireEvent(new SaveApplicationSettingsEvent(appSettings, SaveType.COOKIES));
-            getUsersRepos();
+            goToLogin();
          }
       });
 
-      display.getSamplesListGrid().addSelectionHandler(new SelectionHandler<ProjectData>()
+      display.getRepositoriesGrid().addSelectionHandler(new SelectionHandler<ProjectData>()
       {
 
          @Override
@@ -159,54 +256,86 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
          @Override
          public void onClick(ClickEvent event)
          {
-            String name = display.getProjectNameField().getValue();
-            if (name != null && !name.isEmpty())
-            {
-               selectedProjectData.setName(name);
-            }
-            selectedProjectData.setType(display.getProjectTypeField().getValue());
-            nextStep.onOpen(selectedProjectData);
-            closeView();
+            moveToNextStep();
+         }
+      });
+
+      display.getLoginField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            display.setNextButtonEnabled(isLoginFieldsFullFilled());
+         }
+      });
+
+      display.getPasswordField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            display.setNextButtonEnabled(isLoginFieldsFullFilled());
          }
       });
 
       final Set<String> types = ProjectResolver.getProjectsTypes();
       display.setProjectTypeValues(types.toArray(new String[types.size()]));
 
-      if (appSettings.containsKey("GitHubUserName"))
+      if (appSettings.containsKey(GITHUB_USER))
       {
-         String userName = appSettings.getValueAsString("GitHubUserName");
-         display.getGitHubName().setValue(userName);
-         getUsersRepos();
+         Map<String, String> user = appSettings.getValueAsMap(GITHUB_USER);
+         String login = user.keySet().iterator().next();
+         display.getLoginField().setValue(login);
+         display.getPasswordField().setValue(user.get(login));
       }
-      display.setNextButtonEnabled(false);
    }
 
    /**
+    * Returns login fields full filled state.
     * 
+    * @return {@link Boolean}
     */
-   private void getUsersRepos()
+   private boolean isLoginFieldsFullFilled()
+   {
+      return (display.getLoginField().getValue() != null && !display.getLoginField().getValue().isEmpty()
+         && display.getPasswordField().getValue() != null && !display.getPasswordField().getValue().isEmpty());
+   }
+
+   /**
+    * Get the list of authorized user's repositories.
+    */
+   private void getUserRepos()
    {
       try
       {
-         SamplesClientService.getInstance().getRepositoriesList(display.getGitHubName().getValue(),
-            new AsyncRequestCallback<List<Repository>>(new RepositoriesUnmarshaller(new ArrayList<Repository>()))
+         SamplesClientService.getInstance().getRepositoriesList(
+            new AsyncRequestCallback<List<RepositoryExt>>(new RepositoriesExtUnmarshaller(
+               new ArrayList<RepositoryExt>()))
             {
                @Override
-               protected void onSuccess(List<Repository> result)
+               protected void onSuccess(List<RepositoryExt> result)
                {
                   List<ProjectData> projectDataList = new ArrayList<ProjectData>();
-                  for (Repository repo : result)
+                  readonlyUrls.clear();
+                  for (RepositoryExt repo : result)
                   {
-                     projectDataList.add(new ProjectData(repo.getName(), repo.getDescription(), null, repo.getUrl()));
+                     projectDataList.add(new ProjectData(repo.getName(), repo.getDescription(), null, repo.getSshUrl()));
+                     readonlyUrls.put(repo.getSshUrl(), repo.getGitUrl());
                   }
-                  display.getSamplesListGrid().setValue(projectDataList);
+                  display.getRepositoriesGrid().setValue(projectDataList);
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  if (exception instanceof UnauthorizedException)
+                  {
+                     goToLogin();
+                  }
+                  else
+                  {
+                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  }
                }
             });
       }
@@ -214,120 +343,6 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
-   }
-
-   // /**
-   // * For public repos, the URL can be a read-only URL like
-   // * <code>git://github.com/user/repo.git</code> or an HTTP read-only URL like
-   // * <code>http://github.com/user/repo.git</code>.
-   // * <p/>
-   // *
-   // * For private repos, you must use a private ssh url like
-   // * <code>git@github.com:user/repo.git</code>.
-   // * <p/>
-   // *
-   // * From here http://help.github.com/remotes/
-   // *
-   // * @param gitUrl
-   // * @return
-   // */
-   // private boolean isPublicUrl(String gitUrl)
-   // {
-   // if (gitUrl == null || gitUrl.isEmpty())
-   // return false;
-   //
-   // if (gitUrl.startsWith("git@"))
-   // return false;
-   //
-   // if ((gitUrl.startsWith("git:") || gitUrl.startsWith("https:")) && gitUrl.endsWith(".git"))
-   // return true;
-   //
-   // return false;
-   // }
-
-   // private void createProject()
-   // {
-   // FolderModel parent = (FolderModel)vfs.getRoot();
-   // ProjectModel model = new ProjectModel();
-   // model.setName(projectName);
-   // model.setProjectType(projectType);
-   // model.setParent(parent);
-   // try
-   // {
-   // VirtualFileSystem.getInstance().createProject(
-   // parent,
-   // new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel>(
-   // new ProjectUnmarshaller(model))
-   // {
-   //
-   // @Override
-   // protected void onSuccess(ProjectModel result)
-   // {
-   // cloneRepository(result);
-   // }
-   //
-   // @Override
-   // protected void onFailure(Throwable exception)
-   // {
-   // IDE.fireEvent(new ExceptionThrownEvent(exception, "Exception during creating project"));
-   // }
-   // });
-   // }
-   // catch (RequestException e)
-   // {
-   // IDE.fireEvent(new ExceptionThrownEvent(exception, "Exception during creating project"));
-   // }
-   // }
-
-   // private void cloneRepository(final ProjectModel project)
-   // {
-   // try
-   // {
-   // GitClientService.getInstance().cloneRepository(vfs.getId(), project, gitUrl, null,
-   // new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
-   // {
-   //
-   // @Override
-   // protected void onSuccess(String result)
-   // {
-   // IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-   // IDE.fireEvent(new ProjectCreatedEvent(project));
-   // IDE.fireEvent(new RefreshBrowserEvent(project.getParent()));
-   // }
-   //
-   // @Override
-   // protected void onFailure(Throwable exception)
-   // {
-   // handleError(exception);
-   // }
-   // });
-   // }
-   // catch (RequestException e)
-   // {
-   // handleError(e);
-   // }
-   // }
-
-   // private String getRepoNameByUrl(String gitUrl)
-   // {
-   // String name = gitUrl.substring(gitUrl.lastIndexOf("/") + 1, gitUrl.lastIndexOf("."));
-   // return name;
-   // }
-
-   // private void handleError(Throwable t)
-   // {
-   // String errorMessage =
-   // (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES.cloneFailed();
-   // IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-   // }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      this.vfs = event.getVfsInfo();
    }
 
    /**
@@ -348,20 +363,8 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
    @Override
    public void onShowImportFromGithub(ShowImportFromGithubEvent event)
    {
-      if (display == null)
-      {
-         Display d = GWT.create(Display.class);
-         display = d;
-      }
-      IDE.getInstance().openView((View)display);
-      bindDisplay();
-
-      // display.enableImportButton(false);
-   }
-
-   private void closeView()
-   {
-      IDE.getInstance().closeView(display.asView().getId());
+      openView();
+      goToLogin();
    }
 
    /**
@@ -370,7 +373,6 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
    @Override
    public void onOpen(ProjectData value)
    {
-
    }
 
    /**
@@ -380,8 +382,12 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
    public void onReturn()
    {
       openView();
+      goToImport();
    }
 
+   /**
+    * Open view.
+    */
    private void openView()
    {
       if (display == null)
@@ -392,10 +398,6 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
          bindDisplay();
          return;
       }
-      else
-      {
-         IDE.fireEvent(new ExceptionThrownEvent("Show Samples View must be null"));
-      }
    }
 
    /**
@@ -405,7 +407,6 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
    public void setNextStep(GithubStep<ProjectData> step)
    {
       nextStep = step;
-
    }
 
    /**
@@ -423,5 +424,92 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       appSettings = event.getApplicationSettings();
+   }
+
+   /**
+    * Go to login step.
+    */
+   protected void goToLogin()
+   {
+      isLoginStep = true;
+      display.showLoginStep(true);
+      display.focusInLoginField();
+      display.setNextButtonEnabled(isLoginFieldsFullFilled());
+   }
+
+   /**
+    * Go to import state.
+    */
+   protected void goToImport()
+   {
+      isLoginStep = false;
+      display.showImportStep(true);
+      display.setNextButtonEnabled(false);
+      getUserRepos();
+   }
+
+   /**
+    * Move to next step.
+    */
+   protected void moveToNextStep()
+   {
+      if (isLoginStep)
+      {
+         login();
+      }
+      else
+      {
+         String name = display.getProjectNameField().getValue();
+         if (name != null && !name.isEmpty())
+         {
+            selectedProjectData.setName(name);
+         }
+         selectedProjectData.setType(display.getProjectTypeField().getValue());
+         if (display.getReadOnlyModeField().getValue())
+         {
+            String readonlyUrl = readonlyUrls.get(selectedProjectData.getRepositoryUrl());
+            selectedProjectData.setRepositoryUrl(readonlyUrl);
+         }
+
+         nextStep.onOpen(selectedProjectData);
+         IDE.getInstance().closeView(display.asView().getId());
+      }
+   }
+
+   /**
+    * Log in GitHub.
+    */
+   public void login()
+   {
+      final String login = display.getLoginField().getValue();
+      final String password = display.getPasswordField().getValue();
+
+      try
+      {
+         SamplesClientService.getInstance().loginGitHub(login, password, new AsyncRequestCallback<String>()
+         {
+
+            @Override
+            protected void onSuccess(String result)
+            {
+               HashMap<String, String> user = new HashMap<String, String>();
+               user.put(display.getLoginField().getValue(), display.getPasswordField().getValue());
+
+               appSettings.setValue(GITHUB_USER, user, Store.SERVER);
+               IDE.fireEvent(new SaveApplicationSettingsEvent(appSettings, SaveType.SERVER));
+               goToImport();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               display.getLoginResult().setValue(SamplesExtension.LOCALIZATION_CONSTANT.importFromGithubLoginFailed());
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 }

@@ -22,11 +22,13 @@ import org.exoplatform.ide.extension.samples.server.GithubException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SamplesServiceExceptionMapper.java Sep 2, 2011 12:22:10 PM vereshchaka $
  */
+@Provider
 public class GithubExceptionMapper implements ExceptionMapper<GithubException>
 {
 

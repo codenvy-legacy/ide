@@ -22,6 +22,7 @@ import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.shared.Repository;
+import org.exoplatform.ide.extension.samples.shared.RepositoryExt;
 
 import java.util.List;
 
@@ -51,11 +52,11 @@ public abstract class SamplesClientService
    }
 
    /**
-    * Get the list of available public repositories from GitHub with sample applications.
+    * Get the list of available public and private repositories of the authorized user.
     * 
     * @param callback the callback client has to implement
     */
-   public abstract void getRepositoriesList(AsyncRequestCallback<List<Repository>> callback) throws RequestException;
+   public abstract void getRepositoriesList(AsyncRequestCallback<List<RepositoryExt>> callback) throws RequestException;
 
    /**
     * Get the list of available public repositories from GitHub user.
@@ -63,7 +64,15 @@ public abstract class SamplesClientService
     * @param userName Name of GitHub User
     * @param callback the callback client has to implement
     */
-   public abstract void getRepositoriesList(String userName, AsyncRequestCallback<List<Repository>> callback)
+   public abstract void getRepositoriesByUser(String userName, AsyncRequestCallback<List<Repository>> callback)
       throws RequestException;
 
+   /**
+    * Log in GitHub account.
+    * 
+    * @param login user's login
+    * @param password user's password
+    * @param callback callback the client has to implement
+    */
+   public abstract void loginGitHub(String login, String password, AsyncRequestCallback<String> callback) throws RequestException;
 }

@@ -107,7 +107,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
                Dialogs.getInstance().showError(lb.showSamplesErrorSelectRepository());
                return;
             }
-            
+
             selectedProjectData = selectedProjects.get(0);
             String name = display.getProjectNameField().getValue();
             if (name != null && !name.isEmpty())
@@ -170,7 +170,8 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    {
       try
       {
-         SamplesClientService.getInstance().getRepositoriesList(
+         //User's name will be taken from configuration:
+         SamplesClientService.getInstance().getRepositoriesByUser(null,
             new AsyncRequestCallback<List<Repository>>(new RepositoriesUnmarshaller(new ArrayList<Repository>()))
             {
                @Override
@@ -277,28 +278,30 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    {
       try
       {
-         SamplesClientService.getInstance().getRepositoriesList(new AsyncRequestCallback<List<Repository>>(new RepositoriesUnmarshaller(new ArrayList<Repository>()))
-         {
-            @Override
-            protected void onSuccess(List<Repository> result)
+         //User's name will be taken from configuration:
+         SamplesClientService.getInstance().getRepositoriesByUser(null,
+            new AsyncRequestCallback<List<Repository>>(new RepositoriesUnmarshaller(new ArrayList<Repository>()))
             {
-               openView();
-               List<ProjectData> projectDataList = new ArrayList<ProjectData>();
-               for (Repository repo : result)
+               @Override
+               protected void onSuccess(List<Repository> result)
                {
-                  String[] arr = parseDescription(repo.getDescription());
-                  projectDataList.add(new ProjectData(repo.getName(), arr[1], arr[0], repo.getUrl()));
+                  openView();
+                  List<ProjectData> projectDataList = new ArrayList<ProjectData>();
+                  for (Repository repo : result)
+                  {
+                     String[] arr = parseDescription(repo.getDescription());
+                     projectDataList.add(new ProjectData(repo.getName(), arr[1], arr[0], repo.getUrl()));
+                  }
+                  display.getSamplesListGrid().setValue(projectDataList);
+                  display.enableNextButton(false);
                }
-               display.getSamplesListGrid().setValue(projectDataList);
-               display.enableNextButton(false);
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
       }
       catch (RequestException e)
       {

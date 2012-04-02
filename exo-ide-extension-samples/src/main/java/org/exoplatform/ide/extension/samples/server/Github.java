@@ -18,22 +18,31 @@
  */
 package org.exoplatform.ide.extension.samples.server;
 
+import static org.apache.commons.codec.binary.Base64.encodeBase64;
+
+import org.everrest.core.impl.provider.json.ArrayValue;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
+import org.everrest.core.impl.provider.json.ObjectValue;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
+import org.exoplatform.ide.extension.samples.shared.Credentials;
+import org.exoplatform.ide.extension.samples.shared.GitHubCredentials;
 import org.exoplatform.ide.extension.samples.shared.Repository;
+import org.exoplatform.ide.extension.samples.shared.RepositoryExt;
 import org.exoplatform.ide.helper.JsonHelper;
 import org.exoplatform.ide.helper.ParsingResponseException;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.regex.Pattern;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -43,14 +52,19 @@ public class Github
 {
    private String userName;
 
-   public Github(InitParams initParams)
+   private Pattern pattern = Pattern.compile("_");
+
+   private final GitHubAuthenticator authenticator;
+
+   public Github(InitParams initParams, GitHubAuthenticator authenticator)
    {
-      this(readValueParam(initParams, "github-user"));
+      this(readValueParam(initParams, "github-user"), authenticator);
    }
 
-   public Github(String userName)
+   public Github(String userName, GitHubAuthenticator authenticator)
    {
       this.userName = userName;
+      this.authenticator = authenticator;
    }
 
    private static String readValueParam(InitParams initParams, String paramName)
@@ -65,30 +79,25 @@ public class Github
    }
 
    /**
-    * Get the list of repositories.
+    * Get the list of public repositories by user's name.
     * 
-    * @return an array of repositories.
+    * @param user name of user
+    * @return an array of repositories
     * @throws IOException if any i/o errors occurs
-    * @throws GithubException if github server return unexpected or error status for request
+    * @throws GithubException if GitHub server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws InvalidArgumentException
     */
-   public Repository[] listRepositories() throws IOException, GithubException, ParsingResponseException
+   public Repository[] listRepositories(String user) throws IOException, GithubException, ParsingResponseException,
+      InvalidArgumentException
    {
-      return listRepositories(this.userName);
-   }
+      user = (user == null || user.isEmpty()) ? userName : user;
+      if (user == null)
+      {
+         throw new InvalidArgumentException("'User's name must not be null.");
+      }
 
-   /**
-    * Get the list of repositories for User Name.
-    * 
-    * @param userName name of user
-    * @return an array of repositories.
-    * @throws IOException if any i/o errors occurs
-    * @throws GithubException if github server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
-    */
-   public Repository[] listRepositories(String userName) throws IOException, GithubException, ParsingResponseException
-   {
-      String url = "http://github.com/api/v2/json/repos/show/" + userName;
+      String url = "http://github.com/api/v2/json/repos/show/" + user;
       String method = "GET";
       String response = doJsonRequest(url, method, null, 200);
       JsonValue repositoryJsValue = JsonHelper.parseJson(response);
@@ -105,7 +114,150 @@ public class Github
       {
          throw new ParsingResponseException(jsone.getMessage(), jsone);
       }
+   }
 
+   /**
+    * Log in GitHub.
+    * 
+    * @param credentials user's credentials
+    * @throws IOException
+    * @throws GithubException
+    * @throws VirtualFileSystemException
+    */
+   public void login(Credentials credentials) throws IOException, GithubException, VirtualFileSystemException
+   {
+      HttpURLConnection http = null;
+      try
+      {
+         http = (HttpURLConnection)new URL("https://api.github.com").openConnection();
+         http.setInstanceFollowRedirects(false);
+         http.setRequestMethod("GET");
+         authenticate(credentials, http);
+
+         if (http.getResponseCode() != 204)
+            throw fault(http);
+         authenticator.writeCredentials(credentials);
+      }
+      finally
+      {
+         if (http != null)
+            http.disconnect();
+      }
+   }
+
+   /**
+    * Get the array of the extended repositories of the authorized user.
+    * 
+    * @return array of the repositories
+    * @throws IOException
+    * @throws GithubException
+    * @throws ParsingResponseException
+    * @throws VirtualFileSystemException
+    */
+   public RepositoryExt[] listRepositories() throws IOException, GithubException, ParsingResponseException,
+      VirtualFileSystemException
+   {
+      GitHubCredentials credentials = authenticator.readCredentials();
+      if (credentials == null)
+      {
+         throw new GithubException(401, "Authentication required.\n", "text/plain");
+      }
+      return getRepositories(credentials);
+   }
+
+   /**
+    * @param credentials
+    * @return
+    * @throws ParsingResponseException
+    * @throws IOException
+    * @throws GithubException
+    */
+   private RepositoryExt[] getRepositories(GitHubCredentials credentials) throws ParsingResponseException, IOException,
+      GithubException
+   {
+      String url = "https://api.github.com/user/repos";
+      String response = doJsonRequest(url, "GET", credentials, 200);
+
+      JsonValue reposArray = JsonHelper.parseJson(response);
+      if (reposArray == null || !reposArray.isArray())
+         return null;
+      reposArray = formatJsonArray(reposArray);
+      try
+      {
+         RepositoryExt[] repos = (RepositoryExt[])ObjectBuilder.createArray(RepositoryExt[].class, reposArray);
+         return repos;
+      }
+      catch (JsonException jsone)
+      {
+         throw new ParsingResponseException(jsone.getMessage(), jsone);
+      }
+
+   }
+
+   /**
+    * Formats the keys of JSON array objects for them to be represented as beans.
+    * 
+    * @param source JSON value
+    * @return {@link JsonValue} formated JSON array
+    */
+   private JsonValue formatJsonArray(JsonValue source)
+   {
+      ArrayValue array = new ArrayValue();
+      if (!source.isArray())
+      {
+         return array;
+      }
+
+      Iterator<JsonValue> objIterator = source.getElements();
+
+      while (objIterator.hasNext())
+      {
+         JsonValue obj = objIterator.next();
+         if (obj.isObject())
+         {
+            Iterator<String> keysIterator = obj.getKeys();
+            ObjectValue objectValue = new ObjectValue();
+            while (keysIterator.hasNext())
+            {
+               String key = keysIterator.next();
+               objectValue.addElement(formatKey(key), obj.getElement(key));
+            }
+            array.addElement(objectValue);
+         }
+      }
+      return array;
+   }
+
+   /**
+    * Format key in the following way: <code>ssh_url</code> to <code>sshUrl</code>, <code>pushed_at</code> to
+    * <code>pushedAt</code>.
+    * 
+    * @param key source key
+    * @return {@link String} formated key
+    */
+   private String formatKey(String key)
+   {
+      if (key.contains("_"))
+      {
+         String[] parts = pattern.split(key);
+         StringBuilder str = new StringBuilder(parts[0]);
+         for (int i = 1; i < parts.length; i++)
+         {
+            if ((parts[i].length() > 1))
+            {
+               str.append(Character.toUpperCase(parts[i].charAt(0))).append(parts[i].substring(1));
+            }
+            else
+            {
+               str.append(parts[i].toUpperCase());
+            }
+         }
+         return str.toString();
+      }
+      else
+      {
+         return key;
+      }
    }
 
    // ---------Implementation-----------------
@@ -121,8 +273,8 @@ public class Github
     * @throws IOException
     * @throws GithubException
     */
-   private String doJsonRequest(String url, String method, String body, int success) throws IOException,
-      GithubException
+   private String doJsonRequest(String url, String method, GitHubCredentials credentials, int success)
+      throws IOException, GithubException
    {
       HttpURLConnection http = null;
       try
@@ -131,22 +283,11 @@ public class Github
          http.setInstanceFollowRedirects(false);
          http.setRequestMethod(method);
          http.setRequestProperty("Accept", "application/json");
-         if (body != null && body.length() > 0)
+         if (credentials != null)
          {
-            http.setRequestProperty("Content-type", "application/json");
-            http.setDoOutput(true);
-            BufferedWriter writer = null;
-            try
-            {
-               writer = new BufferedWriter(new OutputStreamWriter(http.getOutputStream()));
-               writer.write(body);
-            }
-            finally
-            {
-               if (writer != null)
-                  writer.close();
-            }
+            authenticate(credentials, http);
          }
+
          if (http.getResponseCode() != success)
             throw fault(http);
 
@@ -175,7 +316,6 @@ public class Github
       try
       {
          int responseCode = http.getResponseCode();
-         // System.err.println("fault : " + responseCode);
          errorStream = http.getErrorStream();
          if (errorStream == null)
             return new GithubException(responseCode, null, null);
@@ -215,6 +355,19 @@ public class Github
          body = bout.toString();
       }
       return body;
+   }
+
+   /**
+    * Add Basic authentication headers to HttpURLConnection.
+    * 
+    * @param gitHubCredentials GitHub account credentials
+    * @param http HttpURLConnection
+    * @throws IOException if any i/o errors occurs
+    */
+   private static void authenticate(Credentials credentials, HttpURLConnection http) throws IOException
+   {
+      byte[] base64 = encodeBase64((credentials.getLogin() + ":" + credentials.getPassword()).getBytes("ISO-8859-1"));
+      http.setRequestProperty("Authorization", "Basic " + new String(base64, "ISO-8859-1"));
    }
 
 }

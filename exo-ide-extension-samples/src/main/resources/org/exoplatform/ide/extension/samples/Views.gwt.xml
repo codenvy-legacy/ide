@@ -54,7 +54,7 @@
    <replace-with class="org.exoplatform.ide.extension.samples.client.paas.login.LoginView">
       <when-type-is class="org.exoplatform.ide.extension.samples.client.paas.login.LoginPresenter.Display" />
    </replace-with>
-
+   
    <replace-with class="org.exoplatform.ide.extension.samples.client.convert.ConvertToProjectView">
       <when-type-is class="org.exoplatform.ide.extension.samples.client.convert.ConvertToProjectPresenter.Display" />
    </replace-with>

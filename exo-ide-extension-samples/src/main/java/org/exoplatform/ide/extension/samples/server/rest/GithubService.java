@@ -20,14 +20,20 @@ package org.exoplatform.ide.extension.samples.server.rest;
 
 import org.exoplatform.ide.extension.samples.server.Github;
 import org.exoplatform.ide.extension.samples.server.GithubException;
+import org.exoplatform.ide.extension.samples.shared.GitHubCredentials;
 import org.exoplatform.ide.extension.samples.shared.Repository;
+import org.exoplatform.ide.extension.samples.shared.RepositoryExt;
 import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -51,28 +57,33 @@ public class GithubService
 
    protected GithubService(Github github)
    {
-      // Use this constructor when deploy CloudBeesService as singleton resource.
       this.github = github;
-   }
-
-   @Path("list")
-   @GET
-   @Produces(MediaType.APPLICATION_JSON)
-   public Repository[] listRepositories() throws IOException, GithubException, ParsingResponseException
-   {
-      return github.listRepositories();
    }
 
    @Path("list/user")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public Repository[] listRepositories(@QueryParam("username") String userName) throws IOException, GithubException,
-      ParsingResponseException, InvalidArgumentException
+   public Repository[] listRepositoriesByUser(@QueryParam("username") String userName) throws IOException,
+      GithubException, ParsingResponseException, InvalidArgumentException
    {
-      if (userName == null)
-         throw new InvalidArgumentException("'username' parameter is null");
-
       return github.listRepositories(userName);
    }
 
+   @Path("login")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   public void login(Map<String, String> credentials) throws IOException, GithubException, ParsingResponseException,
+      VirtualFileSystemException
+   {
+      github.login(new GitHubCredentials(credentials.get("login"), credentials.get("password")));
+   }
+
+   @Path("list")
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public RepositoryExt[] listRepositories() throws IOException, GithubException, ParsingResponseException,
+      VirtualFileSystemException
+   {
+      return github.listRepositories();
+   }
 }

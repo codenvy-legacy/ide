@@ -238,4 +238,12 @@ public interface SamplesLocalizationConstant extends Messages
    @Key("import.github.selectProjectType")
    String importFromGithubSelectProjectType();
 
+   @Key("import.github.login")
+   String importFromGithubLogin();
+
+   @Key("import.github.login.failed")
+   String importFromGithubLoginFailed();
+
+   @Key("git.read.only")
+   String gitReadOnly();
 }

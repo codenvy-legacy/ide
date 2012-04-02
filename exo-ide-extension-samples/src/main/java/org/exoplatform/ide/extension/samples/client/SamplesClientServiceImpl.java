@@ -20,11 +20,17 @@ package org.exoplatform.ide.extension.samples.client;
 
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.extension.samples.shared.Credentials;
 import org.exoplatform.ide.extension.samples.shared.Repository;
+import org.exoplatform.ide.extension.samples.shared.RepositoryExt;
 
 import java.util.List;
 
@@ -40,6 +46,8 @@ public class SamplesClientServiceImpl extends SamplesClientService
    private static final String BASE_URL = "/ide/github";
 
    private static final String LIST = BASE_URL + "/list";
+
+   private static final String LOGIN = BASE_URL + "/login";
 
    private static final String LIST_USER = BASE_URL + "/list/user";
 
@@ -66,7 +74,7 @@ public class SamplesClientServiceImpl extends SamplesClientService
     * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#getRepositoriesList(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getRepositoriesList(AsyncRequestCallback<List<Repository>> callback) throws RequestException
+   public void getRepositoriesList(AsyncRequestCallback<List<RepositoryExt>> callback) throws RequestException
    {
       String url = restServiceContext + LIST;
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
@@ -74,15 +82,35 @@ public class SamplesClientServiceImpl extends SamplesClientService
 
    /**
     * @throws RequestException
-    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#getRepositoriesList(java.lang.String,
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#getRepositoriesByUser(java.lang.String,
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getRepositoriesList(String userName, AsyncRequestCallback<List<Repository>> callback)
+   public void getRepositoriesByUser(String userName, AsyncRequestCallback<List<Repository>> callback)
       throws RequestException
    {
-      String url = restServiceContext + LIST_USER + "?username=" + userName;
-      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+      String params = (userName != null) ? "?username=" + userName : "";
+      String url = restServiceContext + LIST_USER;
+      AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
    }
 
+   /**
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#loginGitHub(java.lang.String, java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void loginGitHub(String login, String password, AsyncRequestCallback<String> callback)
+      throws RequestException
+   {
+      String url = restServiceContext + LOGIN;
+
+      Credentials credentialsBean = SamplesExtension.AUTO_BEAN_FACTORY.githubCredentials().as();
+      credentialsBean.setLogin(login);
+      credentialsBean.setPassword(password);
+      String credentials = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(credentialsBean)).getPayload();
+
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(credentials)
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
 }
