@@ -35,11 +35,12 @@ import com.sun.jdi.request.EventRequest;
 import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.request.InvalidRequestStateException;
 import com.sun.jdi.request.StepRequest;
+
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
-import org.antlr.runtime.tree.Tree;
+import org.exoplatform.ide.extension.java.jdi.server.expression.Evaluator;
 import org.exoplatform.ide.extension.java.jdi.server.expression.JavaLexer;
 import org.exoplatform.ide.extension.java.jdi.server.expression.JavaParser;
 import org.exoplatform.ide.extension.java.jdi.server.expression.JavaTreeParser;
@@ -367,12 +368,8 @@ public class Debugger implements EventsHandler
     */
    public StackFrameDump dumpStackFrame() throws DebuggerStateException, DebuggerException
    {
-      if (stackFrame == null)
-      {
-         throw new DebuggerStateException("Unable get dump. Target Java VM is not suspended. ");
-      }
       StackFrameDumpImpl dump = new StackFrameDumpImpl();
-      for (JdiField f : stackFrame.getFields())
+      for (JdiField f : getCurrentFrame().getFields())
       {
          dump.getFields().add(
             new FieldImpl(f.getName(),
@@ -386,7 +383,7 @@ public class Debugger implements EventsHandler
                f.isPrimitive())
          );
       }
-      for (JdiLocalVariable var : stackFrame.getLocalVariables())
+      for (JdiLocalVariable var : getCurrentFrame().getLocalVariables())
       {
          dump.getLocalVariables().add(
             new VariableImpl(var.getName(),
@@ -447,10 +444,6 @@ public class Debugger implements EventsHandler
       {
          throw new IllegalArgumentException("Path to value may not be empty. ");
       }
-      if (stackFrame == null)
-      {
-         throw new DebuggerStateException("Unable get variable. Target Java VM is not suspended. ");
-      }
       JdiVariable variable;
       int offset;
       if ("this".equals(path.get(0)) || "static".equals(path.get(0)))
@@ -459,12 +452,12 @@ public class Debugger implements EventsHandler
          {
             throw new IllegalArgumentException("Name of field required. ");
          }
-         variable = stackFrame.getFieldByName(path.get(1));
+         variable = getCurrentFrame().getFieldByName(path.get(1));
          offset = 2;
       }
       else
       {
-         variable = stackFrame.getLocalVariableByName(path.get(0));
+         variable = getCurrentFrame().getLocalVariableByName(path.get(0));
          offset = 1;
       }
 
@@ -646,12 +639,8 @@ public class Debugger implements EventsHandler
 
    private void doStep(int depth) throws DebuggerException
    {
-      if (thread == null)
-      {
-         throw new DebuggerStateException("Target Java VM is not suspended. ");
-      }
       clearSteps();
-      StepRequest request = getEventManager().createStepRequest(thread, StepRequest.STEP_LINE, depth);
+      StepRequest request = getEventManager().createStepRequest(getCurrentThread(), StepRequest.STEP_LINE, depth);
       request.addCountFilter(1);
       request.enable();
       resume();
@@ -662,7 +651,7 @@ public class Debugger implements EventsHandler
       List<StepRequest> snapshot = new ArrayList<StepRequest>(getEventManager().stepRequests());
       for (StepRequest stepRequest : snapshot)
       {
-         if (stepRequest.thread().equals(thread))
+         if (stepRequest.thread().equals(getCurrentThread()))
          {
             getEventManager().deleteEventRequest(stepRequest);
          }
@@ -682,8 +671,7 @@ public class Debugger implements EventsHandler
 
       CommonTreeNodeStream nodes = new CommonTreeNodeStream(r.getTree());
 
-
-      JavaTreeParser walker = new JavaTreeParser(nodes, vm, this);
+      JavaTreeParser walker = new JavaTreeParser(nodes, new Evaluator(vm, getCurrentThread()));
       try
       {
          walker.eval();
@@ -691,26 +679,47 @@ public class Debugger implements EventsHandler
       catch (RecognitionException e)
       {
          e.printStackTrace();
+      } finally {
+         resetCurrentFrame();
       }
 
    }
 
-   public ThreadReference getCurrentThread()
+   private ThreadReference getCurrentThread() throws DebuggerStateException
    {
+      if (thread == null)
+      {
+         throw new DebuggerStateException("Target Java VM is not suspended. ");
+      }
       return thread;
    }
 
-   private void setCurrentThread(ThreadReference t) throws DebuggerException
+   private JdiStackFrame getCurrentFrame() throws DebuggerException
    {
+      if (stackFrame != null)
+      {
+         return stackFrame;
+      }
       try
       {
-         this.stackFrame = new JdiStackFrameImpl(t.frame(0));
-         this.thread = t;
+         stackFrame = new JdiStackFrameImpl(getCurrentThread().frame(0));
       }
       catch (IncompatibleThreadStateException e)
       {
          throw new DebuggerException(e.getMessage(), e);
       }
+      return stackFrame;
+   }
+
+   private void setCurrentThread(ThreadReference t)
+   {
+      stackFrame = null;
+      thread = t;
+   }
+
+   private void resetCurrentFrame()
+   {
+      stackFrame = null;
    }
 
    private void resetCurrentThread()

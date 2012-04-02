@@ -46,24 +46,6 @@ options {
 
 @treeparser::header {
 package org.exoplatform.ide.extension.java.jdi.server.expression;
-
-import org.exoplatform.ide.extension.java.jdi.server.Debugger;
-
-import com.sun.jdi.ArrayReference;
-import com.sun.jdi.DoubleValue;
-import com.sun.jdi.FloatValue;
-import com.sun.jdi.LongValue;
-import com.sun.jdi.BooleanValue;
-import com.sun.jdi.LocalVariable;
-import com.sun.jdi.Field;
-import com.sun.jdi.ObjectReference;
-import com.sun.jdi.PrimitiveValue;
-import com.sun.jdi.StackFrame;
-import com.sun.jdi.StringReference;
-import com.sun.jdi.ReferenceType;
-import com.sun.jdi.ThreadReference;
-import com.sun.jdi.Value;
-import com.sun.jdi.VirtualMachine;
 }
 
 @treeparser::members {
@@ -73,13 +55,11 @@ boolean mMessageCollectionEnabled = false;
 private boolean mHasErrors = false;
 List<String> mMessages;
 
-private VirtualMachine vm;
-private Debugger debugger;
+private Evaluator ev;
 
-public JavaTreeParser(TreeNodeStream input, VirtualMachine vm, Debugger debugger) {
+public JavaTreeParser(TreeNodeStream input, Evaluator ev) {
 	this(input);
-	this.vm = vm;
-	this.debugger = debugger;
+	this.ev = ev;
 }
 
 /**
@@ -137,327 +117,6 @@ public List<String> getMessages() {
  */
 public boolean hasErrors() {
 	return mHasErrors;
-}
-
-private ThreadReference getCurrentThread() {
-	ThreadReference thread = debugger.getCurrentThread();
-	if (thread == null) {
-		throw new ExpressionException("Target Java VM is not suspended. ");
-	}
-	return thread;
-}
-
-private StackFrame getCurrentFrame() {
-	try {
-		return getCurrentThread().frame(0);
-	} catch (Exception e) { // TODO
-		throw new ExpressionException(e.getMessage(), e);
-	}
-}
-
-private Value booleanValue(String text) {
-	return value(Boolean.parseBoolean(text));
-}
-
-/*
- private Value byteValue(String text) {
- return value(Byte.parseByte(text));
- }
-
- private Value shortValue(String text) {
- return value(Short.parseShort(text));
- }
-
- private Value intValue(String text) {
- return value(Integer.parseInt(text));
- }
- */
-
-private Value longValue(String text) {
-	if (text.length() > 2 && '0' == text.charAt(0) && 'x' == text.charAt(1)) {
-		return value(Long.parseLong(text.substring(2), 16));
-	} else if (text.length() > 1 && '0' == text.charAt(0)) {
-		return value(Long.parseLong(text.substring(1), 8));
-	}
-	return value(Long.parseLong(text));
-}
-
-/*
- private Value floatValue(String text) {
- return value(Float.parseFloat(text));
- }
- */
-
-private Value doubleValue(String text) {
-	return value(Double.parseDouble(text));
-}
-
-private Value charValue(String text) {
-	return value(text.charAt(0));
-}
-
-private Value stringValue(String text) {
-	return value(text.substring(1, text.length() - 1));
-}
-
-//
-
-private Value value(boolean v) {
-	return vm.mirrorOf(v);
-}
-
-private Value value(byte v) {
-	return vm.mirrorOf(v);
-}
-
-private Value value(short v) {
-	return vm.mirrorOf(v);
-}
-
-private Value value(int v) {
-	return vm.mirrorOf(v);
-}
-
-private Value value(long l) {
-	return vm.mirrorOf(l);
-}
-
-private Value value(float v) {
-	return vm.mirrorOf(v);
-}
-
-private Value value(double v) {
-	return vm.mirrorOf(v);
-}
-
-private Value value(char v) {
-	return vm.mirrorOf(v);
-}
-
-private Value value(String v) {
-	return vm.mirrorOf(v);
-}
-
-//
-
-private Value getField(String text) {
-	StackFrame frame = getCurrentFrame();
-	try {
-		ObjectReference object = frame.thisObject();
-		if (object == null) {
-			ReferenceType type = frame.location().declaringType();
-			Field field = type.fieldByName(text);
-			if (field != null) {
-				return type.getValue(field);
-			}
-		} else {
-			Field field = object.referenceType().fieldByName(text);
-			if (field != null) {
-				return object.getValue(field);
-			}
-		}
-	} catch (Exception e) {
-		// TODO
-		e.printStackTrace();
-	}
-	// TODO
-	return null;
-}
-
-private Value getLocalVariable(String text) {
-	StackFrame frame = getCurrentFrame();
-	try {
-		LocalVariable var = frame.visibleVariableByName(text);
-		if (var != null) {
-			return frame.getValue(var);
-		}
-	} catch (Exception e) {
-		// TODO
-		e.printStackTrace();
-	}
-	// TODO
-	return null;
-}
-
-private Value getArrayElement(Value vArray, Value indx) {
-	ThreadReference thread = getCurrentThread();
-	if (!(vArray instanceof ArrayReference)) {
-		throw new ExpressionException("Unable get element of array. " + vArray
-				+ " is not an array. ");
-	}
-	ArrayReference array = (ArrayReference) vArray;
-	try {
-		return array.getValue(((PrimitiveValue) indx).intValue());
-	} catch (IndexOutOfBoundsException e) {
-		throw new ExpressionException(e.getMessage(), e);
-	}
-}
-
-private Value operation(Value left, Value right, int op) {
-	if (left instanceof StringReference || right instanceof StringReference) {
-		if (PLUS == op) {
-			return value(valueToString(left) + valueToString(right));
-		}
-	}
-
-	if (left instanceof ObjectReference && right instanceof ObjectReference) {
-	  boolean result;
-	  switch (op) {
-      case EQUAL :
-        result = left.equals(right); 
-        break;
-      case NOT_EQUAL :
-        result = !(left.equals(right)); 
-        break;
-      default :
-        throw new ExpressionException("Unsupported operation " + tokenNames[op] + " for object. ");
-	  }
-	  return value(result);
-	}
-	
-	if (left instanceof PrimitiveValue && right instanceof PrimitiveValue) {
-	  if (left instanceof DoubleValue || right instanceof DoubleValue) {
-	    double l = ((PrimitiveValue)left).doubleValue();
-	    double r = ((PrimitiveValue)right).doubleValue();
-	    double result;
-	    switch (op) {
-	      case PLUS :
-	        result = l + r; 
-	        break;
-	      case MINUS :
-	        result = l - r; 
-	        break;
-	      case STAR :
-	        result = l * r; 
-	        break;
-	      case DIV :
-	        result = l / r; 
-	        break;
-	      case MOD :
-	        result = l \% r; 
-	        break;
-	      default :
-	        throw new ExpressionException("Unsupported operation " + tokenNames[op] + ". ");
-	    }
-	    return value(result);
-	  }
-	  if (left instanceof FloatValue || right instanceof FloatValue) {
-	    float l = ((PrimitiveValue)left).floatValue();
-	    float r = ((PrimitiveValue)right).floatValue();
-	    float result;
-	    switch (op) {
-	      case PLUS :
-	        result = l + r; 
-	        break;
-	      case MINUS :
-	        result = l - r; 
-	        break;
-	      case STAR :
-	        result = l * r; 
-	        break;
-	      case DIV :
-	        result = l / r; 
-	        break;
-	      case MOD :
-	        result = l \% r; 
-	        break;
-	      default :
-	        throw new ExpressionException("Unsupported operation " + tokenNames[op] + ". ");
-	    }
-	    return value(result);
-	  }
-	  if (left instanceof LongValue || right instanceof LongValue) {
-	    long l = ((PrimitiveValue)left).longValue();
-	    long r = ((PrimitiveValue)right).longValue();
-	    long result;
-	    switch (op) {
-	      case PLUS :
-	        result = l + r; 
-	        break;
-	      case MINUS :
-	        result = l - r; 
-	        break;
-	      case STAR :
-	        result = l * r; 
-	        break;
-	      case DIV :
-	        result = l / r; 
-	        break;
-	      case MOD :
-	        result = l \% r; 
-	        break;
-	      default :
-	        throw new ExpressionException("Unsupported operation " + tokenNames[op] + ". ");
-	    }
-	    return value(result);
-	  }
-    int l = ((PrimitiveValue)left).intValue();
-    int r = ((PrimitiveValue)right).intValue();
-    int result;
-    switch (op) {
-      case PLUS :
-        result = l + r; 
-        break;
-      case MINUS :
-        result = l - r; 
-        break;
-      case STAR :
-        result = l * r; 
-        break;
-      case DIV :
-        result = l / r; 
-        break;
-      case MOD :
-        result = l \% r; 
-        break;
-      default :
-        throw new ExpressionException("Unsupported operation " + tokenNames[op] + " ");
-    }
-    return value(result);
-	}
-	return null;
-}
-
-private Value unaryOperation(Value v, int op) {
-	if (!(v instanceof PrimitiveValue)) {
-		throw new ExpressionException("Operation " + op
-				+ " is not supported for " + v);
-	}
-	double d = ((PrimitiveValue) v).doubleValue();
-	if (UNARY_PLUS == op) {
-		return value(++d);
-	} else if (UNARY_PLUS == op) {
-		return value(--d);
-	}
-	return null;
-}
-
-private String valueToString(Value value) {
-	if (value == null) {
-		return "null";
-	}
-	if (value instanceof StringReference) {
-		return ((StringReference) value).value();
-	}
-	return value.toString();
-}
-
-private Value invokeMethod(Value vObject, String name, List<Value> arguments) {
-	ThreadReference thread = getCurrentThread();
-	if (!(vObject instanceof ObjectReference)) {
-		throw new ExpressionException("Unable invoke method " + name + ". "
-				+ vObject + " is not an object. ");
-	}
-	ObjectReference object = (ObjectReference) vObject;
-	try {
-		ReferenceType type = object.referenceType();
-		List<com.sun.jdi.Method> methods = type.methodsByName(name);
-		com.sun.jdi.Method m = methods.get(0);
-		return object.invokeMethod(thread, m, arguments, 0);
-	} catch (Exception e) {
-		e.printStackTrace(); // TODO
-	}
-	return null;
 }
 }
 
@@ -869,49 +528,74 @@ forUpdater
 
 eval
   :
-  a=expression 
-              {
-               System.out.printf("RESULT: \%s\%n", $a.value);
-              }
+  expression 
+             {
+               System.out.printf("RESULT: \%s\%n", $expression.value.getValue());
+             }
   ;
 
-parenthesizedExpression returns [Value value]
+parenthesizedExpression returns [ExpressionValue value]
   :
   ^(PARENTESIZED_EXPR expression)
-  
-  {
-   $value = $expression.value;
-  }
+															  {
+															    $value = $expression.value;
+															  }
   ;
 
-expression returns [Value value]
+expression returns [ExpressionValue value]
   :
   ^(EXPR expr)
-  
-  {
-   $value = $expr.value;
-  }
+							{
+							  $value = $expr.value;
+							}
   ;
 
-expr returns [Value value]
+expr returns [ExpressionValue value]
   :
-  ^(ASSIGN expr expr)
+  ^(ASSIGN a=expr b=expr)
+                              {
+                                $value = ev.operation($a.value, $b.value, $ASSIGN.type);
+                              }
   |
-  ^(PLUS_ASSIGN expr expr)
+  ^(PLUS_ASSIGN a=expr b=expr)
+														  {
+															  $value = ev.operation($a.value, $b.value, $PLUS_ASSIGN.type);
+														  }
   |
-  ^(MINUS_ASSIGN expr expr)
+  ^(MINUS_ASSIGN a=expr b=expr)
+														  {
+															  $value = ev.operation($a.value, $b.value, $MINUS_ASSIGN.type);
+														  }
   |
-  ^(STAR_ASSIGN expr expr)
+  ^(STAR_ASSIGN a=expr b=expr)
+														  {
+															  $value = ev.operation($a.value, $b.value, $STAR_ASSIGN.type);
+														  }
   |
-  ^(DIV_ASSIGN expr expr)
+  ^(DIV_ASSIGN a=expr b=expr)
+														  {
+														    $value = ev.operation($a.value, $b.value, $DIV_ASSIGN.type);
+														  }
   |
-  ^(AND_ASSIGN expr expr)
+  ^(AND_ASSIGN a=expr b=expr)
+                              {
+                                $value = ev.operation($a.value, $b.value, $AND_ASSIGN.type);
+                              }
   |
-  ^(OR_ASSIGN expr expr)
+  ^(OR_ASSIGN a=expr b=expr)
+                              {
+                                $value = ev.operation($a.value, $b.value, $OR_ASSIGN.type);
+                              }
   |
-  ^(XOR_ASSIGN expr expr)
+  ^(XOR_ASSIGN a=expr b=expr)
+                              {
+                                $value = ev.operation($a.value, $b.value, $XOR_ASSIGN.type);
+                              }
   |
-  ^(MOD_ASSIGN expr expr)
+  ^(MOD_ASSIGN a=expr b=expr)
+                              {
+                                $value = ev.operation($a.value, $b.value, $MOD_ASSIGN.type);
+                              }
   |
   ^(BIT_SHIFT_RIGHT_ASSIGN expr expr)
   |
@@ -919,159 +603,190 @@ expr returns [Value value]
   |
   ^(SHIFT_LEFT_ASSIGN expr expr)
   |
-  ^(QUESTION expr expr expr)
+  ^(QUESTION test=expr a=expr b=expr)
+                              {
+                                throw new ExpressionException("Ternary operator is not supported yet. ");
+                                //$value = ev.ternaryOperator($test.value, $a.value, $b.value);
+                              }
   |
-  ^(LOGICAL_OR expr expr)
+  ^(LOGICAL_OR a=expr b=expr)
+														  {
+														    $value = ev.operation($a.value, $b.value, $LOGICAL_OR.type);
+														  }
   |
-  ^(LOGICAL_AND expr expr)
+  ^(LOGICAL_AND a=expr b=expr)
+														  {
+														    $value = ev.operation($a.value, $b.value, $LOGICAL_AND.type);
+														  }
   |
-  ^(OR expr expr)
+  ^(OR a=expr b=expr)
+                              {
+                                $value = ev.operation($a.value, $b.value, $OR.type);
+                              }
   |
-  ^(XOR expr expr)
+  ^(XOR a=expr b=expr)
+                              {
+                                $value = ev.operation($a.value, $b.value, $XOR.type);
+                              }
   |
-  ^(AND expr expr)
+  ^(AND a=expr b=expr)
+                              {
+                                $value = ev.operation($a.value, $b.value, $AND.type);
+                              }
   |
   ^(EQUAL a=expr b=expr)
-  
-  {
-   $value = operation($a.value, $b.value, $EQUAL.type);
-  }
+														  {
+														    $value = ev.operation($a.value, $b.value, $EQUAL.type);
+														  }
   |
   ^(NOT_EQUAL a=expr b=expr)
-  
-  {
-   $value = operation($a.value, $b.value, $NOT_EQUAL.type);
-  }
+														  {
+														    $value = ev.operation($a.value, $b.value, $NOT_EQUAL.type);
+														  }
   |
   ^(INSTANCEOF expr type)
-  
-  {
-   throw new ExpressionException("Operation 'instanceof' is not supported yet. ");
-  }
+														  {
+														    throw new ExpressionException("Operation 'instanceof' is not supported yet. ");
+														  }
   |
-  ^(LESS_OR_EQUAL expr expr)
+  ^(LESS_OR_EQUAL a=expr b=expr)
+														  {
+														    $value = ev.operation($a.value, $b.value, $LESS_OR_EQUAL.type);
+														  }
   |
-  ^(GREATER_OR_EQUAL expr expr)
+  ^(GREATER_OR_EQUAL a=expr b=expr)
+														  {
+														    $value = ev.operation($a.value, $b.value, $GREATER_OR_EQUAL.type);
+														  }
   |
-  ^(BIT_SHIFT_RIGHT expr expr)
+  ^(BIT_SHIFT_RIGHT a=expr b=expr)
+														  {
+														    $value = ev.operation($a.value, $b.value, $BIT_SHIFT_RIGHT.type);
+														  }
   |
-  ^(SHIFT_RIGHT expr expr)
+  ^(SHIFT_RIGHT a=expr b=expr)
+														  {
+														    $value = ev.operation($a.value, $b.value, $SHIFT_RIGHT.type);
+														  }
   |
-  ^(GREATER_THAN expr expr)
+  ^(GREATER_THAN a=expr b=expr)
+														  {
+														    $value = ev.operation($a.value, $b.value, $GREATER_THAN.type);
+														  }
   |
-  ^(SHIFT_LEFT expr expr)
+  ^(SHIFT_LEFT a=expr b=expr)
+														  {
+														    $value = ev.operation($a.value, $b.value, $SHIFT_LEFT.type);
+														  }
   |
-  ^(LESS_THAN expr expr)
+  ^(LESS_THAN a=expr b=expr)
+														  {
+															  $value = ev.operation($a.value, $b.value, $LESS_THAN.type);
+														  }
   |
   ^(PLUS a=expr b=expr)
-  
-  {
-   $value = operation($a.value, $b.value, $PLUS.type);
-  }
+														  {
+														    $value = ev.operation($a.value, $b.value, $PLUS.type);
+														  }
   |
   ^(MINUS a=expr b=expr)
-  
-  {
-   $value = operation($a.value, $b.value, $MINUS.type);
-  }
+														  {
+														    $value = ev.operation($a.value, $b.value, $MINUS.type);
+														  }
   |
   ^(STAR a=expr b=expr)
-  
-  {
-   $value = operation($a.value, $b.value, $STAR.type);
-  }
+														  {
+														    $value = ev.operation($a.value, $b.value, $STAR.type);
+														  }
   |
   ^(DIV a=expr b=expr)
-  
-  {
-   $value = operation($a.value, $b.value, $DIV.type);
-  }
+														  {
+														    $value = ev.operation($a.value, $b.value, $DIV.type);
+														  }
   |
   ^(MOD a=expr b=expr)
-  
-  {
-   $value = operation($a.value, $b.value, $MOD.type);
-  }
+														  {
+														    $value = ev.operation($a.value, $b.value, $MOD.type);
+														  }
   |
-  ^(UNARY_PLUS expr)
-  
-  {
-   throw new ExpressionException("Operation 'unary +' is not supported yet. ");
-  }
+  ^(UNARY_PLUS a=expr)
+														  {
+														    $value = ev.unaryOperation($a.value, $UNARY_PLUS.type);
+														  }
   |
-  ^(UNARY_MINUS expr)
-  
-  {
-   throw new ExpressionException("Operation 'unary -' is not supported yet. ");
-  }
+  ^(UNARY_MINUS a=expr)
+														  {
+														    $value = ev.unaryOperation($a.value, $UNARY_MINUS.type);
+														  }
   |
   ^(PRE_INC a=expr)
-  
-  {
-   throw new ExpressionException("Operation '++' is not supported yet. ");
-  }
+														  {
+														    throw new ExpressionException("Operation '++' is not supported yet. ");
+														  }
   |
   ^(PRE_DEC expr)
-  
-  {
-   throw new ExpressionException("Operation '--' is not supported yet. ");
-  }
+														  {
+														    throw new ExpressionException("Operation '--' is not supported yet. ");
+														  }
   |
   ^(POST_INC a=expr)
-  
-  {
-   throw new ExpressionException("Operation '++' is not supported yet. ");
-  }
+														  {
+														    throw new ExpressionException("Operation '++' is not supported yet. ");
+														  }
   |
   ^(POST_DEC expr)
-  
-  {
-   throw new ExpressionException("Operation '--' is not supported yet. ");
-  }
+														  {
+														    throw new ExpressionException("Operation '--' is not supported yet. ");
+														  }
   |
-  ^(NOT expr)
+  ^(NOT a=expr)
+														  {
+														    $value = ev.unaryOperation($a.value, $NOT.type);
+														  }
   |
-  ^(LOGICAL_NOT expr)
+  ^(LOGICAL_NOT a=expr)
+														  {
+														    $value = ev.unaryOperation($a.value, $LOGICAL_NOT.type);
+														  }
   |
   ^(CAST_EXPR type expr)
-  
-  {
-   throw new ExpressionException("Operation 'cast' is not supported yet. ");
-  }
+														  {
+														    throw new ExpressionException("Operation 'cast' is not supported yet. ");
+														  }
   | primaryExpression 
-                     {
-                      $value = $primaryExpression.value;
-                     }
+														  {
+														    $value = $primaryExpression.value;
+														  }
   ;
 
-primaryExpression returns [Value value, String method]
+primaryExpression returns [ExpressionValue value]
   :
   ^(
     DOT
     (
       e=primaryExpression 
-                         {
-                          $value = $e.value;
-                         }
+															{
+															  $value = $e.value;
+															}
       (
         IDENT 
-             {
-              if ($start.getParent().getType() == METHOD_CALL) {
-              	$method = $IDENT.text;
-              } else {
-              	$value = getField($IDENT.text);
-              }
-             }
+															{
+															  if ($start.getParent().getType() != METHOD_CALL) {
+															    $value = ev.getField($IDENT.text);
+															    if ($value == null) {
+															      throw new ExpressionException("Unknown field " + $IDENT.text);
+															    }
+															  }
+															}
         | THIS 
-              {
-               $value = getCurrentFrame().thisObject();
-              }
+															{
+															  $value = ev.getThisObject();
+															}
         | SUPER
         | innerNewExpression 
-                            {
-                             throw new ExpressionException(
-                             		"Unable create new instance. Operation not supported yet. ");
-                            }
+	                            {
+	                              throw new ExpressionException("Unable create new instance. Operation not supported yet. ");
+	                            }
         | CLASS
       )
       | primitiveType CLASS
@@ -1079,55 +794,53 @@ primaryExpression returns [Value value, String method]
     )
    )
   | parenthesizedExpression 
-                           {
-                            $value = $parenthesizedExpression.value;
-                           }
+															{
+															  $value = $parenthesizedExpression.value;
+															}
   | IDENT 
-         {
-          if ($start.getParent().getType() == METHOD_CALL) {
-          	$method = $IDENT.text;
-          } else {
-          	$value = getLocalVariable($IDENT.text);
-          	if ($value == null) {
-          		$value = getField($IDENT.text);
-          	}
-          }
-         }
+															{
+																if ($start.getParent().getType() != METHOD_CALL) {
+																	$value = ev.getLocalVariable($IDENT.text);
+																	if ($value == null) {
+																	  $value = ev.getField($IDENT.text);
+																	}
+																	if ($value == null) {
+                                    throw new ExpressionException("Unknown local variable or field " + $IDENT.text);
+                                  }
+																}
+															}
   |
   ^(METHOD_CALL o=primaryExpression genericTypeArgumentList? arguments)
-  
-  {
-   $value = invokeMethod($o.value, $o.method, $arguments.args);
-  }
+															{
+																String name = $o.start.getChild(1).getText();
+																$value = ev.invokeMethod($o.value.getValue(), name, $arguments.args);
+															}
   | explicitConstructorCall 
-                           {
-                            throw new ExpressionException(
-                            		"Unable create new instance. Operation not supported yet. ");
-                           }
+															{
+															  throw new ExpressionException("Unable create new instance. Operation not supported yet. ");
+															}
   |
   ^(ARRAY_ELEMENT_ACCESS arr=primaryExpression indx=expression)
-  
-  {
-   $value = getArrayElement($arr.value, $indx.value);
-  }
+															{
+															  $value = ev.getArrayElement($arr.value.getValue(), $indx.value.getValue());
+															}
   | literal 
-           {
-            $value = $literal.value;
-           }
+															{
+															  $value = $literal.value;
+															}
   | newExpression 
-                 {
-                  throw new ExpressionException(
-                  		"Unable create new instance. Operation not supported yet. ");
-                 }
+															{
+															  throw new ExpressionException("Unable create new instance. Operation not supported yet. ");
+															}
   | THIS 
-        {
-         $value = getCurrentFrame().thisObject();
-        }
+															{
+															  $value = ev.getThisObject();
+															}
   | arrayTypeDeclarator
   | SUPER 
-         {
-          $value = getCurrentFrame().thisObject();
-         }
+															{
+															  $value = ev.getThisObject();
+															}
   ;
 
 explicitConstructorCall
@@ -1173,59 +886,58 @@ newArrayConstruction
   | expression+ arrayDeclaratorList?
   ;
 
-arguments returns [List < Value > args]
+arguments returns [List < com.sun.jdi.Value > args]
   :
-  
-  {
-   $args = new ArrayList<Value>();
-  }
+														  {
+														    $args = new ArrayList<com.sun.jdi.Value>();
+														  }
   ^(
     ARGUMENT_LIST
     (
       e=expression 
-                  {
-                   args.add($e.value);
-                  }
+															{
+															  args.add($e.value.getValue());
+															}
     )*
    )
   ;
 
-literal returns [Value value]
+literal returns [ExpressionValue value]
   :
   HEX_LITERAL 
-             {
-              $value = longValue($HEX_LITERAL.text);
-             }
+															{
+															  $value = ev.hexValue($HEX_LITERAL.text);
+															}
   | OCTAL_LITERAL 
-                 {
-                  $value = longValue($OCTAL_LITERAL.text);
-                 }
+															{
+															  $value = ev.octalValue($OCTAL_LITERAL.text);
+															}
   | DECIMAL_LITERAL 
-                   {
-                    $value = longValue($DECIMAL_LITERAL.text);
-                   }
+															{
+															  $value = ev.decimalValue($DECIMAL_LITERAL.text);
+															}
   | FLOATING_POINT_LITERAL 
-                          {
-                           $value = doubleValue($FLOATING_POINT_LITERAL.text);
-                          }
+															{
+															  $value = ev.floating_pointValue($FLOATING_POINT_LITERAL.text);
+															}
   | CHARACTER_LITERAL 
-                     {
-                      $value = charValue($CHARACTER_LITERAL.text);
-                     }
+															{
+															  $value = ev.charValue($CHARACTER_LITERAL.text);
+															}
   | STRING_LITERAL 
-                  {
-                   $value = stringValue($STRING_LITERAL.text);
-                  }
+															{
+															  $value = ev.stringValue($STRING_LITERAL.text);
+															}
   | TRUE 
-        {
-         $value = booleanValue($TRUE.text);
-        }
+															{
+															  $value = ev.booleanValue($TRUE.text);
+															}
   | FALSE 
-         {
-          $value = booleanValue($FALSE.text);
-         }
+															{
+															  $value = ev.booleanValue($FALSE.text);
+															}
   | NULL 
-        {
-         $value = null;
-        }
+															{
+															  $value = null;
+															}
   ;
