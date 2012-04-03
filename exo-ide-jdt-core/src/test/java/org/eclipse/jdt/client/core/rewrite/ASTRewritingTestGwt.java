@@ -22,6 +22,7 @@ import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.dom.*;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
+import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterOptions;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 import org.exoplatform.ide.editor.text.Document;
 import org.exoplatform.ide.editor.text.edits.TextEdit;
@@ -64,7 +65,7 @@ public class ASTRewritingTestGwt extends BaseTestGwt
    protected void gwtSetUp() throws Exception
    {
       super.gwtSetUp();
-      HashMap<String, String> options = JavaCore.getOptions();
+      HashMap<String, String> options = new HashMap<String, String>();
       options.put(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR, JavaCore.SPACE);
       options.put(DefaultCodeFormatterConstants.FORMATTER_TAB_SIZE, "4");
       options.put(DefaultCodeFormatterConstants.FORMATTER_INDENT_SWITCHSTATEMENTS_COMPARE_TO_CASES,
@@ -75,6 +76,7 @@ public class ASTRewritingTestGwt extends BaseTestGwt
       options.put(JavaCore.COMPILER_PB_ASSERT_IDENTIFIER, JavaCore.ERROR);
       options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_5);
       options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_5);
+      options.putAll(DefaultCodeFormatterOptions.getEclipseDefaultSettings().getMap());
 
    }
 

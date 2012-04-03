@@ -101,7 +101,6 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       options.put(JavaCore.CORE_ENCODING, "UTF-8");
       options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
       options.put(CompilerOptions.OPTION_TargetPlatform, JavaCore.VERSION_1_6);
-      // options.putAll(DefaultCodeFormatterOptions.getEclipseDefaultSettings().getMap());
    }
 
    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
