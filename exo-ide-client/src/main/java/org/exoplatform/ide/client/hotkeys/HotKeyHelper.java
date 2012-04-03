@@ -52,6 +52,7 @@ public class HotKeyHelper
       KEY_CODES.put("16", "Shift");
       KEY_CODES.put("17", "Ctrl");
       KEY_CODES.put("18", "Alt");
+
       KEY_CODES.put("19", "Pause");
       KEY_CODES.put("20", "CapsLock");
       KEY_CODES.put("27", "Esc");
@@ -158,6 +159,8 @@ public class HotKeyHelper
       KEY_CODES.put("220", "\\");
       KEY_CODES.put("221", "]");
       KEY_CODES.put("222", "'");
+      
+      KEY_CODES.put("224", "Alt");
    }
 
    /**

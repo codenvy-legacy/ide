@@ -44,7 +44,7 @@
                   </td>
 
                   <td>
-                     <c:TextInput ui:field="hotKeyField"  width="100px"  height="22px"></c:TextInput>
+                     <c:TextInput ui:field="hotKeyField"  width="140px"  height="22px"></c:TextInput>
                   </td>
 
                   <td style="width:3px;">

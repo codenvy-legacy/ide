@@ -208,7 +208,6 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
             if (selectedItem.getGroup().equals(EDITOR_GROUP))
             {
                selectedItem = null;
-
                display.setBindButtonEnabled(false);
                display.setUnbindButtonEnabled(false);
                display.setHotKeyFieldEnabled(false);
@@ -216,6 +215,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
                display.getHotKeyField().setValue("");
                return;
             }
+            
             hotKeySelected(selectedItem);
             display.showError(null);
          }
@@ -255,7 +255,6 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
    private void fillHotkeyListGrid()
    {
       HashMap<String, List<SimpleControl>> groups = new LinkedHashMap<String, List<SimpleControl>>();
-
       for (Control command : controls)
       {
          if (command instanceof SimpleControl)
@@ -278,26 +277,24 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          }
       }
 
-      /*
-       * fill default hotkeys
-       */
-      hotKeys.add(new HotKeyItem(EDITOR_GROUP, null, true, EDITOR_GROUP));
-      Iterator<Entry<String, String>> it = ReservedHotKeys.getHotkeys().entrySet().iterator();
-      while (it.hasNext())
-      {
-         Entry<String, String> entry = it.next();
-         String id = entry.getValue();
-         String hotkey = HotKeyHelper.convertToStringCombination(entry.getKey());
-         hotKeys.add(new HotKeyItem(id, hotkey, false, EDITOR_GROUP));
-      }
+//      /*
+//       * fill default hotkeys
+//       */
+//      hotKeys.add(new HotKeyItem(EDITOR_GROUP, null, true, EDITOR_GROUP));
+//      Iterator<Entry<String, String>> it = ReservedHotKeys.getHotkeys().entrySet().iterator();
+//      while (it.hasNext())
+//      {
+//         Entry<String, String> entry = it.next();
+//         String id = entry.getValue();
+//         String hotkey = HotKeyHelper.convertToStringCombination(entry.getKey());
+//         hotKeys.add(new HotKeyItem(id, hotkey, false, EDITOR_GROUP));
+//      }
 
       display.getHotKeyItemListGrid().setValue(hotKeys);
-
    }
 
    private void addCommand(HashMap<String, List<SimpleControl>> groups, SimpleControl command)
    {
-
       String groupName = command.getId();
       if (groupName.indexOf("/") >= 0)
       {
@@ -335,17 +332,16 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
    private void bindHotKey()
    {
       String newHotKey = display.getHotKeyField().getValue();
-
-      final String selectedCommandId =
-         selectedItem.getCommand() == null ? selectedItem.getTitle() : selectedItem.getCommand().getId();
+      String selectedCommandId = selectedItem.getCommand() == null ? selectedItem.getTitle() : selectedItem.getCommand().getId();
       for (HotKeyItem hotKey : hotKeys)
       {
-         final String commandId = hotKey.getCommand() == null ? hotKey.getTitle() : hotKey.getCommand().getId();
+         String commandId = hotKey.getCommand() == null ? hotKey.getTitle() : hotKey.getCommand().getId();
          if (commandId.equals(selectedCommandId))
          {
             hotKey.setHotKey(newHotKey);
          }
       }
+      
       updateState();
    }
 
@@ -385,7 +381,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
     * @param newHotKey
     * @return is combination of hot key is valid
     */
-   private boolean validateHotKey(boolean isCtrl, boolean isAlt, int keyCode)
+   private boolean validateHotKey(boolean isCtrl, boolean isAlt, boolean isShift, int keyCode)
    {
       final String firstKeyCtrlOrAltMsg = CONSTANTS.msgFirstKeyCtrlOrAlt();
 
@@ -400,17 +396,18 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
       final String tryAnotherKey = CONSTANTS.msgTryAnotherHotkey();
 
       // --- check is control key pressed first ---
-      //
+      // 16 - key code of Shift
       // 17 - key code of Ctrl
       // 18 - key code of Alt
+      // 224 - key code of Alt when Shift is pressed
       // on Linux, if single Ctrl or Alt key pressed, than isCtrl or isAlt will be false,
       // but keyCode will contain 17 or 18 key. To check keyCode - is the one way
       // to know, that Ctrl or Alt single key was pressed on Linux
-      if (!isCtrl && !isAlt)
+      if (!isCtrl && !isAlt && !isShift)
       {
          // if control is null, but keyCode is Ctrl or Alt,
          // than Ctrl or Alt is pressed first
-         if (keyCode == 17 || keyCode == 18)
+         if (keyCode == 17 || keyCode == 18 || keyCode == 16 || keyCode == 224)
          {
             display.getHotKeyField().setValue(HotKeyHelper.getKeyName(String.valueOf(keyCode)) + "+");
             display.showError(pressControlKeyThenKey);
@@ -427,20 +424,54 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
       }
 
       // --- controlKey must be Ctrl or Alt ---
-      String controlKey = null;
+      String shortcut = "";
       if (isCtrl)
       {
-         controlKey = "Ctrl";
-      }
-      else if (isAlt)
-      {
-         controlKey = "Alt";
+         shortcut = "Ctrl";
       }
 
-      // if control key is correct, but keyCode is not pressed yet
-      if (keyCode == 0 || keyCode == 17 || keyCode == 18)
+      if (isAlt || keyCode == 224)
       {
-         display.getHotKeyField().setValue(controlKey + "+");
+         if (shortcut.isEmpty())
+         {
+            shortcut = "Alt";
+         }
+         else
+         {
+            shortcut += "+Alt";
+         }
+      }
+
+      if (isShift)
+      {
+         if (shortcut.isEmpty())
+         {
+            shortcut = "Shift";
+         }
+         else
+         {
+            shortcut += "+Shift";
+         }
+      }
+
+      //      String controlKey = "";
+      //      if (isCtrl)
+      //      {
+      //         controlKey = "Ctrl";
+      //      }
+      //      else if (isAlt)
+      //      {
+      //         controlKey = "Alt";
+      //      }
+      //      else if (isShift)
+      //      {
+      //         controlKey = "Shift";
+      //      }
+
+      // if control key is correct, but keyCode is not pressed yet
+      if (keyCode == 0 || keyCode == 16 || keyCode == 17 || keyCode == 18 || keyCode == 224)
+      {
+         display.getHotKeyField().setValue(shortcut + "+");
          display.showError(pressControlKeyThenKey);
          return false;
       }
@@ -450,18 +481,18 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
       // --- check, is keyCode correct (maybe pressed not standard key on keyboard) ---
       if (keyString == null)
       {
-         display.getHotKeyField().setValue(controlKey + "+");
+         display.getHotKeyField().setValue(shortcut + "+");
          display.showError(tryAnotherKey);
          return false;
       }
 
-      String stringHotKey = controlKey + "+" + keyString;
+      String stringHotKey = shortcut + "+" + keyString;
 
       // show hotkey in text field
       display.getHotKeyField().setValue(stringHotKey);
 
       // --- check, is stringHotKey is reserved by editor ---
-      if (ReservedHotKeys.getHotkeys().containsKey(controlKey + "+" + keyCode))
+      if (ReservedHotKeys.getHotkeys().containsKey(shortcut + "+" + keyCode))
       {
          display.showError(hotkeyIsUsedInCkEditorMsg);
          return false;
@@ -506,8 +537,9 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
 
             if (hotKey != null && !"".equals(hotKey))
             {
-               String keyCode = HotKeyHelper.convertToCodeCombination(hotKey);
-               keys.put(keyCode, hotKeyItem.getCommand().getId());
+//               String keyCode = HotKeyHelper.convertToCodeCombination(hotKey);
+//               keys.put(keyCode, hotKeyItem.getCommand().getId());
+               keys.put(hotKey, hotKeyItem.getCommand().getId());
             }
          }
       }
@@ -545,14 +577,20 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
       // selectedItem = null;
 
       display.setBindButtonEnabled(false);
-      if (selectedItem.getHotKey() != null && !"".equals(selectedItem.getHotKey()))
+      if (selectedItem.getHotKey() != null && !selectedItem.getHotKey().isEmpty())
+      {
          display.setUnbindButtonEnabled(true);
+      }
       else
+      {
          display.setUnbindButtonEnabled(false);
-      display.getHotKeyField().setValue("", true);
+//         display.getHotKeyField().setValue("", true);
+//         display.setHotKeyFieldEnabled(false);
+//         display.getHotKeyItemListGrid().setValue(hotKeys);
+      }
+      
+      display.getHotKeyItemListGrid().setValue(hotKeys);      
       display.setOkButtonEnabled(true);
-      display.setHotKeyFieldEnabled(false);
-      display.getHotKeyItemListGrid().setValue(hotKeys);
    }
 
    /**
@@ -560,13 +598,14 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
     * 
     * @see org.exoplatform.ide.client.hotkeys.HotKeyPressedListener#onHotKeyPressed(java.lang.String, java.lang.String)
     */
-   public void onHotKeyPressed(boolean isCtrl, boolean isAlt, int keyCode)
+   public void onHotKeyPressed(boolean isCtrl, boolean isAlt, boolean isShift, int keyCode)
    {
       if (selectedItem == null)
       {
          return;
       }
-      if (validateHotKey(isCtrl, isAlt, keyCode))
+
+      if (validateHotKey(isCtrl, isAlt, isShift, keyCode))
       {
          display.showError(null);
          display.setBindButtonEnabled(true);

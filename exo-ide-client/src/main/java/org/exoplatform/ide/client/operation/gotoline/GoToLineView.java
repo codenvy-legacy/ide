@@ -80,6 +80,7 @@ public class GoToLineView extends ViewImpl implements
    {
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.goToLine()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
+      setCloseOnEscape(true);
 
       lineNumberField.setName(LINE_NUMBER_FIELD);
       rangeLabel.getElement().setId(LINE_NUMBER_RANGE_LABEL);

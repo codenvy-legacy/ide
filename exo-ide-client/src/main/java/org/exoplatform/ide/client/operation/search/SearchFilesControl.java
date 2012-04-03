@@ -31,6 +31,7 @@ import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -55,6 +56,8 @@ public class SearchFilesControl extends SimpleControl implements IDEControl, Ite
    private VirtualFileSystemInfo vfsInfo;
 
    private List<Item> selectedItems = new ArrayList<Item>();
+
+   private boolean navigatorSelected = false;
 
    /**
     * 
@@ -86,15 +89,7 @@ public class SearchFilesControl extends SimpleControl implements IDEControl, Ite
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
-
-      if (vfsInfo != null && selectedItems.size() == 1)
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
+      refresh();
    }
 
    /**
@@ -104,17 +99,7 @@ public class SearchFilesControl extends SimpleControl implements IDEControl, Ite
    public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
-
-      if (vfsInfo == null)
-      {
-         setVisible(false);
-      }
-      else
-      {
-         setVisible(true);
-      }
-
-      setEnabled(false);
+      refresh();
    }
 
    /**
@@ -123,7 +108,30 @@ public class SearchFilesControl extends SimpleControl implements IDEControl, Ite
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      if (!(event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay))
+      navigatorSelected =
+         event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay
+            || event.getView() instanceof ProjectExplorerPresenter.Display;
+
+      refresh();
+   }
+
+   /**
+    * Refresh control
+    */
+   private void refresh()
+   {
+      if (vfsInfo == null)
+      {
+         setVisible(false);
+         return;
+      }
+
+      setVisible(true);
+      if (vfsInfo != null && selectedItems.size() == 1 && navigatorSelected)
+      {
+         setEnabled(true);
+      }
+      else
       {
          setEnabled(false);
       }

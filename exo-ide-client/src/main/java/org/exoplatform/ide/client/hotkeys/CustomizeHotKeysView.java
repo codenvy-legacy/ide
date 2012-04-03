@@ -54,7 +54,7 @@ public class CustomizeHotKeysView extends ViewImpl implements
    /**
     * Initial width of this view
     */
-   private static final int WIDTH = 600;
+   private static final int WIDTH = 640;
 
    /**
     * Initial height of this view
@@ -94,6 +94,8 @@ public class CustomizeHotKeysView extends ViewImpl implements
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
       messageLabel.getElement().setId(MSG_LABEL_ID);
+      
+      hotKeyField.setReadOnly(true);
    }
 
    @Override

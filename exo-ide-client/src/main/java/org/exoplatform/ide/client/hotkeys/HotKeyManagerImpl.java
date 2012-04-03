@@ -59,15 +59,15 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
    private static final class WindowCloseHandlerImpl implements ClosingHandler
    {
       public native void onWindowClosing(ClosingEvent event) /*-{
-                                                             $doc.onkeydown = null; 
-                                                             }-*/;
+         $doc.onkeydown = null; 
+      }-*/;
 
       private native void init() /*-{
-                                 $doc.onkeydown = function(evt) { 
-                                 var hotKeyNamager = @org.exoplatform.ide.client.hotkeys.HotKeyManager::getInstance()();
-                                 hotKeyNamager.@org.exoplatform.ide.client.hotkeys.HotKeyManager::onKeyDown(Lcom/google/gwt/user/client/Event;)(evt || $wnd.event);
-                                 }                        
-                                 }-*/;
+         $doc.onkeydown = function(evt) { 
+         var hotKeyNamager = @org.exoplatform.ide.client.hotkeys.HotKeyManager::getInstance()();
+            hotKeyNamager.@org.exoplatform.ide.client.hotkeys.HotKeyManager::onKeyDown(Lcom/google/gwt/user/client/Event;)(evt || $wnd.event);
+         }                        
+      }-*/;
    }
 
    private HotKeyPressedListener hotKeyPressedListener;
@@ -116,7 +116,8 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
    {
       if (hotKeyPressedListener != null)
       {
-         hotKeyCustomizing(event);
+         hotKeyPressedListener.onHotKeyPressed(event.getCtrlKey(), event.getAltKey(), event.getShiftKey(), DOM.eventGetKeyCode(event));
+         event.preventDefault();
       }
       else
       {
@@ -127,33 +128,45 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
    private void hotKeyPressed(final Event event)
    {
       int keyCode = DOM.eventGetKeyCode(event);
-      String controlKey = null;
-      if (event.getCtrlKey() && !event.getAltKey())
-         controlKey = "Ctrl";
-      if (event.getAltKey() && !event.getCtrlKey())
-         controlKey = "Alt";
-      if (controlKey == null)
+      
+      String shortcut = "";
+      if (event.getCtrlKey()) {
+         shortcut = "Ctrl";
+      }
+      
+      if (event.getAltKey()) {
+         if (shortcut.isEmpty()) {
+            shortcut = "Alt";
+         } else {
+            shortcut += "+Alt";
+         }
+      }
+      
+      if (event.getShiftKey()) {
+         if (shortcut.isEmpty()) {
+            shortcut = "Shift";
+         } else {
+            shortcut += "+Shift";
+         }
+      }
+      
+      if (shortcut.isEmpty() || keyCode == 16 || keyCode == 17 || keyCode == 18 || keyCode == 224) {
          return;
-
-      String hotKey = controlKey + "+" + String.valueOf(keyCode);
-      if (!hotKeys.containsKey(hotKey))
+      }
+      
+      shortcut += "+" + HotKeyHelper.getKeyName(String.valueOf(keyCode));
+      if (!hotKeys.containsKey(shortcut))
+      {
          return;
+      }
 
-      callEventByHotKey(hotKey);
+      callEventByHotKey(shortcut);
       event.preventDefault();
-
    }
 
    public void setHotKeyPressedListener(HotKeyPressedListener listener)
    {
       hotKeyPressedListener = listener;
-   }
-
-   private void hotKeyCustomizing(final Event event)
-   {
-
-      hotKeyPressedListener.onHotKeyPressed(event.getCtrlKey(), event.getAltKey(), DOM.eventGetKeyCode(event));
-      event.preventDefault();
    }
 
    public void onKeyPress(final Event event)
@@ -173,11 +186,17 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
 
       hotKeys.clear();
 
-      hotKeys.put("Ctrl+83", SaveFileControl.ID); // Ctrl+S
-      hotKeys.put("Ctrl+70", FindTextControl.ID); // Ctrl+F
-      hotKeys.put("Ctrl+68", DeleteCurrentLineControl.ID); // Ctrl+D
-      hotKeys.put("Ctrl+76", GoToLineControl.ID); // Ctrl+L
-      hotKeys.put("Ctrl+78", CreateFileFromTemplateControl.ID); // Ctrl+N
+//      hotKeys.put("Ctrl+83", SaveFileControl.ID); // Ctrl+S
+//      hotKeys.put("Ctrl+70", FindTextControl.ID); // Ctrl+F
+//      hotKeys.put("Ctrl+68", DeleteCurrentLineControl.ID); // Ctrl+D
+//      hotKeys.put("Ctrl+76", GoToLineControl.ID); // Ctrl+L
+//      hotKeys.put("Ctrl+78", CreateFileFromTemplateControl.ID); // Ctrl+N
+
+      hotKeys.put("Ctrl+S", SaveFileControl.ID); // Ctrl+S
+      hotKeys.put("Ctrl+F", FindTextControl.ID); // Ctrl+F
+      hotKeys.put("Ctrl+D", DeleteCurrentLineControl.ID); // Ctrl+D
+      hotKeys.put("Ctrl+L", GoToLineControl.ID); // Ctrl+L
+      hotKeys.put("Ctrl+N", CreateFileFromTemplateControl.ID); // Ctrl+N
 
       hotKeys.putAll(hotKeys);
    }
@@ -194,9 +213,10 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
    {
       for (Control command : registeredControls)
       {
-         if (command instanceof SimpleControl && ((SimpleControl)command).getEvent() != null
-            && command.getId().equals(hotKeys.get(hotKey))
-            && (command.isEnabled() || ((SimpleControl)command).isIgnoreDisable()))
+         if (command instanceof SimpleControl &&
+                  ((SimpleControl)command).getEvent() != null &&
+                  command.getId().equals(hotKeys.get(hotKey)) &&
+                  (command.isEnabled() || ((SimpleControl)command).isIgnoreDisable()))
          {
             IDE.fireEvent(((SimpleControl)command).getEvent());
             return;
@@ -225,7 +245,6 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       {
          String key = keyIter.next();
          String controlId = event.getHotKeys().get(key);
-
          Control control = getControl(controlId);
          if (control == null || !(control instanceof SimpleControl))
          {
@@ -233,9 +252,8 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
          }
 
          SimpleControl simpleControl = (SimpleControl)control;
-
-         String k = HotKeyHelper.convertToStringCombination(key);
-         simpleControl.setHotKey(k);
+         //String k = HotKeyHelper.convertToStringCombination(key);
+         simpleControl.setHotKey(key);
       }
    }
 
