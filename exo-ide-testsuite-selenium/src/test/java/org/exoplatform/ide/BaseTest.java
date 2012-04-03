@@ -30,6 +30,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -38,6 +39,7 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.BufferedReader;
@@ -186,6 +188,7 @@ public abstract class BaseTest
       try
       {
          selenium().windowFocus();
+         new Actions(driver).sendKeys(Keys.F11.toString()).build().perform();
          selenium().windowMaximize();
          selenium().open(APPLICATION_URL);
          selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
