@@ -16,23 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.maven.client.build;
+package org.exoplatform.ide.extension.maven.client.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link BuildProjectEvent} event.
+ * Class, that implements this handler, will listen when project has built.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BuildProjectHandler.java Feb 17, 2012 4:05:12 PM azatsarynnyy $
+ * @version $Id: ProjectBuiltHandler.java Apr 3, 2012 12:23:21 PM azatsarynnyy $
  *
  */
-public interface BuildProjectHandler extends EventHandler
+public interface ProjectBuiltHandler extends EventHandler
 {
    /**
-    * Perform actions, when user tries to build project by maven builder.
-    * 
-    * @param event BuildProjectEvent
+    * @param event event generated when project is built
     */
-   void onBuildProject(BuildProjectEvent event);
+   void onProjectBuilt(ProjectBuiltEvent event);
 }

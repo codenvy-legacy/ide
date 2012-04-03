@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
 import org.exoplatform.ide.extension.maven.client.MavenClientBundle;
-import org.exoplatform.ide.extension.maven.client.build.BuildProjectEvent;
+import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 
 /**
  * Control for build project by maven builder.

@@ -16,46 +16,46 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.maven.client.build;
+package org.exoplatform.ide.extension.maven.client.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 
 /**
- * Event occurs, when user tries to build project by maven builder.
+ * Event occurs, when project has built by maven builder.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BuildProjectEvent.java Feb 17, 2012 4:04:56 PM azatsarynnyy $
+ * @version $Id: ProjectBuiltEvent.java Apr 3, 2012 12:23:44 PM azatsarynnyy $
  *
  */
-public class BuildProjectEvent extends GwtEvent<BuildProjectHandler>
+public class ProjectBuiltEvent extends GwtEvent<ProjectBuiltHandler>
 {
+
    /**
-    * Project for build.
+    * Status of build.
     */
-   private ProjectModel project;
-
-   public BuildProjectEvent()
-   {
-      this.project = null;
-   }
-
-   public BuildProjectEvent(ProjectModel project)
-   {
-      this.project = project;
-   }
+   private BuildStatus status;
 
    /**
     * Type used to register this event.
     */
-   public static final GwtEvent.Type<BuildProjectHandler> TYPE = new GwtEvent.Type<BuildProjectHandler>();
+   public static final GwtEvent.Type<ProjectBuiltHandler> TYPE = new Type<ProjectBuiltHandler>();
+
+   /**
+    * @param status status of build
+    */
+   public ProjectBuiltEvent(BuildStatus status)
+   {
+      super();
+      this.status = status;
+   }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<BuildProjectHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ProjectBuiltHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -64,18 +64,19 @@ public class BuildProjectEvent extends GwtEvent<BuildProjectHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(BuildProjectHandler handler)
+   protected void dispatch(ProjectBuiltHandler handler)
    {
-      handler.onBuildProject(this);
+      handler.onProjectBuilt(this);
    }
 
    /**
-    * Get the project for build.
+    * Returns the status of build project.
     * 
-    * @return the project
+    * @return the build status
     */
-   public ProjectModel getProject()
+   public BuildStatus getBuildStatus()
    {
-      return project;
+      return status;
    }
+
 }

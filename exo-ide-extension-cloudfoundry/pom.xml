@@ -33,7 +33,7 @@
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-jenkins</artifactId>
+         <artifactId>exo-ide-extension-maven</artifactId>
       </dependency>
 
       <dependency>

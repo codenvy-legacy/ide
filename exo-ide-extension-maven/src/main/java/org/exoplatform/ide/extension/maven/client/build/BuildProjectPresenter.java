@@ -43,6 +43,9 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.maven.client.BuilderClientService;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
 import org.exoplatform.ide.extension.maven.client.control.BuildProjectControl;
+import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
+import org.exoplatform.ide.extension.maven.client.event.BuildProjectHandler;
+import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -141,7 +144,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.project.BuildProjectHandler#onBuildProject(org.exoplatform.ide.client.framework.project.BuildProjectEvent)
+    * @see org.exoplatform.ide.extension.maven.client.event.BuildProjectHandler#onBuildProject(org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent)
     */
    @Override
    public void onBuildProject(BuildProjectEvent event)
@@ -169,7 +172,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     */
    private void doBuild()
    {
-      projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      projectId = project.getId();
       statusHandler.requestInProgress(projectId);
 
       try
@@ -335,7 +338,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
          String errorMessage = buildStatus.getError();
          String exceptionMessage = "Building of project failed";
-         if (!errorMessage.equals("null"))
+         if (errorMessage != null && !errorMessage.equals("null"))
          {
             message.append("\r\n" + errorMessage);
             exceptionMessage += ": " + errorMessage;
@@ -346,6 +349,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
       showBuildMessage(message.toString());
       display.stopAnimation();
+      
+      IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
    }
 
    /**

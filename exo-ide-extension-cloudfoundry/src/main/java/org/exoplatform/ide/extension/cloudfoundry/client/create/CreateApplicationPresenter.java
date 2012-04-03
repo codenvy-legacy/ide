@@ -49,9 +49,9 @@ import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.FrameworksUn
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
-import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
-import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
-import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
+import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
+import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
+import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
@@ -71,7 +71,7 @@ import java.util.List;
  * @version $Id: CreateApplicationPresenter.java Jul 8, 2011 11:57:36 AM vereshchaka $
  */
 public class CreateApplicationPresenter extends GitPresenter implements CreateApplicationHandler, ViewClosedHandler,
-   ApplicationBuiltHandler
+   ProjectBuiltHandler
 {
    interface Display extends IsView
    {
@@ -354,15 +354,15 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
    }
 
    /**
-    * @see org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler#onApplicationBuilt(org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent)
+    * @see org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler#onProjectBuilt(org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent)
     */
    @Override
-   public void onApplicationBuilt(ApplicationBuiltEvent event)
+   public void onProjectBuilt(ProjectBuiltEvent event)
    {
       IDE.removeHandler(event.getAssociatedType(), this);
-      if (event.getJobStatus().getArtifactUrl() != null)
+      if (event.getBuildStatus().getDownloadUrl() != null)
       {
-         warUrl = event.getJobStatus().getArtifactUrl();
+         warUrl = event.getBuildStatus().getDownloadUrl();
          createApplication(appData);
       }
    }
@@ -457,8 +457,8 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
    private void buildApplication()
    {
-      IDE.addHandler(ApplicationBuiltEvent.TYPE, this);
-      IDE.fireEvent(new BuildApplicationEvent());
+      IDE.addHandler(ProjectBuiltEvent.TYPE, this);
+      IDE.fireEvent(new BuildProjectEvent());
    }
 
    private void createApplication(final AppData app)

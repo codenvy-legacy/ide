@@ -46,9 +46,9 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizatio
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
-import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
-import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
-import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
+import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
+import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
+import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -64,7 +64,7 @@ import java.util.List;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeployApplicationPresenter.java Dec 2, 2011 10:17:23 AM vereshchaka $
  */
-public class DeployApplicationPresenter implements ApplicationBuiltHandler, PaasComponent, VfsChangedHandler
+public class DeployApplicationPresenter implements ProjectBuiltHandler, PaasComponent, VfsChangedHandler
 {
    interface Display
    {
@@ -163,15 +163,15 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
    }
 
    /**
-    * @see org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler#onApplicationBuilt(org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent)
+    * @see org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler#onProjectBuilt(org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent)
     */
    @Override
-   public void onApplicationBuilt(ApplicationBuiltEvent event)
+   public void onProjectBuilt(ProjectBuiltEvent event)
    {
       IDE.removeHandler(event.getAssociatedType(), this);
-      if (event.getJobStatus().getArtifactUrl() != null)
+      if (event.getBuildStatus().getDownloadUrl() != null)
       {
-         warUrl = event.getJobStatus().getArtifactUrl();
+         warUrl = event.getBuildStatus().getDownloadUrl();
          createApplication();
       }
    }
@@ -180,8 +180,8 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
 
    private void buildApplication()
    {
-      IDE.addHandler(ApplicationBuiltEvent.TYPE, this);
-      IDE.fireEvent(new BuildApplicationEvent(project));
+      IDE.addHandler(ProjectBuiltEvent.TYPE, this);
+      IDE.fireEvent(new BuildProjectEvent(project));
    }
 
    private void createApplication()
