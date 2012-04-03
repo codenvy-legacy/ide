@@ -88,6 +88,7 @@
 package org.eclipse.jdt.client.core;
 
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
+import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterOptions;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
 
@@ -480,18 +481,7 @@ public final class JavaCore
       // options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
       options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
       options.put(CompilerOptions.OPTION_TargetPlatform, JavaCore.VERSION_1_6);
-      options.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_METHOD_INVOCATION, JavaCore.DO_NOT_INSERT);
-      options.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_METHOD_INVOCATION, JavaCore.DO_NOT_INSERT);
-      options.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_METHOD_INVOCATION_ARGUMENTS, JavaCore.DO_NOT_INSERT);
-      options.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_METHOD_INVOCATION_ARGUMENTS, INSERT);
-      options.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_METHOD_INVOCATION, JavaCore.DO_NOT_INSERT);
-      options.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_PARENS_IN_METHOD_INVOCATION, JavaCore.DO_NOT_INSERT);
-
-      options.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_ANGLE_BRACKET_IN_PARAMETERIZED_TYPE_REFERENCE, JavaCore.DO_NOT_INSERT);
-      options.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_ANGLE_BRACKET_IN_PARAMETERIZED_TYPE_REFERENCE, JavaCore.DO_NOT_INSERT);
-      options.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_PARAMETERIZED_TYPE_REFERENCE, JavaCore.DO_NOT_INSERT);
-      options.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_PARAMETERIZED_TYPE_REFERENCE, INSERT);
-      options.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_ANGLE_BRACKET_IN_PARAMETERIZED_TYPE_REFERENCE, JavaCore.DO_NOT_INSERT);
+      options.putAll(DefaultCodeFormatterOptions.getDefaultSettings().getMap());
    }
 
    /**

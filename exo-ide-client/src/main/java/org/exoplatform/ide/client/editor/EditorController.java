@@ -108,7 +108,7 @@ import java.util.Map;
  */
 public class EditorController implements EditorContentChangedHandler, EditorSaveContentHandler,
    EditorActiveFileChangedHandler, EditorCloseFileHandler, EditorUndoTypingHandler, EditorRedoTypingHandler,
-   EditorFormatTextHandler, ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler,
+   ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler,
    FileSavedHandler, EditorReplaceFileHandler, EditorDeleteCurrentLineHandler, EditorGoToLineHandler,
    EditorFindTextHandler, EditorReplaceTextHandler, EditorReplaceAndFindTextHandler, EditorSetFocusHandler,
    RefreshHotKeysHandler, ApplicationSettingsReceivedHandler, SaveFileAsHandler, ViewVisibilityChangedHandler,
@@ -156,7 +156,6 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       IDE.addHandler(EditorUndoTypingEvent.TYPE, this);
       IDE.addHandler(EditorRedoTypingEvent.TYPE, this);
       IDE.addHandler(FileSavedEvent.TYPE, this);
-      IDE.addHandler(EditorFormatTextEvent.TYPE, this);
       IDE.addHandler(ShowLineNumbersEvent.TYPE, this);
       IDE.addHandler(EditorChangeActiveFileEvent.TYPE, this);
       IDE.addHandler(EditorDeleteCurrentLineEvent.TYPE, this);
@@ -373,11 +372,6 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
    private void updateTabTitle(FileModel file)
    {
       editorsViews.get(file.getId()).setTitle(file, isReadOnly(file));
-   }
-
-   public void onFormatFile(EditorFormatTextEvent event)
-   {
-      getEditorFromView(activeFile.getId()).formatSource();
    }
 
    private void updateLineNumbers(boolean lineNumbers)

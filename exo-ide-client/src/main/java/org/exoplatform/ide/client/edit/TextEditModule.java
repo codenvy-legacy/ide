@@ -69,6 +69,7 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
       new CloseAllFilesEventHandler();
+      new CodeFormatterManager(IDE.eventBus());
    }
 
    /**

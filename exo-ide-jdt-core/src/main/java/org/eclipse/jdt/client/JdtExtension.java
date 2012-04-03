@@ -42,8 +42,10 @@ import org.eclipse.jdt.client.templates.TemplateStore;
 import org.eclipse.jdt.client.templates.TypeResolver;
 import org.eclipse.jdt.client.templates.TypeVariableResolver;
 import org.eclipse.jdt.client.templates.VarResolver;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.editor.AddCodeFormatterEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -94,6 +96,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       new CleanProjectCommandHandler();
       IDE.getInstance().addControl(new CleanProjectControl());
       Window.addCloseHandler(this);
+      IDE.fireEvent(new AddCodeFormatterEvent(new JavaCodeFormatter(), MimeType.APPLICATION_JAVA));
    }
 
    /**

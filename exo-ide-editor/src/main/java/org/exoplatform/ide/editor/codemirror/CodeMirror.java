@@ -294,7 +294,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    {
       clickHandler.cancel();
       fireEvent(new LineNumberDoubleClickEvent(lineNumber));
-      if(activeNotification != null)
+      if (activeNotification != null)
          activeNotification.update();
    }
 
@@ -1336,7 +1336,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 			editor.setLineNumbers(showLineNumbers);
    }-*/;
 
-   private native String getLineNumber(JavaScriptObject editor, int lineNumber)/*-{
+   private native String getLineContent(JavaScriptObject editor, int lineNumber)/*-{
 		var handler = editor.nthLine(lineNumber);
 		return editor.lineContent(handler);
 
@@ -1348,7 +1348,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    @Override
    public String getLineContent(int line)
    {
-      return getLineNumber(editorObject, line);
+      return getLineContent(editorObject, line);
    }
 
    public void onEditorTokenListPrepared(EditorTokenListPreparedEvent event)
@@ -1437,7 +1437,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       boolean hasError = fillMessages(problemList, message);
 
       String markStyle = getStyleForLine(problemList, hasError);
-      
+
       markProblemmeLine(problem.getLineNumber(), message.toString(), markStyle);
       if (overviewRuler != null)
          overviewRuler.addProblem(problem, message.toString());
@@ -1514,17 +1514,17 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
          unmarkNative(key);
          List<Problem> list = problems.get(key);
          Problem breakpoint = getBreakpoint(list);
-         if(breakpoint != null)
+         if (breakpoint != null)
             breakpoins.add(breakpoint);
          list.clear();
       }
 
       if (overviewRuler != null)
          overviewRuler.clearProblems();
-      for(Problem p : breakpoins)
+      for (Problem p : breakpoins)
          markProblem(p);
    }
-   
+
    private Problem getBreakpoint(List<Problem> problems)
    {
       for (Problem p : problems)
@@ -1706,6 +1706,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 		}
    }-*/;
 
+   @Override
    public IDocument getDocument()
    {
       if (needUpdateDocument)
@@ -1733,6 +1734,18 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 		editor.setLineContent(handle, text);
    }-*/;
 
+   private native void deleteLine(JavaScriptObject editor, int line)/*-{
+		var lineHandler = editor.nthLine(line);
+
+		if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser != @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE
+				&& this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getLastLineNumber()() == line) {
+			// clear current line
+			this.@org.exoplatform.ide.editor.codemirror.CodeMirror::clearLastLine()();
+		} else {
+			editor.removeLine(lineHandler);
+		}
+   }-*/;
+
    /**
     * @see org.exoplatform.ide.editor.text.IDocumentListener#documentChanged(org.exoplatform.ide.editor.text.DocumentEvent)
     */
@@ -1746,8 +1759,17 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
          int col = event.getOffset() - document.getLineOffset(lineNumber);
          // lineNumber start from 0, but editor store lines starting form 1
          lineNumber++;
-         StringBuilder b = new StringBuilder(getLineNumber(editorObject, lineNumber));
-         b.replace(col, col + event.getLength(), event.getText());
+         StringBuilder b = new StringBuilder(getLineContent(lineNumber));
+         int length = col + event.getLength();
+         int nextLine = lineNumber + 1;
+         while (length > b.length())
+         {
+            b.append(getLineContent(nextLine));
+            deleteLine(editorObject, nextLine);
+            // symbol '\n' not present in line content
+            length --;
+         }
+         b.replace(col, length, event.getText());
          updateLineContent(lineNumber, b.toString());
       }
       catch (BadLocationException e)

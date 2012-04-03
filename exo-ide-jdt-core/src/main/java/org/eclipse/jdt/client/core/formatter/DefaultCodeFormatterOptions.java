@@ -4139,7 +4139,7 @@ public class DefaultCodeFormatterOptions
       this.put_empty_statement_on_new_line = false;
       this.tab_size = 4;
       this.page_width = 80;
-      this.tab_char = TAB; // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=49081
+      this.tab_char = SPACE; // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=49081
       this.use_tabs_only_for_leading_indentations = false;
       this.wrap_before_binary_operator = true;
       this.wrap_before_or_operator_multicatch = true;

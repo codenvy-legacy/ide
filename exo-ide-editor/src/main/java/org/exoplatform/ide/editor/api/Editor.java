@@ -20,6 +20,7 @@ package org.exoplatform.ide.editor.api;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledEvent;
+import org.exoplatform.ide.editor.text.IDocument;
 
 import java.util.List;
 import java.util.Map;
@@ -65,6 +66,11 @@ public abstract class Editor extends AbsolutePanel
     * @return content of editor
     */
    public abstract String getText();
+   
+   /**
+    * @return content of editor
+    */
+   public abstract IDocument getDocument();
 
    /**
     * replace current content of editor by text parameter
