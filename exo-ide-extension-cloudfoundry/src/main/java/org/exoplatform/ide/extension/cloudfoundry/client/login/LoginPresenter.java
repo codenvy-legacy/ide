@@ -354,7 +354,6 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.fireEvent(new OutputEvent(lb.loginFailed(), Type.INFO));
                   if (exception instanceof ServerException)
                   {
                      ServerException serverException = (ServerException)exception;

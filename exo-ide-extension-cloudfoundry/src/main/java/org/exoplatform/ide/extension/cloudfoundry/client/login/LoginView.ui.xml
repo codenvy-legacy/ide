@@ -47,7 +47,7 @@
       }
       
       .borderBox {
-         margin: 10px 15px 15px;
+         margin: 15px;
       }
    </ui:style>
 
@@ -55,7 +55,6 @@
    <f:Border borderColor="transparent" styleName="{style.borderBox}">
       <f:layer>
          <g:FlowPanel>
-            <f:Label ui:field="errLabel" styleName="{style.errLabel}"></f:Label>
             <g:DockLayoutPanel width="100%" unit="PX" height="22px" styleName="{style.line}">
                <g:west size="75">
                   <g:Label text="{locale.loginViewTargetField}" styleName="{style.label}"></g:Label>
@@ -82,7 +81,7 @@
                   <f:PasswordTextInput ui:field="passwordField" height="22px" width="100%" addStyleNames="{style.spacing}"></f:PasswordTextInput>
                </g:center>
             </g:DockLayoutPanel>
-
+            <f:Label ui:field="errLabel" styleName="{style.errLabel}"></f:Label>
          </g:FlowPanel>
       </f:layer>
 
