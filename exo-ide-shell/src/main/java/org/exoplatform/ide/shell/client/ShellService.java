@@ -217,7 +217,7 @@ public class ShellService
    {
       String url = REST_CONTEXT + "/ide/crash/command";
 
-      Login loginBean = ShellAutoBeanFactory.AUTO_BEAN_FACTORY.login().as();
+      Login loginBean = CloudShell.AUTO_BEAN_FACTORY.login().as();
       loginBean.setCmd(command);
       String payload = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(loginBean)).getPayload();
 

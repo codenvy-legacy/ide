@@ -336,5 +336,25 @@
     "path": "/ide/cloudfoundry/target",
     "method": "GET",
     "description" : "Reports current target"
+},
+{
+    "command": ["mvn clean package"],
+    "path": "/ide/maven/build",
+    "method": "GET",
+    "description" : "Start project build.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      }
+    ]
 }
 ]

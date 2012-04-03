@@ -54,7 +54,7 @@ public class ShellConfigurationBean implements ShellConfiguration
     * @see org.exoplatform.ide.shell.shared.ShellConfiguration#getUserInfo()
     */
    @Override
-   public UserInfo getUserInfo()
+   public UserInfo getUser()
    {
       return userInfo;
    }
@@ -63,7 +63,7 @@ public class ShellConfigurationBean implements ShellConfiguration
     * @see org.exoplatform.ide.shell.shared.ShellConfiguration#setUserInfo(org.exoplatform.ide.shell.shared.UserInfo)
     */
    @Override
-   public void setUserInfo(UserInfo userInfo)
+   public void setUser(UserInfo userInfo)
    {
       this.userInfo = userInfo;
    }

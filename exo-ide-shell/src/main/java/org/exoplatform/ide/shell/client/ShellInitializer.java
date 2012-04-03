@@ -65,7 +65,7 @@ public class ShellInitializer
    {
       try
       {
-         AutoBean<ShellConfiguration> autoBean = ShellAutoBeanFactory.AUTO_BEAN_FACTORY.shellConfiguration();
+         AutoBean<ShellConfiguration> autoBean = CloudShell.AUTO_BEAN_FACTORY.shellConfiguration();
          AutoBeanUnmarshaller<ShellConfiguration> unmarshaller = new AutoBeanUnmarshaller<ShellConfiguration>(autoBean);
          ShellService.getService().loadConfiguration(getConfigurationURL(),
             new AsyncRequestCallback<ShellConfiguration>(unmarshaller)
@@ -76,7 +76,7 @@ public class ShellInitializer
                {
                   CloudShell.getCommands().add(new HelpCommand());
                   CloudShell.getCommands().add(new ClearCommand());
-                  Environment.get().saveValue(EnvironmentVariables.USER_NAME, result.getUserInfo().getName());
+                  Environment.get().saveValue(EnvironmentVariables.USER_NAME, result.getUser().getName());
                   if (result.getEntryPoint() != null)
                   {
                      Environment.get().saveValue(EnvironmentVariables.ENTRY_POINT, result.getEntryPoint());
@@ -116,7 +116,8 @@ public class ShellInitializer
                @Override
                protected void onFailure(Throwable exception)
                {
-                  CloudShell.console().println(exception.getMessage());
+                  exception.printStackTrace();
+                  CloudShell.console().println(exception.getMessage() != null ? exception.getMessage() : "");
                }
             });
 

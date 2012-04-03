@@ -14,6 +14,8 @@ import java.util.Set;
  */
 public class CloudShell implements EntryPoint
 {
+   public static final ShellAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(ShellAutoBeanFactory.class);
+   
    public static final Messages messages = GWT.create(Messages.class);
 
    static ConsoleWriter consoleWriter;

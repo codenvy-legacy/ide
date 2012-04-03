@@ -16,14 +16,14 @@ public interface ShellConfiguration
     * 
     * @return the user information
     */
-   public UserInfo getUserInfo();
+   public UserInfo getUser();
 
    /**
     * Sets information about user.
     * 
     * @param userInfo the user information
     */
-   public void setUserInfo(UserInfo userInfo);
+   public void setUser(UserInfo userInfo);
 
    /**
     * Returns entry point.
