@@ -25,6 +25,9 @@ import com.google.gwt.user.client.Window;
 
 import org.eclipse.jdt.client.codeassistant.ContentAssistHistory;
 import org.eclipse.jdt.client.codeassistant.QualifiedTypeNameHistory;
+import org.eclipse.jdt.client.core.JavaCore;
+import org.eclipse.jdt.client.core.formatter.FormatterProfileManager;
+import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.client.outline.OutlinePresenter;
 import org.eclipse.jdt.client.templates.CodeTemplateContextType;
 import org.eclipse.jdt.client.templates.ContextTypeRegistry;
@@ -50,21 +53,28 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
+
+import java.util.HashMap;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 20, 2012 1:08:51 PM evgen $
  */
 public class JdtExtension extends Extension implements InitializeServicesHandler, UserInfoReceivedHandler,
-   CloseHandler<Window>, ProjectClosedHandler
+   CloseHandler<Window>, ProjectClosedHandler, ApplicationSettingsReceivedHandler
 {
 
    static String DOC_CONTEXT;
 
    static String REST_CONTEXT;
+
+   private static final String JAVA_CODE_FORMATTER = "JavaCodeFormatter";
 
    private static JdtExtension instance;
 
@@ -81,6 +91,19 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
 
    private UserInfo userInfo;
 
+   private static HashMap<String, String> options = new HashMap<String, String>();
+
+   private FormatterProfileManager formatterProfileManager;
+
+   static
+   {
+      options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
+      options.put(JavaCore.CORE_ENCODING, "UTF-8");
+      options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
+      options.put(CompilerOptions.OPTION_TargetPlatform, JavaCore.VERSION_1_6);
+      // options.putAll(DefaultCodeFormatterOptions.getEclipseDefaultSettings().getMap());
+   }
+
    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
    @Override
    public void initialize()
@@ -89,14 +112,16 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
       IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       new CodeAssistantPresenter();
       new JavaCodeController();
       new OutlinePresenter();
       new TypeInfoUpdater();
       new CleanProjectCommandHandler();
       IDE.getInstance().addControl(new CleanProjectControl());
-      Window.addCloseHandler(this);
       IDE.fireEvent(new AddCodeFormatterEvent(new JavaCodeFormatter(), MimeType.APPLICATION_JAVA));
+      Window.addCloseHandler(this);
+      formatterProfileManager = new FormatterProfileManager(IDE.eventBus());
    }
 
    /**
@@ -230,6 +255,32 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
    public void onProjectClosed(ProjectClosedEvent event)
    {
       TypeInfoStorage.get().clear();
+   }
+
+   /**
+    * @return
+    */
+   public HashMap<String, String> getOptions()
+   {
+      return options;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent)
+    */
+   @Override
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      ApplicationSettings settings = event.getApplicationSettings();
+      if (settings.containsKey(JAVA_CODE_FORMATTER))
+      {
+         options.putAll(formatterProfileManager.getProfile(settings.getValueAsString(JAVA_CODE_FORMATTER))
+            .getSettings());
+      }
+      else
+      {
+         options.putAll(formatterProfileManager.getDefault().getSettings());
+      }
    }
 
 }

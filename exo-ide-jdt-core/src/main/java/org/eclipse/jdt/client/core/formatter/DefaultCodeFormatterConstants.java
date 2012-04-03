@@ -4910,17 +4910,6 @@ public class DefaultCodeFormatterConstants
    }
 
    /**
-    * Returns the formatter settings that most closely approximate the default formatter settings of Eclipse version 2.1.
-    * 
-    * @return the Eclipse 2.1 settings
-    * @since 3.0
-    */
-   public static Map getEclipse21Settings()
-   {
-      return DefaultCodeFormatterOptions.getDefaultSettings().getMap();
-   }
-
-   /**
     * Returns the default Eclipse formatter settings
     * 
     * @return the Eclipse default settings
