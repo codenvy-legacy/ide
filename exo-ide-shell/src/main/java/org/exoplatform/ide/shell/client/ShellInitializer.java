@@ -76,10 +76,10 @@ public class ShellInitializer
                {
                   CloudShell.getCommands().add(new HelpCommand());
                   CloudShell.getCommands().add(new ClearCommand());
-                  Environment.get().saveValue(EnvironmentVariables.USER_NAME, result.getUser().getName());
-                  if (result.getEntryPoint() != null)
+                  Environment.get().saveValue(EnvironmentVariables.USER_NAME, result.getUser().getUserId());
+                  if (result.getDefaultEntrypoint() != null)
                   {
-                     Environment.get().saveValue(EnvironmentVariables.ENTRY_POINT, result.getEntryPoint());
+                     Environment.get().saveValue(EnvironmentVariables.ENTRY_POINT, result.getDefaultEntrypoint());
                      initCommands();
                      try
                      {

@@ -31,18 +31,18 @@ public interface UserInfo
 {
 
    /**
-    * Returns the user's name.
+    * Returns the user's id.
     * 
-    * @return user's name
+    * @return {@link String} user's id
     */
-   public String getName();
+   public String getUserId();
 
    /**
-    * Change the user's name.
+    * Change the user's id.
     * 
-    * @param name user's name
+    * @param id user's id
     */
-   public void setName(String name);
+   public void setUserId(String id);
 
    /**
     * Returns the list of the user's groups.

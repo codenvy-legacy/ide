@@ -30,13 +30,13 @@ public interface ShellConfiguration
     * 
     * @return the entry point
     */
-   public String getEntryPoint();
+   public String getDefaultEntrypoint();
 
    /**
     * Change the entry point.
     * 
     * @param entryPoint the entry point
     */
-   public void setEntryPoint(String entryPoint);
+   public void setDefaultEntrypoint(String entryPoint);
 
 }

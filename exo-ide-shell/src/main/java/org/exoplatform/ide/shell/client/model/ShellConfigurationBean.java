@@ -69,19 +69,19 @@ public class ShellConfigurationBean implements ShellConfiguration
    }
 
    /**
-    * @see org.exoplatform.ide.shell.shared.ShellConfiguration#getEntryPoint()
+    * @see org.exoplatform.ide.shell.shared.ShellConfiguration#getDefaultEntrypoint()
     */
    @Override
-   public String getEntryPoint()
+   public String getDefaultEntrypoint()
    {
       return entryPoint;
    }
 
    /**
-    * @see org.exoplatform.ide.shell.shared.ShellConfiguration#setEntryPoint(java.lang.String)
+    * @see org.exoplatform.ide.shell.shared.ShellConfiguration#setDefaultEntrypoint(java.lang.String)
     */
    @Override
-   public void setEntryPoint(String entryPoint)
+   public void setDefaultEntrypoint(String entryPoint)
    {
       this.entryPoint = entryPoint;
    }

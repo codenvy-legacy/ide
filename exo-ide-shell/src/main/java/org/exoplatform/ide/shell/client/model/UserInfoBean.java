@@ -35,7 +35,7 @@ public class UserInfoBean implements UserInfo
 
    public static final String DEFAULT_USER_NAME = "DefaultUser";
 
-   private String name;
+   private String userId;
 
    private List<String> groups;
 
@@ -45,34 +45,34 @@ public class UserInfoBean implements UserInfo
    {
    }
 
-   public UserInfoBean(String name)
+   public UserInfoBean(String id)
    {
-      this.name = name;
+      this.userId = id;
    }
 
-   public UserInfoBean(String name, List<String> groups, List<String> roles)
+   public UserInfoBean(String id, List<String> groups, List<String> roles)
    {
-      this.name = name;
+      this.userId = id;
       this.groups = groups;
       this.roles = roles;
    }
 
    /**
-    * @see org.exoplatform.ide.shell.shared.UserInfo#getName()
+    * @see org.exoplatform.ide.shell.shared.UserInfo#getUserId()
     */
    @Override
-   public String getName()
+   public String getUserId()
    {
-      return name;
+      return userId;
    }
 
    /**
-    * @see org.exoplatform.ide.shell.shared.UserInfo#setName(java.lang.String)
+    * @see org.exoplatform.ide.shell.shared.UserInfo#setUserId(java.lang.String)
     */
    @Override
-   public void setName(String name)
+   public void setUserId(String id)
    {
-      this.name = name;
+      this.userId = id;
    }
 
    /**
