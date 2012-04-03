@@ -51,6 +51,22 @@ package org.exoplatform.ide.extension.java.jdi.server.expression;
 @treeparser::members {
 int i = 0;
 
+public static com.sun.jdi.Value evaluate(String expr, Evaluator ev) {
+   try
+   {
+      JavaLexer lex = new JavaLexer(new ANTLRStringStream(expr));
+      CommonTokenStream tokens = new CommonTokenStream(lex);
+      JavaParser parser = new JavaParser(tokens);
+      CommonTreeNodeStream nodes = new CommonTreeNodeStream(parser.expression().getTree());
+      JavaTreeParser walker = new JavaTreeParser(nodes, ev);
+      return walker.evaluate();
+   }
+   catch (RecognitionException e)
+   {
+      throw new ExpressionException(e.getMessage(), e);
+   }
+}
+
 boolean mMessageCollectionEnabled = false;
 private boolean mHasErrors = false;
 List<String> mMessages;
@@ -526,7 +542,7 @@ forUpdater
 
 // EXPRESSIONS
 
-eval returns [com.sun.jdi.Value value]
+evaluate returns [com.sun.jdi.Value value]
   :
   expression 
              {
@@ -948,6 +964,6 @@ literal returns [ExpressionValue value]
 															}
   | NULL 
 															{
-															  $value = null;
+															  $value = ev.nullValue();
 															}
   ;

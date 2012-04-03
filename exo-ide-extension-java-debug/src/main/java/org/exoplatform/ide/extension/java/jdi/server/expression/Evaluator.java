@@ -146,6 +146,11 @@ public class Evaluator
       return value(text.substring(1, text.length() - 1));
    }
 
+   public ExpressionValue nullValue()
+   {
+      return new ReadOnlyValue(null);
+   }
+
 //
 
    public ExpressionValue value(boolean v)
@@ -585,18 +590,25 @@ public class Evaluator
          }
       }
 
-      if (leftValue instanceof ObjectReference && rightValue instanceof ObjectReference)
+      if (leftValue instanceof ObjectReference || rightValue instanceof ObjectReference)
       {
          switch (op)
          {
             case JavaParser.EQUAL:
-               return value(leftValue.equals(rightValue));
+               return value(leftValue != null ? leftValue.equals(rightValue) : rightValue == null);
             case JavaParser.NOT_EQUAL:
-               return value(!(leftValue.equals(rightValue)));
+               return value(!(leftValue != null ? leftValue.equals(rightValue) : rightValue == null));
             default:
                throw new ExpressionException("Unsupported operation " + JavaParser.tokenNames[op] + " for " + leftValue
                   + " and " + rightValue);
          }
+      }
+
+      if (leftValue == null || rightValue == null)
+      {
+         // Neither one is object and operation is not assignation.
+         throw new ExpressionException("Unsupported operation " + JavaParser.tokenNames[op] + " for " + leftValue
+            + " and " + rightValue);
       }
 
       PrimitiveValue lp = (PrimitiveValue)leftValue;

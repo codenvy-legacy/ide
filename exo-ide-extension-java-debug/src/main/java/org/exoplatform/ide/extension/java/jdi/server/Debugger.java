@@ -35,14 +35,7 @@ import com.sun.jdi.request.EventRequest;
 import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.request.InvalidRequestStateException;
 import com.sun.jdi.request.StepRequest;
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.exoplatform.ide.extension.java.jdi.server.expression.Evaluator;
-import org.exoplatform.ide.extension.java.jdi.server.expression.ExpressionException;
-import org.exoplatform.ide.extension.java.jdi.server.expression.JavaLexer;
-import org.exoplatform.ide.extension.java.jdi.server.expression.JavaParser;
 import org.exoplatform.ide.extension.java.jdi.server.expression.JavaTreeParser;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointEventImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointImpl;
@@ -672,16 +665,7 @@ public class Debugger implements EventsHandler
    {
       try
       {
-         JavaLexer lex = new JavaLexer(new ANTLRStringStream(expr));
-         CommonTokenStream tokens = new CommonTokenStream(lex);
-         JavaParser parser = new JavaParser(tokens);
-         CommonTreeNodeStream nodes = new CommonTreeNodeStream(parser.expression().getTree());
-         JavaTreeParser walker = new JavaTreeParser(nodes, new Evaluator(vm, getCurrentThread()));
-         return walker.eval().toString();
-      }
-      catch (RecognitionException e)
-      {
-         throw new ExpressionException(e.getMessage(), e);
+         return JavaTreeParser.evaluate(expr, new Evaluator(vm, getCurrentThread())).toString();
       }
       finally
       {
