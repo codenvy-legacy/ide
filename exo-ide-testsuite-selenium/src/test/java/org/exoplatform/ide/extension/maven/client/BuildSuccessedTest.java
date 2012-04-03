@@ -82,10 +82,6 @@ public class BuildSuccessedTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
 
-      // Necessary because davfs working slowly and several
-      // tests which run in test suite not work correctly.
-      Thread.sleep(40 * 1000);
-
       // Building of project is started
       IDE.MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.BUILD_PROJECT);
       IDE.BUILD.waitOpened();

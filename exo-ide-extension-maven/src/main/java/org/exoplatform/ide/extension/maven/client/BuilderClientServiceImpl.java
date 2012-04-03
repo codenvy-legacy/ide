@@ -89,11 +89,12 @@ public class BuilderClientServiceImpl extends BuilderClientService
     * @throws RequestException
     * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#build(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
-   public void build(String uri, AsyncRequestCallback<StringBuilder> callback) throws RequestException
+   public void build(String projectId, String vfsId, AsyncRequestCallback<StringBuilder> callback)
+      throws RequestException
    {
       final String requesrUrl = restServiceContext + BUILD;
 
-      String params = "gituri=" + uri;
+      String params = "vfsid=" + vfsId + "&projectid=" + projectId;
       callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
       AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);

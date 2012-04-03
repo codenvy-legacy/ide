@@ -44,12 +44,6 @@ public interface BuilderLocalizationConstant extends Messages
    /*
     * Messages.
     */
-   @Key("messages.unableToGetGitUrl")
-   String unableToGetGitUrl();
-
-   @Key("messages.needInitializeGit")
-   String needInitializeGit();
-
    @Key("messages.buildInProgress")
    String buildInProgress(String project);
 

@@ -44,7 +44,6 @@ import org.exoplatform.ide.extension.maven.client.BuilderClientService;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
 import org.exoplatform.ide.extension.maven.client.control.BuildProjectControl;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus;
-import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -74,10 +73,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
    private Display display;
 
-   private static final String UNABLE_TO_GET_GIT_URL = BuilderExtension.LOCALIZATION_CONSTANT.unableToGetGitUrl();
-
-   private static final String NEED_INITIALIZE_GIT = BuilderExtension.LOCALIZATION_CONSTANT.needInitializeGit();
-
    private static final String BUILD_SUCCESS = BuilderExtension.LOCALIZATION_CONSTANT.buildSuccess();
 
    private static final String BUILD_FAILED = BuilderExtension.LOCALIZATION_CONSTANT.buildFailed();
@@ -89,9 +84,9 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    private static final BuildStatus.Status BUILD_STATUS_IN_PROGRESS = BuildStatus.Status.IN_PROGRESS;
 
    /**
-    * Git repository url of projects.
+    * Identifier of project we want to send for build.
     */
-   private String gitUrl = null;
+   private String projectId = null;
 
    /**
     * The build's identifier.
@@ -166,70 +161,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
       statusHandler = new BuildRequestStatusHandler(project.getPath());
 
-      if (isGitRepository(project))
-      {
-         build();
-      }
-      else
-      {
-         Dialogs.getInstance().showError(NEED_INITIALIZE_GIT);
-      }
-   }
-
-   /**
-    * Сhecks whether the repository is initialized.
-    * 
-    * @param project
-    */
-   private boolean isGitRepository(final ProjectModel project)
-   {
-      for (Item item : project.getChildren().getItems())
-      {
-         if (".git".equals(item.getName()))
-         {
-            return true;
-         }
-      }
-      return false;
-   }
-
-   /**
-    * Get the Git repository url and start the build of project.
-    */
-   private void build()
-   {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      try
-      {
-         GitClientService.getInstance().getGitReadOnlyUrl(vfs.getId(), projectId,
-            new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
-            {
-               @Override
-               protected void onSuccess(StringBuilder result)
-               {
-                  gitUrl = result.toString();
-
-                  statusHandler.requestInProgress(gitUrl);
-
-                  doBuild();
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  String errorMessage =
-                     (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                        : UNABLE_TO_GET_GIT_URL;
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         String errorMessage =
-            (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : UNABLE_TO_GET_GIT_URL;
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-      }
+      doBuild();
    }
 
    /**
@@ -237,9 +169,12 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     */
    private void doBuild()
    {
+      projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      statusHandler.requestInProgress(projectId);
+
       try
       {
-         BuilderClientService.getInstance().build(gitUrl,
+         BuilderClientService.getInstance().build(projectId, vfs.getId(),
             new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
                @Override
@@ -261,7 +196,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                @Override
                protected void onFailure(Throwable exception)
                {
-                  statusHandler.requestError(gitUrl, exception);
+                  statusHandler.requestError(projectId, exception);
 
                   IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.INFO));
                }
@@ -389,7 +324,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       {
          IDE.fireEvent(new OutputEvent(BUILD_SUCCESS, Type.INFO));
 
-         statusHandler.requestFinished(gitUrl);
+         statusHandler.requestFinished(projectId);
 
          message.append("\r\nYou can download result of build by <a href=\"").append(buildStatus.getDownloadUrl())
             .append("\">this link</a>");
@@ -406,7 +341,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
             exceptionMessage += ": " + errorMessage;
          }
 
-         statusHandler.requestError(gitUrl, new Exception(exceptionMessage));
+         statusHandler.requestError(projectId, new Exception(exceptionMessage));
       }
 
       showBuildMessage(message.toString());

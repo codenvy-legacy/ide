@@ -56,11 +56,13 @@ public abstract class BuilderClientService
    /**
     * Start new build.
     * 
-    * @param uri remote location of remote Git repository that contains maven project
+    * @param projectId identifier of project we want to send for build
+    * @param vfsId identifier of virtual file system
     * @param callback callback
     * @throws RequestException
     */
-   public abstract void build(String uri, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+   public abstract void build(String projectId, String vfsId, AsyncRequestCallback<StringBuilder> callback)
+      throws RequestException;
 
    /**
     * Cancel previously launched build.
