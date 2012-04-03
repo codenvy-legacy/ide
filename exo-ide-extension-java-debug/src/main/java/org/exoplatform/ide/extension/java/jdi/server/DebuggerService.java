@@ -126,28 +126,28 @@ public class DebuggerService
    }
 
    @GET
-   @Path("step/over")
+   @Path("step/over/{id}")
    public void stepOver(@PathParam("id") String id) throws DebuggerException
    {
       Debugger.getInstance(id).stepNext();
    }
 
    @GET
-   @Path("step/into")
+   @Path("step/into/{id}")
    public void stepInto(@PathParam("id") String id) throws DebuggerException
    {
       Debugger.getInstance(id).stepOver();
    }
 
    @GET
-   @Path("step/out")
+   @Path("step/out/{id}")
    public void stepOut(@PathParam("id") String id) throws DebuggerException
    {
       Debugger.getInstance(id).stepOut();
    }
 
    @POST
-   @Path("expression")
+   @Path("expression/{id}")
    @Consumes(MediaType.TEXT_PLAIN)
    @Produces(MediaType.TEXT_PLAIN)
    public String expression(@PathParam("id") String id, String expr) throws DebuggerException

@@ -146,4 +146,20 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
   @DefaultMessage("Variables")
   @Key("variabels")
   String variabels();
+  
+  
+  @DefaultMessage("Step Into")
+  @Key("stepInto")
+  String stepInto();
+  
+  
+  @DefaultMessage("Step Over")
+  @Key("stepOver")
+  String stepOver();
+  
+           
+  @DefaultMessage("Step Return")
+  @Key("stepReturn")
+  String stepReturn();
+
 }

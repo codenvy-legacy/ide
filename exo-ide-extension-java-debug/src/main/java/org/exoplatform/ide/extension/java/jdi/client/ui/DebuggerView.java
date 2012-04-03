@@ -19,7 +19,6 @@
 package org.exoplatform.ide.extension.java.jdi.client.ui;
 
 import org.exoplatform.gwtframework.ui.client.CellTreeResource;
-import org.exoplatform.gwtframework.ui.client.component.IconButton;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.tablayout.TabPanel;
@@ -29,31 +28,23 @@ import org.exoplatform.ide.extension.java.jdi.client.DebuggerClientBundle;
 import org.exoplatform.ide.extension.java.jdi.client.DebuggerExtension;
 import org.exoplatform.ide.extension.java.jdi.client.DebuggerPresenter;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
-import org.exoplatform.ide.extension.java.jdi.shared.BreakPointList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.i18n.client.HasDirection.Direction;
-import com.google.gwt.i18n.shared.DirectionEstimator;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.CellTree;
-import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SingleSelectionModel;
 
 /**
@@ -86,20 +77,23 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
 
    @UiField
    ImageButton removeAllBreakpointsButton;
-   
+
+   @UiField
+   ImageButton stepIntoButton;
+
+   @UiField
+   ImageButton stepOverButton;
+
+   @UiField
+   ImageButton stepReturnButton;
+
    @UiField
    Label vmName;
 
    CellList<BreakPoint> breakpointsContainer;
 
-   CellTree frameTree;
-
-   private SingleSelectionModel<Variable> selectionModel;
-
-   private FrameTreeViewModel frameTreeViewModel;
-
    private CellTree.Resources res = GWT.create(CellTreeResource.class);
-   
+
    private DebuggerInfo debuggerInfo;
 
    public DebuggerView(DebuggerInfo debuggerInfo)
@@ -107,30 +101,39 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
 
       super(ID, ViewType.OPERATION, DebuggerExtension.LOCALIZATION_CONSTANT.debug());
       add(uiBinder.createAndBindUi(this));
-
       this.debuggerInfo = debuggerInfo;
-      
-      frameTreeViewModel = new FrameTreeViewModel(selectionModel, debuggerInfo);
-      frameTree = new CellTree(frameTreeViewModel, null, res);
-
       BreakPointCell breakpointCell = new BreakPointCell();
       breakpointsContainer = new CellList<BreakPoint>(breakpointCell);
       breakpointsContainer.setHeight("100%");
       breakpointsContainer.setWidth("100%");
 
+      buildVariebelsTreePanel(Collections.<Variable>emptyList());
       breakPointsPanel.addTab("breakpointstabid", new Image(DebuggerClientBundle.INSTANCE.breakPointsIcon()),
          DebuggerExtension.LOCALIZATION_CONSTANT.breakPoints(), breakpointsContainer, false);
       breakPointsPanel.setWidth("100%");
       breakPointsPanel.setHeight("100%");
-      ScrollPanel scrollPanel = new ScrollPanel(frameTree);
-      variabelsPanel.addTab("variabletabid", new Image(DebuggerClientBundle.INSTANCE.variable()),
-         DebuggerExtension.LOCALIZATION_CONSTANT.variabels(), scrollPanel, false);
-      
+
       vmName.setText(debuggerInfo.getVmName() + " " + debuggerInfo.getVmVersion(), Direction.RTL);
       vmName.setDirectionEstimator(true);
    }
 
-  
+   private void buildVariebelsTreePanel(List<Variable> variables)
+   {
+      variabelsPanel.removeTab("variabletabid");
+      SingleSelectionModel<Variable> selectionModel = new SingleSelectionModel<Variable>();
+      FrameTreeViewModel frameTreeViewModel = new FrameTreeViewModel(selectionModel, debuggerInfo);
+      CellTree frameTree = new CellTree(frameTreeViewModel, null, res);
+      ScrollPanel scrollPanel = new ScrollPanel();
+      if (variables.size()>0)
+      {
+         frameTree = new CellTree(frameTreeViewModel, null, res);
+         frameTreeViewModel.getDataProvider().setList(variables);
+         scrollPanel.add(frameTree);
+      }
+      variabelsPanel.addTab("variabletabid", new Image(DebuggerClientBundle.INSTANCE.variable()),
+         DebuggerExtension.LOCALIZATION_CONSTANT.variabels(), scrollPanel, false);
+   }
+
    @Override
    public HasClickHandlers getResumeButton()
    {
@@ -156,16 +159,27 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
    }
 
    @Override
-   public void cleareVariabels()
+   public HasClickHandlers getStepIntoButton()
    {
-      frameTreeViewModel = new FrameTreeViewModel(selectionModel, debuggerInfo); 
-      frameTree = new CellTree(frameTreeViewModel, null, res);
+      return stepIntoButton;
    }
 
    @Override
-   public ListDataProvider<Variable> getDataProvider()
+   public HasClickHandlers getStepOverButton()
    {
-      return frameTreeViewModel.getDataProvider();
+      return stepOverButton;
+   }
+
+   @Override
+   public HasClickHandlers getStepReturnButton()
+   {
+      return stepReturnButton;
+   }
+
+   @Override
+   public void setVariebels(List<Variable> variables)
+   {
+      buildVariebelsTreePanel(variables);
    }
 
 }

@@ -1,15 +1,18 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
-import org.exoplatform.ide.extension.java.jdi.client.DebuggerClientService;
-import org.exoplatform.ide.extension.java.jdi.client.DebuggerExtension;
-import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
+import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
+import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEvent;
+import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
+import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
+import org.exoplatform.ide.extension.java.jdi.shared.Location;
+import org.exoplatform.ide.extension.java.jdi.shared.StepEvent;
+import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Header;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 /**
@@ -25,56 +28,104 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 public class GwtTestJavaDebugExtension extends GWTTestCase
 {
 
-   /**
-    * Must refer to a valid module that sources this class.
-    */
+  
+   @Override 
    public String getModuleName()
    {
-      return "org.exoplatform.ide.extension.java.jdi.JavaDebugExtensionJUnit";
+      return "org.exoplatform.ide.extension.java.jdi.DebuggerExtensionJUnit";
    }
 
-   /**
-    * This test will send a request to the server using the greetServer method in
-    * GreetingService and verify the response.
-    * @throws RequestException 
-    */
-   public void testGreetingService() throws RequestException
+   private DebuggerAutoBeanFactory factory;
+
+   private String eventsTxt =
+      "{\"events\":[{\"location\":{\"className\":\"HelloWorld\",\"lineNumber\":13},\"type\":2},{\"type\":1,\"breakPoint\":{\"location\":{\"className\":\"HelloWorld\",\"lineNumber\":13},\"enabled\":true}}]}";
+
+   @Test
+   public void testUnmarshallerPrepareBean() throws Exception
    {
-      // Create the service that we will test.
-      DebuggerClientService debuggerClientService = GWT.create(DebuggerClientService.class);
-      ServiceDefTarget target = (ServiceDefTarget)debuggerClientService;
-      target.setServiceEntryPoint(GWT.getModuleBaseURL() + "JavaDebugExtension/greet");
-
-      // Since RPC calls are asynchronous, we will need to wait for a response
-      // after this test method returns. This line tells the test runner to wait
-      // up to 10 seconds before timing out.
-      delayTestFinish(10000);
-      AutoBean<DebuggerInfo> debuggerInfo = DebuggerExtension.AUTO_BEAN_FACTORY.create(DebuggerInfo.class);
-      AutoBeanUnmarshaller<DebuggerInfo> unmarshaller = new AutoBeanUnmarshaller<DebuggerInfo>(debuggerInfo);
-      // Send a request to the server.
-      debuggerClientService.create("localhost", 8000, new AsyncRequestCallback<DebuggerInfo>(unmarshaller)
-      {
-         @Override
-         public void onSuccess(DebuggerInfo result)
-         {
-            // Verify that the response is correct.
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-
-            // Now that we have received a response, we need to tell the test runner
-            // that the test is complete. You must call finishTest() after an
-            // asynchronous test finishes successfully, or the test will time out.
-            finishTest();
-         }
-
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            System.err.println("--------------------------------------");
-            fail("Request failure: " + exception.getMessage());
-         }
-
-         
-      });
+      AutoBean<DebuggerEventList> ab = factory.debuggerEventList();
+      DebuggerEventListUnmarshaller unmarshaller = new DebuggerEventListUnmarshaller(ab.as());
+      MockResponse response = new MockResponse(eventsTxt);
+      unmarshaller.unmarshal(response);
+      assertEquals(2, ab.as().getEvents().size());
+      assertTrue(ab.as().getEvents().get(0) instanceof StepEvent);
+      StepEvent stepEvent = (StepEvent)ab.as().getEvents().get(0);
+      Location location = stepEvent.getLocation();  
+      assertNotNull(location);
+      assertEquals("HelloWorld", location.getClassName());
+      assertEquals(13, location.getLineNumber());
+      assertTrue(ab.as().getEvents().get(1) instanceof BreakPointEvent);
+      
+      BreakPointEvent breakPointEvent = (BreakPointEvent)ab.as().getEvents().get(1);
+      BreakPoint breakPoint = breakPointEvent.getBreakPoint();
+      assertNotNull(breakPoint);
+      assertTrue(breakPoint.isEnabled());
+      location = breakPoint.getLocation();
+      assertEquals("HelloWorld", location.getClassName());
+      assertEquals(13, location.getLineNumber());
    }
 
+   @Override
+   protected void gwtSetUp() throws Exception
+   {
+      factory = GWT.create(DebuggerAutoBeanFactory.class);
+   }
+
+   public class MockResponse extends Response
+   {
+
+      int status;
+
+      String text;
+
+      /**
+       * @param status
+       * @param text
+       */
+      public MockResponse(String text)
+      {
+         this.status = 200;
+         this.text = text;
+      }
+
+      @Override
+      public String getHeader(String arg0)
+      {
+         return null;
+      }
+
+      @Override
+      public Header[] getHeaders()
+      {
+         return null;
+      }
+
+      @Override
+      public String getHeadersAsString()
+      {
+         return null;
+      }
+
+      @Override
+      public int getStatusCode()
+      {
+         return status;
+      }
+
+      @Override
+      public String getStatusText()
+      {
+         return null;
+      }
+
+      @Override
+      public String getText()
+      {
+         return text;
+      }
+
+   }
+
+   
+   
 }

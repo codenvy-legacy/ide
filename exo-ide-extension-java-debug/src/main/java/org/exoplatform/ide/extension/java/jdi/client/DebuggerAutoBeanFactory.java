@@ -19,11 +19,14 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
+import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointList;
+import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Field;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
+import org.exoplatform.ide.extension.java.jdi.shared.StepEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
@@ -42,6 +45,8 @@ public interface DebuggerAutoBeanFactory extends AutoBeanFactory
    AutoBean<BreakPoint> breakPoint();
 
    AutoBean<BreakPointEventList> breakPoinEventList();
+   
+   AutoBean<DebuggerEventList> debuggerEventList();
 
    AutoBean<StackFrameDump> stackFrameDump();
 
@@ -60,5 +65,9 @@ public interface DebuggerAutoBeanFactory extends AutoBeanFactory
    AutoBean<VariablePath> variablePath();
 
    AutoBean<VariablePath> variablePath(VariablePath valuePath);
+
+   AutoBean<BreakPointEvent> breakPoinEvent();
+
+   AutoBean<StepEvent> stepEvent();
 
 }

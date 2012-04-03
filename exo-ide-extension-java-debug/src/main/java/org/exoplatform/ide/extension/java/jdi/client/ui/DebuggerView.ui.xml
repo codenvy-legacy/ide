@@ -19,10 +19,19 @@
             <g:layer top="0" height="28px">
                <c:Toolbar height="28px">
                   <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="resumeButton" width="22px" buttonId="resumeButton" imageResource="{resource.resumeButton}"></c:ImageButton>
+                     <c:ImageButton ui:field="resumeButton" width="22px" buttonId="resumeButton" title="{locale.resumeButton}" imageResource="{resource.resumeButton}"></c:ImageButton>
                   </c:ToolbarItem>
                   <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="disconnectButton" width="22px" buttonId="disconnectButton" imageResource="{resource.disconnectButton}"></c:ImageButton>
+                     <c:ImageButton ui:field="stepIntoButton" width="22px" buttonId="stepIntoButton" title="{locale.stepInto}" imageResource="{resource.stepIntoButton}"></c:ImageButton>
+                  </c:ToolbarItem>
+                  <c:ToolbarItem rightDocked="false" paddingRight="2">
+                     <c:ImageButton ui:field="stepOverButton" width="22px" buttonId="stepOverButton" title="{locale.stepOver}" imageResource="{resource.stepOverButton}"></c:ImageButton>
+                  </c:ToolbarItem>
+                  <c:ToolbarItem rightDocked="false" paddingRight="2">
+                     <c:ImageButton ui:field="stepReturnButton" width="22px" buttonId="stepReturnButton" title="{locale.stepReturn}" imageResource="{resource.stepReturnButton}"></c:ImageButton>
+                  </c:ToolbarItem>
+                  <c:ToolbarItem rightDocked="false" paddingRight="2">
+                     <c:ImageButton ui:field="disconnectButton" width="22px" buttonId="disconnectButton" title="{locale.disConnectButton}" imageResource="{resource.disconnectButton}"></c:ImageButton>
                   </c:ToolbarItem>
                   <c:ToolbarItem rightDocked="false" paddingRight="2">
                      <c:ImageButton ui:field="removeAllBreakpointsButton" width="22px" buttonId="removeAllBreakpointsButton"
@@ -36,9 +45,9 @@
             <g:layer top="30" bottom="0">
                <c:Border margin="5" borderColor="transparent">
                   <c:layer>
-                     <g:DockLayoutPanel height="100%" width="100%" unit="PCT">
+                     <g:DockLayoutPanel height="100%" width="100%" unit="PCT" styleName="{style.bpPanel}">
                         <g:east size="50">
-                           <tp:TabPanel ui:field="breakPointsPanel"></tp:TabPanel>
+                           <tp:TabPanel ui:field="breakPointsPanel" ></tp:TabPanel>
                         </g:east>
                         <g:center>
                            <g:FlexTable></g:FlexTable>

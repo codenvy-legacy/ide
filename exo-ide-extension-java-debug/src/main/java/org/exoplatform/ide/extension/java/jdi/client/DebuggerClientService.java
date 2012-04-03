@@ -24,8 +24,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
-import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointList;
+import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
 import org.exoplatform.ide.extension.java.jdi.shared.Value;
@@ -46,34 +46,18 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 public class DebuggerClientService
 {
 
-   private static final String BASE_URL = "/rest/ide/java/debug";
-
-   private static final String CONNECT = "/connect";
-
-   private static final String DISCONNECT = "/disconnect";
-
-   private static final String BREAKPOINT_ADD = "/breakpoints/add";
-
-   private static final String BREACPOINT_DELETE = "/breakpoints/delete/";
-
-   private static final String BREAKPOINT = "/breakpoints";
-
-   private static final String BREAKPOINT_SWITCH = "/breakpoints/switch";
-
-   private static final String EVENTS = "/events";
-
-   private static final String DUMP = "/dump";
-
-   private static final String RESUME = "/resume";
+   private static String BASE_URL;
 
    private static DebuggerClientService instance;
+   
+   public DebuggerClientService(String restContext)
+   {
+      BASE_URL = restContext + "/ide/java/debug";
+      instance = this;
+   }
 
    public static DebuggerClientService getInstance()
    {
-      if (instance == null)
-      {
-         instance = new DebuggerClientService();
-      }
       return instance;
    }
 
@@ -81,15 +65,15 @@ public class DebuggerClientService
    {
       Loader loader = new GWTLoader();
       loader.setMessage("Connection... to the host " + host);
-      AsyncRequest.build(RequestBuilder.GET, BASE_URL + CONNECT + "?" + "host=" + host + "&port=" + port)
+      AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/connect?host=" + host + "&port=" + port)
          .loader(loader).send(callback);
    }
 
-   public void disconnect(String id, AsyncRequestCallback callback) throws RequestException
+   public void disconnect(String id, AsyncRequestCallback<String> callback) throws RequestException
    {
       Loader loader = new GWTLoader();
       loader.setMessage("DisConnection... ");
-      AsyncRequest.build(RequestBuilder.GET, BASE_URL + DISCONNECT + "/" + id).loader(loader).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/disconnect/" + id).loader(loader).send(callback);
    }
 
    public void addBreakPoint(String id, BreakPoint breakPoint, AsyncRequestCallback<BreakPoint> callback)
@@ -97,7 +81,7 @@ public class DebuggerClientService
    {
       AutoBean<BreakPoint> ab = DebuggerExtension.AUTO_BEAN_FACTORY.breakPoint(breakPoint);
       String json = AutoBeanCodex.encode(ab).getPayload();
-      AsyncRequest.build(RequestBuilder.POST, BASE_URL + BREAKPOINT_ADD + "/" + id).data(json)
+      AsyncRequest.build(RequestBuilder.POST, BASE_URL + "/breakpoints/add/" + id).data(json)
          .header("Content-Type", "application/json").loader(new EmptyLoader()).send(callback);
    }
 
@@ -106,39 +90,31 @@ public class DebuggerClientService
    {
       AutoBean<BreakPoint> ab = DebuggerExtension.AUTO_BEAN_FACTORY.breakPoint(breakPoint);
       String json = AutoBeanCodex.encode(ab).getPayload();
-      AsyncRequest.build(RequestBuilder.POST, BASE_URL + BREACPOINT_DELETE + id).data(json)
+      AsyncRequest.build(RequestBuilder.POST, BASE_URL + "/breakpoints/delete/" + id).data(json)
          .header("Content-Type", "application/json").loader(new EmptyLoader()).send(callback);
    }
 
    public void getBreakPoints(String id, AsyncRequestCallback<BreakPointList> callback) throws RequestException
    {
-      AsyncRequest.build(RequestBuilder.GET, BASE_URL + BREAKPOINT + "/" + id).loader(new EmptyLoader()).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/breakpoints/" + id).loader(new EmptyLoader()).send(callback);
    }
 
-   public void switchBreakPoint(String id, BreakPoint breakPoint, AsyncRequestCallback<BreakPointList> callback)
-      throws RequestException
-   {
-      AutoBean<BreakPoint> ab = DebuggerExtension.AUTO_BEAN_FACTORY.breakPoint(breakPoint);
-      String json = AutoBeanCodex.encode(ab).getPayload();
-      AsyncRequest.build(RequestBuilder.GET, BASE_URL + BREAKPOINT_SWITCH + "/" + id).data(json)
-         .loader(new EmptyLoader()).send(callback);
-   }
 
-   public void checkEvents(String id, AsyncRequestCallback<BreakPointEventList> asyncRequestCallback)
+   public void checkEvents(String id, AsyncRequestCallback<DebuggerEventList> callback)
       throws RequestException
    {
-      AsyncRequest.build(RequestBuilder.GET, BASE_URL + EVENTS + "/" + id).loader(new EmptyLoader())
-         .send(asyncRequestCallback);
+      AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/events/" + id).loader(new EmptyLoader())
+         .send(callback);
    }
 
    public void dump(String id, AsyncRequestCallback<StackFrameDump> callback) throws RequestException
    {
-      AsyncRequest.build(RequestBuilder.GET, BASE_URL + DUMP + "/" + id).loader(new EmptyLoader()).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/dump/" + id).loader(new EmptyLoader()).send(callback);
    }
 
-   public void resume(String id, AsyncRequestCallback callback) throws RequestException
+   public void resume(String id, AsyncRequestCallback<String> callback) throws RequestException
    {
-      AsyncRequest.build(RequestBuilder.GET, BASE_URL + RESUME + "/" + id).loader(new EmptyLoader()).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/resume/" + id).loader(new EmptyLoader()).send(callback);
    }
 
    public void getValue(String id, Variable var, AsyncRequestCallback<Value> callback) throws RequestException
@@ -147,6 +123,21 @@ public class DebuggerClientService
       String json = AutoBeanCodex.encode(autoBean2).getPayload();
       AsyncRequest.build(RequestBuilder.POST, BASE_URL + "/value/" + id).data(json)
          .header("Content-Type", "application/json").loader(new EmptyLoader()).send(callback);
+   }
+
+   public void stepInto(String id, AsyncRequestCallback<String> callback) throws RequestException
+   {
+      AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/step/into/" + id).loader(new EmptyLoader()).send(callback);
+   }
+
+   public void stepOver(String id, AsyncRequestCallback<String> callback) throws RequestException
+   {
+      AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/step/over/" + id).loader(new EmptyLoader()).send(callback);
+   }
+
+   public void stepReturn(String id, AsyncRequestCallback<String> callback) throws RequestException
+   {
+      AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/step/out/" + id).loader(new EmptyLoader()).send(callback);
    }
 
 }

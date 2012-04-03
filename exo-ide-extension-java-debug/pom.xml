@@ -140,6 +140,12 @@
 			<resource>
 				<directory>src/main/resources</directory>
 			</resource>
+         <resource>
+        <directory>src/test/java</directory>
+      </resource>
+      <resource>
+        <directory>src/test/resources</directory>
+      </resource>
 		</resources>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<outputDirectory>target/classes</outputDirectory>

@@ -64,6 +64,15 @@ public interface DebuggerClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/java/jdi/images/breakpoint.gif")
    ImageResource breakpoint();
    
+   @Source("org/exoplatform/ide/extension/java/jdi/images/stepinto.gif")
+   ImageResource stepIntoButton();
+   
+   @Source("org/exoplatform/ide/extension/java/jdi/images/stepover.gif")
+   ImageResource stepOverButton();
+   
+   @Source("org/exoplatform/ide/extension/java/jdi/images/stepreturn.gif")
+   ImageResource stepReturnButton();
+   
    @Source("org/exoplatform/ide/extension/java/jdi/images/debug.png")
    ImageResource debug();
    
