@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.navigation.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent;
@@ -89,12 +90,14 @@ public class ShowHideHiddenFilesControl extends SimpleControl implements IDECont
       {
          setTitle(TITLE_HIDE);
          setPrompt(TITLE_HIDE);
+         setIcon(IDEImageBundle.INSTANCE.hideHiddenFiles().getSafeUri().asString());
          setEvent(new ShowHideHiddenFilesEvent(false));
       }
       else
       {
          setTitle(TITLE_SHOW);
          setPrompt(TITLE_SHOW);
+         setIcon(IDEImageBundle.INSTANCE.showHiddenFiles().getSafeUri().asString());
          setEvent(new ShowHideHiddenFilesEvent(true));
       }
    }

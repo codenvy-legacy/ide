@@ -26,7 +26,6 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter;
-import org.exoplatform.ide.extension.maven.client.control.BuildProjectControl;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 
 /**
@@ -34,7 +33,7 @@ import org.exoplatform.ide.extension.maven.shared.BuildStatus;
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuilderExtension.java Feb 21, 2012 1:53:48 PM azatsarynnyy $
- *
+ * 
  */
 public class BuilderExtension extends Extension implements InitializeServicesHandler
 {
@@ -67,9 +66,6 @@ public class BuilderExtension extends Extension implements InitializeServicesHan
    public void initialize()
    {
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
-
-      IDE.getInstance().addControl(new BuildProjectControl());
-
       new BuildProjectPresenter();
    }
 }

@@ -42,6 +42,7 @@ public class LaunchDebuggerControl extends SimpleControl implements IDEControl, 
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
+      setImages(DebuggerClientBundle.INSTANCE.debug(), DebuggerClientBundle.INSTANCE.debugDisabled());
       setEvent(new LaunchDebuggerEvent());
    }
 

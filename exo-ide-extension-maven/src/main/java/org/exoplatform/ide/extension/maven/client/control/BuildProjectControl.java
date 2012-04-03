@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
+import org.exoplatform.ide.extension.maven.client.MavenClientBundle;
 import org.exoplatform.ide.extension.maven.client.build.BuildProjectEvent;
 
 /**
@@ -33,7 +34,7 @@ import org.exoplatform.ide.extension.maven.client.build.BuildProjectEvent;
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectControl.java Feb 17, 2012 3:51:08 PM azatsarynnyy $
- *
+ * 
  */
 public class BuildProjectControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
    ProjectOpenedHandler
@@ -49,6 +50,7 @@ public class BuildProjectControl extends SimpleControl implements IDEControl, Pr
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
+      setImages(MavenClientBundle.INSTANCE.build(), MavenClientBundle.INSTANCE.buildDisabled());
       setEvent(new BuildProjectEvent());
    }
 
