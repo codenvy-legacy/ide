@@ -247,7 +247,6 @@ public class Outline extends AbstractTestModule
     */
    public void selectRow(int rowNumber) throws Exception
    {
-      System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + rowNumber);
       WebElement row = getVisibleItem(rowNumber);
       row.click();
    }

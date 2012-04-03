@@ -157,7 +157,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       IDE.EDITOR.clickDesignButton();
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
 
-      IDE.EDITOR.checkCkEditorOpened(2);
+      assertTrue(IDE.CK_EDITOR.isCkEditorOpened(2));
 
       //delete Test Folder to Delete from server
       try
@@ -178,7 +178,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
       waitForElementPresent(CK_EDITOR_FRAME_LOCATOR);
 
-      IDE.EDITOR.checkCkEditorOpened(1);
+      assertTrue(IDE.CK_EDITOR.isCkEditorOpened(1));
 
       checkOpenedFilesHistory();
 

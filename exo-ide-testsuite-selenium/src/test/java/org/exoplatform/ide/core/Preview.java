@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.core;
 
+
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -48,6 +50,8 @@ public class Preview extends AbstractTestModule
    private static final String GADGET_PREVIEW_IFRAME = GADGET_PREVIEW + "//iframe";
 
    private static final String VIEW_TITLE = "Preview";
+   
+   private static final String PREVIEW_TABLE ="//table[@cellspacing='1' and @cellpadding='1' and @style]/tbody/tr[%s]/td[%s]";
 
    @FindBy(xpath = HTML_PREVIEW)
    private WebElement htmlPreview;
@@ -348,6 +352,13 @@ public class Preview extends AbstractTestModule
    public void closeView()
    {
       IDE().PERSPECTIVE.getCloseViewButton(VIEW_TITLE).click();
+   }
+   
+   public boolean isTablePresent(final int row, final int cell)
+   {
+      WebElement table = driver().findElement(By.xpath(String.format(PREVIEW_TABLE, row, cell)));
+      return table != null && table.isDisplayed();
+
    }
 
 }

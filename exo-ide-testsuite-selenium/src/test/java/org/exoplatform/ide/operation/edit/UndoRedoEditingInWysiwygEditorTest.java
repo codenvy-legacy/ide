@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.operation.edit;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -70,7 +71,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //open with WYSIWYG editor and make default
       IDE.WORKSPACE.doubleClickOnFile(URL + htmlFile);
       IDE.EDITOR.clickDesignButton();
-      IDE.EDITOR.checkCkEditorOpened(0);
+    assertTrue(IDE.CK_EDITOR.isCkEditorOpened(0));
 
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.UNDO, true);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.REDO, true);

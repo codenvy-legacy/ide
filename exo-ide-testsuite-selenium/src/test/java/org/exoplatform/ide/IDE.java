@@ -68,6 +68,7 @@ import org.exoplatform.ide.core.Upload;
 import org.exoplatform.ide.core.Versions;
 import org.exoplatform.ide.core.WarningDialog;
 import org.exoplatform.ide.core.WelcomePage;
+import org.exoplatform.ide.core.CkEditor;
 import org.exoplatform.ide.core.Workspace;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
@@ -192,6 +193,8 @@ public class IDE
    public OpenFileByPath OPEN_FILE_BY_PATH;
 
    public WelcomePage WELCOME_PAGE;
+   
+   public CkEditor CK_EDITOR;
 
    public Build BUILD;
 
@@ -249,6 +252,7 @@ public class IDE
       CUSTOMIZE_HOTKEYS = PageFactory.initElements(driver, CustomizeHotkeys.class);
       UPLOAD = PageFactory.initElements(driver, Upload.class);
       WELCOME_PAGE = PageFactory.initElements(driver, WelcomePage.class);
+      CK_EDITOR = PageFactory.initElements(driver, CkEditor.class);
    }
 
    public Selenium getSelenium()

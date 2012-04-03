@@ -29,6 +29,8 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a> 
@@ -115,6 +117,9 @@ public class CodeOutLineRubyTest extends CodeAssistantBaseTest
       outlineTreeHelper.addOutlineItem("ascii1 : Ascii", 77, false, TokenType.LOCAL_VARIABLE); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
       outlineTreeHelper.addOutlineItem("@field : nil", 78, TokenType.INSTANCE_VARIABLE);
 
+      IDE.OUTLINE.selectRow(5);
+      driver.findElement(By.className("exo-menuBar")).sendKeys(Keys.F11);
+      Thread.sleep(2000);
       // check is tree created correctly      
       outlineTreeHelper.checkOutlineTree();
    }

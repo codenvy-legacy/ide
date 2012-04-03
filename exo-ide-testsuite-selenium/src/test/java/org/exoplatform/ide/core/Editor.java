@@ -21,6 +21,7 @@ package org.exoplatform.ide.core;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
@@ -31,6 +32,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import javax.xml.bind.ParseConversionEvent;
 
 /**
  * 
@@ -47,17 +50,19 @@ public class Editor extends AbstractTestModule
 
    private interface Locators
    {
-      /**
-       * XPATH CodeMirror locator.
-       */
-      public static final String CODE_MIRROR_EDITOR = "//body[@class='editbox']";
 
-      /**
-       * XPATH CK editor locator.
-       */
+      String CODE_MIRROR_EDITOR = "//body[@class='editbox']";
+
       String CK_EDITOR = "//table[@class='cke_editor']";
 
       String CK_EDITOR_IFRAME = "td.cke_contents>iframe";
+
+      String CK_EDITOR_TOOLS_BAR = "td#cke_top_editor%s";
+
+      String CK_EDITOR_TOOL_SELECT =
+         "//span[@class='cke_toolgroup']//span[@class='cke_button']//a[@href=\"javascript:void('%s')\"]";
+
+      String CK_EDITOR_OPENED = "//span[@id='cke_editor%s']" + "/span[@class='cke_browser_gecko cke_focus']";
 
       String EDITOR_TABSET_LOCATOR = "//div[@id='editor']";
 
@@ -100,12 +105,18 @@ public class Editor extends AbstractTestModule
 
       String HIGHLITER_BORDER = DESIGN_EDITOR_PREFIX
          + "//div[@component= 'Border' and contains(@style, 'color: rgb(182, 204, 232)')]";
+
+      String IFRAME_SELECTOR = "//div[@panel-id='editor']//div[@class='CodeMirror-wrapping']/iframe";
+
    }
 
    private WebElement editor;
 
    @FindBy(className = Locators.LINE_HIGHLIGHTER_CLASS)
    private WebElement highlighter;
+
+   @FindBy(xpath = Locators.CODE_MIRROR_EDITOR)
+   private WebElement editorCodemirr;
 
    /**
     * Returns the title of the tab with the pointed index.
@@ -137,16 +148,31 @@ public class Editor extends AbstractTestModule
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
 
+   /**
+    * Select tab the code editor
+    * with the specified name 
+    * @param fileName
+    * @throws Exception
+    */
    public void selectTab(String fileName) throws Exception
    {
       WebElement tab =
          editor.findElement(By.xpath(String.format(Locators.EDITOR_TABSET_LOCATOR + Locators.TITLE_SPAN_LOCATOR,
             fileName)));
       tab.click();
+
       // TODO replace with wait for condition
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
 
+   /**
+    * click on save as button and
+    * type in save as field new name
+    * of the file
+    * @param tabIndex
+    * @param name
+    * @throws Exception
+    */
    public void saveAs(int tabIndex, String name) throws Exception
    {
       selectTab(tabIndex);
@@ -171,6 +197,12 @@ public class Editor extends AbstractTestModule
       closeButton.click();
    }
 
+   /**
+    * click on close label
+    * on tab wit file name
+    * @param tabTitle
+    * @throws Exception
+    */
    public void clickCloseEditorButton(String tabTitle) throws Exception
    {
       WebElement closeButton =
@@ -181,7 +213,8 @@ public class Editor extends AbstractTestModule
 
    /**
     * Closes file
-    * 
+    * with num tabinfex 
+    * start with 0
     * @param tabIndex
     */
    public void closeFile(int tabIndex) throws Exception
@@ -193,6 +226,11 @@ public class Editor extends AbstractTestModule
       waitActiveFileChanged(activeFile);
    }
 
+   /** Close file
+    * with name on tab
+    * @param fileName
+    * @throws Exception
+    */
    public void closeFile(String fileName) throws Exception
    {
       selectTab(fileName);
@@ -203,6 +241,9 @@ public class Editor extends AbstractTestModule
       waitTabNotPresent(fileName);
    }
 
+   /**
+    * @param activeFile
+    */
    private void waitActiveFileChanged(final String activeFile)
    {
       new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
@@ -263,9 +304,6 @@ public class Editor extends AbstractTestModule
       });
    }
 
-   
-   
-   
    /**
     * 
     * 
@@ -289,31 +327,47 @@ public class Editor extends AbstractTestModule
       {
          IDE().ASK_FOR_VALUE_DIALOG.clickNoButton();
       }
-      else 
-      
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      else
+
+         new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+         {
+
+            @Override
+            public Boolean apply(WebDriver input)
+            {
+               try
+               {
+                  input.findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR, viewId)));
+                  return false;
+               }
+               catch (NoSuchElementException e)
+               {
+                  return true;
+               }
+            }
+         });
+   }
+
+   /**
+    * waiting while switch between ckeditor on codeeditor
+    *  @param numCodeEditor
+    */
+   public void waitSwitchOnCodeEditor()
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
          public Boolean apply(WebDriver input)
          {
-            try
-            {
-               input.findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR, viewId)));
-               return false;
-            }
-            catch (NoSuchElementException e)
-            {
-               return true;
-            }
+            IDE().selectMainFrame();
+            WebElement elem = driver().findElement(By.xpath(Locators.IFRAME_SELECTOR));
+            driver().switchTo().frame(elem);
+            return editorCodemirr != null && editorCodemirr.isDisplayed();
          }
       });
    }
-   
-   
-   
-   
-   
+
    /**
     * 
     * 
@@ -362,6 +416,9 @@ public class Editor extends AbstractTestModule
       });
    }
 
+   /**
+    * @param title
+    */
    public void waitNoContentModificationMark(final String title)
    {
       new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
@@ -820,22 +877,7 @@ public class Editor extends AbstractTestModule
       });
    }
 
-   /**
-    * Check is file in tabIndex tab opened with CK editor.
-    * 
-    * @param tabIndex index of tab, starts at 0
-    * @throws Exception
-    */
-   public void checkCkEditorOpened(int tabIndex) throws Exception
-   {
-      // TODO
-      String locator =
-         "//div[@panel-id='editor' and @tab-index='" + tabIndex
-            + "']//table[@class='cke_editor']//td[@class='cke_contents']/iframe";
-
-      assertTrue(selenium().isElementPresent(locator));
-      // assertTrue(selenium().isVisible(locator));
-   }
+   
 
    /**
     * Check is file in tabIndex tab opened with Code Editor.
@@ -846,7 +888,6 @@ public class Editor extends AbstractTestModule
    public void checkCodeEditorOpened(int tabIndex) throws Exception
    {
       // TODO
-
       String locator =
          "//div[@panel-id='editor'and @tab-index='" + tabIndex + "']//div[@class='CodeMirror-wrapping']/iframe";
       assertTrue(selenium().isElementPresent(locator));

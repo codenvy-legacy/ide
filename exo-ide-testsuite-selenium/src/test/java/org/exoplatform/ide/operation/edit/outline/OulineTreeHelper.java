@@ -217,14 +217,14 @@ public class OulineTreeHelper extends BaseTest
          OutlineItemInfo outlineItem = item.getValue();
 
          checkItemPresent(outlineItem.getId());
-         if (outlineItem.getFileLineNumber() > 30)
-         {
-            break;
-         }
-         else
-         {
-            checkOutlineItemFromOutlinePanel(item.getKey(), outlineItem.getLabel(), outlineItem.getFileLineNumber());
-         }
+         //         if (outlineItem.getFileLineNumber() > 30)
+         //         {
+         //            break;
+         //         }
+         //         else
+         //         {
+         checkOutlineItemFromOutlinePanel(item.getKey(), outlineItem.getLabel(), outlineItem.getFileLineNumber());
+         //         }
       }
 
       // test outline item from file
@@ -291,6 +291,7 @@ public class OulineTreeHelper extends BaseTest
    private void checkOutlineItemFromOutlinePanel(Integer itemRowNumber, String itemLabel, int fileLineNumber)
       throws Exception
    {
+      System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<line_number_first_cycle:" + itemRowNumber);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       assertEquals(itemLabel, IDE.OUTLINE.getItemLabel(itemRowNumber));
       IDE.OUTLINE.selectRow(itemRowNumber);
@@ -309,6 +310,7 @@ public class OulineTreeHelper extends BaseTest
     */
    private void checkOutlineItemFromFile(int itemRowNumber, String itemLabel, int fileLineNumber) throws Exception
    {
+
       IDE.GOTOLINE.goToLine(fileLineNumber);
 
       Thread.sleep(TestConstants.REDRAW_PERIOD);
