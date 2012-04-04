@@ -137,8 +137,6 @@ public interface MenuCommands
       String LOG_READER = "Log";
 
       public static final String SHOW_HIDDEN_FILES = "Show Hidden Files";
-
-      public static final String HIDE_HIDDEN_FILES = "Hide Hidden Files";
    }
 
    public interface File

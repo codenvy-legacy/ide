@@ -43,14 +43,9 @@ public class ShowHideHiddenFilesControl extends SimpleControl implements IDECont
    public static final String ID = "View/Show \\ Hide Hidden Files";
 
    /**
-    * Title of this control when hidden files are hidden.
+    * Title of this control.
     */
-   public static final String TITLE_SHOW = IDE.IDE_LOCALIZATION_CONSTANT.showHiddenFilesShowControl();
-
-   /**
-    * Title of this control when hidden files are shown.
-    */
-   public static final String TITLE_HIDE = IDE.IDE_LOCALIZATION_CONSTANT.showHiddenFilesHideControl();
+   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.showHiddenFilesControlTitle();
 
    /**
     * State of hidden files visibility.
@@ -63,9 +58,12 @@ public class ShowHideHiddenFilesControl extends SimpleControl implements IDECont
    public ShowHideHiddenFilesControl()
    {
       super(ID);
-      setTitle(TITLE_SHOW);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setIcon(IDEImageBundle.INSTANCE.showHiddenFiles().getSafeUri().asString());
       setEvent(new ShowHideHiddenFilesEvent(true));
       setDelimiterBefore(true);
+      setCanBeSelected(true);
       setEnabled(true);
       setVisible(true);
    }
@@ -88,18 +86,13 @@ public class ShowHideHiddenFilesControl extends SimpleControl implements IDECont
    {
       if (filesAreShown)
       {
-         setTitle(TITLE_HIDE);
-         setPrompt(TITLE_HIDE);
-         setIcon(IDEImageBundle.INSTANCE.hideHiddenFiles().getSafeUri().asString());
          setEvent(new ShowHideHiddenFilesEvent(false));
       }
       else
       {
-         setTitle(TITLE_SHOW);
-         setPrompt(TITLE_SHOW);
-         setIcon(IDEImageBundle.INSTANCE.showHiddenFiles().getSafeUri().asString());
          setEvent(new ShowHideHiddenFilesEvent(true));
       }
+      setSelected(filesAreShown);
    }
 
    /**

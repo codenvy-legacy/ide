@@ -94,8 +94,7 @@ public class ShowHideHiddenFilesTest extends BaseTest
       Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + HIDDEN_FILE_NAME));
       
       // hide hidden files
-      Assert.assertTrue(IDE.MENU.isCommandVisible(MenuCommands.View.VIEW, MenuCommands.View.HIDE_HIDDEN_FILES));
-      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.HIDE_HIDDEN_FILES);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_HIDDEN_FILES);
       IDE.LOADER.waitClosed();
       Assert.assertFalse(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + HIDDEN_FILE_NAME));
    }

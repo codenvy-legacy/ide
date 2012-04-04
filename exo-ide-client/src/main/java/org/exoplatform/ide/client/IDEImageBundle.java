@@ -459,9 +459,6 @@ public interface IDEImageBundle extends ClientBundle
    @Source("../public/images/bundled/view/show_hidden_files.png")
    ImageResource showHiddenFiles();
    
-   @Source("../public/images/bundled/view/hide_hidden_files.png")
-   ImageResource hideHiddenFiles();
-   
    /*
     * VERSIONING
     */
