@@ -107,6 +107,7 @@
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>buildnumber-maven-plugin</artifactId>
+            <version>1.0</version>
             <configuration>
                <timestampFormat>{0, date, yyyy-MM-dd HH:mm:ss}</timestampFormat>
                <doCheck>false</doCheck>
