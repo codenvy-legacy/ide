@@ -71,8 +71,9 @@ public class CodeMirrorProducer extends EditorProducer
    @Override
    public Editor createEditor(String content, HandlerManager eventBus, HashMap<String, Object> params)
    {
-      params.putAll(this.params);
-      return new CodeMirror(content, params, eventBus);
+      HashMap<String, Object> initParam = new HashMap<String, Object>(this.params);
+      initParam.putAll(params);
+      return new CodeMirror(content, initParam, eventBus);
    }
 
 }

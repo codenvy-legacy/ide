@@ -28,6 +28,7 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.edit.control.DeleteCurrentLineControl;
+import org.exoplatform.ide.client.edit.control.FormatSourceControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
@@ -197,6 +198,7 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       hotKeys.put("Ctrl+D", DeleteCurrentLineControl.ID); // Ctrl+D
       hotKeys.put("Ctrl+L", GoToLineControl.ID); // Ctrl+L
       hotKeys.put("Ctrl+N", CreateFileFromTemplateControl.ID); // Ctrl+N
+      hotKeys.put("Ctrl+Shift+F", FormatSourceControl.ID);
 
       hotKeys.putAll(hotKeys);
    }

@@ -39,7 +39,7 @@ import org.exoplatform.ide.editor.api.EditorCapability;
 public class FormatSourceControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
-   private static final String ID = "Edit/Format";
+   public static final String ID = "Edit/Format";
 
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.formatControl();
 

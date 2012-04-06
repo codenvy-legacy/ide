@@ -188,9 +188,10 @@ public class IDEConfigurationService
       while (iterator.hasNext())
       {
          String key = iterator.next();
-         if (jsonValue.getElement(key).isObject())
+         JsonValue value = jsonValue.getElement(key);
+         if (value.isObject())
          {
-            ObjectValue ob = (ObjectValue)jsonValue.getElement(key);
+            ObjectValue ob = (ObjectValue)value;
             Map<String, String> map = new HashMap<String, String>();
             Iterator<String> obIterator = ob.getKeys();
             while (obIterator.hasNext())
@@ -200,10 +201,10 @@ public class IDEConfigurationService
             }
             userSettings.put(key, map);
          }
-         else if (jsonValue.getElement(key).isArray())
+         else if (value.isArray())
          {
             List<String> list = new ArrayList<String>();
-            ArrayValue ar = (ArrayValue)jsonValue.getElement(key);
+            ArrayValue ar = (ArrayValue)value;
             Iterator<JsonValue> arrIterator = ar.getElements();
 
             while (arrIterator.hasNext())
@@ -213,6 +214,19 @@ public class IDEConfigurationService
             }
             userSettings.put(key, list);
          }
+         else if (value.isString())
+         {
+            userSettings.put(key, value.getStringValue());
+         }
+         else if (value.isBoolean())
+         {
+            userSettings.put(key, value.getBooleanValue());
+         }
+         else if (value.isNumeric())
+         {
+            userSettings.put(key, value.getNumberValue());
+         }
+
       }
       return userSettings;
    }
