@@ -53,7 +53,11 @@ public class Outline extends AbstractTestModule
       String scrollTopLocator =
          "document.getElementById('ideOutlineTreeGrid').parentNode.parentNode.parentNode.scrollTop";
 
-      String HIGHLIGHTER_SELECTOR = "div#" + TREE_ID + ">div.ide-Tree-item-selected";
+      String HIGHLIGHTER_SELECTOR_OLD = "div#" + TREE_ID + ">div.ide-Tree-item-selected";
+
+      String EXPAND_SELECTOR = "div.cellTreeSelectedItem>div>div>img";
+
+      String HIGHLIGHTER_SELECTOR = "div.cellTreeSelectedItem";
 
       String ROW_BY_INDEX_SELECTOR = "div#" + TREE_ID + " div.gwt-Label:nth(%s)";
 
@@ -72,15 +76,16 @@ public class Outline extends AbstractTestModule
 
    public static final int SELECT_OUTLINE_DELAY = 100; // msec
 
-   private static final int LINE_HEIGHT = 29;
+   private static int LINE_HEIGHT = 26;
 
-   private int OUTLINE_TOP_OFFSET_POSITION = 80;
+   private int OUTLINE_TOP_OFFSET_POSITION = 76;
 
    public Outline()
    {
       if (driver() instanceof ChromeDriver)
       {
          OUTLINE_TOP_OFFSET_POSITION = 85;
+         LINE_HEIGHT = 26;
       }
    }
 
@@ -123,6 +128,9 @@ public class Outline extends AbstractTestModule
 
    @FindBy(css = Locators.HIGHLIGHTER_SELECTOR)
    private WebElement highlighter;
+
+   @FindBy(css = Locators.EXPAND_SELECTOR)
+   private WebElement expand;
 
    /**
     * Wait Outline view opened.
@@ -214,6 +222,18 @@ public class Outline extends AbstractTestModule
    }
 
    /**
+    * Click on expand icon in outline three
+    * @param rowNumber row number
+    * @throws Exception
+    */
+   public void expandSelectItem(int rowNumber) throws Exception
+   {
+
+      WebElement exp = driver().findElement(By.cssSelector(Locators.EXPAND_SELECTOR));
+      exp.click();
+   }
+
+   /**
     * Double click the item at pointed row number. Row number starts from <code>1</code>.
     * 
     * @param rowNumber row number
@@ -222,7 +242,7 @@ public class Outline extends AbstractTestModule
    public void doubleClickItem(int rowNumber) throws Exception
    {
       WebElement row = getVisibleItem(rowNumber);
-      row.click();
+      row.findElement(By.xpath("//img[@onload='this.__gwtLastUnhandledEvent=\"load\";']")).click();
       new Actions(driver()).moveToElement(row, 1, 1).doubleClick().build().perform();
    }
 
@@ -273,12 +293,11 @@ public class Outline extends AbstractTestModule
     * 
     * @param rowNumber number of the row
     */
+
    public boolean isItemSelected(int rowNumber)
    {
-      int linePositionTop = OUTLINE_TOP_OFFSET_POSITION + (rowNumber - 1) * LINE_HEIGHT;
-      // Find delta:
-      int delta = Math.abs(linePositionTop - highlighter.getLocation().y);
-      return delta <= LINE_HEIGHT / 2;
+      int linePosition = OUTLINE_TOP_OFFSET_POSITION + (rowNumber - 1) * LINE_HEIGHT;
+      return highlighter.getLocation().y==linePosition;
    }
 
    /**
