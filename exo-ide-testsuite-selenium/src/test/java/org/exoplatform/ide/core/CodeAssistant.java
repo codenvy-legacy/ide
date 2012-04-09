@@ -336,7 +336,7 @@ public class CodeAssistant extends AbstractTestModule
    public void waitForJavaToolingInitialized(String fileName)
    {
       final String title = "Initialize Java tooling for " + fileName;
-      new WebDriverWait(driver(), 10000).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 1000).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

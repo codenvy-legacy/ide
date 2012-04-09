@@ -216,7 +216,7 @@ public class OulineTreeHelper extends BaseTest
          Entry<Integer, OutlineItemInfo> item = iterator.next();
          OutlineItemInfo outlineItem = item.getValue();
 
-         //checkItemPresent(outlineItem.getId());
+         checkItemPresent(outlineItem.getId());
          //         if (outlineItem.getFileLineNumber() > 30)
          //         {
          //            break;
