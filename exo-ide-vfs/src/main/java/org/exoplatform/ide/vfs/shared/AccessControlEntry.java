@@ -25,7 +25,7 @@ import java.util.Set;
  * Representation of Access Control Entry used to interaction with client via JSON.
  *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: AccessControlEntry.java 79579 2012-02-17 13:27:25Z andrew00x $
  */
 public class AccessControlEntry
 {

@@ -33,7 +33,7 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: CreateTest.java 75317 2011-10-19 15:02:05Z andrew00x $
  */
 public class CreateTest extends JcrFileSystemTest
 {

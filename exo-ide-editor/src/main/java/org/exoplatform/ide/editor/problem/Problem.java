@@ -100,4 +100,7 @@ public interface Problem
     */
    boolean isBreakpoint();
 
+   
+   boolean isCurrentBreakPoint();
+
 }

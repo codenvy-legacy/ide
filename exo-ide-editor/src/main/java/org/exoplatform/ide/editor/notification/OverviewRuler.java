@@ -81,7 +81,7 @@ public class OverviewRuler extends Composite implements MouseDownHandler
     */
    public void addProblem(Problem problem, String message)
    {
-      if (problem.isBreakpoint())
+      if (!(problem.isError() || problem.isWarning()))
          return;
 
       int lastLineNumber = codeMirror.getLastLineNumber();

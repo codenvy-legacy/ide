@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,44 +18,17 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.shared;
 
-import org.exoplatform.ide.extension.cloudfoundry.server.SystemService;
-
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class CloudfoundryServices
+public interface CloudfoundryServices
 {
-   private SystemService[] system;
-   private ProvisionedService[] provisioned;
+   SystemService[] getSystem();
 
-   public CloudfoundryServices(SystemService[] system, ProvisionedService[] provisioned)
-   {
-      this.system = system;
-      this.provisioned = provisioned;
-   }
+   void setSystem(SystemService[] system);
 
-   public CloudfoundryServices()
-   {
-   }
+   ProvisionedService[] getProvisioned();
 
-   public SystemService[] getSystem()
-   {
-      return system;
-   }
-
-   public void setSystem(SystemService[] system)
-   {
-      this.system = system;
-   }
-
-   public ProvisionedService[] getProvisioned()
-   {
-      return provisioned;
-   }
-
-   public void setProvisioned(ProvisionedService[] provisioned)
-   {
-      this.provisioned = provisioned;
-   }
+   void setProvisioned(ProvisionedService[] provisioned);
 }

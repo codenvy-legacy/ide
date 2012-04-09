@@ -114,4 +114,10 @@ public class ProblemImpl implements Problem
       return false;
    }
 
+   @Override
+   public boolean isCurrentBreakPoint()
+   {
+      return false;
+   }
+
 }

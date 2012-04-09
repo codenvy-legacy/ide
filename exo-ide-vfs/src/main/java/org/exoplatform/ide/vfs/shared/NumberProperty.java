@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: NumberProperty.java 65787 2011-02-03 10:03:58Z andrew00x $
  */
 public class NumberProperty extends Property<Double>
 {

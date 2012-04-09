@@ -26,7 +26,7 @@ import javax.ws.rs.core.MediaType;
  * Provide JCR node types name dependent to specified media type.
  *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: MediaType2NodeTypeResolver.java 79579 2012-02-17 13:27:25Z andrew00x $
  */
 public class MediaType2NodeTypeResolver
 {

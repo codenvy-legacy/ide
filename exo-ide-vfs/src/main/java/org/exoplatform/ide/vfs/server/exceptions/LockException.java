@@ -22,7 +22,7 @@ package org.exoplatform.ide.vfs.server.exceptions;
  * Thrown if object on which the action performed is locked.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: LockException.java 68071 2011-04-07 13:11:47Z vitalka $
  */
 @SuppressWarnings("serial")
 public class LockException extends VirtualFileSystemException

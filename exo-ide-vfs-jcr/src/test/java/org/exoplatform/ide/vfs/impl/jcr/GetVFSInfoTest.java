@@ -32,7 +32,7 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: GetVFSInfoTest.java 75032 2011-10-13 15:24:34Z andrew00x $
  */
 public class GetVFSInfoTest extends JcrFileSystemTest
 {

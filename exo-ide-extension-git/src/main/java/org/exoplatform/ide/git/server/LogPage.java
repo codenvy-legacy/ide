@@ -34,7 +34,7 @@ import java.util.TimeZone;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: LogPage.java 79499 2012-02-15 15:42:46Z andrew00x $
  */
 public class LogPage extends Log implements InfoPage
 {

@@ -30,7 +30,7 @@ import java.net.URL;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: RemoteAddTest.java 70163 2011-06-03 13:37:45Z andrew00x $
  */
 public class RemoteAddTest extends BaseTest
 {

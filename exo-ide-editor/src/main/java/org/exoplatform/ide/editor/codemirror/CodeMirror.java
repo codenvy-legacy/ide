@@ -1463,6 +1463,11 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
             if (p.isWarning())
             {
                markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkWarning();
+//               break;
+            }
+            if (p.isCurrentBreakPoint())
+            {
+               markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkBreakpointCurrent();
                break;
             }
          }
@@ -1560,6 +1565,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       {
          List<Problem> list = problems.get(problem.getLineNumber());
          list.remove(problem);
+         
          unmarkNative(problem.getLineNumber());
          if (list.isEmpty())
             return;

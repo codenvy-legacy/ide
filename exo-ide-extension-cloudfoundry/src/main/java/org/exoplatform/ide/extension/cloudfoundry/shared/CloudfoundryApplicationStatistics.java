@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,156 +19,56 @@
 package org.exoplatform.ide.extension.cloudfoundry.shared;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class CloudfoundryApplicationStatistics
+public interface CloudfoundryApplicationStatistics
 {
-   /** Application name. */
-   private String name;
-   /** Application state. */
-   private String state;
-   /** IP address. */
-   private String host;
-   /** Port. */
-   private int port = -1;
-   /** Application URLs. */
-   private String[] uris;
+   String getName();
 
-   /** Application uptime. If format X?d:XXh:XXm:XXs. */
-   private String uptime;
-   /** CPU cores. */
-   private int cpuCores = -1;
+   void setName(String name);
 
-   /** CPU usage in percents. */
-   private double cpu = -1;
-   /** Used memory (in MB). */
-   private int mem = -1;
-   /** Used disk (in MB). */
-   private int disk = -1;
+   String getState();
 
-   /** Memory limit (in MB). */
-   private int memLimit = -1;
-   /** Disk limit (in MB). */
-   private int diskLimit = -1;
+   void setState(String state);
 
-   public String getName()
-   {
-      return name;
-   }
+   String getHost();
 
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+   void setHost(String host);
 
-   public String getState()
-   {
-      return state;
-   }
+   int getPort();
 
-   public void setState(String state)
-   {
-      this.state = state;
-   }
+   void setPort(int port);
 
-   public String getHost()
-   {
-      return host;
-   }
+   String[] getUris();
 
-   public void setHost(String host)
-   {
-      this.host = host;
-   }
+   void setUris(String[] uris);
 
-   public int getPort()
-   {
-      return port;
-   }
+   String getUptime();
 
-   public void setPort(int port)
-   {
-      this.port = port;
-   }
+   void setUptime(String uptime);
 
-   public String[] getUris()
-   {
-      return uris;
-   }
+   int getCpuCores();
 
-   public void setUris(String[] uris)
-   {
-      this.uris = uris;
-   }
+   void setCpuCores(int cores);
 
-   public String getUptime()
-   {
-      return uptime;
-   }
+   double getCpu();
 
-   public void setUptime(String uptime)
-   {
-      this.uptime = uptime;
-   }
+   void setCpu(double cpu);
 
-   public int getCpuCores()
-   {
-      return cpuCores;
-   }
+   int getMem();
 
-   public void setCpuCores(int cores)
-   {
-      this.cpuCores = cores;
-   }
+   void setMem(int mem);
 
-   public double getCpu()
-   {
-      return cpu;
-   }
+   int getDisk();
 
-   public void setCpu(double cpu)
-   {
-      this.cpu = cpu;
-   }
+   void setDisk(int disk);
 
-   public int getMem()
-   {
-      return mem;
-   }
+   int getMemLimit();
 
-   public void setMem(int mem)
-   {
-      this.mem = mem;
-   }
+   void setMemLimit(int memLimit);
 
-   public int getDisk()
-   {
-      return disk;
-   }
+   int getDiskLimit();
 
-   public void setDisk(int disk)
-   {
-      this.disk = disk;
-   }
-
-   public int getMemLimit()
-   {
-      return memLimit;
-   }
-
-   public void setMemLimit(int memLimit)
-   {
-      this.memLimit = memLimit;
-   }
-
-   public int getDiskLimit()
-   {
-      return diskLimit;
-   }
-
-   public void setDiskLimit(int diskLimit)
-   {
-      this.diskLimit = diskLimit;
-   }
+   void setDiskLimit(int diskLimit);
 }

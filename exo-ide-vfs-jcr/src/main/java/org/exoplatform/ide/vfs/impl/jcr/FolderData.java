@@ -47,7 +47,7 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: FolderData.java 79625 2012-02-20 11:06:01Z andrew00x $
  */
 public class FolderData extends ItemData
 {

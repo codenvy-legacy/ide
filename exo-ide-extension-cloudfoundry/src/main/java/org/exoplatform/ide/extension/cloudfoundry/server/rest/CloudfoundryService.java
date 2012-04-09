@@ -20,10 +20,12 @@ package org.exoplatform.ide.extension.cloudfoundry.server.rest;
 
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
+import org.exoplatform.ide.extension.cloudfoundry.server.DebugMode;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
+import org.exoplatform.ide.extension.cloudfoundry.shared.Instance;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.helper.ParsingResponseException;
@@ -127,14 +129,20 @@ public class CloudfoundryService
       @QueryParam("url") String url, //
       @DefaultValue("1") @QueryParam("instances") int instances, //
       @QueryParam("mem") int memory, //
-      @QueryParam("nostart") boolean nostart, //
+      @QueryParam("nostart") boolean noStart, //
+      @QueryParam("debug") String debug,
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId, //
       @QueryParam("war") URL war //
    ) throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
    {
-      return cloudfoundry.createApplication(server, app, framework, url, instances, memory, nostart, vfsId != null
-         ? vfsRegistry.getProvider(vfsId).newInstance(null) : null, projectId, war);
+      DebugMode debugMode = null;
+      if (debug != null)
+      {
+         debugMode = debug.isEmpty() ? new DebugMode() : new DebugMode(debug);
+      }
+      return cloudfoundry.createApplication(server, app, framework, url, instances, memory, noStart, debugMode,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null, projectId, war);
    }
 
    @Path("apps/start")
@@ -143,11 +151,17 @@ public class CloudfoundryService
    public CloudFoundryApplication startApplication( //
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
+      @QueryParam("debug") String debug,
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId //
    ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
-      return cloudfoundry.startApplication(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId)
+      DebugMode debugMode = null;
+      if (debug != null)
+      {
+         debugMode = debug.isEmpty() ? new DebugMode() : new DebugMode(debug);
+      }
+      return cloudfoundry.startApplication(server, app, debugMode, vfsId != null ? vfsRegistry.getProvider(vfsId)
          .newInstance(null) : null, projectId);
    }
 
@@ -170,12 +184,19 @@ public class CloudfoundryService
    public CloudFoundryApplication restartApplication( //
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
+      @QueryParam("debug") String debug,
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId //
    ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
+      DebugMode debugMode = null;
+      if (debug != null)
+      {
+         debugMode = debug.isEmpty() ? new DebugMode() : new DebugMode(debug);
+      }
       return cloudfoundry.restartApplication(server, app,
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null, projectId);
+         debugMode, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         projectId);
    }
 
    /*@Path("apps/rename")
@@ -260,6 +281,19 @@ public class CloudfoundryService
    {
       cloudfoundry.instances(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
          projectId, expression);
+   }
+
+   @Path("apps/instances/info")
+   @GET
+   public Instance[] applicationInstances( //
+      @QueryParam("server") String server, //
+      @QueryParam("name") String app, //
+      @QueryParam("vfsid") String vfsId, //
+      @QueryParam("projectid") String projectId
+   ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+   {
+      return cloudfoundry.applicationInstances(server, app,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null, projectId);
    }
 
    @Path("apps/env/add")

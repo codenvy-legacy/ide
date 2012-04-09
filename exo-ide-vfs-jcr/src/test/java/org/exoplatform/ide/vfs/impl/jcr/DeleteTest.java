@@ -35,7 +35,7 @@ import javax.jcr.lock.Lock;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: DeleteTest.java 75032 2011-10-13 15:24:34Z andrew00x $
  */
 public class DeleteTest extends JcrFileSystemTest
 {

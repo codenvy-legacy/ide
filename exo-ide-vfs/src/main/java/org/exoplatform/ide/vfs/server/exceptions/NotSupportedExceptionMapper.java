@@ -27,7 +27,7 @@ import javax.ws.rs.ext.Provider;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: NotSupportedExceptionMapper.java 78691 2012-01-13 15:24:59Z anya $
  */
 @Provider
 public class NotSupportedExceptionMapper implements ExceptionMapper<NotSupportedException>

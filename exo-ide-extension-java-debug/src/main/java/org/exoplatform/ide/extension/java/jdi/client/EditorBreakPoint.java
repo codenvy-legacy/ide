@@ -37,6 +37,7 @@ public class EditorBreakPoint implements Problem
     * @param lineNumber
     * @param message
     */
+   
    public EditorBreakPoint(BreakPoint breakPoint, String message)
    {
       this.breakPoint = breakPoint;
@@ -121,6 +122,12 @@ public class EditorBreakPoint implements Problem
    public BreakPoint getBreakPoint()
    {
       return breakPoint;
+   }
+
+   @Override
+   public boolean isCurrentBreakPoint()
+   {
+      return false;
    }
 
 }

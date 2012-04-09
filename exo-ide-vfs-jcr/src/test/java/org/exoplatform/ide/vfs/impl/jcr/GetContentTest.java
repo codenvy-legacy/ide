@@ -36,7 +36,7 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: GetContentTest.java 77587 2011-12-13 10:42:02Z andrew00x $
  */
 public class GetContentTest extends JcrFileSystemTest
 {

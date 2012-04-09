@@ -55,4 +55,7 @@ public interface CodeMirrorCss extends CssResource
    @ClassName("exo-code-mark-breakpoint")
    String codeMarkBreakpoint();
 
+   @ClassName("exo-code-mark-breakpoint-current")
+   String codeMarkBreakpointCurrent();
+
 }

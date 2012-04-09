@@ -46,7 +46,7 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-java</artifactId>
       </dependency>
-
+      
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>

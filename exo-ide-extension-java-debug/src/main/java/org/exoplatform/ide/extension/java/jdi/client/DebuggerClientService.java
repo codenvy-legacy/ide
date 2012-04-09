@@ -22,7 +22,11 @@ import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
@@ -47,12 +51,15 @@ public class DebuggerClientService
 {
 
    private static String BASE_URL;
+   
+   private String restContext;  
 
    private static DebuggerClientService instance;
    
    public DebuggerClientService(String restContext)
    {
       BASE_URL = restContext + "/ide/java/debug";
+      this.restContext = restContext;
       instance = this;
    }
 
@@ -138,6 +145,34 @@ public class DebuggerClientService
    public void stepReturn(String id, AsyncRequestCallback<String> callback) throws RequestException
    {
       AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/step/out/" + id).loader(new EmptyLoader()).send(callback);
+   }
+   
+   
+   
+   public void createApplication(String server, String name, String type, String url, int instances, int memory, boolean nostart,
+      String vfsId, String projectId, String war, AsyncRequestCallback<CloudFoundryApplication> callback)
+      throws RequestException
+   {
+      final String requestUrl = restContext + "/ide/cloudfoundry/apps/create";
+
+      String params = "name=" + name;
+      params += (server == null) ? "" : "&server=" + server;
+      params += (type != null) ? "&type=" + type : "";
+      params += (url != null) ? "&url=" + url : "";
+      params += "&instances=" + instances;
+      params += "&mem=" + memory;
+      params += "&nostart=" + nostart;
+      params += (vfsId != null) ? "&vfsid=" + vfsId : "";
+      params += (projectId != null) ? "&projectid=" + projectId : "";
+      params += (war != null) ? "&war=" + war : "";
+
+      System.out.println("DebuggerClientService.createApplication()" + requestUrl + "?" + params);
+      
+      Loader loader = new GWTLoader();
+      loader.setMessage("Starting.... ");
+      AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params).loader(loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+
    }
 
 }

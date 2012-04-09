@@ -23,7 +23,7 @@ package org.exoplatform.ide.git.shared;
  * {@link #url}.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: RemoteAddRequest.java 67651 2011-03-25 16:15:36Z andrew00x $
  */
 public class RemoteAddRequest extends GitRequest
 {

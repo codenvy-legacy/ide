@@ -54,7 +54,7 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: FileData.java 79579 2012-02-17 13:27:25Z andrew00x $
  */
 class FileData extends ItemData
 {

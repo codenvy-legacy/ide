@@ -25,7 +25,7 @@ import java.util.Map;
  * Representation of Folder object used to interaction with client via JSON.
  *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: Folder.java 79657 2012-02-21 07:25:22Z andrew00x $
  */
 public class Folder extends Item
 {

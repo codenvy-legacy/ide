@@ -48,7 +48,7 @@ import java.util.Set;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: JSONDeserializer.java 80595 2012-03-27 09:12:25Z azatsarynnyy $
  */
 public abstract class JSONDeserializer<O>
 {

@@ -1,6 +1,7 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
 
+
 /**
  * Interface to represent the messages contained in resource bundle:
  * 	/home/vetal/eXo/eXoProjects/ide/trunk/exo-ide-extension-java-debug/src/main/resources/org/exoplatform/ide/extension/java/jdi/client/DebugLocalizationConstant.properties'.
@@ -161,5 +162,24 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
   @DefaultMessage("Step Return")
   @Key("stepReturn")
   String stepReturn();
+  
+  
+//  @Key("control.startApp.id")
+//  String startAppControlId();
+//
+//  @Key("control.startApp.title")
+//  String startAppControlTitle();
+//
+//  @Key("control.startApp.prompt")
+//  String startAppControlPrompt();
+//
+//  @Key("control.stopApp.id")
+//  String stopAppControlId();
+//
+//  @Key("control.stopApp.title")
+//  String stopAppControlTitle();
+//
+//  @Key("control.stopApp.prompt")
+//  String stopAppControlPrompt();
 
 }

@@ -24,7 +24,7 @@ package org.exoplatform.ide.vfs.shared;
  * particular lock. Is used for replace existed lock or performing actions on locked object.
  *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: LockTokenBean.java 80595 2012-03-27 09:12:25Z azatsarynnyy $
  */
 public class LockTokenBean implements LockToken
 {

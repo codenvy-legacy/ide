@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,53 +19,24 @@
 package org.exoplatform.ide.extension.cloudfoundry.shared;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ProvisionedService
+public interface ProvisionedService
 {
-   private String name;
-   private String type;
-   private String vendor;
-   private String version;
+   String getName();
 
-   public String getName()
-   {
-      return name;
-   }
+   void setName(String name);
 
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+   String getType();
 
-   public String getType()
-   {
-      return type;
-   }
+   void setType(String type);
 
-   public void setType(String type)
-   {
-      this.type = type;
-   }
+   String getVendor();
 
-   public String getVendor()
-   {
-      return vendor;
-   }
+   void setVendor(String vendor);
 
-   public void setVendor(String vendor)
-   {
-      this.vendor = vendor;
-   }
+   String getVersion();
 
-   public String getVersion()
-   {
-      return version;
-   }
-
-   public void setVersion(String version)
-   {
-      this.version = version;
-   }
+   void setVersion(String version);
 }

@@ -25,7 +25,7 @@ import java.util.List;
  * Set of abstract items for paging view.
  *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: ItemList.java 79579 2012-02-17 13:27:25Z andrew00x $
  */
 public class ItemList<T>
 {

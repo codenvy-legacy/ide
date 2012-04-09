@@ -22,7 +22,7 @@ package org.exoplatform.ide.vfs.server.exceptions;
  * Thrown if requested item does not exist.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: ItemNotFoundException.java 68071 2011-04-07 13:11:47Z vitalka $
  */
 @SuppressWarnings("serial")
 public class ItemNotFoundException extends VirtualFileSystemException

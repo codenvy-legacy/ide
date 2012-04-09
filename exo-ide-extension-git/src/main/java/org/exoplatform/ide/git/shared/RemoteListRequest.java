@@ -23,7 +23,7 @@ package org.exoplatform.ide.git.shared;
  * about this remote only given.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: RemoteListRequest.java 68015 2011-04-06 09:21:31Z anya $
  */
 public class RemoteListRequest extends GitRequest
 {

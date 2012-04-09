@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.editor.problem.LineNumberDoubleClickEvent;
 import org.exoplatform.ide.editor.problem.LineNumberDoubleClickHandler;
 import org.exoplatform.ide.editor.problem.Markable;
+import org.exoplatform.ide.editor.problem.Problem;
 import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedHandler;
@@ -144,7 +145,18 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
       
       eventBus.fireEvent(new BreakPointsUpdatedEvent(breakPoints));
    }
-
+   
+   
+   public void markCurrentBreakPoint(Problem problem)
+   {
+      markable.markProblem(problem);
+   }
+   
+   public void unmarkCurrentBreakPoint(Problem problem)
+   {
+      markable.unmarkProblem(problem);
+   }
+   
    /**
     * @see org.exoplatform.ide.editor.problem.LineNumberDoubleClickHandler#onLineNumberDoubleClick(org.exoplatform.ide.editor.problem.LineNumberDoubleClickEvent)
     */

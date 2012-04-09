@@ -35,7 +35,7 @@ import javax.jcr.Node;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: UpdateTest.java 77229 2011-12-03 16:56:34Z andrew00x $
  */
 public class UpdateTest extends JcrFileSystemTest
 {

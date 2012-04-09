@@ -38,6 +38,9 @@
 /exo-ide-client/.gwt
 /exo-ide-client/git
 
+
+/**/.gwt
+
 # /exo-ide-client/src/main/java/org/exoplatform/ide/client/
 /exo-ide-client/src/main/java/org/exoplatform/ide/client/Log.java
 

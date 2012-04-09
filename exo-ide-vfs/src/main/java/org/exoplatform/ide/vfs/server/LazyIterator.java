@@ -23,7 +23,7 @@ import java.util.NoSuchElementException;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: LazyIterator.java 79579 2012-02-17 13:27:25Z andrew00x $
  */
 public abstract class LazyIterator<T> implements Iterator<T>
 {

@@ -24,11 +24,11 @@ package org.exoplatform.ide.extension.cloudfoundry.shared;
  */
 public interface Staging
 {
-   public String getModel();
+   String getModel();
 
-   public void setModel(String model);
+   void setModel(String model);
 
-   public String getStack();
+   String getStack();
 
-   public void setStack(String stack);
+   void setStack(String stack);
 }

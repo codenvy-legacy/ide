@@ -29,7 +29,7 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: ConvertiblePropertyTest.java 75232 2011-10-18 12:27:53Z andrew00x $
  */
 public class ConvertiblePropertyTest extends JcrFileSystemTest
 {

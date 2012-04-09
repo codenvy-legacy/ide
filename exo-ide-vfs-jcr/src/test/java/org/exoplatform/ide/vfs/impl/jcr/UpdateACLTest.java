@@ -39,7 +39,7 @@ import javax.jcr.lock.Lock;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: UpdateACLTest.java 75317 2011-10-19 15:02:05Z andrew00x $
  */
 public class UpdateACLTest extends JcrFileSystemTest
 {

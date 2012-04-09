@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: Log.java 68139 2011-04-08 15:06:00Z andrew00x $
  */
 public class Log
 {

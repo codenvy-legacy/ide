@@ -20,68 +20,65 @@ package org.exoplatform.ide.extension.cloudfoundry.shared;
 
 /**
  * Framework info.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: Framework.java Mar 16, 2012 5:14:15 PM azatsarynnyy $
- *
  */
 public interface Framework
 {
-
    /**
     * Get the framework type.
-    * 
+    *
     * @return framework type.
     */
-   public String getType();
+   String getType();
 
    /**
     * Set the framework type.
-    * 
+    *
     * @param type framework type.
     */
-   public void setType(String type);
+   void setType(String type);
 
    /**
     * Get framework name that was displayed.
-    * 
+    *
     * @return displayed name of framework.
     */
-   public String getDisplayName();
+   String getDisplayName();
 
    /**
     * Set framework name that was displayed.
-    * 
+    *
     * @param displayName displayed name of framework.
     */
-   public void setDisplayName(String displayName);
+   void setDisplayName(String displayName);
 
    /**
     * Get default memory size in megabytes.
-    * 
+    *
     * @return memory size
     */
-   public int getMemory();
+   int getMemory();
 
    /**
     * Set default memory size in megabytes.
-    * 
+    *
     * @param memory
     */
-   public void setMemory(int memory);
+   void setMemory(int memory);
 
    /**
     * Get framework description.
-    * 
+    *
     * @return framework description
     */
-   public String getDescription();
+   String getDescription();
 
    /**
     * Set framework description.
-    * 
+    *
     * @param description framework description.
     */
-   public void setDescription(String description);
-
+   void setDescription(String description);
 }

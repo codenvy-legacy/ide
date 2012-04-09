@@ -21,12 +21,23 @@ package org.exoplatform.ide.extension.java.jdi.client;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.CursorPosition;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
@@ -35,6 +46,8 @@ import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnected
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.LaunchDebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.LaunchDebuggerHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.RunAppEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.RunAppHandler;
 import org.exoplatform.ide.extension.java.jdi.client.ui.DebuggerView;
 import org.exoplatform.ide.extension.java.jdi.client.ui.RunDebuggerView;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
@@ -46,7 +59,12 @@ import org.exoplatform.ide.extension.java.jdi.shared.Location;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
 import org.exoplatform.ide.extension.java.jdi.shared.StepEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
+import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
+import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
+import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,13 +86,23 @@ import com.google.web.bindery.autobean.shared.AutoBean;
  * @version $Id: $
 */
 public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisconnectedHandler, LaunchDebuggerHandler,
-   ViewClosedHandler, BreakPointsUpdatedHandler
+   ViewClosedHandler, BreakPointsUpdatedHandler, RunAppHandler, ProjectBuiltHandler, ProjectOpenedHandler, ProjectClosedHandler, VfsChangedHandler
 {
    private Display display;
+   
+   private static final CloudFoundryLocalizationConstant lb = CloudFoundryExtension.LOCALIZATION_CONSTANT;
 
    private DebuggerInfo debuggerInfo;
+   
+   private CurrentEditorBreakPoint currentBreakPoint = new CurrentEditorBreakPoint();
 
    private BreakpointsManager breakpointsManager;
+   
+   private String warUrl;
+
+   private ProjectModel project;
+
+   private VirtualFileSystemInfo vfsInfo;
 
    public interface Display extends IsView
    {
@@ -92,14 +120,13 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       HasClickHandlers getStepReturnButton();
 
       void setBreakPoints(List<BreakPoint> breakPoints);
-
-//      void cleareVariabels();
-//
-//      ListDataProvider<Variable> getDataProvider();
       
       void setVariebels(List<Variable> variables);
 
    }
+   
+   
+  
 
    public DebuggerPresenter(BreakpointsManager breakpointsManager)
    {
@@ -124,6 +151,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   protected void onSuccess(String result)
                   {
                      display.setVariebels(Collections.<Variable>emptyList());
+                     breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
                   }
 
                   @Override
@@ -157,6 +185,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   protected void onSuccess(String result)
                   {
                      display.setVariebels(Collections.<Variable>emptyList());
+                     breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
                   }
 
                   @Override
@@ -188,6 +217,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   protected void onSuccess(String result)
                   {
                      display.setVariebels(Collections.<Variable>emptyList());
+                     breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
                   }
 
                   @Override
@@ -219,6 +249,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   protected void onSuccess(String result)
                   {
                      display.setVariebels(Collections.<Variable>emptyList());
+                     breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
                   }
 
                   @Override
@@ -320,6 +351,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          bindDisplay(display);
          IDE.getInstance().openView(display.asView());
          checkDebugEventsTimer.scheduleRepeating(3000);
+         breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
       }
    }
 
@@ -350,14 +382,19 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                            {
                               StepEvent stepEvent = (StepEvent)event;
                               openFile(stepEvent.getLocation());
+                              currentBreakPoint.setLine(stepEvent.getLocation().getLineNumber());
+                              currentBreakPoint.setMessage("BreakPoint");
                            }
                            else if (event instanceof BreakPointEvent)
                            {
                               BreakPointEvent breakPointEvent = (BreakPointEvent)event;
                               openFile(breakPointEvent.getBreakPoint().getLocation());
+                              currentBreakPoint.setLine(breakPointEvent.getBreakPoint().getLocation().getLineNumber());
+                              currentBreakPoint.setMessage("BreakPoint");
                            }
                            doGetDump();
                         }
+                        breakpointsManager.markCurrentBreakPoint(currentBreakPoint);
                      }
                   }
 
@@ -375,6 +412,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          }
       }
    };
+
+
 
    private void openFile(Location location)
    {
@@ -423,4 +462,121 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          display.setBreakPoints(breakPoints);
       }
    }
+
+   @Override
+   public void onRunApp(RunAppEvent event)
+   {
+     buildApplication();
+   }
+   
+   private void buildApplication()
+   {
+      IDE.addHandler(ProjectBuiltEvent.TYPE, this);
+      IDE.fireEvent(new BuildProjectEvent());
+   }
+   
+   @Override
+   public void onProjectBuilt(ProjectBuiltEvent event)
+   {
+      IDE.removeHandler(event.getAssociatedType(), this);
+      if (event.getBuildStatus().getDownloadUrl() != null)
+      {
+         warUrl = event.getBuildStatus().getDownloadUrl();
+         System.out.println("DebuggerPresenter.onProjectBuilt()" + warUrl);
+         createApplication();
+      }
+   }
+   
+   private void createApplication()
+   {
+      try
+      {
+         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+            CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+            new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+         DebuggerClientService.getInstance().createApplication(
+            "http://api.javarun.exoplatform.com",
+            project.getId(),
+            "spring",
+            "",
+            1,
+            128,
+            false,
+            vfsInfo.getId(),
+            project.getId(),
+            warUrl,
+            new AsyncRequestCallback<CloudFoundryApplication>(unmarshaller)
+            {
+               @Override
+               protected void onSuccess(CloudFoundryApplication result)
+               {
+                  warUrl = null;
+                  String msg = lb.applicationCreatedSuccessfully(result.getName());
+                  if ("STARTED".equals(result.getState()))
+                  {
+                     if (result.getUris().isEmpty())
+                     {
+                        msg += "<br>" + lb.applicationStartedWithNoUrls();
+                     }
+                     else
+                     {
+                        msg += "<br>" + lb.applicationStartedOnUrls(result.getName(), getAppUrlsAsString(result));
+                     }
+                  }
+                  IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+//                  IDE.fireEvent(new RefreshBrowserEvent(project));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+      }
+   }
+   
+   private String getAppUrlsAsString(CloudFoundryApplication application)
+   {
+      String appUris = "";
+      for (String uri : application.getUris())
+      {
+         if (!uri.startsWith("http"))
+         {
+            uri = "http://" + uri;
+         }
+         appUris += ", " + "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>";
+      }
+      if (!appUris.isEmpty())
+      {
+         // crop unnecessary symbols
+         appUris = appUris.substring(2);
+      }
+      return appUris;
+   }
+   
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      project = null;
+   }
+   
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      project = event.getProject();
+   }
+   
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      vfsInfo = event.getVfsInfo();
+   }
+   
+  
 }

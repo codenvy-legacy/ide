@@ -109,7 +109,7 @@ import javax.ws.rs.core.UriBuilder;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: JcrFileSystem.java 80595 2012-03-27 09:12:25Z azatsarynnyy $
  */
 public class JcrFileSystem implements VirtualFileSystem
 {

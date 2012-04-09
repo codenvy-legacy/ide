@@ -29,45 +29,53 @@ import java.util.List;
  */
 public interface CloudFoundryApplication
 {
+   String getName();
 
-   public String getName();
+   void setName(String name);
 
-   public void setName(String name);
+   List<String> getUris();
 
-   public List<String> getUris();
+   void setUris(List<String> uris);
 
-   public void setUris(List<String> uris);
+   int getInstances();
 
-   public int getInstances();
+   void setInstances(int instances);
 
-   public void setInstances(int instances);
+   int getRunningInstances();
 
-   public int getRunningInstances();
+   void setRunningInstances(int runningInstances);
 
-   public void setRunningInstances(int runningInstances);
+   String getState();
 
-   public String getState();
+   void setState(String state);
 
-   public void setState(String state);
+   List<String> getServices();
 
-   public List<String> getServices();
+   void setServices(List<String> services);
 
-   public void setServices(List<String> services);
+   String getVersion();
 
-   public String getVersion();
+   void setVersion(String version);
 
-   public void setVersion(String version);
+   List<String> getEnv();
 
-   public List<String> getEnv();
+   void setEnv(List<String> env);
 
-   public void setEnv(List<String> env);
+   CloudFoundryApplicationResources getResources();
 
-   public CloudFoundryApplicationResources getResources();
+   void setResources(CloudFoundryApplicationResources resources);
 
-   public void setResources(CloudFoundryApplicationResources resources);
+   Staging getStaging();
 
-   public Staging getStaging();
+   void setStaging(Staging staging);
 
-   public void setStaging(Staging staging);
+   // Switch debug mode.
+   String getDebug();
 
+   void setDebug(String debug);
+   // ------------------
+
+   ApplicationMetaInfo getMeta();
+
+   void setMeta(ApplicationMetaInfo mi);
 }

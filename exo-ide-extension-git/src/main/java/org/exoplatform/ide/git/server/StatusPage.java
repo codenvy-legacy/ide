@@ -29,7 +29,7 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: StatusPage.java 79938 2012-02-28 09:34:46Z andrew00x $
  */
 public class StatusPage extends Status implements InfoPage
 {

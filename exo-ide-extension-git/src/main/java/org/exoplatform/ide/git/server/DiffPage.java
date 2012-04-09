@@ -20,7 +20,7 @@ package org.exoplatform.ide.git.server;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: DiffPage.java 68157 2011-04-11 09:06:23Z andrew00x $
  */
 public abstract class DiffPage implements InfoPage
 {

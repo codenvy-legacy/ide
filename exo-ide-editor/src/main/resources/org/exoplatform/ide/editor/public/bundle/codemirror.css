@@ -46,6 +46,18 @@
   margin-left: 5px;
 }
 
+@sprite .exo-code-mark-breakpoint-current
+{
+  gwt-image: "breakpointCurrent";
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-attachment: scroll;
+  cursor: pointer;
+  width: auto;
+  height: auto;
+  margin-left: 5px;
+}
+
 .overview-panel
 {
     background-color: #eee;

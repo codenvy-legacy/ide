@@ -23,7 +23,7 @@ package org.exoplatform.ide.vfs.server.exceptions;
  * any VFS unchecked exceptions.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: VirtualFileSystemRuntimeException.java 78691 2012-01-13 15:24:59Z anya $
  */
 @SuppressWarnings("serial")
 public class VirtualFileSystemRuntimeException extends RuntimeException

@@ -25,7 +25,6 @@ package org.exoplatform.ide.extension.cloudfoundry.shared;
 */
 public interface SystemInfo
 {
-
    SystemResources getUsage();
 
    void setUsage(SystemResources usage);
@@ -53,5 +52,4 @@ public interface SystemInfo
    String getSupport();
 
    void setSupport(String support);
-
 }

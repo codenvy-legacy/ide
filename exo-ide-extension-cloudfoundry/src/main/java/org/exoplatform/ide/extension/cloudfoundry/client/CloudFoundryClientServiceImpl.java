@@ -116,8 +116,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       final String requestUrl = restServiceContext + CREATE;
 
-      if (server != null && !server.startsWith("http"))
-         server = "http://" + server;
+      server = checkServerUrl(server);
 
       String params = "name=" + name;
       params += (server == null) ? "" : "&server=" + server;
@@ -135,6 +134,13 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
    }
 
+   private String checkServerUrl(String server)
+   {
+      if (server != null && !server.startsWith("http") && !server.startsWith("https"))
+         server = "http://" + server;
+      return server;
+   }
+
    /**
     * @throws RequestException 
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#login(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
@@ -145,9 +151,8 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       String url = restServiceContext + LOGIN;
 
-      if (server != null && !server.startsWith("http://"))
-         server = "http://" + server;
-
+      server = checkServerUrl(server);
+      
       Credentials credentialsBean = CloudFoundryExtension.AUTO_BEAN_FACTORY.credentials().as();
       credentialsBean.setServer(server);
       credentialsBean.setEmail(email);
@@ -168,8 +173,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       String url = restServiceContext + LOGOUT;
 
-      if (server != null && !server.startsWith("http"))
-         server = "http://" + server;
+      server = checkServerUrl(server);
 
       String params = (server != null) ? "?server=" + server : "";
 
@@ -186,8 +190,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       final String url = restServiceContext + APPS_INFO;
 
-      if (server != null && !server.startsWith("http"))
-         server = "http://" + server;
+      server = checkServerUrl(server);
 
       String params = (appId != null) ? "name=" + appId : "";
       params += (vfsId != null) ? "&vfsid=" + vfsId : "";
@@ -209,8 +212,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       final String url = restServiceContext + DELETE;
 
-      if (server != null && !server.startsWith("http"))
-         server = "http://" + server;
+      server = checkServerUrl(server);
 
       String params = (appId != null) ? "name=" + appId + "&" : "";
       params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
@@ -245,8 +247,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       final String url = restServiceContext + START;
 
-      if (server != null && !server.startsWith("http"))
-         server = "http://" + server;
+      server = checkServerUrl(server);
 
       String params = (name != null) ? "name=" + name : "";
       params += (vfsId != null) ? "&vfsid=" + vfsId : "";
@@ -268,8 +269,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       final String url = restServiceContext + STOP;
 
-      if (server != null && !server.startsWith("http"))
-         server = "http://" + server;
+      server = checkServerUrl(server);
 
       String params = (name != null) ? "name=" + name : "";
       params += (vfsId != null) ? "&vfsid=" + vfsId : "";
@@ -291,8 +291,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       final String url = restServiceContext + RESTART;
 
-      if (server != null && !server.startsWith("http"))
-         server = "http://" + server;
+      server = checkServerUrl(server);
 
       String params = (name != null) ? "name=" + name : "";
       params += (vfsId != null) ? "&vfsid=" + vfsId : "";
@@ -314,8 +313,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       final String url = restServiceContext + UPDATE;
 
-      if (server != null && !server.startsWith("http"))
-         server = "http://" + server;
+      server = checkServerUrl(server);
 
       String params = (name != null) ? "name=" + name : "";
       params += (vfsId != null) ? "&vfsid=" + vfsId : "";
@@ -338,8 +336,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       final String url = restServiceContext + RENAME;
 
-      if (server != null && !server.startsWith("http"))
-         server = "http://" + server;
+      server = checkServerUrl(server);
 
       String params = (name != null) ? "name=" + name + "&" : "";
       params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
@@ -361,8 +358,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       final String requestUrl = restServiceContext + MAP_URL;
 
-      if (server != null && !server.startsWith("http"))
-         server = "http://" + server;
+      server = checkServerUrl(server);
 
       String params = (name != null) ? "name=" + name + "&" : "";
       params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
@@ -384,8 +380,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       final String requestUrl = restServiceContext + UNMAP_URL;
 
-      if (server != null && !server.startsWith("http"))
-         server = "http://" + server;
+      server = checkServerUrl(server);
 
       String params = (name != null) ? "name=" + name + "&" : "";
       params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
@@ -407,8 +402,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       final String url = restServiceContext + UPDATE_MEMORY;
 
-      if (server != null && !server.startsWith("http"))
-         server = "http://" + server;
+      server = checkServerUrl(server);
 
       String params = (name != null) ? "name=" + name + "&" : "";
       params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
@@ -430,8 +424,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       final String url = restServiceContext + UPDATE_INSTANCES;
 
-      if (server != null && !server.startsWith("http"))
-         server = "http://" + server;
+      server = checkServerUrl(server);
 
       String params = (name != null) ? "name=" + name + "&" : "";
       params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
@@ -454,8 +447,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       final String postUrl = restServiceContext + VALIDATE_ACTION;
 
-      if (server != null && !server.startsWith("http"))
-         server = "http://" + server;
+      server = checkServerUrl(server);
 
       String params = "action=" + action;
       params += (appName == null) ? "" : "&name=" + appName;
@@ -480,8 +472,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       final String url = restServiceContext + SYSTEM_INFO_URL;
 
-      if (server != null && !server.startsWith("http"))
-         server = "http://" + server;
+      server = checkServerUrl(server);
 
       String params = (server == null) ? "" : "?server=" + server;
 
@@ -499,8 +490,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       String url = restServiceContext + APPS;
 
-      if (server != null && !server.startsWith("http"))
-         server = "http://" + server;
+      server = checkServerUrl(server);
 
       if (server != null && !server.isEmpty())
       {

@@ -38,7 +38,7 @@ import javax.jcr.Node;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: SearchTest.java 79905 2012-02-27 15:50:25Z vitalka $
  */
 public class SearchTest extends JcrFileSystemTest
 {

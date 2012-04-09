@@ -26,14 +26,18 @@ import org.exoplatform.ide.extension.cloudfoundry.server.json.ApplicationFile;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateApplication;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateResponse;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateService;
+import org.exoplatform.ide.extension.cloudfoundry.server.json.InstanceInfo;
+import org.exoplatform.ide.extension.cloudfoundry.server.json.InstancesInfo;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.Stats;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
+import org.exoplatform.ide.extension.cloudfoundry.shared.Instance;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
 import org.exoplatform.ide.helper.JsonHelper;
 import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
@@ -61,11 +65,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,15 +95,23 @@ public class Cloudfoundry
 
    // TODO get list of supported frameworks from Cloud Foundry server.
    public static final Map<String, Framework> FRAMEWORKS;
+
+   // TODO get from Cloud Foundry server.
+   private static final Map<String, Set<String>> DEBUG_MODES;
+
    static
    {
       Map<String, Framework> fm = new HashMap<String, Framework>(5);
-      fm.put("rails3", new FrameworkBean("rails3", "Rails", 256, "Rails  Application"));
-      fm.put("spring", new FrameworkBean("spring", "Spring", 512, "Java SpringSource Spring Application"));
-      fm.put("grails", new FrameworkBean("grails", "Grails", 512, "Java SpringSource Grails Application"));
-      fm.put("sinatra", new FrameworkBean("sinatra", "Sinatra", 128, "Sinatra Application"));
-      fm.put("node", new FrameworkBean("node", "Node", 64, "Node.js Application"));
+      fm.put("rails3", new FrameworkImpl("rails3", "Rails", 256, "Rails  Application"));
+      fm.put("spring", new FrameworkImpl("spring", "Spring", 512, "Java SpringSource Spring Application"));
+      fm.put("grails", new FrameworkImpl("grails", "Grails", 512, "Java SpringSource Grails Application"));
+      fm.put("sinatra", new FrameworkImpl("sinatra", "Sinatra", 128, "Sinatra Application"));
+      fm.put("node", new FrameworkImpl("node", "Node", 64, "Node.js Application"));
       FRAMEWORKS = Collections.unmodifiableMap(fm);
+
+      Map<String, Set<String>> dm = new HashMap<String, Set<String>>(1);
+      dm.put("java", Collections.unmodifiableSet(new HashSet<String>(java.util.Arrays.asList("run", "suspend"))));
+      DEBUG_MODES = Collections.unmodifiableMap(dm);
    }
 
    private final CloudfoundryAuthenticator authenticator;
@@ -124,16 +137,25 @@ public class Cloudfoundry
    }
 
    /**
-    * Log in with specified email/password. If login is successful then authentication token from cloudfoundry.com saved
+    * Log in with specified email/password. If login is successful then authentication token from cloudfoundry.com
+    * saved
     * locally and used instead email/password in all next requests.
-    * 
-    * @param server location of Cloud Foundry instance for login, e.g. http://api.cloudfoundry.com
-    * @param email email address that used when create account at cloudfoundry.com
-    * @param password password
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    *
+    * @param server
+    *    location of Cloud Foundry instance for login, e.g. http://api.cloudfoundry.com
+    * @param email
+    *    email address that used when create account at cloudfoundry.com
+    * @param password
+    *    password
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> name is not provided and we try to
+    *    determine it from IDE project properties.
+    * @throws IOException
+    *    if any i/o errors occurs
     */
    public void login(String server, String email, String password) throws CloudfoundryException,
       ParsingResponseException, VirtualFileSystemException, IOException
@@ -147,10 +169,14 @@ public class Cloudfoundry
 
    /**
     * Remove locally saved authentication token. Need use {@link #login(String, String, String)} again.
-    * 
-    * @param server location of Cloud Foundry instance for logout, e.g. http://api.cloudfoundry.com
+    *
+    * @param server
+    *    location of Cloud Foundry instance for logout, e.g. http://api.cloudfoundry.com
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> name is not provided and we try to
+    *    determine it from IDE project properties
+    * @throws IOException
+    *    id any i/o errors occurs
     */
    public void logout(String server) throws CloudfoundryException, VirtualFileSystemException, IOException
    {
@@ -159,15 +185,21 @@ public class Cloudfoundry
 
    /**
     * Get current account status (available and used resources, owner email, cloud controller description, etc)
-    * 
-    * @param server location of Cloud Foundry instance to get info, e.g. http://api.cloudfoundry.com. If not specified
-    *           then try determine server. If can't determine server from user context then use default server location,
-    *           see {@link CloudfoundryAuthenticator#defaultTarget}
+    *
+    * @param server
+    *    location of Cloud Foundry instance to get info, e.g. http://api.cloudfoundry.com. If not specified
+    *    then try determine server. If can't determine server from user context then use default server location,
+    *    see {@link CloudfoundryAuthenticator#defaultTarget}
     * @return account info
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> name is not provided and we try to
+    *    determine it from IDE project properties.
+    * @throws IOException
+    *    if any i/o errors occurs
     */
    public SystemInfo systemInfo(String server) throws CloudfoundryException, ParsingResponseException,
       VirtualFileSystemException, IOException
@@ -182,27 +214,36 @@ public class Cloudfoundry
    private SystemInfo systemInfo(Credential credential) throws CloudfoundryException, IOException,
       ParsingResponseException
    {
-      return JsonHelper.fromJson(getJson(credential.target + "/info", credential.token, 200), SystemInfoBean.class,
+      return JsonHelper.fromJson(getJson(credential.target + "/info", credential.token, 200), SystemInfoImpl.class,
          null);
    }
 
    /**
     * Get info about application.
-    * 
-    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
-    *           not specified then try determine server. If can't determine server from application configuration or
-    *           user context then use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param app application name to get info about. If <code>null</code> then try to determine application name. To be
-    *           able determine application name <code>projectId</code> and <code>vfs</code> must not be
-    *           <code>null</code> at least. If name not specified and cannot be determined RuntimeException thrown
-    * @param vfs VirtualFileSystem
-    * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
-    *           this case <code>app</code> parameter must be not <code>null</code>
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *    not specified then try determine server. If can't determine server from application configuration or
+    *    user context then use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param app
+    *    application name to get info about. If <code>null</code> then try to determine application name. To be
+    *    able determine application name <code>projectId</code> and <code>vfs</code> must not be
+    *    <code>null</code> at least. If name not specified and cannot be determined RuntimeException thrown
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    IDE project identifier. May be <code>null</code> if command executed out of project directory in
+    *    this case <code>app</code> parameter must be not <code>null</code>
     * @return application info
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    if any i/o errors occurs
     */
    public CloudFoundryApplication applicationInfo(String server, String app, VirtualFileSystem vfs, String projectId)
       throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
@@ -227,30 +268,56 @@ public class Cloudfoundry
 
    /**
     * Create new application.
-    * 
-    * @param server location of Cloud Foundry instance where application must be created, e.g.
-    *           http://api.cloudfoundry.com. If not specified then try determine server. If can't determine server from
-    *           user context ({@link CloudfoundryAuthenticator#readTarget()) then use default server location, see
-    *           {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param app application name. This parameter is mandatory.
-    * @param framework type of framework (optional). If <code>null</code> then try determine type of framework by
-    *           discovering content of <code>workDir</code>
-    * @param url URL for new application (optional). If <code>null</code> then URL: &lt;app&gt;.cloudfoundry.com
-    * @param instances number of instances for application. If less of equals zero then assume 1 instance
-    * @param memory memory (in MB) allocated for application (optional). If less of equals zero then use default value
-    *           which is dependents to framework type
-    * @param nostart if <code>true</code> then do not start newly created application
-    * @param vfs VirtualFileSystem
-    * @param projectId identifier of project directory that contains source code
-    * @param war URL to pre-builded war file. May be present for java (spring, grails, java-web) applications ONLY
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application must be created, e.g.
+    *    http://api.cloudfoundry.com. If not specified then try determine server. If can't determine server from
+    *    user context ({@link CloudfoundryAuthenticator#readTarget()}) then use default server location, see
+    *    {@link CloudfoundryAuthenticator#defaultTarget} .
+    * @param app
+    *    application name. This parameter is mandatory
+    * @param framework
+    *    type of framework (optional). If <code>null</code> then try determine type of framework by
+    *    discovering content of <code>workDir</code>
+    * @param url
+    *    URL for new application (optional). If <code>null</code> then URL: &lt;app&gt;.cloudfoundry.com
+    * @param instances
+    *    number of instances for application. If less of equals zero then assume 1 instance
+    * @param memory
+    *    memory (in MB) allocated for application (optional). If less of equals zero then use default value
+    *    which is dependents to framework type
+    * @param noStart
+    *    if <code>true</code> then do not start newly created application
+    * @param debugMode
+    *    must be not <code>null</code> if need run application under debugger
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    identifier of project directory that contains source code
+    * @param war
+    *    URL to pre-builded war file. May be present for java (spring, grails, java-web) applications ONLY
     * @return info about newly created application
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    if any i/o errors occurs
     */
-   public CloudFoundryApplication createApplication(String server, String app, String framework, String url,
-      int instances, int memory, boolean nostart, VirtualFileSystem vfs, String projectId, URL war)
+   public CloudFoundryApplication createApplication(String server,
+                                                    String app,
+                                                    String framework,
+                                                    String url,
+                                                    int instances,
+                                                    int memory,
+                                                    boolean noStart,
+                                                    DebugMode debugMode,
+                                                    VirtualFileSystem vfs,
+                                                    String projectId,
+                                                    URL war)
       throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
    {
       if (app == null || app.isEmpty())
@@ -266,20 +333,29 @@ public class Cloudfoundry
          throw new IllegalArgumentException("Location of Cloud Foundry server required. ");
       }
       Credential credential = getCredential(server);
-      return createApplication(credential, app, framework, url, instances, memory, nostart, vfs, projectId, war);
+      return createApplication(credential, app, framework, url, instances, memory, noStart, debugMode, vfs, projectId, war);
    }
 
    private static final Pattern suggestUrlPattern = Pattern.compile("(http(s)?://)?([^\\.]+)(.*)");
 
-   private CloudFoundryApplication createApplication(Credential credential, String app, String frameworkName,
-      String appUrl, int instances, int memory, boolean nostart, VirtualFileSystem vfs, String projectId, URL war)
+   private CloudFoundryApplication createApplication(Credential credential,
+                                                     String app,
+                                                     String frameworkName,
+                                                     String appUrl,
+                                                     int instances,
+                                                     int memory,
+                                                     boolean noStart,
+                                                     DebugMode debugMode,
+                                                     VirtualFileSystem vfs,
+                                                     String projectId,
+                                                     URL war)
       throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
    {
       // Assume war-file may be located remotely, e.g. if use Jenkins to produce file for us.
       // Check number of applications.
       SystemInfo systemInfo = systemInfo(credential);
-      SystemResources limits = (SystemResources)systemInfo.getLimits();
-      SystemResources usage = (SystemResources)systemInfo.getUsage();
+      SystemResources limits = systemInfo.getLimits();
+      SystemResources usage = systemInfo.getUsage();
 
       checkApplicationNumberLimit(limits, usage);
 
@@ -314,16 +390,22 @@ public class Cloudfoundry
          Framework cfg = getFramework(frameworkName);
 
          if (instances <= 0)
+         {
             instances = 1;
+         }
 
          if (memory <= 0)
+         {
             memory = cfg.getMemory();
+         }
 
          String framework = cfg.getType();
 
          // Check memory capacity.
-         if (!nostart)
+         if (!noStart)
+         {
             checkAvailableMemory(instances, memory, limits, usage);
+         }
 
          if (appUrl == null || appUrl.isEmpty())
          {
@@ -355,40 +437,58 @@ public class Cloudfoundry
             writeServerName(vfs, projectId, credential.target);
          }
 
-         if (!nostart)
+         if (!noStart)
          {
-            appInfo = startApplication(credential, app, false);
+            appInfo = startApplication(credential, app, debugMode != null ? debugMode.getMode() : null, false);
          }
       }
       finally
       {
          if (warFile != null && warFile.exists())
+         {
             warFile.delete();
+         }
       }
       return appInfo;
    }
 
    /**
     * Start application if it not started yet.
-    * 
-    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
-    *           not specified then try determine server. If can't determine server from application or user context then
-    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param app application name to start. If <code>null</code> then try to determine application name. To be able
-    *           determine application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at
-    *           least. If name not specified and cannot be determined RuntimeException thrown
-    * @param vfs VirtualFileSystem
-    * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
-    *           this case <code>app</code> parameter must be not <code>null</code>
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *    not specified then try determine server. If can't determine server from application or user context then
+    *    use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param app
+    *    application name to start. If <code>null</code> then try to determine application name. To be able
+    *    determine application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at
+    *    least. If name not specified and cannot be determined RuntimeException thrown
+    * @param debugMode
+    *    debug mode. Should be not <code>null</code> if need to start application with debugging.
+    *    Mode is dependent to application the type of application.
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    IDE project identifier. May be <code>null</code> if command executed out of project directory in
+    *    this case <code>app</code> parameter must be not <code>null</code>
     * @return since start application may take a while time return info with current state of application. If
     *         {@link CloudFoundryApplication#getState()} gives something other then 'STARTED' caller should wait and
     *         check status of application later to be sure it started
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    if any i/o errors occurs
     */
-   public CloudFoundryApplication startApplication(String server, String app, VirtualFileSystem vfs, String projectId)
+   public CloudFoundryApplication startApplication(String server,
+                                                   String app,
+                                                   DebugMode debugMode,
+                                                   VirtualFileSystem vfs,
+                                                   String projectId)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
       if (app == null || app.isEmpty())
@@ -399,39 +499,55 @@ public class Cloudfoundry
       {
          server = detectServer(vfs, projectId);
       }
-      return startApplication(getCredential(server), app, true);
+      return startApplication(getCredential(server), app, debugMode != null ? debugMode.getMode() : null, true);
    }
 
-   private CloudFoundryApplication startApplication(Credential credential, String app, boolean failIfStarted)
+   private CloudFoundryApplication startApplication(Credential credential,
+                                                    String app,
+                                                    String debug,
+                                                    boolean failIfStarted)
       throws IOException, ParsingResponseException, CloudfoundryException
    {
       CloudFoundryApplication appInfo = applicationInfo(credential, app);
+      String name = appInfo.getName();
+      if (debug != null)
+      {
+         String stack = appInfo.getStaging().getStack();
+         Set<String> debugModes = DEBUG_MODES.get(stack);
+         if (debugModes == null || !debugModes.contains(debug))
+         {
+            StringBuilder msg = new StringBuilder();
+            msg.append("Unsupported debug mode '" + debug + "' for application " + name);
+            if (debugModes == null || debugModes.isEmpty())
+            {
+               msg.append(". Debug is not supported. ");
+            }
+            else
+            {
+               msg.append(". Available modes: ").append(debugModes);
+            }
+            throw new IllegalArgumentException(msg.toString());
+         }
+      }
       // Do nothing if application already started.
       if (!"STARTED".equals(appInfo.getState()))
       {
          appInfo.setState("STARTED"); // Update application state.
-         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
+         appInfo.setDebug(debug);
+         putJson(credential.target + "/apps/" + name, credential.token, JsonHelper.toJson(appInfo), 200);
          // Check is application started.
          final int attempt = 3;
          boolean started = false;
          for (int i = 0; i < attempt && !started; i++)
          {
-            try
-            {
-               Thread.sleep(1000);
-            }
-            catch (InterruptedException ignored)
-            {
-            }
-            appInfo = applicationInfo(credential, app);
+            appInfo = applicationInfo(credential, name);
             started = "STARTED".equals(appInfo.getState());
          }
-         if (!started)
-            ; // TODO check application crashes and throw exception if any.
+         // TODO check application crashes and throw exception if any.
       }
       else if (failIfStarted)
       {
-         throw new CloudfoundryException(400, "Application '" + app + "' already started. ", "text/plain");
+         throw new CloudfoundryException(400, "Application '" + name + "' already started. ", "text/plain");
       }
       // Send info about application to client to make possible check is application started or not.
       return appInfo;
@@ -439,20 +555,29 @@ public class Cloudfoundry
 
    /**
     * Stop application if it not stopped yet.
-    * 
-    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
-    *           not specified then try determine server. If can't determine server from application or user context then
-    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param app application name to stop. If <code>null</code> then try to determine application name. To be able
-    *           determine application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at
-    *           least. If name not specified and cannot be determined RuntimeException thrown
-    * @param vfs VirtualFileSystem
-    * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
-    *           this case <code>app</code> parameter must be not <code>null</code>
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *    not specified then try determine server. If can't determine server from application or user context then
+    *    use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param app
+    *    application name to stop. If <code>null</code> then try to determine application name. To be able
+    *    determine application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at
+    *    least. If name not specified and cannot be determined RuntimeException thrown
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    IDE project identifier. May be <code>null</code> if command executed out of project directory in
+    *    this case <code>app</code> parameter must be not <code>null</code>
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    if any i/o errors occurs
     */
    public void stopApplication(String server, String app, VirtualFileSystem vfs, String projectId)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
@@ -486,25 +611,37 @@ public class Cloudfoundry
 
    /**
     * Restart application.
-    * 
-    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
-    *           not specified then try determine server. If can't determine server from application or user context then
-    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
-    *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined RuntimeException thrown
-    * @param vfs VirtualFileSystem
-    * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
-    *           this case <code>app</code> parameter must be not <code>null</code>
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *    not specified then try determine server. If can't determine server from application or user context then
+    *    use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param app
+    *    application name. If <code>null</code> then try to determine application name. To be able determine
+    *    application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
+    *    name not specified and cannot be determined RuntimeException thrown
+    * @param debugMode
+    *    must be not <code>null</code> if need to start application under debugger
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    IDE project identifier. May be <code>null</code> if command executed out of project directory in
+    *    this case <code>app</code> parameter must be not <code>null</code>
     * @return since restart application may take a while time return info with current state of application. If
     *         {@link CloudFoundryApplication#getState()} gives something other then 'STARTED' caller should wait and
     *         check status of application later to be sure it started
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    if any i/o errors occurs
     */
-   public CloudFoundryApplication restartApplication(String server, String app, VirtualFileSystem vfs, String projectId)
+   public CloudFoundryApplication restartApplication(String server, String app, DebugMode debugMode,
+                                                     VirtualFileSystem vfs, String projectId)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
       if (app == null || app.isEmpty())
@@ -515,33 +652,43 @@ public class Cloudfoundry
       {
          server = detectServer(vfs, projectId);
       }
-      return restartApplication(getCredential(server), app);
+      return restartApplication(getCredential(server), app, debugMode == null ? null : debugMode.getMode());
    }
 
-   private CloudFoundryApplication restartApplication(Credential credential, String app) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   private CloudFoundryApplication restartApplication(Credential credential, String app, String debug)
+      throws IOException, ParsingResponseException, CloudfoundryException
    {
       stopApplication(credential, app, false);
-      return startApplication(credential, app, false);
+      return startApplication(credential, app, debug, false);
    }
 
    /**
     * Rename application.
-    * 
-    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
-    *           not specified then try determine server. If can't determine server from application or user context then
-    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
-    *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined RuntimeException thrown
-    * @param vfs VirtualFileSystem
-    * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
-    *           this case <code>app</code> parameter must be not <code>null</code>
-    * @param newname new name for application
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *    not specified then try determine server. If can't determine server from application or user context then
+    *    use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param app
+    *    application name. If <code>null</code> then try to determine application name. To be able determine
+    *    application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
+    *    name not specified and cannot be determined RuntimeException thrown
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    IDE project identifier. May be <code>null</code> if command executed out of project directory in
+    *    this case <code>app</code> parameter must be not <code>null</code>
+    * @param newname
+    *    new name for application
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    if any i/o errors occurs
     */
    public void renameApplication(String server, String app, VirtualFileSystem vfs, String projectId, String newname)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
@@ -573,21 +720,31 @@ public class Cloudfoundry
 
    /**
     * Update application. Upload all files that has changes to cloud controller.
-    * 
-    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
-    *           not specified then try determine server. If can't determine server from application or user context then
-    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
-    *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined RuntimeException thrown
-    * @param vfs VirtualFileSystem
-    * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
-    *           this case <code>app</code> parameter must be not <code>null</code>
-    * @param war URL to pre-builded war file. May be present for java (spring, grails, java-web) applications ONLY
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *    not specified then try determine server. If can't determine server from application or user context then
+    *    use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param app
+    *    application name. If <code>null</code> then try to determine application name. To be able determine
+    *    application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
+    *    name not specified and cannot be determined RuntimeException thrown
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    IDE project identifier. May be <code>null</code> if command executed out of project directory in
+    *    this case <code>app</code> parameter must be not <code>null</code>
+    * @param war
+    *    URL to pre-builded war file. May be present for java (spring, grails, java-web) applications ONLY
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    if any i/o errors occurs
     */
    public void updateApplication(String server, String app, VirtualFileSystem vfs, String projectId, URL war)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
@@ -634,28 +791,41 @@ public class Cloudfoundry
       }
 
       if ("STARTED".equals(appInfo.getState()))
-         restartApplication(credential, app);
+      {
+         restartApplication(credential, app, appInfo.getMeta().getDebug());
+      }
    }
 
    /**
-    * Register new URL for application. From start application has single URL, e.g. <i>my-app.cloudfoundry.com</i>. This
+    * Register new URL for application. From start application has single URL, e.g. <i>my-app.cloudfoundry.com</i>.
+    * This
     * method adds new URL for application. If parameter <code>url</code> is <i>my-app2.cloudfoundry.com</i> the
     * application may be accessed with URLs: <i>my-app.cloudfoundry.com</i> and <i>my-app2.cloudfoundry.com</i> .
-    * 
-    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
-    *           not specified then try determine server. If can't determine server from application or user context then
-    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
-    *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined RuntimeException thrown
-    * @param vfs VirtualFileSystem
-    * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
-    *           this case <code>app</code> parameter must be not <code>null</code>
-    * @param url new URL registered for application
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *    not specified then try determine server. If can't determine server from application or user context then
+    *    use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param app
+    *    application name. If <code>null</code> then try to determine application name. To be able determine
+    *    application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
+    *    name not specified and cannot be determined RuntimeException thrown
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    IDE project identifier. May be <code>null</code> if command executed out of project directory in
+    *    this case <code>app</code> parameter must be not <code>null</code>
+    * @param url
+    *    new URL registered for application
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    if any i/o errors occurs
     */
    public void mapUrl(String server, String app, VirtualFileSystem vfs, String projectId, String url)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
@@ -681,9 +851,13 @@ public class Cloudfoundry
       CloudFoundryApplication appInfo = applicationInfo(credential, app);
       // Cloud foundry server send URL without schema.
       if (url.startsWith("http://"))
+      {
          url = url.substring(7);
+      }
       else if (url.startsWith("https://"))
+      {
          url = url.substring(8);
+      }
 
       boolean updated = false;
       List<String> uris = appInfo.getUris();
@@ -699,26 +873,38 @@ public class Cloudfoundry
       }
       // If have something to update then do that.
       if (updated)
+      {
          putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
+      }
    }
 
    /**
     * Unregister the application from the <code>url</code>.
-    * 
-    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
-    *           not specified then try determine server. If can't determine server from application or user context then
-    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
-    *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined RuntimeException thrown
-    * @param vfs VirtualFileSystem
-    * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
-    *           this case <code>app</code> parameter must be not <code>null</code>
-    * @param url URL unregistered for application. Application not accessible with URL any more
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *    not specified then try determine server. If can't determine server from application or user context then
+    *    use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param app
+    *    application name. If <code>null</code> then try to determine application name. To be able determine
+    *    application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
+    *    name not specified and cannot be determined RuntimeException thrown
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    IDE project identifier. May be <code>null</code> if command executed out of project directory in
+    *    this case <code>app</code> parameter must be not <code>null</code>
+    * @param url
+    *    URL unregistered for application. Application not accessible with URL any more
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    if any i/o errors occurs
     */
    public void unmapUrl(String server, String app, VirtualFileSystem vfs, String projectId, String url)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
@@ -744,32 +930,48 @@ public class Cloudfoundry
       CloudFoundryApplication appInfo = applicationInfo(credential, app);
       // Cloud foundry server send URL without schema.
       if (url.startsWith("http://"))
+      {
          url = url.substring(7);
+      }
       else if (url.startsWith("https://"))
+      {
          url = url.substring(8);
+      }
       List<String> uris = appInfo.getUris();
       if (uris != null && uris.size() > 0 && uris.remove(url))
+      {
          putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
+      }
    }
 
    /**
     * Update amount of memory allocated for application.
-    * 
-    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
-    *           not specified then try determine server. If can't determine server from application or user context then
-    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
-    *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined RuntimeException thrown
-    * @param vfs VirtualFileSystem
-    * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
-    *           this case <code>app</code> parameter must be not <code>null</code>
-    * @param memory memory size in megabytes. If application use more than one instance then specified size of memory
-    *           reserved on each instance used by application
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *    not specified then try determine server. If can't determine server from application or user context then
+    *    use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param app
+    *    application name. If <code>null</code> then try to determine application name. To be able determine
+    *    application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
+    *    name not specified and cannot be determined RuntimeException thrown
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    IDE project identifier. May be <code>null</code> if command executed out of project directory in
+    *    this case <code>app</code> parameter must be not <code>null</code>
+    * @param memory
+    *    memory size in megabytes. If application use more than one instance then specified size of memory
+    *    reserved on each instance used by application
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    if any i/o errors occurs
     */
    public void mem(String server, String app, VirtualFileSystem vfs, String projectId, int memory)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
@@ -797,8 +999,8 @@ public class Cloudfoundry
       if (memory != currentMem)
       {
          SystemInfo systemInfo = systemInfo(credential);
-         SystemResources limits = (SystemResources)systemInfo.getLimits();
-         SystemResources usage = (SystemResources)systemInfo.getUsage();
+         SystemResources limits = systemInfo.getLimits();
+         SystemResources usage = systemInfo.getUsage();
          if (limits != null && usage != null //
             && (appInfo.getInstances() * (memory - currentMem)) > (limits.getMemory() - usage.getMemory()))
          {
@@ -812,32 +1014,107 @@ public class Cloudfoundry
          appInfo.getResources().setMemory(memory);
          putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
-            restartApplication(credential, app);
+         {
+            restartApplication(credential, app, appInfo.getMeta().getDebug());
+         }
       }
    }
 
    /**
-    * Update number of instances of application.
-    * 
-    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
-    *           not specified then try determine server. If can't determine server from application or user context then
-    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
-    *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined RuntimeException thrown
-    * @param vfs VirtualFileSystem
-    * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
-    *           this case <code>app</code> parameter must be not <code>null</code>
-    * @param expression how should we change number of instances. Expected are:
-    *           <ul>
-    *           <li>&lt;num&gt; - set number of instances to &lt;num&gt;</li>
-    *           <li>&lt;+num&gt; - increase by &lt;num&gt; of instances</li>
-    *           <li>&lt;-num&gt; - decrease by &lt;num&gt; of instances</li>
-    *           </ul>
-    * @throws CloudfoundryException if cloud foundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    * Get info about instances of specified application.
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *    not specified then try determine server. If can't determine server from application or user context then
+    *    use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param app
+    *    application name. If <code>null</code> then try to determine application name. To be able determine
+    *    application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
+    *    name not specified and cannot be determined RuntimeException thrown
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    IDE project identifier. May be <code>null</code> if command executed out of project directory in
+    *    this case <code>app</code> parameter must be not <code>null</code>
+    * @return description od application instances
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties.
+    * @throws IOException
+    *    if any i/o errors occurs
+    */
+   public Instance[] applicationInstances(String server, String app, VirtualFileSystem vfs, String projectId)
+      throws ParsingResponseException, CloudfoundryException, IOException, VirtualFileSystemException
+   {
+      if (app == null || app.isEmpty())
+      {
+         app = detectApplicationName(vfs, projectId, true);
+      }
+      if (server == null || server.isEmpty())
+      {
+         server = detectServer(vfs, projectId);
+      }
+      return applicationInstances(getCredential(server), app);
+   }
+
+   private Instance[] applicationInstances(Credential credential, String app)
+      throws ParsingResponseException, CloudfoundryException, IOException
+   {
+      InstanceInfo[] instancesInfo =
+         JsonHelper.fromJson(getJson(credential.target + "/apps/" + app + "/instances", credential.token, 200),
+            InstancesInfo.class, null).getInstances();
+      if (instancesInfo != null && instancesInfo.length > 0)
+      {
+         Instance[] instances = new Instance[instancesInfo.length];
+         for (int i = 0; i < instancesInfo.length; i++)
+         {
+            InstanceInfo info = instancesInfo[i];
+            instances[i] = new InstanceImpl(info.getDebug_ip(),
+               info.getDebug_port(),
+               info.getConsole_ip(),
+               info.getConsole_port());
+         }
+         return instances;
+      }
+      return new Instance[0];
+   }
+
+   /**
+    * Update number of instances of application.
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *    not specified then try determine server. If can't determine server from application or user context then
+    *    use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param app
+    *    application name. If <code>null</code> then try to determine application name. To be able determine
+    *    application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
+    *    name not specified and cannot be determined RuntimeException thrown
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    IDE project identifier. May be <code>null</code> if command executed out of project directory in
+    *    this case <code>app</code> parameter must be not <code>null</code>
+    * @param expression
+    *    how should we change number of instances. Expected are:
+    *    <ul>
+    *    <li>&lt;num&gt; - set number of instances to &lt;num&gt;</li>
+    *    <li>&lt;+num&gt; - increase by &lt;num&gt; of instances</li>
+    *    <li>&lt;-num&gt; - decrease by &lt;num&gt; of instances</li>
+    *    </ul>
+    * @throws CloudfoundryException
+    *    if cloud foundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
+    * @throws VirtualFileSystemException
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    id any i/o errors occurs
     */
    public void instances(String server, String app, VirtualFileSystem vfs, String projectId, String expression)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
@@ -850,7 +1127,7 @@ public class Cloudfoundry
       {
          server = detectServer(vfs, projectId);
       }
-      instances(getCredential(server), app, expression, true);
+      instances(getCredential(server), app, expression, false);
    }
 
    /** Instance update expression pattern. */
@@ -872,8 +1149,8 @@ public class Cloudfoundry
       int newInst = sign == null //
          ? Integer.parseInt(expression) //
          : sign.equals("-") // 
-            ? currentInst - Integer.parseInt(val) //
-            : currentInst + Integer.parseInt(val);
+         ? currentInst - Integer.parseInt(val) //
+         : currentInst + Integer.parseInt(val);
       if (newInst < 1)
       {
          throw new IllegalArgumentException("Invalid number of instances " + newInst //
@@ -884,31 +1161,42 @@ public class Cloudfoundry
          appInfo.setInstances(newInst);
          putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
-            restartApplication(credential, app);
+         {
+            restartApplication(credential, app, appInfo.getMeta().getDebug());
+         }
       }
    }
 
    /**
     * Delete application.
-    * 
-    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
-    *           not specified then try determine server. If can't determine server from application or user context then
-    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
-    *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined RuntimeException thrown
-    * @param vfs VirtualFileSystem
-    * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
-    *           this case <code>app</code> parameter must be not <code>null</code>
-    * @param deleteServices if <code>true</code> then delete all services bounded to application
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *    not specified then try determine server. If can't determine server from application or user context then
+    *    use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param app
+    *    application name. If <code>null</code> then try to determine application name. To be able determine
+    *    application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
+    *    name not specified and cannot be determined RuntimeException thrown
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    IDE project identifier. May be <code>null</code> if command executed out of project directory in
+    *    this case <code>app</code> parameter must be not <code>null</code>
+    * @param deleteServices
+    *    if <code>true</code> then delete all services bounded to application
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    id any i/o errors occurs
     */
-   public void deleteApplication(String server, String app, VirtualFileSystem vfs, String projectId,
-      boolean deleteServices) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException,
-      IOException
+   public void deleteApplication(String server, String app, VirtualFileSystem vfs, String projectId, boolean deleteServices)
+      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
       if (app == null || app.isEmpty())
       {
@@ -922,7 +1210,8 @@ public class Cloudfoundry
    }
 
    private void deleteApplication(Credential credential, String app, boolean deleteServices, VirtualFileSystem vfs,
-      String projectId) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+                                  String projectId)
+      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
       CloudFoundryApplication appInfo = applicationInfo(credential, app);
       deleteJson(credential.target + "/apps/" + app, credential.token, 200);
@@ -936,34 +1225,47 @@ public class Cloudfoundry
          List<String> services = appInfo.getServices();
          if (services != null && services.size() > 0)
          {
-            for (int i = 0; i < services.size(); i++)
-               deleteService(credential, services.get(i));
+            for (String service : services)
+            {
+               deleteService(credential, service);
+            }
          }
       }
    }
 
    /**
     * Get application statistics.
-    * 
-    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
-    *           not specified then try determine server. If can't determine server from application or user context then
-    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
-    *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined RuntimeException thrown
-    * @param vfs VirtualFileSystem
-    * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
-    *           this case <code>app</code> parameter must be not <code>null</code>
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *    not specified then try determine server. If can't determine server from application or user context then
+    *    use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param app
+    *    application name. If <code>null</code> then try to determine application name. To be able determine
+    *    application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
+    *    name not specified and cannot be determined RuntimeException thrown
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    IDE project identifier. May be <code>null</code> if command executed out of project directory in
+    *    this case <code>app</code> parameter must be not <code>null</code>
     * @return statistics of application as Map. In Map key is name (index) of instances and corresponded value is
     *         application statistic for this instance
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    if any i/o errors occurs
     */
-   public Map<String, CloudfoundryApplicationStatistics> applicationStats(String server, String app,
-      VirtualFileSystem vfs, String projectId) throws ParsingResponseException, CloudfoundryException,
-      VirtualFileSystemException, IOException
+   public Map<String, CloudfoundryApplicationStatistics> applicationStats(String server,
+                                                                          String app,
+                                                                          VirtualFileSystem vfs,
+                                                                          String projectId)
+      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
       if (app == null || app.isEmpty())
       {
@@ -982,19 +1284,19 @@ public class Cloudfoundry
    {
       Map cloudStats =
          JsonHelper.fromJson(getJson(credential.target + "/apps/" + app + "/stats", credential.token, 200), Map.class,
-            new HashMap<String, Stats>()
+            new HashMap<String, Stats>(0)
             {
             }.getClass().getGenericSuperclass());
+
       if (cloudStats != null && cloudStats.size() > 0)
       {
          Map<String, CloudfoundryApplicationStatistics> stats =
             new HashMap<String, CloudfoundryApplicationStatistics>(cloudStats.size());
-         for (Iterator<Map.Entry> iter = cloudStats.entrySet().iterator(); iter.hasNext();)
+         for (Map.Entry next : (Iterable<Map.Entry>)cloudStats.entrySet())
          {
-            Entry next = iter.next();
             Stats s = (Stats)next.getValue();
 
-            CloudfoundryApplicationStatistics appStats = new CloudfoundryApplicationStatistics();
+            CloudfoundryApplicationStatistics appStats = new CloudfoundryApplicationStatisticsImpl();
             appStats.setState(s.getState());
             if (s.getStats() != null)
             {
@@ -1022,15 +1324,21 @@ public class Cloudfoundry
 
    /**
     * Get list of applications of current user.
-    * 
-    * @param server location of Cloud Foundry instance to get applications, e.g. http://api.cloudfoundry.com. If not
-    *           specified then try determine server. If can't determine server from user context then use default server
-    *           location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    *
+    * @param server
+    *    location of Cloud Foundry instance to get applications, e.g. http://api.cloudfoundry.com. If not
+    *    specified then try determine server. If can't determine server from user context then use default server
+    *    location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @return list of applications
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    if any i/o errors occurs
     */
    public CloudFoundryApplication[] listApplications(String server) throws ParsingResponseException,
       CloudfoundryException, VirtualFileSystemException, IOException
@@ -1046,15 +1354,21 @@ public class Cloudfoundry
 
    /**
     * Get services available and already in use.
-    * 
-    * @param server location of Cloud Foundry instance to get services, e.g. http://api.cloudfoundry.com. If not
-    *           specified then try determine server. If can't determine server from user context then use default server
-    *           location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    *
+    * @param server
+    *    location of Cloud Foundry instance to get services, e.g. http://api.cloudfoundry.com. If not
+    *    specified then try determine server. If can't determine server from user context then use default server
+    *    location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @return info about available and used services
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    if any i/o errors occurs
     */
    public CloudfoundryServices services(String server) throws CloudfoundryException, ParsingResponseException,
       VirtualFileSystemException, IOException
@@ -1064,9 +1378,7 @@ public class Cloudfoundry
          server = authenticator.readTarget();
       }
       Credential credential = getCredential(server);
-      CloudfoundryServices services =
-         new CloudfoundryServices(systemServices(credential), provisionedServices(credential));
-      return services;
+      return new CloudfoundryServicesImpl(systemServices(credential), provisionedServices(credential));
    }
 
    private SystemService[] systemServices(Credential credential) throws IOException, ParsingResponseException,
@@ -1085,27 +1397,42 @@ public class Cloudfoundry
 
    /**
     * Create new service.
-    * 
-    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
-    *           not specified then try determine server. If can't determine server from application or user context then
-    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param service type of service to create. Should be one from system service, see {@link #services()}, e.g.
-    *           <i>mysql</i> or <i>mongodb</i>
-    * @param name name for new service (optional). If not specified that random name generated
-    * @param app application name (optional). If other then <code>null</code> than bind newly created service to
-    *           application
-    * @param vfs VirtualFileSystem (optional). If other then <code>null</code> than bind newly created service to
-    *           application. Name of application determined from IDE project (<code>projectId</code>) properties. 
-    * @param projectId IDE project identifier (optional)
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *    not specified then try determine server. If can't determine server from application or user context then
+    *    use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param service
+    *    type of service to create. Should be one from system service, see {@link #services(String)}, e.g.
+    *    <i>mysql</i> or <i>mongodb</i>
+    * @param name
+    *    name for new service (optional). If not specified that random name generated
+    * @param app
+    *    application name (optional). If other then <code>null</code> than bind newly created service to
+    *    application
+    * @param vfs
+    *    VirtualFileSystem (optional). If other then <code>null</code> than bind newly created service to
+    *    application. Name of application determined from IDE project (<code>projectId</code>) properties.
+    * @param projectId
+    *    IDE project identifier (optional)
     * @return info about newly created service
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    if any i/o errors occurs
     */
-   public ProvisionedService createService(String server, String service, String name, String app,
-      VirtualFileSystem vfs, String projectId) throws ParsingResponseException, CloudfoundryException,
-      VirtualFileSystemException, IOException
+   public ProvisionedService createService(String server,
+                                           String service,
+                                           String name,
+                                           String app,
+                                           VirtualFileSystem vfs,
+                                           String projectId)
+      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
       if (service == null || service.isEmpty())
       {
@@ -1133,7 +1460,9 @@ public class Cloudfoundry
       for (int i = 0; i < available.length && target == null; i++)
       {
          if (service.equals(available[i].getVendor()))
+         {
             target = available[i];
+         }
       }
       if (target == null)
       {
@@ -1144,7 +1473,7 @@ public class Cloudfoundry
       {
          byte[] b = new byte[3];
          new Random().nextBytes(b);
-         name = service + "-" + FilesHelper.toHex(b);
+         name = service + '-' + FilesHelper.toHex(b);
       }
 
       CreateService req = new CreateService(name, target.getType(), service, target.getVersion());
@@ -1163,15 +1492,22 @@ public class Cloudfoundry
 
    /**
     * Delete provisioned service.
-    * 
-    * @param server location of Cloud Foundry instance to delete service, e.g. http://api.cloudfoundry.com. If not
-    *           specified then try determine server. If can't determine server from user context then use default server
-    *           location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param name name of service to delete
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    *
+    * @param server
+    *    location of Cloud Foundry instance to delete service, e.g. http://api.cloudfoundry.com. If not
+    *    specified then try determine server. If can't determine server from user context then use default server
+    *    location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param name
+    *    name of service to delete
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    if any i/o errors occurs
     */
    public void deleteService(String server, String name) throws ParsingResponseException, CloudfoundryException,
       VirtualFileSystemException, IOException
@@ -1196,21 +1532,31 @@ public class Cloudfoundry
 
    /**
     * Bind provisioned service to application.
-    * 
-    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
-    *           not specified then try determine server. If can't determine server from application or user context then
-    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param name provisioned service name
-    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
-    *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined RuntimeException thrown
-    * @param vfs VirtualFileSystem
-    * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
-    *           this case <code>app</code> parameter must be not <code>null</code>
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *    not specified then try determine server. If can't determine server from application or user context then
+    *    use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param name
+    *    provisioned service name
+    * @param app
+    *    application name. If <code>null</code> then try to determine application name. To be able determine
+    *    application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
+    *    name not specified and cannot be determined RuntimeException thrown
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    IDE project identifier. May be <code>null</code> if command executed out of project directory in
+    *    this case <code>app</code> parameter must be not <code>null</code>
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    if any i/o errors occurs
     */
    public void bindService(String server, String name, String app, VirtualFileSystem vfs, String projectId)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
@@ -1252,27 +1598,39 @@ public class Cloudfoundry
       {
          putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
-            restartApplication(credential, app);
+         {
+            restartApplication(credential, app, appInfo.getMeta().getDebug());
+         }
       }
    }
 
    /**
     * Unbind provisioned service to application.
-    * 
-    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
-    *           not specified then try determine server. If can't determine server from application or user context then
-    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param name provisioned service name
-    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
-    *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined RuntimeException thrown
-    * @param vfs VirtualFileSystem
-    * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
-    *           this case <code>app</code> parameter must be not <code>null</code>
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *    not specified then try determine server. If can't determine server from application or user context then
+    *    use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param name
+    *    provisioned service name
+    * @param app
+    *    application name. If <code>null</code> then try to determine application name. To be able determine
+    *    application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
+    *    name not specified and cannot be determined RuntimeException thrown
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    IDE project identifier. May be <code>null</code> if command executed out of project directory in
+    *    this case <code>app</code> parameter must be not <code>null</code>
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    id any i/o errors occurs
     */
    public void unbindService(String server, String name, String app, VirtualFileSystem vfs, String projectId)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
@@ -1302,28 +1660,41 @@ public class Cloudfoundry
       {
          putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
-            restartApplication(credential, app);
+         {
+            restartApplication(credential, app, appInfo.getMeta().getDebug());
+         }
       }
    }
 
    /**
     * Add new environment variable. One key may have multiple values.
-    * 
-    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
-    *           not specified then try determine server. If can't determine server from application or user context then
-    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
-    *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined RuntimeException thrown
-    * @param vfs VirtualFileSystem
-    * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
-    *           this case <code>app</code> parameter must be not <code>null</code>
-    * @param key key
-    * @param val value
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *    not specified then try determine server. If can't determine server from application or user context then
+    *    use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param app
+    *    application name. If <code>null</code> then try to determine application name. To be able determine
+    *    application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
+    *    name not specified and cannot be determined RuntimeException thrown
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    IDE project identifier. May be <code>null</code> if command executed out of project directory in
+    *    this case <code>app</code> parameter must be not <code>null</code>
+    * @param key
+    *    key
+    * @param val
+    *    value
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    if any i/o errors occurs
     */
    public void environmentAdd(String server, String app, VirtualFileSystem vfs, String projectId, String key, String val)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
@@ -1365,27 +1736,39 @@ public class Cloudfoundry
       {
          putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
-            restartApplication(credential, app);
+         {
+            restartApplication(credential, app, appInfo.getMeta().getDebug());
+         }
       }
    }
 
    /**
     * Delete environment variable. <b>NOTE</b> If more then one values assigned to the key than remove first one only.
-    * 
-    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
-    *           not specified then try determine server. If can't determine server from application or user context then
-    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
-    *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined RuntimeException thrown
-    * @param vfs VirtualFileSystem
-    * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
-    *           this case <code>app</code> parameter must be not <code>null</code>
-    * @param key key
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    *
+    * @param server
+    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *    not specified then try determine server. If can't determine server from application or user context then
+    *    use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @param app
+    *    application name. If <code>null</code> then try to determine application name. To be able determine
+    *    application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
+    *    name not specified and cannot be determined RuntimeException thrown
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    IDE project identifier. May be <code>null</code> if command executed out of project directory in
+    *    this case <code>app</code> parameter must be not <code>null</code>
+    * @param key
+    *    key
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException id any i/o errors occurs
+    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
+    *    name is not provided and we try to determine it from IDE project properties
+    * @throws IOException
+    *    if any i/o errors occurs
     */
    public void environmentDelete(String server, String app, VirtualFileSystem vfs, String projectId, String key)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
@@ -1413,7 +1796,7 @@ public class Cloudfoundry
       List<String> env = appInfo.getEnv();
       if (env != null && env.size() > 0)
       {
-         for (Iterator<String> iter = env.iterator(); iter.hasNext() && !updated;)
+         for (Iterator<String> iter = env.iterator(); iter.hasNext() && !updated; )
          {
             String[] kv = iter.next().split("=");
             if (key.equals(kv[0].trim()))
@@ -1428,12 +1811,22 @@ public class Cloudfoundry
       {
          putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
-            restartApplication(credential, app);
+         {
+            restartApplication(credential, app, appInfo.getMeta().getDebug());
+         }
       }
    }
 
-   public void validateAction(String server, String action, String app, String frameworkName, String url,
-      int instances, int memory, boolean nostart, VirtualFileSystem vfs, String projectId)
+   public void validateAction(String server,
+                              String action,
+                              String app,
+                              String frameworkName,
+                              String url,
+                              int instances,
+                              int memory,
+                              boolean noStart,
+                              VirtualFileSystem vfs,
+                              String projectId)
       throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
    {
       if ("create".equals(action))
@@ -1456,8 +1849,8 @@ public class Cloudfoundry
          Credential credential = getCredential(server);
 
          SystemInfo systemInfo = systemInfo(credential);
-         SystemResources limits = (SystemResources)systemInfo.getLimits();
-         SystemResources usage = (SystemResources)systemInfo.getUsage();
+         SystemResources limits = systemInfo.getLimits();
+         SystemResources usage = systemInfo.getUsage();
 
          checkApplicationNumberLimit(limits, usage);
 
@@ -1465,17 +1858,25 @@ public class Cloudfoundry
 
          Framework cfg = null;
          if (frameworkName != null)
+         {
             cfg = getFramework(frameworkName);
+         }
 
          if (instances <= 0)
+         {
             instances = 1;
+         }
 
          if (memory <= 0 && cfg != null)
+         {
             memory = cfg.getMemory();
+         }
 
          // Check memory capacity.
-         if (!nostart)
+         if (!noStart)
+         {
             checkAvailableMemory(instances, memory, limits, usage);
+         }
       }
       else if ("update".equals(action))
       {
@@ -1498,20 +1899,24 @@ public class Cloudfoundry
    private void checkApplicationNumberLimit(SystemResources limits, SystemResources usage)
    {
       if (limits != null && usage != null && limits.getApps() == usage.getApps())
+      {
          throw new IllegalStateException("Not enough resources to create new application. "
             + "Max number of applications (" + limits.getApps() + ") reached. ");
+      }
    }
 
    private void checkAvailableMemory(int instances, int memory, SystemResources limits, SystemResources usage)
    {
       if (limits != null && usage != null //
          && (instances * memory) > (limits.getMemory() - usage.getMemory()))
+      {
          throw new IllegalStateException("Not enough resources to create new application. " //
             + "Available memory " + //
             (limits.getMemory() - usage.getMemory()) //
             + "M but " //
             + (instances * memory) //
             + "M required. ");
+      }
    }
 
    private void checkApplicationName(Credential credential, String app) throws IOException, ParsingResponseException,
@@ -1527,7 +1932,9 @@ public class Cloudfoundry
          // If application does not exists then expected code is 301.
          // NOTE this is not HTTP status but status of Cloudfoundry action.
          if (301 != e.getExitCode())
+         {
             throw e;
+         }
          // 301 - Good, application name is not used yet.
       }
    }
@@ -1543,7 +1950,9 @@ public class Cloudfoundry
          for (String t : FRAMEWORKS.keySet())
          {
             if (i > 0)
+            {
                msg.append(" or ");
+            }
             msg.append(t);
             i++;
          }
@@ -1559,7 +1968,9 @@ public class Cloudfoundry
       for (int i = 0; i < services.length; i++)
       {
          if (name.equals(services[i].getName()))
+         {
             return services[i];
+         }
       }
       throw new IllegalArgumentException("Service '" + name + "' not found. ");
    }
@@ -1679,7 +2090,8 @@ public class Cloudfoundry
    }
 
    private void uploadApplication(Credential credential, String app, VirtualFileSystem vfs, String projectId,
-      java.io.File warFile) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException,
+                                  java.io.File warFile)
+      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException,
       IOException
    {
       java.io.File zip = null;
@@ -1743,7 +2155,7 @@ public class Cloudfoundry
                   postJson(credential.target + "/resources", credential.token, JsonHelper.toJson(fingerprints), 200),
                   ApplicationFile[].class, null);
 
-            String uploadDirPath = uploadDir.getAbsolutePath() + "/";
+            String uploadDirPath = uploadDir.getAbsolutePath() + '/';
 
             for (int i = 0; i < resources.length; i++)
             {
@@ -1902,11 +2314,15 @@ public class Cloudfoundry
             finally
             {
                if (writer != null)
+               {
                   writer.close();
+               }
             }
          }
          if (http.getResponseCode() != success)
+         {
             throw fault(http);
+         }
 
          InputStream input = http.getInputStream();
          String result;
@@ -1923,7 +2339,9 @@ public class Cloudfoundry
       finally
       {
          if (http != null)
+         {
             http.disconnect();
+         }
       }
    }
 
@@ -1949,14 +2367,18 @@ public class Cloudfoundry
             byte[] b = new byte[1024];
             int r;
             while ((r = input.read(b)) != -1)
+            {
                foutput.write(b, 0, r);
+            }
          }
          finally
          {
             try
             {
                if (foutput != null)
+               {
                   foutput.close();
+               }
             }
             finally
             {
@@ -1967,7 +2389,9 @@ public class Cloudfoundry
       finally
       {
          if (conn != null && "http".equals(protocol) || "https".equals(protocol))
+         {
             ((HttpURLConnection)conn).disconnect();
+         }
       }
       return war;
    }
@@ -1992,7 +2416,9 @@ public class Cloudfoundry
          finally
          {
             if (in != null)
+            {
                in.close();
+            }
          }
          if (contentType.startsWith("application/json")) // May have '; charset=utf-8'
          {
@@ -2027,23 +2453,28 @@ public class Cloudfoundry
       if (contentLength > 0)
       {
          byte[] b = new byte[contentLength];
-         for (int point = -1, off = 0; (point = input.read(b, off, contentLength - off)) > 0; off += point) //
-         ;
+         int point, off = 0;
+         while ((point = input.read(b, off, contentLength - off)) > 0)
+         {
+            off += point;
+         }
          body = new String(b);
       }
       else if (contentLength < 0)
       {
          ByteArrayOutputStream bout = new ByteArrayOutputStream();
          byte[] buf = new byte[1024];
-         int point = -1;
+         int point;
          while ((point = input.read(buf)) != -1)
+         {
             bout.write(buf, 0, point);
+         }
          body = bout.toString();
       }
       return body;
    }
 
-   private static final String toUptimeString(double uptime)
+   private static String toUptimeString(double uptime)
    {
       int seconds = (int)uptime;
       int days = seconds / (60 * 60 * 24);
@@ -2052,36 +2483,36 @@ public class Cloudfoundry
       seconds -= hours * 60 * 60;
       int minutes = seconds / 60;
       seconds -= minutes * 60;
-      String s = days + "d:" + hours + "h:" + minutes + "m:" + seconds + "s";
-      return s;
+      return days + "d:" + hours + "h:" + minutes + "m:" + seconds + 's';
    }
 
    private static SystemService[] parseSystemServices(String json) throws ParsingResponseException
    {
+      //System.out.println("SYSTEM SERVICES" + json);
       try
       {
-         JsonValue jservices = org.exoplatform.ide.helper.JsonHelper.parseJson(json);
-         List<SystemService> result = new ArrayList<SystemService>(3);
-         for (Iterator<String> types = jservices.getKeys(); types.hasNext();)
+         JsonValue jsonServices = org.exoplatform.ide.helper.JsonHelper.parseJson(json);
+         List<SystemService> result = new ArrayList<SystemService>();
+         for (Iterator<String> types = jsonServices.getKeys(); types.hasNext(); )
          {
             String type = types.next();
-            for (Iterator<String> vendors = jservices.getElement(type).getKeys(); vendors.hasNext();)
+            for (Iterator<String> vendors = jsonServices.getElement(type).getKeys(); vendors.hasNext(); )
             {
                String vendor = vendors.next();
-               for (Iterator<String> versions = jservices.getElement(type).getElement(vendor).getKeys(); versions
-                  .hasNext();)
+               for (Iterator<String> versions = jsonServices.getElement(type).getElement(vendor).getKeys(); versions
+                  .hasNext(); )
                {
                   String version = versions.next();
-                  result.add(ObjectBuilder.createObject(SystemService.class,
-                     jservices.getElement(type).getElement(vendor).getElement(version)));
+                  result.add(ObjectBuilder.createObject(SystemServiceImpl.class,
+                     jsonServices.getElement(type).getElement(vendor).getElement(version)));
                }
             }
          }
          return result.toArray(new SystemService[result.size()]);
       }
-      catch (JsonException jsone)
+      catch (JsonException e)
       {
-         throw new ParsingResponseException(jsone.getMessage(), jsone);
+         throw new ParsingResponseException(e.getMessage(), e);
       }
    }
 }

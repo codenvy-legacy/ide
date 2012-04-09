@@ -35,7 +35,7 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: RemoteUpdateTest.java 70163 2011-06-03 13:37:45Z andrew00x $
  */
 public class RemoteUpdateTest extends BaseTest
 {

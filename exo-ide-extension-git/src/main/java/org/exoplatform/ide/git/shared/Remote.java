@@ -22,7 +22,7 @@ package org.exoplatform.ide.git.shared;
  * Info about remote configuration.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: Remote.java 67651 2011-03-25 16:15:36Z andrew00x $
  */
 public class Remote
 {

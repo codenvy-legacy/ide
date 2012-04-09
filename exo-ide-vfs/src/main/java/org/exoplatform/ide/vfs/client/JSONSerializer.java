@@ -39,7 +39,7 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: JSONSerializer.java 75889 2011-11-01 10:42:51Z anya $
  */
 public abstract class JSONSerializer<O>
 {

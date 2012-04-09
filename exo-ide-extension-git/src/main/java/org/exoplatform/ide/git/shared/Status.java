@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: Status.java 68135 2011-04-08 14:23:36Z andrew00x $
  */
 public class Status
 {

@@ -27,7 +27,7 @@ import javax.ws.rs.ext.Provider;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: PermissionDeniedExceptionMapper.java 74306 2011-09-29 13:55:18Z andrew00x $
  */
 @Provider
 public class PermissionDeniedExceptionMapper implements ExceptionMapper<PermissionDeniedException>

@@ -28,7 +28,7 @@ import java.util.Set;
  * Representation of abstract item used to interaction with client via JSON.
  *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: Item.java 79579 2012-02-17 13:27:25Z andrew00x $
  */
 public abstract class Item
 {

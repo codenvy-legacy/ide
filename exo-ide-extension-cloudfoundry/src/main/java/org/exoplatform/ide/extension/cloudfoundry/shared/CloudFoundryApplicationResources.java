@@ -19,7 +19,7 @@
 package org.exoplatform.ide.extension.cloudfoundry.shared;
 
 /**
- * Cloud Foundry application info.
+ * Cloud Foundry application resources info.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: CloudFoundryApplicationResources.java Mar 16, 2012 2:14:15 PM azatsarynnyy $
@@ -27,33 +27,31 @@ package org.exoplatform.ide.extension.cloudfoundry.shared;
  */
 public interface CloudFoundryApplicationResources
 {
-
    /**
     * Get amount of memory available for application (in MB).
     * 
     * @return amount of memory.
     */
-   public int getMemory();
+    int getMemory();
 
    /**
     * Set amount of memory available for application (in MB).
     * 
     * @param memory amount of memory.
     */
-   public void setMemory(int memory);
+    void setMemory(int memory);
 
    /**
     * Get amount disk space available for application (in MB).
     * 
     * @return amount of disk space.
     */
-   public int getDisk();
+    int getDisk();
 
    /**
     * Set amount disk space available for application (in MB).
     * 
     * @param disk amount of disk space.
     */
-   public void setDisk(int disk);
-
+    void setDisk(int disk);
 }

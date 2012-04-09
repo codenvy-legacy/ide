@@ -22,7 +22,7 @@ package org.exoplatform.ide.vfs.shared;
  * Object types.
  *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @version $Id: ItemType.java 79579 2012-02-17 13:27:25Z andrew00x $
  */
 public enum ItemType
 {
