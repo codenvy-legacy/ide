@@ -52,5 +52,39 @@ public interface IType extends IJavaElement
     * @return the fully qualified name of this type
     */
    String getFullyQualifiedName();
+
+   /**
+    * Returns the fully qualified name of this type,
+    * including qualification for any containing types and packages.
+    * This is the name of the package, followed by <code>'.'</code>,
+    * followed by the type-qualified name using the <code>enclosingTypeSeparator</code>.
+    *
+    * For example:
+    * <ul>
+    * <li>the fully qualified name of a class B defined as a member of a class A in a compilation unit A.java
+    *     in a package x.y using the '.' separator is "x.y.A.B"</li>
+    * <li>the fully qualified name of a class B defined as a member of a class A in a compilation unit A.java
+    *     in a package x.y using the '$' separator is "x.y.A$B"</li>
+    * <li>the fully qualified name of a binary type whose class file is x/y/A$B.class
+    *     using the '.' separator is "x.y.A.B"</li>
+    * <li>the fully qualified name of a binary type whose class file is x/y/A$B.class
+    *     using the '$' separator is "x.y.A$B"</li>
+    * <li>the fully qualified name of an anonymous binary type whose class file is x/y/A$1.class
+    *     using the '.' separator is "x.y.A.1"</li>
+    * </ul>
+    *
+    * This is a handle-only method.
+    *
+    * @param enclosingTypeSeparator the given enclosing type separator
+    * @return the fully qualified name of this type, including qualification for any containing types and packages
+    * @see IType#getTypeQualifiedName(char)
+    */
+   String getFullyQualifiedName(char c);
+
+   /**
+    * @param c
+    * @return
+    */
+   String getTypeQualifiedName(char c);
    
 }
