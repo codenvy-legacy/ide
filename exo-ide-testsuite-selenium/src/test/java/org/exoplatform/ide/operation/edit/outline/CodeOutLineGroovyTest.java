@@ -84,6 +84,10 @@ public class CodeOutLineGroovyTest extends CodeAssistantBaseTest
       // expand outline tree
       outlineTreeHelper.expandOutlineTree();
 
+      // TODO issue IDE-1499
+      IDE.GOTOLINE.goToLine(10);
+      IDE.GOTOLINE.goToLine(15);
+      
       // create outline tree map
       OulineTreeHelper.init();
       outlineTreeHelper.addOutlineItem("TestJSON", 6);

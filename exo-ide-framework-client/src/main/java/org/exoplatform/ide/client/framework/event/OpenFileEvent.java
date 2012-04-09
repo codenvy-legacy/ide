@@ -112,9 +112,9 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
    }
 
    @Override
-   protected void dispatch(OpenFileHandler hendler)
+   protected void dispatch(OpenFileHandler handler)
    {
-      hendler.onOpenFile(this);
+      handler.onOpenFile(this);
    }
 
    @Override

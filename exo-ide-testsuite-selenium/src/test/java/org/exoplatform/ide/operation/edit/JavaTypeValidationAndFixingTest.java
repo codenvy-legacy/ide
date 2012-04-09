@@ -20,6 +20,7 @@ package org.exoplatform.ide.operation.edit;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -48,6 +49,22 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
 
    private final static String PROJECT = JavaTypeValidationAndFixingTest.class.getSimpleName();
 
+   private final static String ERROR_10_SERVICE_FILE =
+      "ManyToOne' cannot be resolved to a type; 'Mandatory' cannot be resolved to a type; ";
+
+   private final static String ERROR_11_SERVICE_FILE = "'Property' cannot be resolved to a type; ";
+
+   private final static String ERROR_14_SERVICE_FILE = "'POST' cannot be resolved to a type; ";
+
+   private final static String ERROR_16_SERVICE_FILE =
+      "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ";
+
+   private final static String ERROR_17_SERVICE_FILE = "'Base64' cannot be resolved to a type; ";
+
+   private final static String ERROR_39_SERVICE_FILE = "'ChromatticSession' cannot be resolved to a type; ";
+
+   private final static String ERROR_41_SERVICE_FILE = "'ChromatticSession' cannot be resolved to a type; ";
+
    @BeforeClass
    public static void setUp()
    {
@@ -70,185 +87,160 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    @Test
    public void testServiceFile() throws Exception
    {
+      //step 1 open project and walidation error marks 
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SERVICE_FILE_NAME);
-
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + SERVICE_FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + SERVICE_FILE_NAME);
-
-      // test error marks
+      //wait last number of string
+      IDE.ERROR_MARKS.waitLineNumberAppearance(43);
+      // test  error marks after open test file
       firstTestErrorMarks();
 
-      // test error marks appearance after the hiding line numbers (IDE-764)
-      assertTrue(IDE.MENU.isCommandVisible(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS));
-      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS);
-      assertTrue(IDE.MENU.isCommandVisible(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS));
-      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS);
-
-      // test error marks
-      firstTestErrorMarks();
-
-      // fix error
-      selenium()
-         .clickAt(
-            getCodeErrorMarkLocator(
-               16,
-               "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; "),
-            "");
-      selenium().click(getErrorCorrectionListItemLocator("Base64"));
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-
-      // test import statement
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.PAGE_UP.toString() + Keys.HOME);
+      //step 2 click on mark in 16 string-position, fix error and check changes
+      IDE.ERROR_MARKS.clickOnErorMarker(16);
+      IDE.ERROR_MARKS.waitDeclarationFormOpen("Base64");
+      IDE.ERROR_MARKS.downMoveCursorInDeclForm(10);
+      IDE.ERROR_MARKS.waitFqnDeclarationIsAppear("-java.util.prefs");
+      IDE.ERROR_MARKS.selectAndInsertFqn("-java.util.prefs");
+      IDE.ERROR_MARKS.waitErrorMarkerIsDisAppear(16);
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" + "import Path\n" + "import javax.ws.rs.GET\n" + "import some.pack.String\n"
-            + "import javax.inject.Inject \n" + "import java.util.prefs.Base64\n" + "\n" + "@Path("));
+            + "import javax.inject.Inject\n" + "import java.util.prefs.Base64\n"));
+      testAfterFixFirstError();
 
-      // test code error marks
-      assertTrue(selenium().isElementPresent(
-         getCodeErrorMarkLocator(17,
-            "'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(18)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(37)));
-
+      //step 3 delete all code and  type new test-code. Tests error-markers
       // edit text
       IDE.EDITOR.deleteFileContent(0);
-
       // add test text
       IDE.EDITOR.typeTextIntoEditor(0, "Integer1 d \n" + "@POST \n"
          + "public Base64 hello(@PathParam(\"name\") Base64 name) {}");
+      IDE.ERROR_MARKS.waitErrorMarkerIsAppear(3);
+      testAfterClearAndTypeNewCode();
 
-      // test error marks
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(1, "'Integer1' cannot be resolved to a type; ")));
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(2, "'POST' cannot be resolved to a type; ")));
-      assertTrue(selenium()
-         .isElementPresent(
-            getCodeErrorMarkLocator(
-               3,
-               "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'Base64' cannot be resolved to a type; ")));
-
-      // fix error
-      selenium().clickAt(getCodeErrorMarkLocator(3), "");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium().clickAt(getErrorCorrectionListItemLocator("Base64"), "");
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      Thread.sleep(TestConstants.SLEEP * 2);
-
-      // test import statement and code error marks
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.PAGE_UP.toString() + Keys.HOME);
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(
-         "import java.util.prefs.Base64\n" + "Integer1 d \n" + "@POST \n"
-            + "public Base64 hello(@PathParam(\"name\") Base64 name) {}"));
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(2, "'Integer1' cannot be resolved to a type; ")));
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(3, "'POST' cannot be resolved to a type; ")));
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(4, "'PathParam' cannot be resolved to a type; ")));
-      // turn off line numbers
-   }
-
-   private void firstTestErrorMarks() throws InterruptedException
-   {
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(4)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(6)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(7)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(8)));
-
-      //timeout for parsing text
-      Thread.sleep(3000);
-      assertTrue(selenium().isElementPresent(
-         getCodeErrorMarkLocator(10,
-            "'ManyToOne' cannot be resolved to a type; 'Mandatory' cannot be resolved to a type; ")));
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(11, "'Property' cannot be resolved to a type; ")));
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(14, "'POST' cannot be resolved to a type; ")));
-
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(15)));
-
-      assertTrue(selenium()
-         .isElementPresent(
-            getCodeErrorMarkLocator(
-               16,
-               "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(17, "'Base64' cannot be resolved to a type; ")));
-
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(18)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(23)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(31)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(33)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(35)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(37)));
-      assertTrue(selenium().isElementPresent(
-         getCodeErrorMarkLocator(39, "'ChromatticSession' cannot be resolved to a type; ")));
-      assertTrue(selenium().isElementPresent(
-         getCodeErrorMarkLocator(41, "'ChromatticSession' cannot be resolved to a type; ")));
-   }
-
-   private void secondVerificationOfErrorMarks()
-   {
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(1, "'Integer1' cannot be resolved to a type; ")));
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(2, "'Integer1' cannot be resolved to a type; ")));
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(3, "'POST' cannot be resolved to a type; ")));
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(4, "'PathParam' cannot be resolved to a type; ")));
+      //step 4 fix third error and check states in code and
+      // marker-position
+      IDE.ERROR_MARKS.clickOnErorMarker(3);
+      IDE.ERROR_MARKS.waitDeclarationFormOpen("Base64");
+      IDE.ERROR_MARKS.downMoveCursorInDeclForm(10);
+      IDE.ERROR_MARKS.waitFqnDeclarationIsAppear("-java.util.prefs");
+      IDE.ERROR_MARKS.selectAndInsertFqn("-java.util.prefs");
+      testAfterFixFileWithNewCode();
+      
+      IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
    // IDE-499: "Recognize error "cannot resolve to a type" within the Groovy Template file in the Code Editor."
    @Test
    public void testTemplateFile() throws Exception
    {
-      // Open template file with test content
+      // step 1 Open template file with test content, wait as file is parse
+      //and check error marker positions of test-file
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEMPLATE_FILE_NAME);
-
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEMPLATE_FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEMPLATE_FILE_NAME);
+      IDE.ERROR_MARKS.waitErrorMarkerIsAppear(12);
 
-      // test error marks
-      Thread.sleep(3000);
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(6, "'Path' cannot be resolved to a type; ")));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(7)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(8)));
+      checkErrorMarkerAfterFirsOpeningInGtmpl();
 
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(9, "'POST' cannot be resolved to a type; ")));
+      //step 2 click on error-marker 11 fix error in code
+      // and check changes
+      IDE.ERROR_MARKS.clickOnErorMarker(11);
+      IDE.ERROR_MARKS.waitDeclarationFormOpen("Base64");
+      IDE.ERROR_MARKS.downMoveCursorInDeclForm(10);
 
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(10, "'Path' cannot be resolved to a type; ")));
+      IDE.ERROR_MARKS.waitFqnDeclarationIsAppear("-java.util.prefs");
+      IDE.ERROR_MARKS.selectAndInsertFqn("-java.util.prefs");
+      IDE.ERROR_MARKS.waitErrorMarkerIsDisAppear(11);
+      IDE.ERROR_MARKS.waitErrorMarkerIsAppear(14);
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith("<%\n" + "  import java.util.prefs.Base64\n" + "%>\n"));
+      assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(12));
+      assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(13));
+      assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(9));
+   }
 
-      assertTrue(selenium()
-         .isElementPresent(
-            getCodeErrorMarkLocator(
-               11,
-               "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(12, "'Base64' cannot be resolved to a type; ")));
+   //--------------------------------------------------------------
+   /**
+    * check error-markers after first opening
+    * test groovy template file 
+    */
+   private void checkErrorMarkerAfterFirsOpeningInGtmpl()
+   {
+      assertEquals(IDE.ERROR_MARKS.getTextFromErorMarker(6), "'Path' cannot be resolved to a type; ");
+      assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(7));
+      assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(8));
+      assertEquals(IDE.ERROR_MARKS.getTextFromErorMarker(10), "'Path' cannot be resolved to a type; ");
+      assertEquals(
+         IDE.ERROR_MARKS.getTextFromErorMarker(11),
+         "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ");
+      assertEquals(IDE.ERROR_MARKS.getTextFromErorMarker(12), "'Base64' cannot be resolved to a type; ");
+      assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(13));
+      assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(14));
+      assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(17));
+      assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(19));
+      assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(21));
+   }
 
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(13)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(14)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(17)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(19)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(21)));
+   /**
+    * chek states after fix error in marker #3
+    * @throws Exception
+    */
+   private void testAfterFixFileWithNewCode() throws Exception
+   {
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith("import java.util.prefs.Base64\n"));
+      assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(1));
+      assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(2));
+      assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(3));
+   }
 
-      // fix error
-      selenium()
-         .clickAt(
-            getCodeErrorMarkLocator(
-               11,
-               "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; "),
-            "");
-      IDE.EDITOR.waitTabPresent(1);
-      selenium().clickAt(getErrorCorrectionListItemLocator("Base64"), "");
-      IDE.EDITOR.waitTabPresent(1);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      Thread.sleep(TestConstants.SLEEP);
+   /**
+    * check erorrs in new code (after clear)
+    */
+   private void testAfterClearAndTypeNewCode()
+   {
+      assertEquals("'Integer1' cannot be resolved to a type; ", IDE.ERROR_MARKS.getTextFromErorMarker(1));
+      assertEquals("'POST' cannot be resolved to a type; ", IDE.ERROR_MARKS.getTextFromErorMarker(2));
+      assertEquals(
+         "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'Base64' cannot be resolved to a type; ",
+         IDE.ERROR_MARKS.getTextFromErorMarker(3));
+   }
 
-      // test import statement
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.PAGE_UP.toString() + Keys.HOME);
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(1).startsWith("<%\n" + "  import java.util.prefs.Base64\n" + "%>\n"));
+   /**
+    * check position error markers after 
+    * open of the test-file
+    * @throws InterruptedException
+    */
+   private void firstTestErrorMarks() throws InterruptedException
+   {
+      assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(4));
+      assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(6));
+      assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(7));
+      assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(8));
 
-      // test code error marks
-      assertTrue(selenium().isElementPresent(
-         getCodeErrorMarkLocator(14,
-            "'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(15)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(23)));
+      assertEquals(ERROR_11_SERVICE_FILE, IDE.ERROR_MARKS.getTextFromErorMarker(11));
+      assertEquals(ERROR_14_SERVICE_FILE, IDE.ERROR_MARKS.getTextFromErorMarker(14));
+      assertEquals(ERROR_16_SERVICE_FILE, IDE.ERROR_MARKS.getTextFromErorMarker(16));
+      assertEquals(ERROR_17_SERVICE_FILE, IDE.ERROR_MARKS.getTextFromErorMarker(17));
+      assertEquals(ERROR_39_SERVICE_FILE, IDE.ERROR_MARKS.getTextFromErorMarker(39));
+      assertEquals(ERROR_41_SERVICE_FILE, IDE.ERROR_MARKS.getTextFromErorMarker(41));
+   }
+
+   /**
+    * check position error marks after fix in 16 string 
+    * @throws InterruptedException
+    */
+   private void testAfterFixFirstError() throws InterruptedException
+   {
+      assertEquals("'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ",
+         IDE.ERROR_MARKS.getTextFromErorMarker(17));
+      assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(18));
+      assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(18));
+      assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(37));
+      assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(40));
+      assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(42));
    }
 
    @AfterClass
@@ -261,20 +253,5 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       catch (Exception e)
       {
       }
-   }
-
-   public String getCodeErrorMarkLocator(int lineNumber, String title)
-   {
-      return "//div[@class='CodeMirror-line-numbers']/div[text() = '" + lineNumber + "' and @title=\"" + title + "\"]";
-   }
-
-   public String getCodeErrorMarkLocator(int lineNumber)
-   {
-      return "//div[@class='CodeMirror-line-numbers']/div[text() = '" + lineNumber + "' and @title]";
-   }
-
-   private String getErrorCorrectionListItemLocator(String packageName)
-   {
-      return "//div[@class='gwt-Label' and contains(text(),'" + packageName + "')]";
    }
 }

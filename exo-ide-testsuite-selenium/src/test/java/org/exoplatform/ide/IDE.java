@@ -68,6 +68,7 @@ import org.exoplatform.ide.core.Upload;
 import org.exoplatform.ide.core.Versions;
 import org.exoplatform.ide.core.WarningDialog;
 import org.exoplatform.ide.core.WelcomePage;
+import org.exoplatform.ide.core.ErrorMarks;
 import org.exoplatform.ide.core.CkEditor;
 import org.exoplatform.ide.core.Workspace;
 import org.openqa.selenium.WebDriver;
@@ -197,6 +198,8 @@ public class IDE
    public CkEditor CK_EDITOR;
 
    public Build BUILD;
+   
+   public ErrorMarks ERROR_MARKS;
 
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
@@ -253,6 +256,7 @@ public class IDE
       UPLOAD = PageFactory.initElements(driver, Upload.class);
       WELCOME_PAGE = PageFactory.initElements(driver, WelcomePage.class);
       CK_EDITOR = PageFactory.initElements(driver, CkEditor.class);
+      ERROR_MARKS = PageFactory.initElements(driver, ErrorMarks.class);
    }
 
    public Selenium getSelenium()
