@@ -114,6 +114,15 @@ public class Cloudfoundry
       DEBUG_MODES = Collections.unmodifiableMap(dm);
    }
 
+   private static final Random gen = new Random();
+
+   private static String generateServiceName(String service)
+   {
+      byte[] b = new byte[3];
+      gen.nextBytes(b);
+      return service + '-' + FilesHelper.toHex(b);
+   }
+
    private final CloudfoundryAuthenticator authenticator;
 
    public Cloudfoundry(CloudfoundryAuthenticator authenticator)
@@ -1471,9 +1480,7 @@ public class Cloudfoundry
       // Generate service name if not specified.
       if (name == null || name.isEmpty())
       {
-         byte[] b = new byte[3];
-         new Random().nextBytes(b);
-         name = service + '-' + FilesHelper.toHex(b);
+         name = generateServiceName(service);
       }
 
       CreateService req = new CreateService(name, target.getType(), service, target.getVersion());
