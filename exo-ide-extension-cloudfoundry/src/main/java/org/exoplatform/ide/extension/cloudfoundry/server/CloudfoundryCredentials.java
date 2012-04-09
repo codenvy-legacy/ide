@@ -35,35 +35,35 @@ import java.util.Map;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-class CloudfoundryCredentials
+public final class CloudfoundryCredentials
 {
    private final Map<String, String> tokens = new HashMap<String, String>();
 
-   CloudfoundryCredentials()
+   public CloudfoundryCredentials()
    {
    }
 
-   Collection<String> getTargets()
+   public Collection<String> getTargets()
    {
       return Collections.unmodifiableSet(tokens.keySet());
    }
 
-   String getToken(String target)
+   public String getToken(String target)
    {
       return tokens.get(target);
    }
 
-   void addToken(String target, String token)
+   public void addToken(String target, String token)
    {
       tokens.put(target, token);
    }
 
-   boolean removeToken(String target)
+   public boolean removeToken(String target)
    {
       return tokens.remove(target) != null;
    }
 
-   void writeTo(Writer out) throws IOException
+   public void writeTo(Writer out) throws IOException
    {
       StringBuilder body = new StringBuilder();
       body.append('{'); //
@@ -85,7 +85,7 @@ class CloudfoundryCredentials
       out.write(body.toString());
    }
 
-   static CloudfoundryCredentials readFrom(Reader in) throws IOException
+   public static CloudfoundryCredentials readFrom(Reader in) throws IOException
    {
       JsonParser jsonParser = new JsonParser();
       try
