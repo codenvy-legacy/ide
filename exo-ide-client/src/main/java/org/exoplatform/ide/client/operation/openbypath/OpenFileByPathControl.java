@@ -59,6 +59,7 @@ public class OpenFileByPathControl extends SimpleControl implements IDEControl, 
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
+      setVisible(true);
       setImages(IDEImageBundle.INSTANCE.openFileByPath(), IDEImageBundle.INSTANCE.openFileByPathDisabled());
       setEvent(new OpenFileByPathEvent());
    }
