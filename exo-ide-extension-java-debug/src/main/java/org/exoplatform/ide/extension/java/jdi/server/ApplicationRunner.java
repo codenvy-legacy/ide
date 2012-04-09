@@ -18,10 +18,20 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
+import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
+import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
+
+import java.net.URL;
+
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ApplicationRunner
+public interface ApplicationRunner
 {
+   ApplicationInstance runApplication(URL war) throws DeployApplicationException;
+
+   DebugApplicationInstance debugApplication(URL war, boolean suspend) throws DeployApplicationException;
+
+   void stopApplication(String name) throws DeployApplicationException;
 }

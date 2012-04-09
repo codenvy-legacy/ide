@@ -24,6 +24,55 @@ import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class DebugApplicationInstanceImpl implements DebugApplicationInstance
+public class DebugApplicationInstanceImpl extends ApplicationInstanceImpl implements DebugApplicationInstance
 {
+   private String debugHost;
+   private int debugPort;
+
+   public DebugApplicationInstanceImpl(String name, String webURL, String stopURL, String debugHost, int debugPort)
+   {
+      super(name, webURL, stopURL);
+      this.debugHost = debugHost;
+      this.debugPort = debugPort;
+   }
+
+   public DebugApplicationInstanceImpl()
+   {
+   }
+
+   @Override
+   public String getDebugHost()
+   {
+      return debugHost;
+   }
+
+   @Override
+   public void setDebugHost(String debugHost)
+   {
+      this.debugHost = debugHost;
+   }
+
+   @Override
+   public int getDebugPort()
+   {
+      return debugPort;
+   }
+
+   @Override
+   public void setDebugPort(int debugPort)
+   {
+      this.debugPort = debugPort;
+   }
+
+   @Override
+   public String toString()
+   {
+      return "DebugApplicationInstanceImpl{" +
+         "name='" + getName() + '\'' +
+         ", webURL='" + getWebURL() + '\'' +
+         ", stopURL='" + getStopURL() + '\'' +
+         ", debugPort=" + debugPort +
+         ", debugHost='" + debugHost + '\'' +
+         '}';
+   }
 }

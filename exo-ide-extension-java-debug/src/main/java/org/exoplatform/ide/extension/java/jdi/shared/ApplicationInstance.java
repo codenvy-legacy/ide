@@ -24,6 +24,10 @@ package org.exoplatform.ide.extension.java.jdi.shared;
  */
 public interface ApplicationInstance
 {
+   String getName();
+
+   void setName(String name);
+
    String getWebURL();
 
    void setWebURL(String url);

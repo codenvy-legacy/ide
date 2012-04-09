@@ -26,4 +26,64 @@ import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
  */
 public class ApplicationInstanceImpl implements ApplicationInstance
 {
+   private String name;
+   private String webURL;
+   private String stopURL;
+
+   public ApplicationInstanceImpl(String name, String webURL, String stopURL)
+   {
+      this.name = name;
+      this.webURL = webURL;
+      this.stopURL = stopURL;
+   }
+
+   public ApplicationInstanceImpl()
+   {
+   }
+
+   @Override
+   public String getName()
+   {
+      return name;
+   }
+
+   @Override
+   public void setName(String name)
+   {
+      this.name = name;
+   }
+
+   @Override
+   public String getWebURL()
+   {
+      return webURL;
+   }
+
+   @Override
+   public void setWebURL(String webURL)
+   {
+      this.webURL = webURL;
+   }
+
+   @Override
+   public String getStopURL()
+   {
+      return stopURL;
+   }
+
+   @Override
+   public void setStopURL(String stopURL)
+   {
+      this.stopURL = stopURL;
+   }
+
+   @Override
+   public String toString()
+   {
+      return "ApplicationInstanceImpl{" +
+         "name='" + name + '\'' +
+         ", webURL='" + webURL + '\'' +
+         ", stopURL='" + stopURL + '\'' +
+         '}';
+   }
 }

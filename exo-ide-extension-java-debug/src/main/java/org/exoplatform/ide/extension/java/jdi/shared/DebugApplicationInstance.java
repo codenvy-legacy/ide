@@ -24,11 +24,11 @@ package org.exoplatform.ide.extension.java.jdi.shared;
  */
 public interface DebugApplicationInstance extends ApplicationInstance
 {
-   String getDebugURL();
+   String getDebugHost();
 
-   void setDebugURL(String url);
+   void setDebugHost(String debugHost);
 
    int getDebugPort();
 
-   void setDebugPort(int port);
+   void setDebugPort(int debugPort);
 }
