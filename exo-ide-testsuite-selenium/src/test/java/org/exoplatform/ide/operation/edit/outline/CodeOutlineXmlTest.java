@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -26,6 +26,7 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -36,6 +37,7 @@ import java.util.Map;
  * Created by The eXo Platform SAS.
  * @author <a href="dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @author <a href="mailto:njusha.exo@gmail.com">Nadia Zavalko</a>
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id:
  *
  */
@@ -45,6 +47,13 @@ public class CodeOutlineXmlTest extends BaseTest
    private final static String FILE_NAME = "XmlCodeOutline.xml";
 
    private final static String PROJECT = CodeOutlineXmlTest.class.getSimpleName();
+
+   private OulineTreeHelper outlineTreeHelper;
+
+   public CodeOutlineXmlTest()
+   {
+      this.outlineTreeHelper = new OulineTreeHelper();
+   }
 
    @BeforeClass
    public static void setUp()
@@ -98,26 +107,64 @@ public class CodeOutlineXmlTest extends BaseTest
 
    private void checkTreeCorrectlyCreated() throws Exception
    {
+      // expand outline tree
+      outlineTreeHelper.expandOutlineTree();
+
+      // TODO issue IDE-1499
+      IDE.GOTOLINE.goToLine(5);
+      IDE.GOTOLINE.goToLine(10);
+
       //check web-app and sub nodes
-      assertTrue(IDE.OUTLINE.isItemPresentById("web-app:TAG:2"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("display-name:TAG:3"));
+      IDE.OUTLINE.selectRow(1);
+      Assert.assertEquals(IDE.OUTLINE.getItemLabel(1), "web-app");
+      assertEquals("2 : 1", IDE.STATUSBAR.getCursorPosition());
+
+      IDE.OUTLINE.selectRow(2);
+      Assert.assertEquals(IDE.OUTLINE.getItemLabel(2), "display-name");
+      assertEquals("3 : 1", IDE.STATUSBAR.getCursorPosition());
 
       //check context-param and node and sub nodes
-      assertTrue(IDE.OUTLINE.isItemPresentById("context-param:TAG:7"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("param-name:TAG:8"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("param-value:TAG:12"));
+      IDE.OUTLINE.selectRow(3);
+      Assert.assertEquals(IDE.OUTLINE.getItemLabel(3), "context-param");
+      assertEquals("7 : 1", IDE.STATUSBAR.getCursorPosition());
+
+      IDE.OUTLINE.selectRow(4);
+      Assert.assertEquals(IDE.OUTLINE.getItemLabel(4), "param-name");
+      assertEquals("8 : 1", IDE.STATUSBAR.getCursorPosition());
+
+      IDE.OUTLINE.selectRow(5);
+      Assert.assertEquals(IDE.OUTLINE.getItemLabel(5), "param-value");
+      assertEquals("12 : 1", IDE.STATUSBAR.getCursorPosition());
 
       //check context-param and node and sub nodes
-      assertTrue(IDE.OUTLINE.isItemPresentById("context-param:TAG:19"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("param-name:TAG:20"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("param-value:TAG:21"));
+      IDE.OUTLINE.selectRow(6);
+      Assert.assertEquals(IDE.OUTLINE.getItemLabel(6), "context-param");
+      assertEquals("19 : 1", IDE.STATUSBAR.getCursorPosition());
+
+      IDE.OUTLINE.selectRow(7);
+      Assert.assertEquals(IDE.OUTLINE.getItemLabel(7), "param-name");
+      assertEquals("20 : 1", IDE.STATUSBAR.getCursorPosition());
+
+      IDE.OUTLINE.selectRow(8);
+      Assert.assertEquals(IDE.OUTLINE.getItemLabel(8), "param-value");
+      assertEquals("21 : 1", IDE.STATUSBAR.getCursorPosition());
 
       //check cdata tag
-      assertTrue(IDE.OUTLINE.isItemPresentById("CDATA:CDATA:24"));
+      IDE.OUTLINE.selectRow(9);
+      Assert.assertEquals(IDE.OUTLINE.getItemLabel(9), "CDATA");
+      assertEquals("24 : 1", IDE.STATUSBAR.getCursorPosition());
 
       //check filter tag and sub nodes
-      assertTrue(IDE.OUTLINE.isItemPresentById("filter:TAG:27"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("filter-name:TAG:28"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("filter-class:TAG:29"));
+      IDE.OUTLINE.selectRow(10);
+      Assert.assertEquals(IDE.OUTLINE.getItemLabel(10), "filter");
+      assertEquals("27 : 1", IDE.STATUSBAR.getCursorPosition());
+
+      IDE.OUTLINE.selectRow(11);
+      Assert.assertEquals(IDE.OUTLINE.getItemLabel(11), "filter-name");
+      assertEquals("28 : 1", IDE.STATUSBAR.getCursorPosition());
+
+      IDE.OUTLINE.selectRow(12);
+      Assert.assertEquals(IDE.OUTLINE.getItemLabel(12), "filter-class");
+      assertEquals("29 : 1", IDE.STATUSBAR.getCursorPosition());
    }
 }
