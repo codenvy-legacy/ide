@@ -26,7 +26,7 @@ import com.google.gwt.user.client.Window;
 import org.eclipse.jdt.client.codeassistant.ContentAssistHistory;
 import org.eclipse.jdt.client.codeassistant.QualifiedTypeNameHistory;
 import org.eclipse.jdt.client.core.JavaCore;
-import org.eclipse.jdt.client.core.formatter.FormatterProfileManager;
+import org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.client.outline.OutlinePresenter;
 import org.eclipse.jdt.client.templates.CodeTemplateContextType;
@@ -74,7 +74,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
 
    static String REST_CONTEXT;
 
-   private static final String JAVA_CODE_FORMATTER = "JavaCodeFormatter";
+   public static final String JAVA_CODE_FORMATTER = "JavaCodeFormatter";
 
    private static JdtExtension instance;
 
@@ -93,7 +93,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
 
    private static HashMap<String, String> options = new HashMap<String, String>();
 
-   private FormatterProfileManager formatterProfileManager;
+   private FormatterProfilePresenter formatterProfileManager;
 
    static
    {
@@ -118,9 +118,10 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       new TypeInfoUpdater();
       new CleanProjectCommandHandler();
       IDE.getInstance().addControl(new CleanProjectControl());
+      IDE.getInstance().addControl(new FormatterProfilesControl());
       IDE.fireEvent(new AddCodeFormatterEvent(new JavaCodeFormatter(), MimeType.APPLICATION_JAVA));
       Window.addCloseHandler(this);
-      formatterProfileManager = new FormatterProfileManager(IDE.eventBus());
+      formatterProfileManager = new FormatterProfilePresenter(IDE.eventBus());
    }
 
    /**

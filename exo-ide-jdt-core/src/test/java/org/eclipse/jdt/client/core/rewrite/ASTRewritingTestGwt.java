@@ -10,22 +10,30 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.rewrite;
 
-import java.util.HashMap;
-import java.util.List;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
-import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.core.BaseTestGwt;
 import org.eclipse.jdt.client.core.JavaCore;
-import org.eclipse.jdt.client.core.dom.*;
+import org.eclipse.jdt.client.core.dom.AST;
+import org.eclipse.jdt.client.core.dom.ASTParser;
+import org.eclipse.jdt.client.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.client.core.dom.BodyDeclaration;
+import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.core.dom.FieldDeclaration;
+import org.eclipse.jdt.client.core.dom.MethodDeclaration;
+import org.eclipse.jdt.client.core.dom.Modifier;
+import org.eclipse.jdt.client.core.dom.PrimitiveType;
+import org.eclipse.jdt.client.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.client.core.dom.Type;
+import org.eclipse.jdt.client.core.dom.TypeDeclaration;
+import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterOptions;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 import org.exoplatform.ide.editor.text.Document;
 import org.exoplatform.ide.editor.text.edits.TextEdit;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
   */
