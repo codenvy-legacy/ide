@@ -1,0 +1,62 @@
+.cellTreeWidget {
+    font-family: Verdana,Bitstream Vera Sans,sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: normal;
+    white-space: nowrap;
+    line-height: 16px;
+}
+
+.cellTreeEmptyMessage {
+	padding-left: 16px;
+	font-style: italic;
+}
+
+.cellTreeItem {
+	height: 22px !important;
+	padding-top:2px !important;	
+	padding-bottom:2px !important;
+}
+
+.cellTreeItemImage {
+}
+
+.cellTreeItemImageValue {
+}
+
+.cellTreeItemValue {
+}
+
+/*
+div:focus { outline: none; }
+*/
+.cellTreeKeyboardSelectedItem { /*  background-color: #ffff00; */
+	
+}
+
+.cellTreeOpenItem {
+	
+}
+
+.cellTreeTopItem {
+	
+}
+
+.cellTreeTopItemImage {
+	
+}
+
+.cellTreeTopItemImageValue {
+	
+}
+
+.cellTreeSelectedItem {
+	background-color: #d6e9ff !important;
+	background-image: none;
+}
+
+.cellTreeShowMoreButton {
+	padding-left: 16px;
+	padding-top: 5px;
+	outline: none;
+}
