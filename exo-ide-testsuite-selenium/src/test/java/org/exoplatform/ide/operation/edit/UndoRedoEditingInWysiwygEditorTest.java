@@ -22,12 +22,21 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import com.google.gwt.user.client.Command;
+
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
+
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -39,11 +48,75 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
 {
 
    //IDE-122 Undo/Redo Editing in WYSIWYG editor 
-   //@Ignore
+
+   private final static String PROJECT = UndoRedoEditingInWysiwygEditorTest.class.getSimpleName();
+
+   private final static String HTML_FILE = "EditFileInWysiwygEditor.html";
+
+   private final static String GOOGLE_GADGET = "GoogleGadget.xml";
+
+   @BeforeClass
+   public static void setUp()
+   {
+      String htmlPath = "src/test/resources/org/exoplatform/ide/operation/edit/" + HTML_FILE;
+      String gadgetPath = "src/test/resources/org/exoplatform/ide/miscellaneous/" + GOOGLE_GADGET;
+
+      try
+      {
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         Link link = project.get(Link.REL_CREATE_FILE);
+         VirtualFileSystemUtils.createFileFromLocal(link, HTML_FILE, MimeType.TEXT_HTML, htmlPath);
+         VirtualFileSystemUtils.createFileFromLocal(link, GOOGLE_GADGET, MimeType.GOOGLE_GADGET, gadgetPath);
+      }
+      catch (Exception e)
+      {
+      }
+   }
+
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      }
+      catch (Exception e)
+      {
+      }
+   }
+
    @Test
    public void undoRedoEditingInWysiwydEditor() throws Exception
    {
-      final String htmlFile = "testHtmlFile.html";
+
+      //step 1 open project and walidation error marks 
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_FILE);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE);
+
+      IDE.EDITOR.clickDesignButton();
+
+      IDE.CK_EDITOR.typeTextIntoCkEditor(0, "1");
+      IDE.CK_EDITOR.typeTextIntoCkEditor(0, Keys.ENTER.toString());
+      IDE.CK_EDITOR.typeTextIntoCkEditor(0, "2");
+      IDE.CK_EDITOR.typeTextIntoCkEditor(0, Keys.ENTER.toString());
+      IDE.CK_EDITOR.typeTextIntoCkEditor(0, "3");
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(0), "1\n" + "2\n" + "3");
+      Thread.sleep(3000);
+      
+      
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.UNDO);
+
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(0), "1\n" + "2");
+
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.UNDO);
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(0), "1");
+
+      Thread.sleep(10000);
+
+      /* final String htmlFile = "testHtmlFile.html";
 
       final String googleGadgetFile = "testGadgetFile.xml";
 
@@ -71,7 +144,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //open with WYSIWYG editor and make default
       IDE.WORKSPACE.doubleClickOnFile(URL + htmlFile);
       IDE.EDITOR.clickDesignButton();
-    assertTrue(IDE.CK_EDITOR.isCkEditorOpened(0));
+      assertTrue(IDE.CK_EDITOR.isCkEditorOpened(0));
 
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.UNDO, true);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.REDO, true);
@@ -317,7 +390,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       IDE.NAVIGATION.deleteSelectedItems();
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + googleGadgetFile, false);
-      
+
       saveCurrentFile();
       IDE.EDITOR.closeFile(0);
 
@@ -327,7 +400,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
 
       IDE.WORKSPACE.selectItem(URL + googleGadgetFile);
-      IDE.NAVIGATION.deleteSelectedItems();
+      IDE.NAVIGATION.deleteSelectedItems();*/
 
    }
 
@@ -339,11 +412,13 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       String divIndex = "0";
 
       //check Code Editor is not present in tab 0
-      assertFalse(selenium().isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-         + "//div[@class='CodeMirror-wrapping']/iframe"));
+      assertFalse(selenium().isElementPresent(
+         "//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
+            + "//div[@class='CodeMirror-wrapping']/iframe"));
       //check CK editor is not present in tab 0
-      assertFalse(selenium().isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-         + "//div[@class='CodeMirror-wrapping']/iframe"));
+      assertFalse(selenium().isElementPresent(
+         "//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
+            + "//div[@class='CodeMirror-wrapping']/iframe"));
    }
 
 }
