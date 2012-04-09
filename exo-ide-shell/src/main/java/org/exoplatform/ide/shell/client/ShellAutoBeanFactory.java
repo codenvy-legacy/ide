@@ -21,6 +21,7 @@ package org.exoplatform.ide.shell.client;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
+import org.exoplatform.ide.shell.client.maven.BuildStatus;
 import org.exoplatform.ide.shell.shared.Login;
 import org.exoplatform.ide.shell.shared.ShellConfiguration;
 
@@ -46,4 +47,11 @@ public interface ShellAutoBeanFactory extends AutoBeanFactory
     * @return an {@link AutoBean} of type {@link ShellConfiguration}
     */
    AutoBean<ShellConfiguration> shellConfiguration();
+   
+   /**
+    * A factory method for a status bean.
+    * 
+    * @return an {@link AutoBean} of type {@link BuildStatus}
+    */
+   AutoBean<BuildStatus> buildStatus();
 }
