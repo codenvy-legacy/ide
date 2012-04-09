@@ -18,14 +18,6 @@
  */
 package org.exoplatform.ide.client.operation.openbypath;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.framework.event.OpenFileEvent;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -36,6 +28,26 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.navigation.event.GoToFolderEvent;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
 
 /**
  * Created by The eXo Platform SAS.
@@ -43,7 +55,8 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */
-public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPathHandler
+public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPathHandler,
+   EditorActiveFileChangedHandler
 {
 
    public interface Display extends IsView
@@ -66,6 +79,16 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
    }
 
    private Display display;
+
+   /**
+    * Active file, opened in tab.
+    */
+   private FileModel activeFile;
+
+   /**
+    * Is need go to folder on active file changed (when file opened in new tab by {@link OpenFileByPathControl}).
+    */
+   private boolean isNeedGoToFolderOnActiveFileChanged = false;
 
    public OpenFileByPathPresenter()
    {
@@ -147,8 +170,94 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
          return;
       }
 
-      IDE.fireEvent(new OpenFileEvent(filePath));
+      filePath = retrieveRelativeFilePath(filePath);
+      final String fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
+
+      try
+      {
+         VirtualFileSystem.getInstance().getItemByPath(filePath,
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(new FileModel())))
+            {
+
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  doOpenFile(result.getItem());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String message = IDE.IDE_LOCALIZATION_MESSAGES.openFileByPathErrorMessage(fileName);
+                  Dialogs.getInstance().showError(message);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+
       IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * Retrieves relative path to the file from absolute path.
+    * 
+    * @param absoluteFilePath link to the file
+    * @return relative path to the file
+    */
+   private String retrieveRelativeFilePath(String absoluteFilePath)
+   {
+      String vfsURL = VirtualFileSystem.getInstance().getURL();
+
+      if (!absoluteFilePath.startsWith(vfsURL))
+      {
+         return absoluteFilePath;
+      }
+
+      int index = absoluteFilePath.indexOf('/', vfsURL.length() + 1);
+
+      return absoluteFilePath.substring(index + 1);
+   }
+
+   /**
+    * Open file and/or go to parent folder.
+    * 
+    * @param item file which must be opened
+    */
+   private void doOpenFile(Item item)
+   {
+      if (item.getItemType() == ItemType.FILE)
+      {
+         // if tab with file content is active
+         if (activeFile != null && activeFile.getId().equals(item.getId()))
+         {
+            IDE.fireEvent(new GoToFolderEvent());
+            return;
+         }
+
+         isNeedGoToFolderOnActiveFileChanged = true;
+
+         IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+         IDE.fireEvent(new OpenFileEvent((FileModel)item));
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      this.activeFile = event.getFile();
+
+      // if file opened by OpenFileByPathControl
+      if (isNeedGoToFolderOnActiveFileChanged)
+      {
+         IDE.fireEvent(new GoToFolderEvent());
+         isNeedGoToFolderOnActiveFileChanged = false;
+      }
    }
 
    /**
