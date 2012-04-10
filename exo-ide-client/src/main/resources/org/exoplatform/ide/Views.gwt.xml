@@ -207,6 +207,10 @@
       <when-type-is class="org.exoplatform.ide.client.project.list.ShowProjectsPresenter.Display" />
    </replace-with>
 
+   <replace-with class="org.exoplatform.ide.client.project.resource.OpenResourceView">
+      <when-type-is class="org.exoplatform.ide.client.project.resource.OpenResourcePresenter.Display" />
+   </replace-with>
+
    <replace-with class="org.exoplatform.ide.client.project.properties.ProjectPropertiesView">
       <when-type-is class="org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter.Display" />
    </replace-with>

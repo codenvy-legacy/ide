@@ -17,20 +17,17 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.client.edit.switching;
+package org.exoplatform.ide.client.project.resource;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
-import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.hotkeys.HotKeyManager;
 
 /**
  * 
@@ -40,49 +37,44 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
  * @version $
  */
 
-public class GoNextFileControl extends SimpleControl implements IDEControl, EditorFileOpenedHandler, EditorFileClosedHandler, ProjectOpenedHandler, ProjectClosedHandler
+public class OpenResourceControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler
 {
    
-   public static final String ID = "View/Switch to next file";
+   //public static final String ID = "Navigate/Open Resource...";
+   public static final String ID = "Project/Open Resource...";
 
-   public static final String TITLE = "Switch to next file";
+   private static final String TITLE = "Open Resource...";
 
-   public GoNextFileControl()
-   {
+   private static final String PROMPT = "Open Resource...";
+   
+   public OpenResourceControl() {
       super(ID);
       setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.next(), IDEImageBundle.INSTANCE.nextDisabled());
-      setEvent(new GoNextFileEvent());
+      setPrompt(PROMPT);
+      setImages(IDEImageBundle.INSTANCE.openResource(), IDEImageBundle.INSTANCE.openResourceDisabled());
+      setEvent(new OpenResourceEvent());
+      setHotKey("Ctrl+Shift+R");
    }
 
    @Override
    public void initialize()
    {
-      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
-      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
-   }
-
-   @Override
-   public void onEditorFileOpened(EditorFileOpenedEvent event)
-   {
-   }
-
-   @Override
-   public void onEditorFileClosed(EditorFileClosedEvent event)
-   {
+      
+      setVisible(true);
    }
 
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
    {
+      setEnabled(false);
    }
 
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
+      setEnabled(true);
    }
 
 }

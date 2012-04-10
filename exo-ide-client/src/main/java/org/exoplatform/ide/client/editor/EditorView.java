@@ -182,14 +182,12 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
    private void showEditor(final EditorType editorType)
    {
-
       editorArea.setWidgetVisible(editorArea.getWidget(editorType.getPosition()), true);
       restoreEditorHeight(editorType);
 
       editors.get(editorType).setFocus();
       new Timer()
       {
-
          @Override
          public void run()
          {
@@ -450,7 +448,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
          {
             currentEditor.setFocus();
          }
-      }.schedule(1000);
+      }.schedule(100);
    }
 
 }

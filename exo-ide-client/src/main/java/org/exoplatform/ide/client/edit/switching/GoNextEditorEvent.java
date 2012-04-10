@@ -19,7 +19,7 @@
 
 package org.exoplatform.ide.client.edit.switching;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * 
@@ -29,9 +29,21 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface GoPreviousFileHandler extends EventHandler
+public class GoNextEditorEvent extends GwtEvent<GoNextEditorHandler>
 {
-   
-   void onGoPreviousFile(GoPreviousFileEvent event);
+
+   public static final GwtEvent.Type<GoNextEditorHandler> TYPE = new GwtEvent.Type<GoNextEditorHandler>();
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<GoNextEditorHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(GoNextEditorHandler handler)
+   {
+      handler.onGoNextEditor(this);
+   }
 
 }

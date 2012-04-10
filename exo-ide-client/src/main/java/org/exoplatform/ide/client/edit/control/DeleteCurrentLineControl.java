@@ -48,6 +48,7 @@ public class DeleteCurrentLineControl extends SimpleControl implements IDEContro
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.deleteCurrentLine(), IDEImageBundle.INSTANCE.deleteCurrentLineDisabled());
       setEvent(new EditorDeleteCurrentLineEvent());
+      setHotKey("Ctrl+D");
    }
 
    /**
