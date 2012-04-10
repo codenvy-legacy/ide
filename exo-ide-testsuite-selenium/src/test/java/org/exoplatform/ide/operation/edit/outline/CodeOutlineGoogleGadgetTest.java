@@ -18,6 +18,7 @@
 package org.exoplatform.ide.operation.edit.outline;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -79,44 +80,83 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
 
    private void checkTreeCorrectlyCreated() throws Exception
    {
-      //check module tag and subnode
-      assertTrue(IDE.OUTLINE.isItemPresentById("Module:TAG:2"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("ModulePrefs:TAG:3"));
+      //check first node after open
+      assertEquals("Module", IDE.OUTLINE.getItemLabel(1));
+      //expand first node and check
 
-      assertTrue(IDE.OUTLINE.isItemPresentById("Content:TAG:4"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("CDATA:CDATA:5"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("html:TAG:6"));
+      IDE.OUTLINE.expandSelectItem(1);
 
-      //check head tag and subnodes
-      assertTrue(IDE.OUTLINE.isItemPresentById("head:TAG:7"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("meta:TAG:8"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("link:TAG:9"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("title:TAG:10"));
+      assertEquals("ModulePrefs", IDE.OUTLINE.getItemLabel(2));
+      assertEquals("Content", IDE.OUTLINE.getItemLabel(3));
+      //expand third node and check 
+      IDE.OUTLINE.selectRow(3);
+      IDE.OUTLINE.expandSelectItem(3);
+      assertEquals("CDATA", IDE.OUTLINE.getItemLabel(4));
 
-      //check script tag and subnodes
-      assertTrue(IDE.OUTLINE.isItemPresentById("script:TAG:11"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("a:VARIABLE:12"));
+      //expand 4 node and check 
+      IDE.OUTLINE.selectRow(4);
+      IDE.OUTLINE.expandSelectItem(4);
+      assertEquals("html", IDE.OUTLINE.getItemLabel(5));
 
-      assertTrue(IDE.OUTLINE.isItemPresentById("style:TAG:14"));
+      //expand 5 node and check
+      IDE.OUTLINE.selectRow(5);
+      IDE.OUTLINE.expandSelectItem(5);
+      assertEquals("head", IDE.OUTLINE.getItemLabel(6));
+      assertEquals("body", IDE.OUTLINE.getItemLabel(7));
 
-      //check body tag and subnodes
-      assertTrue(IDE.OUTLINE.isItemPresentById("body:TAG:20"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("table:TAG:21"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("thead:TAG:22"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("tr:TAG:23"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:23"));
+      //expand 5 node and check
+      IDE.OUTLINE.selectRow(6);
+      IDE.OUTLINE.expandSelectItem(6);
+      assertEquals("meta", IDE.OUTLINE.getItemLabel(7));
+      assertEquals("link", IDE.OUTLINE.getItemLabel(8));
+      assertEquals("title", IDE.OUTLINE.getItemLabel(9));
+      assertEquals("script", IDE.OUTLINE.getItemLabel(10));
+      assertEquals("style", IDE.OUTLINE.getItemLabel(11));
+      assertEquals("body", IDE.OUTLINE.getItemLabel(12));
 
-      //check tbody tag and subnodes
-      assertTrue(IDE.OUTLINE.isItemPresentById("tbody:TAG:25"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("tr:TAG:26"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:27"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:28"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:29"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("br:TAG:32"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("br:TAG:33"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("style:TAG:34"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("script:TAG:40"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("b:VARIABLE:41"));
+      //expand 10 (script) node and check
+      IDE.OUTLINE.selectRow(10);
+      IDE.OUTLINE.expandSelectItem(10);
+      assertEquals("a", IDE.OUTLINE.getItemLabel(11));
+
+      //expand 13 (body) node and check
+      IDE.OUTLINE.selectRow(13);
+      IDE.OUTLINE.expandSelectItem(13);
+      assertEquals("table", IDE.OUTLINE.getItemLabel(14));
+      assertEquals("br", IDE.OUTLINE.getItemLabel(15));
+      assertEquals("br", IDE.OUTLINE.getItemLabel(16));
+      assertEquals("style", IDE.OUTLINE.getItemLabel(17));
+      assertEquals("script", IDE.OUTLINE.getItemLabel(18));
+
+      //go to line and check item in Outline tree
+      IDE.GOTOLINE.goToLine(41);
+      assertEquals("b", IDE.OUTLINE.getItemLabel(19));
+
+      //go to line and check item in Outline tree
+      IDE.GOTOLINE.goToLine(41);
+      assertEquals("b", IDE.OUTLINE.getItemLabel(19));
+
+      IDE.OUTLINE.selectRow(14);
+      IDE.OUTLINE.expandSelectItem(14);
+      assertEquals("thead", IDE.OUTLINE.getItemLabel(15));
+      assertEquals("tbody", IDE.OUTLINE.getItemLabel(16));
+
+      IDE.OUTLINE.selectRow(15);
+      assertEquals("22 : 1", IDE.STATUSBAR.getCursorPosition());
+
+      IDE.OUTLINE.selectRow(16);
+      assertEquals("25 : 1", IDE.STATUSBAR.getCursorPosition());
+
+      IDE.GOTOLINE.goToLine(23);
+      assertEquals("tr", IDE.OUTLINE.getItemLabel(16));
+      assertEquals("td", IDE.OUTLINE.getItemLabel(17));
+
+      IDE.GOTOLINE.goToLine(27);
+      assertEquals("tr", IDE.OUTLINE.getItemLabel(19));
+      assertEquals("td", IDE.OUTLINE.getItemLabel(20));
+      assertEquals("td", IDE.OUTLINE.getItemLabel(21));
+      assertEquals("td", IDE.OUTLINE.getItemLabel(22));
+
    }
 
    @AfterClass
