@@ -175,6 +175,7 @@ public class Debugger implements EventsHandler
     */
    public void disconnect() throws DebuggerException
    {
+      resume();
       vm.dispose();
       LOG.debug("Close connection to {}:{}", host, port);
    }
