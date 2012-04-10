@@ -33,7 +33,6 @@ import org.eclipse.jdt.client.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.client.env.BinaryTypeImpl;
 import org.eclipse.jdt.client.internal.codeassist.ISearchRequestor;
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod;
-import org.eclipse.jdt.client.internal.compiler.env.IBinaryType;
 import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.client.internal.compiler.env.NameEnvironmentAnswer;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
@@ -53,9 +52,7 @@ import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Implementation of {@link INameEnvironment} interface, use JavaCodeAssistantService for receiving data and SessionStorage for

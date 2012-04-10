@@ -27,7 +27,10 @@ import org.eclipse.jdt.client.codeassistant.ContentAssistHistory;
 import org.eclipse.jdt.client.codeassistant.QualifiedTypeNameHistory;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter;
+import org.eclipse.jdt.client.internal.codeassist.impl.AssistOptions;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsControl;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsPresenter;
 import org.eclipse.jdt.client.outline.OutlinePresenter;
 import org.eclipse.jdt.client.templates.CodeTemplateContextType;
 import org.eclipse.jdt.client.templates.ContextTypeRegistry;
@@ -48,6 +51,7 @@ import org.eclipse.jdt.client.templates.VarResolver;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.AddCodeFormatterEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -101,6 +105,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       options.put(JavaCore.CORE_ENCODING, "UTF-8");
       options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
       options.put(CompilerOptions.OPTION_TargetPlatform, JavaCore.VERSION_1_6);
+      options.put(AssistOptions.OPTION_PerformVisibilityCheck, AssistOptions.ENABLED);
    }
 
    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
@@ -117,8 +122,10 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       new OutlinePresenter();
       new TypeInfoUpdater();
       new CleanProjectCommandHandler();
+      new OrganizeImportsPresenter(IDE.eventBus());
       IDE.getInstance().addControl(new CleanProjectControl());
       IDE.getInstance().addControl(new FormatterProfilesControl());
+      IDE.getInstance().addControl(new OrganizeImportsControl(),Docking.TOOLBAR);
       IDE.fireEvent(new AddCodeFormatterEvent(new JavaCodeFormatter(), MimeType.APPLICATION_JAVA));
       Window.addCloseHandler(this);
       formatterProfileManager = new FormatterProfilePresenter(IDE.eventBus());
