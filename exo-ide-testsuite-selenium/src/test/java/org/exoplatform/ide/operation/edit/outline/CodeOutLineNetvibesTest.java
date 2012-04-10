@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -28,7 +25,6 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Outline.TokenType;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -51,11 +47,11 @@ public class CodeOutLineNetvibesTest extends BaseTest
 
    private final static String FOLDER_NAME = CodeOutLineNetvibesTest.class.getSimpleName() + "-dir";
 
-   private OulineTreeHelper outlineTreeHelper;
+   private OutlineTreeHelper outlineTreeHelper;
 
    public CodeOutLineNetvibesTest()
    {
-      this.outlineTreeHelper = new OulineTreeHelper();
+      this.outlineTreeHelper = new OutlineTreeHelper();
    }
 
    @Before
@@ -122,8 +118,8 @@ public class CodeOutLineNetvibesTest extends BaseTest
    private void checkTreeCorrectlyCreated() throws Exception
    {
       // create initial outline tree map
-      OulineTreeHelper.init();
-      
+      OutlineTreeHelper.init();
+
       // check is tree created correctly      
       outlineTreeHelper.checkOutlineTree();
 
@@ -150,7 +146,7 @@ public class CodeOutLineNetvibesTest extends BaseTest
       outlineTreeHelper.addOutlineItem("link", 17, TokenType.TAG);
       outlineTreeHelper.addOutlineItem("widget:preferences", 20, TokenType.TAG);
       outlineTreeHelper.addOutlineItem("style", 22, TokenType.TAG);
-      
+
       // check script tag and sub-nodes script
       outlineTreeHelper.addOutlineItem("script", 26, TokenType.TAG);
       outlineTreeHelper.addOutlineItem("YourWidgetName : Object", 31, TokenType.VARIABLE);
@@ -160,7 +156,7 @@ public class CodeOutLineNetvibesTest extends BaseTest
       // check body tag and subnodes body
       outlineTreeHelper.addOutlineItem("body", 50, TokenType.TAG);
       outlineTreeHelper.addOutlineItem("p", 51, TokenType.TAG);
-      
+
       outlineTreeHelper.checkOutlineTree();
    }
 

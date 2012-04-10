@@ -41,11 +41,11 @@ public class CodeOutLineRESTServiceTest extends CodeAssistantBaseTest
 
    private final static String FILE_NAME = "RESTCodeOutline.groovy";
 
-   private OulineTreeHelper outlineTreeHelper;
+   private OutlineTreeHelper outlineTreeHelper;
 
    public CodeOutLineRESTServiceTest()
    {
-      this.outlineTreeHelper = new OulineTreeHelper();
+      this.outlineTreeHelper = new OutlineTreeHelper();
    }
 
    @BeforeClass

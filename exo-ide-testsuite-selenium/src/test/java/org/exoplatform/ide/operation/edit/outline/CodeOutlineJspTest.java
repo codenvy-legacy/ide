@@ -42,11 +42,11 @@ public class CodeOutlineJspTest extends BaseTest
 
    private final static String PROJECT = CodeOutlineJspTest.class.getSimpleName();
 
-   private OulineTreeHelper outlineTreeHelper;
+   private OutlineTreeHelper outlineTreeHelper;
 
    public CodeOutlineJspTest()
    {
-      this.outlineTreeHelper = new OulineTreeHelper();
+      this.outlineTreeHelper = new OutlineTreeHelper();
    }
 
    @BeforeClass
@@ -100,7 +100,7 @@ public class CodeOutlineJspTest extends BaseTest
    private void checkTreeCorrectlyCreated() throws Exception
    {
       // create initial outline tree map
-      OulineTreeHelper.init();
+      OutlineTreeHelper.init();
 
       // check is tree created correctly      
       outlineTreeHelper.checkOutlineTree();

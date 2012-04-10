@@ -40,11 +40,11 @@ public class CodeOutLinePhpTest extends CodeAssistantBaseTest
 
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/edit/outline/" + FILE_NAME;
 
-   private OulineTreeHelper outlineTreeHelper;
+   private OutlineTreeHelper outlineTreeHelper;
 
    public CodeOutLinePhpTest()
    {
-      this.outlineTreeHelper = new OulineTreeHelper();
+      this.outlineTreeHelper = new OutlineTreeHelper();
    }
 
    @BeforeClass
@@ -93,7 +93,7 @@ public class CodeOutLinePhpTest extends CodeAssistantBaseTest
       IDE.OUTLINE.isOutlineViewVisible();
 
       // create initial outline tree map
-      OulineTreeHelper.init();
+      OutlineTreeHelper.init();
       outlineTreeHelper.addOutlineItem("php code", 1, false, TokenType.PHP_TAG, "php code"); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
       outlineTreeHelper.addOutlineItem("php code", 15, TokenType.PHP_TAG);
       outlineTreeHelper.addOutlineItem("html", 18, false, TokenType.TAG, "html"); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
@@ -106,7 +106,7 @@ public class CodeOutLinePhpTest extends CodeAssistantBaseTest
 
       // create opened outline tree map
       outlineTreeHelper.clearOutlineTreeInfo();
-      OulineTreeHelper.init();
+      OutlineTreeHelper.init();
       outlineTreeHelper.addOutlineItem("php code", 1, false, TokenType.PHP_TAG, "php code"); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
       outlineTreeHelper.addOutlineItem("A", 2, TokenType.NAMESPACE, "A");
       outlineTreeHelper.addOutlineItem("my\\name", 3, TokenType.NAMESPACE, "my\\name");

@@ -39,11 +39,11 @@ public class CodeOutLineRubyTest extends CodeAssistantBaseTest
 {
    private final static String FILE_NAME = "TestRubyFile.rb";
 
-   private OulineTreeHelper outlineTreeHelper;
+   private OutlineTreeHelper outlineTreeHelper;
 
    public CodeOutLineRubyTest()
    {
-      this.outlineTreeHelper = new OulineTreeHelper();
+      this.outlineTreeHelper = new OutlineTreeHelper();
    }
 
    @BeforeClass
@@ -87,7 +87,7 @@ public class CodeOutLineRubyTest extends CodeAssistantBaseTest
       IDE.GOTOLINE.goToLine(15);
 
       // create outline tree map
-      OulineTreeHelper.init();
+      OutlineTreeHelper.init();
       outlineTreeHelper.addOutlineItem("TOPLEVEL_CONSTANT : String", 5, TokenType.CONSTANT);
       outlineTreeHelper.addOutlineItem("@@n2 : Array", 7, TokenType.CLASS_VARIABLE);
       outlineTreeHelper.addOutlineItem("$global : nil", 11, TokenType.GLOBAL_VARIABLE);
