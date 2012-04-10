@@ -108,23 +108,42 @@ public class CodeOutLineHtmlTest extends BaseTest
       
       // expand outline tree
       outlineTreeHelper.expandOutlineTree();
-
-      IDE.OUTLINE.selectRow(1);
-      Assert.assertEquals(IDE.OUTLINE.getItemLabel(1), "html");
-      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
       
-      IDE.OUTLINE.selectRow(1);
-      Assert.assertEquals(IDE.OUTLINE.getItemLabel(1), "head");
-      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
+
+      //sheck key nodes 
+      assertEquals(IDE.OUTLINE.getItemLabel(1), "html");
+      assertEquals(IDE.OUTLINE.getItemLabel(2), "head");
+      assertEquals(IDE.OUTLINE.getItemLabel(3), "meta");
+      assertEquals(IDE.OUTLINE.getItemLabel(4), "link");
+      assertEquals(IDE.OUTLINE.getItemLabel(5), "title");
+      assertEquals(IDE.OUTLINE.getItemLabel(6), "script");
+      assertEquals(IDE.OUTLINE.getItemLabel(7), "style");
+      assertEquals(IDE.OUTLINE.getItemLabel(8), "body");
+      assertEquals(IDE.OUTLINE.getItemLabel(9), "table");
+      assertEquals(IDE.OUTLINE.getItemLabel(10), "thead");
+      assertEquals(IDE.OUTLINE.getItemLabel(11), "tr");
+      assertEquals(IDE.OUTLINE.getItemLabel(12), "td");
+      assertEquals(IDE.OUTLINE.getItemLabel(13), "tbody");
+      assertEquals(IDE.OUTLINE.getItemLabel(14), "tr");
+      assertEquals(IDE.OUTLINE.getItemLabel(15), "td");
+      assertEquals(IDE.OUTLINE.getItemLabel(16), "td");
+      assertEquals(IDE.OUTLINE.getItemLabel(17), "td");
+      assertEquals(IDE.OUTLINE.getItemLabel(18), "br");
+      assertEquals(IDE.OUTLINE.getItemLabel(19), "br");
+      assertEquals(IDE.OUTLINE.getItemLabel(20), "script");
+      assertEquals(IDE.OUTLINE.getItemLabel(21), "prefs : gadgets.Prefs");
+      assertEquals(IDE.OUTLINE.getItemLabel(22), "displayGreeting()");
+      assertEquals(IDE.OUTLINE.getItemLabel(23), "today : Date");
+      assertEquals(IDE.OUTLINE.getItemLabel(24), "html : String");
+      assertEquals(IDE.OUTLINE.getItemLabel(25), "style");
+      assertEquals(IDE.OUTLINE.getItemLabel(26), "table");
+      assertEquals(IDE.OUTLINE.getItemLabel(27), "tr");
+      assertEquals(IDE.OUTLINE.getItemLabel(28), "td");
+      assertEquals(IDE.OUTLINE.getItemLabel(29), "td");
+      assertEquals(IDE.OUTLINE.getItemLabel(30), "tr");
+      assertEquals(IDE.OUTLINE.getItemLabel(31), "td");
+      assertEquals(IDE.OUTLINE.getItemLabel(32), "td");
       
-      IDE.OUTLINE.selectRow(1);
-      Assert.assertEquals(IDE.OUTLINE.getItemLabel(9), "table");
-      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
-
-      IDE.OUTLINE.selectRow(1);
-      Assert.assertEquals(IDE.OUTLINE.getItemLabel(19), "br");
-      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
-
       //check head tag and subnodes head
 //      assertTrue(IDE.OUTLINE.isItemPresentById("head:TAG:2"));
 //      assertTrue(IDE.OUTLINE.isItemPresentById("meta:TAG:3"));
