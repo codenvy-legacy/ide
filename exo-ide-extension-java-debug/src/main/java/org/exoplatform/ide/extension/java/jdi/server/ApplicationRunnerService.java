@@ -62,7 +62,7 @@ public class ApplicationRunnerService
                                                     @Context UriInfo uriInfo) throws DeployApplicationException
    {
       DebugApplicationInstance app = runner.debugApplication(war, suspend);
-      app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stop")
+      app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stopApplication")
          .queryParam("name", app.getName()).build().toString());
       return app;
    }
