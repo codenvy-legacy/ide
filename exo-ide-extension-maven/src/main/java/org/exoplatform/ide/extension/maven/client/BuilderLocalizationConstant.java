@@ -47,10 +47,10 @@ public interface BuilderLocalizationConstant extends Messages
    @Key("messages.buildInProgress")
    String buildInProgress(String project);
 
-   @Key("messages.build_success")
+   @Key("messages.buildSuccess")
    String buildSuccess();
 
-   @Key("messages.build_failed")
+   @Key("messages.buildFailed")
    String buildFailed();
 
    /*
