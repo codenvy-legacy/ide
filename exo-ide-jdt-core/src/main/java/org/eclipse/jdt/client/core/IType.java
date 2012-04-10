@@ -87,4 +87,12 @@ public interface IType extends IJavaElement
     */
    String getTypeQualifiedName(char c);
    
+   /**
+    * Returns the package fragment in which this element is defined.
+    * This is a handle-only method.
+    *
+    * @return the package fragment in which this element is defined
+    */
+   IPackageFragment getPackageFragment();
+   
 }

@@ -16,32 +16,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.env;
-
-import com.google.gwt.json.client.JSONObject;
+package org.eclipse.jdt.client.core.search;
 
 import org.eclipse.jdt.client.core.IJavaElement;
 import org.eclipse.jdt.client.core.IPackageFragment;
 import org.eclipse.jdt.client.core.IType;
+import org.eclipse.jdt.client.core.Signature;
+import org.eclipse.jdt.client.env.PackageFragment;
+import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 11:28:31 AM Mar 30, 2012 evgen $
- * 
+ * @version $Id:
+ *
  */
-public class TypeImpl implements IType
+public class Type implements IType
 {
 
-   private JSONObject jsObj;
+   private ShortTypeInfo typeInfo;
 
    private PackageFragment packageFragment;
 
+   private String name;
+
    /**
-    * @param jsObj
+    * @param typeInfo
     */
-   public TypeImpl(JSONObject jsObj)
+   public Type(ShortTypeInfo typeInfo)
    {
-      this.jsObj = jsObj;
+      this.typeInfo = typeInfo;
    }
 
    /**
@@ -50,7 +53,13 @@ public class TypeImpl implements IType
    @Override
    public String getElementName()
    {
-      return jsObj.get("name").isString().stringValue();
+      if (name == null)
+      {
+         name = Signature.getSimpleName(typeInfo.getName());
+         if (name.contains("."))
+            name = name.substring(name.lastIndexOf('.'));
+      }
+      return name;
    }
 
    /**
@@ -68,7 +77,7 @@ public class TypeImpl implements IType
    @Override
    public int getFlags()
    {
-      return (int)jsObj.get("modifiers").isNumber().doubleValue();
+      return typeInfo.getModifiers();
    }
 
    /**
@@ -77,7 +86,7 @@ public class TypeImpl implements IType
    @Override
    public String getFullyQualifiedName()
    {
-      return jsObj.get("name").isString().stringValue();
+      return typeInfo.getName();
    }
 
    /**

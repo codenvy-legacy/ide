@@ -123,15 +123,16 @@ public abstract class TypeNameMatch
     */
    public String getTypeContainerName()
    {
-      IType outerType = getType().getDeclaringType();
-      if (outerType != null)
-      {
-         return outerType.getFullyQualifiedName('.');
-      }
-      else
-      {
+      //TODO
+//      IType outerType = getType().getDeclaringType();
+//      if (outerType != null)
+//      {
+//         return outerType.getFullyQualifiedName('.');
+//      }
+//      else
+//      {
          return getType().getPackageFragment().getElementName();
-      }
+//      }
    }
 
    /**

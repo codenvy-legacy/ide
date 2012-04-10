@@ -26,12 +26,14 @@ import org.eclipse.jdt.client.core.dom.Name;
 import org.eclipse.jdt.client.core.dom.SimpleName;
 import org.eclipse.jdt.client.core.dom.Type;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
+import org.eclipse.jdt.client.core.search.SearchEngine;
+import org.eclipse.jdt.client.core.search.SearchEngine.SearchCallback;
 import org.eclipse.jdt.client.core.search.TypeNameMatch;
+import org.eclipse.jdt.client.env.PackageFragment;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.corext.dom.Bindings;
 import org.eclipse.jdt.client.internal.corext.dom.ScopeAnalyzer;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.eclipse.jdt.client.runtime.OperationCanceledException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.edits.TextEdit;
 
@@ -55,7 +57,22 @@ public class OrganizeImportsOperation
        * @return Returns <code>null</code> to cancel the operation, or the
        *         selected imports.
        */
-      TypeNameMatch[] chooseImports(TypeNameMatch[][] openChoices, ISourceRange[] ranges);
+      void chooseImports(TypeNameMatch[][] openChoices, ISourceRange[] ranges, TypeNameMatchCallback callback);
+   }
+
+   static interface ReferenceProcessorCallback
+   {
+      void finished(boolean hasOpenChoices);
+   }
+
+   public static interface ITextEditCallback
+   {
+      void textEditCreated(TextEdit edit);
+   }
+
+   public static interface TypeNameMatchCallback
+   {
+      void typeNameMatch(TypeNameMatch[] chosen);
    }
 
    private static class TypeReferenceProcessor
@@ -114,16 +131,19 @@ public class OrganizeImportsOperation
 
       private SourceRange[] fSourceRanges;
 
+      private final String projectId;
+
       public TypeReferenceProcessor(Set<String> oldSingleImports, Set<String> oldDemandImports, CompilationUnit root,
-         ImportRewrite impStructure, boolean ignoreLowerCaseNames)
+         ImportRewrite impStructure, boolean ignoreLowerCaseNames, String projectId)
       {
          fOldSingleImports = oldSingleImports;
          fOldDemandImports = oldDemandImports;
          fImpStructure = impStructure;
          fDoIgnoreLowerCaseNames = ignoreLowerCaseNames;
+         this.projectId = projectId;
 
          //TODO
-//         ICompilationUnit cu = impStructure.getCompilationUnit();
+         //         ICompilationUnit cu = impStructure.getCompilationUnit();
 
          fImplicitImports = new HashSet<String>(3);
          fImplicitImports.add(""); //$NON-NLS-1$
@@ -132,10 +152,10 @@ public class OrganizeImportsOperation
 
          fAnalyzer = new ScopeAnalyzer(root);
 
-//         fCurrPackage = (IPackageFragment)cu.getParent();
+         fCurrPackage = new PackageFragment(root.getPackage().getName());
 
          fAllowDefaultPackageImports = false;
-//            cu.getJavaProject().getOption(JavaCore.COMPILER_SOURCE, true).equals(JavaCore.VERSION_1_3);
+         //            cu.getJavaProject().getOption(JavaCore.COMPILER_SOURCE, true).equals(JavaCore.VERSION_1_3);
 
          fImportsAdded = new HashSet<String>();
          fUnresolvedTypes = new HashMap<String, UnresolvedTypeData>();
@@ -238,14 +258,15 @@ public class OrganizeImportsOperation
          fUnresolvedTypes.put(typeName, new UnresolvedTypeData(ref));
       }
 
-      public boolean process()
+      public void process(final ReferenceProcessorCallback callback)
       {
          try
          {
-            int nUnresolved = fUnresolvedTypes.size();
+            final int nUnresolved = fUnresolvedTypes.size();
             if (nUnresolved == 0)
             {
-               return false;
+               callback.finished(false);
+               return;
             }
             char[][] allTypes = new char[nUnresolved][];
             int i = 0;
@@ -254,47 +275,50 @@ public class OrganizeImportsOperation
                allTypes[i++] = iter.next().toCharArray();
             }
             final ArrayList<TypeNameMatch> typesFound = new ArrayList<TypeNameMatch>();
-            //TODO
-//            final IJavaProject project = fCurrPackage.getJavaProject();
-//            IJavaSearchScope scope = SearchEngine.createJavaSearchScope(new IJavaElement[]{project});
-//            TypeNameMatchCollector collector = new TypeNameMatchCollector(typesFound);
-//            new SearchEngine().searchAllTypeNames(null, allTypes, scope, collector,
-//               IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, monitor);
-
-            boolean is50OrHigher = true; //JavaModelUtil.is50OrHigher(project);
-
-            for (i = 0; i < typesFound.size(); i++)
+            new SearchEngine(projectId, fCurrPackage).searchAllTypeNames(allTypes, typesFound, new SearchCallback()
             {
-               TypeNameMatch curr = typesFound.get(i);
-               UnresolvedTypeData data = fUnresolvedTypes.get(curr.getSimpleTypeName());
-               if (data != null && isVisible(curr) && isOfKind(curr, data.typeKinds, is50OrHigher))
+
+               @Override
+               public void searchFinished(ArrayList<TypeNameMatch> typesFound)
                {
-                  if (fAllowDefaultPackageImports || curr.getPackageName().length() > 0)
+
+                  boolean is50OrHigher = true; //JavaModelUtil.is50OrHigher(project);
+
+                  for (int i = 0; i < typesFound.size(); i++)
                   {
-                     data.addInfo(curr);
+                     TypeNameMatch curr = typesFound.get(i);
+                     UnresolvedTypeData data = fUnresolvedTypes.get(curr.getSimpleTypeName());
+                     if (data != null && isVisible(curr) && isOfKind(curr, data.typeKinds, is50OrHigher))
+                     {
+                        if (fAllowDefaultPackageImports || curr.getPackageName().length() > 0)
+                        {
+                           data.addInfo(curr);
+                        }
+                     }
                   }
+                  ArrayList<TypeNameMatch[]> openChoices = new ArrayList<TypeNameMatch[]>(nUnresolved);
+                  ArrayList<SourceRange> sourceRanges = new ArrayList<SourceRange>(nUnresolved);
+                  for (Iterator<UnresolvedTypeData> iter = fUnresolvedTypes.values().iterator(); iter.hasNext();)
+                  {
+                     UnresolvedTypeData data = iter.next();
+                     TypeNameMatch[] openChoice = processTypeInfo(data.foundInfos);
+                     if (openChoice != null)
+                     {
+                        openChoices.add(openChoice);
+                        sourceRanges.add(new SourceRange(data.ref.getStartPosition(), data.ref.getLength()));
+                     }
+                  }
+                  if (openChoices.isEmpty())
+                  {
+                     callback.finished(false);
+                     return;
+                  }
+                  fOpenChoices = openChoices.toArray(new TypeNameMatch[openChoices.size()][]);
+                  fSourceRanges = sourceRanges.toArray(new SourceRange[sourceRanges.size()]);
+                  callback.finished(true);
                }
-            }
+            });
 
-            ArrayList<TypeNameMatch[]> openChoices = new ArrayList<TypeNameMatch[]>(nUnresolved);
-            ArrayList<SourceRange> sourceRanges = new ArrayList<SourceRange>(nUnresolved);
-            for (Iterator<UnresolvedTypeData> iter = fUnresolvedTypes.values().iterator(); iter.hasNext();)
-            {
-               UnresolvedTypeData data = iter.next();
-               TypeNameMatch[] openChoice = processTypeInfo(data.foundInfos);
-               if (openChoice != null)
-               {
-                  openChoices.add(openChoice);
-                  sourceRanges.add(new SourceRange(data.ref.getStartPosition(), data.ref.getLength()));
-               }
-            }
-            if (openChoices.isEmpty())
-            {
-               return false;
-            }
-            fOpenChoices = openChoices.toArray(new TypeNameMatch[openChoices.size()][]);
-            fSourceRanges = sourceRanges.toArray(new SourceRange[sourceRanges.size()]);
-            return true;
          }
          finally
          {
@@ -411,7 +435,7 @@ public class OrganizeImportsOperation
 
    private IProblem fParsingError;
 
-//   private ICompilationUnit fCompilationUnit;
+   //   private ICompilationUnit fCompilationUnit;
 
    private CompilationUnit fASTRoot;
 
@@ -419,17 +443,20 @@ public class OrganizeImportsOperation
 
    private final IDocument document;
 
-   public OrganizeImportsOperation(IDocument document, CompilationUnit astRoot,
-      boolean ignoreLowerCaseNames, boolean save, boolean allowSyntaxErrors, IChooseImportQuery chooseImportQuery)
+   private final String projectId;
+
+   public OrganizeImportsOperation(IDocument document, CompilationUnit astRoot, boolean ignoreLowerCaseNames,
+      boolean save, boolean allowSyntaxErrors, IChooseImportQuery chooseImportQuery, String projectId)
    {
       this.document = document;
-//      fCompilationUnit = cu;
+      //      fCompilationUnit = cu;
       fASTRoot = astRoot;
 
       fDoSave = save;
       fIgnoreLowerCaseNames = ignoreLowerCaseNames;
       fAllowSyntaxErrors = allowSyntaxErrors;
       fChooseImportQuery = chooseImportQuery;
+      this.projectId = projectId;
 
       fNumberOfImportsAdded = 0;
       fNumberOfImportsRemoved = 0;
@@ -437,34 +464,34 @@ public class OrganizeImportsOperation
       fParsingError = null;
    }
 
-   /**
-    * Runs the operation.
-    * @param monitor the progress monitor
-    * @throws CoreException thrown when the operation failed
-    * @throws OperationCanceledException Runtime error thrown when operation is canceled.
-    */
-   public void run() throws CoreException
-   {
-      //		if (monitor == null) {
-      //			monitor= new NullProgressMonitor();
-      //		}
-      try
-      {
-         //			monitor.beginTask(Messages.format(CodeGenerationMessages.OrganizeImportsOperation_description, BasicElementLabels.getFileName(fCompilationUnit)), 10);
+   //   /**
+   //    * Runs the operation.
+   //    * @param monitor the progress monitor
+   //    * @throws CoreException thrown when the operation failed
+   //    * @throws OperationCanceledException Runtime error thrown when operation is canceled.
+   //    */
+   //   public void run() throws CoreException
+   //   {
+   //      //		if (monitor == null) {
+   //      //			monitor= new NullProgressMonitor();
+   //      //		}
+   //      try
+   //      {
+   //         //			monitor.beginTask(Messages.format(CodeGenerationMessages.OrganizeImportsOperation_description, BasicElementLabels.getFileName(fCompilationUnit)), 10);
+   //
+   //         TextEdit edit = createTextEdit();
+   //         if (edit == null)
+   //            return;
+   //         //TODO
+   //         //    		JavaModelUtil.applyEdit(fCompilationUnit, edit, fDoSave, new SubProgressMonitor(monitor, 1));
+   //      }
+   //      finally
+   //      {
+   //         //			monitor.done();
+   //      }
+   //   }
 
-         TextEdit edit = createTextEdit();
-         if (edit == null)
-            return;
-         //TODO
-         //    		JavaModelUtil.applyEdit(fCompilationUnit, edit, fDoSave, new SubProgressMonitor(monitor, 1));
-      }
-      finally
-      {
-         //			monitor.done();
-      }
-   }
-
-   public TextEdit createTextEdit() throws CoreException
+   public void createTextEdit(final ITextEditCallback callback)
    {
 
       try
@@ -483,21 +510,23 @@ public class OrganizeImportsOperation
          ////				monitor.worked(2);
          //			}
 
-         ImportRewrite importsRewrite = StubUtility.createImportRewrite(document, astRoot, false);
+         final ImportRewrite importsRewrite = StubUtility.createImportRewrite(document, astRoot, false);
 
-         Set<String> oldSingleImports = new HashSet<String>();
-         Set<String> oldDemandImports = new HashSet<String>();
-         List<SimpleName> typeReferences = new ArrayList<SimpleName>();
-         List<SimpleName> staticReferences = new ArrayList<SimpleName>();
+         final Set<String> oldSingleImports = new HashSet<String>();
+         final Set<String> oldDemandImports = new HashSet<String>();
+         final List<SimpleName> typeReferences = new ArrayList<SimpleName>();
+         final List<SimpleName> staticReferences = new ArrayList<SimpleName>();
 
          if (!collectReferences(astRoot, typeReferences, staticReferences, oldSingleImports, oldDemandImports))
-            return null;
-
+         {
+            callback.textEditCreated(null);
+            return;
+         }
          //			monitor.worked(1);
 
-         TypeReferenceProcessor processor =
+         final TypeReferenceProcessor processor =
             new TypeReferenceProcessor(oldSingleImports, oldDemandImports, astRoot, importsRewrite,
-               fIgnoreLowerCaseNames);
+               fIgnoreLowerCaseNames, projectId);
 
          Iterator<SimpleName> refIterator = typeReferences.iterator();
          while (refIterator.hasNext())
@@ -506,37 +535,78 @@ public class OrganizeImportsOperation
             processor.add(typeRef);
          }
 
-         boolean hasOpenChoices = processor.process();
-         addStaticImports(staticReferences, importsRewrite);
-
-         if (hasOpenChoices && fChooseImportQuery != null)
+         processor.process(new ReferenceProcessorCallback()
          {
-            TypeNameMatch[][] choices = processor.getChoices();
-            ISourceRange[] ranges = processor.getChoicesSourceRanges();
-            TypeNameMatch[] chosen = fChooseImportQuery.chooseImports(choices, ranges);
-            if (chosen == null)
+
+            @Override
+            public void finished(boolean hasOpenChoices)
             {
-               //TODO
-               // cancel pressed by the user
-               //					throw new OperationCanceledException();
+               addStaticImports(staticReferences, importsRewrite);
+
+               if (hasOpenChoices && fChooseImportQuery != null)
+               {
+                  TypeNameMatch[][] choices = processor.getChoices();
+                  ISourceRange[] ranges = processor.getChoicesSourceRanges();
+                  fChooseImportQuery.chooseImports(choices, ranges, new TypeNameMatchCallback()
+                  {
+
+                     @Override
+                     public void typeNameMatch(TypeNameMatch[] chosen)
+                     {
+                        if (chosen == null)
+                        {
+                           //TODO
+                           // cancel pressed by the user
+                           //					throw new OperationCanceledException();
+                           return;
+                        }
+                        for (int i = 0; i < chosen.length; i++)
+                        {
+                           TypeNameMatch typeInfo = chosen[i];
+                           importsRewrite.addImport(typeInfo.getFullyQualifiedName());
+                        }
+
+                        createTextEdit(callback, importsRewrite, oldSingleImports, oldDemandImports);
+                     }
+
+                  });
+               }
+               else
+                  createTextEdit(callback, importsRewrite, oldSingleImports, oldDemandImports);
             }
-            for (int i = 0; i < chosen.length; i++)
-            {
-               TypeNameMatch typeInfo = chosen[i];
-               importsRewrite.addImport(typeInfo.getFullyQualifiedName());
-            }
-         }
+         });
 
-         TextEdit result = importsRewrite.rewriteImports(null);
-
-         determineImportDifferences(importsRewrite, oldSingleImports, oldDemandImports);
-
-         return result;
       }
       finally
       {
          //			monitor.done();
       }
+   }
+
+   /**
+    * @param callback
+    * @param importsRewrite
+    * @param oldSingleImports
+    * @param oldDemandImports
+    */
+   private void createTextEdit(final ITextEditCallback callback, final ImportRewrite importsRewrite,
+      final Set<String> oldSingleImports, final Set<String> oldDemandImports)
+   {
+      TextEdit result = null;
+      try
+      {
+         result = importsRewrite.rewriteImports(null);
+      }
+      catch (CoreException e)
+      {
+         e.printStackTrace();
+         callback.textEditCreated(null);
+         return;
+      }
+
+      determineImportDifferences(importsRewrite, oldSingleImports, oldDemandImports);
+
+      callback.textEditCreated(result);
    }
 
    private void determineImportDifferences(ImportRewrite importsStructure, Set<String> oldSingleImports,
@@ -609,7 +679,7 @@ public class OrganizeImportsOperation
          }
       }
 
-//      IJavaProject project = fCompilationUnit.getJavaProject();
+      //      IJavaProject project = fCompilationUnit.getJavaProject();
       ImportReferencesCollector.collect(astRoot, null, typeReferences, staticReferences);
 
       return true;
