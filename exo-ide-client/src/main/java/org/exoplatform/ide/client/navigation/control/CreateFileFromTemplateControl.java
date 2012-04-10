@@ -44,6 +44,7 @@ public class CreateFileFromTemplateControl extends NewFileControl
       super(ID, TITLE, PROMPT, IDEImageBundle.INSTANCE.createFromTemplate(), IDEImageBundle.INSTANCE
          .createFromTemplateDisabled(), new CreateFileFromTemplateEvent());
       setDelimiterBefore(true);
+      setHotKey("Ctrl+N");
    }
 
 }

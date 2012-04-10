@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.edit.control.ShowLineNumbersControl;
 import org.exoplatform.ide.client.edit.control.UndoTypingControl;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersHandler;
-import org.exoplatform.ide.client.edit.switching.SwitchingActiveFileCommandHandler;
+import org.exoplatform.ide.client.edit.switching.SwitchingEditorCommandHandler;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
@@ -72,7 +72,7 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
       new CloseAllFilesEventHandler();
       new CodeFormatterManager(IDE.eventBus());      
       
-      new SwitchingActiveFileCommandHandler();
+      new SwitchingEditorCommandHandler();
    }
 
    /**

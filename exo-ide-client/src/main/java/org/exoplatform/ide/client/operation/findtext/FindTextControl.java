@@ -60,6 +60,7 @@ public class FindTextControl extends SimpleControl implements IDEControl, Editor
       setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.findText(), IDEImageBundle.INSTANCE.findTextDisabled());
       setEvent(new FindTextEvent());
+      setHotKey("Ctrl+F");
    }
 
    /**

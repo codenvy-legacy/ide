@@ -29,9 +29,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface GoNextFileHandler extends EventHandler
+public interface GoNextEditorHandler extends EventHandler
 {
    
-   void onGoNextFile(GoNextFileEvent event);
+   void onGoNextEditor(GoNextEditorEvent event);
 
 }

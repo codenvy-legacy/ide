@@ -17,11 +17,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.client.edit.switching;
+package org.exoplatform.ide.client.project.resource;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * 
@@ -31,25 +29,9 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @version $
  */
 
-public class GoPreviousFileControl extends SimpleControl implements IDEControl
+public interface OpenResourceHandler extends EventHandler
 {
+
+   void onOpenResource(OpenResourceEvent event);
    
-   public static final String ID = "View/Switch to previous file";
-
-   public static final String TITLE = "Switch to previous file";
-
-   public GoPreviousFileControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.back(), IDEImageBundle.INSTANCE.backDisabled());
-      setEvent(new GoPreviousFileEvent());
-   }
-
-   @Override
-   public void initialize()
-   {
-   }   
-
 }

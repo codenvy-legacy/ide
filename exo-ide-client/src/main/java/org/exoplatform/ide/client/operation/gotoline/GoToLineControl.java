@@ -47,6 +47,7 @@ public class GoToLineControl extends SimpleControl implements IDEControl, Editor
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.goToLine(), IDEImageBundle.INSTANCE.goToLineDisabled());
       setEvent(new GoToLineEvent());
+      setHotKey("Ctrl+L");
    }
 
    /**
