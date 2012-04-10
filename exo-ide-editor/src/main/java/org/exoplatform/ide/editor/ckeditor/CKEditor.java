@@ -18,15 +18,17 @@
  */
 package org.exoplatform.ide.editor.ckeditor;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Label;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.EditorParameters;
+import org.exoplatform.ide.editor.api.SelectionRange;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
@@ -36,10 +38,9 @@ import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
 import org.exoplatform.ide.editor.text.Document;
 import org.exoplatform.ide.editor.text.IDocument;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Label;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -109,99 +110,99 @@ public class CKEditor extends Editor
 
    private native JavaScriptObject initCKEditor(String id, String basePath, String toolbar, String theme, String skin,
       String language, int continuousScanning, boolean fullPage) /*-{
-		var instance = this;
-		if (toolbar !== undefined) {
-			$wnd.CKEDITOR.config.toolbar = toolbar;
-		}
+                                                                 var instance = this;
+                                                                 if (toolbar !== undefined) {
+                                                                 $wnd.CKEDITOR.config.toolbar = toolbar;
+                                                                 }
 
-		if (theme !== undefined) {
-			$wnd.CKEDITOR.config.theme = theme;
-		}
+                                                                 if (theme !== undefined) {
+                                                                 $wnd.CKEDITOR.config.theme = theme;
+                                                                 }
 
-		if (language !== undefined) {
-			$wnd.CKEDITOR.config.language = language;
-		}
+                                                                 if (language !== undefined) {
+                                                                 $wnd.CKEDITOR.config.language = language;
+                                                                 }
 
-		if (basePath !== undefined) {
-			$wnd.CKEDITOR.basePath = basePath;
-			$wnd.CKEDITOR.config.contentsCss = basePath + "contents.css"; // reflects the CSS used in the final pages where the contents are to be used.
-			$wnd.CKEDITOR.plugins.basePath = basePath + "plugins/"; // set base path to the plugins folder
-			$wnd.CKEDITOR.config.templates_files[0] = basePath
-					+ "plugins/templates/templates/default.js"; // set default template path
-			$wnd.CKEDITOR.config.smiley_path = basePath
-					+ "plugins/smiley/images/"; // The base path used to build the URL for the smiley images.
-		}
+                                                                 if (basePath !== undefined) {
+                                                                 $wnd.CKEDITOR.basePath = basePath;
+                                                                 $wnd.CKEDITOR.config.contentsCss = basePath + "contents.css"; // reflects the CSS used in the final pages where the contents are to be used.
+                                                                 $wnd.CKEDITOR.plugins.basePath = basePath + "plugins/"; // set base path to the plugins folder
+                                                                 $wnd.CKEDITOR.config.templates_files[0] = basePath
+                                                                 + "plugins/templates/templates/default.js"; // set default template path
+                                                                 $wnd.CKEDITOR.config.smiley_path = basePath
+                                                                 + "plugins/smiley/images/"; // The base path used to build the URL for the smiley images.
+                                                                 }
 
-		if (skin !== undefined) {
-			$wnd.CKEDITOR.config.skin = skin + ',' + basePath + 'skins/' + skin
-					+ '/';
-		}
+                                                                 if (skin !== undefined) {
+                                                                 $wnd.CKEDITOR.config.skin = skin + ',' + basePath + 'skins/' + skin
+                                                                 + '/';
+                                                                 }
 
-		if (fullPage !== undefined) {
-			$wnd.CKEDITOR.config.fullPage = fullPage;
-		}
+                                                                 if (fullPage !== undefined) {
+                                                                 $wnd.CKEDITOR.config.fullPage = fullPage;
+                                                                 }
 
-		// create editor instance      
-		var editor = $wnd.CKEDITOR.appendTo(id, $wnd.CKEDITOR.config);
+                                                                 // create editor instance      
+                                                                 var editor = $wnd.CKEDITOR.appendTo(id, $wnd.CKEDITOR.config);
 
-		// add listeners
-		if (editor !== null) {
-			// init editor content variable
-			editor.exoSavedContent = "";
+                                                                 // add listeners
+                                                                 if (editor !== null) {
+                                                                 // init editor content variable
+                                                                 editor.exoSavedContent = "";
 
-			// set onContentChangeListener
-			editor.exoChangeFunction = function() {
-				// check if content was changed
-				if (editor.checkDirty()) {
-					editor.resetDirty();
-					if (editor.getData() != editor.exoSavedContent) {
-						editor.exoSavedContent = editor.getData();
-						instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onContentChanged()();
-					}
-				}
-			}
-			instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onContentChangeListenerId = $wnd
-					.setInterval(editor.exoChangeFunction, continuousScanning);
+                                                                 // set onContentChangeListener
+                                                                 editor.exoChangeFunction = function() {
+                                                                 // check if content was changed
+                                                                 if (editor.checkDirty()) {
+                                                                 editor.resetDirty();
+                                                                 if (editor.getData() != editor.exoSavedContent) {
+                                                                 editor.exoSavedContent = editor.getData();
+                                                                 instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onContentChanged()();
+                                                                 }
+                                                                 }
+                                                                 }
+                                                                 instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onContentChangeListenerId = $wnd
+                                                                 .setInterval(editor.exoChangeFunction, continuousScanning);
 
-			// add Hot Key Listener
-			instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::setHotKeysClickListener(Lcom/google/gwt/core/client/JavaScriptObject;)(editor);
-			//         var Ctrl_s_keycode = $wnd.CKEDITOR.CTRL + 115;
-			//         var Ctrl_S_keycode = $wnd.CKEDITOR.CTRL + 83;          
-			//         editor.exoSaveFunction = function(e) {
-			//            // test if was pressed "Ctrl + S" or "Ctrl + s"
-			//            if (e.data.keyCode == Ctrl_s_keycode || e.data.keyCode == Ctrl_S_keycode) {
-			//              instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onSaveContent()();  // call onSaveContent() listener                
-			//              return false;  // this disables default action (submitting the form)
-			//            }
-			//         }
-			//         editor.on('key', editor.exoSaveFunction);
+                                                                 // add Hot Key Listener
+                                                                 instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::setHotKeysClickListener(Lcom/google/gwt/core/client/JavaScriptObject;)(editor);
+                                                                 //         var Ctrl_s_keycode = $wnd.CKEDITOR.CTRL + 115;
+                                                                 //         var Ctrl_S_keycode = $wnd.CKEDITOR.CTRL + 83;          
+                                                                 //         editor.exoSaveFunction = function(e) {
+                                                                 //            // test if was pressed "Ctrl + S" or "Ctrl + s"
+                                                                 //            if (e.data.keyCode == Ctrl_s_keycode || e.data.keyCode == Ctrl_S_keycode) {
+                                                                 //              instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onSaveContent()();  // call onSaveContent() listener                
+                                                                 //              return false;  // this disables default action (submitting the form)
+                                                                 //            }
+                                                                 //         }
+                                                                 //         editor.on('key', editor.exoSaveFunction);
 
-			// add onCursorActitvity listener
-			editor.exoCursorActivity = function() {
-				instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onCursorActivity()();
-			}
-			editor.on('key', editor.exoCursorActivity);
+                                                                 // add onCursorActitvity listener
+                                                                 editor.exoCursorActivity = function() {
+                                                                 instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onCursorActivity()();
+                                                                 }
+                                                                 editor.on('key', editor.exoCursorActivity);
 
-			// add onFocus listener
-			editor.onFocusReceived = function() {
-				instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onFocusReceived()();
-			}
-			editor.on('focus', editor.onFocusReceived);
+                                                                 // add onFocus listener
+                                                                 editor.onFocusReceived = function() {
+                                                                 instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onFocusReceived()();
+                                                                 }
+                                                                 editor.on('focus', editor.onFocusReceived);
 
-			// set init callback
-			editor.exoInitCallback = function() {
-				instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onInitialized()();
-			}
+                                                                 // set init callback
+                                                                 editor.exoInitCallback = function() {
+                                                                 instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onInitialized()();
+                                                                 }
 
-			editor.on('instanceReady', editor.exoInitCallback);
-		}
+                                                                 editor.on('instanceReady', editor.exoInitCallback);
+                                                                 }
 
-		editor.exoNativeAlert = $wnd.alert;
-		editor.exoNativeConfirm = $wnd.confirm;
-		instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::overrideNativeAlertAndConfirm()();
+                                                                 editor.exoNativeAlert = $wnd.alert;
+                                                                 editor.exoNativeConfirm = $wnd.confirm;
+                                                                 instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::overrideNativeAlertAndConfirm()();
 
-		return editor;
-   }-*/;
+                                                                 return editor;
+                                                                 }-*/;
 
    private void onContentChanged()
    {
@@ -236,14 +237,14 @@ public class CKEditor extends Editor
    }
 
    public native String getTextNative()/*-{
-		var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
-		if (editor != null) {
-			editor.exoSavedContent = editor.getData();
-			return this.@org.exoplatform.ide.editor.ckeditor.CKEditor::prefix
-					+ editor.exoSavedContent
-					+ this.@org.exoplatform.ide.editor.ckeditor.CKEditor::suffix;
-		}
-   }-*/;
+                                       var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+                                       if (editor != null) {
+                                       editor.exoSavedContent = editor.getData();
+                                       return this.@org.exoplatform.ide.editor.ckeditor.CKEditor::prefix
+                                       + editor.exoSavedContent
+                                       + this.@org.exoplatform.ide.editor.ckeditor.CKEditor::suffix;
+                                       }
+                                       }-*/;
 
    public String extractHtmlCodeFromGoogleGadget(String text)
    {
@@ -275,73 +276,73 @@ public class CKEditor extends Editor
    }
 
    private native void setEditorMode(String mode)/*-{
-		var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
-		if (editor != null) {
-			editor.setMode(mode);
-		}
-   }-*/;
+                                                 var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+                                                 if (editor != null) {
+                                                 editor.setMode(mode);
+                                                 }
+                                                 }-*/;
 
    private native void setData(String data)/*-{
-		var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
-		if (editor != null) {
-			editor.setData(data, function() {
-				editor.checkDirty(); // reset ckeditor content changed indicator (http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.editor.html#setData)
-			});
+                                           var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+                                           if (editor != null) {
+                                           editor.setData(data, function() {
+                                           editor.checkDirty(); // reset ckeditor content changed indicator (http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.editor.html#setData)
+                                           });
 
-			editor.exoSavedContent = data;
-			editor.focus();
-		}
-   }-*/;
+                                           editor.exoSavedContent = data;
+                                           editor.focus();
+                                           }
+                                           }-*/;
 
    public native void undo()/*-{
-		var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
-		if (editor != null) {
-			editor.execCommand("undo");
-		}
-   }-*/;
+                            var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+                            if (editor != null) {
+                            editor.execCommand("undo");
+                            }
+                            }-*/;
 
    public native void redo()/*-{
-		var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
-		if (editor != null) {
-			editor.execCommand("redo");
-		}
-   }-*/;
+                            var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+                            if (editor != null) {
+                            editor.execCommand("redo");
+                            }
+                            }-*/;
 
    @Deprecated
    public native void formatSource()/*-{
                                     }-*/;
 
    public native void replaceText(String text)/*-{
-		var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
-		if (editor != null) {
-			// TODO
-		}
-   }-*/;
+                                              var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+                                              if (editor != null) {
+                                              // TODO
+                                              }
+                                              }-*/;
 
    @Deprecated
    public native void setLineNumbers(boolean showLineNumbers)/*-{
                                                              }-*/;
 
    public native void setFocus()/*-{
-		var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
-		var instance = this;
-		if (editor != null) {
-			$wnd
-					.setTimeout(
-							function(a, b) {
-								editor.focus();
-								instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onFocusReceived()();
-							}, 200);
-		}
-   }-*/;
+                                var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+                                var instance = this;
+                                if (editor != null) {
+                                $wnd
+                                .setTimeout(
+                                function(a, b) {
+                                editor.focus();
+                                instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onFocusReceived()();
+                                }, 200);
+                                }
+                                }-*/;
 
    public native boolean hasRedoChanges()/*-{
-		return true;
-   }-*/;
+                                         return true;
+                                         }-*/;
 
    public native boolean hasUndoChanges()/*-{
-		return true;
-   }-*/;
+                                         return true;
+                                         }-*/;
 
    public boolean canFormatSource()
    {
@@ -365,27 +366,27 @@ public class CKEditor extends Editor
    }
 
    private native void restoreNativeAlertAndConfirm() /*-{
-		var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
-		if (typeof editor.exoNativeAlert === "function"
-				&& typeof editor.exoNativeConfirm === "function") {
-			$wnd.alert = editor.exoNativeAlert;
-			$wnd.confirm = editor.exoNativeConfirm;
-		}
-   }-*/;
+                                                      var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+                                                      if (typeof editor.exoNativeAlert === "function"
+                                                      && typeof editor.exoNativeConfirm === "function") {
+                                                      $wnd.alert = editor.exoNativeAlert;
+                                                      $wnd.confirm = editor.exoNativeConfirm;
+                                                      }
+                                                      }-*/;
 
    private native void removeOnContentChangeListener() /*-{
-		var onContentChangeListenerId = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::onContentChangeListenerId;
-		if (onContentChangeListenerId !== null) {
-			$wnd.clearInterval(onContentChangeListenerId);
-		}
-   }-*/;
+                                                       var onContentChangeListenerId = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::onContentChangeListenerId;
+                                                       if (onContentChangeListenerId !== null) {
+                                                       $wnd.clearInterval(onContentChangeListenerId);
+                                                       }
+                                                       }-*/;
 
    private native void removeOnEditorResizeListener() /*-{
-		var onEditorResizeListenerId = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::onEditorResizeListenerId;
-		if (onEditorResizeListenerId !== null) {
-			$wnd.clearInterval(onEditorResizeListenerId);
-		}
-   }-*/;
+                                                      var onEditorResizeListenerId = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::onEditorResizeListenerId;
+                                                      if (onEditorResizeListenerId !== null) {
+                                                      $wnd.clearInterval(onEditorResizeListenerId);
+                                                      }
+                                                      }-*/;
 
    @Override
    public void setHeight(String height)
@@ -398,30 +399,30 @@ public class CKEditor extends Editor
     * set editor height
     */
    public native void setHeightNative(String height) /*-{
-		var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
-		if (editor !== null) {
-			editor.resize("100%", height);
-		}
-   }-*/;
+                                                     var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+                                                     if (editor !== null) {
+                                                     editor.resize("100%", height);
+                                                     }
+                                                     }-*/;
 
    private native void removeEditorListeners() /*-{
-		var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
-		if (editor !== null) {
-			// remove 'instanceReady' listener
-			if (editor.hasListeners('instanceReady')) {
-				editor.removeListener('instanceReady', editor.exoInitCallback)
-			}
+                                               var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+                                               if (editor !== null) {
+                                               // remove 'instanceReady' listener
+                                               if (editor.hasListeners('instanceReady')) {
+                                               editor.removeListener('instanceReady', editor.exoInitCallback)
+                                               }
 
-			// remove 'key' listeners       
-			if (editor.hasListeners('key')) {
-				editor.removeListener('key', editor.exoCursorActivity);
-			}
+                                               // remove 'key' listeners       
+                                               if (editor.hasListeners('key')) {
+                                               editor.removeListener('key', editor.exoCursorActivity);
+                                               }
 
-			if (editor.hasListeners('key')) {
-				editor.removeListener('key', editor.exoHotKeysClickListener);
-			}
-		}
-   }-*/;
+                                               if (editor.hasListeners('key')) {
+                                               editor.removeListener('key', editor.exoHotKeysClickListener);
+                                               }
+                                               }
+                                               }-*/;
 
    public boolean isReadOnly()
    {
@@ -443,32 +444,32 @@ public class CKEditor extends Editor
     * window.confirm() function
     * */
    private native void overrideNativeAlertAndConfirm() /*-{
-		(function() {
-			var proxied = $wnd.alert;
-			$wnd.alert = function(message) {
-				// test if this is a in context of ckeditor
-				if (typeof $wnd.CKEDITOR !== "undefined") {
-					@org.exoplatform.ide.editor.ckeditor.CKEditor::showErrorDialog(Ljava/lang/String;Ljava/lang/String;)("WYSIWYG Editor Error",message);
-				} else {
-					return proxied(message);
-				}
-			};
-		})(this);
+                                                       (function() {
+                                                       var proxied = $wnd.alert;
+                                                       $wnd.alert = function(message) {
+                                                       // test if this is a in context of ckeditor
+                                                       if (typeof $wnd.CKEDITOR !== "undefined") {
+                                                       @org.exoplatform.ide.editor.ckeditor.CKEditor::showErrorDialog(Ljava/lang/String;Ljava/lang/String;)("WYSIWYG Editor Error",message);
+                                                       } else {
+                                                       return proxied(message);
+                                                       }
+                                                       };
+                                                       })(this);
 
-		(function() {
-			var proxied = $wnd.confirm;
+                                                       (function() {
+                                                       var proxied = $wnd.confirm;
 
-			$wnd.confirm = function(message) {
-				// test if this is a ckeditor
-				if (typeof $wnd.CKEDITOR !== "undefined") {
-					return true;
-				} else {
-					return proxied(message);
-				}
-			};
-		})();
+                                                       $wnd.confirm = function(message) {
+                                                       // test if this is a ckeditor
+                                                       if (typeof $wnd.CKEDITOR !== "undefined") {
+                                                       return true;
+                                                       } else {
+                                                       return proxied(message);
+                                                       }
+                                                       };
+                                                       })();
 
-   }-*/;
+                                                       }-*/;
 
    public boolean canDeleteCurrentLine()
    {
@@ -660,5 +661,14 @@ public class CKEditor extends Editor
    public IDocument getDocument()
    {
       return new Document(getText());
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#getSelectionRange()
+    */
+   @Override
+   public SelectionRange getSelectionRange()
+   {
+      return null;
    }
 }

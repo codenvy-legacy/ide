@@ -218,4 +218,11 @@ public abstract class Editor extends AbsolutePanel
     * @return String content of line
     */
    public abstract String getLineContent(int line);
+   
+   /**
+    * Get the range of the selection.
+    * 
+    * @return {@link SelectionRange} range of the selection
+    */
+   public abstract SelectionRange getSelectionRange();
 }
