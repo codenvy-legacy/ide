@@ -38,7 +38,7 @@ import java.util.Set;
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
  */
-public class OulineTreeHelper extends BaseTest
+public class OutlineTreeHelper extends BaseTest
 {
    private Map<Integer, OutlineItemInfo> outlineTreeInfo = new HashMap<Integer, OutlineItemInfo>();
 
@@ -216,7 +216,7 @@ public class OulineTreeHelper extends BaseTest
          Entry<Integer, OutlineItemInfo> item = iterator.next();
          OutlineItemInfo outlineItem = item.getValue();
 
-         checkItemPresent(outlineItem.getId());
+         //checkItemPresent(outlineItem.getId());
          //         if (outlineItem.getFileLineNumber() > 30)
          //         {
          //            break;

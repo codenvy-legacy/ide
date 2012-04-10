@@ -51,11 +51,11 @@ public class CodeOutlineJavaScriptTest extends CodeAssistantBaseTest
 
    private final static String FILE_NAME = "TestJavaScriptFile.js";
 
-   private OulineTreeHelper outlineTreeHelper;
+   private OutlineTreeHelper outlineTreeHelper;
 
    public CodeOutlineJavaScriptTest()
    {
-      this.outlineTreeHelper = new OulineTreeHelper();
+      this.outlineTreeHelper = new OutlineTreeHelper();
    }
 
    @BeforeClass
@@ -65,14 +65,14 @@ public class CodeOutlineJavaScriptTest extends CodeAssistantBaseTest
       {
          createProject(CodeOutLineChromatticTest.class.getSimpleName());
          VirtualFileSystemUtils.createFileFromLocal(project.get(Link.REL_CREATE_FILE), FILE_NAME,
-            MimeType.APPLICATION_JAVASCRIPT,
-            "src/test/resources/org/exoplatform/ide/operation/edit/outline/" + FILE_NAME);
+            MimeType.APPLICATION_JAVASCRIPT, "src/test/resources/org/exoplatform/ide/operation/edit/outline/"
+               + FILE_NAME);
       }
       catch (Exception e)
       {
       }
    }
-   
+
    @Before
    public void openFile() throws Exception
    {
@@ -81,7 +81,7 @@ public class CodeOutlineJavaScriptTest extends CodeAssistantBaseTest
       IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
    }
-   
+
    @Test
    public void testCodeOutlineJavaScript() throws Exception
    {
@@ -144,7 +144,7 @@ public class CodeOutlineJavaScriptTest extends CodeAssistantBaseTest
       outlineTreeHelper.addOutlineItem("e : Object", 39, TokenType.VARIABLE, "e");
       outlineTreeHelper.addOutlineItem("k : Object", 40, TokenType.VARIABLE, "k");
       outlineTreeHelper.addOutlineItem("i : Object", 43, false, TokenType.VARIABLE, "i"); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
-      outlineTreeHelper.addOutlineItem("j : Array", 44, false, TokenType.VARIABLE, "j"); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
+      outlineTreeHelper.addOutlineItem("j : Array", 44, TokenType.VARIABLE, "j");
 
       // expand outline tree
       outlineTreeHelper.expandOutlineTree();

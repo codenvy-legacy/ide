@@ -41,6 +41,7 @@ import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.EditorParameters;
+import org.exoplatform.ide.editor.api.SelectionRange;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
@@ -1463,11 +1464,6 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
             if (p.isWarning())
             {
                markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkWarning();
-//               break;
-            }
-            if (p.isCurrentBreakPoint())
-            {
-               markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkBreakpointCurrent();
                break;
             }
          }
@@ -1565,7 +1561,6 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       {
          List<Problem> list = problems.get(problem.getLineNumber());
          list.remove(problem);
-         
          unmarkNative(problem.getLineNumber());
          if (list.isEmpty())
             return;
@@ -1801,5 +1796,17 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
          }
       };
    }
+
+   public native SelectionRange getSelectionRange() /*-{
+      var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+      if (editor == null)
+         return null;
+
+      var start = editor.cursorPosition(true);
+      var startLine = editor.lineNumber(start.line);
+      var end = editor.cursorPosition(false);
+      var endLine = editor.lineNumber(end.line);
+      return @org.exoplatform.ide.editor.api.SelectionRange::new(IIII)(startLine, start.character, endLine, end.character);
+   }-*/;
 
 }

@@ -48,11 +48,11 @@ public class CodeOutLineHtmlTest extends BaseTest
 
    private final static String PROJECT = CodeOutLineHtmlTest.class.getSimpleName();
 
-   private OulineTreeHelper outlineTreeHelper;
+   private OutlineTreeHelper outlineTreeHelper;
 
    public CodeOutLineHtmlTest()
    {
-      this.outlineTreeHelper = new OulineTreeHelper();
+      this.outlineTreeHelper = new OutlineTreeHelper();
    }
    
    @BeforeClass

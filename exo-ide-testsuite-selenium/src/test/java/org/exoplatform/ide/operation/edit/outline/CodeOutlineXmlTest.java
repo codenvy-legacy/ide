@@ -37,7 +37,6 @@ import java.util.Map;
  * Created by The eXo Platform SAS.
  * @author <a href="dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @author <a href="mailto:njusha.exo@gmail.com">Nadia Zavalko</a>
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id:
  *
  */
@@ -48,11 +47,11 @@ public class CodeOutlineXmlTest extends BaseTest
 
    private final static String PROJECT = CodeOutlineXmlTest.class.getSimpleName();
 
-   private OulineTreeHelper outlineTreeHelper;
+   private OutlineTreeHelper outlineTreeHelper;
 
    public CodeOutlineXmlTest()
    {
-      this.outlineTreeHelper = new OulineTreeHelper();
+      this.outlineTreeHelper = new OutlineTreeHelper();
    }
 
    @BeforeClass

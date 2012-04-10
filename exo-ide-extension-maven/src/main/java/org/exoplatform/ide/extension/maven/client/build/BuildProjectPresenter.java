@@ -47,6 +47,7 @@ import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectHandler;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus;
+import org.exoplatform.ide.extension.maven.shared.BuildStatus.Status;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -80,12 +81,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
    private static final String BUILD_FAILED = BuilderExtension.LOCALIZATION_CONSTANT.buildFailed();
 
-   private static final BuildStatus.Status BUILD_STATUS_SUCCESSFUL = BuildStatus.Status.SUCCESSFUL;
-
-   private static final BuildStatus.Status BUILD_STATUS_FAILED = BuildStatus.Status.FAILED;
-
-   private static final BuildStatus.Status BUILD_STATUS_IN_PROGRESS = BuildStatus.Status.IN_PROGRESS;
-
    /**
     * Identifier of project we want to send for build.
     */
@@ -104,7 +99,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    /**
     * Status of previously build.
     */
-   private BuildStatus.Status previousStatus = null;
+   private Status previousStatus = null;
 
    /**
     * Build of another project is performed.
@@ -184,15 +179,10 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                protected void onSuccess(StringBuilder result)
                {
                   buildID = result.substring(result.lastIndexOf("/") + 1);
-
                   buildInProgress = true;
-
                   showBuildMessage("Building project <b>" + project.getPath().substring(1) + "</b>");
-
                   display.startAnimation();
-
                   previousStatus = null;
-
                   refreshBuildStatusTimer.schedule(delay);
                }
 
@@ -200,7 +190,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                protected void onFailure(Throwable exception)
                {
                   statusHandler.requestError(projectId, exception);
-
                   IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.INFO));
                }
             });
@@ -230,12 +219,12 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                {
                   updateBuildStatus(response);
 
-                  BuildStatus.Status status = response.getStatus();
-                  if (status == BUILD_STATUS_IN_PROGRESS)
+                  Status status = response.getStatus();
+                  if (status == Status.IN_PROGRESS)
                   {
                      schedule(delay);
                   }
-                  else if (status == BUILD_STATUS_FAILED)
+                  else if (status == Status.FAILED)
                   {
                      showLog();
                   }
@@ -293,16 +282,16 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     */
    private void updateBuildStatus(BuildStatus buildStatus)
    {
-      BuildStatus.Status status = buildStatus.getStatus();
+      Status status = buildStatus.getStatus();
 
-      if (status == BUILD_STATUS_IN_PROGRESS && previousStatus != BUILD_STATUS_IN_PROGRESS)
+      if (status == Status.IN_PROGRESS && previousStatus != Status.IN_PROGRESS)
       {
-         previousStatus = BUILD_STATUS_IN_PROGRESS;
+         previousStatus = Status.IN_PROGRESS;
          return;
       }
 
-      if ((status == BUILD_STATUS_SUCCESSFUL && previousStatus != BUILD_STATUS_SUCCESSFUL)
-         || (status == BUILD_STATUS_FAILED && previousStatus != BUILD_STATUS_FAILED))
+      if ((status == Status.SUCCESSFUL && previousStatus != Status.SUCCESSFUL)
+         || (status == Status.FAILED && previousStatus != Status.FAILED))
       {
          afterBuildFinished(buildStatus);
          return;
@@ -323,7 +312,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          new StringBuilder("Building project <b>").append(project.getPath().substring(1))
             .append("</b> has been finished.\r\nResult: ").append(buildStatus.getStatus());
 
-      if (buildStatus.getStatus() == BUILD_STATUS_SUCCESSFUL)
+      if (buildStatus.getStatus() == Status.SUCCESSFUL)
       {
          IDE.fireEvent(new OutputEvent(BUILD_SUCCESS, Type.INFO));
 
@@ -332,7 +321,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          message.append("\r\nYou can download result of build by <a href=\"").append(buildStatus.getDownloadUrl())
             .append("\">this link</a>");
       }
-      else if (buildStatus.getStatus() == BUILD_STATUS_FAILED)
+      else if (buildStatus.getStatus() == Status.FAILED)
       {
          IDE.fireEvent(new OutputEvent(BUILD_FAILED, Type.ERROR));
 
@@ -349,7 +338,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
       showBuildMessage(message.toString());
       display.stopAnimation();
-      
+
       IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
    }
 

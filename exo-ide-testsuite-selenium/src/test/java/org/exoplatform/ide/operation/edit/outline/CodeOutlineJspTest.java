@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Outline.TokenType;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -42,6 +41,13 @@ public class CodeOutlineJspTest extends BaseTest
    private final static String FILE_NAME = "JspCodeOutline.jsp";
 
    private final static String PROJECT = CodeOutlineJspTest.class.getSimpleName();
+
+   private OutlineTreeHelper outlineTreeHelper;
+
+   public CodeOutlineJspTest()
+   {
+      this.outlineTreeHelper = new OutlineTreeHelper();
+   }
 
    @BeforeClass
    public static void setUp()
@@ -84,27 +90,38 @@ public class CodeOutlineJspTest extends BaseTest
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOpened();
       IDE.OUTLINE.waitOutlineTreeVisible();
-      
-      assertTrue(IDE.OUTLINE.isItemPresentById("html:TAG:1"));
-      IDE.GOTOLINE.goToLine(9);
 
-      waitForElementPresent("a:VARIABLE:9");
-      assertTrue(IDE.OUTLINE.isItemPresentById("a:VARIABLE:9"));
-
-      IDE.GOTOLINE.goToLine(23);
-
-      waitForElementPresent("a:PROPERTY:23");
-      assertTrue(IDE.OUTLINE.isItemPresentById("a:PROPERTY:23"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("head:TAG:2"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("script:TAG:8"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("body:TAG:12"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("java code:JSP_TAG:13"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("curentState:PROPERTY:14"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("identity:PROPERTY:17"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("i:PROPERTY:18"));
+      checkTreeCorrectlyCreated();
 
       IDE.EDITOR.closeFile(FILE_NAME);
       IDE.EDITOR.waitTabNotPresent(FILE_NAME);
+   }
+
+   private void checkTreeCorrectlyCreated() throws Exception
+   {
+      // create initial outline tree map
+      OutlineTreeHelper.init();
+
+      // check is tree created correctly      
+      outlineTreeHelper.checkOutlineTree();
+
+      // expand outline tree
+      outlineTreeHelper.expandOutlineTree();
+
+      // TODO issue IDE-1499
+      IDE.GOTOLINE.goToLine(10);
+      IDE.GOTOLINE.goToLine(15);
+
+      outlineTreeHelper.addOutlineItem("html", 1, TokenType.TAG);
+      outlineTreeHelper.addOutlineItem("head", 2, TokenType.TAG);
+      outlineTreeHelper.addOutlineItem("script", 8, TokenType.TAG);
+      outlineTreeHelper.addOutlineItem("a", 9, TokenType.VARIABLE);
+      outlineTreeHelper.addOutlineItem("body", 12, TokenType.TAG);
+      outlineTreeHelper.addOutlineItem("java code", 13, TokenType.JSP_TAG);
+      outlineTreeHelper.addOutlineItem("curentState", 14, TokenType.PROPERTY);
+      outlineTreeHelper.addOutlineItem("identity", 17, TokenType.PROPERTY);
+      outlineTreeHelper.addOutlineItem("i", 18, TokenType.PROPERTY);
+      outlineTreeHelper.addOutlineItem("a", 23, TokenType.PROPERTY);
    }
 
 }

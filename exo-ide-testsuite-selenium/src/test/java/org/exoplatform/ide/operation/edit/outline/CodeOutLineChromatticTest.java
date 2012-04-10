@@ -39,11 +39,11 @@ public class CodeOutLineChromatticTest extends CodeAssistantBaseTest
 {
    private final static String FILE_NAME = "ChromatticOutline.cmtc";
    
-   private OulineTreeHelper outlineTreeHelper;
+   private OutlineTreeHelper outlineTreeHelper;
    
    public CodeOutLineChromatticTest()
    {
-      this.outlineTreeHelper = new OulineTreeHelper();
+      this.outlineTreeHelper = new OutlineTreeHelper();
    }
    
    @BeforeClass
@@ -82,7 +82,7 @@ public class CodeOutLineChromatticTest extends CodeAssistantBaseTest
       assertTrue(IDE.OUTLINE.isOutlineViewVisible());
       
       // create initial outline tree map
-      OulineTreeHelper.init();
+      OutlineTreeHelper.init();
       outlineTreeHelper.addOutlineItem("@\nDataObject", 7, TokenType.CLASS, "DataObject");
       
       // check is tree created correctly      
@@ -93,7 +93,7 @@ public class CodeOutLineChromatticTest extends CodeAssistantBaseTest
       
       // create opened outline tree map
       outlineTreeHelper.clearOutlineTreeInfo();      
-      OulineTreeHelper.init();
+      OutlineTreeHelper.init();
       outlineTreeHelper.addOutlineItem("@\nDataObject", 7, TokenType.CLASS, "DataObject");
       outlineTreeHelper.addOutlineItem("@a : java.lang.String", 9, TokenType.PROPERTY, "a");
       outlineTreeHelper.addOutlineItem("@b : String", 10, TokenType.PROPERTY, "b");
