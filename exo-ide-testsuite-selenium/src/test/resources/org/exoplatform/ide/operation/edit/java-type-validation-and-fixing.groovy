@@ -2,7 +2,7 @@
 import Path
 import javax.ws.rs.GET
 import some.pack.String
-import javax.inject.Inject 
+import javax.inject.Inject
 
 @Path("/my-service")
 public class HelloWorld {
