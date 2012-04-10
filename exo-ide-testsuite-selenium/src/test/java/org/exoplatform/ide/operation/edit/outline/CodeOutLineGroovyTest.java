@@ -40,11 +40,11 @@ public class CodeOutLineGroovyTest extends CodeAssistantBaseTest
 {
    private final static String FILE_NAME = "GroovyCodeOutline.groovy";
 
-   private OulineTreeHelper outlineTreeHelper;
+   private OutlineTreeHelper outlineTreeHelper;
 
    public CodeOutLineGroovyTest()
    {
-      this.outlineTreeHelper = new OulineTreeHelper();
+      this.outlineTreeHelper = new OutlineTreeHelper();
    }
 
    @BeforeClass
@@ -84,8 +84,12 @@ public class CodeOutLineGroovyTest extends CodeAssistantBaseTest
       // expand outline tree
       outlineTreeHelper.expandOutlineTree();
 
+      // TODO issue IDE-1499
+      IDE.GOTOLINE.goToLine(10);
+      IDE.GOTOLINE.goToLine(15);
+      
       // create outline tree map
-      OulineTreeHelper.init();
+      OutlineTreeHelper.init();
       outlineTreeHelper.addOutlineItem("TestJSON", 6);
       outlineTreeHelper.addOutlineItem("a1 : java.lang.A", 7);
       outlineTreeHelper.addOutlineItem("a2 : java.lang.A", 7, false);

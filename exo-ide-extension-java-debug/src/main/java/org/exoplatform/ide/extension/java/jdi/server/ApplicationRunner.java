@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,23 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.operation.upload;
+package org.exoplatform.ide.extension.java.jdi.server;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
+import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
+
+import java.net.URL;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
- * 
  */
-@RunWith(Suite.class)
-@SuiteClasses({OpenGadgetLocalFileTest.class, OpenGroovyLocalFileTest.class, OpenHtmlLocalFileTest.class,
-   UploadingGoogleGadgetTest.class, UploadingGroovyFileTest.class, UploadingHtmlFileTest.class,
-   OpenLocalFileTest.class, UploadingZippedFolderTest.class, OpenFileByURLTest.class, OpenFileByPathTest.class,
-   UploadToFolderWithSpacesTest.class})
-public class UploadTestSuite
+public interface ApplicationRunner
 {
+   ApplicationInstance runApplication(URL war) throws DeployApplicationException;
 
+   DebugApplicationInstance debugApplication(URL war, boolean suspend) throws DeployApplicationException;
+
+   void stopApplication(String name) throws DeployApplicationException;
 }

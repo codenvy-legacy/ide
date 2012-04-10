@@ -28,7 +28,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -63,8 +62,6 @@ public class OpenFileByPathTest extends BaseTest
    }
 
    @Test
-   @Ignore 
-   //When issue is ready https://jira.exoplatform.org/browse/IDE-1489
    public void testOpenFileByPath() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
@@ -109,6 +106,19 @@ public class OpenFileByPathTest extends BaseTest
       IDE.OPEN_FILE_BY_PATH.waitOpened();
       assertFalse(IDE.OPEN_FILE_BY_PATH.isOpenButtonEnabled());
       IDE.OPEN_FILE_BY_PATH.setFilePath(fileUrl);
+      assertTrue(IDE.OPEN_FILE_BY_PATH.isOpenButtonEnabled());
+      IDE.OPEN_FILE_BY_PATH.clickOpenButton();
+      IDE.OPEN_FILE_BY_PATH.waitClosed();
+
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+
+      IDE.EDITOR.closeFile(FILE_NAME);
+
+      // trying to open file by relative path and using "Open" key
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
+      IDE.OPEN_FILE_BY_PATH.waitOpened();
+      assertFalse(IDE.OPEN_FILE_BY_PATH.isOpenButtonEnabled());
+      IDE.OPEN_FILE_BY_PATH.setFilePath(PROJECT + "/" + FILE_NAME);
       assertTrue(IDE.OPEN_FILE_BY_PATH.isOpenButtonEnabled());
       IDE.OPEN_FILE_BY_PATH.clickOpenButton();
       IDE.OPEN_FILE_BY_PATH.waitClosed();

@@ -36,6 +36,7 @@ import org.exoplatform.ide.shell.client.commands.LsCommand;
 import org.exoplatform.ide.shell.client.commands.MkdirCommand;
 import org.exoplatform.ide.shell.client.commands.PwdCommand;
 import org.exoplatform.ide.shell.client.commands.RmCommand;
+import org.exoplatform.ide.shell.client.maven.BuildCommand;
 import org.exoplatform.ide.shell.shared.CLIResource;
 import org.exoplatform.ide.shell.shared.CLIResourceParameter;
 import org.exoplatform.ide.shell.shared.ShellConfiguration;
@@ -141,6 +142,8 @@ public class ShellInitializer
       CloudShell.getCommands().add(new CatCommand());
       CloudShell.getCommands().add(new KillJobCommand());
       CloudShell.getCommands().add(new JobsCommand());
+
+      CloudShell.getCommands().add(new BuildCommand());
    }
 
    /**

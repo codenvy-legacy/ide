@@ -29,8 +29,6 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a> 
@@ -41,11 +39,11 @@ public class CodeOutLineRubyTest extends CodeAssistantBaseTest
 {
    private final static String FILE_NAME = "TestRubyFile.rb";
 
-   private OulineTreeHelper outlineTreeHelper;
+   private OutlineTreeHelper outlineTreeHelper;
 
    public CodeOutLineRubyTest()
    {
-      this.outlineTreeHelper = new OulineTreeHelper();
+      this.outlineTreeHelper = new OutlineTreeHelper();
    }
 
    @BeforeClass
@@ -55,14 +53,13 @@ public class CodeOutLineRubyTest extends CodeAssistantBaseTest
       {
          createProject(CodeOutLineRubyTest.class.getSimpleName());
          VirtualFileSystemUtils.createFileFromLocal(project.get(Link.REL_CREATE_FILE), FILE_NAME,
-            MimeType.APPLICATION_RUBY,
-            "src/test/resources/org/exoplatform/ide/operation/edit/outline/" + FILE_NAME);
+            MimeType.APPLICATION_RUBY, "src/test/resources/org/exoplatform/ide/operation/edit/outline/" + FILE_NAME);
       }
       catch (Exception e)
       {
       }
    }
-   
+
    @Before
    public void openFile() throws Exception
    {
@@ -74,19 +71,23 @@ public class CodeOutLineRubyTest extends CodeAssistantBaseTest
 
    @Test
    public void testCodeOutLineRuby() throws Exception
-   {     
+   {
       // open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOutlineTreeVisible();
       // check for presence and visibility of outline tab
       assertTrue(IDE.OUTLINE.isOutlineTreePresent());
       assertTrue(IDE.OUTLINE.isOutlineViewVisible());
-      
+
       // expand outline tree
       outlineTreeHelper.expandOutlineTree();
 
+      // TODO issue IDE-1499
+      IDE.GOTOLINE.goToLine(10);
+      IDE.GOTOLINE.goToLine(15);
+
       // create outline tree map
-      OulineTreeHelper.init();
+      OutlineTreeHelper.init();
       outlineTreeHelper.addOutlineItem("TOPLEVEL_CONSTANT : String", 5, TokenType.CONSTANT);
       outlineTreeHelper.addOutlineItem("@@n2 : Array", 7, TokenType.CLASS_VARIABLE);
       outlineTreeHelper.addOutlineItem("$global : nil", 11, TokenType.GLOBAL_VARIABLE);
@@ -117,9 +118,9 @@ public class CodeOutLineRubyTest extends CodeAssistantBaseTest
       outlineTreeHelper.addOutlineItem("ascii1 : Ascii", 77, false, TokenType.LOCAL_VARIABLE); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
       outlineTreeHelper.addOutlineItem("@field : nil", 78, TokenType.INSTANCE_VARIABLE);
 
-      IDE.OUTLINE.selectRow(5);
-      driver.findElement(By.className("exo-menuBar")).sendKeys(Keys.F11);
-      Thread.sleep(2000);
+      //      IDE.OUTLINE.selectRow(5);
+      //      driver.findElement(By.className("exo-menuBar")).sendKeys(Keys.F11);
+      //      Thread.sleep(2000);
       // check is tree created correctly      
       outlineTreeHelper.checkOutlineTree();
    }

@@ -83,7 +83,7 @@ public class CodeOutLineBaseOperationTest extends BaseTest
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
-      
+
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOpened();
 
@@ -94,12 +94,14 @@ public class CodeOutLineBaseOperationTest extends BaseTest
       assertEquals("26 : 1", IDE.STATUSBAR.getCursorPosition());
       IDE.EDITOR.deleteLinesInEditor(0, 7);
 
-    //Schedule redraw period is 3 seconds: 
+      //Schedule redraw period is 3 seconds: 
       Thread.sleep(3000);
-      
+
       assertEquals("26 : 1", IDE.STATUSBAR.getCursorPosition());
       assertEquals("groovy code", IDE.OUTLINE.getItemLabel(1));
-      IDE.OUTLINE.doubleClickItem(1);
+      IDE.OUTLINE.selectRow(1);
+      IDE.OUTLINE.expandSelectItem(1);
+
       IDE.OUTLINE.waitItemAtPosition("div", 12);
       assertEquals("div", IDE.OUTLINE.getItemLabel(12));
       assertEquals("a1 : Object", IDE.OUTLINE.getItemLabel(2));

@@ -41,13 +41,13 @@ public class CodeOutLineRESTServiceTest extends CodeAssistantBaseTest
 
    private final static String FILE_NAME = "RESTCodeOutline.groovy";
 
-   private OulineTreeHelper outlineTreeHelper;
-   
+   private OutlineTreeHelper outlineTreeHelper;
+
    public CodeOutLineRESTServiceTest()
    {
-      this.outlineTreeHelper = new OulineTreeHelper();
+      this.outlineTreeHelper = new OutlineTreeHelper();
    }
-   
+
    @BeforeClass
    public static void setUp()
    {
@@ -55,14 +55,13 @@ public class CodeOutLineRESTServiceTest extends CodeAssistantBaseTest
       {
          createProject(CodeOutLineChromatticTest.class.getSimpleName());
          VirtualFileSystemUtils.createFileFromLocal(project.get(Link.REL_CREATE_FILE), FILE_NAME,
-            MimeType.GROOVY_SERVICE,
-            "src/test/resources/org/exoplatform/ide/operation/edit/outline/" + FILE_NAME);
+            MimeType.GROOVY_SERVICE, "src/test/resources/org/exoplatform/ide/operation/edit/outline/" + FILE_NAME);
       }
       catch (Exception e)
       {
       }
    }
-   
+
    @Before
    public void openFile() throws Exception
    {
@@ -72,19 +71,19 @@ public class CodeOutLineRESTServiceTest extends CodeAssistantBaseTest
       IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
    }
 
-   //TODO Issue IDE - 466 
+   //TODO Issue IDE-466 
    //TODO Issue IDE-1499
    @Test
    public void testCodeOutLineRestService() throws Exception
-   {     
+   {
       // open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOutlineTreeVisible();
-      
+
       // check for presence and visibility of outline tab
       assertTrue(IDE.OUTLINE.isOutlineTreePresent());
       assertTrue(IDE.OUTLINE.isOutlineViewVisible());
-      
+
       // create initial outline tree map
       outlineTreeHelper.init();
       outlineTreeHelper.addOutlineItem("@TestService", 6, false);
@@ -92,26 +91,32 @@ public class CodeOutLineRESTServiceTest extends CodeAssistantBaseTest
 
       // check is tree created correctly
       outlineTreeHelper.checkOutlineTree();
-      
+
       // expand outline tree
       outlineTreeHelper.expandOutlineTree();
 
+      // TODO issue IDE-1499
+      IDE.GOTOLINE.goToLine(24);
+      IDE.GOTOLINE.goToLine(31);
+
       // create opened outline tree map
       outlineTreeHelper.clearOutlineTreeInfo();
-      outlineTreeHelper.init();      
+      outlineTreeHelper.init();
       outlineTreeHelper.addOutlineItem("@TestService", 6);
       outlineTreeHelper.addOutlineItem("@post1(@String, @String, @String, String) : String", 12);
-      outlineTreeHelper.addOutlineItem("@post2(@String, @java.lang.String, @String, java.lang.String) : java.lang.String", 24);
-      
+      outlineTreeHelper.addOutlineItem(
+         "@post2(@String, @java.lang.String, @String, java.lang.String) : java.lang.String", 24);
+
       outlineTreeHelper.addOutlineItem("TestService(String) : TestService", 31, TokenType.METHOD, "TestService");
-      outlineTreeHelper.addOutlineItem("@TestService(String, HashMap<String,String>) : TestService", 36, false, TokenType.METHOD, "TestService");            
-      
+      outlineTreeHelper.addOutlineItem("@TestService(String, HashMap<String,String>) : TestService", 36, false,
+         TokenType.METHOD, "TestService");
+
       outlineTreeHelper.addOutlineItem("Dep", 43);
       outlineTreeHelper.addOutlineItem("name : String", 45);
       outlineTreeHelper.addOutlineItem("age : int", 46);
       outlineTreeHelper.addOutlineItem("addYear() : void", 48);
       outlineTreeHelper.addOutlineItem("greet(@String) : java.lang.String", 50);
-      outlineTreeHelper.addOutlineItem("address : int", 53, false);   // false, because outline node is not highlighted from test, but highlighted when goto this line manually
+      outlineTreeHelper.addOutlineItem("address : int", 53, false); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
 
       // check is tree created correctly
       outlineTreeHelper.checkOutlineTree();

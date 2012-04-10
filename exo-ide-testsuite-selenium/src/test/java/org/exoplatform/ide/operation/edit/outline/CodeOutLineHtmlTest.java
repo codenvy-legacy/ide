@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -26,6 +26,7 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -47,6 +48,13 @@ public class CodeOutLineHtmlTest extends BaseTest
 
    private final static String PROJECT = CodeOutLineHtmlTest.class.getSimpleName();
 
+   private OutlineTreeHelper outlineTreeHelper;
+
+   public CodeOutLineHtmlTest()
+   {
+      this.outlineTreeHelper = new OutlineTreeHelper();
+   }
+   
    @BeforeClass
    public static void setUp()
    {
@@ -96,53 +104,91 @@ public class CodeOutLineHtmlTest extends BaseTest
    private void checkTreeCorrectlyCreated() throws Exception
    {
       //check html node
-      assertTrue(IDE.OUTLINE.isItemPresentById("html:TAG:1"));
+      //assertTrue(IDE.OUTLINE.isItemPresentById("html:TAG:1"));
+      
+      // expand outline tree
+      outlineTreeHelper.expandOutlineTree();
+      
 
+      //sheck key nodes 
+      assertEquals(IDE.OUTLINE.getItemLabel(1), "html");
+      assertEquals(IDE.OUTLINE.getItemLabel(2), "head");
+      assertEquals(IDE.OUTLINE.getItemLabel(3), "meta");
+      assertEquals(IDE.OUTLINE.getItemLabel(4), "link");
+      assertEquals(IDE.OUTLINE.getItemLabel(5), "title");
+      assertEquals(IDE.OUTLINE.getItemLabel(6), "script");
+      assertEquals(IDE.OUTLINE.getItemLabel(7), "style");
+      assertEquals(IDE.OUTLINE.getItemLabel(8), "body");
+      assertEquals(IDE.OUTLINE.getItemLabel(9), "table");
+      assertEquals(IDE.OUTLINE.getItemLabel(10), "thead");
+      assertEquals(IDE.OUTLINE.getItemLabel(11), "tr");
+      assertEquals(IDE.OUTLINE.getItemLabel(12), "td");
+      assertEquals(IDE.OUTLINE.getItemLabel(13), "tbody");
+      assertEquals(IDE.OUTLINE.getItemLabel(14), "tr");
+      assertEquals(IDE.OUTLINE.getItemLabel(15), "td");
+      assertEquals(IDE.OUTLINE.getItemLabel(16), "td");
+      assertEquals(IDE.OUTLINE.getItemLabel(17), "td");
+      assertEquals(IDE.OUTLINE.getItemLabel(18), "br");
+      assertEquals(IDE.OUTLINE.getItemLabel(19), "br");
+      assertEquals(IDE.OUTLINE.getItemLabel(20), "script");
+      assertEquals(IDE.OUTLINE.getItemLabel(21), "prefs : gadgets.Prefs");
+      assertEquals(IDE.OUTLINE.getItemLabel(22), "displayGreeting()");
+      assertEquals(IDE.OUTLINE.getItemLabel(23), "today : Date");
+      assertEquals(IDE.OUTLINE.getItemLabel(24), "html : String");
+      assertEquals(IDE.OUTLINE.getItemLabel(25), "style");
+      assertEquals(IDE.OUTLINE.getItemLabel(26), "table");
+      assertEquals(IDE.OUTLINE.getItemLabel(27), "tr");
+      assertEquals(IDE.OUTLINE.getItemLabel(28), "td");
+      assertEquals(IDE.OUTLINE.getItemLabel(29), "td");
+      assertEquals(IDE.OUTLINE.getItemLabel(30), "tr");
+      assertEquals(IDE.OUTLINE.getItemLabel(31), "td");
+      assertEquals(IDE.OUTLINE.getItemLabel(32), "td");
+      
       //check head tag and subnodes head
-      assertTrue(IDE.OUTLINE.isItemPresentById("head:TAG:2"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("meta:TAG:3"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("link:TAG:4"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("title:TAG:5"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("script:TAG:6"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("style:TAG:7"));
-
-      //check body tag and subnodes body
-      assertTrue(IDE.OUTLINE.isItemPresentById("body:TAG:13"));
-
-      //check table tag and subnodes table
-      assertTrue(IDE.OUTLINE.isItemPresentById("table:TAG:14"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("thead:TAG:15"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("tr:TAG:16"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:16"));
-
-      //check tbody tag and subnodes tbody
-      assertTrue(IDE.OUTLINE.isItemPresentById("tbody:TAG:18"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("tr:TAG:19"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:20"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:21"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:22"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("br:TAG:25"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("br:TAG:26"));
-
-      //check script tag and subnodes script
-      assertTrue(IDE.OUTLINE.isItemPresentById("script:TAG:27"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("prefs:VARIABLE:28"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("displayGreeting:FUNCTION:30"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("today:VARIABLE:31"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("html:VARIABLE:33"));
-
-      //check style tag
-      assertTrue(IDE.OUTLINE.isItemPresentById("style:TAG:36"));
-
-      //check tr and subnodes tag
-      assertTrue(IDE.OUTLINE.isItemPresentById("tr:TAG:45"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:46"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:47"));
-
-      //check tr and subnodes tag
-      assertTrue(IDE.OUTLINE.isItemPresentById("tr:TAG:49"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:50"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:51"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("head:TAG:2"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("meta:TAG:3"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("link:TAG:4"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("title:TAG:5"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("script:TAG:6"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("style:TAG:7"));
+//
+//      //check body tag and subnodes body
+//      assertTrue(IDE.OUTLINE.isItemPresentById("body:TAG:13"));
+//
+//      //check table tag and subnodes table
+//      assertTrue(IDE.OUTLINE.isItemPresentById("table:TAG:14"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("thead:TAG:15"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("tr:TAG:16"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:16"));
+//
+//      //check tbody tag and subnodes tbody
+//      assertTrue(IDE.OUTLINE.isItemPresentById("tbody:TAG:18"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("tr:TAG:19"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:20"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:21"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:22"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("br:TAG:25"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("br:TAG:26"));
+//
+//      //check script tag and subnodes script
+//      assertTrue(IDE.OUTLINE.isItemPresentById("script:TAG:27"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("prefs:VARIABLE:28"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("displayGreeting:FUNCTION:30"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("today:VARIABLE:31"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("html:VARIABLE:33"));
+//
+//      //check style tag
+//      assertTrue(IDE.OUTLINE.isItemPresentById("style:TAG:36"));
+//
+//      //check tr and subnodes tag
+//      assertTrue(IDE.OUTLINE.isItemPresentById("tr:TAG:45"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:46"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:47"));
+//
+//      //check tr and subnodes tag
+//      assertTrue(IDE.OUTLINE.isItemPresentById("tr:TAG:49"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:50"));
+//      assertTrue(IDE.OUTLINE.isItemPresentById("td:TAG:51"));
    }
 
 }

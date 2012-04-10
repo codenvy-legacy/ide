@@ -156,4 +156,10 @@ public interface IdeLocalizationMessages extends Messages
    @Key("openFileByURL.errorMessage")
    String openFileByURLErrorMessage(String message);
 
+   /*
+    * Open File by path
+    */
+   @Key("openFileByPath.errorMessage")
+   String openFileByPathErrorMessage(String message);
+
 }
