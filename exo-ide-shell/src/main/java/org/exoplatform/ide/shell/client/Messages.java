@@ -114,6 +114,12 @@ public interface Messages extends com.google.gwt.i18n.client.Messages
 
    @Key("rm.header")
    String rmHeader();
+   
+   @Key("mvn.build.help")
+   String mvnBuildHelp();
+   
+   @Key("mvn.build.success")
+   String mvnBuildSuccess(String url);
 
    // Errors
    @Key("commands.unmarshaller.error")
