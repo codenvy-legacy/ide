@@ -29,9 +29,9 @@ import java.net.URL;
  */
 public interface ApplicationRunner
 {
-   ApplicationInstance runApplication(URL war) throws DeployApplicationException;
+   ApplicationInstance runApplication(URL war) throws ApplicationRunnerException;
 
-   DebugApplicationInstance debugApplication(URL war, boolean suspend) throws DeployApplicationException;
+   DebugApplicationInstance debugApplication(URL war, boolean suspend) throws ApplicationRunnerException;
 
-   void stopApplication(String name) throws DeployApplicationException;
+   void stopApplication(String name) throws ApplicationRunnerException;
 }
