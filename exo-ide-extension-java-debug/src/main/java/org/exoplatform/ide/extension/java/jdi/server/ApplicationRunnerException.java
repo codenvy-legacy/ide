@@ -22,14 +22,14 @@ package org.exoplatform.ide.extension.java.jdi.server;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class DeployApplicationException extends Exception
+public class ApplicationRunnerException extends Exception
 {
-   public DeployApplicationException(String message)
+   public ApplicationRunnerException(String message)
    {
       super(message);
    }
 
-   public DeployApplicationException(String message, Throwable cause)
+   public ApplicationRunnerException(String message, Throwable cause)
    {
       super(message, cause);
    }

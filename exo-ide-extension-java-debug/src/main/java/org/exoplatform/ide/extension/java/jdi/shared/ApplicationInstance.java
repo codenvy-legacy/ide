@@ -35,4 +35,14 @@ public interface ApplicationInstance
    String getStopURL();
 
    void setStopURL(String url);
+
+   /**
+    * Lifetime of application instance in minutes. After this time instance may be stopped.
+    * Method may return -1 if lifetime of instance is unknown.
+    *
+    * @return application instance lifetime in minutes
+    */
+   int getLifetime();
+
+   void setLifetime(int lifetime);
 }
