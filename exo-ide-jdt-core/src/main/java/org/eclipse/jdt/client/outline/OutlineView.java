@@ -76,6 +76,7 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display
 
       outlineTreeViewModel = new OutlineTreeViewModel(selectionModel);
       cellTree = new CellTree(outlineTreeViewModel, null, res);
+      cellTree.getElement().setId("ideOutlineTreeGrid");
 
       // Keyboard is disabled because of the selection problem (when selecting programmatically), if
       // KeyboardSelectionPolicy.BOUND_TO_SELECTION is set
