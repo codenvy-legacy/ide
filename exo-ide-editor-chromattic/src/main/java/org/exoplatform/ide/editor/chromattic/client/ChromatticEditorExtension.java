@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
+import org.exoplatform.ide.client.framework.editor.AddCommentsModifierEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -39,6 +40,7 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
+import org.exoplatform.ide.editor.groovy.client.GroovyCommentsModifier;
 import org.exoplatform.ide.editor.groovy.client.codeassistant.GroovyCodeAssistant;
 import org.exoplatform.ide.editor.groovy.client.codeassistant.service.GroovyCodeAssistantService;
 import org.exoplatform.ide.editor.groovy.client.codemirror.GroovyAutocompleteHelper;
@@ -115,6 +117,7 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
             .setCodeAssistant(groovyCodeAssistant).setCodeValidator(groovyCodeValidator)));
 
       IDE.getInstance().addOutlineItemCreator(MimeType.CHROMATTIC_DATA_OBJECT, new GroovyOutlineItemCreator());
+      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.CHROMATTIC_DATA_OBJECT, new GroovyCommentsModifier()));
    }
 
    /**

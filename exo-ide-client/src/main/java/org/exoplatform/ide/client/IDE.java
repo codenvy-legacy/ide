@@ -19,6 +19,9 @@
 package org.exoplatform.ide.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.Window;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
@@ -36,6 +39,7 @@ import org.exoplatform.ide.client.documentation.DocumentationPresenter;
 import org.exoplatform.ide.client.edit.TextEditModule;
 import org.exoplatform.ide.client.editor.EditorController;
 import org.exoplatform.ide.client.editor.EditorFactory;
+import org.exoplatform.ide.client.framework.application.event.ApplicationClosedEvent;
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
@@ -121,15 +125,12 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
    public IDE()
    {
-      /*
-       * Remember browser's window.alert(...) function
-       */
+      // Remember browser's window.alert(...) function
       Alert.init();
 
-      /*
-       * Create the list of available icons.
-       */
+      // Create the list of available icons.
       IDEIconSet.init();
+      addWindowCloseHandler();
 
       new IDEDialogs();
       new AskForValueDialog();
@@ -295,4 +296,16 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       paasRegistration.add(paas);
    }
 
+   public void addWindowCloseHandler()
+   {
+      Window.addCloseHandler(new CloseHandler<Window>()
+      {
+
+         @Override
+         public void onClose(CloseEvent<Window> event)
+         {
+            fireEvent(new ApplicationClosedEvent());
+         }
+      });
+   }
 }

@@ -20,6 +20,7 @@ package org.exoplatform.ide.editor.xml.client;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
+import org.exoplatform.ide.client.framework.editor.AddCommentsModifierEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
@@ -69,6 +70,10 @@ public class XmlEditor extends Extension
                .setParser(new XmlParser()).setCanBeOutlined(true).setCodeAssistant(xmlAssistant)));
 
       IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_XML, new XmlOutlineItemCreator());
+
+      XmlCommentsModifier commentsModifier = new XmlCommentsModifier();
+      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.TEXT_XML, commentsModifier));
+      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_XML, commentsModifier));
    }
 
 }

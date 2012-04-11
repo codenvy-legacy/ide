@@ -51,7 +51,7 @@ public class ApplicationRunnerService
                                              @Context UriInfo uriInfo) throws ApplicationRunnerException
    {
       ApplicationInstance app = runner.runApplication(war);
-      app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stop")
+      app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stopApplication")
          .queryParam("name", app.getName()).build().toString());
       return app;
    }

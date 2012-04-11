@@ -25,6 +25,7 @@ import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.editor.AddCommentsModifierEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -79,8 +80,8 @@ public class JavaEditorExtension extends Extension implements InitializeServices
             JavaClientBundle.INSTANCE.java(), true, new CodeMirrorConfiguration()
                .setGenericParsers("['parsejava.js', 'tokenizejava.js']")
                .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']").setCanBeOutlined(true),
-            true)); 
-
+            true));
+      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_JAVA, new JavaCommentsModifier()));
    }
 
    /**

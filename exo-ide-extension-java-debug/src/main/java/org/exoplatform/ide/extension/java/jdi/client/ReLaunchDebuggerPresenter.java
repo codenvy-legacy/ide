@@ -26,13 +26,13 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
+import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 /**
@@ -40,32 +40,27 @@ import com.google.web.bindery.autobean.shared.AutoBean;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class RunDebuggerPresenter implements ViewClosedHandler
+public class ReLaunchDebuggerPresenter implements ViewClosedHandler
 
 {
    public interface Display extends IsView
    {
-      
+
       HasClickHandlers getRunButton();
 
       HasClickHandlers getCancelButton();
-      
-      HasValue<String> getHostField();
-      
-      HasValue<String> getPortField();
-      
-      void enableRunButton(boolean enable);
+
+      void setAppWebUrl(String webUrl);
 
    }
 
    private Display display;
 
-   private String host;
+   private final DebugApplicationInstance instance;
 
-   private int port;
-
-   public RunDebuggerPresenter()
+   public ReLaunchDebuggerPresenter(DebugApplicationInstance instance)
    {
+      this.instance = instance;
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
@@ -75,19 +70,15 @@ public class RunDebuggerPresenter implements ViewClosedHandler
    public void bindDisplay(Display d)
    {
       display = d;
-      
-      display.getHostField().setValue("localhost");
-      display.getPortField().setValue("8000");
-      
+
+      display.setAppWebUrl(instance.getWebURL());
+
       display.getRunButton().addClickHandler(new ClickHandler()
       {
 
          @Override
          public void onClick(ClickEvent event)
          {
-            host = display.getHostField().getValue();
-            port = Integer.parseInt(display.getPortField().getValue());
-            IDE.getInstance().closeView(display.asView().getId());
             doRunDebugger();
          }
       });
@@ -115,27 +106,28 @@ public class RunDebuggerPresenter implements ViewClosedHandler
       }
    }
 
-  
    protected void doRunDebugger()
    {
       AutoBean<DebuggerInfo> debuggerInfo = DebuggerExtension.AUTO_BEAN_FACTORY.create(DebuggerInfo.class);
       AutoBeanUnmarshaller<DebuggerInfo> unmarshaller = new AutoBeanUnmarshaller<DebuggerInfo>(debuggerInfo);
       try
       {
-         DebuggerClientService.getInstance().create(host, port, new AsyncRequestCallback<DebuggerInfo>(unmarshaller)
-         {
-            @Override
-            public void onSuccess(DebuggerInfo result)
+         DebuggerClientService.getInstance().create(instance.getDebugHost(), instance.getDebugPort(),
+            new AsyncRequestCallback<DebuggerInfo>(unmarshaller)
             {
-               IDE.eventBus().fireEvent(new DebuggerConnectedEvent(result));
-            }
+               @Override
+               public void onSuccess(DebuggerInfo result)
+               {
+                  IDE.getInstance().closeView(display.asView().getId());
+                  IDE.eventBus().fireEvent(new DebuggerConnectedEvent(result));
+               }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-              IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
       }
       catch (RequestException e)
       {

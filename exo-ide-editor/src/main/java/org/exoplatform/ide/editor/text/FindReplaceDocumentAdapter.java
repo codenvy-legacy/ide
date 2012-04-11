@@ -142,6 +142,9 @@ public class FindReplaceDocumentAdapter implements CharSequence
          if (wholeWord)
             findString = "\\b" + findString + "\\b"; //$NON-NLS-1$ //$NON-NLS-2$
 
+         if (!wholeWord)
+            findString = asRegPattern(findString);
+         
          fFindReplaceMatchOffset = startOffset;
          regExp = RegExp.compile(findString, patternFlags);
          regExp.setLastIndex(fFindReplaceMatchOffset);
@@ -224,6 +227,35 @@ public class FindReplaceDocumentAdapter implements CharSequence
    public String toString()
    {
       return fDocument.get();
+   }
+
+   /**
+    * Converts a non-regex string to a pattern that can be used with the regex search engine.
+    * 
+    * @param string the non-regex pattern
+    * @return the string converted to a regex pattern
+    */
+   private String asRegPattern(String string)
+   {
+      StringBuffer out = new StringBuffer(string.length());
+
+      for (int i = 0, length = string.length(); i < length; i++)
+      {
+         char ch = string.charAt(i);
+         if (ch == '\\')
+         {
+            out.append("\\\\"); //$NON-NLS-1$
+         }
+         else if (ch == '*')
+         {
+            out.append("\\*");
+         }
+         else
+         {
+            out.append(ch);
+         }
+      }
+      return out.toString();
    }
 
    /**

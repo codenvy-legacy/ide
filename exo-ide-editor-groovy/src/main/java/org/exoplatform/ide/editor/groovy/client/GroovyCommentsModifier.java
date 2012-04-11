@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,16 +16,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.client.events;
+package org.exoplatform.ide.editor.groovy.client;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier;
 
 /**
- * Created by The eXo Platform SAS.
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: $
-*/
-public interface LaunchDebuggerHandler extends EventHandler
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id:  Apr 11, 2012 9:52:16 AM anya $
+ *
+ */
+public class GroovyCommentsModifier extends AbstractCommentsModifier
 {
-   void onLaunchDebugger(LaunchDebuggerEvent event);
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getOpenBlockComment()
+    */
+   @Override
+   public String getOpenBlockComment()
+   {
+      return "/*";
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getCloseBlockComment()
+    */
+   @Override
+   public String getCloseBlockComment()
+   {
+      return "*/";
+   }
 }

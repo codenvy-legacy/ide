@@ -19,19 +19,19 @@
             <g:layer top="0" height="28px">
                <c:Toolbar height="28px">
                   <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="resumeButton" width="22px" buttonId="resumeButton" title="{locale.resumeButton}" imageResource="{resource.resumeButton}"></c:ImageButton>
+                     <c:ImageButton ui:field="resumeButton" width="22px" buttonId="resumeButton" title="{locale.resumeButton}" imageResource="{resource.resumeButton}" disabledImageResource="{resource.resumeButtonDisabled}"></c:ImageButton>
                   </c:ToolbarItem>
                   <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="stepIntoButton" width="22px" buttonId="stepIntoButton" title="{locale.stepInto}" imageResource="{resource.stepIntoButton}"></c:ImageButton>
+                     <c:ImageButton ui:field="stepIntoButton" width="22px" buttonId="stepIntoButton" title="{locale.stepInto}" imageResource="{resource.stepIntoButton}" disabledImageResource="{resource.stepIntoButtonDisabled}"></c:ImageButton>
                   </c:ToolbarItem>
                   <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="stepOverButton" width="22px" buttonId="stepOverButton" title="{locale.stepOver}" imageResource="{resource.stepOverButton}"></c:ImageButton>
+                     <c:ImageButton ui:field="stepOverButton" width="22px" buttonId="stepOverButton" title="{locale.stepOver}" imageResource="{resource.stepOverButton}" disabledImageResource="{resource.stepOverButtonDisabled}"></c:ImageButton>
                   </c:ToolbarItem>
                   <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="stepReturnButton" width="22px" buttonId="stepReturnButton" title="{locale.stepReturn}" imageResource="{resource.stepReturnButton}"></c:ImageButton>
+                     <c:ImageButton ui:field="stepReturnButton" width="22px" buttonId="stepReturnButton" title="{locale.stepReturn}" imageResource="{resource.stepReturnButton}" disabledImageResource="{resource.stepReturnButtonDisabled}"></c:ImageButton>
                   </c:ToolbarItem>
                   <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="disconnectButton" width="22px" buttonId="disconnectButton" title="{locale.disConnectButton}" imageResource="{resource.disconnectButton}"></c:ImageButton>
+                     <c:ImageButton ui:field="disconnectButton" width="22px" buttonId="disconnectButton" title="{locale.disConnectButton}" imageResource="{resource.disconnectButton}" disabledImageResource="{resource.disconnectButtonDisabled}"></c:ImageButton>
                   </c:ToolbarItem>
                   <c:ToolbarItem rightDocked="false" paddingRight="2">
                      <c:ImageButton ui:field="removeAllBreakpointsButton" width="22px" buttonId="removeAllBreakpointsButton"
