@@ -53,6 +53,7 @@ public class FormatSourceControl extends SimpleControl implements IDEControl, Ed
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.format(), IDEImageBundle.INSTANCE.formatDisabled());
       setEvent(new EditorFormatTextEvent());
+      setHotKey("Ctrl+Shift+F");
    }
 
    /**

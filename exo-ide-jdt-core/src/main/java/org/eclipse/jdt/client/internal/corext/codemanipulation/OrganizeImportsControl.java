@@ -39,6 +39,7 @@ public class OrganizeImportsControl extends SimpleControl implements IDEControl
       setTitle("Organize Imports");
       setPrompt("Organize Imports");
       setEvent(new OrganizeImportsEvent());
+      setHotKey("Ctrl+Shift+O");
    }
 
    /**

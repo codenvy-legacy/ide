@@ -18,20 +18,30 @@
  */
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.view.client.HasData;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+
+import com.google.gwt.core.client.Scheduler;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.HasData;
 
+import org.eclipse.jdt.client.codeassistant.CompletionProposalLabelProvider;
 import org.eclipse.jdt.client.core.search.TypeNameMatch;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsPresenter.Display;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
@@ -49,6 +59,8 @@ public class OrganizeImportsView extends ViewImpl implements Display
 
    private static OrganizeImportsViewUiBinder uiBinder = GWT.create(OrganizeImportsViewUiBinder.class);
 
+   private CompletionProposalLabelProvider labelProvider = new CompletionProposalLabelProvider();
+
    @UiField
    TextInput filterTextInput;
 
@@ -61,7 +73,25 @@ public class OrganizeImportsView extends ViewImpl implements Display
       @Override
       public void render(Context context, TypeNameMatch value, SafeHtmlBuilder sb)
       {
+         if (value == null)
+         {
+            return;
+         }
+
+         sb.appendHtmlConstant("<table>");
+
+         String imageHtml = AbstractImagePrototype.create(labelProvider.getTypeImage(value.getModifiers())).getHTML();
+         // Add the contact image.
+         sb.appendHtmlConstant("<tr><td rowspan='3'>");
+         sb.appendHtmlConstant(imageHtml);
+         sb.appendHtmlConstant("</td>");
+
+         // Add the name and address.
+         sb.appendHtmlConstant("<td style='font-size:12px;'>");
          sb.appendEscaped(value.getFullyQualifiedName());
+         sb.appendHtmlConstant("</td></tr>");
+         sb.appendHtmlConstant("</table>");
+         //         sb.appendEscaped(value.getFullyQualifiedName());
       }
    });
 
@@ -85,6 +115,8 @@ public class OrganizeImportsView extends ViewImpl implements Display
    {
       super(ID, ViewType.MODAL, "Organize Imports", null, 500, 300, false);
       add(uiBinder.createAndBindUi(this));
+      cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
+      setCloseOnEscape(true);
    }
 
    /**
@@ -175,6 +207,42 @@ public class OrganizeImportsView extends ViewImpl implements Display
    public void setFinishButtonEnabled(boolean b)
    {
       finishButton.setEnabled(b);
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsPresenter.Display#addDoubleClickHandler(com.google.gwt.event.dom.client.DoubleClickHandler)
+    */
+   @Override
+   public void addDoubleClickHandler(DoubleClickHandler handler)
+   {
+      cellList.addDomHandler(handler, DoubleClickEvent.getType());
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsPresenter.Display#setFocusInList()
+    */
+   @Override
+   public void setFocusInList()
+   {
+      cellList.setFocus(true);
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         
+         @Override
+         public void execute()
+         {
+            cellList.setFocus(true);
+         }
+      });
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsPresenter.Display#addKeyHandler(com.google.gwt.event.dom.client.KeyPressHandler)
+    */
+   @Override
+   public void addKeyHandler(KeyDownHandler handler)
+   {
+      cellList.addDomHandler(handler, KeyDownEvent.getType());
    }
 
 }

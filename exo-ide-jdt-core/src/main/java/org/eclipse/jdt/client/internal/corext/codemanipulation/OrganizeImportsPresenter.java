@@ -18,23 +18,25 @@
  */
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
-import com.google.gwt.view.client.SelectionChangeEvent.Handler;
-
-import com.google.gwt.view.client.SelectionChangeEvent;
-
-import com.google.gwt.view.client.SelectionChangeEvent;
-
-import com.google.gwt.view.client.SingleSelectionModel;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SelectionChangeEvent.Handler;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 import org.eclipse.jdt.client.UpdateOutlineEvent;
 import org.eclipse.jdt.client.UpdateOutlineHandler;
@@ -59,7 +61,9 @@ import org.exoplatform.ide.editor.text.edits.MalformedTreeException;
 import org.exoplatform.ide.editor.text.edits.TextEdit;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -92,9 +96,13 @@ public class OrganizeImportsPresenter implements UpdateOutlineHandler, OrganizeI
       void setBackButtonEnabled(boolean enabled);
 
       void setFinishButtonEnabled(boolean b);
-   }
 
-   private HandlerManager eventBus;
+      void addDoubleClickHandler(DoubleClickHandler handler);
+      
+      void addKeyHandler(KeyDownHandler handler);
+
+      void setFocusInList();
+   }
 
    private FileModel activeFile;
 
@@ -122,7 +130,6 @@ public class OrganizeImportsPresenter implements UpdateOutlineHandler, OrganizeI
    public OrganizeImportsPresenter(HandlerManager eventBus)
    {
       super();
-      this.eventBus = eventBus;
       eventBus.addHandler(UpdateOutlineEvent.TYPE, this);
       eventBus.addHandler(OrganizeImportsEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
@@ -238,9 +245,9 @@ public class OrganizeImportsPresenter implements UpdateOutlineHandler, OrganizeI
          @Override
          public void onClick(ClickEvent event)
          {
-            callback.typeNameMatch(chosen);
-            IDE.getInstance().closeView(Display.ID);
+            finish();
          }
+
       });
 
       display.setBackButtonEnabled(false);
@@ -273,6 +280,52 @@ public class OrganizeImportsPresenter implements UpdateOutlineHandler, OrganizeI
 
          }
       });
+
+      display.getFilterInput().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            if (event.getValue() == null || event.getValue().isEmpty())
+            {
+               updateForm();
+               return;
+            }
+            List<TypeNameMatch> types = new ArrayList<TypeNameMatch>();
+            for (TypeNameMatch type : openChoices[index])
+            {
+               if (type.getFullyQualifiedName().startsWith(event.getValue()))
+                  types.add(type);
+            }
+
+            dataProvider.setList(types);
+         }
+      });
+
+      display.addDoubleClickHandler(new DoubleClickHandler()
+      {
+
+         @Override
+         public void onDoubleClick(DoubleClickEvent event)
+         {
+            nextOrFinish();
+         }
+      });
+      
+      display.addKeyHandler(new KeyDownHandler()
+      {
+         
+         @Override
+         public void onKeyDown(KeyDownEvent event)
+         {
+            if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
+            {
+               nextOrFinish();
+            }
+         }
+      });
+      
       display.getTypeList().setSelectionModel(selectionModel);
       updateForm();
    }
@@ -286,6 +339,13 @@ public class OrganizeImportsPresenter implements UpdateOutlineHandler, OrganizeI
       dataProvider = new ListDataProvider<TypeNameMatch>(Arrays.asList(openChoices[index]));
       dataProvider.addDataDisplay(display.getTypeList());
       selectionModel.setSelected(openChoices[index][0], true);
+      display.setFocusInList();
+   }
+
+   private void finish()
+   {
+      callback.typeNameMatch(chosen);
+      IDE.getInstance().closeView(Display.ID);
    }
 
    /**
@@ -338,6 +398,17 @@ public class OrganizeImportsPresenter implements UpdateOutlineHandler, OrganizeI
       {
          display = null;
       }
+   }
+
+   /**
+    * 
+    */
+   private void nextOrFinish()
+   {
+      if (index < chosen.length - 1)
+         next();
+      else
+         finish();
    }
 
 }
