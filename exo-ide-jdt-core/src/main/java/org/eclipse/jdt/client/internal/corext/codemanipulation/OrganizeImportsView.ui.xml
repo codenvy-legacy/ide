@@ -4,14 +4,7 @@
 	<ui:style>
 		/* Add CSS here. See the GWT docs on UI Binder for more details */
 	</ui:style>
-	<f:Border borderColor="transparent">
-		<f:layer left="0px" top="56px" bottom="41px" right="1px">
-			<g:LayoutPanel width="" height="">
-				<g:layer left="0px" top="0px" right="0px" bottom="0px">
-					<p1:CellList ui:field="cellList" focus="true"/>
-				</g:layer>
-			</g:LayoutPanel>
-		</f:layer>
+	<f:Border borderColor="transparent" margin="5">
 		<f:layer top="0px" height="50px" left="0px" right="0px">
 			<g:DockLayoutPanel unit="PX">
 				<g:south size="25.0">
@@ -40,6 +33,13 @@
 					<f:ImageButton ui:field="finishButton" text="Finish" buttonId="ideOrganizeImportFinish"/>
 				</g:layer>
 			</g:LayoutPanel>
+		</f:layer>
+		<f:layer left="0px" right="0px" top="55px" bottom="40px">
+			<f:Border borderSize="1">
+						<f:layer left="0px" top="0px" right="0px" bottom="1px">
+							<p1:CellList ui:field="cellList" focus="true"/>
+						</f:layer>
+					</f:Border>
 		</f:layer>
 	</f:Border>
 </ui:UiBinder> 

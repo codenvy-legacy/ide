@@ -83,7 +83,7 @@ public class OrganizeImportsView extends ViewImpl implements Display
 
    public OrganizeImportsView()
    {
-      super(ID, ViewType.MODAL, "Organize Imports", null, 500, 500, false);
+      super(ID, ViewType.MODAL, "Organize Imports", null, 500, 300, false);
       add(uiBinder.createAndBindUi(this));
    }
 
@@ -148,6 +148,33 @@ public class OrganizeImportsView extends ViewImpl implements Display
    public HasText getPageLabel()
    {
       return pageLabel;
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsPresenter.Display#setNextButtonEnabled(boolean)
+    */
+   @Override
+   public void setNextButtonEnabled(boolean enabled)
+   {
+      nextButton.setEnabled(enabled);
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsPresenter.Display#setBackButtonEnabled(boolean)
+    */
+   @Override
+   public void setBackButtonEnabled(boolean enabled)
+   {
+      backButton.setEnabled(enabled);
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsPresenter.Display#setFinishButtonEnabled(boolean)
+    */
+   @Override
+   public void setFinishButtonEnabled(boolean b)
+   {
+      finishButton.setEnabled(b);
    }
 
 }

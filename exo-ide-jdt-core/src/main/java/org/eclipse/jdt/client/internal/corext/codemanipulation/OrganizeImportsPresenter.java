@@ -18,17 +18,23 @@
  */
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
-import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 
-import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.view.client.SelectionChangeEvent;
 
-import com.google.gwt.view.client.HasData;
+import com.google.gwt.view.client.SelectionChangeEvent;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 import com.google.gwt.core.client.GWT;
-
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.view.client.HasData;
+import com.google.gwt.view.client.ListDataProvider;
 
 import org.eclipse.jdt.client.UpdateOutlineEvent;
 import org.eclipse.jdt.client.UpdateOutlineHandler;
@@ -45,11 +51,15 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.edits.MalformedTreeException;
 import org.exoplatform.ide.editor.text.edits.TextEdit;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+
+import java.util.Arrays;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -57,25 +67,31 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  *
  */
 public class OrganizeImportsPresenter implements UpdateOutlineHandler, OrganizeImportsHandler,
-   EditorActiveFileChangedHandler
+   EditorActiveFileChangedHandler, ViewClosedHandler
 {
    public interface Display extends IsView
    {
       String ID = "ideOrganizeImportsView";
-      
+
       HasClickHandlers getBackButton();
-      
+
       HasClickHandlers getNextButton();
-      
+
       HasClickHandlers getCancelButton();
-      
+
       HasClickHandlers getFinishButton();
-      
+
       HasData<TypeNameMatch> getTypeList();
-      
+
       HasValue<String> getFilterInput();
-      
+
       HasText getPageLabel();
+
+      void setNextButtonEnabled(boolean enabled);
+
+      void setBackButtonEnabled(boolean enabled);
+
+      void setFinishButtonEnabled(boolean b);
    }
 
    private HandlerManager eventBus;
@@ -92,6 +108,14 @@ public class OrganizeImportsPresenter implements UpdateOutlineHandler, OrganizeI
 
    private Display display;
 
+   private ListDataProvider<TypeNameMatch> dataProvider;
+
+   private TypeNameMatch[] chosen;
+
+   private int index;
+
+   private SingleSelectionModel<TypeNameMatch> selectionModel;
+
    /**
     * @param event
     */
@@ -102,6 +126,7 @@ public class OrganizeImportsPresenter implements UpdateOutlineHandler, OrganizeI
       eventBus.addHandler(UpdateOutlineEvent.TYPE, this);
       eventBus.addHandler(OrganizeImportsEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -165,6 +190,128 @@ public class OrganizeImportsPresenter implements UpdateOutlineHandler, OrganizeI
    {
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
+      bind();
+   }
+
+   /**
+    * 
+    */
+   private void bind()
+   {
+      chosen = new TypeNameMatch[openChoices.length];
+      index = 0;
+      display.getCancelButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            callback.typeNameMatch(null);
+            IDE.getInstance().closeView(Display.ID);
+
+         }
+      });
+
+      display.getNextButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            next();
+         }
+      });
+
+      display.getBackButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            back();
+         }
+      });
+
+      display.getFinishButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            callback.typeNameMatch(chosen);
+            IDE.getInstance().closeView(Display.ID);
+         }
+      });
+
+      display.setBackButtonEnabled(false);
+      if (openChoices.length == 1)
+      {
+         display.setNextButtonEnabled(false);
+      }
+      display.setFinishButtonEnabled(false);
+
+      selectionModel = new SingleSelectionModel<TypeNameMatch>();
+      selectionModel.addSelectionChangeHandler(new Handler()
+      {
+         @Override
+         public void onSelectionChange(SelectionChangeEvent event)
+         {
+            chosen[index] = selectionModel.getSelectedObject();
+            boolean hasNoNull = true;
+            for (TypeNameMatch type : chosen)
+            {
+               if (type == null)
+               {
+                  hasNoNull = false;
+                  break;
+               }
+            }
+            if (hasNoNull)
+            {
+               display.setFinishButtonEnabled(true);
+            }
+
+         }
+      });
+      display.getTypeList().setSelectionModel(selectionModel);
+      updateForm();
+   }
+
+   /**
+    * 
+    */
+   private void updateForm()
+   {
+      display.getPageLabel().setText("Page " + (index + 1) + " of " + openChoices.length);
+      dataProvider = new ListDataProvider<TypeNameMatch>(Arrays.asList(openChoices[index]));
+      dataProvider.addDataDisplay(display.getTypeList());
+      selectionModel.setSelected(openChoices[index][0], true);
+   }
+
+   /**
+    * 
+    */
+   private void back()
+   {
+      display.setNextButtonEnabled(true);
+      index--;
+      updateForm();
+      if (index == 0)
+         display.setBackButtonEnabled(false);
+   }
+
+   /**
+    * 
+    */
+   private void next()
+   {
+      display.setBackButtonEnabled(true);
+      index++;
+      updateForm();
+      if (index >= chosen.length - 1)
+      {
+         display.setNextButtonEnabled(false);
+      }
    }
 
    /**
@@ -179,6 +326,18 @@ public class OrganizeImportsPresenter implements UpdateOutlineHandler, OrganizeI
       }
       else
          editor = null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView().getId().equals(Display.ID))
+      {
+         display = null;
+      }
    }
 
 }
