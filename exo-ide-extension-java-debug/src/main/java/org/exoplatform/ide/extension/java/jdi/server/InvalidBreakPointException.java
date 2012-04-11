@@ -19,9 +19,14 @@
 package org.exoplatform.ide.extension.java.jdi.server;
 
 /**
+ * Thrown by {@link Debugger} when request to add new breakpoint is invalid. Typically it means the location (class
+ * name or line number) is invalid.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @see Debugger#addBreakPoint(org.exoplatform.ide.extension.java.jdi.shared.BreakPoint)
  */
+@SuppressWarnings("serial")
 public final class InvalidBreakPointException extends DebuggerException
 {
    public InvalidBreakPointException(String message)

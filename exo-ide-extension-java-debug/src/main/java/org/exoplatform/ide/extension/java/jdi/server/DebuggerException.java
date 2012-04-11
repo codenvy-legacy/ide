@@ -24,6 +24,7 @@ package org.exoplatform.ide.extension.java.jdi.server;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@SuppressWarnings("serial")
 public class DebuggerException extends Exception
 {
    public DebuggerException(String message)

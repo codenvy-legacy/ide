@@ -21,8 +21,11 @@ package org.exoplatform.ide.extension.java.jdi.server;
 import com.sun.jdi.event.EventSet;
 
 /**
+ * Handle events from {@link EventsCollector}.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @see org.exoplatform.ide.extension.java.jdi.server.EventsCollector#run()
  */
 public interface EventsHandler
 {

@@ -19,16 +19,46 @@
 package org.exoplatform.ide.extension.java.jdi.server;
 
 /**
+ * Instance of class member in debuggee JVM.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public interface JdiField extends JdiVariable
 {
+   /**
+    * Check is this field is final.
+    *
+    * @return <code>true</code> if field is final and <code>false</code> otherwise
+    * @throws DebuggerException
+    *    if an error occurs
+    */
    boolean isFinal() throws DebuggerException;
 
+   /**
+    * Check is this field is static.
+    *
+    * @return <code>true</code> if field is static and <code>false</code> otherwise
+    * @throws DebuggerException
+    *    if an error occurs
+    */
    boolean isStatic() throws DebuggerException;
 
+   /**
+    * Check is this transient is transient.
+    *
+    * @return <code>true</code> if field is transient and <code>false</code> otherwise
+    * @throws DebuggerException
+    *    if an error occurs
+    */
    boolean isTransient() throws DebuggerException;
 
+   /**
+    * Check is this field is volatile.
+    *
+    * @return <code>true</code> if field is volatile and <code>false</code> otherwise
+    * @throws DebuggerException
+    *    if an error occurs
+    */
    boolean isVolatile() throws DebuggerException;
 }

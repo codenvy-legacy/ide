@@ -19,9 +19,12 @@
 package org.exoplatform.ide.extension.java.jdi.server;
 
 /**
+ * Thrown by {@link ApplicationRunner}.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@SuppressWarnings("serial")
 public class ApplicationRunnerException extends Exception
 {
    public ApplicationRunnerException(String message)
