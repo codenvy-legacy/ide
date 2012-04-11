@@ -42,7 +42,7 @@ public class RunAppControl extends SimpleControl implements IDEControl, ProjectC
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(DebuggerClientBundle.INSTANCE.debug(), DebuggerClientBundle.INSTANCE.debugDisabled());
+      setImages(DebuggerClientBundle.INSTANCE.runApp(), DebuggerClientBundle.INSTANCE.runAppDisabled());
       setEvent(new RunAppEvent());
    }
 

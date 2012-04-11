@@ -87,31 +87,10 @@
       <type>org.exoplatform.ide.extension.maven.server.BuilderApplication</type>
    </component>
 
-   <component>
-      <type>org.exoplatform.ide.shell.server.rest.ShellApplication</type>
-      <init-params>
-         <value-param>
-            <name>defaultEntryPoint</name>
-            <value>dev-monit</value>
-         </value-param>
-         <value-param>
-            <name>discoverable</name>
-            <value>true</value>
-         </value-param>
-         <value-param>
-            <name>workspace</name>
-            <value>production</value>
-         </value-param>
-         <value-param>
-            <name>user-config</name>
-            <value>/ide-home/users/</value>
-         </value-param>
-      </init-params>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.shell.server.CLIResourceFactory</type>
-   </component>
+   <!-- component> <type>org.exoplatform.ide.shell.server.rest.ShellApplication</type> <init-params> <value-param> <name>defaultEntryPoint</name> <value>dev-monit</value> 
+      </value-param> <value-param> <name>discoverable</name> <value>true</value> </value-param> <value-param> <name>workspace</name> <value>production</value> 
+      </value-param> <value-param> <name>user-config</name> <value>/ide-home/users/</value> </value-param> </init-params> </component> <component> <type>org.exoplatform.ide.shell.server.CLIResourceFactory</type> 
+      </component -->
 
    <component>
       <key>org.exoplatform.ide.extension.jenkins.server.JenkinsClient</key>
@@ -347,4 +326,20 @@
          </value-param>
       </init-params>
    </component>
+
+   <component>
+      <key>org.exoplatform.ide.extension.java.jdi.server.ApplicationRunner</key>
+      <type>org.exoplatform.ide.extension.java.jdi.server.CloudfoundryApplicationRunner</type>
+      <init-params>
+         <value-param>
+            <name>cloudfoundry-target</name>
+            <value>http://api.javarun.exoplatform.com</value>
+         </value-param>
+         <value-param>
+            <name>cloudfoundry-token</name>
+            <value>04085b0849221e76706172666f6e6f764065786f706c6174666f726d2e636f6d063a0645546c2b070e6c8d4f2219c65557d6a6cda8a1c94916e78d1043887f473d12</value>
+         </value-param>
+      </init-params>
+   </component>
+
 </configuration>

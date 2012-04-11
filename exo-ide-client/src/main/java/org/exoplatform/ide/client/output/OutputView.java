@@ -89,7 +89,7 @@ public class OutputView extends ViewImpl implements org.exoplatform.ide.client.o
       String disabledIcon = ImageHelper.getImageHTML(Images.OutputPanel.CLEAR_OUTPUT);
       clearOutputButton = new IconButton(normalIcon, disabledIcon);
       clearOutputButton.setTitle(CLEAR_OUTPUT);
-
+      clearOutputButton.setEnabled(true);
       ToolbarItem toolbarItem = toolbar.addItem(clearOutputButton, true);
       toolbarItem.getElement().getStyle().setPaddingTop(2, Unit.PX);
       toolbarItem.getElement().getStyle().setPaddingRight(2, Unit.PX);

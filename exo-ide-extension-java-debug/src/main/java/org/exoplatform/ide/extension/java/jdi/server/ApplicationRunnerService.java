@@ -33,6 +33,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
 /**
+ * Provide access to {@link ApplicationRunner} through HTTP.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -49,7 +51,7 @@ public class ApplicationRunnerService
                                              @Context UriInfo uriInfo) throws ApplicationRunnerException
    {
       ApplicationInstance app = runner.runApplication(war);
-      app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stop")
+      app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stopApplication")
          .queryParam("name", app.getName()).build().toString());
       return app;
    }

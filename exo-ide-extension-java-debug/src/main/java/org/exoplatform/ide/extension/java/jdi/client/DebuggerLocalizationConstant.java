@@ -1,5 +1,7 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
+import com.google.gwt.i18n.client.LocalizableResource.Key;
+
 
 
 /**
@@ -47,6 +49,10 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
   @DefaultMessage("Debug")
   @Key("debug")
   String debug();
+  
+  @DefaultMessage("Your application still starting.\n So wait are few second and try connect debugger again.")
+  @Key("notStartedYet")
+  String notStartedYet();
 
   /**
    * Translated "Disconnect".
@@ -92,6 +98,11 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
   @DefaultMessage("Port")
   @Key("port")
   String port();
+  
+  
+  @DefaultMessage("Application URL")
+  @Key("appUrl")
+  String appUrl();
   
   
   /**
@@ -163,23 +174,21 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
   @Key("stepReturn")
   String stepReturn();
   
+  @DefaultMessage("Application <b>{0}</b> started")
+  @Key("appStarted")
+  String applicationStarted(String name);
   
-//  @Key("control.startApp.id")
-//  String startAppControlId();
-//
-//  @Key("control.startApp.title")
-//  String startAppControlTitle();
-//
-//  @Key("control.startApp.prompt")
-//  String startAppControlPrompt();
-//
-//  @Key("control.stopApp.id")
-//  String stopAppControlId();
-//
-//  @Key("control.stopApp.title")
-//  String stopAppControlTitle();
-//
-//  @Key("control.stopApp.prompt")
-//  String stopAppControlPrompt();
+  @DefaultMessage("Application <b>{0}</b> stoped")
+  @Key("appStoped")
+  String applicationStoped(String name);
+  
+  @DefaultMessage("Application <b>{0}</b> started on {1}")
+  @Key("appStarted.uris")
+  String applicationStartedOnUrls(String name, String uris);  
+
+  @DefaultMessage("Start application failed.")
+  @Key("startAppFailed")
+  String startApplicationFailed();
+
 
 }

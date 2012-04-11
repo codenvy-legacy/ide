@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
+import org.exoplatform.ide.client.framework.editor.AddCommentsModifierEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
@@ -88,6 +89,7 @@ public class RubyEditorExtension extends Extension implements InitializeServices
                .setCodeAssistant(new RubyCodeAssistant())));
 
       IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_RUBY, new RubyOutlineItemCreator());
+   //TODO   IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_RUBY, new RubyCommentModifier()));
    }
 
 }

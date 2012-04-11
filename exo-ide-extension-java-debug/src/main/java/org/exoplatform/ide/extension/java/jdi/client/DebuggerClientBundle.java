@@ -31,53 +31,48 @@ import com.google.gwt.resources.client.ImageResource;
 public interface DebuggerClientBundle extends ClientBundle
 {
    DebuggerClientBundle INSTANCE = GWT.<DebuggerClientBundle> create(DebuggerClientBundle.class);
-   /*
-    * Buttons
-    */
-   @Source("org/exoplatform/ide/extension/java/jdi/images/resume_co.gif")
+  
+   @Source("org/exoplatform/ide/extension/java/jdi/images/resume.png")
    ImageResource resumeButton();
    
-   @Source("org/exoplatform/ide/extension/java/jdi/images/disconnect_co.gif")
+   @Source("org/exoplatform/ide/extension/java/jdi/images/resume_Disabled.png")
+   ImageResource resumeButtonDisabled();
+   
+   @Source("org/exoplatform/ide/extension/java/jdi/images/disconnect.png")
    ImageResource disconnectButton();
-   
-   @Source("org/exoplatform/ide/extension/java/jdi/images/remove_all_breakpoints.gif")
-   ImageResource removeAllBreakpointsButton();
-   
-   @Source("org/exoplatform/ide/extension/java/jdi/images/rundebug.gif")
-   ImageResource runDebugButton();
-   
-   @Source("org/exoplatform/ide/extension/java/jdi/images/debugtt_obj.gif")
-   ImageResource addBreakPointButton();
-   
-   @Source("org/exoplatform/ide/extension/java/jdi/images/export_brkpts.gif")
-   ImageResource breakPointsIcon();
-   
-   @Source("org/exoplatform/ide/extension/java/jdi/images/update.gif")
-   ImageResource checkEvents();
+
+   @Source("org/exoplatform/ide/extension/java/jdi/images/disconnect_Disabled.png")
+   ImageResource disconnectButtonDisabled();
    
    @Source("org/exoplatform/ide/extension/java/jdi/images/cancel.png")
    ImageResource cancelButton();
    
-   @Source("org/exoplatform/ide/extension/java/jdi/images/variable.gif")
-   ImageResource variable();
+   @Source("org/exoplatform/ide/extension/java/jdi/images/cancel_Disabled.png")
+   ImageResource cancelButtonDisabled();
    
-   @Source("org/exoplatform/ide/extension/java/jdi/images/breakpoint.gif")
-   ImageResource breakpoint();
-   
-   @Source("org/exoplatform/ide/extension/java/jdi/images/stepinto.gif")
+   @Source("org/exoplatform/ide/extension/java/jdi/images/stepinto.png")
    ImageResource stepIntoButton();
+
+   @Source("org/exoplatform/ide/extension/java/jdi/images/stepinto_Disabled.png")
+   ImageResource stepIntoButtonDisabled();
    
-   @Source("org/exoplatform/ide/extension/java/jdi/images/stepover.gif")
+   @Source("org/exoplatform/ide/extension/java/jdi/images/stepover.png")
    ImageResource stepOverButton();
    
-   @Source("org/exoplatform/ide/extension/java/jdi/images/stepreturn.gif")
+   @Source("org/exoplatform/ide/extension/java/jdi/images/stepover_Disabled.png")
+   ImageResource stepOverButtonDisabled();
+   
+   @Source("org/exoplatform/ide/extension/java/jdi/images/stepreturn.png")
    ImageResource stepReturnButton();
+
+   @Source("org/exoplatform/ide/extension/java/jdi/images/stepreturn_Disabled.png")
+   ImageResource stepReturnButtonDisabled();
    
-   @Source("org/exoplatform/ide/extension/java/jdi/images/debug.png")
-   ImageResource debug();
+   @Source("org/exoplatform/ide/extension/java/jdi/images/debugApp.png")
+   ImageResource debugApp();
    
-   @Source("org/exoplatform/ide/extension/java/jdi/images/debug_Disabled.png")
-   ImageResource debugDisabled();
+   @Source("org/exoplatform/ide/extension/java/jdi/images/debugApp_Disabled.png")
+   ImageResource debugAppDisabled();
    
    @Source("org/exoplatform/ide/extension/java/jdi/images/stopApp.png")
    ImageResource stopApp();
@@ -85,4 +80,22 @@ public interface DebuggerClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/java/jdi/images/stopApp_Disabled.png")
    ImageResource stopAppDisabled();
    
+   @Source("org/exoplatform/ide/extension/java/jdi/images/runApp.png")
+   ImageResource runApp();
+   
+   @Source("org/exoplatform/ide/extension/java/jdi/images/runApp_Disabled.png")
+   ImageResource runAppDisabled();
+   
+   @Source("org/exoplatform/ide/extension/java/jdi/images/variable.png")
+   ImageResource variable();
+   
+   @Source("org/exoplatform/ide/extension/java/jdi/images/breakpoint.png")
+   ImageResource breakpoint();
+   
+   @Source("org/exoplatform/ide/extension/java/jdi/images/remove_all_breakpoints.gif")
+   ImageResource removeAllBreakpointsButton();
+
+   @Source("org/exoplatform/ide/extension/java/jdi/images/breakpoints.png")
+   ImageResource breakPointsIcon();
 }
+

@@ -25,25 +25,25 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.extension.java.jdi.client.events.LaunchDebuggerEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebugAppEvent;
 
 
-public class LaunchDebuggerControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
+public class DebugAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
    ProjectOpenedHandler
 {
    public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.launchDebuggerControlId();
 
-   private static final String TITLE = "Debug";
+   private static final String TITLE = "Debug Application";
 
    private static final String PROMPT = "Launch Debug";
 
-   public LaunchDebuggerControl()
+   public DebugAppControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(DebuggerClientBundle.INSTANCE.debug(), DebuggerClientBundle.INSTANCE.debugDisabled());
-      setEvent(new LaunchDebuggerEvent());
+      setImages(DebuggerClientBundle.INSTANCE.debugApp(), DebuggerClientBundle.INSTANCE.debugAppDisabled());
+      setEvent(new DebugAppEvent());
    }
 
    /**

@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
+import org.exoplatform.ide.client.framework.editor.AddCommentsModifierEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
@@ -98,6 +99,11 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
       IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_PHP, phpOutlineItemCreator);
       IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_X_PHP, phpOutlineItemCreator);
       IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_X_HTTPD_PHP, phpOutlineItemCreator);
+
+      /* PhpCommentsModifier commentsModifier = new PhpCommentsModifier();
+      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_PHP, commentsModifier));
+      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_X_PHP, commentsModifier));
+      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_X_HTTPD_PHP, commentsModifier));*/
    }
 
 }

@@ -53,7 +53,7 @@ import java.util.concurrent.TimeUnit;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class CloudfoundryApplicationRunner implements ApplicationRunner, Startable
+public class CloudfoundryApplicationRunner implements ApplicationRunner, Startable
 {
    /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
    public static final int DEFAULT_APPLICATION_LIFETIME = 10;
