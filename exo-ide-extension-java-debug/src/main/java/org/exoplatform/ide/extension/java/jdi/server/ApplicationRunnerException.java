@@ -16,33 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.shared;
+package org.exoplatform.ide.extension.java.jdi.server;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ApplicationInstance
+public class ApplicationRunnerException extends Exception
 {
-   String getName();
+   public ApplicationRunnerException(String message)
+   {
+      super(message);
+   }
 
-   void setName(String name);
-
-   String getWebURL();
-
-   void setWebURL(String url);
-
-   String getStopURL();
-
-   void setStopURL(String url);
-
-   /**
-    * Lifetime of application instance in minutes. After this time instance may be stopped.
-    * Method may return -1 if lifetime of instance is unknown.
-    *
-    * @return application instance lifetime in minutes
-    */
-   int getLifetime();
-
-   void setLifetime(int lifetime);
+   public ApplicationRunnerException(String message, Throwable cause)
+   {
+      super(message, cause);
+   }
 }

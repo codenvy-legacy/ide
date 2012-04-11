@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.client.edit.switching;
+package org.exoplatform.ide.editor.api.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
@@ -29,9 +29,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface GoPreviousFileHandler extends EventHandler
+public interface EditorHotKeyPressedHandler extends EventHandler
 {
    
-   void onGoPreviousFile(GoPreviousFileEvent event);
+   void onEditorHotKeyPressed(EditorHotKeyPressedEvent event);
 
 }

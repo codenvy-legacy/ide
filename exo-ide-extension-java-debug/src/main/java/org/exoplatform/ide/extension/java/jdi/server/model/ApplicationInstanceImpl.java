@@ -29,6 +29,15 @@ public class ApplicationInstanceImpl implements ApplicationInstance
    private String name;
    private String webURL;
    private String stopURL;
+   private int lifetime = -1;
+
+   public ApplicationInstanceImpl(String name, String webURL, String stopURL, int lifetime)
+   {
+      this.name = name;
+      this.webURL = webURL;
+      this.stopURL = stopURL;
+      this.lifetime = lifetime;
+   }
 
    public ApplicationInstanceImpl(String name, String webURL, String stopURL)
    {
@@ -78,12 +87,25 @@ public class ApplicationInstanceImpl implements ApplicationInstance
    }
 
    @Override
+   public int getLifetime()
+   {
+      return lifetime;
+   }
+
+   @Override
+   public void setLifetime(int lifetime)
+   {
+      this.lifetime = lifetime;
+   }
+
+   @Override
    public String toString()
    {
       return "ApplicationInstanceImpl{" +
          "name='" + name + '\'' +
          ", webURL='" + webURL + '\'' +
          ", stopURL='" + stopURL + '\'' +
+         ", lifetime=" + lifetime +
          '}';
    }
 }

@@ -31,7 +31,7 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter;
-import org.exoplatform.ide.client.hotkeys.HotKeyManagerImpl;
+import org.exoplatform.ide.client.hotkeys.HotKeyManager;
 import org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter;
 import org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter;
 import org.exoplatform.ide.client.workspace.SelectWorkspacePresenter;
@@ -93,7 +93,7 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
       applicationConfiguration = event.getApplicationConfiguration();
       new VirtualFileSystemFactory(applicationConfiguration.getContext());
       new RestDiscoveryService(applicationConfiguration.getContext());
-      new HotKeyManagerImpl(controls, applicationSettings);
+      new HotKeyManager(controls, applicationSettings);
    }
 
    public void onControlsUpdated(ControlsUpdatedEvent event)

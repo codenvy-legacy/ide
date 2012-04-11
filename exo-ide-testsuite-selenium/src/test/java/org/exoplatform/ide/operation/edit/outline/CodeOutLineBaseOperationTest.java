@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -92,7 +93,9 @@ public class CodeOutLineBaseOperationTest extends BaseTest
 
       //check, than cursor go to line
       assertEquals("26 : 1", IDE.STATUSBAR.getCursorPosition());
-      IDE.EDITOR.deleteLinesInEditor(0, 7);
+      
+      //IDE.EDITOR.deleteLinesInEditor(0, 7);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
 
       //Schedule redraw period is 3 seconds: 
       Thread.sleep(3000);
@@ -112,9 +115,9 @@ public class CodeOutLineBaseOperationTest extends BaseTest
 
       assertEquals("groovy code", IDE.OUTLINE.getItemLabel(1));
       assertEquals("div", IDE.OUTLINE.getItemLabel(12));
-      assertEquals("a", IDE.OUTLINE.getItemLabel(13));
+      assertEquals("div", IDE.OUTLINE.getItemLabel(13));
       assertEquals("groovy code", IDE.OUTLINE.getItemLabel(14));
 
-      assertTrue(IDE.OUTLINE.isItemSelected(14));
+      assertTrue(IDE.OUTLINE.isItemSelected(13));
    }
 }

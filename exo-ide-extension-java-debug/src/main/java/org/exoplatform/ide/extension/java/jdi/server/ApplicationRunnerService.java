@@ -46,7 +46,7 @@ public class ApplicationRunnerService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    public ApplicationInstance runApplication(@QueryParam("war") URL war,
-                                             @Context UriInfo uriInfo) throws DeployApplicationException
+                                             @Context UriInfo uriInfo) throws ApplicationRunnerException
    {
       ApplicationInstance app = runner.runApplication(war);
       app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stop")
@@ -59,7 +59,7 @@ public class ApplicationRunnerService
    @Produces(MediaType.APPLICATION_JSON)
    public DebugApplicationInstance debugApplication(@QueryParam("war") URL war,
                                                     @QueryParam("suspend") boolean suspend,
-                                                    @Context UriInfo uriInfo) throws DeployApplicationException
+                                                    @Context UriInfo uriInfo) throws ApplicationRunnerException
    {
       DebugApplicationInstance app = runner.debugApplication(war, suspend);
       app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stopApplication")
@@ -69,7 +69,7 @@ public class ApplicationRunnerService
 
    @GET
    @Path("stop")
-   public void stopApplication(@QueryParam("name") String name) throws DeployApplicationException
+   public void stopApplication(@QueryParam("name") String name) throws ApplicationRunnerException
    {
       runner.stopApplication(name);
    }

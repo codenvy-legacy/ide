@@ -29,21 +29,21 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class GoPreviousFileEvent extends GwtEvent<GoPreviousFileHandler>
+public class GoPreviousEditorEvent extends GwtEvent<GoPreviousEditorHandler>
 {
 
-   public static final GwtEvent.Type<GoPreviousFileHandler> TYPE = new GwtEvent.Type<GoPreviousFileHandler>();
+   public static final GwtEvent.Type<GoPreviousEditorHandler> TYPE = new GwtEvent.Type<GoPreviousEditorHandler>();
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<GoPreviousFileHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<GoPreviousEditorHandler> getAssociatedType()
    {
       return TYPE;
    }
 
    @Override
-   protected void dispatch(GoPreviousFileHandler handler)
+   protected void dispatch(GoPreviousEditorHandler handler)
    {
-      handler.onGoPreviousFile(this);
+      handler.onGoPreviousEditor(this);
    }
 
 }

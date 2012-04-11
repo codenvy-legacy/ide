@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,21 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.server;
+
+package org.exoplatform.ide.client.edit.switching;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * 
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public class DeployApplicationException extends Exception
+
+public class GoNextEditorEvent extends GwtEvent<GoNextEditorHandler>
 {
-   public DeployApplicationException(String message)
+
+   public static final GwtEvent.Type<GoNextEditorHandler> TYPE = new GwtEvent.Type<GoNextEditorHandler>();
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<GoNextEditorHandler> getAssociatedType()
    {
-      super(message);
+      return TYPE;
    }
 
-   public DeployApplicationException(String message, Throwable cause)
+   @Override
+   protected void dispatch(GoNextEditorHandler handler)
    {
-      super(message, cause);
+      handler.onGoNextEditor(this);
    }
+
 }

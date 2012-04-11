@@ -111,8 +111,8 @@ public class CodeOutLineNetvibesTest extends BaseTest
       IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOpened();
+      
       checkTreeCorrectlyCreated();
-
    }
 
    private void checkTreeCorrectlyCreated() throws Exception
