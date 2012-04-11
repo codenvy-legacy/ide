@@ -95,7 +95,7 @@ public class DebuggerService
       Debugger.getInstance(id).deleteBreakPoint(breakPoint);
    }
 
-   @POST
+   @GET
    @Path("breakpoints/delete_all/{id}")
    public void deleteAllBreakPoint(@PathParam("id") String id) throws DebuggerException
    {
