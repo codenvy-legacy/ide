@@ -21,6 +21,7 @@ package org.exoplatform.ide.editor.css.client;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
+import org.exoplatform.ide.client.framework.editor.AddCommentsModifierEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
@@ -64,6 +65,8 @@ public class CssEditorExtension extends Extension
                .setParser(new CssParser()).setCodeAssistant(new CssCodeAssistant())));
 
       IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_CSS, new CssOutlineItemCreator());
+
+      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.TEXT_CSS, new CssCommentsModifier()));
    }
 
 }

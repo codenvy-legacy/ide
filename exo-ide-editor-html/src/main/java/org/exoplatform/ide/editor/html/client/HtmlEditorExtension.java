@@ -22,6 +22,7 @@ import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
+import org.exoplatform.ide.client.framework.editor.AddCommentsModifierEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
@@ -73,6 +74,8 @@ public class HtmlEditorExtension extends Extension
             new CKEditorConfiguration()));
 
       IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_HTML, new HtmlOutlineItemCreator());
+
+      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.TEXT_HTML, new HtmlCommentsModifier()));
    }
 
 }

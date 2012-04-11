@@ -25,6 +25,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
+import org.exoplatform.ide.client.framework.editor.AddCommentsModifierEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -128,6 +129,10 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
       IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_GROOVY, groovyOutlineItemCreator);
       IDE.getInstance().addOutlineItemCreator(MimeType.GROOVY_SERVICE, groovyOutlineItemCreator);
 
+      GroovyCommentsModifier commentsModifier = new GroovyCommentsModifier();
+      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_GROOVY, commentsModifier));
+      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.GROOVY_SERVICE, commentsModifier));
+      
    }
 
    /**
