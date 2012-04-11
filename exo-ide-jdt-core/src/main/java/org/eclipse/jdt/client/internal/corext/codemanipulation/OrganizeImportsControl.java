@@ -19,15 +19,19 @@
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
 import org.eclipse.jdt.client.event.OrganizeImportsEvent;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class OrganizeImportsControl extends SimpleControl implements IDEControl
+public class OrganizeImportsControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
    /**
@@ -48,8 +52,33 @@ public class OrganizeImportsControl extends SimpleControl implements IDEControl
    @Override
    public void initialize()
    {
-      setEnabled(true);
-      setVisible(true);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      if (event.getEditor() == null)
+      {
+         setEnabled(false);
+         setVisible(false);
+      }
+      else
+      {
+         if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
+         {
+            setEnabled(true);
+            setVisible(true);
+         }
+         else
+         {
+            setEnabled(false);
+            setVisible(false);
+         }
+      }
    }
 
 }
