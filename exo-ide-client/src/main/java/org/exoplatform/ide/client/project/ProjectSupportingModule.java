@@ -36,6 +36,7 @@ import org.exoplatform.ide.client.model.template.marshal.TemplateListUnmarshalle
 import org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter;
 import org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter;
 import org.exoplatform.ide.client.project.deploy.DeployProjectToPaasPresenter;
+import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.project.explorer.ShowProjectExplorerControl;
 import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
 import org.exoplatform.ide.client.project.list.ShowProjectsPresenter;
@@ -71,7 +72,7 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       new ShowProjectsPresenter();
 
       new TinyProjectExplorerPresenter();
-      //new ProjectExplorerPresenter();
+//      new ProjectExplorerPresenter();
       
       IDE.getInstance().addControl(new ShowProjectExplorerControl());
       IDE.getInstance().addControl(new CloseProjectControl());      

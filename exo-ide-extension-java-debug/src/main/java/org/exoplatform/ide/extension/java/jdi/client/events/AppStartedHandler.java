@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,31 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.server;
+package org.exoplatform.ide.extension.java.jdi.client.events;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.core.Application;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
- */
-public class DebuggerApplication extends Application
+*/
+public interface AppStartedHandler extends EventHandler
 {
-   private final Set<Class<?>> classes;
-
-   public DebuggerApplication()
-   {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(DebuggerService.class);
-      classes.add(ApplicationRunnerService.class);
-   }
-
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return classes;
-   }
+   void onAppStarted(AppStartedEvent event);
 }

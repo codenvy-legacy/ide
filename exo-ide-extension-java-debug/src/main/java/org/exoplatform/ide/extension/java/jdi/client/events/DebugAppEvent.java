@@ -16,31 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.server;
+package org.exoplatform.ide.extension.java.jdi.client.events;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.core.Application;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
- */
-public class DebuggerApplication extends Application
+*/
+public class DebugAppEvent extends GwtEvent<DebugAppHandler>
 {
-   private final Set<Class<?>> classes;
 
-   public DebuggerApplication()
+     public static final GwtEvent.Type<DebugAppHandler> TYPE = new GwtEvent.Type<DebugAppHandler>();
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<DebugAppHandler> getAssociatedType()
    {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(DebuggerService.class);
-      classes.add(ApplicationRunnerService.class);
+      return TYPE;
    }
 
    @Override
-   public Set<Class<?>> getClasses()
+   protected void dispatch(DebugAppHandler handler)
    {
-      return classes;
+      handler.onDebugApp(this);
    }
+
 }

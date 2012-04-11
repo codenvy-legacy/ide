@@ -25,21 +25,21 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class LaunchDebuggerEvent extends GwtEvent<LaunchDebuggerHandler>
+public class AppStartedEvent extends GwtEvent<AppStartedHandler>
 {
 
-     public static final GwtEvent.Type<LaunchDebuggerHandler> TYPE = new GwtEvent.Type<LaunchDebuggerHandler>();
+   public static final GwtEvent.Type<AppStartedHandler> TYPE = new GwtEvent.Type<AppStartedHandler>();
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<LaunchDebuggerHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<AppStartedHandler> getAssociatedType()
    {
       return TYPE;
    }
 
    @Override
-   protected void dispatch(LaunchDebuggerHandler handler)
+   protected void dispatch(AppStartedHandler handler)
    {
-      handler.onLaunchDebugger(this);
+      handler.onAppStarted(this);
    }
 
 }

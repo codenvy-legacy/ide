@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
+import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointList;
+import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Field;
@@ -69,5 +71,9 @@ public interface DebuggerAutoBeanFactory extends AutoBeanFactory
    AutoBean<BreakPointEvent> breakPoinEvent();
 
    AutoBean<StepEvent> stepEvent();
+
+   AutoBean<ApplicationInstance> applicationInstance();
+
+   AutoBean<DebugApplicationInstance> debugApplicationInstance();
 
 }

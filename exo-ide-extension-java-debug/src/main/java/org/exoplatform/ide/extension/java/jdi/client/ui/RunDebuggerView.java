@@ -1,28 +1,25 @@
 package org.exoplatform.ide.extension.java.jdi.client.ui;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.java.jdi.client.DebuggerExtension;
-import org.exoplatform.ide.extension.java.jdi.client.RunDebuggerPresenter;
+import org.exoplatform.ide.extension.java.jdi.client.ReLaunchDebuggerPresenter;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-
-public class RunDebuggerView extends ViewImpl implements RunDebuggerPresenter.Display
+public class RunDebuggerView extends ViewImpl implements ReLaunchDebuggerPresenter.Display
 {
    private static final String ID = "ideRunDebuggerView";
 
    private static final int WIDTH = 420;
 
    private static final int HEIGHT = 150;
-
 
    private static RunDebuggerViewUiBinder uiBinder = GWT.create(RunDebuggerViewUiBinder.class);
 
@@ -31,10 +28,7 @@ public class RunDebuggerView extends ViewImpl implements RunDebuggerPresenter.Di
    }
 
    @UiField
-   TextInput hostField;
-
-   @UiField
-   TextInput portField;
+   FlowPanel webUrl;
 
    /**
     * Create application button.
@@ -51,6 +45,7 @@ public class RunDebuggerView extends ViewImpl implements RunDebuggerPresenter.Di
    public RunDebuggerView()
    {
       super(ID, ViewType.MODAL, DebuggerExtension.LOCALIZATION_CONSTANT.debug(), null, WIDTH, HEIGHT, false);
+      //      webUrl.se
       add(uiBinder.createAndBindUi(this));
    }
 
@@ -61,7 +56,7 @@ public class RunDebuggerView extends ViewImpl implements RunDebuggerPresenter.Di
    }
 
    /**
-    * @see org.exoplatform.ide.extension.RunDebuggerPresenter.client.create.CreateApplicationPresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.extension.ReLaunchDebuggerPresenter.client.create.CreateApplicationPresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()
@@ -69,28 +64,14 @@ public class RunDebuggerView extends ViewImpl implements RunDebuggerPresenter.Di
       return cancelButton;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.RunDebuggerPresenter.client.create.CreateApplicationPresenter.Display#getApplicationNameField()
-    */
    @Override
-   public HasValue<String> getHostField()
+   public void setAppWebUrl(String webUrl)
    {
-      return hostField;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.RunDebuggerPresenter.client.create.CreateApplicationPresenter.Display#getWorkDirLocationField()
-    */
-   @Override
-   public HasValue<String> getPortField()
-   {
-      return portField;
-   }
-
-   @Override
-   public void enableRunButton(boolean enable)
-   {
-      runButton.setEnabled(enable);
+      if (!webUrl.startsWith("http"))
+      {
+         webUrl = "http://" + webUrl;
+      }
+      this.webUrl.getElement().setInnerHTML("<a href=\"" + webUrl + "\" target=\"_blank\">Your application starting here</a>");
    }
 
 }

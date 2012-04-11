@@ -25,25 +25,28 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.extension.java.jdi.client.events.RunAppEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
 
 
-public class RunAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
-   ProjectOpenedHandler
+public class StopAppControl extends SimpleControl implements IDEControl, AppStartedHandler, AppStopedHandler
 {
-   public static final String ID = "Project/Run";
+   public static final String ID = "Project/Stop";
 
-   private static final String TITLE = "Run Application";
+   private static final String TITLE = "Stop Application";
 
-   private static final String PROMPT = "Run Application";
+   private static final String PROMPT = "Stop Application";
 
-   public RunAppControl()
+   public StopAppControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(DebuggerClientBundle.INSTANCE.runApp(), DebuggerClientBundle.INSTANCE.runAppDisabled());
-      setEvent(new RunAppEvent());
+      setImages(DebuggerClientBundle.INSTANCE.stopApp(), DebuggerClientBundle.INSTANCE.stopAppDisabled());
+      setEvent(new StopAppEvent());
    }
 
    /**
@@ -55,25 +58,19 @@ public class RunAppControl extends SimpleControl implements IDEControl, ProjectC
       setVisible(true);
       setEnabled(false);
 
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(AppStartedEvent.TYPE, this);
+      IDE.addHandler(AppStopedEvent.TYPE, this);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
    @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setEnabled(false);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
+   public void onAppStarted(AppStartedEvent event)
    {
       setEnabled(true);
+   }
+
+   @Override
+   public void onAppStoped(AppStopedEvent appStopedEvent)
+   {
+      setEnabled(false);
    }
 }

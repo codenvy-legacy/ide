@@ -182,4 +182,40 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
       buildVariebelsTreePanel(variables);
    }
 
+   @Override
+   public void setEnabelResumeButton(boolean isEnabel)
+   {
+      resumeButton.setEnabled(isEnabel);
+   }
+
+   @Override
+   public void setRemoveAllBreakpointsButton(boolean isEnabel)
+   {
+      removeAllBreakpointsButton.setEnabled(isEnabel);
+   }
+
+   @Override
+   public void setDisconnectButton(boolean isEnabel)
+   {
+      disconnectButton.setEnabled(isEnabel);
+   }
+
+   @Override
+   public void setStepIntoButton(boolean isEnabel)
+   {
+      stepIntoButton.setEnabled(isEnabel);
+   }
+
+   @Override
+   public void setStepOverButton(boolean isEnabel)
+   {
+      stepOverButton.setEnabled(isEnabel);
+   }
+
+   @Override
+   public void setStepReturnButton(boolean isEnabel)
+   {
+      stepReturnButton.setEnabled(isEnabel);
+   }
+
 }

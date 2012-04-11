@@ -28,25 +28,19 @@
       <f:layer>
          <g:FlowPanel>
             <g:DockLayoutPanel unit="PCT" width="100%" height="60px">
-               <g:west size="75">
+               <g:center>
                   <g:FlowPanel>
-                     <g:Label styleName="{style.label}" text="{locale.host}" height="22" width="100%"></g:Label>
-                     <f:TextInput ui:field="hostField" width="100%" height="22px"></f:TextInput>
+                      <g:Label text="{locale.notStartedYet}" styleName="{style.label}"></g:Label>
+                     <g:FlowPanel ui:field="webUrl"></g:FlowPanel>
                   </g:FlowPanel>
-               </g:west>
-               <g:east size="20">
-                  <g:FlowPanel>
-                     <g:Label styleName="{style.label}" text="{locale.port}" height="22" width="100%"></g:Label>
-                     <f:TextInput ui:field="portField" width="100%" height="22px"></f:TextInput>
-                  </g:FlowPanel>
-               </g:east>
+               </g:center>
             </g:DockLayoutPanel>
             <g:DockLayoutPanel unit="PCT" width="100%" height="40px" styleName="{style.spacing}">
                <g:west size="50">
                   <g:LayoutPanel width="100%" height="100%">
                      <g:layer right="5px" width="90px">
-                        <f:ImageButton ui:field="runButton" height="22" text="{locale.runButton}" imageResource="{resource.runDebugButton}"
-                           disabledImageResource="{resource.runDebugButton}"></f:ImageButton>
+                        <f:ImageButton ui:field="runButton" height="22" text="{locale.debug}" imageResource="{resource.debugApp}"
+                           disabledImageResource="{resource.debugAppDisabled}"></f:ImageButton>
                      </g:layer>
                   </g:LayoutPanel>
                </g:west>
