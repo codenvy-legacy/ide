@@ -614,7 +614,7 @@ public class Debugger implements EventsHandler
     * @throws DebuggerStateException when target JVM is not suspended
     * @throws DebuggerException when any other JDI errors occur
     */
-   public void stepNext() throws DebuggerException
+   public void stepOver() throws DebuggerException
    {
       doStep(StepRequest.STEP_OVER);
    }
@@ -625,7 +625,7 @@ public class Debugger implements EventsHandler
     * @throws DebuggerStateException when target JVM is not suspended
     * @throws DebuggerException when any other JDI errors occur
     */
-   public void stepOver() throws DebuggerException
+   public void stepInto() throws DebuggerException
    {
       doStep(StepRequest.STEP_INTO);
    }
