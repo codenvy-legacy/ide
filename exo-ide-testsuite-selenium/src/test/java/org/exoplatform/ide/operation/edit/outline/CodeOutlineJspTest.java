@@ -108,10 +108,6 @@ public class CodeOutlineJspTest extends BaseTest
       // expand outline tree
       outlineTreeHelper.expandOutlineTree();
 
-      // TODO issue IDE-1499
-      IDE.GOTOLINE.goToLine(10);
-      IDE.GOTOLINE.goToLine(15);
-
       outlineTreeHelper.addOutlineItem("html", 1, TokenType.TAG);
       outlineTreeHelper.addOutlineItem("head", 2, TokenType.TAG);
       outlineTreeHelper.addOutlineItem("script", 8, TokenType.TAG);
@@ -122,6 +118,9 @@ public class CodeOutlineJspTest extends BaseTest
       outlineTreeHelper.addOutlineItem("identity", 17, TokenType.PROPERTY);
       outlineTreeHelper.addOutlineItem("i", 18, TokenType.PROPERTY);
       outlineTreeHelper.addOutlineItem("a", 23, TokenType.PROPERTY);
+
+      // check is tree created correctly
+      outlineTreeHelper.checkOutlineTree();
    }
 
 }

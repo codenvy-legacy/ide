@@ -19,9 +19,7 @@
 
 package org.exoplatform.ide.client.edit.switching;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.control.IDEControl;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * 
@@ -31,25 +29,21 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @version $
  */
 
-public class GoPreviousFileControl extends SimpleControl implements IDEControl
+public class GoPreviousEditorEvent extends GwtEvent<GoPreviousEditorHandler>
 {
-   
-   public static final String ID = "View/Switch to previous file";
 
-   public static final String TITLE = "Switch to previous file";
+   public static final GwtEvent.Type<GoPreviousEditorHandler> TYPE = new GwtEvent.Type<GoPreviousEditorHandler>();
 
-   public GoPreviousFileControl()
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<GoPreviousEditorHandler> getAssociatedType()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.back(), IDEImageBundle.INSTANCE.backDisabled());
-      setEvent(new GoPreviousFileEvent());
+      return TYPE;
    }
 
    @Override
-   public void initialize()
+   protected void dispatch(GoPreviousEditorHandler handler)
    {
-   }   
+      handler.onGoPreviousEditor(this);
+   }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,22 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
-package org.exoplatform.ide.client.edit.switching;
+package org.exoplatform.ide.client.framework.editor.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link EditorRemoveBlockCommentEvent} event.
  * 
- * Created by The eXo Platform SAS .
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Apr 6, 2012 11:29:43 AM anya $
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
  */
-
-public interface GoPreviousFileHandler extends EventHandler
+public interface EditorRemoveBlockCommentHandler extends EventHandler
 {
-   
-   void onGoPreviousFile(GoPreviousFileEvent event);
-
+   /**
+    * Perform removing block comment from source code.
+    * 
+    * @param event
+    */
+   void onEditorRemoveBlockComment(EditorRemoveBlockCommentEvent event);
 }

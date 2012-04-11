@@ -33,17 +33,34 @@ import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
 import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.picocontainer.Startable;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
+ * ApplicationRunner for deploy Java applications at Cloud Foundry PaaS.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class CloudfoundryApplicationRunner implements ApplicationRunner
+public final class CloudfoundryApplicationRunner implements ApplicationRunner, Startable
 {
+   /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
+   public static final int DEFAULT_APPLICATION_LIFETIME = 10;
+
+   private static final Log LOG = ExoLogger.getLogger(CloudfoundryApplicationRunner.class);
+
+   //
    private static final Random RANDOM = new Random();
    private static final char[] CHARS = new char[36];
 
@@ -71,14 +88,24 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner
       return b.toString();
    }
 
+   private final int applicationLifetime;
+   private final long applicationLifetimeMillis;
+
    private final Cloudfoundry cloudfoundry;
+   private final List<Application> applications;
+   private final ScheduledExecutorService applicationTerminator;
 
    public CloudfoundryApplicationRunner(InitParams initParams)
    {
-      this(readValueParam(initParams, "cloudfoundry-target"), readValueParam(initParams, "cloudfoundry-token"));
+      this(
+         getValueParam(initParams, "cloudfoundry-target"),
+         getValueParam(initParams, "cloudfoundry-token"),
+         parseNumber(getValueParam(initParams, "cloudfoundry-application-lifetime"), DEFAULT_APPLICATION_LIFETIME)
+            .intValue()
+      );
    }
 
-   protected CloudfoundryApplicationRunner(String cfTarget, String cfToken)
+   protected CloudfoundryApplicationRunner(String cfTarget, String cfToken, int applicationLifetime)
    {
       if (cfTarget == null || cfTarget.isEmpty())
       {
@@ -88,10 +115,21 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner
       {
          throw new IllegalArgumentException("Cloud Foundry secret token may not be null or empty.");
       }
-      cloudfoundry = new Cloudfoundry(new Auth(cfTarget, cfToken));
+      if (applicationLifetime < 1)
+      {
+         throw new IllegalArgumentException("Invalid application lifetime: " + 1);
+      }
+
+      this.applicationLifetime = applicationLifetime;
+      this.applicationLifetimeMillis = applicationLifetime * 60 * 1000;
+
+      this.cloudfoundry = new Cloudfoundry(new Auth(cfTarget, cfToken));
+      this.applications = new CopyOnWriteArrayList<Application>();
+      this.applicationTerminator = Executors.newSingleThreadScheduledExecutor();
+      this.applicationTerminator.scheduleAtFixedRate(new TerminateApplicationTask(), 1, 1, TimeUnit.MINUTES);
    }
 
-   private static String readValueParam(InitParams initParams, String name)
+   private static String getValueParam(InitParams initParams, String name)
    {
       if (initParams != null)
       {
@@ -101,98 +139,101 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner
       return null;
    }
 
+   private static Double parseNumber(String str, double defaultValue)
+   {
+      if (str != null)
+      {
+         try
+         {
+            return Double.parseDouble(str);
+         }
+         catch (NumberFormatException ignored)
+         {
+         }
+      }
+      return defaultValue;
+   }
+
    @Override
-   public synchronized ApplicationInstance runApplication(URL war) throws DeployApplicationException
+   public synchronized ApplicationInstance runApplication(URL war) throws ApplicationRunnerException
    {
       // Method should be 'synchronized'. At the moment we use just one user as deployer.
       try
       {
-         String target = cloudfoundry.getTarget();
-         CloudFoundryApplication cfApp = cloudfoundry.createApplication(
-            target,
-            generateAppName(16),
-            "spring",
-            null,
-            1,
-            -1,
-            false,
-            null,
-            null,
-            null,
-            war);
-         return new ApplicationInstanceImpl(cfApp.getName(), cfApp.getUris().get(0), null);
+         final String target = cloudfoundry.getTarget();
+         CloudFoundryApplication cfApp = cloudfoundry.createApplication(target, generateAppName(16), "spring", null,
+            1, -1, false, null, null, null, war);
+         final String name = cfApp.getName();
+         final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
+         applications.add(new Application(name, expired));
+         LOG.debug("Start application {}.", name);
+         return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime);
       }
       catch (CloudfoundryException e)
       {
-         throw new DeployApplicationException(e.getMessage(), e);
+         throw new ApplicationRunnerException(e.getMessage(), e);
       }
       catch (ParsingResponseException e)
       {
-         throw new DeployApplicationException(e.getMessage(), e);
+         throw new ApplicationRunnerException(e.getMessage(), e);
       }
       catch (VirtualFileSystemException e)
       {
-         throw new DeployApplicationException(e.getMessage(), e);
+         throw new ApplicationRunnerException(e.getMessage(), e);
       }
       catch (IOException e)
       {
-         throw new DeployApplicationException(e.getMessage(), e);
+         throw new ApplicationRunnerException(e.getMessage(), e);
       }
    }
 
    @Override
-   public synchronized DebugApplicationInstance debugApplication(URL war, boolean suspend) throws DeployApplicationException
+   public synchronized DebugApplicationInstance debugApplication(URL war, boolean suspend) throws ApplicationRunnerException
    {
       // Method should be 'synchronized'. At the moment we use just one user as deployer.
       try
       {
-         String target = cloudfoundry.getTarget();
-         CloudFoundryApplication cfApp = cloudfoundry.createApplication(
-            target,
-            generateAppName(16),
-            "spring",
-            null,
-            1,
-            -1,
-            false,
-            suspend ? new DebugMode("suspend") : new DebugMode(),
-            null,
-            null,
-            war);
-         String name = cfApp.getName();
+         final String target = cloudfoundry.getTarget();
+         CloudFoundryApplication cfApp = cloudfoundry.createApplication(target, generateAppName(16), "spring",
+            null, 1, -1, false, suspend ? new DebugMode("suspend") : new DebugMode(), null, null, war);
+         final String name = cfApp.getName();
          Instance[] instances = cloudfoundry.applicationInstances(target, name, null, null);
          if (instances.length != 1)
          {
-            throw new DeployApplicationException("Unable run application in debug mode. ");
+            throw new ApplicationRunnerException("Unable run application in debug mode. ");
          }
+         final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
+         applications.add(new Application(name, expired));
+         LOG.debug("Start application {} under debug.", name);
          return new DebugApplicationInstanceImpl(
-            cfApp.getName(),
+            name,
             cfApp.getUris().get(0),
             null,
+            applicationLifetime,
             instances[0].getDebugHost(),
             instances[0].getDebugPort()
          );
       }
       catch (CloudfoundryException e)
       {
-         throw new DeployApplicationException(e.getMessage(), e);
+         throw new ApplicationRunnerException(e.getMessage(), e);
       }
       catch (ParsingResponseException e)
       {
-         throw new DeployApplicationException(e.getMessage(), e);
+         throw new ApplicationRunnerException(e.getMessage(), e);
       }
       catch (VirtualFileSystemException e)
       {
-         throw new DeployApplicationException(e.getMessage(), e);
+         throw new ApplicationRunnerException(e.getMessage(), e);
       }
       catch (IOException e)
       {
-         throw new DeployApplicationException(e.getMessage(), e);
+         throw new ApplicationRunnerException(e.getMessage(), e);
       }
    }
 
    @Override
-   public synchronized void stopApplication(String name) throws DeployApplicationException
+   public synchronized void stopApplication(String name) throws ApplicationRunnerException
    {
       // Method should be 'synchronized'. At the moment we use just one user as deployer.
       try
@@ -200,22 +241,73 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner
          String target = cloudfoundry.getTarget();
          cloudfoundry.stopApplication(target, name, null, null);
          cloudfoundry.deleteApplication(target, name, null, null, true);
+         LOG.debug("Stop application {}.", name);
       }
       catch (CloudfoundryException e)
       {
-         throw new DeployApplicationException(e.getMessage(), e);
+         throw new ApplicationRunnerException(e.getMessage(), e);
       }
       catch (ParsingResponseException e)
       {
-         throw new DeployApplicationException(e.getMessage(), e);
+         throw new ApplicationRunnerException(e.getMessage(), e);
       }
       catch (VirtualFileSystemException e)
       {
-         throw new DeployApplicationException(e.getMessage(), e);
+         throw new ApplicationRunnerException(e.getMessage(), e);
       }
       catch (IOException e)
       {
-         throw new DeployApplicationException(e.getMessage(), e);
+         throw new ApplicationRunnerException(e.getMessage(), e);
+      }
+   }
+
+   @Override
+   public void start()
+   {
+   }
+
+   @Override
+   public void stop()
+   {
+      applicationTerminator.shutdownNow();
+      for (Application app : applications)
+      {
+         try
+         {
+            stopApplication(app.name);
+         }
+         catch (ApplicationRunnerException e)
+         {
+            LOG.error("Failed to stop application {}.", app.name, e);
+         }
+      }
+      applications.clear();
+   }
+
+   private class TerminateApplicationTask implements Runnable
+   {
+      @Override
+      public void run()
+      {
+         List<Application> stopped = new ArrayList<Application>();
+         for (Application app : applications)
+         {
+            if (app.isExpired())
+            {
+               try
+               {
+                  stopApplication(app.name);
+               }
+               catch (ApplicationRunnerException e)
+               {
+                  LOG.error("Failed to stop application {}.", app.name, e);
+               }
+               // Do not try to stop application twice.
+               stopped.add(app);
+            }
+         }
+         applications.removeAll(stopped);
+         LOG.debug("{} APPLICATION REMOVED", stopped.size());
       }
    }
 
@@ -256,6 +348,23 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner
       public void writeCredentials(CloudfoundryCredentials credentials) throws VirtualFileSystemException, IOException
       {
          throw new UnsupportedOperationException();
+      }
+   }
+
+   private static class Application
+   {
+      final String name;
+      final long expirationTime;
+
+      Application(String name, long expirationTime)
+      {
+         this.name = name;
+         this.expirationTime = expirationTime;
+      }
+
+      boolean isExpired()
+      {
+         return expirationTime < System.currentTimeMillis();
       }
    }
 }

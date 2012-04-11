@@ -43,9 +43,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
-import org.exoplatform.ide.client.hotkeys.event.CustomizeHotKeysEvent;
-import org.exoplatform.ide.client.hotkeys.event.CustomizeHotKeysHandler;
-import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ide.client.messages.IdePreferencesLocalizationConstant;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 
@@ -55,7 +52,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * Presenter for customize hotkeys form.
@@ -553,7 +549,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
                protected void onSuccess(ApplicationSettings result)
                {
                   IDE.getInstance().closeView(display.asView().getId());
-                  IDE.fireEvent(new RefreshHotKeysEvent(keys));
+                  HotKeyManager.getInstance().setHotKeys(keys);
                }
 
                @Override

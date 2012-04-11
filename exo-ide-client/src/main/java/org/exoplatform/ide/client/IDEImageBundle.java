@@ -71,6 +71,12 @@ public interface IDEImageBundle extends ClientBundle
    @Source("bundled-images/link-with-editor-disabled.png")
    ImageResource linkWithEditorDisabled();
    
+   @Source("bundled-images/resource-open.png")
+   ImageResource openResource();
+   
+   @Source("bundled-images/resource-open-disabled.png")
+   ImageResource openResourceDisabled();
+
    /*
     * Navigation buttons
     */

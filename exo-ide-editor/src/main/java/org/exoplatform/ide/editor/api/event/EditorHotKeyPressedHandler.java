@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,33 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.shared;
+
+package org.exoplatform.ide.editor.api.event;
+
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * 
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public interface ApplicationInstance
+
+public interface EditorHotKeyPressedHandler extends EventHandler
 {
-   String getName();
+   
+   void onEditorHotKeyPressed(EditorHotKeyPressedEvent event);
 
-   void setName(String name);
-
-   String getWebURL();
-
-   void setWebURL(String url);
-
-   String getStopURL();
-
-   void setStopURL(String url);
-
-   /**
-    * Lifetime of application instance in minutes. After this time instance may be stopped.
-    * Method may return -1 if lifetime of instance is unknown.
-    *
-    * @return application instance lifetime in minutes
-    */
-   int getLifetime();
-
-   void setLifetime(int lifetime);
 }

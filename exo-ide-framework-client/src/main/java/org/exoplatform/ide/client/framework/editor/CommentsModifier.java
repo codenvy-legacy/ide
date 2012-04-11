@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,34 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+package org.exoplatform.ide.client.framework.editor;
 
-package org.exoplatform.ide.client.edit.switching;
-
-import com.google.gwt.event.shared.GwtEvent;
+import org.exoplatform.ide.editor.api.SelectionRange;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.edits.TextEdit;
 
 /**
+ * Code comments modifier.
  * 
- * Created by The eXo Platform SAS .
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Apr 6, 2012 2:59:01 PM anya $
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
  */
-
-public class GoNextFileEvent extends GwtEvent<GoNextFileHandler>
+public interface CommentsModifier
 {
+   /**
+    * @param document
+    * @return {@link TextEdit}
+    */
+   TextEdit addBlockComment(SelectionRange selectionRange, IDocument document);
 
-   public static final GwtEvent.Type<GoNextFileHandler> TYPE = new GwtEvent.Type<GoNextFileHandler>();
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<GoNextFileHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   @Override
-   protected void dispatch(GoNextFileHandler handler)
-   {
-      handler.onGoNextFile(this);
-   }
-
+   /**
+    * @param document
+    * @return {@link TextEdit}
+    */
+   TextEdit removeBlockComment(SelectionRange selectionRange, IDocument document);
 }

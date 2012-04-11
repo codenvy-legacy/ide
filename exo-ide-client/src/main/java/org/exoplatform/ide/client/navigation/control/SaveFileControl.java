@@ -83,6 +83,7 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
       setImages(IDEImageBundle.INSTANCE.save(), IDEImageBundle.INSTANCE.saveDisabled());
       setEvent(new SaveFileEvent());
       setIgnoreDisable(true);
+      setHotKey("Ctrl+S");
    }
 
    /**

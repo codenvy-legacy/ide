@@ -16,33 +16,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.shared;
+package org.exoplatform.ide.client.framework.editor;
+
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * Handler for {@link AddCommentsModifierEvent} event.
+ * 
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Apr 6, 2012 4:45:24 PM anya $
+ * 
  */
-public interface ApplicationInstance
+public interface AddCommentsModifierHandler extends EventHandler
 {
-   String getName();
-
-   void setName(String name);
-
-   String getWebURL();
-
-   void setWebURL(String url);
-
-   String getStopURL();
-
-   void setStopURL(String url);
 
    /**
-    * Lifetime of application instance in minutes. After this time instance may be stopped.
-    * Method may return -1 if lifetime of instance is unknown.
-    *
-    * @return application instance lifetime in minutes
+    * Register comments modifier.
+    * 
+    * @param event
     */
-   int getLifetime();
-
-   void setLifetime(int lifetime);
+   void onAddCommentsModifier(AddCommentsModifierEvent event);
 }
