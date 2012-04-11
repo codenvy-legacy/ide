@@ -17,9 +17,14 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.client.edit.switching;
+package org.exoplatform.ide.client.project.resource;
+
+import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 
 /**
  * 
@@ -29,26 +34,47 @@ import org.exoplatform.ide.client.framework.module.IDE;
  * @version $
  */
 
-public class SwitchingActiveFileCommandHandler implements GoNextFileHandler, GoPreviousFileHandler
+public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHandler
 {
 
-   public SwitchingActiveFileCommandHandler()
-   {
-      IDE.getInstance().addControl(new GoNextFileControl());
-      IDE.getInstance().addControl(new GoPreviousFileControl());
-      
-      IDE.addHandler(GoNextFileEvent.TYPE, this);
-      IDE.addHandler(GoPreviousFileEvent.TYPE, this);
-   }
-
-   @Override
-   public void onGoPreviousFile(GoPreviousFileEvent event)
+   public interface Display extends IsView
    {
    }
 
-   @Override
-   public void onGoNextFile(GoNextFileEvent event)
+   private Display display;
+
+   public OpenResourcePresenter()
    {
+      IDE.getInstance().addControl(new OpenResourceControl());
+
+      IDE.addHandler(OpenResourceEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+   }
+
+   @Override
+   public void onOpenResource(OpenResourceEvent event)
+   {
+      if (display != null)
+      {
+         return;
+      }
+
+      display = GWT.create(Display.class);
+      bindDisplay();
+      IDE.getInstance().openView(display.asView());
+   }
+
+   private void bindDisplay()
+   {
+   }
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+      }
    }
 
 }

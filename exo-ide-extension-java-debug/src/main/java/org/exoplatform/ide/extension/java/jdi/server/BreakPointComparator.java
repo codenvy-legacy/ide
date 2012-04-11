@@ -23,9 +23,11 @@ import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import java.util.Comparator;
 
 /**
-* @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
-* @version $Id: $
-*/
+ * Helps to order breakpoints by name of location and line number.
+ *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
+ */
 final class BreakPointComparator implements Comparator<BreakPoint>
 {
    @Override

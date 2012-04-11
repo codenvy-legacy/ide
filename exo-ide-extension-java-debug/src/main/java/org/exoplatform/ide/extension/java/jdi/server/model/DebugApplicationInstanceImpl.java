@@ -29,6 +29,18 @@ public class DebugApplicationInstanceImpl extends ApplicationInstanceImpl implem
    private String debugHost;
    private int debugPort;
 
+   public DebugApplicationInstanceImpl(String name,
+                                       String webURL,
+                                       String stopURL,
+                                       int lifetime,
+                                       String debugHost,
+                                       int debugPort)
+   {
+      super(name, webURL, stopURL, lifetime);
+      this.debugHost = debugHost;
+      this.debugPort = debugPort;
+   }
+
    public DebugApplicationInstanceImpl(String name, String webURL, String stopURL, String debugHost, int debugPort)
    {
       super(name, webURL, stopURL);
@@ -71,6 +83,7 @@ public class DebugApplicationInstanceImpl extends ApplicationInstanceImpl implem
          "name='" + getName() + '\'' +
          ", webURL='" + getWebURL() + '\'' +
          ", stopURL='" + getStopURL() + '\'' +
+         ", lifetime=" + getLifetime() +
          ", debugPort=" + debugPort +
          ", debugHost='" + debugHost + '\'' +
          '}';

@@ -18,13 +18,12 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Outline.TokenType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +46,13 @@ public class CodeOutLineNetvibesTest extends BaseTest
    private final static String FILE_NAME = "NetvibesCodeOutline.html";
 
    private final static String FOLDER_NAME = CodeOutLineNetvibesTest.class.getSimpleName() + "-dir";
+
+   private OutlineTreeHelper outlineTreeHelper;
+
+   public CodeOutLineNetvibesTest()
+   {
+      this.outlineTreeHelper = new OutlineTreeHelper();
+   }
 
    @Before
    public void setUp()
@@ -105,39 +111,53 @@ public class CodeOutLineNetvibesTest extends BaseTest
       IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOpened();
+      
       checkTreeCorrectlyCreated();
-
    }
 
    private void checkTreeCorrectlyCreated() throws Exception
    {
+      // create initial outline tree map
+      OutlineTreeHelper.init();
+
+      // check is tree created correctly      
+      outlineTreeHelper.checkOutlineTree();
+
+      // expand outline tree
+      outlineTreeHelper.expandOutlineTree();
+
+      // TODO issue IDE-1499
+      IDE.GOTOLINE.goToLine(10);
+      IDE.GOTOLINE.goToLine(15);
+
       // check html node
-      assertTrue(IDE.OUTLINE.isItemPresentById("html:TAG:4"));
+      outlineTreeHelper.addOutlineItem("html", 4, TokenType.TAG);
 
-      // check head tag and subnodes head
-      assertTrue(IDE.OUTLINE.isItemPresentById("head:TAG:6"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("meta:TAG:7"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("meta:TAG:8"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("meta:TAG:9"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("meta:TAG:10"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("meta:TAG:11"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("link:TAG:12"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("script:TAG:14"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("title:TAG:16"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("link:TAG:17"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("widget:preferences:TAG:20"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("style:TAG:22"));
+      // check head tag and sub-nodes head
+      outlineTreeHelper.addOutlineItem("head", 6, TokenType.TAG);
+      outlineTreeHelper.addOutlineItem("meta", 7, TokenType.TAG);
+      outlineTreeHelper.addOutlineItem("meta", 8, TokenType.TAG);
+      outlineTreeHelper.addOutlineItem("meta", 9, TokenType.TAG);
+      outlineTreeHelper.addOutlineItem("meta", 10, TokenType.TAG);
+      outlineTreeHelper.addOutlineItem("meta", 11, TokenType.TAG);
+      outlineTreeHelper.addOutlineItem("link", 12, TokenType.TAG);
+      outlineTreeHelper.addOutlineItem("script", 14, TokenType.TAG);
+      outlineTreeHelper.addOutlineItem("title", 16, TokenType.TAG);
+      outlineTreeHelper.addOutlineItem("link", 17, TokenType.TAG);
+      outlineTreeHelper.addOutlineItem("widget:preferences", 20, TokenType.TAG);
+      outlineTreeHelper.addOutlineItem("style", 22, TokenType.TAG);
 
-      // check script tag and subnodes script
-      assertTrue(IDE.OUTLINE.isItemPresentById("script:TAG:26"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("YourWidgetName:VARIABLE:31"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("function:FUNCTION:37"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("function:FUNCTION:44"));
+      // check script tag and sub-nodes script
+      outlineTreeHelper.addOutlineItem("script", 26, TokenType.TAG);
+      outlineTreeHelper.addOutlineItem("YourWidgetName : Object", 31, TokenType.VARIABLE);
+      outlineTreeHelper.addOutlineItem("function()", 37, TokenType.FUNCTION);
+      outlineTreeHelper.addOutlineItem("function()", 44, TokenType.FUNCTION);
 
       // check body tag and subnodes body
-      assertTrue(IDE.OUTLINE.isItemPresentById("body:TAG:50"));
-      assertTrue(IDE.OUTLINE.isItemPresentById("p:TAG:51"));
+      outlineTreeHelper.addOutlineItem("body", 50, TokenType.TAG);
+      outlineTreeHelper.addOutlineItem("p", 51, TokenType.TAG);
 
+      outlineTreeHelper.checkOutlineTree();
    }
 
 }

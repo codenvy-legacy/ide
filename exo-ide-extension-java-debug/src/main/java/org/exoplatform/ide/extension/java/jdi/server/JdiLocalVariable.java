@@ -19,6 +19,8 @@
 package org.exoplatform.ide.extension.java.jdi.server;
 
 /**
+ * Local variable in debuggee JVM.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */

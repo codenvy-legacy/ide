@@ -39,6 +39,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 /**
+ * Provide access to {@link Debugger} through HTTP.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -93,7 +95,7 @@ public class DebuggerService
       Debugger.getInstance(id).deleteBreakPoint(breakPoint);
    }
 
-   @POST
+   @GET
    @Path("breakpoints/delete_all/{id}")
    public void deleteAllBreakPoint(@PathParam("id") String id) throws DebuggerException
    {

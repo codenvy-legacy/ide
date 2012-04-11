@@ -24,14 +24,49 @@ import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
 import java.net.URL;
 
 /**
+ * Java application runner.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public interface ApplicationRunner
 {
-   ApplicationInstance runApplication(URL war) throws DeployApplicationException;
+   /**
+    * Run Java web application.
+    *
+    * @param war
+    *    location of .war file. It may be local or remote location
+    * @return description of deployed application
+    * @throws ApplicationRunnerException
+    *    if any error occur when try to deploy application
+    * @see ApplicationRunnerService#stopApplication(String)
+    * @see ApplicationInstance
+    */
+   ApplicationInstance runApplication(URL war) throws ApplicationRunnerException;
 
-   DebugApplicationInstance debugApplication(URL war, boolean suspend) throws DeployApplicationException;
+   /**
+    * Run Java web application in debug mode.
+    *
+    * @param war
+    *    location of .war file. It may be local or remote location
+    * @param suspend
+    *    if <code>true</code> wait on startup for debugger connect
+    * @return description of deployed application
+    * @throws ApplicationRunnerException
+    *    if any error occur when try to deploy application
+    * @see ApplicationRunnerService#stopApplication(String)
+    * @see ApplicationInstance
+    */
+   DebugApplicationInstance debugApplication(URL war, boolean suspend) throws ApplicationRunnerException;
 
-   void stopApplication(String name) throws DeployApplicationException;
+   /**
+    * Stop application.
+    *
+    * @param name
+    *    name of application
+    * @throws ApplicationRunnerException
+    *    if any error occur when try to stop application
+    * @see ApplicationInstance#getName()
+    */
+   void stopApplication(String name) throws ApplicationRunnerException;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,22 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
-package org.exoplatform.ide.client.edit.switching;
+package org.exoplatform.ide.client.framework.editor.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link EditorAddBlockCommentEvent} event.
  * 
- * Created by The eXo Platform SAS .
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Apr 6, 2012 11:04:59 AM anya $
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
  */
-
-public interface GoNextFileHandler extends EventHandler
+public interface EditorAddBlockCommentHandler extends EventHandler
 {
-   
-   void onGoNextFile(GoNextFileEvent event);
-
+   /**
+    * Perform adding block comment to source code.
+    * 
+    * @param event
+    */
+   void onEditorAddBlockComment(EditorAddBlockCommentEvent event);
 }

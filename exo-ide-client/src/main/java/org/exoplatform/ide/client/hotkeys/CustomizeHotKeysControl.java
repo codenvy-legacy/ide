@@ -23,7 +23,6 @@ import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.hotkeys.event.CustomizeHotKeysEvent;
 
 /**
  * Created by The eXo Platform SAS .

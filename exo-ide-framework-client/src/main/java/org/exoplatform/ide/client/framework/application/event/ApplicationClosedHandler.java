@@ -16,21 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.server;
+package org.exoplatform.ide.client.framework.application.event;
+
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * Handler for {@link ApplicationClosedEvent} event.
+ * 
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Apr 5, 2012 11:21:00 AM anya $
+ * 
  */
-public class DeployApplicationException extends Exception
+public interface ApplicationClosedHandler extends EventHandler
 {
-   public DeployApplicationException(String message)
-   {
-      super(message);
-   }
-
-   public DeployApplicationException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+   /**
+    * Perform actions, when application is closed.
+    * 
+    * @param event
+    */
+   void onApplicationClosed(ApplicationClosedEvent event);
 }

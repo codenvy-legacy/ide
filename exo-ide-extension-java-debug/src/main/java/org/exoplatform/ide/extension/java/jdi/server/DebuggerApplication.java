@@ -33,7 +33,7 @@ public class DebuggerApplication extends Application
 
    public DebuggerApplication()
    {
-      classes = new HashSet<Class<?>>(1);
+      classes = new HashSet<Class<?>>(2);
       classes.add(DebuggerService.class);
       classes.add(ApplicationRunnerService.class);
    }
