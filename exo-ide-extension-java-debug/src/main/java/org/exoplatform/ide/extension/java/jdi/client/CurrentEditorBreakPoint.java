@@ -31,16 +31,18 @@ public class CurrentEditorBreakPoint implements Problem
 
    private String message;
    private int line;
+   private String filePath;
 
   
    /**
     * @param lineNumber
     * @param message
     */
-   public CurrentEditorBreakPoint(int line, String message)
+   public CurrentEditorBreakPoint(int line, String message, String filePath)
    {
       this.line = line;
       this.message = message;
+      this.filePath = filePath;
    }
 
    public CurrentEditorBreakPoint()
@@ -133,6 +135,21 @@ public class CurrentEditorBreakPoint implements Problem
    public void setMessage(String message)
    {
       this.message = message;
+   }
+   
+   public String getFilePath()
+   {
+      return filePath;
+   }
+   
+   public void setFilePath(String filePath)
+   {
+      this.filePath = filePath;
+   }
+   
+   public int getLine()
+   {
+      return line;
    }
 
    @Override

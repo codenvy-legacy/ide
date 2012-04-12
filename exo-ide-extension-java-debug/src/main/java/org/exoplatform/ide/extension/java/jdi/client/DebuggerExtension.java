@@ -3,10 +3,12 @@ package org.exoplatform.ide.extension.java.jdi.client;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebugAppEvent;
@@ -63,6 +65,10 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
       IDE.addHandler(DebugAppEvent.TYPE, debuggerPresenter);
       IDE.addHandler(StopAppEvent.TYPE, debuggerPresenter);
       IDE.addHandler(AppStopedEvent.TYPE, debuggerPresenter);
+      
+      IDE.addHandler(ProjectClosedEvent.TYPE, debuggerPresenter);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, debuggerPresenter);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, debuggerPresenter);
    }
 
 }

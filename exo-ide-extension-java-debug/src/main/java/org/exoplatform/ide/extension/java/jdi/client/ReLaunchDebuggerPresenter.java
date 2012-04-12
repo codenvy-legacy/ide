@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 
@@ -89,6 +90,7 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
          @Override
          public void onClick(ClickEvent event)
          {
+            IDE.fireEvent(new StopAppEvent());
             IDE.getInstance().closeView(display.asView().getId());
          }
       });

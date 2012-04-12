@@ -37,6 +37,7 @@ import org.exoplatform.ide.editor.problem.LineNumberDoubleClickHandler;
 import org.exoplatform.ide.editor.problem.Markable;
 import org.exoplatform.ide.editor.problem.Problem;
 import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedEvent;
@@ -58,7 +59,7 @@ import java.util.Set;
  * 
  */
 public class BreakpointsManager implements EditorActiveFileChangedHandler, LineNumberDoubleClickHandler,
-   DebuggerConnectedHandler, DebuggerDisconnectedHandler, EditorFileOpenedHandler
+   DebuggerConnectedHandler, DebuggerDisconnectedHandler, EditorFileOpenedHandler, BreakPointsUpdatedHandler
 {
 
    private HandlerManager eventBus;
@@ -87,7 +88,6 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
    public BreakpointsManager(HandlerManager eventBus, DebuggerClientService service,
       DebuggerAutoBeanFactory autoBeanFactory, FqnResolverFactory resolverFactory)
    {
-      super();
       this.eventBus = eventBus;
       this.service = service;
       this.autoBeanFactory = autoBeanFactory;
@@ -149,12 +149,14 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
    
    public void markCurrentBreakPoint(Problem problem)
    {
-      markable.markProblem(problem);
+      if(problem != null)
+         markable.markProblem(problem);
    }
    
    public void unmarkCurrentBreakPoint(Problem problem)
    {
-      markable.unmarkProblem(problem);
+      if(problem != null)
+         markable.unmarkProblem(problem);
    }
    
    /**
@@ -331,6 +333,11 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
    public Map<String, FileModel> getFileWithBreakPoints()
    {
       return fileWithBreakPoints;
+   }
+
+   @Override
+   public void onBreakPointsUpdated(BreakPointsUpdatedEvent event)
+   {
    }
 
 }

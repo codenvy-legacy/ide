@@ -21,11 +21,18 @@ package org.exoplatform.ide.extension.java.jdi.client;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.CursorPosition;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -60,7 +67,11 @@ import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -81,19 +92,24 @@ import com.google.web.bindery.autobean.shared.AutoBean;
  * @version $Id: $
 */
 public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisconnectedHandler, ViewClosedHandler,
-   BreakPointsUpdatedHandler, RunAppHandler, DebugAppHandler, ProjectBuiltHandler, StopAppHandler, AppStopedHandler
+   BreakPointsUpdatedHandler, RunAppHandler, DebugAppHandler, ProjectBuiltHandler, StopAppHandler, AppStopedHandler,
+   ProjectClosedHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler
 {
    private Display display;
 
    private DebuggerInfo debuggerInfo;
 
-   private CurrentEditorBreakPoint currentBreakPoint = new CurrentEditorBreakPoint();
+   private CurrentEditorBreakPoint currentBreakPoint;
 
    private ApplicationInstance runningApp;
 
    private BreakpointsManager breakpointsManager;
 
    private String warUrl;
+
+   private boolean startDebugger;
+   
+   private FileModel activeFile;
 
    public interface Display extends IsView
    {
@@ -151,8 +167,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   @Override
                   protected void onSuccess(String result)
                   {
-                     display.setVariebels(Collections.<Variable> emptyList());
-                     breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
+                     resetStates();
                   }
 
                   @Override
@@ -186,8 +201,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   @Override
                   protected void onSuccess(String result)
                   {
-                     display.setVariebels(Collections.<Variable> emptyList());
-                     breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
+                     resetStates();
                   }
 
                   @Override
@@ -220,8 +234,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   @Override
                   protected void onSuccess(String result)
                   {
-                     display.setVariebels(Collections.<Variable> emptyList());
-                     breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
+                     resetStates();
                   }
 
                   @Override
@@ -254,8 +267,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   @Override
                   protected void onSuccess(String result)
                   {
-                     display.setVariebels(Collections.<Variable> emptyList());
-                     breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
+                     resetStates();
                   }
 
                   @Override
@@ -336,6 +348,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   IDE.eventBus().fireEvent(new DebuggerDisconnectedEvent());
                   debuggerInfo = null;
                   checkDebugEventsTimer.cancel();
+                  breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
+                  currentBreakPoint = null;
                }
 
                @Override
@@ -367,7 +381,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                protected void onSuccess(StackFrameDump result)
                {
                   List<Variable> variables = new ArrayList<Variable>(result.getFields());
-                  variables.addAll(result.getLocalVariables());
+                  if (result.getLocalVariables() != null)
+                     variables.addAll(result.getLocalVariables());
                   display.setVariebels(variables);
                }
 
@@ -394,7 +409,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          bindDisplay(display);
          IDE.getInstance().openView(display.asView());
          checkDebugEventsTimer.scheduleRepeating(3000);
-         breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
       }
    }
 
@@ -433,28 +447,36 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   @Override
                   protected void onSuccess(DebuggerEventList result)
                   {
+                     String filePath = null;
                      if (result != null && result.getEvents().size() > 0)
                      {
+                        Location location;
                         for (DebuggerEvent event : result.getEvents())
                         {
                            if (event instanceof StepEvent)
                            {
                               StepEvent stepEvent = (StepEvent)event;
-                              openFile(stepEvent.getLocation());
-                              currentBreakPoint.setLine(stepEvent.getLocation().getLineNumber());
-                              currentBreakPoint.setMessage("BreakPoint");
+                              location = stepEvent.getLocation();
+                              filePath = resolveFilePath(location);
+                              if (!filePath.equalsIgnoreCase(activeFile.getPath()))
+                                 openFile(location);
+                              currentBreakPoint = new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath); 
                            }
                            else if (event instanceof BreakPointEvent)
                            {
                               BreakPointEvent breakPointEvent = (BreakPointEvent)event;
-                              openFile(breakPointEvent.getBreakPoint().getLocation());
-                              currentBreakPoint.setLine(breakPointEvent.getBreakPoint().getLocation().getLineNumber());
-                              currentBreakPoint.setMessage("BreakPoint");
+                              location = breakPointEvent.getBreakPoint().getLocation();
+                              filePath = resolveFilePath(location);
+                              if (!filePath.equalsIgnoreCase(activeFile.getPath()))
+                                 openFile(location);
+                              currentBreakPoint = new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
+                              currentBreakPoint.setLine(location.getLineNumber());
                            }
                            doGetDump();
                            enabelButtons();
                         }
-                        breakpointsManager.markCurrentBreakPoint(currentBreakPoint);
+                        if (filePath != null && filePath.equalsIgnoreCase(activeFile.getPath()))
+                           breakpointsManager.markCurrentBreakPoint(currentBreakPoint);
                      }
                   }
 
@@ -473,12 +495,51 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       }
    };
 
-   private boolean startDebugger;
+   private ProjectModel project;
 
-   private void openFile(Location location)
+   private void openFile(final Location location)
    {
       FileModel fileModel = breakpointsManager.getFileWithBreakPoints().get(location.getClassName());
-      IDE.eventBus().fireEvent(new OpenFileEvent(fileModel, new CursorPosition(location.getLineNumber())));
+      if (fileModel == null)
+      {
+         String path = resolveFilePath(location);
+         try
+         {
+            VirtualFileSystem.getInstance().getItemByPath(path,
+               new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(new FileModel())))
+               {
+
+                  @Override
+                  protected void onSuccess(ItemWrapper result)
+                  {
+                     IDE.eventBus().fireEvent(new OpenFileEvent((FileModel)result.getItem(), new CursorPosition(location.getLineNumber())));
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     Dialogs.getInstance().showError(exception.getMessage());
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+         }
+
+      }
+      else
+      {
+         IDE.eventBus().fireEvent(new OpenFileEvent(fileModel, new CursorPosition(location.getLineNumber())));
+      }
+   }
+
+   private String resolveFilePath(final Location location)
+   {
+      String sourcePath =
+         project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder") : "src/main/java";
+      String path = project.getPath() + "/" + sourcePath + "/" + location.getClassName().replace(".", "/") + ".java";
+      return path;
    }
 
    public void reLaunchDebugger(DebugApplicationInstance debugApplicationInstance)
@@ -730,6 +791,34 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       String msg = DebuggerExtension.LOCALIZATION_CONSTANT.applicationStoped(appStopedEvent.getAppName());
       IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
       runningApp = null;
+   }
+
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      project = null;
+   }
+
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      project = event.getProject();
+   }
+
+   @Override
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      activeFile = event.getFile();
+      String path = event.getFile().getPath();
+      if (currentBreakPoint.getFilePath().equals(path))
+         breakpointsManager.markCurrentBreakPoint(currentBreakPoint);
+   }
+
+   private void resetStates()
+   {
+      display.setVariebels(Collections.<Variable> emptyList());
+      breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
+      currentBreakPoint = null;
    }
 
 }

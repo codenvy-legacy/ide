@@ -55,7 +55,8 @@ public class ValueDataProvider extends ListDataProvider<Variable>
                {
                   if (result != null)
                   {
-                     setList(result.getVariables());
+                     if (!(result.getVariables() == null  || result.getVariables().isEmpty()))
+                       setList(result.getVariables());
                   }
                }
 
