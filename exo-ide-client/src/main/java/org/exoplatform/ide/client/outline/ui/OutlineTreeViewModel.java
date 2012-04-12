@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.client.outline.ui;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Image;
+
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.DOM;
@@ -75,27 +80,17 @@ public class OutlineTreeViewModel implements TreeViewModel
       {
          OutlineItemCreator outlineItemCreator =
             IDE.getInstance().getOutlineItemCreator(((TokenBeenImpl)token).getMimeType());
-
          if (outlineItemCreator != null)
          {
             return outlineItemCreator.getOutlineItemWidget(token);
          }
          else
          {
-            Grid grid = new Grid(1, 2);
-            grid.setWidth("100%");
-
-            Label l = new Label();
-            l.getElement().setInnerHTML(token.getName());
-            l.setWordWrap(false);
-            grid.setWidget(0, 1, l);
-
-            grid.getCellFormatter().setWidth(0, 0, "16px");
-            grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
-            grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
-            grid.getCellFormatter().setWidth(0, 1, "100%");
-            DOM.setStyleAttribute(grid.getElement(), "display", "block");
-            return grid;
+            FlowPanel flowPanel = new FlowPanel();
+            Element span = DOM.createSpan();
+            span.setInnerHTML(token.getName());
+            flowPanel.getElement().appendChild(span);
+            return flowPanel;
          }
       }
 

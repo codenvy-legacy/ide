@@ -44,6 +44,7 @@ import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAss
 import org.exoplatform.ide.editor.jsp.client.codeassistant.JspCodeAssistant;
 import org.exoplatform.ide.editor.jsp.client.codemirror.JspAutocompleteHelper;
 import org.exoplatform.ide.editor.jsp.client.codemirror.JspCodeValidator;
+import org.exoplatform.ide.editor.jsp.client.codemirror.JspOutlineItemCreator;
 import org.exoplatform.ide.editor.jsp.client.codemirror.JspParser;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -76,6 +77,7 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New JSP File", "JSP", "Create JSP", JSPClientBundle.INSTANCE.jspFile(),
             JSPClientBundle.INSTANCE.jspFileDisabled(), MimeType.APPLICATION_JSP));
+      IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_JAVA, new JspOutlineItemCreator());
    }
 
    /**
