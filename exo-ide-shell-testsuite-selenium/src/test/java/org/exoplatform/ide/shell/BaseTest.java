@@ -31,6 +31,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.PageFactory;
 
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
@@ -61,7 +62,7 @@ public abstract class BaseTest
 
    public static final int IDE_PORT = Integer.valueOf(IDE_SETTINGS.getString("ide.port"));
 
-   public static String BASE_URL = "http://" +USER_NAME + ":" + USER_PASSWORD +"@" + IDE_HOST + ":" + IDE_PORT + "/";
+   public static String BASE_URL = "http://" +URLEncoder.encode(USER_NAME) + ":" + USER_PASSWORD +"@" + IDE_HOST + ":" + IDE_PORT + "/";
 
    protected static String APPLICATION_URL = BASE_URL + IDE_SETTINGS.getString("ide.app.url");
 
