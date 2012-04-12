@@ -395,7 +395,7 @@ public class Editor extends AbstractTestModule
     */
    public void waitFileContentModificationMark(final String title)
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
