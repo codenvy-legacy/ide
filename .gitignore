@@ -435,6 +435,9 @@
 /exo-ide-testsuite-selenium/run_tests.cmd
 /exo-ide-testsuite-selenium/reports.zip
 /exo-ide-testsuite-selenium/bin
+/exo-ide-testsuite-selenium/src/test/resources/conf/ide-selenium.properties
+/exo-ide-testsuite-selenium/chromedriver.log
+
 
 # /exo-ide-testsuite-selenium/src/test/java/org/exoplatform/ide/operation/browse/
 /exo-ide-testsuite-selenium/src/test/java/org/exoplatform/ide/operation/browse/NavigationPanelHotkeysTest.java.new

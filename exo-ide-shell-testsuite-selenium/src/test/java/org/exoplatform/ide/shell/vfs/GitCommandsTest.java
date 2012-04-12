@@ -47,12 +47,16 @@ public class GitCommandsTest extends BaseTest
    private static Map<String, Link> gitFolderLinks;
 
    @BeforeClass
-   public static void uploadFolders() throws IOException
+   public static void uploadFolders() throws IOException, InterruptedException
    {
       folderLinks =
          VfsUtils.importZipProject(MAIN_FOLDER, "src/test/resources/org/exoplatform/ide/shell/test-project.zip");
+      //add for davFs delay
+      Thread.sleep(3000);
       gitFolderLinks =
          VfsUtils.importZipProject(GIT_MAIN_FOLDER, "src/test/resources/org/exoplatform/ide/shell/gitaddtest.zip");
+      //add for davFs delay
+      Thread.sleep(3000);
    }
 
    @AfterClass
@@ -67,13 +71,16 @@ public class GitCommandsTest extends BaseTest
    {
       shell.executeCommand("cd " + MAIN_FOLDER);
       shell.executeCommand("git status");
-      assertThat(shell.getContent()).contains("HEAD reference not found. Seems working directory is not git repository.");
+      assertThat(shell.getContent()).contains(
+         "HEAD reference not found. Seems working directory is not git repository.");
       shell.executeCommand("clear");
 
       shell.executeCommand("git init");
-      Thread.sleep(1000);
+      //add for davFs delay
+      Thread.sleep(10000);
       shell.executeCommand("git status");
-      Thread.sleep(1000);
+      //add for davFs delay
+      Thread.sleep(10000);
       assertThat(shell.getContent()).doesNotContain(
          "HEAD reference not found. Seems working directory is not git repository.").contains("# On branch master");
 
@@ -81,16 +88,17 @@ public class GitCommandsTest extends BaseTest
 
       shell.executeCommand("clear");
       shell.executeCommand("git status");
-      Thread.sleep(1000);
+      //add for davFs delay
+      Thread.sleep(10000);
       assertThat(shell.getContent())
          .doesNotContain("HEAD reference not found. Seems working directory is not git repository.")
          .contains("modified:").contains("TestFile1.txt");
       shell.executeCommand("git add TestFile1.txt");
 
       shell.executeCommand("git commit -m \"test commit\"");
-      Thread.sleep(1000);
+      //add for davFs delay
+      Thread.sleep(10000);
       assertThat(shell.getContent()).contains("\"test commit\"");
-
       shell.executeCommand("clear");
       shell.executeCommand("git status");
    }

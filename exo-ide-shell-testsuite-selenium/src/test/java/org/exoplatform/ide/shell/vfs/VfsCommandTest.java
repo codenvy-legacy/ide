@@ -46,10 +46,12 @@ public class VfsCommandTest extends BaseTest
    private static Map<String, Link> folderLinks;
 
    @BeforeClass
-   public static void uploadFolders() throws IOException
+   public static void uploadFolders() throws IOException, InterruptedException
    {
       folderLinks =
          VfsUtils.importZipProject(MAIN_FOLDER, "src/test/resources/org/exoplatform/ide/shell/test-project.zip");
+    //add for davFs delay
+      Thread.sleep(3000);
    }
 
    @AfterClass
