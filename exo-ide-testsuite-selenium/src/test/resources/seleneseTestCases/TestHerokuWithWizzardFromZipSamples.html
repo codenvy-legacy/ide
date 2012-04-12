@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="http://localhost:8080/" />
+<link rel="selenium.base" href="http://testide248.cloudtest2.exoplatform.com" />
 <title>HerokuWithWizzardFromZipSamples</title>
 </head>
 <body>
@@ -37,57 +37,6 @@
 	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[8]/div/div[2]/table/tr/td/div/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[2]</td>
 	<td></td>
 </tr>
-<!--Generate New SSH Key-->
-<tr>
-	<td>mouseDown</td>
-	<td>//*[.='Window']</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//html/body/div[4]/div[2]/table/tbody/tr[6]/td[2]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[3]/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Generate Key')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[3]/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Generate Key')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Ok')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/table/tbody/tr/td/div/input</td>
-	<td>heroku.com</td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td[contains(.,'Ok')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>5000</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr/td/div[contains(.,'heroku.com')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[5]/table/tbody/tr/td[contains(.,'Close')]</td>
-	<td></td>
-</tr>
 <!--Login to Heroku-->
 <tr>
 	<td>mouseDown</td>
@@ -100,8 +49,13 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr[4]/td[2]/nobr[contains(.,'Switch account')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>//html/body/div[4]/div[3]/table/tbody/tr[11]/td[2]/nobr</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr[4]/td[2]/nobr[contains(.,'Switch account')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -146,8 +100,13 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr[3]/td[2]/nobr[contains(.,'Deploy public key')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>//html/body/div[4]/div[3]/table/tbody/tr[10]/td[2]</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr[3]/td[2]/nobr[contains(.,'Deploy public key')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -227,8 +186,13 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'MyPrj')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>mouseDown</td>
-	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'MyPrj')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -290,42 +254,67 @@
 <!--Rename application-->
 <tr>
 	<td>mouseDown</td>
-	<td>//*[.='PaaS']</td>
+	<td>//*[.='Project']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[4]/div[2]/table/tbody/tr[3]/td[2]/nobr</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[2]/td[2]/nobr[contains(.,'PaaS')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[4]/div[3]/table/tbody/tr[3]/td[2]/nobr[contains(.,'Rename application...')]</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr/td[2]/nobr[contains(.,'Heroku')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div/input[@name=&quot;ideRenameApplicationViewNameField&quot;]</td>
+	<td>//html/body/div[7]/div/table/tbody/tr/td[2]/div/div/div[contains(.,'Heroku Project')]</td>
 	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div[2]/table/tbody/tr/td[2]/table/tbody/tr/td/div[@class=&quot;imageButtonIconPanel&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div[2]/table/tbody/tr/td[2]/table/tbody/tr/td/div[@class=&quot;imageButtonIconPanel&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div/input[@name=&quot;ideRenameApplicationViewNameField&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{&quot;my-new-projectj-&quot; + Math.floor(Math.random()*999999999)}</td>
+	<td>projectName</td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div/input[@name=&quot;ideRenameApplicationViewNameField&quot;]</td>
-	<td>my-new-project2</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div/input[@name=&quot;ideRenameApplicationViewNameField&quot;]</td>
+	<td>${projectName}</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div[2]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Rename')]</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div[2]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[3][contains(.,'Rename')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div[2]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Rename')]</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div[2]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[3][contains(.,'Rename')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Close')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/*[contains(.,'is successfully renamed to my-new-project2.')]</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/*[contains(.,'is successfully renamed to ${projectName}.')]</td>
 	<td></td>
 </tr>
 <!--Open pushed projeckt-->
@@ -346,12 +335,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/a[contains(.,'http://my-new-project2.heroku.com/')]</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/a[contains(.,'http://${projectName}.heroku.com/')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>open</td>
-	<td>http://my-new-project2.heroku.com/</td>
+	<td>http://${projectName}.heroku.com/</td>
 	<td></td>
 </tr>
 <tr>
@@ -376,12 +365,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'MyPrj')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>mouseDown</td>
-	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'MyPrj')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -392,53 +381,113 @@
 <!--heroku application info-->
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//*[.='PaaS']</td>
+	<td>//*[.='Project']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>mouseDown</td>
-	<td>//*[.='PaaS']</td>
+	<td>//*[.='Project']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[4]/div[2]/table/tbody/tr[3]/td[2]/nobr</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[2]/td[2]/nobr[contains(.,'PaaS')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[4]/div[3]/table/tbody/tr[5]/td[2]/nobr[contains(.,'Application info...')]</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr/td[2]/nobr[contains(.,'Heroku')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr/td[2]/div[contains(.,'my-new-project2')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr[4]/td[2]/div[contains(.,'eos.roman@gmail.com')]</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div[3]/table/tbody/tr/td[2]/table/tbody/tr/td/div/img[@class=&quot;gwt-Image&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Ok')]</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div[3]/table/tbody/tr/td[2]/table/tbody/tr/td/div/img[@class=&quot;gwt-Image&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[8]/div/table/tbody/tr/td[2]/div/div/div[contains(.,'Heroku application information')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr[2]/td[2]/div[contains(.,'${projectName}')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr[4]/td[2]/div[contains(.,'eos.roman@gmail.com')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Ok')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Ok')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Close')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Close')]</td>
 	<td></td>
 </tr>
 <!--heroku logs-->
 <tr>
 	<td>mouseDown</td>
-	<td>//*[.='PaaS']</td>
+	<td>//*[.='Project']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[4]/div[2]/table/tbody/tr[3]/td[2]/nobr</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[2]/td[2]/nobr[contains(.,'PaaS')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[4]/div[3]/table/tbody/tr[6]/td[2]/nobr[contains(.,'Logs...')]</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr/td[2]/nobr[contains(.,'Heroku')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr/td[2]/div/div/div[contains(.,'Heroku Project')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//*[@id=&quot;ideHerokuProjectViewLogsButton&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//*[@id=&quot;ideHerokuProjectViewLogsButton&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>5000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Close')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Close')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -448,7 +497,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr/td/div[contains(.,'Max number of log lines')]</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div[contains(.,'heroku')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr/td[2]/input[@name=&quot;ideLogsViewLogLinesField&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -479,37 +533,67 @@
 <!--rake commands-->
 <tr>
 	<td>mouseDown</td>
-	<td>//*[.='PaaS']</td>
+	<td>//*[.='Project']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[4]/div[2]/table/tbody/tr[3]/td[2]/nobr</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[2]/td[2]/nobr[contains(.,'PaaS')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[4]/div[3]/table/tbody/tr[8]/td[2]/nobr[contains(.,'Rake...')]</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr/td[2]/nobr[contains(.,'Heroku')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div/div[5]/input[@name=&quot;ideRakeCommandViewCommandField&quot;]</td>
+	<td>//html/body/div[7]/div/table/tbody/tr/td[2]/div/div/div[contains(.,'Heroku Project')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//*[@id=&quot;ideHerokuProjectViewRakeButton&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//*[@id=&quot;ideHerokuProjectViewRakeButton&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div/div[5]/input[@name=&quot;ideRakeCommandViewCommandField&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div/div[5]/input[@name=&quot;ideRakeCommandViewCommandField&quot;]</td>
-	<td>--help</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div/div[5]/input[@name=&quot;ideRakeCommandViewCommandField&quot;]</td>
+	<td>-help</td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div/div[4]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Run')]</td>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div/div[4]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Run')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div[3]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Close')]</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div/div[4]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Run')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div[3]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Close')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Close')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>10000</td>
 	<td></td>
 </tr>
 <tr>
@@ -524,43 +608,38 @@
 </tr>
 <!--Change project index page-->
 <tr>
-	<td>pause</td>
-	<td>5000</td>
-	<td></td>
-</tr>
-<tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/div/div[7]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'public')]</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div[7]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'public')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>mouseDown</td>
-	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/div/div[7]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'public')]</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div[7]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'public')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>doubleClick</td>
-	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/div/div[7]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'public')]</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div[7]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'public')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForVisible</td>
-	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/div/div[7]/div/div[8]/div/table/tbody/tr/td[2]/div[contains(.,'index.html')]</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div[7]/div/div[8]/div/table/tbody/tr/td[2]/div[contains(.,'index.html')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>mouseDown</td>
-	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/div/div[7]/div/div[8]/div/table/tbody/tr/td[2]/div[contains(.,'index.html')]</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div[7]/div/div[8]/div/table/tbody/tr/td[2]/div[contains(.,'index.html')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/div/div[7]/div/div[8]/div/table/tbody/tr/td[2]/div[contains(.,'index.html')]</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div[7]/div/div[8]/div/table/tbody/tr/td[2]/div[contains(.,'index.html')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>doubleClick</td>
-	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/div/div[7]/div/div[8]/div/table/tbody/tr/td[2]/div[contains(.,'index.html')]</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div[7]/div/div[8]/div/table/tbody/tr/td[2]/div[contains(.,'index.html')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -644,8 +723,13 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'MyPrj')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>mouseDown</td>
-	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'MyPrj')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -661,6 +745,11 @@
 <!--Add to git index after changes-->
 <tr>
 	<td>mouseDown</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div[7]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'public')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
 	<td>//*[.='Git']</td>
 	<td></td>
 </tr>
@@ -672,6 +761,11 @@
 <tr>
 	<td>click</td>
 	<td>//html/body/div[4]/div[2]/table/tbody/tr[5]/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div/b[contains(.,'public')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -743,52 +837,62 @@
 <!--Changing environment-->
 <tr>
 	<td>mouseDown</td>
-	<td>//*[.='PaaS']</td>
+	<td>//*[.='Project']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[4]/div[2]/table/tbody/tr[3]/td[2]/nobr</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//html/body/div[4]/div[3]/table/tbody/tr[4]/td[2]/nobr[contains(.,'Change environment')]</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[2]/td[2]/nobr[contains(.,'PaaS')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[4]/div[3]/table/tbody/tr[4]/td[2]/nobr[contains(.,'Change environment')]</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr/td[2]/nobr[contains(.,'Heroku')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[7]/div/table/tbody/tr/td[2]/div/div/div[contains(.,'Change deployment')]</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/input[@name=&quot;ideHerokuProjectViewSatckField&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr[2]/td/div/*[contains(.,'bamboo')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr[3]/td/div[contains(.,'bamboo')]</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div[2]/table/tbody/tr/td[2]/table/tbody/tr/td/div[@class=&quot;imageButtonIconPanel&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr[3]/td/div[contains(.,'bamboo')]</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div[2]/table/tbody/tr/td[2]/table/tbody/tr/td/div[@class=&quot;imageButtonIconPanel&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Change')]</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div[contains(.,'bamboo')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr[3]/td/div[contains(.,'bamboo')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Change')]</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr[3]/td/div[contains(.,'bamboo')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Change')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Change')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Close')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -875,12 +979,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/a[contains(.,'http://my-new-project2.heroku.com/')]</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/a[contains(.,'http://${projectName}.heroku.com/')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>open</td>
-	<td>http://my-new-project2.heroku.com/</td>
+	<td>http://${projectName}.heroku.com/</td>
 	<td></td>
 </tr>
 <tr>
@@ -905,17 +1009,17 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[8]/div/div[2]/table/tr/td/div/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[2]</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[8]/div/div[2]/table/tr/td/div/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Welcome')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'MyPrj')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>mouseDown</td>
-	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'MyPrj')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -926,32 +1030,47 @@
 <!--delete heroku application-->
 <tr>
 	<td>mouseDown</td>
-	<td>//*[.='PaaS']</td>
+	<td>//*[.='Project']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[4]/div[2]/table/tbody/tr[3]/td[2]/nobr</td>
+	<td>//html/body/div[4]/div[2]/table/tbody/tr[2]/td[2]/nobr[contains(.,'PaaS')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[4]/div[3]/table/tbody/tr[2]/td[2]/nobr[contains(.,'Delete application...')]</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr/td[2]/nobr[contains(.,'Heroku')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[7]/div/table/tbody/tr/td[2]/div/div/div[contains(.,'Delete application from Heroku')]</td>
+	<td>//html/body/div[7]/div/table/tbody/tr/td[2]/div/div/div[contains(.,'Heroku Project')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Yes')]</td>
+	<td>//*[@id=&quot;ideHerokuProjectViewDeleteButton&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Yes')]</td>
+	<td>//*[@id=&quot;ideHerokuProjectViewDeleteButton&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[8]/div/table/tbody/tr/td[2]/div/div/div[contains(.,'Delete application from Heroku')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td[2]/table/tbody/tr/td[3][contains(.,'Yes')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td[2]/table/tbody/tr/td[3][contains(.,'Yes')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -972,7 +1091,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[4]/div[3]/table/tbody/tr[11]/td[2]/nobr</td>
+	<td>//html/body/div[4]/div[3]/table/tbody/tr[4]/td[2]/nobr[contains(.,'Switch account')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -1019,47 +1138,6 @@
 <tr>
 	<td>click</td>
 	<td>//html/body/div[4]/div[2]/table/tbody/tr[4]/td[2]/nobr[contains(.,'Close')]</td>
-	<td></td>
-</tr>
-<!--delete ssh key-->
-<tr>
-	<td>mouseDown</td>
-	<td>//*[.='Window']</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//html/body/div[4]/div[2]/table/tbody/tr[6]/td[2]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr/td[3]/div[contains(.,'Delete')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr/td[3]/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Yes')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//html/body/div[8]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td[2]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[5]/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Close')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>5000</td>
 	<td></td>
 </tr>
 <!--logout-->
