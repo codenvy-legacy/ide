@@ -50,6 +50,7 @@ public class ShowAboutControl extends SimpleControl implements IDEControl
       setVisible(true);
       setImages(IDEImageBundle.INSTANCE.about(), IDEImageBundle.INSTANCE.aboutDisabled());
       setEvent(new ShowAboutDialogEvent());
+      setHotKey("F1");
    }
 
    /**

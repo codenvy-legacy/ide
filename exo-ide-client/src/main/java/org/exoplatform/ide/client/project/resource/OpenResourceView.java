@@ -19,11 +19,14 @@
 
 package org.exoplatform.ide.client.project.resource;
 
+import com.google.gwt.uibinder.client.UiField;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
@@ -47,16 +50,22 @@ public class OpenResourceView extends ViewImpl implements org.exoplatform.ide.cl
    /**
     * Initial width of this view
     */
-   private static final int WIDTH = 500;
+   private static final int WIDTH = 550;
 
    /**
     * Initial height of this view
     */
-   private static final int HEIGHT = 300;   
+   private static final int HEIGHT = 320;   
    
    public static final String ID = "ideOpenResourceView";
    
    public static final String TITLE = "Open Resource";
+   
+   @UiField
+   ImageButton openButton;
+   
+   @UiField
+   ImageButton cancelButton;
 
    public OpenResourceView()
    {

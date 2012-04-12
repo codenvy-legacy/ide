@@ -22,9 +22,14 @@ package org.exoplatform.ide.client.project.resource;
 import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * 
@@ -34,7 +39,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
  * @version $
  */
 
-public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHandler
+public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHandler, ProjectOpenedHandler,
+   ProjectClosedHandler
 {
 
    public interface Display extends IsView
@@ -43,18 +49,22 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
 
    private Display display;
 
+   private ProjectModel project;
+
    public OpenResourcePresenter()
    {
       IDE.getInstance().addControl(new OpenResourceControl());
 
       IDE.addHandler(OpenResourceEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
    @Override
    public void onOpenResource(OpenResourceEvent event)
    {
-      if (display != null)
+      if (project == null || display != null)
       {
          return;
       }
@@ -75,6 +85,18 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
       {
          display = null;
       }
+   }
+
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      project = null;
+   }
+
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      project = event.getProject();
    }
 
 }
