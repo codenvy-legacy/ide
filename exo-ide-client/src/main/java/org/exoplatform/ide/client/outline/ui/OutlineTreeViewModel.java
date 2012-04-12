@@ -58,7 +58,7 @@ public class OutlineTreeViewModel implements TreeViewModel
       {
          if (value instanceof TokenBeenImpl)
          {
-            sb.appendHtmlConstant((createItemWidget((TokenBeenImpl)value).getElement().getString()));
+            sb.appendHtmlConstant((createItemWidget((TokenBeenImpl)value).getElement().getInnerHTML()));
          }
          else if (value instanceof EmptyTreeMessage)
          {

@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.client.framework.outline.ui;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.commons.util.StringEscapeUtils;
@@ -47,11 +47,6 @@ public abstract class OutlineItemCreatorImpl implements OutlineItemCreator
    public Widget getOutlineItemWidget(Token token)
    {
       FlowPanel flowPanel = new FlowPanel();
-      flowPanel.setWidth("100%");
-      DOM.setStyleAttribute(flowPanel.getElement(), "display", "inline");
-      DOM.setStyleAttribute(flowPanel.getElement(), "cssFloat", "left");
-      DOM.setStyleAttribute(flowPanel.getElement(), "overflow", "hidden");
-      DOM.setStyleAttribute(flowPanel.getElement(), "whiteSpace", "nowrap");
 
       ImageResource imageResource = getTokenIcon((TokenBeenImpl)token);
       if (imageResource != null)
@@ -61,11 +56,9 @@ public abstract class OutlineItemCreatorImpl implements OutlineItemCreator
          DOM.setStyleAttribute(i.getElement(), "marginRight", "5px");
          flowPanel.add(i);
       }
-      Label l = new Label();
-      DOM.setStyleAttribute(l.getElement(), "position", "relative");
-      l.getElement().setInnerHTML(getTokenDisplayTitle((TokenBeenImpl)token));
-      l.setWordWrap(false);
-      flowPanel.add(l);
+      Element span = DOM.createSpan();
+      span.setInnerHTML(getTokenDisplayTitle((TokenBeenImpl)token));
+      flowPanel.getElement().appendChild(span);
 
       return flowPanel;
    }
