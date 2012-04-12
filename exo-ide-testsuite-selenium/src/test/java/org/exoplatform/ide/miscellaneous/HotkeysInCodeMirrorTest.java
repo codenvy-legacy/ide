@@ -90,7 +90,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
       //----- 2 ------------
       //Press Ctrl+F
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "F");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "f");
       //Find-replace form appeared
       IDE.FINDREPLACE.waitOpened();
       IDE.FINDREPLACE.waitFindButtonAppeared();
@@ -104,12 +104,12 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
 
       //----- 3 ------------
       //check Ctrl+D
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "D");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
       assertEquals("", IDE.EDITOR.getTextFromCodeEditor(0));
 
       //----- 4 ------------
       //check Ctrl+L
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "L");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "l");
       //check go to line window dialog appeared
       IDE.GOTOLINE.waitOpened();
       IDE.GOTOLINE.clickCancelButton();
@@ -152,9 +152,9 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       //delete all text
       IDE.EDITOR.typeTextIntoEditor(0, Keys.ARROW_UP.toString());
       Thread.sleep(500);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "D");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
       Thread.sleep(500);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "D");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
       Thread.sleep(500);
 
       final String textToCut = "text to cut";
@@ -200,7 +200,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       assertEquals(textToRevert, IDE.EDITOR.getTextFromCodeEditor(0));
 
       // press Ctrl+Y
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "Y");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "y");
       assertEquals(textToRevert + "5", IDE.EDITOR.getTextFromCodeEditor(0));
 
       IDE.EDITOR.closeTabIgnoringChanges(1);
