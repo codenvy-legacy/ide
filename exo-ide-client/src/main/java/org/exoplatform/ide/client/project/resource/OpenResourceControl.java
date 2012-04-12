@@ -54,6 +54,7 @@ public class OpenResourceControl extends SimpleControl implements IDEControl, Pr
       setImages(IDEImageBundle.INSTANCE.openResource(), IDEImageBundle.INSTANCE.openResourceDisabled());
       setEvent(new OpenResourceEvent());
       setHotKey("Ctrl+Shift+R");
+      setIgnoreDisable(true);
    }
 
    @Override

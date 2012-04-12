@@ -47,6 +47,7 @@ import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.paas.Paas;
+import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
 import org.exoplatform.ide.client.messages.IdeEditorLocalizationConstant;
@@ -232,6 +233,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    @Override
    public void openView(View view)
    {
+      ClearFocusForm.getInstance().clearFocus();
       presenter.openView(view);
    }
 

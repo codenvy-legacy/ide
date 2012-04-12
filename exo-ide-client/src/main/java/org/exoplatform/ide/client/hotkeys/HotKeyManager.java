@@ -179,28 +179,34 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
    // This method is not unused but called by the javaScript function : WindowCloseHandlerImpl::Init
    public void onKeyDown(final Event event)
    {
+      int keyCode = DOM.eventGetKeyCode(event);
+      boolean ctrl = event.getCtrlKey();
+      boolean alt = event.getAltKey();
+      boolean shift = event.getShiftKey();
+      
       if (hotKeyPressedListener != null)
       {
-         hotKeyPressedListener.onHotKeyPressed(event.getCtrlKey(), event.getAltKey(), event.getShiftKey(),
-            DOM.eventGetKeyCode(event));
+         hotKeyPressedListener.onHotKeyPressed(ctrl, alt, shift, keyCode);
          event.preventDefault();
       }
       else
       {
-         int keyCode = DOM.eventGetKeyCode(event);
-         if (handleKeyPressing(event.getCtrlKey(), event.getAltKey(), event.getShiftKey(), keyCode))
+         if (handleKeyPressing(ctrl, alt, shift, keyCode))
          {
             event.preventDefault();
          }
       }
    }
 
-   private boolean handleKeyPressing(boolean isCtrl, boolean isAlt, boolean isShift, int keyCode)
+   private boolean handleKeyPressing(boolean ctrl, boolean alt, boolean shift, int keyCode)
    {
-      if (!isCtrl && !isAlt)
+      if (keyCode < HotKeyHelper.KeyCode.F1 || keyCode > HotKeyHelper.KeyCode.F12)
       {
-         return false;
-      }
+         if (!ctrl && !alt)
+         {
+            return false;
+         }         
+      }      
 
       if (keyCode == 16 || keyCode == 17 || keyCode == 18 || keyCode == 224)
       {
@@ -208,12 +214,12 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
       }
 
       String shortcut = "";
-      if (isCtrl)
+      if (ctrl)
       {
          shortcut = "Ctrl";
       }
 
-      if (isAlt)
+      if (alt)
       {
          if (shortcut.isEmpty())
          {
@@ -225,7 +231,7 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
          }
       }
 
-      if (isShift)
+      if (shift)
       {
          if (shortcut.isEmpty())
          {
@@ -239,13 +245,14 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
 
       if (shortcut.isEmpty())
       {
-         return false;
+         shortcut = HotKeyHelper.getKeyName(String.valueOf(keyCode));
+      }
+      else
+      {
+         shortcut += "+" + HotKeyHelper.getKeyName(String.valueOf(keyCode));
       }
 
-      shortcut += "+" + HotKeyHelper.getKeyName(String.valueOf(keyCode));
-
       // search associated command
-
       if (hotKeys.containsKey(shortcut))
       {
          String controlId = hotKeys.get(shortcut);
