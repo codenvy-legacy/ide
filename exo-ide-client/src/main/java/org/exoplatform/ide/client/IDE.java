@@ -27,6 +27,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
 import org.exoplatform.ide.client.application.ControlsRegistration;
+import org.exoplatform.ide.client.application.EditControlsFormatter;
 import org.exoplatform.ide.client.application.IDEForm;
 import org.exoplatform.ide.client.application.IDEPresenter;
 import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
@@ -149,6 +150,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       controlsRegistration = new ControlsRegistration();
       controlsRegistration.addControlsFormatter(new NewItemControlsFormatter());
       controlsRegistration.addControlsFormatter(new ViewControlsFormatter());
+      controlsRegistration.addControlsFormatter(new EditControlsFormatter());
+      
 
       paasRegistration = new ArrayList<Paas>();
 

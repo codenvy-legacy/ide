@@ -61,6 +61,11 @@ import java.util.Set;
 public class StubUtility
 {
 
+   /**
+    * Default eXo import order
+    */
+   private static final String[] ORDER = new String[]{"#", "*","org", "java", "javax"};
+
    private static final String[] EMPTY = new String[0];
 
    private static final Set<String> VALID_TYPE_BODY_TEMPLATES;
@@ -1594,9 +1599,12 @@ public class StubUtility
    public static ImportRewrite createImportRewrite(IDocument document, CompilationUnit astRoot,
       boolean restoreExistingImports)
    {
-      ImportRewrite rewrite = ImportRewrite.create(document, astRoot, true);
+      ImportRewrite rewrite = ImportRewrite.create(document, astRoot, restoreExistingImports);
       rewrite.setOnDemandImportThreshold(99);
       rewrite.setStaticOnDemandImportThreshold(99);
+      
+      //TODO configure order
+      rewrite.setImportOrder(ORDER);
       if (astRoot.getAST().hasResolvedBindings())
       {
          rewrite.setUseContextToFilterImplicitImports(true);

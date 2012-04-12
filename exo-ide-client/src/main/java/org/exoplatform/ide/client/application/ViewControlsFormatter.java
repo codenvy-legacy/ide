@@ -18,13 +18,7 @@
  */
 package org.exoplatform.ide.client.application;
 
-import org.exoplatform.gwtframework.ui.client.command.Control;
-import org.exoplatform.ide.client.framework.control.ControlsFormatter;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * Formatter to sort controls from "View" menu.
@@ -33,14 +27,13 @@ import java.util.List;
  * @version $Id: Dec 22, 2011 3:47:02 PM anya $
  * 
  */
-public class ViewControlsFormatter implements ControlsFormatter
+public class ViewControlsFormatter extends ControlFormatterBase
 {
-   private List<String> controlIdsOrder;
-
    /**
     * Initialize the order of the controls in menu "View".
     */
-   private void initControlsOrder()
+   @Override
+   protected void initControlsOrder()
    {
       controlIdsOrder = new ArrayList<String>();
       controlIdsOrder.add("View/Properties");
@@ -56,65 +49,11 @@ public class ViewControlsFormatter implements ControlsFormatter
    }
 
    /**
-    * @param eventBus
+    * @see org.exoplatform.ide.client.application.ControlFormatterBase#getMainMenuPrefix()
     */
-   public ViewControlsFormatter()
+   @Override
+   protected String getMainMenuPrefix()
    {
-      initControlsOrder();
+      return "View/";
    }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.ControlsFormatter#format(java.util.List)
-    */
-   @SuppressWarnings("rawtypes")
-   public void format(List<Control> controls)
-   {
-      List<Control> viewControls = sortViewControls(controls);
-      controls.removeAll(viewControls);
-      controls.addAll(viewControls);
-   }
-
-   /**
-    * Sort new items controls and return them.
-    * 
-    * @param controls all controls
-    * @return sorted only new item controls
-    */
-   @SuppressWarnings("rawtypes")
-   private List<Control> sortViewControls(List<Control> controls)
-   {
-      List<Control> viewControls = new ArrayList<Control>();
-      for (Control control : controls)
-      {
-         if (control.getId().startsWith("View/"))
-         {
-            viewControls.add(control);
-         }
-      }
-
-      Collections.sort(viewControls, controlComparator);
-
-      return viewControls;
-   }
-
-   /**
-    * Comparator for items order.
-    */
-   @SuppressWarnings("rawtypes")
-   private Comparator<Control> controlComparator = new Comparator<Control>()
-   {
-      public int compare(Control control1, Control control2)
-      {
-         Integer index1 = controlIdsOrder.indexOf(control1.getId());
-         Integer index2 = controlIdsOrder.indexOf(control2.getId());
-
-         // If item is not found in order list, then put it at the end of the list
-         if (index2 == -1)
-            return -1;
-         if (index1 == -1)
-            return 1;
-
-         return index1.compareTo(index2);
-      }
-   };
 }
