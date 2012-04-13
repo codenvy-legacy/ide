@@ -32,6 +32,7 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter;
 import org.exoplatform.ide.client.hotkeys.HotKeyManager;
+import org.exoplatform.ide.client.operation.autocompletion.AutocompletionHandler;
 import org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter;
 import org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter;
 import org.exoplatform.ide.client.workspace.SelectWorkspacePresenter;
@@ -62,6 +63,8 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
       IDE.addHandler(ControlsUpdatedEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
+      new AutocompletionHandler();
+      
       /*
        * Select Workspace ability.
        */

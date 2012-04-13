@@ -21,6 +21,10 @@
       <when-type-is class="org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter.Display" />
    </replace-with>
    
+     <replace-with class="org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsView">
+      <when-type-is class="org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsPresenter.Display" />
+   </replace-with>
+   
    <source path="client" />
    <entry-point class="org.eclipse.jdt.client.JdtExtension" />
 </module>

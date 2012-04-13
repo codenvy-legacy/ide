@@ -18,19 +18,16 @@
  */
 package org.exoplatform.ide.editor.codemirror;
 
-import com.google.gwt.user.client.ui.AbsolutePanel;
-
-import com.google.gwt.dom.client.Style.Unit;
-
-import com.google.gwt.user.client.ui.DockLayoutPanel;
-
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextArea;
 
@@ -51,7 +48,6 @@ import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
-import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
 import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedEvent;
 import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedHandler;
 import org.exoplatform.ide.editor.keys.KeyHandler;
@@ -549,29 +545,27 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    }
 
    /**
-    * Set listener to call this.onCtrlSpaceClick() method just after the clicking on "Ctrl + Space" keys
+    * Handle autocompletion.
     */
-   public native void ctrlSpaceClickHandler() /*-{
-                                              var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-                                              if (editor == null) return;   
+   public native void onAutocomplete() /*-{
+      var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+      if (editor == null)
+      {
+         return;
+      }   
 
-                                              var cursor = editor.cursorPosition(true);     
-                                              var lineContent = editor.lineContent(cursor.line);
+      var cursor = editor.cursorPosition(true);     
+      var lineContent = editor.lineContent(cursor.line);
 
+      // get fqn of current node
+      if (editor.nextLine(cursor.line) != null 
+      && editor.nextLine(cursor.line).previousSibling)
+      {
+         var currentNode = editor.nextLine(cursor.line).previousSibling;
+      }
 
-                                              // get fqn of current node
-                                              if (editor.nextLine(cursor.line) != null 
-                                              && editor.nextLine(cursor.line).previousSibling)
-                                              {
-                                              var currentNode = editor.nextLine(cursor.line).previousSibling;
-                                              }
-
-                                              this.@org.exoplatform.ide.editor.codemirror.CodeMirror::callAutocompleteHandler(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(
-                                              lineContent,
-                                              currentNode
-                                              );
-
-                                              }-*/;
+      this.@org.exoplatform.ide.editor.codemirror.CodeMirror::callAutocompleteHandler(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(lineContent, currentNode);
+   }-*/;
 
    private void callAutocompleteHandler(String lineContent, JavaScriptObject currentNode)
    {
@@ -668,11 +662,6 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
                                                                        }
                                                                        }
                                                                        }-*/;
-
-   private void onSaveContent()
-   {
-      eventBus.fireEvent(new EditorSaveContentEvent(getEditorId()));
-   }
 
    /**
     * @return mimeType of current line content

@@ -3,26 +3,61 @@
 	xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
+	xmlns:r="urn:import:org.exoplatform.ide.client.project.resource"
 	>
 	
 	<ui:style>
-		.important {
-			font-weight: bold;
+
+		.butPanel
+		{
+			margin: 5px auto;
+			height:40px;
+			text-align: center;
+			width:100%;
+			min-width:190px;
+			display: inline;
 		}
+		
+		.butLeft
+		{
+			display: inline-block;
+		}
+		
+		.butRight
+		{
+			display: inline-block;
+			margin-left: 10px;
+		}		
+
 	</ui:style>
 	
 	<c:Border margin="15" borderColor="transparent">
-		<c:layer top="0px" bottom="55px" left="0px" right="110px">
+		<c:layer top="0" height="20px">
 			<g:Label text="Select an item to open:"></g:Label>
-		<!-- 
+		</c:layer>
+		
+		<c:layer top="20px" height="25px">
+			<c:TextInput width="100%"></c:TextInput>
+		</c:layer>		
+
+		<c:layer top="50" height="20px">
+			<g:Label text="Matching items:"></g:Label>
+		</c:layer>
+		
+		<c:layer top="70px" bottom="45px" >		
 			<c:Border>
 				<c:layer>
-					<p:PropertiesListGrid ui:field="propertiesListGrid"
-						width="100%" listGridId="ideProjectPropertiesListGrid"></p:PropertiesListGrid>
+					<r:FilesListGrid width="100%"></r:FilesListGrid>
 				</c:layer>
 			</c:Border>
-		 -->
 		</c:layer>
+		
+		<c:layer height="35px" bottom="0px">
+			<g:FlowPanel styleName="{style.butPanel}">
+				<c:ImageButton text="Open" imageName="ok" ui:field="openButton" buttonId="ideProjectResourcesOpenButton" addStyleNames="{style.butLeft}"></c:ImageButton>
+				<c:ImageButton text="Cancel" imageName="cancel" ui:field="cancelButton" buttonId="ideProjectResourcesCancelButton" addStyleNames="{style.butRight}"></c:ImageButton>
+			</g:FlowPanel>
+		</c:layer>		
 		
 	</c:Border>
 	

@@ -450,20 +450,6 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          }
       }
 
-      //      String controlKey = "";
-      //      if (isCtrl)
-      //      {
-      //         controlKey = "Ctrl";
-      //      }
-      //      else if (isAlt)
-      //      {
-      //         controlKey = "Alt";
-      //      }
-      //      else if (isShift)
-      //      {
-      //         controlKey = "Shift";
-      //      }
-
       // if control key is correct, but keyCode is not pressed yet
       if (keyCode == 0 || keyCode == 16 || keyCode == 17 || keyCode == 18 || keyCode == 224)
       {
@@ -533,8 +519,6 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
 
             if (hotKey != null && !"".equals(hotKey))
             {
-//               String keyCode = HotKeyHelper.convertToCodeCombination(hotKey);
-//               keys.put(keyCode, hotKeyItem.getCommand().getId());
                keys.put(hotKey, hotKeyItem.getCommand().getId());
             }
          }

@@ -27,6 +27,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
 import org.exoplatform.ide.client.application.ControlsRegistration;
+import org.exoplatform.ide.client.application.EditControlsFormatter;
 import org.exoplatform.ide.client.application.IDEForm;
 import org.exoplatform.ide.client.application.IDEPresenter;
 import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
@@ -46,6 +47,7 @@ import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.paas.Paas;
+import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
 import org.exoplatform.ide.client.messages.IdeEditorLocalizationConstant;
@@ -149,6 +151,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       controlsRegistration = new ControlsRegistration();
       controlsRegistration.addControlsFormatter(new NewItemControlsFormatter());
       controlsRegistration.addControlsFormatter(new ViewControlsFormatter());
+      controlsRegistration.addControlsFormatter(new EditControlsFormatter());
+      
 
       paasRegistration = new ArrayList<Paas>();
 
@@ -229,6 +233,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    @Override
    public void openView(View view)
    {
+      ClearFocusForm.getInstance().clearFocus();
       presenter.openView(view);
    }
 

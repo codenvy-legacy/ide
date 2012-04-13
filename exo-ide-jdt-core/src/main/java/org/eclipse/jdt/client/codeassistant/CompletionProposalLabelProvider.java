@@ -761,6 +761,15 @@ public class CompletionProposalLabelProvider
    ImageResource createTypeImageDescriptor(CompletionProposal proposal)
    {
       final int flags = proposal.getFlags();
+      return getTypeImage(flags);
+   }
+
+   /**
+    * @param flags
+    * @return
+    */
+   public ImageResource getTypeImage(final int flags)
+   {
       if (Flags.isEnum(flags))
          return JavaClientBundle.INSTANCE.enumItem();
       else if (Flags.isAnnotation(flags))

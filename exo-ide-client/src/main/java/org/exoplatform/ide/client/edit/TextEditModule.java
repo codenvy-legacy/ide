@@ -56,8 +56,8 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
       IDE.getInstance().addControl(new UndoTypingControl(), Docking.TOOLBAR);
       IDE.getInstance().addControl(new RedoTypingControl(), Docking.TOOLBAR);
       IDE.getInstance().addControl(new FormatSourceControl(), Docking.TOOLBAR);
-      IDE.getInstance().addControl(new AddBlockCommentControl(), Docking.TOOLBAR);
-      IDE.getInstance().addControl(new RemoveBlockCommentControl(), Docking.TOOLBAR);
+      IDE.getInstance().addControl(new AddBlockCommentControl());
+      IDE.getInstance().addControl(new RemoveBlockCommentControl());
 
       new FindTextPresenter();
 

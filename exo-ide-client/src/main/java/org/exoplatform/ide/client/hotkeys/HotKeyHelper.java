@@ -34,6 +34,36 @@ import java.util.Map.Entry;
  */
 public class HotKeyHelper
 {
+   
+   public interface KeyCode
+   {
+      
+      static final int F1 = 112;
+      
+      static final int F2 = 113;
+      
+      static final int F3 = 114;
+      
+      static final int F4 = 115;
+      
+      static final int F5 = 116;
+      
+      static final int F6 = 117;
+      
+      static final int F7 = 118;
+      
+      static final int F8 = 119;
+      
+      static final int F9 = 120;
+      
+      static final int F10 = 121;
+      
+      static final int F11 = 122;
+      
+      static final int F12 = 123;
+
+   }
+   
    static final Map<String, String> KEY_CODES = new HashMap<String, String>();
 
    static
