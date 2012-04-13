@@ -51,7 +51,6 @@ import org.eclipse.jdt.client.templates.VarResolver;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.AddCodeFormatterEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -125,7 +124,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       new OrganizeImportsPresenter(IDE.eventBus());
       IDE.getInstance().addControl(new CleanProjectControl());
       IDE.getInstance().addControl(new FormatterProfilesControl());
-      IDE.getInstance().addControl(new OrganizeImportsControl(),Docking.TOOLBAR);
+      IDE.getInstance().addControl(new OrganizeImportsControl());
       IDE.fireEvent(new AddCodeFormatterEvent(new JavaCodeFormatter(), MimeType.APPLICATION_JAVA));
       Window.addCloseHandler(this);
       formatterProfileManager = new FormatterProfilePresenter(IDE.eventBus());
