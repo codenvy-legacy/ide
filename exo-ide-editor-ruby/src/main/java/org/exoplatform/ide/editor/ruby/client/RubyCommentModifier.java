@@ -46,4 +46,13 @@ public class RubyCommentModifier extends AbstractCommentsModifier
       return "=end";
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getSingleLineComment()
+    */
+   @Override
+   public String getSingleLineComment()
+   {
+      return "#";
+   }
+
 }

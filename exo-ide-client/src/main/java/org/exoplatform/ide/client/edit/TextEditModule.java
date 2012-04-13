@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.edit.control.LockUnlockFileControl;
 import org.exoplatform.ide.client.edit.control.RedoTypingControl;
 import org.exoplatform.ide.client.edit.control.RemoveBlockCommentControl;
 import org.exoplatform.ide.client.edit.control.ShowLineNumbersControl;
+import org.exoplatform.ide.client.edit.control.ToggleCommentControl;
 import org.exoplatform.ide.client.edit.control.UndoTypingControl;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersHandler;
@@ -58,6 +59,7 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
       IDE.getInstance().addControl(new FormatSourceControl(), Docking.TOOLBAR);
       IDE.getInstance().addControl(new AddBlockCommentControl());
       IDE.getInstance().addControl(new RemoveBlockCommentControl());
+      IDE.getInstance().addControl(new ToggleCommentControl());
 
       new FindTextPresenter();
 

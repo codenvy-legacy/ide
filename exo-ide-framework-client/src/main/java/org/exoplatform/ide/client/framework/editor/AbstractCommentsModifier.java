@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.framework.editor;
 
+import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.editor.api.SelectionRange;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.FindReplaceDocumentAdapter;
@@ -121,6 +122,66 @@ public abstract class AbstractCommentsModifier implements CommentsModifier
    }
 
    /**
+    * @see org.exoplatform.ide.client.framework.editor.CommentsModifier#toggleSingleLineComment(org.exoplatform.ide.editor.api.SelectionRange,
+    *      org.exoplatform.ide.editor.text.IDocument)
+    */
+   @Override
+   public TextEdit toggleSingleLineComment(SelectionRange selectionRange, IDocument document)
+   {
+      MultiTextEdit textEdit = new MultiTextEdit();
+      boolean removeComment = isRemoveOperation(selectionRange, document);
+
+      for (int i = selectionRange.getStartLine(); i <= selectionRange.getEndLine(); i++)
+      {
+         try
+         {
+            int lineStartOffset = document.getLineOffset(i - 1);
+            int lineEndOffset = lineStartOffset + document.getLineLength(i - 1);
+            if (removeComment)
+            {
+               FindReplaceDocumentAdapter findReplaceDocument = new FindReplaceDocumentAdapter(document);
+               IRegion region =
+                  findReplaceDocument.find(lineStartOffset, getSingleLineComment(), true, false, false, false);
+               if (region != null && region.getOffset() < lineEndOffset)
+               {
+                  textEdit.addChild(new DeleteEdit(region.getOffset(), region.getLength()));
+               }
+            }
+            else
+            {
+               textEdit.addChild(new InsertEdit(lineStartOffset, getSingleLineComment()));
+            }
+         }
+         catch (BadLocationException e)
+         {
+            Log.info(e.getMessage());
+         }
+      }
+      return textEdit;
+   }
+
+   private boolean isRemoveOperation(SelectionRange selectionRange, IDocument document)
+   {
+      for (int i = selectionRange.getStartLine(); i <= selectionRange.getEndLine(); i++)
+      {
+         int line = i - 1;
+         try
+         {
+            String lineContent = document.get(document.getLineOffset(line), document.getLineLength(line));
+            if (!lineContent.trim().startsWith(getSingleLineComment()))
+            {
+               return false;
+            }
+         }
+         catch (BadLocationException e)
+         {
+            return false;
+         }
+      }
+      return true;
+   }
+
+   /**
     * Returns mark of the opening block comment.
     * 
     * @return {@link String} mark of the opening block comment
@@ -133,4 +194,6 @@ public abstract class AbstractCommentsModifier implements CommentsModifier
     * @return {@link String} mark of the closing block comment
     */
    public abstract String getCloseBlockComment();
+
+   public abstract String getSingleLineComment();
 }

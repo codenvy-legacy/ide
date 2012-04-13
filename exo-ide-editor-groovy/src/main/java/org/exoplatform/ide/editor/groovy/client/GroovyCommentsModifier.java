@@ -45,4 +45,13 @@ public class GroovyCommentsModifier extends AbstractCommentsModifier
    {
       return "*/";
    }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getSingleLineComment()
+    */
+   @Override
+   public String getSingleLineComment()
+   {
+      return "//";
+   }
 }

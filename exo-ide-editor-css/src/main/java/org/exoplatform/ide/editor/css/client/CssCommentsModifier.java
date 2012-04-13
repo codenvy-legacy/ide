@@ -46,4 +46,13 @@ public class CssCommentsModifier extends AbstractCommentsModifier
       return "*/";
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getSingleLineComment()
+    */
+   @Override
+   public String getSingleLineComment()
+   {
+      return null;
+   }
+
 }
