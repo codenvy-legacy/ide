@@ -338,6 +338,14 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
    @Override
    public void onBreakPointsUpdated(BreakPointsUpdatedEvent event)
    {
+      if (breakPoints.containsKey(file.getId()))
+      {
+         for (EditorBreakPoint p : breakPoints.get(file.getId()))
+         {
+            markable.unmarkProblem(p);
+         }
+         breakPoints.get(file.getId()).clear();
+      }
    }
 
 }

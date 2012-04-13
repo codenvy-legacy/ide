@@ -4,13 +4,17 @@
    <ui:with field="locale" type="org.exoplatform.ide.extension.java.jdi.client.DebuggerLocalizationConstant"></ui:with>
 
    <ui:style>
-      .spacing {
-      	margin-top: 15px;
+
+      .center {
+      	text-align: center;
+      	margin-bottom: 7px;
+        padding: 7px;
       }
       
-      .spacingFields {
-      	margin-bottom: 7px;
-      	padding: 7px;
+      .centerButton {
+        width: 90px;
+        margin: 0px auto;
+        padding-top: 7px;
       }
       
       .label {
@@ -24,36 +28,17 @@
       }
    </ui:style>
 
-   <f:Border margin="7" borderColor="transparent">
+   <f:Border margin="7" borderColor="transparent" >
       <f:layer>
-         <g:FlowPanel>
-            <g:DockLayoutPanel unit="PCT" width="100%" height="60px">
-               <g:center>
-                  <g:FlowPanel>
-                      <g:Label text="{locale.notStartedYet}" styleName="{style.label}"></g:Label>
-                     <g:FlowPanel ui:field="webUrl"></g:FlowPanel>
-                  </g:FlowPanel>
-               </g:center>
-            </g:DockLayoutPanel>
-            <g:DockLayoutPanel unit="PCT" width="100%" height="40px" styleName="{style.spacing}">
-               <g:west size="50">
-                  <g:LayoutPanel width="100%" height="100%">
-                     <g:layer right="5px" width="90px">
-                        <f:ImageButton ui:field="runButton" height="22" text="{locale.debug}" imageResource="{resource.debugApp}"
-                           disabledImageResource="{resource.debugAppDisabled}"></f:ImageButton>
-                     </g:layer>
-                  </g:LayoutPanel>
-               </g:west>
-               <g:east size="50">
-                  <g:LayoutPanel width="100%" height="100%">
-                     <g:layer left="5px" width="90px">
-                        <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageResource="{resource.cancelButton}"
-                           disabledImageResource="{resource.cancelButton}"></f:ImageButton>
-                     </g:layer>
-                  </g:LayoutPanel>
-               </g:east>
-            </g:DockLayoutPanel>
+         <g:FlowPanel styleName="{style.center}">
+            <g:Label horizontalAlignment="center" text="{locale.notStartedYet}" styleName="{style.label}"></g:Label>
+            <g:Image resource="{resource.loader}"></g:Image>
+            <g:FlowPanel styleName="{style.centerButton}">
+               <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageResource="{resource.cancelButton}"
+                  disabledImageResource="{resource.cancelButton}"></f:ImageButton>
+            </g:FlowPanel>
          </g:FlowPanel>
       </f:layer>
    </f:Border>
-</ui:UiBinder> 
+</ui:UiBinder>
+  

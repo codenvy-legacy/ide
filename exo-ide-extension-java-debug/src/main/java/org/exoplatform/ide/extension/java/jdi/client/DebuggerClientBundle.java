@@ -97,5 +97,8 @@ public interface DebuggerClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/java/jdi/images/breakpoints.png")
    ImageResource breakPointsIcon();
+   
+   @Source("org/exoplatform/ide/extension/java/jdi/images/ajax-loader.gif")
+   ImageResource loader();
 }
 

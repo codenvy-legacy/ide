@@ -27,13 +27,19 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
+import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
+import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
+import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
+import org.exoplatform.ide.extension.java.jdi.shared.Location;
+import org.exoplatform.ide.extension.java.jdi.shared.StepEvent;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 /**
@@ -47,11 +53,10 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
    public interface Display extends IsView
    {
 
-      HasClickHandlers getRunButton();
+//      HasClickHandlers getRunButton();
 
       HasClickHandlers getCancelButton();
 
-      void setAppWebUrl(String webUrl);
 
    }
 
@@ -72,17 +77,17 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
    {
       display = d;
 
-      display.setAppWebUrl(instance.getWebURL());
-
-      display.getRunButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            doRunDebugger();
-         }
-      });
+//      display.setAppWebUrl(instance.getWebURL());
+//
+//      display.getRunButton().addClickHandler(new ClickHandler()
+//      {
+//
+//         @Override
+//         public void onClick(ClickEvent event)
+//         {
+//            doRunDebugger();
+//         }
+//      });
 
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
@@ -94,6 +99,8 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
+      
+      tryConnectDebuger.scheduleRepeating(3000);
    }
 
    /**
@@ -120,6 +127,7 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
                @Override
                public void onSuccess(DebuggerInfo result)
                {
+                  tryConnectDebuger.cancel();
                   IDE.getInstance().closeView(display.asView().getId());
                   IDE.eventBus().fireEvent(new DebuggerConnectedEvent(result));
                }
@@ -137,5 +145,18 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
       }
 
    }
+   
+   /**
+    * A timer for checking events
+    */
+   private Timer tryConnectDebuger = new Timer()
+   {
+      @Override
+      public void run()
+      {
+         doRunDebugger();
+      }
+   };
+
 
 }

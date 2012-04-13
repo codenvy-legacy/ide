@@ -110,6 +110,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    private boolean startDebugger;
    
    private FileModel activeFile;
+   
+   private ProjectModel project;
 
    public interface Display extends IsView
    {
@@ -344,12 +346,12 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                @Override
                protected void onSuccess(String result)
                {
-                  disabelButtons();
-                  IDE.eventBus().fireEvent(new DebuggerDisconnectedEvent());
-                  debuggerInfo = null;
                   checkDebugEventsTimer.cancel();
+                  disabelButtons();
+                  debuggerInfo = null;
                   breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
                   currentBreakPoint = null;
+                  IDE.eventBus().fireEvent(new DebuggerDisconnectedEvent());
                }
 
                @Override
@@ -495,7 +497,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       }
    };
 
-   private ProjectModel project;
+  
 
    private void openFile(final Location location)
    {
@@ -518,7 +520,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   @Override
                   protected void onFailure(Throwable exception)
                   {
-                     Dialogs.getInstance().showError(exception.getMessage());
+                     Dialogs.getInstance().showInfo("Source not found", "Can't load source of the " + location.getClassName() + " class.");
                   }
                });
          }

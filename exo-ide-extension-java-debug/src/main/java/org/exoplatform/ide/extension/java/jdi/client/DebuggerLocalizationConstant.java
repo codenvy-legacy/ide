@@ -50,7 +50,7 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
   @Key("debug")
   String debug();
   
-  @DefaultMessage("Your application still starting. So wait a few second and try connect debugger again.")
+  @DefaultMessage("Connection debugger...")
   @Key("notStartedYet")
   String notStartedYet();
 
