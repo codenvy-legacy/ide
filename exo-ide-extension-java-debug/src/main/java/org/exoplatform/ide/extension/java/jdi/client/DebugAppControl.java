@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebugAppEvent;
 
 
@@ -74,6 +75,8 @@ public class DebugAppControl extends SimpleControl implements IDEControl, Projec
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      setEnabled(true);
+      String projectType = event.getProject().getProjectType();
+      if (ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType));
+         setEnabled(true);
    }
 }
