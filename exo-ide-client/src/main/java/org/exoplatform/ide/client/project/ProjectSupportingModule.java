@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.project;
 
-import com.google.gwt.http.client.RequestException;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
@@ -36,12 +34,10 @@ import org.exoplatform.ide.client.model.template.marshal.TemplateListUnmarshalle
 import org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter;
 import org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter;
 import org.exoplatform.ide.client.project.deploy.DeployProjectToPaasPresenter;
-import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.project.explorer.ShowProjectExplorerControl;
 import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
 import org.exoplatform.ide.client.project.list.ShowProjectsPresenter;
 import org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter;
-import org.exoplatform.ide.client.project.resource.OpenResourcePresenter;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.MigrateTemplatesHandler;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
@@ -49,6 +45,8 @@ import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gwt.http.client.RequestException;
 
 /**
  * Created by The eXo Platform SAS .
@@ -84,8 +82,6 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
 
       new ProjectCreatedEventHandler();
       
-      new OpenResourcePresenter();
-
       IDE.getInstance().addControlsFormatter(new ProjectMenuItemFormatter());
 
       IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
