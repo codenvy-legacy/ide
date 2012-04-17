@@ -175,12 +175,15 @@ public interface IdeLocalizationConstant extends Constants
 
    @Key("control.about")
    String aboutControl();
-   
+
    @Key("control.add.block.comment")
    String addBlockCommentControl();
-   
+
    @Key("control.remove.block.comment")
    String removeBlockCommentControl();
+
+   @Key("control.toggle.comment")
+   String toggleCommentControl();
 
    @Key("control.documentation.title")
    String documentationControlTitle();

@@ -42,4 +42,11 @@ public interface CommentsModifier
     * @return {@link TextEdit}
     */
    TextEdit removeBlockComment(SelectionRange selectionRange, IDocument document);
+
+   /**
+    * @param selectionRange
+    * @param document
+    * @return {@link TextEdit}
+    */
+   TextEdit toggleSingleLineComment(SelectionRange selectionRange, IDocument document);
 }

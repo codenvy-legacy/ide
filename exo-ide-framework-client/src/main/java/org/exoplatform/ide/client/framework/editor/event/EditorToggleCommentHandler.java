@@ -16,43 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.php.client;
+package org.exoplatform.ide.client.framework.editor.event;
 
-import org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link EditorToggleCommentEvent} event.
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Apr 11, 2012 12:18:12 PM anya $
+ * @version $Id:  Apr 13, 2012 1:48:11 PM anya $
  *
  */
-public class PhpCommentsModifier extends AbstractCommentsModifier
+public interface EditorToggleCommentHandler extends EventHandler
 {
-
    /**
-    * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getOpenBlockComment()
+    * Toggle single line comment in source code. 
+    * 
+    * @param event
     */
-   @Override
-   public String getOpenBlockComment()
-   {
-      return "/*";
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getCloseBlockComment()
-    */
-   @Override
-   public String getCloseBlockComment()
-   {
-      return "*/";
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getSingleLineComment()
-    */
-   @Override
-   public String getSingleLineComment()
-   {
-      return "//";
-   }
-
+   void onEditorToggleComment(EditorToggleCommentEvent event);
 }

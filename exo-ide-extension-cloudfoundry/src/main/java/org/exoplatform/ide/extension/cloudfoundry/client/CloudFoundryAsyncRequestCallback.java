@@ -83,6 +83,13 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
             IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
             return;
          }
+         else if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus()
+            && serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE) != null
+            && "301".equals(serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE)))
+         {
+            Dialogs.getInstance().showError(CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationNotFound());
+            return;
+         }
          else
          {
             String msg = "";

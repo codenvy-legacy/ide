@@ -334,6 +334,9 @@ public interface CloudFoundryLocalizationConstant extends Messages
 
    @Key("systemInfo.umarshaller.error")
    String systemInfoUnmarshallerError();
+   
+   @Key("application.not.found")
+   String applicationNotFound();
 
    /*
     * DeployApplicationPresenter

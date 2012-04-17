@@ -247,13 +247,6 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
    @Override
    public void onManageCloudFoundryProject(ManageCloudFoundryProjectEvent event)
    {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bindDisplay();
-         IDE.getInstance().openView(display.asView());
-      }
-
       getApplicationInfo(openedProject);
    }
 
@@ -303,6 +296,13 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
                @Override
                protected void onSuccess(CloudFoundryApplication result)
                {
+                  if (display == null)
+                  {
+                     display = GWT.create(Display.class);
+                     bindDisplay();
+                     IDE.getInstance().openView(display.asView());
+                  }
+                  
                   displayApplicationProperties(result);
                }
             });

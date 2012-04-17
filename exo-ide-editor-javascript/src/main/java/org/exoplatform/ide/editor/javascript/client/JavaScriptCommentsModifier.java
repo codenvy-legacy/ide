@@ -22,8 +22,8 @@ import org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Apr 11, 2012 9:40:32 AM anya $
- *
+ * @version $Id: Apr 11, 2012 9:40:32 AM anya $
+ * 
  */
 public class JavaScriptCommentsModifier extends AbstractCommentsModifier
 {
@@ -46,4 +46,12 @@ public class JavaScriptCommentsModifier extends AbstractCommentsModifier
       return "*/";
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getSingleLineComment()
+    */
+   @Override
+   public String getSingleLineComment()
+   {
+      return "//";
+   }
 }

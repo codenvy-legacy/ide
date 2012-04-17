@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.edit;
 
-
 import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.client.framework.editor.AddCommentsModifierEvent;
 import org.exoplatform.ide.client.framework.editor.AddCommentsModifierHandler;
@@ -29,6 +28,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorAddBlockCommentEv
 import org.exoplatform.ide.client.framework.editor.event.EditorAddBlockCommentHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorRemoveBlockCommentEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorRemoveBlockCommentHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorToggleCommentEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorToggleCommentHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.text.BadLocationException;
@@ -46,7 +47,7 @@ import java.util.Map;
  * 
  */
 public class CodeCommentsManager implements AddCommentsModifierHandler, EditorAddBlockCommentHandler,
-   EditorRemoveBlockCommentHandler, EditorActiveFileChangedHandler
+   EditorRemoveBlockCommentHandler, EditorActiveFileChangedHandler, EditorToggleCommentHandler
 {
 
    private Map<String, CommentsModifier> commentModifiers = new HashMap<String, CommentsModifier>();
@@ -62,6 +63,7 @@ public class CodeCommentsManager implements AddCommentsModifierHandler, EditorAd
 
       IDE.addHandler(EditorAddBlockCommentEvent.TYPE, this);
       IDE.addHandler(EditorRemoveBlockCommentEvent.TYPE, this);
+      IDE.addHandler(EditorToggleCommentEvent.TYPE, this);
    }
 
    /**
@@ -131,5 +133,30 @@ public class CodeCommentsManager implements AddCommentsModifierHandler, EditorAd
    {
       this.activeFile = event.getFile();
       this.editor = event.getEditor();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorToggleCommentHandler#onEditorToggleComment(org.exoplatform.ide.client.framework.editor.event.EditorToggleCommentEvent)
+    */
+   @Override
+   public void onEditorToggleComment(EditorToggleCommentEvent event)
+   {
+      if (commentModifiers.containsKey(activeFile.getMimeType()))
+      {
+         CommentsModifier commentsModifier = commentModifiers.get(activeFile.getMimeType());
+         TextEdit textEdit = commentsModifier.toggleSingleLineComment(editor.getSelectionRange(), editor.getDocument());
+         try
+         {
+            textEdit.apply(editor.getDocument());
+         }
+         catch (MalformedTreeException e)
+         {
+            Log.info(e.getMessage());
+         }
+         catch (BadLocationException e)
+         {
+            Log.info(e.getMessage());
+         }
+      }
    }
 }
