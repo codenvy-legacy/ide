@@ -19,9 +19,8 @@
 package org.exoplatform.ide.shell.server.rest;
 
 import org.exoplatform.ide.shell.conversationstate.ShellUser;
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Identity;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
@@ -49,24 +47,16 @@ public class DummyConfigurationService
    @RolesAllowed("users")
    public Map<String, Object> inializationParameters(@Context UriInfo uriInfo, @Context HttpServletRequest request)
    {
-      try
-      {
-         Map<String, Object> result = new HashMap<String, Object>();
-         ConversationState curentState = ConversationState.getCurrent();
-         if (curentState != null)
-         {
-            Identity identity = curentState.getIdentity();
-            ShellUser user = new ShellUser(identity.getUserId(), identity.getGroups(), identity.getRoles());
 
-            result.put("user", user);
-            result.put("userSettings", "{}");
-         }
-         return result;
-      }
-      catch (Exception e)
-      {
-         throw new WebApplicationException(e);
-      }
+      Map<String, Object> result = new HashMap<String, Object>();
+      result.put("userSettings", "{}");
+      ShellUser user =
+         new ShellUser(request.getUserPrincipal().getName(), Collections.<String> emptyList(),
+            Collections.<String> emptyList());
+      result.put("user", user);
+      result.put("userSettings", "{}");
+      return result;
+
    }
 
 }
