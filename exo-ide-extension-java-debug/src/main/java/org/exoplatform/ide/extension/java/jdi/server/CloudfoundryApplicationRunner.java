@@ -94,36 +94,47 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    private final Cloudfoundry cloudfoundry;
    private final List<Application> applications;
    private final ScheduledExecutorService applicationTerminator;
+   private final String cfUser;
+   private final String cfPassword;
+
 
    public CloudfoundryApplicationRunner(InitParams initParams)
    {
       this(
          getValueParam(initParams, "cloudfoundry-target"),
-         getValueParam(initParams, "cloudfoundry-token"),
+         getValueParam(initParams, "cloudfoundry-user"),
+         getValueParam(initParams, "cloudfoundry-password"),
          parseNumber(getValueParam(initParams, "cloudfoundry-application-lifetime"), DEFAULT_APPLICATION_LIFETIME)
             .intValue()
       );
    }
 
-   protected CloudfoundryApplicationRunner(String cfTarget, String cfToken, int applicationLifetime)
+   protected CloudfoundryApplicationRunner(String cfTarget, String cfUser, String cfPassword, int applicationLifetime)
    {
       if (cfTarget == null || cfTarget.isEmpty())
       {
          throw new IllegalArgumentException("Cloud Foundry target URL may not be null or empty.");
       }
-      if (cfToken == null || cfToken.isEmpty())
+      if (cfUser == null || cfUser.isEmpty())
       {
-         throw new IllegalArgumentException("Cloud Foundry secret token may not be null or empty.");
+         throw new IllegalArgumentException("Cloud Foundry username may not be null or empty.");
+      }
+      if (cfPassword == null || cfPassword.isEmpty())
+      {
+         throw new IllegalArgumentException("Cloud Foundry password may not be null or empty.");
       }
       if (applicationLifetime < 1)
       {
          throw new IllegalArgumentException("Invalid application lifetime: " + 1);
       }
 
+      this.cfUser = cfUser;
+      this.cfPassword = cfPassword;
+
       this.applicationLifetime = applicationLifetime;
       this.applicationLifetimeMillis = applicationLifetime * 60 * 1000;
 
-      this.cloudfoundry = new Cloudfoundry(new Auth(cfTarget, cfToken));
+      this.cloudfoundry = new Cloudfoundry(new Auth(cfTarget));
       this.applications = new CopyOnWriteArrayList<Application>();
       this.applicationTerminator = Executors.newSingleThreadScheduledExecutor();
       this.applicationTerminator.scheduleAtFixedRate(new TerminateApplicationTask(), 1, 1, TimeUnit.MINUTES);
@@ -160,6 +171,27 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       // Method should be 'synchronized'. At the moment we use just one user as deployer.
       try
       {
+         return doRunApplication(war);
+      }
+      catch (ApplicationRunnerException e)
+      {
+         Throwable cause = e.getCause();
+         if (cause instanceof CloudfoundryException)
+         {
+            if (200 == ((CloudfoundryException)cause).getExitCode())
+            {
+               login();
+               return doRunApplication(war);
+            }
+         }
+         throw e;
+      }
+   }
+
+   private ApplicationInstance doRunApplication(URL war) throws ApplicationRunnerException
+   {
+      try
+      {
          final String target = cloudfoundry.getTarget();
          CloudFoundryApplication cfApp = cloudfoundry.createApplication(target, generateAppName(16), "spring", null,
             1, -1, false, null, null, null, war);
@@ -191,6 +223,27 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    public synchronized DebugApplicationInstance debugApplication(URL war, boolean suspend) throws ApplicationRunnerException
    {
       // Method should be 'synchronized'. At the moment we use just one user as deployer.
+      try
+      {
+         return doDebugApplication(war, suspend);
+      }
+      catch (ApplicationRunnerException e)
+      {
+         Throwable cause = e.getCause();
+         if (cause instanceof CloudfoundryException)
+         {
+            if (200 == ((CloudfoundryException)cause).getExitCode())
+            {
+               login();
+               return doDebugApplication(war, suspend);
+            }
+         }
+         throw e;
+      }
+   }
+
+   private DebugApplicationInstance doDebugApplication(URL war, boolean suspend) throws ApplicationRunnerException
+   {
       try
       {
          final String target = cloudfoundry.getTarget();
@@ -234,6 +287,28 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
    @Override
    public synchronized void stopApplication(String name) throws ApplicationRunnerException
+   {
+      // Method should be 'synchronized'. At the moment we use just one user as deployer.
+      try
+      {
+         doStopApplication(name);
+      }
+      catch (ApplicationRunnerException e)
+      {
+         Throwable cause = e.getCause();
+         if (cause instanceof CloudfoundryException)
+         {
+            if (200 == ((CloudfoundryException)cause).getExitCode())
+            {
+               login();
+               doStopApplication(name);
+            }
+         }
+         throw e;
+      }
+   }
+
+   private void doStopApplication(String name) throws ApplicationRunnerException
    {
       // Method should be 'synchronized'. At the moment we use just one user as deployer.
       try
@@ -284,6 +359,30 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       applications.clear();
    }
 
+   private void login() throws ApplicationRunnerException
+   {
+      try
+      {
+         cloudfoundry.login(cloudfoundry.getTarget(), cfUser, cfPassword);
+      }
+      catch (CloudfoundryException e)
+      {
+         throw new ApplicationRunnerException(e.getMessage(), e);
+      }
+      catch (ParsingResponseException e)
+      {
+         throw new ApplicationRunnerException(e.getMessage(), e);
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new ApplicationRunnerException(e.getMessage(), e);
+      }
+      catch (IOException e)
+      {
+         throw new ApplicationRunnerException(e.getMessage(), e);
+      }
+   }
+
    private class TerminateApplicationTask implements Runnable
    {
       @Override
@@ -313,17 +412,18 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
    private static class Auth extends CloudfoundryAuthenticator
    {
-      private final CloudfoundryCredentials credentials;
       private final String cfTarget;
 
-      public Auth(String cfTarget, String cfToken)
+      private CloudfoundryCredentials credentials;
+
+      public Auth(String cfTarget)
       {
          // We do not use stored cloud foundry credentials.
          // Not need VFS, configuration, etc.
          super(null, null);
          this.cfTarget = cfTarget;
          credentials = new CloudfoundryCredentials();
-         credentials.addToken(cfTarget, cfToken);
+         credentials.addToken(this.cfTarget, "");
       }
 
       @Override
@@ -347,7 +447,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       @Override
       public void writeCredentials(CloudfoundryCredentials credentials) throws VirtualFileSystemException, IOException
       {
-         throw new UnsupportedOperationException();
+         this.credentials = new CloudfoundryCredentials();
+         this.credentials.addToken(cfTarget, credentials.getToken(cfTarget));
       }
    }
 

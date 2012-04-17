@@ -604,26 +604,36 @@ public class Debugger implements EventsHandler
    private boolean processBreakPointEvent(com.sun.jdi.event.BreakpointEvent event) throws DebuggerException
    {
       setCurrentThread(event.thread());
-      com.sun.jdi.Location location = event.location();
-      synchronized (events)
-      {
-         events.add(new BreakPointEventImpl(
-            new BreakPointImpl(
-               new LocationImpl(location.declaringType().name(), location.lineNumber())
-            )
-         ));
-      }
-
+      boolean hitBreakpoint;
       ExpressionParser parser = (ExpressionParser)event.request()
          .getProperty("org.exoplatform.ide.java.debug.condition.expression.parser");
       if (parser != null)
       {
          com.sun.jdi.Value result = evaluate(parser);
-         // Left target JVM in suspended state if result of evaluation of expression is boolean value and true.
-         return !(result instanceof com.sun.jdi.BooleanValue && ((com.sun.jdi.BooleanValue)result).value());
+         hitBreakpoint = result instanceof com.sun.jdi.BooleanValue && ((com.sun.jdi.BooleanValue)result).value();
       }
-      // Lets target JVM to be in suspend state.
-      return false;
+      else
+      {
+         // If there is no expression.
+         hitBreakpoint = true;
+      }
+
+      if (hitBreakpoint)
+      {
+         com.sun.jdi.Location location = event.location();
+         synchronized (events)
+         {
+            events.add(new BreakPointEventImpl(
+               new BreakPointImpl(
+                  new LocationImpl(location.declaringType().name(), location.lineNumber())
+               )
+            ));
+         }
+      }
+
+      // Left target JVM in suspended state if result of evaluation of expression is boolean value and true
+      // or if condition expression is not set.
+      return !hitBreakpoint;
    }
 
    private boolean processBreakStepEvent(com.sun.jdi.event.StepEvent event) throws DebuggerException
