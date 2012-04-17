@@ -43,7 +43,11 @@ public class Outline extends AbstractTestModule
    private interface Locators
    {
       String VIEW_ID = "ideOutlineView";
-
+      
+      String JAVA_VIEW_ID = "exoJavaOutlineView";
+      
+      String JAVA_VIEW_LOCATOR = "//div[@view-id='" + JAVA_VIEW_ID + "']";
+      
       String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
       String TREE_ID = "ideOutlineTreeGrid";
@@ -61,9 +65,9 @@ public class Outline extends AbstractTestModule
 
       String ROW_BY_INDEX_SELECTOR = "div#" + TREE_ID + " div.gwt-Label:nth(%s)";
 
-      String ROW_SELECTOR = "div#" + TREE_ID + " div.gwt-Label";
+      String ROW_SELECTOR = "div#" + TREE_ID + " div>span";
 
-      String ROW_BY_TITLE_LOCATOR = "//div[@id='" + TREE_ID + "']//div[@class='gwt-Label' and text()='%s']";
+      String ROW_BY_TITLE_LOCATOR = "//div[@id='" + TREE_ID + "']//div[@class]//span[text()='%s']";
 
       String BORDER_PREFIX = "//div[@component=\"Border\" and contains(@style, 'color: rgb(182, 204, 232)')]";
 
@@ -122,6 +126,10 @@ public class Outline extends AbstractTestModule
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
    private WebElement view;
+   
+   
+   @FindBy(xpath = Locators.JAVA_VIEW_LOCATOR)
+   private WebElement javaView;
 
    @FindBy(id = Locators.TREE_ID)
    private WebElement tree;
@@ -287,6 +295,25 @@ public class Outline extends AbstractTestModule
          return false;
       }
    }
+  
+   /**
+    * Returns the visibility state of the Outline view.
+    * Only for Java files 
+    * 
+    * @return {@link Boolean} if <code>true</code> then view is visible
+    */
+   public boolean isJavaOutlineViewVisible()
+   {
+      try
+      {
+         return javaView != null && javaView.isDisplayed();
+      }
+      catch (Exception e)
+      {
+         return false;
+      }
+   }
+   
 
    /**
     * Returns the outline's item selection state. Row number starts from <code>1</code>.
@@ -337,7 +364,7 @@ public class Outline extends AbstractTestModule
     */
    public void waitOutlineTreeVisible() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
