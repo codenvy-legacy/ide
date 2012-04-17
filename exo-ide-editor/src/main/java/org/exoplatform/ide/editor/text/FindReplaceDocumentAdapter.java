@@ -91,7 +91,7 @@ public class FindReplaceDocumentAdapter implements CharSequence
          startOffset = 0;
       if (startOffset == -1 && !forwardSearch)
          startOffset = length() - 1;
-      return findReplace(FIND_FIRST, startOffset, findString, null, true, caseSensitive, wholeWord);
+      return findReplace(FIND_FIRST, startOffset, findString, null, forwardSearch, caseSensitive, wholeWord);
    }
 
    /**
@@ -144,7 +144,7 @@ public class FindReplaceDocumentAdapter implements CharSequence
 
          if (!wholeWord)
             findString = asRegPattern(findString);
-         
+
          fFindReplaceMatchOffset = startOffset;
          regExp = RegExp.compile(findString, patternFlags);
          regExp.setLastIndex(fFindReplaceMatchOffset);
@@ -163,6 +163,30 @@ public class FindReplaceDocumentAdapter implements CharSequence
                return new Region(matchResult.getIndex(), matchResult.getGroup(0).length());
             return null;
          }
+         // backward search
+         regExp.setLastIndex(0);
+         MatchResult matchResult = regExp.exec(String.valueOf(this));
+
+         boolean found = matchResult != null;
+         int index = -1;
+         int length = -1;
+         while (found && matchResult.getIndex() + matchResult.getGroup(0).length() <= fFindReplaceMatchOffset + 1)
+         {
+            index = matchResult.getIndex();
+            length = matchResult.getGroup(0).length();
+            regExp.setLastIndex(index + 1);
+            matchResult = regExp.exec(String.valueOf(this));
+            found = matchResult != null;
+         }
+         fFindReplaceMatchOffset = index;
+         if (index > -1)
+         {
+            // must set matcher to correct position
+            regExp.setLastIndex(index);
+            matchResult = regExp.exec(String.valueOf(this));
+            return new Region(index, length);
+         }
+         return null;
       }
 
       return null;
