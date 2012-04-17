@@ -33,4 +33,8 @@ public interface BreakPoint
    boolean isEnabled();
 
    void setEnabled(boolean enabled);
+
+   String getCondition();
+
+   void setCondition(String expression);
 }

@@ -30,6 +30,13 @@ public class BreakPointImpl implements BreakPoint
    private Location location;
    // Always enable at the moment. Managing states of breakpoint is not supported for now.
    private boolean enabled = true;
+   private String expression;
+
+   public BreakPointImpl(Location location, String expression)
+   {
+      this.location = location;
+      this.expression = expression;
+   }
 
    public BreakPointImpl(Location location)
    {
@@ -62,6 +69,18 @@ public class BreakPointImpl implements BreakPoint
    public void setEnabled(boolean enabled)
    {
       this.enabled = enabled;
+   }
+
+   @Override
+   public String getCondition()
+   {
+      return expression;
+   }
+
+   @Override
+   public void setCondition(String expression)
+   {
+      this.expression = expression;
    }
 
    @Override

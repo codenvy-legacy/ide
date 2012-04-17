@@ -36,7 +36,7 @@ import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.request.InvalidRequestStateException;
 import com.sun.jdi.request.StepRequest;
 import org.exoplatform.ide.extension.java.jdi.server.expression.Evaluator;
-import org.exoplatform.ide.extension.java.jdi.server.expression.JavaTreeParser;
+import org.exoplatform.ide.extension.java.jdi.server.expression.ExpressionParser;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointEventImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.FieldImpl;
@@ -113,9 +113,12 @@ public class Debugger implements EventsHandler
    /**
     * Create debugger and connect it to the JVM which already running at the specified host and port.
     *
-    * @param host the host where JVM running
-    * @param port the Java Debug Wire Protocol (JDWP) port
-    * @throws VMConnectException when connection to Java VM is not established
+    * @param host
+    *    the host where JVM running
+    * @param port
+    *    the Java Debug Wire Protocol (JDWP) port
+    * @throws VMConnectException
+    *    when connection to Java VM is not established
     */
    private Debugger(String host, int port) throws VMConnectException
    {
@@ -128,7 +131,8 @@ public class Debugger implements EventsHandler
     * Attach to a JVM that is already running at specified host. Calling this method has no effect is Debugger already
     * connected.
     *
-    * @throws VMConnectException when connection to Java VM is not established
+    * @throws VMConnectException
+    *    when connection to Java VM is not established
     */
    private void connect() throws VMConnectException
    {
@@ -171,7 +175,8 @@ public class Debugger implements EventsHandler
    /**
     * Close connection to the target JVM.
     *
-    * @throws DebuggerException when failed to close connection
+    * @throws DebuggerException
+    *    when failed to close connection
     */
    public void disconnect() throws DebuggerException
    {
@@ -183,10 +188,13 @@ public class Debugger implements EventsHandler
    /**
     * Add new break point.
     *
-    * @param breakPoint break point description
-    * @throws InvalidBreakPointException if description of break point is invalid (specified line number or class name
-    * is invalid)
-    * @throws DebuggerException when other JDI error occurs
+    * @param breakPoint
+    *    break point description
+    * @throws InvalidBreakPointException
+    *    if description of break point is invalid (specified line number or class name
+    *    is invalid)
+    * @throws DebuggerException
+    *    when other JDI error occurs
     */
    public void addBreakPoint(BreakPoint breakPoint) throws InvalidBreakPointException, DebuggerException
    {
@@ -239,6 +247,12 @@ public class Debugger implements EventsHandler
       {
          EventRequest breakPointRequest = events.createBreakpointRequest(location);
          breakPointRequest.setSuspendPolicy(EventRequest.SUSPEND_ALL);
+         String expression = breakPoint.getCondition();
+         if (!(expression == null || expression.isEmpty()))
+         {
+            ExpressionParser parser = ExpressionParser.newInstance(expression);
+            breakPointRequest.putProperty("org.exoplatform.ide.java.debug.condition.expression.parser", parser);
+         }
          breakPointRequest.setEnabled(true);
       }
       catch (NativeMethodException e)
@@ -260,7 +274,8 @@ public class Debugger implements EventsHandler
     * Get all break points which set for current debugger.
     *
     * @return list of break points
-    * @throws DebuggerException when any JDI errors occurs when try to access current break points
+    * @throws DebuggerException
+    *    when any JDI errors occurs when try to access current break points
     */
    public List<BreakPoint> getBreakPoints() throws DebuggerException
    {
@@ -294,8 +309,10 @@ public class Debugger implements EventsHandler
    /**
     * Delete break point.
     *
-    * @param breakPoint break point to be removed
-    * @throws DebuggerException when any JDI errors occurs when try to delete break point
+    * @param breakPoint
+    *    break point to be removed
+    * @throws DebuggerException
+    *    when any JDI errors occurs when try to delete break point
     */
    public void deleteBreakPoint(BreakPoint breakPoint) throws DebuggerException
    {
@@ -317,7 +334,8 @@ public class Debugger implements EventsHandler
    /**
     * Delete all break point.
     *
-    * @throws DebuggerException when any JDI errors occurs when try to delete break point
+    * @throws DebuggerException
+    *    when any JDI errors occurs when try to delete break point
     */
    public void deleteAllBreakPoints() throws DebuggerException
    {
@@ -328,7 +346,8 @@ public class Debugger implements EventsHandler
     * Get next set of debugger events.
     *
     * @return set of the debugger's events which occurred after last visit this method
-    * @throws DebuggerException when any JDI errors occurs when try to get events
+    * @throws DebuggerException
+    *    when any JDI errors occurs when try to get events
     */
    public List<DebuggerEvent> getEvents() throws DebuggerException
    {
@@ -344,7 +363,8 @@ public class Debugger implements EventsHandler
    /**
     * Resume suspended JVM.
     *
-    * @throws DebuggerException when failed to resume target JVM
+    * @throws DebuggerException
+    *    when failed to resume target JVM
     */
    public void resume() throws DebuggerException
    {
@@ -367,8 +387,10 @@ public class Debugger implements EventsHandler
     * Get dump of fields and local variable of current object and current frame.
     *
     * @return dump of current stack frame
-    * @throws DebuggerStateException when target JVM is not suspended
-    * @throws DebuggerException when any other errors occur when try to access the current state of target JVM
+    * @throws DebuggerStateException
+    *    when target JVM is not suspended
+    * @throws DebuggerException
+    *    when any other errors occur when try to access the current state of target JVM
     */
    public StackFrameDump dumpStackFrame() throws DebuggerStateException, DebuggerException
    {
@@ -436,10 +458,13 @@ public class Debugger implements EventsHandler
     * <li>Through local variable <i>var</i> in method <i>B.method()</i>: ['var', 'str']</li>
     * </ol>
     *
-    * @param variablePath path to variable
+    * @param variablePath
+    *    path to variable
     * @return variable or <code>null</code> if variable not found
-    * @throws DebuggerStateException when target JVM is not suspended
-    * @throws DebuggerException when any other errors occur when try to access the variable
+    * @throws DebuggerStateException
+    *    when target JVM is not suspended
+    * @throws DebuggerException
+    *    when any other errors occur when try to access the variable
     */
    public Value getValue(VariablePath variablePath) throws DebuggerStateException, DebuggerException
    {
@@ -514,7 +539,8 @@ public class Debugger implements EventsHandler
     * Returns the name of the target Java VM.
     *
     * @return JVM name
-    * @throws DebuggerException when any JDI errors occur
+    * @throws DebuggerException
+    *    when any JDI errors occur
     */
    public String getVmName() throws DebuggerException
    {
@@ -525,7 +551,8 @@ public class Debugger implements EventsHandler
     * Returns the version of the target Java VM.
     *
     * @return JVM version
-    * @throws DebuggerException when any JDI errors occur
+    * @throws DebuggerException
+    *    when any JDI errors occur
     */
    public String getVmVersion() throws DebuggerException
    {
@@ -553,19 +580,15 @@ public class Debugger implements EventsHandler
             LOG.debug("New event: {}", event);
             if (event instanceof com.sun.jdi.event.BreakpointEvent)
             {
-               processBreakPointEvent((com.sun.jdi.event.BreakpointEvent)event);
-               // Lets target JVM to be in suspend state.
-               resume = false;
+               resume = processBreakPointEvent((com.sun.jdi.event.BreakpointEvent)event);
             }
             else if (event instanceof com.sun.jdi.event.StepEvent)
             {
-               processBreakStepEvent((com.sun.jdi.event.StepEvent)event);
-               // Lets target JVM to be in suspend state.
-               resume = false;
+               resume = processBreakStepEvent((com.sun.jdi.event.StepEvent)event);
             }
             else if (event instanceof com.sun.jdi.event.VMDisconnectEvent)
             {
-               processDisconnectEvent((com.sun.jdi.event.VMDisconnectEvent)event);
+               resume = processDisconnectEvent((com.sun.jdi.event.VMDisconnectEvent)event);
             }
          }
       }
@@ -578,7 +601,7 @@ public class Debugger implements EventsHandler
       }
    }
 
-   private void processBreakPointEvent(com.sun.jdi.event.BreakpointEvent event) throws DebuggerException
+   private boolean processBreakPointEvent(com.sun.jdi.event.BreakpointEvent event) throws DebuggerException
    {
       setCurrentThread(event.thread());
       com.sun.jdi.Location location = event.location();
@@ -590,9 +613,20 @@ public class Debugger implements EventsHandler
             )
          ));
       }
+
+      ExpressionParser parser = (ExpressionParser)event.request()
+         .getProperty("org.exoplatform.ide.java.debug.condition.expression.parser");
+      if (parser != null)
+      {
+         com.sun.jdi.Value result = evaluate(parser);
+         // Left target JVM in suspended state if result of evaluation of expression is boolean value and true.
+         return !(result instanceof com.sun.jdi.BooleanValue && ((com.sun.jdi.BooleanValue)result).value());
+      }
+      // Lets target JVM to be in suspend state.
+      return false;
    }
 
-   private void processBreakStepEvent(com.sun.jdi.event.StepEvent event) throws DebuggerException
+   private boolean processBreakStepEvent(com.sun.jdi.event.StepEvent event) throws DebuggerException
    {
       setCurrentThread(event.thread());
       com.sun.jdi.Location location = event.location();
@@ -600,19 +634,24 @@ public class Debugger implements EventsHandler
       {
          events.add(new StepEventImpl(new LocationImpl(location.declaringType().name(), location.lineNumber())));
       }
+      // Lets target JVM to be in suspend state.
+      return false;
    }
 
-   private void processDisconnectEvent(com.sun.jdi.event.VMDisconnectEvent event)
+   private boolean processDisconnectEvent(com.sun.jdi.event.VMDisconnectEvent event)
    {
       eventsCollector.stop();
       instances.remove(id);
+      return true;
    }
 
    /**
     * Step to the next line.
     *
-    * @throws DebuggerStateException when target JVM is not suspended
-    * @throws DebuggerException when any other JDI errors occur
+    * @throws DebuggerStateException
+    *    when target JVM is not suspended
+    * @throws DebuggerException
+    *    when any other JDI errors occur
     */
    public void stepOver() throws DebuggerException
    {
@@ -622,8 +661,10 @@ public class Debugger implements EventsHandler
    /**
     * Step to the next frame.
     *
-    * @throws DebuggerStateException when target JVM is not suspended
-    * @throws DebuggerException when any other JDI errors occur
+    * @throws DebuggerStateException
+    *    when target JVM is not suspended
+    * @throws DebuggerException
+    *    when any other JDI errors occur
     */
    public void stepInto() throws DebuggerException
    {
@@ -633,8 +674,10 @@ public class Debugger implements EventsHandler
    /**
     * Step out of the current frame.
     *
-    * @throws DebuggerStateException when target JVM is not suspended
-    * @throws DebuggerException when any other JDI errors occur
+    * @throws DebuggerStateException
+    *    when target JVM is not suspended
+    * @throws DebuggerException
+    *    when any other JDI errors occur
     */
    public void stepOut() throws DebuggerException
    {
@@ -662,14 +705,22 @@ public class Debugger implements EventsHandler
       }
    }
 
-   public String expression(String expr) throws DebuggerStateException
+   public String expression(String expression) throws DebuggerStateException
    {
+      return evaluate(ExpressionParser.newInstance(expression)).toString();
+   }
+
+   private com.sun.jdi.Value evaluate(ExpressionParser parser) throws DebuggerStateException
+   {
+      final long startTime = System.currentTimeMillis();
       try
       {
-         return JavaTreeParser.evaluate(expr, new Evaluator(vm, getCurrentThread())).toString();
+         return parser.evaluate(new Evaluator(vm, getCurrentThread()));
       }
       finally
       {
+         final long endTime = System.currentTimeMillis();
+         LOG.debug("==>> Evaluate time: {} ms", (endTime - startTime));
          // Evaluation of expression may update state of frame.
          resetCurrentFrame();
       }
@@ -696,7 +747,7 @@ public class Debugger implements EventsHandler
       }
       catch (IncompatibleThreadStateException e)
       {
-         throw new DebuggerException(e.getMessage(), e);
+         throw new DebuggerException("Thread is not suspended. ", e);
       }
       return stackFrame;
    }

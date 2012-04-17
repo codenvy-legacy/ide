@@ -21,7 +21,6 @@ package org.exoplatform.ide.extension.java.jdi.server.expression;
 import com.sun.jdi.ArrayReference;
 import com.sun.jdi.ClassNotLoadedException;
 import com.sun.jdi.InvalidTypeException;
-import com.sun.jdi.PrimitiveValue;
 import com.sun.jdi.VMCannotBeModifiedException;
 import com.sun.jdi.Value;
 

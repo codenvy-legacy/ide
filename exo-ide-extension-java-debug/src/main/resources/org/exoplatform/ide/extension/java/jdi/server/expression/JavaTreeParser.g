@@ -49,8 +49,7 @@ package org.exoplatform.ide.extension.java.jdi.server.expression;
 }
 
 @treeparser::members {
-int i = 0;
-
+/*
 public static com.sun.jdi.Value evaluate(String expr, Evaluator ev) {
    try
    {
@@ -66,7 +65,7 @@ public static com.sun.jdi.Value evaluate(String expr, Evaluator ev) {
       throw new ExpressionException(e.getMessage(), e);
    }
 }
-
+*/
 boolean mMessageCollectionEnabled = false;
 private boolean mHasErrors = false;
 List<String> mMessages;

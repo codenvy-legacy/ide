@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server.model;
 
-import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
+import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
