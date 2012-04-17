@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.shell.server.rest;
 
+import org.exoplatform.ide.shell.conversationstate.ShellUser;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,8 +52,15 @@ public class DummyConfigurationService
       try
       {
          Map<String, Object> result = new HashMap<String, Object>();
-         result.put("user", request.getUserPrincipal().getName());
-         result.put("userSettings", "{}");
+         ConversationState curentState = ConversationState.getCurrent();
+         if (curentState != null)
+         {
+            Identity identity = curentState.getIdentity();
+            ShellUser user = new ShellUser(identity.getUserId(), identity.getGroups(), identity.getRoles());
+
+            result.put("user", user);
+            result.put("userSettings", "{}");
+         }
          return result;
       }
       catch (Exception e)
@@ -58,5 +69,4 @@ public class DummyConfigurationService
       }
    }
 
-  
 }
