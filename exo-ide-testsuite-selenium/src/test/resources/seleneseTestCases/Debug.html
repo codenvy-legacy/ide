@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="http://localhost:8080/" />
+<link rel="selenium.base" href="http://testide258.cloudtest2.exoplatform.com/" />
 <title>HerokuWithoutWizzardFromZipSamples</title>
 </head>
 <body>
@@ -14,8 +14,18 @@
 <!--Open login page-->
 <tr>
 	<td>open</td>
-	<td>/site/index.html</td>
+	<td>cloud/ide.jsp</td>
 	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=j_username</td>
+	<td>cloud.ide.test2@gmail.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=j_password</td>
+	<td>test</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -34,7 +44,7 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[8]/div/div[2]/table/tr/td/div/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[2]</td>
+	<td>//html/body//div[@view-id=&quot;WelcomeViewId&quot;]</td>
 	<td></td>
 </tr>
 <!--Create Spring  app-->
@@ -55,12 +65,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[2]/div/div/div/table/tbody/tr[3]/td[2]/div/span/nobr[contains(.,'Spring')]</td>
+	<td>//html/body/div[9]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[2]/div/div/div/table/tbody/tr/td[2]/div/span/nobr[contains(.,'Spring')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[2]/div/div/div/table/tbody/tr[3]/td[2]/div/span/nobr[contains(.,'Spring')]</td>
+	<td>//html/body/div[9]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[2]/div/div/div/table/tbody/tr/td[2]/div/span/nobr[contains(.,'Spring')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -70,7 +80,7 @@
 </tr>
 <tr>
 	<td>type</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[4]/div/div/div[3]/input[@class=&quot;gwt-TextBox&quot;]</td>
+	<td>//td[@class='dialogMiddleCenter']//input[@class=&quot;gwt-TextBox&quot;]</td>
 	<td>javascript{Math.floor(Math.random()*13341) + &quot;-MySpringPrj-&quot; + Math.floor(Math.random()*1441)}</td>
 </tr>
 <tr>
@@ -80,17 +90,17 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[5]/div/div[4]/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Finish')]</td>
+	<td>id=ideWizardDeploymentNextButtonId</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[5]/div/div[4]/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Finish')]</td>
+	<td>id=ideWizardDeploymentNextButtonId</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div/table/tbody/tr/td[2]/div/table/tbody/tr/td[2]/div[contains(.,'src')]</td>
+	<td>//div[@class='ide-Tree-label' and text()='src']</td>
 	<td></td>
 </tr>
 <!--Start debug app-->
