@@ -103,16 +103,32 @@ public abstract class AbstractCommentsModifier implements CommentsModifier
       FindReplaceDocumentAdapter findReplaceDocument = new FindReplaceDocumentAdapter(document);
       try
       {
-         IRegion region = findReplaceDocument.find(startOffset, getOpenBlockComment(), true, false, false, false);
-         if (region != null && region.getOffset() < endOffset)
+         IRegion startRegion = findReplaceDocument.find(startOffset, getOpenBlockComment(), true, false, false, false);
+         if (startRegion != null && startRegion.getOffset() < endOffset)
          {
-            textEdit.addChild(new DeleteEdit(region.getOffset(), region.getLength()));
+            textEdit.addChild(new DeleteEdit(startRegion.getOffset(), startRegion.getLength()));
+         }
+         else
+         {
+            // Perform backward search:
+            startRegion = findReplaceDocument.find(startOffset, getOpenBlockComment(), false, false, false, false);
+            IRegion endRegion =
+               findReplaceDocument.find(startOffset, getCloseBlockComment(), false, false, false, false);
+            if ((startRegion != null && endRegion == null)
+               || (startRegion != null && endRegion != null && startRegion.getOffset() > endRegion.getOffset()))
+            {
+               textEdit.addChild(new DeleteEdit(startRegion.getOffset(), startRegion.getLength()));
+            }
+            else
+            {
+               return textEdit;
+            }
          }
 
-         region = findReplaceDocument.find(startOffset, getCloseBlockComment(), true, false, false, false);
-         if (region != null)
+         IRegion endRegion = findReplaceDocument.find(startOffset, getCloseBlockComment(), true, false, false, false);
+         if (endRegion != null)
          {
-            textEdit.addChild(new DeleteEdit(region.getOffset(), region.getLength()));
+            textEdit.addChild(new DeleteEdit(endRegion.getOffset(), endRegion.getLength()));
          }
       }
       catch (BadLocationException e)
