@@ -87,7 +87,7 @@ public class Express
    public static Set<String> APP_TYPES = new HashSet<String>(Arrays.asList( //
       "php-5.3", //
       //"wsgi-3.2.1", //
-      "rack-1.1") //
+      "ruby-1.8") //
       );
 
    //   private static Set<String> APP_TYPES = new HashSet<String>(Arrays.asList( //
