@@ -41,6 +41,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.editor.java.client.create.CreateJavaPresenter;
 import org.exoplatform.ide.editor.java.client.create.CreateJavaPresenter.Display;
+import org.exoplatform.ide.editor.java.client.event.CreateJavaClassEvent;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
