@@ -26,6 +26,8 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.editor.java.client.CreateJavaClassEvent;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -52,8 +54,16 @@ public class NewJavaClassControl extends SimpleControl implements IDEControl, It
    {
       if (event.getSelectedItems().size() == 1 && event.getSelectedItems().get(0) instanceof ItemContext)
       {
-         boolean enabled = ((ItemContext)event.getSelectedItems().get(0)).getProject() != null;
-         setEnabled(enabled);
+         Item item = event.getSelectedItems().get(0);
+         ProjectModel project = ((ItemContext)item).getProject();
+         String sourcePath =
+            project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder")
+               : CreateJavaPresenter.DEFAULT_SOURCE_FOLDER;
+         sourcePath = (project.getPath().endsWith("/") ? project.getPath() : project.getPath() + "/") + sourcePath;
+         if (item.getPath().startsWith(sourcePath))
+            setEnabled(true);
+         else
+            setEnabled(false);
       }
       else
       {

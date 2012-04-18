@@ -113,7 +113,7 @@ public class CreateJavaPresenter implements CreateJavaClassHandler, ViewClosedHa
    /**
     * Default Maven 'sourceDirectory' value
     */
-   private static final String DEFAULT_SOURCE_FOLDER = "src/main/java";
+   public static final String DEFAULT_SOURCE_FOLDER = "src/main/java";
 
    private HandlerManager eventBus;
 
