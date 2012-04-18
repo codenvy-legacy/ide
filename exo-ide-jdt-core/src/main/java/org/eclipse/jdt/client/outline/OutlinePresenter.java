@@ -230,6 +230,12 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
       if (compilationUnit != null)
       {
          display.updateOutline(compilationUnit);
+         if (currentEditor != null)
+         {
+            currentRow = currentEditor.getCursorRow();
+            selectOutlineTimer.cancel();
+            selectOutlineTimer.schedule(100);
+         }
       }
    }
 
@@ -247,7 +253,9 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
          display.updateOutline(compilationUnit);
          if (currentEditor != null)
          {
-            selectNode(currentEditor.getCursorRow());
+            currentRow = currentEditor.getCursorRow();
+            selectOutlineTimer.cancel();
+            selectOutlineTimer.schedule(100);
          }
       }
    }
@@ -325,17 +333,15 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
          if (nodes.get(i) instanceof ASTNode)
          {
             ASTNode node = (ASTNode)nodes.get(i);
-
             int startLineNumber = compilationUnit.getLineNumber(node.getStartPosition());
-            int endLineNumber = compilationUnit.getLineNumber(node.getStartPosition() + node.getLength());
-
+            int endLineNumber = compilationUnit.getLineNumber(node.getStartPosition() + node.getLength() - 1);
             if (startLineNumber == lineNumber)
             {
                return node;
             }
 
             // Check current line is between node's start and end lines:
-            if (startLineNumber <= lineNumber & lineNumber <= endLineNumber)
+            if (startLineNumber <= lineNumber && lineNumber <= endLineNumber)
             {
                // If there are no children - return this node
                if (display.getNodes(node).isEmpty())
