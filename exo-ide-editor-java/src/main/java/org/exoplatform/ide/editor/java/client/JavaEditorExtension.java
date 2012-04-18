@@ -34,8 +34,9 @@ import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
-import org.exoplatform.ide.editor.java.client.create.CreateJavaClassPresenter;
+import org.exoplatform.ide.editor.java.client.create.CreateJavaPresenter;
 import org.exoplatform.ide.editor.java.client.create.NewJavaClassControl;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -62,7 +63,8 @@ public class JavaEditorExtension extends Extension implements InitializeServices
 
       JavaClientBundle.INSTANCE.css().ensureInjected();
 
-      new CreateJavaClassPresenter();
+//      new CreateJavaClassPresenter();
+      
    }
 
    /**
@@ -82,6 +84,7 @@ public class JavaEditorExtension extends Extension implements InitializeServices
                .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']").setCanBeOutlined(true),
             true));
       IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_JAVA, new JavaCommentsModifier()));
+      new CreateJavaPresenter(IDE.eventBus(),VirtualFileSystem.getInstance(), IDE.getInstance());
    }
 
    /**

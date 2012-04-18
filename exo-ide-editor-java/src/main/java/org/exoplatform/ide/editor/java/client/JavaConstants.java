@@ -104,5 +104,8 @@ public interface JavaConstants extends Messages
 
    @Key("create.java.class.view.error.package")
    String packageError();
+   
+   @Key("create.java.type")
+   String createJavaType();
 
 }
