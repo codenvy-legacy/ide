@@ -248,7 +248,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       {
          final String target = cloudfoundry.getTarget();
          CloudFoundryApplication cfApp = cloudfoundry.createApplication(target, generateAppName(16), "spring",
-            null, 1, -1, false, suspend ? new DebugMode("suspend") : new DebugMode(), null, null, war);
+            null, 1, 256, false, suspend ? new DebugMode("suspend") : new DebugMode(), null, null, war);
          final String name = cfApp.getName();
          Instance[] instances = cloudfoundry.applicationInstances(target, name, null, null);
          if (instances.length != 1)
