@@ -27,6 +27,7 @@ import org.eclipse.jdt.client.codeassistant.ContentAssistHistory;
 import org.eclipse.jdt.client.codeassistant.QualifiedTypeNameHistory;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter;
+import org.eclipse.jdt.client.create.CreatePackagePresenter;
 import org.eclipse.jdt.client.internal.codeassist.impl.AssistOptions;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsControl;
@@ -62,6 +63,7 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 import java.util.HashMap;
 
@@ -125,6 +127,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new CleanProjectControl());
       IDE.getInstance().addControl(new FormatterProfilesControl());
       IDE.getInstance().addControl(new OrganizeImportsControl());
+      IDE.getInstance().addControl(new CreatePackageControl());
       IDE.fireEvent(new AddCodeFormatterEvent(new JavaCodeFormatter(), MimeType.APPLICATION_JAVA));
       Window.addCloseHandler(this);
       formatterProfileManager = new FormatterProfilePresenter(IDE.eventBus());
@@ -138,6 +141,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
    {
       REST_CONTEXT = event.getApplicationConfiguration().getContext();
       DOC_CONTEXT = REST_CONTEXT + "/ide/code-assistant/java/class-doc?fqn=";
+      new CreatePackagePresenter(IDE.eventBus(), VirtualFileSystem.getInstance(), IDE.getInstance());
    }
 
    public static JdtExtension get()

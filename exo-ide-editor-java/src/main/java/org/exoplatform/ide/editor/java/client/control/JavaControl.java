@@ -16,34 +16,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.java.client.create;
+package org.exoplatform.ide.editor.java.client.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.editor.java.client.CreateJavaClassEvent;
-import org.exoplatform.ide.editor.java.client.JavaClientBundle;
+import org.exoplatform.ide.editor.java.client.create.CreateJavaPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 /**
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Jan 10, 2012 2:05:22 PM anya $
- * 
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id:
+ *
  */
-public class NewJavaClassControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
+public class JavaControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {
-   public NewJavaClassControl()
+
+   /**
+    * @param id
+    */
+   public JavaControl(String id)
    {
-      super("File/New/New Java Class");
-      setTitle("Java Class");
-      setPrompt("Create Java Class");
-      setNormalImage(JavaClientBundle.INSTANCE.newClassWizz());
-      setDisabledImage(JavaClientBundle.INSTANCE.newClassWizzDisabled());
-      setEvent(new CreateJavaClassEvent());
+      super(id);
    }
 
    /**
@@ -80,4 +78,5 @@ public class NewJavaClassControl extends SimpleControl implements IDEControl, It
       setVisible(true);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
+
 }

@@ -62,6 +62,7 @@ public class NewItemControlsFormatter implements ControlsFormatter
       controlIdsOrder.add("File/New/New POGO");
       controlIdsOrder.add("File/New/New Template");
       controlIdsOrder.add("File/New/New Data Object");
+      controlIdsOrder.add("File/New/New Package");
       controlIdsOrder.add("File/New/New Java Class");
       controlIdsOrder.add("File/New/New JSP File");
       controlIdsOrder.add("File/New/New Ruby File");

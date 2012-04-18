@@ -34,8 +34,8 @@ import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
+import org.exoplatform.ide.editor.java.client.control.NewJavaClassControl;
 import org.exoplatform.ide.editor.java.client.create.CreateJavaPresenter;
-import org.exoplatform.ide.editor.java.client.create.NewJavaClassControl;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 /**

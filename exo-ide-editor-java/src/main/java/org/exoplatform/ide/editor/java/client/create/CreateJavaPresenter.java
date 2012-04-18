@@ -46,8 +46,8 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.editor.java.client.CreateJavaClassEvent;
-import org.exoplatform.ide.editor.java.client.CreateJavaClassHandler;
+import org.exoplatform.ide.editor.java.client.event.CreateJavaClassEvent;
+import org.exoplatform.ide.editor.java.client.event.CreateJavaClassHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -146,7 +146,7 @@ public class CreateJavaPresenter implements CreateJavaClassHandler, ViewClosedHa
    }
 
    /**
-    * @see org.exoplatform.ide.editor.java.client.CreateJavaClassHandler#onCreateJavaClass(org.exoplatform.ide.editor.java.client.CreateJavaClassEvent)
+    * @see org.exoplatform.ide.editor.java.client.event.CreateJavaClassHandler#onCreateJavaClass(org.exoplatform.ide.editor.java.client.event.CreateJavaClassEvent)
     */
    @Override
    public void onCreateJavaClass(CreateJavaClassEvent event)

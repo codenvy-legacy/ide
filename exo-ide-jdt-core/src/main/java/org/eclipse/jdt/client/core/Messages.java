@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,36 +16,54 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.java.client;
+package org.eclipse.jdt.client.core;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.core.client.GWT;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version ${Id}: Dec 1, 2011 4:34:07 PM evgen $
- * 
+ * @version $Id:
+ *
  */
-public class CreateJavaClassEvent extends GwtEvent<CreateJavaClassHandler>
+public interface Messages extends com.google.gwt.i18n.client.Messages
 {
-
-   public static GwtEvent.Type<CreateJavaClassHandler> TYPE = new Type<CreateJavaClassHandler>();
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateJavaClassHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   
+   Messages INSTANCE = GWT.create(Messages.class);
 
    /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    * @return
     */
-   @Override
-   protected void dispatch(CreateJavaClassHandler handler)
-   {
-      handler.onCreateJavaClass(this);
-   }
+   String convention_package_nullName();
+
+   /**
+    * @return
+    */
+   String convention_package_emptyName();
+
+   /**
+    * @return
+    */
+   String convention_package_dotName();
+
+   /**
+    * @return
+    */
+   String convention_package_nameWithBlanks();
+
+   /**
+    * @return
+    */
+   String convention_package_consecutiveDotsName();
+
+   /**
+    * @param typeName 
+    * @return
+    */
+   String convention_illegalIdentifier(String typeName);
+
+   /**
+    * @return
+    */
+   String convention_package_uppercaseName();
 
 }

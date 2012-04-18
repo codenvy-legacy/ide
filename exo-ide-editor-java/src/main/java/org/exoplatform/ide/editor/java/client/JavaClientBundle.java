@@ -127,4 +127,7 @@ public interface JavaClientBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/editor/java/client/images/template.png")
    ImageResource template();
+
+   @Source("org/exoplatform/ide/editor/java/client/images/package_Disabled.png")
+   ImageResource packageDisabled();
 }
