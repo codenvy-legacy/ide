@@ -98,7 +98,7 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
    public DebuggerView(DebuggerInfo debuggerInfo)
    {
 
-      super(ID, ViewType.OPERATION, DebuggerExtension.LOCALIZATION_CONSTANT.debug());
+      super(ID, ViewType.OPERATION, DebuggerExtension.LOCALIZATION_CONSTANT.debug(), new Image(DebuggerClientBundle.INSTANCE.debugApp()));
       add(uiBinder.createAndBindUi(this));
       this.debuggerInfo = debuggerInfo;
       setCanBeClosed(false);
