@@ -31,7 +31,6 @@ import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -102,6 +101,7 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
       super(ID, ViewType.OPERATION, DebuggerExtension.LOCALIZATION_CONSTANT.debug());
       add(uiBinder.createAndBindUi(this));
       this.debuggerInfo = debuggerInfo;
+      setCanBeClosed(false);
       BreakPointCell breakpointCell = new BreakPointCell();
       breakpointsContainer = new CellList<BreakPoint>(breakpointCell);
       breakpointsContainer.setHeight("100%");

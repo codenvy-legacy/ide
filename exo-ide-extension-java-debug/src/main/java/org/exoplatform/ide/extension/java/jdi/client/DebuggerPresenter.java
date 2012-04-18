@@ -652,8 +652,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                protected void onFailure(Throwable exception)
                {
                   exception.printStackTrace();
-                  IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed(),
-                     OutputMessage.Type.INFO));
+                  IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed() + " : " + exception.getMessage(),
+                     OutputMessage.Type.ERROR));
                }
             });
       }
@@ -722,8 +722,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                protected void onFailure(Throwable exception)
                {
                   exception.printStackTrace();
-                  IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed(),
-                     OutputMessage.Type.INFO));
+                  IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed() + " : " + exception.getMessage(),
+                     OutputMessage.Type.ERROR));
                }
             });
       }
@@ -776,7 +776,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  IDE.fireEvent(new OutputEvent(exception.getMessage(), OutputMessage.Type.WARNING));
                }
             });
          }

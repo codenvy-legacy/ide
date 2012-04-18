@@ -36,7 +36,9 @@ public class RunDebuggerView extends ViewImpl implements ReLaunchDebuggerPresent
    public RunDebuggerView()
    {
       super(ID, ViewType.MODAL, DebuggerExtension.LOCALIZATION_CONSTANT.debug(), null, WIDTH, HEIGHT, false);
+      
       add(uiBinder.createAndBindUi(this));
+      setCanBeClosed(false);
    }
 
    /**
