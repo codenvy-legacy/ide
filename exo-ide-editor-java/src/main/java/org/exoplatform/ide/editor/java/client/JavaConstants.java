@@ -107,5 +107,18 @@ public interface JavaConstants extends Messages
    
    @Key("create.java.type")
    String createJavaType();
+   
+   @Key("control.package.title")
+   String controlPackageTitle();
+   
+   @Key("control.package.prompt")
+   String controlPackagePrompt();
+   
+   @Key("create.package.label")
+   String createPackageLabel();
+   
+   @Key("create.package.title")
+   String createPackageTitle();
+   
 
 }
