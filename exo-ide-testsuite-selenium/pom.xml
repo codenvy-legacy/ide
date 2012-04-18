@@ -249,7 +249,7 @@
 						<configuration>
 							<browser>*firefox</browser>
 							<suite>src/test/resources/seleneseTestCases/PaaSTestSuite.html</suite>
-							<startURL>http://localhost:8080/</startURL>
+							<startURL>http://testide258.cloudtest2.exoplatform.com/</startURL>
 						</configuration>
 						<executions>
 							<execution>

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -27,9 +28,11 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Outline.TokenType;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -75,6 +78,13 @@ public class CodeOutLineJavaTest extends CodeAssistantBaseTest
       {
       }
    }
+   
+   @AfterClass
+   
+   public static void TearDown() throws IOException
+   {
+      VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+   }
 
    @Test
    public void testCodeOutLineJava() throws Exception
@@ -98,41 +108,60 @@ public class CodeOutLineJavaTest extends CodeAssistantBaseTest
 
       // check for presence and visibility of outline tab
       assertTrue(IDE.OUTLINE.isOutlineTreePresent());
-      assertTrue(IDE.OUTLINE.isOutlineViewVisible());
+      assertTrue(IDE.OUTLINE.isJavaOutlineViewVisible());
 
       // expand outline tree
-      outlineTreeHelper.expandOutlineTree();
-
-      // create outline tree map
-      OutlineTreeHelper.init();
-      outlineTreeHelper.addOutlineItem("JavaCodeOutline", 8, TokenType.CLASS, "JavaCodeOutline");
-      outlineTreeHelper.addOutlineItem("f@border : Color", 11, TokenType.PROPERTY, "border");
-      outlineTreeHelper.addOutlineItem("sname : String", 12, TokenType.PROPERTY, "name");
-      outlineTreeHelper.addOutlineItem("sfill : String", 12, false, TokenType.PROPERTY, "fill");
-      outlineTreeHelper.addOutlineItem("ColoredRect(int, int, int, int, Color, Color) : void", 17, TokenType.METHOD,
-         "ColoredRect");
-      outlineTreeHelper.addOutlineItem("draw(@Graphics) : void", 27, TokenType.METHOD, "draw");
-      outlineTreeHelper.addOutlineItem("color : String", 30, false, TokenType.VARIABLE, "color"); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
-
-      outlineTreeHelper.addOutlineItem("@get(@java.lang.List<? extends Tree>) : Collection<HashMap<String,String>>",
-         38, TokenType.METHOD);
-      outlineTreeHelper.addOutlineItem("var1 : List<String>", 39, TokenType.VARIABLE);
-      outlineTreeHelper.addOutlineItem("var2 : List<String>", 48, TokenType.VARIABLE);
-
-      outlineTreeHelper.addOutlineItem("JavaCodeOutline() : JavaCodeOutline", 55, TokenType.METHOD, "JavaCodeOutline");
-
-      outlineTreeHelper.addOutlineItem("@add(HashMap<String,String>) : HashMap<String,String>", 60, TokenType.METHOD);
-      outlineTreeHelper.addOutlineItem("addVar1 : List<Tree>", 63, false, TokenType.VARIABLE); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
-
-      outlineTreeHelper.addOutlineItem("JavaCodeOutline(String) : JavaCodeOutline", 69, TokenType.METHOD,
-         "JavaCodeOutline");
-      outlineTreeHelper.addOutlineItem("@JavaCodeOutline(String, HashMap<String,String>) : JavaCodeOutline", 74, false,
-         TokenType.METHOD, "JavaCodeOutline");
-
-      Thread.sleep(TestConstants.SLEEP * 3);
-
-      // check is tree created correctly
-      outlineTreeHelper.checkOutlineTree();
+      IDE.OUTLINE.selectItem("JavaCodeOutline");
+      assertEquals(IDE.OUTLINE.getItemLabel(1), "example");
+      assertEquals(IDE.OUTLINE.getItemLabel(2), "import declarations");
+      assertEquals(IDE.OUTLINE.getItemLabel(3), "JavaCodeOutline");
+     
+      IDE.OUTLINE.selectItem("import declarations");
+      IDE.OUTLINE.expandSelectItem(2);
+      assertEquals(IDE.OUTLINE.getItemLabel(3), "java.awt");
+      assertEquals(IDE.OUTLINE.getItemLabel(4), "JavaCodeOutline");
+      
+      //IDE.OUTLINE.expandSelectItem(4);
+      
+      
+      
+      
+//      //  outlineTreeHelper.expandOutlineTree();
+//      
+//      // TODO issue IDE-1499
+//      IDE.GOTOLINE.goToLine(5);
+//      IDE.GOTOLINE.goToLine(10);
+//
+//      // create outline tree map
+//      OutlineTreeHelper.init();
+//      outlineTreeHelper.addOutlineItem("JavaCodeOutline", 8, TokenType.CLASS, "JavaCodeOutline");
+//      outlineTreeHelper.addOutlineItem("f@border : Color", 11, TokenType.PROPERTY, "border");
+//      outlineTreeHelper.addOutlineItem("sname : String", 12, TokenType.PROPERTY, "name");
+//      outlineTreeHelper.addOutlineItem("sfill : String", 12, false, TokenType.PROPERTY, "fill");
+//      outlineTreeHelper.addOutlineItem("ColoredRect(int, int, int, int, Color, Color) : void", 17, TokenType.METHOD,
+//         "ColoredRect");
+//      outlineTreeHelper.addOutlineItem("draw(@Graphics) : void", 27, TokenType.METHOD, "draw");
+//      outlineTreeHelper.addOutlineItem("color : String", 30, false, TokenType.VARIABLE, "color"); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
+//
+//      outlineTreeHelper.addOutlineItem("@get(@java.lang.List<? extends Tree>) : Collection<HashMap<String,String>>",
+//         38, TokenType.METHOD);
+//      outlineTreeHelper.addOutlineItem("var1 : List<String>", 39, TokenType.VARIABLE);
+//      outlineTreeHelper.addOutlineItem("var2 : List<String>", 48, TokenType.VARIABLE);
+//
+//      outlineTreeHelper.addOutlineItem("JavaCodeOutline() : JavaCodeOutline", 55, TokenType.METHOD, "JavaCodeOutline");
+//
+//      outlineTreeHelper.addOutlineItem("@add(HashMap<String,String>) : HashMap<String,String>", 60, TokenType.METHOD);
+//      outlineTreeHelper.addOutlineItem("addVar1 : List<Tree>", 63, false, TokenType.VARIABLE); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
+//
+//      outlineTreeHelper.addOutlineItem("JavaCodeOutline(String) : JavaCodeOutline", 69, TokenType.METHOD,
+//         "JavaCodeOutline");
+//      outlineTreeHelper.addOutlineItem("@JavaCodeOutline(String, HashMap<String,String>) : JavaCodeOutline", 74, false,
+//         TokenType.METHOD, "JavaCodeOutline");
+//
+//      Thread.sleep(TestConstants.SLEEP * 3);
+//
+//      // check is tree created correctly
+//      outlineTreeHelper.checkOutlineTree();
    }
 
 }
