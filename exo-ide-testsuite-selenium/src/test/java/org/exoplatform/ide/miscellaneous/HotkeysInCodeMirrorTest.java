@@ -120,8 +120,6 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
    public void testCopyPasetHotkeys() throws Exception
    {
       driver.navigate().refresh();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       //----- 1 ------------
       //Create new text file
