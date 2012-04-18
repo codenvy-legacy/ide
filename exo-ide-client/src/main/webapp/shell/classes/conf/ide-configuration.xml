@@ -327,7 +327,7 @@
       </init-params>
    </component>
 
-   <component>
+  <component>
       <key>org.exoplatform.ide.extension.java.jdi.server.ApplicationRunner</key>
       <type>org.exoplatform.ide.extension.java.jdi.server.CloudfoundryApplicationRunner</type>
       <init-params>
@@ -336,10 +336,13 @@
             <value>http://api.javarun.exoplatform.com</value>
          </value-param>
          <value-param>
-            <name>cloudfoundry-token</name>
-            <value>04085b0849221e76706172666f6e6f764065786f706c6174666f726d2e636f6d063a0645546c2b070e6c8d4f2219c65557d6a6cda8a1c94916e78d1043887f473d12</value>
+            <name>cloudfoundry-user</name>
+            <value>vparfonov@exoplatform.com</value>
+         </value-param>
+         <value-param>
+            <name>cloudfoundry-password</name>
+            <value>1234qwer</value>
          </value-param>
       </init-params>
    </component>
-
 </configuration>
