@@ -121,6 +121,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
    {
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       //----- 1 ------------
       //Create new text file
@@ -135,8 +136,12 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       IDE.EDITOR.typeTextIntoEditor(0, Keys.ARROW_LEFT.toString());
       IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "a");
       //used delay to imitate the user's typing
-      Thread.sleep(500);
+      
+      //TODO Used two "Ctrl+c" because after first pressing does not copy to clipboard
+      //If, maybe this problem will fixed in latest versions WebDriver, one "Ctrl+c" should remove. 
       IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "c");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "c");
+
       IDE.EDITOR.typeTextIntoEditor(0, Keys.ARROW_DOWN.toString());
 
       IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
@@ -173,7 +178,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
-   @Test
+  @Test
    public void testUndoRedoHotkeys() throws Exception
    {
       driver.navigate().refresh();
