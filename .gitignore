@@ -37,6 +37,7 @@
 /exo-ide-client/.directory
 /exo-ide-client/.gwt
 /exo-ide-client/git
+/exo-ide-client/tomcat
 
 
 /**/.gwt

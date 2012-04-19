@@ -54,12 +54,12 @@ import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.codeassistant.util.ModifierHelper;
-import org.exoplatform.ide.editor.java.client.CreateJavaClassEvent;
-import org.exoplatform.ide.editor.java.client.CreateJavaClassHandler;
 import org.exoplatform.ide.editor.java.client.JavaCodeAssistantUtils;
 import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.JavaClass;
+import org.exoplatform.ide.editor.java.client.event.CreateJavaClassEvent;
+import org.exoplatform.ide.editor.java.client.event.CreateJavaClassHandler;
 import org.exoplatform.ide.editor.java.client.model.TypeSelectedCallback;
 import org.exoplatform.ide.editor.java.client.model.Types;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
@@ -282,7 +282,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
    }
 
    /**
-    * @see org.exoplatform.ide.editor.java.client.CreateJavaClassHandler#onCreateJavaClass(org.exoplatform.ide.editor.java.client.CreateJavaClassEvent)
+    * @see org.exoplatform.ide.editor.java.client.event.CreateJavaClassHandler#onCreateJavaClass(org.exoplatform.ide.editor.java.client.event.CreateJavaClassEvent)
     */
    @Override
    public void onCreateJavaClass(CreateJavaClassEvent event)
