@@ -56,7 +56,7 @@ var tokenizeJava = (function() {
       "static": keywordC, "final": keywordC, "const": keywordC, "abstract": keywordC, "static": keywordC,
 
       "int": keywordC, "double": keywordC, "long": keywordC, "boolean": keywordC, "char": keywordC,
-      "void": keywordC, "byte": keywordC, "float": keywordC, "short": keywordC
+      "void": keywordC, "byte": keywordC, "float": keywordC, "short": keywordC, "enum" : keywordC
     };
   }();
 
@@ -194,6 +194,9 @@ var tokenizeJava = (function() {
     else if (/[0-9]/.test(ch))
       return readNumber();
     else if (ch == "@"){
+    	if(source.equals("i"))
+    		return readOperator();
+    	else
     	return readAnnotation();
     }else if (ch == "/"){
       if (source.equals("*")){
