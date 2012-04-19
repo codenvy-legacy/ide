@@ -12,8 +12,8 @@
    <packaging>pom</packaging>
    <name>eXo IDE :: Parent</name>
    <scm>
-      <connection>scm:svn:http://svn.exoplatform.org/projects/ide/trunk</connection>
-      <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ide/trunk</developerConnection>
+      <connection>scm:git:git@github.com:exodev/ide.git</connection>
+      <developerConnection>scm:git:git@github.com:exodev/ide.git</developerConnection>
       <url>http://fisheye.exoplatform.org/browse/projects-internal/ide/trunk</url>
    </scm>
    <properties>
@@ -25,7 +25,7 @@
       <org.exoplatform.kernel.version>2.3.7-GA</org.exoplatform.kernel.version>
       <org.exoplatform.core.version>2.4.7-GA</org.exoplatform.core.version>
       <org.exoplatform.ws.version>2.2.7-GA</org.exoplatform.ws.version>
-      <org.exoplatform.gwtframework.version>1.2.0-M7-SNAPSHOT</org.exoplatform.gwtframework.version>
+      <org.exoplatform.gwtframework.version>1.2.0-M7</org.exoplatform.gwtframework.version>
       <!-- CodeAssistant DataBase -->
        <ide.codeassistant.lucene.index.version>20120306</ide.codeassistant.lucene.index.version>
       <!-- Third parties -->
@@ -50,6 +50,8 @@
       <jgit.version>1.2.0.201112221803-r</jgit.version>
       <jsch.version>0.1.44-1</jsch.version>
       <everrest.version>1.0.4</everrest.version>
+      <version.buildnumber.plugin>1.0</version.buildnumber.plugin>
+      <version.release.plugin>2.2.1</version.release.plugin>
    </properties>
 
 
