@@ -46,12 +46,10 @@
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
-         <version>1.2.0-M6-SNAPSHOT</version>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-ui</artifactId>
-         <version>1.2.0-M6-SNAPSHOT</version>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
