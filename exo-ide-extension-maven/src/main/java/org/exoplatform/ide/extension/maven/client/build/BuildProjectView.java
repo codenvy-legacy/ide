@@ -26,11 +26,13 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
+import org.exoplatform.ide.extension.maven.client.MavenClientBundle;
 
 /**
  * View for build project by maven builder.
@@ -79,7 +81,7 @@ public class BuildProjectView extends ViewImpl implements BuildProjectPresenter.
 
    public BuildProjectView()
    {
-      super(ID, ViewType.OPERATION, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.OPERATION, TITLE, new Image(MavenClientBundle.INSTANCE.build()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }
 
