@@ -255,7 +255,7 @@ public class InternalCompletionProposal extends CompletionProposal
          {
             parameters = new char[length][];
             char[][] params = method.getArgumentNames();
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < length; i++)//NOSONAR
             {
                parameters[i] = params[i];
             }

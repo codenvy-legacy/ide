@@ -108,16 +108,6 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.maven.server.BuilderClient</type>
-      <init-params>
-         <value-param>
-            <name>build-server-base-url</name>
-            <value>http://localhost:8081/builder</value>
-         </value-param>
-      </init-params>
-   </component>
-
-   <component>
       <type>org.exoplatform.logreader.LogReaderServiceApplication</type>
    </component>
 
@@ -333,7 +323,7 @@
       <init-params>
          <value-param>
             <name>cloudfoundry-target</name>
-            <value>http://api.javarun.exoplatform.com</value>
+            <value>http://api.javarun2.exoplatform.com</value>
          </value-param>
          <value-param>
             <name>cloudfoundry-user</name>

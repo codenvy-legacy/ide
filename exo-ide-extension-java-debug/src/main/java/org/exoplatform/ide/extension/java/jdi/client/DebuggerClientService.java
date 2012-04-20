@@ -98,6 +98,7 @@ public class DebuggerClientService
       AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/breakpoints/" + id).loader(new EmptyLoader()).send(callback);
    }
 
+   
 
    public void checkEvents(String id, AsyncRequestCallback<DebuggerEventList> callback)
       throws RequestException
@@ -120,7 +121,7 @@ public class DebuggerClientService
    {
       AutoBean<VariablePath> autoBean2 = DebuggerExtension.AUTO_BEAN_FACTORY.variablePath(var.getVariablePath());
       String json = AutoBeanCodex.encode(autoBean2).getPayload();
-      AsyncRequest.build(RequestBuilder.POST, BASE_URL + "/value/" + id).data(json)
+      AsyncRequest.build(RequestBuilder.POST, BASE_URL + "/value/get/" + id).data(json)
          .header("Content-Type", "application/json").loader(new EmptyLoader()).send(callback);
    }
 

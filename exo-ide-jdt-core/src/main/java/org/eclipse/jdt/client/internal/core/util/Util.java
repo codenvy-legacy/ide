@@ -1773,7 +1773,7 @@ public class Util
       // Resize signatures array
       char[][] typeSignatures = new char[signaturesCount + 1][];
       typeSignatures[0] = source;
-      for (int i = 1, j = signaturesCount - 1; i <= signaturesCount; i++, j--)
+      for (int i = 1, j = signaturesCount - 1; i <= signaturesCount; i++, j--)//NOSONAR
       {
          typeSignatures[i] = signatures[j];
       }
