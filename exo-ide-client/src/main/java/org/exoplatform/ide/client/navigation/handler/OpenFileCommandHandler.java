@@ -35,6 +35,8 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -49,6 +51,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.event.CursorPosition;
+import org.exoplatform.ide.client.framework.event.FileOpenedEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -178,8 +181,12 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
       }
    }
 
+   private FileModel fileToOpen;
+   
    private void openFile(FileModel file)
    {
+      fileToOpen = file;
+      
       try
       {
          if (selectedEditor == null)
@@ -211,9 +218,22 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
     */
-   public void onEditorFileOpened(EditorFileOpenedEvent event)
+   public void onEditorFileOpened(final EditorFileOpenedEvent event)
    {
       openedFiles = event.getOpenedFiles();
+
+      if (fileToOpen != null && event.getFile().getId().equals(fileToOpen.getId()))
+      {
+         fileToOpen = null;
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               IDE.fireEvent(new FileOpenedEvent(event.getFile()));
+            }
+         });
+      }
    }
 
    /**
