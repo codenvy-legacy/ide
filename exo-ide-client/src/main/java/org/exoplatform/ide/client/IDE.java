@@ -41,6 +41,7 @@ import org.exoplatform.ide.client.edit.TextEditModule;
 import org.exoplatform.ide.client.editor.EditorController;
 import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedEvent;
+import org.exoplatform.ide.client.framework.application.event.ApplicationClosingEvent;
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
@@ -133,6 +134,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       // Create the list of available icons.
       IDEIconSet.init();
       addWindowCloseHandler();
+      addWindowClosingHandler();
 
       new IDEDialogs();
       new AskForValueDialog();
@@ -152,7 +154,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       controlsRegistration.addControlsFormatter(new NewItemControlsFormatter());
       controlsRegistration.addControlsFormatter(new ViewControlsFormatter());
       controlsRegistration.addControlsFormatter(new EditControlsFormatter());
-      
 
       paasRegistration = new ArrayList<Paas>();
 
@@ -313,4 +314,18 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
          }
       });
    }
+
+   public void addWindowClosingHandler()
+   {
+      Window.addWindowClosingHandler(new Window.ClosingHandler()
+      {
+
+         @Override
+         public void onWindowClosing(Window.ClosingEvent event)
+         {
+            fireEvent(new ApplicationClosingEvent(event));
+         }
+      });
+   }
+
 }

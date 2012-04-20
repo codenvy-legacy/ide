@@ -262,6 +262,12 @@
             </dependency>
             
             <!--DELETE -->
+             <dependency>
+               <groupId>org.json</groupId>
+               <artifactId>json</artifactId>
+               <version>1.5</version>
+            </dependency>
+            
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-git</artifactId>

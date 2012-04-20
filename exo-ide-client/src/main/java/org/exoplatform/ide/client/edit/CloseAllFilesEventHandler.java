@@ -24,6 +24,8 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.application.event.ApplicationClosingEvent;
+import org.exoplatform.ide.client.framework.application.event.ApplicationClosingHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
@@ -41,6 +43,7 @@ import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -52,7 +55,7 @@ import java.util.Map;
  */
 
 public class CloseAllFilesEventHandler implements CloseAllFilesHandler, EditorFileOpenedHandler,
-   EditorFileClosedHandler, FileSavedHandler
+   EditorFileClosedHandler, FileSavedHandler, ApplicationClosingHandler
 {
 
    private static final String ASK_DIALOG_TITLE = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT
@@ -60,6 +63,12 @@ public class CloseAllFilesEventHandler implements CloseAllFilesHandler, EditorFi
 
    private static final String ASK_DIALOG_TEXT = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT
       .workspaceCloseAllFilesDialogText();
+
+   /**
+    * The message to display to user if he has unsaved files, that may be lost after refresh or close page.
+    */
+   private static final String UNSAVED_FILES_MAY_BE_LOST = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT
+      .unsavedFilesMayBeLost();
 
    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
@@ -71,6 +80,7 @@ public class CloseAllFilesEventHandler implements CloseAllFilesHandler, EditorFi
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
       IDE.addHandler(FileSavedEvent.TYPE, this);
+      IDE.addHandler(ApplicationClosingEvent.TYPE, this);
    }
 
    @Override
@@ -190,6 +200,23 @@ public class CloseAllFilesEventHandler implements CloseAllFilesHandler, EditorFi
          fileToClose = null;
          IDE.fireEvent(e);
          closeNextFile();
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.ApplicationClosingHandler#onApplicationClosing(
+    * org.exoplatform.ide.client.framework.application.event.ApplicationClosingEvent)
+    */
+   @Override
+   public void onApplicationClosing(ApplicationClosingEvent event)
+   {
+      for (FileModel file : openedFiles.values())
+      {
+         if (file.isContentChanged())
+         {
+            event.setMessage(UNSAVED_FILES_MAY_BE_LOST);
+            break;
+         }
       }
    }
 
