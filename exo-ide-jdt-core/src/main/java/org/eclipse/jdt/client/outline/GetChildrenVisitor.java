@@ -22,10 +22,13 @@ import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTVisitor;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.EnumDeclaration;
+import org.eclipse.jdt.client.core.dom.FieldDeclaration;
 import org.eclipse.jdt.client.core.dom.TypeDeclaration;
+import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -38,7 +41,6 @@ import java.util.List;
  */
 public class GetChildrenVisitor extends ASTVisitor
 {
-
    /**
     * Child nodes.
     */
@@ -76,10 +78,40 @@ public class GetChildrenVisitor extends ASTVisitor
    public boolean visit(TypeDeclaration typeDeclaration)
    {
       nodes.clear();
-      nodes.addAll(Arrays.asList(typeDeclaration.getFields()));
+      nodes.addAll(retrieveFields(typeDeclaration.getFields()));
       nodes.addAll(Arrays.asList(typeDeclaration.getMethods()));
       nodes.addAll(Arrays.asList(typeDeclaration.getTypes()));
       return true;
+   }
+
+   /**
+    * The incoming list of fields may contain following field declaration: <code>
+    * private int x, y;
+    * </code> This method returns it as separate fields. 
+    * 
+    * TODO rework this method
+    * 
+    * @param fields
+    * @return {@link List}
+    */
+   @SuppressWarnings({"rawtypes", "unchecked"})
+   private List<FieldDeclaration> retrieveFields(FieldDeclaration[] fields)
+   {
+      List<FieldDeclaration> separatedFields = new ArrayList<FieldDeclaration>();
+      for (FieldDeclaration field : fields)
+      {
+         List fragments = new ArrayList(field.fragments());
+         Iterator<VariableDeclarationFragment> iterator = fragments.iterator();
+         while (iterator.hasNext())
+         {
+            VariableDeclarationFragment declarationFragment = iterator.next();
+            FieldDeclaration newField = (FieldDeclaration)field.clone0(field.getAST());
+            newField.fragments().clear();
+            newField.fragments().addAll(ASTNode.copySubtrees(newField.getAST(), Arrays.asList(declarationFragment)));
+            separatedFields.add(newField);
+         }
+      }
+      return separatedFields;
    }
 
    /**
