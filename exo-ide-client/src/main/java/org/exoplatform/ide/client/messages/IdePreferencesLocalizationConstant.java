@@ -256,4 +256,9 @@ public interface IdePreferencesLocalizationConstant extends Constants
    @Key("hotkeys.group.other")
    String hotkeysOtherGroup();
 
+   /*
+    * CloseAllFilesEventHandler
+    */
+   @Key("closeAllFiles.unsavedFilesMayBeLost")
+   String unsavedFilesMayBeLost();
 }
