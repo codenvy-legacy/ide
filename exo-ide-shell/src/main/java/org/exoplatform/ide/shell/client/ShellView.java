@@ -24,6 +24,8 @@ import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -66,9 +68,9 @@ public class ShellView extends Composite implements ShellPresenter.Display
    {
       ShellClientBundle.INSTANCE.css().ensureInjected();
       initWidget(uiBinder.createAndBindUi(this));
-      content.setId( "shellContent");
+      content.setId("shellContent");
       RootPanel.get().add(this);
-      
+
       focusInConsole();
       getElement().setTabIndex(0);
       sinkEvents(Event.ONFOCUS);
@@ -90,7 +92,10 @@ public class ShellView extends Composite implements ShellPresenter.Display
    @Override
    public void print(String str)
    {
-      content.setInnerHTML(content.getInnerHTML() + str);
+      Element pre = DOM.createElement("pre");
+      pre.setInnerHTML(str);
+      content.appendChild(pre);
+
       termText.clear();
       printPrompt();
    }
@@ -156,7 +161,11 @@ public class ShellView extends Composite implements ShellPresenter.Display
    public String submitBuffer()
    {
       String buffer = termText.bufferSubmit();
-      content.setInnerHTML(content.getInnerHTML() + termText.getState());
+
+      Element pre = DOM.createElement("pre");
+      pre.setInnerHTML(termText.getState());
+      content.appendChild(pre);
+
       termText.clear();
       return buffer;
    }
