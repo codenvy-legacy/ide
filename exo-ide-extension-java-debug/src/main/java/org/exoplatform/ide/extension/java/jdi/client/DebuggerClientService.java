@@ -64,10 +64,8 @@ public class DebuggerClientService
 
    public void create(String host, int port, AsyncRequestCallback<DebuggerInfo> callback) throws RequestException
    {
-      Loader loader = new GWTLoader();
-      loader.setMessage("Connection... to the host " + host);
       AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/connect?host=" + host + "&port=" + port)
-         .loader(loader).send(callback);
+         .loader(new EmptyLoader()).send(callback);
    }
 
    public void disconnect(String id, AsyncRequestCallback<String> callback) throws RequestException

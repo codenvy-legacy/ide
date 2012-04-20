@@ -19,16 +19,27 @@
 
 package org.exoplatform.ide.client.project.resource;
 
-import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.cell.client.SafeHtmlCell;
+import com.google.gwt.event.dom.client.HasAllKeyHandlers;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
+import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
-import org.exoplatform.ide.client.project.properties.PropertyUtil;
+import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
+import org.exoplatform.ide.client.framework.util.ImageUtil;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.Property;
 
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * 
@@ -38,48 +49,84 @@ import java.util.List;
  * @version $
  */
 
-public class FilesListGrid extends ListGrid<FileModel>
+public class FilesListGrid extends ListGrid<FileModel> implements HasAllKeyHandlers
 {
-   
+
+   private static final HashMap<String, String> mimeTypeImages = new HashMap<String, String>();
+
+   private String build(String image, String name)
+   {
+      String html = "<div style=\"height: 16px; padding:0px; margin:0px; line-height:16px;\">";
+      if (image != null)
+      {
+         html += "<div style=\"width:16px; height:16px; overflow:hidden; float:left;\">" + image + "</div>";
+      }
+
+      html += "<div style=\"float:left;\">&nbsp;" + name + "</div>";
+      html += "</div>";
+      return html;
+   }
+
+   private String renderCell(final FileModel file)
+   {
+      String name = file.getName();
+
+      String img = mimeTypeImages.get(file.getMimeType());
+      if (img == null)
+      {
+         ImageResource resource = ImageUtil.getIcon(file.getMimeType());
+         img = ImageHelper.getImageHTML(resource);
+         mimeTypeImages.put(file.getMimeType(), img);
+      }
+
+      return build(img, name);
+   }
+
    public FilesListGrid()
    {
-      
-      Column<FileModel, String> nameColumn = new Column<FileModel, String>(new TextCell())
+      Column<FileModel, SafeHtml> nameColumn = new Column<FileModel, SafeHtml>(new SafeHtmlCell())
       {
          @Override
-         public String getValue(FileModel object)
+         public SafeHtml getValue(final FileModel file)
          {
-            return PropertyUtil.getHumanReadableName(object.getName());
+            SafeHtml html = new SafeHtml()
+            {
+               private static final long serialVersionUID = 1L;
+
+               @Override
+               public String asString()
+               {
+                  return renderCell(file);
+               }
+            };
+
+            return html;
          }
       };
 
-//      Column<Property, String> valueColumn = new Column<Property, String>(new TextCell())
-//      {
-//         @Override
-//         public String getValue(Property object)
-//         {
-//            String value = "";
-//            List values = object.getValue();
-//            for (Object v : values)
-//            {
-//               if (!value.isEmpty())
-//               {
-//                  value += "<br>";
-//               }
-//
-//               value += v;
-//            }
-//
-//            return value;
-//         }
-//      };
-
       nameColumn.setCellStyleNames("default-cursor");
-//      valueColumn.setCellStyleNames("default-cursor");
-
-      //getCellTable().addColumn(nameColumn, "Name");
       getCellTable().addColumn(nameColumn);
-//      getCellTable().addColumn(valueColumn, "Value");
-   }   
+
+      getCellTable().setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
+      getCellTable().setKeyboardPagingPolicy(KeyboardPagingPolicy.CURRENT_PAGE);
+   }
+
+   @Override
+   public HandlerRegistration addKeyUpHandler(KeyUpHandler handler)
+   {
+      return addDomHandler(handler, KeyUpEvent.getType());
+   }
+
+   @Override
+   public HandlerRegistration addKeyDownHandler(KeyDownHandler handler)
+   {
+      return addDomHandler(handler, KeyDownEvent.getType());
+   }
+
+   @Override
+   public HandlerRegistration addKeyPressHandler(KeyPressHandler handler)
+   {
+      return addDomHandler(handler, KeyPressEvent.getType());
+   }
 
 }

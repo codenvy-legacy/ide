@@ -173,12 +173,13 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
       add(uiBinder.createAndBindUi(this));
 
       revisionADate.setInnerText(GitExtension.MESSAGES.historyViewDateTitle());
-      revisionATitle.setInnerText(GitExtension.MESSAGES.historyViewRevisionTitle());
+      revisionATitle.setInnerText(GitExtension.MESSAGES.historyViewRevisionATitle());
 
-      comitADate.setHeight("20px");
-      comitARevision.setHeight("20px");
-      comitBDate.setHeight("20px");
-      comitARevision.setHeight("20px");
+      comitADate.setSize("300px", "20px");
+      comitARevision.setSize("300px", "20px");
+      comitBDate.setSize("300px", "20px");
+      comitBRevision.setSize("300px", "20px");
+
       createControls();
    }
 
@@ -387,9 +388,10 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
          comitARevision.setValue(revision.getId());
       }
 
-      revisionBDate.setAttribute("rowspan", "2");
-      revisionBDate.setInnerHTML("<nobr>" + text + "</nobr>");
-      revisionBTitle.setInnerHTML("");
+      revisionBTitle.setAttribute("rowspan", "2");
+      revisionBTitle.setAttribute("colspan", "2");
+      revisionBTitle.setInnerHTML("<nobr>" + text + "</nobr>");
+      revisionBDate.setInnerHTML("");
       comitBDate.setVisible(false);
       comitBRevision.setVisible(false);
    }
@@ -401,9 +403,10 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
    @Override
    public void displayCompareVersion(Revision revisionA, Revision revisionB)
    {
-      revisionBDate.setAttribute("rowspan", "1");
+      revisionBTitle.setAttribute("rowspan", "1");
+      revisionBTitle.setAttribute("colspan", "1");
       revisionBDate.setInnerText(GitExtension.MESSAGES.historyViewDateTitle());
-      revisionBTitle.setInnerText(GitExtension.MESSAGES.historyViewRevisionTitle());
+      revisionBTitle.setInnerText(GitExtension.MESSAGES.historyViewRevisionBTitle());
       comitBDate.setVisible(true);
       comitBRevision.setVisible(true);
       DateTimeFormat formatter = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);

@@ -26,11 +26,15 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.RunAppEvent;
 
 
 public class RunAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
-   ProjectOpenedHandler
+   ProjectOpenedHandler, AppStartedHandler, AppStopedHandler
 {
    public static final String ID = "Project/Run";
 
@@ -58,6 +62,8 @@ public class RunAppControl extends SimpleControl implements IDEControl, ProjectC
 
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(AppStartedEvent.TYPE, this);
+      IDE.addHandler(AppStopedEvent.TYPE, this);
    }
 
    /**
@@ -78,5 +84,17 @@ public class RunAppControl extends SimpleControl implements IDEControl, ProjectC
       String projectType = event.getProject().getProjectType();
       if (ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType));
          setEnabled(true);
+   }
+   
+   @Override
+   public void onAppStoped(AppStopedEvent appStopedEvent)
+   {
+      setEnabled(true);
+   }
+
+   @Override
+   public void onAppStarted(AppStartedEvent event)
+   {
+      setEnabled(false);
    }
 }

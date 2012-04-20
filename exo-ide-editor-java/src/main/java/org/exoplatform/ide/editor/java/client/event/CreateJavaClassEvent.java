@@ -16,37 +16,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.java.client;
+package org.exoplatform.ide.editor.java.client.event;
 
-import com.google.gwt.junit.client.GWTTestCase;
-
-import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Base Feb 25, 2011 10:59:00 AM evgen $
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version ${Id}: Dec 1, 2011 4:34:07 PM evgen $
  * 
  */
-public class Base extends GWTTestCase
+public class CreateJavaClassEvent extends GwtEvent<CreateJavaClassHandler>
 {
 
+   public static GwtEvent.Type<CreateJavaClassHandler> TYPE = new Type<CreateJavaClassHandler>();
+
    /**
-    * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
-   // @Override
-   public String getModuleName()
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<CreateJavaClassHandler> getAssociatedType()
    {
-      return "org.exoplatform.ide.editor.EditorTest";
+      return TYPE;
    }
 
    /**
-    * Takes in a trusted JSON String and evals it.
-    * 
-    * @param JSON String that you trust
-    * @return JavaScriptObject that you can cast to an Overlay Type
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
-   protected native JavaScriptObject parseJson(String json) /*-{
-                                                            return eval('(' + json + ')'); ;
-                                                            }-*/;
+   @Override
+   protected void dispatch(CreateJavaClassHandler handler)
+   {
+      handler.onCreateJavaClass(this);
+   }
 
 }

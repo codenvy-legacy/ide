@@ -28,4 +28,7 @@
     <replace-with class="org.exoplatform.ide.editor.java.client.create.TypeSearchView">
       <when-type-is class="org.exoplatform.ide.editor.java.client.create.TypeSearchPresenter.Display" />
    </replace-with>
+    <replace-with class="org.exoplatform.ide.editor.java.client.create.CreateJavaView">
+      <when-type-is class="org.exoplatform.ide.editor.java.client.create.CreateJavaPresenter.Display" />
+   </replace-with>
 </module>
