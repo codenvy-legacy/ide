@@ -210,10 +210,9 @@ public class CloseAllFilesEventHandler implements CloseAllFilesHandler, EditorFi
    @Override
    public void onApplicationClosing(ApplicationClosingEvent event)
    {
-      Iterator<Map.Entry<String, FileModel>> iterator = openedFiles.entrySet().iterator();
-      while (iterator.hasNext())
+      for (FileModel file : openedFiles.values())
       {
-         if (iterator.next().getValue().isContentChanged())
+         if (file.isContentChanged())
          {
             event.setMessage(UNSAVED_FILES_MAY_BE_LOST);
             break;
