@@ -127,7 +127,7 @@ public class LsCommand extends ClientCommand
                @Override
                protected void onSuccess(List<Item> result)
                {
-                  CloudShell.console().println(Utils.fomatItems(result));
+                  CloudShell.console().print(Utils.fomatItems(result));
                }
 
                /**
