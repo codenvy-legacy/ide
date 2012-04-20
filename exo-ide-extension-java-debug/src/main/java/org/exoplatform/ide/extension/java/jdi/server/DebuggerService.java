@@ -26,6 +26,7 @@ import org.exoplatform.ide.extension.java.jdi.shared.BreakPointList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
+import org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest;
 import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
 
@@ -119,12 +120,20 @@ public class DebuggerService
    }
 
    @POST
-   @Path("value/{id}")
+   @Path("value/get/{id}")
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    public Value getValue(@PathParam("id") String id, VariablePath path) throws DebuggerException
    {
       return Debugger.getInstance(id).getValue(path);
+   }
+
+   @POST
+   @Path("value/set/{id}")
+   @Consumes(MediaType.APPLICATION_JSON)
+   public void setValue(@PathParam("id") String id, UpdateVariableRequest request) throws DebuggerException
+   {
+      Debugger.getInstance(id).setValue(request.getVariablePath(), request.getExpression());
    }
 
    @GET
@@ -152,8 +161,8 @@ public class DebuggerService
    @Path("expression/{id}")
    @Consumes(MediaType.TEXT_PLAIN)
    @Produces(MediaType.TEXT_PLAIN)
-   public String expression(@PathParam("id") String id, String expr) throws DebuggerException
+   public String expression(@PathParam("id") String id, String expression) throws DebuggerException
    {
-      return Debugger.getInstance(id).expression(expr);
+      return Debugger.getInstance(id).expression(expression);
    }
 }

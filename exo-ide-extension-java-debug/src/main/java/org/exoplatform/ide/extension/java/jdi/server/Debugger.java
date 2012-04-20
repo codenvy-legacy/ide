@@ -535,6 +535,16 @@ public class Debugger implements EventsHandler
       return value;
    }
 
+   /**
+    * Update the value of variable with the value of an evaluated expression.
+    *
+    * @param variablePath
+    *    path to updated variable
+    * @param valueExpression
+    *    expression
+    * @throws DebuggerException
+    *    when any other errors occur when try to update the variable
+    */
    public void setValue(VariablePath variablePath, String valueExpression) throws DebuggerException
    {
       StringBuilder expression = new StringBuilder();
