@@ -90,7 +90,7 @@ public class ShellView extends Composite implements ShellPresenter.Display
    @Override
    public void print(String str)
    {
-      content.setInnerHTML(content.getInnerText() + str);
+      content.setInnerHTML(content.getInnerHTML() + str);
       termText.clear();
       printPrompt();
    }
@@ -156,7 +156,7 @@ public class ShellView extends Composite implements ShellPresenter.Display
    public String submitBuffer()
    {
       String buffer = termText.bufferSubmit();
-      content.setInnerHTML(content.getInnerText() + termText.getState());
+      content.setInnerHTML(content.getInnerHTML() + termText.getState());
       termText.clear();
       return buffer;
    }
