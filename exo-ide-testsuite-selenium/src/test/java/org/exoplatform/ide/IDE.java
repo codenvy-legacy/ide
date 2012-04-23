@@ -73,6 +73,7 @@ import org.exoplatform.ide.core.CkEditor;
 import org.exoplatform.ide.core.Workspace;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
+import org.exoplatform.ide.core.CodeAssistantJava;
 
 /**
  * 
@@ -200,6 +201,8 @@ public class IDE
    public Build BUILD;
    
    public ErrorMarks ERROR_MARKS;
+   
+   public CodeAssistantJava CODE_ASSISTANT_JAVA; 
 
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
@@ -257,6 +260,7 @@ public class IDE
       WELCOME_PAGE = PageFactory.initElements(driver, WelcomePage.class);
       CK_EDITOR = PageFactory.initElements(driver, CkEditor.class);
       ERROR_MARKS = PageFactory.initElements(driver, ErrorMarks.class);
+      CODE_ASSISTANT_JAVA = PageFactory.initElements(driver, CodeAssistantJava.class);
    }
 
    public Selenium getSelenium()
