@@ -36,7 +36,7 @@ public class Preferences
     * 
     */
    public static final String CODEASSIST_LRU_HISTORY = "content_assist_lru_history_";
-   
+
    public static final String QUALIFIED_TYPE_NAMEHISTORY = "Qualified_Type_Name_History_";
 
    private Storage storage;

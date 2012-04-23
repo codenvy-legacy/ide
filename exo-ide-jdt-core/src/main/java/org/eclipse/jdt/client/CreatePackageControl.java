@@ -32,6 +32,7 @@ public class CreatePackageControl extends JavaControl
 {
 
    private static final String ID = "File/New/New Package";
+
    /**
     * @param id
     */

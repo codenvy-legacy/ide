@@ -38,7 +38,7 @@ public interface IType extends IJavaElement
     * @see Flags
     */
    int getFlags();
-   
+
    /**
     * Returns the fully qualified name of this type,
     * including qualification for any containing types and packages.
@@ -86,7 +86,7 @@ public interface IType extends IJavaElement
     * @return
     */
    String getTypeQualifiedName(char c);
-   
+
    /**
     * Returns the package fragment in which this element is defined.
     * This is a handle-only method.
@@ -94,5 +94,5 @@ public interface IType extends IJavaElement
     * @return the package fragment in which this element is defined
     */
    IPackageFragment getPackageFragment();
-   
+
 }

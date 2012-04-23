@@ -1092,29 +1092,29 @@ public class ASTResolving
       return name.getFullyQualifiedName();
    }
 
-//   public static ICompilationUnit findCompilationUnitForBinding(ICompilationUnit cu, CompilationUnit astRoot,
-//      ITypeBinding binding) throws JavaModelException
-//   {
-//      if (binding == null || !binding.isFromSource() || binding.isTypeVariable() || binding.isWildcardType())
-//      {
-//         return null;
-//      }
-//      ASTNode node = astRoot.findDeclaringNode(binding.getTypeDeclaration());
-//      if (node == null)
-//      {
-//         ICompilationUnit targetCU = Bindings.findCompilationUnit(binding, cu.getJavaProject());
-//         if (targetCU != null)
-//         {
-//            return targetCU;
-//         }
-//         return null;
-//      }
-//      else if (node instanceof AbstractTypeDeclaration || node instanceof AnonymousClassDeclaration)
-//      {
-//         return cu;
-//      }
-//      return null;
-//   }
+   //   public static ICompilationUnit findCompilationUnitForBinding(ICompilationUnit cu, CompilationUnit astRoot,
+   //      ITypeBinding binding) throws JavaModelException
+   //   {
+   //      if (binding == null || !binding.isFromSource() || binding.isTypeVariable() || binding.isWildcardType())
+   //      {
+   //         return null;
+   //      }
+   //      ASTNode node = astRoot.findDeclaringNode(binding.getTypeDeclaration());
+   //      if (node == null)
+   //      {
+   //         ICompilationUnit targetCU = Bindings.findCompilationUnit(binding, cu.getJavaProject());
+   //         if (targetCU != null)
+   //         {
+   //            return targetCU;
+   //         }
+   //         return null;
+   //      }
+   //      else if (node instanceof AbstractTypeDeclaration || node instanceof AnonymousClassDeclaration)
+   //      {
+   //         return cu;
+   //      }
+   //      return null;
+   //   }
 
    private static final Code[] CODE_ORDER = {PrimitiveType.CHAR, PrimitiveType.SHORT, PrimitiveType.INT,
       PrimitiveType.LONG, PrimitiveType.FLOAT, PrimitiveType.DOUBLE};
@@ -1343,48 +1343,48 @@ public class ASTResolving
 
    // pretty signatures
 
-//   public static String getTypeSignature(ITypeBinding type)
-//   {
-//      return BindingLabelProvider.getBindingLabel(type, BindingLabelProvider.DEFAULT_TEXTFLAGS);
-//   }
-//
-//   public static String getMethodSignature(IMethodBinding binding)
-//   {
-//      return BindingLabelProvider.getBindingLabel(binding, BindingLabelProvider.DEFAULT_TEXTFLAGS);
-//   }
-//
-//   public static String getMethodSignature(String name, ITypeBinding[] params, boolean isVarArgs)
-//   {
-//      StringBuffer buf = new StringBuffer();
-//      buf.append(name).append('(');
-//      for (int i = 0; i < params.length; i++)
-//      {
-//         if (i > 0)
-//         {
-//            buf.append(JavaElementLabels.COMMA_STRING);
-//         }
-//         if (isVarArgs && i == params.length - 1)
-//         {
-//            buf.append(getTypeSignature(params[i].getElementType()));
-//            buf.append("..."); //$NON-NLS-1$
-//         }
-//         else
-//         {
-//            buf.append(getTypeSignature(params[i]));
-//         }
-//      }
-//      buf.append(')');
-//      return BasicElementLabels.getJavaElementName(buf.toString());
-//   }
-//
-//   public static CompilationUnit createQuickFixAST(ICompilationUnit compilationUnit, IProgressMonitor monitor)
-//   {
-//      ASTParser astParser = ASTParser.newParser(ASTProvider.SHARED_AST_LEVEL);
-//      astParser.setSource(compilationUnit);
-//      astParser.setResolveBindings(true);
-//      astParser.setStatementsRecovery(ASTProvider.SHARED_AST_STATEMENT_RECOVERY);
-//      astParser.setBindingsRecovery(ASTProvider.SHARED_BINDING_RECOVERY);
-//      return (CompilationUnit)astParser.createAST(monitor);
-//   }
+   //   public static String getTypeSignature(ITypeBinding type)
+   //   {
+   //      return BindingLabelProvider.getBindingLabel(type, BindingLabelProvider.DEFAULT_TEXTFLAGS);
+   //   }
+   //
+   //   public static String getMethodSignature(IMethodBinding binding)
+   //   {
+   //      return BindingLabelProvider.getBindingLabel(binding, BindingLabelProvider.DEFAULT_TEXTFLAGS);
+   //   }
+   //
+   //   public static String getMethodSignature(String name, ITypeBinding[] params, boolean isVarArgs)
+   //   {
+   //      StringBuffer buf = new StringBuffer();
+   //      buf.append(name).append('(');
+   //      for (int i = 0; i < params.length; i++)
+   //      {
+   //         if (i > 0)
+   //         {
+   //            buf.append(JavaElementLabels.COMMA_STRING);
+   //         }
+   //         if (isVarArgs && i == params.length - 1)
+   //         {
+   //            buf.append(getTypeSignature(params[i].getElementType()));
+   //            buf.append("..."); //$NON-NLS-1$
+   //         }
+   //         else
+   //         {
+   //            buf.append(getTypeSignature(params[i]));
+   //         }
+   //      }
+   //      buf.append(')');
+   //      return BasicElementLabels.getJavaElementName(buf.toString());
+   //   }
+   //
+   //   public static CompilationUnit createQuickFixAST(ICompilationUnit compilationUnit, IProgressMonitor monitor)
+   //   {
+   //      ASTParser astParser = ASTParser.newParser(ASTProvider.SHARED_AST_LEVEL);
+   //      astParser.setSource(compilationUnit);
+   //      astParser.setResolveBindings(true);
+   //      astParser.setStatementsRecovery(ASTProvider.SHARED_AST_STATEMENT_RECOVERY);
+   //      astParser.setBindingsRecovery(ASTProvider.SHARED_BINDING_RECOVERY);
+   //      return (CompilationUnit)astParser.createAST(monitor);
+   //   }
 
 }

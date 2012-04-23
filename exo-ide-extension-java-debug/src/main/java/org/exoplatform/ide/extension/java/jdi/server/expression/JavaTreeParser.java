@@ -8570,7 +8570,7 @@ public class JavaTreeParser extends TreeParser {
         try {
             synpred132_JavaTreeParser_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re); //NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -8584,7 +8584,7 @@ public class JavaTreeParser extends TreeParser {
         try {
             synpred125_JavaTreeParser_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);

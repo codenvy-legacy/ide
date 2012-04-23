@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.templates.api;
 
-
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.TextUtilities;
 

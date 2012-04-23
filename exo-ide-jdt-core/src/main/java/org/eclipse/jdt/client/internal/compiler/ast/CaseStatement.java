@@ -64,7 +64,6 @@ public class CaseStatement extends Statement
       return output;
    }
 
-
    /** No-op : should use resolveCase(...) instead. */
    public void resolve(BlockScope scope)
    {

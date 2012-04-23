@@ -71,7 +71,7 @@ public abstract class ParserBaseTestGwt extends BaseTestGwt
 
       new JavaCodeAssistantService(null, null);
    }
-   
+
    private class MockNameEnv implements INameEnvironment
    {
 
@@ -112,10 +112,9 @@ public abstract class ParserBaseTestGwt extends BaseTestGwt
       public void cleanup()
       {
          // TODO Auto-generated method stub
-         
+
       }
-      
+
    }
-   
 
 }

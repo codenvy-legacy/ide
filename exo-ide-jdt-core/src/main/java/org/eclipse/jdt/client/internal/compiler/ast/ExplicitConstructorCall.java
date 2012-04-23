@@ -243,8 +243,8 @@ public class ExplicitConstructorCall extends Statement implements InvocationSite
             }
             else
             {
-//               this.syntheticAccessor =
-//                  ((SourceTypeBinding)declaringClass).addSyntheticMethod(codegenBinding, isSuperAccess());
+               //               this.syntheticAccessor =
+               //                  ((SourceTypeBinding)declaringClass).addSyntheticMethod(codegenBinding, isSuperAccess());
                currentScope.problemReporter().needToEmulateMethodAccess(codegenBinding, this);
             }
          }

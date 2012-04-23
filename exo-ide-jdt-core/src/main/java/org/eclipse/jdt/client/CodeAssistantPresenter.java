@@ -303,7 +303,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
       JavaContentAssistInvocationContext context)
    {
       IType type = TypeInfoStorage.get().getTypeByFqn(fullyQualifiedType);
-      
+
       if (type == null)
          return null;
 

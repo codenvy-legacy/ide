@@ -31,7 +31,6 @@ import org.eclipse.jdt.client.core.dom.Name;
 public class PackageFragment implements IPackageFragment
 {
 
-   
    private final String packageFragment;
 
    /**
@@ -41,7 +40,7 @@ public class PackageFragment implements IPackageFragment
    {
       this.packageFragment = Signature.getQualifier(fullyQualifiedName);
    }
-   
+
    /**
     * 
     */

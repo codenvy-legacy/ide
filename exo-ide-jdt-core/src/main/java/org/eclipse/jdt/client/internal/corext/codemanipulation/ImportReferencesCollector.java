@@ -94,10 +94,10 @@ public class ImportReferencesCollector extends GenericVisitor
    private static boolean processJavadocComments(CompilationUnit astRoot)
    {
       // don't visit Javadoc for 'package-info' (bug 216432)
-//      if (astRoot != null && astRoot.getTypeRoot() != null)
-//      {
-//         return !"package-info.java".equals(astRoot.getTypeRoot().getElementName()); //$NON-NLS-1$
-//      }
+      //      if (astRoot != null && astRoot.getTypeRoot() != null)
+      //      {
+      //         return !"package-info.java".equals(astRoot.getTypeRoot().getElementName()); //$NON-NLS-1$
+      //      }
       return true;
    }
 

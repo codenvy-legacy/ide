@@ -29,5 +29,5 @@ public interface CleanProjectHandler extends EventHandler
 {
 
    void onCleanProject(CleanProjectEvent event);
-   
+
 }
