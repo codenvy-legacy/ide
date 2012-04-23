@@ -71,6 +71,7 @@ private boolean mHasErrors = false;
 List<String> mMessages;
 
 private Evaluator ev;
+private ExpressionValue latest;
 
 public JavaTreeParser(TreeNodeStream input, Evaluator ev) {
 	this(input);
@@ -545,7 +546,6 @@ evaluate returns [com.sun.jdi.Value value]
   :
   expression 
              {
-               //System.out.printf("RESULT: \%s\%n", $expression.value.getValue());
                $value = $expression.value.getValue();
              }
   ;
@@ -567,11 +567,14 @@ expression returns [ExpressionValue value]
   ;
 
 expr returns [ExpressionValue value]
+                                            @init {
+                                               latest = ev.getThisObject();
+                                            }
   :
   ^(ASSIGN a=expr b=expr)
-                              {
-                                $value = ev.operation($a.value, $b.value, $ASSIGN.type);
-                              }
+                                            {
+                                              $value = ev.operation($a.value, $b.value, $ASSIGN.type);
+                                            }
   |
   ^(PLUS_ASSIGN a=expr b=expr)
 														  {
@@ -594,95 +597,94 @@ expr returns [ExpressionValue value]
 														  }
   |
   ^(AND_ASSIGN a=expr b=expr)
-                              {
-                                $value = ev.operation($a.value, $b.value, $AND_ASSIGN.type);
-                              }
+                                            {
+                                              $value = ev.operation($a.value, $b.value, $AND_ASSIGN.type);
+                                            }
   |
   ^(OR_ASSIGN a=expr b=expr)
-                              {
-                                $value = ev.operation($a.value, $b.value, $OR_ASSIGN.type);
-                              }
+                                            {
+                                              $value = ev.operation($a.value, $b.value, $OR_ASSIGN.type);
+                                            }
   |
   ^(XOR_ASSIGN a=expr b=expr)
-                              {
-                                $value = ev.operation($a.value, $b.value, $XOR_ASSIGN.type);
-                              }
+                                            {
+                                              $value = ev.operation($a.value, $b.value, $XOR_ASSIGN.type);
+                                            }
   |
   ^(MOD_ASSIGN a=expr b=expr)
-                              {
-                                $value = ev.operation($a.value, $b.value, $MOD_ASSIGN.type);
-                              }
+                                            {
+                                              $value = ev.operation($a.value, $b.value, $MOD_ASSIGN.type);
+                                            }
   |
   ^(BIT_SHIFT_RIGHT_ASSIGN a=expr b=expr)
-                              {
-                                $value = ev.operation($a.value, $b.value, $BIT_SHIFT_RIGHT_ASSIGN.type);
-                              }
+                                            {
+                                              $value = ev.operation($a.value, $b.value, $BIT_SHIFT_RIGHT_ASSIGN.type);
+                                            }
   |
   ^(SHIFT_RIGHT_ASSIGN a=expr b=expr)
-                              {
-                                $value = ev.operation($a.value, $b.value, $SHIFT_RIGHT_ASSIGN.type);
-                              }
+                                            {
+                                              $value = ev.operation($a.value, $b.value, $SHIFT_RIGHT_ASSIGN.type);
+                                            }
   |
   ^(SHIFT_LEFT_ASSIGN a=expr b=expr)
-                              {
-                                $value = ev.operation($a.value, $b.value, $SHIFT_LEFT_ASSIGN.type);
-                              }
+                                            {
+                                              $value = ev.operation($a.value, $b.value, $SHIFT_LEFT_ASSIGN.type);
+                                            }
   |
   ^(QUESTION test=expr a=expr b=expr)
-                              {
-                                //throw new ExpressionException("Ternary operator is not supported yet. ");
-                                $value = ev.ternaryOperator($test.value, $a.value, $b.value);
-                              }
+                                            {
+                                              $value = ev.ternaryOperator($test.value, $a.value, $b.value);
+                                            }
   |
   ^(LOGICAL_OR a=expr b=expr)
-														  {
-														    $value = ev.operation($a.value, $b.value, $LOGICAL_OR.type);
-														  }
+                                            {
+                                              $value = ev.operation($a.value, $b.value, $LOGICAL_OR.type);
+                                            }
   |
   ^(LOGICAL_AND a=expr b=expr)
-														  {
-														    $value = ev.operation($a.value, $b.value, $LOGICAL_AND.type);
-														  }
+                                            {
+                                              $value = ev.operation($a.value, $b.value, $LOGICAL_AND.type);
+                                            }
   |
   ^(OR a=expr b=expr)
-                              {
-                                $value = ev.operation($a.value, $b.value, $OR.type);
-                              }
+                                            {
+                                              $value = ev.operation($a.value, $b.value, $OR.type);
+                                            }
   |
   ^(XOR a=expr b=expr)
-                              {
-                                $value = ev.operation($a.value, $b.value, $XOR.type);
-                              }
+                                            {
+                                              $value = ev.operation($a.value, $b.value, $XOR.type);
+                                            }
   |
   ^(AND a=expr b=expr)
-                              {
-                                $value = ev.operation($a.value, $b.value, $AND.type);
-                              }
+                                            {
+                                              $value = ev.operation($a.value, $b.value, $AND.type);
+                                            }
   |
   ^(EQUAL a=expr b=expr)
-														  {
-														    $value = ev.operation($a.value, $b.value, $EQUAL.type);
-														  }
+                                            {
+                                              $value = ev.operation($a.value, $b.value, $EQUAL.type);
+                                            }
   |
   ^(NOT_EQUAL a=expr b=expr)
-														  {
-														    $value = ev.operation($a.value, $b.value, $NOT_EQUAL.type);
-														  }
+                                            {
+                                              $value = ev.operation($a.value, $b.value, $NOT_EQUAL.type);
+                                            }
   |
   ^(INSTANCEOF expr type)
-														  {
-														    throw new ExpressionException("Operation 'instanceof' is not supported yet. ");
-														  }
+                                            {
+                                              throw new ExpressionException("Operation 'instanceof' is not supported yet. ");
+                                            }
   |
   ^(LESS_OR_EQUAL a=expr b=expr)
-														  {
-														    $value = ev.operation($a.value, $b.value, $LESS_OR_EQUAL.type);
-														  }
+                                            {
+                                              $value = ev.operation($a.value, $b.value, $LESS_OR_EQUAL.type);
+                                            }
   |
   ^(GREATER_OR_EQUAL a=expr b=expr)
-														  {
-														    $value = ev.operation($a.value, $b.value, $GREATER_OR_EQUAL.type);
-														  }
+                                            {
+                                              $value = ev.operation($a.value, $b.value, $GREATER_OR_EQUAL.type);
+                                            }
   |
   ^(BIT_SHIFT_RIGHT a=expr b=expr)
 														  {
@@ -785,11 +787,14 @@ expr returns [ExpressionValue value]
   ;
 
 primaryExpression returns [ExpressionValue value]
+                                             @after {
+      													    latest = $value;
+                                             }
   :
   ^(
     DOT
     (
-      e=primaryExpression 
+      e=primaryExpression
 															{
 															  $value = $e.value;
 															}
@@ -797,8 +802,8 @@ primaryExpression returns [ExpressionValue value]
         IDENT 
 															{
 															  if ($start.getParent().getType() != METHOD_CALL) {
-															    $value = ev.getField($IDENT.text);
-															    if ($value == null) {
+    													       $value = ev.getField(latest.getValue(), $IDENT.text);
+	      												    if ($value == null) {
 															      throw new ExpressionException("Unknown field " + $IDENT.text);
 															    }
 															  }
@@ -809,9 +814,9 @@ primaryExpression returns [ExpressionValue value]
 															}
         | SUPER
         | innerNewExpression 
-	                            {
-	                              throw new ExpressionException("Unable create new instance. Operation not supported yet. ");
-	                            }
+                                             {
+                                               throw new ExpressionException("Unable create new instance. Operation not supported yet. ");
+                                             }
         | CLASS
       )
       | primitiveType CLASS
@@ -827,27 +832,31 @@ primaryExpression returns [ExpressionValue value]
 																if ($start.getParent().getType() != METHOD_CALL) {
 																	$value = ev.getLocalVariable($IDENT.text);
 																	if ($value == null) {
-																	  $value = ev.getField($IDENT.text);
+																	  $value = ev.getField(latest.getValue(), $IDENT.text);
 																	}
 																	if ($value == null) {
-                                    throw new ExpressionException("Unknown local variable or field " + $IDENT.text);
-                                  }
+                                                     throw new ExpressionException("Unknown local variable or field " + $IDENT.text);
+                                                   }
+																} else {
+																   $value = ev.getThisObject();
 																}
+
 															}
   |
   ^(METHOD_CALL o=primaryExpression genericTypeArgumentList? arguments)
 															{
-																String name = $o.start.getChild(1).getText();
-																$value = ev.invokeMethod($o.value.getValue(), name, $arguments.args);
+
+															   String name = $o.start.getChildCount() == 0 ? $o.start.getText() : $o.start.getChild(1).getText();
+																$value = ev.invokeMethod(latest.getValue(), name, $arguments.args);
 															}
   | explicitConstructorCall 
 															{
 															  throw new ExpressionException("Unable create new instance. Operation not supported yet. ");
 															}
   |
-  ^(ARRAY_ELEMENT_ACCESS arr=primaryExpression indx=expression)
+  ^(ARRAY_ELEMENT_ACCESS arr=primaryExpression index=expression)
 															{
-															  $value = ev.getArrayElement($arr.value.getValue(), $indx.value.getValue());
+															  $value = ev.getArrayElement($arr.value.getValue(), $index.value.getValue());
 															}
   | literal 
 															{

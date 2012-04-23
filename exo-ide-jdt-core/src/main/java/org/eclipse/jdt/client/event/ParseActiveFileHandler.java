@@ -27,7 +27,7 @@ import com.google.gwt.event.shared.EventHandler;
  */
 public interface ParseActiveFileHandler extends EventHandler
 {
- 
+
    void onParseActiveFile(ParseActiveFileEvent event);
-   
+
 }

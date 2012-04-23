@@ -213,22 +213,22 @@ public class CompilationUnitDeclaration extends ASTNode implements ProblemSeveri
       this.types[0] = declaration; // Assumes the first slot is meant for this type
    }
 
-//   /*
-//    * Finds the matching type amoung this compilation unit types. Returns null if no type with this name is found. The type name
-//    * is a compound name e.g. if we're looking for X.A.B then a type name would be {X, A, B}
-//    */
-//   public TypeDeclaration declarationOfType(char[][] typeName)
-//   {
-//      for (int i = 0; i < this.types.length; i++)
-//      {
-//         TypeDeclaration typeDecl = this.types[i].declarationOfType(typeName);
-//         if (typeDecl != null)
-//         {
-//            return typeDecl;
-//         }
-//      }
-//      return null;
-//   }
+   //   /*
+   //    * Finds the matching type amoung this compilation unit types. Returns null if no type with this name is found. The type name
+   //    * is a compound name e.g. if we're looking for X.A.B then a type name would be {X, A, B}
+   //    */
+   //   public TypeDeclaration declarationOfType(char[][] typeName)
+   //   {
+   //      for (int i = 0; i < this.types.length; i++)
+   //      {
+   //         TypeDeclaration typeDecl = this.types[i].declarationOfType(typeName);
+   //         if (typeDecl != null)
+   //         {
+   //            return typeDecl;
+   //         }
+   //      }
+   //      return null;
+   //   }
 
    public void finalizeProblems()
    {
@@ -411,7 +411,6 @@ public class CompilationUnitDeclaration extends ASTNode implements ProblemSeveri
          }
       }
    }
-
 
    public char[] getFileName()
    {

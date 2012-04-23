@@ -37,10 +37,12 @@ public class JavaConventions
 {
 
    private static final char DOT = '.';
-   
-   private static final Scanner SCANNER = new Scanner(false /*comment*/, true /*whitespace*/, false /*nls*/, ClassFileConstants.JDK1_3 /*sourceLevel*/, null/*taskTag*/, null/*taskPriorities*/, true /*taskCaseSensitive*/);
 
-   private static final IStatus VERIFIED_OK = new Status(IStatus.OK, JavaCore.PLUGIN_ID, "ok");   
+   private static final Scanner SCANNER =
+      new Scanner(false /*comment*/, true /*whitespace*/, false /*nls*/, ClassFileConstants.JDK1_3 /*sourceLevel*/,
+         null/*taskTag*/, null/*taskPriorities*/, true /*taskCaseSensitive*/);
+
+   private static final IStatus VERIFIED_OK = new Status(IStatus.OK, JavaCore.PLUGIN_ID, "ok");
 
    /**
     * Validate the given package name for the given source and compliance levels.
@@ -71,7 +73,8 @@ public class JavaConventions
       int length;
       if ((length = name.length()) == 0)
       {
-         return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1, Messages.INSTANCE.convention_package_emptyName(), null);
+         return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1, Messages.INSTANCE.convention_package_emptyName(),
+            null);
       }
       if (name.charAt(0) == DOT || name.charAt(length - 1) == DOT)
       {
@@ -79,42 +82,45 @@ public class JavaConventions
       }
       if (CharOperation.isWhitespace(name.charAt(0)) || CharOperation.isWhitespace(name.charAt(name.length() - 1)))
       {
-         return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1, Messages.INSTANCE.convention_package_nameWithBlanks(), null);
+         return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1,
+            Messages.INSTANCE.convention_package_nameWithBlanks(), null);
       }
       int dot = 0;
       while (dot != -1 && dot < length - 1)
       {
          if ((dot = name.indexOf(DOT, dot + 1)) != -1 && dot < length - 1 && name.charAt(dot + 1) == DOT)
          {
-            return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1, Messages.INSTANCE.convention_package_consecutiveDotsName(),
-               null);
+            return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1,
+               Messages.INSTANCE.convention_package_consecutiveDotsName(), null);
          }
       }
       //      IWorkspace workspace = ResourcesPlugin.getWorkspace();
-//      StringTokenizer st = new StringTokenizer(name, "."); //$NON-NLS-1$
+      //      StringTokenizer st = new StringTokenizer(name, "."); //$NON-NLS-1$
       String[] split = name.split("\\.");
       boolean firstToken = true;
       IStatus warningStatus = null;
-      for(String typeName : split)
+      for (String typeName : split)
       {
-//         String typeName = st.nextToken();
+         //         String typeName = st.nextToken();
          typeName = typeName.trim(); // grammar allows spaces
          char[] scannedID = scannedIdentifier(typeName, sourceLevel, complianceLevel);
          if (scannedID == null)
          {
-            return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1,   Messages.INSTANCE.convention_illegalIdentifier(typeName), null);
+            return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1,
+               Messages.INSTANCE.convention_illegalIdentifier(typeName), null);
          }
-//         IStatus status = workspace.validateName(new String(scannedID), IResource.FOLDER);
-//         if (!status.isOK())
-//         {
-//            return status;
-//         }
+         //         IStatus status = workspace.validateName(new String(scannedID), IResource.FOLDER);
+         //         if (!status.isOK())
+         //         {
+         //            return status;
+         //         }
          if (firstToken && scannedID.length > 0 && ScannerHelper.isUpperCase(scannedID[0]))
          {
             if (warningStatus == null)
             {
                warningStatus =
-                  new Status(IStatus.WARNING, JavaCore.PLUGIN_ID, -1, Messages.INSTANCE.convention_package_uppercaseName(), null);
+                  new Status(IStatus.WARNING, JavaCore.PLUGIN_ID, -1,
+                     Messages.INSTANCE.convention_package_uppercaseName(), null);
             }
          }
          firstToken = false;
@@ -125,35 +131,48 @@ public class JavaConventions
       }
       return VERIFIED_OK;
    }
-   
+
    /*
     * Returns the current identifier extracted by the scanner (without unicode
     * escapes) from the given id and for the given source and compliance levels.
     * Returns <code>null</code> if the id was not valid
     */
-   private static char[] scannedIdentifier(String id, String sourceLevel, String complianceLevel) {
-      if (id == null) {
+   private static char[] scannedIdentifier(String id, String sourceLevel, String complianceLevel)
+   {
+      if (id == null)
+      {
          return null;
       }
       // Set scanner for given source and compliance levels
-      SCANNER.sourceLevel = sourceLevel == null ? ClassFileConstants.JDK1_3 : CompilerOptions.versionToJdkLevel(sourceLevel);
-      SCANNER.complianceLevel = complianceLevel == null ? ClassFileConstants.JDK1_3 : CompilerOptions.versionToJdkLevel(complianceLevel);
+      SCANNER.sourceLevel =
+         sourceLevel == null ? ClassFileConstants.JDK1_3 : CompilerOptions.versionToJdkLevel(sourceLevel);
+      SCANNER.complianceLevel =
+         complianceLevel == null ? ClassFileConstants.JDK1_3 : CompilerOptions.versionToJdkLevel(complianceLevel);
 
-      try {
+      try
+      {
          SCANNER.setSource(id.toCharArray());
          int token = SCANNER.scanIdentifier();
-         if (token != TerminalTokens.TokenNameIdentifier) return null;
-         if (SCANNER.currentPosition == SCANNER.eofPosition) { // to handle case where we had an ArrayIndexOutOfBoundsException
-            try {
+         if (token != TerminalTokens.TokenNameIdentifier)
+            return null;
+         if (SCANNER.currentPosition == SCANNER.eofPosition)
+         { // to handle case where we had an ArrayIndexOutOfBoundsException
+            try
+            {
                return SCANNER.getCurrentIdentifierSource();
-            } catch (ArrayIndexOutOfBoundsException e) {
+            }
+            catch (ArrayIndexOutOfBoundsException e)
+            {
                return null;
             }
-         } else {
+         }
+         else
+         {
             return null;
          }
       }
-      catch (InvalidInputException e) {
+      catch (InvalidInputException e)
+      {
          return null;
       }
    }

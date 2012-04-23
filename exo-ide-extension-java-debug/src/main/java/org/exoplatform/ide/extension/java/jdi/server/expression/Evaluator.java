@@ -49,7 +49,10 @@ import com.sun.jdi.ThreadReference;
 import com.sun.jdi.Type;
 import com.sun.jdi.Value;
 import com.sun.jdi.VirtualMachine;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -61,6 +64,8 @@ import java.util.Set;
  */
 public class Evaluator
 {
+   private static final Log LOG = ExoLogger.getLogger(Evaluator.class);
+
    private final VirtualMachine vm;
 
    private final ThreadReference thread;
@@ -212,8 +217,10 @@ public class Evaluator
       }
    }
 
+/*
    public ExpressionValue getField(String text)
    {
+      ExpressionValue value = null;
       try
       {
          StackFrame frame = thread.frame(0);
@@ -224,7 +231,7 @@ public class Evaluator
             Field field = type.fieldByName(text);
             if (field != null)
             {
-               return new StaticValue(type, field);
+               value = new StaticValue(type, field);
             }
          }
          else
@@ -232,7 +239,7 @@ public class Evaluator
             Field field = object.referenceType().fieldByName(text);
             if (field != null)
             {
-               return new InstanceValue(object, field);
+               value = new InstanceValue(object, field);
             }
          }
       }
@@ -248,18 +255,45 @@ public class Evaluator
       {
          throw new ExpressionException(e.getMessage(), e);
       }
-      return null;
+      LOG.debug("GET field {} {} ", text, value);
+      return value;
+   }
+*/
+
+   public ExpressionValue getField(Value parent, String name)
+   {
+      if (!(parent instanceof ObjectReference))
+      {
+         throw new ExpressionException("Value is not object. Cannot invoke method " + name);
+      }
+      ExpressionValue value = null;
+      try
+      {
+         ObjectReference object = (ObjectReference)parent;
+         Field field = object.referenceType().fieldByName(name);
+         if (field != null)
+         {
+            value = new InstanceValue(object, field);
+         }
+      }
+      catch (ClassNotPreparedException e)
+      {
+         throw new ExpressionException(e.getMessage(), e);
+      }
+      LOG.debug("GET field {} {} ", name, value);
+      return value;
    }
 
    public ExpressionValue getLocalVariable(String text)
    {
+      ExpressionValue value = null;
       try
       {
          StackFrame frame = thread.frame(0);
          LocalVariable var = frame.visibleVariableByName(text);
          if (var != null)
          {
-            return new LocalValue(thread, var);
+            value = new LocalValue(thread, var);
          }
       }
       catch (IncompatibleThreadStateException e)
@@ -278,7 +312,8 @@ public class Evaluator
       {
          throw new ExpressionException(e.getMessage(), e);
       }
-      return null;
+      LOG.debug("GET local variable {} {} ", text, value);
+      return value;
    }
 
    public ExpressionValue getArrayElement(Value arrayValue, Value indexValue)
@@ -333,13 +368,13 @@ public class Evaluator
             continue;
          }
 
-         ARGUMENT_MATCHING i = argumentsMatching(argumentTypes, arguments);
-         if (i == ARGUMENT_MATCHING.MATCH)
+         ARGUMENT_MATCHING argumentMatching = argumentsMatching(argumentTypes, arguments);
+         if (argumentMatching == ARGUMENT_MATCHING.MATCH)
          {
             m = mm;
             break;
          }
-         else if (i == ARGUMENT_MATCHING.ASSIGNABLE)
+         else if (argumentMatching == ARGUMENT_MATCHING.ASSIGNABLE)
          {
             if (m == null)
             {
@@ -467,7 +502,7 @@ public class Evaluator
    {
       if (!(value instanceof ObjectReference))
       {
-         throw new ExpressionException("Value is not object. Cannot invoke method. ");
+         throw new ExpressionException("Value is not object. Cannot invoke method " + name);
       }
       ObjectReference object = (ObjectReference)value;
       ReferenceType type = object.referenceType();
@@ -475,7 +510,7 @@ public class Evaluator
       Method method = findMethod(methods, arguments);
       if (method == null)
       {
-         throw new ExpressionException("No method with name " + name + " matched to specified arguments. ");
+         throw new ExpressionException("No method with name " + name + " matched to specified arguments for " + type.name());
       }
       try
       {
@@ -871,6 +906,12 @@ public class Evaluator
       if (value instanceof StringReference)
       {
          return ((StringReference)value).value();
+      }
+      if (value instanceof ObjectReference)
+      {
+         StringReference stringValue = (StringReference)invokeMethod(value, "toString", Collections.<Value>emptyList()).getValue();
+         // XXX Can result be null ?
+         return stringValue == null ? "null" : stringValue.value();
       }
       return value.toString();
    }

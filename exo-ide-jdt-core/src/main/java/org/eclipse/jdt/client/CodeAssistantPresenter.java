@@ -56,6 +56,8 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantHandler;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.keys.KeyHandler;
 import org.exoplatform.ide.editor.text.BadLocationException;
@@ -75,7 +77,7 @@ import java.util.Set;
  * @version ${Id}: Jan 24, 2012 5:11:46 PM evgen $
  */
 public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorActiveFileChangedHandler,
-   ProposalSelectedHandler, KeyHandler
+   ProposalSelectedHandler, EditorHotKeyPressedHandler
 {
 
    public interface Display extends IsWidget
@@ -303,7 +305,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
       JavaContentAssistInvocationContext context)
    {
       IType type = TypeInfoStorage.get().getTypeByFqn(fullyQualifiedType);
-      
+
       if (type == null)
          return null;
 
@@ -360,7 +362,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
 
       int posX = currentEditor.getCursorOffsetX() + 8;
       int posY = currentEditor.getCursorOffsetY() + 22;
-      keyHandler = currentEditor.addHandler(this);
+      keyHandler = IDE.addHandler(EditorHotKeyPressedEvent.TYPE, this);
       display = new CodeAssitantForm(posX, posY, createProposals(false), this);
 
    }
@@ -455,50 +457,6 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
    private org.eclipse.jdt.client.core.dom.CompilationUnit unit;
 
    /**
-    * @see org.exoplatform.ide.editor.keys.KeyHandler#handleEvent(com.google.gwt.user.client.Event)
-    */
-   @Override
-   public boolean handleEvent(Event event)
-   {
-      switch (event.getKeyCode())
-      {
-         case KeyCodes.KEY_DOWN :
-            display.moveSelectionDown();
-            return true;
-
-         case KeyCodes.KEY_UP :
-            display.moveSelectionUp();
-            return true;
-
-         case KeyCodes.KEY_ENTER :
-            display.proposalSelected();
-            return true;
-
-         case KeyCodes.KEY_ESCAPE :
-            display.cancelCodeAssistant();
-            return true;
-
-         case KeyCodes.KEY_RIGHT :
-            if (currentEditor.getCursorCol() + 1 > currentEditor.getLineContent(currentEditor.getCursorRow()).length())
-               display.cancelCodeAssistant();
-            else
-               generateNewProposals();
-            return false;
-
-         case KeyCodes.KEY_LEFT :
-            if (currentEditor.getCursorCol() - 1 <= 0)
-               display.cancelCodeAssistant();
-            else
-               generateNewProposals();
-            return false;
-
-         default :
-            generateNewProposals();
-            return false;
-      }
-   }
-
-   /**
     * 
     */
    private void generateNewProposals()
@@ -506,6 +464,54 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
       IDE.fireEvent(new CancelParseEvent());
       timer.cancel();
       timer.schedule(1000);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler#onEditorHotKeyPressed(org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent)
+    */
+   @Override
+   public void onEditorHotKeyPressed(EditorHotKeyPressedEvent event)
+   {
+      switch (event.getKeyCode())
+      {
+         case KeyCodes.KEY_DOWN :
+            display.moveSelectionDown();
+            event.setHotKeyHandled(true);
+            break;
+
+         case KeyCodes.KEY_UP :
+            display.moveSelectionUp();
+            event.setHotKeyHandled(true);
+            break;
+
+         case KeyCodes.KEY_ENTER :
+            display.proposalSelected();
+            event.setHotKeyHandled(true);
+            break;
+
+         case KeyCodes.KEY_ESCAPE :
+            display.cancelCodeAssistant();
+            event.setHotKeyHandled(true);
+            break;
+
+         case KeyCodes.KEY_RIGHT :
+            if (currentEditor.getCursorCol() + 1 > currentEditor.getLineContent(currentEditor.getCursorRow()).length())
+               display.cancelCodeAssistant();
+            else
+               generateNewProposals();
+            break;
+
+         case KeyCodes.KEY_LEFT :
+            if (currentEditor.getCursorCol() - 1 <= 0)
+               display.cancelCodeAssistant();
+            else
+               generateNewProposals();
+            break;
+
+         default :
+            generateNewProposals();
+            break;
+      }
    }
 
 }

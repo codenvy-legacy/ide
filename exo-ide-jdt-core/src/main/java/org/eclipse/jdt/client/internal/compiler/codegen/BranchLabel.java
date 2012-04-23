@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.codegen;
 
-
 public class BranchLabel extends Label
 {
 

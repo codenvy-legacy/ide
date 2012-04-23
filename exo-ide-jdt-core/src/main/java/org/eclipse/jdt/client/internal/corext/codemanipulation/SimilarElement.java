@@ -12,73 +12,87 @@ package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
 import java.util.Arrays;
 
-public class SimilarElement {
+public class SimilarElement
+{
 
-	private final int fKind;
-	private final String fName;
-	private final String[] fTypesParameters;
-	private final int fRelevance;
+   private final int fKind;
 
-	public SimilarElement(int kind, String name, int relevance) {
-		this(kind, name, null, relevance);
-	}
+   private final String fName;
 
-	public SimilarElement(int kind, String name, String[] typesParameters, int relevance) {
-		fKind= kind;
-		fName= name;
-		fTypesParameters= typesParameters;
-		fRelevance= relevance;
-	}
+   private final String[] fTypesParameters;
 
-	/**
-	 * Gets the kind.
-	 * @return Returns a int
-	 */
-	public int getKind() {
-		return fKind;
-	}
+   private final int fRelevance;
 
-	/**
-	 * Gets the parameter types.
-	 * @return Returns a int
-	 */
-	public String[] getTypesParameter() {
-		return fTypesParameters;
-	}
+   public SimilarElement(int kind, String name, int relevance)
+   {
+      this(kind, name, null, relevance);
+   }
 
-	/**
-	 * Gets the name.
-	 * @return Returns a String
-	 */
-	public String getName() {
-		return fName;
-	}
+   public SimilarElement(int kind, String name, String[] typesParameters, int relevance)
+   {
+      fKind = kind;
+      fName = name;
+      fTypesParameters = typesParameters;
+      fRelevance = relevance;
+   }
 
-	/**
-	 * Gets the relevance.
-	 * @return Returns a int
-	 */
-	public int getRelevance() {
-		return fRelevance;
-	}
+   /**
+    * Gets the kind.
+    * @return Returns a int
+    */
+   public int getKind()
+   {
+      return fKind;
+   }
 
-	/* (non-Javadoc)
-	 * @see Object#equals(Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof SimilarElement) {
-			SimilarElement elem= (SimilarElement) obj;
-			return fName.equals(elem.fName) && fKind == elem.fKind && Arrays.equals(fTypesParameters, elem.fTypesParameters);
-		}
-		return false;
-	}
+   /**
+    * Gets the parameter types.
+    * @return Returns a int
+    */
+   public String[] getTypesParameter()
+   {
+      return fTypesParameters;
+   }
 
-	/* (non-Javadoc)
-	 * @see Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		return fName.hashCode() + fKind;
-	}
+   /**
+    * Gets the name.
+    * @return Returns a String
+    */
+   public String getName()
+   {
+      return fName;
+   }
+
+   /**
+    * Gets the relevance.
+    * @return Returns a int
+    */
+   public int getRelevance()
+   {
+      return fRelevance;
+   }
+
+   /* (non-Javadoc)
+    * @see Object#equals(Object)
+    */
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (obj instanceof SimilarElement)
+      {
+         SimilarElement elem = (SimilarElement)obj;
+         return fName.equals(elem.fName) && fKind == elem.fKind
+            && Arrays.equals(fTypesParameters, elem.fTypesParameters);
+      }
+      return false;
+   }
+
+   /* (non-Javadoc)
+    * @see Object#hashCode()
+    */
+   @Override
+   public int hashCode()
+   {
+      return fName.hashCode() + fKind;
+   }
 }

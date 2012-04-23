@@ -12,20 +12,19 @@ package org.eclipse.jdt.client;
 
 import org.eclipse.jdt.client.internal.corext.codemanipulation.CodeGenerationSettings;
 
+public class JavaPreferencesSettings
+{
 
-
-public class JavaPreferencesSettings  {
-
-	public static CodeGenerationSettings getCodeGenerationSettings() {
-		CodeGenerationSettings res= new CodeGenerationSettings();
-		res.createComments= true; //Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS, project)).booleanValue();
-		res.useKeywordThis= true; //Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_KEYWORD_THIS, project)).booleanValue();
-		res.overrideAnnotation= true; //Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_USE_OVERRIDE_ANNOTATION, project)).booleanValue();
-		res.importIgnoreLowercase= true;//Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.ORGIMPORTS_IGNORELOWERCASE, project)).booleanValue();
-		res.tabWidth= 3;//CodeFormatterUtil.getTabWidth(project);
-		res.indentWidth=3; //CodeFormatterUtil.getIndentWidth(project);
-		return res;
-	}
+   public static CodeGenerationSettings getCodeGenerationSettings()
+   {
+      CodeGenerationSettings res = new CodeGenerationSettings();
+      res.createComments = true; //Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS, project)).booleanValue();
+      res.useKeywordThis = true; //Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_KEYWORD_THIS, project)).booleanValue();
+      res.overrideAnnotation = true; //Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_USE_OVERRIDE_ANNOTATION, project)).booleanValue();
+      res.importIgnoreLowercase = true;//Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.ORGIMPORTS_IGNORELOWERCASE, project)).booleanValue();
+      res.tabWidth = 3;//CodeFormatterUtil.getTabWidth(project);
+      res.indentWidth = 3; //CodeFormatterUtil.getIndentWidth(project);
+      return res;
+   }
 
 }
-

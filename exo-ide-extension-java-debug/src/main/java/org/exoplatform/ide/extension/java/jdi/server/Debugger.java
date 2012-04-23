@@ -536,6 +536,36 @@ public class Debugger implements EventsHandler
    }
 
    /**
+    * Update the value of variable with the value of an evaluated expression.
+    *
+    * @param variablePath
+    *    path to updated variable
+    * @param valueExpression
+    *    expression
+    * @throws DebuggerException
+    *    when any other errors occur when try to update the variable
+    */
+   public void setValue(VariablePath variablePath, String valueExpression) throws DebuggerException
+   {
+      StringBuilder expression = new StringBuilder();
+      for (String s : variablePath.getPath())
+      {
+         if ("static".equals(s))
+         {
+            continue;
+         }
+         if (expression.length() > 0)
+         {
+            expression.append('.');
+         }
+         expression.append(s);
+      }
+      expression.append('=');
+      expression.append(valueExpression);
+      expression(expression.toString());
+   }
+
+   /**
     * Returns the name of the target Java VM.
     *
     * @return JVM name
@@ -717,7 +747,8 @@ public class Debugger implements EventsHandler
 
    public String expression(String expression) throws DebuggerStateException
    {
-      return evaluate(ExpressionParser.newInstance(expression)).toString();
+      com.sun.jdi.Value result = evaluate(ExpressionParser.newInstance(expression));
+      return result == null ? "null" : result.toString();
    }
 
    private com.sun.jdi.Value evaluate(ExpressionParser parser) throws DebuggerStateException

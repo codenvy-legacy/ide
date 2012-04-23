@@ -36,7 +36,7 @@ public class StyledString
    }
 
    public static Styler QUALIFIER_STYLER = new DefaultStyler(JavaClientBundle.INSTANCE.css().fqnStyle());
-   
+
    public static Styler COUNTER_STYLER = new DefaultStyler(JavaClientBundle.INSTANCE.css().counter());
 
    private StringBuilder builder;
@@ -132,7 +132,7 @@ public class StyledString
    {
       builder.append(styler.applyStyles(new String(declaration)));
    }
-   
+
    /**
     * HTML-encode a string. This simple method only replaces the five characters &, <, >, ", and '.
     * 

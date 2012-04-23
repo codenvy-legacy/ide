@@ -27,7 +27,13 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateEvent;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Created by The eXo Platform SAS .
@@ -37,12 +43,21 @@ import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateEvent;
  */
 @RolesAllowed({"administrators", "developers"})
 public class SaveFileAsTemplateControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   VfsChangedHandler
+   VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
 
    public static final String ID = "File/Save As Template...";
 
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.saveFileAsTemplateControl();
+
+   private FileModel activeFile = null;
+
+   /**
+    * Current workspace's href.
+    */
+   private VirtualFileSystemInfo vfsInfo = null;
+
+   private boolean isProjectOpened = false;
 
    /**
     * 
@@ -64,6 +79,23 @@ public class SaveFileAsTemplateControl extends SimpleControl implements IDEContr
    {
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+   }
+
+   /**
+    * Update control's state.
+    */
+   private void updateState()
+   {
+      if (vfsInfo == null || !isProjectOpened)
+      {
+         setVisible(false);
+         return;
+      }
+
+      setVisible(isProjectOpened);
+      setEnabled(activeFile != null);
    }
 
    /**
@@ -72,13 +104,8 @@ public class SaveFileAsTemplateControl extends SimpleControl implements IDEContr
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null)
-      {
-         setEnabled(false);
-         return;
-      }
-
-      setEnabled(true);
+      activeFile = event.getFile();
+      updateState();
    }
 
    /**
@@ -87,13 +114,28 @@ public class SaveFileAsTemplateControl extends SimpleControl implements IDEContr
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getVfsInfo() != null)
-      {
-         setVisible(true);
-      }
-      else
-      {
-         setVisible(false);
-      }
+      vfsInfo = event.getVfsInfo();
+      updateState();
    }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      isProjectOpened = false;
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      isProjectOpened = true;
+      updateState();
+   }
+
 }

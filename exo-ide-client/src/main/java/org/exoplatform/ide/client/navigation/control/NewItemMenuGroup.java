@@ -25,6 +25,11 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Created by The eXo Platform SAS .
@@ -33,12 +38,20 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsChangedHandler
+public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsChangedHandler, ProjectOpenedHandler,
+   ProjectClosedHandler
 {
 
    public static final String ID = "File/New";
 
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.newMenu();
+
+   /**
+    * Current workspace's href.
+    */
+   private VirtualFileSystemInfo vfsInfo = null;
+
+   private boolean isProjectOpened = false;
 
    /**
     * 
@@ -58,7 +71,10 @@ public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsCh
    public void initialize()
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-      setEnabled(true);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+
+      updateState();
    }
 
    /**
@@ -67,13 +83,43 @@ public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsCh
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getVfsInfo() != null)
-      {
-         setVisible(true);
-      }
-      else
+      vfsInfo = event.getVfsInfo();
+      updateState();
+   }
+
+   /**
+    * Update control state.
+    */
+   private void updateState()
+   {
+      if (vfsInfo == null || !isProjectOpened)
       {
          setVisible(false);
+         return;
       }
+
+      setVisible(isProjectOpened);
+      setEnabled(isProjectOpened);
    }
+
+   /**
+    * @see org.exoplatform.ide.client.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      isProjectOpened = false;
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.project.ProjectOpenedEvent)
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      isProjectOpened = true;
+      updateState();
+   }
+
 }

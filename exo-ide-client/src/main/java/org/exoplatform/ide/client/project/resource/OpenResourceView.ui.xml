@@ -27,7 +27,41 @@
 		{
 			display: inline-block;
 			margin-left: 10px;
-		}		
+		}
+		
+		.colored
+		{
+			height: 16px;
+			padding:0px;
+			margin:0px;
+			line-height:16px;
+		}
+		
+		.folderImage
+		{
+			position:absolute;
+			left:0px;
+			top:0px;
+			width:16px;
+			height:16px;
+			overflow:hidden;
+		}
+		
+		.folderName
+		{
+			position:absolute;
+			left:20px;
+			top:0px;
+			right:0px;
+			bottom:0px;
+			height:16px;
+			overflow:hidden;
+			
+			font-family: Verdana, Bitstream Vera Sans, sans-serif;
+			font-size: 11px;
+			font-weight: normal;
+			font-style: normal;			
+		}
 
 	</ui:style>
 	
@@ -37,21 +71,28 @@
 		</c:layer>
 		
 		<c:layer top="20px" height="25px">
-			<c:TextInput width="100%"></c:TextInput>
+			<c:TextInput ui:field="fileNameField" width="100%"></c:TextInput>
 		</c:layer>		
 
 		<c:layer top="50" height="20px">
 			<g:Label text="Matching items:"></g:Label>
 		</c:layer>
 		
-		<c:layer top="70px" bottom="45px" >		
+		<c:layer top="70px" bottom="65px" >		
 			<c:Border>
 				<c:layer>
-					<r:FilesListGrid width="100%"></r:FilesListGrid>
+					<r:FilesListGrid width="100%" ui:field="filesListGrid"></r:FilesListGrid>
 				</c:layer>
 			</c:Border>
 		</c:layer>
 		
+		<c:layer bottom="40px" height="16px">
+			<g:HTMLPanel addStyleNames="{style.colored}">
+				<div class="{style.folderImage}" ui:field="folderIconElement"></div>
+				<div class="{style.folderName}" ui:field="folderNameElement"></div>
+			</g:HTMLPanel>
+		</c:layer>
+
 		<c:layer height="35px" bottom="0px">
 			<g:FlowPanel styleName="{style.butPanel}">
 				<c:ImageButton text="Open" imageName="ok" ui:field="openButton" buttonId="ideProjectResourcesOpenButton" addStyleNames="{style.butLeft}"></c:ImageButton>

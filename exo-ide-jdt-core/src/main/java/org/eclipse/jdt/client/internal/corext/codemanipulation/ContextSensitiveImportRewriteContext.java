@@ -158,35 +158,35 @@ public class ContextSensitiveImportRewriteContext extends ImportRewriteContext
                return RES_NAME_CONFLICT;
          }
       }
-//TODO maybe need search for types in project that has package 'java.lang' 
-//      if (qualifier.equals("java.lang"))
-//      {
-//         // No explicit import statement required
-//         ITypeRoot typeRoot = fCompilationUnit.getTypeRoot();
-//         if (typeRoot != null)
-//         {
-//            IPackageFragment packageFragment = (IPackageFragment)typeRoot.getParent();
-//            try
-//            {
-//               ICompilationUnit[] compilationUnits = packageFragment.getCompilationUnits();
-//               for (int i = 0; i < compilationUnits.length; i++)
-//               {
-//                  ICompilationUnit cu = compilationUnits[i];
-//                  IType[] allTypes = cu.getAllTypes();
-//                  for (int j = 0; j < allTypes.length; j++)
-//                  {
-//                     IType type = allTypes[j];
-//                     String packageTypeName = type.getFullyQualifiedName();
-//                     if (isConflicting(name, packageTypeName))
-//                        return RES_NAME_CONFLICT;
-//                  }
-//               }
-//            }
-//            catch (JavaModelException e)
-//            {
-//            }
-//         }
-//      }
+      //TODO maybe need search for types in project that has package 'java.lang' 
+      //      if (qualifier.equals("java.lang"))
+      //      {
+      //         // No explicit import statement required
+      //         ITypeRoot typeRoot = fCompilationUnit.getTypeRoot();
+      //         if (typeRoot != null)
+      //         {
+      //            IPackageFragment packageFragment = (IPackageFragment)typeRoot.getParent();
+      //            try
+      //            {
+      //               ICompilationUnit[] compilationUnits = packageFragment.getCompilationUnits();
+      //               for (int i = 0; i < compilationUnits.length; i++)
+      //               {
+      //                  ICompilationUnit cu = compilationUnits[i];
+      //                  IType[] allTypes = cu.getAllTypes();
+      //                  for (int j = 0; j < allTypes.length; j++)
+      //                  {
+      //                     IType type = allTypes[j];
+      //                     String packageTypeName = type.getFullyQualifiedName();
+      //                     if (isConflicting(name, packageTypeName))
+      //                        return RES_NAME_CONFLICT;
+      //                  }
+      //               }
+      //            }
+      //            catch (JavaModelException e)
+      //            {
+      //            }
+      //         }
+      //      }
 
       return fImportRewrite.getDefaultImportRewriteContext().findInContext(qualifier, name, kind);
    }

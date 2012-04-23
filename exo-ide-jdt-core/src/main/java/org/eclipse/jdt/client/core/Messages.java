@@ -27,7 +27,7 @@ import com.google.gwt.core.client.GWT;
  */
 public interface Messages extends com.google.gwt.i18n.client.Messages
 {
-   
+
    Messages INSTANCE = GWT.create(Messages.class);
 
    /**

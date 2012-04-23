@@ -1683,20 +1683,20 @@ public class Util
       Assert.isTrue(isValidTypeSignature(sig, allowVoid));
    }
 
-/** Get all type arguments from an array of signatures.
-    * 
-    * Example: For following type X<Y<Z>,V<W>,U>.A<B> signatures is: [
-    * ['L','X','<'
-    * ,'L','Y','<','L','Z',';'>',';','L','V','<','L','W',';'>',';','L'
-    * ,'U',';',>',';'], ['L','A','<','L','B',';','>',';'] ]
-    * 
-    * @see #splitTypeLevelsSignature(String) Then, this method returns: [ [
-    *      ['L','Y','<','L','Z',';'>',';'], ['L','V','<','L','W',';'>',';'],
-    *      ['L','U',';'] ], [ ['L','B',';'] ] ]
-    * 
-    * @param typeSignatures Array of signatures (one per each type levels)
-    * @throws IllegalArgumentException If one of provided signature is malformed
-    * @return char[][][] Array of type arguments for each signature */
+   /** Get all type arguments from an array of signatures.
+       * 
+       * Example: For following type X<Y<Z>,V<W>,U>.A<B> signatures is: [
+       * ['L','X','<'
+       * ,'L','Y','<','L','Z',';'>',';','L','V','<','L','W',';'>',';','L'
+       * ,'U',';',>',';'], ['L','A','<','L','B',';','>',';'] ]
+       * 
+       * @see #splitTypeLevelsSignature(String) Then, this method returns: [ [
+       *      ['L','Y','<','L','Z',';'>',';'], ['L','V','<','L','W',';'>',';'],
+       *      ['L','U',';'] ], [ ['L','B',';'] ] ]
+       * 
+       * @param typeSignatures Array of signatures (one per each type levels)
+       * @throws IllegalArgumentException If one of provided signature is malformed
+       * @return char[][][] Array of type arguments for each signature */
    public final static char[][][] getAllTypeArguments(char[][] typeSignatures)
    {
       if (typeSignatures == null)
@@ -1773,7 +1773,7 @@ public class Util
       // Resize signatures array
       char[][] typeSignatures = new char[signaturesCount + 1][];
       typeSignatures[0] = source;
-      for (int i = 1, j = signaturesCount - 1; i <= signaturesCount; i++, j--)
+      for (int i = 1, j = signaturesCount - 1; i <= signaturesCount; i++, j--)//NOSONAR
       {
          typeSignatures[i] = signatures[j];
       }

@@ -57,7 +57,7 @@ public class CreatePackageView extends ViewImpl implements Display
 
    @UiField
    Label errorLabel;
-   
+
    @UiField
    Label warningLabel;
 

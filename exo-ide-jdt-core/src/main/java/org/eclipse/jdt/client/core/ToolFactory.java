@@ -397,9 +397,9 @@ public class ToolFactory
       if (complianceLevelValue == 0)
          complianceLevelValue = ClassFileConstants.JDK1_4; // fault-tolerance
       PublicScanner scanner =
-         new PublicScanner(tokenizeComments, tokenizeWhiteSpace, false/* nls */, assertMode ? ClassFileConstants.JDK1_4
-            : ClassFileConstants.JDK1_3/* sourceLevel */, complianceLevelValue, null/* taskTags */,
-            null/* taskPriorities */, true/* taskCaseSensitive */);
+         new PublicScanner(tokenizeComments, tokenizeWhiteSpace, false/* nls */, assertMode
+            ? ClassFileConstants.JDK1_4 : ClassFileConstants.JDK1_3/* sourceLevel */, complianceLevelValue,
+            null/* taskTags */, null/* taskPriorities */, true/* taskCaseSensitive */);
       scanner.recordLineSeparator = recordLineSeparator;
       return scanner;
    }

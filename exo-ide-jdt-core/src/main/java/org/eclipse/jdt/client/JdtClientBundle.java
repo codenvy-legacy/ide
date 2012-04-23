@@ -32,23 +32,23 @@ import com.google.gwt.resources.client.TextResource;
 public interface JdtClientBundle extends ClientBundle
 {
    JdtClientBundle INSTANCE = GWT.<JdtClientBundle> create(JdtClientBundle.class);
-   
+
    @Source("org/eclipse/jdt/client/core/formatter/exo-jboss-codestyle.xml")
    ExternalTextResource eXoProfile();
-   
+
    @Source("org/eclipse/jdt/client/core/formatter/formatter-sample.txt")
    TextResource formatterSample();
 
    @Source("org/eclipse/jdt/images/controls/clean.png")
    ImageResource clean();
-   
+
    @Source("org/eclipse/jdt/images/controls/clean_Disabled.png")
    ImageResource cleanDisabled();
-   
+
    @Source("org/eclipse/jdt/images/controls/format.png")
    ImageResource formatterProfiles();
-   
+
    @Source("org/eclipse/jdt/images/controls/format_Disabled.png")
    ImageResource formatterProfilesDisabled();
-   
+
 }

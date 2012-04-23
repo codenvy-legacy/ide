@@ -61,21 +61,20 @@ import java.util.Map;
 public final class StubUtility2
 {
 
-   public static void addOverrideAnnotation(ASTRewrite rewrite, MethodDeclaration decl,
-      IMethodBinding binding)
+   public static void addOverrideAnnotation(ASTRewrite rewrite, MethodDeclaration decl, IMethodBinding binding)
    {
-//      String version = JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE);
-//      if (!binding.getDeclaringClass().isInterface())
-//      {
-         final Annotation marker = rewrite.getAST().newMarkerAnnotation();
-         marker.setTypeName(rewrite.getAST().newSimpleName("Override")); //$NON-NLS-1$
-         rewrite.getListRewrite(decl, MethodDeclaration.MODIFIERS2_PROPERTY).insertFirst(marker, null);
-//      }
+      //      String version = JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE);
+      //      if (!binding.getDeclaringClass().isInterface())
+      //      {
+      final Annotation marker = rewrite.getAST().newMarkerAnnotation();
+      marker.setTypeName(rewrite.getAST().newSimpleName("Override")); //$NON-NLS-1$
+      rewrite.getListRewrite(decl, MethodDeclaration.MODIFIERS2_PROPERTY).insertFirst(marker, null);
+      //      }
    }
 
-   public static MethodDeclaration createConstructorStub(ASTRewrite rewrite,
-      ImportRewrite imports, ImportRewriteContext context, IMethodBinding binding, String type, int modifiers,
-      boolean omitSuperForDefConst, boolean todo, CodeGenerationSettings settings) throws CoreException
+   public static MethodDeclaration createConstructorStub(ASTRewrite rewrite, ImportRewrite imports,
+      ImportRewriteContext context, IMethodBinding binding, String type, int modifiers, boolean omitSuperForDefConst,
+      boolean todo, CodeGenerationSettings settings) throws CoreException
    {
       AST ast = rewrite.getAST();
       MethodDeclaration decl = ast.newMethodDeclaration();
@@ -101,8 +100,7 @@ public final class StubUtility2
          typeParameters.add(newTypeParam);
       }
 
-      List<SingleVariableDeclaration> parameters =
-         createParameters(imports, context, ast, binding, decl);
+      List<SingleVariableDeclaration> parameters = createParameters(imports, context, ast, binding, decl);
 
       List<Name> thrownExceptions = decl.thrownExceptions();
       ITypeBinding[] excTypes = binding.getExceptionTypes();
@@ -132,14 +130,14 @@ public final class StubUtility2
       if (todo)
       {
          //TDO
-//         String placeHolder =
-//            CodeGeneration.getMethodBodyContent(unit, type, binding.getName(), true, bodyStatement, delimiter);
-//         if (placeHolder != null)
-//         {
-//            ReturnStatement todoNode =
-//               (ReturnStatement)rewrite.createStringPlaceholder(placeHolder, ASTNode.RETURN_STATEMENT);
-//            body.statements().add(todoNode);
-//         }
+         //         String placeHolder =
+         //            CodeGeneration.getMethodBodyContent(unit, type, binding.getName(), true, bodyStatement, delimiter);
+         //         if (placeHolder != null)
+         //         {
+         //            ReturnStatement todoNode =
+         //               (ReturnStatement)rewrite.createStringPlaceholder(placeHolder, ASTNode.RETURN_STATEMENT);
+         //            body.statements().add(todoNode);
+         //         }
       }
       else
       {
@@ -151,18 +149,18 @@ public final class StubUtility2
       if (settings != null && settings.createComments)
       {
          //TODO
-//         String string = CodeGeneration.getMethodComment(unit, type, decl, binding, delimiter);
-//         if (string != null)
-//         {
-//            Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
-//            decl.setJavadoc(javadoc);
-//         }
+         //         String string = CodeGeneration.getMethodComment(unit, type, decl, binding, delimiter);
+         //         if (string != null)
+         //         {
+         //            Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+         //            decl.setJavadoc(javadoc);
+         //         }
       }
       return decl;
    }
 
-   public static MethodDeclaration createConstructorStub(ASTRewrite rewrite,
-      ImportRewrite imports, ImportRewriteContext context, ITypeBinding typeBinding, IMethodBinding superConstructor,
+   public static MethodDeclaration createConstructorStub(ASTRewrite rewrite, ImportRewrite imports,
+      ImportRewriteContext context, ITypeBinding typeBinding, IMethodBinding superConstructor,
       IVariableBinding[] variableBindings, int modifiers, CodeGenerationSettings settings) throws CoreException
    {
       AST ast = rewrite.getAST();
@@ -267,19 +265,19 @@ public final class StubUtility2
       if (settings != null && settings.createComments)
       {
          //TODO
-//         String string =
-//            CodeGeneration.getMethodComment(unit, typeBinding.getName(), decl, superConstructor, delimiter);
-//         if (string != null)
-//         {
-//            Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
-//            decl.setJavadoc(javadoc);
-//         }
+         //         String string =
+         //            CodeGeneration.getMethodComment(unit, typeBinding.getName(), decl, superConstructor, delimiter);
+         //         if (string != null)
+         //         {
+         //            Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+         //            decl.setJavadoc(javadoc);
+         //         }
       }
       return decl;
    }
 
-   public static MethodDeclaration createDelegationStub(ASTRewrite rewrite,
-      ImportRewrite imports, ImportRewriteContext context, IMethodBinding delegate, IVariableBinding delegatingField,
+   public static MethodDeclaration createDelegationStub(ASTRewrite rewrite, ImportRewrite imports,
+      ImportRewriteContext context, IMethodBinding delegate, IVariableBinding delegatingField,
       CodeGenerationSettings settings) throws CoreException
    {
       Assert.isNotNull(delegate);
@@ -400,25 +398,25 @@ public final class StubUtility2
           * TODO: have API for delegate method comments This is an inlined version of {@link
           * CodeGeneration#getMethodComment(ICompilationUnit, String, MethodDeclaration, IMethodBinding, String)}
           */
-//         delegate = delegate.getMethodDeclaration();
-//         String declaringClassQualifiedName = delegate.getDeclaringClass().getQualifiedName();
-//         String linkToMethodName = delegate.getName();
-//         String[] parameterTypesQualifiedNames = StubUtility.getParameterTypeNamesForSeeTag(delegate);
-//         String string =
-//            StubUtility.getMethodComment(qualifiedName, decl, delegate.isDeprecated(), linkToMethodName,
-//               declaringClassQualifiedName, parameterTypesQualifiedNames, true, delimiter);
-//         if (string != null)
-//         {
-//            Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
-//            decl.setJavadoc(javadoc);
-//         }
+         //         delegate = delegate.getMethodDeclaration();
+         //         String declaringClassQualifiedName = delegate.getDeclaringClass().getQualifiedName();
+         //         String linkToMethodName = delegate.getName();
+         //         String[] parameterTypesQualifiedNames = StubUtility.getParameterTypeNamesForSeeTag(delegate);
+         //         String string =
+         //            StubUtility.getMethodComment(qualifiedName, decl, delegate.isDeprecated(), linkToMethodName,
+         //               declaringClassQualifiedName, parameterTypesQualifiedNames, true, delimiter);
+         //         if (string != null)
+         //         {
+         //            Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+         //            decl.setJavadoc(javadoc);
+         //         }
       }
       return decl;
    }
 
-   public static MethodDeclaration createImplementationStub(ASTRewrite rewrite,
-      ImportRewrite imports, ImportRewriteContext context, IMethodBinding binding, String type,
-      CodeGenerationSettings settings, boolean deferred) throws CoreException
+   public static MethodDeclaration createImplementationStub(ASTRewrite rewrite, ImportRewrite imports,
+      ImportRewriteContext context, IMethodBinding binding, String type, CodeGenerationSettings settings,
+      boolean deferred) throws CoreException
    {
       Assert.isNotNull(imports);
       Assert.isNotNull(rewrite);
@@ -433,36 +431,35 @@ public final class StubUtility2
 
       ITypeBinding bindingReturnType = binding.getReturnType();
 
-//      if (JavaModelUtil.is50OrHigher(unit.getJavaProject()))
-//      {
-         ITypeBinding[] typeParams = binding.getTypeParameters();
-         List<TypeParameter> typeParameters = decl.typeParameters();
-         for (int i = 0; i < typeParams.length; i++)
-         {
-            ITypeBinding curr = typeParams[i];
-            TypeParameter newTypeParam = ast.newTypeParameter();
-            newTypeParam.setName(ast.newSimpleName(curr.getName()));
-            ITypeBinding[] typeBounds = curr.getTypeBounds();
-            if (typeBounds.length != 1 || !"java.lang.Object".equals(typeBounds[0].getQualifiedName())) {//$NON-NLS-1$
-               List<Type> newTypeBounds = newTypeParam.typeBounds();
-               for (int k = 0; k < typeBounds.length; k++)
-               {
-                  newTypeBounds.add(imports.addImport(typeBounds[k], ast, context));
-               }
+      //      if (JavaModelUtil.is50OrHigher(unit.getJavaProject()))
+      //      {
+      ITypeBinding[] typeParams = binding.getTypeParameters();
+      List<TypeParameter> typeParameters = decl.typeParameters();
+      for (int i = 0; i < typeParams.length; i++)
+      {
+         ITypeBinding curr = typeParams[i];
+         TypeParameter newTypeParam = ast.newTypeParameter();
+         newTypeParam.setName(ast.newSimpleName(curr.getName()));
+         ITypeBinding[] typeBounds = curr.getTypeBounds();
+         if (typeBounds.length != 1 || !"java.lang.Object".equals(typeBounds[0].getQualifiedName())) {//$NON-NLS-1$
+            List<Type> newTypeBounds = newTypeParam.typeBounds();
+            for (int k = 0; k < typeBounds.length; k++)
+            {
+               newTypeBounds.add(imports.addImport(typeBounds[k], ast, context));
             }
-            typeParameters.add(newTypeParam);
          }
+         typeParameters.add(newTypeParam);
+      }
 
-//      }
-//      else
-//      {
-//         bindingReturnType = bindingReturnType.getErasure();
-//      }
+      //      }
+      //      else
+      //      {
+      //         bindingReturnType = bindingReturnType.getErasure();
+      //      }
 
       decl.setReturnType2(imports.addImport(bindingReturnType, ast, context));
 
-      List<SingleVariableDeclaration> parameters =
-         createParameters(imports, context, ast, binding, decl);
+      List<SingleVariableDeclaration> parameters = createParameters(imports, context, ast, binding, decl);
 
       List<Name> thrownExceptions = decl.thrownExceptions();
       ITypeBinding[] excTypes = binding.getExceptionTypes();
@@ -519,8 +516,9 @@ public final class StubUtility2
             }
          }
 
-         String placeHolder = StubUtility.getMethodBodyContent(false, type, binding.getName(), bodyStatement, delimiter);
-//            CodeGeneration.getMethodBodyContent(unit, type, binding.getName(), false, bodyStatement, delimiter);
+         String placeHolder =
+            StubUtility.getMethodBodyContent(false, type, binding.getName(), bodyStatement, delimiter);
+         //            CodeGeneration.getMethodBodyContent(unit, type, binding.getName(), false, bodyStatement, delimiter);
          if (placeHolder != null)
          {
             ReturnStatement todoNode =
@@ -528,16 +526,16 @@ public final class StubUtility2
             body.statements().add(todoNode);
          }
       }
-  //TODO
-//      if (settings != null && settings.createComments)
-//      {
-//         String string = CodeGeneration.getMethodComment(unit, type, decl, binding, delimiter);
-//         if (string != null)
-//         {
-//            Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
-//            decl.setJavadoc(javadoc);
-//         }
-//      }
+      //TODO
+      //      if (settings != null && settings.createComments)
+      //      {
+      //         String string = CodeGeneration.getMethodComment(unit, type, decl, binding, delimiter);
+      //         if (string != null)
+      //         {
+      //            Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+      //            decl.setJavadoc(javadoc);
+      //         }
+      //      }
       if (settings != null && settings.overrideAnnotation)
       {
          addOverrideAnnotation(rewrite, decl, binding);
@@ -546,8 +544,8 @@ public final class StubUtility2
       return decl;
    }
 
-   private static List<SingleVariableDeclaration> createParameters(ImportRewrite imports,
-      ImportRewriteContext context, AST ast, IMethodBinding binding, MethodDeclaration decl)
+   private static List<SingleVariableDeclaration> createParameters(ImportRewrite imports, ImportRewriteContext context,
+      AST ast, IMethodBinding binding, MethodDeclaration decl)
    {
       boolean is50OrHigher = true;
       List<SingleVariableDeclaration> parameters = decl.parameters();
@@ -628,74 +626,74 @@ public final class StubUtility2
       }
    }
 
-//   public static DelegateEntry[] getDelegatableMethods(ITypeBinding binding)
-//   {
-//      final List<DelegateEntry> tuples = new ArrayList<DelegateEntry>();
-//      final List<IMethodBinding> declared = new ArrayList<IMethodBinding>();
-//      IMethodBinding[] typeMethods = binding.getDeclaredMethods();
-//      for (int index = 0; index < typeMethods.length; index++)
-//         declared.add(typeMethods[index]);
-//      IVariableBinding[] typeFields = binding.getDeclaredFields();
-//      for (int index = 0; index < typeFields.length; index++)
-//      {
-//         IVariableBinding fieldBinding = typeFields[index];
-//         if (fieldBinding.isField() && !fieldBinding.isEnumConstant() && !fieldBinding.isSynthetic())
-//            getDelegatableMethods(new ArrayList<IMethodBinding>(declared), fieldBinding, fieldBinding.getType(),
-//               binding, tuples);
-//      }
-//      // list of tuple<IVariableBinding, IMethodBinding>
-//      return tuples.toArray(new DelegateEntry[tuples.size()]);
-//   }
+   //   public static DelegateEntry[] getDelegatableMethods(ITypeBinding binding)
+   //   {
+   //      final List<DelegateEntry> tuples = new ArrayList<DelegateEntry>();
+   //      final List<IMethodBinding> declared = new ArrayList<IMethodBinding>();
+   //      IMethodBinding[] typeMethods = binding.getDeclaredMethods();
+   //      for (int index = 0; index < typeMethods.length; index++)
+   //         declared.add(typeMethods[index]);
+   //      IVariableBinding[] typeFields = binding.getDeclaredFields();
+   //      for (int index = 0; index < typeFields.length; index++)
+   //      {
+   //         IVariableBinding fieldBinding = typeFields[index];
+   //         if (fieldBinding.isField() && !fieldBinding.isEnumConstant() && !fieldBinding.isSynthetic())
+   //            getDelegatableMethods(new ArrayList<IMethodBinding>(declared), fieldBinding, fieldBinding.getType(),
+   //               binding, tuples);
+   //      }
+   //      // list of tuple<IVariableBinding, IMethodBinding>
+   //      return tuples.toArray(new DelegateEntry[tuples.size()]);
+   //   }
 
-//   private static void getDelegatableMethods(List<IMethodBinding> methods, IVariableBinding fieldBinding,
-//      ITypeBinding typeBinding, ITypeBinding binding, List<DelegateEntry> result)
-//   {
-//      boolean match = false;
-//      if (typeBinding.isTypeVariable())
-//      {
-//         ITypeBinding[] typeBounds = typeBinding.getTypeBounds();
-//         if (typeBounds.length > 0)
-//         {
-//            for (int i = 0; i < typeBounds.length; i++)
-//            {
-//               getDelegatableMethods(methods, fieldBinding, typeBounds[i], binding, result);
-//            }
-//         }
-//         else
-//         {
-//            ITypeBinding objectBinding = Bindings.findTypeInHierarchy(binding, "java.lang.Object"); //$NON-NLS-1$
-//            if (objectBinding != null)
-//            {
-//               getDelegatableMethods(methods, fieldBinding, objectBinding, binding, result);
-//            }
-//         }
-//      }
-//      else
-//      {
-//         IMethodBinding[] candidates = getDelegateCandidates(typeBinding, binding);
-//         for (int index = 0; index < candidates.length; index++)
-//         {
-//            match = false;
-//            final IMethodBinding methodBinding = candidates[index];
-//            for (int offset = 0; offset < methods.size() && !match; offset++)
-//            {
-//               if (Bindings.areOverriddenMethods(methods.get(offset), methodBinding))
-//                  match = true;
-//            }
-//            if (!match)
-//            {
-//               result.add(new DelegateEntry(methodBinding, fieldBinding));
-//               methods.add(methodBinding);
-//            }
-//         }
-//         final ITypeBinding superclass = typeBinding.getSuperclass();
-//         if (superclass != null)
-//            getDelegatableMethods(methods, fieldBinding, superclass, binding, result);
-//         ITypeBinding[] superInterfaces = typeBinding.getInterfaces();
-//         for (int offset = 0; offset < superInterfaces.length; offset++)
-//            getDelegatableMethods(methods, fieldBinding, superInterfaces[offset], binding, result);
-//      }
-//   }
+   //   private static void getDelegatableMethods(List<IMethodBinding> methods, IVariableBinding fieldBinding,
+   //      ITypeBinding typeBinding, ITypeBinding binding, List<DelegateEntry> result)
+   //   {
+   //      boolean match = false;
+   //      if (typeBinding.isTypeVariable())
+   //      {
+   //         ITypeBinding[] typeBounds = typeBinding.getTypeBounds();
+   //         if (typeBounds.length > 0)
+   //         {
+   //            for (int i = 0; i < typeBounds.length; i++)
+   //            {
+   //               getDelegatableMethods(methods, fieldBinding, typeBounds[i], binding, result);
+   //            }
+   //         }
+   //         else
+   //         {
+   //            ITypeBinding objectBinding = Bindings.findTypeInHierarchy(binding, "java.lang.Object"); //$NON-NLS-1$
+   //            if (objectBinding != null)
+   //            {
+   //               getDelegatableMethods(methods, fieldBinding, objectBinding, binding, result);
+   //            }
+   //         }
+   //      }
+   //      else
+   //      {
+   //         IMethodBinding[] candidates = getDelegateCandidates(typeBinding, binding);
+   //         for (int index = 0; index < candidates.length; index++)
+   //         {
+   //            match = false;
+   //            final IMethodBinding methodBinding = candidates[index];
+   //            for (int offset = 0; offset < methods.size() && !match; offset++)
+   //            {
+   //               if (Bindings.areOverriddenMethods(methods.get(offset), methodBinding))
+   //                  match = true;
+   //            }
+   //            if (!match)
+   //            {
+   //               result.add(new DelegateEntry(methodBinding, fieldBinding));
+   //               methods.add(methodBinding);
+   //            }
+   //         }
+   //         final ITypeBinding superclass = typeBinding.getSuperclass();
+   //         if (superclass != null)
+   //            getDelegatableMethods(methods, fieldBinding, superclass, binding, result);
+   //         ITypeBinding[] superInterfaces = typeBinding.getInterfaces();
+   //         for (int offset = 0; offset < superInterfaces.length; offset++)
+   //            getDelegatableMethods(methods, fieldBinding, superInterfaces[offset], binding, result);
+   //      }
+   //   }
 
    private static IMethodBinding[] getDelegateCandidates(ITypeBinding binding, ITypeBinding hierarchy)
    {
@@ -933,38 +931,38 @@ public final class StubUtility2
       return constructorMethods.toArray(new IMethodBinding[constructorMethods.size()]);
    }
 
-//   /**
-//    * Evaluates the insertion position of a new node.
-//    * 
-//    * @param listRewrite The list rewriter to which the new node will be added
-//    * @param sibling The Java element before which the new element should be added.
-//    * @return the AST node of the list to insert before or null to insert as last.
-//    * @throws JavaModelException thrown if accessing the Java element failed
-//    */
-//
-//   public static ASTNode getNodeToInsertBefore(ListRewrite listRewrite, IJavaElement sibling) throws JavaModelException
-//   {
-//      if (sibling instanceof IMember)
-//      {
-//         ISourceRange sourceRange = ((IMember)sibling).getSourceRange();
-//         if (sourceRange == null)
-//         {
-//            return null;
-//         }
-//         int insertPos = sourceRange.getOffset();
-//
-//         List<? extends ASTNode> members = listRewrite.getOriginalList();
-//         for (int i = 0; i < members.size(); i++)
-//         {
-//            ASTNode curr = members.get(i);
-//            if (curr.getStartPosition() >= insertPos)
-//            {
-//               return curr;
-//            }
-//         }
-//      }
-//      return null;
-//   }
+   //   /**
+   //    * Evaluates the insertion position of a new node.
+   //    * 
+   //    * @param listRewrite The list rewriter to which the new node will be added
+   //    * @param sibling The Java element before which the new element should be added.
+   //    * @return the AST node of the list to insert before or null to insert as last.
+   //    * @throws JavaModelException thrown if accessing the Java element failed
+   //    */
+   //
+   //   public static ASTNode getNodeToInsertBefore(ListRewrite listRewrite, IJavaElement sibling) throws JavaModelException
+   //   {
+   //      if (sibling instanceof IMember)
+   //      {
+   //         ISourceRange sourceRange = ((IMember)sibling).getSourceRange();
+   //         if (sourceRange == null)
+   //         {
+   //            return null;
+   //         }
+   //         int insertPos = sourceRange.getOffset();
+   //
+   //         List<? extends ASTNode> members = listRewrite.getOriginalList();
+   //         for (int i = 0; i < members.size(); i++)
+   //         {
+   //            ASTNode curr = members.get(i);
+   //            if (curr.getStartPosition() >= insertPos)
+   //            {
+   //               return curr;
+   //            }
+   //         }
+   //      }
+   //      return null;
+   //   }
 
    /**
     * Creates a new stub utility.

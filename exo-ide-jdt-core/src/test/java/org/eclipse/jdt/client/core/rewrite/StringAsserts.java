@@ -21,8 +21,8 @@ import junit.framework.Assert;
 public class StringAsserts
 {
    /**
-	 *
-	 */
+    *
+    */
    public StringAsserts()
    {
       super();

@@ -251,10 +251,10 @@ public final class ImportRewrite
          this.restoreExistingImports = false;
       }
       this.document = document;
-       this.filterImplicitImports= true;
-       // consider that no contexts are used
-       this.useContextToFilterImplicitImports = false;
-      
+      this.filterImplicitImports = true;
+      // consider that no contexts are used
+      this.useContextToFilterImplicitImports = false;
+
       this.defaultContext = new ImportRewriteContext()
       {
          public int findInContext(String qualifier, String name, int kind)

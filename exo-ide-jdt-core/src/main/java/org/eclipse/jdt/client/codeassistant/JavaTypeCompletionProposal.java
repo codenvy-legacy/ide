@@ -129,13 +129,13 @@ public class JavaTypeCompletionProposal extends JavaCompletionProposal
       catch (CoreException e)
       {
          // TODO log exception
-         e.printStackTrace();
+         e.printStackTrace(); //NOSOANR
 
       }
       catch (BadLocationException e)
       {
          // TODO log exception
-         e.printStackTrace();
+         e.printStackTrace();//NOSONAR
       }
    }
 

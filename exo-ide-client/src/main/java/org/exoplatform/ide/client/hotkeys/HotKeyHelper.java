@@ -34,36 +34,70 @@ import java.util.Map.Entry;
  */
 public class HotKeyHelper
 {
-   
+
    public interface KeyCode
    {
+
+      static final int BACKSPACE = 8;
       
+      static final int TAB = 9;
+      
+      static final int ENTER = 13;
+      
+      static final int SHIFT = 16;
+      
+      static final int CTRL = 17;
+      
+      static final int ALT = 18;
+      
+      static final int LEFT = 37;
+
+      static final int UP = 38;
+
+      static final int RIGHT = 39;
+
+      static final int DOWN = 40;
+
+      static final int SELECT = 41;
+
+      static final int PRINT = 42;
+
+      static final int EXECUTE = 43;
+
+      static final int PRINTSCREEN = 44; // PRINT SCREEN key for Windows 3.0 and later
+
+      static final int INSERT = 45;
+
+      static final int DELETE = 46;
+
+      static final int HELP = 47;
+
       static final int F1 = 112;
-      
+
       static final int F2 = 113;
-      
+
       static final int F3 = 114;
-      
+
       static final int F4 = 115;
-      
+
       static final int F5 = 116;
-      
+
       static final int F6 = 117;
-      
+
       static final int F7 = 118;
-      
+
       static final int F8 = 119;
-      
+
       static final int F9 = 120;
-      
+
       static final int F10 = 121;
-      
+
       static final int F11 = 122;
-      
+
       static final int F12 = 123;
 
    }
-   
+
    static final Map<String, String> KEY_CODES = new HashMap<String, String>();
 
    static
@@ -189,7 +223,7 @@ public class HotKeyHelper
       KEY_CODES.put("220", "\\");
       KEY_CODES.put("221", "]");
       KEY_CODES.put("222", "'");
-      
+
       KEY_CODES.put("224", "Alt");
    }
 

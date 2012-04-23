@@ -39,7 +39,6 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 public class OpenResourceControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler
 {
    
-   //public static final String ID = "Navigate/Open Resource...";
    public static final String ID = "Project/Open Resource...";
 
    private static final String TITLE = "Open Resource...";

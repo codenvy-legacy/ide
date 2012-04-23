@@ -34,7 +34,6 @@ import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
 public class SourceTypeConverter extends TypeConverter
 {
 
-
    public static final int FIELD = 0x01;
 
    public static final int CONSTRUCTOR = 0x02;

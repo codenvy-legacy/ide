@@ -384,10 +384,6 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
                   do
                   {
                      int lhs_symbol = Parser.lhs[act];
-                     if (DEBUG)
-                     {
-                        System.out.println(Parser.name[Parser.non_terminal_index[lhs_symbol]]);
-                     }
                      this.tempStackTop -= (Parser.rhs[act] - 1);
                      act =
                         (this.tempStackTop > next_pos ? this.tempStack[this.tempStackTop]
@@ -479,10 +475,6 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
                else if (candidate.symbol > NT_OFFSET)
                {
                   int lhs_symbol = candidate.symbol - NT_OFFSET;
-                  if (DEBUG)
-                  {
-                     System.out.println(Parser.name[Parser.non_terminal_index[lhs_symbol]]);
-                  }
                   act = Parser.ntAction(act, lhs_symbol);
                   while (act <= NUM_RULES)
                   {
@@ -2151,21 +2143,6 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
             do
             {
                this.tempStackTop -= (Parser.rhs[act] - 1);
-
-               if (this.DEBUG_PARSECHECK)
-               {
-                  System.out.print(this.tempStackTop);
-                  System.out.print(" ("); //$NON-NLS-1$
-                  System.out.print(-(Parser.rhs[act] - 1));
-                  System.out.print(") [max:"); //$NON-NLS-1$
-                  System.out.print(max_pos);
-                  System.out.print("]\tprocess_non_terminal\t"); //$NON-NLS-1$
-                  System.out.print(act);
-                  System.out.print("\t"); //$NON-NLS-1$
-                  System.out.print(Parser.name[Parser.non_terminal_index[Parser.lhs[act]]]);
-                  System.out.println();
-               }
-
                if (Parser.rules_compliance[act] > this.options.sourceLevel)
                {
                   return 0;
@@ -2183,11 +2160,6 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
       {
          this.tempStackTop = stack_top - 1;
 
-         if (this.DEBUG_PARSECHECK)
-         {
-            System.out.println(this.tempStackTop);
-         }
-
          max_pos = this.tempStackTop;
          indx = buffer_position - 1;
          ct = first_token;
@@ -2196,18 +2168,6 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
 
       process_terminal : for (;;)
       {
-         if (this.DEBUG_PARSECHECK)
-         {
-            System.out.print(this.tempStackTop + 1);
-            System.out.print(" (+1) [max:"); //$NON-NLS-1$
-            System.out.print(max_pos);
-            System.out.print("]\tprocess_terminal    \t"); //$NON-NLS-1$
-            System.out.print(ct);
-            System.out.print("\t"); //$NON-NLS-1$
-            System.out.print(Parser.name[Parser.terminal_index[ct]]);
-            System.out.println();
-         }
-
          if (++this.tempStackTop >= this.stackLength) // Stack overflow!!!
             return indx;
          this.tempStack[this.tempStackTop] = act;
@@ -2217,15 +2177,6 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
          if (act <= NUM_RULES)
          { // reduce action
             this.tempStackTop--;
-
-            if (this.DEBUG_PARSECHECK)
-            {
-               System.out.print(this.tempStackTop);
-               System.out.print(" (-1) [max:"); //$NON-NLS-1$
-               System.out.print(max_pos);
-               System.out.print("]\treduce"); //$NON-NLS-1$
-               System.out.println();
-            }
          }
          else if (act < ACCEPT_ACTION || // shift action
             act > ERROR_ACTION)
@@ -2238,20 +2189,9 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
             if (act > ERROR_ACTION)
             {
                act -= ERROR_ACTION;
-
-               if (this.DEBUG_PARSECHECK)
-               {
-                  System.out.print(this.tempStackTop);
-                  System.out.print("\tshift reduce"); //$NON-NLS-1$
-                  System.out.println();
-               }
             }
             else
             {
-               if (this.DEBUG_PARSECHECK)
-               {
-                  System.out.println("\tshift"); //$NON-NLS-1$
-               }
                continue process_terminal;
             }
          }
@@ -2269,20 +2209,6 @@ public class DiagnoseParser implements ParserBasicInformation, TerminalTokens
          do
          {
             this.tempStackTop -= (Parser.rhs[act] - 1);
-
-            if (this.DEBUG_PARSECHECK)
-            {
-               System.out.print(this.tempStackTop);
-               System.out.print(" ("); //$NON-NLS-1$
-               System.out.print(-(Parser.rhs[act] - 1));
-               System.out.print(") [max:"); //$NON-NLS-1$
-               System.out.print(max_pos);
-               System.out.print("]\tprocess_non_terminal\t"); //$NON-NLS-1$
-               System.out.print(act);
-               System.out.print("\t"); //$NON-NLS-1$
-               System.out.print(Parser.name[Parser.non_terminal_index[Parser.lhs[act]]]);
-               System.out.println();
-            }
 
             if (act <= NUM_RULES)
             {
