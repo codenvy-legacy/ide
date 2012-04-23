@@ -32,10 +32,15 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChange
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.SaveFileEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -48,7 +53,8 @@ import java.util.Map;
  */
 @RolesAllowed({"administrators", "developers"})
 public class SaveFileControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   EditorFileContentChangedHandler, FileSavedHandler, VfsChangedHandler, ApplicationSettingsReceivedHandler
+   EditorFileContentChangedHandler, FileSavedHandler, VfsChangedHandler, ApplicationSettingsReceivedHandler,
+   ProjectOpenedHandler, ProjectClosedHandler
 {
 
    /**
@@ -70,6 +76,16 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
     * Lock tokens
     */
    private Map<String, String> lockTokens;
+
+   /**
+    * Current workspace's href.
+    */
+   private VirtualFileSystemInfo vfsInfo;
+
+   /**
+    * Is any project opened?
+    */
+   private boolean isProjectOpened = false;
 
    /**
     * Creates a new instance of this control
@@ -97,6 +113,22 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
       IDE.addHandler(FileSavedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+   }
+
+   /**
+    * Update control's visibility.
+    */
+   private void updateVisibility()
+   {
+      if (vfsInfo == null || !isProjectOpened)
+      {
+         setVisible(false);
+         return;
+      }
+
+      setVisible(isProjectOpened);
    }
 
    /**
@@ -105,14 +137,8 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getVfsInfo() != null)
-      {
-         setVisible(true);
-      }
-      else
-      {
-         setVisible(false);
-      }
+      vfsInfo = event.getVfsInfo();
+      updateVisibility();
    }
 
    /**
@@ -203,6 +229,26 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
       {
          setEnabled(false);
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      isProjectOpened = false;
+      updateVisibility();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      isProjectOpened = true;
+      updateVisibility();
    }
 
 }

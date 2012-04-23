@@ -28,10 +28,15 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +50,7 @@ import java.util.List;
  */
 @RolesAllowed({"administrators", "developers"})
 public class UploadZipControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   ViewVisibilityChangedHandler, VfsChangedHandler
+   ViewVisibilityChangedHandler, VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
 
    private final static String ID = "File/Upload Zipped Folder...";
@@ -55,6 +60,13 @@ public class UploadZipControl extends SimpleControl implements IDEControl, Items
    private boolean browserPanelSelected = true;
 
    private List<Item> selectedItems = new ArrayList<Item>();
+
+   /**
+    * Current workspace's href.
+    */
+   private VirtualFileSystemInfo vfsInfo = null;
+
+   private boolean isProjectOpened = false;
 
    /**
     * 
@@ -77,23 +89,32 @@ public class UploadZipControl extends SimpleControl implements IDEControl, Items
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
    /**
-    * 
+    * Update control's state.
     */
-   private void updateEnabling()
+   private void updateState()
    {
-      if (browserPanelSelected)
+      if (vfsInfo == null || !isProjectOpened)
       {
-         if (selectedItems.size() == 1)
-         {
-            setEnabled(true);
-         }
-         else
-         {
-            setEnabled(false);
-         }
+         setVisible(false);
+         return;
+      }
+
+      setVisible(isProjectOpened);
+
+      if (!browserPanelSelected)
+      {
+         setEnabled(false);
+         return;
+      }
+
+      if (selectedItems.size() == 1)
+      {
+         setEnabled(true);
       }
       else
       {
@@ -108,7 +129,7 @@ public class UploadZipControl extends SimpleControl implements IDEControl, Items
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
-      updateEnabling();
+      updateState();
    }
 
    /**
@@ -117,14 +138,8 @@ public class UploadZipControl extends SimpleControl implements IDEControl, Items
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getVfsInfo() != null)
-      {
-         setVisible(true);
-      }
-      else
-      {
-         setVisible(false);
-      }
+      vfsInfo = event.getVfsInfo();
+      updateState();
    }
 
    /**
@@ -136,8 +151,28 @@ public class UploadZipControl extends SimpleControl implements IDEControl, Items
       if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay)
       {
          browserPanelSelected = event.getView().isViewVisible();
-         updateEnabling();
+         updateState();
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      isProjectOpened = false;
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      isProjectOpened = true;
+      updateState();
    }
 
 }

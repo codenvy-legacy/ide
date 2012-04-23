@@ -28,7 +28,11 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -45,7 +49,7 @@ import java.util.List;
  */
 @RolesAllowed({"administrators", "developers"})
 public class CopyItemsCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler, ViewActivatedHandler,
-   VfsChangedHandler
+   VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
 
    public static final String ID = "Edit/Copy Item(s)";
@@ -59,6 +63,8 @@ public class CopyItemsCommand extends SimpleControl implements IDEControl, Items
    private boolean browserPanelSelected = false;
 
    private List<Item> selectedItems;
+
+   private boolean isProjectOpened = false;
 
    /**
     * 
@@ -81,6 +87,8 @@ public class CopyItemsCommand extends SimpleControl implements IDEControl, Items
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
    /**
@@ -107,7 +115,13 @@ public class CopyItemsCommand extends SimpleControl implements IDEControl, Items
 
    protected void updateState()
    {
-      if (vfsInfo == null || selectedItems == null || selectedItems.size() != 1)
+      if (vfsInfo == null || !isProjectOpened)
+      {
+         setVisible(false);
+         return;
+      }
+
+      if (selectedItems == null || selectedItems.size() != 1)
       {
          setEnabled(false);
          return;
@@ -127,7 +141,26 @@ public class CopyItemsCommand extends SimpleControl implements IDEControl, Items
    public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
-      setVisible(vfsInfo != null);
       updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      isProjectOpened = false;
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.project.ProjectOpenedEvent)
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      isProjectOpened = true;
+      setVisible(true);
    }
 }

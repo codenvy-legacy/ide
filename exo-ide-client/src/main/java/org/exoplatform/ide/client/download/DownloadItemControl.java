@@ -25,10 +25,17 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -37,7 +44,8 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class DownloadItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
+public class DownloadItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
+   ProjectOpenedHandler, ProjectClosedHandler
 {
 
    enum Type {
@@ -57,6 +65,10 @@ public class DownloadItemControl extends SimpleControl implements IDEControl, It
    private static final String PROMPT_ZIP = IDE.IDE_LOCALIZATION_CONSTANT.downloadZippedFolderControl();
 
    private boolean downloadZip;
+
+   private boolean isProjectOpened = false;
+
+   private List<Item> selectedItems = new ArrayList<Item>();
 
    /**
     * 
@@ -92,6 +104,21 @@ public class DownloadItemControl extends SimpleControl implements IDEControl, It
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
+   /**
+    * Update control's state.
+    */
+   private void updateState()
+   {
+      if (!isProjectOpened)
+      {
+         setVisible(false);
+         return;
+      }
+
+      setVisible(isProjectOpened);
+      setEnabled(selectedItems.size() == 1 && isApplicableFor(selectedItems.get(0)));
+   }
+
    private boolean isApplicableFor(Item item)
    {
       if (downloadZip && (item instanceof FolderModel || item instanceof ProjectModel))
@@ -112,14 +139,28 @@ public class DownloadItemControl extends SimpleControl implements IDEControl, It
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() == 1 && isApplicableFor(event.getSelectedItems().get(0)))
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
+      selectedItems = event.getSelectedItems();
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      isProjectOpened = false;
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      isProjectOpened = true;
+      updateState();
    }
 
 }

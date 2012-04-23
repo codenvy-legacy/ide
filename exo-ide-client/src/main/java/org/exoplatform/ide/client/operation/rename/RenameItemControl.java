@@ -28,7 +28,12 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -45,7 +50,7 @@ import java.util.List;
  */
 @RolesAllowed({"administrators", "developers"})
 public class RenameItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler,
-   ViewActivatedHandler
+   ViewActivatedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
 
    private static final String ID = "File/Rename...";
@@ -56,7 +61,17 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
-   private VirtualFileSystemInfo vfsInfo;
+   /**
+    * Current workspace's href.
+    */
+   private VirtualFileSystemInfo vfsInfo = null;
+
+   private boolean isProjectOpened = false;
+
+   /**
+    * View which is active.
+    */
+   private View activeView = null;
 
    /**
     * 
@@ -80,18 +95,29 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    * Update control's state.
     */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
+   private void updateState()
    {
-      selectedItems = event.getSelectedItems();
+      if (vfsInfo == null || !isProjectOpened)
+      {
+         setVisible(false);
+         return;
+      }
+      setVisible(isProjectOpened);
 
-      if (vfsInfo != null && selectedItems.size() == 1
-         && !vfsInfo.getRoot().getId().equals(selectedItems.get(0).getId()))
+      if (!(activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay))
+      {
+         setEnabled(false);
+         return;
+      }
+
+      if (selectedItems.size() == 1 && !vfsInfo.getRoot().getId().equals(selectedItems.get(0).getId()))
       {
          setEnabled(true);
       }
@@ -102,21 +128,23 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
    }
 
    /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      selectedItems = event.getSelectedItems();
+      updateState();
+   }
+
+   /**
     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
     */
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
-      if (vfsInfo == null)
-      {
-         setVisible(false);
-      }
-      else
-      {
-         setVisible(true);
-         setEnabled(false);
-      }
+      updateState();
    }
 
    /**
@@ -125,10 +153,28 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      if (!(event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay))
-      {
-         setEnabled(false);
-      }
+      activeView = event.getView();
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      isProjectOpened = false;
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      isProjectOpened = true;
+      updateState();
    }
 
 }

@@ -26,7 +26,11 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
@@ -45,7 +49,7 @@ import java.util.List;
  */
 @RolesAllowed({"administrators", "developers"})
 public class CreateFolderControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   ViewActivatedHandler
+   ViewActivatedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
 
    private boolean browserPanelSelected = true;
@@ -58,6 +62,8 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
+   private boolean isProjectOpened = false;
+
    /**
     * 
     */
@@ -68,7 +74,8 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.newFolder(), IDEImageBundle.INSTANCE.newFolderDisabled());
       setEvent(new CreateFolderEvent());
-      setVisible(true);
+
+      updateEnabling();
    }
 
    /**
@@ -80,6 +87,8 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
       // IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
    /**
@@ -87,6 +96,12 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
     */
    private void updateEnabling()
    {
+      if (!isProjectOpened)
+      {
+         setVisible(false);
+         return;
+      }
+
       if (!browserPanelSelected)
       {
          setEnabled(false);
@@ -94,8 +109,7 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
       }
 
       if (selectedItems.size() == 1
-         && (selectedItems.get(0) instanceof FolderModel ||
-                  selectedItems.get(0) instanceof ProjectModel))
+         && (selectedItems.get(0) instanceof FolderModel || selectedItems.get(0) instanceof ProjectModel))
       {
          setEnabled(true);
       }
@@ -113,9 +127,8 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    {
       selectedItems = event.getSelectedItems();
 
-      if (event.getView() instanceof NavigatorDisplay ||
-               event.getView() instanceof ProjectExplorerDisplay ||
-               event.getView() instanceof ProjectExplorerPresenter.Display)
+      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay
+         || event.getView() instanceof ProjectExplorerPresenter.Display)
       {
          browserPanelSelected = true;
       }
@@ -140,6 +153,26 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
       }
 
       updateEnabling();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      isProjectOpened = false;
+      updateEnabling();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.project.ProjectOpenedEvent)
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      isProjectOpened = true;
+      setVisible(true);
    }
 
 }
