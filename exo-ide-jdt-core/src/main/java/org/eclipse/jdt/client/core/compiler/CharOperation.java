@@ -656,16 +656,16 @@ public final class CharOperation
    }
 
    public static native boolean isJavaIdentifierPart(char ch)/*-{
-      var str = String.fromCharCode(ch);
-		var pat = /[_$a-zA-Z0-9\xA0-\uFFFF]/;
-		return str.match(pat) != null;
-   }-*/;
+                                                             var str = String.fromCharCode(ch);
+                                                             var pat = /[_$a-zA-Z0-9\xA0-\uFFFF]/;
+                                                             return str.match(pat) != null;
+                                                             }-*/;
 
    public static native boolean isJavaIdentifierStart(char ch)/*-{
-      var str = String.fromCharCode(ch);
-		var pat = /[_$a-zA-Z\xA0-\uFFFF]/;
-		return str.match(pat) != null;
-   }-*/;
+                                                              var str = String.fromCharCode(ch);
+                                                              var pat = /[_$a-zA-Z\xA0-\uFFFF]/;
+                                                              return str.match(pat) != null;
+                                                              }-*/;
 
    /**
     * Returns the char arrays as an array of Strings

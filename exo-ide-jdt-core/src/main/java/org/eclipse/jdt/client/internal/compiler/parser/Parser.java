@@ -9460,8 +9460,7 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
 
       // real parse of the method....
       CompilationResult compilationResult = unit.compilationResult;
-      char[] contents =
-         compilationResult.compilationUnit.getContents();
+      char[] contents = compilationResult.compilationUnit.getContents();
       this.scanner.setSource(contents, compilationResult);
 
       if (this.javadocParser != null && this.javadocParser.checkDocComment)
@@ -10015,8 +10014,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    {
       this.scanner =
          new Scanner(false /* comment */, false /* whitespace */, false, /*
-                                                                          * will be set in initialize ( boolean )
-                                                                          */
+                                                                            * will be set in initialize ( boolean )
+                                                                            */
          this.options.sourceLevel /* sourceLevel */, this.options.complianceLevel /* complianceLevel */,
             this.options.taskTags/* taskTags */, this.options.taskPriorities/* taskPriorities */,
             this.options.isTaskCaseSensitive/* taskCaseSensitive */);

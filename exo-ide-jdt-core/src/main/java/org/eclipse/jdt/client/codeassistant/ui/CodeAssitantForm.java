@@ -184,8 +184,8 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Displa
    }
 
    private native void scroll(Element scroll, int pos)/*-{
-		scroll.scrollTop = scroll.scrollTop + pos;
-   }-*/;
+                                                      scroll.scrollTop = scroll.scrollTop + pos;
+                                                      }-*/;
 
    private void selectWidget(int i)
    {

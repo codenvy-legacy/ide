@@ -38,7 +38,7 @@ public class CleanProjectCommandHandler implements CleanProjectHandler
    {
       IDE.addHandler(CleanProjectEvent.TYPE, this);
    }
-   
+
    /**
     * @see org.eclipse.jdt.client.event.CleanProjectHandler#onCleanProject(org.eclipse.jdt.client.event.CleanProjectEvent)
     */

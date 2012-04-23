@@ -55,21 +55,21 @@ public abstract class TypeNameMatch
     */
    public abstract int getModifiers();
 
-//   /**
-//    * Returns the package fragment root of the stored type.
-//    * Package fragment root cannot be null and <strong>does</strong> exist.
-//    *
-//    * @see #getType()
-//    * @see IJavaElement#getAncestor(int)
-//    *
-//    * @throws NullPointerException if matched type is <code> null</code>
-//    * @return the existing java model package fragment root (i.e. cannot be <code>null</code>
-//    * 	and will return <code>true</code> to <code>exists()</code> message).
-//    */
-//   public IPackageFragmentRoot getPackageFragmentRoot()
-//   {
-//      return (IPackageFragmentRoot)getType().getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
-//   }
+   //   /**
+   //    * Returns the package fragment root of the stored type.
+   //    * Package fragment root cannot be null and <strong>does</strong> exist.
+   //    *
+   //    * @see #getType()
+   //    * @see IJavaElement#getAncestor(int)
+   //    *
+   //    * @throws NullPointerException if matched type is <code> null</code>
+   //    * @return the existing java model package fragment root (i.e. cannot be <code>null</code>
+   //    * 	and will return <code>true</code> to <code>exists()</code> message).
+   //    */
+   //   public IPackageFragmentRoot getPackageFragmentRoot()
+   //   {
+   //      return (IPackageFragmentRoot)getType().getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
+   //   }
 
    /**
     * Returns the package name of the stored type.
@@ -124,15 +124,15 @@ public abstract class TypeNameMatch
    public String getTypeContainerName()
    {
       //TODO
-//      IType outerType = getType().getDeclaringType();
-//      if (outerType != null)
-//      {
-//         return outerType.getFullyQualifiedName('.');
-//      }
-//      else
-//      {
-         return getType().getPackageFragment().getElementName();
-//      }
+      //      IType outerType = getType().getDeclaringType();
+      //      if (outerType != null)
+      //      {
+      //         return outerType.getFullyQualifiedName('.');
+      //      }
+      //      else
+      //      {
+      return getType().getPackageFragment().getElementName();
+      //      }
    }
 
    /**

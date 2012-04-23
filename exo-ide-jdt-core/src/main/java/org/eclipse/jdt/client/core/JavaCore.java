@@ -483,19 +483,42 @@ public final class JavaCore
       defaultOptions.put(JavaCore.CORE_ENCODING, "UTF-8");
       defaultOptions.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
       defaultOptions.put(CompilerOptions.OPTION_TargetPlatform, JavaCore.VERSION_1_6);
-      defaultOptions.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_METHOD_INVOCATION, JavaCore.DO_NOT_INSERT);
-      defaultOptions.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_METHOD_INVOCATION, JavaCore.DO_NOT_INSERT);
-      defaultOptions.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_METHOD_INVOCATION_ARGUMENTS, JavaCore.DO_NOT_INSERT);
-      defaultOptions.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_METHOD_INVOCATION_ARGUMENTS, INSERT);
-      defaultOptions.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_METHOD_INVOCATION, JavaCore.DO_NOT_INSERT);
-      defaultOptions.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_PARENS_IN_METHOD_INVOCATION, JavaCore.DO_NOT_INSERT);
+      defaultOptions.put(
+         DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_METHOD_INVOCATION,
+         JavaCore.DO_NOT_INSERT);
+      defaultOptions.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_METHOD_INVOCATION,
+         JavaCore.DO_NOT_INSERT);
+      defaultOptions.put(
+         DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_METHOD_INVOCATION_ARGUMENTS,
+         JavaCore.DO_NOT_INSERT);
+      defaultOptions.put(
+         DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_METHOD_INVOCATION_ARGUMENTS, INSERT);
+      defaultOptions.put(
+         DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_METHOD_INVOCATION,
+         JavaCore.DO_NOT_INSERT);
+      defaultOptions.put(
+         DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_PARENS_IN_METHOD_INVOCATION,
+         JavaCore.DO_NOT_INSERT);
 
-      defaultOptions.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_ANGLE_BRACKET_IN_PARAMETERIZED_TYPE_REFERENCE, JavaCore.DO_NOT_INSERT);
-      defaultOptions.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_ANGLE_BRACKET_IN_PARAMETERIZED_TYPE_REFERENCE, JavaCore.DO_NOT_INSERT);
-      defaultOptions.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_PARAMETERIZED_TYPE_REFERENCE, JavaCore.DO_NOT_INSERT);
-      defaultOptions.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_PARAMETERIZED_TYPE_REFERENCE, INSERT);
-      defaultOptions.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_ANGLE_BRACKET_IN_PARAMETERIZED_TYPE_REFERENCE, JavaCore.DO_NOT_INSERT);
+      defaultOptions
+         .put(
+            DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_ANGLE_BRACKET_IN_PARAMETERIZED_TYPE_REFERENCE,
+            JavaCore.DO_NOT_INSERT);
+      defaultOptions
+         .put(
+            DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_ANGLE_BRACKET_IN_PARAMETERIZED_TYPE_REFERENCE,
+            JavaCore.DO_NOT_INSERT);
+      defaultOptions.put(
+         DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_PARAMETERIZED_TYPE_REFERENCE,
+         JavaCore.DO_NOT_INSERT);
+      defaultOptions.put(
+         DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_PARAMETERIZED_TYPE_REFERENCE, INSERT);
+      defaultOptions
+         .put(
+            DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_ANGLE_BRACKET_IN_PARAMETERIZED_TYPE_REFERENCE,
+            JavaCore.DO_NOT_INSERT);
    }
+
    /**
     * Creates the Java core plug-in.
     * <p>
@@ -562,9 +585,9 @@ public final class JavaCore
    public static HashMap<String, String> getOptions()
    {
       // get encoding through resource plugin
-      if(JdtExtension.get() == null)
+      if (JdtExtension.get() == null)
          return getDefaultOptions();
-      
+
       return JdtExtension.get().getOptions();
    }
 

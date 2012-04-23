@@ -1034,14 +1034,15 @@ public class ScopeAnalyzer
       }
       return false;
    }
-   
-   public static BodyDeclaration findParentBodyDeclaration(ASTNode node) {
-      while ((node != null) && (!(node instanceof BodyDeclaration))) {
-         node= node.getParent();
-      }
-      return (BodyDeclaration) node;
-   }
 
+   public static BodyDeclaration findParentBodyDeclaration(ASTNode node)
+   {
+      while ((node != null) && (!(node instanceof BodyDeclaration)))
+      {
+         node = node.getParent();
+      }
+      return (BodyDeclaration)node;
+   }
 
    public Collection<String> getUsedVariableNames(int offset, int length)
    {

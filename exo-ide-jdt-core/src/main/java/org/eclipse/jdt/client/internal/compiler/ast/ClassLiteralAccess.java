@@ -40,16 +40,15 @@ public class ClassLiteralAccess extends Expression
    {
 
       // if reachable, request the addition of a synthetic field for caching the class descriptor
-//      SourceTypeBinding sourceType = currentScope.outerMostClassScope().enclosingSourceType();
+      //      SourceTypeBinding sourceType = currentScope.outerMostClassScope().enclosingSourceType();
       // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=22334
-//      if (!sourceType.isInterface() && !this.targetType.isBaseType()
-//         && currentScope.compilerOptions().targetJDK < ClassFileConstants.JDK1_5)
-//      {
-//         this.syntheticField = sourceType.addSyntheticFieldForClassLiteral(this.targetType, currentScope);
-//      }
+      //      if (!sourceType.isInterface() && !this.targetType.isBaseType()
+      //         && currentScope.compilerOptions().targetJDK < ClassFileConstants.JDK1_5)
+      //      {
+      //         this.syntheticField = sourceType.addSyntheticFieldForClassLiteral(this.targetType, currentScope);
+      //      }
       return flowInfo;
    }
-
 
    public StringBuffer printExpression(int indent, StringBuffer output)
    {

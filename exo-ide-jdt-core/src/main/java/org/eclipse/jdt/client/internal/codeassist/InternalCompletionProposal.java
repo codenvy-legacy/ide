@@ -279,7 +279,7 @@ public class InternalCompletionProposal extends CompletionProposal
       {
 
          char[] methodSelector = null;
-         if (method.isConstructor()) 
+         if (method.isConstructor())
             methodSelector = type.getSourceName();
          else
             methodSelector = method.getSelector();

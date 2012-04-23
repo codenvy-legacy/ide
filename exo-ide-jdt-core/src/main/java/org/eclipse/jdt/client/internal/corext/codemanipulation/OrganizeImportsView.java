@@ -227,7 +227,7 @@ public class OrganizeImportsView extends ViewImpl implements Display
       cellList.setFocus(true);
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
-         
+
          @Override
          public void execute()
          {

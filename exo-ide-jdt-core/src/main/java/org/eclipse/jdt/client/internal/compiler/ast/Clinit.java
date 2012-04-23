@@ -120,18 +120,18 @@ public class Clinit extends AbstractMethodDeclaration
    public void setAssertionSupport(FieldBinding assertionSyntheticFieldBinding, boolean needClassLiteralField)
    {
 
-//      this.assertionSyntheticFieldBinding = assertionSyntheticFieldBinding;
-//
-//      // we need to add the field right now, because the field infos are generated before the methods
-//      if (needClassLiteralField)
-//      {
-//         SourceTypeBinding sourceType = this.scope.outerMostClassScope().enclosingSourceType();
-//         // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=22334
-//         if (!sourceType.isInterface() && !sourceType.isBaseType())
-//         {
-//            this.classLiteralSyntheticField = sourceType.addSyntheticFieldForClassLiteral(sourceType, this.scope);
-//         }
-//      }
+      //      this.assertionSyntheticFieldBinding = assertionSyntheticFieldBinding;
+      //
+      //      // we need to add the field right now, because the field infos are generated before the methods
+      //      if (needClassLiteralField)
+      //      {
+      //         SourceTypeBinding sourceType = this.scope.outerMostClassScope().enclosingSourceType();
+      //         // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=22334
+      //         if (!sourceType.isInterface() && !sourceType.isBaseType())
+      //         {
+      //            this.classLiteralSyntheticField = sourceType.addSyntheticFieldForClassLiteral(sourceType, this.scope);
+      //         }
+      //      }
    }
 
 }

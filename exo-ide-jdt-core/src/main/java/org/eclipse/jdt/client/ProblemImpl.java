@@ -64,7 +64,7 @@ public class ProblemImpl implements Problem
    @Override
    public int getLineNumber()
    {
-      if(problem.getSourceLineNumber() == 0)
+      if (problem.getSourceLineNumber() == 0)
          return 1;
       return problem.getSourceLineNumber();
    }

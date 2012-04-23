@@ -1113,8 +1113,7 @@ public class ASTParser
                org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit sourceUnit = null;
                if (this.rawSource != null)
                {
-                  needToResolveBindings =
-                     ((this.bits & CompilationUnitResolver.RESOLVE_BINDING) != 0);
+                  needToResolveBindings = ((this.bits & CompilationUnitResolver.RESOLVE_BINDING) != 0);
                   sourceUnit =
                      new BasicCompilationUnit(this.rawSource, null, this.unitName == null ? "" : this.unitName); //$NON-NLS-1$
                }

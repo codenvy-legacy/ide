@@ -41,7 +41,7 @@ public final class MethodProposalInfo extends MemberProposalInfo
    {
       char[][] parameterTypes = Signature.getParameterTypes(fProposal.getSignature());
       char[][] params = new char[parameterTypes.length][];
-      
+
       for (int i = 0; i < parameterTypes.length; i++)
       {
          params[i] = Signature.getTypeErasure(parameterTypes[i]);

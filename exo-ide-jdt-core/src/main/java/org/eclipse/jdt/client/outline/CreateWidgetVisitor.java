@@ -280,7 +280,7 @@ public class CreateWidgetVisitor extends ASTVisitor
    public boolean visit(EnumConstantDeclaration node)
    {
       html = new SafeHtmlBuilder();
-      
+
       //Enum constants are static and final by default:
       int modifiers = 24;
       Image image = getMainImage(JavaClientBundle.INSTANCE.publicField());

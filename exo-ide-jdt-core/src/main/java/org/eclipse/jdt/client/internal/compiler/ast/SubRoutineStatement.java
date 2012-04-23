@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 
-
 /** Extra behavior for statements which are generating subroutines */
 public abstract class SubRoutineStatement extends Statement
 {
-
 
    public void exitAnyExceptionHandler()
    {

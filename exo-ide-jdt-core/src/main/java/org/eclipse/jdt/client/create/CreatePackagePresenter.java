@@ -67,7 +67,7 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
       HasClickHandlers getCancelButton();
 
       HasText getErrorLabel();
-      
+
       HasText getWarningLabel();
 
       void setOkButtonEnabled(boolean enabled);
@@ -219,31 +219,31 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
     */
    protected void doCreate()
    {
-          String pack = display.getPackageNameField().getValue().replaceAll("\\.", "/");
-          FolderModel newFolder = new FolderModel(pack, parentFolder);
-          try
+      String pack = display.getPackageNameField().getValue().replaceAll("\\.", "/");
+      FolderModel newFolder = new FolderModel(pack, parentFolder);
+      try
+      {
+         vfs.createFolder(parentFolder, new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(newFolder))
          {
-            vfs.createFolder(parentFolder, new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(newFolder))
+
+            @Override
+            protected void onSuccess(FolderModel result)
             {
-               
-               @Override
-               protected void onSuccess(FolderModel result)
-               {
-                  
-                  ide.closeView(Display.ID);
-                  eventBus.fireEvent(new RefreshBrowserEvent(parentFolder));
-               }
-               
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-         }
-         catch (RequestException e)
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent(e));
-         }
+
+               ide.closeView(Display.ID);
+               eventBus.fireEvent(new RefreshBrowserEvent(parentFolder));
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               eventBus.fireEvent(new ExceptionThrownEvent(exception));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 }

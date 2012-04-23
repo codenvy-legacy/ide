@@ -28,8 +28,8 @@ import com.google.gwt.event.shared.GwtEvent;
 public class ShowFormatterProfilesEvent extends GwtEvent<ShowFormatterProfilesHandler>
 {
 
-   public static final GwtEvent.Type<ShowFormatterProfilesHandler> TYPE= new Type<ShowFormatterProfilesHandler>();
-   
+   public static final GwtEvent.Type<ShowFormatterProfilesHandler> TYPE = new Type<ShowFormatterProfilesHandler>();
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

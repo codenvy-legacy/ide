@@ -132,7 +132,6 @@ public class AllocationExpression extends Expression implements InvocationSite
       return null;
    }
 
-
    /** @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments() */
    public TypeBinding[] genericTypeArguments()
    {

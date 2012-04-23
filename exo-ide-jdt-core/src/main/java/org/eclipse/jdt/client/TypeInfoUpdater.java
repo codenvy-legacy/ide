@@ -86,7 +86,7 @@ public class TypeInfoUpdater implements FileSavedHandler, ItemDeletedHandler, It
       fqn = fqn.substring(0, fqn.lastIndexOf('.'));
       fqn = fqn.replaceAll("/", ".");
       TypeInfoStorage.get().removeTypeInfo(fqn);
-      if(isNeedUpdate)
+      if (isNeedUpdate)
          NameEnvironment.loadTypeInfo(fqn, project.getId());
    }
 
@@ -109,7 +109,7 @@ public class TypeInfoUpdater implements FileSavedHandler, ItemDeletedHandler, It
    public void onItemMoved(ItemMovedEvent event)
    {
       // TODO Auto-generated method stub
-      
+
    }
 
 }

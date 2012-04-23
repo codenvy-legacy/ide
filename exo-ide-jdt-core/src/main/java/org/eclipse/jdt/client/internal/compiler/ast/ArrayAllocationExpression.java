@@ -53,7 +53,6 @@ public class ArrayAllocationExpression extends Expression
       return flowInfo;
    }
 
-
    public StringBuffer printExpression(int indent, StringBuffer output)
    {
       output.append("new "); //$NON-NLS-1$

@@ -751,7 +751,6 @@ public abstract class Expression extends Statement
       }
    }
 
-
    private MethodBinding[] getAllOriginalInheritedMethods(ReferenceBinding binding)
    {
       ArrayList collector = new ArrayList();

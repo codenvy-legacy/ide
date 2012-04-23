@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-
 public final class BaseTypeBinding extends TypeBinding
 {
 

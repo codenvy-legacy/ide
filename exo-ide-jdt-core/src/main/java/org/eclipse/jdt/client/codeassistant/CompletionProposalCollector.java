@@ -219,7 +219,7 @@ public class CompletionProposalCollector extends CompletionRequestor
          // don't abort, but log and show all the valid proposals
          // TODO
          //JavaPlugin.log(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.OK, "Exception when processing proposal for: " + String.valueOf(proposal.getCompletion()), e)); //$NON-NLS-1$
-         e.printStackTrace();
+         e.printStackTrace(); //NOSONAR
       }
 
       if (DEBUG)
@@ -283,8 +283,8 @@ public class CompletionProposalCollector extends CompletionRequestor
       if (DEBUG)
       {
          long total = System.currentTimeMillis() - fStartTime;
-         System.err.println("Core Collector (core):\t" + (total - fUITime)); //$NON-NLS-1$
-         System.err.println("Core Collector (ui):\t" + fUITime); //$NON-NLS-1$
+         System.err.println("Core Collector (core):\t" + (total - fUITime)); //NOSONAR //$NON-NLS-1$ 
+         System.err.println("Core Collector (ui):\t" + fUITime); //NOSONAR //$NON-NLS-1$
       }
    }
 
@@ -544,7 +544,7 @@ public class CompletionProposalCollector extends CompletionRequestor
    {
       if (isIgnored(proposal.getKind()))
          return true;
-//       char[] declaringType = getDeclaringType(proposal);
+      //       char[] declaringType = getDeclaringType(proposal);
       // TODO
       // return declaringType != null; //&& TypeFilter.isFiltered(declaringType);
       return false;
