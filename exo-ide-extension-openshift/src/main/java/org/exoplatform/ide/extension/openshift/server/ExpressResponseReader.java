@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,28 +18,27 @@
  */
 package org.exoplatform.ide.extension.openshift.server;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * Read response from openshift server and represent it in implementation specific type.
+ *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-class RHCloudCredentials
+public interface ExpressResponseReader<T>
 {
-   private final String rhlogin;
-   private final String password;
-
-   RHCloudCredentials(String rhlogin, String password)
-   {
-      this.rhlogin = rhlogin;
-      this.password = password;
-   }
-
-   public String getRhlogin()
-   {
-      return rhlogin;
-   }
-
-   public String getPassword()
-   {
-      return password;
-   }
+   /**
+    * Read object from stream.
+    *
+    * @param in
+    *    stream that contains response from openshift server
+    * @return implementation specific representation of response
+    * @throws ParsingResponseException
+    *    if any parsing response error occurs
+    * @throws IOException
+    *    if any i/o error occurs
+    */
+   T readObject(InputStream in) throws ParsingResponseException, IOException;
 }
