@@ -46,6 +46,9 @@ public class Output extends AbstractTestModule
       String OUTPUT_ROW_BY_INDEX = "//div[@id='" + OUTPUT_CONTENT_ID + "']/div[%d]";
 
       String OUTPUT_ERROR_BY_INDEX = "//div[@id='" + OUTPUT_CONTENT_ID + "']/div[%d]//span";
+
+      String OUTPUT_TAB = "//div[@class='gwt-TabLayoutPanelTabs']//td[@class='tabTitleText' and text()='Output']";
+
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
@@ -56,6 +59,9 @@ public class Output extends AbstractTestModule
 
    @FindBy(id = Locators.OUTPUT_CONTENT_ID)
    private WebElement outputContent;
+   
+   @FindBy(xpath = Locators.OUTPUT_TAB)
+   private WebElement outputTab;
 
    /**
     * Wait Output view opened.
@@ -166,6 +172,18 @@ public class Output extends AbstractTestModule
       outputContent.findElement(By.xpath(String.format(Locators.OUTPUT_ERROR_BY_INDEX, messageNumber))).click();
    }
 
+   
+   /**
+    * click on label tab Output panel
+    */
+   public void clickOnOutputTab()
+   {
+      outputTab.click();
+   }
+   
+   
+   
+   
    /**
     * @param index
     * @return
