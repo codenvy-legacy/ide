@@ -50,7 +50,7 @@ public class VfsCommandTest extends BaseTest
    {
       folderLinks =
          VfsUtils.importZipProject(MAIN_FOLDER, "src/test/resources/org/exoplatform/ide/shell/test-project.zip");
-    //add for davFs delay
+      //add for davFs delay
       Thread.sleep(3000);
    }
 
@@ -64,13 +64,22 @@ public class VfsCommandTest extends BaseTest
    public void vfsCommands() throws Exception
    {
       shell.executeCommand("ls");
+      //add for davFs delay
+      Thread.sleep(500);
       assertThat(shell.getContent()).contains(MAIN_FOLDER);
       shell.executeCommand("cd " + MAIN_FOLDER);
 
       shell.executeCommand("ls");
+     
+      //add for davFs delay
+      Thread.sleep(500);
       assertThat(shell.getContent()).contains("src").contains(REST_SERVICE_GRS);
 
       shell.executeCommand("cat " + REST_SERVICE_GRS);
+      
+      //add for davFs delay
+      Thread.sleep(500);
+      
       assertThat(shell.getContent()).contains("import org.exoplatform.sample.Employee;")
          .contains("@Path(\"/classpath-test\")").contains("public class HelloWorld {");
 

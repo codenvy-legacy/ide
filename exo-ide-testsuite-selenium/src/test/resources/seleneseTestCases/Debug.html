@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="http://testide258.cloudtest2.exoplatform.com/" />
+<link rel="selenium.base" href="http://trololo.cloud-ide.com/" />
 <title>HerokuWithoutWizzardFromZipSamples</title>
 </head>
 <body>
@@ -20,12 +20,12 @@
 <tr>
 	<td>type</td>
 	<td>id=j_username</td>
-	<td>musienko.maxim@gmail.com</td>
+	<td>eos.roman@gmail.com</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>id=j_password</td>
-	<td>test</td>
+	<td>a422657c77d5</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -33,13 +33,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
+	<td>click</td>
 	<td>id=loginButton</td>
 	<td></td>
 </tr>
 <tr>
 	<td>pause</td>
-	<td>5000</td>
+	<td>10000</td>
 	<td></td>
 </tr>
 <tr>
@@ -48,6 +48,11 @@
 	<td></td>
 </tr>
 <!--Create Spring  app-->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//*[.='Project']</td>
+	<td></td>
+</tr>
 <tr>
 	<td>mouseDown</td>
 	<td>//*[.='Project']</td>
@@ -232,8 +237,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//html/body/div[7]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div[2]/table/tbody/tr/td/font/a[contains(.,'javarun.exoplatform.com')]</td>
+	<td>storeText</td>
+	<td>//html/body/div[7]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div[2]/table/tbody/tr/td/font/a</td>
+	<td>link</td>
+</tr>
+<tr>
+	<td>openWindow</td>
+	<td>${link}</td>
 	<td></td>
 </tr>
 <!--Open Debug Tab-->
@@ -335,6 +345,11 @@
 <tr>
 	<td>click</td>
 	<td>//td[@class='exo-popupMenuTitleField' and text()='Logout']</td>
+	<td></td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
 	<td></td>
 </tr>
 </tbody></table>
