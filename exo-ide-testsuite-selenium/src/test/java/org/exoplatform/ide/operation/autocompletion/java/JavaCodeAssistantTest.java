@@ -188,7 +188,7 @@ public class JavaCodeAssistantTest extends CodeAssistantBaseTest
       IDE.EDITOR.typeTextIntoEditor(0, " ");
       // sleep to re-parse file and load data from server-side
       Thread.sleep(TestConstants.SLEEP);
-      
+
       IDE.CODE_ASSISTANT_JAVA.openForm();
       IDE.CODE_ASSISTANT_JAVA.selectProposalPanel();
       IDE.CODE_ASSISTANT_JAVA.moveCursorDown(1);
