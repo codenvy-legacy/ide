@@ -34,8 +34,11 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -50,7 +53,7 @@ import java.util.List;
  */
 @RolesAllowed({"administrators", "developers"})
 public class RefreshBrowserControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   ViewActivatedHandler, VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
+   ViewActivatedHandler, ViewVisibilityChangedHandler, VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
 
    private static final String ID = "File/Refresh Selected Folder";
@@ -69,6 +72,15 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
    private VirtualFileSystemInfo vfsInfo = null;
 
    private boolean isProjectOpened = false;
+
+   /**
+    * Current active view.
+    */
+   private View activeView;
+
+   private boolean isBrowserPanelVisible;
+
+   private boolean isProjectExplorerVisible;
 
    /**
     * 
@@ -90,6 +102,7 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
@@ -118,8 +131,31 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
+      activeView = event.getView();
+
       browserPanelSelected =
-         (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay || event.getView() instanceof ProjectExplorerPresenter.Display);
+         (activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay || activeView instanceof ProjectExplorerPresenter.Display);
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      View view = event.getView();
+
+      if (view instanceof NavigatorDisplay || view instanceof ProjectExplorerDisplay)
+      {
+         isBrowserPanelVisible = view.isViewVisible();
+
+         if (view instanceof ProjectExplorerDisplay)
+         {
+            isProjectExplorerVisible = view.isViewVisible();
+         }
+      }
+
       updateState();
    }
 
@@ -128,13 +164,25 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
     */
    protected void updateState()
    {
-      if (vfsInfo == null || !isProjectOpened)
+      if (vfsInfo == null)
       {
          setVisible(false);
          return;
       }
 
-      setVisible(isProjectOpened);
+      if (!isProjectOpened && isProjectExplorerVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      if (!isBrowserPanelVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      setVisible(true);
 
       if (selectedItems.size() != 1)
       {

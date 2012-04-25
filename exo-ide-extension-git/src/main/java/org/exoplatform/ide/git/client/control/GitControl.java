@@ -29,8 +29,12 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -46,7 +50,7 @@ import java.util.List;
  * 
  */
 public abstract class GitControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler,
-   FolderRefreshedHandler, ProjectOpenedHandler, ProjectClosedHandler
+   FolderRefreshedHandler, ProjectOpenedHandler, ProjectClosedHandler, ViewVisibilityChangedHandler
 {
 
    enum EnableState {
@@ -65,7 +69,17 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
     */
    private EnableState enableState = EnableState.AFTER_INIT;
 
-   private boolean isProjectOpened = false;
+   /**
+    * Current selected project.
+    */
+   private ProjectModel selectedProject;
+
+   private boolean isProjectExplorerVisible;
+
+   /**
+    * Current selected item in project explorer or in workspace navigator.
+    */
+   private Item selectedItem;
 
    /**
     * @param id control's id
@@ -83,19 +97,15 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
    {
       if (event.getSelectedItems().size() != 1)
       {
-         setEnabled(false);
-         return;
+         selectedItem = null;
+         updateControlState();
       }
-
-      final Item item = event.getSelectedItems().get(0);
-
-      if (isWorkspaceSelected(item.getId()) || !isProjectSelected((ItemContext)item))
+      else
       {
-         setEnabled(false);
-         return;
+         selectedItem = event.getSelectedItems().get(0);
+         selectedProject = ((ItemContext)selectedItem).getProject();
+         updateControlState();
       }
-
-      updateControlState(((ItemContext)item).getProject());
    }
 
    protected boolean isWorkspaceSelected(String id)
@@ -120,8 +130,9 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
 
-      updateControlState(null);
+      updateControlState();
    }
 
    /**
@@ -131,7 +142,7 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
    public void onVfsChanged(VfsChangedEvent event)
    {
       this.workspace = event.getVfsInfo();
-      updateControlState(null);
+      updateControlState();
    }
 
    /**
@@ -152,23 +163,34 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
    @Override
    public void onFolderRefreshed(FolderRefreshedEvent event)
    {
-      updateControlState(((ItemContext)event.getFolder()).getProject());
+      selectedProject = ((ItemContext)event.getFolder()).getProject();
+      updateControlState();
    }
 
-   protected void updateControlState(ProjectModel project)
+   protected void updateControlState()
    {
-      if (workspace == null || !isProjectOpened)
+      if (workspace == null)
       {
          setVisible(false);
          return;
       }
 
-      if (project == null || project.getChildren() == null)
+      if (selectedProject == null && isProjectExplorerVisible)
       {
+         setVisible(false);
          return;
       }
 
-      List<Item> itemList = project.getChildren().getItems();
+      if (selectedItem == null
+         || (isWorkspaceSelected(selectedItem.getId()) || !isProjectSelected((ItemContext)selectedItem)))
+      {
+         setVisible(false);
+         return;
+      }
+
+      setVisible(true);
+
+      List<Item> itemList = selectedProject.getChildren().getItems();
       for (Item child : itemList)
       {
          if (".git".equals(child.getName()))
@@ -193,8 +215,8 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
    {
-      isProjectOpened = false;
-      updateControlState(null);
+      selectedProject = event.getProject();
+      updateControlState();
    }
 
    /**
@@ -203,8 +225,24 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      isProjectOpened = true;
-      setVisible(true);
+      selectedProject = event.getProject();
+      updateControlState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      View view = event.getView();
+
+      if (view instanceof ProjectExplorerDisplay)
+      {
+         isProjectExplorerVisible = view.isViewVisible();
+      }
+
+      updateControlState();
    }
 
 }

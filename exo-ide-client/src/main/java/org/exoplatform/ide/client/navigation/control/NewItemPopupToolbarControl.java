@@ -25,10 +25,15 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
@@ -39,7 +44,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  */
 @RolesAllowed({"administrators", "developers"})
 public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEControl, VfsChangedHandler,
-   ProjectOpenedHandler, ProjectClosedHandler
+   ProjectOpenedHandler, ProjectClosedHandler, ViewVisibilityChangedHandler
 {
 
    public static final String ID = "File/New *";
@@ -50,6 +55,10 @@ public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEC
    private VirtualFileSystemInfo vfsInfo = null;
 
    private boolean isProjectOpened = false;
+
+   private boolean isBrowserPanelVisible;
+
+   private boolean isProjectExplorerVisible;
 
    /**
     * 
@@ -72,6 +81,7 @@ public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEC
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
 
       updateState();
    }
@@ -91,17 +101,26 @@ public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEC
     */
    private void updateState()
    {
-      if (vfsInfo == null || !isProjectOpened)
+      if (vfsInfo == null)
       {
          setVisible(false);
          return;
       }
-      else
+
+      if (!isProjectOpened && isProjectExplorerVisible)
       {
-         setVisible(true);
+         setVisible(false);
+         return;
       }
 
-      setEnabled(isProjectOpened);
+      if (!isBrowserPanelVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      setVisible(true);
+      setEnabled(true);
    }
 
    /**
@@ -121,6 +140,27 @@ public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEC
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       isProjectOpened = true;
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      View view = event.getView();
+
+      if (view instanceof NavigatorDisplay || view instanceof ProjectExplorerDisplay)
+      {
+         isBrowserPanelVisible = view.isViewVisible();
+
+         if (view instanceof ProjectExplorerDisplay)
+         {
+            isProjectExplorerVisible = view.isViewVisible();
+         }
+      }
+
       updateState();
    }
 

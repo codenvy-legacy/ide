@@ -32,13 +32,18 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChange
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.SaveFileEvent;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -54,7 +59,7 @@ import java.util.Map;
 @RolesAllowed({"administrators", "developers"})
 public class SaveFileControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    EditorFileContentChangedHandler, FileSavedHandler, VfsChangedHandler, ApplicationSettingsReceivedHandler,
-   ProjectOpenedHandler, ProjectClosedHandler
+   ProjectOpenedHandler, ProjectClosedHandler, ViewVisibilityChangedHandler
 {
 
    /**
@@ -87,6 +92,10 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
     */
    private boolean isProjectOpened = false;
 
+   private boolean isBrowserPanelVisible;
+
+   private boolean isProjectExplorerVisible;
+
    /**
     * Creates a new instance of this control
     */
@@ -115,6 +124,7 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
    }
 
    /**
@@ -122,13 +132,25 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
     */
    private void updateVisibility()
    {
-      if (vfsInfo == null || !isProjectOpened)
+      if (vfsInfo == null)
       {
          setVisible(false);
          return;
       }
 
-      setVisible(isProjectOpened);
+      if (!isProjectOpened && isProjectExplorerVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      if (!isBrowserPanelVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      setVisible(true);
    }
 
    /**
@@ -248,6 +270,27 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       isProjectOpened = true;
+      updateVisibility();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      View view = event.getView();
+
+      if (view instanceof NavigatorDisplay || view instanceof ProjectExplorerDisplay)
+      {
+         isBrowserPanelVisible = view.isViewVisible();
+
+         if (view instanceof ProjectExplorerDisplay)
+         {
+            isProjectExplorerVisible = view.isViewVisible();
+         }
+      }
+
       updateVisibility();
    }
 

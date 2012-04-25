@@ -33,6 +33,7 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -56,14 +57,16 @@ public class UploadFileControl extends SimpleControl implements IDEControl, Item
 
    private final static String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.uploadFileControl();
 
-   private boolean browserPanelSelected = true;
+   private boolean isBrowserPanelVisible;
+
+   private boolean isProjectExplorerVisible;
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
    /**
     * Current workspace's href.
     */
-   private VirtualFileSystemInfo vfsInfo = null;
+   private VirtualFileSystemInfo vfsInfo;
 
    private boolean isProjectOpened = false;
 
@@ -98,19 +101,25 @@ public class UploadFileControl extends SimpleControl implements IDEControl, Item
     */
    private void updateState()
    {
-      if (vfsInfo == null || !isProjectOpened)
+      if (vfsInfo == null)
       {
          setVisible(false);
          return;
       }
 
-      setVisible(isProjectOpened);
-
-      if (!browserPanelSelected)
+      if (!isProjectOpened && isProjectExplorerVisible)
       {
-         setEnabled(false);
+         setVisible(false);
          return;
       }
+
+      if (!isBrowserPanelVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      setVisible(true);
 
       if (selectedItems.size() == 1)
       {
@@ -148,11 +157,19 @@ public class UploadFileControl extends SimpleControl implements IDEControl, Item
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay)
+      View view = event.getView();
+
+      if (view instanceof NavigatorDisplay || view instanceof ProjectExplorerDisplay)
       {
-         browserPanelSelected = event.getView().isViewVisible();
-         updateState();
+         isBrowserPanelVisible = view.isViewVisible();
+
+         if (view instanceof ProjectExplorerDisplay)
+         {
+            isProjectExplorerVisible = view.isViewVisible();
+         }
       }
+
+      updateState();
    }
 
    /**
