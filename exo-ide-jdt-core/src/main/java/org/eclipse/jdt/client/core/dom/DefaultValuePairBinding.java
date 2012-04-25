@@ -13,7 +13,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.dom;
 
-
 /** Member value pair which compose of default values. */
 class DefaultValuePairBinding extends MemberValuePairBinding
 {

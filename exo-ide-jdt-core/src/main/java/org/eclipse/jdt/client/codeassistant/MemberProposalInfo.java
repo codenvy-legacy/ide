@@ -31,9 +31,9 @@ public abstract class MemberProposalInfo extends ProposalInfo
    protected final String projectId;
 
    protected final String docContext;
-   
+
    private boolean isResolved = false;
-   
+
    private Frame frame;
 
    /**
@@ -56,9 +56,9 @@ public abstract class MemberProposalInfo extends ProposalInfo
    @Override
    public Widget getInfo()
    {
-      if(isResolved)
+      if (isResolved)
          return frame;
-      
+
       String url = getURL();
       isResolved = true;
       if (url != null)

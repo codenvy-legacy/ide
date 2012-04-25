@@ -28,10 +28,16 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -46,7 +52,7 @@ import java.util.List;
  */
 @RolesAllowed({"administrators", "developers"})
 public class DeleteItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler,
-   ViewActivatedHandler
+   ViewActivatedHandler, ViewVisibilityChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
 
    private static final String ID = "File/Delete...";
@@ -55,11 +61,23 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
 
    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.deleteItemsPromptControl();
 
-   private VirtualFileSystemInfo vfsInfo;
+   /**
+    * Current workspace's href.
+    */
+   private VirtualFileSystemInfo vfsInfo = null;
 
-   private View view;
+   /**
+    * Current active view.
+    */
+   private View activeView;
+
+   private boolean isBrowserPanelVisible;
+
+   private boolean isProjectExplorerVisible;
 
    private List<Item> selectedItems;
+
+   private boolean isProjectOpened = false;
 
    /**
     * 
@@ -81,21 +99,44 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
-
-      setVisible(vfsInfo != null);
+      updateState();
    }
 
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      view = event.getView();
+      activeView = event.getView();
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      View view = event.getView();
+
+      if (view instanceof NavigatorDisplay || view instanceof ProjectExplorerDisplay)
+      {
+         isBrowserPanelVisible = view.isViewVisible();
+
+         if (view instanceof ProjectExplorerDisplay)
+         {
+            isProjectExplorerVisible = view.isViewVisible();
+         }
+      }
+
       updateState();
    }
 
@@ -109,8 +150,51 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
       updateState();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      isProjectOpened = false;
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      isProjectOpened = true;
+      updateState();
+   }
+
+   /**
+    * Update control's state.
+    */
    protected void updateState()
    {
+      if (vfsInfo == null)
+      {
+         setVisible(false);
+         return;
+      }
+
+      if (!isProjectOpened && isProjectExplorerVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      if (!isBrowserPanelVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      setVisible(true);
+
       if (selectedItems == null || selectedItems.size() != 1)
       {
          setEnabled(false);
@@ -123,13 +207,14 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
          return;
       }
 
-      if (view instanceof ProjectExplorerDisplay && selectedItems.get(0) instanceof ProjectModel)
+      if (activeView instanceof ProjectExplorerDisplay && selectedItems.get(0) instanceof ProjectModel)
       {
          setEnabled(false);
          return;
       }
 
-      boolean browserPanelSelected = (view instanceof NavigatorDisplay || view instanceof ProjectExplorerDisplay);
+      boolean browserPanelSelected =
+         (activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay);
       setEnabled(browserPanelSelected);
    }
 

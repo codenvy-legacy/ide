@@ -28,10 +28,18 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.List;
 
@@ -43,7 +51,8 @@ import java.util.List;
  */
 @RolesAllowed({"administrators", "developers"})
 public class PasteItemsCommand extends SimpleControl implements IDEControl, ItemsToPasteSelectedHandler,
-   PasteItemsCompleteHandler, ItemsSelectedHandler, VfsChangedHandler, ViewActivatedHandler
+   PasteItemsCompleteHandler, ItemsSelectedHandler, VfsChangedHandler, ViewActivatedHandler,
+   ViewVisibilityChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
    public static final String ID = "Edit/Paste Item(s)";
 
@@ -56,6 +65,14 @@ public class PasteItemsCommand extends SimpleControl implements IDEControl, Item
    private boolean browserPanelSelected = false;
 
    private List<Item> selectedItems;
+
+   private VirtualFileSystemInfo vfsInfo;
+
+   private boolean isProjectOpened = false;
+
+   private boolean isBrowserPanelVisible;
+
+   private boolean isProjectExplorerVisible;
 
    /**
     * 
@@ -80,6 +97,9 @@ public class PasteItemsCommand extends SimpleControl implements IDEControl, Item
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
    /**
@@ -115,7 +135,8 @@ public class PasteItemsCommand extends SimpleControl implements IDEControl, Item
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      setVisible(event.getVfsInfo() != null);
+      vfsInfo = event.getVfsInfo();
+      updateState();
    }
 
    @Override
@@ -126,8 +147,49 @@ public class PasteItemsCommand extends SimpleControl implements IDEControl, Item
       updateState();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      View view = event.getView();
+
+      if (view instanceof NavigatorDisplay || view instanceof ProjectExplorerDisplay)
+      {
+         isBrowserPanelVisible = view.isViewVisible();
+
+         if (view instanceof ProjectExplorerDisplay)
+         {
+            isProjectExplorerVisible = view.isViewVisible();
+         }
+      }
+
+      updateState();
+   }
+
    protected void updateState()
    {
+      if (vfsInfo == null)
+      {
+         setVisible(false);
+         return;
+      }
+
+      if (!isProjectOpened && isProjectExplorerVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      if (!isBrowserPanelVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      setVisible(true);
+
       if (selectedItems == null || selectedItems.size() != 1)
       {
          setEnabled(false);
@@ -135,5 +197,25 @@ public class PasteItemsCommand extends SimpleControl implements IDEControl, Item
       }
 
       setEnabled(itemsToPasteSelected && browserPanelSelected);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      isProjectOpened = false;
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.project.ProjectOpenedEvent)
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      isProjectOpened = true;
+      updateState();
    }
 }

@@ -1063,8 +1063,8 @@ public class QualifiedNameReference extends NameReference
          {
             setSyntheticAccessor(fieldBinding, index, ((SourceTypeBinding)declaringClass).addSyntheticMethod(
                codegenField, index >= 0 /* read-access? */, false /*
-                                                                   * not super access
-                                                                   */));
+                                                                    * not super access
+                                                                    */));
             currentScope.problemReporter().needToEmulateFieldAccess(codegenField, this, index >= 0 /*
                                                                                                     * read - access ?
                                                                                                     */);

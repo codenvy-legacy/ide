@@ -138,10 +138,10 @@ public class TemplateContributionTestGwt extends BaseTestGwt
    {
       checkContribution(JavaContextType.ID_ALL, JavaContextType.ID_ALL);
       //TODO HtmlUnit has a bug with RegExp emulation
-//      checkContribution(JavaContextType.ID_ALL, JavaContextType.ID_MEMBERS);
-//      checkContribution(JavaContextType.ID_ALL, JavaContextType.ID_STATEMENTS);
-//      checkContribution(JavaContextType.ID_MEMBERS, JavaContextType.ID_MEMBERS);
-//      checkContribution(JavaContextType.ID_STATEMENTS, JavaContextType.ID_STATEMENTS);
+      //      checkContribution(JavaContextType.ID_ALL, JavaContextType.ID_MEMBERS);
+      //      checkContribution(JavaContextType.ID_ALL, JavaContextType.ID_STATEMENTS);
+      //      checkContribution(JavaContextType.ID_MEMBERS, JavaContextType.ID_MEMBERS);
+      //      checkContribution(JavaContextType.ID_STATEMENTS, JavaContextType.ID_STATEMENTS);
    }
 
    public void testJavaDocContribution() throws Exception

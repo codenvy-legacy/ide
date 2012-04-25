@@ -518,20 +518,20 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       return null;
    }
 
-//   /** Find the matching parse node, answers null if nothing found */
-//   public TypeDeclaration declarationOf(MemberTypeBinding memberTypeBinding)
-//   {
-//      if (memberTypeBinding != null && this.memberTypes != null)
-//      {
-//         for (int i = 0, max = this.memberTypes.length; i < max; i++)
-//         {
-//            TypeDeclaration memberTypeDecl;
-//            if ((memberTypeDecl = this.memberTypes[i]).binding == memberTypeBinding)
-//               return memberTypeDecl;
-//         }
-//      }
-//      return null;
-//   }
+   //   /** Find the matching parse node, answers null if nothing found */
+   //   public TypeDeclaration declarationOf(MemberTypeBinding memberTypeBinding)
+   //   {
+   //      if (memberTypeBinding != null && this.memberTypes != null)
+   //      {
+   //         for (int i = 0, max = this.memberTypes.length; i < max; i++)
+   //         {
+   //            TypeDeclaration memberTypeDecl;
+   //            if ((memberTypeDecl = this.memberTypes[i]).binding == memberTypeBinding)
+   //               return memberTypeDecl;
+   //         }
+   //      }
+   //      return null;
+   //   }
 
    /** Find the matching parse node, answers null if nothing found */
    public AbstractMethodDeclaration declarationOf(MethodBinding methodBinding)
@@ -576,7 +576,6 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       }
       return null;
    }
-
 
    public boolean hasErrors()
    {
@@ -692,11 +691,11 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
             }
          }
       }
-//      // enable enum support ?
-//      if (this.binding.isEnum() && !this.binding.isAnonymousType())
-//      {
-//         this.enumValuesSyntheticfield = this.binding.addSyntheticFieldForEnumValues();
-//      }
+      //      // enable enum support ?
+      //      if (this.binding.isEnum() && !this.binding.isAnonymousType())
+      //      {
+      //         this.enumValuesSyntheticfield = this.binding.addSyntheticFieldForEnumValues();
+      //      }
    }
 
    public final static int kind(int flags)

@@ -29,5 +29,5 @@ public interface CancelParseHandler extends EventHandler
 {
 
    void onCancelParse(CancelParseEvent event);
-   
+
 }

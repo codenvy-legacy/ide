@@ -187,11 +187,11 @@ public class OverrideCompletionProposal extends JavaTypeCompletionProposal imple
             }
             catch (MalformedTreeException e)
             {
-               e.printStackTrace();
+               e.printStackTrace(); //NOSONAR
             }
             catch (BadLocationException e)
             {
-               e.printStackTrace();
+               e.printStackTrace();//NOSONAHR
             }
          }
       }

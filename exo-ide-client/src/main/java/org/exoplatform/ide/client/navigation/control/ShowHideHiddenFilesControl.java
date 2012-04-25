@@ -23,6 +23,10 @@ import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent;
 import org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler;
 
@@ -34,7 +38,8 @@ import org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler;
  *
  */
 @RolesAllowed({"administrators", "developers"})
-public class ShowHideHiddenFilesControl extends SimpleControl implements IDEControl, ShowHideHiddenFilesHandler
+public class ShowHideHiddenFilesControl extends SimpleControl implements IDEControl, ShowHideHiddenFilesHandler,
+   ProjectOpenedHandler, ProjectClosedHandler
 {
 
    /**
@@ -52,6 +57,8 @@ public class ShowHideHiddenFilesControl extends SimpleControl implements IDECont
     */
    private boolean filesAreShown = false;
 
+   private boolean isProjectOpened = false;
+
    /**
     * Default constructor.
     */
@@ -60,12 +67,12 @@ public class ShowHideHiddenFilesControl extends SimpleControl implements IDECont
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setIcon(IDEImageBundle.INSTANCE.showHiddenFiles().getSafeUri().asString());
+      setImages(IDEImageBundle.INSTANCE.showHiddenFiles(), IDEImageBundle.INSTANCE.showHiddenFiles());
       setEvent(new ShowHideHiddenFilesEvent(true));
       setDelimiterBefore(true);
       setCanBeSelected(true);
-      setEnabled(true);
       setVisible(true);
+      setEnabled(true);
    }
 
    /**
@@ -77,6 +84,10 @@ public class ShowHideHiddenFilesControl extends SimpleControl implements IDECont
    public void initialize()
    {
       IDE.addHandler(ShowHideHiddenFilesEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+
+      updateState();
    }
 
    /**
@@ -84,6 +95,16 @@ public class ShowHideHiddenFilesControl extends SimpleControl implements IDECont
     */
    private void updateState()
    {
+      if (!isProjectOpened)
+      {
+         setEnabled(false);
+         return;
+      }
+      else
+      {
+         setEnabled(true);
+      }
+
       if (filesAreShown)
       {
          setEvent(new ShowHideHiddenFilesEvent(false));
@@ -92,6 +113,7 @@ public class ShowHideHiddenFilesControl extends SimpleControl implements IDECont
       {
          setEvent(new ShowHideHiddenFilesEvent(true));
       }
+
       setSelected(filesAreShown);
    }
 
@@ -102,6 +124,26 @@ public class ShowHideHiddenFilesControl extends SimpleControl implements IDECont
    public void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event)
    {
       filesAreShown = event.isFilesShown();
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      isProjectOpened = false;
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      isProjectOpened = true;
       updateState();
    }
 

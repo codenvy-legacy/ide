@@ -64,15 +64,15 @@ public class ContentAssistInvocationContext
    // fOffset= offset;
    // }
 
-//   /**
-//    * Creates a new context with no viewer or invocation offset set.
-//    */
-//   protected ContentAssistInvocationContext(int offset)
-//   {
-//      fDocument = null;
-//      // fViewer= null;
-//      fOffset = offset;
-//   }
+   //   /**
+   //    * Creates a new context with no viewer or invocation offset set.
+   //    */
+   //   protected ContentAssistInvocationContext(int offset)
+   //   {
+   //      fDocument = null;
+   //      // fViewer= null;
+   //      fOffset = offset;
+   //   }
 
    /**
     * Creates a new context for the given document and offset.

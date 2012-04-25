@@ -233,8 +233,8 @@ public class Scanner implements TerminalTokens
 
    public Scanner()
    {
-      this(false /* comment */, false /* whitespace */, false /* nls */, ClassFileConstants.JDK1_3 /* sourceLevel */,
-         null/* taskTag */, null/* taskPriorities */, true /* taskCaseSensitive */);
+      this(false /* comment */, false /* whitespace */, false /* nls */,
+         ClassFileConstants.JDK1_3 /* sourceLevel */, null/* taskTag */, null/* taskPriorities */, true /* taskCaseSensitive */);
    }
 
    public Scanner(boolean tokenizeComments, boolean tokenizeWhiteSpace, boolean checkNonExternalizedStringLiterals,
@@ -1871,7 +1871,7 @@ public class Scanner implements TerminalTokens
                            }
 
                            // handle the \\u case manually into comment
-                           if (this.currentCharacter == '\\')
+if (this.currentCharacter == '\\')
                            {
                               if (this.source[this.currentPosition] == '\\')
                                  this.currentPosition++;
@@ -1896,7 +1896,7 @@ public class Scanner implements TerminalTokens
                                  isUnicode = true;
                               }
                               // handle the \\u case manually into comment
-                              if (this.currentCharacter == '\\')
+if (this.currentCharacter == '\\')
                               {
                                  if (this.source[this.currentPosition] == '\\')
                                     this.currentPosition++;
@@ -2021,7 +2021,7 @@ public class Scanner implements TerminalTokens
                               isUnicode = false;
                            }
                            // handle the \\u case manually into comment
-                           if (this.currentCharacter == '\\')
+if (this.currentCharacter == '\\')
                            {
                               if (this.source[this.currentPosition] == '\\')
                                  this.currentPosition++; // jump over the \\
@@ -2081,7 +2081,7 @@ public class Scanner implements TerminalTokens
                                  isUnicode = false;
                               }
                               // handle the \\u case manually into comment
-                              if (this.currentCharacter == '\\')
+if (this.currentCharacter == '\\')
                               {
                                  if (this.source[this.currentPosition] == '\\')
                                     this.currentPosition++;
@@ -2478,7 +2478,7 @@ public class Scanner implements TerminalTokens
                            getNextUnicodeChar();
                         }
                         // handle the \\u case manually into comment
-                        if (this.currentCharacter == '\\')
+if (this.currentCharacter == '\\')
                         {
                            if (this.source[this.currentPosition] == '\\')
                               this.currentPosition++;
@@ -2503,7 +2503,7 @@ public class Scanner implements TerminalTokens
                               getNextUnicodeChar();
                            }
                            // handle the \\u case manually into comment
-                           if (this.currentCharacter == '\\')
+if (this.currentCharacter == '\\')
                            {
                               if (this.source[this.currentPosition] == '\\')
                                  this.currentPosition++;
@@ -2618,7 +2618,7 @@ public class Scanner implements TerminalTokens
                            isUnicode = false;
                         }
                         // handle the \\u case manually into comment
-                        if (this.currentCharacter == '\\')
+if (this.currentCharacter == '\\')
                         {
                            if (this.source[this.currentPosition] == '\\')
                               this.currentPosition++; // jump over the \\
@@ -2677,7 +2677,7 @@ public class Scanner implements TerminalTokens
                               isUnicode = false;
                            }
                            // handle the \\u case manually into comment
-                           if (this.currentCharacter == '\\')
+if (this.currentCharacter == '\\')
                            {
                               if (this.source[this.currentPosition] == '\\')
                                  this.currentPosition++;
@@ -3296,7 +3296,7 @@ public class Scanner implements TerminalTokens
    protected final void scanEscapeCharacter() throws InvalidInputException
    {
       // the string with "\\u" is a legal string of two chars \ and u
-      // thus we use a direct access to the source (for regular cases).
+// thus we use a direct access to the source (for regular cases).
       switch (this.currentCharacter)
       {
          case 'b' :

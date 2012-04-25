@@ -353,7 +353,7 @@ public class MissingTypesGuesser extends ASTVisitor
                return null;
 
             TypeReference[][] newConvertedTypeArguments = new TypeReference[typeNames[0].length][];
-            for (int k = newConvertedTypeArguments.length - 1, l = convertedTypeArguments.length - 1; k > -1 && l > -1;)
+            for (int k = newConvertedTypeArguments.length - 1, l = convertedTypeArguments.length - 1; k > -1 && l > -1;)//NOSONAR
             {
                newConvertedTypeArguments[k] = convertedTypeArguments[l];
                k--;
@@ -681,7 +681,7 @@ public class MissingTypesGuesser extends ASTVisitor
                (ParameterizedQualifiedTypeReference)qualifiedTypeReference;
             TypeReference[][] typeArguments = parameterizedQualifiedTypeReference.typeArguments;
             TypeReference[][] newTypeArguments = new TypeReference[qualifiedTypeReference.tokens.length][];
-            for (int j = newTypeArguments.length - 1, k = typeArguments.length - 1; j > -1 && k > -1;)
+            for (int j = newTypeArguments.length - 1, k = typeArguments.length - 1; j > -1 && k > -1;)//NOSONAR
             {
                newTypeArguments[j] = typeArguments[k];
                j--;

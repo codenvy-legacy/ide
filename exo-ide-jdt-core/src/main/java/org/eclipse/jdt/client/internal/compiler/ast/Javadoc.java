@@ -339,8 +339,8 @@ public class Javadoc extends ASTNode
       AbstractMethodDeclaration methDecl = methScope.referenceMethod();
       boolean overriding =
          methDecl == null /* field declaration */|| methDecl.binding == null /*
-                                                                              * compiler error
-                                                                              */
+                                                                               * compiler error
+                                                                               */
             ? false
             : !methDecl.binding.isStatic()
                && ((methDecl.binding.modifiers & (ExtraCompilerModifiers.AccImplementing | ExtraCompilerModifiers.AccOverriding)) != 0);

@@ -30,49 +30,49 @@ public class CharOperationGwtTest extends BaseTestGwt
    public void testJavaIdentifierPart()
    {
       String s = "for";
-      for(char c : s.toCharArray())
+      for (char c : s.toCharArray())
       {
-         if(!CharOperation.isJavaIdentifierPart(c))
+         if (!CharOperation.isJavaIdentifierPart(c))
             fail("Char '" + c + "' is valid Java identifier part");
       }
    }
-   
+
    public void testJavaIdentifierPartUnicode()
    {
       String s = "змінна";
-      for(char c : s.toCharArray())
+      for (char c : s.toCharArray())
       {
-         if(!CharOperation.isJavaIdentifierPart(c))
+         if (!CharOperation.isJavaIdentifierPart(c))
             fail("Char '" + c + "' is valid Java identifier part");
       }
    }
-   
+
    public void testNotJavaIdentifierPart()
    {
       String s = "@#%*";
-      for(char c : s.toCharArray())
+      for (char c : s.toCharArray())
       {
-         if(CharOperation.isJavaIdentifierPart(c))
+         if (CharOperation.isJavaIdentifierPart(c))
             fail("Char '" + c + "' not valid Java identifier part");
       }
    }
-   
+
    public void testJavaIdentifierStart()
    {
       String s = "_$Ab";
-      for(char c : s.toCharArray())
+      for (char c : s.toCharArray())
       {
-         if(!CharOperation.isJavaIdentifierStart(c))
+         if (!CharOperation.isJavaIdentifierStart(c))
             fail("Char '" + c + "' is valid Java identifier part");
       }
    }
-   
+
    public void testNotJavaIdentifierStart()
    {
       String s = "123@#&";
-      for(char c : s.toCharArray())
+      for (char c : s.toCharArray())
       {
-         if(CharOperation.isJavaIdentifierStart(c))
+         if (CharOperation.isJavaIdentifierStart(c))
             fail("Char '" + c + "' not valid Java identifier part");
       }
    }

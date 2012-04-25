@@ -64,7 +64,7 @@ public class StubUtility
    /**
     * Default eXo import order
     */
-   private static final String[] ORDER = new String[]{"#", "*","org", "java", "javax"};
+   private static final String[] ORDER = new String[]{"#", "*", "org", "java", "javax"};
 
    private static final String[] EMPTY = new String[0];
 
@@ -1602,7 +1602,7 @@ public class StubUtility
       ImportRewrite rewrite = ImportRewrite.create(document, astRoot, restoreExistingImports);
       rewrite.setOnDemandImportThreshold(99);
       rewrite.setStaticOnDemandImportThreshold(99);
-      
+
       //TODO configure order
       rewrite.setImportOrder(ORDER);
       if (astRoot.getAST().hasResolvedBindings())

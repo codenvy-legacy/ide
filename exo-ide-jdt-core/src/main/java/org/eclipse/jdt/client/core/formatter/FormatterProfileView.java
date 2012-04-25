@@ -86,8 +86,7 @@ public class FormatterProfileView extends ViewImpl implements Display
          params.put(EditorParameters.IS_SHOW_OVERVIEW_PANEL, Boolean.FALSE);
          EditorProducer editorProducer = IDE.getInstance().getEditor(MimeType.APPLICATION_JAVA);
          eventBus = new HandlerManager(null);
-         editor =
-            editorProducer.createEditor(JdtClientBundle.INSTANCE.formatterSample().getText(), eventBus, params);
+         editor = editorProducer.createEditor(JdtClientBundle.INSTANCE.formatterSample().getText(), eventBus, params);
          editor.setSize("100%", "100%");
          editorPanel.add(editor);
       }

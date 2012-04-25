@@ -336,16 +336,16 @@ public final class ContentAssistHistory
 
       if (!isCacheableRHS(rhs))
          return;
-//      ITypeHierarchy hierarchy = rhs.newSupertypeHierarchy(getProgressMonitor());
-//      if (hierarchy.contains(lhs))
-//      {
-//         // TODO remember for every member of the LHS hierarchy or not? Yes for now.
-//         IGenericType[] allLHSides = hierarchy.getAllSupertypes(lhs);
-         String rhsQualifiedName = rhs.getFullyQualifiedName();
-//         for (int i = 0; i < allLHSides.length; i++)
-//            rememberInternal(allLHSides[i], rhsQualifiedName);
-         rememberInternal(lhs, rhsQualifiedName);
-//      }
+      //      ITypeHierarchy hierarchy = rhs.newSupertypeHierarchy(getProgressMonitor());
+      //      if (hierarchy.contains(lhs))
+      //      {
+      //         // TODO remember for every member of the LHS hierarchy or not? Yes for now.
+      //         IGenericType[] allLHSides = hierarchy.getAllSupertypes(lhs);
+      String rhsQualifiedName = rhs.getFullyQualifiedName();
+      //         for (int i = 0; i < allLHSides.length; i++)
+      //            rememberInternal(allLHSides[i], rhsQualifiedName);
+      rememberInternal(lhs, rhsQualifiedName);
+      //      }
 
    }
 

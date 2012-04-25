@@ -19,7 +19,8 @@ import org.eclipse.jdt.client.core.dom.ITypeBinding;
  *
  * @see Bindings#visitHierarchy(ITypeBinding, TypeBindingVisitor)
  */
-public interface TypeBindingVisitor {
+public interface TypeBindingVisitor
+{
 
-	public boolean visit(ITypeBinding node);
+   public boolean visit(ITypeBinding node);
 }

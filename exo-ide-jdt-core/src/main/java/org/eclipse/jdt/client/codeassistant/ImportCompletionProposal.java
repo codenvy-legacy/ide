@@ -155,12 +155,12 @@ public class ImportCompletionProposal extends AbstractJavaCompletionProposal
       catch (CoreException e)
       {
          // TODO log error
-         e.printStackTrace();
+         e.printStackTrace(); //NOSONAR
       }
       catch (BadLocationException e)
       {
          // TODO log error
-         e.printStackTrace();
+         e.printStackTrace();//NOSONAR
       }
    }
 

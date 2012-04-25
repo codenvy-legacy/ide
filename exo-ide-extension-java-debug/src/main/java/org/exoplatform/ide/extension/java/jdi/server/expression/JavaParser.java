@@ -20112,7 +20112,7 @@ public class JavaParser extends Parser {
         try {
             synpred226_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re); //NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20126,7 +20126,7 @@ public class JavaParser extends Parser {
         try {
             synpred43_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20140,7 +20140,7 @@ public class JavaParser extends Parser {
         try {
             synpred121_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20154,7 +20154,7 @@ public class JavaParser extends Parser {
         try {
             synpred76_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20168,7 +20168,7 @@ public class JavaParser extends Parser {
         try {
             synpred114_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20182,7 +20182,7 @@ public class JavaParser extends Parser {
         try {
             synpred116_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20196,7 +20196,7 @@ public class JavaParser extends Parser {
         try {
             synpred97_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20210,7 +20210,7 @@ public class JavaParser extends Parser {
         try {
             synpred102_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20224,7 +20224,7 @@ public class JavaParser extends Parser {
         try {
             synpred218_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20238,7 +20238,7 @@ public class JavaParser extends Parser {
         try {
             synpred117_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20252,7 +20252,7 @@ public class JavaParser extends Parser {
         try {
             synpred79_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20266,7 +20266,7 @@ public class JavaParser extends Parser {
         try {
             synpred101_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20280,7 +20280,7 @@ public class JavaParser extends Parser {
         try {
             synpred16_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20294,7 +20294,7 @@ public class JavaParser extends Parser {
         try {
             synpred147_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20308,7 +20308,7 @@ public class JavaParser extends Parser {
         try {
             synpred42_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20322,7 +20322,7 @@ public class JavaParser extends Parser {
         try {
             synpred143_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20336,7 +20336,7 @@ public class JavaParser extends Parser {
         try {
             synpred190_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20350,7 +20350,7 @@ public class JavaParser extends Parser {
         try {
             synpred77_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20364,7 +20364,7 @@ public class JavaParser extends Parser {
         try {
             synpred51_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20378,7 +20378,7 @@ public class JavaParser extends Parser {
         try {
             synpred100_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20392,7 +20392,7 @@ public class JavaParser extends Parser {
         try {
             synpred52_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20406,7 +20406,7 @@ public class JavaParser extends Parser {
         try {
             synpred15_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20420,7 +20420,7 @@ public class JavaParser extends Parser {
         try {
             synpred123_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20434,7 +20434,7 @@ public class JavaParser extends Parser {
         try {
             synpred32_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20448,7 +20448,7 @@ public class JavaParser extends Parser {
         try {
             synpred17_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20462,7 +20462,7 @@ public class JavaParser extends Parser {
         try {
             synpred92_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20476,7 +20476,7 @@ public class JavaParser extends Parser {
         try {
             synpred90_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20490,7 +20490,7 @@ public class JavaParser extends Parser {
         try {
             synpred58_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20504,7 +20504,7 @@ public class JavaParser extends Parser {
         try {
             synpred50_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20518,7 +20518,7 @@ public class JavaParser extends Parser {
         try {
             synpred14_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20532,7 +20532,7 @@ public class JavaParser extends Parser {
         try {
             synpred99_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20546,7 +20546,7 @@ public class JavaParser extends Parser {
         try {
             synpred234_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20560,7 +20560,7 @@ public class JavaParser extends Parser {
         try {
             synpred146_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -20574,7 +20574,7 @@ public class JavaParser extends Parser {
         try {
             synpred44_Java_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
+            System.err.println("impossible: "+re);//NOSONAR
         }
         boolean success = !state.failed;
         input.rewind(start);

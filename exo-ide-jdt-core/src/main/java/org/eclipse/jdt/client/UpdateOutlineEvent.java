@@ -42,7 +42,7 @@ public class UpdateOutlineEvent extends GwtEvent<UpdateOutlineHandler>
     * Compilation unit with info for updating Outline.
     */
    private CompilationUnit compilationUnit;
-   
+
    /**
     * File, that was parsed.
     */

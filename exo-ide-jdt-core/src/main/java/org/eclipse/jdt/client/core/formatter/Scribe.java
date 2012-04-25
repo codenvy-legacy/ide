@@ -1966,7 +1966,8 @@ public class Scribe implements IJavaDocTagConstants
          }
       }
       this.scanner =
-         new Scanner(true, true, false/* nls */, sourceLevel/* sourceLevel */, taskTags, null/* taskPriorities */, true/* taskCaseSensitive */);
+         new Scanner(true, true, false/* nls */, sourceLevel/* sourceLevel */, taskTags, null/* taskPriorities */,
+            true/* taskCaseSensitive */);
       this.editsEnabled = true;
    }
 
@@ -5527,8 +5528,8 @@ public class Scribe implements IJavaDocTagConstants
          this.needSpace = idx > 0;
          printJavadocTextLine(this.javadocTextBuffer, nextStart, end, block,
             idx == 0 || (!joinLines && textOnNewLine)/* first text? */, needIndentation, false /*
-                                                                                                * not an html tag
-                                                                                                */);
+                                                                                                 * not an html tag
+                                                                                                 */);
          textOnNewLine = false;
 
          // Replace with current buffer if there are several empty lines between text lines

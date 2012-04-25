@@ -29,5 +29,5 @@ public interface CreatePackageHandler extends EventHandler
 {
 
    void onCreatePackage(CreatePackageEvent event);
-   
+
 }

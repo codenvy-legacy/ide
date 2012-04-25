@@ -214,12 +214,12 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal
       catch (CoreException e)
       {
          // TODO Log exception
-         e.printStackTrace();
+         e.printStackTrace(); //NOSONAR
       }
       catch (BadLocationException e)
       {
          // TODO Log exception
-         e.printStackTrace();
+         e.printStackTrace();//NOSONAR
       }
    }
 

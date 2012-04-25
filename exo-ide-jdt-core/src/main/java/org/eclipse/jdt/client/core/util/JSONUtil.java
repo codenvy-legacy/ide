@@ -71,7 +71,7 @@ public class JSONUtil
       }
       return result;
    }
-   
+
    public static char[] parseArrayToCharArray(String json)
    {
       JSONValue value = JSONParser.parseLenient(json);

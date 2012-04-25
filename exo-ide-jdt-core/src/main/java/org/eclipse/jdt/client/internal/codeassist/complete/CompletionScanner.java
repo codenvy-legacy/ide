@@ -685,7 +685,7 @@ public class CompletionScanner extends Scanner
                         }
 
                         // handle the \\u case manually into comment
-                        if (this.currentCharacter == '\\')
+if (this.currentCharacter == '\\')
                         {
                            if (this.source[this.currentPosition] == '\\')
                               this.currentPosition++;
@@ -724,7 +724,7 @@ public class CompletionScanner extends Scanner
                               }
                            }
                            // handle the \\u case manually into comment
-                           if (this.currentCharacter == '\\')
+if (this.currentCharacter == '\\')
                            {
                               if (this.source[this.currentPosition] == '\\')
                                  this.currentPosition++;
@@ -868,7 +868,7 @@ public class CompletionScanner extends Scanner
                            isUnicode = false;
                         }
                         // handle the \\u case manually into comment
-                        if (this.currentCharacter == '\\')
+if (this.currentCharacter == '\\')
                         {
                            if (this.source[this.currentPosition] == '\\')
                               this.currentPosition++;
@@ -921,7 +921,7 @@ public class CompletionScanner extends Scanner
                               isUnicode = false;
                            }
                            // handle the \\u case manually into comment
-                           if (this.currentCharacter == '\\')
+if (this.currentCharacter == '\\')
                            {
                               if (this.source[this.currentPosition] == '\\')
                                  this.currentPosition++;

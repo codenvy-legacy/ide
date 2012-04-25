@@ -98,7 +98,7 @@ public class OrganizeImportsPresenter implements UpdateOutlineHandler, OrganizeI
       void setFinishButtonEnabled(boolean b);
 
       void addDoubleClickHandler(DoubleClickHandler handler);
-      
+
       void addKeyHandler(KeyDownHandler handler);
 
       void setFocusInList();
@@ -312,20 +312,20 @@ public class OrganizeImportsPresenter implements UpdateOutlineHandler, OrganizeI
             nextOrFinish();
          }
       });
-      
+
       display.addKeyHandler(new KeyDownHandler()
       {
-         
+
          @Override
          public void onKeyDown(KeyDownEvent event)
          {
-            if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
+            if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
             {
                nextOrFinish();
             }
          }
       });
-      
+
       display.getTypeList().setSelectionModel(selectionModel);
       updateForm();
    }

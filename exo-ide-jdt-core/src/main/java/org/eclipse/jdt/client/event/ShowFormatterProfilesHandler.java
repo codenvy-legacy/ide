@@ -29,5 +29,5 @@ public interface ShowFormatterProfilesHandler extends EventHandler
 {
 
    void onShowFormatterProfiles(ShowFormatterProfilesEvent event);
-   
+
 }
