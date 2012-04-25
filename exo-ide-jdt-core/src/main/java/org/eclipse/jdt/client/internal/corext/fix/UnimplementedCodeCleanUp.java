@@ -49,10 +49,10 @@ public class UnimplementedCodeCleanUp extends AbstractMultiFix
    public String[] getStepDescriptions()
    {
       if (isEnabled(CleanUpConstants.ADD_MISSING_METHODES))
-         return new String[]{MultiFixMessages.UnimplementedCodeCleanUp_AddUnimplementedMethods_description};
+         return new String[]{MultiFixMessages.INSTANCE.UnimplementedCodeCleanUp_AddUnimplementedMethods_description()};
 
       if (isEnabled(MAKE_TYPE_ABSTRACT))
-         return new String[]{MultiFixMessages.UnimplementedCodeCleanUp_MakeAbstract_description};
+         return new String[]{MultiFixMessages.INSTANCE.UnimplementedCodeCleanUp_MakeAbstract_description()};
 
       return null;
    }
@@ -75,9 +75,10 @@ public class UnimplementedCodeCleanUp extends AbstractMultiFix
       }
       if (isEnabled(CleanUpConstants.ADD_MISSING_METHODES))
       {
-         boolean createComments =
-            Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS, null))
-               .booleanValue();
+         boolean createComments = true;
+         //TODO
+//            Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS, null))
+//               .booleanValue();
          if (createComments)
             buf.append(indent(getOverridingMethodComment(), "    ")); //$NON-NLS-1$
 
@@ -171,37 +172,41 @@ public class UnimplementedCodeCleanUp extends AbstractMultiFix
 
    private String getOverridingMethodComment()
    {
-      String templateName = CodeTemplateContextType.OVERRIDECOMMENT_ID;
-
-      Template template = getCodeTemplate(templateName);
-      if (template == null)
-         return ""; //$NON-NLS-1$
-
-      CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), null, "\n"); //$NON-NLS-1$
-
-      context.setVariable(CodeTemplateContextType.FILENAME, "Face.java"); //$NON-NLS-1$
-      context.setVariable(CodeTemplateContextType.PACKAGENAME, "test"); //$NON-NLS-1$
-      context.setVariable(CodeTemplateContextType.PROJECTNAME, "TestProject"); //$NON-NLS-1$
-      context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, "Face"); //$NON-NLS-1$
-      context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, "method"); //$NON-NLS-1$
-      context.setVariable(CodeTemplateContextType.RETURN_TYPE, "void"); //$NON-NLS-1$
-      context.setVariable(CodeTemplateContextType.SEE_TO_OVERRIDDEN_TAG, "test.IFace#foo()"); //$NON-NLS-1$
-
-      return evaluateTemplate(template, context);
+//      String templateName = CodeTemplateContextType.OVERRIDECOMMENT_ID;
+//
+//      Template template = getCodeTemplate(templateName);
+//      if (template == null)
+//         return ""; //$NON-NLS-1$
+//
+//      CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), null, "\n"); //$NON-NLS-1$
+//
+//      context.setVariable(CodeTemplateContextType.FILENAME, "Face.java"); //$NON-NLS-1$
+//      context.setVariable(CodeTemplateContextType.PACKAGENAME, "test"); //$NON-NLS-1$
+//      context.setVariable(CodeTemplateContextType.PROJECTNAME, "TestProject"); //$NON-NLS-1$
+//      context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, "Face"); //$NON-NLS-1$
+//      context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, "method"); //$NON-NLS-1$
+//      context.setVariable(CodeTemplateContextType.RETURN_TYPE, "void"); //$NON-NLS-1$
+//      context.setVariable(CodeTemplateContextType.SEE_TO_OVERRIDDEN_TAG, "test.IFace#foo()"); //$NON-NLS-1$
+//
+//      return evaluateTemplate(template, context);
+      //TODO
+      return "Comment";
    }
 
    private String getMethodBody()
    {
-      String templateName = CodeTemplateContextType.METHODSTUB_ID;
-      Template template = getCodeTemplate(templateName);
-      if (template == null)
-         return ""; //$NON-NLS-1$
-
-      CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), null, "\n"); //$NON-NLS-1$
-      context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, "method"); //$NON-NLS-1$
-      context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, "Face"); //$NON-NLS-1$
-      context.setVariable(CodeTemplateContextType.BODY_STATEMENT, ""); //$NON-NLS-1$
-      return evaluateTemplate(template, context);
+//      String templateName = CodeTemplateContextType.METHODSTUB_ID;
+//      Template template = getCodeTemplate(templateName);
+//      if (template == null)
+//         return ""; //$NON-NLS-1$
+//
+//      CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), null, "\n"); //$NON-NLS-1$
+//      context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, "method"); //$NON-NLS-1$
+//      context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, "Face"); //$NON-NLS-1$
+//      context.setVariable(CodeTemplateContextType.BODY_STATEMENT, ""); //$NON-NLS-1$
+//      return evaluateTemplate(template, context);
+      //TODO
+      return "{}";
    }
 
    private static Template getCodeTemplate(String id)
@@ -210,28 +215,32 @@ public class UnimplementedCodeCleanUp extends AbstractMultiFix
       return JdtExtension.get().getTemplateStore().getTemplates(id)[0];
    }
 
-   private String evaluateTemplate(Template template, CodeTemplateContext context)
-   {
-      TemplateBuffer buffer;
-      try
-      {
-         buffer = context.evaluate(template);
-      }
-      catch (BadLocationException e)
-      {
-         JavaPlugin.log(e);
-         return ""; //$NON-NLS-1$
-      }
-      catch (TemplateException e)
-      {
-         JavaPlugin.log(e);
-         return ""; //$NON-NLS-1$
-      }
-      if (buffer == null)
-         return ""; //$NON-NLS-1$
-
-      return buffer.getString();
-   }
+//   private String evaluateTemplate(Template template, CodeTemplateContext context)
+//   {
+//      TemplateBuffer buffer;
+//      try
+//      {
+//         buffer = context.evaluate(template);
+//      }
+//      catch (BadLocationException e)
+//      {
+//         //TODO
+//         e.printStackTrace();
+//         //JavaPlugin.log(e);
+//         return ""; //$NON-NLS-1$
+//      }
+//      catch (TemplateException e)
+//      {
+//         //TODO
+//         e.printStackTrace();
+////         JavaPlugin.log(e);
+//         return ""; //$NON-NLS-1$
+//      }
+//      if (buffer == null)
+//         return ""; //$NON-NLS-1$
+//
+//      return buffer.getString();
+//   }
 
    private String indent(String code, String indent)
    {

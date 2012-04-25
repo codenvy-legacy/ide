@@ -12,7 +12,7 @@ package org.eclipse.jdt.client.internal.corext.fix;
 
 import org.eclipse.jdt.client.runtime.IStatus;
 
-public abstract class AbstractFix implements IProposableFix, ILinkedFix
+public abstract class AbstractFix implements IProposableFix
 {
 
    private final String fDisplayString;
@@ -38,13 +38,13 @@ public abstract class AbstractFix implements IProposableFix, ILinkedFix
       return fDisplayString;
    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public LinkedProposalModel getLinkedPositions()
-   {
-      return null;
-   }
+//   /**
+//    * {@inheritDoc}
+//    */
+//   public LinkedProposalModel getLinkedPositions()
+//   {
+//      return null;
+//   }
 
    /**
     * {@inheritDoc}

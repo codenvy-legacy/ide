@@ -62,8 +62,8 @@ import org.exoplatform.ide.editor.text.edits.TextEditGroup;
 public final class ConvertIterableLoopOperation extends ConvertLoopOperation
 {
 
-   private static final Status SEMANTIC_CHANGE_WARNING_STATUS = new Status(IStatus.WARNING,
-      FixMessages.ConvertIterableLoopOperation_semanticChangeWarning);
+   private static final Status SEMANTIC_CHANGE_WARNING_STATUS = new Status(IStatus.WARNING,"",
+      FixMessages.INSTANCE.ConvertIterableLoopOperation_semanticChangeWarning());
 
    /**
     * Returns the supertype of the given type with the qualified name.
@@ -226,10 +226,10 @@ public final class ConvertIterableLoopOperation extends ConvertLoopOperation
     * {@inheritDoc}
     */
    @Override
-   public void rewriteAST(CompilationUnitRewrite cuRewrite, LinkedProposalModel positionGroups) throws CoreException
+   public void rewriteAST(CompilationUnitRewrite cuRewrite) throws CoreException
    {
       final TextEditGroup group =
-         createTextEditGroup(FixMessages.Java50Fix_ConvertToEnhancedForLoop_description, cuRewrite);
+         createTextEditGroup(FixMessages.INSTANCE.Java50Fix_ConvertToEnhancedForLoop_description(), cuRewrite);
 
       final ASTRewrite astRewrite = cuRewrite.getASTRewrite();
 
@@ -245,13 +245,12 @@ public final class ConvertIterableLoopOperation extends ConvertLoopOperation
       rangeComputer.addTightSourceNode(getForStatement());
       astRewrite.setTargetSourceRangeComputer(rangeComputer);
 
-      Statement statement = convert(cuRewrite, group, positionGroups);
+      Statement statement = convert(cuRewrite, group);
       astRewrite.replace(getForStatement(), statement, group);
    }
 
    @Override
-   protected Statement convert(CompilationUnitRewrite cuRewrite, final TextEditGroup group,
-      final LinkedProposalModel positionGroups) throws CoreException
+   protected Statement convert(CompilationUnitRewrite cuRewrite, final TextEditGroup group) throws CoreException
    {
       final AST ast = cuRewrite.getAST();
       final ASTRewrite astRewrite = cuRewrite.getASTRewrite();
@@ -354,7 +353,7 @@ public final class ConvertIterableLoopOperation extends ConvertLoopOperation
             }
          });
 
-         fEnhancedForLoop.setBody(getBody(cuRewrite, group, positionGroups));
+         fEnhancedForLoop.setBody(getBody(cuRewrite, group));
       }
       final SingleVariableDeclaration declaration = ast.newSingleVariableDeclaration();
       final SimpleName simple = ast.newSimpleName(name);
@@ -414,14 +413,14 @@ public final class ConvertIterableLoopOperation extends ConvertLoopOperation
          if (updateExpressions.size() == 1)
          {
             resultStatus =
-               new Status(IStatus.WARNING, "", Messages.format(
-                  FixMessages.ConvertIterableLoopOperation_RemoveUpdateExpression_Warning, updateExpressions.get(0)
+               new Status(IStatus.WARNING, "", 
+                  FixMessages.INSTANCE.ConvertIterableLoopOperation_RemoveUpdateExpression_Warning(updateExpressions.get(0)
                      .toString()));
          }
          else if (updateExpressions.size() > 1)
          {
             resultStatus =
-               new Status(IStatus.WARNING, "", FixMessages.ConvertIterableLoopOperation_RemoveUpdateExpressions_Warning);
+               new Status(IStatus.WARNING, "", FixMessages.INSTANCE.ConvertIterableLoopOperation_RemoveUpdateExpressions_Warning());
          }
 
          for (final Iterator<Expression> outer = getForStatement().initializers().iterator(); outer.hasNext();)

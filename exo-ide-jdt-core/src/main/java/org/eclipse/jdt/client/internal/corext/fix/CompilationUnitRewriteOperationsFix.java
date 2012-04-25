@@ -34,7 +34,7 @@ public class CompilationUnitRewriteOperationsFix extends AbstractFix {
 
 	public abstract static class CompilationUnitRewriteOperation {
 
-		public abstract void rewriteAST(CompilationUnitRewrite cuRewrite, LinkedProposalModel linkedModel) throws CoreException;
+		public abstract void rewriteAST(CompilationUnitRewrite cuRewrite) throws CoreException;
 
 		protected Type importType(final ITypeBinding toImport, final ASTNode accessor, ImportRewrite imports, final CompilationUnit compilationUnit) {
 			ImportRewriteContext importContext= new ContextSensitiveImportRewriteContext(compilationUnit, accessor.getStartPosition(), imports);
@@ -56,7 +56,7 @@ public class CompilationUnitRewriteOperationsFix extends AbstractFix {
 
 	private final CompilationUnitRewriteOperation[] fOperations;
 	private final CompilationUnit fCompilationUnit;
-	private final LinkedProposalModel fLinkedProposalModel;
+//	private final LinkedProposalModel fLinkedProposalModel;
 
 	public CompilationUnitRewriteOperationsFix(String name, CompilationUnit compilationUnit, CompilationUnitRewriteOperation operation) {
 		this(name, compilationUnit, new CompilationUnitRewriteOperation[] { operation });
@@ -69,19 +69,19 @@ public class CompilationUnitRewriteOperationsFix extends AbstractFix {
 		Assert.isLegal(operations.length > 0);
 		fCompilationUnit= compilationUnit;
 		fOperations= operations;
-		fLinkedProposalModel= new LinkedProposalModel();
+//		fLinkedProposalModel= new LinkedProposalModel();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public LinkedProposalModel getLinkedPositions() {
-		if (!fLinkedProposalModel.hasLinkedPositions())
-			return null;
-
-		return fLinkedProposalModel;
-	}
+//	/**
+//	 * {@inheritDoc}
+//	 */
+//	@Override
+//	public LinkedProposalModel getLinkedPositions() {
+//		if (!fLinkedProposalModel.hasLinkedPositions())
+//			return null;
+//
+//		return fLinkedProposalModel;
+//	}
 
 	/**
 	 * {@inheritDoc}
@@ -89,15 +89,15 @@ public class CompilationUnitRewriteOperationsFix extends AbstractFix {
 	public CompilationUnitChange createChange(IProgressMonitor progressMonitor) throws CoreException {
 		CompilationUnitRewrite cuRewrite= new CompilationUnitRewrite(fCompilationUnit);
 
-		fLinkedProposalModel.clear();
+//		fLinkedProposalModel.clear();
 		for (int i= 0; i < fOperations.length; i++) {
 			CompilationUnitRewriteOperation operation= fOperations[i];
-			operation.rewriteAST(cuRewrite, fLinkedProposalModel);
+			operation.rewriteAST(cuRewrite);
 		}
 
 		CompilationUnitChange result= cuRewrite.createChange(getDisplayString(), true, null);
 		if (result == null)
-			throw new CoreException(new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, Messages.format(FixMessages.CompilationUnitRewriteOperationsFix_nullChangeError, getDisplayString())));
+			throw new CoreException(new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, FixMessages.INSTANCE.CompilationUnitRewriteOperationsFix_nullChangeError(getDisplayString())));
 
 		return result;
 	}

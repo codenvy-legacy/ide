@@ -25,6 +25,7 @@ import org.eclipse.jdt.client.core.dom.WhileStatement;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.internal.corext.dom.GenericVisitor;
 import org.eclipse.jdt.client.internal.corext.refactoring.structure.CompilationUnitRewrite;
+import org.eclipse.jdt.client.runtime.CoreException;
 import org.exoplatform.ide.editor.text.edits.TextEditGroup;
 
 import java.util.ArrayList;
@@ -223,21 +224,21 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
        * {@inheritDoc}
        */
       @Override
-      public void rewriteAST(CompilationUnitRewrite cuRewrite, LinkedProposalModel model) throws CoreException
+      public void rewriteAST(CompilationUnitRewrite cuRewrite) throws CoreException
       {
          ASTRewrite rewrite = cuRewrite.getASTRewrite();
          String label;
          if (fBodyProperty == IfStatement.THEN_STATEMENT_PROPERTY)
          {
-            label = FixMessages.CodeStyleFix_ChangeIfToBlock_desription;
+            label = FixMessages.INSTANCE.INSTANCE.CodeStyleFix_ChangeIfToBlock_desription();
          }
          else if (fBodyProperty == IfStatement.ELSE_STATEMENT_PROPERTY)
          {
-            label = FixMessages.CodeStyleFix_ChangeElseToBlock_description;
+            label = FixMessages.INSTANCE.CodeStyleFix_ChangeElseToBlock_description();
          }
          else
          {
-            label = FixMessages.CodeStyleFix_ChangeControlToBlock_description;
+            label = FixMessages.INSTANCE.CodeStyleFix_ChangeControlToBlock_description();
          }
 
          TextEditGroup group = createTextEditGroup(label, cuRewrite);
@@ -266,7 +267,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
        * {@inheritDoc}
        */
       @Override
-      public void rewriteAST(CompilationUnitRewrite cuRewrite, LinkedProposalModel model) throws CoreException
+      public void rewriteAST(CompilationUnitRewrite cuRewrite) throws CoreException
       {
          ASTRewrite rewrite = cuRewrite.getASTRewrite();
 
@@ -275,7 +276,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
          Statement moveTarget = (Statement)rewrite.createMoveTarget(statement);
 
          TextEditGroup group =
-            createTextEditGroup(FixMessages.ControlStatementsFix_removeBrackets_proposalDescription, cuRewrite);
+            createTextEditGroup(FixMessages.INSTANCE.ControlStatementsFix_removeBrackets_proposalDescription(), cuRewrite);
          rewrite.set(fStatement, fChild, moveTarget, group);
       }
 
@@ -476,7 +477,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
                removeAllList.add(op);
                if (item == statement)
                   result.add(new ControlStatementsFix(
-                     FixMessages.ControlStatementsFix_removeIfBlock_proposalDescription, compilationUnit,
+                     FixMessages.INSTANCE.ControlStatementsFix_removeIfBlock_proposalDescription(), compilationUnit,
                      new CompilationUnitRewriteOperation[]{op}));
             }
          }
@@ -487,7 +488,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
             removeAllList.add(op);
             if (item == statement)
                result.add(new ControlStatementsFix(
-                  FixMessages.ControlStatementsFix_removeElseBlock_proposalDescription, compilationUnit,
+                  FixMessages.INSTANCE.ControlStatementsFix_removeElseBlock_proposalDescription(), compilationUnit,
                   new CompilationUnitRewriteOperation[]{op}));
          }
 
@@ -495,7 +496,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
          {
             CompilationUnitRewriteOperation[] allConvert =
                removeAllList.toArray(new CompilationUnitRewriteOperation[removeAllList.size()]);
-            result.add(new ControlStatementsFix(FixMessages.ControlStatementsFix_removeIfElseBlock_proposalDescription,
+            result.add(new ControlStatementsFix(FixMessages.INSTANCE.ControlStatementsFix_removeIfElseBlock_proposalDescription(),
                compilationUnit, allConvert));
          }
 
@@ -507,7 +508,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
          {
             RemoveBlockOperation op = new RemoveBlockOperation(statement, WhileStatement.BODY_PROPERTY);
             return new ControlStatementsFix[]{new ControlStatementsFix(
-               FixMessages.ControlStatementsFix_removeBrackets_proposalDescription, compilationUnit,
+               FixMessages.INSTANCE.ControlStatementsFix_removeBrackets_proposalDescription(), compilationUnit,
                new CompilationUnitRewriteOperation[]{op})};
          }
       }
@@ -517,7 +518,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
          {
             RemoveBlockOperation op = new RemoveBlockOperation(statement, ForStatement.BODY_PROPERTY);
             return new ControlStatementsFix[]{new ControlStatementsFix(
-               FixMessages.ControlStatementsFix_removeBrackets_proposalDescription, compilationUnit,
+               FixMessages.INSTANCE.ControlStatementsFix_removeBrackets_proposalDescription(), compilationUnit,
                new CompilationUnitRewriteOperation[]{op})};
          }
       }
@@ -527,7 +528,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
          {
             RemoveBlockOperation op = new RemoveBlockOperation(statement, EnhancedForStatement.BODY_PROPERTY);
             return new ControlStatementsFix[]{new ControlStatementsFix(
-               FixMessages.ControlStatementsFix_removeBrackets_proposalDescription, compilationUnit,
+               FixMessages.INSTANCE.ControlStatementsFix_removeBrackets_proposalDescription(), compilationUnit,
                new CompilationUnitRewriteOperation[]{op})};
          }
       }
@@ -537,7 +538,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
          {
             RemoveBlockOperation op = new RemoveBlockOperation(statement, DoStatement.BODY_PROPERTY);
             return new ControlStatementsFix[]{new ControlStatementsFix(
-               FixMessages.ControlStatementsFix_removeBrackets_proposalDescription, compilationUnit,
+               FixMessages.INSTANCE.ControlStatementsFix_removeBrackets_proposalDescription(), compilationUnit,
                new CompilationUnitRewriteOperation[]{op})};
          }
       }
@@ -563,7 +564,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
 
       CompilationUnitRewriteOperation[] ops =
          operations.toArray(new CompilationUnitRewriteOperation[operations.size()]);
-      return new ControlStatementsFix(FixMessages.ControlStatementsFix_change_name, compilationUnit, ops);
+      return new ControlStatementsFix(FixMessages.INSTANCE.ControlStatementsFix_change_name(), compilationUnit, ops);
    }
 
    protected ControlStatementsFix(String name, CompilationUnit compilationUnit,

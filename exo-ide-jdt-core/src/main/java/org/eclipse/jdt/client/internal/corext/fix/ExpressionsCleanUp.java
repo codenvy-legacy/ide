@@ -77,11 +77,11 @@ public class ExpressionsCleanUp extends AbstractCleanUp
       List<String> result = new ArrayList<String>();
       if (isEnabled(CleanUpConstants.EXPRESSIONS_USE_PARENTHESES)
          && isEnabled(CleanUpConstants.EXPRESSIONS_USE_PARENTHESES_ALWAYS))
-         result.add(MultiFixMessages.ExpressionsCleanUp_addParanoiac_description);
+         result.add(MultiFixMessages.INSTANCE.ExpressionsCleanUp_addParanoiac_description());
 
       if (isEnabled(CleanUpConstants.EXPRESSIONS_USE_PARENTHESES)
          && isEnabled(CleanUpConstants.EXPRESSIONS_USE_PARENTHESES_NEVER))
-         result.add(MultiFixMessages.ExpressionsCleanUp_removeUnnecessary_description);
+         result.add(MultiFixMessages.INSTANCE.ExpressionsCleanUp_removeUnnecessary_description());
 
       return result.toArray(new String[result.size()]);
    }

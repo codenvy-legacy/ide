@@ -151,7 +151,7 @@ public class ConvertLoopFix extends CompilationUnitRewriteOperationsFix
 
       CompilationUnitRewriteOperation[] ops =
          operations.toArray(new CompilationUnitRewriteOperation[operations.size()]);
-      return new ConvertLoopFix(FixMessages.ControlStatementsFix_change_name, compilationUnit, ops, null);
+      return new ConvertLoopFix(FixMessages.INSTANCE.ControlStatementsFix_change_name(), compilationUnit, ops, null);
    }
 
    public static ConvertLoopFix createConvertForLoopToEnhancedFix(CompilationUnit compilationUnit, ForStatement loop)
@@ -160,7 +160,7 @@ public class ConvertLoopFix extends CompilationUnitRewriteOperationsFix
       if (!convertForLoopOperation.satisfiesPreconditions().isOK())
          return null;
 
-      return new ConvertLoopFix(FixMessages.Java50Fix_ConvertToEnhancedForLoop_description, compilationUnit,
+      return new ConvertLoopFix(FixMessages.INSTANCE.Java50Fix_ConvertToEnhancedForLoop_description(), compilationUnit,
          new CompilationUnitRewriteOperation[]{convertForLoopOperation}, null);
    }
 
@@ -172,7 +172,7 @@ public class ConvertLoopFix extends CompilationUnitRewriteOperationsFix
       if (status.getSeverity() == IStatus.ERROR)
          return null;
 
-      return new ConvertLoopFix(FixMessages.Java50Fix_ConvertToEnhancedForLoop_description, compilationUnit,
+      return new ConvertLoopFix(FixMessages.INSTANCE.Java50Fix_ConvertToEnhancedForLoop_description(), compilationUnit,
          new CompilationUnitRewriteOperation[]{loopConverter}, status);
    }
 

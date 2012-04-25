@@ -54,20 +54,21 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
        * {@inheritDoc}
        */
       @Override
-      public void rewriteAST(CompilationUnitRewrite cuRewrite, LinkedProposalModel linkedProposalPositions)
+      public void rewriteAST(CompilationUnitRewrite cuRewrite)
          throws CoreException
       {
          AST ast = cuRewrite.getAST();
          ASTRewrite rewrite = cuRewrite.getASTRewrite();
          Modifier newModifier = ast.newModifier(Modifier.ModifierKeyword.ABSTRACT_KEYWORD);
          TextEditGroup textEditGroup =
-            createTextEditGroup(CorrectionMessages.UnimplementedCodeFix_TextEditGroup_label, cuRewrite);
+            createTextEditGroup(CorrectionMessages.INSTANCE.UnimplementedCodeFix_TextEditGroup_label(), cuRewrite);
          rewrite.getListRewrite(fTypeDeclaration, TypeDeclaration.MODIFIERS2_PROPERTY).insertLast(newModifier,
             textEditGroup);
 
-         LinkedProposalPositionGroup group = new LinkedProposalPositionGroup("modifier"); //$NON-NLS-1$
-         group.addPosition(rewrite.track(newModifier), !linkedProposalPositions.hasLinkedPositions());
-         linkedProposalPositions.addPositionGroup(group);
+         //TODO
+//         LinkedProposalPositionGroup group = new LinkedProposalPositionGroup("modifier"); //$NON-NLS-1$
+//         group.addPosition(rewrite.track(newModifier), !linkedProposalPositions.hasLinkedPositions());
+//         linkedProposalPositions.addPositionGroup(group);
       }
    }
 
@@ -110,11 +111,11 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
       String label;
       if (addMissingMethod)
       {
-         label = CorrectionMessages.UnimplementedMethodsCorrectionProposal_description;
+         label = CorrectionMessages.INSTANCE.UnimplementedMethodsCorrectionProposal_description();
       }
       else
       {
-         label = CorrectionMessages.UnimplementedCodeFix_MakeAbstractFix_label;
+         label = CorrectionMessages.INSTANCE.UnimplementedCodeFix_MakeAbstractFix_label();
       }
       return new UnimplementedCodeFix(label, root, operations.toArray(new CompilationUnitRewriteOperation[operations
          .size()]));
@@ -132,7 +133,7 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
       AddUnimplementedMethodsOperation operation = new AddUnimplementedMethodsOperation(typeNode);
       if (operation.getMethodsToImplement().length > 0)
       {
-         return new UnimplementedCodeFix(CorrectionMessages.UnimplementedMethodsCorrectionProposal_description, root,
+         return new UnimplementedCodeFix(CorrectionMessages.INSTANCE.UnimplementedMethodsCorrectionProposal_description(), root,
             new CompilationUnitRewriteOperation[]{operation});
       }
       else
@@ -142,7 +143,7 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
             public CompilationUnitChange createChange(IProgressMonitor progressMonitor) throws CoreException
             {
                CompilationUnitChange change =
-                  new CompilationUnitChange(CorrectionMessages.UnimplementedMethodsCorrectionProposal_description)
+                  new CompilationUnitChange(CorrectionMessages.INSTANCE.UnimplementedMethodsCorrectionProposal_description())
                   {
                      @Override
                      public Change perform(IProgressMonitor pm) throws CoreException
@@ -167,13 +168,13 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
 
             public String getDisplayString()
             {
-               return CorrectionMessages.UnimplementedMethodsCorrectionProposal_description;
+               return CorrectionMessages.INSTANCE.UnimplementedMethodsCorrectionProposal_description();
             }
 
             public IStatus getStatus()
             {
                return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID,
-                  CorrectionMessages.UnimplementedCodeFix_DependenciesStatusMessage);
+                  CorrectionMessages.INSTANCE.UnimplementedCodeFix_DependenciesStatusMessage());
             }
          };
       }
@@ -188,9 +189,11 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
       TypeDeclaration typeDeclaration = (TypeDeclaration)typeNode;
       MakeTypeAbstractOperation operation = new MakeTypeAbstractOperation(typeDeclaration);
 
-      String label =
-         Messages.format(CorrectionMessages.ModifierCorrectionSubProcessor_addabstract_description,
-            BasicElementLabels.getJavaElementName(typeDeclaration.getName().getIdentifier()));
+      //TODO
+      String label =CorrectionMessages.INSTANCE.ModifierCorrectionSubProcessor_addabstract_description(
+       typeDeclaration.getName().getIdentifier());
+//         CorrectionMessages.INSTANCE.ModifierCorrectionSubProcessor_addabstract_description(
+//            BasicElementLabels.getJavaElementName(typeDeclaration.getName().getIdentifier()));
       return new UnimplementedCodeFix(label, root, new CompilationUnitRewriteOperation[]{operation});
    }
 

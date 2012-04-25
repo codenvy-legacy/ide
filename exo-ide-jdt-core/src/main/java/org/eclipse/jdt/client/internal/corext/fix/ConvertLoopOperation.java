@@ -62,20 +62,19 @@ public abstract class ConvertLoopOperation extends CompilationUnitRewriteOperati
 
    public abstract IStatus satisfiesPreconditions();
 
-   protected abstract Statement convert(CompilationUnitRewrite cuRewrite, TextEditGroup group,
-      LinkedProposalModel positionGroups) throws CoreException;
+   protected abstract Statement convert(CompilationUnitRewrite cuRewrite, TextEditGroup group) throws CoreException;
 
    protected ForStatement getForStatement()
    {
       return fStatement;
    }
 
-   protected Statement getBody(CompilationUnitRewrite cuRewrite, TextEditGroup group, LinkedProposalModel positionGroups)
+   protected Statement getBody(CompilationUnitRewrite cuRewrite, TextEditGroup group)
       throws CoreException
    {
       if (fOperation != null)
       {
-         return fOperation.convert(cuRewrite, group, positionGroups);
+         return fOperation.convert(cuRewrite, group);
       }
       else
       {
