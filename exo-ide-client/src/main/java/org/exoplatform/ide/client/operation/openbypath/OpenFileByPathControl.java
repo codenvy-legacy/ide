@@ -27,10 +27,15 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -45,7 +50,7 @@ import java.util.List;
  */
 @RolesAllowed({"administrators", "developers"})
 public class OpenFileByPathControl extends SimpleControl implements IDEControl, VfsChangedHandler,
-   ItemsSelectedHandler, ProjectOpenedHandler, ProjectClosedHandler
+   ItemsSelectedHandler, ProjectOpenedHandler, ProjectClosedHandler, ViewVisibilityChangedHandler
 {
 
    private final static String ID = "File/Open File By Path...";
@@ -60,6 +65,10 @@ public class OpenFileByPathControl extends SimpleControl implements IDEControl, 
    private VirtualFileSystemInfo vfsInfo = null;
 
    private boolean isProjectOpened = false;
+
+   private boolean isBrowserPanelVisible;
+
+   private boolean isProjectExplorerVisible;
 
    /**
     * 
@@ -84,6 +93,7 @@ public class OpenFileByPathControl extends SimpleControl implements IDEControl, 
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
    }
 
    /**
@@ -101,13 +111,26 @@ public class OpenFileByPathControl extends SimpleControl implements IDEControl, 
     */
    private void updateState()
    {
-      if (vfsInfo == null || !isProjectOpened)
+      if (vfsInfo == null)
       {
          setVisible(false);
          return;
       }
 
-      setVisible(isProjectOpened);
+      if (!isProjectOpened && isProjectExplorerVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      if (!isBrowserPanelVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      setVisible(true);
+
       setEnabled(selectedItems.size() > 0);
    }
 
@@ -138,6 +161,27 @@ public class OpenFileByPathControl extends SimpleControl implements IDEControl, 
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       isProjectOpened = true;
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      View view = event.getView();
+
+      if (view instanceof NavigatorDisplay || view instanceof ProjectExplorerDisplay)
+      {
+         isBrowserPanelVisible = view.isViewVisible();
+
+         if (view instanceof ProjectExplorerDisplay)
+         {
+            isProjectExplorerVisible = view.isViewVisible();
+         }
+      }
+
       updateState();
    }
 
