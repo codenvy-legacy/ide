@@ -38,6 +38,10 @@ public class Statusbar extends AbstractTestModule
       String CURSOR_POSITION_LOCATOR = "//div[@control-id='__editor_cursor_position']";
 
       String NAVIGATION_STATUS_LOCATOR = "//div[@control-id='__navigator_status']";
+
+      String BUILD_FAILED_STATUS_LOCATOR =
+         "div[control-id='__request-notification-control'][title='Building of project failed']";
+
    }
 
    @FindBy(xpath = Locators.CURSOR_POSITION_LOCATOR)
@@ -45,6 +49,9 @@ public class Statusbar extends AbstractTestModule
 
    @FindBy(xpath = Locators.NAVIGATION_STATUS_LOCATOR)
    private WebElement navigationStatus;
+
+   @FindBy(css = Locators.BUILD_FAILED_STATUS_LOCATOR)
+   private WebElement buildFailStatus;
 
    /**
     * Get cursor position.
@@ -86,6 +93,24 @@ public class Statusbar extends AbstractTestModule
          public Boolean apply(WebDriver arg0)
          {
             return (position.equals(getCursorPosition()));
+         }
+      });
+   }
+
+   /**
+    * wait appearance failed build message
+    * on status bar
+    * 
+    */
+   public void waitBuildFailStatus()
+   {
+      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver arg0)
+         {
+            return buildFailStatus != null && buildFailStatus.isDisplayed();
          }
       });
    }
