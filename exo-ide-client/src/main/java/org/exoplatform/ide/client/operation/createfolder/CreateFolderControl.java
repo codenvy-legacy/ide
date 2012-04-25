@@ -22,6 +22,8 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -31,12 +33,16 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +55,7 @@ import java.util.List;
  */
 @RolesAllowed({"administrators", "developers"})
 public class CreateFolderControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   ViewActivatedHandler, ProjectOpenedHandler, ProjectClosedHandler
+   ViewActivatedHandler, ViewVisibilityChangedHandler, ProjectOpenedHandler, ProjectClosedHandler, VfsChangedHandler
 {
 
    private boolean browserPanelSelected = true;
@@ -65,6 +71,15 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    private boolean isProjectOpened = false;
 
    /**
+    * Current workspace's href.
+    */
+   private VirtualFileSystemInfo vfsInfo;
+
+   private boolean isBrowserPanelVisible;
+
+   private boolean isProjectExplorerVisible;
+
+   /**
     * 
     */
    public CreateFolderControl()
@@ -75,7 +90,7 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
       setImages(IDEImageBundle.INSTANCE.newFolder(), IDEImageBundle.INSTANCE.newFolderDisabled());
       setEvent(new CreateFolderEvent());
 
-      updateEnabling();
+      updateState();
    }
 
    /**
@@ -84,23 +99,38 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    @Override
    public void initialize()
    {
-      // IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    /**
     * 
     */
-   private void updateEnabling()
+   private void updateState()
    {
-      if (!isProjectOpened)
+      if (vfsInfo == null)
       {
          setVisible(false);
          return;
       }
+
+      if (!isProjectOpened && isProjectExplorerVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      if (!isBrowserPanelVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      setVisible(true);
 
       if (!browserPanelSelected)
       {
@@ -137,7 +167,7 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
          browserPanelSelected = false;
       }
 
-      updateEnabling();
+      updateState();
    }
 
    @Override
@@ -152,7 +182,28 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
          browserPanelSelected = false;
       }
 
-      updateEnabling();
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      View view = event.getView();
+
+      if (view instanceof NavigatorDisplay || view instanceof ProjectExplorerDisplay)
+      {
+         isBrowserPanelVisible = view.isViewVisible();
+
+         if (view instanceof ProjectExplorerDisplay)
+         {
+            isProjectExplorerVisible = view.isViewVisible();
+         }
+      }
+
+      updateState();
    }
 
    /**
@@ -162,7 +213,7 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    public void onProjectClosed(ProjectClosedEvent event)
    {
       isProjectOpened = false;
-      updateEnabling();
+      updateState();
    }
 
    /**
@@ -172,7 +223,16 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       isProjectOpened = true;
-      setVisible(true);
+      updateState();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      vfsInfo = event.getVfsInfo();
+      updateState();
+   }
 }
