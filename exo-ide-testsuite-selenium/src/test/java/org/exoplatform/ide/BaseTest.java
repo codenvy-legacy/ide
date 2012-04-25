@@ -180,7 +180,7 @@ public abstract class BaseTest
             driver = new ChromeDriver(capabilities);
 
             // driver = new ChromeDriver(options);
-            System.out.println("BaseTest.start()1");
+           
 
             break;
          case IE_EXPLORE_PROXY :
@@ -193,8 +193,7 @@ public abstract class BaseTest
       selenium = new WebDriverBackedSelenium(driver, APPLICATION_URL);
 
       IDE = new IDE(selenium(), ENTRY_POINT_URL + WS_NAME + "/", driver);
-      System.out.println("BaseTest.start()2");
-      try
+       try
       {
 
          if (IDE_SETTINGS.getString("selenium.browser.commad").equals("CHROME"))
@@ -202,7 +201,6 @@ public abstract class BaseTest
             driver.manage().window().maximize();
          }
          driver.get(APPLICATION_URL);
-         System.out.println("BaseTest.start()3");
          waitIdeLoginPage();
 
          if (isRunIdeUnderPortal())

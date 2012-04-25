@@ -29,8 +29,8 @@ import javax.ws.rs.core.Application;
  */
 public class ExpressApplication extends Application
 {
-   private Set<Class<?>> classes;
-   private Set<Object> singletons;
+   private final Set<Class<?>> classes;
+   private final Set<Object> singletons;
 
    public ExpressApplication()
    {

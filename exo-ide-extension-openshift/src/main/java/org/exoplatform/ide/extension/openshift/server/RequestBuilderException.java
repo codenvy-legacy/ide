@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,27 +19,19 @@
 package org.exoplatform.ide.extension.openshift.server;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-class RHCloudCredentials
+@SuppressWarnings("serial")
+public final class RequestBuilderException extends RuntimeException
 {
-   private final String rhlogin;
-   private final String password;
-
-   RHCloudCredentials(String rhlogin, String password)
+   public RequestBuilderException(String message)
    {
-      this.rhlogin = rhlogin;
-      this.password = password;
+      super(message);
    }
 
-   public String getRhlogin()
+   public RequestBuilderException(String message, Throwable cause)
    {
-      return rhlogin;
-   }
-
-   public String getPassword()
-   {
-      return password;
+      super(message, cause);
    }
 }

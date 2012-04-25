@@ -53,6 +53,8 @@ public class CodeAssistantJava extends AbstractTestModule
    private static final String ELEMENT_LOCATOR = PANEL + "//div[text()='%s']";
 
    private static final String SUBSTITUTE_ELEMENT = PANEL + "//div[text()='%s']";
+   
+   private static final String AUTOCOMPLETE_PROPOSAL = "//div[@class='gwt-HTML' and text()='%s']";
 
    /**
     * Xpath autocompletion input locator.
@@ -167,6 +169,27 @@ public class CodeAssistantJava extends AbstractTestModule
       }
    }
 
+   
+   
+   /**
+    * Move cursor down
+    * 
+    * @param row Number of rows to move down
+    * @throws InterruptedException
+    */
+   public void moveCursorUp(int row) throws InterruptedException
+   {
+      for (int i = 0; i < row; i++)
+      {
+         selectProposalPanel();
+         new Actions(driver()).sendKeys(Keys.UP.toString()).build().perform();
+         //input.sendKeys(Keys.DOWN.toString());
+         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      }
+   }
+   
+   
+   
    /**
     * Clear input field of Autocompletion form
     */
@@ -217,12 +240,34 @@ public class CodeAssistantJava extends AbstractTestModule
    {
       // RETURN key is used instead of ENTER because
       // of issue http://code.google.com/p/selenium/issues/detail?id=2180
-      new Actions(driver()).sendKeys(Keys.ENTER.toString()).build().perform();
-      new Actions(driver()).sendKeys(Keys.ENTER.toString()).build().perform();
+      new Actions(driver()).sendKeys(Keys.RETURN.toString()).build().perform();
       //input.sendKeys(Keys.RETURN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
    }
 
+   
+
+   
+   /**
+    * double click on selected item
+    * in java autocomplete form
+    * @param parameter
+    * @throws InterruptedException
+    */
+   public void doudleClickSelectedItem(String parameter) throws InterruptedException
+   {
+      // RETURN key is used instead of ENTER because
+      // of issue http://code.google.com/p/selenium/issues/detail?id=2180
+      
+      WebElement prop = driver().findElement(By.xpath(String.format(AUTOCOMPLETE_PROPOSAL, parameter)));
+      new Actions (driver()).doubleClick(prop).build().perform();
+      //input.sendKeys(Keys.RETURN);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+   }
+   
+   
+   
+   
    /**
     * Open Autocompletion Form
     * 

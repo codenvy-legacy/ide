@@ -27,7 +27,7 @@ import java.util.List;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class RHUserInfoBean implements RHUserInfo
+public class RHUserInfoImpl implements RHUserInfo
 {
    private String rhcDomain;
 
@@ -39,7 +39,7 @@ public class RHUserInfoBean implements RHUserInfo
 
    private List<AppInfo> apps;
 
-   public RHUserInfoBean(String rhcDomain, String uuid, String rhlogin, String namespace)
+   public RHUserInfoImpl(String rhcDomain, String uuid, String rhlogin, String namespace)
    {
       this.rhcDomain = rhcDomain;
       this.uuid = uuid;
@@ -47,7 +47,7 @@ public class RHUserInfoBean implements RHUserInfo
       this.namespace = namespace;
    }
 
-   public RHUserInfoBean()
+   public RHUserInfoImpl()
    {
    }
 
@@ -147,7 +147,12 @@ public class RHUserInfoBean implements RHUserInfo
    @Override
    public String toString()
    {
-      return "RHUserInfoBean [rhcDomain=" + rhcDomain + ", uuid=" + uuid + ", rhlogin=" + rhlogin + ", namespace="
-         + namespace + "]";
+      return "RHUserInfoImpl{" +
+         "rhcDomain='" + rhcDomain + '\'' +
+         ", uuid='" + uuid + '\'' +
+         ", rhlogin='" + rhlogin + '\'' +
+         ", namespace='" + namespace + '\'' +
+         ", apps=" + apps +
+         '}';
    }
 }

@@ -46,7 +46,7 @@ public class NewFileControl extends SimpleControl implements IDEControl, ViewVis
    VfsChangedHandler, ItemsSelectedHandler
 {
 
-   private VirtualFileSystemInfo vfsInfo = null;
+   private VirtualFileSystemInfo vfsInfo;
 
    private List<Item> selectedItems = new ArrayList<Item>();
 

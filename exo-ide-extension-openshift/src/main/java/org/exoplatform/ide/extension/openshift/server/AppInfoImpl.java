@@ -24,7 +24,7 @@ import org.exoplatform.ide.extension.openshift.shared.AppInfo;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class AppInfoBean implements AppInfo
+public class AppInfoImpl implements AppInfo
 {
    private String name;
 
@@ -36,7 +36,7 @@ public class AppInfoBean implements AppInfo
 
    private double creationTime;
 
-   public AppInfoBean(String name, String type, String gitUrl, String publicUrl, long creationTime)
+   public AppInfoImpl(String name, String type, String gitUrl, String publicUrl, long creationTime)
    {
       this.name = name;
       this.type = type;
@@ -45,7 +45,7 @@ public class AppInfoBean implements AppInfo
       this.creationTime = creationTime;
    }
 
-   public AppInfoBean()
+   public AppInfoImpl()
    {
    }
 
