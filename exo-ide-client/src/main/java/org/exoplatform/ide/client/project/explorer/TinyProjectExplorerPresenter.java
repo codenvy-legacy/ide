@@ -95,6 +95,8 @@ import org.exoplatform.ide.client.operation.cutcopy.CutItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.PasteItemsEvent;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemEvent;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
 import org.exoplatform.ide.vfs.client.event.ItemLockedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemLockedHandler;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
@@ -110,6 +112,7 @@ import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Lock;
 
 import java.util.ArrayList;
@@ -132,13 +135,19 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowProjectExplorerHandler,
    ItemsSelectedHandler, ViewActivatedHandler, OpenProjectHandler, VfsChangedHandler, CloseProjectHandler,
    AllFilesClosedHandler, GoToFolderHandler, EditorActiveFileChangedHandler, IDELoadCompleteHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler, ShowHideHiddenFilesHandler
+   EditorFileOpenedHandler, EditorFileClosedHandler, ShowHideHiddenFilesHandler, ItemDeletedHandler
 {
 
    private static final String DEFAULT_TITLE = "Project Explorer";
 
    private static final String RECEIVE_CHILDREN_ERROR_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
       .workspaceReceiveChildrenError();
+
+
+   /**
+    * Comparator for ordering projects by name.
+    */
+   private static final Comparator<ProjectModel> PROJECT_COMPARATOR = new ProjectComparator();
 
    private ProjectExplorerDisplay display;
 
@@ -183,6 +192,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
       IDE.addHandler(ShowHideHiddenFilesEvent.TYPE, this);
+      IDE.addHandler(ItemDeletedEvent.TYPE, this);
    }
 
    private void ensureProjectExplorerDisplayCreated()
@@ -242,6 +252,18 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
       display.getLinkWithEditorButton().addClickHandler(linkWithEditorButtonClickHandler);
       display.setLinkWithEditorButtonSelected(linkingWithEditor);
+
+      display.getProjectsListGrid().addDoubleClickHandler(new DoubleClickHandler()
+      {
+         public void onDoubleClick(DoubleClickEvent event)
+         {
+            List<ProjectModel> projectsList = display.getSelectedProjects();
+            if (projectsList.size() == 1)
+            {
+               IDE.fireEvent(new OpenProjectEvent(projectsList.get(0)));
+            }
+         }
+      });
    }
 
    /**
@@ -739,7 +761,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
       if (openedProject == null)
       {
-         display.setProjectExplorerTreeVisible(true);
+         display.setProjectExplorerTreeVisible(false);
+         refreshProjectsList();
       }
       else
       {
@@ -756,6 +779,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
 
       display.setProjectExplorerTreeVisible(false);
+      refreshProjectsList();
       display.asView().setTitle(DEFAULT_TITLE);
    }
 
@@ -795,6 +819,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          display.getBrowserTree().setValue(null);
          display.asView().setTitle(DEFAULT_TITLE);
          display.setProjectExplorerTreeVisible(false);
+         refreshProjectsList();
          display.setLinkWithEditorButtonEnabled(false);
       }
 
@@ -1071,4 +1096,69 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          refreshNextFolder();
       }
    }
+
+   /**
+    * Refreshes the list of existing projects in project explorer.
+    */
+   private void refreshProjectsList()
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().getChildren(VirtualFileSystem.getInstance().getInfo().getRoot(),
+            ItemType.PROJECT, new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
+            {
+               @Override
+               protected void onSuccess(List<Item> result)
+               {
+                  List<ProjectModel> projects = new ArrayList<ProjectModel>();
+                  for (Item item : result)
+                  {
+                     if (item instanceof ProjectModel)
+                     {
+                        projects.add((ProjectModel)item);
+                     }
+                  }
+
+                  Collections.sort(projects, PROJECT_COMPARATOR);
+                  display.getProjectsListGrid().setValue(projects);
+
+                  if (projects.size() == 0)
+                  {
+                     display.setProjectsListGridVisible(false);
+                  }
+                  else
+                  {
+                     display.setProjectsListGridVisible(true);
+                  }
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, "Searching of projects failed."));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e, "Searching of projects failed."));
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.client.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ide.vfs.client.event.ItemDeletedEvent)
+    */
+   @Override
+   public void onItemDeleted(ItemDeletedEvent event)
+   {
+      if (event.getItem() instanceof ProjectModel)
+      {
+         // if any project is opened then projects list will be refreshed when the project will be closed
+         if (openedProject == null)
+         {
+            refreshProjectsList();
+         }
+      }
+   }
+
 }
