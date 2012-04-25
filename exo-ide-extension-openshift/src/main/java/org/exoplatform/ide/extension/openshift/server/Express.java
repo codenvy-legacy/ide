@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.extension.openshift.server;
 
-import org.everrest.core.impl.provider.json.JsonException;
-import org.everrest.core.impl.provider.json.JsonParser;
-import org.everrest.core.impl.provider.json.JsonValue;
-import org.everrest.core.impl.provider.json.JsonWriter;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
@@ -51,26 +47,20 @@ import org.exoplatform.services.security.ConversationState;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -82,36 +72,16 @@ import javax.ws.rs.core.MediaType;
  */
 public class Express
 {
-   private static String EXPRESS_API = "https://openshift.redhat.com/broker";
-
-   public static Set<String> APP_TYPES = new HashSet<String>(Arrays.asList( //
-      "php-5.3", //
-      //"wsgi-3.2.1", //
-      "ruby-1.8") //
-      );
-
-   //   private static Set<String> APP_TYPES = new HashSet<String>(Arrays.asList( //
-   //      "php-5.3.2", //
-   //      "wsgi-3.2.1", //
-   //      "jbossas-7.0.0", //
-   //      "perl-5.10.1", //
-   //      "rack-1.1.0") //
-   //      );
-   private static final Pattern TD_DATE_FORMAT = Pattern
-      .compile("(\\d{4})-(\\d{2})-(\\d{2})[Tt](\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d{1,3}))?([+-])((\\d{2}):(\\d{2}))");
-
+   private static final String EXPRESS_API = "https://openshift.redhat.com/broker";
    private static final Pattern GIT_URL_PATTERN = Pattern
-      .compile("ssh://(\\w+)@(\\w+)-(\\w+)\\.rhcloud\\.com/\\~/git/(\\w+)\\.git/");
-
-   private SshKeyProvider keyProvider;
-
-   private String workspace;
-
-   private String config = "/ide-home/users/";
+      .compile("ssh://(\\w+)@(\\w+)-(\\w+)\\.rhcloud\\.com/~/git/(\\w+)\\.git/");
 
    private final boolean debug = false;
-
    private final VirtualFileSystemRegistry vfsRegistry;
+
+   private final SshKeyProvider keyProvider;
+   private final String workspace;
+   private String config = "/ide-home/users/";
 
    public Express(VirtualFileSystemRegistry vfsRegistry, SshKeyProvider keyProvider, InitParams initParams)
    {
@@ -135,39 +105,26 @@ public class Express
          this.config = config;
          if (!this.config.endsWith("/"))
          {
-            this.config += "/";
+            this.config += '/';
          }
       }
    }
 
-   public void login(String rhlogin, String password) throws ExpressException, IOException, VirtualFileSystemException
+   public void login(String rhlogin, String password) throws ExpressException, IOException,
+      ParsingResponseException, VirtualFileSystemException
    {
-      StringWriter body = new StringWriter();
-      JsonWriter jsonWriter = new JsonWriter(body);
-      try
-      {
-         jsonWriter.writeStartObject();
-         jsonWriter.writeKey("rhlogin");
-         jsonWriter.writeString(rhlogin);
-         jsonWriter.writeKey("debug");
-         jsonWriter.writeString(Boolean.toString(debug));
-         jsonWriter.writeEndObject();
-      }
-      catch (JsonException jsone)
-      {
-         // Must not happen if use JsonWriter correctly.
-         throw new RuntimeException(jsone.getMessage(), jsone);
-      }
-
+      String data = new JsonRequestBuilder()
+         .addProperty("rhlogin", rhlogin)
+         .addProperty("debug", Boolean.toString(debug))
+         .build();
       URL url = new URL(EXPRESS_API + "/userinfo");
       HttpURLConnection http = (HttpURLConnection)url.openConnection();
       try
       {
          http.setDoOutput(true);
          http.setRequestMethod("POST");
-         http.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
 
-         writeFormData(http, body.toString(), password);
+         writeFormData(http, data, password);
 
          int status = http.getResponseCode();
          if (status != 200)
@@ -197,7 +154,7 @@ public class Express
    }
 
    public void createDomain(String namespace, boolean alter) throws ExpressException, IOException,
-      VirtualFileSystemException
+      ParsingResponseException, VirtualFileSystemException
    {
       RHCloudCredentials rhCloudCredentials = readCredentials();
       if (rhCloudCredentials == null)
@@ -208,11 +165,11 @@ public class Express
    }
 
    private void createDomain(RHCloudCredentials rhCloudCredentials, String namespace, boolean alter)
-      throws ExpressException, IOException, VirtualFileSystemException
+      throws ExpressException, IOException, ParsingResponseException, VirtualFileSystemException
    {
       final String host = "rhcloud.com";
 
-      SshKey publicKey = null;
+      SshKey publicKey;
       if (alter)
       {
          // Update SSH keys.
@@ -230,28 +187,14 @@ public class Express
          }
       }
 
-      StringWriter body = new StringWriter();
-      JsonWriter jsonWriter = new JsonWriter(body);
-      try
-      {
-         jsonWriter.writeStartObject();
-         jsonWriter.writeKey("namespace");
-         jsonWriter.writeString(namespace);
-         jsonWriter.writeKey("rhlogin");
-         jsonWriter.writeString(rhCloudCredentials.getRhlogin());
-         jsonWriter.writeKey("debug");
-         jsonWriter.writeString(Boolean.toString(debug));
-         jsonWriter.writeKey("alter");
-         jsonWriter.writeString(Boolean.toString(alter));
-         jsonWriter.writeKey("ssh");
-         jsonWriter.writeString(readSshKeyBody(publicKey));
-         jsonWriter.writeEndObject();
-      }
-      catch (JsonException jsone)
-      {
-         // Must not happen if use JsonWriter correctly.
-         throw new RuntimeException(jsone.getMessage(), jsone);
-      }
+      String data = new JsonRequestBuilder()
+         .addProperty("namespace", namespace)
+         .addProperty("rhlogin", rhCloudCredentials.getRhlogin())
+         .addProperty("debug", Boolean.toString(debug))
+         .addProperty("alter", Boolean.toString(alter))
+         .addProperty("ssh", readSshKeyBody(publicKey))
+         .addProperty("key_type", readSshKeyType(publicKey))
+         .build();
 
       URL url = new URL(EXPRESS_API + "/domain");
       HttpURLConnection http = (HttpURLConnection)url.openConnection();
@@ -259,9 +202,8 @@ public class Express
       {
          http.setDoOutput(true);
          http.setRequestMethod("POST");
-         http.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
 
-         writeFormData(http, body.toString(), rhCloudCredentials.getPassword());
+         writeFormData(http, data, rhCloudCredentials.getPassword());
 
          int status = http.getResponseCode();
          if (status != 200)
@@ -278,25 +220,6 @@ public class Express
    public AppInfo createApplication(String app, String type, File workDir) throws ExpressException, IOException,
       ParsingResponseException, VirtualFileSystemException
    {
-      if (!APP_TYPES.contains(type))
-      {
-         StringBuilder msg = new StringBuilder();
-         msg.append("Unsupported application type ");
-         msg.append(type);
-         msg.append(". Must be ");
-         int i = 0;
-         for (String t : APP_TYPES)
-         {
-            if (i > 0)
-            {
-               msg.append(" or ");
-            }
-            msg.append(t);
-            i++;
-         }
-         throw new IllegalArgumentException(msg.toString());
-      }
-
       RHCloudCredentials rhCloudCredentials = readCredentials();
       if (rhCloudCredentials == null)
       {
@@ -308,28 +231,14 @@ public class Express
    private AppInfo createApplication(RHCloudCredentials rhCloudCredentials, String app, String type, File workDir)
       throws ExpressException, IOException, ParsingResponseException
    {
-      StringWriter body = new StringWriter();
-      JsonWriter jsonWriter = new JsonWriter(body);
-      try
-      {
-         jsonWriter.writeStartObject();
-         jsonWriter.writeKey("action");
-         jsonWriter.writeString("configure");
-         jsonWriter.writeKey("rhlogin");
-         jsonWriter.writeString(rhCloudCredentials.getRhlogin());
-         jsonWriter.writeKey("debug");
-         jsonWriter.writeString(Boolean.toString(debug));
-         jsonWriter.writeKey("app_name");
-         jsonWriter.writeString(app);
-         jsonWriter.writeKey("cartridge");
-         jsonWriter.writeString(type);
-         jsonWriter.writeEndObject();
-      }
-      catch (JsonException jsone)
-      {
-         // Must not happen if use JsonWriter correctly.
-         throw new RuntimeException(jsone.getMessage(), jsone);
-      }
+      validateAppType(type, rhCloudCredentials);
+      String data = new JsonRequestBuilder()
+         .addProperty("action", "configure")
+         .addProperty("rhlogin", rhCloudCredentials.getRhlogin())
+         .addProperty("debug", Boolean.toString(debug))
+         .addProperty("app_name", app)
+         .addProperty("cartridge", type)
+         .build();
 
       URL url = new URL(EXPRESS_API + "/cartridge");
       HttpURLConnection http = (HttpURLConnection)url.openConnection();
@@ -337,9 +246,8 @@ public class Express
       {
          http.setDoOutput(true);
          http.setRequestMethod("POST");
-         http.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
 
-         writeFormData(http, body.toString(), rhCloudCredentials.getPassword());
+         writeFormData(http, data, rhCloudCredentials.getPassword());
 
          int status = http.getResponseCode();
          if (status != 200)
@@ -376,6 +284,30 @@ public class Express
       finally
       {
          http.disconnect();
+      }
+   }
+
+   private void validateAppType(String type, RHCloudCredentials rhCloudCredentials) throws ParsingResponseException,
+      IOException, ExpressException
+   {
+      Set<String> supportedTypes = frameworks(rhCloudCredentials);
+      if (!supportedTypes.contains(type))
+      {
+         StringBuilder msg = new StringBuilder();
+         msg.append("Unsupported application type ");
+         msg.append(type);
+         msg.append(". Must be ");
+         int i = 0;
+         for (String t : supportedTypes)
+         {
+            if (i > 0)
+            {
+               msg.append(" or ");
+            }
+            msg.append(t);
+            i++;
+         }
+         throw new IllegalArgumentException(msg.toString());
       }
    }
 
@@ -430,28 +362,14 @@ public class Express
       IOException, ParsingResponseException
    {
       AppInfo target = applicationInfo(rhCloudCredentials, app);
-      StringWriter body = new StringWriter();
-      JsonWriter jsonWriter = new JsonWriter(body);
-      try
-      {
-         jsonWriter.writeStartObject();
-         jsonWriter.writeKey("action");
-         jsonWriter.writeString("deconfigure");
-         jsonWriter.writeKey("rhlogin");
-         jsonWriter.writeString(rhCloudCredentials.getRhlogin());
-         jsonWriter.writeKey("debug");
-         jsonWriter.writeString(Boolean.toString(debug));
-         jsonWriter.writeKey("app_name");
-         jsonWriter.writeString(app);
-         jsonWriter.writeKey("cartridge");
-         jsonWriter.writeString(target.getType());
-         jsonWriter.writeEndObject();
-      }
-      catch (JsonException jsone)
-      {
-         // Must not happen if use JsonWriter correctly.
-         throw new RuntimeException(jsone.getMessage(), jsone);
-      }
+
+      String data = new JsonRequestBuilder()
+         .addProperty("action", "deconfigure")
+         .addProperty("rhlogin", rhCloudCredentials.getRhlogin())
+         .addProperty("debug", Boolean.toString(debug))
+         .addProperty("app_name", app)
+         .addProperty("cartridge", target.getType())
+         .build();
 
       URL url = new URL(EXPRESS_API + "/cartridge");
       HttpURLConnection http = (HttpURLConnection)url.openConnection();
@@ -459,14 +377,66 @@ public class Express
       {
          http.setDoOutput(true);
          http.setRequestMethod("POST");
-         http.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
 
-         writeFormData(http, body.toString(), rhCloudCredentials.getPassword());
+         writeFormData(http, data, rhCloudCredentials.getPassword());
 
          int status = http.getResponseCode();
          if (status != 200)
          {
             throw fault(http);
+         }
+      }
+      finally
+      {
+         http.disconnect();
+      }
+   }
+
+   public Set<String> frameworks() throws ExpressException, IOException, ParsingResponseException,
+      VirtualFileSystemException
+   {
+      RHCloudCredentials rhCloudCredentials = readCredentials();
+      if (rhCloudCredentials == null)
+      {
+         throw new ExpressException(200, "Authentication required.\n", "text/plain");
+      }
+      return frameworks(rhCloudCredentials);
+   }
+
+   private Set<String> frameworks(RHCloudCredentials rhCloudCredentials) throws ExpressException, IOException,
+      ParsingResponseException
+   {
+      String data = new JsonRequestBuilder()
+         .addProperty("rhlogin", rhCloudCredentials.getRhlogin())
+         .addProperty("cart_type", "standalone")
+         .addProperty("debug", Boolean.toString(debug))
+         .build();
+      URL url = new URL(EXPRESS_API + "/cartlist");
+      HttpURLConnection http = (HttpURLConnection)url.openConnection();
+      try
+      {
+         http.setDoOutput(true);
+         http.setRequestMethod("POST");
+
+         writeFormData(http, data, rhCloudCredentials.getPassword());
+
+         int status = http.getResponseCode();
+         if (status != 200)
+         {
+            throw fault(http);
+         }
+
+         InputStream in = null;
+         try
+         {
+            return new FrameworkListReader().readObject(in = http.getInputStream());
+         }
+         finally
+         {
+            if (in != null)
+            {
+               in.close();
+            }
          }
       }
       finally
@@ -489,22 +459,10 @@ public class Express
    private RHUserInfo userInfo(RHCloudCredentials rhCloudCredentials, boolean appsInfo) throws ExpressException,
       IOException, ParsingResponseException
    {
-      StringWriter body = new StringWriter();
-      JsonWriter jsonWriter = new JsonWriter(body);
-      try
-      {
-         jsonWriter.writeStartObject();
-         jsonWriter.writeKey("rhlogin");
-         jsonWriter.writeString(rhCloudCredentials.getRhlogin());
-         jsonWriter.writeKey("debug");
-         jsonWriter.writeString(Boolean.toString(debug));
-         jsonWriter.writeEndObject();
-      }
-      catch (JsonException jsone)
-      {
-         // Must not happen if use JsonWriter correctly.
-         throw new RuntimeException(jsone.getMessage(), jsone);
-      }
+      String data = new JsonRequestBuilder()
+         .addProperty("rhlogin", rhCloudCredentials.getRhlogin())
+         .addProperty("debug", Boolean.toString(debug))
+         .build();
 
       URL url = new URL(EXPRESS_API + "/userinfo");
       HttpURLConnection http = (HttpURLConnection)url.openConnection();
@@ -512,9 +470,8 @@ public class Express
       {
          http.setDoOutput(true);
          http.setRequestMethod("POST");
-         http.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
 
-         writeFormData(http, body.toString(), rhCloudCredentials.getPassword());
+         writeFormData(http, data, rhCloudCredentials.getPassword());
 
          int status = http.getResponseCode();
          if (status != 200)
@@ -525,63 +482,14 @@ public class Express
          InputStream in = null;
          try
          {
-            in = http.getInputStream();
-            JsonParser jsonParser = new JsonParser();
-            jsonParser.parse(in);
-            JsonValue resultJson = jsonParser.getJsonObject().getElement("data");
-
-            // Response in form :
-            // "data":"{\"user_info\":{\"rhc_domain\":\"rhcloud.com\", ... }
-            // result is String, why not JSON object ???
-            // Need parse twice :-(
-            String resultSrc = resultJson.getStringValue();
-            jsonParser.parse(new StringReader(resultSrc));
-
-            JsonValue userInfoJson = jsonParser.getJsonObject().getElement("user_info");
-            RHUserInfo rhUserInfo = new RHUserInfoBean( //
-               userInfoJson.getElement("rhc_domain").getStringValue(), //
-               userInfoJson.getElement("uuid").getStringValue(), //
-               userInfoJson.getElement("rhlogin").getStringValue(), //
-               userInfoJson.getElement("namespace").getStringValue() //
-               );
-
-            if (appsInfo)
-            {
-               JsonValue appsInfoJson = jsonParser.getJsonObject().getElement("app_info");
-               if (appsInfoJson != null)
-               {
-                  // Result in form : 
-                  // {"firstapp":{"creation_time":"2011-06-02T07:44:16-04:00","framework":"php-5.3.2"}}
-                  Iterator<String> keys = appsInfoJson.getKeys();
-                  List<AppInfo> l = new ArrayList<AppInfo>();
-                  while (keys.hasNext())
-                  {
-                     String app = keys.next();
-                     JsonValue appData = appsInfoJson.getElement(app);
-                     String type = appData.getElement("framework").getStringValue();
-                     String uuid = appData.getElement("uuid").getStringValue();
-                     Calendar created = parseDate(appData.getElement("creation_time").getStringValue());
-                     l.add(new AppInfoBean( //
-                        app, //
-                        type, //
-                        gitUrl(rhUserInfo, app, uuid), //
-                        publicUrl(rhUserInfo, app), //
-                        created != null ? created.getTimeInMillis() : -1 //
-                     ));
-                  }
-                  rhUserInfo.setApps(l);
-               }
-            }
-            return rhUserInfo;
-         }
-         catch (JsonException jsone)
-         {
-            throw new ParsingResponseException(jsone.getMessage(), jsone);
+            return new UserInfoReader(appsInfo).readObject(in = http.getInputStream());
          }
          finally
          {
             if (in != null)
+            {
                in.close();
+            }
          }
       }
       finally
@@ -600,13 +508,13 @@ public class Express
          ContentStream content = vfs.getContent(keyPath, null);
          return readCredentials(content);
       }
-      catch (ItemNotFoundException e)
+      catch (ItemNotFoundException ignored)
       {
       }
       return null;
    }
 
-   private RHCloudCredentials readCredentials(ContentStream content) throws VirtualFileSystemException, IOException
+   private RHCloudCredentials readCredentials(ContentStream content) throws IOException
    {
       InputStream in = content.getStream();
       BufferedReader r = new BufferedReader(new InputStreamReader(content.getStream()));
@@ -631,9 +539,9 @@ public class Express
       {
          Item credentialsFile =
             vfs.getItemByPath(expressConfig.createPath("rhcloud-credentials"), null, PropertyFilter.NONE_FILTER);
-         InputStream newcontent =
+         InputStream newContent =
             new ByteArrayInputStream((credentials.getRhlogin() + "\n" + credentials.getPassword()).getBytes());
-         vfs.updateContent(credentialsFile.getId(), MediaType.TEXT_PLAIN_TYPE, newcontent, null);
+         vfs.updateContent(credentialsFile.getId(), MediaType.TEXT_PLAIN_TYPE, newContent, null);
       }
       catch (ItemNotFoundException e)
       {
@@ -653,7 +561,7 @@ public class Express
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String expressPath = config + user + "/express";
       VirtualFileSystemInfo info = vfs.getInfo();
-      Folder expressConfig = null;
+      Folder expressConfig;
       try
       {
          Item item = vfs.getItemByPath(expressPath, null, PropertyFilter.NONE_FILTER);
@@ -679,23 +587,6 @@ public class Express
       vfs.delete(credentialsFile.getId(), null);
    }
 
-   private static String gitUrl(RHUserInfo userInfo, String app, String uuid)
-   {
-      StringBuilder sb = new StringBuilder();
-      sb.append("ssh://");
-      sb.append(uuid);
-      sb.append('@');
-      sb.append(app);
-      sb.append('-');
-      sb.append(userInfo.getNamespace());
-      sb.append('.');
-      sb.append(userInfo.getRhcDomain());
-      sb.append("/~/git/");
-      sb.append(app);
-      sb.append(".git/");
-      return sb.toString();
-   }
-
    private static String detectAppName(File workDir)
    {
       String app = null;
@@ -719,9 +610,9 @@ public class Express
                git.close();
             }
          }
-         for (Iterator<Remote> iter = remotes.iterator(); iter.hasNext() && app == null;)
+         for (Iterator<Remote> iterator = remotes.iterator(); iterator.hasNext() && app == null; )
          {
-            Remote r = iter.next();
+            Remote r = iterator.next();
             Matcher m = GIT_URL_PATTERN.matcher(r.getUrl());
             if (m.matches())
             {
@@ -737,86 +628,23 @@ public class Express
       return app;
    }
 
-   private static String publicUrl(RHUserInfo userInfo, String app)
+   private static ExpressException fault(HttpURLConnection http) throws IOException, ParsingResponseException
    {
-      StringBuilder sb = new StringBuilder();
-      sb.append("http://");
-      sb.append(app);
-      sb.append('-');
-      sb.append(userInfo.getNamespace());
-      sb.append('.');
-      sb.append(userInfo.getRhcDomain());
-      sb.append('/');
-      return sb.toString();
-   }
-
-   private static ExpressException fault(HttpURLConnection http) throws IOException
-   {
-      final String contentType = http.getContentType();
-      final int responseCode = http.getResponseCode();
-      final int length = http.getContentLength();
-      String msg = null;
-      int exitCode = -1;
-      if (length != 0)
+      InputStream in = null;
+      try
       {
-         InputStream in = null;
-         try
+         return new ErrorReader(http.getResponseCode(), http.getContentType()).readObject(in = http.getErrorStream());
+      }
+      finally
+      {
+         if (in != null)
          {
-            in = http.getErrorStream();
-            if (length > 0)
-            {
-               byte[] b = new byte[length];
-               for (int point = -1, off = 0; (point = in.read(b, off, length - off)) > 0; off += point) //
-               ;
-               in.read(b);
-               msg = new String(b);
-            }
-            else
-            {
-               // Unknown length of response.
-               ByteArrayOutputStream bout = new ByteArrayOutputStream();
-               byte[] b = new byte[1024];
-               int point = -1;
-               while ((point = in.read(b)) != -1)
-               {
-                  bout.write(b, 0, point);
-               }
-               msg = new String(bout.toByteArray());
-            }
-         }
-         finally
-         {
-            if (in != null)
-               in.close();
-         }
-         if (contentType.startsWith("application/json")) // May have '; charset=utf-8'
-         {
-            try
-            {
-               JsonParser jsonParser = new JsonParser();
-               jsonParser.parse(new StringReader(msg));
-               JsonValue resultJson = jsonParser.getJsonObject().getElement("result");
-               if (resultJson != null)
-               {
-                  msg = resultJson.getStringValue();
-               }
-               JsonValue exitCodeJson = jsonParser.getJsonObject().getElement("exit_code");
-               if (exitCodeJson != null)
-               {
-                  exitCode = exitCodeJson.getIntValue();
-               }
-               return new ExpressException(responseCode, exitCode, msg, "text/plain");
-            }
-            catch (JsonException ignored)
-            {
-               // Cannot parse JSON send as is.
-            }
+            in.close();
          }
       }
-      return new ExpressException(responseCode, exitCode, msg, contentType);
    }
 
-   private static String readSshKeyBody(SshKey sshKey) throws IOException
+   private static String readSshKeyBody(SshKey sshKey)
    {
       byte[] b = sshKey.getBytes();
       StringBuilder sb = new StringBuilder();
@@ -827,31 +655,20 @@ public class Express
       return sb.toString();
    }
 
-   private static Calendar parseDate(String date)
+   private static String readSshKeyType(SshKey sshKey)
    {
-      Matcher m = TD_DATE_FORMAT.matcher(date);
-      if (m.matches())
+      byte[] b = sshKey.getBytes();
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; b[i] != ' ' && i < b.length; i++)
       {
-         int t = m.group(9).equals("+") ? 1 : -1;
-         Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-         c.set(Calendar.YEAR, Integer.parseInt(m.group(1)));
-         c.set(Calendar.MONTH, Integer.parseInt(m.group(2)) - 1);
-         c.set(Calendar.DATE, Integer.parseInt(m.group(3)));
-         c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(m.group(4)));
-         c.set(Calendar.MINUTE, Integer.parseInt(m.group(5)));
-         c.set(Calendar.SECOND, Integer.parseInt(m.group(6)));
-         c.set(Calendar.MILLISECOND, m.group(7) == null ? 0 : Integer.parseInt(m.group(8)));
-         int zoneOffset =
-            t * (Integer.parseInt(m.group(11)) * 60 * 60 * 1000 + Integer.parseInt(m.group(12)) * 60 * 1000);
-         c.set(Calendar.ZONE_OFFSET, zoneOffset);
-         return c;
+         sb.append((char)b[i]);
       }
-      // Unsupported format of date.
-      return null;
+      return sb.toString();
    }
 
-   private static void writeFormData(HttpURLConnection http, String json, String password) throws IOException
+   private void writeFormData(HttpURLConnection http, String json, String password) throws IOException
    {
+      http.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
       final String encJsonData = URLEncoder.encode(json, "utf-8");
       final String encPassword = URLEncoder.encode(password, "utf-8");
       OutputStream out = null;
@@ -870,9 +687,13 @@ public class Express
       finally
       {
          if (w != null)
+         {
             w.close();
+         }
          if (out != null)
+         {
             out.close();
+         }
       }
    }
 }
