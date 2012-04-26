@@ -31,6 +31,7 @@ import org.junit.Test;
 /**
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: Dec 1, 2010 $
  *
  */
@@ -47,6 +48,8 @@ public class RenameClosedFileTest extends BaseTest
    private static final String FILE_CONTENT = "file for rename";
 
    private static final String PATH = "src/test/resources/org/exoplatform/ide/operation/file/" + ORIG_FILE_NAME;
+
+   private static final String UNKNOWN_MIME_TYPE = "unknown-mime-type/*";
 
    @Before
    public void setUp()
@@ -112,6 +115,34 @@ public class RenameClosedFileTest extends BaseTest
 
       IDE.PROPERTIES.openProperties();
       assertEquals(MimeType.TEXT_XML, IDE.PROPERTIES.getContentType());
+      IDE.LOADER.waitClosed();
+      IDE.PROPERTIES.closeProperties();
+      IDE.EDITOR.closeFile(1);
+   }
+
+   /**
+    * Test for opening file with unknown mime-type.
+    * 
+    * @throws Exception
+    */
+   @Test
+   public void testChangeMimeTypeToUnknown() throws Exception
+   {
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + ORIG_FILE_NAME);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + ORIG_FILE_NAME);
+
+      IDE.RENAME.rename(null, UNKNOWN_MIME_TYPE);
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + ORIG_FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + ORIG_FILE_NAME);
+      String textFromEditor = IDE.EDITOR.getTextFromCodeEditor(0);
+      assertEquals(FILE_CONTENT, textFromEditor);
+
+      IDE.PROPERTIES.openProperties();
+      assertEquals(UNKNOWN_MIME_TYPE, IDE.PROPERTIES.getContentType());
       IDE.LOADER.waitClosed();
       IDE.PROPERTIES.closeProperties();
       IDE.EDITOR.closeFile(1);

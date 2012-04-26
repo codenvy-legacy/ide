@@ -45,7 +45,13 @@ public class ProjectExplorer extends AbstractTestModule
 
       String TREE_GRID_ID = "ideProjectExplorerItemTreeGrid";
 
+      String PROJECTS_LIST_GRID_ID = "ideProjectExplorerProjectsListGrid";
+
       String ROOT_ITEM_SELECTOR = "div#" + TREE_GRID_ID + " div.ide-Tree-label:first-of-type";
+
+      String PROJECT_ROW_LOCATOR = "//table[@id=\"" + PROJECTS_LIST_GRID_ID + "\"]//tr[contains(., \"%s\")]//div";
+
+      String PROJECT_ROW_SELECTOR = "table#" + PROJECTS_LIST_GRID_ID + ">tbody:first-of-type tr";
 
       String OPEN_CLOSE_BUTTON_LOCATOR = "//div[@id='%s']/table/tbody/tr/td[1]/img";
    }
@@ -55,6 +61,9 @@ public class ProjectExplorer extends AbstractTestModule
 
    @FindBy(id = Locators.TREE_GRID_ID)
    private WebElement treeGrid;
+
+   @FindBy(id = Locators.PROJECTS_LIST_GRID_ID)
+   private WebElement projectsListGrid;
 
    @FindBy(css = Locators.ROOT_ITEM_SELECTOR)
    private WebElement rootItem;
@@ -271,6 +280,37 @@ public class ProjectExplorer extends AbstractTestModule
    public void selectProjectTab(String nameProject)
    {
       IDE().PERSPECTIVE.selectTabsOnExplorer(nameProject);
+   }
+
+   /**
+    * Returns the visibility state of the projects list grid.
+    * 
+    * @return true if projects list grid is visible
+    */
+   public boolean isProjectsListGridVisible()
+   {
+      return projectsListGrid.isDisplayed();
+   }
+
+   /**
+    * Get the number of projects in grid.
+    * 
+    * @return count of projects
+    */
+   public int getProjectsCountInProjectsListGrid()
+   {
+      return driver().findElements(By.cssSelector(Locators.PROJECT_ROW_SELECTOR)).size();
+   }
+
+   /**
+    * Select the row with project by the pointed name.
+    * 
+    * @param name project name
+    */
+   public void selectProjectByNameInProjectsListGrid(String name)
+   {
+      WebElement projectRow = driver().findElement(By.xpath(String.format(Locators.PROJECT_ROW_LOCATOR, name)));
+      projectRow.click();
    }
 
 }

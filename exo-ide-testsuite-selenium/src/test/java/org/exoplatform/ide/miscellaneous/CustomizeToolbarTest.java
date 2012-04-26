@@ -41,6 +41,19 @@ import java.util.Map;
  */
 public class CustomizeToolbarTest extends BaseTest
 {
+   @AfterClass
+   public static void restoreDefault()
+   {
+      deleteCookies();
+      try
+      {
+         VirtualFileSystemUtils.delete(ENTRY_POINT_URL_IDE + PRODUCTION_SERVICE_PREFIX);
+      }
+      catch (IOException e)
+      {
+      }
+   }
+
    @Test
    public void CustomizeToolbartest() throws Exception
    {
