@@ -120,7 +120,11 @@ public abstract class BaseTest
 
    public static String ENTRY_POINT_URL = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
 
-   public static String STANDALONE_LOGIN_FIELD = "";
+   //for restore default hotkeys values in IDE
+   public final static String PRODUCTION_SERVICE_PREFIX = "production/ide-home/users/" + USER_NAME
+   + "/settings/userSettings";
+   
+   
 
    public static Selenium selenium;
 

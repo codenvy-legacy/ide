@@ -177,7 +177,7 @@ public class CustomizeHotkeys extends AbstractTestModule
     */
    public void waitBindEnabled() throws InterruptedException
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
