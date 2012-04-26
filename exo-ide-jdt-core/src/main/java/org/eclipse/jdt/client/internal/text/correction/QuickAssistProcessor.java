@@ -181,7 +181,7 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
             || getPickoutTypeFromMulticatchProposals(context, coveringNode, coveredNodes, null)
             || getConvertToMultiCatchProposals(context, coveringNode, null)
             || getUnrollMultiCatchProposals(context, coveringNode, null)
-            || getRenameLocalProposals(context, coveringNode, null, null)
+//            || getRenameLocalProposals(context, coveringNode, null, null)
           //  || getRenameRefactoringProposal(context, coveringNode, null, null)
             || getAssignToVariableProposals(context, coveringNode, null, null)
             || getUnWrapProposals(context, coveringNode, null)
@@ -220,7 +220,7 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
          boolean noErrorsAtLocation = noErrorsAtLocation(locations);
 
          // quick assists that show up also if there is an error/warning
-         getRenameLocalProposals(context, coveringNode, locations, resultingCollections);
+//         getRenameLocalProposals(context, coveringNode, locations, resultingCollections);
          //			getRenameRefactoringProposal(context, coveringNode, locations, resultingCollections);
          getAssignToVariableProposals(context, coveringNode, locations, resultingCollections);
          getAssignParamToFieldProposals(context, coveringNode, resultingCollections);

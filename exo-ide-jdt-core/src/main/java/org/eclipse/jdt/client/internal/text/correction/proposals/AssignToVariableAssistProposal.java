@@ -11,387 +11,467 @@
 
 package org.eclipse.jdt.client.internal.text.correction.proposals;
 
+import com.google.gwt.user.client.ui.Image;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.client.JdtClientBundle;
+import org.eclipse.jdt.client.core.NamingConventions;
+import org.eclipse.jdt.client.core.compiler.ITerminalSymbols;
+import org.eclipse.jdt.client.core.dom.AST;
+import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.client.core.dom.Assignment;
+import org.eclipse.jdt.client.core.dom.Block;
+import org.eclipse.jdt.client.core.dom.BodyDeclaration;
+import org.eclipse.jdt.client.core.dom.ChildListPropertyDescriptor;
+import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.core.dom.Expression;
+import org.eclipse.jdt.client.core.dom.ExpressionStatement;
+import org.eclipse.jdt.client.core.dom.FieldAccess;
+import org.eclipse.jdt.client.core.dom.FieldDeclaration;
+import org.eclipse.jdt.client.core.dom.ITypeBinding;
+import org.eclipse.jdt.client.core.dom.IVariableBinding;
+import org.eclipse.jdt.client.core.dom.Initializer;
+import org.eclipse.jdt.client.core.dom.MethodDeclaration;
+import org.eclipse.jdt.client.core.dom.Modifier;
+import org.eclipse.jdt.client.core.dom.SimpleName;
+import org.eclipse.jdt.client.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.client.core.dom.Statement;
+import org.eclipse.jdt.client.core.dom.Type;
+import org.eclipse.jdt.client.core.dom.VariableDeclarationExpression;
+import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
+import org.eclipse.jdt.client.core.dom.VariableDeclarationStatement;
+import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
+import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
+import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite.ImportRewriteContext;
 
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.NamingConventions;
-import org.eclipse.jdt.core.compiler.ITerminalSymbols;
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
-import org.eclipse.jdt.core.dom.Assignment;
-import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.BodyDeclaration;
-import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.ExpressionStatement;
-import org.eclipse.jdt.core.dom.FieldAccess;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
-import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.IVariableBinding;
-import org.eclipse.jdt.core.dom.Initializer;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.Modifier;
-import org.eclipse.jdt.core.dom.SimpleName;
-import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.Statement;
-import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
-import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
-import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
-import org.eclipse.jdt.core.dom.rewrite.ImportRewrite;
-import org.eclipse.jdt.core.dom.rewrite.ImportRewrite.ImportRewriteContext;
-
-import org.eclipse.jdt.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
-import org.eclipse.jdt.internal.corext.codemanipulation.StubUtility;
-import org.eclipse.jdt.internal.corext.dom.ASTNodeFactory;
-import org.eclipse.jdt.internal.corext.dom.ASTNodes;
-import org.eclipse.jdt.internal.corext.dom.Bindings;
-import org.eclipse.jdt.internal.corext.dom.LinkedNodeFinder;
-import org.eclipse.jdt.internal.corext.dom.TokenScanner;
-import org.eclipse.jdt.internal.corext.util.Messages;
-
-import org.eclipse.jdt.internal.ui.JavaPluginImages;
-import org.eclipse.jdt.internal.ui.text.correction.ASTResolving;
-import org.eclipse.jdt.internal.ui.text.correction.CorrectionMessages;
-import org.eclipse.jdt.internal.ui.text.correction.ModifierCorrectionSubProcessor;
-import org.eclipse.jdt.internal.ui.viewsupport.BasicElementLabels;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.ASTResolving;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
+import org.eclipse.jdt.client.internal.corext.dom.ASTNodeFactory;
+import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
+import org.eclipse.jdt.client.internal.corext.dom.Bindings;
+import org.eclipse.jdt.client.internal.corext.dom.LinkedNodeFinder;
+import org.eclipse.jdt.client.internal.corext.dom.TokenScanner;
+import org.eclipse.jdt.client.internal.text.correction.CorrectionMessages;
+import org.eclipse.jdt.client.runtime.CoreException;
+import org.exoplatform.ide.editor.text.IDocument;
 
 /**
  * Proposals for 'Assign to variable' quick assist
  * - Assign an expression from an ExpressionStatement to a local or field
  * - Assign a parameter to a field
  * */
-public class AssignToVariableAssistProposal extends LinkedCorrectionProposal {
+public class AssignToVariableAssistProposal extends LinkedCorrectionProposal
+{
 
-	public static final int LOCAL= 1;
-	public static final int FIELD= 2;
+   public static final int LOCAL = 1;
 
-	private final String KEY_NAME= "name";  //$NON-NLS-1$
-	private final String KEY_TYPE= "type";  //$NON-NLS-1$
+   public static final int FIELD = 2;
 
-	private final int  fVariableKind;
-	private final ASTNode fNodeToAssign; // ExpressionStatement or SingleVariableDeclaration
-	private final ITypeBinding fTypeBinding;
+   private final String KEY_NAME = "name"; //$NON-NLS-1$
 
-	private VariableDeclarationFragment fExistingFragment;
+   private final String KEY_TYPE = "type"; //$NON-NLS-1$
 
-	public AssignToVariableAssistProposal(ICompilationUnit cu, int variableKind, ExpressionStatement node, ITypeBinding typeBinding, int relevance) {
-		super("", cu, null, relevance, null); //$NON-NLS-1$
+   private final int fVariableKind;
 
-		fVariableKind= variableKind;
-		fNodeToAssign= node;
-		if (typeBinding.isWildcardType()) {
-			typeBinding= ASTResolving.normalizeWildcardType(typeBinding, true, node.getAST());
-		}
+   private final ASTNode fNodeToAssign; // ExpressionStatement or SingleVariableDeclaration
 
-		fTypeBinding= typeBinding;
-		if (variableKind == LOCAL) {
-			setDisplayName(CorrectionMessages.AssignToVariableAssistProposal_assigntolocal_description);
-			setImage(JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_LOCAL));
-		} else {
-			setDisplayName(CorrectionMessages.AssignToVariableAssistProposal_assigntofield_description);
-			setImage(JavaPluginImages.get(JavaPluginImages.IMG_FIELD_PRIVATE));
-		}
-		createImportRewrite((CompilationUnit) node.getRoot());
-	}
+   private final ITypeBinding fTypeBinding;
 
-	public AssignToVariableAssistProposal(ICompilationUnit cu, SingleVariableDeclaration parameter, VariableDeclarationFragment existingFragment, ITypeBinding typeBinding, int relevance) {
-		super("", cu, null, relevance, null); //$NON-NLS-1$
+   private VariableDeclarationFragment fExistingFragment;
 
-		fVariableKind= FIELD;
-		fNodeToAssign= parameter;
-		fTypeBinding= typeBinding;
-		fExistingFragment= existingFragment;
+   public AssignToVariableAssistProposal(int variableKind, ExpressionStatement node, ITypeBinding typeBinding,
+      int relevance, IDocument document)
+   {
+      super("", null, relevance, document, null); //$NON-NLS-1$
 
-		if (existingFragment == null) {
-			setDisplayName(CorrectionMessages.AssignToVariableAssistProposal_assignparamtofield_description);
-		} else {
-			setDisplayName(Messages.format(CorrectionMessages.AssignToVariableAssistProposal_assigntoexistingfield_description, BasicElementLabels.getJavaElementName(existingFragment.getName().getIdentifier())));
-		}
-		setImage(JavaPluginImages.get(JavaPluginImages.IMG_FIELD_PRIVATE));
-	}
+      fVariableKind = variableKind;
+      fNodeToAssign = node;
+      if (typeBinding.isWildcardType())
+      {
+         typeBinding = ASTResolving.normalizeWildcardType(typeBinding, true, node.getAST());
+      }
 
-	@Override
-	protected ASTRewrite getRewrite() throws CoreException {
-		if (fVariableKind == FIELD) {
-			return doAddField();
-		} else { // LOCAL
-			return doAddLocal();
-		}
-	}
+      fTypeBinding = typeBinding;
+      if (variableKind == LOCAL)
+      {
+         setDisplayName(CorrectionMessages.INSTANCE.AssignToVariableAssistProposal_assigntolocal_description());
+         setImage(new Image(JdtClientBundle.INSTANCE.local_var()));
+      }
+      else
+      {
+         setDisplayName(CorrectionMessages.INSTANCE.AssignToVariableAssistProposal_assigntofield_description());
+         setImage(new Image(JdtClientBundle.INSTANCE.privateField()));
+      }
+      createImportRewrite((CompilationUnit)node.getRoot());
+   }
 
-	private ASTRewrite doAddLocal() {
-		Expression expression= ((ExpressionStatement) fNodeToAssign).getExpression();
-		AST ast= fNodeToAssign.getAST();
+   public AssignToVariableAssistProposal(SingleVariableDeclaration parameter,
+      VariableDeclarationFragment existingFragment, ITypeBinding typeBinding, int relevance, IDocument document)
+   {
+      super("", null, relevance, document, null); //$NON-NLS-1$
 
-		ASTRewrite rewrite= ASTRewrite.create(ast);
+      fVariableKind = FIELD;
+      fNodeToAssign = parameter;
+      fTypeBinding = typeBinding;
+      fExistingFragment = existingFragment;
 
-		createImportRewrite((CompilationUnit) fNodeToAssign.getRoot());
+      if (existingFragment == null)
+      {
+         setDisplayName(CorrectionMessages.INSTANCE.AssignToVariableAssistProposal_assignparamtofield_description());
+      }
+      else
+      {
+         setDisplayName(
+            CorrectionMessages.INSTANCE.AssignToVariableAssistProposal_assigntoexistingfield_description(
+            existingFragment.getName().getIdentifier()));
+      }
+      setImage(new Image(JdtClientBundle.INSTANCE.privateField()));
+   }
 
-		String[] varNames= suggestLocalVariableNames(fTypeBinding, expression);
-		for (int i= 0; i < varNames.length; i++) {
-			addLinkedPositionProposal(KEY_NAME, varNames[i], null);
-		}
+   @Override
+   protected ASTRewrite getRewrite() throws CoreException
+   {
+      if (fVariableKind == FIELD)
+      {
+         return doAddField();
+      }
+      else
+      { // LOCAL
+         return doAddLocal();
+      }
+   }
 
-		VariableDeclarationFragment newDeclFrag= ast.newVariableDeclarationFragment();
-		newDeclFrag.setName(ast.newSimpleName(varNames[0]));
-		newDeclFrag.setInitializer((Expression) rewrite.createCopyTarget(expression));
+   private ASTRewrite doAddLocal()
+   {
+      Expression expression = ((ExpressionStatement)fNodeToAssign).getExpression();
+      AST ast = fNodeToAssign.getAST();
 
-		Type type= evaluateType(ast);
+      ASTRewrite rewrite = ASTRewrite.create(ast);
 
-		if (ASTNodes.isControlStatementBody(fNodeToAssign.getLocationInParent())) {
-			Block block= ast.newBlock();
-			block.statements().add(rewrite.createMoveTarget(fNodeToAssign));
-			rewrite.replace(fNodeToAssign, block, null);
-		}
+      createImportRewrite((CompilationUnit)fNodeToAssign.getRoot());
 
-		if (needsSemicolon(expression)) {
-			VariableDeclarationStatement varStatement= ast.newVariableDeclarationStatement(newDeclFrag);
-			varStatement.setType(type);
-			rewrite.replace(expression, varStatement, null);
-		} else {
-			// trick for bug 43248: use an VariableDeclarationExpression and keep the ExpressionStatement
-			VariableDeclarationExpression varExpression= ast.newVariableDeclarationExpression(newDeclFrag);
-			varExpression.setType(type);
-			rewrite.replace(expression, varExpression, null);
-		}
+      String[] varNames = suggestLocalVariableNames(fTypeBinding, expression);
+//      for (int i = 0; i < varNames.length; i++)
+//      {
+//         addLinkedPositionProposal(KEY_NAME, varNames[i], null);
+//      }
 
-		addLinkedPosition(rewrite.track(newDeclFrag.getName()), true, KEY_NAME);
-		addLinkedPosition(rewrite.track(type), false, KEY_TYPE);
-		setEndPosition(rewrite.track(fNodeToAssign)); // set cursor after expression statement
+      VariableDeclarationFragment newDeclFrag = ast.newVariableDeclarationFragment();
+      newDeclFrag.setName(ast.newSimpleName(varNames[0]));
+      newDeclFrag.setInitializer((Expression)rewrite.createCopyTarget(expression));
 
-		return rewrite;
-	}
+      Type type = evaluateType(ast);
 
-	private boolean needsSemicolon(Expression expression) {
-		if ((expression.getParent().getFlags() & ASTNode.RECOVERED) != 0) {
-			try {
-				TokenScanner scanner= new TokenScanner(getCompilationUnit());
-				return scanner.readNext(expression.getStartPosition() + expression.getLength(), true) != ITerminalSymbols.TokenNameSEMICOLON;
-			} catch (CoreException e) {
-				// ignore
-			}
-		}
-		return false;
-	}
+      if (ASTNodes.isControlStatementBody(fNodeToAssign.getLocationInParent()))
+      {
+         Block block = ast.newBlock();
+         block.statements().add(rewrite.createMoveTarget(fNodeToAssign));
+         rewrite.replace(fNodeToAssign, block, null);
+      }
 
-	private ASTRewrite doAddField() {
-		boolean isParamToField= fNodeToAssign.getNodeType() == ASTNode.SINGLE_VARIABLE_DECLARATION;
+      if (needsSemicolon(expression))
+      {
+         VariableDeclarationStatement varStatement = ast.newVariableDeclarationStatement(newDeclFrag);
+         varStatement.setType(type);
+         rewrite.replace(expression, varStatement, null);
+      }
+      else
+      {
+         // trick for bug 43248: use an VariableDeclarationExpression and keep the ExpressionStatement
+         VariableDeclarationExpression varExpression = ast.newVariableDeclarationExpression(newDeclFrag);
+         varExpression.setType(type);
+         rewrite.replace(expression, varExpression, null);
+      }
 
-		ASTNode newTypeDecl= ASTResolving.findParentType(fNodeToAssign);
-		if (newTypeDecl == null) {
-			return null;
-		}
+//      addLinkedPosition(rewrite.track(newDeclFrag.getName()), true, KEY_NAME);
+//      addLinkedPosition(rewrite.track(type), false, KEY_TYPE);
+//      setEndPosition(rewrite.track(fNodeToAssign)); // set cursor after expression statement
 
-		Expression expression= isParamToField ? ((SingleVariableDeclaration) fNodeToAssign).getName() : ((ExpressionStatement) fNodeToAssign).getExpression();
+      return rewrite;
+   }
 
-		AST ast= newTypeDecl.getAST();
-		ASTRewrite rewrite= ASTRewrite.create(ast);
+   private boolean needsSemicolon(Expression expression)
+   {
+      if ((expression.getParent().getFlags() & ASTNode.RECOVERED) != 0)
+      {
+         try
+         {
+            TokenScanner scanner = new TokenScanner(document);
+            return scanner.readNext(expression.getStartPosition() + expression.getLength(), true) != ITerminalSymbols.TokenNameSEMICOLON;
+         }
+         catch (CoreException e)
+         {
+            // ignore
+         }
+      }
+      return false;
+   }
 
-		createImportRewrite((CompilationUnit) fNodeToAssign.getRoot());
+   private ASTRewrite doAddField()
+   {
+      boolean isParamToField = fNodeToAssign.getNodeType() == ASTNode.SINGLE_VARIABLE_DECLARATION;
 
-		BodyDeclaration bodyDecl= ASTResolving.findParentBodyDeclaration(fNodeToAssign);
-		Block body;
-		if (bodyDecl instanceof MethodDeclaration) {
-			body= ((MethodDeclaration) bodyDecl).getBody();
-		} else if (bodyDecl instanceof Initializer) {
-			body= ((Initializer) bodyDecl).getBody();
-		} else {
-			return null;
-		}
+      ASTNode newTypeDecl = ASTResolving.findParentType(fNodeToAssign);
+      if (newTypeDecl == null)
+      {
+         return null;
+      }
 
-		boolean isAnonymous= newTypeDecl.getNodeType() == ASTNode.ANONYMOUS_CLASS_DECLARATION;
-		boolean isStatic= Modifier.isStatic(bodyDecl.getModifiers()) && !isAnonymous;
-		boolean isConstructorParam= isParamToField && fNodeToAssign.getParent() instanceof MethodDeclaration && ((MethodDeclaration) fNodeToAssign.getParent()).isConstructor();
-		int modifiers= Modifier.PRIVATE;
-		if (isStatic) {
-			modifiers |= Modifier.STATIC;
-		} else if (isConstructorParam) {
-			modifiers |= Modifier.FINAL;
-		}
+      Expression expression =
+         isParamToField ? ((SingleVariableDeclaration)fNodeToAssign).getName() : ((ExpressionStatement)fNodeToAssign)
+            .getExpression();
 
-		VariableDeclarationFragment newDeclFrag= addFieldDeclaration(rewrite, newTypeDecl, modifiers, expression);
-		String varName= newDeclFrag.getName().getIdentifier();
+      AST ast = newTypeDecl.getAST();
+      ASTRewrite rewrite = ASTRewrite.create(ast);
 
-		Assignment assignment= ast.newAssignment();
-		assignment.setRightHandSide((Expression) rewrite.createCopyTarget(expression));
+      createImportRewrite((CompilationUnit)fNodeToAssign.getRoot());
 
-		boolean needsThis= StubUtility.useThisForFieldAccess(getCompilationUnit().getJavaProject());
-		if (isParamToField) {
-			needsThis |= varName.equals(((SimpleName) expression).getIdentifier());
-		}
+      BodyDeclaration bodyDecl = ASTResolving.findParentBodyDeclaration(fNodeToAssign);
+      Block body;
+      if (bodyDecl instanceof MethodDeclaration)
+      {
+         body = ((MethodDeclaration)bodyDecl).getBody();
+      }
+      else if (bodyDecl instanceof Initializer)
+      {
+         body = ((Initializer)bodyDecl).getBody();
+      }
+      else
+      {
+         return null;
+      }
 
-		SimpleName accessName= ast.newSimpleName(varName);
-		if (needsThis) {
-			FieldAccess fieldAccess= ast.newFieldAccess();
-			fieldAccess.setName(accessName);
-			if (isStatic) {
-				String typeName= ((AbstractTypeDeclaration) newTypeDecl).getName().getIdentifier();
-				fieldAccess.setExpression(ast.newSimpleName(typeName));
-			} else {
-				fieldAccess.setExpression(ast.newThisExpression());
-			}
-			assignment.setLeftHandSide(fieldAccess);
-		} else {
-			assignment.setLeftHandSide(accessName);
-		}
+      boolean isAnonymous = newTypeDecl.getNodeType() == ASTNode.ANONYMOUS_CLASS_DECLARATION;
+      boolean isStatic = Modifier.isStatic(bodyDecl.getModifiers()) && !isAnonymous;
+      boolean isConstructorParam =
+         isParamToField && fNodeToAssign.getParent() instanceof MethodDeclaration
+            && ((MethodDeclaration)fNodeToAssign.getParent()).isConstructor();
+      int modifiers = Modifier.PRIVATE;
+      if (isStatic)
+      {
+         modifiers |= Modifier.STATIC;
+      }
+      else if (isConstructorParam)
+      {
+         modifiers |= Modifier.FINAL;
+      }
 
-		ASTNode selectionNode;
-		if (isParamToField) {
-			// assign parameter to field
-			ExpressionStatement statement= ast.newExpressionStatement(assignment);
-			int insertIdx= findAssignmentInsertIndex(body.statements());
-			rewrite.getListRewrite(body, Block.STATEMENTS_PROPERTY).insertAt(statement, insertIdx, null);
-			selectionNode= statement;
-		} else {
-			if (needsSemicolon(expression)) {
-				rewrite.replace(expression, ast.newExpressionStatement(assignment), null);
-			} else {
-				rewrite.replace(expression, assignment, null);
-			}
-			selectionNode= fNodeToAssign;
-		}
+      VariableDeclarationFragment newDeclFrag = addFieldDeclaration(rewrite, newTypeDecl, modifiers, expression);
+      String varName = newDeclFrag.getName().getIdentifier();
 
-		addLinkedPosition(rewrite.track(newDeclFrag.getName()), false, KEY_NAME);
-		if (!isParamToField) {
-			FieldDeclaration fieldDeclaration= (FieldDeclaration) newDeclFrag.getParent();
-			addLinkedPosition(rewrite.track(fieldDeclaration.getType()), false, KEY_TYPE);
-		}
-		addLinkedPosition(rewrite.track(accessName), true, KEY_NAME);
-		IVariableBinding variableBinding= newDeclFrag.resolveBinding();
-		if (variableBinding != null) {
-			SimpleName[] linkedNodes= LinkedNodeFinder.findByBinding(fNodeToAssign.getRoot(), variableBinding);
-			for (int i= 0; i < linkedNodes.length; i++) {
-				addLinkedPosition(rewrite.track(linkedNodes[i]), false, KEY_NAME);
-			}
-		}
-		setEndPosition(rewrite.track(selectionNode));
+      Assignment assignment = ast.newAssignment();
+      assignment.setRightHandSide((Expression)rewrite.createCopyTarget(expression));
 
-		return rewrite;
-	}
+      //TODO
+      boolean needsThis = true;//StubUtility.useThisForFieldAccess(getCompilationUnit().getJavaProject());
+      if (isParamToField)
+      {
+         needsThis |= varName.equals(((SimpleName)expression).getIdentifier());
+      }
 
-	private VariableDeclarationFragment addFieldDeclaration(ASTRewrite rewrite, ASTNode newTypeDecl, int modifiers, Expression expression) {
-		if (fExistingFragment != null) {
-			return fExistingFragment;
-		}
+      SimpleName accessName = ast.newSimpleName(varName);
+      if (needsThis)
+      {
+         FieldAccess fieldAccess = ast.newFieldAccess();
+         fieldAccess.setName(accessName);
+         if (isStatic)
+         {
+            String typeName = ((AbstractTypeDeclaration)newTypeDecl).getName().getIdentifier();
+            fieldAccess.setExpression(ast.newSimpleName(typeName));
+         }
+         else
+         {
+            fieldAccess.setExpression(ast.newThisExpression());
+         }
+         assignment.setLeftHandSide(fieldAccess);
+      }
+      else
+      {
+         assignment.setLeftHandSide(accessName);
+      }
 
-		ChildListPropertyDescriptor property= ASTNodes.getBodyDeclarationsProperty(newTypeDecl);
-		List<BodyDeclaration> decls= (List<BodyDeclaration>) newTypeDecl.getStructuralProperty(property);
-		AST ast= newTypeDecl.getAST();
-		String[] varNames= suggestFieldNames(fTypeBinding, expression, modifiers);
-		for (int i= 0; i < varNames.length; i++) {
-			addLinkedPositionProposal(KEY_NAME, varNames[i], null);
-		}
-		String varName= varNames[0];
+      ASTNode selectionNode;
+      if (isParamToField)
+      {
+         // assign parameter to field
+         ExpressionStatement statement = ast.newExpressionStatement(assignment);
+         int insertIdx = findAssignmentInsertIndex(body.statements());
+         rewrite.getListRewrite(body, Block.STATEMENTS_PROPERTY).insertAt(statement, insertIdx, null);
+         selectionNode = statement;
+      }
+      else
+      {
+         if (needsSemicolon(expression))
+         {
+            rewrite.replace(expression, ast.newExpressionStatement(assignment), null);
+         }
+         else
+         {
+            rewrite.replace(expression, assignment, null);
+         }
+         selectionNode = fNodeToAssign;
+      }
 
-		VariableDeclarationFragment newDeclFrag= ast.newVariableDeclarationFragment();
-		newDeclFrag.setName(ast.newSimpleName(varName));
+//      addLinkedPosition(rewrite.track(newDeclFrag.getName()), false, KEY_NAME);
+//      if (!isParamToField)
+//      {
+//         FieldDeclaration fieldDeclaration = (FieldDeclaration)newDeclFrag.getParent();
+//         addLinkedPosition(rewrite.track(fieldDeclaration.getType()), false, KEY_TYPE);
+//      }
+//      addLinkedPosition(rewrite.track(accessName), true, KEY_NAME);
+//      IVariableBinding variableBinding = newDeclFrag.resolveBinding();
+//      if (variableBinding != null)
+//      {
+//         SimpleName[] linkedNodes = LinkedNodeFinder.findByBinding(fNodeToAssign.getRoot(), variableBinding);
+//         for (int i = 0; i < linkedNodes.length; i++)
+//         {
+//            addLinkedPosition(rewrite.track(linkedNodes[i]), false, KEY_NAME);
+//         }
+//      }
+//      setEndPosition(rewrite.track(selectionNode));
 
-		FieldDeclaration newDecl= ast.newFieldDeclaration(newDeclFrag);
+      return rewrite;
+   }
 
-		Type type= evaluateType(ast);
-		newDecl.setType(type);
-		newDecl.modifiers().addAll(ASTNodeFactory.newModifiers(ast, modifiers));
+   private VariableDeclarationFragment addFieldDeclaration(ASTRewrite rewrite, ASTNode newTypeDecl, int modifiers,
+      Expression expression)
+   {
+      if (fExistingFragment != null)
+      {
+         return fExistingFragment;
+      }
 
-		ModifierCorrectionSubProcessor.installLinkedVisibilityProposals(getLinkedProposalModel(), rewrite, newDecl.modifiers(), false);
+      ChildListPropertyDescriptor property = ASTNodes.getBodyDeclarationsProperty(newTypeDecl);
+      List<BodyDeclaration> decls = (List<BodyDeclaration>)newTypeDecl.getStructuralProperty(property);
+      AST ast = newTypeDecl.getAST();
+      String[] varNames = suggestFieldNames(fTypeBinding, expression, modifiers);
+//      for (int i = 0; i < varNames.length; i++)
+//      {
+//         addLinkedPositionProposal(KEY_NAME, varNames[i], null);
+//      }
+      String varName = varNames[0];
 
-		int insertIndex= findFieldInsertIndex(decls, fNodeToAssign.getStartPosition());
-		rewrite.getListRewrite(newTypeDecl, property).insertAt(newDecl, insertIndex, null);
+      VariableDeclarationFragment newDeclFrag = ast.newVariableDeclarationFragment();
+      newDeclFrag.setName(ast.newSimpleName(varName));
 
-		return newDeclFrag;
-	}
+      FieldDeclaration newDecl = ast.newFieldDeclaration(newDeclFrag);
 
+      Type type = evaluateType(ast);
+      newDecl.setType(type);
+      newDecl.modifiers().addAll(ASTNodeFactory.newModifiers(ast, modifiers));
 
-	private Type evaluateType(AST ast) {
-		ITypeBinding[] proposals= ASTResolving.getRelaxingTypes(ast, fTypeBinding);
-		for (int i= 0; i < proposals.length; i++) {
-			addLinkedPositionProposal(KEY_TYPE, proposals[i]);
-		}
-		ImportRewrite importRewrite= getImportRewrite();
-		CompilationUnit cuNode= (CompilationUnit) fNodeToAssign.getRoot();
-		ImportRewriteContext context= new ContextSensitiveImportRewriteContext(cuNode, fNodeToAssign.getStartPosition(), importRewrite);
-		return importRewrite.addImport(fTypeBinding, ast, context);
-	}
+//      ModifierCorrectionSubProcessor.installLinkedVisibilityProposals(getLinkedProposalModel(), rewrite,
+//         newDecl.modifiers(), false);
 
-	private String[] suggestLocalVariableNames(ITypeBinding binding, Expression expression) {
-		IJavaProject project= getCompilationUnit().getJavaProject();
-		return StubUtility.getVariableNameSuggestions(NamingConventions.VK_LOCAL, project, binding, expression, getUsedVariableNames());
-	}
+      int insertIndex = findFieldInsertIndex(decls, fNodeToAssign.getStartPosition());
+      rewrite.getListRewrite(newTypeDecl, property).insertAt(newDecl, insertIndex, null);
 
-	private String[] suggestFieldNames(ITypeBinding binding, Expression expression, int modifiers) {
-		IJavaProject project= getCompilationUnit().getJavaProject();
-		int varKind= Modifier.isStatic(modifiers) ? NamingConventions.VK_STATIC_FIELD : NamingConventions.VK_INSTANCE_FIELD;
-		return StubUtility.getVariableNameSuggestions(varKind, project, binding, expression, getUsedVariableNames());
-	}
+      return newDeclFrag;
+   }
 
-	private Collection<String> getUsedVariableNames() {
-		return Arrays.asList(ASTResolving.getUsedVariableNames(fNodeToAssign));
-	}
+   private Type evaluateType(AST ast)
+   {
+      ITypeBinding[] proposals = ASTResolving.getRelaxingTypes(ast, fTypeBinding);
+//      for (int i = 0; i < proposals.length; i++)
+//      {
+//         addLinkedPositionProposal(KEY_TYPE, proposals[i]);
+//      }
+      ImportRewrite importRewrite = getImportRewrite();
+      CompilationUnit cuNode = (CompilationUnit)fNodeToAssign.getRoot();
+      ImportRewriteContext context =
+         new ContextSensitiveImportRewriteContext(cuNode, fNodeToAssign.getStartPosition(), importRewrite);
+      return importRewrite.addImport(fTypeBinding, ast, context);
+   }
 
-	private int findAssignmentInsertIndex(List<Statement> statements) {
+   private String[] suggestLocalVariableNames(ITypeBinding binding, Expression expression)
+   {
+      return StubUtility.getVariableNameSuggestions(NamingConventions.VK_LOCAL, binding, expression,
+         getUsedVariableNames());
+   }
 
-		HashSet<String> paramsBefore= new HashSet<String>();
-		List<SingleVariableDeclaration> params = ((MethodDeclaration) fNodeToAssign.getParent()).parameters();
-		for (int i = 0; i < params.size() && (params.get(i) != fNodeToAssign); i++) {
-			SingleVariableDeclaration decl= params.get(i);
-			paramsBefore.add(decl.getName().getIdentifier());
-		}
+   private String[] suggestFieldNames(ITypeBinding binding, Expression expression, int modifiers)
+   {
+      int varKind =
+         Modifier.isStatic(modifiers) ? NamingConventions.VK_STATIC_FIELD : NamingConventions.VK_INSTANCE_FIELD;
+      return StubUtility.getVariableNameSuggestions(varKind, binding, expression, getUsedVariableNames());
+   }
 
-		int i= 0;
-		for (i = 0; i < statements.size(); i++) {
-			Statement curr= statements.get(i);
-			switch (curr.getNodeType()) {
-				case ASTNode.CONSTRUCTOR_INVOCATION:
-				case ASTNode.SUPER_CONSTRUCTOR_INVOCATION:
-					break;
-				case ASTNode.EXPRESSION_STATEMENT:
-					Expression expr= ((ExpressionStatement) curr).getExpression();
-					if (expr instanceof Assignment) {
-						Assignment assignment= (Assignment) expr;
-						Expression rightHand = assignment.getRightHandSide();
-						if (rightHand instanceof SimpleName && paramsBefore.contains(((SimpleName) rightHand).getIdentifier())) {
-							IVariableBinding binding = Bindings.getAssignedVariable(assignment);
-							if (binding == null || binding.isField()) {
-								break;
-							}
-						}
-					}
-					return i;
-				default:
-					return i;
+   private Collection<String> getUsedVariableNames()
+   {
+      return Arrays.asList(ASTResolving.getUsedVariableNames(fNodeToAssign));
+   }
 
-			}
-		}
-		return i;
+   private int findAssignmentInsertIndex(List<Statement> statements)
+   {
 
-	}
+      HashSet<String> paramsBefore = new HashSet<String>();
+      List<SingleVariableDeclaration> params = ((MethodDeclaration)fNodeToAssign.getParent()).parameters();
+      for (int i = 0; i < params.size() && (params.get(i) != fNodeToAssign); i++)
+      {
+         SingleVariableDeclaration decl = params.get(i);
+         paramsBefore.add(decl.getName().getIdentifier());
+      }
 
-	private int findFieldInsertIndex(List<BodyDeclaration> decls, int currPos) {
-		for (int i= decls.size() - 1; i >= 0; i--) {
-			ASTNode curr= decls.get(i);
-			if (curr instanceof FieldDeclaration && currPos > curr.getStartPosition() + curr.getLength()) {
-				return i + 1;
-			}
-		}
-		return 0;
-	}
+      int i = 0;
+      for (i = 0; i < statements.size(); i++)
+      {
+         Statement curr = statements.get(i);
+         switch (curr.getNodeType())
+         {
+            case ASTNode.CONSTRUCTOR_INVOCATION :
+            case ASTNode.SUPER_CONSTRUCTOR_INVOCATION :
+               break;
+            case ASTNode.EXPRESSION_STATEMENT :
+               Expression expr = ((ExpressionStatement)curr).getExpression();
+               if (expr instanceof Assignment)
+               {
+                  Assignment assignment = (Assignment)expr;
+                  Expression rightHand = assignment.getRightHandSide();
+                  if (rightHand instanceof SimpleName && paramsBefore.contains(((SimpleName)rightHand).getIdentifier()))
+                  {
+                     IVariableBinding binding = Bindings.getAssignedVariable(assignment);
+                     if (binding == null || binding.isField())
+                     {
+                        break;
+                     }
+                  }
+               }
+               return i;
+            default :
+               return i;
 
-	/**
-	 * Returns the variable kind.
-	 * @return int
-	 */
-	public int getVariableKind() {
-		return fVariableKind;
-	}
+         }
+      }
+      return i;
 
+   }
+
+   private int findFieldInsertIndex(List<BodyDeclaration> decls, int currPos)
+   {
+      for (int i = decls.size() - 1; i >= 0; i--)
+      {
+         ASTNode curr = decls.get(i);
+         if (curr instanceof FieldDeclaration && currPos > curr.getStartPosition() + curr.getLength())
+         {
+            return i + 1;
+         }
+      }
+      return 0;
+   }
+
+   /**
+    * Returns the variable kind.
+    * @return int
+    */
+   public int getVariableKind()
+   {
+      return fVariableKind;
+   }
 
 }

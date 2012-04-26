@@ -109,7 +109,7 @@ public interface CorrectionMessages extends Messages
 
     String CUCorrectionProposal_error_message();
 
-    String ReorgCorrectionsSubProcessor_renametype_description();
+    String ReorgCorrectionsSubProcessor_renametype_description(String newTypeName);
 
     String ReorgCorrectionsSubProcessor_renamecu_description();
 
@@ -207,15 +207,15 @@ public interface CorrectionMessages extends Messages
 
     String TypeMismatchSubProcessor_insertnullcheck_description();
 
-    String RemoveDeclarationCorrectionProposal_removeunusedfield_description();
+    String RemoveDeclarationCorrectionProposal_removeunusedfield_description(String name);
 
-    String RemoveDeclarationCorrectionProposal_removeunusedmethod_description();
+    String RemoveDeclarationCorrectionProposal_removeunusedmethod_description(String name);
 
-    String RemoveDeclarationCorrectionProposal_removeunusedconstructor_description();
+    String RemoveDeclarationCorrectionProposal_removeunusedconstructor_description(String name);
 
-    String RemoveDeclarationCorrectionProposal_removeunusedtype_description();
+    String RemoveDeclarationCorrectionProposal_removeunusedtype_description(String name);
 
-    String RemoveDeclarationCorrectionProposal_removeunusedvar_description();
+    String RemoveDeclarationCorrectionProposal_removeunusedvar_description(String name);
 
     String RenameRefactoringProposal_additionalInfo();
 
@@ -443,7 +443,7 @@ public interface CorrectionMessages extends Messages
 
     String NewCUCompletionUsingWizardProposal_createannotation_info();
 
-    String ConstructorFromSuperclassProposal_description();
+    String ConstructorFromSuperclassProposal_description(String string);
 
     String AssignToVariableAssistProposal_assigntolocal_description();
 
@@ -529,15 +529,15 @@ public interface CorrectionMessages extends Messages
 
     String TaskMarkerProposal_description();
 
-    String TypeChangeCompletionProposal_field_name();
+    String TypeChangeCompletionProposal_field_name(String string, String typeName);
 
-    String TypeChangeCompletionProposal_variable_name();
+    String TypeChangeCompletionProposal_variable_name(String string, String typeName);
 
-    String TypeChangeCompletionProposal_param_name();
+    String TypeChangeCompletionProposal_param_name(String string, String typeName);
 
-    String TypeChangeCompletionProposal_method_name();
+    String TypeChangeCompletionProposal_method_name(String string, String typeName);
 
-    String ImplementInterfaceProposal_name();
+    String ImplementInterfaceProposal_name(String string, String string2);
 
     String AddUnimplementedMethodsOperation_AddMissingMethod_group();
 
@@ -591,9 +591,9 @@ public interface CorrectionMessages extends Messages
 
     String AdvancedQuickAssistProcessor_exchangeOperands_description();
 
-    String AddTypeParameterProposal_method_label();
+    String AddTypeParameterProposal_method_label(String fTypeParamName, String string);
 
-    String AddTypeParameterProposal_type_label();
+    String AddTypeParameterProposal_type_label(String fTypeParamName, String string);
 
     String LocalCorrectionsSubProcessor_externalizestrings_additional_info();
 
@@ -601,7 +601,7 @@ public interface CorrectionMessages extends Messages
 
     String LocalCorrectionsSubProcessor_generate_hashCode_equals_description();
 
-    String AssignToVariableAssistProposal_assigntoexistingfield_description();
+    String AssignToVariableAssistProposal_assigntoexistingfield_description(String string);
 
     String ReorgCorrectionsSubProcessor_50_compliance_operation();
 
@@ -681,7 +681,7 @@ public interface CorrectionMessages extends Messages
 
     String FixCorrectionProposal_HitCtrlEnter_description();
 
-    String FixCorrectionProposal_hitCtrlEnter_variable_description();
+    String FixCorrectionProposal_hitCtrlEnter_variable_description(int count);
 
     String LocalCorrectionsSubProcessor_insert_break_statement();
 

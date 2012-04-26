@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
+import org.eclipse.jdt.client.ui.BindingLabelProvider;
 
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
@@ -85,6 +86,7 @@ import org.eclipse.jdt.client.internal.corext.dom.Bindings;
 import org.eclipse.jdt.client.internal.corext.dom.GenericVisitor;
 import org.eclipse.jdt.client.internal.corext.dom.ScopeAnalyzer;
 import org.eclipse.jdt.client.internal.corext.dom.TypeBindingVisitor;
+import org.exoplatform.ide.editor.text.IDocument;
 
 public class ASTResolving
 {
@@ -1343,15 +1345,16 @@ public class ASTResolving
 
    // pretty signatures
 
-   //   public static String getTypeSignature(ITypeBinding type)
-   //   {
-   //      return BindingLabelProvider.getBindingLabel(type, BindingLabelProvider.DEFAULT_TEXTFLAGS);
-   //   }
-   //
-   //   public static String getMethodSignature(IMethodBinding binding)
-   //   {
-   //      return BindingLabelProvider.getBindingLabel(binding, BindingLabelProvider.DEFAULT_TEXTFLAGS);
-   //   }
+   public static String getTypeSignature(ITypeBinding type)
+   {
+      return BindingLabelProvider.getBindingLabel(type);
+   }
+
+   public static String getMethodSignature(IMethodBinding binding)
+   {
+      return BindingLabelProvider.getBindingLabel(binding);
+   }
+
    //
    //   public static String getMethodSignature(String name, ITypeBinding[] params, boolean isVarArgs)
    //   {
@@ -1377,14 +1380,14 @@ public class ASTResolving
    //      return BasicElementLabels.getJavaElementName(buf.toString());
    //   }
    //
-   //   public static CompilationUnit createQuickFixAST(ICompilationUnit compilationUnit, IProgressMonitor monitor)
-   //   {
-   //      ASTParser astParser = ASTParser.newParser(ASTProvider.SHARED_AST_LEVEL);
-   //      astParser.setSource(compilationUnit);
-   //      astParser.setResolveBindings(true);
-   //      astParser.setStatementsRecovery(ASTProvider.SHARED_AST_STATEMENT_RECOVERY);
-   //      astParser.setBindingsRecovery(ASTProvider.SHARED_BINDING_RECOVERY);
-   //      return (CompilationUnit)astParser.createAST(monitor);
-   //   }
+   public static CompilationUnit createQuickFixAST(IDocument document, IProgressMonitor monitor)
+   {
+      ASTParser astParser = ASTParser.newParser(AST.JLS4);
+      astParser.setSource(document.get().toCharArray());
+      astParser.setResolveBindings(true);
+      astParser.setStatementsRecovery(true);
+      astParser.setBindingsRecovery(true);
+      return (CompilationUnit)astParser.createAST(monitor);
+   }
 
 }

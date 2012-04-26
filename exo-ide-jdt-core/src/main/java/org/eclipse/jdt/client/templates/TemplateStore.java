@@ -72,7 +72,7 @@ public class TemplateStore
       JSONObject jsonObject = JSONParser.parseLenient(templatesText.templatesText().getText()).isObject();
       JSONArray templatesJson = jsonObject.get("templates").isArray();
       templates = new Template[templatesJson.size()];
-      String name, description, contextTypeId, pattern = null;
+      String name, description, contextTypeId, pattern, id = null;
       boolean isAutoInsertable = false;
       for (int i = 0; i < templatesJson.size(); i++)
       {
@@ -82,7 +82,8 @@ public class TemplateStore
          contextTypeId = tem.get("context").isString().stringValue();
          pattern = tem.get("text").isString().stringValue();
          isAutoInsertable = tem.get("autoinsert").isBoolean().booleanValue();
-         templates[i] = new Template(name, description, contextTypeId, pattern, isAutoInsertable);
+         id = tem.get("id").isString().stringValue();
+         templates[i] = new Template(id, name, description, contextTypeId, pattern, isAutoInsertable);
       }
 
    }
@@ -106,6 +107,20 @@ public class TemplateStore
       }
 
       return temList.toArray(new Template[temList.size()]);
+   }
+
+   /**
+    * @param id
+    * @return
+    */
+   public Template findTemplateById(String id)
+   {
+      for (Template t : templates)
+      {
+         if (t.getId().equals(id))
+            return t;
+      }
+      return null;
    }
 
 }

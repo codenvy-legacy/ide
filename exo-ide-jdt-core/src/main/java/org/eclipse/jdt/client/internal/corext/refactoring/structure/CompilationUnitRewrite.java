@@ -222,7 +222,7 @@ public class CompilationUnitRewrite
     */
    public CompilationUnitChange createChange(boolean generateGroups, IProgressMonitor monitor) throws CoreException
    {
-      return createChange(fCu.getElementName(), generateGroups, monitor);
+      return createChange(generateGroups, monitor);
    }
 
    /**

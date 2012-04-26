@@ -10,122 +10,138 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.text.correction.proposals;
 
-import java.lang.reflect.Modifier;
+import com.google.gwt.user.client.ui.Image;
+
+import org.eclipse.jdt.client.JdtClientBundle;
+import org.eclipse.jdt.client.core.dom.AST;
+import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.ChildListPropertyDescriptor;
+import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.core.dom.Expression;
+import org.eclipse.jdt.client.core.dom.IBinding;
+import org.eclipse.jdt.client.core.dom.ITypeBinding;
+import org.eclipse.jdt.client.core.dom.IVariableBinding;
+import org.eclipse.jdt.client.core.dom.Modifier;
+import org.eclipse.jdt.client.core.dom.StructuralPropertyDescriptor;
+import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
+import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.ASTResolving;
+import org.eclipse.jdt.client.internal.corext.dom.ASTNodeFactory;
+import org.eclipse.jdt.client.internal.corext.dom.ScopeAnalyzer;
+import org.exoplatform.ide.editor.text.IDocument;
+
 import java.util.List;
 
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.IBinding;
-import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.IVariableBinding;
-import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
-import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
-import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
+public class AddArgumentCorrectionProposal extends LinkedCorrectionProposal
+{
 
-import org.eclipse.jdt.internal.corext.dom.ASTNodeFactory;
-import org.eclipse.jdt.internal.corext.dom.ASTNodes;
-import org.eclipse.jdt.internal.corext.dom.ScopeAnalyzer;
+   private int[] fInsertIndexes;
 
-import org.eclipse.jdt.internal.ui.JavaPluginImages;
-import org.eclipse.jdt.internal.ui.text.correction.ASTResolving;
+   private ITypeBinding[] fParamTypes;
 
-public class AddArgumentCorrectionProposal extends LinkedCorrectionProposal {
+   private ASTNode fCallerNode;
 
-	private int[] fInsertIndexes;
-	private ITypeBinding[] fParamTypes;
-	private ASTNode fCallerNode;
+   public AddArgumentCorrectionProposal(String label, ASTNode callerNode, int[] insertIdx,
+      ITypeBinding[] expectedTypes, int relevance, IDocument document)
+   {
+      super(label, null, relevance, document, new Image(JdtClientBundle.INSTANCE.correction_change()));
+      fCallerNode = callerNode;
+      fInsertIndexes = insertIdx;
+      fParamTypes = expectedTypes;
+   }
 
-	public AddArgumentCorrectionProposal(String label, ICompilationUnit cu, ASTNode callerNode, int[] insertIdx, ITypeBinding[] expectedTypes, int relevance) {
-		super(label, cu, null, relevance, JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE));
-		fCallerNode= callerNode;
-		fInsertIndexes= insertIdx;
-		fParamTypes= expectedTypes;
-	}
+   /*(non-Javadoc)
+    * @see org.eclipse.jdt.internal.ui.text.correction.ASTRewriteCorrectionProposal#getRewrite()
+    */
+   @Override
+   protected ASTRewrite getRewrite()
+   {
+      AST ast = fCallerNode.getAST();
+      ASTRewrite rewrite = ASTRewrite.create(ast);
+      ChildListPropertyDescriptor property = getProperty();
 
-	/*(non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.ASTRewriteCorrectionProposal#getRewrite()
-	 */
-	@Override
-	protected ASTRewrite getRewrite() {
-		AST ast= fCallerNode.getAST();
-		ASTRewrite rewrite= ASTRewrite.create(ast);
-		ChildListPropertyDescriptor property= getProperty();
+      for (int i = 0; i < fInsertIndexes.length; i++)
+      {
+         int idx = fInsertIndexes[i];
+         String key = "newarg_" + i; //$NON-NLS-1$
+         Expression newArg = evaluateArgumentExpressions(ast, fParamTypes[idx], key);
+         ListRewrite listRewriter = rewrite.getListRewrite(fCallerNode, property);
+         listRewriter.insertAt(newArg, idx, null);
 
-		for (int i= 0; i < fInsertIndexes.length; i++) {
-			int idx= fInsertIndexes[i];
-			String key= "newarg_" + i; //$NON-NLS-1$
-			Expression newArg= evaluateArgumentExpressions(ast, fParamTypes[idx], key);
-			ListRewrite listRewriter= rewrite.getListRewrite(fCallerNode, property);
-			listRewriter.insertAt(newArg, idx, null);
+//         addLinkedPosition(rewrite.track(newArg), i == 0, key);
+      }
+      return rewrite;
+   }
 
-			addLinkedPosition(rewrite.track(newArg), i == 0, key);
-		}
-		return rewrite;
-	}
+   private ChildListPropertyDescriptor getProperty()
+   {
+      List<StructuralPropertyDescriptor> list = fCallerNode.structuralPropertiesForType();
+      for (int i = 0; i < list.size(); i++)
+      {
+         StructuralPropertyDescriptor curr = list.get(i);
+         if (curr.isChildListProperty() && "arguments".equals(curr.getId())) { //$NON-NLS-1$
+            return (ChildListPropertyDescriptor)curr;
+         }
+      }
+      return null;
 
-	private ChildListPropertyDescriptor getProperty() {
-		List<StructuralPropertyDescriptor> list= fCallerNode.structuralPropertiesForType();
-		for (int i= 0; i < list.size(); i++) {
-			StructuralPropertyDescriptor curr= list.get(i);
-			if (curr.isChildListProperty() && "arguments".equals(curr.getId())) { //$NON-NLS-1$
-				return (ChildListPropertyDescriptor) curr;
-			}
-		}
-		return null;
+   }
 
-	}
+   private Expression evaluateArgumentExpressions(AST ast, ITypeBinding requiredType, String key)
+   {
+      CompilationUnit root = (CompilationUnit)fCallerNode.getRoot();
 
+      int offset = fCallerNode.getStartPosition();
+      Expression best = null;
+      ITypeBinding bestType = null;
 
-	private Expression evaluateArgumentExpressions(AST ast, ITypeBinding requiredType, String key) {
-		CompilationUnit root= (CompilationUnit) fCallerNode.getRoot();
+      ScopeAnalyzer analyzer = new ScopeAnalyzer(root);
+      IBinding[] bindings = analyzer.getDeclarationsInScope(offset, ScopeAnalyzer.VARIABLES);
+      for (int i = 0; i < bindings.length; i++)
+      {
+         IVariableBinding curr = (IVariableBinding)bindings[i];
+         ITypeBinding type = curr.getType();
+         if (type != null && canAssign(type, requiredType) && testModifier(curr))
+         {
+            if (best == null || isMoreSpecific(bestType, type))
+            {
+               best = ast.newSimpleName(curr.getName());
+               bestType = type;
+            }
+//            addLinkedPositionProposal(key, curr.getName(), null);
+         }
+      }
+      Expression defaultExpression = ASTNodeFactory.newDefaultExpression(ast, requiredType);
+      if (best == null)
+      {
+         best = defaultExpression;
+      }
+//      addLinkedPositionProposal(key, ASTNodes.asString(defaultExpression), null);
+      return best;
+   }
 
-		int offset= fCallerNode.getStartPosition();
-		Expression best= null;
-		ITypeBinding bestType= null;
+   private boolean isMoreSpecific(ITypeBinding best, ITypeBinding curr)
+   {
+      return (canAssign(best, curr) && !canAssign(curr, best));
+   }
 
-		ScopeAnalyzer analyzer= new ScopeAnalyzer(root);
-		IBinding[] bindings= analyzer.getDeclarationsInScope(offset, ScopeAnalyzer.VARIABLES);
-		for (int i= 0; i < bindings.length; i++) {
-			IVariableBinding curr= (IVariableBinding) bindings[i];
-			ITypeBinding type= curr.getType();
-			if (type != null && canAssign(type, requiredType) && testModifier(curr)) {
-				if (best == null || isMoreSpecific(bestType, type)) {
-					best= ast.newSimpleName(curr.getName());
-					bestType= type;
-				}
-				addLinkedPositionProposal(key, curr.getName(), null);
-			}
-		}
-		Expression defaultExpression= ASTNodeFactory.newDefaultExpression(ast, requiredType);
-		if (best == null) {
-			best= defaultExpression;
-		}
-		addLinkedPositionProposal(key, ASTNodes.asString(defaultExpression), null);
-		return best;
-	}
+   private boolean canAssign(ITypeBinding curr, ITypeBinding best)
+   {
+      return curr.isAssignmentCompatible(best);
+   }
 
-	private boolean isMoreSpecific(ITypeBinding best, ITypeBinding curr) {
-		return (canAssign(best, curr) && !canAssign(curr, best));
-	}
-
-
-	private boolean canAssign(ITypeBinding curr, ITypeBinding best) {
-		return curr.isAssignmentCompatible(best);
-	}
-
-	private boolean testModifier(IVariableBinding curr) {
-		int modifiers= curr.getModifiers();
-		int staticFinal= Modifier.STATIC | Modifier.FINAL;
-		if ((modifiers & staticFinal) == staticFinal) {
-			return false;
-		}
-		if (Modifier.isStatic(modifiers) && !ASTResolving.isInStaticContext(fCallerNode)) {
-			return false;
-		}
-		return true;
-	}
+   private boolean testModifier(IVariableBinding curr)
+   {
+      int modifiers = curr.getModifiers();
+      int staticFinal = Modifier.STATIC | Modifier.FINAL;
+      if ((modifiers & staticFinal) == staticFinal)
+      {
+         return false;
+      }
+      if (Modifier.isStatic(modifiers) && !ASTResolving.isInStaticContext(fCallerNode))
+      {
+         return false;
+      }
+      return true;
+   }
 }

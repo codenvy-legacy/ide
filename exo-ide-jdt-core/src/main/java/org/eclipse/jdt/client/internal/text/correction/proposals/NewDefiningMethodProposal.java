@@ -10,150 +10,169 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.text.correction.proposals;
 
+import com.google.gwt.user.client.ui.Image;
+
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.client.core.dom.AST;
+import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.IExtendedModifier;
+import org.eclipse.jdt.client.core.dom.IMethodBinding;
+import org.eclipse.jdt.client.core.dom.ITypeBinding;
+import org.eclipse.jdt.client.core.dom.Modifier;
+import org.eclipse.jdt.client.core.dom.Name;
+import org.eclipse.jdt.client.core.dom.SimpleName;
+import org.eclipse.jdt.client.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.client.core.dom.Type;
+import org.eclipse.jdt.client.core.dom.TypeParameter;
+import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
+import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
+import org.eclipse.jdt.client.internal.corext.dom.ASTNodeFactory;
+import org.eclipse.jdt.client.runtime.CoreException;
+import org.exoplatform.ide.editor.text.IDocument;
 
-import org.eclipse.jface.resource.ImageDescriptor;
+public class NewDefiningMethodProposal extends AbstractMethodCorrectionProposal
+{
 
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.IExtendedModifier;
-import org.eclipse.jdt.core.dom.IMethodBinding;
-import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.Modifier;
-import org.eclipse.jdt.core.dom.Name;
-import org.eclipse.jdt.core.dom.SimpleName;
-import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.TypeParameter;
-import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
-import org.eclipse.jdt.core.dom.rewrite.ImportRewrite;
+   private final IMethodBinding fMethod;
 
-import org.eclipse.jdt.internal.corext.codemanipulation.StubUtility;
-import org.eclipse.jdt.internal.corext.dom.ASTNodeFactory;
+   private final String[] fParamNames;
 
-import org.eclipse.jdt.internal.ui.JavaPlugin;
-import org.eclipse.jdt.internal.ui.viewsupport.JavaElementImageProvider;
+   public NewDefiningMethodProposal(String label, ASTNode invocationNode, ITypeBinding binding, IMethodBinding method,
+      String[] paramNames, int relevance, IDocument document)
+   {
+      super(label, invocationNode, binding, relevance, document, null);
+      fMethod = method;
+      fParamNames = paramNames;
 
-public class NewDefiningMethodProposal extends AbstractMethodCorrectionProposal {
+      //TODO
+//      ImageDescriptor desc =
+//         JavaElementImageProvider.getMethodImageDescriptor(binding.isInterface() || binding.isAnnotation(),
+//            method.getModifiers());
+//      setImage(JavaPlugin.getImageDescriptorRegistry().get(desc));
+      setImage(new Image());
+   }
 
-	private final IMethodBinding fMethod;
-	private final String[] fParamNames;
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.internal.ui.text.correction.proposals.AbstractMethodCorrectionProposal#isConstructor()
+    */
+   @Override
+   protected boolean isConstructor()
+   {
+      return fMethod.isConstructor();
+   }
 
-	public NewDefiningMethodProposal(String label, ICompilationUnit targetCU, ASTNode invocationNode, ITypeBinding binding, IMethodBinding method, String[] paramNames, int relevance) {
-		super(label,targetCU,invocationNode,binding,relevance,null);
-		fMethod= method;
-		fParamNames= paramNames;
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.internal.ui.text.correction.proposals.AbstractMethodCorrectionProposal#addNewParameters(org.eclipse.jdt.core.dom.rewrite.ASTRewrite, java.util.List, java.util.List)
+    */
+   @Override
+   protected void addNewParameters(ASTRewrite rewrite, List<String> takenNames, List<SingleVariableDeclaration> params)
+      throws CoreException
+   {
+      AST ast = rewrite.getAST();
+      ImportRewrite importRewrite = getImportRewrite();
+      ITypeBinding[] bindings = fMethod.getParameterTypes();
 
-		ImageDescriptor desc= JavaElementImageProvider.getMethodImageDescriptor(binding.isInterface() || binding.isAnnotation(), method.getModifiers());
-		setImage(JavaPlugin.getImageDescriptorRegistry().get(desc));
-	}
+//      IJavaProject project = getCompilationUnit().getJavaProject();
+      String[][] paramNames = StubUtility.suggestArgumentNamesWithProposals(fParamNames);
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.proposals.AbstractMethodCorrectionProposal#isConstructor()
-	 */
-	@Override
-	protected boolean isConstructor() {
-		return fMethod.isConstructor();
-	}
+      for (int i = 0; i < bindings.length; i++)
+      {
+         ITypeBinding curr = bindings[i];
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.proposals.AbstractMethodCorrectionProposal#addNewParameters(org.eclipse.jdt.core.dom.rewrite.ASTRewrite, java.util.List, java.util.List)
-	 */
-	@Override
-	protected void addNewParameters(ASTRewrite rewrite, List<String> takenNames, List<SingleVariableDeclaration> params) throws CoreException {
-		AST ast= rewrite.getAST();
-		ImportRewrite importRewrite= getImportRewrite();
-		ITypeBinding[] bindings= fMethod.getParameterTypes();
+         String[] proposedNames = paramNames[i];
 
-		IJavaProject project= getCompilationUnit().getJavaProject();
-		String[][] paramNames= StubUtility.suggestArgumentNamesWithProposals(project, fParamNames);
+         SingleVariableDeclaration newParam = ast.newSingleVariableDeclaration();
 
-		for (int i= 0; i < bindings.length; i++) {
-			ITypeBinding curr= bindings[i];
+         newParam.setType(importRewrite.addImport(curr, ast));
+         newParam.setName(ast.newSimpleName(proposedNames[0]));
 
-			String[] proposedNames= paramNames[i];
+         params.add(newParam);
 
-			SingleVariableDeclaration newParam= ast.newSingleVariableDeclaration();
+         String groupId = "arg_name_" + i; //$NON-NLS-1$
+//         addLinkedPosition(rewrite.track(newParam.getName()), false, groupId);
+//
+//         for (int k = 0; k < proposedNames.length; k++)
+//         {
+//            addLinkedPositionProposal(groupId, proposedNames[k], null);
+//         }
+      }
+   }
 
-			newParam.setType(importRewrite.addImport(curr, ast));
-			newParam.setName(ast.newSimpleName(proposedNames[0]));
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.internal.ui.text.correction.proposals.AbstractMethodCorrectionProposal#getNewName(org.eclipse.jdt.core.dom.rewrite.ASTRewrite)
+    */
+   @Override
+   protected SimpleName getNewName(ASTRewrite rewrite)
+   {
+      AST ast = rewrite.getAST();
+      SimpleName nameNode = ast.newSimpleName(fMethod.getName());
+      return nameNode;
+   }
 
-			params.add(newParam);
+   private int evaluateModifiers()
+   {
+      if (getSenderBinding().isInterface())
+      {
+         return 0;
+      }
+      else
+      {
+         int modifiers = fMethod.getModifiers();
+         if (Modifier.isPrivate(modifiers))
+         {
+            modifiers |= Modifier.PROTECTED;
+         }
+         return modifiers & (Modifier.PUBLIC | Modifier.PROTECTED | Modifier.ABSTRACT | Modifier.STRICTFP);
+      }
+   }
 
-			String groupId= "arg_name_" + i; //$NON-NLS-1$
-			addLinkedPosition(rewrite.track(newParam.getName()), false, groupId);
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.internal.ui.text.correction.proposals.AbstractMethodCorrectionProposal#addNewModifiers(org.eclipse.jdt.core.dom.rewrite.ASTRewrite, org.eclipse.jdt.core.dom.ASTNode, java.util.List)
+    */
+   @Override
+   protected void addNewModifiers(ASTRewrite rewrite, ASTNode targetTypeDecl, List<IExtendedModifier> modifiers)
+   {
+      modifiers.addAll(rewrite.getAST().newModifiers(evaluateModifiers()));
+   }
 
-			for (int k= 0; k < proposedNames.length; k++) {
-				addLinkedPositionProposal(groupId, proposedNames[k], null);
-			}
-		}
-	}
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.internal.ui.text.correction.proposals.AbstractMethodCorrectionProposal#getNewMethodType(org.eclipse.jdt.core.dom.rewrite.ASTRewrite)
+    */
+   @Override
+   protected Type getNewMethodType(ASTRewrite rewrite) throws CoreException
+   {
+      return getImportRewrite().addImport(fMethod.getReturnType(), rewrite.getAST());
+   }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.proposals.AbstractMethodCorrectionProposal#getNewName(org.eclipse.jdt.core.dom.rewrite.ASTRewrite)
-	 */
-	@Override
-	protected SimpleName getNewName(ASTRewrite rewrite) {
-		AST ast= rewrite.getAST();
-		SimpleName nameNode= ast.newSimpleName(fMethod.getName());
-		return nameNode;
-	}
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.internal.ui.text.correction.proposals.AbstractMethodCorrectionProposal#addNewExceptions(org.eclipse.jdt.core.dom.rewrite.ASTRewrite, java.util.List)
+    */
+   @Override
+   protected void addNewExceptions(ASTRewrite rewrite, List<Name> exceptions) throws CoreException
+   {
+      AST ast = rewrite.getAST();
+      ImportRewrite importRewrite = getImportRewrite();
+      ITypeBinding[] bindings = fMethod.getExceptionTypes();
+      for (int i = 0; i < bindings.length; i++)
+      {
+         String typeName = importRewrite.addImport(bindings[i]);
+         Name newNode = ASTNodeFactory.newName(ast, typeName);
+         exceptions.add(newNode);
 
-	private int evaluateModifiers() {
-		if (getSenderBinding().isInterface()) {
-			return 0;
-		} else {
-			int modifiers= fMethod.getModifiers();
-			if (Modifier.isPrivate(modifiers)) {
-				modifiers |= Modifier.PROTECTED;
-			}
-			return modifiers & (Modifier.PUBLIC | Modifier.PROTECTED | Modifier.ABSTRACT | Modifier.STRICTFP);
-		}
-	}
+//         addLinkedPosition(rewrite.track(newNode), false, "exc_type_" + i); //$NON-NLS-1$
+      }
+   }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.proposals.AbstractMethodCorrectionProposal#addNewModifiers(org.eclipse.jdt.core.dom.rewrite.ASTRewrite, org.eclipse.jdt.core.dom.ASTNode, java.util.List)
-	 */
-	@Override
-	protected void addNewModifiers(ASTRewrite rewrite, ASTNode targetTypeDecl, List<IExtendedModifier> modifiers) {
-		modifiers.addAll(rewrite.getAST().newModifiers(evaluateModifiers()));
-	}
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.internal.ui.text.correction.proposals.AbstractMethodCorrectionProposal#addNewTypeParameters(org.eclipse.jdt.core.dom.rewrite.ASTRewrite, java.util.List, java.util.List)
+    */
+   @Override
+   protected void addNewTypeParameters(ASTRewrite rewrite, List<String> takenNames, List<TypeParameter> params)
+      throws CoreException
+   {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.proposals.AbstractMethodCorrectionProposal#getNewMethodType(org.eclipse.jdt.core.dom.rewrite.ASTRewrite)
-	 */
-	@Override
-	protected Type getNewMethodType(ASTRewrite rewrite) throws CoreException {
-		return getImportRewrite().addImport(fMethod.getReturnType(), rewrite.getAST());
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.proposals.AbstractMethodCorrectionProposal#addNewExceptions(org.eclipse.jdt.core.dom.rewrite.ASTRewrite, java.util.List)
-	 */
-	@Override
-	protected void addNewExceptions(ASTRewrite rewrite, List<Name> exceptions) throws CoreException {
-		AST ast= rewrite.getAST();
-		ImportRewrite importRewrite= getImportRewrite();
-		ITypeBinding[] bindings= fMethod.getExceptionTypes();
-		for (int i= 0; i < bindings.length; i++) {
-			String typeName= importRewrite.addImport(bindings[i]);
-			Name newNode= ASTNodeFactory.newName(ast, typeName);
-			exceptions.add(newNode);
-
-			addLinkedPosition(rewrite.track(newNode), false, "exc_type_" + i); //$NON-NLS-1$
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.proposals.AbstractMethodCorrectionProposal#addNewTypeParameters(org.eclipse.jdt.core.dom.rewrite.ASTRewrite, java.util.List, java.util.List)
-	 */
-	@Override
-	protected void addNewTypeParameters(ASTRewrite rewrite, List<String> takenNames, List<TypeParameter> params) throws CoreException {
-
-	}
+   }
 
 }

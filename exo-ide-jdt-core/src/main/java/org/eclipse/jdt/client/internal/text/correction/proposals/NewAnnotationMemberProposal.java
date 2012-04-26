@@ -10,146 +10,168 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.text.correction.proposals;
 
+import com.google.gwt.user.client.ui.Image;
+
+import org.eclipse.jdt.client.core.dom.AST;
+import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.AnnotationTypeDeclaration;
+import org.eclipse.jdt.client.core.dom.AnnotationTypeMemberDeclaration;
+import org.eclipse.jdt.client.core.dom.BodyDeclaration;
+import org.eclipse.jdt.client.core.dom.ChildListPropertyDescriptor;
+import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.core.dom.Expression;
+import org.eclipse.jdt.client.core.dom.ITypeBinding;
+import org.eclipse.jdt.client.core.dom.MemberValuePair;
+import org.eclipse.jdt.client.core.dom.SimpleName;
+import org.eclipse.jdt.client.core.dom.Type;
+import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
+import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite.ImportRewriteContext;
+import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.ASTResolving;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
+import org.eclipse.jdt.client.internal.corext.dom.ASTNodeFactory;
+import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
+import org.eclipse.jdt.client.runtime.CoreException;
+import org.exoplatform.ide.editor.text.IDocument;
+
 import java.util.List;
 
-import org.eclipse.swt.graphics.Image;
+public class NewAnnotationMemberProposal extends LinkedCorrectionProposal
+{
 
-import org.eclipse.core.runtime.CoreException;
+   private static final String KEY_NAME = "name"; //$NON-NLS-1$
 
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
-import org.eclipse.jdt.core.dom.AnnotationTypeMemberDeclaration;
-import org.eclipse.jdt.core.dom.BodyDeclaration;
-import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.MemberValuePair;
-import org.eclipse.jdt.core.dom.SimpleName;
-import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
-import org.eclipse.jdt.core.dom.rewrite.ImportRewrite.ImportRewriteContext;
-import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
+   private static final String KEY_TYPE = "type"; //$NON-NLS-1$
 
-import org.eclipse.jdt.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
-import org.eclipse.jdt.internal.corext.dom.ASTNodeFactory;
-import org.eclipse.jdt.internal.corext.dom.ASTNodes;
+   private final ASTNode fInvocationNode;
 
-import org.eclipse.jdt.internal.ui.text.correction.ASTResolving;
-import org.eclipse.jdt.internal.ui.text.correction.ModifierCorrectionSubProcessor;
+   private final ITypeBinding fSenderBinding;
 
-public class NewAnnotationMemberProposal extends LinkedCorrectionProposal {
+   public NewAnnotationMemberProposal(String label, ASTNode invocationNode, ITypeBinding binding, int relevance,
+      IDocument document, Image image)
+   {
+      super(label, null, relevance, document, image);
+      fInvocationNode = invocationNode;
+      fSenderBinding = binding;
+   }
 
-	private static final String KEY_NAME= "name"; //$NON-NLS-1$
-	private static final String KEY_TYPE= "type"; //$NON-NLS-1$
+   @Override
+   protected ASTRewrite getRewrite() throws CoreException
+   {
+      CompilationUnit astRoot = ASTResolving.findParentCompilationUnit(fInvocationNode);
+      ASTNode typeDecl = astRoot.findDeclaringNode(fSenderBinding);
+      ASTNode newTypeDecl = null;
+      if (typeDecl != null)
+      {
+         newTypeDecl = typeDecl;
+      }
+      else
+      {
+         astRoot = ASTResolving.createQuickFixAST(document, null);
+         newTypeDecl = astRoot.findDeclaringNode(fSenderBinding.getKey());
+      }
+      createImportRewrite(astRoot);
 
-	private final ASTNode fInvocationNode;
-	private final ITypeBinding fSenderBinding;
+      if (newTypeDecl instanceof AnnotationTypeDeclaration)
+      {
+         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
 
-	public NewAnnotationMemberProposal(String label, ICompilationUnit targetCU, ASTNode invocationNode, ITypeBinding binding, int relevance, Image image) {
-		super(label, targetCU, null, relevance, image);
-		fInvocationNode= invocationNode;
-		fSenderBinding= binding;
-	}
+         AnnotationTypeMemberDeclaration newStub = getStub(rewrite, (AnnotationTypeDeclaration)newTypeDecl);
 
-	@Override
-	protected ASTRewrite getRewrite() throws CoreException {
-		CompilationUnit astRoot= ASTResolving.findParentCompilationUnit(fInvocationNode);
-		ASTNode typeDecl= astRoot.findDeclaringNode(fSenderBinding);
-		ASTNode newTypeDecl= null;
-		if (typeDecl != null) {
-			newTypeDecl= typeDecl;
-		} else {
-			astRoot= ASTResolving.createQuickFixAST(getCompilationUnit(), null);
-			newTypeDecl= astRoot.findDeclaringNode(fSenderBinding.getKey());
-		}
-		createImportRewrite(astRoot);
+         ChildListPropertyDescriptor property = ASTNodes.getBodyDeclarationsProperty(newTypeDecl);
+         List<? extends ASTNode> members = (List<? extends ASTNode>)newTypeDecl.getStructuralProperty(property);
+         int insertIndex = members.size();
 
-		if (newTypeDecl instanceof AnnotationTypeDeclaration) {
-			ASTRewrite rewrite= ASTRewrite.create(astRoot.getAST());
+         ListRewrite listRewriter = rewrite.getListRewrite(newTypeDecl, property);
+         listRewriter.insertAt(newStub, insertIndex, null);
 
-			AnnotationTypeMemberDeclaration newStub= getStub(rewrite, (AnnotationTypeDeclaration) newTypeDecl);
+         return rewrite;
+      }
+      return null;
+   }
 
-			ChildListPropertyDescriptor property= ASTNodes.getBodyDeclarationsProperty(newTypeDecl);
-			List<? extends ASTNode> members= (List<? extends ASTNode>) newTypeDecl.getStructuralProperty(property);
-			int insertIndex= members.size();
+   private AnnotationTypeMemberDeclaration getStub(ASTRewrite rewrite, AnnotationTypeDeclaration targetTypeDecl)
+   {
+      AST ast = targetTypeDecl.getAST();
 
-			ListRewrite listRewriter= rewrite.getListRewrite(newTypeDecl, property);
-			listRewriter.insertAt(newStub, insertIndex, null);
+      AnnotationTypeMemberDeclaration decl = ast.newAnnotationTypeMemberDeclaration();
 
-			return rewrite;
-		}
-		return null;
-	}
+      SimpleName newNameNode = getNewName(rewrite);
 
-	private AnnotationTypeMemberDeclaration getStub(ASTRewrite rewrite, AnnotationTypeDeclaration targetTypeDecl) {
-		AST ast= targetTypeDecl.getAST();
+      decl.modifiers().addAll(ASTNodeFactory.newModifiers(ast, evaluateModifiers(targetTypeDecl)));
 
-		AnnotationTypeMemberDeclaration decl= ast.newAnnotationTypeMemberDeclaration();
+//      ModifierCorrectionSubProcessor.installLinkedVisibilityProposals(getLinkedProposalModel(), rewrite,
+//         decl.modifiers(), true);
 
-		SimpleName newNameNode= getNewName(rewrite);
+      decl.setName(newNameNode);
 
-		decl.modifiers().addAll(ASTNodeFactory.newModifiers(ast, evaluateModifiers(targetTypeDecl)));
+      Type returnType = getNewType(rewrite);
+      decl.setType(returnType);
+      return decl;
+   }
 
-		ModifierCorrectionSubProcessor.installLinkedVisibilityProposals(getLinkedProposalModel(), rewrite, decl.modifiers(), true);
+   private Type getNewType(ASTRewrite rewrite)
+   {
+      AST ast = rewrite.getAST();
+      Type newTypeNode = null;
+      ITypeBinding binding = null;
+      if (fInvocationNode.getLocationInParent() == MemberValuePair.NAME_PROPERTY)
+      {
+         Expression value = ((MemberValuePair)fInvocationNode.getParent()).getValue();
+         binding = value.resolveTypeBinding();
+      }
+      else if (fInvocationNode instanceof Expression)
+      {
+         binding = ((Expression)fInvocationNode).resolveTypeBinding();
+      }
+      if (binding != null)
+      {
+         ImportRewriteContext importRewriteContext =
+            new ContextSensitiveImportRewriteContext(fInvocationNode, getImportRewrite());
+         newTypeNode = getImportRewrite().addImport(binding, ast, importRewriteContext);
+      }
+      if (newTypeNode == null)
+      {
+         newTypeNode = ast.newSimpleType(ast.newSimpleName("String")); //$NON-NLS-1$
+      }
+//      addLinkedPosition(rewrite.track(newTypeNode), false, KEY_TYPE);
+      return newTypeNode;
+   }
 
-		decl.setName(newNameNode);
+   private int evaluateModifiers(AnnotationTypeDeclaration targetTypeDecl)
+   {
+      List<BodyDeclaration> methodDecls = targetTypeDecl.bodyDeclarations();
+      for (int i = 0; i < methodDecls.size(); i++)
+      {
+         Object curr = methodDecls.get(i);
+         if (curr instanceof AnnotationTypeMemberDeclaration)
+         {
+            return ((AnnotationTypeMemberDeclaration)curr).getModifiers();
+         }
+      }
+      return 0;
+   }
 
-		Type returnType= getNewType(rewrite);
-		decl.setType(returnType);
-		return decl;
-	}
+   private SimpleName getNewName(ASTRewrite rewrite)
+   {
+      AST ast = rewrite.getAST();
+      String name;
+      if (fInvocationNode.getLocationInParent() == MemberValuePair.NAME_PROPERTY)
+      {
+         name = ((SimpleName)fInvocationNode).getIdentifier();
+//         if (ast == fInvocationNode.getAST())
+//         {
+//            addLinkedPosition(rewrite.track(fInvocationNode), true, KEY_NAME);
+//         }
+      }
+      else
+      {
+         name = "value"; //$NON-NLS-1$
+      }
 
-	private Type getNewType(ASTRewrite rewrite) {
-		AST ast= rewrite.getAST();
-		Type newTypeNode= null;
-		ITypeBinding binding= null;
-		if (fInvocationNode.getLocationInParent() == MemberValuePair.NAME_PROPERTY) {
-			Expression value= ((MemberValuePair) fInvocationNode.getParent()).getValue();
-			binding= value.resolveTypeBinding();
-		} else if (fInvocationNode instanceof Expression) {
-			binding= ((Expression) fInvocationNode).resolveTypeBinding();
-		}
-		if (binding != null) {
-			ImportRewriteContext importRewriteContext= new ContextSensitiveImportRewriteContext(fInvocationNode, getImportRewrite());
-			newTypeNode= getImportRewrite().addImport(binding, ast, importRewriteContext);
-		}
-		if (newTypeNode == null) {
-			newTypeNode= ast.newSimpleType(ast.newSimpleName("String")); //$NON-NLS-1$
-		}
-		addLinkedPosition(rewrite.track(newTypeNode), false, KEY_TYPE);
-		return newTypeNode;
-	}
-
-	private int evaluateModifiers(AnnotationTypeDeclaration targetTypeDecl) {
-		List<BodyDeclaration> methodDecls= targetTypeDecl.bodyDeclarations();
-		for (int i= 0; i < methodDecls.size(); i++) {
-			Object curr= methodDecls.get(i);
-			if (curr instanceof AnnotationTypeMemberDeclaration) {
-				return ((AnnotationTypeMemberDeclaration) curr).getModifiers();
-			}
-		}
-		return 0;
-	}
-
-	private SimpleName getNewName(ASTRewrite rewrite) {
-		AST ast= rewrite.getAST();
-		String name;
-		if (fInvocationNode.getLocationInParent() == MemberValuePair.NAME_PROPERTY) {
-			name= ((SimpleName) fInvocationNode).getIdentifier();
-			if (ast == fInvocationNode.getAST()) {
-				addLinkedPosition(rewrite.track(fInvocationNode), true, KEY_NAME);
-			}
-		} else {
-			name= "value"; //$NON-NLS-1$
-		}
-
-
-		SimpleName newNameNode= ast.newSimpleName(name);
-		addLinkedPosition(rewrite.track(newNameNode), false, KEY_NAME);
-		return newNameNode;
-	}
+      SimpleName newNameNode = ast.newSimpleName(name);
+//      addLinkedPosition(rewrite.track(newNameNode), false, KEY_NAME);
+      return newNameNode;
+   }
 
 }

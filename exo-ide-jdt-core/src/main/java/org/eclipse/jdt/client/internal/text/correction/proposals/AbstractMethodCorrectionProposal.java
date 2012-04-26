@@ -12,204 +12,248 @@
 
 package org.eclipse.jdt.client.internal.text.correction.proposals;
 
+import com.google.gwt.user.client.ui.Image;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.jdt.client.JavaPreferencesSettings;
+import org.eclipse.jdt.client.JdtExtension;
+import org.eclipse.jdt.client.core.dom.AST;
+import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.Block;
+import org.eclipse.jdt.client.core.dom.BodyDeclaration;
+import org.eclipse.jdt.client.core.dom.ChildListPropertyDescriptor;
+import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.core.dom.IExtendedModifier;
+import org.eclipse.jdt.client.core.dom.ITypeBinding;
+import org.eclipse.jdt.client.core.dom.IVariableBinding;
+import org.eclipse.jdt.client.core.dom.Javadoc;
+import org.eclipse.jdt.client.core.dom.MethodDeclaration;
+import org.eclipse.jdt.client.core.dom.Name;
+import org.eclipse.jdt.client.core.dom.PrimitiveType;
+import org.eclipse.jdt.client.core.dom.ReturnStatement;
+import org.eclipse.jdt.client.core.dom.SimpleName;
+import org.eclipse.jdt.client.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.client.core.dom.Type;
+import org.eclipse.jdt.client.core.dom.TypeParameter;
+import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
+import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.ASTResolving;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.CodeGenerationSettings;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
+import org.eclipse.jdt.client.internal.corext.dom.ASTNodeFactory;
+import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
+import org.eclipse.jdt.client.internal.corext.dom.Bindings;
+import org.eclipse.jdt.client.runtime.CoreException;
+import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.text.IDocument;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
+public abstract class AbstractMethodCorrectionProposal extends LinkedCorrectionProposal
+{
 
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.BodyDeclaration;
-import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.IExtendedModifier;
-import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.IVariableBinding;
-import org.eclipse.jdt.core.dom.Javadoc;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.Name;
-import org.eclipse.jdt.core.dom.PrimitiveType;
-import org.eclipse.jdt.core.dom.ReturnStatement;
-import org.eclipse.jdt.core.dom.SimpleName;
-import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.TypeParameter;
-import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
-import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
+   private ASTNode fNode;
 
-import org.eclipse.jdt.internal.corext.codemanipulation.CodeGenerationSettings;
-import org.eclipse.jdt.internal.corext.dom.ASTNodeFactory;
-import org.eclipse.jdt.internal.corext.dom.ASTNodes;
-import org.eclipse.jdt.internal.corext.dom.Bindings;
+   private ITypeBinding fSenderBinding;
 
-import org.eclipse.jdt.ui.CodeGeneration;
+   public AbstractMethodCorrectionProposal(String label, ASTNode invocationNode, ITypeBinding binding, int relevance,
+      IDocument document, Image image)
+   {
+      super(label, null, relevance, document, image);
 
-import org.eclipse.jdt.internal.ui.preferences.JavaPreferencesSettings;
-import org.eclipse.jdt.internal.ui.text.correction.ASTResolving;
+      Assert.isTrue(binding != null && Bindings.isDeclarationBinding(binding));
 
-public abstract class AbstractMethodCorrectionProposal extends LinkedCorrectionProposal {
+      fNode = invocationNode;
+      fSenderBinding = binding;
+   }
 
-	private ASTNode fNode;
-	private ITypeBinding fSenderBinding;
+   protected ASTNode getInvocationNode()
+   {
+      return fNode;
+   }
 
-	public AbstractMethodCorrectionProposal(String label, ICompilationUnit targetCU, ASTNode invocationNode, ITypeBinding binding, int relevance, Image image) {
-		super(label, targetCU, null, relevance, image);
+   /**
+    * @return The binding of the type declaration (generic type)
+    */
+   protected ITypeBinding getSenderBinding()
+   {
+      return fSenderBinding;
+   }
 
-		Assert.isTrue(binding != null && Bindings.isDeclarationBinding(binding));
+   @Override
+   protected ASTRewrite getRewrite() throws CoreException
+   {
+      CompilationUnit astRoot = ASTResolving.findParentCompilationUnit(fNode);
+      ASTNode typeDecl = astRoot.findDeclaringNode(fSenderBinding);
+      ASTNode newTypeDecl = null;
+      boolean isInDifferentCU;
+      if (typeDecl != null)
+      {
+         isInDifferentCU = false;
+         newTypeDecl = typeDecl;
+      }
+      else
+      {
+         isInDifferentCU = true;
+         astRoot = ASTResolving.createQuickFixAST(document, null);
+         newTypeDecl = astRoot.findDeclaringNode(fSenderBinding.getKey());
+      }
+      createImportRewrite(astRoot);
 
-		fNode= invocationNode;
-		fSenderBinding= binding;
-	}
+      if (newTypeDecl != null)
+      {
+         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
 
-	protected ASTNode getInvocationNode() {
-		return fNode;
-	}
+         MethodDeclaration newStub = getStub(rewrite, newTypeDecl);
 
-	/**
-	 * @return The binding of the type declaration (generic type)
-	 */
-	protected ITypeBinding getSenderBinding() {
-		return fSenderBinding;
-	}
+         ChildListPropertyDescriptor property = ASTNodes.getBodyDeclarationsProperty(newTypeDecl);
+         List<BodyDeclaration> members = (List<BodyDeclaration>)newTypeDecl.getStructuralProperty(property);
 
-	@Override
-	protected ASTRewrite getRewrite() throws CoreException {
-		CompilationUnit astRoot= ASTResolving.findParentCompilationUnit(fNode);
-		ASTNode typeDecl= astRoot.findDeclaringNode(fSenderBinding);
-		ASTNode newTypeDecl= null;
-		boolean isInDifferentCU;
-		if (typeDecl != null) {
-			isInDifferentCU= false;
-			newTypeDecl= typeDecl;
-		} else {
-			isInDifferentCU= true;
-			astRoot= ASTResolving.createQuickFixAST(getCompilationUnit(), null);
-			newTypeDecl= astRoot.findDeclaringNode(fSenderBinding.getKey());
-		}
-		createImportRewrite(astRoot);
+         int insertIndex;
+         if (isConstructor())
+         {
+            insertIndex = findConstructorInsertIndex(members);
+         }
+         else if (!isInDifferentCU)
+         {
+            insertIndex = findMethodInsertIndex(members, fNode.getStartPosition());
+         }
+         else
+         {
+            insertIndex = members.size();
+         }
+         ListRewrite listRewriter = rewrite.getListRewrite(newTypeDecl, property);
+         listRewriter.insertAt(newStub, insertIndex, null);
 
-		if (newTypeDecl != null) {
-			ASTRewrite rewrite= ASTRewrite.create(astRoot.getAST());
+         return rewrite;
+      }
+      return null;
+   }
 
-			MethodDeclaration newStub= getStub(rewrite, newTypeDecl);
+   private MethodDeclaration getStub(ASTRewrite rewrite, ASTNode targetTypeDecl) throws CoreException
+   {
+      AST ast = targetTypeDecl.getAST();
+      MethodDeclaration decl = ast.newMethodDeclaration();
 
-			ChildListPropertyDescriptor property= ASTNodes.getBodyDeclarationsProperty(newTypeDecl);
-			List<BodyDeclaration> members= (List<BodyDeclaration>) newTypeDecl.getStructuralProperty(property);
+      SimpleName newNameNode = getNewName(rewrite);
 
-			int insertIndex;
-			if (isConstructor()) {
-				insertIndex= findConstructorInsertIndex(members);
-			} else if (!isInDifferentCU) {
-				insertIndex= findMethodInsertIndex(members, fNode.getStartPosition());
-			} else {
-				insertIndex= members.size();
-			}
-			ListRewrite listRewriter= rewrite.getListRewrite(newTypeDecl, property);
-			listRewriter.insertAt(newStub, insertIndex, null);
+      decl.setConstructor(isConstructor());
 
-			return rewrite;
-		}
-		return null;
-	}
+      addNewModifiers(rewrite, targetTypeDecl, decl.modifiers());
 
-	private MethodDeclaration getStub(ASTRewrite rewrite, ASTNode targetTypeDecl) throws CoreException {
-		AST ast= targetTypeDecl.getAST();
-		MethodDeclaration decl= ast.newMethodDeclaration();
+      ArrayList<String> takenNames = new ArrayList<String>();
+      addNewTypeParameters(rewrite, takenNames, decl.typeParameters());
 
-		SimpleName newNameNode= getNewName(rewrite);
+      decl.setName(newNameNode);
 
-		decl.setConstructor(isConstructor());
+      IVariableBinding[] declaredFields = fSenderBinding.getDeclaredFields();
+      for (int i = 0; i < declaredFields.length; i++)
+      { // avoid to take parameter names that are equal to field names
+         takenNames.add(declaredFields[i].getName());
+      }
 
-		addNewModifiers(rewrite, targetTypeDecl, decl.modifiers());
+      String bodyStatement = ""; //$NON-NLS-1$
+      if (!isConstructor())
+      {
+         Type returnType = getNewMethodType(rewrite);
+         decl.setReturnType2(returnType);
 
-		ArrayList<String> takenNames= new ArrayList<String>();
-		addNewTypeParameters(rewrite, takenNames, decl.typeParameters());
+         boolean isVoid =
+            returnType instanceof PrimitiveType
+               && PrimitiveType.VOID.equals(((PrimitiveType)returnType).getPrimitiveTypeCode());
+         if (!fSenderBinding.isInterface() && !isVoid)
+         {
+            ReturnStatement returnStatement = ast.newReturnStatement();
+            returnStatement.setExpression(ASTNodeFactory.newDefaultExpression(ast, returnType, 0));
+            bodyStatement =
+               ASTNodes.asFormattedString(returnStatement, 0, String.valueOf('\n'), JdtExtension.get().getOptions());
+         }
+      }
 
-		decl.setName(newNameNode);
+      addNewParameters(rewrite, takenNames, decl.parameters());
+      addNewExceptions(rewrite, decl.thrownExceptions());
 
-		IVariableBinding[] declaredFields= fSenderBinding.getDeclaredFields();
-		for (int i= 0; i < declaredFields.length; i++) { // avoid to take parameter names that are equal to field names
-			takenNames.add(declaredFields[i].getName());
-		}
+      Block body = null;
+      if (!fSenderBinding.isInterface())
+      {
+         body = ast.newBlock();
+         String placeHolder =
+            StubUtility.getMethodBodyContent(isConstructor(), fSenderBinding.getName(), newNameNode.getIdentifier(),
+               bodyStatement, String.valueOf('\n'));
 
-		String bodyStatement= ""; //$NON-NLS-1$
-		if (!isConstructor()) {
-			Type returnType= getNewMethodType(rewrite);
-			decl.setReturnType2(returnType);
+         if (placeHolder != null)
+         {
+            ReturnStatement todoNode =
+               (ReturnStatement)rewrite.createStringPlaceholder(placeHolder, ASTNode.RETURN_STATEMENT);
+            body.statements().add(todoNode);
+         }
+      }
+      decl.setBody(body);
 
-			boolean isVoid= returnType instanceof PrimitiveType && PrimitiveType.VOID.equals(((PrimitiveType)returnType).getPrimitiveTypeCode());
-			if (!fSenderBinding.isInterface() && !isVoid) {
-				ReturnStatement returnStatement= ast.newReturnStatement();
-				returnStatement.setExpression(ASTNodeFactory.newDefaultExpression(ast, returnType, 0));
-				bodyStatement= ASTNodes.asFormattedString(returnStatement, 0, String.valueOf('\n'), getCompilationUnit().getJavaProject().getOptions(true));
-			}
-		}
+      CodeGenerationSettings settings =
+         JavaPreferencesSettings.getCodeGenerationSettings();
+      if (settings.createComments && !fSenderBinding.isAnonymous())
+      {
+         String string = getMethodComment(fSenderBinding.getName(), decl, null,
+            String.valueOf('\n'));
+         
+         if (string != null)
+         {
+            Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+            decl.setJavadoc(javadoc);
+         }
+      }
+      return decl;
+   }
 
-		addNewParameters(rewrite, takenNames, decl.parameters());
-		addNewExceptions(rewrite, decl.thrownExceptions());
+   private int findMethodInsertIndex(List<BodyDeclaration> decls, int currPos)
+   {
+      int nDecls = decls.size();
+      for (int i = 0; i < nDecls; i++)
+      {
+         BodyDeclaration curr = decls.get(i);
+         if (curr instanceof MethodDeclaration && currPos < curr.getStartPosition() + curr.getLength())
+         {
+            return i + 1;
+         }
+      }
+      return nDecls;
+   }
 
-		Block body= null;
-		if (!fSenderBinding.isInterface()) {
-			body= ast.newBlock();
-			String placeHolder= CodeGeneration.getMethodBodyContent(getCompilationUnit(), fSenderBinding.getName(), newNameNode.getIdentifier(), isConstructor(), bodyStatement, String.valueOf('\n'));
-			if (placeHolder != null) {
-				ReturnStatement todoNode= (ReturnStatement)rewrite.createStringPlaceholder(placeHolder, ASTNode.RETURN_STATEMENT);
-				body.statements().add(todoNode);
-			}
-		}
-		decl.setBody(body);
+   private int findConstructorInsertIndex(List<BodyDeclaration> decls)
+   {
+      int nDecls = decls.size();
+      int lastMethod = 0;
+      for (int i = nDecls - 1; i >= 0; i--)
+      {
+         BodyDeclaration curr = decls.get(i);
+         if (curr instanceof MethodDeclaration)
+         {
+            if (((MethodDeclaration)curr).isConstructor())
+            {
+               return i + 1;
+            }
+            lastMethod = i;
+         }
+      }
+      return lastMethod;
+   }
 
-		CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(getCompilationUnit().getJavaProject());
-		if (settings.createComments && !fSenderBinding.isAnonymous()) {
-			String string= CodeGeneration.getMethodComment(getCompilationUnit(), fSenderBinding.getName(), decl, null, String.valueOf('\n'));
-			if (string != null) {
-				Javadoc javadoc= (Javadoc) rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
-				decl.setJavadoc(javadoc);
-			}
-		}
-		return decl;
-	}
+   protected abstract boolean isConstructor();
 
-	private int findMethodInsertIndex(List<BodyDeclaration> decls, int currPos) {
-		int nDecls= decls.size();
-		for (int i= 0; i < nDecls; i++) {
-			BodyDeclaration curr= decls.get(i);
-			if (curr instanceof MethodDeclaration && currPos < curr.getStartPosition() + curr.getLength()) {
-				return i + 1;
-			}
-		}
-		return nDecls;
-	}
+   protected abstract void addNewModifiers(ASTRewrite rewrite, ASTNode targetTypeDecl,
+      List<IExtendedModifier> exceptions);
 
-	private int findConstructorInsertIndex(List<BodyDeclaration> decls) {
-		int nDecls= decls.size();
-		int lastMethod= 0;
-		for (int i= nDecls - 1; i >= 0; i--) {
-			BodyDeclaration curr= decls.get(i);
-			if (curr instanceof MethodDeclaration) {
-				if (((MethodDeclaration) curr).isConstructor()) {
-					return i + 1;
-				}
-				lastMethod= i;
-			}
-		}
-		return lastMethod;
-	}
+   protected abstract void addNewTypeParameters(ASTRewrite rewrite, List<String> takenNames, List<TypeParameter> params)
+      throws CoreException;
 
-	protected abstract boolean isConstructor();
+   protected abstract void addNewParameters(ASTRewrite rewrite, List<String> takenNames,
+      List<SingleVariableDeclaration> params) throws CoreException;
 
-	protected abstract void addNewModifiers(ASTRewrite rewrite, ASTNode targetTypeDecl, List<IExtendedModifier> exceptions);
-	protected abstract void addNewTypeParameters(ASTRewrite rewrite, List<String> takenNames, List<TypeParameter> params) throws CoreException;
-	protected abstract void addNewParameters(ASTRewrite rewrite, List<String> takenNames, List<SingleVariableDeclaration> params) throws CoreException;
-	protected abstract void addNewExceptions(ASTRewrite rewrite, List<Name> exceptions) throws CoreException;
+   protected abstract void addNewExceptions(ASTRewrite rewrite, List<Name> exceptions) throws CoreException;
 
-	protected abstract SimpleName getNewName(ASTRewrite rewrite);
-	protected abstract Type getNewMethodType(ASTRewrite rewrite) throws CoreException;
+   protected abstract SimpleName getNewName(ASTRewrite rewrite);
 
+   protected abstract Type getNewMethodType(ASTRewrite rewrite) throws CoreException;
 
 }

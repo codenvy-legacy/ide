@@ -10,34 +10,42 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.text.correction.proposals;
 
+import com.google.gwt.user.client.ui.Image;
+
+import org.eclipse.jdt.client.JdtClientBundle;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.edits.ReplaceEdit;
 import org.exoplatform.ide.editor.text.edits.TextEdit;
 
+public class ReplaceCorrectionProposal extends CUCorrectionProposal
+{
 
-public class ReplaceCorrectionProposal extends CUCorrectionProposal {
+   private String fReplacementString;
 
-	private String fReplacementString;
-	private int fOffset;
-	private int fLength;
+   private int fOffset;
 
-	public ReplaceCorrectionProposal(String name, ICompilationUnit cu, int offset, int length, String replacementString, int relevance) {
-		super(name, cu, relevance, JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE));
-		fReplacementString= replacementString;
-		fOffset= offset;
-		fLength= length;
-	}
+   private int fLength;
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.CUCorrectionProposal#addEdits(org.eclipse.jface.text.IDocument)
-	 */
-	@Override
-	protected void addEdits(IDocument doc, TextEdit rootEdit) throws CoreException {
-		super.addEdits(doc, rootEdit);
+   public ReplaceCorrectionProposal(String name, int offset, int length, String replacementString, int relevance,
+      IDocument document)
+   {
+      super(name, relevance, document, new Image(JdtClientBundle.INSTANCE.correction_change()));
+      fReplacementString = replacementString;
+      fOffset = offset;
+      fLength = length;
+   }
 
-		TextEdit edit= new ReplaceEdit(fOffset, fLength, fReplacementString);
-		rootEdit.addChild(edit);
-	}
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.internal.ui.text.correction.CUCorrectionProposal#addEdits(org.eclipse.jface.text.IDocument)
+    */
+   @Override
+   protected void addEdits(IDocument doc, TextEdit rootEdit) throws CoreException
+   {
+      super.addEdits(doc, rootEdit);
+
+      TextEdit edit = new ReplaceEdit(fOffset, fLength, fReplacementString);
+      rootEdit.addChild(edit);
+   }
 
 }

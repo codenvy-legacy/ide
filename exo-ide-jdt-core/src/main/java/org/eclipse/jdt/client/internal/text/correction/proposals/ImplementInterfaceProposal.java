@@ -10,79 +10,86 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.text.correction.proposals;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
+import com.google.gwt.user.client.ui.Image;
 
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.IBinding;
-import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
-import org.eclipse.jdt.core.dom.rewrite.ImportRewrite;
-import org.eclipse.jdt.core.dom.rewrite.ImportRewrite.ImportRewriteContext;
-import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
+import org.eclipse.jdt.client.JdtClientBundle;
+import org.eclipse.jdt.client.core.dom.AST;
+import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.core.dom.IBinding;
+import org.eclipse.jdt.client.core.dom.ITypeBinding;
+import org.eclipse.jdt.client.core.dom.Type;
+import org.eclipse.jdt.client.core.dom.TypeDeclaration;
+import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
+import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
+import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite.ImportRewriteContext;
+import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
 
-import org.eclipse.jdt.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
-import org.eclipse.jdt.internal.corext.dom.Bindings;
-import org.eclipse.jdt.internal.corext.util.Messages;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.ASTResolving;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
+import org.eclipse.jdt.client.internal.corext.dom.Bindings;
+import org.eclipse.jdt.client.internal.text.correction.CorrectionMessages;
+import org.eclipse.jdt.client.runtime.CoreException;
+import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.text.IDocument;
 
-import org.eclipse.jdt.internal.ui.JavaPluginImages;
-import org.eclipse.jdt.internal.ui.text.correction.ASTResolving;
-import org.eclipse.jdt.internal.ui.text.correction.CorrectionMessages;
-import org.eclipse.jdt.internal.ui.viewsupport.BasicElementLabels;
+public class ImplementInterfaceProposal extends LinkedCorrectionProposal
+{
 
-public class ImplementInterfaceProposal extends LinkedCorrectionProposal {
+   private IBinding fBinding;
 
-	private IBinding fBinding;
-	private CompilationUnit fAstRoot;
-	private ITypeBinding fNewInterface;
+   private CompilationUnit fAstRoot;
 
-	public ImplementInterfaceProposal(ICompilationUnit targetCU, ITypeBinding binding, CompilationUnit astRoot, ITypeBinding newInterface, int relevance) {
-		super("", targetCU, null, relevance, JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE)); //$NON-NLS-1$
+   private ITypeBinding fNewInterface;
 
-		Assert.isTrue(binding != null && Bindings.isDeclarationBinding(binding));
+   public ImplementInterfaceProposal(ITypeBinding binding, CompilationUnit astRoot, ITypeBinding newInterface,
+      int relevance, IDocument document)
+   {
+      super("", null, relevance, document, new Image(JdtClientBundle.INSTANCE.correction_change())); //$NON-NLS-1$
 
-		fBinding= binding;
-		fAstRoot= astRoot;
-		fNewInterface= newInterface;
+      Assert.isTrue(binding != null && Bindings.isDeclarationBinding(binding));
 
-		String[] args= { BasicElementLabels.getJavaElementName(binding.getName()), BasicElementLabels.getJavaElementName(Bindings.getRawName(newInterface)) };
-		setDisplayName(Messages.format(CorrectionMessages.ImplementInterfaceProposal_name, args));
-	}
+      fBinding = binding;
+      fAstRoot = astRoot;
+      fNewInterface = newInterface;
 
-	@Override
-	protected ASTRewrite getRewrite() throws CoreException {
-		ASTNode boundNode= fAstRoot.findDeclaringNode(fBinding);
-		ASTNode declNode= null;
-		CompilationUnit newRoot= fAstRoot;
-		if (boundNode != null) {
-			declNode= boundNode; // is same CU
-		} else {
-			newRoot= ASTResolving.createQuickFixAST(getCompilationUnit(), null);
-			declNode= newRoot.findDeclaringNode(fBinding.getKey());
-		}
-		ImportRewrite imports= createImportRewrite(newRoot);
+      setDisplayName(CorrectionMessages.INSTANCE.ImplementInterfaceProposal_name(binding.getName(),
+         Bindings.getRawName(newInterface)));
+   }
 
-		if (declNode instanceof TypeDeclaration) {
-			AST ast= declNode.getAST();
-			ASTRewrite rewrite= ASTRewrite.create(ast);
+   @Override
+   protected ASTRewrite getRewrite() throws CoreException
+   {
+      ASTNode boundNode = fAstRoot.findDeclaringNode(fBinding);
+      ASTNode declNode = null;
+      CompilationUnit newRoot = fAstRoot;
+      if (boundNode != null)
+      {
+         declNode = boundNode; // is same CU
+      }
+      else
+      {
+         newRoot = ASTResolving.createQuickFixAST(document, null);
+         declNode = newRoot.findDeclaringNode(fBinding.getKey());
+      }
+      ImportRewrite imports = createImportRewrite(newRoot);
 
-			ImportRewriteContext importRewriteContext= new ContextSensitiveImportRewriteContext(declNode, imports);
-			Type newInterface= imports.addImport(fNewInterface, ast, importRewriteContext);
-			ListRewrite listRewrite= rewrite.getListRewrite(declNode, TypeDeclaration.SUPER_INTERFACE_TYPES_PROPERTY);
-			listRewrite.insertLast(newInterface, null);
+      if (declNode instanceof TypeDeclaration)
+      {
+         AST ast = declNode.getAST();
+         ASTRewrite rewrite = ASTRewrite.create(ast);
 
-			// set up linked mode
-			final String KEY_TYPE= "type"; //$NON-NLS-1$
-			addLinkedPosition(rewrite.track(newInterface), true, KEY_TYPE);
-			return rewrite;
-		}
-		return null;
-	}
+         ImportRewriteContext importRewriteContext = new ContextSensitiveImportRewriteContext(declNode, imports);
+         Type newInterface = imports.addImport(fNewInterface, ast, importRewriteContext);
+         ListRewrite listRewrite = rewrite.getListRewrite(declNode, TypeDeclaration.SUPER_INTERFACE_TYPES_PROPERTY);
+         listRewrite.insertLast(newInterface, null);
 
+         // set up linked mode
+         final String KEY_TYPE = "type"; //$NON-NLS-1$
+//         addLinkedPosition(rewrite.track(newInterface), true, KEY_TYPE);
+         return rewrite;
+      }
+      return null;
+   }
 
 }

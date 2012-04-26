@@ -10,47 +10,47 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.text.correction.proposals;
 
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.jdt.client.codeassistant.QualifiedTypeNameHistory;
+import org.eclipse.jdt.client.core.dom.SimpleName;
+import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
+import org.eclipse.jdt.client.runtime.CoreException;
+import org.exoplatform.ide.editor.text.IDocument;
 
-import org.eclipse.core.runtime.CoreException;
+import com.google.gwt.user.client.ui.Image;
 
-import org.eclipse.jface.text.IDocument;
+public class AddImportCorrectionProposal extends ASTRewriteCorrectionProposal
+{
 
-import org.eclipse.ui.IEditorPart;
+   private final String fTypeName;
 
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.dom.SimpleName;
-import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
+   private final String fQualifierName;
 
-import org.eclipse.jdt.internal.corext.util.QualifiedTypeNameHistory;
+   public AddImportCorrectionProposal(String name, int relevance, IDocument document, Image image,
+      String qualifierName, String typeName, SimpleName node)
+   {
+      super(name, ASTRewrite.create(node.getAST()), relevance, document, image);
+      fTypeName = typeName;
+      fQualifierName = qualifierName;
+   }
 
-public class AddImportCorrectionProposal extends ASTRewriteCorrectionProposal {
+   public String getQualifiedTypeName()
+   {
+      return fQualifierName + '.' + fTypeName;
+   }
 
-	private final String fTypeName;
-	private final String fQualifierName;
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.internal.ui.text.correction.ChangeCorrectionProposal#performChange(org.eclipse.ui.IEditorPart, org.eclipse.jface.text.IDocument)
+    */
+   @Override
+   protected void performChange(IDocument document) throws CoreException
+   {
+      super.performChange(document);
+      rememberSelection();
+   }
 
-	public AddImportCorrectionProposal(String name, ICompilationUnit cu, int relevance, Image image, String qualifierName, String typeName, SimpleName node) {
-		super(name, cu, ASTRewrite.create(node.getAST()), relevance, image);
-		fTypeName= typeName;
-		fQualifierName= qualifierName;
-	}
-
-	public String getQualifiedTypeName() {
-		return fQualifierName + '.' + fTypeName;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.ChangeCorrectionProposal#performChange(org.eclipse.ui.IEditorPart, org.eclipse.jface.text.IDocument)
-	 */
-	@Override
-	protected void performChange(IEditorPart activeEditor, IDocument document) throws CoreException {
-		super.performChange(activeEditor, document);
-		rememberSelection();
-	}
-
-
-	private void rememberSelection() {
-		QualifiedTypeNameHistory.remember(getQualifiedTypeName());
-	}
+   private void rememberSelection()
+   {
+      QualifiedTypeNameHistory.remember(getQualifiedTypeName());
+   }
 
 }

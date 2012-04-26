@@ -24,6 +24,8 @@ import org.exoplatform.ide.editor.runtime.Assert;
 public class Template
 {
 
+   private String id;
+   
    /** The name of this template */
    private/* final */String fName;
 
@@ -48,7 +50,7 @@ public class Template
     */
    public Template()
    {
-      this("", "", "", "", true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      this("", "", "", "", "", true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
    }
 
    /**
@@ -58,7 +60,7 @@ public class Template
     */
    public Template(Template template)
    {
-      this(template.getName(), template.getDescription(), template.getContextTypeId(), template.getPattern(), template
+      this(template.getId(), template.getName(), template.getDescription(), template.getContextTypeId(), template.getPattern(), template
          .isAutoInsertable());
    }
 
@@ -72,7 +74,7 @@ public class Template
     * @param isAutoInsertable the auto insertable property of the template
     * @since 3.1
     */
-   public Template(String name, String description, String contextTypeId, String pattern, boolean isAutoInsertable)
+   public Template(String id, String name, String description, String contextTypeId, String pattern, boolean isAutoInsertable)
    {
       Assert.isNotNull(description);
       fDescription = description;
@@ -168,5 +170,14 @@ public class Template
    public boolean isAutoInsertable()
    {
       return fIsAutoInsertable;
+   }
+   
+   /**
+    * Template id
+    * @return the id
+    */
+   public String getId()
+   {
+      return id;
    }
 }

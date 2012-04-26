@@ -11,17 +11,15 @@
 
 package org.eclipse.jdt.client.internal.text.correction.proposals;
 
-import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
+import org.eclipse.jdt.client.internal.corext.refactoring.code.CompilationUnitChange;
 import org.eclipse.jdt.client.internal.corext.util.Strings;
 import org.eclipse.jdt.client.ltk.refactoring.Change;
 import org.eclipse.jdt.client.ltk.refactoring.DocumentChange;
 import org.eclipse.jdt.client.ltk.refactoring.TextChange;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
-import org.eclipse.jdt.client.runtime.IStatus;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
 import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.Document;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.IRegion;
 import org.exoplatform.ide.editor.text.edits.CopyTargetEdit;
@@ -36,8 +34,6 @@ import org.exoplatform.ide.editor.text.edits.TextEditVisitor;
 
 import com.google.gwt.user.client.ui.Image;
 
-
-
 /**
  * A proposal for quick fixes and quick assist that work on a single compilation unit.
  * Either a {@link TextChange text change} is directly passed in the constructor or method
@@ -51,11 +47,13 @@ import com.google.gwt.user.client.ui.Image;
 public class CUCorrectionProposal extends ChangeCorrectionProposal
 {
 
-//   private ICompilationUnit fCompilationUnit;
+   //   private ICompilationUnit fCompilationUnit;
 
-//   private LinkedProposalModel fLinkedProposalModel;
+   //   private LinkedProposalModel fLinkedProposalModel;
 
-   private boolean fSwitchedEditor;
+//   private boolean fSwitchedEditor;
+
+   protected final IDocument document;
 
    /**
     * Constructs a correction proposal working on a compilation unit with a given text change
@@ -69,15 +67,16 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal
     * @param image the image that is displayed for this proposal or <code>null</code> if no
     * image is desired.
     */
-   public CUCorrectionProposal(String name, TextChange change, int relevance, Image image)
+   public CUCorrectionProposal(String name, TextChange change, int relevance, IDocument document, Image image)
    {
       super(name, change, relevance, image);
-//      if (cu == null)
-//      {
-//         throw new IllegalArgumentException("Compilation unit must not be null"); //$NON-NLS-1$
-//      }
-//      fCompilationUnit = cu;
-//      fLinkedProposalModel = null;
+      //      if (cu == null)
+      //      {
+      //         throw new IllegalArgumentException("Compilation unit must not be null"); //$NON-NLS-1$
+      //      }
+      //      fCompilationUnit = cu;
+      //      fLinkedProposalModel = null;
+      this.document = document;
    }
 
    /**
@@ -92,9 +91,9 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal
     * @param image The image that is displayed for this proposal or <code>null</code> if no
     * image is desired.
     */
-   protected CUCorrectionProposal(String name, int relevance, Image image)
+   protected CUCorrectionProposal(String name, int relevance, IDocument document, Image image)
    {
-      this(name, null, relevance, image);
+      this(name, null, relevance, document, image);
    }
 
    /**
@@ -111,19 +110,19 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal
    {
    }
 
-//   protected LinkedProposalModel getLinkedProposalModel()
-//   {
-//      if (fLinkedProposalModel == null)
-//      {
-//         fLinkedProposalModel = new LinkedProposalModel();
-//      }
-//      return fLinkedProposalModel;
-//   }
-//
-//   public void setLinkedProposalModel(LinkedProposalModel model)
-//   {
-//      fLinkedProposalModel = model;
-//   }
+   //   protected LinkedProposalModel getLinkedProposalModel()
+   //   {
+   //      if (fLinkedProposalModel == null)
+   //      {
+   //         fLinkedProposalModel = new LinkedProposalModel();
+   //      }
+   //      return fLinkedProposalModel;
+   //   }
+   //
+   //   public void setLinkedProposalModel(LinkedProposalModel model)
+   //   {
+   //      fLinkedProposalModel = model;
+   //   }
 
    @Override
    public Object getAdditionalProposalInfo(IProgressMonitor monitor)
@@ -216,7 +215,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal
       {
          e.printStackTrace();
          //TODO
-//         JavaPlugin.log(e);
+         //         JavaPlugin.log(e);
       }
       return buf.toString();
    }
@@ -305,95 +304,97 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal
    {
       try
       {
-//         ICompilationUnit unit = getCompilationUnit();
-//         IEditorPart part = null;
-//         if (unit.getResource().exists())
-//         {
-//            boolean canEdit = performValidateEdit(unit);
-//            if (!canEdit)
-//            {
-//               return;
-//            }
-//            part = EditorUtility.isOpenInEditor(unit);
-//            if (part == null)
-//            {
-//               part = JavaUI.openInEditor(unit);
-//               if (part != null)
-//               {
-//                  fSwitchedEditor = true;
-//                  document = JavaUI.getDocumentProvider().getDocument(part.getEditorInput());
-//               }
-//            }
-//            IWorkbenchPage page = JavaPlugin.getActivePage();
-//            if (page != null && part != null)
-//            {
-//               page.bringToTop(part);
-//            }
-//            if (part != null)
-//            {
-//               part.setFocus();
-//            }
-//         }
-         performChange(part, document);
+         //         ICompilationUnit unit = getCompilationUnit();
+         //         IEditorPart part = null;
+         //         if (unit.getResource().exists())
+         //         {
+         //            boolean canEdit = performValidateEdit(unit);
+         //            if (!canEdit)
+         //            {
+         //               return;
+         //            }
+         //            part = EditorUtility.isOpenInEditor(unit);
+         //            if (part == null)
+         //            {
+         //               part = JavaUI.openInEditor(unit);
+         //               if (part != null)
+         //               {
+         //                  fSwitchedEditor = true;
+         //                  document = JavaUI.getDocumentProvider().getDocument(part.getEditorInput());
+         //               }
+         //            }
+         //            IWorkbenchPage page = JavaPlugin.getActivePage();
+         //            if (page != null && part != null)
+         //            {
+         //               page.bringToTop(part);
+         //            }
+         //            if (part != null)
+         //            {
+         //               part.setFocus();
+         //            }
+         //         }
+         performChange(document);
       }
       catch (CoreException e)
       {
-         ExceptionHandler.handle(e, CorrectionMessages.CUCorrectionProposal_error_title,
-            CorrectionMessages.CUCorrectionProposal_error_message);
+         //TODO
+         e.printStackTrace();
+         //         ExceptionHandler.handle(e, CorrectionMessages.CUCorrectionProposal_error_title,
+         //            CorrectionMessages.CUCorrectionProposal_error_message);
       }
    }
 
-//   private boolean performValidateEdit(ICompilationUnit unit)
-//   {
-//      IStatus status = Resources.makeCommittable(unit.getResource(), JavaPlugin.getActiveWorkbenchShell());
-//      if (!status.isOK())
-//      {
-//         String label = CorrectionMessages.CUCorrectionProposal_error_title;
-//         String message = CorrectionMessages.CUCorrectionProposal_error_message;
-//         ErrorDialog.openError(JavaPlugin.getActiveWorkbenchShell(), label, message, status);
-//         return false;
-//      }
-//      return true;
-//   }
+   //   private boolean performValidateEdit(ICompilationUnit unit)
+   //   {
+   //      IStatus status = Resources.makeCommittable(unit.getResource(), JavaPlugin.getActiveWorkbenchShell());
+   //      if (!status.isOK())
+   //      {
+   //         String label = CorrectionMessages.CUCorrectionProposal_error_title;
+   //         String message = CorrectionMessages.CUCorrectionProposal_error_message;
+   //         ErrorDialog.openError(JavaPlugin.getActiveWorkbenchShell(), label, message, status);
+   //         return false;
+   //      }
+   //      return true;
+   //   }
 
    /* (non-Javadoc)
     * @see org.eclipse.jdt.internal.ui.text.correction.ChangeCorrectionProposal#performChange(org.eclipse.jface.text.IDocument, org.eclipse.ui.IEditorPart)
     */
    @Override
-   protected void performChange(IEditorPart part, IDocument document) throws CoreException
+   protected void performChange(IDocument document) throws CoreException
    {
-      try
-      {
-         super.performChange(part, document);
-         if (part == null)
-         {
-            return;
-         }
-
-         if (fLinkedProposalModel != null)
-         {
-            if (fLinkedProposalModel.hasLinkedPositions() && part instanceof JavaEditor)
-            {
-               // enter linked mode
-               ITextViewer viewer = ((JavaEditor)part).getViewer();
-               new LinkedProposalModelPresenter().enterLinkedMode(viewer, part, fSwitchedEditor, fLinkedProposalModel);
-            }
-            else if (part instanceof ITextEditor)
-            {
-               LinkedProposalPositionGroup.PositionInformation endPosition = fLinkedProposalModel.getEndPosition();
-               if (endPosition != null)
-               {
-                  // select a result
-                  int pos = endPosition.getOffset() + endPosition.getLength();
-                  ((ITextEditor)part).selectAndReveal(pos, 0);
-               }
-            }
-         }
-      }
-      catch (BadLocationException e)
-      {
-         throw new CoreException(JavaUIStatus.createError(IStatus.ERROR, e));
-      }
+      //      try
+      //      {
+      super.performChange(document);
+      //         if (part == null)
+      //         {
+      //            return;
+      //         }
+      //
+      //         if (fLinkedProposalModel != null)
+      //         {
+      //            if (fLinkedProposalModel.hasLinkedPositions() && part instanceof JavaEditor)
+      //            {
+      //               // enter linked mode
+      //               ITextViewer viewer = ((JavaEditor)part).getViewer();
+      //               new LinkedProposalModelPresenter().enterLinkedMode(viewer, part, fSwitchedEditor, fLinkedProposalModel);
+      //            }
+      //            else if (part instanceof ITextEditor)
+      //            {
+      //               LinkedProposalPositionGroup.PositionInformation endPosition = fLinkedProposalModel.getEndPosition();
+      //               if (endPosition != null)
+      //               {
+      //                  // select a result
+      //                  int pos = endPosition.getOffset() + endPosition.getLength();
+      //                  ((ITextEditor)part).selectAndReveal(pos, 0);
+      //               }
+      //            }
+      //         }
+      //      }
+      //      catch (BadLocationException e)
+      //      {
+      //         throw new CoreException(JavaUIStatus.createError(IStatus.ERROR, e));
+      //      }
    }
 
    /**
@@ -406,31 +407,31 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal
     */
    protected TextChange createTextChange() throws CoreException
    {
-      ICompilationUnit cu = getCompilationUnit();
+      //      ICompilationUnit cu = getCompilationUnit();
       String name = getName();
       TextChange change;
-      if (!cu.getResource().exists())
-      {
-         String source;
-         try
-         {
-            source = cu.getSource();
-         }
-         catch (JavaModelException e)
-         {
-            JavaPlugin.log(e);
-            source = new String(); // empty
-         }
-         Document document = new Document(source);
-         document.setInitialLineDelimiter(StubUtility.getLineDelimiterUsed(cu));
-         change = new DocumentChange(name, document);
-      }
-      else
-      {
-         CompilationUnitChange cuChange = new CompilationUnitChange(name, cu);
-         cuChange.setSaveMode(TextFileChange.LEAVE_DIRTY);
-         change = cuChange;
-      }
+      //      if (!cu.getResource().exists())
+      //      {
+      //         String source;
+      //         try
+      //         {
+      //            source = cu.getSource();
+      //         }
+      //         catch (JavaModelException e)
+      //         {
+      //            JavaPlugin.log(e);
+      //            source = new String(); // empty
+      //         }
+      //         Document document = new Document(source);
+      //         document.setInitialLineDelimiter(StubUtility.getLineDelimiterUsed());
+      change = new DocumentChange(name, document);
+      //      }
+      //      else
+      //      {
+      //         CompilationUnitChange cuChange = new CompilationUnitChange(name, cu);
+      //         cuChange.setSaveMode(TextFileChange.LEAVE_DIRTY);
+      //         change = cuChange;
+      //      }
       TextEdit rootEdit = new MultiTextEdit();
       change.setEdit(rootEdit);
 
@@ -460,15 +461,15 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal
       return (TextChange)getChange();
    }
 
-   /**
-    * The compilation unit on that the change works.
-    *
-    * @return the compilation unit on that the change works.
-    */
-   public final ICompilationUnit getCompilationUnit()
-   {
-      return fCompilationUnit;
-   }
+   //   /**
+   //    * The compilation unit on that the change works.
+   //    *
+   //    * @return the compilation unit on that the change works.
+   //    */
+   //   public final ICompilationUnit getCompilationUnit()
+   //   {
+   //      return fCompilationUnit;
+   //   }
 
    /**
     * Creates a preview of the content of the compilation unit after applying the change.

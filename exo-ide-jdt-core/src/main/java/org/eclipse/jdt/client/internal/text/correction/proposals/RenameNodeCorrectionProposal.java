@@ -10,59 +10,63 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.text.correction.proposals;
 
-import org.eclipse.core.runtime.CoreException;
+import com.google.gwt.user.client.ui.Image;
 
-import org.eclipse.text.edits.ReplaceEdit;
-import org.eclipse.text.edits.TextEdit;
+import org.eclipse.jdt.client.JdtClientBundle;
+import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.core.dom.NodeFinder;
+import org.eclipse.jdt.client.core.dom.SimpleName;
+import org.eclipse.jdt.client.internal.corext.dom.LinkedNodeFinder;
+import org.eclipse.jdt.client.runtime.CoreException;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.edits.ReplaceEdit;
+import org.exoplatform.ide.editor.text.edits.TextEdit;
 
-import org.eclipse.jface.text.IDocument;
+public class RenameNodeCorrectionProposal extends CUCorrectionProposal
+{
 
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.NodeFinder;
-import org.eclipse.jdt.core.dom.SimpleName;
+   private String fNewName;
 
-import org.eclipse.jdt.internal.corext.dom.LinkedNodeFinder;
-import org.eclipse.jdt.ui.SharedASTProvider;
+   private int fOffset;
 
-import org.eclipse.jdt.internal.ui.JavaPluginImages;
+   private int fLength;
 
-public class RenameNodeCorrectionProposal extends CUCorrectionProposal {
+   private final CompilationUnit unit;
 
-	private String fNewName;
-	private int fOffset;
-	private int fLength;
+   public RenameNodeCorrectionProposal(String name, CompilationUnit cu, int offset, int length, String newName,
+      int relevance, IDocument document)
+   {
+      super(name, relevance, document, new Image(JdtClientBundle.INSTANCE.correction_change()));
+      this.unit = cu;
+      fOffset = offset;
+      fLength = length;
+      fNewName = newName;
+   }
 
-	public RenameNodeCorrectionProposal(String name, ICompilationUnit cu, int offset, int length, String newName, int relevance) {
-		super(name, cu, relevance, JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE));
-		fOffset= offset;
-		fLength= length;
-		fNewName= newName;
-	}
+   /*(non-Javadoc)
+    * @see org.eclipse.jdt.internal.ui.text.correction.CUCorrectionProposal#addEdits(org.eclipse.jface.text.IDocument)
+    */
+   @Override
+   protected void addEdits(IDocument doc, TextEdit root) throws CoreException
+   {
+      super.addEdits(doc, root);
 
-	/*(non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.CUCorrectionProposal#addEdits(org.eclipse.jface.text.IDocument)
-	 */
-	@Override
-	protected void addEdits(IDocument doc, TextEdit root) throws CoreException {
-		super.addEdits(doc, root);
+      ASTNode name = NodeFinder.perform(unit, fOffset, fLength);
+      if (name instanceof SimpleName)
+      {
 
-		// build a full AST
-		CompilationUnit unit= SharedASTProvider.getAST(getCompilationUnit(), SharedASTProvider.WAIT_YES, null);
-
-		ASTNode name= NodeFinder.perform(unit, fOffset, fLength);
-		if (name instanceof SimpleName) {
-
-			SimpleName[] names= LinkedNodeFinder.findByProblems(unit, (SimpleName) name);
-			if (names != null) {
-				for (int i= 0; i < names.length; i++) {
-					SimpleName curr= names[i];
-					root.addChild(new ReplaceEdit(curr.getStartPosition(), curr.getLength(), fNewName));
-				}
-				return;
-			}
-		}
-		root.addChild(new ReplaceEdit(fOffset, fLength, fNewName));
-	}
+         SimpleName[] names = LinkedNodeFinder.findByProblems(unit, (SimpleName)name);
+         if (names != null)
+         {
+            for (int i = 0; i < names.length; i++)
+            {
+               SimpleName curr = names[i];
+               root.addChild(new ReplaceEdit(curr.getStartPosition(), curr.getLength(), fNewName));
+            }
+            return;
+         }
+      }
+      root.addChild(new ReplaceEdit(fOffset, fLength, fNewName));
+   }
 }

@@ -10,12 +10,16 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.text.correction.proposals;
 
+import com.google.gwt.user.client.ui.Image;
+
+import org.eclipse.jdt.client.JdtExtension;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IStatus;
+import org.eclipse.jdt.client.runtime.JavaUIStatus;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.edits.TextEdit;
@@ -46,9 +50,9 @@ public class ASTRewriteCorrectionProposal extends CUCorrectionProposal
     * @param image The image that is displayed for this proposal or <code>null</code> if no
     * image is desired.
     */
-   public ASTRewriteCorrectionProposal(String name, ICompilationUnit cu, ASTRewrite rewrite, int relevance, Image image)
+   public ASTRewriteCorrectionProposal(String name, ASTRewrite rewrite, int relevance, IDocument document,Image image)
    {
-      super(name, cu, relevance, image);
+      super(name, relevance, document, image);
       fRewrite = rewrite;
    }
 
@@ -77,7 +81,7 @@ public class ASTRewriteCorrectionProposal extends CUCorrectionProposal
     */
    public ImportRewrite createImportRewrite(CompilationUnit astRoot)
    {
-      fImportRewrite = StubUtility.createImportRewrite(astRoot, true);
+      fImportRewrite = StubUtility.createImportRewrite(document, astRoot, true);
       return fImportRewrite;
    }
 
@@ -93,7 +97,7 @@ public class ASTRewriteCorrectionProposal extends CUCorrectionProposal
       {
          try
          {
-            TextEdit edit = rewrite.rewriteAST();
+            TextEdit edit = rewrite.rewriteAST(document, JdtExtension.get().getOptions());
             editRoot.addChild(edit);
          }
          catch (IllegalArgumentException e)
