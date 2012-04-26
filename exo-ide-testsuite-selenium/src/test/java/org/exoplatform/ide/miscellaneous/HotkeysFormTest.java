@@ -182,7 +182,7 @@ public class HotkeysFormTest extends BaseTest
       IDE.EDITOR.waitTabNotPresent("Untitled file.css *");
    }
 
-   //@Test
+   @Test
    public void testTryToBindForbiddenHotkeys() throws Exception
    {
       //Select "New Text file" command and try to bind Shift+N. 
@@ -234,7 +234,7 @@ public class HotkeysFormTest extends BaseTest
       IDE.CUSTOMIZE_HOTKEYS.waitClosed();
    }
 
-  // @Test
+   @Test
    //TODO If will be fix problem with impossible selecting elements after 
    //scroll of form "Customize Hotkeys..." in FF 4.0 and higher, test should be reworked.
    public void testUnbindingDefaultHotkey() throws Exception

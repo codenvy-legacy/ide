@@ -78,9 +78,9 @@ public class CustomizeHotkeys extends AbstractTestModule
       // TODO After isuue IDE-; should be change
       String INPUT_FIELD = "div[view-id=ideCustomizeHotKeysView] input[type=text]";
 
-      String INPUT_FIELD_DISABLED = "div[view-id=ideCustomizeHotKeysView] input[type=text][disabled='']";
+      String INPUT_FIELD_DISABLED = "div[view-id=ideCustomizeHotKeysView] input.gwt-TextBox[type='text'][disabled]";
 
-      String INPUT_FIELD_ENABLED = "div[view-id=ideCustomizeHotKeysView] input[class=gwt-TextBox][type=text]";
+      String INPUT_FIELD_ENABLED = "div[view-id=ideCustomizeHotKeysView] input.gwt-TextBox[type='text']";
 
       String LABEL_MESSAGE_HOTKEY_ID = "ideCustomizeHotKeysMessageLabel";
 
