@@ -64,7 +64,7 @@ public class BuildFailedTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-
+         //delay for DavFs
          Thread.sleep(2000);
       }
       catch (Exception e)
@@ -87,12 +87,13 @@ public class BuildFailedTest extends BaseTest
       IDE.BUILD.waitOpened();
       String builderMessage = IDE.BUILD.getOutputMessage();
       assertTrue(builderMessage.startsWith(Build.Messages.BUILDING_PROJECT));
-      
-      // Wait until building is finished.
-      Thread.sleep(10000);
 
+      // Wait until building is finished.
+      IDE.STATUSBAR.waitBuildFailStatus();
+      
       // Close Build project view because Output view is not visible
-      selenium().click("//div[@class='gwt-TabLayoutPanelTabs']//div[@tab-title='Build project']");
+      IDE.OUTPUT.clickOnOutputTab();
+      //     selenium().click("//div[@class='gwt-TabLayoutPanelTabs']//div[@tab-title='Build project']");
 
       // Get error message
       IDE.OUTPUT.waitForMessageShow(1, 15);
