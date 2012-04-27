@@ -424,7 +424,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
          super(null, null);
          this.cfTarget = cfTarget;
          credentials = new CloudfoundryCredentials();
-         credentials.addToken(this.cfTarget, "");
+         //credentials.addToken(this.cfTarget, "");
       }
 
       @Override
