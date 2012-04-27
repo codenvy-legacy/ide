@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,23 +19,27 @@
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
+import org.exoplatform.ide.extension.cloudfoundry.shared.Runtime;
+
+import java.util.List;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class FrameworkImpl implements Framework
 {
-   private String displayName;
-   private String type;
-   /** Default memory size in megabytes. */
-   private int memory;
+   private String name;
+   private List<Runtime> runtimes;
    private String description;
+   private int memory;
+   private String displayName;
 
-   public FrameworkImpl(String type, String displayName, int memory, String description)
+   public FrameworkImpl(String name, String displayName, List<Runtime> runtimes, int memory, String description)
    {
-      this.type = type;
+      this.name = name;
       this.displayName = displayName;
+      this.runtimes = runtimes;
       this.memory = memory;
       this.description = description;
    }
@@ -44,75 +48,63 @@ public class FrameworkImpl implements Framework
    {
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.shared.Framework#getType()
-    */
    @Override
-   public String getType()
+   public String getName()
    {
-      return type;
+      return name;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.shared.Framework#setType(java.lang.String)
-    */
    @Override
-   public void setType(String type)
+   public void setName(String name)
    {
-      this.type = type;
+      this.name = name;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.shared.Framework#getDisplayName()
-    */
    @Override
-   public String getDisplayName()
+   public List<Runtime> getRuntimes()
    {
-      return displayName;
+      return runtimes;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.shared.Framework#setDisplayName(java.lang.String)
-    */
    @Override
-   public void setDisplayName(String displayName)
+   public void setRuntimes(List<Runtime> runtimes)
    {
-      this.displayName = displayName;
+      this.runtimes = runtimes;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.shared.Framework#getMemory()
-    */
-   @Override
-   public int getMemory()
-   {
-      return memory;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.shared.Framework#setMemory(int)
-    */
-   @Override
-   public void setMemory(int memory)
-   {
-      this.memory = memory;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.shared.Framework#getDescription()
-    */
    @Override
    public String getDescription()
    {
       return description;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.shared.Framework#setDescription(java.lang.String)
-    */
    @Override
    public void setDescription(String description)
    {
       this.description = description;
+   }
+
+   @Override
+   public int getMemory()
+   {
+      return memory;
+   }
+
+   @Override
+   public void setMemory(int memory)
+   {
+      this.memory = memory;
+   }
+
+   @Override
+   public String getDisplayName()
+   {
+      return displayName;
+   }
+
+   @Override
+   public void setDisplayName(String displayName)
+   {
+      this.displayName = displayName;
    }
 }

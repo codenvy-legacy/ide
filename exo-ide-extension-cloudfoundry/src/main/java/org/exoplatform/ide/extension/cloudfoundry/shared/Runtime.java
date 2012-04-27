@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,44 +18,21 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.shared;
 
-import java.util.Map;
-
 /**
- * Created by The eXo Platform SAS.
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
-*/
-public interface SystemInfo
+ */
+public interface Runtime
 {
-   SystemResources getUsage();
+   String getName();
 
-   void setUsage(SystemResources usage);
-
-   SystemResources getLimits();
-
-   void setLimits(SystemResources limits);
-
-   String getDescription();
-
-   void setDescription(String description);
-
-   String getUser();
-
-   void setUser(String user);
+   void setName(String name);
 
    String getVersion();
 
    void setVersion(String version);
 
-   String getName();
+   String getDescription();
 
-   void setName(String name);
-
-   String getSupport();
-
-   void setSupport(String support);
-
-   Map<String, Framework> getFrameworks();
-
-   void setFrameworks(Map<String, Framework> frameworks);
+   void setDescription(String description);
 }

@@ -100,9 +100,10 @@ public class CloudfoundryService
    @Path("info/frameworks")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public Collection<Framework> frameworks()
+   public Collection<Framework> frameworks(@QueryParam("server") String server) throws CloudfoundryException,
+      IOException, ParsingResponseException, VirtualFileSystemException
    {
-      return Cloudfoundry.FRAMEWORKS.values();
+      return cloudfoundry.systemInfo(server).getFrameworks().values();
    }
 
    @Path("apps/info")

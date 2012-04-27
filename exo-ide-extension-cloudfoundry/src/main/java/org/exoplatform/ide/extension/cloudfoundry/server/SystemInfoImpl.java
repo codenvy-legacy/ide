@@ -18,8 +18,11 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
+import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
+
+import java.util.Map;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -39,130 +42,118 @@ public class SystemInfoImpl implements SystemInfo
    private String name;
    /** Support email address. */
    private String support;
+   /** Supported frameworks. */
+   private Map<String, Framework> frameworks;
 
-   /**
-    * {@inheritDoc}
-    */
+   /** {@inheritDoc} */
    @Override
    public SystemResources getUsage()
    {
       return usage;
    }
 
-   /**
-    * {@inheritDoc}
-    */
+   /** {@inheritDoc} */
    @Override
    public void setUsage(SystemResources usage)
    {
       this.usage = usage;
    }
 
-   /**
-    * {@inheritDoc}
-    */
+   /** {@inheritDoc} */
    @Override
    public SystemResources getLimits()
    {
       return limits;
    }
 
-   /**
-    * {@inheritDoc}
-    */
+   /** {@inheritDoc} */
    @Override
    public void setLimits(SystemResources limits)
    {
       this.limits = limits;
    }
 
-   /**
-    * {@inheritDoc}
-    */
+   /** {@inheritDoc} */
    @Override
    public String getDescription()
    {
       return description;
    }
 
-   /**
-    * {@inheritDoc}
-    */
+   /** {@inheritDoc} */
    @Override
    public void setDescription(String description)
    {
       this.description = description;
    }
 
-   /**
-    * {@inheritDoc}
-    */
+   /** {@inheritDoc} */
    @Override
    public String getUser()
    {
       return user;
    }
 
-   /**
-    * {@inheritDoc}
-    */
+   /** {@inheritDoc} */
    @Override
    public void setUser(String user)
    {
       this.user = user;
    }
 
-   /**
-    * {@inheritDoc}
-    */
+   /** {@inheritDoc} */
    @Override
    public String getVersion()
    {
       return version;
    }
 
-   /**
-    * {@inheritDoc}
-    */
+   /** {@inheritDoc} */
    @Override
    public void setVersion(String version)
    {
       this.version = version;
    }
 
-   /**
-    * {@inheritDoc}
-    */
+   /** {@inheritDoc} */
    @Override
    public String getName()
    {
       return name;
    }
 
-   /**
-    * {@inheritDoc}
-    */
+   /** {@inheritDoc} */
    @Override
    public void setName(String name)
    {
       this.name = name;
    }
 
-   /**
-    * {@inheritDoc}
-    */
+   /** {@inheritDoc} */
    @Override
    public String getSupport()
    {
       return support;
    }
 
-   /**
-    * {@inheritDoc}
-    */
+   /** {@inheritDoc} */
    @Override
    public void setSupport(String support)
    {
       this.support = support;
+   }
+
+   /** {@inheritDoc} */
+   @Override
+   public Map<String, Framework> getFrameworks()
+   {
+      return frameworks;
+   }
+
+   /** {@inheritDoc} */
+   @Override
+   public void setFrameworks(Map<String, Framework> frameworks)
+   {
+      this.frameworks = frameworks;
    }
 }
