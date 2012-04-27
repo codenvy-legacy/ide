@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.ItemTree;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
@@ -73,6 +74,9 @@ public class TinyProjectExplorerView extends ViewImpl implements ProjectExplorer
 
    @UiField
    HTMLPanel projectNotOpenedPanel;
+
+   @UiField
+   ProjectsListGrid projectsListGrid;
 
    @UiField
    IconButton linkWithEditorButton;
@@ -165,6 +169,21 @@ public class TinyProjectExplorerView extends ViewImpl implements ProjectExplorer
    public void setProjectExplorerTreeVisible(boolean visible)
    {
       treeGrid.setVisible(visible);
+
+      if (visible)
+      {
+         projectNotOpenedPanel.setVisible(!visible);
+         projectsListGrid.setVisible(!visible);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#setProjectsListGridVisible(boolean)
+    */
+   @Override
+   public void setProjectsListGridVisible(boolean visible)
+   {
+      projectsListGrid.setVisible(visible);
       projectNotOpenedPanel.setVisible(!visible);
    }
 
@@ -202,6 +221,24 @@ public class TinyProjectExplorerView extends ViewImpl implements ProjectExplorer
    public void setLinkWithEditorButtonSelected(boolean selected)
    {
       linkWithEditorButton.setSelected(selected);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#getProjectsListGrid()
+    */
+   @Override
+   public ProjectsListGrid getProjectsListGrid()
+   {
+      return projectsListGrid;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#getSelectedProjects()
+    */
+   @Override
+   public List<ProjectModel> getSelectedProjects()
+   {
+      return projectsListGrid.getSelectedItems();
    }
 
 }

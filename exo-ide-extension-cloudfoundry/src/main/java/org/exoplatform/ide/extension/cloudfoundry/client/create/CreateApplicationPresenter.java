@@ -633,7 +633,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       else
       {
          Framework framework = findFrameworkByName(display.getTypeField().getValue());
-         type = framework.getType();
+         type = framework.getName();
          try
          {
             memory = Integer.parseInt(display.getMemoryField().getValue());

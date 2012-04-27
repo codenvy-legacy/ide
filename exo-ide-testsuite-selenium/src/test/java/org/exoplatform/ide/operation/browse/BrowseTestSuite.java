@@ -30,7 +30,8 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({ExploringWorkspacePanelTest.class, GetItemUrlTest.class, GoToFolderTest.class, OpeningFilesTest.class,
-   UsingKeyboardTest.class, ItemOrderingTest.class, OpenFileByURLTest.class, ShowHideHiddenFilesTest.class})
+   UsingKeyboardTest.class, ItemOrderingTest.class, OpenFileByURLTest.class, ProjectsListGridTest.class,
+   ShowHideHiddenFilesTest.class})
 public class BrowseTestSuite
 {
 

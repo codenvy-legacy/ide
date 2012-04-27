@@ -37,10 +37,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverBackedSelenium;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -50,6 +53,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by The eXo Platform SAS.
@@ -85,7 +89,7 @@ public abstract class BaseTest
    public static String IDE_HOST = IDE_SETTINGS.getString("ide.host");
 
    public static final int IDE_PORT = Integer.valueOf(IDE_SETTINGS.getString("ide.port"));
-   
+
    public static String BASE_URL = "http://" + IDE_HOST + ((IDE_PORT == 80) ? ("") : (":" + IDE_PORT)) + "/";
 
    public static final String USER_NAME = IDE_SETTINGS.getString("ide.user.root.name");
@@ -95,7 +99,7 @@ public abstract class BaseTest
    public static final String NOT_ROOT_USER_NAME = IDE_SETTINGS.getString("ide.user.dev.name");
 
    public static final String NOT_ROOT_USER_PASSWORD = IDE_SETTINGS.getString("ide.user.dev.password");
-   
+
    protected static String APPLICATION_URL = BASE_URL + IDE_SETTINGS.getString("ide.app.url");
 
    protected static String LOGIN_URL = BASE_URL + IDE_SETTINGS.getString("ide.login.url");
@@ -115,6 +119,12 @@ public abstract class BaseTest
    public static String WS_URL_IDE = ENTRY_POINT_URL_IDE + WS_NAME + "/";
 
    public static String ENTRY_POINT_URL = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
+
+   //for restore default hotkeys values in IDE
+   public final static String PRODUCTION_SERVICE_PREFIX = "production/ide-home/users/" + USER_NAME
+   + "/settings/userSettings";
+   
+   
 
    public static Selenium selenium;
 
@@ -173,6 +183,9 @@ public abstract class BaseTest
             capabilities.setCapability("chrome.switches", Arrays.asList("--start-maximized"));
             driver = new ChromeDriver(capabilities);
 
+            // driver = new ChromeDriver(options);
+           
+
             break;
          case IE_EXPLORE_PROXY :
             driver = new InternetExplorerDriver();
@@ -184,14 +197,15 @@ public abstract class BaseTest
       selenium = new WebDriverBackedSelenium(driver, APPLICATION_URL);
 
       IDE = new IDE(selenium(), ENTRY_POINT_URL + WS_NAME + "/", driver);
-
-      try
+       try
       {
-         selenium().windowFocus();
-         new Actions(driver).sendKeys(Keys.F11.toString()).build().perform();
-         selenium().windowMaximize();
-         selenium().open(APPLICATION_URL);
-         selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+
+         if (IDE_SETTINGS.getString("selenium.browser.commad").equals("CHROME"))
+         {
+            driver.manage().window().maximize();
+         }
+         driver.get(APPLICATION_URL);
+         waitIdeLoginPage();
 
          if (isRunIdeUnderPortal())
          {
@@ -211,7 +225,7 @@ public abstract class BaseTest
          }
          else if (isRunIdeAsStandalone())
          {
-//            standaloneLogin(USER_NAME, USER_PASSWORD);
+            //            standaloneLogin(USER_NAME, USER_PASSWORD);
             IDE.LOGIN.waitStandaloneLogin();
             IDE.LOGIN.standaloneLogin(USER_NAME, USER_PASSWORD);
          }
@@ -307,7 +321,7 @@ public abstract class BaseTest
 
       SaveFileUtils.checkSaveAsDialogAndSave(name, true);
    }
-   
+
    @Deprecated
    protected void saveCurrentFile() throws Exception
    {
@@ -554,6 +568,24 @@ public abstract class BaseTest
       selenium().focus(
          "//body/input[@class='gwt-TextBox' and contains(@style,'position: absolute; left: -100px; top: -100px;')]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+
+   /**
+    * wait load login page
+    * @throws Exception
+    */
+   public void waitIdeLoginPage() throws Exception
+   {
+
+      if (SELENIUM_PORT.equals("8080"))
+      {
+         IDE.LOGIN.waitStandaloneLoginPage();
+      }
+      else
+      {
+         IDE.LOGIN.waitTenantLoginPage();
+      }
+
    }
 
    @AfterClass

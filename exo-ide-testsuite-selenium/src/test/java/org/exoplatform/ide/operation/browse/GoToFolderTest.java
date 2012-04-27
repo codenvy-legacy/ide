@@ -145,6 +145,10 @@ public class GoToFolderTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2);
 
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_2);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
+      
+      
       IDE.TOOLBAR.runCommand(MenuCommands.File.SEARCH);
       IDE.SEARCH.waitPerformSearchOpened();
       IDE.SEARCH.clickSearchButton();

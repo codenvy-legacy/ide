@@ -19,13 +19,14 @@
 package org.exoplatform.ide.client.framework.project;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
-
 import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
@@ -102,25 +103,25 @@ public interface ProjectExplorerDisplay extends IsView
     * Remove info icon from item.
     */
    void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
-   
+
    /*
     * Linking with Editor
     */
-   
+
    /**
     * Returns Link with Editor button.
     * 
     * @return Link with Editor button
     */
    HasClickHandlers getLinkWithEditorButton();
-   
+
    /**
     * Enables or disables Link with Editor button.
     * 
     * @param enabled <b>true</b> makes Link with Editor button enabled, <b>false</b> makes disabled
     */
    void setLinkWithEditorButtonEnabled(boolean enabled);
-   
+
    /**
     * Adds or removes selection of Link with Editor button.
     * 
@@ -128,4 +129,24 @@ public interface ProjectExplorerDisplay extends IsView
     */
    void setLinkWithEditorButtonSelected(boolean selected);
 
+   /**
+    * Change projects list grid visibility.
+    * 
+    * @param visible <code>true</code> if visible
+    */
+   void setProjectsListGridVisible(boolean visible);
+
+   /**
+    * Get projects list grid.
+    * 
+    * @return projects list grid
+    */
+   ListGrid<ProjectModel> getProjectsListGrid();
+
+   /**
+    * Returns selected projects in the projects list grid.
+    * 
+    * @return {@link List} of selected projects
+    */
+   List<ProjectModel> getSelectedProjects();
 }

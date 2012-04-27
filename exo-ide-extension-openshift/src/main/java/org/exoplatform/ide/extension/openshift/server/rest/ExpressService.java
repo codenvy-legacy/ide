@@ -74,7 +74,8 @@ public class ExpressService
    @POST
    @Path("login")
    @Consumes(MediaType.APPLICATION_JSON)
-   public void login(Map<String, String> credentials) throws ExpressException, IOException, VirtualFileSystemException
+   public void login(Map<String, String> credentials) throws ExpressException, IOException, ParsingResponseException,
+      VirtualFileSystemException
    {
       express.login(credentials.get("rhlogin"), credentials.get("password"));
    }
@@ -89,7 +90,7 @@ public class ExpressService
    @POST
    @Path("domain/create")
    public void createDomain(@QueryParam("namespace") String namespace, @QueryParam("alter") boolean alter)
-      throws ExpressException, IOException, VirtualFileSystemException
+      throws ExpressException, IOException, ParsingResponseException, VirtualFileSystemException
    {
       express.createDomain(namespace, alter);
    }
@@ -117,9 +118,10 @@ public class ExpressService
    @GET
    @Path("apps/type")
    @Produces(MediaType.APPLICATION_JSON)
-   public Set<String> applicationTypes()
+   public Set<String> applicationTypes() throws ExpressException, IOException, ParsingResponseException,
+      VirtualFileSystemException
    {
-      return Express.APP_TYPES;
+      return express.frameworks();
    }
 
    @GET

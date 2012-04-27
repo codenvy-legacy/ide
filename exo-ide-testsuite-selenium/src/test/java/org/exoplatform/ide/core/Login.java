@@ -99,7 +99,7 @@ public class Login extends AbstractTestModule
     */
    public void waitStandaloneLogin()
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -139,6 +139,32 @@ public class Login extends AbstractTestModule
          }
       });
    }
+   
+   
+   
+   /**
+    * wait login jsp page on cloud-ide
+    */
+   public void waitStandaloneLoginPage()
+   {
+      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return name != null && name.isDisplayed() && password != null && password.isDisplayed()
+                  && cloudLoginButton != null && cloudLoginButton.isDisplayed();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+   
 
    /**
     * click on button Login on cloud page

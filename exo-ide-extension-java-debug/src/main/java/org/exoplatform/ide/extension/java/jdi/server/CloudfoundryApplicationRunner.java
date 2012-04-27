@@ -310,12 +310,13 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
    private void doStopApplication(String name) throws ApplicationRunnerException
    {
-      // Method should be 'synchronized'. At the moment we use just one user as deployer.
       try
       {
          String target = cloudfoundry.getTarget();
          cloudfoundry.stopApplication(target, name, null, null);
          cloudfoundry.deleteApplication(target, name, null, null, true);
+         Application app = new Application(name, 0);
+         applications.remove(app);
          LOG.debug("Stop application {}.", name);
       }
       catch (CloudfoundryException e)
@@ -423,7 +424,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
          super(null, null);
          this.cfTarget = cfTarget;
          credentials = new CloudfoundryCredentials();
-         credentials.addToken(this.cfTarget, "");
+         //credentials.addToken(this.cfTarget, "");
       }
 
       @Override
@@ -456,16 +457,30 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    {
       final String name;
       final long expirationTime;
+      final int hash;
 
       Application(String name, long expirationTime)
       {
          this.name = name;
          this.expirationTime = expirationTime;
+         this.hash = 31 * 7 + name.hashCode();
       }
 
       boolean isExpired()
       {
          return expirationTime < System.currentTimeMillis();
+      }
+
+      @Override
+      public boolean equals(Object o)
+      {
+         return o instanceof Application && name.equals(((Application)o).name);
+      }
+
+      @Override
+      public int hashCode()
+      {
+         return hash;
       }
    }
 }

@@ -28,9 +28,16 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -46,18 +53,32 @@ import java.util.List;
  */
 @RolesAllowed({"administrators", "developers"})
 public class SearchFilesControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler,
-   ViewActivatedHandler
+   ViewActivatedHandler, ViewVisibilityChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
 
    public static final String ID = "File/Search...";
 
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.searchFilesControl();
 
-   private VirtualFileSystemInfo vfsInfo;
+   /**
+    * Current workspace's href.
+    */
+   private VirtualFileSystemInfo vfsInfo = null;
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
    private boolean navigatorSelected = false;
+
+   private boolean isProjectOpened = false;
+
+   /**
+    * Current active view.
+    */
+   private View activeView;
+
+   private boolean isBrowserPanelVisible;
+
+   private boolean isProjectExplorerVisible;
 
    /**
     * 
@@ -80,6 +101,9 @@ public class SearchFilesControl extends SimpleControl implements IDEControl, Ite
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
    /**
@@ -89,7 +113,7 @@ public class SearchFilesControl extends SimpleControl implements IDEControl, Ite
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
-      refresh();
+      updateState();
    }
 
    /**
@@ -99,7 +123,7 @@ public class SearchFilesControl extends SimpleControl implements IDEControl, Ite
    public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
-      refresh();
+      updateState();
    }
 
    /**
@@ -108,17 +132,60 @@ public class SearchFilesControl extends SimpleControl implements IDEControl, Ite
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      navigatorSelected =
-         event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay
-            || event.getView() instanceof ProjectExplorerPresenter.Display;
+      activeView = event.getView();
 
-      refresh();
+      navigatorSelected =
+         activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay
+            || activeView instanceof ProjectExplorerPresenter.Display;
+
+      updateState();
    }
 
    /**
-    * Refresh control
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
     */
-   private void refresh()
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      View view = event.getView();
+
+      if (view instanceof NavigatorDisplay || view instanceof ProjectExplorerDisplay)
+      {
+         isBrowserPanelVisible = view.isViewVisible();
+
+         if (view instanceof ProjectExplorerDisplay)
+         {
+            isProjectExplorerVisible = view.isViewVisible();
+         }
+      }
+
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      isProjectOpened = false;
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      isProjectOpened = true;
+      updateState();
+   }
+
+   /**
+    * Update control's state.
+    */
+   private void updateState()
    {
       if (vfsInfo == null)
       {
@@ -126,8 +193,21 @@ public class SearchFilesControl extends SimpleControl implements IDEControl, Ite
          return;
       }
 
+      if (!isProjectOpened && isProjectExplorerVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      if (!isBrowserPanelVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
       setVisible(true);
-      if (vfsInfo != null && selectedItems.size() == 1 && navigatorSelected)
+
+      if (selectedItems.size() == 1 && navigatorSelected)
       {
          setEnabled(true);
       }

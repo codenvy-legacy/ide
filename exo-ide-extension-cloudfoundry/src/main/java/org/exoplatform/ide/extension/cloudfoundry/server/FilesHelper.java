@@ -24,7 +24,6 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemType;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -52,6 +51,7 @@ class FilesHelper
    private static final Pattern SPRING1 = Pattern.compile("WEB-INF/lib/spring-core.*\\.jar");
    private static final Pattern SPRING2 = Pattern.compile("WEB-INF/classes/org/springframework/.+");
    private static final Pattern GRAILS = Pattern.compile("WEB-INF/lib/grails-web.*\\.jar");
+   private static final Pattern LIFT = Pattern.compile("WEB-INF/lib/lift-webkit.*\\.jar");
    private static final Pattern SINATRA = Pattern.compile("^\\s*require\\s*[\"']sinatra[\"']");
 
    static interface NameFilter
@@ -71,7 +71,8 @@ class FilesHelper
 
    static final NameFilter WAR_FILTER = new TypeFilter(".war");
    static final NameFilter RUBY_FILTER = new TypeFilter(".rb");
-   static final NameFilter JS_FILTER = new TypeFilter(".js");
+   //static final NameFilter JS_FILTER = new TypeFilter(".js");
+   static final NameFilter PHP_FILTER = new TypeFilter(".php");
 
    private static class TypeFilter implements NameFilter
    {
@@ -212,18 +213,14 @@ class FilesHelper
       unzip(new FileInputStream(zip), targetDir);
    }
 
-   /**
-    * Read the first line from file or <code>null</code> if file not found.
-    */
+   /** Read the first line from file or <code>null</code> if file not found. */
    static String readFile(VirtualFileSystem vfs, Item parent, String name) throws VirtualFileSystemException,
       IOException
    {
       return readFile(vfs, (parent.getPath() + "/" + name));
    }
 
-   /**
-    * Read the first line from file or <code>null</code> if file not found.
-    */
+   /** Read the first line from file or <code>null</code> if file not found. */
    static String readFile(VirtualFileSystem vfs, String path) throws VirtualFileSystemException, IOException
    {
       InputStream in = null;
@@ -233,8 +230,7 @@ class FilesHelper
          ContentStream content = vfs.getContent(path, null);
          in = content.getStream();
          r = new BufferedReader(new InputStreamReader(in));
-         String line = r.readLine();
-         return line;
+         return r.readLine();
       }
       catch (ItemNotFoundException ignored)
       {
@@ -341,26 +337,32 @@ class FilesHelper
          {
             fis = new FileInputStream(war);
             zipIn = new ZipInputStream(fis);
-            Matcher m1 = null;
-            Matcher m2 = null;
-            Matcher m3 = null;
+            Matcher springMatcher1 = null;
+            Matcher springMatcher2 = null;
+            Matcher grailsMatcher = null;
+            Matcher liftMatcher = null;
             for (ZipEntry e = zipIn.getNextEntry(); e != null; e = zipIn.getNextEntry())
             {
                String name = e.getName();
-               m1 = m1 == null ? SPRING1.matcher(name) : m1.reset(name);
-               if (m1.matches())
+               springMatcher1 = springMatcher1 == null ? SPRING1.matcher(name) : springMatcher1.reset(name);
+               if (springMatcher1.matches())
                {
                   return "spring";
                }
-               m2 = m2 == null ? SPRING2.matcher(name) : m2.reset(name);
-               if (m2.matches())
+               springMatcher2 = springMatcher2 == null ? SPRING2.matcher(name) : springMatcher2.reset(name);
+               if (springMatcher2.matches())
                {
                   return "spring";
                }
-               m3 = m3 == null ? GRAILS.matcher(name) : m3.reset(name);
-               if (m3.matches())
+               grailsMatcher = grailsMatcher == null ? GRAILS.matcher(name) : grailsMatcher.reset(name);
+               if (grailsMatcher.matches())
                {
                   return "grails";
+               }
+               liftMatcher = liftMatcher == null ? LIFT.matcher(name) : liftMatcher.reset(name);
+               if (liftMatcher.matches())
+               {
+                  return "lift";
                }
             }
          }
@@ -375,8 +377,7 @@ class FilesHelper
                fis.close();
             }
          }
-         // Java web application if Spring or Grails frameworks is not detected. But use Spring settings for it.
-         return "spring";
+         return "java_web";
       }
       return null;
    }
@@ -394,7 +395,7 @@ class FilesHelper
       {
       }
       List<Item> children = vfs.getChildren(projectId, -1, 0, "file", PropertyFilter.NONE_FILTER).getItems();
-      Matcher m = null;
+      Matcher sinatraMatcher = null;
       // Check each ruby file to include "sinatra" import. 
       for (Item i : children)
       {
@@ -409,8 +410,8 @@ class FilesHelper
                String line;
                while ((line = reader.readLine()) != null)
                {
-                  m = m == null ? SINATRA.matcher(line) : m.reset(line);
-                  if (m.matches())
+                  sinatraMatcher = sinatraMatcher == null ? SINATRA.matcher(line) : sinatraMatcher.reset(line);
+                  if (sinatraMatcher.matches())
                   {
                      return "sinatra";
                   }
@@ -429,12 +430,27 @@ class FilesHelper
             }
          }
       }
-      // Lookup app.js, index.js or main.js files.
+
       for (Item i : children)
       {
-         if ("app.js".equals(i.getName()) || "index.js".equals(i.getName()) || "main.js".equals(i.getName()))
+         if ("server.js".equals(i.getName())
+            || "app.js".equals(i.getName())
+            || "index.js".equals(i.getName())
+            || "main.js".equals(i.getName()))
          {
             return "node";
+         }
+         else if (PHP_FILTER.accept(i.getName()))
+         {
+            return "php";
+         }
+         else if ("manage.py".equals(i.getName()) || "settings.py".equals(i.getName()))
+         {
+            return "django";
+         }
+         else if ("wsgi.py".equals(i.getName()))
+         {
+            return "wsgi";
          }
       }
       return null;

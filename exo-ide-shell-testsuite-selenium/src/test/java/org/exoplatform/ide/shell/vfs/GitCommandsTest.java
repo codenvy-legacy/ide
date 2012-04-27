@@ -52,11 +52,11 @@ public class GitCommandsTest extends BaseTest
       folderLinks =
          VfsUtils.importZipProject(MAIN_FOLDER, "src/test/resources/org/exoplatform/ide/shell/test-project.zip");
       //add for davFs delay
-      Thread.sleep(3000);
+      Thread.sleep(10000);
       gitFolderLinks =
          VfsUtils.importZipProject(GIT_MAIN_FOLDER, "src/test/resources/org/exoplatform/ide/shell/gitaddtest.zip");
       //add for davFs delay
-      Thread.sleep(3000);
+      Thread.sleep(10000);
    }
 
    @AfterClass
@@ -71,6 +71,8 @@ public class GitCommandsTest extends BaseTest
    {
       shell.executeCommand("cd " + MAIN_FOLDER);
       shell.executeCommand("git status");
+      //need for davFs delay
+      Thread.sleep(5000);
       assertThat(shell.getContent()).contains(
          "HEAD reference not found. Seems working directory is not git repository.");
       shell.executeCommand("clear");

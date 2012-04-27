@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -39,7 +36,20 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.SaveAllFilesEvent;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -50,7 +60,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 @RolesAllowed({"administrators", "developers"})
 public class SaveAllFilesControl extends SimpleControl implements IDEControl, EditorFileContentChangedHandler,
    EditorActiveFileChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, VfsChangedHandler,
-   FileSavedHandler
+   FileSavedHandler, ProjectOpenedHandler, ProjectClosedHandler, ViewVisibilityChangedHandler
 {
 
    public static final String ID = "File/Save All";
@@ -58,6 +68,17 @@ public class SaveAllFilesControl extends SimpleControl implements IDEControl, Ed
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.saveAllControl();
 
    private Map<String, FileModel> openedFiles = new LinkedHashMap<String, FileModel>();
+
+   /**
+    * Current workspace's href.
+    */
+   private VirtualFileSystemInfo vfsInfo = null;
+
+   private boolean isProjectOpened = false;
+
+   private boolean isBrowserPanelVisible;
+
+   private boolean isProjectExplorerVisible;
 
    /**
     * 
@@ -83,10 +104,36 @@ public class SaveAllFilesControl extends SimpleControl implements IDEControl, Ed
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
    }
 
-   private void checkItemEnabling()
+   /**
+    * Update control's state.
+    */
+   private void updateState()
    {
+      if (vfsInfo == null)
+      {
+         setVisible(false);
+         return;
+      }
+
+      if (!isProjectOpened && isProjectExplorerVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      if (!isBrowserPanelVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      setVisible(true);
+
       boolean enable = false;
       for (FileModel file : openedFiles.values())
       {
@@ -96,24 +143,23 @@ public class SaveAllFilesControl extends SimpleControl implements IDEControl, Ed
             break;
          }
       }
-
       setEnabled(enable);
    }
 
    public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
    {
-      checkItemEnabling();
+      updateState();
    }
 
    @Override
    public void onFileSaved(FileSavedEvent event)
    {
-      checkItemEnabling();
+      updateState();
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      checkItemEnabling();
+      updateState();
    }
 
    public void onEditorFileOpened(EditorFileOpenedEvent event)
@@ -126,16 +172,55 @@ public class SaveAllFilesControl extends SimpleControl implements IDEControl, Ed
       openedFiles = event.getOpenedFiles();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
+   @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getVfsInfo() != null)
+      vfsInfo = event.getVfsInfo();
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      isProjectOpened = false;
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      isProjectOpened = true;
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      View view = event.getView();
+
+      if (view instanceof NavigatorDisplay || view instanceof ProjectExplorerDisplay)
       {
-         setVisible(true);
+         isBrowserPanelVisible = view.isViewVisible();
+
+         if (view instanceof ProjectExplorerDisplay)
+         {
+            isProjectExplorerVisible = view.isViewVisible();
+         }
       }
-      else
-      {
-         setVisible(false);
-      }
+
+      updateState();
    }
 
 }

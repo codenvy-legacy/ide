@@ -28,9 +28,16 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -45,7 +52,7 @@ import java.util.List;
  */
 @RolesAllowed({"administrators", "developers"})
 public class CutItemsCommand extends SimpleControl implements IDEControl, VfsChangedHandler, ItemsSelectedHandler,
-   ViewActivatedHandler
+   ViewActivatedHandler, ViewVisibilityChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
 
    private static final String ID = "Edit/Cut Item(s)";
@@ -59,6 +66,12 @@ public class CutItemsCommand extends SimpleControl implements IDEControl, VfsCha
    private boolean browserPanelSelected = false;
 
    private List<Item> selectedItems;
+
+   private boolean isProjectOpened = false;
+
+   private boolean isBrowserPanelVisible;
+
+   private boolean isProjectExplorerVisible;
 
    /**
     * 
@@ -82,6 +95,9 @@ public class CutItemsCommand extends SimpleControl implements IDEControl, VfsCha
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
    /**
@@ -106,9 +122,50 @@ public class CutItemsCommand extends SimpleControl implements IDEControl, VfsCha
       updateState();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      View view = event.getView();
+
+      if (view instanceof NavigatorDisplay || view instanceof ProjectExplorerDisplay)
+      {
+         isBrowserPanelVisible = view.isViewVisible();
+
+         if (view instanceof ProjectExplorerDisplay)
+         {
+            isProjectExplorerVisible = view.isViewVisible();
+         }
+      }
+
+      updateState();
+   }
+
    protected void updateState()
    {
-      if (vfsInfo == null || selectedItems == null || selectedItems.size() != 1)
+      if (vfsInfo == null)
+      {
+         setVisible(false);
+         return;
+      }
+
+      if (!isProjectOpened && isProjectExplorerVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      if (!isBrowserPanelVisible)
+      {
+         setVisible(false);
+         return;
+      }
+
+      setVisible(true);
+
+      if (selectedItems == null || selectedItems.size() != 1)
       {
          setEnabled(false);
          return;
@@ -129,8 +186,26 @@ public class CutItemsCommand extends SimpleControl implements IDEControl, VfsCha
    public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
-      setVisible(vfsInfo != null);
       updateState();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      isProjectOpened = false;
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.project.ProjectOpenedEvent)
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      isProjectOpened = true;
+      updateState();
+   }
 }

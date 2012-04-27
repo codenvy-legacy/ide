@@ -50,7 +50,7 @@ public class BuildPerformedTest extends BaseTest
          project =
             VirtualFileSystemUtils.importZipProject(PROJECT,
                "src/test/resources/org/exoplatform/ide/extension/maven/TestSpringProjectWithPOM.zip");
-
+         //need for create project on  DavFs
          Thread.sleep(2000);
       }
       catch (Exception e)
@@ -65,6 +65,7 @@ public class BuildPerformedTest extends BaseTest
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
 
+         //need for delete project on  DavFs
          Thread.sleep(2000);
       }
       catch (Exception e)

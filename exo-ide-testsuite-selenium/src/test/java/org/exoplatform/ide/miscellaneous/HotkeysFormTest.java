@@ -141,7 +141,7 @@ public class HotkeysFormTest extends BaseTest
       IDE.CUSTOMIZE_HOTKEYS.isOkEnabled();
       IDE.CUSTOMIZE_HOTKEYS.isCancelEnabled();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(ToolbarCommands.File.SAVE);
-      assertEquals("", IDE.CUSTOMIZE_HOTKEYS.getTextTypeKeys());
+      assertEquals("Ctrl+K", IDE.CUSTOMIZE_HOTKEYS.getTextTypeKeys());
       IDE.CUSTOMIZE_HOTKEYS.cancelButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitClosed();
    }

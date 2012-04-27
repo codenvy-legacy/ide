@@ -24,8 +24,8 @@ package org.exoplatform.ide.extension.openshift.server;
  */
 class RHCloudCredentials
 {
-   private String rhlogin;
-   private String password;
+   private final String rhlogin;
+   private final String password;
 
    RHCloudCredentials(String rhlogin, String password)
    {

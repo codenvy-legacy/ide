@@ -23,7 +23,7 @@ package org.exoplatform.ide.extension.openshift.server;
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public class ParsingResponseException extends Exception
+public final class ParsingResponseException extends Exception
 {
    public ParsingResponseException(String message, Throwable cause)
    {
@@ -33,10 +33,5 @@ public class ParsingResponseException extends Exception
    public ParsingResponseException(String message)
    {
       super(message);
-   }
-
-   public ParsingResponseException(Throwable cause)
-   {
-      super(cause);
    }
 }

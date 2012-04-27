@@ -160,30 +160,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          @Override
          public void onClick(ClickEvent event)
          {
-            disabelButtons();
-            try
-            {
-               DebuggerClientService.getInstance().resume(debuggerInfo.getId(), new AsyncRequestCallback<String>()
-               {
-
-                  @Override
-                  protected void onSuccess(String result)
-                  {
-                     resetStates();
-                  }
-
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     IDE.fireEvent(new ExceptionThrownEvent(exception));
-                  }
-
-               });
-            }
-            catch (RequestException e)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(e));
-            }
+            doResume();
          }
 
       });
@@ -194,30 +171,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          @Override
          public void onClick(ClickEvent event)
          {
-            disabelButtons();
-            try
-            {
-               DebuggerClientService.getInstance().stepInto(debuggerInfo.getId(), new AsyncRequestCallback<String>()
-               {
-
-                  @Override
-                  protected void onSuccess(String result)
-                  {
-                     resetStates();
-                  }
-
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     IDE.fireEvent(new ExceptionThrownEvent(exception));
-                  }
-
-               });
-            }
-            catch (RequestException e)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(e));
-            }
+            doStepInto();
          }
       });
 
@@ -227,30 +181,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          @Override
          public void onClick(ClickEvent event)
          {
-            disabelButtons();
-            try
-            {
-               DebuggerClientService.getInstance().stepOver(debuggerInfo.getId(), new AsyncRequestCallback<String>()
-               {
-
-                  @Override
-                  protected void onSuccess(String result)
-                  {
-                     resetStates();
-                  }
-
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     IDE.fireEvent(new ExceptionThrownEvent(exception));
-                  }
-
-               });
-            }
-            catch (RequestException e)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(e));
-            }
+            doStepOver();
          }
       });
 
@@ -260,30 +191,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          @Override
          public void onClick(ClickEvent event)
          {
-            disabelButtons();
-            try
-            {
-               DebuggerClientService.getInstance().stepReturn(debuggerInfo.getId(), new AsyncRequestCallback<String>()
-               {
-
-                  @Override
-                  protected void onSuccess(String result)
-                  {
-                     resetStates();
-                  }
-
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     IDE.fireEvent(new ExceptionThrownEvent(exception));
-                  }
-
-               });
-            }
-            catch (RequestException e)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(e));
-            }
+            doStepReturn();
          }
       });
 
@@ -302,37 +210,127 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          @Override
          public void onClick(ClickEvent event)
          {
-            try
-            {
-               DebuggerClientService.getInstance().deleteAllBreakPoint(debuggerInfo.getId(),
-                  new AsyncRequestCallback<String>()
-                  {
-
-                     @Override
-                     protected void onSuccess(String result)
-                     {
-                        IDE.fireEvent(new BreakPointsUpdatedEvent(Collections
-                           .<String, Set<EditorBreakPoint>> emptyMap()));
-                     }
-
-                     @Override
-                     protected void onFailure(Throwable exception)
-                     {
-                        IDE.fireEvent(new ExceptionThrownEvent(exception));
-                     }
-
-                  });
-            }
-            catch (RequestException e)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(e));
-            }
-
+            doRemoveAllBreakPoints();
          }
       });
 
       disabelButtons();
    }
+   
+   
+   private void doResume()
+   {
+      disabelButtons();
+      try
+      {
+         DebuggerClientService.getInstance().resume(debuggerInfo.getId(), new AsyncRequestCallback<String>()
+            {
+            
+            @Override
+            protected void onSuccess(String result)
+            {
+               resetStates();
+            }
+            
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+            
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+   
+   private void doStepInto()
+   {
+      disabelButtons();
+      try
+      {
+         DebuggerClientService.getInstance().stepInto(debuggerInfo.getId(), new AsyncRequestCallback<String>()
+         {
+
+            @Override
+            protected void onSuccess(String result)
+            {
+               resetStates();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+   
+   private void doStepOver()
+   {
+      disabelButtons();
+      try
+      {
+         DebuggerClientService.getInstance().stepOver(debuggerInfo.getId(), new AsyncRequestCallback<String>()
+         {
+
+            @Override
+            protected void onSuccess(String result)
+            {
+               resetStates();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+   
+
+   private void doStepReturn()
+   {
+      disabelButtons();
+      try
+      {
+         DebuggerClientService.getInstance().stepReturn(debuggerInfo.getId(), new AsyncRequestCallback<String>()
+         {
+
+            @Override
+            protected void onSuccess(String result)
+            {
+               resetStates();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+   
 
    private void doDisconnectDebugger()
    {
@@ -821,6 +819,35 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       display.setVariebels(Collections.<Variable> emptyList());
       breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
       currentBreakPoint = null;
+   }
+
+   private void doRemoveAllBreakPoints()
+   {
+      try
+      {
+         DebuggerClientService.getInstance().deleteAllBreakPoint(debuggerInfo.getId(),
+            new AsyncRequestCallback<String>()
+            {
+
+               @Override
+               protected void onSuccess(String result)
+               {
+                  IDE.fireEvent(new BreakPointsUpdatedEvent(Collections
+                     .<String, Set<EditorBreakPoint>> emptyMap()));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
 }
