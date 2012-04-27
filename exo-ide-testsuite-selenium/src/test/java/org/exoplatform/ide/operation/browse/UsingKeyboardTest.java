@@ -71,7 +71,7 @@ public class UsingKeyboardTest extends BaseTest
     * 
     * @throws Exception
     */
-   //   @Test
+      @Test
    public void testUsingKeyboardInNavigationPanel() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
@@ -147,7 +147,7 @@ public class UsingKeyboardTest extends BaseTest
     * 
     * @throws Exception
     */
-   // @Test
+   @Test
    public void testUsingKeyboardInOutlinePanel() throws Exception
    {
       driver.navigate().refresh();
