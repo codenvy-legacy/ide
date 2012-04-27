@@ -121,6 +121,7 @@ public class CopyItemsCommand extends SimpleControl implements IDEControl, Items
       }
 
       setEnabled(browserPanelSelected);
+      setShowInContextMenu(browserPanelSelected);
    }
 
    @Override

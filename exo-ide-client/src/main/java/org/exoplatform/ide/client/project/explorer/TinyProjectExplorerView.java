@@ -73,16 +73,17 @@ public class TinyProjectExplorerView extends ViewImpl implements ProjectExplorer
 
    @UiField
    HTMLPanel projectNotOpenedPanel;
-   
+
    @UiField
    IconButton linkWithEditorButton;
 
    private static final String TITLE = "Project Explorer";
-   
+
    public TinyProjectExplorerView()
    {
       super(ID, "navigation", TITLE, new Image(IDEImageBundle.INSTANCE.projectExplorer()), WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));      
+      add(uiBinder.createAndBindUi(this));
+      setCanShowContextMenu(true);
    }
 
    /**
