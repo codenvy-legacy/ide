@@ -67,7 +67,7 @@ public class UnusedCodeCleanUp extends AbstractMultiFix
     * {@inheritDoc}
     */
    @Override
-   protected ICleanUpFix createFix(CompilationUnit compilationUnit) throws CoreException
+   protected ICleanUpFix createFix(CompilationUnit compilationUnit, IDocument document) throws CoreException
    {
       boolean removeUnuseMembers = isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_MEMBERS);
 
@@ -79,7 +79,7 @@ public class UnusedCodeCleanUp extends AbstractMultiFix
             && isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_TYPES),
             isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_LOCAL_VARIABLES),
             isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_IMPORTS) && !isEnabled(CleanUpConstants.ORGANIZE_IMPORTS),
-            false);
+            false, document);
    }
 
    /**
@@ -98,7 +98,7 @@ public class UnusedCodeCleanUp extends AbstractMultiFix
             && isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_TYPES),
             isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_LOCAL_VARIABLES),
             isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_IMPORTS) && !isEnabled(CleanUpConstants.ORGANIZE_IMPORTS),
-            false);
+            false, document);
    }
 
    public Map<String, String> getRequiredOptions()

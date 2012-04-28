@@ -60,7 +60,7 @@ public interface CorrectionMessages extends Messages
 
     String QuickAssistProcessor_convert_to_single_multicatch_block();
 
-    String QuickAssistProcessor_convert_to_string_buffer_description();
+    String QuickAssistProcessor_convert_to_string_buffer_description(String mechanismName);
 
     String QuickAssistProcessor_exceptiontothrows_description();
 
@@ -554,7 +554,7 @@ public interface CorrectionMessages extends Messages
 
     String AdvancedQuickAssistProcessor_pickSelectedString();
 
-    String AdvancedQuickAssistProcessor_negatedVariableName();
+    String AdvancedQuickAssistProcessor_negatedVariableName(String string);
 
     String AdvancedQuickAssistProcessor_pushNegationDown();
 

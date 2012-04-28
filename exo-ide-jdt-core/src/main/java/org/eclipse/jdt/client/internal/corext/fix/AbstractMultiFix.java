@@ -40,11 +40,11 @@ public abstract class AbstractMultiFix extends AbstractCleanUp implements IMulti
 		if (context instanceof MultiFixContext) {
 			return createFix(unit,context.getDocument(), ((MultiFixContext)context).getProblemLocations());
 		} else {
-			return createFix(unit);
+			return createFix(unit, context.getDocument());
 		}
 	}
 
-	protected abstract ICleanUpFix createFix(CompilationUnit unit) throws CoreException;
+	protected abstract ICleanUpFix createFix(CompilationUnit unit, IDocument document) throws CoreException;
 
 	protected abstract ICleanUpFix createFix(CompilationUnit unit, IDocument document, IProblemLocation[] problems) throws CoreException;
 

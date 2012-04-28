@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.text.quickassist;
 
+import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
+import org.exoplatform.ide.editor.text.IDocument;
 
 /**
  * Context information for quick fix and quick assist processors.
@@ -18,26 +20,41 @@ package org.eclipse.jdt.client.internal.text.quickassist;
  *
  * @since 3.2
  */
-public interface IQuickAssistInvocationContext {
+public interface IQuickAssistInvocationContext
+{
 
-	/**
-	 * Returns the offset where quick assist was invoked.
-	 *
-	 * @return the invocation offset or <code>-1</code> if unknown
-	 */
-	int getOffset();
+   /**
+    * Returns the offset where quick assist was invoked.
+    *
+    * @return the invocation offset or <code>-1</code> if unknown
+    */
+   int getOffset();
 
-	/**
-	 * Returns the length of the selection at the invocation offset.
-	 *
-	 * @return the length of the current selection or <code>-1</code> if none or unknown
-	 */
-	int getLength();
+   /**
+    * Returns the length of the selection at the invocation offset.
+    *
+    * @return the length of the current selection or <code>-1</code> if none or unknown
+    */
+   int getLength();
+   
+   /**
+    * Return the document where quick assist was invoked
+    * @return the document
+    */
+   IDocument getDocument();
+   
+   /**
+    * Return the problems at cursor
+    * @return
+    */
+   IProblemLocation[] getProblemsAtOffset();
+   
+   boolean isUpdatedOffset();
 
-//	/**
-//	 * Returns the viewer for this context.
-//	 *
-//	 * @return the viewer or <code>null</code> if not available
-//	 */
-//	ISourceViewer getSourceViewer();
+   //	/**
+   //	 * Returns the viewer for this context.
+   //	 *
+   //	 * @return the viewer or <code>null</code> if not available
+   //	 */
+   //	ISourceViewer getSourceViewer();
 }

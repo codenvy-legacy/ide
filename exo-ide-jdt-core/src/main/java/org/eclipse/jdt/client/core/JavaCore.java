@@ -91,6 +91,8 @@ import org.eclipse.jdt.client.JdtExtension;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
+import org.eclipse.jdt.client.core.compiler.IProblem;
+import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -737,6 +739,25 @@ public final class JavaCore
    public static String getOption(String key)
    {
       return getOptions().get(key);
+   }
+   
+   /**
+    * Returns the option that can be used to configure the severity of the
+    * compiler problem identified by <code>problemID</code> if any,
+    * <code>null</code> otherwise. Non-null return values are taken from the
+    * constants defined by this class whose names start with
+    * <code>COMPILER_PB</code> and for which the possible values of the
+    * option are defined by <code>{ "error", "warning", "ignore" }</code>. A
+    * null return value means that the provided problem ID is unknown or that
+    * it matches a problem whose severity cannot be configured.
+    * @param problemID one of the problem IDs defined by {@link IProblem}
+    * @return the option that can be used to configure the severity of the
+    *         compiler problem identified by <code>problemID</code> if any,
+    *         <code>null</code> otherwise
+    * @since 3.4
+    */
+   public static String getOptionForConfigurableSeverity(int problemID) {
+      return CompilerOptions.optionKeyFromIrritant(ProblemReporter.getIrritant(problemID));
    }
 
    /**

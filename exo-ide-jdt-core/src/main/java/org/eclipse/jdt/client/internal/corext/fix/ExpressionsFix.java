@@ -27,6 +27,7 @@ import org.eclipse.jdt.client.internal.corext.dom.NecessaryParenthesesChecker;
 import org.eclipse.jdt.client.internal.corext.refactoring.structure.CompilationUnitRewrite;
 import org.eclipse.jdt.client.internal.corext.refactoring.util.NoCommentSourceRangeComputer;
 import org.eclipse.jdt.client.runtime.CoreException;
+import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.edits.TextEditGroup;
 
 public class ExpressionsFix extends CompilationUnitRewriteOperationsFix
@@ -182,7 +183,7 @@ public class ExpressionsFix extends CompilationUnitRewriteOperationsFix
    }
 
    public static ExpressionsFix createAddParanoidalParenthesisFix(CompilationUnit compilationUnit,
-      ASTNode[] coveredNodes)
+      ASTNode[] coveredNodes, IDocument document)
    {
       if (coveredNodes == null)
          return null;
@@ -203,10 +204,10 @@ public class ExpressionsFix extends CompilationUnitRewriteOperationsFix
       CompilationUnitRewriteOperation op =
          new AddParenthesisOperation(changedNodes.toArray(new Expression[changedNodes.size()]));
       return new ExpressionsFix(FixMessages.INSTANCE.ExpressionsFix_addParanoiacParentheses_description(),
-         compilationUnit, new CompilationUnitRewriteOperation[]{op});
+         compilationUnit, new CompilationUnitRewriteOperation[]{op}, document);
    }
 
-   public static ExpressionsFix createRemoveUnnecessaryParenthesisFix(CompilationUnit compilationUnit, ASTNode[] nodes)
+   public static ExpressionsFix createRemoveUnnecessaryParenthesisFix(CompilationUnit compilationUnit, ASTNode[] nodes, IDocument document)
    {
       // check sub-expressions in fully covered nodes
       final ArrayList<ParenthesizedExpression> changedNodes = new ArrayList<ParenthesizedExpression>();
@@ -222,11 +223,11 @@ public class ExpressionsFix extends CompilationUnitRewriteOperationsFix
       HashSet<ParenthesizedExpression> expressions = new HashSet<ParenthesizedExpression>(changedNodes);
       RemoveParenthesisOperation op = new RemoveParenthesisOperation(expressions);
       return new ExpressionsFix(FixMessages.INSTANCE.ExpressionsFix_removeUnnecessaryParentheses_description(),
-         compilationUnit, new CompilationUnitRewriteOperation[]{op});
+         compilationUnit, new CompilationUnitRewriteOperation[]{op}, document);
    }
 
    public static ICleanUpFix createCleanUp(CompilationUnit compilationUnit, boolean addParanoicParentesis,
-      boolean removeUnnecessaryParenthesis)
+      boolean removeUnnecessaryParenthesis, IDocument document)
    {
 
       if (addParanoicParentesis)
@@ -240,7 +241,7 @@ public class ExpressionsFix extends CompilationUnitRewriteOperationsFix
          CompilationUnitRewriteOperation op =
             new AddParenthesisOperation(changedNodes.toArray(new Expression[changedNodes.size()]));
          return new ExpressionsFix(FixMessages.INSTANCE.ExpressionsFix_add_parentheses_change_name(), compilationUnit,
-            new CompilationUnitRewriteOperation[]{op});
+            new CompilationUnitRewriteOperation[]{op}, document);
       }
       else if (removeUnnecessaryParenthesis)
       {
@@ -253,14 +254,14 @@ public class ExpressionsFix extends CompilationUnitRewriteOperationsFix
          HashSet<ParenthesizedExpression> expressions = new HashSet<ParenthesizedExpression>(changedNodes);
          CompilationUnitRewriteOperation op = new RemoveParenthesisOperation(expressions);
          return new ExpressionsFix(FixMessages.INSTANCE.ExpressionsFix_remove_parentheses_change_name(),
-            compilationUnit, new CompilationUnitRewriteOperation[]{op});
+            compilationUnit, new CompilationUnitRewriteOperation[]{op}, document);
       }
       return null;
    }
 
    protected ExpressionsFix(String name, CompilationUnit compilationUnit,
-      CompilationUnitRewriteOperation[] fixRewriteOperations)
+      CompilationUnitRewriteOperation[] fixRewriteOperations, IDocument document)
    {
-      super(name, compilationUnit, fixRewriteOperations);
+      super(name, compilationUnit, fixRewriteOperations, document);
    }
 }

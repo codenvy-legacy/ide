@@ -607,7 +607,7 @@ public class CodeStyleFix extends CompilationUnitRewriteOperationsFix
    }
 
    public static CompilationUnitRewriteOperationsFix[] createNonStaticAccessFixes(CompilationUnit compilationUnit,
-      IProblemLocation problem)
+      IProblemLocation problem, IDocument document)
    {
       if (!isNonStaticAccess(problem))
          return null;
@@ -620,7 +620,7 @@ public class CodeStyleFix extends CompilationUnitRewriteOperationsFix
       String label1 =
          FixMessages.INSTANCE.CodeStyleFix_ChangeAccessToStatic_description(operations[0].getAccessorName());
       CompilationUnitRewriteOperationsFix fix1 =
-         new CompilationUnitRewriteOperationsFix(label1, compilationUnit, operations[0]);
+         new CompilationUnitRewriteOperationsFix(label1, compilationUnit, operations[0], document);
 
       if (operations.length > 1)
       {
@@ -628,7 +628,7 @@ public class CodeStyleFix extends CompilationUnitRewriteOperationsFix
             FixMessages.INSTANCE.CodeStyleFix_ChangeAccessToStaticUsingInstanceType_description(operations[1]
                .getAccessorName());
          CompilationUnitRewriteOperationsFix fix2 =
-            new CompilationUnitRewriteOperationsFix(label2, compilationUnit, operations[1]);
+            new CompilationUnitRewriteOperationsFix(label2, compilationUnit, operations[1], document);
          return new CompilationUnitRewriteOperationsFix[]{fix1, fix2};
       }
       return new CompilationUnitRewriteOperationsFix[]{fix1};
@@ -646,11 +646,11 @@ public class CodeStyleFix extends CompilationUnitRewriteOperationsFix
          return null;
 
       String groupName = operation.getDescription();
-      return new CodeStyleFix(groupName, compilationUnit, new CompilationUnitRewriteOperation[]{operation});
+      return new CodeStyleFix(groupName, compilationUnit, new CompilationUnitRewriteOperation[]{operation}, document);
    }
 
    public static CompilationUnitRewriteOperationsFix createIndirectAccessToStaticFix(CompilationUnit compilationUnit,
-      IProblemLocation problem)
+      IProblemLocation problem, IDocument document)
    {
       if (!isIndirectStaticAccess(problem))
          return null;
@@ -661,7 +661,7 @@ public class CodeStyleFix extends CompilationUnitRewriteOperationsFix
          return null;
 
       String label = FixMessages.INSTANCE.CodeStyleFix_ChangeStaticAccess_description(operations[0].getAccessorName());
-      return new CodeStyleFix(label, compilationUnit, new CompilationUnitRewriteOperation[]{operations[0]});
+      return new CodeStyleFix(label, compilationUnit, new CompilationUnitRewriteOperation[]{operations[0]}, document);
    }
 
    public static ICleanUpFix createCleanUp(CompilationUnit compilationUnit, IDocument document,
@@ -705,7 +705,7 @@ public class CodeStyleFix extends CompilationUnitRewriteOperationsFix
 
       CompilationUnitRewriteOperation[] operationsArray =
          operations.toArray(new CompilationUnitRewriteOperation[operations.size()]);
-      return new CodeStyleFix(FixMessages.INSTANCE.CodeStyleFix_change_name(), compilationUnit, operationsArray);
+      return new CodeStyleFix(FixMessages.INSTANCE.CodeStyleFix_change_name(), compilationUnit, operationsArray, document);
    }
 
    public static ICleanUpFix createCleanUp(CompilationUnit compilationUnit, IDocument document,
@@ -740,7 +740,7 @@ public class CodeStyleFix extends CompilationUnitRewriteOperationsFix
 
       CompilationUnitRewriteOperation[] operationsArray =
          operations.toArray(new CompilationUnitRewriteOperation[operations.size()]);
-      return new CodeStyleFix(FixMessages.INSTANCE.CodeStyleFix_change_name(), compilationUnit, operationsArray);
+      return new CodeStyleFix(FixMessages.INSTANCE.CodeStyleFix_change_name(), compilationUnit, operationsArray, document);
    }
 
    private static void addToStaticAccessOperations(CompilationUnit compilationUnit, IProblemLocation[] problems,
@@ -971,9 +971,9 @@ public class CodeStyleFix extends CompilationUnitRewriteOperationsFix
       return (SimpleName)selectedNode;
    }
 
-   private CodeStyleFix(String name, CompilationUnit compilationUnit, CompilationUnitRewriteOperation[] operations)
+   private CodeStyleFix(String name, CompilationUnit compilationUnit, CompilationUnitRewriteOperation[] operations, IDocument document)
    {
-      super(name, compilationUnit, operations);
+      super(name, compilationUnit, operations, document);
    }
 
 }

@@ -103,7 +103,7 @@ public class UnimplementedCodeCleanUp extends AbstractMultiFix
     * {@inheritDoc}
     */
    @Override
-   protected ICleanUpFix createFix(CompilationUnit unit) throws CoreException
+   protected ICleanUpFix createFix(CompilationUnit unit, IDocument document) throws CoreException
    {
       IProblemLocation[] problemLocations = convertProblems(unit.getProblems());
       problemLocations =
@@ -111,7 +111,7 @@ public class UnimplementedCodeCleanUp extends AbstractMultiFix
             IProblem.EnumConstantMustImplementAbstractMethod});
 
       return UnimplementedCodeFix.createCleanUp(unit, isEnabled(CleanUpConstants.ADD_MISSING_METHODES),
-         isEnabled(MAKE_TYPE_ABSTRACT), problemLocations);
+         isEnabled(MAKE_TYPE_ABSTRACT), problemLocations, document);
    }
 
    /**
@@ -124,7 +124,7 @@ public class UnimplementedCodeCleanUp extends AbstractMultiFix
          filter(problems, new int[]{IProblem.AbstractMethodMustBeImplemented,
             IProblem.EnumConstantMustImplementAbstractMethod});
       return UnimplementedCodeFix.createCleanUp(unit, isEnabled(CleanUpConstants.ADD_MISSING_METHODES),
-         isEnabled(MAKE_TYPE_ABSTRACT), problemLocations);
+         isEnabled(MAKE_TYPE_ABSTRACT), problemLocations, document);
    }
 
    /**

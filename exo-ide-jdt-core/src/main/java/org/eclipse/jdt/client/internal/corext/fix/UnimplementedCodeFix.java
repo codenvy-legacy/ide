@@ -34,6 +34,7 @@ import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.runtime.IStatus;
 import org.eclipse.jdt.client.runtime.Status;
 import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.edits.MultiTextEdit;
 import org.exoplatform.ide.editor.text.edits.TextEditGroup;
 
@@ -73,7 +74,7 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
    }
 
    public static ICleanUpFix createCleanUp(CompilationUnit root, boolean addMissingMethod, boolean makeTypeAbstract,
-      IProblemLocation[] problems)
+      IProblemLocation[] problems, IDocument document)
    {
       Assert.isLegal(!addMissingMethod || !makeTypeAbstract);
       if (!addMissingMethod && !makeTypeAbstract)
@@ -118,10 +119,10 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
          label = CorrectionMessages.INSTANCE.UnimplementedCodeFix_MakeAbstractFix_label();
       }
       return new UnimplementedCodeFix(label, root, operations.toArray(new CompilationUnitRewriteOperation[operations
-         .size()]));
+         .size()]), document);
    }
 
-   public static IProposableFix createAddUnimplementedMethodsFix(final CompilationUnit root, IProblemLocation problem)
+   public static IProposableFix createAddUnimplementedMethodsFix(final CompilationUnit root, IProblemLocation problem, IDocument document)
    {
       ASTNode typeNode = getSelectedTypeNode(root, problem);
       if (typeNode == null)
@@ -134,7 +135,7 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
       if (operation.getMethodsToImplement().length > 0)
       {
          return new UnimplementedCodeFix(CorrectionMessages.INSTANCE.UnimplementedMethodsCorrectionProposal_description(), root,
-            new CompilationUnitRewriteOperation[]{operation});
+            new CompilationUnitRewriteOperation[]{operation}, document);
       }
       else
       {
@@ -180,7 +181,7 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
       }
    }
 
-   public static UnimplementedCodeFix createMakeTypeAbstractFix(CompilationUnit root, IProblemLocation problem)
+   public static UnimplementedCodeFix createMakeTypeAbstractFix(CompilationUnit root, IProblemLocation problem, IDocument document)
    {
       ASTNode typeNode = getSelectedTypeNode(root, problem);
       if (!(typeNode instanceof TypeDeclaration))
@@ -194,7 +195,7 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
        typeDeclaration.getName().getIdentifier());
 //         CorrectionMessages.INSTANCE.ModifierCorrectionSubProcessor_addabstract_description(
 //            BasicElementLabels.getJavaElementName(typeDeclaration.getName().getIdentifier()));
-      return new UnimplementedCodeFix(label, root, new CompilationUnitRewriteOperation[]{operation});
+      return new UnimplementedCodeFix(label, root, new CompilationUnitRewriteOperation[]{operation}, document);
    }
 
    public static ASTNode getSelectedTypeNode(CompilationUnit root, IProblemLocation problem)
@@ -263,8 +264,8 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
    }
 
    public UnimplementedCodeFix(String name, CompilationUnit compilationUnit,
-      CompilationUnitRewriteOperation[] fixRewriteOperations)
+      CompilationUnitRewriteOperation[] fixRewriteOperations, IDocument document)
    {
-      super(name, compilationUnit, fixRewriteOperations);
+      super(name, compilationUnit, fixRewriteOperations, document);
    }
 }

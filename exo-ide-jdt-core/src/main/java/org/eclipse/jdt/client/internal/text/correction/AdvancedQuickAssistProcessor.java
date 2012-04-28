@@ -14,37 +14,7 @@ package org.eclipse.jdt.client.internal.text.correction;
 
 import com.google.gwt.user.client.ui.Image;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.eclipse.jdt.client.internal.corext.codemanipulation.ASTResolving;
-import org.eclipse.jdt.client.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
-import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
-import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
-import org.eclipse.jdt.client.internal.corext.dom.GenericVisitor;
-import org.eclipse.jdt.client.internal.corext.dom.LinkedNodeFinder;
-import org.eclipse.jdt.client.internal.corext.dom.NecessaryParenthesesChecker;
-import org.eclipse.jdt.client.internal.corext.fix.CleanUpConstants;
-import org.eclipse.jdt.client.internal.corext.fix.CleanUpOptions;
-import org.eclipse.jdt.client.internal.corext.fix.ExpressionsCleanUp;
-import org.eclipse.jdt.client.internal.corext.fix.ExpressionsFix;
-import org.eclipse.jdt.client.internal.corext.fix.IProposableFix;
-import org.eclipse.jdt.client.internal.corext.refactoring.code.Invocations;
-import org.eclipse.jdt.client.internal.corext.refactoring.code.OperatorPrecedence;
-import org.eclipse.jdt.client.internal.corext.refactoring.util.TightSourceRangeComputer;
-import org.eclipse.jdt.client.internal.text.correction.proposals.ASTRewriteCorrectionProposal;
-import org.eclipse.jdt.client.internal.text.correction.proposals.FixCorrectionProposal;
-import org.eclipse.jdt.client.internal.text.correction.proposals.LinkedCorrectionProposal;
-import org.eclipse.jdt.client.internal.text.quickassist.IQuickAssistInvocationContext;
-import org.eclipse.jdt.client.internal.text.quickassist.IQuickAssistProcessor;
-import org.eclipse.jdt.client.runtime.CoreException;
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
+import org.eclipse.jdt.client.JdtClientBundle;
 import org.eclipse.jdt.client.codeassistant.api.IInvocationContext;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
@@ -103,6 +73,35 @@ import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite.ImportRewriteContext;
 import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.ASTResolving;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
+import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
+import org.eclipse.jdt.client.internal.corext.dom.GenericVisitor;
+import org.eclipse.jdt.client.internal.corext.dom.LinkedNodeFinder;
+import org.eclipse.jdt.client.internal.corext.dom.NecessaryParenthesesChecker;
+import org.eclipse.jdt.client.internal.corext.fix.CleanUpConstants;
+import org.eclipse.jdt.client.internal.corext.fix.CleanUpOptions;
+import org.eclipse.jdt.client.internal.corext.fix.ExpressionsCleanUp;
+import org.eclipse.jdt.client.internal.corext.fix.ExpressionsFix;
+import org.eclipse.jdt.client.internal.corext.fix.IProposableFix;
+import org.eclipse.jdt.client.internal.corext.refactoring.code.Invocations;
+import org.eclipse.jdt.client.internal.corext.refactoring.code.OperatorPrecedence;
+import org.eclipse.jdt.client.internal.corext.refactoring.util.TightSourceRangeComputer;
+import org.eclipse.jdt.client.internal.text.correction.proposals.ASTRewriteCorrectionProposal;
+import org.eclipse.jdt.client.internal.text.correction.proposals.FixCorrectionProposal;
+import org.eclipse.jdt.client.internal.text.correction.proposals.LinkedCorrectionProposal;
+import org.eclipse.jdt.client.internal.text.quickassist.IQuickAssistProcessor;
+import org.eclipse.jdt.client.runtime.CoreException;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  */
@@ -270,10 +269,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       newIf.setElseStatement(elseBlock);
       rewrite.replace(ifStatement, newIf, null);
       // add correction proposal
-      String label = CorrectionMessages.AdvancedQuickAssistProcessor_convertToIfElse_description;
-      Image image = new Image();//TODO //JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_convertToIfElse_description();
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       ASTRewriteCorrectionProposal proposal =
-         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+         new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
       resultingCollections.add(proposal);
       return true;
    }
@@ -318,10 +317,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       rewrite.set(ifStatement, IfStatement.THEN_STATEMENT_PROPERTY, newThenStatement, null);
       rewrite.set(ifStatement, IfStatement.ELSE_STATEMENT_PROPERTY, newElseStatement, null);
       // add correction proposal
-      String label = CorrectionMessages.AdvancedQuickAssistProcessor_inverseIf_description;
-      Image image = new Image();//TODO //JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_inverseIf_description();
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       ASTRewriteCorrectionProposal proposal =
-         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+         new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
       resultingCollections.add(proposal);
       return true;
    }
@@ -381,10 +380,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       // replace 'if' statement in loop
       rewrite.replace(ifStatement, newIf, null);
       // add correction proposal
-      String label = CorrectionMessages.AdvancedQuickAssistProcessor_inverseIfContinue_description;
-      Image image = new Image();//TODO //JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_inverseIfContinue_description();
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       ASTRewriteCorrectionProposal proposal =
-         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+         new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
       resultingCollections.add(proposal);
       return true;
    }
@@ -470,10 +469,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
          }
       }
       // add correction proposal
-      String label = CorrectionMessages.AdvancedQuickAssistProcessor_inverseIfToContinue_description;
-      Image image = new Image();//TODO //JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_inverseIfToContinue_description();
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       ASTRewriteCorrectionProposal proposal =
-         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+         new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
       resultingCollections.add(proposal);
       return true;
    }
@@ -529,10 +528,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
          return true;
       }
       // add correction proposal
-      String label = CorrectionMessages.AdvancedQuickAssistProcessor_inverseConditions_description;
-      Image image = new Image();//TODO //JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_inverseConditions_description();
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       ASTRewriteCorrectionProposal proposal =
-         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+         new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
       resultingCollections.add(proposal);
       return true;
    }
@@ -762,14 +761,14 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
 
       IProposableFix fix =
          ExpressionsFix.createRemoveUnnecessaryParenthesisFix(context.getASTRoot(),
-            nodes.toArray(new ASTNode[nodes.size()]));
+            nodes.toArray(new ASTNode[nodes.size()]), context.getDocument());
       if (fix == null)
          return false;
 
       if (resultingCollections == null)
          return true;
 
-      Image image = new Image();//TODO// JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_REMOVE);
+      Image image = new Image(JdtClientBundle.INSTANCE.delete_obj());
       Map<String, String> options = new Hashtable<String, String>();
       options.put(CleanUpConstants.EXPRESSIONS_USE_PARENTHESES, CleanUpOptions.TRUE);
       options.put(CleanUpConstants.EXPRESSIONS_USE_PARENTHESES_NEVER, CleanUpOptions.TRUE);
@@ -785,7 +784,7 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
 
       IProposableFix fix =
          ExpressionsFix.createAddParanoidalParenthesisFix(context.getASTRoot(),
-            coveredNodes.toArray(new ASTNode[coveredNodes.size()]));
+            coveredNodes.toArray(new ASTNode[coveredNodes.size()]), context.getDocument());
       if (fix == null)
          return false;
 
@@ -793,7 +792,7 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
          return true;
 
       // add correction proposal
-      Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CAST);
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_cast());
       Map<String, String> options = new Hashtable<String, String>();
       options.put(CleanUpConstants.EXPRESSIONS_USE_PARENTHESES, CleanUpOptions.TRUE);
       options.put(CleanUpConstants.EXPRESSIONS_USE_PARENTHESES_ALWAYS, CleanUpOptions.TRUE);
@@ -825,22 +824,22 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       String label = null;
       if (node instanceof CastExpression)
       {
-         label = CorrectionMessages.UnresolvedElementsSubProcessor_missingcastbrackets_description;
+         label = CorrectionMessages.INSTANCE.UnresolvedElementsSubProcessor_missingcastbrackets_description();
       }
       else if (node instanceof InstanceofExpression)
       {
-         label = CorrectionMessages.LocalCorrectionsSubProcessor_setparenteses_instanceof_description;
+         label = CorrectionMessages.INSTANCE.LocalCorrectionsSubProcessor_setparenteses_instanceof_description();
       }
       else if (node instanceof InfixExpression)
       {
          InfixExpression infixExpression = (InfixExpression)node;
          label =
-            Messages.format(CorrectionMessages.LocalCorrectionsSubProcessor_setparenteses_description, infixExpression
+            CorrectionMessages.INSTANCE.LocalCorrectionsSubProcessor_setparenteses_description(infixExpression
                .getOperator().toString());
       }
       else if (node instanceof ConditionalExpression)
       {
-         label = CorrectionMessages.AdvancedQuickAssistProcessor_putConditionalExpressionInParentheses;
+         label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_putConditionalExpressionInParentheses();
       }
       else
       {
@@ -860,9 +859,9 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       parenthesizedExpression.setExpression((Expression)rewrite.createCopyTarget(node));
       rewrite.replace(node, parenthesizedExpression, null);
 
-      Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CAST);
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_cast());
       ASTRewriteCorrectionProposal proposal =
-         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, -10, image);
+         new ASTRewriteCorrectionProposal(label, rewrite, -10, context.getDocument(), image);
       resultingCollections.add(proposal);
       return true;
    }
@@ -965,10 +964,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
             newIf.setThenStatement(bodyPlaceholder);
             rewrite.replace(outerIf, newIf, null);
             // add correction proposal
-            String label = CorrectionMessages.AdvancedQuickAssistProcessor_joinWithOuter_description;
-            Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+            String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_joinWithOuter_description();
+            Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
             ASTRewriteCorrectionProposal proposal =
-               new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+               new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
             resultingCollections.add(proposal);
          }
       }
@@ -1015,10 +1014,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
             newIf.setThenStatement(bodyPlaceholder);
             rewrite.replace(ifStatement, newIf, null);
             // add correction proposal
-            String label = CorrectionMessages.AdvancedQuickAssistProcessor_joinWithInner_description;
-            Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+            String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_joinWithInner_description();
+            Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
             ASTRewriteCorrectionProposal proposal =
-               new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+               new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
             resultingCollections.add(proposal);
          }
       }
@@ -1119,10 +1118,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       rewrite.replace(ifStatement.getThenStatement(), innerBlock, null);
 
       // add correction proposal
-      String label = CorrectionMessages.AdvancedQuickAssistProcessor_splitAndCondition_description;
-      Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_splitAndCondition_description();
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       ASTRewriteCorrectionProposal proposal =
-         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+         new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
       resultingCollections.add(proposal);
       return true;
    }
@@ -1189,9 +1188,7 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
          Statement thenStatement = ifStatement.getThenStatement();
          try
          {
-            String thenSource =
-               context.getCompilationUnit().getBuffer()
-                  .getText(thenStatement.getStartPosition(), thenStatement.getLength());
+            String thenSource = context.getDocument().get(thenStatement.getStartPosition(), thenStatement.getLength());
             if (commonThenSource == null)
             {
                commonThenSource = thenSource;
@@ -1273,10 +1270,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
          }
       }
       // add correction proposal
-      String label = CorrectionMessages.AdvancedQuickAssistProcessor_joinWithOr_description;
-      Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_joinWithOr_description();
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       ASTRewriteCorrectionProposal proposal =
-         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+         new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
       resultingCollections.add(proposal);
       return true;
    }
@@ -1353,10 +1350,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       }
 
       // add correction proposal
-      String label = CorrectionMessages.AdvancedQuickAssistProcessor_splitOrCondition_description;
-      Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_splitOrCondition_description();
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       ASTRewriteCorrectionProposal proposal =
-         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+         new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
       resultingCollections.add(proposal);
       return true;
    }
@@ -1392,10 +1389,11 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       // replace old expression with new
       rewrite.replace(expression, newExpression, null);
       // add correction proposal
-      String label = CorrectionMessages.AdvancedQuickAssistProcessor_inverseConditionalExpression_description;
-      Image image =new Image();//TODO  JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      String label =
+         CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_inverseConditionalExpression_description();
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       ASTRewriteCorrectionProposal proposal =
-         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+         new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
       resultingCollections.add(proposal);
       return true;
    }
@@ -1446,10 +1444,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
             rewrite.replace(ifStatement.getExpression(), outerCondition, null);
             // add correction proposal
             String label =
-               CorrectionMessages.AdvancedQuickAssistProcessor_exchangeInnerAndOuterIfConditions_description;
-            Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+               CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_exchangeInnerAndOuterIfConditions_description();
+            Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
             ASTRewriteCorrectionProposal proposal =
-               new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+               new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
             resultingCollections.add(proposal);
             result = true;
          }
@@ -1486,10 +1484,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
             rewrite.replace(ifStatement.getExpression(), innerCondition, null);
             // add correction proposal
             String label =
-               CorrectionMessages.AdvancedQuickAssistProcessor_exchangeInnerAndOuterIfConditions_description;
-            Image image =new Image();//TODO  JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+               CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_exchangeInnerAndOuterIfConditions_description();
+            Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
             ASTRewriteCorrectionProposal proposal =
-               new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+               new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
             resultingCollections.add(proposal);
             result = true;
          }
@@ -1593,10 +1591,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       newInfix.setRightOperand(leftExpression);
       rewrite.replace(infixExpression, newInfix, null);
       // add correction proposal
-      String label = CorrectionMessages.AdvancedQuickAssistProcessor_exchangeOperands_description;
-      Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_exchangeOperands_description();
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       ASTRewriteCorrectionProposal proposal =
-         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+         new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
       resultingCollections.add(proposal);
       return true;
    }
@@ -1802,18 +1800,17 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       //
       AST ast = expression.getAST();
       ASTRewrite rewrite = ASTRewrite.create(ast);
-      ICompilationUnit cu = context.getCompilationUnit();
       // prepare correction proposal
-      String label = CorrectionMessages.AdvancedQuickAssistProcessor_castAndAssign;
-      Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_LOCAL);
-      LinkedCorrectionProposal proposal = new LinkedCorrectionProposal(label, cu, rewrite, 7, image);
+      String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_castAndAssign();
+      Image image = new Image(JdtClientBundle.INSTANCE.local_var());
+      LinkedCorrectionProposal proposal = new LinkedCorrectionProposal(label, rewrite, 7, context.getDocument(), image);
       // prepare possible variable names
       List<String> excludedNames = Arrays.asList(ASTResolving.getUsedVariableNames(body));
-      String[] varNames = suggestLocalVariableNames(cu, originalType.resolveBinding(), excludedNames);
-      for (int i = 0; i < varNames.length; i++)
-      {
-         proposal.addLinkedPositionProposal(KEY_NAME, varNames[i], null);
-      }
+      String[] varNames = suggestLocalVariableNames(originalType.resolveBinding(), excludedNames);
+      //      for (int i = 0; i < varNames.length; i++)
+      //      {
+      //         proposal.addLinkedPositionProposal(KEY_NAME, varNames[i], null);
+      //      }
       CastExpression castExpression = ast.newCastExpression();
       castExpression.setExpression((Expression)rewrite.createCopyTarget(expression.getLeftOperand()));
       castExpression.setType((Type)ASTNode.copySubtree(ast, originalType));
@@ -1848,11 +1845,11 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
          }
       }
 
-      // setup linked positions
-      proposal.addLinkedPosition(rewrite.track(vdf.getName()), true, KEY_NAME);
-      proposal.addLinkedPosition(rewrite.track(vds.getType()), false, KEY_TYPE);
-      proposal.addLinkedPosition(rewrite.track(castExpression.getType()), false, KEY_TYPE);
-      proposal.setEndPosition(rewrite.track(vds)); // set cursor after expression statement
+      //      // setup linked positions
+      //      proposal.addLinkedPosition(rewrite.track(vdf.getName()), true, KEY_NAME);
+      //      proposal.addLinkedPosition(rewrite.track(vds.getType()), false, KEY_TYPE);
+      //      proposal.addLinkedPosition(rewrite.track(castExpression.getType()), false, KEY_TYPE);
+      //      proposal.setEndPosition(rewrite.track(vds)); // set cursor after expression statement
       // add correction proposal
       resultingCollections.add(proposal);
       return true;
@@ -1874,10 +1871,9 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       return true;
    }
 
-   private static String[] suggestLocalVariableNames(ICompilationUnit cu, ITypeBinding binding, List<String> excluded)
+   private static String[] suggestLocalVariableNames(ITypeBinding binding, List<String> excluded)
    {
-      return StubUtility.getVariableNameSuggestions(NamingConventions.VK_LOCAL, cu.getJavaProject(), binding, null,
-         excluded);
+      return StubUtility.getVariableNameSuggestions(NamingConventions.VK_LOCAL, binding, null, excluded);
    }
 
    private static boolean getPickOutStringProposals(IInvocationContext context, ASTNode node,
@@ -1965,11 +1961,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       // use new expression instead of old StirngLiteral
       rewrite.replace(stringLiteral, expression, null);
       // add correction proposal
-      String label = CorrectionMessages.AdvancedQuickAssistProcessor_pickSelectedString;
-      Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
-      LinkedCorrectionProposal proposal =
-         new LinkedCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
-      proposal.addLinkedPosition(rewrite.track(centerLiteral), true, "CENTER_STRING"); //$NON-NLS-1$
+      String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_pickSelectedString();
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
+      LinkedCorrectionProposal proposal = new LinkedCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
+      //      proposal.addLinkedPosition(rewrite.track(centerLiteral), true, "CENTER_STRING"); //$NON-NLS-1$
       resultingCollections.add(proposal);
       return true;
    }
@@ -2059,10 +2054,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       sourceRangeComputer.addTightSourceNode(ifStatement);
       rewrite.setTargetSourceRangeComputer(sourceRangeComputer);
 
-      String label = CorrectionMessages.AdvancedQuickAssistProcessor_replaceIfWithConditional;
-      Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_replaceIfWithConditional();
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       ASTRewriteCorrectionProposal proposal =
-         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+         new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
 
       // prepare conditional expression
       ConditionalExpression conditionalExpression = ast.newConditionalExpression();
@@ -2071,27 +2066,27 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       Expression thenCopy = (Expression)rewrite.createCopyTarget(thenExpression);
       Expression elseCopy = (Expression)rewrite.createCopyTarget(elseExpression);
 
-      IJavaProject project = context.getCompilationUnit().getJavaProject();
-      if (!JavaModelUtil.is50OrHigher(project))
+      //      if (!JavaModelUtil.is50OrHigher(project))
+      //      {
+      ITypeBinding thenBinding = thenExpression.resolveTypeBinding();
+      ITypeBinding elseBinding = elseExpression.resolveTypeBinding();
+      if (thenBinding != null && elseBinding != null && exprBinding != null
+         && !elseBinding.isAssignmentCompatible(thenBinding))
       {
-         ITypeBinding thenBinding = thenExpression.resolveTypeBinding();
-         ITypeBinding elseBinding = elseExpression.resolveTypeBinding();
-         if (thenBinding != null && elseBinding != null && exprBinding != null
-            && !elseBinding.isAssignmentCompatible(thenBinding))
-         {
-            CastExpression castException = ast.newCastExpression();
-            ImportRewrite importRewrite = proposal.createImportRewrite(context.getASTRoot());
-            ImportRewriteContext importRewriteContext = new ContextSensitiveImportRewriteContext(node, importRewrite);
-            castException.setType(importRewrite.addImport(exprBinding, ast, importRewriteContext));
-            castException.setExpression(elseCopy);
-            elseCopy = castException;
-         }
+         CastExpression castException = ast.newCastExpression();
+         ImportRewrite importRewrite = proposal.createImportRewrite(context.getASTRoot());
+         ImportRewriteContext importRewriteContext = new ContextSensitiveImportRewriteContext(node, importRewrite);
+         castException.setType(importRewrite.addImport(exprBinding, ast, importRewriteContext));
+         castException.setExpression(elseCopy);
+         elseCopy = castException;
       }
-      else if (JavaModelUtil.is17OrHigher(project))
-      {
-         addExplicitTypeArgumentsIfNecessary(rewrite, proposal, thenExpression);
-         addExplicitTypeArgumentsIfNecessary(rewrite, proposal, elseExpression);
-      }
+      //TODO Java 7
+      //      }
+      //      else if (JavaModelUtil.is17OrHigher(project))
+      //      {
+      //         addExplicitTypeArgumentsIfNecessary(rewrite, proposal, thenExpression);
+      //         addExplicitTypeArgumentsIfNecessary(rewrite, proposal, elseExpression);
+      //      }
       conditionalExpression.setThenExpression(thenCopy);
       conditionalExpression.setElseExpression(elseCopy);
 
@@ -2308,10 +2303,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       }
 
       // add correction proposal
-      String label = CorrectionMessages.AdvancedQuickAssistProcessor_replaceConditionalWithIf;
-      Image image =new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_replaceConditionalWithIf();
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       ASTRewriteCorrectionProposal proposal =
-         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+         new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
       resultingCollections.add(proposal);
       return true;
    }
@@ -2357,14 +2352,14 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       //
       final ASTRewrite rewrite = ASTRewrite.create(ast);
       // create proposal
-      String label = CorrectionMessages.AdvancedQuickAssistProcessor_inverseBooleanVariable;
-      Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_inverseBooleanVariable();
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       final String KEY_NAME = "name"; //$NON-NLS-1$
       final LinkedCorrectionProposal proposal =
-         new LinkedCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+         new LinkedCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
       // prepare new variable identifier
       final String oldIdentifier = coveringName.getIdentifier();
-      final String notString = Messages.format(CorrectionMessages.AdvancedQuickAssistProcessor_negatedVariableName, ""); //$NON-NLS-1$
+      final String notString = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_negatedVariableName(""); //$NON-NLS-1$
       final String newIdentifier;
       if (oldIdentifier.startsWith(notString))
       {
@@ -2382,12 +2377,12 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       else
       {
          newIdentifier =
-            Messages.format(CorrectionMessages.AdvancedQuickAssistProcessor_negatedVariableName,
-               Character.toUpperCase(oldIdentifier.charAt(0)) + oldIdentifier.substring(1));
+            CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_negatedVariableName(Character
+               .toUpperCase(oldIdentifier.charAt(0)) + oldIdentifier.substring(1));
       }
       //
-      proposal.addLinkedPositionProposal(KEY_NAME, newIdentifier, null);
-      proposal.addLinkedPositionProposal(KEY_NAME, oldIdentifier, null);
+      //      proposal.addLinkedPositionProposal(KEY_NAME, newIdentifier, null);
+      //      proposal.addLinkedPositionProposal(KEY_NAME, oldIdentifier, null);
       // iterate over linked nodes and replace variable references with negated reference
       final HashSet<SimpleName> renamedNames = new HashSet<SimpleName>();
       for (int i = 0; i < linkedNodes.length; i++)
@@ -2399,7 +2394,7 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
          }
          // prepare new name with new identifier
          SimpleName newName = ast.newSimpleName(newIdentifier);
-         proposal.addLinkedPosition(rewrite.track(newName), name == coveringName, KEY_NAME);
+         //         proposal.addLinkedPosition(rewrite.track(newName), name == coveringName, KEY_NAME);
          //
          StructuralPropertyDescriptor location = name.getLocationInParent();
          if (location == SingleVariableDeclaration.NAME_PROPERTY)
@@ -2566,10 +2561,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
          rewrite.replace(negationExpression, inversedExpression, null);
       }
       // add correction proposal
-      String label = CorrectionMessages.AdvancedQuickAssistProcessor_pushNegationDown;
-      Image image =new Image();//TODO  JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_pushNegationDown();
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       ASTRewriteCorrectionProposal proposal =
-         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+         new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
       resultingCollections.add(proposal);
       return true;
    }
@@ -2659,10 +2654,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       // replace old expression
       rewrite.replace(expression, prefixExpression, null);
       // add correction proposal
-      String label = CorrectionMessages.AdvancedQuickAssistProcessor_pullNegationUp;
-      Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_pullNegationUp();
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       ASTRewriteCorrectionProposal proposal =
-         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+         new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
       resultingCollections.add(proposal);
       return true;
    }
@@ -2739,10 +2734,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       }
       rewrite.replace(firstIfStatement, firstNewIfStatement, null);
       // add correction proposal
-      String label = CorrectionMessages.AdvancedQuickAssistProcessor_joinIfSequence;
-      Image image =new Image();//TODO  JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      String label = CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_joinIfSequence();
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       ASTRewriteCorrectionProposal proposal =
-         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 1, image);
+         new ASTRewriteCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
       resultingCollections.add(proposal);
       return true;
    }
@@ -2762,7 +2757,8 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       //
       final AST ast = covering.getAST();
       final ASTRewrite rewrite = ASTRewrite.create(ast);
-      final ImportRewrite importRewrite = StubUtility.createImportRewrite(context.getASTRoot(), true);
+      final ImportRewrite importRewrite =
+         StubUtility.createImportRewrite(context.getDocument(), context.getASTRoot(), true);
       //
       SwitchStatement switchStatement = (SwitchStatement)covering;
       ITypeBinding expressionType = switchStatement.getExpression().resolveTypeBinding();
@@ -2896,10 +2892,10 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
       rewrite.replace(switchStatement, firstIfStatement, null);
 
       // add correction proposal
-      Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       ASTRewriteCorrectionProposal proposal =
-         new ASTRewriteCorrectionProposal(CorrectionMessages.AdvancedQuickAssistProcessor_convertSwitchToIf,
-            context.getCompilationUnit(), rewrite, 1, image);
+         new ASTRewriteCorrectionProposal(CorrectionMessages.INSTANCE.AdvancedQuickAssistProcessor_convertSwitchToIf(),
+            rewrite, 1, context.getDocument(), image);
       proposal.setImportRewrite(importRewrite);
       resultingCollections.add(proposal);
       return true;
@@ -2980,35 +2976,5 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
          return newBlock;
       }
       return (Statement)rewrite.createMoveTarget(source);
-   }
-
-   /**
-    * @see org.eclipse.jdt.client.internal.text.quickassist.IQuickAssistProcessor#getErrorMessage()
-    */
-   @Override
-   public String getErrorMessage()
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   /**
-    * @see org.eclipse.jdt.client.internal.text.quickassist.IQuickAssistProcessor#canAssist(org.eclipse.jdt.client.internal.text.quickassist.IQuickAssistInvocationContext)
-    */
-   @Override
-   public boolean canAssist(IQuickAssistInvocationContext invocationContext)
-   {
-      // TODO Auto-generated method stub
-      return false;
-   }
-
-   /**
-    * @see org.eclipse.jdt.client.internal.text.quickassist.IQuickAssistProcessor#computeQuickAssistProposals(org.eclipse.jdt.client.internal.text.quickassist.IQuickAssistInvocationContext)
-    */
-   @Override
-   public ICompletionProposal[] computeQuickAssistProposals(IQuickAssistInvocationContext invocationContext)
-   {
-      // TODO Auto-generated method stub
-      return null;
    }
 }

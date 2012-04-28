@@ -27,6 +27,7 @@ import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.runtime.IStatus;
 import org.eclipse.jdt.client.runtime.Status;
 import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.edits.TextEditGroup;
 
 public class CompilationUnitRewriteOperationsFix extends AbstractFix
@@ -68,19 +69,22 @@ public class CompilationUnitRewriteOperationsFix extends AbstractFix
 
    private final CompilationUnit fCompilationUnit;
 
+   private final IDocument document;
+
    //	private final LinkedProposalModel fLinkedProposalModel;
 
    public CompilationUnitRewriteOperationsFix(String name, CompilationUnit compilationUnit,
-      CompilationUnitRewriteOperation operation)
+      CompilationUnitRewriteOperation operation, IDocument document)
    {
-      this(name, compilationUnit, new CompilationUnitRewriteOperation[]{operation});
+      this(name, compilationUnit, new CompilationUnitRewriteOperation[]{operation}, document);
       Assert.isNotNull(operation);
    }
 
    public CompilationUnitRewriteOperationsFix(String name, CompilationUnit compilationUnit,
-      CompilationUnitRewriteOperation[] operations)
+      CompilationUnitRewriteOperation[] operations, IDocument document)
    {
       super(name);
+      this.document = document;
       Assert.isNotNull(operations);
       Assert.isLegal(operations.length > 0);
       fCompilationUnit = compilationUnit;
@@ -104,7 +108,7 @@ public class CompilationUnitRewriteOperationsFix extends AbstractFix
     */
    public CompilationUnitChange createChange(IProgressMonitor progressMonitor) throws CoreException
    {
-      CompilationUnitRewrite cuRewrite = new CompilationUnitRewrite(fCompilationUnit);
+      CompilationUnitRewrite cuRewrite = new CompilationUnitRewrite(fCompilationUnit, document);
 
       //		fLinkedProposalModel.clear();
       for (int i = 0; i < fOperations.length; i++)

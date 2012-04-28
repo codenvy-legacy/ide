@@ -205,7 +205,6 @@ public class ASTRewrite
       {
          return new MultiTextEdit(); // no changes
       }
-
       char[] content = document.get().toCharArray();
       LineInformation lineInfo = LineInformation.create(document);
       String lineDelim = TextUtilities.getDefaultLineDelimiter(document);

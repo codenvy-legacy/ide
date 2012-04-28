@@ -10,11 +10,13 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.refactoring.structure;
 
+import org.eclipse.jdt.client.JdtExtension;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
+import org.eclipse.jdt.client.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.jdt.client.internal.corext.refactoring.code.CompilationUnitChange;
 import org.eclipse.jdt.client.ltk.refactoring.CategorizedTextEditGroup;
 import org.eclipse.jdt.client.ltk.refactoring.GroupCategorySet;
@@ -63,6 +65,8 @@ public class CompilationUnitRewrite
 
    private IDocument fRememberContent = null;
 
+   private final IDocument document;
+
    //	public CompilationUnitRewrite(ICompilationUnit cu) {
    //		this(null, cu, null);
    //	}
@@ -75,11 +79,12 @@ public class CompilationUnitRewrite
    //		this(null, cu, root);
    //	}
 
-   public CompilationUnitRewrite(CompilationUnit root)
+   public CompilationUnitRewrite(CompilationUnit root, IDocument document)
    {
       //		fOwner= owner;
       //		fCu= cu;
       fRoot = root;
+      this.document = document;
    }
 
    public void rememberContent()
@@ -279,11 +284,11 @@ public class CompilationUnitRewrite
             TextEdit rewriteEdit;
             if (fRememberContent != null)
             {
-               rewriteEdit = fRewrite.rewriteAST(fRememberContent, fCu.getJavaProject().getOptions(true));
+               rewriteEdit = fRewrite.rewriteAST(fRememberContent, JdtExtension.get().getOptions());
             }
             else
             {
-               rewriteEdit = fRewrite.rewriteAST();
+               rewriteEdit = fRewrite.rewriteAST(document, JdtExtension.get().getOptions());
             }
             if (!isEmptyEdit(rewriteEdit))
             {
@@ -308,7 +313,7 @@ public class CompilationUnitRewrite
             if (!isEmptyEdit(importsEdit))
             {
                multiEdit.addChild(importsEdit);
-               String importUpdateName = RefactoringCoreMessages.ASTData_update_imports;
+               String importUpdateName = RefactoringCoreMessages.INSTANCE.ASTData_update_imports();
                cuChange.addTextEditGroup(new TextEditGroup(importUpdateName, importsEdit));
             }
          }
@@ -355,14 +360,14 @@ public class CompilationUnitRewrite
          fRewrite = ASTRewrite.create(getRoot().getAST());
          if (fRememberContent != null)
          { // wain until ast rewrite is accessed first
-            try
-            {
-               fRememberContent.set(fCu.getSource());
-            }
-            catch (JavaModelException e)
-            {
-               fRememberContent = null;
-            }
+//            try
+//            {
+               fRememberContent = document;
+//            }
+//            catch (JavaModelException e)
+//            {
+//               fRememberContent = null;
+//            }
          }
       }
       return fRewrite;
@@ -373,25 +378,25 @@ public class CompilationUnitRewrite
       if (fImportRewrite == null)
       {
          // lazily initialized to avoid lengthy processing in checkInitialConditions(..)
-         try
-         {
+//         try
+//         {
             /* If bindings are to be resolved, then create the AST, so that
              * ImportRewrite#setUseContextToFilterImplicitImports(boolean) will be set to true
              * and ContextSensitiveImportRewriteContext etc. can be used. */
             if (fRoot == null && !fResolveBindings)
             {
-               fImportRewrite = StubUtility.createImportRewrite(true);
+               fImportRewrite = StubUtility.createImportRewrite(document, getRoot(), true);
             }
             else
             {
-               fImportRewrite = StubUtility.createImportRewrite(getRoot(), true);
+               fImportRewrite = StubUtility.createImportRewrite(document, getRoot(), true);
             }
-         }
-         catch (CoreException e)
-         {
-            JavaPlugin.log(e);
-            throw new IllegalStateException(e.getMessage()); // like ASTParser#createAST(..) does
-         }
+//         }
+//         catch (CoreException e)
+//         {
+////            JavaPlugin.log(e);
+//            throw new IllegalStateException(e.getMessage()); // like ASTParser#createAST(..) does
+//         }
       }
       return fImportRewrite;
 

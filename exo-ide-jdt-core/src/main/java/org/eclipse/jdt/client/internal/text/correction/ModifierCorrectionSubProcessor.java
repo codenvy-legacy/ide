@@ -631,7 +631,7 @@ public class ModifierCorrectionSubProcessor
          CorrectionMessages.INSTANCE.ModifierCorrectionSubProcessor_addabstract_description(parentTypeDecl.getName()
             .getIdentifier());
       UnimplementedCodeFix fix =
-         new UnimplementedCodeFix(label, context.getASTRoot(), new CompilationUnitRewriteOperation[]{operation});
+         new UnimplementedCodeFix(label, context.getASTRoot(), new CompilationUnitRewriteOperation[]{operation}, context.getDocument());
 
       Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       FixCorrectionProposal proposal = new FixCorrectionProposal(fix, null, 5, image, context);

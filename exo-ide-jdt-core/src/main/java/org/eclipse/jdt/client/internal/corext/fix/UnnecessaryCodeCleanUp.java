@@ -53,10 +53,10 @@ public class UnnecessaryCodeCleanUp extends AbstractMultiFix
     * {@inheritDoc}
     */
    @Override
-   protected ICleanUpFix createFix(CompilationUnit compilationUnit) throws CoreException
+   protected ICleanUpFix createFix(CompilationUnit compilationUnit, IDocument document) throws CoreException
    {
       return UnusedCodeFix.createCleanUp(compilationUnit, false, false, false, false, false, false,
-         isEnabled(CleanUpConstants.REMOVE_UNNECESSARY_CASTS));
+         isEnabled(CleanUpConstants.REMOVE_UNNECESSARY_CASTS), document);
    }
 
    /**
@@ -66,7 +66,7 @@ public class UnnecessaryCodeCleanUp extends AbstractMultiFix
    protected ICleanUpFix createFix(CompilationUnit compilationUnit,IDocument document, IProblemLocation[] problems) throws CoreException
    {
       return UnusedCodeFix.createCleanUp(compilationUnit, problems, false, false, false, false, false, false,
-         isEnabled(CleanUpConstants.REMOVE_UNNECESSARY_CASTS));
+         isEnabled(CleanUpConstants.REMOVE_UNNECESSARY_CASTS), document);
    }
 
    private Map<String, String> getRequiredOptions()

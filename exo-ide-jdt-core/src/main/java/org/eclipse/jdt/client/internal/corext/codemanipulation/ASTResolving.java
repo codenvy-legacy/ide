@@ -1346,12 +1346,12 @@ public class ASTResolving
 
    public static String getTypeSignature(ITypeBinding type)
    {
-      return BindingLabelProvider.getBindingLabel(type);
+      return BindingLabelProvider.getBindingLabel(type, BindingLabelProvider.DEFAULT_TEXTFLAGS);
    }
 
    public static String getMethodSignature(IMethodBinding binding)
    {
-      return BindingLabelProvider.getBindingLabel(binding);
+      return BindingLabelProvider.getBindingLabel(binding, BindingLabelProvider.DEFAULT_TEXTFLAGS);
    }
 
    public static String getMethodSignature(String name, ITypeBinding[] params, boolean isVarArgs)

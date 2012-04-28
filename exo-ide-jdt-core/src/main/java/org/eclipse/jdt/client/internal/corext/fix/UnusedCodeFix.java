@@ -67,6 +67,7 @@ import org.eclipse.jdt.client.internal.text.correction.JavadocTagsSubProcessor;
 import org.eclipse.jdt.client.internal.text.correction.ProblemLocation;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.edits.TextEditGroup;
 
 /**
@@ -623,7 +624,7 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
       }
    }
 
-   public static UnusedCodeFix createRemoveUnusedImportFix(CompilationUnit compilationUnit, IProblemLocation problem)
+   public static UnusedCodeFix createRemoveUnusedImportFix(CompilationUnit compilationUnit, IProblemLocation problem, IDocument document)
    {
       if (isUnusedImport(problem))
       {
@@ -634,7 +635,7 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
             RemoveImportOperation operation = new RemoveImportOperation(node);
             Map<String, String> options = new Hashtable<String, String>();
             options.put(CleanUpConstants.REMOVE_UNUSED_CODE_IMPORTS, CleanUpOptions.TRUE);
-            return new UnusedCodeFix(label, compilationUnit, new CompilationUnitRewriteOperation[]{operation}, options);
+            return new UnusedCodeFix(label, compilationUnit, new CompilationUnitRewriteOperation[]{operation}, options, document);
          }
       }
       return null;
@@ -648,7 +649,7 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
    }
 
    public static UnusedCodeFix createUnusedMemberFix(CompilationUnit compilationUnit, IProblemLocation problem,
-      boolean removeAllAssignements)
+      boolean removeAllAssignements, IDocument document)
    {
       if (isUnusedMember(problem))
       {
@@ -665,7 +666,7 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
                RemoveUnusedMemberOperation operation =
                   new RemoveUnusedMemberOperation(new SimpleName[]{name}, removeAllAssignements);
                return new UnusedCodeFix(label, compilationUnit, new CompilationUnitRewriteOperation[]{operation},
-                  getCleanUpOptions(binding, removeAllAssignements));
+                  getCleanUpOptions(binding, removeAllAssignements), document);
             }
          }
       }
@@ -680,7 +681,7 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
          || id == IProblem.LocalVariableIsNeverUsed || id == IProblem.ArgumentIsNeverUsed;
    }
 
-   public static UnusedCodeFix createRemoveUnusedCastFix(CompilationUnit compilationUnit, IProblemLocation problem)
+   public static UnusedCodeFix createRemoveUnusedCastFix(CompilationUnit compilationUnit, IProblemLocation problem, IDocument document)
    {
       if (problem.getProblemId() != IProblem.UnnecessaryCast)
          return null;
@@ -697,12 +698,12 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
          return null;
 
       return new UnusedCodeFix(FixMessages.INSTANCE.UnusedCodeFix_RemoveCast_description(), compilationUnit,
-         new CompilationUnitRewriteOperation[]{new RemoveCastOperation((CastExpression)curr, selectedNode)});
+         new CompilationUnitRewriteOperation[]{new RemoveCastOperation((CastExpression)curr, selectedNode)}, document);
    }
 
    public static ICleanUpFix createCleanUp(CompilationUnit compilationUnit, boolean removeUnusedPrivateMethods,
       boolean removeUnusedPrivateConstructors, boolean removeUnusedPrivateFields, boolean removeUnusedPrivateTypes,
-      boolean removeUnusedLocalVariables, boolean removeUnusedImports, boolean removeUnusedCast)
+      boolean removeUnusedLocalVariables, boolean removeUnusedImports, boolean removeUnusedCast, IDocument document)
    {
 
       IProblem[] problems = compilationUnit.getProblems();
@@ -714,13 +715,13 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
 
       return createCleanUp(compilationUnit, locations, removeUnusedPrivateMethods, removeUnusedPrivateConstructors,
          removeUnusedPrivateFields, removeUnusedPrivateTypes, removeUnusedLocalVariables, removeUnusedImports,
-         removeUnusedCast);
+         removeUnusedCast, document);
    }
 
    public static ICleanUpFix createCleanUp(CompilationUnit compilationUnit, IProblemLocation[] problems,
       boolean removeUnusedPrivateMethods, boolean removeUnusedPrivateConstructors, boolean removeUnusedPrivateFields,
       boolean removeUnusedPrivateTypes, boolean removeUnusedLocalVariables, boolean removeUnusedImports,
-      boolean removeUnusedCast)
+      boolean removeUnusedCast, IDocument document)
    {
 
       List<CompilationUnitRewriteOperation> result = new ArrayList<CompilationUnitRewriteOperation>();
@@ -816,7 +817,7 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
          return null;
 
       return new UnusedCodeFix(FixMessages.INSTANCE.UnusedCodeFix_change_name(), compilationUnit,
-         result.toArray(new CompilationUnitRewriteOperation[result.size()]));
+         result.toArray(new CompilationUnitRewriteOperation[result.size()]), document);
    }
 
    private static boolean isFormalParameterInEnhancedForStatement(SimpleName name)
@@ -973,15 +974,15 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
    private final Map<String, String> fCleanUpOptions;
 
    private UnusedCodeFix(String name, CompilationUnit compilationUnit,
-      CompilationUnitRewriteOperation[] fixRewriteOperations)
+      CompilationUnitRewriteOperation[] fixRewriteOperations, IDocument document)
    {
-      this(name, compilationUnit, fixRewriteOperations, null);
+      this(name, compilationUnit, fixRewriteOperations, null, document);
    }
 
    private UnusedCodeFix(String name, CompilationUnit compilationUnit,
-      CompilationUnitRewriteOperation[] fixRewriteOperations, Map<String, String> options)
+      CompilationUnitRewriteOperation[] fixRewriteOperations, Map<String, String> options, IDocument document)
    {
-      super(name, compilationUnit, fixRewriteOperations);
+      super(name, compilationUnit, fixRewriteOperations, document);
       fCleanUpOptions = options;
    }
 

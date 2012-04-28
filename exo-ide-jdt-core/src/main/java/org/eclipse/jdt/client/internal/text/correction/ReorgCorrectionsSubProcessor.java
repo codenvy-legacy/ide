@@ -14,29 +14,14 @@ package org.eclipse.jdt.client.internal.text.correction;
 
 import com.google.gwt.user.client.ui.Image;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-
 import org.eclipse.jdt.client.JdtClientBundle;
 import org.eclipse.jdt.client.codeassistant.api.IInvocationContext;
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
-import org.eclipse.jdt.client.core.JavaConventions;
-import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.dom.ASTNode;
-import org.eclipse.jdt.client.core.dom.AbstractTypeDeclaration;
-import org.eclipse.jdt.client.core.dom.CompilationUnit;
-import org.eclipse.jdt.client.core.dom.IBinding;
 import org.eclipse.jdt.client.core.dom.ImportDeclaration;
-import org.eclipse.jdt.client.core.dom.Modifier;
 import org.eclipse.jdt.client.core.dom.Name;
 import org.eclipse.jdt.client.core.dom.QualifiedName;
-import org.eclipse.jdt.client.core.dom.SimpleName;
-import org.eclipse.jdt.client.core.dom.Type;
 import org.eclipse.jdt.client.event.OrganizeImportsEvent;
-
 import org.eclipse.jdt.client.internal.corext.codemanipulation.SimilarElementsRequestor;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.corext.fix.CleanUpConstants;
@@ -45,13 +30,14 @@ import org.eclipse.jdt.client.internal.corext.fix.IProposableFix;
 import org.eclipse.jdt.client.internal.corext.fix.UnusedCodeCleanUp;
 import org.eclipse.jdt.client.internal.corext.fix.UnusedCodeFix;
 import org.eclipse.jdt.client.internal.text.correction.proposals.ChangeCorrectionProposal;
-import org.eclipse.jdt.client.internal.text.correction.proposals.CorrectMainTypeNameProposal;
-import org.eclipse.jdt.client.internal.text.correction.proposals.CorrectPackageDeclarationProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.FixCorrectionProposal;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.eclipse.jdt.client.runtime.IStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.text.IDocument;
+
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Map;
 
 public class ReorgCorrectionsSubProcessor
 {
@@ -174,7 +160,7 @@ public class ReorgCorrectionsSubProcessor
    public static void removeImportStatementProposals(IInvocationContext context, IProblemLocation problem,
       Collection<ICommandAccess> proposals)
    {
-      IProposableFix fix = UnusedCodeFix.createRemoveUnusedImportFix(context.getASTRoot(), problem);
+      IProposableFix fix = UnusedCodeFix.createRemoveUnusedImportFix(context.getASTRoot(), problem, context.getDocument());
       if (fix != null)
       {
          Image image = new Image(JdtClientBundle.INSTANCE.correction_delete_import());

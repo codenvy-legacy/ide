@@ -10,57 +10,39 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.text.quickassist;
 
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
-
+import org.eclipse.jdt.client.codeassistant.api.IInvocationContext;
+import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
+import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
+import org.eclipse.jdt.client.runtime.CoreException;
 
 /**
- * Quick assist processor for quick fixes and quick assists.
- * <p>
- * A processor can provide just quick fixes, just quick assists
- * or both.
- * </p>
- * <p>
- * This interface can be implemented by clients.</p>
+ * Interface to be implemented by contributors to the extension point
+ * <code>org.eclipse.jdt.ui.quickAssistProcessors</code>.
  *
- * @since 3.2
+ * @since 3.0
  */
-public interface IQuickAssistProcessor {
+public interface IQuickAssistProcessor
+{
 
-	/**
-	 * Returns the reason why this quick assist processor
-	 * was unable to produce any completion proposals.
-	 *
-	 * @return an error message or <code>null</code> if no error occurred
-	 */
-	String getErrorMessage();
+   /**
+    * Evaluates if quick assists can be created for the given context. This evaluation must be precise.
+    *
+    * @param context The invocation context
+    * @return Returns <code>true</code> if quick assists can be created
+    * @throws CoreException CoreException can be thrown if the operation fails
+    */
+   boolean hasAssists(IInvocationContext context) throws CoreException;
 
-//	/**
-//	 * Tells whether this processor has a fix for the given annotation.
-//	 * <p>
-//	 * <strong>Note:</strong> This test must be fast and optimistic i.e. it is OK to return
-//	 * <code>true</code> even though there might be no quick fix.
-//	 * </p>
-//	 *
-//	 * @param annotation the annotation
-//	 * @return <code>true</code> if the assistant has a fix for the given annotation
-//	 */
-//	boolean canFix(Annotation annotation);
-
-	/**
-	 * Tells whether this assistant has assists for the given invocation context.
-	 *
-	 * @param invocationContext the invocation context
-	 * @return <code>true</code> if the assistant has a fix for the given annotation
-	 */
-	boolean canAssist(IQuickAssistInvocationContext invocationContext);
-
-	/**
-	 * Returns a list of quick assist and quick fix proposals for the
-	 * given invocation context.
-	 *
-	 * @param invocationContext the invocation context
-	 * @return an array of completion proposals or <code>null</code> if no proposals are available
-	 */
-	ICompletionProposal[] computeQuickAssistProposals(IQuickAssistInvocationContext invocationContext);
+   /**
+    * Collects quick assists for the given context.
+    *
+    * @param context Defines current compilation unit, position and a shared AST
+    * @param locations The locations of problems at the invocation offset. The processor can decide to only
+    *          add assists when there are no errors at the selection offset.
+    * @return Returns the assists applicable at the location or <code>null</code> if no proposals
+    *          can be offered.
+    * @throws CoreException CoreException can be thrown if the operation fails
+    */
+   IJavaCompletionProposal[] getAssists(IInvocationContext context, IProblemLocation[] locations) throws CoreException;
 
 }

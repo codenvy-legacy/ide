@@ -65,7 +65,7 @@ public class ExpressionsCleanUp extends AbstractCleanUp
 
       return ExpressionsFix.createCleanUp(compilationUnit,
          isEnabled(CleanUpConstants.EXPRESSIONS_USE_PARENTHESES_ALWAYS),
-         isEnabled(CleanUpConstants.EXPRESSIONS_USE_PARENTHESES_NEVER));
+         isEnabled(CleanUpConstants.EXPRESSIONS_USE_PARENTHESES_NEVER), context.getDocument());
    }
 
    /**

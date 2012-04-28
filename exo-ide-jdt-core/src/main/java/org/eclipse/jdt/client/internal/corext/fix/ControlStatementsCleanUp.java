@@ -69,7 +69,7 @@ public class ControlStatementsCleanUp extends AbstractCleanUp
       return ControlStatementsFix.createCleanUp(compilationUnit,
          isEnabled(CleanUpConstants.CONTROL_STATMENTS_USE_BLOCKS_ALWAYS),
          isEnabled(CleanUpConstants.CONTROL_STATMENTS_USE_BLOCKS_NEVER),
-         isEnabled(CleanUpConstants.CONTROL_STATMENTS_USE_BLOCKS_NO_FOR_RETURN_AND_THROW));
+         isEnabled(CleanUpConstants.CONTROL_STATMENTS_USE_BLOCKS_NO_FOR_RETURN_AND_THROW), context.getDocument());
    }
 
    /**

@@ -144,6 +144,11 @@ public interface RefactoringCoreMessages extends Messages
    /**
     * @return
     */
-   String SurroundWithTryCatchRefactoring_notMultipleexceptions(); 
+   String SurroundWithTryCatchRefactoring_notMultipleexceptions();
+
+   /**
+    * @return
+    */
+   String ASTData_update_imports(); 
 
 }

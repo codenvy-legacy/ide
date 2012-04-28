@@ -26,6 +26,7 @@ import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.internal.corext.dom.GenericVisitor;
 import org.eclipse.jdt.client.internal.corext.refactoring.structure.CompilationUnitRewrite;
 import org.eclipse.jdt.client.runtime.CoreException;
+import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.edits.TextEditGroup;
 
 import java.util.ArrayList;
@@ -439,7 +440,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
 
    }
 
-   public static ControlStatementsFix[] createRemoveBlockFix(CompilationUnit compilationUnit, ASTNode node)
+   public static ControlStatementsFix[] createRemoveBlockFix(CompilationUnit compilationUnit, ASTNode node, IDocument document)
    {
       if (!(node instanceof Statement))
       {
@@ -478,7 +479,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
                if (item == statement)
                   result.add(new ControlStatementsFix(
                      FixMessages.INSTANCE.ControlStatementsFix_removeIfBlock_proposalDescription(), compilationUnit,
-                     new CompilationUnitRewriteOperation[]{op}));
+                     new CompilationUnitRewriteOperation[]{op}, document));
             }
          }
 
@@ -489,7 +490,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
             if (item == statement)
                result.add(new ControlStatementsFix(
                   FixMessages.INSTANCE.ControlStatementsFix_removeElseBlock_proposalDescription(), compilationUnit,
-                  new CompilationUnitRewriteOperation[]{op}));
+                  new CompilationUnitRewriteOperation[]{op}, document));
          }
 
          if (removeAllList.size() > 1)
@@ -497,7 +498,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
             CompilationUnitRewriteOperation[] allConvert =
                removeAllList.toArray(new CompilationUnitRewriteOperation[removeAllList.size()]);
             result.add(new ControlStatementsFix(FixMessages.INSTANCE.ControlStatementsFix_removeIfElseBlock_proposalDescription(),
-               compilationUnit, allConvert));
+               compilationUnit, allConvert, document));
          }
 
          return result.toArray(new ControlStatementsFix[result.size()]);
@@ -509,7 +510,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
             RemoveBlockOperation op = new RemoveBlockOperation(statement, WhileStatement.BODY_PROPERTY);
             return new ControlStatementsFix[]{new ControlStatementsFix(
                FixMessages.INSTANCE.ControlStatementsFix_removeBrackets_proposalDescription(), compilationUnit,
-               new CompilationUnitRewriteOperation[]{op})};
+               new CompilationUnitRewriteOperation[]{op}, document)};
          }
       }
       else if (statement instanceof ForStatement)
@@ -519,7 +520,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
             RemoveBlockOperation op = new RemoveBlockOperation(statement, ForStatement.BODY_PROPERTY);
             return new ControlStatementsFix[]{new ControlStatementsFix(
                FixMessages.INSTANCE.ControlStatementsFix_removeBrackets_proposalDescription(), compilationUnit,
-               new CompilationUnitRewriteOperation[]{op})};
+               new CompilationUnitRewriteOperation[]{op}, document)};
          }
       }
       else if (statement instanceof EnhancedForStatement)
@@ -529,7 +530,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
             RemoveBlockOperation op = new RemoveBlockOperation(statement, EnhancedForStatement.BODY_PROPERTY);
             return new ControlStatementsFix[]{new ControlStatementsFix(
                FixMessages.INSTANCE.ControlStatementsFix_removeBrackets_proposalDescription(), compilationUnit,
-               new CompilationUnitRewriteOperation[]{op})};
+               new CompilationUnitRewriteOperation[]{op}, document)};
          }
       }
       else if (statement instanceof DoStatement)
@@ -539,7 +540,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
             RemoveBlockOperation op = new RemoveBlockOperation(statement, DoStatement.BODY_PROPERTY);
             return new ControlStatementsFix[]{new ControlStatementsFix(
                FixMessages.INSTANCE.ControlStatementsFix_removeBrackets_proposalDescription(), compilationUnit,
-               new CompilationUnitRewriteOperation[]{op})};
+               new CompilationUnitRewriteOperation[]{op}, document)};
          }
       }
 
@@ -547,7 +548,7 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
    }
 
    public static ICleanUpFix createCleanUp(CompilationUnit compilationUnit, boolean convertSingleStatementToBlock,
-      boolean removeUnnecessaryBlock, boolean removeUnnecessaryBlockContainingReturnOrThrow)
+      boolean removeUnnecessaryBlock, boolean removeUnnecessaryBlockContainingReturnOrThrow, IDocument document)
    {
 
       if (!convertSingleStatementToBlock && !removeUnnecessaryBlock && !removeUnnecessaryBlockContainingReturnOrThrow)
@@ -564,13 +565,13 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
 
       CompilationUnitRewriteOperation[] ops =
          operations.toArray(new CompilationUnitRewriteOperation[operations.size()]);
-      return new ControlStatementsFix(FixMessages.INSTANCE.ControlStatementsFix_change_name(), compilationUnit, ops);
+      return new ControlStatementsFix(FixMessages.INSTANCE.ControlStatementsFix_change_name(), compilationUnit, ops, document);
    }
 
    protected ControlStatementsFix(String name, CompilationUnit compilationUnit,
-      CompilationUnitRewriteOperation[] fixRewriteOperations)
+      CompilationUnitRewriteOperation[] fixRewriteOperations, IDocument document)
    {
-      super(name, compilationUnit, fixRewriteOperations);
+      super(name, compilationUnit, fixRewriteOperations, document);
    }
 
 }

@@ -77,7 +77,7 @@ public class CodeStyleCleanUp extends AbstractMultiFix
     * {@inheritDoc}
     */
    @Override
-   protected ICleanUpFix createFix(CompilationUnit compilationUnit) throws CoreException
+   protected ICleanUpFix createFix(CompilationUnit compilationUnit, IDocument document) throws CoreException
    {
       if (compilationUnit == null)
          return null;

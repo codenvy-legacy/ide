@@ -523,7 +523,8 @@ public class LocalCorrectionsSubProcessor
    public static void addCorrectAccessToStaticProposals(IInvocationContext context, IProblemLocation problem,
       Collection<ICommandAccess> proposals) throws CoreException
    {
-      IProposableFix fix = CodeStyleFix.createIndirectAccessToStaticFix(context.getASTRoot(), problem);
+      IProposableFix fix =
+         CodeStyleFix.createIndirectAccessToStaticFix(context.getASTRoot(), problem, context.getDocument());
       if (fix != null)
       {
          Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
@@ -538,7 +539,8 @@ public class LocalCorrectionsSubProcessor
          return;
       }
 
-      IProposableFix[] fixes = CodeStyleFix.createNonStaticAccessFixes(context.getASTRoot(), problem);
+      IProposableFix[] fixes =
+         CodeStyleFix.createNonStaticAccessFixes(context.getASTRoot(), problem, context.getDocument());
       if (fixes != null)
       {
          IProposableFix fix1 = fixes[0];
@@ -574,7 +576,7 @@ public class LocalCorrectionsSubProcessor
       Collection<ICommandAccess> proposals)
    {
       IProposableFix addMethodFix =
-         UnimplementedCodeFix.createAddUnimplementedMethodsFix(context.getASTRoot(), problem);
+         UnimplementedCodeFix.createAddUnimplementedMethodsFix(context.getASTRoot(), problem, context.getDocument());
       if (addMethodFix != null)
       {
          Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
@@ -586,7 +588,8 @@ public class LocalCorrectionsSubProcessor
          proposals.add(new FixCorrectionProposal(addMethodFix, cleanUp, 10, image, context));
       }
 
-      IProposableFix makeAbstractFix = UnimplementedCodeFix.createMakeTypeAbstractFix(context.getASTRoot(), problem);
+      IProposableFix makeAbstractFix =
+         UnimplementedCodeFix.createMakeTypeAbstractFix(context.getASTRoot(), problem, context.getDocument());
       if (makeAbstractFix != null)
       {
          Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
@@ -688,7 +691,8 @@ public class LocalCorrectionsSubProcessor
       Collection<ICommandAccess> proposals)
    {
       int problemId = problem.getProblemId();
-      UnusedCodeFix fix = UnusedCodeFix.createUnusedMemberFix(context.getASTRoot(), problem, false);
+      UnusedCodeFix fix =
+         UnusedCodeFix.createUnusedMemberFix(context.getASTRoot(), problem, false, context.getDocument());
       if (fix != null)
       {
          addProposal(context, proposals, fix);
@@ -696,7 +700,7 @@ public class LocalCorrectionsSubProcessor
 
       if (problemId == IProblem.LocalVariableIsNeverUsed)
       {
-         fix = UnusedCodeFix.createUnusedMemberFix(context.getASTRoot(), problem, true);
+         fix = UnusedCodeFix.createUnusedMemberFix(context.getASTRoot(), problem, true, context.getDocument());
          addProposal(context, proposals, fix);
       }
 
@@ -758,7 +762,8 @@ public class LocalCorrectionsSubProcessor
    public static void addUnnecessaryCastProposal(IInvocationContext context, IProblemLocation problem,
       Collection<ICommandAccess> proposals)
    {
-      IProposableFix fix = UnusedCodeFix.createRemoveUnusedCastFix(context.getASTRoot(), problem);
+      IProposableFix fix =
+         UnusedCodeFix.createRemoveUnusedCastFix(context.getASTRoot(), problem, context.getDocument());
       if (fix != null)
       {
          Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
