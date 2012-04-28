@@ -10,22 +10,17 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.fix;
 
-import java.util.HashSet;
-import java.util.Map;
-
 import org.eclipse.jdt.client.JdtExtension;
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
-
-import org.eclipse.jdt.client.internal.corext.fix.CleanUpConstants;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.eclipse.jdt.client.templates.CodeTemplateContextType;
 import org.eclipse.jdt.client.templates.api.Template;
-import org.eclipse.jdt.client.templates.api.TemplateBuffer;
-import org.eclipse.jdt.client.templates.api.TemplateException;
-import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.IDocument;
+
+import java.util.HashSet;
+import java.util.Map;
 
 public class UnimplementedCodeCleanUp extends AbstractMultiFix
 {
@@ -123,7 +118,7 @@ public class UnimplementedCodeCleanUp extends AbstractMultiFix
     * {@inheritDoc}
     */
    @Override
-   protected ICleanUpFix createFix(CompilationUnit unit, IProblemLocation[] problems) throws CoreException
+   protected ICleanUpFix createFix(CompilationUnit unit, IDocument document, IProblemLocation[] problems) throws CoreException
    {
       IProblemLocation[] problemLocations =
          filter(problems, new int[]{IProblem.AbstractMethodMustBeImplemented,

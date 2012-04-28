@@ -11,15 +11,7 @@
 
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-
-import org.eclipse.jdt.client.runtime.IProgressMonitor;
-import org.eclipse.jdt.client.ui.BindingLabelProvider;
-
+import org.eclipse.jdt.client.JavaCodeController;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTParser;
@@ -79,14 +71,21 @@ import org.eclipse.jdt.client.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.client.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.client.core.dom.WildcardType;
-
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodeFactory;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.corext.dom.Bindings;
 import org.eclipse.jdt.client.internal.corext.dom.GenericVisitor;
 import org.eclipse.jdt.client.internal.corext.dom.ScopeAnalyzer;
 import org.eclipse.jdt.client.internal.corext.dom.TypeBindingVisitor;
+import org.eclipse.jdt.client.runtime.IProgressMonitor;
+import org.eclipse.jdt.client.ui.BindingLabelProvider;
 import org.exoplatform.ide.editor.text.IDocument;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 
 public class ASTResolving
 {
@@ -1355,31 +1354,30 @@ public class ASTResolving
       return BindingLabelProvider.getBindingLabel(binding);
    }
 
-   //
-   //   public static String getMethodSignature(String name, ITypeBinding[] params, boolean isVarArgs)
-   //   {
-   //      StringBuffer buf = new StringBuffer();
-   //      buf.append(name).append('(');
-   //      for (int i = 0; i < params.length; i++)
-   //      {
-   //         if (i > 0)
-   //         {
-   //            buf.append(JavaElementLabels.COMMA_STRING);
-   //         }
-   //         if (isVarArgs && i == params.length - 1)
-   //         {
-   //            buf.append(getTypeSignature(params[i].getElementType()));
-   //            buf.append("..."); //$NON-NLS-1$
-   //         }
-   //         else
-   //         {
-   //            buf.append(getTypeSignature(params[i]));
-   //         }
-   //      }
-   //      buf.append(')');
-   //      return BasicElementLabels.getJavaElementName(buf.toString());
-   //   }
-   //
+   public static String getMethodSignature(String name, ITypeBinding[] params, boolean isVarArgs)
+   {
+      StringBuffer buf = new StringBuffer();
+      buf.append(name).append('(');
+      for (int i = 0; i < params.length; i++)
+      {
+         if (i > 0)
+         {
+            buf.append(", ");
+         }
+         if (isVarArgs && i == params.length - 1)
+         {
+            buf.append(getTypeSignature(params[i].getElementType()));
+            buf.append("..."); //$NON-NLS-1$
+         }
+         else
+         {
+            buf.append(getTypeSignature(params[i]));
+         }
+      }
+      buf.append(')');
+      return buf.toString();
+   }
+
    public static CompilationUnit createQuickFixAST(IDocument document, IProgressMonitor monitor)
    {
       ASTParser astParser = ASTParser.newParser(AST.JLS4);
@@ -1387,6 +1385,7 @@ public class ASTResolving
       astParser.setResolveBindings(true);
       astParser.setStatementsRecovery(true);
       astParser.setBindingsRecovery(true);
+      astParser.setNameEnvironment(JavaCodeController.NAME_ENVIRONMENT);
       return (CompilationUnit)astParser.createAST(monitor);
    }
 

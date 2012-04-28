@@ -15,6 +15,7 @@ import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.internal.text.correction.ProblemLocation;
 import org.eclipse.jdt.client.runtime.CoreException;
+import org.exoplatform.ide.editor.text.IDocument;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -37,7 +38,7 @@ public abstract class AbstractMultiFix extends AbstractCleanUp implements IMulti
 			return null;
 
 		if (context instanceof MultiFixContext) {
-			return createFix(unit, ((MultiFixContext)context).getProblemLocations());
+			return createFix(unit,context.getDocument(), ((MultiFixContext)context).getProblemLocations());
 		} else {
 			return createFix(unit);
 		}
@@ -45,7 +46,7 @@ public abstract class AbstractMultiFix extends AbstractCleanUp implements IMulti
 
 	protected abstract ICleanUpFix createFix(CompilationUnit unit) throws CoreException;
 
-	protected abstract ICleanUpFix createFix(CompilationUnit unit, IProblemLocation[] problems) throws CoreException;
+	protected abstract ICleanUpFix createFix(CompilationUnit unit, IDocument document, IProblemLocation[] problems) throws CoreException;
 
 	/**
 	 * {@inheritDoc}

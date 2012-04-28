@@ -113,6 +113,13 @@ public class QualifiedTypeNameHistory
       return instance;
    }
 
+   public static int getBoost(String fullyQualifiedTypeName, int min, int max)
+   {
+      float position = getDefault().getNormalizedPosition(fullyQualifiedTypeName);
+      int dist = max - min;
+      return Math.round(position * dist) + min;
+   }
+
    /**
     * Normalized position in history of object denoted by key. The position is a value between zero and one where zero means not
     * contained in history and one means newest element in history. The lower the value the older the element.

@@ -14,6 +14,8 @@ import org.eclipse.jdt.client.codeassistant.api.IInvocationContext;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.NodeFinder;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.ASTResolving;
+import org.exoplatform.ide.editor.text.IDocument;
 
 public class AssistContext implements IInvocationContext
 {
@@ -34,7 +36,10 @@ public class AssistContext implements IInvocationContext
     * @since 3.6
     */
    private NodeFinder fNodeFinder;
-//TODO
+
+   private final IDocument document;
+
+   //TODO
    //	/*
    //	 * @since 3.5
    //	 */
@@ -69,12 +74,15 @@ public class AssistContext implements IInvocationContext
    //		this(cu, sourceViewer, null, offset, length);
    //	}
    //
-   //	/*
-   //	 * Constructor for CorrectionContext.
-   //	 */
-   //	public AssistContext(ICompilationUnit cu, int offset, int length) {
-   //		this(cu, null, offset, length);
-   //	}
+   /*
+    * Constructor for CorrectionContext.
+    */
+   public AssistContext(IDocument document, int offset, int length)
+   {
+      this.document = document;
+      fOffset = offset;
+      fLength = length;
+   }
 
    //	/**
    //	 * Returns the compilation unit.
@@ -116,30 +124,31 @@ public class AssistContext implements IInvocationContext
       if (fASTRoot == null)
       {
          //TODO
-//         fASTRoot = SharedASTProvider.getAST(fCompilationUnit, fWaitFlag, null);
-//         if (fASTRoot == null)
-//         {
-//            // see bug 63554
-//            fASTRoot = ASTResolving.createQuickFixAST(fCompilationUnit, null);
-//         }
+         //         fASTRoot = SharedASTProvider.getAST(fCompilationUnit, fWaitFlag, null);
+         //         if (fASTRoot == null)
+         //         {
+         //            // see bug 63554
+         //         }
+         fASTRoot = ASTResolving.createQuickFixAST(document, null);
       }
       return fASTRoot;
    }
-   
+
    /*
     * @see org.eclipse.jface.text.quickassist.IQuickAssistInvocationContext#getOffset()
     */
-   public int getOffset() {
+   public int getOffset()
+   {
       return fOffset;
    }
 
    /*
     * @see org.eclipse.jface.text.quickassist.IQuickAssistInvocationContext#getLength()
     */
-   public int getLength() {
+   public int getLength()
+   {
       return fLength;
    }
-
 
    /**
     * @param root The ASTRoot to set.
@@ -171,6 +180,15 @@ public class AssistContext implements IInvocationContext
          fNodeFinder = new NodeFinder(getASTRoot(), getOffset(), getLength());
       }
       return fNodeFinder.getCoveredNode();
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.codeassistant.api.IInvocationContext#getDocument()
+    */
+   @Override
+   public IDocument getDocument()
+   {
+      return null;
    }
 
 }

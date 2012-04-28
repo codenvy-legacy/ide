@@ -10,90 +10,92 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.text.correction;
 
+import org.eclipse.jdt.client.codeassistant.api.IInvocationContext;
+import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
+import org.exoplatform.ide.editor.runtime.Assert;
+
 import java.util.Collection;
-import java.util.Hashtable;
-import java.util.Map;
-
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.IProgressMonitor;
-
-import org.eclipse.jdt.internal.corext.fix.CleanUpConstants;
-import org.eclipse.jdt.internal.corext.fix.IProposableFix;
-import org.eclipse.jdt.internal.corext.fix.PotentialProgrammingProblemsFix;
-
-import org.eclipse.jdt.ui.cleanup.CleanUpOptions;
-import org.eclipse.jdt.ui.cleanup.ICleanUp;
-import org.eclipse.jdt.ui.text.java.IInvocationContext;
-import org.eclipse.jdt.ui.text.java.IProblemLocation;
-
-import org.eclipse.jdt.internal.ui.JavaPluginImages;
-import org.eclipse.jdt.internal.ui.fix.PotentialProgrammingProblemsCleanUp;
-import org.eclipse.jdt.internal.ui.text.correction.proposals.FixCorrectionProposal;
 
 /**
  * Subprocessor for serial version quickfix proposals.
  *
  * @since 3.1
  */
-public final class SerialVersionSubProcessor {
+public final class SerialVersionSubProcessor
+{
 
-	public static final class SerialVersionProposal extends FixCorrectionProposal {
-		private boolean fIsDefaultProposal;
+//   public static final class SerialVersionProposal extends FixCorrectionProposal
+//   {
+//      private boolean fIsDefaultProposal;
+//
+//      public SerialVersionProposal(IProposableFix fix, int relevance, IInvocationContext context, boolean isDefault)
+//      {
+//         super(fix, createCleanUp(isDefault), relevance, new Image(JdtClientBundle.INSTANCE.add_obj()), context);
+//         fIsDefaultProposal = isDefault;
+//      }
+//
+//      private static ICleanUp createCleanUp(boolean isDefault)
+//      {
+//         Map<String, String> options = new Hashtable<String, String>();
+//         options.put(CleanUpConstants.ADD_MISSING_SERIAL_VERSION_ID, CleanUpOptions.TRUE);
+//         if (isDefault)
+//         {
+//            options.put(CleanUpConstants.ADD_MISSING_SERIAL_VERSION_ID_DEFAULT, CleanUpOptions.TRUE);
+//         }
+//         else
+//         {
+//            options.put(CleanUpConstants.ADD_MISSING_SERIAL_VERSION_ID_GENERATED, CleanUpOptions.TRUE);
+//         }
+//         return new PotentialProgrammingProblemsCleanUp(options);
+//      }
+//
+//      public boolean isDefaultProposal()
+//      {
+//         return fIsDefaultProposal;
+//      }
+//
+//      /**
+//       * {@inheritDoc}
+//       */
+//      @Override
+//      public Object getAdditionalProposalInfo(IProgressMonitor monitor)
+//      {
+//         if (fIsDefaultProposal)
+//         {
+//            return CorrectionMessages.INSTANCE.SerialVersionDefaultProposal_message_default_info();
+//         }
+//         else
+//         {
+//            return CorrectionMessages.INSTANCE.SerialVersionHashProposal_message_generated_info();
+//         }
+//      }
+//   }
 
-		public SerialVersionProposal(IProposableFix fix, int relevance, IInvocationContext context, boolean isDefault) {
-			super(fix, createCleanUp(isDefault), relevance, JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_ADD), context);
-			fIsDefaultProposal= isDefault;
-		}
+   /**
+    * Determines the serial version quickfix proposals.
+    *
+    * @param context
+    *        the invocation context
+    * @param location
+    *        the problem location
+    * @param proposals
+    *        the proposal collection to extend
+    */
+   public static final void getSerialVersionProposals(final IInvocationContext context,
+      final IProblemLocation location, final Collection<ICommandAccess> proposals)
+   {
 
-		private static ICleanUp createCleanUp(boolean isDefault) {
-			Map<String, String> options= new Hashtable<String, String>();
-			options.put(CleanUpConstants.ADD_MISSING_SERIAL_VERSION_ID, CleanUpOptions.TRUE);
-			if (isDefault) {
-				options.put(CleanUpConstants.ADD_MISSING_SERIAL_VERSION_ID_DEFAULT, CleanUpOptions.TRUE);
-			} else {
-				options.put(CleanUpConstants.ADD_MISSING_SERIAL_VERSION_ID_GENERATED, CleanUpOptions.TRUE);
-			}
-			return new PotentialProgrammingProblemsCleanUp(options);
-		}
-
-		public boolean isDefaultProposal() {
-			return fIsDefaultProposal;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public Object getAdditionalProposalInfo(IProgressMonitor monitor) {
-			if (fIsDefaultProposal) {
-				return CorrectionMessages.SerialVersionDefaultProposal_message_default_info;
-			} else {
-				return CorrectionMessages.SerialVersionHashProposal_message_generated_info;
-			}
-		}
-	}
-
-
-	/**
-	 * Determines the serial version quickfix proposals.
-	 *
-	 * @param context
-	 *        the invocation context
-	 * @param location
-	 *        the problem location
-	 * @param proposals
-	 *        the proposal collection to extend
-	 */
-	public static final void getSerialVersionProposals(final IInvocationContext context, final IProblemLocation location, final Collection<ICommandAccess> proposals) {
-
-		Assert.isNotNull(context);
-		Assert.isNotNull(location);
-		Assert.isNotNull(proposals);
-
-		IProposableFix[] fixes= PotentialProgrammingProblemsFix.createMissingSerialVersionFixes(context.getASTRoot(), location);
-		if (fixes != null) {
-			proposals.add(new SerialVersionProposal(fixes[0], 9, context, true));
-			proposals.add(new SerialVersionProposal(fixes[1], 9, context, false));
-		}
-	}
+      Assert.isNotNull(context);
+      Assert.isNotNull(location);
+      Assert.isNotNull(proposals);
+      System.out.println("SerialVersionSubProcessor.getSerialVersionProposals()");
+      //TODO
+      //      IProposableFix[] fixes =
+      //         PotentialProgrammingProblemsFix.createMissingSerialVersionFixes(context.getASTRoot(), location);
+      //      if (fixes != null)
+      //      {
+      //         proposals.add(new SerialVersionProposal(fixes[0], 9, context, true));
+      //         proposals.add(new SerialVersionProposal(fixes[1], 9, context, false));
+      //      }
+   }
 }

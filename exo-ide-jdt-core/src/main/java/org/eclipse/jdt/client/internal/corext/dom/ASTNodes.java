@@ -480,46 +480,56 @@ public class ASTNodes
          || locationInParent == DoStatement.BODY_PROPERTY;
    }
 
-   //	/**
-   //	 * Returns the type to which an inlined variable initializer should be cast, or
-   //	 * <code>null</code> if no cast is necessary.
-   //	 * 
-   //	 * @param initializer the initializer expression of the variable to inline
-   //	 * @param reference the reference to the variable (which is to be inlined)
-   //	 * @return a type binding to which the initializer should be cast, or <code>null</code> iff no cast is necessary
-   //	 * @since 3.6
-   //	 */
-   //	public static ITypeBinding getExplicitCast(Expression initializer, Expression reference) {
-   //		ITypeBinding initializerType= initializer.resolveTypeBinding();
-   //		ITypeBinding referenceType= reference.resolveTypeBinding();
-   //		if (initializerType == null || referenceType == null)
-   //			return null;
-   //		
-   //		if (initializerType.isPrimitive() && referenceType.isPrimitive() && ! referenceType.isEqualTo(initializerType)) {
-   //			return referenceType;
-   //			
-   //		} else if (initializerType.isPrimitive() && ! referenceType.isPrimitive()) { // initializer is autoboxed
-   //			ITypeBinding unboxedReferenceType= Bindings.getUnboxedTypeBinding(referenceType, reference.getAST());
-   //			if (!unboxedReferenceType.isEqualTo(initializerType))
-   //				return unboxedReferenceType;
-   //			else if (needsExplicitBoxing(reference))
-   //				return referenceType;
-   //			
-   //		} else if (! initializerType.isPrimitive() && referenceType.isPrimitive()) { // initializer is autounboxed
-   //			ITypeBinding unboxedInitializerType= Bindings.getUnboxedTypeBinding(initializerType, reference.getAST());
-   //			if (!unboxedInitializerType.isEqualTo(referenceType))
-   //				return referenceType;
-   //			
-   //		} else if (initializerType.isRawType() && referenceType.isParameterizedType()) {
-   //			return referenceType; // don't lose the unchecked conversion
-   //			
-   //		} else if (! TypeRules.canAssign(initializerType, referenceType)) {
-   //			if (!Bindings.containsTypeVariables(referenceType))
-   //				return referenceType;
-   //		}
-   //		
-   //		return null;
-   //	}
+   /**
+    * Returns the type to which an inlined variable initializer should be cast, or
+    * <code>null</code> if no cast is necessary.
+    * 
+    * @param initializer the initializer expression of the variable to inline
+    * @param reference the reference to the variable (which is to be inlined)
+    * @return a type binding to which the initializer should be cast, or <code>null</code> iff no cast is necessary
+    * @since 3.6
+    */
+   public static ITypeBinding getExplicitCast(Expression initializer, Expression reference)
+   {
+      ITypeBinding initializerType = initializer.resolveTypeBinding();
+      ITypeBinding referenceType = reference.resolveTypeBinding();
+      if (initializerType == null || referenceType == null)
+         return null;
+
+      if (initializerType.isPrimitive() && referenceType.isPrimitive() && !referenceType.isEqualTo(initializerType))
+      {
+         return referenceType;
+
+      }
+      else if (initializerType.isPrimitive() && !referenceType.isPrimitive())
+      { // initializer is autoboxed
+         ITypeBinding unboxedReferenceType = Bindings.getUnboxedTypeBinding(referenceType, reference.getAST());
+         if (!unboxedReferenceType.isEqualTo(initializerType))
+            return unboxedReferenceType;
+         else if (needsExplicitBoxing(reference))
+            return referenceType;
+
+      }
+      else if (!initializerType.isPrimitive() && referenceType.isPrimitive())
+      { // initializer is autounboxed
+         ITypeBinding unboxedInitializerType = Bindings.getUnboxedTypeBinding(initializerType, reference.getAST());
+         if (!unboxedInitializerType.isEqualTo(referenceType))
+            return referenceType;
+
+      }
+      else if (initializerType.isRawType() && referenceType.isParameterizedType())
+      {
+         return referenceType; // don't lose the unchecked conversion
+
+      }
+      else if (!TypeRules.canAssign(initializerType, referenceType))
+      {
+         if (!Bindings.containsTypeVariables(referenceType))
+            return referenceType;
+      }
+
+      return null;
+   }
 
    /**
     * Returns whether an expression at the given location needs explicit boxing.

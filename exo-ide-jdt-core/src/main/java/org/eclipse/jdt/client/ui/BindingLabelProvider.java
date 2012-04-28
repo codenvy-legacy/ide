@@ -10,17 +10,11 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.ui;
 
-import com.google.gwt.user.client.ui.Image;
-
-import com.google.gwt.resources.client.ImageResource;
-
-import org.eclipse.jdt.client.codeassistant.api.Point;
 import org.eclipse.jdt.client.core.dom.IBinding;
 import org.eclipse.jdt.client.core.dom.IMethodBinding;
 import org.eclipse.jdt.client.core.dom.IPackageBinding;
 import org.eclipse.jdt.client.core.dom.ITypeBinding;
 import org.eclipse.jdt.client.core.dom.IVariableBinding;
-import org.eclipse.jdt.client.core.dom.Modifier;
 
 /**
  * Label provider to render bindings in viewers.
@@ -30,87 +24,87 @@ import org.eclipse.jdt.client.core.dom.Modifier;
 public class BindingLabelProvider
 {
 
-   private static int getAdornmentFlags(IBinding binding)
-   {
-      int adornments = 0;
-      //		final int modifiers= binding.getModifiers();
-      //		if (Modifier.isAbstract(modifiers))
-      //			adornments|= JavaElementImageDescriptor.ABSTRACT;
-      //		if (Modifier.isFinal(modifiers))
-      //			adornments|= JavaElementImageDescriptor.FINAL;
-      //		if (Modifier.isStatic(modifiers))
-      //			adornments|= JavaElementImageDescriptor.STATIC;
-      //		
-      //		if (binding.isDeprecated())
-      //			adornments|= JavaElementImageDescriptor.DEPRECATED;
-      //		
-      //		if (binding instanceof IMethodBinding) {
-      //			if (((IMethodBinding) binding).isConstructor())
-      //				adornments|= JavaElementImageDescriptor.CONSTRUCTOR;
-      //			if (Modifier.isSynchronized(modifiers))
-      //				adornments|= JavaElementImageDescriptor.SYNCHRONIZED;
-      //			if (Modifier.isNative(modifiers))
-      //				adornments|= JavaElementImageDescriptor.NATIVE;
-      //		}
-      //		if (binding instanceof IVariableBinding && ((IVariableBinding) binding).isField()) {
-      //			if (Modifier.isTransient(modifiers))
-      //				adornments|= JavaElementImageDescriptor.TRANSIENT;
-      //			if (Modifier.isVolatile(modifiers))
-      //				adornments|= JavaElementImageDescriptor.VOLATILE;
-      //		}
-      return adornments;
-   }
+   //   private static int getAdornmentFlags(IBinding binding)
+   //   {
+   //      int adornments = 0;
+   //      //		final int modifiers= binding.getModifiers();
+   //      //		if (Modifier.isAbstract(modifiers))
+   //      //			adornments|= JavaElementImageDescriptor.ABSTRACT;
+   //      //		if (Modifier.isFinal(modifiers))
+   //      //			adornments|= JavaElementImageDescriptor.FINAL;
+   //      //		if (Modifier.isStatic(modifiers))
+   //      //			adornments|= JavaElementImageDescriptor.STATIC;
+   //      //		
+   //      //		if (binding.isDeprecated())
+   //      //			adornments|= JavaElementImageDescriptor.DEPRECATED;
+   //      //		
+   //      //		if (binding instanceof IMethodBinding) {
+   //      //			if (((IMethodBinding) binding).isConstructor())
+   //      //				adornments|= JavaElementImageDescriptor.CONSTRUCTOR;
+   //      //			if (Modifier.isSynchronized(modifiers))
+   //      //				adornments|= JavaElementImageDescriptor.SYNCHRONIZED;
+   //      //			if (Modifier.isNative(modifiers))
+   //      //				adornments|= JavaElementImageDescriptor.NATIVE;
+   //      //		}
+   //      //		if (binding instanceof IVariableBinding && ((IVariableBinding) binding).isField()) {
+   //      //			if (Modifier.isTransient(modifiers))
+   //      //				adornments|= JavaElementImageDescriptor.TRANSIENT;
+   //      //			if (Modifier.isVolatile(modifiers))
+   //      //				adornments|= JavaElementImageDescriptor.VOLATILE;
+   //      //		}
+   //      return adornments;
+   //   }
 
-   private static ImageResource getBaseImageDescriptor(IBinding binding, int flags)
-   {
-      if (binding instanceof ITypeBinding)
-      {
-         ITypeBinding typeBinding = (ITypeBinding)binding;
-         if (typeBinding.isArray())
-         {
-            typeBinding = typeBinding.getElementType();
-         }
-         if (typeBinding.isCapture())
-         {
-            typeBinding.getWildcard();
-         }
-         return getTypeImageDescriptor(typeBinding.getDeclaringClass() != null, typeBinding, flags);
-      }
-      else if (binding instanceof IMethodBinding)
-      {
-         ITypeBinding type = ((IMethodBinding)binding).getDeclaringClass();
-         int modifiers = binding.getModifiers();
-         if (type.isEnum()
-            && (!Modifier.isPublic(modifiers) && !Modifier.isProtected(modifiers) && !Modifier.isPrivate(modifiers))
-            && ((IMethodBinding)binding).isConstructor())
-            return JavaPluginImages.DESC_MISC_PRIVATE;
-         return getMethodImageDescriptor(binding.getModifiers());
-      }
-      else if (binding instanceof IVariableBinding)
-         return getFieldImageDescriptor((IVariableBinding)binding);
-      return JavaPluginImages.DESC_OBJS_UNKNOWN;
-   }
+   //   private static ImageResource getBaseImageDescriptor(IBinding binding, int flags)
+   //   {
+   //      if (binding instanceof ITypeBinding)
+   //      {
+   //         ITypeBinding typeBinding = (ITypeBinding)binding;
+   //         if (typeBinding.isArray())
+   //         {
+   //            typeBinding = typeBinding.getElementType();
+   //         }
+   //         if (typeBinding.isCapture())
+   //         {
+   //            typeBinding.getWildcard();
+   //         }
+   //         return getTypeImageDescriptor(typeBinding.getDeclaringClass() != null, typeBinding, flags);
+   //      }
+   //      else if (binding instanceof IMethodBinding)
+   //      {
+   //         ITypeBinding type = ((IMethodBinding)binding).getDeclaringClass();
+   //         int modifiers = binding.getModifiers();
+   //         if (type.isEnum()
+   //            && (!Modifier.isPublic(modifiers) && !Modifier.isProtected(modifiers) && !Modifier.isPrivate(modifiers))
+   //            && ((IMethodBinding)binding).isConstructor())
+   //            return JavaPluginImages.DESC_MISC_PRIVATE;
+   //         return getMethodImageDescriptor(binding.getModifiers());
+   //      }
+   //      else if (binding instanceof IVariableBinding)
+   //         return getFieldImageDescriptor((IVariableBinding)binding);
+   //      return JavaPluginImages.DESC_OBJS_UNKNOWN;
+   //   }
 
-   private static ImageResource getClassImageDescriptor(int modifiers)
-   {
-      if (Modifier.isPublic(modifiers) || Modifier.isProtected(modifiers) || Modifier.isPrivate(modifiers))
-         return JavaPluginImages.DESC_OBJS_CLASS;
-      else
-         return JavaPluginImages.DESC_OBJS_CLASS_DEFAULT;
-   }
-
-   private static ImageResource getFieldImageDescriptor(IVariableBinding binding)
-   {
-      final int modifiers = binding.getModifiers();
-      if (Modifier.isPublic(modifiers) || binding.isEnumConstant())
-         return JavaPluginImages.DESC_FIELD_PUBLIC;
-      if (Modifier.isProtected(modifiers))
-         return JavaPluginImages.DESC_FIELD_PROTECTED;
-      if (Modifier.isPrivate(modifiers))
-         return JavaPluginImages.DESC_FIELD_PRIVATE;
-
-      return JavaPluginImages.DESC_FIELD_DEFAULT;
-   }
+   //   private static ImageResource getClassImageDescriptor(int modifiers)
+   //   {
+   //      if (Modifier.isPublic(modifiers) || Modifier.isProtected(modifiers) || Modifier.isPrivate(modifiers))
+   //         return JavaPluginImages.DESC_OBJS_CLASS;
+   //      else
+   //         return JavaPluginImages.DESC_OBJS_CLASS_DEFAULT;
+   //   }
+   //
+   //   private static ImageResource getFieldImageDescriptor(IVariableBinding binding)
+   //   {
+   //      final int modifiers = binding.getModifiers();
+   //      if (Modifier.isPublic(modifiers) || binding.isEnumConstant())
+   //         return JavaPluginImages.DESC_FIELD_PUBLIC;
+   //      if (Modifier.isProtected(modifiers))
+   //         return JavaPluginImages.DESC_FIELD_PROTECTED;
+   //      if (Modifier.isPrivate(modifiers))
+   //         return JavaPluginImages.DESC_FIELD_PRIVATE;
+   //
+   //      return JavaPluginImages.DESC_FIELD_DEFAULT;
+   //   }
 
    private static void getFieldLabel(IVariableBinding binding, long flags, StringBuffer buffer)
    {
@@ -174,49 +168,49 @@ public class BindingLabelProvider
       }
    }
 
-   private static ImageResource getInnerClassImageDescriptor(int modifiers)
-   {
-      if (Modifier.isPublic(modifiers))
-         return JavaPluginImages.DESC_OBJS_INNER_CLASS_PUBLIC;
-      else if (Modifier.isPrivate(modifiers))
-         return JavaPluginImages.DESC_OBJS_INNER_CLASS_PRIVATE;
-      else if (Modifier.isProtected(modifiers))
-         return JavaPluginImages.DESC_OBJS_INNER_CLASS_PROTECTED;
-      else
-         return JavaPluginImages.DESC_OBJS_INNER_CLASS_DEFAULT;
-   }
+   //   private static ImageResource getInnerClassImageDescriptor(int modifiers)
+   //   {
+   //      if (Modifier.isPublic(modifiers))
+   //         return JavaPluginImages.DESC_OBJS_INNER_CLASS_PUBLIC;
+   //      else if (Modifier.isPrivate(modifiers))
+   //         return JavaPluginImages.DESC_OBJS_INNER_CLASS_PRIVATE;
+   //      else if (Modifier.isProtected(modifiers))
+   //         return JavaPluginImages.DESC_OBJS_INNER_CLASS_PROTECTED;
+   //      else
+   //         return JavaPluginImages.DESC_OBJS_INNER_CLASS_DEFAULT;
+   //   }
+   //
+   //   private static ImageResource getInnerInterfaceImageDescriptor(int modifiers)
+   //   {
+   //      if (Modifier.isPublic(modifiers))
+   //         return JavaPluginImages.DESC_OBJS_INNER_INTERFACE_PUBLIC;
+   //      else if (Modifier.isPrivate(modifiers))
+   //         return JavaPluginImages.DESC_OBJS_INNER_INTERFACE_PRIVATE;
+   //      else if (Modifier.isProtected(modifiers))
+   //         return JavaPluginImages.DESC_OBJS_INNER_INTERFACE_PROTECTED;
+   //      else
+   //         return JavaPluginImages.DESC_OBJS_INTERFACE_DEFAULT;
+   //   }
+   //
+   //   private static ImageResource getInterfaceImageDescriptor(int modifiers)
+   //   {
+   //      if (Modifier.isPublic(modifiers) || Modifier.isProtected(modifiers) || Modifier.isPrivate(modifiers))
+   //         return JavaPluginImages.DESC_OBJS_INTERFACE;
+   //      else
+   //         return JavaPluginImages.DESC_OBJS_INTERFACE_DEFAULT;
+   //   }
 
-   private static ImageResource getInnerInterfaceImageDescriptor(int modifiers)
-   {
-      if (Modifier.isPublic(modifiers))
-         return JavaPluginImages.DESC_OBJS_INNER_INTERFACE_PUBLIC;
-      else if (Modifier.isPrivate(modifiers))
-         return JavaPluginImages.DESC_OBJS_INNER_INTERFACE_PRIVATE;
-      else if (Modifier.isProtected(modifiers))
-         return JavaPluginImages.DESC_OBJS_INNER_INTERFACE_PROTECTED;
-      else
-         return JavaPluginImages.DESC_OBJS_INTERFACE_DEFAULT;
-   }
-
-   private static ImageResource getInterfaceImageDescriptor(int modifiers)
-   {
-      if (Modifier.isPublic(modifiers) || Modifier.isProtected(modifiers) || Modifier.isPrivate(modifiers))
-         return JavaPluginImages.DESC_OBJS_INTERFACE;
-      else
-         return JavaPluginImages.DESC_OBJS_INTERFACE_DEFAULT;
-   }
-
-   private static ImageResource getMethodImageDescriptor(int modifiers)
-   {
-      if (Modifier.isPublic(modifiers))
-         return JavaPluginImages.DESC_MISC_PUBLIC;
-      if (Modifier.isProtected(modifiers))
-         return JavaPluginImages.DESC_MISC_PROTECTED;
-      if (Modifier.isPrivate(modifiers))
-         return JavaPluginImages.DESC_MISC_PRIVATE;
-
-      return JavaPluginImages.DESC_MISC_DEFAULT;
-   }
+   //   private static ImageResource getMethodImageDescriptor(int modifiers)
+   //   {
+   //      if (Modifier.isPublic(modifiers))
+   //         return JavaPluginImages.DESC_MISC_PUBLIC;
+   //      if (Modifier.isProtected(modifiers))
+   //         return JavaPluginImages.DESC_MISC_PROTECTED;
+   //      if (Modifier.isPrivate(modifiers))
+   //         return JavaPluginImages.DESC_MISC_PRIVATE;
+   //
+   //      return JavaPluginImages.DESC_MISC_DEFAULT;
+   //   }
 
    private static void appendDimensions(int dim, StringBuffer buffer)
    {
@@ -347,35 +341,35 @@ public class BindingLabelProvider
       }
    }
 
-   private static ImageResource getTypeImageDescriptor(boolean inner, ITypeBinding binding, int flags)
-   {
-      if (binding.isEnum())
-         return JavaPluginImages.DESC_OBJS_ENUM;
-      else if (binding.isAnnotation())
-         return JavaPluginImages.DESC_OBJS_ANNOTATION;
-      else if (binding.isInterface())
-      {
-         if ((flags & JavaElementImageProvider.LIGHT_TYPE_ICONS) != 0)
-            return JavaPluginImages.DESC_OBJS_INTERFACEALT;
-         if (inner)
-            return getInnerInterfaceImageDescriptor(binding.getModifiers());
-         return getInterfaceImageDescriptor(binding.getModifiers());
-      }
-      else if (binding.isClass())
-      {
-         if ((flags & JavaElementImageProvider.LIGHT_TYPE_ICONS) != 0)
-            return JavaPluginImages.DESC_OBJS_CLASSALT;
-         if (inner)
-            return getInnerClassImageDescriptor(binding.getModifiers());
-         return getClassImageDescriptor(binding.getModifiers());
-      }
-      else if (binding.isTypeVariable())
-      {
-         return JavaPluginImages.DESC_OBJS_TYPEVARIABLE;
-      }
-      // primitive type, wildcard
-      return null;
-   }
+   //   private static ImageResource getTypeImageDescriptor(boolean inner, ITypeBinding binding, int flags)
+   //   {
+   //      if (binding.isEnum())
+   //         return JavaPluginImages.DESC_OBJS_ENUM;
+   //      else if (binding.isAnnotation())
+   //         return JavaPluginImages.DESC_OBJS_ANNOTATION;
+   //      else if (binding.isInterface())
+   //      {
+   //         if ((flags & JavaElementImageProvider.LIGHT_TYPE_ICONS) != 0)
+   //            return JavaPluginImages.DESC_OBJS_INTERFACEALT;
+   //         if (inner)
+   //            return getInnerInterfaceImageDescriptor(binding.getModifiers());
+   //         return getInterfaceImageDescriptor(binding.getModifiers());
+   //      }
+   //      else if (binding.isClass())
+   //      {
+   //         if ((flags & JavaElementImageProvider.LIGHT_TYPE_ICONS) != 0)
+   //            return JavaPluginImages.DESC_OBJS_CLASSALT;
+   //         if (inner)
+   //            return getInnerClassImageDescriptor(binding.getModifiers());
+   //         return getClassImageDescriptor(binding.getModifiers());
+   //      }
+   //      else if (binding.isTypeVariable())
+   //      {
+   //         return JavaPluginImages.DESC_OBJS_TYPEVARIABLE;
+   //      }
+   //      // primitive type, wildcard
+   //      return null;
+   //   }
 
    private static void getTypeLabel(ITypeBinding binding, long flags, StringBuffer buffer)
    {
@@ -456,12 +450,11 @@ public class BindingLabelProvider
                {
                   StringBuffer anonymBaseType = new StringBuffer();
                   getTypeLabel(baseType, flags & JavaElementLabels.T_TYPE_PARAMETERS, anonymBaseType);
-                  buffer
-                     .append(Messages.format(JavaUIMessages.JavaElementLabels_anonym_type, anonymBaseType.toString()));
+                  buffer.append("new ").append(anonymBaseType.toString()).append("() '{'...} ");
                }
                else
                {
-                  buffer.append(JavaUIMessages.JavaElementLabels_anonym);
+                  buffer.append("new Anonymous");
                }
             }
             else
@@ -555,7 +548,7 @@ public class BindingLabelProvider
     * @param flags The text flags as defined in {@link JavaElementLabels}
     * @return the label of the binding
     */
-   public static String getBindingLabel(IBinding binding)
+   public static String getBindingLabel(IBinding binding, long flags)
    {
       StringBuffer buffer = new StringBuffer(60);
       if (binding instanceof ITypeBinding)
@@ -577,28 +570,28 @@ public class BindingLabelProvider
       return buffer.toString();
    }
 
-   /**
-    * Returns the image descriptor for a binding with the flags as defined by {@link JavaElementImageProvider}.
-    * @param binding The binding to get the image for.
-    * @param imageFlags The image flags as defined in {@link JavaElementImageProvider}.
-    * @return the image of the binding or null if there is no image
-    */
-   public static ImageResource getBindingImageDescriptor(IBinding binding, int imageFlags)
-   {
-      ImageResource baseImage = getBaseImageDescriptor(binding, imageFlags);
-      if (baseImage != null)
-      {
-         int adornmentFlags = getAdornmentFlags(binding);
-         Point size =
-            ((imageFlags & JavaElementImageProvider.SMALL_ICONS) != 0) ? JavaElementImageProvider.SMALL_SIZE
-               : JavaElementImageProvider.BIG_SIZE;
-         return new JavaElementImageDescriptor(baseImage, adornmentFlags, size);
-      }
-      return null;
-   }
+   //   /**
+   //    * Returns the image descriptor for a binding with the flags as defined by {@link JavaElementImageProvider}.
+   //    * @param binding The binding to get the image for.
+   //    * @param imageFlags The image flags as defined in {@link JavaElementImageProvider}.
+   //    * @return the image of the binding or null if there is no image
+   //    */
+   //   public static ImageResource getBindingImageDescriptor(IBinding binding, int imageFlags)
+   //   {
+   //      ImageResource baseImage = getBaseImageDescriptor(binding, imageFlags);
+   //      if (baseImage != null)
+   //      {
+   //         int adornmentFlags = getAdornmentFlags(binding);
+   //         Point size =
+   //            ((imageFlags & JavaElementImageProvider.SMALL_ICONS) != 0) ? JavaElementImageProvider.SMALL_SIZE
+   //               : JavaElementImageProvider.BIG_SIZE;
+   //         return new JavaElementImageDescriptor(baseImage, adornmentFlags, size);
+   //      }
+   //      return null;
+   //   }
 
-   //
-   //	public static final long DEFAULT_TEXTFLAGS= JavaElementLabels.ALL_DEFAULT;
+   public static final long DEFAULT_TEXTFLAGS = JavaElementLabels.ALL_DEFAULT;
+
    //	public static final int DEFAULT_IMAGEFLAGS= JavaElementImageProvider.OVERLAY_ICONS;
 
    final private long fTextFlags;
@@ -607,13 +600,13 @@ public class BindingLabelProvider
 
    //	private ImageDescriptorRegistry fRegistry;
 
-   /**
-    * Creates a new binding label provider with default text and image flags
-    */
-   public BindingLabelProvider()
-   {
-      this(DEFAULT_TEXTFLAGS, DEFAULT_IMAGEFLAGS);
-   }
+   //   /**
+   //    * Creates a new binding label provider with default text and image flags
+   //    */
+   //   public BindingLabelProvider()
+   //   {
+   //      this(DEFAULT_TEXTFLAGS, DEFAULT_IMAGEFLAGS);
+   //   }
 
    /**
     * @param textFlags Flags defined in {@link JavaElementLabels}.
@@ -625,23 +618,23 @@ public class BindingLabelProvider
       fTextFlags = textFlags;
    }
 
-   /*
-    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
-    */
-   public Image getImage(Object element)
-   {
-      if (element instanceof IBinding)
-      {
-         ImageResource baseImage = getBindingImageDescriptor((IBinding)element, fImageFlags);
-         if (baseImage != null)
-         {
-            return new Image(baseImage);
-         }
-      }
-      //TODO
-      return new Image();
-      //		return super.getImage(element);
-   }
+   //   /*
+   //    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
+   //    */
+   //   public Image getImage(Object element)
+   //   {
+   //      if (element instanceof IBinding)
+   //      {
+   //         ImageResource baseImage = getBindingImageDescriptor((IBinding)element, fImageFlags);
+   //         if (baseImage != null)
+   //         {
+   //            return new Image(baseImage);
+   //         }
+   //      }
+   //      //TODO
+   //      return new Image();
+   //      //		return super.getImage(element);
+   //   }
 
    //	private ImageDescriptorRegistry getRegistry() {
    //		if (fRegistry == null)
@@ -649,17 +642,17 @@ public class BindingLabelProvider
    //		return fRegistry;
    //	}
 
-   /*
-    * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
-    */
-   public String getText(Object element)
-   {
-      if (element instanceof IBinding)
-      {
-         return getBindingLabel((IBinding)element, fTextFlags);
-      }
-      //TODO
-      //		return super.getText(element);
-      return "";
-   }
+   //   /*
+   //    * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
+   //    */
+   //   public String getText(Object element)
+   //   {
+   //      if (element instanceof IBinding)
+   //      {
+   //         return getBindingLabel((IBinding)element, fTextFlags);
+   //      }
+   //      //TODO
+   //      //		return super.getText(element);
+   //      return "";
+   //   }
 }

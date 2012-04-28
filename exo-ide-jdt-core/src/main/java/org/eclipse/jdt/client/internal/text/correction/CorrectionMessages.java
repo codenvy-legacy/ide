@@ -12,7 +12,6 @@
 package org.eclipse.jdt.client.internal.text.correction;
 
 import com.google.gwt.core.client.GWT;
-
 import com.google.gwt.i18n.client.Messages;
 
 /**
@@ -29,9 +28,9 @@ public interface CorrectionMessages extends Messages
 
     String JavadocTagsSubProcessor_document_parameter_description();
 
-    String LocalCorrectionsSubProcessor_renaming_duplicate_method();
+    String LocalCorrectionsSubProcessor_renaming_duplicate_method(String string);
 
-    String LocalCorrectionsSubProcessor_replacefieldaccesswithmethod_description();
+    String LocalCorrectionsSubProcessor_replacefieldaccesswithmethod_description(String string);
 
     String ModifierCorrectionSubProcessor_addstatic_description();
 
@@ -39,7 +38,7 @@ public interface CorrectionMessages extends Messages
 
     String ModifierCorrectionSubProcessor_addsynchronized_description();
 
-    String ModifierCorrectionSubProcessor_changefieldmodifiertononstatic_description();
+    String ModifierCorrectionSubProcessor_changefieldmodifiertononstatic_description(String methodName);
 
     String ModifierCorrectionSubProcessor_changemodifiertostaticfinal_description();
 
@@ -125,7 +124,7 @@ public interface CorrectionMessages extends Messages
 
     String ReorgCorrectionsSubProcessor_addcp_classfolder_description();
 
-    String ReorgCorrectionsSubProcessor_change_project_compliance_description();
+    String ReorgCorrectionsSubProcessor_change_project_compliance_description(String requiredVersion);
 
     String ReorgCorrectionsSubProcessor_change_workspace_compliance_description();
 
@@ -155,7 +154,7 @@ public interface CorrectionMessages extends Messages
 
     String LocalCorrectionsSubProcessor_unnecessarythrow_description();
 
-    String LocalCorrectionsSubProcessor_classtointerface_description();
+    String LocalCorrectionsSubProcessor_classtointerface_description(String typeName);
 
     String LocalCorrectionsSubProcessor_externalizestrings_description();
 
@@ -173,15 +172,15 @@ public interface CorrectionMessages extends Messages
 
     String LocalCorrectionsSubProcessor_removeelse_description();
 
-    String LocalCorrectionsSubProcessor_hiding_local_label();
+    String LocalCorrectionsSubProcessor_hiding_local_label(String string);
 
-    String LocalCorrectionsSubProcessor_hiding_field_label();
+    String LocalCorrectionsSubProcessor_hiding_field_label(String string);
 
-    String LocalCorrectionsSubProcessor_rename_var_label();
+    String LocalCorrectionsSubProcessor_rename_var_label(String string);
 
-    String LocalCorrectionsSubProcessor_hiding_argument_label();
+    String LocalCorrectionsSubProcessor_hiding_argument_label(String string);
 
-    String LocalCorrectionsSubProcessor_setparenteses_description();
+    String LocalCorrectionsSubProcessor_setparenteses_description(String string);
 
     String LocalCorrectionsSubProcessor_setparenteses_instanceof_description();
 
@@ -189,21 +188,21 @@ public interface CorrectionMessages extends Messages
 
     String LocalCorrectionsSubProcessor_InferGenericTypeArguments_description();
 
-    String TypeMismatchSubProcessor_addcast_description();
+    String TypeMismatchSubProcessor_addcast_description(String castType);
 
-    String TypeMismatchSubProcessor_changecast_description();
+    String TypeMismatchSubProcessor_changecast_description(String castType);
 
-    String TypeMismatchSubProcessor_changereturntype_description();
+    String TypeMismatchSubProcessor_changereturntype_description(String string);
 
-    String TypeMismatchSubProcessor_changereturnofoverridden_description();
+    String TypeMismatchSubProcessor_changereturnofoverridden_description(String string);
 
-    String TypeMismatchSubProcessor_changereturnofimplemented_description();
+    String TypeMismatchSubProcessor_changereturnofimplemented_description(String string);
 
-    String TypeMismatchSubProcessor_removeexceptions_description();
+    String TypeMismatchSubProcessor_removeexceptions_description(String string);
 
-    String TypeMismatchSubProcessor_addexceptions_description();
+    String TypeMismatchSubProcessor_addexceptions_description(String string, String string2);
 
-    String TypeMismatchSubProcessor_incompatible_for_each_type_description();
+    String TypeMismatchSubProcessor_incompatible_for_each_type_description(String string, String string2);
 
     String TypeMismatchSubProcessor_insertnullcheck_description();
 
@@ -221,15 +220,15 @@ public interface CorrectionMessages extends Messages
 
     String RenameRefactoringProposal_name();
 
-    String ModifierCorrectionSubProcessor_changemodifiertostatic_description();
+    String ModifierCorrectionSubProcessor_changemodifiertostatic_description(String name);
 
-    String ModifierCorrectionSubProcessor_changemodifiertononstatic_description();
+    String ModifierCorrectionSubProcessor_changemodifiertononstatic_description(String name);
 
-    String ModifierCorrectionSubProcessor_changemodifiertofinal_description();
+    String ModifierCorrectionSubProcessor_changemodifiertofinal_description(String string);
 
-    String ModifierCorrectionSubProcessor_changemodifiertononfinal_description();
+    String ModifierCorrectionSubProcessor_changemodifiertononfinal_description(String name);
 
-    String ModifierCorrectionSubProcessor_changevisibility_description();
+    String ModifierCorrectionSubProcessor_changevisibility_description(String name, String string);
 
     String ModifierCorrectionSubProcessor_removeabstract_description();
 
@@ -245,25 +244,25 @@ public interface CorrectionMessages extends Messages
 
     String ModifierCorrectionSubProcessor_setmethodabstract_description();
 
-    String ModifierCorrectionSubProcessor_changemethodtononfinal_description();
+    String ModifierCorrectionSubProcessor_changemethodtononfinal_description(String methodLabel);
 
-    String ModifierCorrectionSubProcessor_changeoverriddenvisibility_description();
+    String ModifierCorrectionSubProcessor_changeoverriddenvisibility_description(String methodLabel, String string);
 
-    String ModifierCorrectionSubProcessor_changemethodvisibility_description();
+    String ModifierCorrectionSubProcessor_changemethodvisibility_description(String string);
 
-    String ModifierCorrectionSubProcessor_changemethodtononstatic_description();
+    String ModifierCorrectionSubProcessor_changemethodtononstatic_description(String methodLabel);
 
-    String ModifierCorrectionSubProcessor_removeinvalidmodifiers_description();
+    String ModifierCorrectionSubProcessor_removeinvalidmodifiers_description(String methodName);
 
     String ReturnTypeSubProcessor_constrnamemethod_description();
 
-    String ReturnTypeSubProcessor_voidmethodreturns_description();
+    String ReturnTypeSubProcessor_voidmethodreturns_description(String string);
 
     String ReturnTypeSubProcessor_removereturn_description();
 
-    String ReturnTypeSubProcessor_missingreturntype_description();
+    String ReturnTypeSubProcessor_missingreturntype_description(String string);
 
-    String ReturnTypeSubProcessor_wrongconstructorname_description();
+    String ReturnTypeSubProcessor_wrongconstructorname_description(String constructorName);
 
     String ReturnTypeSubProcessor_changetovoid_description();
 
@@ -289,43 +288,43 @@ public interface CorrectionMessages extends Messages
 
     String UnimplementedCodeFix_TextEditGroup_label();
 
-    String UnresolvedElementsSubProcessor_swaparguments_description();
+    String UnresolvedElementsSubProcessor_swaparguments_description(String string, String string2);
 
-    String UnresolvedElementsSubProcessor_addargumentcast_description();
+    String UnresolvedElementsSubProcessor_addargumentcast_description(String string, String castTypeName);
 
-    String UnresolvedElementsSubProcessor_changemethod_description();
+    String UnresolvedElementsSubProcessor_changemethod_description(String string);
 
-    String UnresolvedElementsSubProcessor_changetoouter_description();
+    String UnresolvedElementsSubProcessor_changetoouter_description(String string);
 
-    String UnresolvedElementsSubProcessor_changetomethod_description();
+    String UnresolvedElementsSubProcessor_changetomethod_description(String string);
 
-    String UnresolvedElementsSubProcessor_createmethod_description();
+    String UnresolvedElementsSubProcessor_createmethod_description(String sig);
 
-    String UnresolvedElementsSubProcessor_createmethod_other_description();
+    String UnresolvedElementsSubProcessor_createmethod_other_description(String sig, String string);
 
     String UnresolvedElementsSubProcessor_createconstructor_description();
 
-    String UnresolvedElementsSubProcessor_changetype_description();
+    String UnresolvedElementsSubProcessor_changetype_description(String simpleName, String packName);
 
-    String UnresolvedElementsSubProcessor_changetype_nopack_description();
+    String UnresolvedElementsSubProcessor_changetype_nopack_description(String simpleName);
 
-    String UnresolvedElementsSubProcessor_importtype_description();
+    String UnresolvedElementsSubProcessor_importtype_description(String simpleName, String packName);
 
-    String UnresolvedElementsSubProcessor_changevariable_description();
+    String UnresolvedElementsSubProcessor_changevariable_description(String currName);
 
-    String UnresolvedElementsSubProcessor_createfield_description();
+    String UnresolvedElementsSubProcessor_createfield_description(String nameLabel);
 
-    String UnresolvedElementsSubProcessor_createfield_other_description();
+    String UnresolvedElementsSubProcessor_createfield_other_description(String nameLabel, String string);
 
-    String UnresolvedElementsSubProcessor_createlocal_description();
+    String UnresolvedElementsSubProcessor_createlocal_description(String name);
 
-    String UnresolvedElementsSubProcessor_createparameter_description();
+    String UnresolvedElementsSubProcessor_createparameter_description(String string);
 
-    String UnresolvedElementsSubProcessor_createconst_description();
+    String UnresolvedElementsSubProcessor_createconst_description(String nameLabel);
 
-    String UnresolvedElementsSubProcessor_createenum_description();
+    String UnresolvedElementsSubProcessor_createenum_description(String nameLabel, String string);
 
-    String UnresolvedElementsSubProcessor_createconst_other_description();
+    String UnresolvedElementsSubProcessor_createconst_other_description(String nameLabel, String string);
 
     String UnresolvedElementsSubProcessor_removestatement_description();
 
@@ -339,21 +338,21 @@ public interface CorrectionMessages extends Messages
 
     String UnresolvedElementsSubProcessor_swapparams_constr_description();
 
-    String UnresolvedElementsSubProcessor_removeparam_description();
+    String UnresolvedElementsSubProcessor_removeparam_description(String signature, String typeNames);
 
-    String UnresolvedElementsSubProcessor_removeparams_description();
+    String UnresolvedElementsSubProcessor_removeparams_description(String signature, String typeNames);
 
-    String UnresolvedElementsSubProcessor_removeparam_constr_description();
+    String UnresolvedElementsSubProcessor_removeparam_constr_description(String signature, String typeNames);
 
-    String UnresolvedElementsSubProcessor_removeparams_constr_description();
+    String UnresolvedElementsSubProcessor_removeparams_constr_description(String signature, String typeNames);
 
-    String UnresolvedElementsSubProcessor_addargument_description();
+    String UnresolvedElementsSubProcessor_addargument_description(String arg);
 
-    String UnresolvedElementsSubProcessor_addarguments_description();
+    String UnresolvedElementsSubProcessor_addarguments_description(String arg);
 
-    String UnresolvedElementsSubProcessor_removeargument_description();
+    String UnresolvedElementsSubProcessor_removeargument_description(String string);
 
-    String UnresolvedElementsSubProcessor_removearguments_description();
+    String UnresolvedElementsSubProcessor_removearguments_description(String string);
 
     String UnresolvedElementsSubProcessor_addparam_description();
 
@@ -367,13 +366,13 @@ public interface CorrectionMessages extends Messages
 
     String UnresolvedElementsSubProcessor_missingcastbrackets_description();
 
-    String UnresolvedElementsSubProcessor_methodtargetcast2_description();
+    String UnresolvedElementsSubProcessor_methodtargetcast2_description(String targetName);
 
-    String UnresolvedElementsSubProcessor_changemethodtargetcast2_description();
+    String UnresolvedElementsSubProcessor_changemethodtargetcast2_description(String targetName);
 
     String UnresolvedElementsSubProcessor_methodtargetcast_description();
 
-    String UnresolvedElementsSubProcessor_arraychangetomethod_description();
+    String UnresolvedElementsSubProcessor_arraychangetomethod_description(String currName);
 
     String UnresolvedElementsSubProcessor_arraychangetolength_description();
 
@@ -621,9 +620,9 @@ public interface CorrectionMessages extends Messages
 
     String GetterSetterCorrectionSubProcessor_encapsulate_field_error_title();
 
-    String GetterSetterCorrectionSubProcessor_replacewithgetter_description();
+    String GetterSetterCorrectionSubProcessor_replacewithgetter_description(String string);
 
-    String GetterSetterCorrectionSubProcessor_replacewithsetter_description();
+    String GetterSetterCorrectionSubProcessor_replacewithsetter_description(String string);
 
     String ReorgCorrectionsSubProcessor_50_compliance_changeProjectJREToDefault_description();
 
@@ -647,7 +646,7 @@ public interface CorrectionMessages extends Messages
 
     String QuickAssistProcessor_move_exceptions_to_separate_catch_block();
 
-    String SuppressWarningsSubProcessor_suppress_warnings_label();
+    String SuppressWarningsSubProcessor_suppress_warnings_label(String warningToken, String name);
 
     String ReorgCorrectionsSubProcessor_accessrules_description();
 
@@ -655,7 +654,7 @@ public interface CorrectionMessages extends Messages
 
     String ReorgCorrectionsSubProcessor_project_seup_fix_info();
 
-    String UnresolvedElementsSubProcessor_change_full_type_description();
+    String UnresolvedElementsSubProcessor_change_full_type_description(String string);
 
     String LocalCorrectionsSubProcessor_remove_allocated_description();
 
@@ -669,7 +668,7 @@ public interface CorrectionMessages extends Messages
 
     String LocalCorrectionsSubProcessor_LocalCorrectionsSubProcessor_qualify_right_hand_side_description();
 
-    String UnresolvedElementsSubProcessor_UnresolvedElementsSubProcessor_changetoattribute_description();
+    String UnresolvedElementsSubProcessor_UnresolvedElementsSubProcessor_changetoattribute_description(String curr);
 
     String UnresolvedElementsSubProcessor_UnresolvedElementsSubProcessor_createattribute_description();
 
@@ -691,9 +690,9 @@ public interface CorrectionMessages extends Messages
 
     String LocalCorrectionsSubProcessor_throw_allocated_description();
 
-    String SuppressWarningsSubProcessor_fix_suppress_token_label();
+    String SuppressWarningsSubProcessor_fix_suppress_token_label(String curr);
 
-    String SuppressWarningsSubProcessor_remove_annotation_label();
+    String SuppressWarningsSubProcessor_remove_annotation_label(String string);
 
     String VarargsWarningsSubProcessor_add_safevarargs_label();
 

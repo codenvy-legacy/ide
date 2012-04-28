@@ -11,55 +11,70 @@
 package org.eclipse.jdt.client.internal.corext.fix;
 
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.exoplatform.ide.editor.text.IDocument;
 
 /**
  * The context that contains all information required by a clean up to create a fix.
  * 
  * @since 3.5
  */
-public class CleanUpContext {
+public class CleanUpContext
+{
 
-//	private final ICompilationUnit fUnit;
+   //	private final ICompilationUnit fUnit;
 
-	private final CompilationUnit fAst;
+   private final CompilationUnit fAst;
 
-	/**
-	 * Creates a new clean up context.
-	 * 
-	 * @param unit the compilation unit
-	 * @param ast the AST, can be <code>null</code> if {@link CleanUpRequirements#requiresAST()}
-	 *            returns <code>false</code>. The AST is guaranteed to contain changes made by
-	 *            previous clean ups only if {@link CleanUpRequirements#requiresFreshAST()} returns
-	 *            <code>true</code>.
-	 */
-	public CleanUpContext(CompilationUnit ast) {
-//		Assert.isLegal(unit != null);
-//		fUnit= unit;
-		fAst= ast;
-	}
+   private final IDocument document;
 
-//	/**
-//	 * The compilation unit to clean up.
-//	 * 
-//	 * @return the compilation unit to clean up
-//	 */
-//	public ICompilationUnit getCompilationUnit() {
-//		return fUnit;
-//	}
+   /**
+    * Creates a new clean up context.
+    * 
+    * @param unit the compilation unit
+    * @param ast the AST, can be <code>null</code> if {@link CleanUpRequirements#requiresAST()}
+    *            returns <code>false</code>. The AST is guaranteed to contain changes made by
+    *            previous clean ups only if {@link CleanUpRequirements#requiresFreshAST()} returns
+    *            <code>true</code>.
+    */
+   public CleanUpContext(CompilationUnit ast, IDocument document)
+   {
+      //		Assert.isLegal(unit != null);
+      //		fUnit= unit;
+      fAst = ast;
+      this.document = document;
+   }
 
-	/**
-	 * An AST built from the compilation unit to fix.
-	 * <p>
-	 * Can be <code>null</code> if {@link CleanUpRequirements#requiresAST()} returns
-	 * <code>false</code>. The AST is guaranteed to contain changes made by previous clean ups only
-	 * if {@link CleanUpRequirements#requiresFreshAST()} returns <code>true</code>.
-	 * </p>
-	 * <p>Clients should check the AST API level and do nothing if they are given an AST
-	 * they can't handle (see {@link org.eclipse.jdt.core.dom.AST#apiLevel()}).
-	 * 
-	 * @return an AST or <code>null</code> if none required
-	 */
-	public CompilationUnit getAST() {
-		return fAst;
-	}
+   //	/**
+   //	 * The compilation unit to clean up.
+   //	 * 
+   //	 * @return the compilation unit to clean up
+   //	 */
+   //	public ICompilationUnit getCompilationUnit() {
+   //		return fUnit;
+   //	}
+
+   /**
+    * An AST built from the compilation unit to fix.
+    * <p>
+    * Can be <code>null</code> if {@link CleanUpRequirements#requiresAST()} returns
+    * <code>false</code>. The AST is guaranteed to contain changes made by previous clean ups only
+    * if {@link CleanUpRequirements#requiresFreshAST()} returns <code>true</code>.
+    * </p>
+    * <p>Clients should check the AST API level and do nothing if they are given an AST
+    * they can't handle (see {@link org.eclipse.jdt.core.dom.AST#apiLevel()}).
+    * 
+    * @return an AST or <code>null</code> if none required
+    */
+   public CompilationUnit getAST()
+   {
+      return fAst;
+   }
+
+   /**
+    * @return the document
+    */
+   public IDocument getDocument()
+   {
+      return document;
+   }
 }

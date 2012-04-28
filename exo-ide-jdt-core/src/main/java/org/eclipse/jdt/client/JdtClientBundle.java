@@ -75,4 +75,28 @@ public interface JdtClientBundle extends ClientBundle
    @Source("org/eclipse/jdt/client/internal/text/correction/proposals/delete_obj.gif")
    ImageResource delete_obj();
 
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/correction_delete_import.gif")
+   ImageResource correction_delete_import();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/private-method.png")
+   ImageResource privateMethod();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/remove_correction.gif")
+   ImageResource remove_correction();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/jexception_obj.gif")
+   ImageResource exceptionProp();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/javadoc.gif")
+   ImageResource javadoc();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/add_obj.gif")
+   ImageResource add_obj();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/imp_obj.gif")
+   ImageResource imp_obj();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/protected-method.png")
+   ImageResource protectedMethod();
+
 }

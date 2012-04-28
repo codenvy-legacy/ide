@@ -18,6 +18,7 @@ import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.client.core.dom.ArrayType;
 import org.eclipse.jdt.client.core.dom.CastExpression;
 import org.eclipse.jdt.client.core.dom.ClassInstanceCreation;
@@ -67,7 +68,6 @@ import org.exoplatform.ide.editor.text.edits.MultiTextEdit;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -165,42 +165,47 @@ public class StubUtility
    //
    // return evaluateTemplate(context, template);
    // }
-   //
-   // public static String getCatchBodyContent(ICompilationUnit cu, String exceptionType, String variableName, ASTNode
-   // locationInAST, String lineDelimiter) throws CoreException {
-   //		String enclosingType= ""; //$NON-NLS-1$
-   //		String enclosingMethod= ""; //$NON-NLS-1$
-   //
-   // if (locationInAST != null) {
-   // MethodDeclaration parentMethod= ASTResolving.findParentMethodDeclaration(locationInAST);
-   // if (parentMethod != null) {
-   // enclosingMethod= parentMethod.getName().getIdentifier();
-   // locationInAST= parentMethod;
-   // }
-   // ASTNode parentType= ASTResolving.findParentType(locationInAST);
-   // if (parentType instanceof AbstractTypeDeclaration) {
-   // enclosingType= ((AbstractTypeDeclaration)parentType).getName().getIdentifier();
-   // }
-   // }
-   // return getCatchBodyContent(cu, exceptionType, variableName, enclosingType, enclosingMethod, lineDelimiter);
-   // }
-   //
-   //
-   // public static String getCatchBodyContent(ICompilationUnit cu, String exceptionType, String variableName, String
-   // enclosingType, String enclosingMethod, String lineDelimiter) throws CoreException {
-   // Template template= getCodeTemplate(CodeTemplateContextType.CATCHBLOCK_ID, cu.getJavaProject());
-   // if (template == null) {
-   // return null;
-   // }
-   //
-   // CodeTemplateContext context= new CodeTemplateContext(template.getContextTypeId(), cu.getJavaProject(), lineDelimiter);
-   // context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, enclosingType);
-   // context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, enclosingMethod);
-   // context.setVariable(CodeTemplateContextType.EXCEPTION_TYPE, exceptionType);
-   // context.setVariable(CodeTemplateContextType.EXCEPTION_VAR, variableName);
-   // return evaluateTemplate(context, template);
-   // }
-   //
+
+   public static String getCatchBodyContent(String exceptionType, String variableName, ASTNode locationInAST,
+      String lineDelimiter) throws CoreException
+   {
+      String enclosingType = ""; //$NON-NLS-1$
+      String enclosingMethod = ""; //$NON-NLS-1$
+
+      if (locationInAST != null)
+      {
+         MethodDeclaration parentMethod = ASTResolving.findParentMethodDeclaration(locationInAST);
+         if (parentMethod != null)
+         {
+            enclosingMethod = parentMethod.getName().getIdentifier();
+            locationInAST = parentMethod;
+         }
+         ASTNode parentType = ASTResolving.findParentType(locationInAST);
+         if (parentType instanceof AbstractTypeDeclaration)
+         {
+            enclosingType = ((AbstractTypeDeclaration)parentType).getName().getIdentifier();
+         }
+      }
+      return getCatchBodyContent(exceptionType, variableName, enclosingType, enclosingMethod, lineDelimiter);
+   }
+
+   public static String getCatchBodyContent(String exceptionType, String variableName, String enclosingType,
+      String enclosingMethod, String lineDelimiter) throws CoreException
+   {
+      Template template = getCodeTemplate(CodeTemplateContextType.CATCHBLOCK_ID);
+      if (template == null)
+      {
+         return null;
+      }
+
+      CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
+      context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, enclosingType);
+      context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, enclosingMethod);
+      context.setVariable(CodeTemplateContextType.EXCEPTION_TYPE, exceptionType);
+      context.setVariable(CodeTemplateContextType.EXCEPTION_VAR, variableName);
+      return evaluateTemplate(context, template);
+   }
+
    // /*
    // * Don't use this method directly, use CodeGeneration.
    // * @see org.eclipse.jdt.ui.CodeGeneration#getCompilationUnitContent(ICompilationUnit, String, String, String, String)
@@ -251,51 +256,65 @@ public class StubUtility
    // return evaluateTemplate(context, template);
    // }
    //
-   // /*
-   // * Don't use this method directly, use CodeGeneration.
-   // * @see org.eclipse.jdt.ui.CodeGeneration#getTypeComment(ICompilationUnit, String, String[], String)
-   // */
-   // public static String getTypeComment(ICompilationUnit cu, String typeQualifiedName, String[] typeParameterNames, String
-   // lineDelim) throws CoreException {
-   // Template template= getCodeTemplate(CodeTemplateContextType.TYPECOMMENT_ID, cu.getJavaProject());
-   // if (template == null) {
-   // return null;
-   // }
-   // CodeTemplateContext context= new CodeTemplateContext(template.getContextTypeId(), cu.getJavaProject(), lineDelim);
-   // context.setCompilationUnitVariables(cu);
-   // context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, Signature.getQualifier(typeQualifiedName));
-   // context.setVariable(CodeTemplateContextType.TYPENAME, Signature.getSimpleName(typeQualifiedName));
-   //
-   // TemplateBuffer buffer;
-   // try {
-   // buffer= context.evaluate(template);
-   // } catch (BadLocationException e) {
-   // throw new CoreException(Status.CANCEL_STATUS);
-   // } catch (TemplateException e) {
-   // throw new CoreException(Status.CANCEL_STATUS);
-   // }
-   // String str= buffer.getString();
-   // if (Strings.containsOnlyWhitespaces(str)) {
-   // return null;
-   // }
-   //
-   // TemplateVariable position= findVariable(buffer, CodeTemplateContextType.TAGS); // look if Javadoc tags have to be added
-   // if (position == null) {
-   // return str;
-   // }
-   //
-   // IDocument document= new Document(str);
-   // int[] tagOffsets= position.getOffsets();
-   // for (int i= tagOffsets.length - 1; i >= 0; i--) { // from last to first
-   // try {
-   // insertTag(document, tagOffsets[i], position.getLength(), EMPTY, EMPTY, null, typeParameterNames, false, lineDelim);
-   // } catch (BadLocationException e) {
-   // throw new CoreException(JavaUIStatus.createError(IStatus.ERROR, e));
-   // }
-   // }
-   // return document.get();
-   // }
-   //
+   /*
+   * Don't use this method directly, use CodeGeneration.
+   * @see org.eclipse.jdt.ui.CodeGeneration#getTypeComment(ICompilationUnit, String, String[], String)
+   */
+   public static String getTypeComment(String typeQualifiedName, String[] typeParameterNames, String lineDelim)
+      throws CoreException
+   {
+      Template template = getCodeTemplate(CodeTemplateContextType.TYPECOMMENT_ID);
+      if (template == null)
+      {
+         return null;
+      }
+      CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelim);
+      //      context.setCompilationUnitVariables(cu);
+      context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, Signature.getQualifier(typeQualifiedName));
+      context.setVariable(CodeTemplateContextType.TYPENAME, Signature.getSimpleName(typeQualifiedName));
+
+      TemplateBuffer buffer;
+      try
+      {
+         buffer = context.evaluate(template);
+      }
+      catch (BadLocationException e)
+      {
+         throw new CoreException(Status.CANCEL_STATUS);
+      }
+      catch (TemplateException e)
+      {
+         throw new CoreException(Status.CANCEL_STATUS);
+      }
+      String str = buffer.getString();
+      if (Strings.containsOnlyWhitespaces(str))
+      {
+         return null;
+      }
+
+      TemplateVariable position = findVariable(buffer, CodeTemplateContextType.TAGS); // look if Javadoc tags have to be added
+      if (position == null)
+      {
+         return str;
+      }
+
+      IDocument document = new Document(str);
+      int[] tagOffsets = position.getOffsets();
+      for (int i = tagOffsets.length - 1; i >= 0; i--)
+      { // from last to first
+         try
+         {
+            insertTag(document, tagOffsets[i], position.getLength(), EMPTY, EMPTY, null, typeParameterNames, false,
+               lineDelim);
+         }
+         catch (BadLocationException e)
+         {
+            throw new CoreException(JavaUIStatus.createError(IStatus.ERROR, e));
+         }
+      }
+      return document.get();
+   }
+
    /*
    * Returns the parameters type names used in see tags. Currently, these are always fully qualified.
    */
@@ -650,23 +669,24 @@ public class StubUtility
       return textBuffer.get();
    }
 
-   // /*
-   // * Don't use this method directly, use CodeGeneration.
-   // */
-   // public static String getFieldComment(ICompilationUnit cu, String typeName, String fieldName, String lineDelimiter) throws
-   // CoreException {
-   // Template template= getCodeTemplate(CodeTemplateContextType.FIELDCOMMENT_ID, cu.getJavaProject());
-   // if (template == null) {
-   // return null;
-   // }
-   // CodeTemplateContext context= new CodeTemplateContext(template.getContextTypeId(), cu.getJavaProject(), lineDelimiter);
-   // context.setCompilationUnitVariables(cu);
-   // context.setVariable(CodeTemplateContextType.FIELD_TYPE, typeName);
-   // context.setVariable(CodeTemplateContextType.FIELD, fieldName);
-   //
-   // return evaluateTemplate(context, template);
-   // }
-   //
+   /*
+   * Don't use this method directly, use CodeGeneration.
+   */
+   public static String getFieldComment(String typeName, String fieldName, String lineDelimiter) throws CoreException
+   {
+      Template template = getCodeTemplate(CodeTemplateContextType.FIELDCOMMENT_ID);
+      if (template == null)
+      {
+         return null;
+      }
+      CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
+      //      context.setCompilationUnitVariables(cu);
+      context.setVariable(CodeTemplateContextType.FIELD_TYPE, typeName);
+      context.setVariable(CodeTemplateContextType.FIELD, fieldName);
+
+      return evaluateTemplate(context, template);
+   }
+
    //
    // /*
    // * Don't use this method directly, use CodeGeneration.
@@ -861,10 +881,13 @@ public class StubUtility
    // return textBuffer.get();
    // }
    //
-   // public static boolean shouldGenerateMethodTypeParameterTags(IJavaProject project) {
-   // return JavaCore.ENABLED.equals(project.getOption(JavaCore.COMPILER_PB_MISSING_JAVADOC_TAGS_METHOD_TYPE_PARAMETERS, true));
-   // }
-   //
+   public static boolean shouldGenerateMethodTypeParameterTags()
+   {
+      //TODO
+      return JavaCore.ENABLED.equals(JavaCore
+         .getOption(JavaCore.COMPILER_PB_MISSING_JAVADOC_TAGS_METHOD_TYPE_PARAMETERS));
+   }
+
    /**
    * @param decl the method declaration
    * @return the return type
@@ -1687,74 +1710,94 @@ public class StubUtility
       }
    }
 
+   public static boolean hasFieldName(String name)
+   {
+      //TODO 
+      //      String prefixes = project.getOption(JavaCore.CODEASSIST_FIELD_PREFIXES, true);
+      //      String suffixes = project.getOption(JavaCore.CODEASSIST_FIELD_SUFFIXES, true);
+      //      String staticPrefixes = project.getOption(JavaCore.CODEASSIST_STATIC_FIELD_PREFIXES, true);
+      //      String staticSuffixes = project.getOption(JavaCore.CODEASSIST_STATIC_FIELD_SUFFIXES, true);
+      //
+      //      return hasPrefixOrSuffix(prefixes, suffixes, name) || hasPrefixOrSuffix(staticPrefixes, staticSuffixes, name);
+      return false;
+   }
+
+   public static boolean hasParameterName(String name)
+   {
+      //TODO
+      //      String prefixes = project.getOption(JavaCore.CODEASSIST_ARGUMENT_PREFIXES, true);
+      //      String suffixes = project.getOption(JavaCore.CODEASSIST_ARGUMENT_SUFFIXES, true);
+      //      return hasPrefixOrSuffix(prefixes, suffixes, name);
+      return false;
+   }
+
+   public static boolean hasLocalVariableName(String name)
+   {
+      //TODO
+      //      String prefixes = project.getOption(JavaCore.CODEASSIST_LOCAL_PREFIXES, true);
+      //      String suffixes = project.getOption(JavaCore.CODEASSIST_LOCAL_SUFFIXES, true);
+      //      return hasPrefixOrSuffix(prefixes, suffixes, name);
+      return false;
+   }
+
+   public static boolean hasConstantName(String name)
+   {
+      //TODO
+      if (Character.isUpperCase(name.charAt(0)))
+         return true;
+      //      String prefixes = project.getOption(JavaCore.CODEASSIST_STATIC_FINAL_FIELD_PREFIXES, true);
+      //      String suffixes = project.getOption(JavaCore.CODEASSIST_STATIC_FINAL_FIELD_SUFFIXES, true);
+      //      return hasPrefixOrSuffix(prefixes, suffixes, name);
+      return false;
+   }
+
    //
-   // public static boolean hasFieldName(IJavaProject project, String name) {
-   // String prefixes= project.getOption(JavaCore.CODEASSIST_FIELD_PREFIXES, true);
-   // String suffixes= project.getOption(JavaCore.CODEASSIST_FIELD_SUFFIXES, true);
-   // String staticPrefixes= project.getOption(JavaCore.CODEASSIST_STATIC_FIELD_PREFIXES, true);
-   // String staticSuffixes= project.getOption(JavaCore.CODEASSIST_STATIC_FIELD_SUFFIXES, true);
+   //   private static boolean hasPrefixOrSuffix(String prefixes, String suffixes, String name)
+   //   {
+   //      final String listSeparartor = ","; //$NON-NLS-1$
    //
+   //      StringTokenizer tok = new StringTokenizer(prefixes, listSeparartor);
+   //      while (tok.hasMoreTokens())
+   //      {
+   //         String curr = tok.nextToken();
+   //         if (name.startsWith(curr))
+   //         {
+   //            return true;
+   //         }
+   //      }
    //
-   // return hasPrefixOrSuffix(prefixes, suffixes, name)
-   // || hasPrefixOrSuffix(staticPrefixes, staticSuffixes, name);
-   // }
-   //
-   // public static boolean hasParameterName(IJavaProject project, String name) {
-   // String prefixes= project.getOption(JavaCore.CODEASSIST_ARGUMENT_PREFIXES, true);
-   // String suffixes= project.getOption(JavaCore.CODEASSIST_ARGUMENT_SUFFIXES, true);
-   // return hasPrefixOrSuffix(prefixes, suffixes, name);
-   // }
-   //
-   // public static boolean hasLocalVariableName(IJavaProject project, String name) {
-   // String prefixes= project.getOption(JavaCore.CODEASSIST_LOCAL_PREFIXES, true);
-   // String suffixes= project.getOption(JavaCore.CODEASSIST_LOCAL_SUFFIXES, true);
-   // return hasPrefixOrSuffix(prefixes, suffixes, name);
-   // }
-   //
-   // public static boolean hasConstantName(IJavaProject project, String name) {
-   // if (Character.isUpperCase(name.charAt(0)))
-   // return true;
-   // String prefixes= project.getOption(JavaCore.CODEASSIST_STATIC_FINAL_FIELD_PREFIXES, true);
-   // String suffixes= project.getOption(JavaCore.CODEASSIST_STATIC_FINAL_FIELD_SUFFIXES, true);
-   // return hasPrefixOrSuffix(prefixes, suffixes, name);
-   // }
-   //
-   //
-   // private static boolean hasPrefixOrSuffix(String prefixes, String suffixes, String name) {
-   //		final String listSeparartor= ","; //$NON-NLS-1$
-   //
-   // StringTokenizer tok= new StringTokenizer(prefixes, listSeparartor);
-   // while (tok.hasMoreTokens()) {
-   // String curr= tok.nextToken();
-   // if (name.startsWith(curr)) {
-   // return true;
-   // }
-   // }
-   //
-   // tok= new StringTokenizer(suffixes, listSeparartor);
-   // while (tok.hasMoreTokens()) {
-   // String curr= tok.nextToken();
-   // if (name.endsWith(curr)) {
-   // return true;
-   // }
-   // }
-   // return false;
-   // }
-   //
+   //      tok = new StringTokenizer(suffixes, listSeparartor);
+   //      while (tok.hasMoreTokens())
+   //      {
+   //         String curr = tok.nextToken();
+   //         if (name.endsWith(curr))
+   //         {
+   //            return true;
+   //         }
+   //      }
+   //      return false;
+   //   }
+
    // // -------------------- preference access -----------------------
    //
    // public static boolean useThisForFieldAccess(IJavaProject project) {
    // return Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_KEYWORD_THIS, project)).booleanValue();
    // }
+
+   public static boolean useIsForBooleanGetters()
+   {
+      //TODO
+      return true;
+      //      return Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_IS_FOR_GETTERS, project))
+      //         .booleanValue();
+   }
+
    //
-   // public static boolean useIsForBooleanGetters(IJavaProject project) {
-   // return Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_IS_FOR_GETTERS,
-   // project)).booleanValue();
-   // }
-   //
-   // public static String getExceptionVariableName(IJavaProject project) {
-   // return PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_EXCEPTION_VAR_NAME, project);
-   // }
+   public static String getExceptionVariableName()
+   {
+      return "e"; //PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_EXCEPTION_VAR_NAME, project);
+   }
+
    //
    // public static boolean doAddComments(IJavaProject project) {
    // return Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS, project)).booleanValue();

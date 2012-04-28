@@ -52,7 +52,7 @@ public class LinkedCorrectionProposal extends ASTRewriteCorrectionProposal
     * @param valueOf
     * @return
     */
-   protected String getMethodComment(String declaringTypeName, MethodDeclaration decl, IMethodBinding overridden, String lineDelimiter) throws CoreException
+   public static String getMethodComment(String declaringTypeName, MethodDeclaration decl, IMethodBinding overridden, String lineDelimiter) throws CoreException
    {
       if (overridden != null) {
          overridden= overridden.getMethodDeclaration();

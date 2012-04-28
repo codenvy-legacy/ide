@@ -105,8 +105,6 @@ import org.eclipse.jdt.client.internal.corext.fix.ControlStatementsFix;
 import org.eclipse.jdt.client.internal.corext.fix.ConvertLoopFix;
 import org.eclipse.jdt.client.internal.corext.fix.ICleanUp;
 import org.eclipse.jdt.client.internal.corext.fix.IProposableFix;
-import org.eclipse.jdt.client.internal.corext.fix.LinkedProposalModel;
-import org.eclipse.jdt.client.internal.corext.refactoring.code.ConvertAnonymousToNestedRefactoring;
 import org.eclipse.jdt.client.internal.corext.refactoring.code.ExtractConstantRefactoring;
 import org.eclipse.jdt.client.internal.corext.refactoring.code.ExtractMethodRefactoring;
 import org.eclipse.jdt.client.internal.corext.refactoring.code.ExtractTempRefactoring;
@@ -119,11 +117,11 @@ import org.eclipse.jdt.client.internal.text.correction.proposals.CUCorrectionPro
 import org.eclipse.jdt.client.internal.text.correction.proposals.ChangeCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.FixCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.LinkedCorrectionProposal;
-import org.eclipse.jdt.client.internal.text.correction.proposals.LinkedNamesAssistProposal;
 import org.eclipse.jdt.client.internal.text.quickassist.IQuickAssistProcessor;
 import org.eclipse.jdt.client.ltk.refactoring.Refactoring;
 import org.eclipse.jdt.client.ltk.refactoring.RefactoringStatus;
 import org.eclipse.jdt.client.ltk.refactoring.TextChange;
+import org.eclipse.jdt.client.ltk.refactoring.TextFileChange;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
@@ -198,7 +196,7 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
             || getExtractMethodProposal(context, coveringNode, false, null)
             || getInlineLocalProposal(context, coveringNode, null)
             || getConvertLocalToFieldProposal(context, coveringNode, null)
-            || getConvertAnonymousToNestedProposal(context, coveringNode, null)
+//            || getConvertAnonymousToNestedProposal(context, coveringNode, null)
             || getConvertIterableLoopProposal(context, coveringNode, null)
             || getRemoveBlockProposals(context, coveringNode, null)
             || getMakeVariableDeclarationFinalProposals(context, null)
@@ -246,7 +244,7 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
             getExtractMethodProposal(context, coveringNode, problemsAtLocation, resultingCollections);
             getInlineLocalProposal(context, coveringNode, resultingCollections);
             getConvertLocalToFieldProposal(context, coveringNode, resultingCollections);
-            getConvertAnonymousToNestedProposal(context, coveringNode, resultingCollections);
+//            getConvertAnonymousToNestedProposal(context, coveringNode, resultingCollections);
             if (!getConvertForLoopProposal(context, coveringNode, resultingCollections))
                getConvertIterableLoopProposal(context, coveringNode, resultingCollections);
             getRemoveBlockProposals(context, coveringNode, resultingCollections);
@@ -324,7 +322,7 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
          return true;
       }
 
-      final ICompilationUnit cu = context.getCompilationUnit();
+//      final ICompilationUnit cu = context.getCompilationUnit();
       final ExtractMethodRefactoring extractMethodRefactoring =
          new ExtractMethodRefactoring(context.getASTRoot(), context.getSelectionOffset(), context.getSelectionLength());
       extractMethodRefactoring.setMethodName("extracted"); //$NON-NLS-1$
@@ -471,66 +469,66 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
       return false;
    }
 
-   private static boolean getConvertAnonymousToNestedProposal(IInvocationContext context, final ASTNode node,
-      Collection<ICommandAccess> proposals) throws CoreException
-   {
-      if (!(node instanceof Name))
-         return false;
-
-      ASTNode normalized = ASTNodes.getNormalizedNode(node);
-      if (normalized.getLocationInParent() != ClassInstanceCreation.TYPE_PROPERTY)
-         return false;
-
-      final AnonymousClassDeclaration anonymTypeDecl =
-         ((ClassInstanceCreation)normalized.getParent()).getAnonymousClassDeclaration();
-      if (anonymTypeDecl == null || anonymTypeDecl.resolveBinding() == null)
-      {
-         return false;
-      }
-
-      if (proposals == null)
-      {
-         return true;
-      }
-
-      final ICompilationUnit cu = context.getCompilationUnit();
-      final ConvertAnonymousToNestedRefactoring refactoring = new ConvertAnonymousToNestedRefactoring(anonymTypeDecl);
-
-      String extTypeName = ASTNodes.getSimpleNameIdentifier((Name)node);
-      ITypeBinding anonymTypeBinding = anonymTypeDecl.resolveBinding();
-      String className;
-      if (anonymTypeBinding.getInterfaces().length == 0)
-      {
-         className =
-            Messages.format(CorrectionMessages.QuickAssistProcessor_name_extension_from_interface, extTypeName);
-      }
-      else
-      {
-         className = Messages.format(CorrectionMessages.QuickAssistProcessor_name_extension_from_class, extTypeName);
-      }
-      String[][] existingTypes = ((IType)anonymTypeBinding.getJavaElement()).resolveType(className);
-      int i = 1;
-      while (existingTypes != null)
-      {
-         i++;
-         existingTypes = ((IType)anonymTypeBinding.getJavaElement()).resolveType(className + i);
-      }
-      refactoring.setClassName(i == 1 ? className : className + i);
-
-      if (refactoring.checkInitialConditions(new NullProgressMonitor()).isOK())
-      {
-         LinkedProposalModel linkedProposalModel = new LinkedProposalModel();
-         refactoring.setLinkedProposalModel(linkedProposalModel);
-
-         String label = CorrectionMessages.QuickAssistProcessor_convert_anonym_to_nested;
-         Image image = new Image(); //TODO//JavaPlugin.getImageDescriptorRegistry().get(JavaElementImageProvider.getTypeImageDescriptor(true, false, Flags.AccPrivate, false));
-         RefactoringCorrectionProposal proposal = new RefactoringCorrectionProposal(label, cu, refactoring, 5, image);
-         proposal.setLinkedProposalModel(linkedProposalModel);
-         proposal.setCommandId(CONVERT_ANONYMOUS_TO_LOCAL_ID);
-         proposals.add(proposal);
-      }
-      return false;
-   }
+//   private static boolean getConvertAnonymousToNestedProposal(IInvocationContext context, final ASTNode node,
+//      Collection<ICommandAccess> proposals) throws CoreException
+//   {
+//      if (!(node instanceof Name))
+//         return false;
+//
+//      ASTNode normalized = ASTNodes.getNormalizedNode(node);
+//      if (normalized.getLocationInParent() != ClassInstanceCreation.TYPE_PROPERTY)
+//         return false;
+//
+//      final AnonymousClassDeclaration anonymTypeDecl =
+//         ((ClassInstanceCreation)normalized.getParent()).getAnonymousClassDeclaration();
+//      if (anonymTypeDecl == null || anonymTypeDecl.resolveBinding() == null)
+//      {
+//         return false;
+//      }
+//
+//      if (proposals == null)
+//      {
+//         return true;
+//      }
+//
+//      final ICompilationUnit cu = context.getCompilationUnit();
+//      final ConvertAnonymousToNestedRefactoring refactoring = new ConvertAnonymousToNestedRefactoring(anonymTypeDecl);
+//
+//      String extTypeName = ASTNodes.getSimpleNameIdentifier((Name)node);
+//      ITypeBinding anonymTypeBinding = anonymTypeDecl.resolveBinding();
+//      String className;
+//      if (anonymTypeBinding.getInterfaces().length == 0)
+//      {
+//         className =
+//            Messages.format(CorrectionMessages.QuickAssistProcessor_name_extension_from_interface, extTypeName);
+//      }
+//      else
+//      {
+//         className = Messages.format(CorrectionMessages.QuickAssistProcessor_name_extension_from_class, extTypeName);
+//      }
+//      String[][] existingTypes = ((IType)anonymTypeBinding.getJavaElement()).resolveType(className);
+//      int i = 1;
+//      while (existingTypes != null)
+//      {
+//         i++;
+//         existingTypes = ((IType)anonymTypeBinding.getJavaElement()).resolveType(className + i);
+//      }
+//      refactoring.setClassName(i == 1 ? className : className + i);
+//
+//      if (refactoring.checkInitialConditions(new NullProgressMonitor()).isOK())
+//      {
+//         LinkedProposalModel linkedProposalModel = new LinkedProposalModel();
+//         refactoring.setLinkedProposalModel(linkedProposalModel);
+//
+//         String label = CorrectionMessages.QuickAssistProcessor_convert_anonym_to_nested;
+//         Image image = new Image(); //TODO//JavaPlugin.getImageDescriptorRegistry().get(JavaElementImageProvider.getTypeImageDescriptor(true, false, Flags.AccPrivate, false));
+//         RefactoringCorrectionProposal proposal = new RefactoringCorrectionProposal(label, cu, refactoring, 5, image);
+//         proposal.setLinkedProposalModel(linkedProposalModel);
+//         proposal.setCommandId(CONVERT_ANONYMOUS_TO_LOCAL_ID);
+//         proposals.add(proposal);
+//      }
+//      return false;
+//   }
 
    public static boolean getInferDiamondArgumentsProposal(IInvocationContext context, ASTNode node,
       IProblemLocation[] locations, Collection<ICommandAccess> resultingCollections)
@@ -2670,18 +2668,19 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
             IMethodBinding method = Bindings.findOverriddenMethodInType(curr, binding);
             if (method == null)
             {
-               ITypeBinding typeDecl = curr.getTypeDeclaration();
-               ICompilationUnit targetCU = ASTResolving.findCompilationUnitForBinding(cu, astRoot, typeDecl);
-               if (targetCU != null)
-               {
-                  String label =
-                     Messages.format(
-                        CorrectionMessages.QuickAssistProcessor_createmethodinsuper_description,
-                        new String[]{BasicElementLabels.getJavaElementName(curr.getName()),
-                           BasicElementLabels.getJavaElementName(binding.getName())});
-                  resultingCollections.add(new NewDefiningMethodProposal(label, targetCU, astRoot, typeDecl, binding,
-                     paramNames, 6));
-               }
+               //TODO load class file
+//               ITypeBinding typeDecl = curr.getTypeDeclaration();
+//               ICompilationUnit targetCU = ASTResolving.findCompilationUnitForBinding(cu, astRoot, typeDecl);
+//               if (targetCU != null)
+//               {
+//                  String label =
+//                     Messages.format(
+//                        CorrectionMessages.QuickAssistProcessor_createmethodinsuper_description,
+//                        new String[]{BasicElementLabels.getJavaElementName(curr.getName()),
+//                           BasicElementLabels.getJavaElementName(binding.getName())});
+//                  resultingCollections.add(new NewDefiningMethodProposal(label, targetCU, astRoot, typeDecl, binding,
+//                     paramNames, 6));
+//               }
             }
          }
       }
@@ -2907,7 +2906,7 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
       {
          super(name, cu, null, relevance, image);
          fRefactoring = refactoring;
-      }
+      }s
 
       /**
        * Can be overridden by clients to perform expensive initializations of the refactoring

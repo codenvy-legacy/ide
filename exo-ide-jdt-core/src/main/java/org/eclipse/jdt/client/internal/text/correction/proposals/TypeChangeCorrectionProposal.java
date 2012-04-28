@@ -50,6 +50,7 @@ import org.eclipse.jdt.client.internal.text.correction.CorrectionMessages;
 import org.eclipse.jdt.client.internal.text.correction.JavadocTagsSubProcessor;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.ui.BindingLabelProvider;
+import org.eclipse.jdt.client.ui.JavaElementLabels;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.IDocument;
 
@@ -87,7 +88,7 @@ public class TypeChangeCorrectionProposal extends LinkedCorrectionProposal
          fTypeProposals = null;
       }
 
-      String typeName = BindingLabelProvider.getBindingLabel(fNewType);
+      String typeName = BindingLabelProvider.getBindingLabel(fNewType, JavaElementLabels.ALL_DEFAULT);
       if (binding.getKind() == IBinding.VARIABLE)
       {
          IVariableBinding varBinding = (IVariableBinding)binding;

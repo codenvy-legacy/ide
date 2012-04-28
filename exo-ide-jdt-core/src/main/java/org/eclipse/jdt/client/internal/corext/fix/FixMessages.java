@@ -93,21 +93,21 @@ public interface FixMessages extends Messages
 
    String UnusedCodeFix_RemoveFieldOrLocal_AlteredAssignments_preview_singular();
 
-   String UnusedCodeFix_RemoveFieldOrLocal_AlteredAssignments_preview_plural();
+   String UnusedCodeFix_RemoveFieldOrLocal_AlteredAssignments_preview_plural(String string);
 
-   String UnusedCodeFix_RemoveFieldOrLocal_description();
+   String UnusedCodeFix_RemoveFieldOrLocal_description(String name);
 
    String UnusedCodeFix_RemoveFieldOrLocal_RemovedAssignments_preview_singular();
 
-   String UnusedCodeFix_RemoveFieldOrLocal_RemovedAssignments_preview_plural();
+   String UnusedCodeFix_RemoveFieldOrLocal_RemovedAssignments_preview_plural(String string);
 
-   String UnusedCodeFix_RemoveFieldOrLocalWithInitializer_description();
+   String UnusedCodeFix_RemoveFieldOrLocalWithInitializer_description(String name);
 
-   String UnusedCodeFix_RemoveMethod_description();
+   String UnusedCodeFix_RemoveMethod_description(String name);
 
-   String UnusedCodeFix_RemoveConstructor_description();
+   String UnusedCodeFix_RemoveConstructor_description(String name);
 
-   String UnusedCodeFix_RemoveType_description();
+   String UnusedCodeFix_RemoveType_description(String name);
 
    String UnusedCodeFix_RemoveImport_description();
 
@@ -147,13 +147,13 @@ public interface FixMessages extends Messages
 
    String StringFix_RemoveNonNls_description();
 
-   String CodeStyleFix_ChangeAccessToStatic_description();
+   String CodeStyleFix_ChangeAccessToStatic_description(String string);
 
-   String CodeStyleFix_QualifyWithThis_description();
+   String CodeStyleFix_QualifyWithThis_description(String nameLabel, String qualifierLabel);
 
-   String CodeStyleFix_ChangeAccessToStaticUsingInstanceType_description();
+   String CodeStyleFix_ChangeAccessToStaticUsingInstanceType_description(String string);
 
-   String CodeStyleFix_ChangeStaticAccess_description();
+   String CodeStyleFix_ChangeStaticAccess_description(String string);
 
    String CodeStyleFix_ChangeIfToBlock_desription();
 

@@ -12,6 +12,7 @@ package org.eclipse.jdt.client.ltk.refactoring;
 
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
+import org.eclipse.jdt.client.runtime.NullProgressMonitor;
 import org.eclipse.jdt.client.runtime.OperationCanceledException;
 
 
@@ -152,11 +153,11 @@ public abstract class Refactoring {
 		RefactoringTickProvider refactoringTickProvider= getRefactoringTickProvider();
 		pm.beginTask("", refactoringTickProvider.getCheckAllConditionsTicks()); //$NON-NLS-1$
 		RefactoringStatus result= new RefactoringStatus();
-		result.merge(checkInitialConditions(new SubProgressMonitor(pm, refactoringTickProvider.getCheckInitialConditionsTicks())));
+		result.merge(checkInitialConditions(new NullProgressMonitor()));
 		if (!result.hasFatalError()) {
 			if (pm.isCanceled())
 				throw new OperationCanceledException();
-			result.merge(checkFinalConditions(new SubProgressMonitor(pm, refactoringTickProvider.getCheckFinalConditionsTicks())));
+			result.merge(checkFinalConditions(new NullProgressMonitor()));
 		}
 		pm.done();
 		return result;

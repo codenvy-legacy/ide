@@ -24,112 +24,68 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jdt.client.core.dom.AST;
+import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.ASTVisitor;
+import org.eclipse.jdt.client.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.client.core.dom.AnnotationTypeDeclaration;
+import org.eclipse.jdt.client.core.dom.AnonymousClassDeclaration;
+import org.eclipse.jdt.client.core.dom.Assignment;
+import org.eclipse.jdt.client.core.dom.Block;
+import org.eclipse.jdt.client.core.dom.BodyDeclaration;
+import org.eclipse.jdt.client.core.dom.ChildListPropertyDescriptor;
+import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.core.dom.ContinueStatement;
+import org.eclipse.jdt.client.core.dom.DoStatement;
+import org.eclipse.jdt.client.core.dom.EnhancedForStatement;
+import org.eclipse.jdt.client.core.dom.EnumDeclaration;
+import org.eclipse.jdt.client.core.dom.Expression;
+import org.eclipse.jdt.client.core.dom.ExpressionStatement;
+import org.eclipse.jdt.client.core.dom.FieldAccess;
+import org.eclipse.jdt.client.core.dom.FieldDeclaration;
+import org.eclipse.jdt.client.core.dom.ForStatement;
+import org.eclipse.jdt.client.core.dom.IMethodBinding;
+import org.eclipse.jdt.client.core.dom.ITypeBinding;
+import org.eclipse.jdt.client.core.dom.IVariableBinding;
+import org.eclipse.jdt.client.core.dom.Initializer;
+import org.eclipse.jdt.client.core.dom.Javadoc;
+import org.eclipse.jdt.client.core.dom.LabeledStatement;
+import org.eclipse.jdt.client.core.dom.MethodDeclaration;
+import org.eclipse.jdt.client.core.dom.MethodInvocation;
+import org.eclipse.jdt.client.core.dom.Modifier;
+import org.eclipse.jdt.client.core.dom.Name;
+import org.eclipse.jdt.client.core.dom.ParenthesizedExpression;
+import org.eclipse.jdt.client.core.dom.QualifiedName;
+import org.eclipse.jdt.client.core.dom.ReturnStatement;
+import org.eclipse.jdt.client.core.dom.SimpleName;
+import org.eclipse.jdt.client.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.client.core.dom.Statement;
+import org.eclipse.jdt.client.core.dom.ThisExpression;
+import org.eclipse.jdt.client.core.dom.Type;
+import org.eclipse.jdt.client.core.dom.TypeDeclaration;
+import org.eclipse.jdt.client.core.dom.TypeParameter;
+import org.eclipse.jdt.client.core.dom.VariableDeclaration;
+import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
+import org.eclipse.jdt.client.core.dom.VariableDeclarationStatement;
+import org.eclipse.jdt.client.core.dom.WhileStatement;
+import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
+import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
+import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite.ImportRewriteContext;
+import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
 
-import org.eclipse.core.resources.IFile;
-
-import org.eclipse.text.edits.MultiTextEdit;
-import org.eclipse.text.edits.TextEdit;
-import org.eclipse.text.edits.TextEditGroup;
-
-import org.eclipse.ltk.core.refactoring.Change;
-import org.eclipse.ltk.core.refactoring.Refactoring;
-import org.eclipse.ltk.core.refactoring.RefactoringChangeDescriptor;
-import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
-import org.eclipse.ltk.core.refactoring.RefactoringStatus;
-import org.eclipse.ltk.core.refactoring.TextFileChange;
-import org.eclipse.ltk.core.refactoring.participants.ResourceChangeChecker;
-
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.ASTVisitor;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
-import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
-import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
-import org.eclipse.jdt.core.dom.Assignment;
-import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.BodyDeclaration;
-import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.ContinueStatement;
-import org.eclipse.jdt.core.dom.DoStatement;
-import org.eclipse.jdt.core.dom.EnhancedForStatement;
-import org.eclipse.jdt.core.dom.EnumDeclaration;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.ExpressionStatement;
-import org.eclipse.jdt.core.dom.FieldAccess;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
-import org.eclipse.jdt.core.dom.ForStatement;
-import org.eclipse.jdt.core.dom.IMethodBinding;
-import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.IVariableBinding;
-import org.eclipse.jdt.core.dom.Initializer;
-import org.eclipse.jdt.core.dom.Javadoc;
-import org.eclipse.jdt.core.dom.LabeledStatement;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.core.dom.Modifier;
-import org.eclipse.jdt.core.dom.Name;
-import org.eclipse.jdt.core.dom.ParenthesizedExpression;
-import org.eclipse.jdt.core.dom.QualifiedName;
-import org.eclipse.jdt.core.dom.ReturnStatement;
-import org.eclipse.jdt.core.dom.SimpleName;
-import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.Statement;
-import org.eclipse.jdt.core.dom.ThisExpression;
-import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.TypeParameter;
-import org.eclipse.jdt.core.dom.VariableDeclaration;
-import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
-import org.eclipse.jdt.core.dom.WhileStatement;
-import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
-import org.eclipse.jdt.core.dom.rewrite.ImportRewrite;
-import org.eclipse.jdt.core.dom.rewrite.ImportRewrite.ImportRewriteContext;
-import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
-import org.eclipse.jdt.core.refactoring.CompilationUnitChange;
-import org.eclipse.jdt.core.refactoring.IJavaRefactorings;
-import org.eclipse.jdt.core.refactoring.descriptors.ExtractMethodDescriptor;
-import org.eclipse.jdt.core.refactoring.descriptors.JavaRefactoringDescriptor;
-
-import org.eclipse.jdt.internal.core.refactoring.descriptors.RefactoringSignatureDescriptorFactory;
-import org.eclipse.jdt.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
-import org.eclipse.jdt.internal.corext.codemanipulation.StubUtility;
-import org.eclipse.jdt.internal.corext.dom.ASTNodeFactory;
-import org.eclipse.jdt.internal.corext.dom.ASTNodes;
-import org.eclipse.jdt.internal.corext.dom.Bindings;
-import org.eclipse.jdt.internal.corext.dom.BodyDeclarationRewrite;
-import org.eclipse.jdt.internal.corext.dom.LinkedNodeFinder;
-import org.eclipse.jdt.internal.corext.dom.Selection;
-import org.eclipse.jdt.internal.corext.dom.StatementRewrite;
-import org.eclipse.jdt.internal.corext.fix.LinkedProposalModel;
-import org.eclipse.jdt.internal.corext.fix.LinkedProposalPositionGroup;
-import org.eclipse.jdt.internal.corext.refactoring.Checks;
-import org.eclipse.jdt.internal.corext.refactoring.JDTRefactoringDescriptorComment;
-import org.eclipse.jdt.internal.corext.refactoring.JavaRefactoringArguments;
-import org.eclipse.jdt.internal.corext.refactoring.JavaRefactoringDescriptorUtil;
-import org.eclipse.jdt.internal.corext.refactoring.ParameterInfo;
-import org.eclipse.jdt.internal.corext.refactoring.RefactoringCoreMessages;
-import org.eclipse.jdt.internal.corext.refactoring.util.RefactoringASTParser;
-import org.eclipse.jdt.internal.corext.refactoring.util.ResourceUtil;
-import org.eclipse.jdt.internal.corext.refactoring.util.SelectionAwareSourceRangeComputer;
-import org.eclipse.jdt.internal.corext.util.JdtFlags;
-import org.eclipse.jdt.internal.corext.util.Messages;
-
-import org.eclipse.jdt.ui.CodeGeneration;
-import org.eclipse.jdt.ui.JavaElementLabels;
-
-import org.eclipse.jdt.internal.ui.text.correction.ASTResolving;
-import org.eclipse.jdt.internal.ui.text.correction.ModifierCorrectionSubProcessor;
-import org.eclipse.jdt.internal.ui.viewsupport.BasicElementLabels;
-import org.eclipse.jdt.internal.ui.viewsupport.BindingLabelProvider;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
+import org.eclipse.jdt.client.internal.corext.dom.ASTNodeFactory;
+import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
+import org.eclipse.jdt.client.internal.corext.dom.Bindings;
+import org.eclipse.jdt.client.internal.corext.dom.LinkedNodeFinder;
+import org.eclipse.jdt.client.internal.corext.dom.Selection;
+import org.eclipse.jdt.client.ltk.refactoring.Change;
+import org.eclipse.jdt.client.ltk.refactoring.Refactoring;
+import org.eclipse.jdt.client.ltk.refactoring.TextFileChange;
+import org.eclipse.jdt.client.runtime.CoreException;
+import org.eclipse.jdt.client.runtime.IProgressMonitor;
+import org.exoplatform.ide.editor.text.edits.TextEditGroup;
 
 /**
  * Extracts a method in a compilation unit based on a text selection range.
@@ -142,7 +98,6 @@ public class ExtractMethodRefactoring extends Refactoring {
 	private static final String ATTRIBUTE_REPLACE= "replace"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_EXCEPTIONS= "exceptions"; //$NON-NLS-1$
 
-	private ICompilationUnit fCUnit;
 	private CompilationUnit fRoot;
 	private ImportRewrite fImportRewriter;
 	private int fSelectionStart;
@@ -163,7 +118,7 @@ public class ExtractMethodRefactoring extends Refactoring {
 	private ASTNode fDestination;
 	// either of type TypeDeclaration or AnonymousClassDeclaration
 	private ASTNode[] fDestinations;
-	private LinkedProposalModel fLinkedProposalModel;
+//	private LinkedProposalModel fLinkedProposalModel;
 
 	private static final String EMPTY= ""; //$NON-NLS-1$
 
@@ -243,8 +198,7 @@ public class ExtractMethodRefactoring extends Refactoring {
 	 * @param selectionStart selection start
 	 * @param selectionLength selection end
 	 */
-	public ExtractMethodRefactoring(ICompilationUnit unit, int selectionStart, int selectionLength) {
-		fCUnit= unit;
+	public ExtractMethodRefactoring(int selectionStart, int selectionLength) {
 		fRoot= null;
 		fMethodName= "extracted"; //$NON-NLS-1$
 		fSelectionStart= selectionStart;
@@ -258,20 +212,20 @@ public class ExtractMethodRefactoring extends Refactoring {
    		status.merge(initializeStatus);
     }
 
-	/**
-	 * Creates a new extract method refactoring
-	 * @param astRoot the AST root of an AST created from a compilation unit
-	 * @param selectionStart start
-	 * @param selectionLength length
-	 */
-	public ExtractMethodRefactoring(CompilationUnit astRoot, int selectionStart, int selectionLength) {
-		this((ICompilationUnit) astRoot.getTypeRoot(), selectionStart, selectionLength);
-		fRoot= astRoot;
-	}
+//	/**
+//	 * Creates a new extract method refactoring
+//	 * @param astRoot the AST root of an AST created from a compilation unit
+//	 * @param selectionStart start
+//	 * @param selectionLength length
+//	 */
+//	public ExtractMethodRefactoring(CompilationUnit astRoot, int selectionStart, int selectionLength) {
+//		this((ICompilationUnit) astRoot.getTypeRoot(), selectionStart, selectionLength);
+//		fRoot= astRoot;
+//	}
 
-	public void setLinkedProposalModel(LinkedProposalModel linkedProposalModel) {
-		fLinkedProposalModel= linkedProposalModel;
-	}
+//	public void setLinkedProposalModel(LinkedProposalModel linkedProposalModel) {
+//		fLinkedProposalModel= linkedProposalModel;
+//	}
 
 	 @Override
 	public String getName() {
