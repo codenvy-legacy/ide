@@ -93,6 +93,13 @@ public class EditorFactory
 
    public static EditorProducer getDefaultEditor(String mimeType) throws EditorNotFoundException
    {
+      // add editor for files with unknown mime-type and preset configuration of plain text
+      if (!editors.containsKey(mimeType))
+      {
+         addEditor(new CodeMirrorProducer(mimeType, IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "",
+            IDEImageBundle.INSTANCE.defaultFile(), true, new CodeMirrorConfiguration()));
+      }
+
       if (editors.containsKey(mimeType))
       {
          for (EditorProducer p : editors.get(mimeType))

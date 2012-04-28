@@ -28,6 +28,7 @@ import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateResponse;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateService;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.InstanceInfo;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.InstancesInfo;
+import org.exoplatform.ide.extension.cloudfoundry.server.json.RuntimeInfo;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.Stats;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics;
@@ -65,7 +66,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -82,36 +82,35 @@ public class Cloudfoundry
 {
    private static final class Credential
    {
+      String target;
+      String token;
+
       Credential(String target, String token)
       {
          this.target = target;
          this.token = token;
       }
-
-      String target;
-
-      String token;
    }
 
-   // TODO get list of supported frameworks from Cloud Foundry server.
-   public static final Map<String, Framework> FRAMEWORKS;
+   private static final Map<String, Framework> FRAMEWORKS;
 
-   // TODO get from Cloud Foundry server.
-   private static final Map<String, Set<String>> DEBUG_MODES;
+   private static final int DEFAULT_MEMORY_SIZE = 256;
 
    static
    {
-      Map<String, Framework> fm = new HashMap<String, Framework>(5);
-      fm.put("rails3", new FrameworkImpl("rails3", "Rails", 256, "Rails  Application"));
-      fm.put("spring", new FrameworkImpl("spring", "Spring", 512, "Java SpringSource Spring Application"));
-      fm.put("grails", new FrameworkImpl("grails", "Grails", 512, "Java SpringSource Grails Application"));
-      fm.put("sinatra", new FrameworkImpl("sinatra", "Sinatra", 128, "Sinatra Application"));
-      fm.put("node", new FrameworkImpl("node", "Node", 64, "Node.js Application"));
+      Map<String, Framework> fm = new HashMap<String, Framework>(11);
+      fm.put("rails3",    new FrameworkImpl("rails3",    "Rails",            null, 256, "Rails  Application"));
+      fm.put("spring",    new FrameworkImpl("spring",    "Spring",           null, 512, "Java SpringSource Spring Application"));
+      fm.put("grails",    new FrameworkImpl("grails",    "Grails",           null, 512, "Java SpringSource Grails Application"));
+      fm.put("lift",      new FrameworkImpl("lift",      "Lift",             null, 512, "Scala Lift Application"));
+      fm.put("java_web",  new FrameworkImpl("java_web",  "JavaWeb",          null, 512, "Java Web Application"));
+      fm.put("sinatra",   new FrameworkImpl("sinatra",   "Sinatra",          null, 128, "Sinatra Application"));
+      fm.put("node",      new FrameworkImpl("node",      "Node",             null, 64,  "Node.js Application"));
+      fm.put("php",       new FrameworkImpl("php",       "PHP",              null, 128, "PHP Application"));
+      fm.put("otp_rebar", new FrameworkImpl("otp_rebar", "Erlang/OTP Rebar", null, 64,  "Erlang/OTP Rebar Application"));
+      fm.put("wsgi",      new FrameworkImpl("wsgi",      "WSGI",             null, 64,  "Python WSGI Application"));
+      fm.put("django",    new FrameworkImpl("django",    "Django",           null, 128, "Python Django Application"));
       FRAMEWORKS = Collections.unmodifiableMap(fm);
-
-      Map<String, Set<String>> dm = new HashMap<String, Set<String>>(1);
-      dm.put("java", Collections.unmodifiableSet(new HashSet<String>(java.util.Arrays.asList("run", "suspend"))));
-      DEBUG_MODES = Collections.unmodifiableMap(dm);
    }
 
    private static final Random gen = new Random();
@@ -223,8 +222,25 @@ public class Cloudfoundry
    private SystemInfo systemInfo(Credential credential) throws CloudfoundryException, IOException,
       ParsingResponseException
    {
-      return JsonHelper.fromJson(getJson(credential.target + "/info", credential.token, 200), SystemInfoImpl.class,
-         null);
+      SystemInfoImpl systemInfo = JsonHelper.fromJson(
+         getJson(credential.target + "/info", credential.token, 200), SystemInfoImpl.class, null);
+
+      for (Framework framework : systemInfo.getFrameworks().values())
+      {
+         // If known framework - try to add some additional info.
+         Framework cfg = FRAMEWORKS.get(framework.getName());
+         if (cfg != null)
+         {
+            framework.setDisplayName(cfg.getDisplayName());
+            framework.setDescription(cfg.getDescription());
+            framework.setMemory(cfg.getMemory());
+         }
+         else
+         {
+            framework.setMemory(DEFAULT_MEMORY_SIZE);
+         }
+      }
+      return systemInfo;
    }
 
    /**
@@ -335,7 +351,7 @@ public class Cloudfoundry
       }
       if ((vfs == null || projectId == null) && war == null)
       {
-         throw new IllegalArgumentException("Project directory or location to WAR file required. ");
+         throw new IllegalArgumentException("Project directory or location of WAR file required. ");
       }
       if (server == null || server.isEmpty())
       {
@@ -357,11 +373,9 @@ public class Cloudfoundry
                                                      DebugMode debugMode,
                                                      VirtualFileSystem vfs,
                                                      String projectId,
-                                                     URL war)
-      throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
+                                                     URL war) throws CloudfoundryException, ParsingResponseException,
+      VirtualFileSystemException, IOException
    {
-      // Assume war-file may be located remotely, e.g. if use Jenkins to produce file for us.
-      // Check number of applications.
       SystemInfo systemInfo = systemInfo(credential);
       SystemResources limits = systemInfo.getLimits();
       SystemResources usage = systemInfo.getUsage();
@@ -396,7 +410,7 @@ public class Cloudfoundry
             }
          }
 
-         Framework cfg = getFramework(frameworkName);
+         Framework cfg = getFramework(systemInfo, frameworkName);
 
          if (instances <= 0)
          {
@@ -407,8 +421,6 @@ public class Cloudfoundry
          {
             memory = cfg.getMemory();
          }
-
-         String framework = cfg.getType();
 
          // Check memory capacity.
          if (!noStart)
@@ -425,20 +437,13 @@ public class Cloudfoundry
 
          String json =
             postJson(credential.target + "/apps", credential.token,
-               JsonHelper.toJson(new CreateApplication(app, instances, appUrl, memory, framework)), 302);
+               JsonHelper.toJson(new CreateApplication(app, instances, appUrl, memory, cfg.getName())), 302);
          CreateResponse resp = JsonHelper.fromJson(json, CreateResponse.class, null);
          appInfo =
             JsonHelper.fromJson(doJsonRequest(resp.getRedirect(), "GET", credential.token, null, 200),
                CloudFoundryApplication.class, null);
 
-         if (("spring".equals(cfg.getType()) || "grails".equals(cfg.getType())) && warFile != null)
-         {
-            uploadApplication(credential, app, vfs, projectId, warFile);
-         }
-         else
-         {
-            uploadApplication(credential, app, vfs, projectId, null);
-         }
+         uploadApplication(credential, app, vfs, projectId, warFile);
 
          if (vfs != null && projectId != null)
          {
@@ -522,12 +527,13 @@ public class Cloudfoundry
       if (debug != null)
       {
          String stack = appInfo.getStaging().getStack();
-         Set<String> debugModes = DEBUG_MODES.get(stack);
-         if (debugModes == null || !debugModes.contains(debug))
+         RuntimeInfo runtimeInfo = getRuntimeInfo(stack, credential);
+         Set<String> debugModes = runtimeInfo != null ? runtimeInfo.getDebug_modes() : Collections.<String>emptySet();
+         if (!debugModes.contains(debug))
          {
             StringBuilder msg = new StringBuilder();
-            msg.append("Unsupported debug mode '" + debug + "' for application " + name);
-            if (debugModes == null || debugModes.isEmpty())
+            msg.append("Unsupported debug mode '").append(debug).append("' for application ").append(name);
+            if (debugModes.isEmpty())
             {
                msg.append(". Debug is not supported. ");
             }
@@ -1866,7 +1872,7 @@ public class Cloudfoundry
          Framework cfg = null;
          if (frameworkName != null)
          {
-            cfg = getFramework(frameworkName);
+            cfg = getFramework(systemInfo, frameworkName);
          }
 
          if (instances <= 0)
@@ -1946,15 +1952,15 @@ public class Cloudfoundry
       }
    }
 
-   private Framework getFramework(String frameworkName)
+   private Framework getFramework(SystemInfo systemInfo, String frameworkName)
    {
-      Framework cfg = FRAMEWORKS.get(frameworkName);
-      if (cfg == null)
+      Framework framework = systemInfo.getFrameworks().get(frameworkName);
+      if (framework == null)
       {
          StringBuilder msg = new StringBuilder();
          msg.append("Unsupported framework ").append(frameworkName).append(". Must be ");
          int i = 0;
-         for (String t : FRAMEWORKS.keySet())
+         for (String t : systemInfo.getFrameworks().keySet())
          {
             if (i > 0)
             {
@@ -1965,7 +1971,17 @@ public class Cloudfoundry
          }
          throw new IllegalArgumentException(msg.toString());
       }
-      return cfg;
+      return framework;
+   }
+
+   private RuntimeInfo getRuntimeInfo(String stackName, Credential credential)
+      throws CloudfoundryException, ParsingResponseException, IOException
+   {
+      Map runtimes = JsonHelper.fromJson(getJson(credential.target + "/info/runtimes", credential.token, 200), Map.class,
+         new HashMap<String, RuntimeInfo>(0)
+         {
+         }.getClass().getGenericSuperclass());
+      return (RuntimeInfo)runtimes.get(stackName);
    }
 
    private ProvisionedService findService(Credential credential, String name) throws IOException,
@@ -1989,7 +2005,7 @@ public class Cloudfoundry
       String token = credentials.getToken(server);
       if (token == null)
       {
-         throw new CloudfoundryException(200, "Authentication required.\n", "text/plain");
+         throw new CloudfoundryException(200, 200, "Authentication required.\n", "text/plain");
       }
       return new Credential(server, token);
    }
@@ -2096,6 +2112,13 @@ public class Cloudfoundry
       return server;
    }
 
+   private static final byte[] NEW_LINE = "\r\n".getBytes();
+   private static final byte[] HYPHENS = "--".getBytes();
+   private static final byte[] CONTENT_DISPOSITION_RESOURCES="Content-Disposition: form-data; name=\"resources\"\r\n\r\n".getBytes();
+   private static final byte[] CONTENT_DISPOSITION_METHOD="Content-Disposition: form-data; name=\"_method\"\r\n\r\n".getBytes();
+   private static final byte[] PUT = "put".getBytes();
+   private static final byte[] CONTENT_TYPE_ZIP="Content-type: application/zip\r\n\r\n".getBytes();
+
    private void uploadApplication(Credential credential, String app, VirtualFileSystem vfs, String projectId,
                                   java.io.File warFile)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException,
@@ -2196,25 +2219,36 @@ public class Cloudfoundry
          OutputStream output = http.getOutputStream();
          try
          {
-            output.write(("--" + boundary + "\r\n").getBytes()); // first boundary
+            final byte[] boundaryBytes = boundary.getBytes();
+            // first boundary
+            output.write(HYPHENS);
+            output.write(boundaryBytes);
 
-            output.write("Content-Disposition: form-data; name=\"resources\"\r\n\r\n".getBytes());
+            output.write(NEW_LINE);
+            output.write(CONTENT_DISPOSITION_RESOURCES);
             output.write(JsonHelper.toJson(resources).getBytes());
 
-            output.write(("\r\n--" + boundary + "\r\n").getBytes());
+            output.write(NEW_LINE);
+            output.write(HYPHENS);
+            output.write(boundaryBytes);
 
-            output.write("Content-Disposition: form-data; name=\"_method\"\r\n\r\n".getBytes());
-            output.write("put".getBytes());
+            output.write(NEW_LINE);
+            output.write(CONTENT_DISPOSITION_METHOD);
+            output.write(PUT);
 
-            output.write(("\r\n--" + boundary).getBytes());
+            output.write(NEW_LINE);
+            output.write(HYPHENS);
+            output.write(boundaryBytes);
+
             if (zip != null)
             {
                // Add zipped application files if any.
                String filename = zip.getName();
-               output
-                  .write(("\r\nContent-Disposition: form-data; name=\"application\"; filename=\"" + filename + "\"\r\n")
-                     .getBytes());
-               output.write("Content-type: application/zip\r\n\r\n".getBytes());
+               output.write(NEW_LINE);
+               output.write(("Content-Disposition: form-data; name=\"application\"; filename=\"" + filename + "\"").getBytes());
+
+               output.write(NEW_LINE);
+               output.write(CONTENT_TYPE_ZIP);
 
                FileInputStream zipInput = new FileInputStream(zip);
                try
@@ -2230,10 +2264,14 @@ public class Cloudfoundry
                {
                   zipInput.close();
                }
-               output.write(("\r\n--" + boundary).getBytes());
+               output.write(NEW_LINE);
+               output.write(HYPHENS);
+               output.write(boundaryBytes);
             }
 
-            output.write("--\r\n".getBytes()); // finalize multi-part stream.
+            // finalize multi-part stream
+            output.write(HYPHENS);
+            output.write(NEW_LINE);
          }
          finally
          {
@@ -2495,10 +2533,9 @@ public class Cloudfoundry
 
    private static SystemService[] parseSystemServices(String json) throws ParsingResponseException
    {
-      //System.out.println("SYSTEM SERVICES" + json);
       try
       {
-         JsonValue jsonServices = org.exoplatform.ide.helper.JsonHelper.parseJson(json);
+         JsonValue jsonServices = JsonHelper.parseJson(json);
          List<SystemService> result = new ArrayList<SystemService>();
          for (Iterator<String> types = jsonServices.getKeys(); types.hasNext(); )
          {

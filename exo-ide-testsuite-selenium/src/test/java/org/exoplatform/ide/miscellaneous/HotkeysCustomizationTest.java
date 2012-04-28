@@ -21,6 +21,7 @@ package org.exoplatform.ide.miscellaneous;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,12 +62,17 @@ public class HotkeysCustomizationTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         VirtualFileSystemUtils.delete(ENTRY_POINT_URL_IDE + PRODUCTION_SERVICE_PREFIX);
       }
       catch (IOException e)
       {
       }
    }
 
+  
+   
+   
+   
    /**
     * IDE-156:HotKeys customization
     * ----- 1-2 ------------
@@ -76,6 +82,7 @@ public class HotkeysCustomizationTest extends BaseTest
    @Test
    public void testDefaultHotkeys() throws Exception
    {
+
       //step 1 create new project, open default xml file and check hotkey ctrl+N.
       //change xml file, press Ctrl+S and check ask for value dialog
       IDE.PROJECT.EXPLORER.waitOpened();
@@ -100,6 +107,8 @@ public class HotkeysCustomizationTest extends BaseTest
    @Test
    public void testHotkeysInSeveralTabs() throws Exception
    {
+      driver.navigate().refresh();
+           
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
@@ -127,21 +136,21 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
       IDE.EDITOR.waitTabPresent(2);
       IDE.EDITOR.selectTab(1);
-      IDE.EDITOR.typeTextIntoEditor(1, Keys.ALT.toString() + "n");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ALT.toString() + "n");
       IDE.SAVE_AS_TEMPLATE.waitOpened();
       IDE.SAVE_AS_TEMPLATE.clickCancelButton();
       IDE.SAVE_AS_TEMPLATE.waitClosed();
 
-      //A temporary solution for problem switching between tabs in FF 4.0 and higher
-      if ("CHROME".equals(IDE_SETTINGS.getString("selenium.browser.commad"))
-         || "FIREFOX_CHROME".equals(IDE_SETTINGS.getString("selenium.browser.commad")))
-      {
-         IDE.EDITOR.closeTabIgnoringChanges(2);
-         IDE.EDITOR.closeTabIgnoringChanges(1);
-         IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      }
-      else
-      {
+//      //A temporary solution for problem switching between tabs in FF 4.0 and higher
+//      if ("CHROME".equals(IDE_SETTINGS.getString("selenium.browser.commad"))
+//         || "FIREFOX_CHROME".equals(IDE_SETTINGS.getString("selenium.browser.commad")))
+//      {
+//         IDE.EDITOR.closeTabIgnoringChanges(2);
+//         IDE.EDITOR.closeTabIgnoringChanges(1);
+//         IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+//      }
+//      else
+//      {
          IDE.EDITOR.typeTextIntoEditor(1, Keys.CONTROL.toString() + "h");
          // TODO After opening third tab, all next steps test cases  don't work in FF v.4.0 and higher.
          //Maybe this problem switch between iframes with WebDriver. Maybe this problem will resolved after 
@@ -168,7 +177,7 @@ public class HotkeysCustomizationTest extends BaseTest
          IDE.EDITOR.closeTabIgnoringChanges(1);
          IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       }
-   }
+ //  }
 
    @Test
    public void testHotkeysAfterRefresh() throws Exception

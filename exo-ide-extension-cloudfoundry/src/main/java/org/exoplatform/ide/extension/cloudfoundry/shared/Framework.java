@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.shared;
 
+import java.util.List;
+
 /**
  * Framework info.
  *
@@ -27,46 +29,23 @@ package org.exoplatform.ide.extension.cloudfoundry.shared;
 public interface Framework
 {
    /**
-    * Get the framework type.
+    * Get the framework name.
     *
-    * @return framework type.
+    * @return framework name
     */
-   String getType();
+   String getName();
 
    /**
-    * Set the framework type.
+    * Set the framework name.
     *
-    * @param type framework type.
+    * @param name
+    *    framework name
     */
-   void setType(String type);
+   void setName(String name);
 
-   /**
-    * Get framework name that was displayed.
-    *
-    * @return displayed name of framework.
-    */
-   String getDisplayName();
+   List<Runtime> getRuntimes();
 
-   /**
-    * Set framework name that was displayed.
-    *
-    * @param displayName displayed name of framework.
-    */
-   void setDisplayName(String displayName);
-
-   /**
-    * Get default memory size in megabytes.
-    *
-    * @return memory size
-    */
-   int getMemory();
-
-   /**
-    * Set default memory size in megabytes.
-    *
-    * @param memory
-    */
-   void setMemory(int memory);
+   void setRuntimes(List<Runtime> runtimes);
 
    /**
     * Get framework description.
@@ -78,7 +57,27 @@ public interface Framework
    /**
     * Set framework description.
     *
-    * @param description framework description.
+    * @param description
+    *    framework description.
     */
    void setDescription(String description);
+
+   /**
+    * Get default memory size in megabytes.
+    *
+    * @return memory size
+    */
+   int getMemory();
+
+   /**
+    * Set memory size in megabytes.
+    *
+    * @param memory
+    *    memory size in megabytes
+    */
+   void setMemory(int memory);
+
+   String getDisplayName();
+
+   void setDisplayName(String displayName);
 }

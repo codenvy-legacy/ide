@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.shared;
 
+import java.util.Map;
+
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
@@ -52,4 +54,8 @@ public interface SystemInfo
    String getSupport();
 
    void setSupport(String support);
+
+   Map<String, Framework> getFrameworks();
+
+   void setFrameworks(Map<String, Framework> frameworks);
 }

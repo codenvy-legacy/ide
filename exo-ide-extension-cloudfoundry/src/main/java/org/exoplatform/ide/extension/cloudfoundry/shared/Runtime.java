@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,30 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.openshift.server;
+package org.exoplatform.ide.extension.cloudfoundry.shared;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-class RHCloudCredentials
+public interface Runtime
 {
-   private final String rhlogin;
-   private final String password;
+   String getName();
 
-   RHCloudCredentials(String rhlogin, String password)
-   {
-      this.rhlogin = rhlogin;
-      this.password = password;
-   }
+   void setName(String name);
 
-   public String getRhlogin()
-   {
-      return rhlogin;
-   }
+   String getVersion();
 
-   public String getPassword()
-   {
-      return password;
-   }
+   void setVersion(String version);
+
+   String getDescription();
+
+   void setDescription(String description);
 }

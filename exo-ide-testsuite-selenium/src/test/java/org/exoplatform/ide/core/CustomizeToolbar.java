@@ -102,7 +102,7 @@ public class CustomizeToolbar extends AbstractTestModule
 
    @FindBy(id = Locators.DELIMETER_BUTTON_ID)
    private WebElement addDelimeterButton;
-   
+
    @FindBy(id = Locators.ADD_BUTTON_ID)
    private WebElement addButton;
 
@@ -158,21 +158,19 @@ public class CustomizeToolbar extends AbstractTestModule
          driver().findElement(By.xpath(String.format(Locators.SELECTION_ON_TOOLBAR_ELEMENT, number)));
       toolbarMenu.click();
    }
-   
-   
+
    /**
     * Selects an item on the commandlist  by number
     * start 1
     * @param number
     */
-   
+
    public void selectNumElementOnCommandListbar(int number)
    {
       WebElement toolbarMenu =
          driver().findElement(By.xpath(String.format(Locators.SELECT_ON_COMMANDLIST_ELEMENT_BY_NUM, number)));
       toolbarMenu.click();
    }
-   
 
    /**
     * Selects an item on the list toolbar by name
@@ -185,8 +183,6 @@ public class CustomizeToolbar extends AbstractTestModule
       toolbarMenuByName.click();
    }
 
-   
-     
    /**
     * Selects an item on the commandlist by name
     * @param name
@@ -197,9 +193,7 @@ public class CustomizeToolbar extends AbstractTestModule
          driver().findElement(By.xpath(String.format(Locators.SELECT_ON_COMMANDLIST_ELEMENT_BY_NAME, name)));
       toolbarMenuByName.click();
    }
-   
-   
-   
+
    /**
     * click on add button on
     * Customize Toolbar form
@@ -208,7 +202,7 @@ public class CustomizeToolbar extends AbstractTestModule
    {
       addButton.click();
    }
-   
+
    /**
     * click on cancel button on
     * Customize Toolbar form
@@ -368,7 +362,7 @@ public class CustomizeToolbar extends AbstractTestModule
       List<String> getSet = getallCommandList();
 
       List<String> defaultSet =
-         Arrays.asList("File", "New * [Popup]", "Upload File...", "Upload Zipped Folder...", "Open Local File...",
+         Arrays.asList("New * [Popup]", "Upload File...", "Upload Zipped Folder...", "Open Local File...",
             "Open File By Path...", "Open by URL...", "Download File...", "Download Zipped Folder...", "Save",
             "Save As...", "Save All", "Save As Template...", "Rename...", "Delete...", "Search...",
             "Refresh Selected Folder", "File / New", "Create Folder...", "New TEXT", "New OpenSocial Gadget",
@@ -376,25 +370,24 @@ public class CustomizeToolbar extends AbstractTestModule
             "New Template", "New Data Object", "New Java Class", "New JSP File", "New Ruby File", "New PHP File",
             "Create File From Template...", "Project / New", "Create Project...", "Create Project...",
             "Import a Sample Project...", "Import from GitHub...", "Project", "Open...", "Close", "Properties...",
-            "Configure Classpath...", "Git URL (Rread-Only)...", "Project / PaaS", "CloudBees", "CloudFoundry",
-            "Heroku", "OpenShift", "Edit", "Cut Item(s)", "Copy Item(s)", "Paste Item(s)", "Undo Typing",
-            "Redo Typing", "Format", "Find-Replace...", "Show / Hide Line Numbers", "Delete Current Line",
-            "Go to Line...", "Lock / Unlock File", "View", "Properties", "Show / Hide Outline",
-            "Show / Hide Documentation", "Go to Folder", "Get URL...", "Progress", "Output", "Log", "Run",
-            "Show Preview", "Deploy widget", "Show Netwibes Preview", "Set / Unset Autoload", "Validate", "Deploy",
-            "Undeploy", "Run in Sandbox", "Deploy to Sandbox", "Undeploy from Sandbox", "Launch REST Service",
-            "Show Template Preview", "Show Gadget Preview", "Preview node type", "Deploy node type", "Git",
-            "Initialize Repository", "Clone Repository...", "Delete Repository...", "Add...", "Reset Files...",
-            "Reset...", "Remove...", "Commit...", "Branches...", "Merge...", "Show History...", "Status",
-            "Git / Remote", "Push...", "Fetch...", "Pull...", "Remotes...", "PaaS / CloudBees", "InitializeApp",
-            "ApplicationInfo", "UpdateApp", "DeleteApp", "AppList", "PaaS / CloudFoundry", "CreateApp", "UpdateApp",
-            "DeleteApp", "ApplicationInfo", "StartApp", "StopApp", "RestartApp", "Map-UnmapUrl", "UpdMemory",
-            "UpdInstances", "SwitchAccount", "Applications", "PaaS / Heroku", "Create application...",
-            "Delete application...", "Rename application...", "Change environment...", "Application info...",
-            "Logs...", "Rake...", "Deploy public key", "Switch account...", "PaaS / OpenShift", "Create domain...",
-            "Create application...", "Delete application...", "Application info...", "Preview Application",
-            "User info...", "Update SSH public key...", "Window / Show View", "Navigator", "Project Explorer",
-            "Window", "Workspace...", "Customize Toolbar...", "HotKeys...", "Ssh Key Manager", "Help", "About...",
+            "Clean", "Configure Classpath...", "Git URL (Rread-Only)...", "Build", "Debug", "Run", "Stop",
+            "Project / PaaS", "CloudBees", "CloudFoundry", "Heroku", "OpenShift", "Edit", "Cut Item(s)",
+            "Copy Item(s)", "Paste Item(s)", "Undo Typing", "Redo Typing", "Format", "Organize Imports",
+            "Add Block Comment", "Remove Block Comment", "Find-Replace...", "Show / Hide Line Numbers",
+            "Delete Current Line", "Go to Line...", "Lock / Unlock File", "Toggle Comment", "Do Autocomplete...",
+            "View", "Properties", "Show / Hide Outline", "Show / Hide Documentation", "Go to Folder", "Get URL...",
+            "Progress", "Output", "Log", "Show / Hide Hidden Files", "Run", "Show Preview", "Deploy widget",
+            "Show Netwibes Preview", "Set / Unset Autoload", "Validate", "Deploy", "Undeploy", "Run in Sandbox",
+            "Deploy to Sandbox", "Undeploy from Sandbox", "Launch REST Service", "Show Template Preview",
+            "Show Gadget Preview", "Preview node type", "Deploy node type", "Git", "Initialize Repository",
+            "Clone Repository...", "Delete Repository...", "Add...", "Reset Files...", "Reset...", "Remove...",
+            "Commit...", "Branches...", "Merge...", "Show History...", "Status", "Git / Remote", "Push...", "Fetch...",
+            "Pull...", "Remotes...", "PaaS / CloudBees", "CreateApplication", "AppList", "PaaS / CloudFoundry",
+            "CreateApp", "Applications", "SwitchAccount", "PaaS / Heroku", "Create application...", "Applications",
+            "Deploy public key", "Switch account...", "PaaS / OpenShift", "Create domain...", "Create application...",
+            "User info...", "Update SSH public key...", "Switch account...", "Window / Show View", "Navigator",
+            "Project Explorer", "Window / Navigation", "Next Editor", "Previous Editor", "Window", "Workspace...",
+            "Customize Toolbar...", "HotKeys...", "Formatter", "Ssh Key Manager", "Help", "About...",
             "REST Services Discovery", "Show Available Dependencies...", "Welcome");
       for (String chkName : defaultSet)
       {
