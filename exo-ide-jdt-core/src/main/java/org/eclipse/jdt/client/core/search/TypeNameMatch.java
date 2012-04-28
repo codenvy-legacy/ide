@@ -64,7 +64,7 @@ public abstract class TypeNameMatch
    //    *
    //    * @throws NullPointerException if matched type is <code> null</code>
    //    * @return the existing java model package fragment root (i.e. cannot be <code>null</code>
-   //    * 	and will return <code>true</code> to <code>exists()</code> message).
+   //    *    and will return <code>true</code> to <code>exists()</code> message).
    //    */
    //   public IPackageFragmentRoot getPackageFragmentRoot()
    //   {

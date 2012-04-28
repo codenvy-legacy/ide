@@ -16,9 +16,9 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
  * of a qualified name.
  * e.g.
  *
- *	class X extends java.lang.Obj[cursor]
+ *   class X extends java.lang.Obj[cursor]
  *
- *	---> class X extends <CompleteOnType:java.lang.Obj>
+ *   ---> class X extends <CompleteOnType:java.lang.Obj>
  *
  * The source range of the completion node denotes the source range
  * which should be replaced by the completion.

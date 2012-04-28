@@ -42,30 +42,30 @@ public class ASTRewritingTestGwt extends BaseTestGwt
    /** @deprecated using deprecated code */
    private static final int AST_INTERNAL_JLS2 = AST.JLS2;
 
-   //	public static Test suite() {
-   //		TestSuite suite= new TestSuite(ASTRewritingTest.class.getName());
-   //		suite.addTest(ASTRewritingExpressionsTest.allTests());
-   //		suite.addTest(ASTRewritingInsertBoundTest.allTests());
-   //		suite.addTest(ASTRewritingMethodDeclTest.allTests());
-   //		suite.addTest(ASTRewritingMoveCodeTest.allTests());
-   //		suite.addTest(ASTRewritingStatementsTest.allTests());
-   //		suite.addTest(ASTRewritingTrackingTest.allTests());
-   //		suite.addTest(ASTRewritingJavadocTest.allTests());
-   //		suite.addTest(ASTRewritingTypeDeclTest.allTests());
-   //		suite.addTest(ASTRewritingGroupNodeTest.allTests());
-   //		suite.addTest(ASTRewritingRevertTest.allTests());
-   //		suite.addTest(SourceModifierTest.allTests());
-   //		suite.addTest(ImportRewriteTest.allTests());
-   //		suite.addTest(LineCommentOffsetsTest.allTests());
-   //		suite.addTest(ASTRewritingWithStatementsRecoveryTest.allTests());
-   //		suite.addTest(ASTRewritePropertyTest.allTests());
-   //		suite.addTest(ASTRewritingPackageDeclTest.allTests());
-   //		return suite;
-   //	}
+   //   public static Test suite() {
+   //      TestSuite suite= new TestSuite(ASTRewritingTest.class.getName());
+   //      suite.addTest(ASTRewritingExpressionsTest.allTests());
+   //      suite.addTest(ASTRewritingInsertBoundTest.allTests());
+   //      suite.addTest(ASTRewritingMethodDeclTest.allTests());
+   //      suite.addTest(ASTRewritingMoveCodeTest.allTests());
+   //      suite.addTest(ASTRewritingStatementsTest.allTests());
+   //      suite.addTest(ASTRewritingTrackingTest.allTests());
+   //      suite.addTest(ASTRewritingJavadocTest.allTests());
+   //      suite.addTest(ASTRewritingTypeDeclTest.allTests());
+   //      suite.addTest(ASTRewritingGroupNodeTest.allTests());
+   //      suite.addTest(ASTRewritingRevertTest.allTests());
+   //      suite.addTest(SourceModifierTest.allTests());
+   //      suite.addTest(ImportRewriteTest.allTests());
+   //      suite.addTest(LineCommentOffsetsTest.allTests());
+   //      suite.addTest(ASTRewritingWithStatementsRecoveryTest.allTests());
+   //      suite.addTest(ASTRewritePropertyTest.allTests());
+   //      suite.addTest(ASTRewritingPackageDeclTest.allTests());
+   //      return suite;
+   //   }
 
    public ASTRewritingTestGwt()
    {
-      //		super(name);
+      //      super(name);
    }
 
    /** @see com.google.gwt.junit.client.GWTTestCase#gwtSetUp() */
@@ -88,33 +88,33 @@ public class ASTRewritingTestGwt extends BaseTestGwt
 
    }
 
-   //	protected void setUp() throws Exception {
-   //		super.setUp();
+   //   protected void setUp() throws Exception {
+   //      super.setUp();
    //
-   //		IJavaProject proj= createProject("P", JavaCore.VERSION_1_5);
+   //      IJavaProject proj= createProject("P", JavaCore.VERSION_1_5);
    //
-   //		this.project1 = proj;
-   //		this.sourceFolder = getPackageFragmentRoot("P", "src");
+   //      this.project1 = proj;
+   //      this.sourceFolder = getPackageFragmentRoot("P", "src");
    //
-   //		waitUntilIndexesReady();
-   //	}
+   //      waitUntilIndexesReady();
+   //   }
 
-   //	protected IJavaProject createProject(String projectName, String complianceVersion) throws CoreException {
-   //		IJavaProject proj = createJavaProject(projectName, new String[] {"src"}, "bin");
-   //		proj.setOption(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR, JavaCore.SPACE);
-   //		proj.setOption(DefaultCodeFormatterConstants.FORMATTER_TAB_SIZE, "4");
-   //		proj.setOption(DefaultCodeFormatterConstants.FORMATTER_INDENT_SWITCHSTATEMENTS_COMPARE_TO_CASES, DefaultCodeFormatterConstants.TRUE);
-   //		proj.setOption(DefaultCodeFormatterConstants.FORMATTER_INDENT_SWITCHSTATEMENTS_COMPARE_TO_SWITCH, DefaultCodeFormatterConstants.TRUE);
-   //		proj.setOption(JavaCore.COMPILER_COMPLIANCE, complianceVersion);
-   //		proj.setOption(JavaCore.COMPILER_PB_ASSERT_IDENTIFIER, JavaCore.ERROR);
-   //		proj.setOption(JavaCore.COMPILER_SOURCE, complianceVersion);
-   //		proj.setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, complianceVersion);
-   //		return proj;
-   //	}
-   //	protected void tearDown() throws Exception {
-   //		deleteProject("P");
-   //		super.tearDown();
-   //	}
+   //   protected IJavaProject createProject(String projectName, String complianceVersion) throws CoreException {
+   //      IJavaProject proj = createJavaProject(projectName, new String[] {"src"}, "bin");
+   //      proj.setOption(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR, JavaCore.SPACE);
+   //      proj.setOption(DefaultCodeFormatterConstants.FORMATTER_TAB_SIZE, "4");
+   //      proj.setOption(DefaultCodeFormatterConstants.FORMATTER_INDENT_SWITCHSTATEMENTS_COMPARE_TO_CASES, DefaultCodeFormatterConstants.TRUE);
+   //      proj.setOption(DefaultCodeFormatterConstants.FORMATTER_INDENT_SWITCHSTATEMENTS_COMPARE_TO_SWITCH, DefaultCodeFormatterConstants.TRUE);
+   //      proj.setOption(JavaCore.COMPILER_COMPLIANCE, complianceVersion);
+   //      proj.setOption(JavaCore.COMPILER_PB_ASSERT_IDENTIFIER, JavaCore.ERROR);
+   //      proj.setOption(JavaCore.COMPILER_SOURCE, complianceVersion);
+   //      proj.setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, complianceVersion);
+   //      return proj;
+   //   }
+   //   protected void tearDown() throws Exception {
+   //      deleteProject("P");
+   //      super.tearDown();
+   //   }
 
    protected CompilationUnit createAST(ICompilationUnit cu)
    {
@@ -154,12 +154,12 @@ public class ASTRewritingTestGwt extends BaseTestGwt
       res.apply(document1);
       String content1 = document1.get();
 
-      //		Document document2= new Document(String.valueOf(cu.getContents()));
-      //		TextEdit res2= rewrite.rewriteAST(document2, JavaCore.getOptions());
-      //		res2.apply(document2);
-      //		String content2= document2.get();
+      //      Document document2= new Document(String.valueOf(cu.getContents()));
+      //      TextEdit res2= rewrite.rewriteAST(document2, JavaCore.getOptions());
+      //      res2.apply(document2);
+      //      String content2= document2.get();
       //
-      //		assertEquals(content1, content2);
+      //      assertEquals(content1, content2);
 
       return content1;
    }

@@ -72,9 +72,9 @@
  *                                 COMPILER_PB_UNUSED_DECLARED_THROWN_EXCEPTION_INCLUDE_DOC_COMMENT_REFERENCE
  *     IBM Corporation - added the following constants:
  *                                 COMPILER_PB_MISSING_JAVADOC_TAG_DESCRIPTION
- *								   COMPILER_PB_MISSING_JAVADOC_TAG_DESCRIPTION_NO_TAG
- *								   COMPILER_PB_MISSING_JAVADOC_TAG_DESCRIPTION_RETURN_TAG
- *								   COMPILER_PB_MISSING_JAVADOC_TAG_DESCRIPTION_ALL_TAGS
+ *                           COMPILER_PB_MISSING_JAVADOC_TAG_DESCRIPTION_NO_TAG
+ *                           COMPILER_PB_MISSING_JAVADOC_TAG_DESCRIPTION_RETURN_TAG
+ *                           COMPILER_PB_MISSING_JAVADOC_TAG_DESCRIPTION_ALL_TAGS
  *     IBM Corporation - added the following constants:
  *                                 COMPILER_PB_REDUNDANT_SUPERINTERFACE
  *     IBM Corporation - added the following constant:

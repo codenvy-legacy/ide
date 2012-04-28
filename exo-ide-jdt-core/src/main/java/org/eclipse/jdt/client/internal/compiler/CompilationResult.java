@@ -487,7 +487,7 @@ public class CompilationResult
       }
       if (this.compiledTypes != null)
       {
-         buffer.append("COMPILED type(s)	\n"); //$NON-NLS-1$
+         buffer.append("COMPILED type(s)   \n"); //$NON-NLS-1$
          Iterator keys = this.compiledTypes.keySet().iterator();
          while (keys.hasNext())
          {

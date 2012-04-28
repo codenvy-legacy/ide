@@ -2707,7 +2707,7 @@ public final class CharOperation
     * For example,
     * 
     * <pre>
-    * 	lastSegment("java.lang.Object".toCharArray(),'.') --> Object
+    *    lastSegment("java.lang.Object".toCharArray(),'.') --> Object
     * </pre>
     * 
     * @param array the array

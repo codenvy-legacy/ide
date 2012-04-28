@@ -56,7 +56,7 @@ class UndoCollector
    // try {
    // currentText= event.getDocument().get(offset, currentLength);
    // } catch (BadLocationException cannotHappen) {
-   //			Assert.isTrue(false, "Can't happen"); //$NON-NLS-1$
+   //         Assert.isTrue(false, "Can't happen"); //$NON-NLS-1$
    // }
    //
    // /*

@@ -20,13 +20,13 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
  * reduce a string literal.
  * e.g.
  *
- *	class X {
+ *   class X {
  *    void foo() {
  *      String s = "a[cursor]"
  *    }
  *  }
  *
- *	---> class X {
+ *   ---> class X {
  *         void foo() {
  *           String s = <CompleteOnStringLiteral:a>
  *         }

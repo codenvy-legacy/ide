@@ -20,11 +20,11 @@ import java.util.List;
  * 
  * <pre>
  * SwitchStatement:
- * 	<b>switch</b> <b>(</b> Expression <b>)</b>
- * 			<b>{</b> { SwitchCase | Statement } } <b>}</b>
+ *    <b>switch</b> <b>(</b> Expression <b>)</b>
+ *          <b>{</b> { SwitchCase | Statement } } <b>}</b>
  * SwitchCase:
- * 	<b>case</b> Expression  <b>:</b>
- * 	<b>default</b> <b>:</b>
+ *    <b>case</b> Expression  <b>:</b>
+ *    <b>default</b> <b>:</b>
  * </pre>
  * 
  * <code>SwitchCase</code> nodes are treated as a kind of <code>Statement</code> .

@@ -421,7 +421,7 @@ public class FormatJavadocBlock extends FormatJavadocNode implements IJavaDocTag
    {
       boolean inlined = (this.flags & INLINED) != 0;
       if (inlined)
-         buffer.append("	{"); //$NON-NLS-1$
+         buffer.append("   {"); //$NON-NLS-1$
       buffer.append('@');
       if (this.tagValue == TAG_OTHERS_VALUE)
       {
@@ -501,7 +501,7 @@ public class FormatJavadocBlock extends FormatJavadocNode implements IJavaDocTag
       {
          if (inlined)
             buffer.append('\t');
-         buffer.append("	flags: "); //$NON-NLS-1$
+         buffer.append("   flags: "); //$NON-NLS-1$
          buffer.append(flagsBuffer);
          buffer.append('\n');
       }

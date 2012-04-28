@@ -794,7 +794,7 @@ public class SignatureCreatorTests
 //   public void testGetSimpleName08()
 //   {
 //      assertEquals("Unexpected simple name", "List<+Comparable<-TT;>;>;",
-//         Signature.getSimpleName("	java.util.List<+Ljava.lang.Comparable<-TT;>;>;"));
+//         Signature.getSimpleName("   java.util.List<+Ljava.lang.Comparable<-TT;>;>;"));
 //   }
 //
 //   /**

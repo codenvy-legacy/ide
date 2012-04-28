@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *     Benjamin Muskalla - Contribution for bug 239066
  *     Stephan Herrmann  - Contributions for 
- *     						bug 236385 - 
- *     						bug 338303 - Warning about Redundant assignment conflicts with definite assignment
+ *                       bug 236385 - 
+ *                       bug 338303 - Warning about Redundant assignment conflicts with definite assignment
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.problem;
 

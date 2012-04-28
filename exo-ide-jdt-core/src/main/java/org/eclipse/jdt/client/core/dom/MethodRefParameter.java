@@ -20,14 +20,14 @@ import java.util.List;
  * 
  * <pre>
  * MethodRefParameter:
- * 		Type [ Identifier ]
+ *       Type [ Identifier ]
  * </pre>
  * 
  * For JLS3, the variable arity indicator was added:
  * 
  * <pre>
  * MethodRefParameter:
- * 		Type [ <b>...</b> ] [ Identifier ]
+ *       Type [ <b>...</b> ] [ Identifier ]
  * </pre>
  * <p>
  * Note: The 1.5 spec for the Javadoc tool does not mention the possibility of a variable arity indicator in method references.

@@ -16,7 +16,7 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
  * Cursor location denotes the position of the last character behind which completion
  * got requested:
  *  -1 means completion at the very beginning of the source
- *	0  means completion behind the first character
+ *   0  means completion behind the first character
  *  n  means completion behind the n-th character
  */
 

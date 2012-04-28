@@ -19,7 +19,7 @@ import java.util.List;
  * <pre>
  * AnnotationTypeDeclaration:
  *   [ Javadoc ] { ExtendedModifier } <b>@</b> <b>interface</b> Identifier
- * 	<b>{</b> { AnnotationTypeBodyDeclaration | <b>;</b> } <b>}</b>
+ *    <b>{</b> { AnnotationTypeBodyDeclaration | <b>;</b> } <b>}</b>
  * AnnotationTypeBodyDeclaration:
  *   AnnotationTypeMemberDeclaration
  *   FieldDeclaration

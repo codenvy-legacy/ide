@@ -6,7 +6,7 @@ import com.google.gwt.i18n.client.LocalizableResource.Key;
 
 /**
  * Interface to represent the messages contained in resource bundle:
- * 	/home/vetal/eXo/eXoProjects/ide/trunk/exo-ide-extension-java-debug/src/main/resources/org/exoplatform/ide/extension/java/jdi/client/DebugLocalizationConstant.properties'.
+ *    /home/vetal/eXo/eXoProjects/ide/trunk/exo-ide-extension-java-debug/src/main/resources/org/exoplatform/ide/extension/java/jdi/client/DebugLocalizationConstant.properties'.
  */
 public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client.Messages {
   

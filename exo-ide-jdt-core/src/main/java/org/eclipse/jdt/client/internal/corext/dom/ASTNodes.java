@@ -121,44 +121,44 @@ public class ASTNodes
          {
             //TODO handle exception
             e.printStackTrace();
-            //				JavaPlugin.log(e);
+            //            JavaPlugin.log(e);
          }
          return document.get();
       }
       return unformatted; // unknown node
    }
 
-   //	/**
-   //	 * Returns the source of the given node from the location where it was parsed.
-   //	 * @param node the node to get the source from
-   //	 * @param extendedRange if set, the extended ranges of the nodes should ne used
-   //	 * @param removeIndent if set, the indentation is removed.
-   //	 * @return return the source for the given node or null if accessing the source failed.
-   //	 */
-   //	public static String getNodeSource(ASTNode node, boolean extendedRange, boolean removeIndent) {
-   //		ASTNode root= node.getRoot();
-   //		if (root instanceof CompilationUnit) {
-   //			CompilationUnit astRoot= (CompilationUnit) root;
-   //			ITypeRoot typeRoot= astRoot.getTypeRoot();
-   //			try {
-   //				if (typeRoot != null && typeRoot.getBuffer() != null) {
-   //					IBuffer buffer= typeRoot.getBuffer();
-   //					int offset= extendedRange ? astRoot.getExtendedStartPosition(node) : node.getStartPosition();
-   //					int length= extendedRange ? astRoot.getExtendedLength(node) : node.getLength();
-   //					String str= buffer.getText(offset, length);
-   //					if (removeIndent) {
-   //						IJavaProject project= typeRoot.getJavaProject();
-   //						int indent= StubUtility.getIndentUsed(buffer, node.getStartPosition(), project);
-   //						str= Strings.changeIndent(str, indent, project, new String(), typeRoot.findRecommendedLineSeparator());
-   //					}
-   //					return str;
-   //				}
-   //			} catch (JavaModelException e) {
-   //				// ignore
-   //			}
-   //		}
-   //		return null;
-   //	}
+   //   /**
+   //    * Returns the source of the given node from the location where it was parsed.
+   //    * @param node the node to get the source from
+   //    * @param extendedRange if set, the extended ranges of the nodes should ne used
+   //    * @param removeIndent if set, the indentation is removed.
+   //    * @return return the source for the given node or null if accessing the source failed.
+   //    */
+   //   public static String getNodeSource(ASTNode node, boolean extendedRange, boolean removeIndent) {
+   //      ASTNode root= node.getRoot();
+   //      if (root instanceof CompilationUnit) {
+   //         CompilationUnit astRoot= (CompilationUnit) root;
+   //         ITypeRoot typeRoot= astRoot.getTypeRoot();
+   //         try {
+   //            if (typeRoot != null && typeRoot.getBuffer() != null) {
+   //               IBuffer buffer= typeRoot.getBuffer();
+   //               int offset= extendedRange ? astRoot.getExtendedStartPosition(node) : node.getStartPosition();
+   //               int length= extendedRange ? astRoot.getExtendedLength(node) : node.getLength();
+   //               String str= buffer.getText(offset, length);
+   //               if (removeIndent) {
+   //                  IJavaProject project= typeRoot.getJavaProject();
+   //                  int indent= StubUtility.getIndentUsed(buffer, node.getStartPosition(), project);
+   //                  str= Strings.changeIndent(str, indent, project, new String(), typeRoot.findRecommendedLineSeparator());
+   //               }
+   //               return str;
+   //            }
+   //         } catch (JavaModelException e) {
+   //            // ignore
+   //         }
+   //      }
+   //      return null;
+   //   }
 
    /**
     * Returns the list that contains the given ASTNode. If the node
@@ -478,46 +478,46 @@ public class ASTNodes
          || locationInParent == DoStatement.BODY_PROPERTY;
    }
 
-   //	/**
-   //	 * Returns the type to which an inlined variable initializer should be cast, or
-   //	 * <code>null</code> if no cast is necessary.
-   //	 * 
-   //	 * @param initializer the initializer expression of the variable to inline
-   //	 * @param reference the reference to the variable (which is to be inlined)
-   //	 * @return a type binding to which the initializer should be cast, or <code>null</code> iff no cast is necessary
-   //	 * @since 3.6
-   //	 */
-   //	public static ITypeBinding getExplicitCast(Expression initializer, Expression reference) {
-   //		ITypeBinding initializerType= initializer.resolveTypeBinding();
-   //		ITypeBinding referenceType= reference.resolveTypeBinding();
-   //		if (initializerType == null || referenceType == null)
-   //			return null;
-   //		
-   //		if (initializerType.isPrimitive() && referenceType.isPrimitive() && ! referenceType.isEqualTo(initializerType)) {
-   //			return referenceType;
-   //			
-   //		} else if (initializerType.isPrimitive() && ! referenceType.isPrimitive()) { // initializer is autoboxed
-   //			ITypeBinding unboxedReferenceType= Bindings.getUnboxedTypeBinding(referenceType, reference.getAST());
-   //			if (!unboxedReferenceType.isEqualTo(initializerType))
-   //				return unboxedReferenceType;
-   //			else if (needsExplicitBoxing(reference))
-   //				return referenceType;
-   //			
-   //		} else if (! initializerType.isPrimitive() && referenceType.isPrimitive()) { // initializer is autounboxed
-   //			ITypeBinding unboxedInitializerType= Bindings.getUnboxedTypeBinding(initializerType, reference.getAST());
-   //			if (!unboxedInitializerType.isEqualTo(referenceType))
-   //				return referenceType;
-   //			
-   //		} else if (initializerType.isRawType() && referenceType.isParameterizedType()) {
-   //			return referenceType; // don't lose the unchecked conversion
-   //			
-   //		} else if (! TypeRules.canAssign(initializerType, referenceType)) {
-   //			if (!Bindings.containsTypeVariables(referenceType))
-   //				return referenceType;
-   //		}
-   //		
-   //		return null;
-   //	}
+   //   /**
+   //    * Returns the type to which an inlined variable initializer should be cast, or
+   //    * <code>null</code> if no cast is necessary.
+   //    * 
+   //    * @param initializer the initializer expression of the variable to inline
+   //    * @param reference the reference to the variable (which is to be inlined)
+   //    * @return a type binding to which the initializer should be cast, or <code>null</code> iff no cast is necessary
+   //    * @since 3.6
+   //    */
+   //   public static ITypeBinding getExplicitCast(Expression initializer, Expression reference) {
+   //      ITypeBinding initializerType= initializer.resolveTypeBinding();
+   //      ITypeBinding referenceType= reference.resolveTypeBinding();
+   //      if (initializerType == null || referenceType == null)
+   //         return null;
+   //      
+   //      if (initializerType.isPrimitive() && referenceType.isPrimitive() && ! referenceType.isEqualTo(initializerType)) {
+   //         return referenceType;
+   //         
+   //      } else if (initializerType.isPrimitive() && ! referenceType.isPrimitive()) { // initializer is autoboxed
+   //         ITypeBinding unboxedReferenceType= Bindings.getUnboxedTypeBinding(referenceType, reference.getAST());
+   //         if (!unboxedReferenceType.isEqualTo(initializerType))
+   //            return unboxedReferenceType;
+   //         else if (needsExplicitBoxing(reference))
+   //            return referenceType;
+   //         
+   //      } else if (! initializerType.isPrimitive() && referenceType.isPrimitive()) { // initializer is autounboxed
+   //         ITypeBinding unboxedInitializerType= Bindings.getUnboxedTypeBinding(initializerType, reference.getAST());
+   //         if (!unboxedInitializerType.isEqualTo(referenceType))
+   //            return referenceType;
+   //         
+   //      } else if (initializerType.isRawType() && referenceType.isParameterizedType()) {
+   //         return referenceType; // don't lose the unchecked conversion
+   //         
+   //      } else if (! TypeRules.canAssign(initializerType, referenceType)) {
+   //         if (!Bindings.containsTypeVariables(referenceType))
+   //            return referenceType;
+   //      }
+   //      
+   //      return null;
+   //   }
 
    /**
     * Returns whether an expression at the given location needs explicit boxing.
@@ -540,23 +540,23 @@ public class ASTNodes
       return false;
    }
 
-   //	/**
-   //	 * Returns the closest ancestor of <code>node</code> that is an instance of <code>parentClass</code>, or <code>null</code> if none.
-   //	 * <p>
-   //	 * <b>Warning:</b> This method does not stop at any boundaries like parentheses, statements, body declarations, etc.
-   //	 * The resulting node may be in a totally different scope than the given node.
-   //	 * Consider using one of the {@link ASTResolving}<code>.find(..)</code> methods instead.
-   //	 * </p>
-   //	 * @param node the node
-   //	 * @param parentClass the class of the sought ancestor node
-   //	 * @return the closest ancestor of <code>node</code> that is an instance of <code>parentClass</code>, or <code>null</code> if none
-   //	 */
-   //	public static ASTNode getParent(ASTNode node, Class<? extends ASTNode> parentClass) {
-   //		do {
-   //			node= node.getParent();
-   //		} while (node != null && !parentClass.isInstance(node));
-   //		return node;
-   //	}
+   //   /**
+   //    * Returns the closest ancestor of <code>node</code> that is an instance of <code>parentClass</code>, or <code>null</code> if none.
+   //    * <p>
+   //    * <b>Warning:</b> This method does not stop at any boundaries like parentheses, statements, body declarations, etc.
+   //    * The resulting node may be in a totally different scope than the given node.
+   //    * Consider using one of the {@link ASTResolving}<code>.find(..)</code> methods instead.
+   //    * </p>
+   //    * @param node the node
+   //    * @param parentClass the class of the sought ancestor node
+   //    * @return the closest ancestor of <code>node</code> that is an instance of <code>parentClass</code>, or <code>null</code> if none
+   //    */
+   //   public static ASTNode getParent(ASTNode node, Class<? extends ASTNode> parentClass) {
+   //      do {
+   //         node= node.getParent();
+   //      } while (node != null && !parentClass.isInstance(node));
+   //      return node;
+   //   }
 
    /**
     * Returns the closest ancestor of <code>node</code> whose type is <code>nodeType</code>, or <code>null</code> if none.
@@ -694,25 +694,25 @@ public class ASTNodes
       return null;
    }
 
-   //	/**
-   //	 * Returns the receiver's type binding of the given method invocation.
-   //	 *
-   //	 * @param invocation method invocation to resolve type of
-   //	 * @return the type binding of the receiver
-   //	 */
-   //	public static ITypeBinding getReceiverTypeBinding(MethodInvocation invocation) {
-   //		ITypeBinding result= null;
-   //		Expression exp= invocation.getExpression();
-   //		if(exp != null) {
-   //			return exp.resolveTypeBinding();
-   //		}
-   //		else {
-   //			AbstractTypeDeclaration type= (AbstractTypeDeclaration)getParent(invocation, AbstractTypeDeclaration.class);
-   //			if (type != null)
-   //				return type.resolveBinding();
-   //		}
-   //		return result;
-   //	}
+   //   /**
+   //    * Returns the receiver's type binding of the given method invocation.
+   //    *
+   //    * @param invocation method invocation to resolve type of
+   //    * @return the type binding of the receiver
+   //    */
+   //   public static ITypeBinding getReceiverTypeBinding(MethodInvocation invocation) {
+   //      ITypeBinding result= null;
+   //      Expression exp= invocation.getExpression();
+   //      if(exp != null) {
+   //         return exp.resolveTypeBinding();
+   //      }
+   //      else {
+   //         AbstractTypeDeclaration type= (AbstractTypeDeclaration)getParent(invocation, AbstractTypeDeclaration.class);
+   //         if (type != null)
+   //            return type.resolveBinding();
+   //      }
+   //      return result;
+   //   }
 
    public static ITypeBinding getEnclosingType(ASTNode node)
    {
@@ -824,82 +824,82 @@ public class ASTNodes
       }
    }
 
-   //	private static int getOrderPreference(BodyDeclaration member, MembersOrderPreferenceCache store) {
-   //		int memberType= member.getNodeType();
-   //		int modifiers= member.getModifiers();
+   //   private static int getOrderPreference(BodyDeclaration member, MembersOrderPreferenceCache store) {
+   //      int memberType= member.getNodeType();
+   //      int modifiers= member.getModifiers();
    //
-   //		switch (memberType) {
-   //			case ASTNode.TYPE_DECLARATION:
-   //			case ASTNode.ENUM_DECLARATION :
-   //			case ASTNode.ANNOTATION_TYPE_DECLARATION :
-   //				return store.getCategoryIndex(MembersOrderPreferenceCache.TYPE_INDEX) * 2;
-   //			case ASTNode.FIELD_DECLARATION:
-   //				if (Modifier.isStatic(modifiers)) {
-   //					int index= store.getCategoryIndex(MembersOrderPreferenceCache.STATIC_FIELDS_INDEX) * 2;
-   //					if (Modifier.isFinal(modifiers)) {
-   //						return index; // first final static, then static
-   //					}
-   //					return index + 1;
-   //				}
-   //				return store.getCategoryIndex(MembersOrderPreferenceCache.FIELDS_INDEX) * 2;
-   //			case ASTNode.INITIALIZER:
-   //				if (Modifier.isStatic(modifiers)) {
-   //					return store.getCategoryIndex(MembersOrderPreferenceCache.STATIC_INIT_INDEX) * 2;
-   //				}
-   //				return store.getCategoryIndex(MembersOrderPreferenceCache.INIT_INDEX) * 2;
-   //			case ASTNode.ANNOTATION_TYPE_MEMBER_DECLARATION:
-   //				return store.getCategoryIndex(MembersOrderPreferenceCache.METHOD_INDEX) * 2;
-   //			case ASTNode.METHOD_DECLARATION:
-   //				if (Modifier.isStatic(modifiers)) {
-   //					return store.getCategoryIndex(MembersOrderPreferenceCache.STATIC_METHODS_INDEX) * 2;
-   //				}
-   //				if (((MethodDeclaration) member).isConstructor()) {
-   //					return store.getCategoryIndex(MembersOrderPreferenceCache.CONSTRUCTORS_INDEX) * 2;
-   //				}
-   //				return store.getCategoryIndex(MembersOrderPreferenceCache.METHOD_INDEX) * 2;
-   //			default:
-   //				return 100;
-   //		}
-   //	}
+   //      switch (memberType) {
+   //         case ASTNode.TYPE_DECLARATION:
+   //         case ASTNode.ENUM_DECLARATION :
+   //         case ASTNode.ANNOTATION_TYPE_DECLARATION :
+   //            return store.getCategoryIndex(MembersOrderPreferenceCache.TYPE_INDEX) * 2;
+   //         case ASTNode.FIELD_DECLARATION:
+   //            if (Modifier.isStatic(modifiers)) {
+   //               int index= store.getCategoryIndex(MembersOrderPreferenceCache.STATIC_FIELDS_INDEX) * 2;
+   //               if (Modifier.isFinal(modifiers)) {
+   //                  return index; // first final static, then static
+   //               }
+   //               return index + 1;
+   //            }
+   //            return store.getCategoryIndex(MembersOrderPreferenceCache.FIELDS_INDEX) * 2;
+   //         case ASTNode.INITIALIZER:
+   //            if (Modifier.isStatic(modifiers)) {
+   //               return store.getCategoryIndex(MembersOrderPreferenceCache.STATIC_INIT_INDEX) * 2;
+   //            }
+   //            return store.getCategoryIndex(MembersOrderPreferenceCache.INIT_INDEX) * 2;
+   //         case ASTNode.ANNOTATION_TYPE_MEMBER_DECLARATION:
+   //            return store.getCategoryIndex(MembersOrderPreferenceCache.METHOD_INDEX) * 2;
+   //         case ASTNode.METHOD_DECLARATION:
+   //            if (Modifier.isStatic(modifiers)) {
+   //               return store.getCategoryIndex(MembersOrderPreferenceCache.STATIC_METHODS_INDEX) * 2;
+   //            }
+   //            if (((MethodDeclaration) member).isConstructor()) {
+   //               return store.getCategoryIndex(MembersOrderPreferenceCache.CONSTRUCTORS_INDEX) * 2;
+   //            }
+   //            return store.getCategoryIndex(MembersOrderPreferenceCache.METHOD_INDEX) * 2;
+   //         default:
+   //            return 100;
+   //      }
+   //   }
    //
-   //	/**
-   //	 * Computes the insertion index to be used to add the given member to the
-   //	 * the list <code>container</code>.
-   //	 * @param member the member to add
-   //	 * @param container a list containing objects of type <code>BodyDeclaration</code>
-   //	 * @return the insertion index to be used
-   //	 */
-   //	public static int getInsertionIndex(BodyDeclaration member, List<? extends BodyDeclaration> container) {
-   //		int containerSize= container.size();
+   //   /**
+   //    * Computes the insertion index to be used to add the given member to the
+   //    * the list <code>container</code>.
+   //    * @param member the member to add
+   //    * @param container a list containing objects of type <code>BodyDeclaration</code>
+   //    * @return the insertion index to be used
+   //    */
+   //   public static int getInsertionIndex(BodyDeclaration member, List<? extends BodyDeclaration> container) {
+   //      int containerSize= container.size();
    //
-   //		MembersOrderPreferenceCache orderStore= JavaPlugin.getDefault().getMemberOrderPreferenceCache();
+   //      MembersOrderPreferenceCache orderStore= JavaPlugin.getDefault().getMemberOrderPreferenceCache();
    //
-   //		int orderIndex= getOrderPreference(member, orderStore);
+   //      int orderIndex= getOrderPreference(member, orderStore);
    //
-   //		int insertPos= containerSize;
-   //		int insertPosOrderIndex= -1;
+   //      int insertPos= containerSize;
+   //      int insertPosOrderIndex= -1;
    //
-   //		for (int i= containerSize - 1; i >= 0; i--) {
-   //			int currOrderIndex= getOrderPreference(container.get(i), orderStore);
-   //			if (orderIndex == currOrderIndex) {
-   //				if (insertPosOrderIndex != orderIndex) { // no perfect match yet
-   //					insertPos= i + 1; // after a same kind
-   //					insertPosOrderIndex= orderIndex; // perfect match
-   //				}
-   //			} else if (insertPosOrderIndex != orderIndex) { // not yet a perfect match
-   //				if (currOrderIndex < orderIndex) { // we are bigger
-   //					if (insertPosOrderIndex == -1) {
-   //						insertPos= i + 1; // after
-   //						insertPosOrderIndex= currOrderIndex;
-   //					}
-   //				} else {
-   //					insertPos= i; // before
-   //					insertPosOrderIndex= currOrderIndex;
-   //				}
-   //			}
-   //		}
-   //		return insertPos;
-   //	}
+   //      for (int i= containerSize - 1; i >= 0; i--) {
+   //         int currOrderIndex= getOrderPreference(container.get(i), orderStore);
+   //         if (orderIndex == currOrderIndex) {
+   //            if (insertPosOrderIndex != orderIndex) { // no perfect match yet
+   //               insertPos= i + 1; // after a same kind
+   //               insertPosOrderIndex= orderIndex; // perfect match
+   //            }
+   //         } else if (insertPosOrderIndex != orderIndex) { // not yet a perfect match
+   //            if (currOrderIndex < orderIndex) { // we are bigger
+   //               if (insertPosOrderIndex == -1) {
+   //                  insertPos= i + 1; // after
+   //                  insertPosOrderIndex= currOrderIndex;
+   //               }
+   //            } else {
+   //               insertPos= i; // before
+   //               insertPosOrderIndex= currOrderIndex;
+   //            }
+   //         }
+   //      }
+   //      return insertPos;
+   //   }
 
    public static SimpleName getLeftMostSimpleName(Name name)
    {
@@ -1037,27 +1037,27 @@ public class ASTNodes
       return null;
    }
 
-   //	public static ITypeBinding getTypeBinding(CompilationUnit root, IType type) throws JavaModelException {
-   //		if (type.isAnonymous()) {
-   //			final IJavaElement parent= type.getParent();
-   //			if (parent instanceof IField && Flags.isEnum(((IMember) parent).getFlags())) {
-   //				final EnumConstantDeclaration constant= (EnumConstantDeclaration) NodeFinder.perform(root, ((ISourceReference) parent).getSourceRange());
-   //				if (constant != null) {
-   //					final AnonymousClassDeclaration declaration= constant.getAnonymousClassDeclaration();
-   //					if (declaration != null)
-   //						return declaration.resolveBinding();
-   //				}
-   //			} else {
-   //				final ClassInstanceCreation creation= (ClassInstanceCreation) getParent(NodeFinder.perform(root, type.getNameRange()), ClassInstanceCreation.class);
-   //				if (creation != null)
-   //					return creation.resolveTypeBinding();
-   //			}
-   //		} else {
-   //			final AbstractTypeDeclaration declaration= (AbstractTypeDeclaration) getParent(NodeFinder.perform(root, type.getNameRange()), AbstractTypeDeclaration.class);
-   //			if (declaration != null)
-   //				return declaration.resolveBinding();
-   //		}
-   //		return null;
-   //	}
+   //   public static ITypeBinding getTypeBinding(CompilationUnit root, IType type) throws JavaModelException {
+   //      if (type.isAnonymous()) {
+   //         final IJavaElement parent= type.getParent();
+   //         if (parent instanceof IField && Flags.isEnum(((IMember) parent).getFlags())) {
+   //            final EnumConstantDeclaration constant= (EnumConstantDeclaration) NodeFinder.perform(root, ((ISourceReference) parent).getSourceRange());
+   //            if (constant != null) {
+   //               final AnonymousClassDeclaration declaration= constant.getAnonymousClassDeclaration();
+   //               if (declaration != null)
+   //                  return declaration.resolveBinding();
+   //            }
+   //         } else {
+   //            final ClassInstanceCreation creation= (ClassInstanceCreation) getParent(NodeFinder.perform(root, type.getNameRange()), ClassInstanceCreation.class);
+   //            if (creation != null)
+   //               return creation.resolveTypeBinding();
+   //         }
+   //      } else {
+   //         final AbstractTypeDeclaration declaration= (AbstractTypeDeclaration) getParent(NodeFinder.perform(root, type.getNameRange()), AbstractTypeDeclaration.class);
+   //         if (declaration != null)
+   //            return declaration.resolveBinding();
+   //      }
+   //      return null;
+   //   }
 
 }

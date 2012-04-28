@@ -2262,55 +2262,55 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
    }
 
    //
-   //	/** @deprecated using deprecated code */
-   //	public void testInsertFieldAfter() throws Exception {
+   //   /** @deprecated using deprecated code */
+   //   public void testInsertFieldAfter() throws Exception {
    //
-   //		IPackageFragment pack1= this.sourceFolder.createPackageFragment("test1", false, null);
-   //		StringBuffer buf= new StringBuffer();
-   //		buf.append("package test1;\n");
+   //      IPackageFragment pack1= this.sourceFolder.createPackageFragment("test1", false, null);
+   //      StringBuffer buf= new StringBuffer();
+   //      buf.append("package test1;\n");
    //
-   //		buf.append("public class DD {\n");
-   //		buf.append("    private int fCount1;\n");
-   //		buf.append("\n");
-   //		buf.append("    /*\n");
-   //		buf.append("     *\n");
-   //		buf.append("     */\n");
-   //		buf.append("    private void foo1(){\n");
-   //		buf.append("    }\n");
-   //		buf.append("}\n");
-   //		ICompilationUnit cu= pack1.createCompilationUnit("DD.java", buf.toString(), false, null);
+   //      buf.append("public class DD {\n");
+   //      buf.append("    private int fCount1;\n");
+   //      buf.append("\n");
+   //      buf.append("    /*\n");
+   //      buf.append("     *\n");
+   //      buf.append("     */\n");
+   //      buf.append("    private void foo1(){\n");
+   //      buf.append("    }\n");
+   //      buf.append("}\n");
+   //      ICompilationUnit cu= pack1.createCompilationUnit("DD.java", buf.toString(), false, null);
    //
-   //		CompilationUnit astRoot= createAST(cu);
-   //		AST ast= astRoot.getAST();
-   //		ASTRewrite rewrite= ASTRewrite.create(astRoot.getAST());
-   //		TypeDeclaration type= findTypeDeclaration(astRoot, "DD");
-   //		{
-   //			VariableDeclarationFragment frag= ast.newVariableDeclarationFragment();
-   //			frag.setName(ast.newSimpleName("fColor"));
-   //			FieldDeclaration newField= ast.newFieldDeclaration(frag);
-   //			newField.setType(ast.newPrimitiveType(PrimitiveType.CHAR));
-   //			newField.setModifiers(Modifier.PRIVATE);
+   //      CompilationUnit astRoot= createAST(cu);
+   //      AST ast= astRoot.getAST();
+   //      ASTRewrite rewrite= ASTRewrite.create(astRoot.getAST());
+   //      TypeDeclaration type= findTypeDeclaration(astRoot, "DD");
+   //      {
+   //         VariableDeclarationFragment frag= ast.newVariableDeclarationFragment();
+   //         frag.setName(ast.newSimpleName("fColor"));
+   //         FieldDeclaration newField= ast.newFieldDeclaration(frag);
+   //         newField.setType(ast.newPrimitiveType(PrimitiveType.CHAR));
+   //         newField.setModifiers(Modifier.PRIVATE);
    //
-   //			rewrite.getListRewrite(type, TypeDeclaration.BODY_DECLARATIONS_PROPERTY).insertAt(newField, 1, null);
-   //		}
+   //         rewrite.getListRewrite(type, TypeDeclaration.BODY_DECLARATIONS_PROPERTY).insertAt(newField, 1, null);
+   //      }
    //
-   //		String preview= evaluateRewrite(cu, rewrite);
+   //      String preview= evaluateRewrite(cu, rewrite);
    //
-   //		buf= new StringBuffer();
-   //		buf.append("package test1;\n");
+   //      buf= new StringBuffer();
+   //      buf.append("package test1;\n");
    //
-   //		buf.append("public class DD {\n");
-   //		buf.append("    private int fCount1;\n");
-   //		buf.append("    private char fColor;\n");
-   //		buf.append("\n");
-   //		buf.append("    /*\n");
-   //		buf.append("     *\n");
-   //		buf.append("     */\n");
-   //		buf.append("    private void foo1(){\n");
-   //		buf.append("    }\n");
-   //		buf.append("}\n");
-   //		assertEqualString(preview, buf.toString());
-   //	}
+   //      buf.append("public class DD {\n");
+   //      buf.append("    private int fCount1;\n");
+   //      buf.append("    private char fColor;\n");
+   //      buf.append("\n");
+   //      buf.append("    /*\n");
+   //      buf.append("     *\n");
+   //      buf.append("     */\n");
+   //      buf.append("    private void foo1(){\n");
+   //      buf.append("    }\n");
+   //      buf.append("}\n");
+   //      assertEqualString(preview, buf.toString());
+   //   }
    //
    //
    public void testVarArgs() throws Exception
@@ -2652,9 +2652,9 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
       StringBuffer buf = new StringBuffer();
       buf.append("// comment\n");
       buf.append("public class A {\n");
-      buf.append("	public int foo() {\n");
-      buf.append("		return 0;\n");
-      buf.append("	}\n");
+      buf.append("   public int foo() {\n");
+      buf.append("      return 0;\n");
+      buf.append("   }\n");
       buf.append("}\n");
       ICompilationUnit cu =
          new org.eclipse.jdt.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");

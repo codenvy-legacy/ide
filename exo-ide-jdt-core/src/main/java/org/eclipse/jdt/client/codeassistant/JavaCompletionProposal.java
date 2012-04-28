@@ -110,17 +110,17 @@ public class JavaCompletionProposal extends AbstractJavaCompletionProposal
    // protected boolean isValidPrefix(String prefix) {
    // String word= TextProcessor.deprocess(getDisplayString());
    // if (isInJavadoc()) {
-   //			int idx = word.indexOf("{@link "); //$NON-NLS-1$
+   //         int idx = word.indexOf("{@link "); //$NON-NLS-1$
    // if (idx==0) {
    // word = word.substring(7);
    // } else {
-   //				idx = word.indexOf("{@value "); //$NON-NLS-1$
+   //            idx = word.indexOf("{@value "); //$NON-NLS-1$
    // if (idx==0) {
    // word = word.substring(8);
    // }
    // }
-   //		} else if (word.indexOf("this.") != -1) { //$NON-NLS-1$
-   //			word= word.substring(word.indexOf("this.") + 5); //$NON-NLS-1$
+   //      } else if (word.indexOf("this.") != -1) { //$NON-NLS-1$
+   //         word= word.substring(word.indexOf("this.") + 5); //$NON-NLS-1$
    // }
    // return isPrefix(prefix, word);
    // }

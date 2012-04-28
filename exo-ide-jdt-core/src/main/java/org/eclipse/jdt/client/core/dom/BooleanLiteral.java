@@ -19,8 +19,8 @@ import java.util.List;
  * 
  * <pre>
  * BooleanLiteral:
- * 		<b>true</b>
- * 		<b>false</b>
+ *       <b>true</b>
+ *       <b>false</b>
  * </pre>
  * 
  * @since 2.0

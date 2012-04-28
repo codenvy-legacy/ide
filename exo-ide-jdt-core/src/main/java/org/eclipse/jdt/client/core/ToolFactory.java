@@ -84,7 +84,7 @@ public class ToolFactory
    // IConfigurationElement [] configElements = extensions[i].getConfigurationElements();
    // for(int j = 0; j < configElements.length; j++){
    // try {
-   //							Object execExt = configElements[j].createExecutableExtension("class"); //$NON-NLS-1$
+   //                     Object execExt = configElements[j].createExecutableExtension("class"); //$NON-NLS-1$
    // if (execExt instanceof ICodeFormatter){
    // // use first contribution found
    // return (ICodeFormatter)execExt;
@@ -311,7 +311,7 @@ public class ToolFactory
    // ZipFile zipFile = null;
    // try {
    // if (JavaModelManager.ZIP_ACCESS_VERBOSE) {
-   //				System.out.println("(" + Thread.currentThread() + ") [ToolFactory.createDefaultClassFileReader()] Creating ZipFile on " + zipFileName); //$NON-NLS-1$	//$NON-NLS-2$
+   //            System.out.println("(" + Thread.currentThread() + ") [ToolFactory.createDefaultClassFileReader()] Creating ZipFile on " + zipFileName); //$NON-NLS-1$   //$NON-NLS-2$
    // }
    // zipFile = new ZipFile(zipFileName);
    // ZipEntry zipEntry = zipFile.getEntry(zipEntryName);

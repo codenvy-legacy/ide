@@ -792,9 +792,9 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
    /**
              * Parse a possible HTML tag like:
              * <ul>
-             * 	<li>&lt;code&gt;
-             * 	<li>&lt;br&gt;
-             * 	<li>&lt;h?&gt;
+             *    <li>&lt;code&gt;
+             *    <li>&lt;br&gt;
+             *    <li>&lt;h?&gt;
              * </ul>
              *
              * Note that the default is to do nothing!
@@ -802,7 +802,7 @@ public abstract class AbstractCommentParser implements JavadocTagConstants
              * @param previousPosition The position of the '<' character on which the tag might start
              * @param endTextPosition The position of the end of the previous text
              * @return <code>true</code> if a valid html tag has been parsed, <code>false</code>
-             * 	otherwise
+             *    otherwise
              * @throws InvalidInputException If any problem happens during the parse in this area
              */
    protected boolean parseHtmlTag(int previousPosition, int endTextPosition) throws InvalidInputException

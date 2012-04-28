@@ -17,13 +17,13 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
  * is null.
  * e.g.
  *
- *	class X {
+ *   class X {
  *    void foo() {
  *      new Bar(1, 2, [cursor]
  *    }
  *  }
  *
- *	---> class X {
+ *   ---> class X {
  *         void foo() {
  *           <CompleteOnAllocationExpression:new Bar(1, 2)>
  *         }

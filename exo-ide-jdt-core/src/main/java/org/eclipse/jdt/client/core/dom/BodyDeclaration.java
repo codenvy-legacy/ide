@@ -22,28 +22,28 @@ import java.util.List;
  * 
  * <pre>
  * BodyDeclaration:
- * 	ClassDeclaration
- * 	InterfaceDeclaration
- * 	MethodDeclaration
- * 		ConstructorDeclaration
- * 		FieldDeclaration
- * 		Initializer
+ *    ClassDeclaration
+ *    InterfaceDeclaration
+ *    MethodDeclaration
+ *       ConstructorDeclaration
+ *       FieldDeclaration
+ *       Initializer
  * </pre>
  * 
  * For JLS3, a number of new node types were introduced:
  * 
  * <pre>
  * BodyDeclaration:
- * 	ClassDeclaration
- * 	InterfaceDeclaration
- * 	EnumDeclaration
- * 	MethodDeclaration
- * 		ConstructorDeclaration
- * 		FieldDeclaration
- * 		Initializer
- * 	EnumConstantDeclaration
- * 	AnnotationTypeDeclaration
- * 	AnnotationTypeMemberDeclaration
+ *    ClassDeclaration
+ *    InterfaceDeclaration
+ *    EnumDeclaration
+ *    MethodDeclaration
+ *       ConstructorDeclaration
+ *       FieldDeclaration
+ *       Initializer
+ *    EnumConstantDeclaration
+ *    AnnotationTypeDeclaration
+ *    AnnotationTypeMemberDeclaration
  * </pre>
  * 
  * </p>

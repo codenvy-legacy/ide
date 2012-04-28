@@ -88,319 +88,319 @@ import java.util.List;
  *      >Git documentation about Checkout</a>
  */
 public class CheckoutCommand_Copy extends GitCommand<Ref> {
-	private String name;
+   private String name;
 
-	private boolean force = false;
+   private boolean force = false;
 
-	private boolean createBranch = false;
+   private boolean createBranch = false;
 
-	private CreateBranchCommand.SetupUpstreamMode upstreamMode;
+   private CreateBranchCommand.SetupUpstreamMode upstreamMode;
 
-	private String startPoint = null;
+   private String startPoint = null;
 
-	private RevCommit startCommit;
+   private RevCommit startCommit;
 
-	private CheckoutResult_Copy status;
+   private CheckoutResult_Copy status;
 
-	private List<String> paths;
+   private List<String> paths;
 
-	/**
-	 * @param repo
-	 */
-	public CheckoutCommand_Copy(Repository repo) {
-		super(repo);
-		this.paths = new LinkedList<String>();
-	}
+   /**
+    * @param repo
+    */
+   public CheckoutCommand_Copy(Repository repo) {
+      super(repo);
+      this.paths = new LinkedList<String>();
+   }
 
-	/**
-	 * @throws org.eclipse.jgit.api.errors.RefAlreadyExistsException
-	 *             when trying to create (without force) a branch with a name
-	 *             that already exists
-	 * @throws org.eclipse.jgit.api.errors.RefNotFoundException
-	 *             if the start point or branch can not be found
-	 * @throws org.eclipse.jgit.api.errors.InvalidRefNameException
-	 *             if the provided name is <code>null</code> or otherwise
-	 *             invalid
-	 * @return the newly created branch
-	 */
-	public Ref call() throws JGitInternalException, RefAlreadyExistsException,
-			RefNotFoundException, InvalidRefNameException {
-		checkCallable();
-		processOptions();
-		try {
-			if (!paths.isEmpty()) {
-				checkoutPaths();
-				status = CheckoutResult_Copy.OK_RESULT;
-				setCallable(false);
-				return null;
-			}
+   /**
+    * @throws org.eclipse.jgit.api.errors.RefAlreadyExistsException
+    *             when trying to create (without force) a branch with a name
+    *             that already exists
+    * @throws org.eclipse.jgit.api.errors.RefNotFoundException
+    *             if the start point or branch can not be found
+    * @throws org.eclipse.jgit.api.errors.InvalidRefNameException
+    *             if the provided name is <code>null</code> or otherwise
+    *             invalid
+    * @return the newly created branch
+    */
+   public Ref call() throws JGitInternalException, RefAlreadyExistsException,
+         RefNotFoundException, InvalidRefNameException {
+      checkCallable();
+      processOptions();
+      try {
+         if (!paths.isEmpty()) {
+            checkoutPaths();
+            status = CheckoutResult_Copy.OK_RESULT;
+            setCallable(false);
+            return null;
+         }
 
-			if (createBranch) {
-				Git git = new Git(repo);
-				CreateBranchCommand command = git.branchCreate();
-				command.setName(name);
-				command.setStartPoint(getStartPoint().name());
-				if (upstreamMode != null)
-					command.setUpstreamMode(upstreamMode);
-				command.call();
-			}
+         if (createBranch) {
+            Git git = new Git(repo);
+            CreateBranchCommand command = git.branchCreate();
+            command.setName(name);
+            command.setStartPoint(getStartPoint().name());
+            if (upstreamMode != null)
+               command.setUpstreamMode(upstreamMode);
+            command.call();
+         }
 
-			Ref headRef = repo.getRef(Constants.HEAD);
-			String shortHeadRef = getShortBranchName(headRef);
-			String refLogMessage = "checkout: moving from " + shortHeadRef;
-			ObjectId branch = repo.resolve(name);
-			if (branch == null)
-				throw new RefNotFoundException(MessageFormat.format(JGitText
-						.get().refNotResolved, name));
+         Ref headRef = repo.getRef(Constants.HEAD);
+         String shortHeadRef = getShortBranchName(headRef);
+         String refLogMessage = "checkout: moving from " + shortHeadRef;
+         ObjectId branch = repo.resolve(name);
+         if (branch == null)
+            throw new RefNotFoundException(MessageFormat.format(JGitText
+                  .get().refNotResolved, name));
 
-			RevWalk revWalk = new RevWalk(repo);
-			AnyObjectId headId = headRef.getObjectId();
-			RevCommit headCommit = headId == null ? null : revWalk
-					.parseCommit(headId);
-			RevCommit newCommit = revWalk.parseCommit(branch);
-			RevTree headTree = headCommit == null ? null : headCommit.getTree();
-			DirCacheCheckout dco = new DirCacheCheckout(repo, headTree,
-					repo.lockDirCache(), newCommit.getTree());
-			dco.setFailOnConflict(true);
-			try {
-				dco.checkout();
-			} catch (CheckoutConflictException e) {
-				status = new CheckoutResult_Copy(CheckoutResult_Copy.Status.CONFLICTS, dco
-						.getConflicts());
-				throw e;
-			}
-			Ref ref = repo.getRef(name);
-			if (ref != null && !ref.getName().startsWith(Constants.R_HEADS))
-				ref = null;
-			String toName = Repository.shortenRefName(name);
-			RefUpdate refUpdate = repo.updateRef(Constants.HEAD, ref == null);
-			refUpdate.setForceUpdate(force);
-			refUpdate.setRefLogMessage(refLogMessage + " to " + toName, false);
-			Result updateResult;
-			if (ref != null)
-				updateResult = refUpdate.link(ref.getName());
-			else {
-				refUpdate.setNewObjectId(newCommit);
-				updateResult = refUpdate.forceUpdate();
-			}
+         RevWalk revWalk = new RevWalk(repo);
+         AnyObjectId headId = headRef.getObjectId();
+         RevCommit headCommit = headId == null ? null : revWalk
+               .parseCommit(headId);
+         RevCommit newCommit = revWalk.parseCommit(branch);
+         RevTree headTree = headCommit == null ? null : headCommit.getTree();
+         DirCacheCheckout dco = new DirCacheCheckout(repo, headTree,
+               repo.lockDirCache(), newCommit.getTree());
+         dco.setFailOnConflict(true);
+         try {
+            dco.checkout();
+         } catch (CheckoutConflictException e) {
+            status = new CheckoutResult_Copy(CheckoutResult_Copy.Status.CONFLICTS, dco
+                  .getConflicts());
+            throw e;
+         }
+         Ref ref = repo.getRef(name);
+         if (ref != null && !ref.getName().startsWith(Constants.R_HEADS))
+            ref = null;
+         String toName = Repository.shortenRefName(name);
+         RefUpdate refUpdate = repo.updateRef(Constants.HEAD, ref == null);
+         refUpdate.setForceUpdate(force);
+         refUpdate.setRefLogMessage(refLogMessage + " to " + toName, false);
+         Result updateResult;
+         if (ref != null)
+            updateResult = refUpdate.link(ref.getName());
+         else {
+            refUpdate.setNewObjectId(newCommit);
+            updateResult = refUpdate.forceUpdate();
+         }
 
-			setCallable(false);
+         setCallable(false);
 
-			boolean ok = false;
-			switch (updateResult) {
-			case NEW:
-				ok = true;
-				break;
-			case NO_CHANGE:
-			case FAST_FORWARD:
-			case FORCED:
-				ok = true;
-				break;
-			default:
-				break;
-			}
+         boolean ok = false;
+         switch (updateResult) {
+         case NEW:
+            ok = true;
+            break;
+         case NO_CHANGE:
+         case FAST_FORWARD:
+         case FORCED:
+            ok = true;
+            break;
+         default:
+            break;
+         }
 
-			if (!ok)
-				throw new JGitInternalException(MessageFormat.format(JGitText
-						.get().checkoutUnexpectedResult, updateResult.name()));
+         if (!ok)
+            throw new JGitInternalException(MessageFormat.format(JGitText
+                  .get().checkoutUnexpectedResult, updateResult.name()));
 
-			if (!dco.getToBeDeleted().isEmpty()) {
-				status = new CheckoutResult_Copy(CheckoutResult_Copy.Status.NONDELETED, dco
-						.getToBeDeleted());
-			}
-			else
-				status = CheckoutResult_Copy.OK_RESULT;
-			return ref;
-		} catch (IOException ioe) {
-			throw new JGitInternalException(ioe.getMessage(), ioe);
-		} finally {
-			if (status == null)
-				status = CheckoutResult_Copy.ERROR_RESULT;
-		}
-	}
+         if (!dco.getToBeDeleted().isEmpty()) {
+            status = new CheckoutResult_Copy(CheckoutResult_Copy.Status.NONDELETED, dco
+                  .getToBeDeleted());
+         }
+         else
+            status = CheckoutResult_Copy.OK_RESULT;
+         return ref;
+      } catch (IOException ioe) {
+         throw new JGitInternalException(ioe.getMessage(), ioe);
+      } finally {
+         if (status == null)
+            status = CheckoutResult_Copy.ERROR_RESULT;
+      }
+   }
 
-	private String getShortBranchName(Ref headRef) {
-		if (headRef.getTarget().getName().equals(headRef.getName()))
-			return headRef.getTarget().getObjectId().getName();
-		return Repository.shortenRefName(headRef.getTarget().getName());
-	}
+   private String getShortBranchName(Ref headRef) {
+      if (headRef.getTarget().getName().equals(headRef.getName()))
+         return headRef.getTarget().getObjectId().getName();
+      return Repository.shortenRefName(headRef.getTarget().getName());
+   }
 
-	/**
-	 * @param path
-	 *            Path to update in the working tree and index.
-	 * @return {@code this}
-	 */
-	public CheckoutCommand_Copy addPath(String path) {
-		checkCallable();
-		this.paths.add(path);
-		return this;
-	}
+   /**
+    * @param path
+    *            Path to update in the working tree and index.
+    * @return {@code this}
+    */
+   public CheckoutCommand_Copy addPath(String path) {
+      checkCallable();
+      this.paths.add(path);
+      return this;
+   }
 
-	/**
-	 * Checkout paths into index and working directory
-	 *
-	 * @return this instance
-	 * @throws java.io.IOException
-	 * @throws org.eclipse.jgit.api.errors.RefNotFoundException
-	 */
-	protected CheckoutCommand_Copy checkoutPaths() throws IOException,
-			RefNotFoundException {
-		RevWalk revWalk = new RevWalk(repo);
-		DirCache dc = repo.lockDirCache();
-		try {
-			DirCacheEditor editor = dc.editor();
-			TreeWalk startWalk = new TreeWalk(revWalk.getObjectReader());
-			startWalk.setRecursive(true);
-			startWalk.setFilter(PathFilterGroup.createFromStrings(paths));
-			boolean checkoutIndex = startCommit == null && startPoint == null;
-			if (!checkoutIndex)
-				startWalk.addTree(revWalk.parseCommit(getStartPoint())
-						.getTree());
-			else
-				startWalk.addTree(new DirCacheIterator(dc));
+   /**
+    * Checkout paths into index and working directory
+    *
+    * @return this instance
+    * @throws java.io.IOException
+    * @throws org.eclipse.jgit.api.errors.RefNotFoundException
+    */
+   protected CheckoutCommand_Copy checkoutPaths() throws IOException,
+         RefNotFoundException {
+      RevWalk revWalk = new RevWalk(repo);
+      DirCache dc = repo.lockDirCache();
+      try {
+         DirCacheEditor editor = dc.editor();
+         TreeWalk startWalk = new TreeWalk(revWalk.getObjectReader());
+         startWalk.setRecursive(true);
+         startWalk.setFilter(PathFilterGroup.createFromStrings(paths));
+         boolean checkoutIndex = startCommit == null && startPoint == null;
+         if (!checkoutIndex)
+            startWalk.addTree(revWalk.parseCommit(getStartPoint())
+                  .getTree());
+         else
+            startWalk.addTree(new DirCacheIterator(dc));
 
-			final File workTree = repo.getWorkTree();
-			final ObjectReader r = repo.getObjectDatabase().newReader();
-			try {
-				while (startWalk.next()) {
-					final ObjectId blobId = startWalk.getObjectId(0);
-					final FileMode mode = startWalk.getFileMode(0);
-					editor.add(new PathEdit(startWalk.getPathString()) {
-						public void apply(DirCacheEntry ent) {
-							ent.setObjectId(blobId);
-							ent.setFileMode(mode);
-							try {
-								DirCacheCheckout.checkoutEntry(repo, new File(
-										workTree, ent.getPathString()), ent, r);
-							} catch (IOException e) {
-								throw new JGitInternalException(
-										MessageFormat.format(
-												JGitText.get().checkoutConflictWithFile,
-												ent.getPathString()), e);
-							}
-						}
-					});
-				}
-				editor.commit();
-			} finally {
-				startWalk.release();
-				r.release();
-			}
-		} finally {
-			dc.unlock();
-			revWalk.release();
-		}
-		return this;
-	}
+         final File workTree = repo.getWorkTree();
+         final ObjectReader r = repo.getObjectDatabase().newReader();
+         try {
+            while (startWalk.next()) {
+               final ObjectId blobId = startWalk.getObjectId(0);
+               final FileMode mode = startWalk.getFileMode(0);
+               editor.add(new PathEdit(startWalk.getPathString()) {
+                  public void apply(DirCacheEntry ent) {
+                     ent.setObjectId(blobId);
+                     ent.setFileMode(mode);
+                     try {
+                        DirCacheCheckout.checkoutEntry(repo, new File(
+                              workTree, ent.getPathString()), ent, r);
+                     } catch (IOException e) {
+                        throw new JGitInternalException(
+                              MessageFormat.format(
+                                    JGitText.get().checkoutConflictWithFile,
+                                    ent.getPathString()), e);
+                     }
+                  }
+               });
+            }
+            editor.commit();
+         } finally {
+            startWalk.release();
+            r.release();
+         }
+      } finally {
+         dc.unlock();
+         revWalk.release();
+      }
+      return this;
+   }
 
-	private ObjectId getStartPoint() throws AmbiguousObjectException,
-			RefNotFoundException, IOException {
-		if (startCommit != null)
-			return startCommit.getId();
-		ObjectId result = null;
-		try {
-			result = repo.resolve((startPoint == null) ? Constants.HEAD
-					: startPoint);
-		} catch (AmbiguousObjectException e) {
-			throw e;
-		}
-		if (result == null)
-			throw new RefNotFoundException(MessageFormat.format(
-					JGitText.get().refNotResolved,
-					startPoint != null ? startPoint : Constants.HEAD));
-		return result;
-	}
+   private ObjectId getStartPoint() throws AmbiguousObjectException,
+         RefNotFoundException, IOException {
+      if (startCommit != null)
+         return startCommit.getId();
+      ObjectId result = null;
+      try {
+         result = repo.resolve((startPoint == null) ? Constants.HEAD
+               : startPoint);
+      } catch (AmbiguousObjectException e) {
+         throw e;
+      }
+      if (result == null)
+         throw new RefNotFoundException(MessageFormat.format(
+               JGitText.get().refNotResolved,
+               startPoint != null ? startPoint : Constants.HEAD));
+      return result;
+   }
 
-	private void processOptions() throws InvalidRefNameException {
-		if (paths.isEmpty()
-				&& (name == null || !Repository
-						.isValidRefName(Constants.R_HEADS + name)))
-			throw new InvalidRefNameException(MessageFormat.format(JGitText
-					.get().branchNameInvalid, name == null ? "<null>" : name));
-	}
+   private void processOptions() throws InvalidRefNameException {
+      if (paths.isEmpty()
+            && (name == null || !Repository
+                  .isValidRefName(Constants.R_HEADS + name)))
+         throw new InvalidRefNameException(MessageFormat.format(JGitText
+               .get().branchNameInvalid, name == null ? "<null>" : name));
+   }
 
-	/**
-	 * @param name
-	 *            the name of the new branch
-	 * @return this instance
-	 */
-	public CheckoutCommand_Copy setName(String name) {
-		checkCallable();
-		this.name = name;
-		return this;
-	}
+   /**
+    * @param name
+    *            the name of the new branch
+    * @return this instance
+    */
+   public CheckoutCommand_Copy setName(String name) {
+      checkCallable();
+      this.name = name;
+      return this;
+   }
 
-	/**
-	 * @param createBranch
-	 *            if <code>true</code> a branch will be created as part of the
-	 *            checkout and set to the specified start point
-	 * @return this instance
-	 */
-	public CheckoutCommand_Copy setCreateBranch(boolean createBranch) {
-		checkCallable();
-		this.createBranch = createBranch;
-		return this;
-	}
+   /**
+    * @param createBranch
+    *            if <code>true</code> a branch will be created as part of the
+    *            checkout and set to the specified start point
+    * @return this instance
+    */
+   public CheckoutCommand_Copy setCreateBranch(boolean createBranch) {
+      checkCallable();
+      this.createBranch = createBranch;
+      return this;
+   }
 
-	/**
-	 * @param force
-	 *            if <code>true</code> and the branch with the given name
-	 *            already exists, the start-point of an existing branch will be
-	 *            set to a new start-point; if false, the existing branch will
-	 *            not be changed
-	 * @return this instance
-	 */
-	public CheckoutCommand_Copy setForce(boolean force) {
-		checkCallable();
-		this.force = force;
-		return this;
-	}
+   /**
+    * @param force
+    *            if <code>true</code> and the branch with the given name
+    *            already exists, the start-point of an existing branch will be
+    *            set to a new start-point; if false, the existing branch will
+    *            not be changed
+    * @return this instance
+    */
+   public CheckoutCommand_Copy setForce(boolean force) {
+      checkCallable();
+      this.force = force;
+      return this;
+   }
 
-	/**
-	 * @param startPoint
-	 *            corresponds to the start-point option; if <code>null</code>,
-	 *            the current HEAD will be used
-	 * @return this instance
-	 */
-	public CheckoutCommand_Copy setStartPoint(String startPoint) {
-		checkCallable();
-		this.startPoint = startPoint;
-		this.startCommit = null;
-		return this;
-	}
+   /**
+    * @param startPoint
+    *            corresponds to the start-point option; if <code>null</code>,
+    *            the current HEAD will be used
+    * @return this instance
+    */
+   public CheckoutCommand_Copy setStartPoint(String startPoint) {
+      checkCallable();
+      this.startPoint = startPoint;
+      this.startCommit = null;
+      return this;
+   }
 
-	/**
-	 * @param startCommit
-	 *            corresponds to the start-point option; if <code>null</code>,
-	 *            the current HEAD will be used
-	 * @return this instance
-	 */
-	public CheckoutCommand_Copy setStartPoint(RevCommit startCommit) {
-		checkCallable();
-		this.startCommit = startCommit;
-		this.startPoint = null;
-		return this;
-	}
+   /**
+    * @param startCommit
+    *            corresponds to the start-point option; if <code>null</code>,
+    *            the current HEAD will be used
+    * @return this instance
+    */
+   public CheckoutCommand_Copy setStartPoint(RevCommit startCommit) {
+      checkCallable();
+      this.startCommit = startCommit;
+      this.startPoint = null;
+      return this;
+   }
 
-	/**
-	 * @param mode
-	 *            corresponds to the --track/--no-track options; may be
-	 *            <code>null</code>
-	 * @return this instance
-	 */
-	public CheckoutCommand_Copy setUpstreamMode(
-			CreateBranchCommand.SetupUpstreamMode mode) {
-		checkCallable();
-		this.upstreamMode = mode;
-		return this;
-	}
+   /**
+    * @param mode
+    *            corresponds to the --track/--no-track options; may be
+    *            <code>null</code>
+    * @return this instance
+    */
+   public CheckoutCommand_Copy setUpstreamMode(
+         CreateBranchCommand.SetupUpstreamMode mode) {
+      checkCallable();
+      this.upstreamMode = mode;
+      return this;
+   }
 
-	/**
-	 * @return the result
-	 */
-	public CheckoutResult_Copy getResult() {
-		if (status == null)
-			return CheckoutResult_Copy.NOT_TRIED_RESULT;
-		return status;
-	}
+   /**
+    * @return the result
+    */
+   public CheckoutResult_Copy getResult() {
+      if (status == null)
+         return CheckoutResult_Copy.NOT_TRIED_RESULT;
+      return status;
+   }
 }

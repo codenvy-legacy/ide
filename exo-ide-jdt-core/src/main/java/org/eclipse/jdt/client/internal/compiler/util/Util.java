@@ -640,7 +640,7 @@ public class Util implements SuffixConstants
    // InputStream stream = null;
    // try {
    // InputStream inputStream = zip.getInputStream(ze);
-   //			if (inputStream == null) throw new IOException("Invalid zip entry name : " + ze.getName()); //$NON-NLS-1$
+   //         if (inputStream == null) throw new IOException("Invalid zip entry name : " + ze.getName()); //$NON-NLS-1$
    // stream = new BufferedInputStream(inputStream);
    // return getInputStreamAsByteArray(stream, (int) ze.getSize());
    // } finally {
@@ -1086,7 +1086,7 @@ public class Util implements SuffixConstants
    // }
    /* // * External API // */
    // public static File getJavaHome() {
-   //		String javaHome = System.getProperty("java.home");//$NON-NLS-1$
+   //      String javaHome = System.getProperty("java.home");//$NON-NLS-1$
    // if (javaHome != null) {
    // File javaHomeFile = new File(javaHome);
    // if (javaHomeFile.exists()) {
@@ -1102,8 +1102,8 @@ public class Util implements SuffixConstants
       // * we can try to retrieve the default librairies of the VM used to run
       // * the batch compiler
       // */
-      //		String javaversion = System.getProperty("java.version");//$NON-NLS-1$
-      //		if (javaversion != null && javaversion.equalsIgnoreCase("1.1.8")) { //$NON-NLS-1$
+      //      String javaversion = System.getProperty("java.version");//$NON-NLS-1$
+      //      if (javaversion != null && javaversion.equalsIgnoreCase("1.1.8")) { //$NON-NLS-1$
       // throw new IllegalStateException();
       // }
       //
@@ -1111,13 +1111,13 @@ public class Util implements SuffixConstants
       // * Handle >= JDK 1.2.2 settings: retrieve the bootclasspath
       // */
       // // check bootclasspath properties for Sun, JRockit and Harmony VMs
-      //		String bootclasspathProperty = System.getProperty("sun.boot.class.path"); //$NON-NLS-1$
+      //      String bootclasspathProperty = System.getProperty("sun.boot.class.path"); //$NON-NLS-1$
       // if ((bootclasspathProperty == null) || (bootclasspathProperty.length() == 0)) {
       // // IBM J9 VMs
-      //			bootclasspathProperty = System.getProperty("vm.boot.class.path"); //$NON-NLS-1$
+      //         bootclasspathProperty = System.getProperty("vm.boot.class.path"); //$NON-NLS-1$
       // if ((bootclasspathProperty == null) || (bootclasspathProperty.length() == 0)) {
       // // Harmony using IBM VME
-      //				bootclasspathProperty = System.getProperty("org.apache.harmony.boot.class.path"); //$NON-NLS-1$
+      //            bootclasspathProperty = System.getProperty("org.apache.harmony.boot.class.path"); //$NON-NLS-1$
       // }
       // }
       // if ((bootclasspathProperty != null) && (bootclasspathProperty.length() != 0)) {
@@ -1135,14 +1135,14 @@ public class Util implements SuffixConstants
       // final File javaHome = getJavaHome();
       // if (javaHome != null) {
       // File[] directoriesToCheck = null;
-      //				if (System.getProperty("os.name").startsWith("Mac")) {//$NON-NLS-1$//$NON-NLS-2$
+      //            if (System.getProperty("os.name").startsWith("Mac")) {//$NON-NLS-1$//$NON-NLS-2$
       // directoriesToCheck = new File[] {
-      //						new File(javaHome, "../Classes"), //$NON-NLS-1$
+      //                  new File(javaHome, "../Classes"), //$NON-NLS-1$
       // };
       // } else {
       // // fall back to try to retrieve them out of the lib directory
       // directoriesToCheck = new File[] {
-      //						new File(javaHome, "lib") //$NON-NLS-1$
+      //                  new File(javaHome, "lib") //$NON-NLS-1$
       // };
       // }
       // File[][] systemLibrariesJars = Main.getLibrariesFiles(directoriesToCheck);

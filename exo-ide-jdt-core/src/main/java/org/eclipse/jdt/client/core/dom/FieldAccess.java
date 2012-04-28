@@ -19,7 +19,7 @@ import java.util.List;
  * 
  * <pre>
  * FieldAccess:
- * 		Expression <b>.</b> Identifier
+ *       Expression <b>.</b> Identifier
  * </pre>
  * 
  * <p>

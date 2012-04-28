@@ -8,11 +8,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Stephan Herrmann <stephan@cs.tu-berlin.de> - Contributions for
- *     						bug 325755 - [compiler] wrong initialization state after conditional expression
- *     						bug 320170 - [compiler] [null] Whitebox issues in null analysis
- *     						bug 292478 - Report potentially null across variable assignment
- *     						bug 332637 - Dead Code detection removing code that isn't dead
- *     						bug 341499 - [compiler][null] allocate extra bits in all methods of UnconditionalFlowInfo
+ *                       bug 325755 - [compiler] wrong initialization state after conditional expression
+ *                       bug 320170 - [compiler] [null] Whitebox issues in null analysis
+ *                       bug 292478 - Report potentially null across variable assignment
+ *                       bug 332637 - Dead Code detection removing code that isn't dead
+ *                       bug 341499 - [compiler][null] allocate extra bits in all methods of UnconditionalFlowInfo
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.flow;
 

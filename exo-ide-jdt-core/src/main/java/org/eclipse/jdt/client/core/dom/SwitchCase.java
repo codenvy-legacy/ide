@@ -21,8 +21,8 @@ import java.util.List;
  * 
  * <pre>
  * SwitchCase:
- * 	<b>case</b> Expression  <b>:</b>
- * 	<b>default</b> <b>:</b>
+ *    <b>case</b> Expression  <b>:</b>
+ *    <b>default</b> <b>:</b>
  * </pre>
  * 
  * </p>

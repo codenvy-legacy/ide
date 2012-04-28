@@ -148,7 +148,7 @@ public class ASTFlattener extends GenericVisitor
 
    public static String asString(ASTNode node)
    {
-      //		Assert.isTrue(node.getAST().apiLevel() == ASTProvider.SHARED_AST_LEVEL);
+      //      Assert.isTrue(node.getAST().apiLevel() == ASTProvider.SHARED_AST_LEVEL);
 
       ASTFlattener flattener = new ASTFlattener();
       node.accept(flattener);
