@@ -19,6 +19,8 @@
 package org.exoplatform.ide.client.application;
 
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -149,4 +151,12 @@ public class IDEForm extends DockLayoutPanel implements IDEPresenter.Display
       return statusbar;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.application.IDEPresenter.Display#setContextMenuHandler(com.google.gwt.event.dom.client.ContextMenuHandler)
+    */
+   @Override
+   public void setContextMenuHandler(ContextMenuHandler handler)
+   {
+      RootLayoutPanel.get().addDomHandler(handler, ContextMenuEvent.getType());
+   }
 }

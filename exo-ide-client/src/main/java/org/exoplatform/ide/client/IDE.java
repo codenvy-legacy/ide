@@ -188,6 +188,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       }
       controlsRegistration.addControlsFormatter(new MainMenuControlsFormatter());
       controlsRegistration.formatControls();
+
       /*
        * Find a method to disable selection of text and elements on the page ( exclude text fields ).
        */

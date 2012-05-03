@@ -179,6 +179,7 @@ public class CutItemsCommand extends SimpleControl implements IDEControl, VfsCha
       }
 
       setEnabled(browserPanelSelected);
+      setShowInContextMenu(browserPanelSelected);
    }
 
    @Override

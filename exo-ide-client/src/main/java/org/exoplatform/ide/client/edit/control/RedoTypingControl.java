@@ -21,13 +21,18 @@ package org.exoplatform.ide.client.edit.control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.editor.EditorView;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuEvent;
+import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -37,16 +42,15 @@ import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingEvent;
  */
 @RolesAllowed({"administrators", "developers"})
 public class RedoTypingControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   EditorFileContentChangedHandler
+   EditorFileContentChangedHandler, ShowContextMenuHandler, ViewActivatedHandler
 {
 
    public static final String ID = "Edit/Redo Typing";
 
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.redoTypingControl();
 
-   /**
-    * 
-    */
+   private boolean isEditorPanelActive = false;
+
    public RedoTypingControl()
    {
       super(ID);
@@ -64,6 +68,8 @@ public class RedoTypingControl extends SimpleControl implements IDEControl, Edit
    {
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(EditorFileContentChangedEvent.TYPE, this);
+      IDE.addHandler(ShowContextMenuEvent.TYPE, this);
+      IDE.addHandler(ViewActivatedEvent.TYPE, this);
    }
 
    /**
@@ -100,4 +106,23 @@ public class RedoTypingControl extends SimpleControl implements IDEControl, Edit
       setEnabled(event.hasRedoChanges());
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.event.ShowContextMenuHandler#onShowContextMenu(org.exoplatform.ide.client.framework.event.ShowContextMenuEvent)
+    */
+   @Override
+   public void onShowContextMenu(ShowContextMenuEvent event)
+   {
+      boolean showInContextMenu = "editor".equals(event.getViewPart());
+      setShowInContextMenu(showInContextMenu && isEditorPanelActive);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
+    */
+   @Override
+   public void onViewActivated(ViewActivatedEvent event)
+   {
+      isEditorPanelActive = event.getView() instanceof EditorView;
+      setShowInContextMenu(isEditorPanelActive);
+   }
 }

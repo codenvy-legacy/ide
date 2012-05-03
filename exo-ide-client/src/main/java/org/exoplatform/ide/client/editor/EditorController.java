@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersHandler;
+import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuEvent;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -84,6 +85,8 @@ import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
+import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
+import org.exoplatform.ide.editor.api.event.EditorContextMenuHandler;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
@@ -104,12 +107,12 @@ import java.util.Map;
  */
 public class EditorController implements EditorContentChangedHandler, EditorSaveContentHandler,
    EditorActiveFileChangedHandler, EditorCloseFileHandler, EditorUndoTypingHandler, EditorRedoTypingHandler,
-   ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler,
-   FileSavedHandler, EditorReplaceFileHandler, EditorDeleteCurrentLineHandler, EditorGoToLineHandler,
-   EditorFindTextHandler, EditorReplaceTextHandler, EditorReplaceAndFindTextHandler, EditorSetFocusHandler,
-   ApplicationSettingsReceivedHandler, SaveFileAsHandler, ViewVisibilityChangedHandler,
-   ViewClosedHandler, ClosingViewHandler, EditorFocusReceivedHandler, VersionRestoredHandler
-   
+   ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler,
+   EditorReplaceFileHandler, EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler,
+   EditorContextMenuHandler, EditorReplaceTextHandler, EditorReplaceAndFindTextHandler, EditorSetFocusHandler,
+   ApplicationSettingsReceivedHandler, SaveFileAsHandler, ViewVisibilityChangedHandler, ViewClosedHandler,
+   ClosingViewHandler, EditorFocusReceivedHandler, VersionRestoredHandler
+
 {
 
    private static final String CLOSE_FILE = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT
@@ -140,7 +143,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(EditorOpenFileEvent.TYPE, this);
       IDE.addHandler(EditorReplaceFileEvent.TYPE, this);
-//      IDE.addHandler(RefreshHotKeysEvent.TYPE, this);
+      // IDE.addHandler(RefreshHotKeysEvent.TYPE, this);
 
       IDE.addHandler(EditorFindTextEvent.TYPE, this);
       IDE.addHandler(EditorReplaceTextEvent.TYPE, this);
@@ -158,6 +161,8 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       IDE.addHandler(EditorDeleteCurrentLineEvent.TYPE, this);
       IDE.addHandler(EditorGoToLineEvent.TYPE, this);
       IDE.addHandler(EditorSetFocusEvent.TYPE, this);
+      IDE.addHandler(EditorContextMenuEvent.TYPE, this);
+
       IDE.addHandler(SaveFileAsEvent.TYPE, this);
       IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(ClosingViewEvent.TYPE, this);
@@ -423,7 +428,8 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
          openedFileEditorView.setViewVisible();
          if (event.getCursorPosition() != null)
          {
-            openedFileEditorView.getEditor().goToPosition(event.getCursorPosition().getRow(), event.getCursorPosition().getColumn());
+            openedFileEditorView.getEditor().goToPosition(event.getCursorPosition().getRow(),
+               event.getCursorPosition().getColumn());
          }
          return;
       }
@@ -628,17 +634,17 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       getEditorFromView(activeFile.getId()).setFocus();
    }
 
-//   public void onRefreshHotKeys(RefreshHotKeysEvent event)
-//   {
-//      Map<String, String> hotKeys = applicationSettings.getValueAsMap("hotkeys");
-//      List<String> hotKeyList = new ArrayList<String>(hotKeys.keySet());
-//      Iterator<String> it = openedFiles.keySet().iterator();
-//      while (it.hasNext())
-//      {
-//         String file = it.next();
-//         getEditorFromView(file).setHotKeyList(hotKeyList);
-//      }
-//   }
+   // public void onRefreshHotKeys(RefreshHotKeysEvent event)
+   // {
+   // Map<String, String> hotKeys = applicationSettings.getValueAsMap("hotkeys");
+   // List<String> hotKeyList = new ArrayList<String>(hotKeys.keySet());
+   // Iterator<String> it = openedFiles.keySet().iterator();
+   // while (it.hasNext())
+   // {
+   // String file = it.next();
+   // getEditorFromView(file).setHotKeyList(hotKeyList);
+   // }
+   // }
 
    /**
     * @see org.exoplatform.ide.client.framework.event.SaveFileAsHandler#onSaveFileAs(org.exoplatform.ide.client.framework.event.SaveFileAsEvent)
@@ -827,4 +833,12 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       editor.setText(oldVersionFile.getContent());
    }
 
+   /**
+    * @see org.exoplatform.ide.editor.api.event.EditorContextMenuHandler#onEditorContextMenu(org.exoplatform.ide.editor.api.event.EditorContextMenuEvent)
+    */
+   @Override
+   public void onEditorContextMenu(EditorContextMenuEvent event)
+   {
+      IDE.fireEvent(new ShowContextMenuEvent(event.getX(), event.getY(), "editor"));
+   }
 }
