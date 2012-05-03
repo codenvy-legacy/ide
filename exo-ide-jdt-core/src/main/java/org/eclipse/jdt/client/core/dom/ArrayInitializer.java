@@ -19,7 +19,7 @@ import java.util.List;
  * 
  * <pre>
  * ArrayInitializer:
- * 		<b>{</b> [ Expression { <b>,</b> Expression} [ <b>,</b> ]] <b>}</b>
+ *       <b>{</b> [ Expression { <b>,</b> Expression} [ <b>,</b> ]] <b>}</b>
  * </pre>
  * 
  * @since 2.0

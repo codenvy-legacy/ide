@@ -1752,7 +1752,7 @@ public class DefaultCodeFormatterConstants
     * @since 3.6
     */
    public static final String FORMATTER_INSERT_NEW_LINE_AFTER_LABEL = JavaCore.PLUGIN_ID
-      + ".formatter.insert_new_line_after_label"; //$NON-NLS-1$	
+      + ".formatter.insert_new_line_after_label"; //$NON-NLS-1$   
 
    /**
     * <pre>
@@ -4496,25 +4496,25 @@ public class DefaultCodeFormatterConstants
     * <pre>
     * FORMATTER / Option to specify whether the formatter can join wrapped lines or not
     * 
-    * 		For example, the wrapped lines of method foo return statement in following test case:
-    * 			class X {
-    * 			String foo() {
-    * 			return "select x "
-    * 			       + "from y "
-    * 			       + "where z=a";
-    * 			}
-    * 			}
+    *       For example, the wrapped lines of method foo return statement in following test case:
+    *          class X {
+    *          String foo() {
+    *          return "select x "
+    *                 + "from y "
+    *                 + "where z=a";
+    *          }
+    *          }
     * 
-    * 		will be preserved by the formatter when the new preference is used
-    * 		even if the maximum line width would give it enough space to join the lines.
-    * 		Hence produces the following output:
-    * 			class X {
-    * 			    String foo() {
-    * 			        return "select x "
-    * 			                + "from y "
-    * 			                + "where z=a";
-    * 			    }
-    * 			}
+    *       will be preserved by the formatter when the new preference is used
+    *       even if the maximum line width would give it enough space to join the lines.
+    *       Hence produces the following output:
+    *          class X {
+    *              String foo() {
+    *                  return "select x "
+    *                          + "from y "
+    *                          + "where z=a";
+    *              }
+    *          }
     * 
     *     - option id:         "org.eclipse.jdt.core.formatter.join_wrapped_lines"
     *     - possible values:   { TRUE, FALSE }
@@ -4529,16 +4529,16 @@ public class DefaultCodeFormatterConstants
     * <pre>
     * FORMATTER / Option to specify whether the formatter can join text lines in comments or not
     * 
-    * 		For example, the following comment:
-    * 			/**
-    * 			 * The foo method.
-    * 			 * foo is a substitute for bar.
-    * 			 *&#0047;
-    * 			public class X {
-    * 			}
+    *       For example, the following comment:
+    *          /**
+    *           * The foo method.
+    *           * foo is a substitute for bar.
+    *           *&#0047;
+    *          public class X {
+    *          }
     * 
-    * 		will be unchanged by the formatter when this new preference is used,
-    * 		even if the maximum line width would give it enough space to join the lines.
+    *       will be unchanged by the formatter when this new preference is used,
+    *       even if the maximum line width would give it enough space to join the lines.
     * 
     *     - option id:         "org.eclipse.jdt.core.formatter.join_lines_in_comments"
     *     - possible values:   { TRUE, FALSE }

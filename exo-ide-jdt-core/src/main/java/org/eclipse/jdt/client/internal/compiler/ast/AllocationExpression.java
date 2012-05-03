@@ -8,8 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Stephan Herrmann - Contributions for 
- *     						bug 236385 - [compiler] Warn for potential programming problem if an object is created but not used
- *     						bug 319201 - [null] no warning when unboxing SingleNameReference causes NPE
+ *                       bug 236385 - [compiler] Warn for potential programming problem if an object is created but not used
+ *                       bug 319201 - [null] no warning when unboxing SingleNameReference causes NPE
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 

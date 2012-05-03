@@ -15,13 +15,13 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
  * reduce a message send containing the cursor.
  * e.g.
  *
- *	class X {
+ *   class X {
  *    void foo() {
  *      this.bar(1, 2, [cursor]
  *    }
  *  }
  *
- *	---> class X {
+ *   ---> class X {
  *         void foo() {
  *           <CompleteOnMessageSend:this.bar(1, 2)>
  *         }

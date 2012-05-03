@@ -68,6 +68,11 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
    private boolean canResize = true;
 
    /**
+    * View can show custom context menu.
+    */
+   private boolean canShowContextMenu = false;
+
+   /**
     * View's default height
     */
    protected int defaultHeight = 200;
@@ -496,4 +501,28 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
       return closeOnEscape;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.View#canShowContextMenu()
+    */
+   @Override
+   public boolean canShowContextMenu()
+   {
+      return canShowContextMenu;
+   }
+
+   /**
+    * @return the canShowContextMenu
+    */
+   public boolean isCanShowContextMenu()
+   {
+      return canShowContextMenu;
+   }
+
+   /**
+    * @param canShowContextMenu the canShowContextMenu to set
+    */
+   public void setCanShowContextMenu(boolean canShowContextMenu)
+   {
+      this.canShowContextMenu = canShowContextMenu;
+   }
 }

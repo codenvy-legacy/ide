@@ -73,15 +73,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-//import org.eclipse.jdt.ui.CodeStyleConfiguration;
-//import org.eclipse.jdt.ui.PreferenceConstants;
-
-//import org.eclipse.jdt.client.internal.ui.JavaPlugin;
-//import org.eclipse.jdt.internal.ui.JavaUIStatus;
-//import org.eclipse.jdt.internal.ui.javaeditor.ASTProvider;
-//import org.eclipse.jdt.internal.ui.text.correction.ASTResolving;
-//import org.eclipse.jdt.internal.ui.viewsupport.ProjectTemplateStore;
-
 public class StubUtility
 {
 
@@ -206,6 +197,42 @@ public class StubUtility
       return evaluateTemplate(context, template);
    }
 
+   //
+   // public static String getCatchBodyContent(ICompilationUnit cu, String exceptionType, String variableName, ASTNode
+   // locationInAST, String lineDelimiter) throws CoreException {
+   //      String enclosingType= ""; //$NON-NLS-1$
+   //      String enclosingMethod= ""; //$NON-NLS-1$
+   //
+   // if (locationInAST != null) {
+   // MethodDeclaration parentMethod= ASTResolving.findParentMethodDeclaration(locationInAST);
+   // if (parentMethod != null) {
+   // enclosingMethod= parentMethod.getName().getIdentifier();
+   // locationInAST= parentMethod;
+   // }
+   // ASTNode parentType= ASTResolving.findParentType(locationInAST);
+   // if (parentType instanceof AbstractTypeDeclaration) {
+   // enclosingType= ((AbstractTypeDeclaration)parentType).getName().getIdentifier();
+   // }
+   // }
+   // return getCatchBodyContent(cu, exceptionType, variableName, enclosingType, enclosingMethod, lineDelimiter);
+   // }
+   //
+   //
+   // public static String getCatchBodyContent(ICompilationUnit cu, String exceptionType, String variableName, String
+   // enclosingType, String enclosingMethod, String lineDelimiter) throws CoreException {
+   // Template template= getCodeTemplate(CodeTemplateContextType.CATCHBLOCK_ID, cu.getJavaProject());
+   // if (template == null) {
+   // return null;
+   // }
+   //
+   // CodeTemplateContext context= new CodeTemplateContext(template.getContextTypeId(), cu.getJavaProject(), lineDelimiter);
+   // context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, enclosingType);
+   // context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, enclosingMethod);
+   // context.setVariable(CodeTemplateContextType.EXCEPTION_TYPE, exceptionType);
+   // context.setVariable(CodeTemplateContextType.EXCEPTION_VAR, variableName);
+   // return evaluateTemplate(context, template);
+   // }
+   //
    // /*
    // * Don't use this method directly, use CodeGeneration.
    // * @see org.eclipse.jdt.ui.CodeGeneration#getCompilationUnitContent(ICompilationUnit, String, String, String, String)
@@ -213,7 +240,7 @@ public class StubUtility
    // public static String getCompilationUnitContent(ICompilationUnit cu, String fileComment, String typeComment, String
    // typeContent, String lineDelimiter) throws CoreException {
    // IPackageFragment pack= (IPackageFragment)cu.getParent();
-   //		String packDecl= pack.isDefaultPackage() ? "" : "package " + pack.getElementName() + ';'; //$NON-NLS-1$ //$NON-NLS-2$
+   //      String packDecl= pack.isDefaultPackage() ? "" : "package " + pack.getElementName() + ';'; //$NON-NLS-1$ //$NON-NLS-2$
    // return getCompilationUnitContent(cu, packDecl, fileComment, typeComment, typeContent, lineDelimiter);
    // }
    //
@@ -228,8 +255,8 @@ public class StubUtility
    // CodeTemplateContext context= new CodeTemplateContext(template.getContextTypeId(), project, lineDelimiter);
    // context.setCompilationUnitVariables(cu);
    // context.setVariable(CodeTemplateContextType.PACKAGE_DECLARATION, packDecl);
-   //		context.setVariable(CodeTemplateContextType.TYPE_COMMENT, typeComment != null ? typeComment : ""); //$NON-NLS-1$
-   //		context.setVariable(CodeTemplateContextType.FILE_COMMENT, fileComment != null ? fileComment : ""); //$NON-NLS-1$
+   //      context.setVariable(CodeTemplateContextType.TYPE_COMMENT, typeComment != null ? typeComment : ""); //$NON-NLS-1$
+   //      context.setVariable(CodeTemplateContextType.FILE_COMMENT, fileComment != null ? fileComment : ""); //$NON-NLS-1$
    // context.setVariable(CodeTemplateContextType.TYPE_DECLARATION, typeContent);
    // context.setVariable(CodeTemplateContextType.TYPENAME, JavaCore.removeJavaLikeExtension(cu.getElementName()));
    //
@@ -381,14 +408,6 @@ public class StubUtility
    }
 
    //
-   // public static String[] getTypeParameterNames(ITypeParameter[] typeParameters) {
-   // String[] typeParametersNames= new String[typeParameters.length];
-   // for (int i= 0; i < typeParameters.length; i++) {
-   // typeParametersNames[i]= typeParameters[i].getElementName();
-   // }
-   // return typeParametersNames;
-   // }
-   //
    // /**
    // * Don't use this method directly, use CodeGeneration.
    // *
@@ -407,7 +426,7 @@ public class StubUtility
    // public static String getTypeBody(String templateID, ICompilationUnit cu, String typeName, String lineDelim) throws
    // CoreException {
    // if (!VALID_TYPE_BODY_TEMPLATES.contains(templateID)) {
-   //			throw new IllegalArgumentException("Invalid code template ID: " + templateID); //$NON-NLS-1$
+   //         throw new IllegalArgumentException("Invalid code template ID: " + templateID); //$NON-NLS-1$
    // }
    //
    // Template template= getCodeTemplate(templateID, cu.getJavaProject());
@@ -995,6 +1014,97 @@ public class StubUtility
       return true;
    }
 
+   // public static boolean shouldGenerateMethodTypeParameterTags(IJavaProject project) {
+   // return JavaCore.ENABLED.equals(project.getOption(JavaCore.COMPILER_PB_MISSING_JAVADOC_TAGS_METHOD_TYPE_PARAMETERS, true));
+   // }
+   //
+   // /**
+   // * @param decl the method declaration
+   // * @return the return type
+   // * @deprecated Deprecated to avoid deprecated warnings
+   // */
+   // private static ASTNode getReturnType(MethodDeclaration decl) {
+   // // used from API, can't eliminate
+   // return decl.getAST().apiLevel() == AST.JLS2 ? decl.getReturnType() : decl.getReturnType2();
+   // }
+   //
+   //
+   // private static TemplateVariable findVariable(TemplateBuffer buffer, String variable) {
+   // TemplateVariable[] positions= buffer.getVariables();
+   // for (int i= 0; i < positions.length; i++) {
+   // TemplateVariable curr= positions[i];
+   // if (variable.equals(curr.getType())) {
+   // return curr;
+   // }
+   // }
+   // return null;
+   // }
+   //
+   // private static void insertTag(IDocument textBuffer, int offset, int length, String[] paramNames, String[] exceptionNames,
+   // String returnType, String[] typeParameterNames, boolean isDeprecated,
+   // String lineDelimiter) throws BadLocationException {
+   // IRegion region= textBuffer.getLineInformationOfOffset(offset);
+   // if (region == null) {
+   // return;
+   // }
+   // String lineStart= textBuffer.get(region.getOffset(), offset - region.getOffset());
+   //
+   // StringBuffer buf= new StringBuffer();
+   // for (int i= 0; i < typeParameterNames.length; i++) {
+   // if (buf.length() > 0) {
+   // buf.append(lineDelimiter).append(lineStart);
+   // }
+   //         buf.append("@param <").append(typeParameterNames[i]).append('>'); //$NON-NLS-1$
+   // }
+   // for (int i= 0; i < paramNames.length; i++) {
+   // if (buf.length() > 0) {
+   // buf.append(lineDelimiter).append(lineStart);
+   // }
+   //         buf.append("@param ").append(paramNames[i]); //$NON-NLS-1$
+   // }
+   //      if (returnType != null && !returnType.equals("void")) { //$NON-NLS-1$
+   // if (buf.length() > 0) {
+   // buf.append(lineDelimiter).append(lineStart);
+   // }
+   //         buf.append("@return"); //$NON-NLS-1$
+   // }
+   // if (exceptionNames != null) {
+   // for (int i= 0; i < exceptionNames.length; i++) {
+   // if (buf.length() > 0) {
+   // buf.append(lineDelimiter).append(lineStart);
+   // }
+   //            buf.append("@throws ").append(exceptionNames[i]); //$NON-NLS-1$
+   // }
+   // }
+   // if (isDeprecated) {
+   // if (buf.length() > 0) {
+   // buf.append(lineDelimiter).append(lineStart);
+   // }
+   //         buf.append("@deprecated"); //$NON-NLS-1$
+   // }
+   // if (buf.length() == 0 && isAllCommentWhitespace(lineStart)) {
+   // int prevLine= textBuffer.getLineOfOffset(offset) - 1;
+   // if (prevLine > 0) {
+   // IRegion prevRegion= textBuffer.getLineInformation(prevLine);
+   // int prevLineEnd= prevRegion.getOffset() + prevRegion.getLength();
+   // // clear full line
+   //            textBuffer.replace(prevLineEnd, offset + length - prevLineEnd, ""); //$NON-NLS-1$
+   // return;
+   // }
+   // }
+   // textBuffer.replace(offset, length, buf.toString());
+   // }
+   //
+   // private static boolean isAllCommentWhitespace(String lineStart) {
+   // for (int i= 0; i < lineStart.length(); i++) {
+   // char ch= lineStart.charAt(i);
+   // if (!Character.isWhitespace(ch) && ch != '*') {
+   // return false;
+   // }
+   // }
+   // return true;
+   // }
+   //
    /**
     * Returns the line delimiter which is used in the specified project.
     * 
@@ -1015,7 +1125,7 @@ public class StubUtility
    // if (lineDelimiter != null)
    // return lineDelimiter;
    //
-   //		return System.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+   //      return System.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
    // }
    //
    // public static String getLineDelimiterPreference(IProject project) {
@@ -1030,7 +1140,7 @@ public class StubUtility
    // }
    // // workspace preference
    // scopeContext= new IScopeContext[] { InstanceScope.INSTANCE };
-   //		String platformDefault= System.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+   //      String platformDefault= System.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
    // return Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, platformDefault,
    // scopeContext);
    // }
@@ -1567,7 +1677,7 @@ public class StubUtility
    // }
    // String[][] names= new String[nParams][];
    // for (int i= 0; i < names.length; i++) {
-   //			names[i]= new String[] { "arg" + i }; //$NON-NLS-1$
+   //         names[i]= new String[] { "arg" + i }; //$NON-NLS-1$
    // }
    // return names;
    // }
@@ -1778,6 +1888,59 @@ public class StubUtility
    //      return false;
    //   }
 
+   // public static boolean hasFieldName(IJavaProject project, String name) {
+   // String prefixes= project.getOption(JavaCore.CODEASSIST_FIELD_PREFIXES, true);
+   // String suffixes= project.getOption(JavaCore.CODEASSIST_FIELD_SUFFIXES, true);
+   // String staticPrefixes= project.getOption(JavaCore.CODEASSIST_STATIC_FIELD_PREFIXES, true);
+   // String staticSuffixes= project.getOption(JavaCore.CODEASSIST_STATIC_FIELD_SUFFIXES, true);
+   //
+   //
+   // return hasPrefixOrSuffix(prefixes, suffixes, name)
+   // || hasPrefixOrSuffix(staticPrefixes, staticSuffixes, name);
+   // }
+   //
+   // public static boolean hasParameterName(IJavaProject project, String name) {
+   // String prefixes= project.getOption(JavaCore.CODEASSIST_ARGUMENT_PREFIXES, true);
+   // String suffixes= project.getOption(JavaCore.CODEASSIST_ARGUMENT_SUFFIXES, true);
+   // return hasPrefixOrSuffix(prefixes, suffixes, name);
+   // }
+   //
+   // public static boolean hasLocalVariableName(IJavaProject project, String name) {
+   // String prefixes= project.getOption(JavaCore.CODEASSIST_LOCAL_PREFIXES, true);
+   // String suffixes= project.getOption(JavaCore.CODEASSIST_LOCAL_SUFFIXES, true);
+   // return hasPrefixOrSuffix(prefixes, suffixes, name);
+   // }
+   //
+   // public static boolean hasConstantName(IJavaProject project, String name) {
+   // if (Character.isUpperCase(name.charAt(0)))
+   // return true;
+   // String prefixes= project.getOption(JavaCore.CODEASSIST_STATIC_FINAL_FIELD_PREFIXES, true);
+   // String suffixes= project.getOption(JavaCore.CODEASSIST_STATIC_FINAL_FIELD_SUFFIXES, true);
+   // return hasPrefixOrSuffix(prefixes, suffixes, name);
+   // }
+   //
+   //
+   // private static boolean hasPrefixOrSuffix(String prefixes, String suffixes, String name) {
+   //      final String listSeparartor= ","; //$NON-NLS-1$
+   //
+   // StringTokenizer tok= new StringTokenizer(prefixes, listSeparartor);
+   // while (tok.hasMoreTokens()) {
+   // String curr= tok.nextToken();
+   // if (name.startsWith(curr)) {
+   // return true;
+   // }
+   // }
+   //
+   // tok= new StringTokenizer(suffixes, listSeparartor);
+   // while (tok.hasMoreTokens()) {
+   // String curr= tok.nextToken();
+   // if (name.endsWith(curr)) {
+   // return true;
+   // }
+   // }
+   // return false;
+   // }
+   //
    // // -------------------- preference access -----------------------
    //
    // public static boolean useThisForFieldAccess(IJavaProject project) {

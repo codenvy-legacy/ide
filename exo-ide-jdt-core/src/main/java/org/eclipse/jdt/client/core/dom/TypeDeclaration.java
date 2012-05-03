@@ -20,17 +20,17 @@ import java.util.List;
  * 
  * <pre>
  * TypeDeclaration:
- * 		ClassDeclaration
- * 		InterfaceDeclaration
+ *       ClassDeclaration
+ *       InterfaceDeclaration
  * ClassDeclaration:
  *      [ Javadoc ] { Modifier } <b>class</b> Identifier
- * 		[ <b>extends</b> Type]
- * 		[ <b>implements</b> Type { <b>,</b> Type } ]
- * 		<b>{</b> { ClassBodyDeclaration | <b>;</b> } <b>}</b>
+ *       [ <b>extends</b> Type]
+ *       [ <b>implements</b> Type { <b>,</b> Type } ]
+ *       <b>{</b> { ClassBodyDeclaration | <b>;</b> } <b>}</b>
  * InterfaceDeclaration:
  *      [ Javadoc ] { Modifier } <b>interface</b> Identifier
- * 		[ <b>extends</b> Type { <b>,</b> Type } ]
- * 			<b>{</b> { InterfaceBodyDeclaration | <b>;</b> } <b>}</b>
+ *       [ <b>extends</b> Type { <b>,</b> Type } ]
+ *          <b>{</b> { InterfaceBodyDeclaration | <b>;</b> } <b>}</b>
  * </pre>
  * 
  * For JLS3, type parameters and reified modifiers (and annotations) were added, and the superclass type name and superinterface
@@ -38,19 +38,19 @@ import java.util.List;
  * 
  * <pre>
  * TypeDeclaration:
- * 		ClassDeclaration
- * 		InterfaceDeclaration
+ *       ClassDeclaration
+ *       InterfaceDeclaration
  * ClassDeclaration:
  *      [ Javadoc ] { ExtendedModifier } <b>class</b> Identifier
- * 		[ <b>&lt;</b> TypeParameter { <b>,</b> TypeParameter } <b>&gt;</b> ]
- * 		[ <b>extends</b> Type ]
- * 		[ <b>implements</b> Type { <b>,</b> Type } ]
- * 		<b>{</b> { ClassBodyDeclaration | <b>;</b> } <b>}</b>
+ *       [ <b>&lt;</b> TypeParameter { <b>,</b> TypeParameter } <b>&gt;</b> ]
+ *       [ <b>extends</b> Type ]
+ *       [ <b>implements</b> Type { <b>,</b> Type } ]
+ *       <b>{</b> { ClassBodyDeclaration | <b>;</b> } <b>}</b>
  * InterfaceDeclaration:
  *      [ Javadoc ] { ExtendedModifier } <b>interface</b> Identifier
- * 		[ <b>&lt;</b> TypeParameter { <b>,</b> TypeParameter } <b>&gt;</b> ]
- * 		[ <b>extends</b> Type { <b>,</b> Type } ]
- * 			<b>{</b> { InterfaceBodyDeclaration | <b>;</b> } <b>}</b>
+ *       [ <b>&lt;</b> TypeParameter { <b>,</b> TypeParameter } <b>&gt;</b> ]
+ *       [ <b>extends</b> Type { <b>,</b> Type } ]
+ *          <b>{</b> { InterfaceBodyDeclaration | <b>;</b> } <b>}</b>
  * </pre>
  * <p>
  * When a Javadoc comment is present, the source range begins with the first character of the "/**" comment delimiter. When there

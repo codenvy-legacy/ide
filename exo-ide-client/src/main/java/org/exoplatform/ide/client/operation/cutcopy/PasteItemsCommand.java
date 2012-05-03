@@ -197,6 +197,7 @@ public class PasteItemsCommand extends SimpleControl implements IDEControl, Item
       }
 
       setEnabled(itemsToPasteSelected && browserPanelSelected);
+      setShowInContextMenu(browserPanelSelected);
    }
 
    /**

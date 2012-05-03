@@ -292,11 +292,11 @@ public class JavaMethodCompletionProposal extends LazyJavaCompletionProposal
    // }
    //
    // if (isInJavadoc()) {
-   //			int idx = word.indexOf("{@link "); //$NON-NLS-1$
+   //         int idx = word.indexOf("{@link "); //$NON-NLS-1$
    // if (idx==0) {
    // word = word.substring(7);
    // } else {
-   //				idx = word.indexOf("{@value "); //$NON-NLS-1$
+   //            idx = word.indexOf("{@value "); //$NON-NLS-1$
    // if (idx==0) {
    // word = word.substring(8);
    // }

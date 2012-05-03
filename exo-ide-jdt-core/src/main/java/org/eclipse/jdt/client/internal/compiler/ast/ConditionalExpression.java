@@ -8,9 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Stephen Herrmann <stephan@cs.tu-berlin.de> -  Contributions for
- *     						bug 133125 - [compiler][null] need to report the null status of expressions and analyze them simultaneously
- *     						bug 292478 - Report potentially null across variable assignment
- * 							bug 324178 - [null] ConditionalExpression.nullStatus(..) doesn't take into account the analysis of condition itself
+ *                       bug 133125 - [compiler][null] need to report the null status of expressions and analyze them simultaneously
+ *                       bug 292478 - Report potentially null across variable assignment
+ *                      bug 324178 - [null] ConditionalExpression.nullStatus(..) doesn't take into account the analysis of condition itself
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 

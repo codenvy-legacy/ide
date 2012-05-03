@@ -259,12 +259,12 @@ public class ASTRewrite
    //
    // ASTNode root= rootNode.getRoot();
    // if (!(root instanceof CompilationUnit)) {
-   //			throw new IllegalArgumentException("This API can only be used if the AST is created from a compilation unit or class file"); //$NON-NLS-1$
+   //         throw new IllegalArgumentException("This API can only be used if the AST is created from a compilation unit or class file"); //$NON-NLS-1$
    // }
    // CompilationUnit astRoot= (CompilationUnit) root;
    // ITypeRoot typeRoot = astRoot.getTypeRoot();
    // if (typeRoot == null || typeRoot.getBuffer() == null) {
-   //			throw new IllegalArgumentException("This API can only be used if the AST is created from a compilation unit or class file"); //$NON-NLS-1$
+   //         throw new IllegalArgumentException("This API can only be used if the AST is created from a compilation unit or class file"); //$NON-NLS-1$
    // }
    //
    // char[] content= typeRoot.getBuffer().getCharacters();
@@ -624,7 +624,7 @@ public class ASTRewrite
    {
       // TODO
       // if (!property.getNodeClass().isInstance(node)) {
-      //			String message= property.getId() + " is not a property of type " + node.getClass().getName(); //$NON-NLS-1$
+      //         String message= property.getId() + " is not a property of type " + node.getClass().getName(); //$NON-NLS-1$
       // throw new IllegalArgumentException(message);
       // }
    }

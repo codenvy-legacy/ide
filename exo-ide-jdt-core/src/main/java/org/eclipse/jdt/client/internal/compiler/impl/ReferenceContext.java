@@ -13,7 +13,7 @@ package org.eclipse.jdt.client.internal.compiler.impl;
 /*
  * Implementors are valid compilation contexts from which we can
  * escape in case of error:
- *	For example: method, type or compilation unit.
+ *   For example: method, type or compilation unit.
  */
 
 import org.eclipse.jdt.client.core.compiler.CategorizedProblem;

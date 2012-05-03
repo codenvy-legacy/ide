@@ -125,7 +125,7 @@ public class ASTResolving
             }
             if (node.equals(infix.getLeftOperand()))
             {
-               //	xx operation expression
+               //   xx operation expression
                ITypeBinding rigthHandBinding = infix.getRightOperand().resolveTypeBinding();
                if (rigthHandBinding != null)
                {

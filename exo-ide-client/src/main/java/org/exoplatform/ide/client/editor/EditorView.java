@@ -104,7 +104,8 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
    {
       super("editor-" + i++, "editor", getFileTitle(file, isFileReadOnly), new Image(ImageUtil.getIcon(file
          .getMimeType())));
-
+      setCanShowContextMenu(true);
+      
       if (supportedEditors == null)
          return;
 

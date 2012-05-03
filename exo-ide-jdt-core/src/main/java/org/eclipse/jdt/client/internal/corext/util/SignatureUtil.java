@@ -218,48 +218,48 @@ public final class SignatureUtil
       return Signature.toString(signature);
    }
 
-   //	/**
-   //	 * Returns the qualified signature corresponding to
-   //	 * <code>signature</code>.
-   //	 *
-   //	 * @param signature the signature to qualify
-   //	 * @param context the type inside which an unqualified type will be
-   //	 *        resolved to find the qualifier, or <code>null</code> if no
-   //	 *        context is available
-   //	 * @return the qualified signature
-   //	 */
-   //	public static String qualifySignature(final String signature, final IType context) {
-   //		if (context == null)
-   //			return signature;
+   //   /**
+   //    * Returns the qualified signature corresponding to
+   //    * <code>signature</code>.
+   //    *
+   //    * @param signature the signature to qualify
+   //    * @param context the type inside which an unqualified type will be
+   //    *        resolved to find the qualifier, or <code>null</code> if no
+   //    *        context is available
+   //    * @return the qualified signature
+   //    */
+   //   public static String qualifySignature(final String signature, final IType context) {
+   //      if (context == null)
+   //         return signature;
    //
-   //		String qualifier= Signature.getSignatureQualifier(signature);
-   //		if (qualifier.length() > 0)
-   //			return signature;
+   //      String qualifier= Signature.getSignatureQualifier(signature);
+   //      if (qualifier.length() > 0)
+   //         return signature;
    //
-   //		String elementType= Signature.getElementType(signature);
-   //		String erasure= Signature.getTypeErasure(elementType);
-   //		String simpleName= Signature.getSignatureSimpleName(erasure);
-   //		String genericSimpleName= Signature.getSignatureSimpleName(elementType);
+   //      String elementType= Signature.getElementType(signature);
+   //      String erasure= Signature.getTypeErasure(elementType);
+   //      String simpleName= Signature.getSignatureSimpleName(erasure);
+   //      String genericSimpleName= Signature.getSignatureSimpleName(elementType);
    //
-   //		int dim= Signature.getArrayCount(signature);
+   //      int dim= Signature.getArrayCount(signature);
    //
-   //		try {
-   //			String[][] strings= context.resolveType(simpleName);
-   //			if (strings != null && strings.length > 0)
-   //				qualifier= strings[0][0];
-   //		} catch (JavaModelException e) {
-   //			// ignore - not found
-   //		}
+   //      try {
+   //         String[][] strings= context.resolveType(simpleName);
+   //         if (strings != null && strings.length > 0)
+   //            qualifier= strings[0][0];
+   //      } catch (JavaModelException e) {
+   //         // ignore - not found
+   //      }
    //
-   //		if (qualifier.length() == 0)
-   //			return signature;
+   //      if (qualifier.length() == 0)
+   //         return signature;
    //
-   //		String qualifiedType= Signature.toQualifiedName(new String[] {qualifier, genericSimpleName});
-   //		String qualifiedSignature= Signature.createTypeSignature(qualifiedType, true);
-   //		String newSignature= Signature.createArraySignature(qualifiedSignature, dim);
+   //      String qualifiedType= Signature.toQualifiedName(new String[] {qualifier, genericSimpleName});
+   //      String qualifiedSignature= Signature.createTypeSignature(qualifiedType, true);
+   //      String newSignature= Signature.createArraySignature(qualifiedSignature, dim);
    //
-   //		return newSignature;
-   //	}
+   //      return newSignature;
+   //   }
 
    /**
     * Takes a method signature

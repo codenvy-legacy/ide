@@ -87,6 +87,7 @@ public class TinyProjectExplorerView extends ViewImpl implements ProjectExplorer
    {
       super(ID, "navigation", TITLE, new Image(IDEImageBundle.INSTANCE.projectExplorer()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
+      setCanShowContextMenu(true);
    }
 
    /**

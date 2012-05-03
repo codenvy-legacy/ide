@@ -25,7 +25,7 @@ import org.eclipse.jdt.client.internal.compiler.util.Util;
  * decide whether the compilation task can be processed further or not.
  *
  * Behavior : will request its current policy if need to stop on
- *	first error, and if should proceed (persist) with problems.
+ *   first error, and if should proceed (persist) with problems.
  */
 
 public class ProblemHandler

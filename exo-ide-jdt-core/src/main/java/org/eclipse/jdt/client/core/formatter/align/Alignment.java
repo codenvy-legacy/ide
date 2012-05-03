@@ -681,7 +681,7 @@ public class Alignment
          buffer.append(indentation).append(" - ") //$NON-NLS-1$
             .append(i).append(": ") //$NON-NLS-1$
             .append("<break: ") //$NON-NLS-1$
-            .append(this.fragmentBreaks[i] > 0 ? "YES" : "NO") //$NON-NLS-1$	//$NON-NLS-2$
+            .append(this.fragmentBreaks[i] > 0 ? "YES" : "NO") //$NON-NLS-1$   //$NON-NLS-2$
             .append(">") //$NON-NLS-1$
             .append("<indent: ") //$NON-NLS-1$
             .append(this.fragmentIndentations[i]).append(">\n"); //$NON-NLS-1$

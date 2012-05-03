@@ -41,7 +41,7 @@ public abstract class ASTNode implements TypeConstants, TypeIds
 
    public int sourceStart, sourceEnd;
 
-   // storage for internal flags (32 bits)				BIT USAGE
+   // storage for internal flags (32 bits)            BIT USAGE
    public final static int Bit1 = 0x1; // return type (operator) | name reference kind (name ref) | add assertion (type decl) | useful empty statement (empty statement)
 
    public final static int Bit2 = 0x2; // return type (operator) | name reference kind (name ref) | has local type (type, method, field decl)
@@ -602,7 +602,7 @@ public abstract class ASTNode implements TypeConstants, TypeIds
       }
 
       // TODO (maxime) consider separating concerns between deprecation and access restriction.
-      // 				 Caveat: this was not the case when access restriction funtion was added.
+      //              Caveat: this was not the case when access restriction funtion was added.
       if (isExplicitUse && (method.modifiers & ExtraCompilerModifiers.AccRestrictedAccess) != 0)
       {
          // note: explicit constructors calls warnings are kept despite the 'new C1()' case (two

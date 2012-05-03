@@ -733,28 +733,28 @@ public class CompilerOptions
    // keep in sync with warningTokenToIrritant and warningTokenFromIrritant
    // TODO Remove unused code found by UCDetector
    // public final static String[] warningTokens = {
-   // 		"all", //$NON-NLS-1$
-   // 		"boxing", //$NON-NLS-1$
-   // 		"cast", //$NON-NLS-1$
-   // 		"dep-ann", //$NON-NLS-1$
-   // 		"deprecation", //$NON-NLS-1$
-   // 		"fallthrough", //$NON-NLS-1$
-   // 		"finally", //$NON-NLS-1$
-   // 		"hiding", //$NON-NLS-1$
-   // 		"incomplete-switch", //$NON-NLS-1$
-   // 		"javadoc", //$NON-NLS-1$
-   // 		"nls", //$NON-NLS-1$
-   // 		"null", //$NON-NLS-1$
-   // 		"restriction", //$NON-NLS-1$
-   // 		"rawtypes", //$NON-NLS-1$
-   // 		"serial", //$NON-NLS-1$
-   // 		"static-access", //$NON-NLS-1$
-   // 		"static-method", //$NON-NLS-1$
-   // 		"super", //$NON-NLS-1$
-   // 		"synthetic-access", //$NON-NLS-1$
-   // 		"unchecked", //$NON-NLS-1$
-   // 		"unqualified-field-access", //$NON-NLS-1$
-   // 		"unused", //$NON-NLS-1$
+   //       "all", //$NON-NLS-1$
+   //       "boxing", //$NON-NLS-1$
+   //       "cast", //$NON-NLS-1$
+   //       "dep-ann", //$NON-NLS-1$
+   //       "deprecation", //$NON-NLS-1$
+   //       "fallthrough", //$NON-NLS-1$
+   //       "finally", //$NON-NLS-1$
+   //       "hiding", //$NON-NLS-1$
+   //       "incomplete-switch", //$NON-NLS-1$
+   //       "javadoc", //$NON-NLS-1$
+   //       "nls", //$NON-NLS-1$
+   //       "null", //$NON-NLS-1$
+   //       "restriction", //$NON-NLS-1$
+   //       "rawtypes", //$NON-NLS-1$
+   //       "serial", //$NON-NLS-1$
+   //       "static-access", //$NON-NLS-1$
+   //       "static-method", //$NON-NLS-1$
+   //       "super", //$NON-NLS-1$
+   //       "synthetic-access", //$NON-NLS-1$
+   //       "unchecked", //$NON-NLS-1$
+   //       "unqualified-field-access", //$NON-NLS-1$
+   //       "unused", //$NON-NLS-1$
    // };
 
    /** Initializing the compiler options with defaults */
@@ -1124,7 +1124,7 @@ public class CompilerOptions
          case InvalidJavadoc :
          case MissingJavadocComments :
          case MissingJavadocTags :
-            return "javadoc"; //$NON-NLS-1$				
+            return "javadoc"; //$NON-NLS-1$            
       }
       return null;
    }

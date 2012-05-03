@@ -123,44 +123,44 @@ public class ASTNodes
          {
             //TODO handle exception
             e.printStackTrace();
-            //				JavaPlugin.log(e);
+            //            JavaPlugin.log(e);
          }
          return document.get();
       }
       return unformatted; // unknown node
    }
 
-   //	/**
-   //	 * Returns the source of the given node from the location where it was parsed.
-   //	 * @param node the node to get the source from
-   //	 * @param extendedRange if set, the extended ranges of the nodes should ne used
-   //	 * @param removeIndent if set, the indentation is removed.
-   //	 * @return return the source for the given node or null if accessing the source failed.
-   //	 */
-   //	public static String getNodeSource(ASTNode node, boolean extendedRange, boolean removeIndent) {
-   //		ASTNode root= node.getRoot();
-   //		if (root instanceof CompilationUnit) {
-   //			CompilationUnit astRoot= (CompilationUnit) root;
-   //			ITypeRoot typeRoot= astRoot.getTypeRoot();
-   //			try {
-   //				if (typeRoot != null && typeRoot.getBuffer() != null) {
-   //					IBuffer buffer= typeRoot.getBuffer();
-   //					int offset= extendedRange ? astRoot.getExtendedStartPosition(node) : node.getStartPosition();
-   //					int length= extendedRange ? astRoot.getExtendedLength(node) : node.getLength();
-   //					String str= buffer.getText(offset, length);
-   //					if (removeIndent) {
-   //						IJavaProject project= typeRoot.getJavaProject();
-   //						int indent= StubUtility.getIndentUsed(buffer, node.getStartPosition(), project);
-   //						str= Strings.changeIndent(str, indent, project, new String(), typeRoot.findRecommendedLineSeparator());
-   //					}
-   //					return str;
-   //				}
-   //			} catch (JavaModelException e) {
-   //				// ignore
-   //			}
-   //		}
-   //		return null;
-   //	}
+   //   /**
+   //    * Returns the source of the given node from the location where it was parsed.
+   //    * @param node the node to get the source from
+   //    * @param extendedRange if set, the extended ranges of the nodes should ne used
+   //    * @param removeIndent if set, the indentation is removed.
+   //    * @return return the source for the given node or null if accessing the source failed.
+   //    */
+   //   public static String getNodeSource(ASTNode node, boolean extendedRange, boolean removeIndent) {
+   //      ASTNode root= node.getRoot();
+   //      if (root instanceof CompilationUnit) {
+   //         CompilationUnit astRoot= (CompilationUnit) root;
+   //         ITypeRoot typeRoot= astRoot.getTypeRoot();
+   //         try {
+   //            if (typeRoot != null && typeRoot.getBuffer() != null) {
+   //               IBuffer buffer= typeRoot.getBuffer();
+   //               int offset= extendedRange ? astRoot.getExtendedStartPosition(node) : node.getStartPosition();
+   //               int length= extendedRange ? astRoot.getExtendedLength(node) : node.getLength();
+   //               String str= buffer.getText(offset, length);
+   //               if (removeIndent) {
+   //                  IJavaProject project= typeRoot.getJavaProject();
+   //                  int indent= StubUtility.getIndentUsed(buffer, node.getStartPosition(), project);
+   //                  str= Strings.changeIndent(str, indent, project, new String(), typeRoot.findRecommendedLineSeparator());
+   //               }
+   //               return str;
+   //            }
+   //         } catch (JavaModelException e) {
+   //            // ignore
+   //         }
+   //      }
+   //      return null;
+   //   }
 
    /**
     * Returns the list that contains the given ASTNode. If the node
@@ -552,23 +552,23 @@ public class ASTNodes
       return false;
    }
 
-   //	/**
-   //	 * Returns the closest ancestor of <code>node</code> that is an instance of <code>parentClass</code>, or <code>null</code> if none.
-   //	 * <p>
-   //	 * <b>Warning:</b> This method does not stop at any boundaries like parentheses, statements, body declarations, etc.
-   //	 * The resulting node may be in a totally different scope than the given node.
-   //	 * Consider using one of the {@link ASTResolving}<code>.find(..)</code> methods instead.
-   //	 * </p>
-   //	 * @param node the node
-   //	 * @param parentClass the class of the sought ancestor node
-   //	 * @return the closest ancestor of <code>node</code> that is an instance of <code>parentClass</code>, or <code>null</code> if none
-   //	 */
-   //	public static ASTNode getParent(ASTNode node, Class<? extends ASTNode> parentClass) {
-   //		do {
-   //			node= node.getParent();
-   //		} while (node != null && !parentClass.isInstance(node));
-   //		return node;
-   //	}
+   //   /**
+   //    * Returns the closest ancestor of <code>node</code> that is an instance of <code>parentClass</code>, or <code>null</code> if none.
+   //    * <p>
+   //    * <b>Warning:</b> This method does not stop at any boundaries like parentheses, statements, body declarations, etc.
+   //    * The resulting node may be in a totally different scope than the given node.
+   //    * Consider using one of the {@link ASTResolving}<code>.find(..)</code> methods instead.
+   //    * </p>
+   //    * @param node the node
+   //    * @param parentClass the class of the sought ancestor node
+   //    * @return the closest ancestor of <code>node</code> that is an instance of <code>parentClass</code>, or <code>null</code> if none
+   //    */
+   //   public static ASTNode getParent(ASTNode node, Class<? extends ASTNode> parentClass) {
+   //      do {
+   //         node= node.getParent();
+   //      } while (node != null && !parentClass.isInstance(node));
+   //      return node;
+   //   }
 
    /**
     * Returns the closest ancestor of <code>node</code> whose type is <code>nodeType</code>, or <code>null</code> if none.
@@ -706,25 +706,25 @@ public class ASTNodes
       return null;
    }
 
-   //	/**
-   //	 * Returns the receiver's type binding of the given method invocation.
-   //	 *
-   //	 * @param invocation method invocation to resolve type of
-   //	 * @return the type binding of the receiver
-   //	 */
-   //	public static ITypeBinding getReceiverTypeBinding(MethodInvocation invocation) {
-   //		ITypeBinding result= null;
-   //		Expression exp= invocation.getExpression();
-   //		if(exp != null) {
-   //			return exp.resolveTypeBinding();
-   //		}
-   //		else {
-   //			AbstractTypeDeclaration type= (AbstractTypeDeclaration)getParent(invocation, AbstractTypeDeclaration.class);
-   //			if (type != null)
-   //				return type.resolveBinding();
-   //		}
-   //		return result;
-   //	}
+   //   /**
+   //    * Returns the receiver's type binding of the given method invocation.
+   //    *
+   //    * @param invocation method invocation to resolve type of
+   //    * @return the type binding of the receiver
+   //    */
+   //   public static ITypeBinding getReceiverTypeBinding(MethodInvocation invocation) {
+   //      ITypeBinding result= null;
+   //      Expression exp= invocation.getExpression();
+   //      if(exp != null) {
+   //         return exp.resolveTypeBinding();
+   //      }
+   //      else {
+   //         AbstractTypeDeclaration type= (AbstractTypeDeclaration)getParent(invocation, AbstractTypeDeclaration.class);
+   //         if (type != null)
+   //            return type.resolveBinding();
+   //      }
+   //      return result;
+   //   }
 
    public static ITypeBinding getEnclosingType(ASTNode node)
    {
@@ -1066,27 +1066,27 @@ public class ASTNodes
       return null;
    }
 
-   //	public static ITypeBinding getTypeBinding(CompilationUnit root, IType type) throws JavaModelException {
-   //		if (type.isAnonymous()) {
-   //			final IJavaElement parent= type.getParent();
-   //			if (parent instanceof IField && Flags.isEnum(((IMember) parent).getFlags())) {
-   //				final EnumConstantDeclaration constant= (EnumConstantDeclaration) NodeFinder.perform(root, ((ISourceReference) parent).getSourceRange());
-   //				if (constant != null) {
-   //					final AnonymousClassDeclaration declaration= constant.getAnonymousClassDeclaration();
-   //					if (declaration != null)
-   //						return declaration.resolveBinding();
-   //				}
-   //			} else {
-   //				final ClassInstanceCreation creation= (ClassInstanceCreation) getParent(NodeFinder.perform(root, type.getNameRange()), ClassInstanceCreation.class);
-   //				if (creation != null)
-   //					return creation.resolveTypeBinding();
-   //			}
-   //		} else {
-   //			final AbstractTypeDeclaration declaration= (AbstractTypeDeclaration) getParent(NodeFinder.perform(root, type.getNameRange()), AbstractTypeDeclaration.class);
-   //			if (declaration != null)
-   //				return declaration.resolveBinding();
-   //		}
-   //		return null;
-   //	}
+   //   public static ITypeBinding getTypeBinding(CompilationUnit root, IType type) throws JavaModelException {
+   //      if (type.isAnonymous()) {
+   //         final IJavaElement parent= type.getParent();
+   //         if (parent instanceof IField && Flags.isEnum(((IMember) parent).getFlags())) {
+   //            final EnumConstantDeclaration constant= (EnumConstantDeclaration) NodeFinder.perform(root, ((ISourceReference) parent).getSourceRange());
+   //            if (constant != null) {
+   //               final AnonymousClassDeclaration declaration= constant.getAnonymousClassDeclaration();
+   //               if (declaration != null)
+   //                  return declaration.resolveBinding();
+   //            }
+   //         } else {
+   //            final ClassInstanceCreation creation= (ClassInstanceCreation) getParent(NodeFinder.perform(root, type.getNameRange()), ClassInstanceCreation.class);
+   //            if (creation != null)
+   //               return creation.resolveTypeBinding();
+   //         }
+   //      } else {
+   //         final AbstractTypeDeclaration declaration= (AbstractTypeDeclaration) getParent(NodeFinder.perform(root, type.getNameRange()), AbstractTypeDeclaration.class);
+   //         if (declaration != null)
+   //            return declaration.resolveBinding();
+   //      }
+   //      return null;
+   //   }
 
 }

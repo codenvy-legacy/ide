@@ -465,7 +465,7 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
    // document.replace(offset, 0, String.valueOf(trigger));
    // setCursorPosition(getCursorPosition() + 1);
    // if (trigger == '(' && autocloseBrackets()) {
-   //						document.replace(getReplacementOffset() + getCursorPosition(), 0, ")"); //$NON-NLS-1$
+   //                  document.replace(getReplacementOffset() + getCursorPosition(), 0, ")"); //$NON-NLS-1$
    // setUpLinkedMode(document, ')');
    // }
    // } catch (BadLocationException x) {

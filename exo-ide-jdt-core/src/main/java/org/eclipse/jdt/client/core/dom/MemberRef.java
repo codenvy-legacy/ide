@@ -20,7 +20,7 @@ import java.util.List;
  * 
  * <pre>
  * MemberRef:
- * 		[ Name ] <b>#</b> Identifier
+ *       [ Name ] <b>#</b> Identifier
  * </pre>
  * 
  * @see Javadoc

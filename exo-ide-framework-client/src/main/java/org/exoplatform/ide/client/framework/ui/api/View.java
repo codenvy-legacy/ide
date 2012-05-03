@@ -120,6 +120,13 @@ public interface View extends HasBeforeViewLoseActivityHandler, HasViewLostActiv
    boolean canResize();
 
    /**
+    * Determines whether this view can show custom context menu.
+    * 
+    * @return <b>true</b> if this view can show custom context menu.
+    */
+   boolean canShowContextMenu();
+
+   /**
     * Makes view activated.
     */
    void activate();

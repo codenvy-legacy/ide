@@ -18,11 +18,11 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
  * which is accessible as the fake-field type.
  * e.g.
  *
- *	class X {
+ *   class X {
  *    Obj[cursor]
  *  }
  *
- *	---> class X {
+ *   ---> class X {
  *         <CompleteOnType:Obj>;
  *       }
  *

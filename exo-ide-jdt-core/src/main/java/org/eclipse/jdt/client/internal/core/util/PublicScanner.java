@@ -638,7 +638,7 @@ public class PublicScanner implements IScanner, ITerminalSymbols
     * Line numbers are 1-based, and relative to the scanner initialPosition.
     * Character positions are 0-based.
     *
-    * e.g.	getLineStart(1) --> 0	indicates that the first line starts at character 0.
+    * e.g.   getLineStart(1) --> 0   indicates that the first line starts at character 0.
     *
     * In case the given line number is inconsistent, answers -1.
     *
@@ -1266,7 +1266,7 @@ public class PublicScanner implements IScanner, ITerminalSymbols
                offset = this.currentPosition - offset;
                // inline version of:
                //isWhiteSpace =
-               //	(this.currentCharacter == ' ') || ScannerHelper.isWhitespace(this.currentCharacter);
+               //   (this.currentCharacter == ' ') || ScannerHelper.isWhitespace(this.currentCharacter);
                switch (this.currentCharacter)
                {
                   case 10 : /* \ u000a: LINE FEED               */
@@ -1427,7 +1427,7 @@ public class PublicScanner implements IScanner, ITerminalSymbols
                   }
                   // inline version of:
                   //isWhiteSpace =
-                  //	(this.currentCharacter == ' ') || ScannerHelper.isWhitespace(this.currentCharacter);
+                  //   (this.currentCharacter == ' ') || ScannerHelper.isWhitespace(this.currentCharacter);
                   switch (this.currentCharacter)
                   {
                      case 10 : /* \ u000a: LINE FEED               */
@@ -1474,11 +1474,11 @@ public class PublicScanner implements IScanner, ITerminalSymbols
             switch (this.currentCharacter)
             {
                case '@' :
-                  /*					if (this.sourceLevel >= ClassFileConstants.JDK1_5) {
-                  						return TokenNameAT;
-                  					} else {
-                  						return TokenNameERROR;
-                  					}*/
+                  /*               if (this.sourceLevel >= ClassFileConstants.JDK1_5) {
+                                    return TokenNameAT;
+                                 } else {
+                                    return TokenNameERROR;
+                                 }*/
                   return TokenNameAT;
                case '(' :
                   return TokenNameLPAREN;
@@ -2111,7 +2111,7 @@ if (this.currentCharacter == '\\')
                            {
                               /*
                               if (isJavadoc)
-                              	return TokenNameCOMMENT_JAVADOC;
+                                 return TokenNameCOMMENT_JAVADOC;
                               return TokenNameCOMMENT_BLOCK;
                               */
                               return token;
@@ -2764,10 +2764,10 @@ if (this.currentCharacter == '\\')
                         scanIdentifierOrKeyword();
                         break NextToken;
                      }
-                     //						if (ScannerHelper.isDigit(this.currentCharacter)) {
-                     //							scanNumber(false);
-                     //							break NextToken;
-                     //						}
+                     //                  if (ScannerHelper.isDigit(this.currentCharacter)) {
+                     //                     scanNumber(false);
+                     //                     break NextToken;
+                     //                  }
                   }
                   catch (InvalidInputException ex)
                   {
@@ -2908,7 +2908,7 @@ if (this.currentCharacter == '\\')
       int start = this.startPosition;
       char c0, c1 = src[start + 1], c2;
       int hash = (((c0 = src[start]) << 6) + (c2 = src[start + 2])) % TableSize;
-      //	int hash = ((c0 << 12) + (c1<< 6) + c2) % TableSize;
+      //   int hash = ((c0 << 12) + (c1<< 6) + c2) % TableSize;
       char[][] table = this.charArray_length[1][hash];
       int i = this.newEntry3;
       while (++i < InternalTableSize)
@@ -2943,7 +2943,7 @@ if (this.currentCharacter == '\\')
       int start = this.startPosition;
       char c0, c1 = src[start + 1], c2, c3 = src[start + 3];
       int hash = (((c0 = src[start]) << 6) + (c2 = src[start + 2])) % TableSize;
-      //	int hash = (int) (((((long) c0) << 18) + (c1 << 12) + (c2 << 6) + c3) % TableSize);
+      //   int hash = (int) (((((long) c0) << 18) + (c1 << 12) + (c2 << 6) + c3) % TableSize);
       char[][] table = this.charArray_length[2][hash];
       int i = this.newEntry4;
       while (++i < InternalTableSize)
@@ -2978,7 +2978,7 @@ if (this.currentCharacter == '\\')
       int start = this.startPosition;
       char c0, c1 = src[start + 1], c2, c3 = src[start + 3], c4;
       int hash = (((c0 = src[start]) << 12) + ((c2 = src[start + 2]) << 6) + (c4 = src[start + 4])) % TableSize;
-      //	int hash = (int) (((((long) c0) << 24) + (((long) c1) << 18) + (c2 << 12) + (c3 << 6) + c4) % TableSize);
+      //   int hash = (int) (((((long) c0) << 24) + (((long) c1) << 18) + (c2 << 12) + (c3 << 6) + c4) % TableSize);
       char[][] table = this.charArray_length[3][hash];
       int i = this.newEntry5;
       while (++i < InternalTableSize)
@@ -3015,7 +3015,7 @@ if (this.currentCharacter == '\\')
       int start = this.startPosition;
       char c0, c1 = src[start + 1], c2, c3 = src[start + 3], c4, c5 = src[start + 5];
       int hash = (((c0 = src[start]) << 12) + ((c2 = src[start + 2]) << 6) + (c4 = src[start + 4])) % TableSize;
-      //	int hash = (int)(((((long) c0) << 32) + (((long) c1) << 24) + (((long) c2) << 18) + (c3 << 12) + (c4 << 6) + c5) % TableSize);
+      //   int hash = (int)(((((long) c0) << 32) + (((long) c1) << 24) + (((long) c2) << 18) + (c3 << 12) + (c4 << 6) + c5) % TableSize);
       char[][] table = this.charArray_length[4][hash];
       int i = this.newEntry6;
       while (++i < InternalTableSize)

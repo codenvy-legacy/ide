@@ -16,9 +16,9 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
  * of a parameterized qualified name.
  * e.g.
  *
- *	class X extends Y<Z>.W[cursor]
+ *   class X extends Y<Z>.W[cursor]
  *
- *	---> class X extends <CompleteOnType:Y<Z>.W>
+ *   ---> class X extends <CompleteOnType:Y<Z>.W>
  *
  * The source range of the completion node denotes the source range
  * which should be replaced by the completion.

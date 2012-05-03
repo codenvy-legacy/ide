@@ -594,7 +594,7 @@ class CompilationUnitResolver extends Compiler
    // try {
    // if (monitor != null) {
    // int amountOfWork = (compilationUnits.length + bindingKeys.length) * 2; // 1 for beginToCompile, 1 for resolve
-   //				monitor.beginTask("", amountOfWork); //$NON-NLS-1$
+   //            monitor.beginTask("", amountOfWork); //$NON-NLS-1$
    // }
    // environment = new CancelableNameEnvironment(((JavaProject) javaProject), monitor);
    // problemFactory = new CancelableProblemFactory(monitor);
@@ -611,8 +611,8 @@ class CompilationUnitResolver extends Compiler
    // javaProject != null);
    // resolver.resolve(compilationUnits, bindingKeys, requestor, apiLevel, options, owner, flags);
    // if (NameLookup.VERBOSE) {
-   //				System.out.println(Thread.currentThread() + " TIME SPENT in NameLoopkup#seekTypesInSourcePackage: " + environment.nameLookup.timeSpentInSeekTypesInSourcePackage + "ms");  //$NON-NLS-1$ //$NON-NLS-2$
-   //				System.out.println(Thread.currentThread() + " TIME SPENT in NameLoopkup#seekTypesInBinaryPackage: " + environment.nameLookup.timeSpentInSeekTypesInBinaryPackage + "ms");  //$NON-NLS-1$ //$NON-NLS-2$
+   //            System.out.println(Thread.currentThread() + " TIME SPENT in NameLoopkup#seekTypesInSourcePackage: " + environment.nameLookup.timeSpentInSeekTypesInSourcePackage + "ms");  //$NON-NLS-1$ //$NON-NLS-2$
+   //            System.out.println(Thread.currentThread() + " TIME SPENT in NameLoopkup#seekTypesInBinaryPackage: " + environment.nameLookup.timeSpentInSeekTypesInBinaryPackage + "ms");  //$NON-NLS-1$ //$NON-NLS-2$
    // }
    // } catch (JavaModelException e) {
    // // project doesn't exist -> simple parse without resolving
@@ -637,7 +637,7 @@ class CompilationUnitResolver extends Compiler
       // try {
       // if (monitor != null) {
       // int amountOfWork = (sourceUnits.length + bindingKeys.length) * 2; // 1 for beginToCompile, 1 for resolve
-      //					monitor.beginTask("", amountOfWork); //$NON-NLS-1$
+      //               monitor.beginTask("", amountOfWork); //$NON-NLS-1$
       // }
       // Classpath[] allEntries = new Classpath[classpaths.size()];
       // classpaths.toArray(allEntries);
@@ -658,8 +658,8 @@ class CompilationUnitResolver extends Compiler
       // resolver.resolve(sourceUnits, encodings, bindingKeys, requestor, apiLevel, options, flags);
       // if (NameLookup.VERBOSE && (environment instanceof CancelableNameEnvironment)) {
       // CancelableNameEnvironment cancelableNameEnvironment = (CancelableNameEnvironment) environment;
-      //					System.out.println(Thread.currentThread() + " TIME SPENT in NameLoopkup#seekTypesInSourcePackage: " + cancelableNameEnvironment.nameLookup.timeSpentInSeekTypesInSourcePackage + "ms");  //$NON-NLS-1$ //$NON-NLS-2$
-      //					System.out.println(Thread.currentThread() + " TIME SPENT in NameLoopkup#seekTypesInBinaryPackage: " + cancelableNameEnvironment.nameLookup.timeSpentInSeekTypesInBinaryPackage + "ms");  //$NON-NLS-1$ //$NON-NLS-2$
+      //               System.out.println(Thread.currentThread() + " TIME SPENT in NameLoopkup#seekTypesInSourcePackage: " + cancelableNameEnvironment.nameLookup.timeSpentInSeekTypesInSourcePackage + "ms");  //$NON-NLS-1$ //$NON-NLS-2$
+      //               System.out.println(Thread.currentThread() + " TIME SPENT in NameLoopkup#seekTypesInBinaryPackage: " + cancelableNameEnvironment.nameLookup.timeSpentInSeekTypesInBinaryPackage + "ms");  //$NON-NLS-1$ //$NON-NLS-2$
       // }
       // } finally {
       // if (monitor != null) monitor.done();
@@ -711,8 +711,8 @@ class CompilationUnitResolver extends Compiler
          }
          // if (NameLookup.VERBOSE && environment instanceof CancelableNameEnvironment) {
          // CancelableNameEnvironment cancelableNameEnvironment = (CancelableNameEnvironment) environment;
-         //   				System.out.println(Thread.currentThread() + " TIME SPENT in NameLoopkup#seekTypesInSourcePackage: " + cancelableNameEnvironment.nameLookup.timeSpentInSeekTypesInSourcePackage + "ms");  //$NON-NLS-1$ //$NON-NLS-2$
-         //   				System.out.println(Thread.currentThread() + " TIME SPENT in NameLoopkup#seekTypesInBinaryPackage: " + cancelableNameEnvironment.nameLookup.timeSpentInSeekTypesInBinaryPackage + "ms");  //$NON-NLS-1$ //$NON-NLS-2$
+         //               System.out.println(Thread.currentThread() + " TIME SPENT in NameLoopkup#seekTypesInSourcePackage: " + cancelableNameEnvironment.nameLookup.timeSpentInSeekTypesInSourcePackage + "ms");  //$NON-NLS-1$ //$NON-NLS-2$
+         //               System.out.println(Thread.currentThread() + " TIME SPENT in NameLoopkup#seekTypesInBinaryPackage: " + cancelableNameEnvironment.nameLookup.timeSpentInSeekTypesInBinaryPackage + "ms");  //$NON-NLS-1$ //$NON-NLS-2$
          // }
          return unit;
       }
@@ -744,7 +744,7 @@ class CompilationUnitResolver extends Compiler
    // IJavaElement element = elements[i];
    // //TODO
    // // if (!(element instanceof SourceRefElement))
-   //         //				throw new IllegalStateException(element + " is not part of a compilation unit or class file"); //$NON-NLS-1$
+   //         //            throw new IllegalStateException(element + " is not part of a compilation unit or class file"); //$NON-NLS-1$
    // Object cu = element.getAncestor(IJavaElement.COMPILATION_UNIT);
    // if (cu != null)
    // {
@@ -764,7 +764,7 @@ class CompilationUnitResolver extends Compiler
    // // String key = ((BinaryMember) element).getKey(true/*open to get resolved info*/);
    // // binaryElementPositions.put(key, i);
    // // } catch (JavaModelException e) {
-   //            //					throw new IllegalArgumentException(element + " does not exist"); //$NON-NLS-1$
+   //            //               throw new IllegalArgumentException(element + " does not exist"); //$NON-NLS-1$
    // // }
    // }
    // }

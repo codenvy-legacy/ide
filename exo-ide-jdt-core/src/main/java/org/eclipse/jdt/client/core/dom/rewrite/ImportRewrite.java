@@ -174,7 +174,7 @@ public final class ImportRewrite
    // */
    // public static ImportRewrite create(ICompilationUnit cu, boolean restoreExistingImports) throws JavaModelException {
    // if (cu == null) {
-   //			throw new IllegalArgumentException("Compilation unit must not be null"); //$NON-NLS-1$
+   //         throw new IllegalArgumentException("Compilation unit must not be null"); //$NON-NLS-1$
    // }
    // List existingImport= null;
    // if (restoreExistingImports) {
@@ -213,7 +213,7 @@ public final class ImportRewrite
       }
       // ITypeRoot typeRoot = astRoot.getTypeRoot();
       // if (!(typeRoot instanceof ICompilationUnit)) {
-      //   			throw new IllegalArgumentException("AST must have been constructed from a Java element"); //$NON-NLS-1$
+      //            throw new IllegalArgumentException("AST must have been constructed from a Java element"); //$NON-NLS-1$
       // }
       List existingImport = null;
       if (restoreExistingImports)

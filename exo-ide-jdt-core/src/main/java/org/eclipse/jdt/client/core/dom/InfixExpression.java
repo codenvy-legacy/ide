@@ -35,7 +35,7 @@ public class InfixExpression extends Expression
     * 
     * <pre>
     * InfixOperator:<code>
-    *    <b>*</b>	TIMES
+    *    <b>*</b>   TIMES
     *    <b>/</b>  DIVIDE
     *    <b>%</b>  REMAINDER
     *    <b>+</b>  PLUS

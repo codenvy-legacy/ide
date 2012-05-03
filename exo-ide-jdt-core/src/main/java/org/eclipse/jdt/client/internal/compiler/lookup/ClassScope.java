@@ -8,9 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Stephan Herrmann <stephan@cs.tu-berlin.de> - Contributions for 
- *     						Bug 328281 - visibility leaks not detected when analyzing unused field in private class
- *     						Bug 300576 - NPE Computing type hierarchy when compliance doesn't match libraries
- *     						Bug 354536 - compiling package-info.java still depends on the order of compilation units
+ *                       Bug 328281 - visibility leaks not detected when analyzing unused field in private class
+ *                       Bug 300576 - NPE Computing type hierarchy when compliance doesn't match libraries
+ *                       Bug 354536 - compiling package-info.java still depends on the order of compilation units
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 

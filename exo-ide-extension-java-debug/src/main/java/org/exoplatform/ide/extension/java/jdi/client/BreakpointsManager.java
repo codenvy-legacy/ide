@@ -99,6 +99,8 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
       eventBus.addHandler(DebuggerDisconnectedEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
    }
+   
+   
 
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)

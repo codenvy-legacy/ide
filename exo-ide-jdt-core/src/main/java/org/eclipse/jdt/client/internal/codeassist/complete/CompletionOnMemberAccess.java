@@ -16,13 +16,13 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
  * containing the completion identifier.
  * e.g.
  *
- *	class X {
+ *   class X {
  *    void foo() {
  *      bar().fred[cursor]
  *    }
  *  }
  *
- *	---> class X {
+ *   ---> class X {
  *         void foo() {
  *           <CompleteOnMemberAccess:bar().fred>
  *         }

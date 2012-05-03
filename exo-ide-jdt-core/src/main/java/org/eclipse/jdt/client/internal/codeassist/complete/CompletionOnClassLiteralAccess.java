@@ -15,13 +15,13 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
  * reduce an access to the literal 'class' containing the cursor.
  * e.g.
  *
- *	class X {
+ *   class X {
  *    void foo() {
  *      String[].[cursor]
  *    }
  *  }
  *
- *	---> class X {
+ *   ---> class X {
  *         void foo() {
  *           <CompleteOnClassLiteralAccess:String[].>
  *         }

@@ -412,7 +412,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -493,21 +493,21 @@ public class JavaParser extends Parser {
 
 
                 switch (alt2) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: importDeclaration
-            	    {
-            	    pushFollow(FOLLOW_importDeclaration_in_compilationUnit4565);
-            	    importDeclaration4=importDeclaration();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: importDeclaration
+                   {
+                   pushFollow(FOLLOW_importDeclaration_in_compilationUnit4565);
+                   importDeclaration4=importDeclaration();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, importDeclaration4.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, importDeclaration4.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop2;
+               default :
+                   break loop2;
                 }
             } while (true);
 
@@ -523,21 +523,21 @@ public class JavaParser extends Parser {
 
 
                 switch (alt3) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: typeDecls
-            	    {
-            	    pushFollow(FOLLOW_typeDecls_in_compilationUnit4577);
-            	    typeDecls5=typeDecls();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: typeDecls
+                   {
+                   pushFollow(FOLLOW_typeDecls_in_compilationUnit4577);
+                   typeDecls5=typeDecls();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, typeDecls5.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, typeDecls5.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop3;
+               default :
+                   break loop3;
                 }
             } while (true);
 
@@ -555,7 +555,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -640,7 +640,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -704,7 +704,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -816,7 +816,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -960,7 +960,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -1150,7 +1150,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -1236,7 +1236,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -1322,7 +1322,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -1408,7 +1408,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -1472,24 +1472,24 @@ public class JavaParser extends Parser {
 
 
                 switch (alt11) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:379:41: COMMA genericTypeParameter
-            	    {
-            	    COMMA35=(Token)match(input,COMMA,FOLLOW_COMMA_in_genericTypeParameterList4998); if (state.failed) return retval; 
-            	    if ( state.backtracking==0 ) stream_COMMA.add(COMMA35);
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:379:41: COMMA genericTypeParameter
+                   {
+                   COMMA35=(Token)match(input,COMMA,FOLLOW_COMMA_in_genericTypeParameterList4998); if (state.failed) return retval; 
+                   if ( state.backtracking==0 ) stream_COMMA.add(COMMA35);
 
-            	    pushFollow(FOLLOW_genericTypeParameter_in_genericTypeParameterList5000);
-            	    genericTypeParameter36=genericTypeParameter();
+                   pushFollow(FOLLOW_genericTypeParameter_in_genericTypeParameterList5000);
+                   genericTypeParameter36=genericTypeParameter();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_genericTypeParameter.add(genericTypeParameter36.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_genericTypeParameter.add(genericTypeParameter36.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop11;
+               default :
+                   break loop11;
                 }
             } while (true);
 
@@ -1548,7 +1548,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -1759,7 +1759,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -1882,7 +1882,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -1943,24 +1943,24 @@ public class JavaParser extends Parser {
 
 
                 switch (alt14) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:399:23: AND type
-            	    {
-            	    AND45=(Token)match(input,AND,FOLLOW_AND_in_bound5220); if (state.failed) return retval; 
-            	    if ( state.backtracking==0 ) stream_AND.add(AND45);
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:399:23: AND type
+                   {
+                   AND45=(Token)match(input,AND,FOLLOW_AND_in_bound5220); if (state.failed) return retval; 
+                   if ( state.backtracking==0 ) stream_AND.add(AND45);
 
-            	    pushFollow(FOLLOW_type_in_bound5222);
-            	    type46=type();
+                   pushFollow(FOLLOW_type_in_bound5222);
+                   type46=type();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_type.add(type46.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_type.add(type46.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop14;
+               default :
+                   break loop14;
                 }
             } while (true);
 
@@ -2013,7 +2013,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -2139,7 +2139,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -2231,7 +2231,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -2330,7 +2330,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -2380,21 +2380,21 @@ public class JavaParser extends Parser {
 
 
                 switch (alt18) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: classScopeDeclarations
-            	    {
-            	    pushFollow(FOLLOW_classScopeDeclarations_in_enumClassScopeDeclarations5388);
-            	    classScopeDeclarations58=classScopeDeclarations();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: classScopeDeclarations
+                   {
+                   pushFollow(FOLLOW_classScopeDeclarations_in_enumClassScopeDeclarations5388);
+                   classScopeDeclarations58=classScopeDeclarations();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_classScopeDeclarations.add(classScopeDeclarations58.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_classScopeDeclarations.add(classScopeDeclarations58.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop18;
+               default :
+                   break loop18;
                 }
             } while (true);
 
@@ -2445,7 +2445,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -2507,22 +2507,22 @@ public class JavaParser extends Parser {
 
 
                 switch (alt19) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:423:23: COMMA enumConstant
-            	    {
-            	    COMMA60=(Token)match(input,COMMA,FOLLOW_COMMA_in_enumConstants5430); if (state.failed) return retval;
-            	    pushFollow(FOLLOW_enumConstant_in_enumConstants5433);
-            	    enumConstant61=enumConstant();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:423:23: COMMA enumConstant
+                   {
+                   COMMA60=(Token)match(input,COMMA,FOLLOW_COMMA_in_enumConstants5430); if (state.failed) return retval;
+                   pushFollow(FOLLOW_enumConstant_in_enumConstants5433);
+                   enumConstant61=enumConstant();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, enumConstant61.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, enumConstant61.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop19;
+               default :
+                   break loop19;
                 }
             } while (true);
 
@@ -2540,7 +2540,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -2651,7 +2651,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -2809,7 +2809,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -2865,22 +2865,22 @@ public class JavaParser extends Parser {
 
 
                 switch (alt24) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:436:15: COMMA type
-            	    {
-            	    COMMA72=(Token)match(input,COMMA,FOLLOW_COMMA_in_typeList5554); if (state.failed) return retval;
-            	    pushFollow(FOLLOW_type_in_typeList5557);
-            	    type73=type();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:436:15: COMMA type
+                   {
+                   COMMA72=(Token)match(input,COMMA,FOLLOW_COMMA_in_typeList5554); if (state.failed) return retval;
+                   pushFollow(FOLLOW_type_in_typeList5557);
+                   type73=type();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, type73.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, type73.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop24;
+               default :
+                   break loop24;
                 }
             } while (true);
 
@@ -2898,7 +2898,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -2951,21 +2951,21 @@ public class JavaParser extends Parser {
 
 
                 switch (alt25) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: classScopeDeclarations
-            	    {
-            	    pushFollow(FOLLOW_classScopeDeclarations_in_classBody5584);
-            	    classScopeDeclarations75=classScopeDeclarations();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: classScopeDeclarations
+                   {
+                   pushFollow(FOLLOW_classScopeDeclarations_in_classBody5584);
+                   classScopeDeclarations75=classScopeDeclarations();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_classScopeDeclarations.add(classScopeDeclarations75.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_classScopeDeclarations.add(classScopeDeclarations75.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop25;
+               default :
+                   break loop25;
                 }
             } while (true);
 
@@ -3019,7 +3019,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -3072,21 +3072,21 @@ public class JavaParser extends Parser {
 
 
                 switch (alt26) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: interfaceScopeDeclarations
-            	    {
-            	    pushFollow(FOLLOW_interfaceScopeDeclarations_in_interfaceBody5631);
-            	    interfaceScopeDeclarations78=interfaceScopeDeclarations();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: interfaceScopeDeclarations
+                   {
+                   pushFollow(FOLLOW_interfaceScopeDeclarations_in_interfaceBody5631);
+                   interfaceScopeDeclarations78=interfaceScopeDeclarations();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_interfaceScopeDeclarations.add(interfaceScopeDeclarations78.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_interfaceScopeDeclarations.add(interfaceScopeDeclarations78.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop26;
+               default :
+                   break loop26;
                 }
             } while (true);
 
@@ -3140,7 +3140,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -3945,7 +3945,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -4441,7 +4441,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -4496,24 +4496,24 @@ public class JavaParser extends Parser {
 
 
                 switch (alt44) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:484:31: COMMA classFieldDeclarator
-            	    {
-            	    COMMA125=(Token)match(input,COMMA,FOLLOW_COMMA_in_classFieldDeclaratorList6330); if (state.failed) return retval; 
-            	    if ( state.backtracking==0 ) stream_COMMA.add(COMMA125);
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:484:31: COMMA classFieldDeclarator
+                   {
+                   COMMA125=(Token)match(input,COMMA,FOLLOW_COMMA_in_classFieldDeclaratorList6330); if (state.failed) return retval; 
+                   if ( state.backtracking==0 ) stream_COMMA.add(COMMA125);
 
-            	    pushFollow(FOLLOW_classFieldDeclarator_in_classFieldDeclaratorList6332);
-            	    classFieldDeclarator126=classFieldDeclarator();
+                   pushFollow(FOLLOW_classFieldDeclarator_in_classFieldDeclaratorList6332);
+                   classFieldDeclarator126=classFieldDeclarator();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_classFieldDeclarator.add(classFieldDeclarator126.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_classFieldDeclarator.add(classFieldDeclarator126.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop44;
+               default :
+                   break loop44;
                 }
             } while (true);
 
@@ -4566,7 +4566,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -4684,7 +4684,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -4739,24 +4739,24 @@ public class JavaParser extends Parser {
 
 
                 switch (alt46) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:494:35: COMMA interfaceFieldDeclarator
-            	    {
-            	    COMMA131=(Token)match(input,COMMA,FOLLOW_COMMA_in_interfaceFieldDeclaratorList6424); if (state.failed) return retval; 
-            	    if ( state.backtracking==0 ) stream_COMMA.add(COMMA131);
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:494:35: COMMA interfaceFieldDeclarator
+                   {
+                   COMMA131=(Token)match(input,COMMA,FOLLOW_COMMA_in_interfaceFieldDeclaratorList6424); if (state.failed) return retval; 
+                   if ( state.backtracking==0 ) stream_COMMA.add(COMMA131);
 
-            	    pushFollow(FOLLOW_interfaceFieldDeclarator_in_interfaceFieldDeclaratorList6426);
-            	    interfaceFieldDeclarator132=interfaceFieldDeclarator();
+                   pushFollow(FOLLOW_interfaceFieldDeclarator_in_interfaceFieldDeclaratorList6426);
+                   interfaceFieldDeclarator132=interfaceFieldDeclarator();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_interfaceFieldDeclarator.add(interfaceFieldDeclarator132.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_interfaceFieldDeclarator.add(interfaceFieldDeclarator132.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop46;
+               default :
+                   break loop46;
                 }
             } while (true);
 
@@ -4809,7 +4809,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -4905,7 +4905,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -4983,7 +4983,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -5073,7 +5073,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -5155,7 +5155,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -5206,22 +5206,22 @@ public class JavaParser extends Parser {
 
 
                 switch (alt49) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: arrayDeclarator
-            	    {
-            	    pushFollow(FOLLOW_arrayDeclarator_in_arrayDeclaratorList6599);
-            	    arrayDeclarator142=arrayDeclarator();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: arrayDeclarator
+                   {
+                   pushFollow(FOLLOW_arrayDeclarator_in_arrayDeclaratorList6599);
+                   arrayDeclarator142=arrayDeclarator();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_arrayDeclarator.add(arrayDeclarator142.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_arrayDeclarator.add(arrayDeclarator142.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    if ( cnt49 >= 1 ) break loop49;
-            	    if (state.backtracking>0) {state.failed=true; return retval;}
+               default :
+                   if ( cnt49 >= 1 ) break loop49;
+                   if (state.backtracking>0) {state.failed=true; return retval;}
                         EarlyExitException eee =
                             new EarlyExitException(49, input);
                         throw eee;
@@ -5278,7 +5278,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -5361,24 +5361,24 @@ public class JavaParser extends Parser {
 
 
                         switch (alt50) {
-                    	case 1 :
-                    	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:523:38: COMMA variableInitializer
-                    	    {
-                    	    COMMA145=(Token)match(input,COMMA,FOLLOW_COMMA_in_arrayInitializer6650); if (state.failed) return retval; 
-                    	    if ( state.backtracking==0 ) stream_COMMA.add(COMMA145);
+                       case 1 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:523:38: COMMA variableInitializer
+                           {
+                           COMMA145=(Token)match(input,COMMA,FOLLOW_COMMA_in_arrayInitializer6650); if (state.failed) return retval; 
+                           if ( state.backtracking==0 ) stream_COMMA.add(COMMA145);
 
-                    	    pushFollow(FOLLOW_variableInitializer_in_arrayInitializer6652);
-                    	    variableInitializer146=variableInitializer();
+                           pushFollow(FOLLOW_variableInitializer_in_arrayInitializer6652);
+                           variableInitializer146=variableInitializer();
 
-                    	    state._fsp--;
-                    	    if (state.failed) return retval;
-                    	    if ( state.backtracking==0 ) stream_variableInitializer.add(variableInitializer146.getTree());
+                           state._fsp--;
+                           if (state.failed) return retval;
+                           if ( state.backtracking==0 ) stream_variableInitializer.add(variableInitializer146.getTree());
 
-                    	    }
-                    	    break;
+                           }
+                           break;
 
-                    	default :
-                    	    break loop50;
+                       default :
+                           break loop50;
                         }
                     } while (true);
 
@@ -5458,7 +5458,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -5544,7 +5544,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -5597,21 +5597,21 @@ public class JavaParser extends Parser {
 
 
                 switch (alt53) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: modifier
-            	    {
-            	    pushFollow(FOLLOW_modifier_in_modifierList6738);
-            	    modifier151=modifier();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: modifier
+                   {
+                   pushFollow(FOLLOW_modifier_in_modifierList6738);
+                   modifier151=modifier();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_modifier.add(modifier151.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_modifier.add(modifier151.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop53;
+               default :
+                   break loop53;
                 }
             } while (true);
 
@@ -5662,7 +5662,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -5936,7 +5936,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -5980,21 +5980,21 @@ public class JavaParser extends Parser {
 
 
                 switch (alt55) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: localModifier
-            	    {
-            	    pushFollow(FOLLOW_localModifier_in_localModifierList6898);
-            	    localModifier163=localModifier();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: localModifier
+                   {
+                   pushFollow(FOLLOW_localModifier_in_localModifierList6898);
+                   localModifier163=localModifier();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_localModifier.add(localModifier163.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_localModifier.add(localModifier163.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop55;
+               default :
+                   break loop55;
                 }
             } while (true);
 
@@ -6045,7 +6045,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -6134,7 +6134,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -6224,7 +6224,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -6344,7 +6344,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -6460,7 +6460,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -6572,7 +6572,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -6633,24 +6633,24 @@ public class JavaParser extends Parser {
 
 
                 switch (alt61) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:582:20: DOT typeIdent
-            	    {
-            	    DOT175=(Token)match(input,DOT,FOLLOW_DOT_in_qualifiedTypeIdent7134); if (state.failed) return retval; 
-            	    if ( state.backtracking==0 ) stream_DOT.add(DOT175);
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:582:20: DOT typeIdent
+                   {
+                   DOT175=(Token)match(input,DOT,FOLLOW_DOT_in_qualifiedTypeIdent7134); if (state.failed) return retval; 
+                   if ( state.backtracking==0 ) stream_DOT.add(DOT175);
 
-            	    pushFollow(FOLLOW_typeIdent_in_qualifiedTypeIdent7136);
-            	    typeIdent176=typeIdent();
+                   pushFollow(FOLLOW_typeIdent_in_qualifiedTypeIdent7136);
+                   typeIdent176=typeIdent();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_typeIdent.add(typeIdent176.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_typeIdent.add(typeIdent176.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop61;
+               default :
+                   break loop61;
                 }
             } while (true);
 
@@ -6703,7 +6703,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -6758,24 +6758,24 @@ public class JavaParser extends Parser {
 
 
                 switch (alt62) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:587:30: DOT typeIdentSimplified
-            	    {
-            	    DOT178=(Token)match(input,DOT,FOLLOW_DOT_in_qualifiedTypeIdentSimplified7179); if (state.failed) return retval; 
-            	    if ( state.backtracking==0 ) stream_DOT.add(DOT178);
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:587:30: DOT typeIdentSimplified
+                   {
+                   DOT178=(Token)match(input,DOT,FOLLOW_DOT_in_qualifiedTypeIdentSimplified7179); if (state.failed) return retval; 
+                   if ( state.backtracking==0 ) stream_DOT.add(DOT178);
 
-            	    pushFollow(FOLLOW_typeIdentSimplified_in_qualifiedTypeIdentSimplified7181);
-            	    typeIdentSimplified179=typeIdentSimplified();
+                   pushFollow(FOLLOW_typeIdentSimplified_in_qualifiedTypeIdentSimplified7181);
+                   typeIdentSimplified179=typeIdentSimplified();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_typeIdentSimplified.add(typeIdentSimplified179.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_typeIdentSimplified.add(typeIdentSimplified179.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop62;
+               default :
+                   break loop62;
                 }
             } while (true);
 
@@ -6828,7 +6828,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -6906,7 +6906,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -6984,7 +6984,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -7044,7 +7044,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -7114,24 +7114,24 @@ public class JavaParser extends Parser {
 
 
                 switch (alt65) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:611:40: COMMA genericTypeArgument
-            	    {
-            	    COMMA187=(Token)match(input,COMMA,FOLLOW_COMMA_in_genericTypeArgumentList7361); if (state.failed) return retval; 
-            	    if ( state.backtracking==0 ) stream_COMMA.add(COMMA187);
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:611:40: COMMA genericTypeArgument
+                   {
+                   COMMA187=(Token)match(input,COMMA,FOLLOW_COMMA_in_genericTypeArgumentList7361); if (state.failed) return retval; 
+                   if ( state.backtracking==0 ) stream_COMMA.add(COMMA187);
 
-            	    pushFollow(FOLLOW_genericTypeArgument_in_genericTypeArgumentList7363);
-            	    genericTypeArgument188=genericTypeArgument();
+                   pushFollow(FOLLOW_genericTypeArgument_in_genericTypeArgumentList7363);
+                   genericTypeArgument188=genericTypeArgument();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_genericTypeArgument.add(genericTypeArgument188.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_genericTypeArgument.add(genericTypeArgument188.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop65;
+               default :
+                   break loop65;
                 }
             } while (true);
 
@@ -7190,7 +7190,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -7356,7 +7356,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -7425,7 +7425,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -7489,24 +7489,24 @@ public class JavaParser extends Parser {
 
 
                 switch (alt68) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:626:50: COMMA genericTypeArgumentSimplified
-            	    {
-            	    COMMA197=(Token)match(input,COMMA,FOLLOW_COMMA_in_genericTypeArgumentListSimplified7492); if (state.failed) return retval; 
-            	    if ( state.backtracking==0 ) stream_COMMA.add(COMMA197);
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:626:50: COMMA genericTypeArgumentSimplified
+                   {
+                   COMMA197=(Token)match(input,COMMA,FOLLOW_COMMA_in_genericTypeArgumentListSimplified7492); if (state.failed) return retval; 
+                   if ( state.backtracking==0 ) stream_COMMA.add(COMMA197);
 
-            	    pushFollow(FOLLOW_genericTypeArgumentSimplified_in_genericTypeArgumentListSimplified7494);
-            	    genericTypeArgumentSimplified198=genericTypeArgumentSimplified();
+                   pushFollow(FOLLOW_genericTypeArgumentSimplified_in_genericTypeArgumentListSimplified7494);
+                   genericTypeArgumentSimplified198=genericTypeArgumentSimplified();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_genericTypeArgumentSimplified.add(genericTypeArgumentSimplified198.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_genericTypeArgumentSimplified.add(genericTypeArgumentSimplified198.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop68;
+               default :
+                   break loop68;
                 }
             } while (true);
 
@@ -7565,7 +7565,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -7654,7 +7654,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -7710,22 +7710,22 @@ public class JavaParser extends Parser {
 
 
                 switch (alt70) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:636:30: COMMA qualifiedIdentifier
-            	    {
-            	    COMMA203=(Token)match(input,COMMA,FOLLOW_COMMA_in_qualifiedIdentList7576); if (state.failed) return retval;
-            	    pushFollow(FOLLOW_qualifiedIdentifier_in_qualifiedIdentList7579);
-            	    qualifiedIdentifier204=qualifiedIdentifier();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:636:30: COMMA qualifiedIdentifier
+                   {
+                   COMMA203=(Token)match(input,COMMA,FOLLOW_COMMA_in_qualifiedIdentList7576); if (state.failed) return retval;
+                   pushFollow(FOLLOW_qualifiedIdentifier_in_qualifiedIdentList7579);
+                   qualifiedIdentifier204=qualifiedIdentifier();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, qualifiedIdentifier204.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, qualifiedIdentifier204.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop70;
+               default :
+                   break loop70;
                 }
             } while (true);
 
@@ -7743,7 +7743,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -7923,24 +7923,24 @@ public class JavaParser extends Parser {
 
 
                         switch (alt71) {
-                    	case 1 :
-                    	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:642:42: COMMA formalParameterStandardDecl
-                    	    {
-                    	    COMMA207=(Token)match(input,COMMA,FOLLOW_COMMA_in_formalParameterList7635); if (state.failed) return retval; 
-                    	    if ( state.backtracking==0 ) stream_COMMA.add(COMMA207);
+                       case 1 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:642:42: COMMA formalParameterStandardDecl
+                           {
+                           COMMA207=(Token)match(input,COMMA,FOLLOW_COMMA_in_formalParameterList7635); if (state.failed) return retval; 
+                           if ( state.backtracking==0 ) stream_COMMA.add(COMMA207);
 
-                    	    pushFollow(FOLLOW_formalParameterStandardDecl_in_formalParameterList7637);
-                    	    formalParameterStandardDecl208=formalParameterStandardDecl();
+                           pushFollow(FOLLOW_formalParameterStandardDecl_in_formalParameterList7637);
+                           formalParameterStandardDecl208=formalParameterStandardDecl();
 
-                    	    state._fsp--;
-                    	    if (state.failed) return retval;
-                    	    if ( state.backtracking==0 ) stream_formalParameterStandardDecl.add(formalParameterStandardDecl208.getTree());
+                           state._fsp--;
+                           if (state.failed) return retval;
+                           if ( state.backtracking==0 ) stream_formalParameterStandardDecl.add(formalParameterStandardDecl208.getTree());
 
-                    	    }
-                    	    break;
+                           }
+                           break;
 
-                    	default :
-                    	    break loop71;
+                       default :
+                           break loop71;
                         }
                     } while (true);
 
@@ -8105,7 +8105,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -8205,7 +8205,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -8311,7 +8311,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -8402,51 +8402,51 @@ public class JavaParser extends Parser {
 
 
                 switch (alt74) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:666:13: DOT ident= IDENT
-            	    {
-            	    DOT221=(Token)match(input,DOT,FOLLOW_DOT_in_qualifiedIdentifier7946); if (state.failed) return retval; 
-            	    if ( state.backtracking==0 ) stream_DOT.add(DOT221);
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:666:13: DOT ident= IDENT
+                   {
+                   DOT221=(Token)match(input,DOT,FOLLOW_DOT_in_qualifiedIdentifier7946); if (state.failed) return retval; 
+                   if ( state.backtracking==0 ) stream_DOT.add(DOT221);
 
-            	    ident=(Token)match(input,IDENT,FOLLOW_IDENT_in_qualifiedIdentifier7950); if (state.failed) return retval; 
-            	    if ( state.backtracking==0 ) stream_IDENT.add(ident);
+                   ident=(Token)match(input,IDENT,FOLLOW_IDENT_in_qualifiedIdentifier7950); if (state.failed) return retval; 
+                   if ( state.backtracking==0 ) stream_IDENT.add(ident);
 
 
 
-            	    // AST REWRITE
-            	    // elements: qualifiedIdentifier, ident, DOT
-            	    // token labels: ident
-            	    // rule labels: retval
-            	    // token list labels: 
-            	    // rule list labels: 
-            	    // wildcard labels: 
-            	    if ( state.backtracking==0 ) {
-            	    retval.tree = root_0;
-            	    RewriteRuleTokenStream stream_ident=new RewriteRuleTokenStream(adaptor,"token ident",ident);
-            	    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+                   // AST REWRITE
+                   // elements: qualifiedIdentifier, ident, DOT
+                   // token labels: ident
+                   // rule labels: retval
+                   // token list labels: 
+                   // rule list labels: 
+                   // wildcard labels: 
+                   if ( state.backtracking==0 ) {
+                   retval.tree = root_0;
+                   RewriteRuleTokenStream stream_ident=new RewriteRuleTokenStream(adaptor,"token ident",ident);
+                   RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
-            	    root_0 = (CommonTree)adaptor.nil();
-            	    // 666:33: -> ^( DOT $qualifiedIdentifier $ident)
-            	    {
-            	        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:666:37: ^( DOT $qualifiedIdentifier $ident)
-            	        {
-            	        CommonTree root_1 = (CommonTree)adaptor.nil();
-            	        root_1 = (CommonTree)adaptor.becomeRoot(stream_DOT.nextNode(), root_1);
+                   root_0 = (CommonTree)adaptor.nil();
+                   // 666:33: -> ^( DOT $qualifiedIdentifier $ident)
+                   {
+                       // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:666:37: ^( DOT $qualifiedIdentifier $ident)
+                       {
+                       CommonTree root_1 = (CommonTree)adaptor.nil();
+                       root_1 = (CommonTree)adaptor.becomeRoot(stream_DOT.nextNode(), root_1);
 
-            	        adaptor.addChild(root_1, stream_retval.nextTree());
-            	        adaptor.addChild(root_1, stream_ident.nextNode());
+                       adaptor.addChild(root_1, stream_retval.nextTree());
+                       adaptor.addChild(root_1, stream_ident.nextNode());
 
-            	        adaptor.addChild(root_0, root_1);
-            	        }
+                       adaptor.addChild(root_0, root_1);
+                       }
 
-            	    }
+                   }
 
-            	    retval.tree = root_0;}
-            	    }
-            	    break;
+                   retval.tree = root_0;}
+                   }
+                   break;
 
-            	default :
-            	    break loop74;
+               default :
+                   break loop74;
                 }
             } while (true);
 
@@ -8464,7 +8464,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -8520,21 +8520,21 @@ public class JavaParser extends Parser {
 
 
                 switch (alt75) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: annotation
-            	    {
-            	    pushFollow(FOLLOW_annotation_in_annotationList8003);
-            	    annotation222=annotation();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: annotation
+                   {
+                   pushFollow(FOLLOW_annotation_in_annotationList8003);
+                   annotation222=annotation();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_annotation.add(annotation222.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_annotation.add(annotation222.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop75;
+               default :
+                   break loop75;
                 }
             } while (true);
 
@@ -8585,7 +8585,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -8671,7 +8671,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -8763,7 +8763,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -8853,24 +8853,24 @@ public class JavaParser extends Parser {
 
 
                         switch (alt77) {
-                    	case 1 :
-                    	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:687:32: COMMA annotationInitializer
-                    	    {
-                    	    COMMA230=(Token)match(input,COMMA,FOLLOW_COMMA_in_annotationInitializers8114); if (state.failed) return retval; 
-                    	    if ( state.backtracking==0 ) stream_COMMA.add(COMMA230);
+                       case 1 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:687:32: COMMA annotationInitializer
+                           {
+                           COMMA230=(Token)match(input,COMMA,FOLLOW_COMMA_in_annotationInitializers8114); if (state.failed) return retval; 
+                           if ( state.backtracking==0 ) stream_COMMA.add(COMMA230);
 
-                    	    pushFollow(FOLLOW_annotationInitializer_in_annotationInitializers8116);
-                    	    annotationInitializer231=annotationInitializer();
+                           pushFollow(FOLLOW_annotationInitializer_in_annotationInitializers8116);
+                           annotationInitializer231=annotationInitializer();
 
-                    	    state._fsp--;
-                    	    if (state.failed) return retval;
-                    	    if ( state.backtracking==0 ) stream_annotationInitializer.add(annotationInitializer231.getTree());
+                           state._fsp--;
+                           if (state.failed) return retval;
+                           if ( state.backtracking==0 ) stream_annotationInitializer.add(annotationInitializer231.getTree());
 
-                    	    }
-                    	    break;
+                           }
+                           break;
 
-                    	default :
-                    	    break loop77;
+                       default :
+                           break loop77;
                         }
                     } while (true);
 
@@ -8965,7 +8965,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -9029,7 +9029,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -9173,7 +9173,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -9253,7 +9253,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -9336,24 +9336,24 @@ public class JavaParser extends Parser {
 
 
                         switch (alt80) {
-                    	case 1 :
-                    	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:709:41: COMMA annotationElementValue
-                    	    {
-                    	    COMMA242=(Token)match(input,COMMA,FOLLOW_COMMA_in_annotationElementValueArrayInitializer8305); if (state.failed) return retval; 
-                    	    if ( state.backtracking==0 ) stream_COMMA.add(COMMA242);
+                       case 1 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:709:41: COMMA annotationElementValue
+                           {
+                           COMMA242=(Token)match(input,COMMA,FOLLOW_COMMA_in_annotationElementValueArrayInitializer8305); if (state.failed) return retval; 
+                           if ( state.backtracking==0 ) stream_COMMA.add(COMMA242);
 
-                    	    pushFollow(FOLLOW_annotationElementValue_in_annotationElementValueArrayInitializer8307);
-                    	    annotationElementValue243=annotationElementValue();
+                           pushFollow(FOLLOW_annotationElementValue_in_annotationElementValueArrayInitializer8307);
+                           annotationElementValue243=annotationElementValue();
 
-                    	    state._fsp--;
-                    	    if (state.failed) return retval;
-                    	    if ( state.backtracking==0 ) stream_annotationElementValue.add(annotationElementValue243.getTree());
+                           state._fsp--;
+                           if (state.failed) return retval;
+                           if ( state.backtracking==0 ) stream_annotationElementValue.add(annotationElementValue243.getTree());
 
-                    	    }
-                    	    break;
+                           }
+                           break;
 
-                    	default :
-                    	    break loop80;
+                       default :
+                           break loop80;
                         }
                     } while (true);
 
@@ -9433,7 +9433,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -9533,7 +9533,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -9586,21 +9586,21 @@ public class JavaParser extends Parser {
 
 
                 switch (alt83) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: annotationScopeDeclarations
-            	    {
-            	    pushFollow(FOLLOW_annotationScopeDeclarations_in_annotationBody8412);
-            	    annotationScopeDeclarations251=annotationScopeDeclarations();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: annotationScopeDeclarations
+                   {
+                   pushFollow(FOLLOW_annotationScopeDeclarations_in_annotationBody8412);
+                   annotationScopeDeclarations251=annotationScopeDeclarations();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_annotationScopeDeclarations.add(annotationScopeDeclarations251.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_annotationScopeDeclarations.add(annotationScopeDeclarations251.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop83;
+               default :
+                   break loop83;
                 }
             } while (true);
 
@@ -9654,7 +9654,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -9911,7 +9911,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -9972,7 +9972,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -10025,21 +10025,21 @@ public class JavaParser extends Parser {
 
 
                 switch (alt87) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: blockStatement
-            	    {
-            	    pushFollow(FOLLOW_blockStatement_in_block8620);
-            	    blockStatement266=blockStatement();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: blockStatement
+                   {
+                   pushFollow(FOLLOW_blockStatement_in_block8620);
+                   blockStatement266=blockStatement();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_blockStatement.add(blockStatement266.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_blockStatement.add(blockStatement266.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop87;
+               default :
+                   break loop87;
                 }
             } while (true);
 
@@ -10093,7 +10093,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -10188,7 +10188,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -10288,7 +10288,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -11586,7 +11586,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -11631,22 +11631,22 @@ public class JavaParser extends Parser {
 
 
                 switch (alt98) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: catchClause
-            	    {
-            	    pushFollow(FOLLOW_catchClause_in_catches9982);
-            	    catchClause338=catchClause();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: catchClause
+                   {
+                   pushFollow(FOLLOW_catchClause_in_catches9982);
+                   catchClause338=catchClause();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_catchClause.add(catchClause338.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_catchClause.add(catchClause338.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    if ( cnt98 >= 1 ) break loop98;
-            	    if (state.backtracking>0) {state.failed=true; return retval;}
+               default :
+                   if ( cnt98 >= 1 ) break loop98;
+                   if (state.backtracking>0) {state.failed=true; return retval;}
                         EarlyExitException eee =
                             new EarlyExitException(98, input);
                         throw eee;
@@ -11703,7 +11703,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -11778,7 +11778,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -11856,7 +11856,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -11977,7 +11977,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -12029,21 +12029,21 @@ public class JavaParser extends Parser {
 
 
                 switch (alt100) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: switchCaseLabel
-            	    {
-            	    pushFollow(FOLLOW_switchCaseLabel_in_switchCaseLabels10138);
-            	    switchCaseLabel349=switchCaseLabel();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: switchCaseLabel
+                   {
+                   pushFollow(FOLLOW_switchCaseLabel_in_switchCaseLabels10138);
+                   switchCaseLabel349=switchCaseLabel();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, switchCaseLabel349.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, switchCaseLabel349.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop100;
+               default :
+                   break loop100;
                 }
             } while (true);
 
@@ -12061,7 +12061,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -12125,21 +12125,21 @@ public class JavaParser extends Parser {
 
 
                 switch (alt101) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: blockStatement
-            	    {
-            	    pushFollow(FOLLOW_blockStatement_in_switchCaseLabel10174);
-            	    blockStatement353=blockStatement();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: blockStatement
+                   {
+                   pushFollow(FOLLOW_blockStatement_in_switchCaseLabel10174);
+                   blockStatement353=blockStatement();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, blockStatement353.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, blockStatement353.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop101;
+               default :
+                   break loop101;
                 }
             } while (true);
 
@@ -12157,7 +12157,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -12213,21 +12213,21 @@ public class JavaParser extends Parser {
 
 
                 switch (alt102) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: blockStatement
-            	    {
-            	    pushFollow(FOLLOW_blockStatement_in_switchDefaultLabel10204);
-            	    blockStatement356=blockStatement();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: blockStatement
+                   {
+                   pushFollow(FOLLOW_blockStatement_in_switchDefaultLabel10204);
+                   blockStatement356=blockStatement();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, blockStatement356.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, blockStatement356.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop102;
+               default :
+                   break loop102;
                 }
             } while (true);
 
@@ -12245,7 +12245,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -12405,7 +12405,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -12507,7 +12507,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -12609,7 +12609,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -12701,7 +12701,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -12757,22 +12757,22 @@ public class JavaParser extends Parser {
 
 
                 switch (alt106) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:840:21: COMMA expression
-            	    {
-            	    COMMA365=(Token)match(input,COMMA,FOLLOW_COMMA_in_expressionList10468); if (state.failed) return retval;
-            	    pushFollow(FOLLOW_expression_in_expressionList10471);
-            	    expression366=expression();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:840:21: COMMA expression
+                   {
+                   COMMA365=(Token)match(input,COMMA,FOLLOW_COMMA_in_expressionList10468); if (state.failed) return retval;
+                   pushFollow(FOLLOW_expression_in_expressionList10471);
+                   expression366=expression();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, expression366.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, expression366.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop106;
+               default :
+                   break loop106;
                 }
             } while (true);
 
@@ -12790,7 +12790,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -12870,7 +12870,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -13180,7 +13180,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -13277,7 +13277,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -13333,26 +13333,26 @@ public class JavaParser extends Parser {
 
 
                 switch (alt110) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:871:31: LOGICAL_OR logicalAndExpression
-            	    {
-            	    LOGICAL_OR388=(Token)match(input,LOGICAL_OR,FOLLOW_LOGICAL_OR_in_logicalOrExpression10838); if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) {
-            	    LOGICAL_OR388_tree = (CommonTree)adaptor.create(LOGICAL_OR388);
-            	    root_0 = (CommonTree)adaptor.becomeRoot(LOGICAL_OR388_tree, root_0);
-            	    }
-            	    pushFollow(FOLLOW_logicalAndExpression_in_logicalOrExpression10841);
-            	    logicalAndExpression389=logicalAndExpression();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:871:31: LOGICAL_OR logicalAndExpression
+                   {
+                   LOGICAL_OR388=(Token)match(input,LOGICAL_OR,FOLLOW_LOGICAL_OR_in_logicalOrExpression10838); if (state.failed) return retval;
+                   if ( state.backtracking==0 ) {
+                   LOGICAL_OR388_tree = (CommonTree)adaptor.create(LOGICAL_OR388);
+                   root_0 = (CommonTree)adaptor.becomeRoot(LOGICAL_OR388_tree, root_0);
+                   }
+                   pushFollow(FOLLOW_logicalAndExpression_in_logicalOrExpression10841);
+                   logicalAndExpression389=logicalAndExpression();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, logicalAndExpression389.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, logicalAndExpression389.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop110;
+               default :
+                   break loop110;
                 }
             } while (true);
 
@@ -13370,7 +13370,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -13426,26 +13426,26 @@ public class JavaParser extends Parser {
 
 
                 switch (alt111) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:875:32: LOGICAL_AND inclusiveOrExpression
-            	    {
-            	    LOGICAL_AND391=(Token)match(input,LOGICAL_AND,FOLLOW_LOGICAL_AND_in_logicalAndExpression10865); if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) {
-            	    LOGICAL_AND391_tree = (CommonTree)adaptor.create(LOGICAL_AND391);
-            	    root_0 = (CommonTree)adaptor.becomeRoot(LOGICAL_AND391_tree, root_0);
-            	    }
-            	    pushFollow(FOLLOW_inclusiveOrExpression_in_logicalAndExpression10868);
-            	    inclusiveOrExpression392=inclusiveOrExpression();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:875:32: LOGICAL_AND inclusiveOrExpression
+                   {
+                   LOGICAL_AND391=(Token)match(input,LOGICAL_AND,FOLLOW_LOGICAL_AND_in_logicalAndExpression10865); if (state.failed) return retval;
+                   if ( state.backtracking==0 ) {
+                   LOGICAL_AND391_tree = (CommonTree)adaptor.create(LOGICAL_AND391);
+                   root_0 = (CommonTree)adaptor.becomeRoot(LOGICAL_AND391_tree, root_0);
+                   }
+                   pushFollow(FOLLOW_inclusiveOrExpression_in_logicalAndExpression10868);
+                   inclusiveOrExpression392=inclusiveOrExpression();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, inclusiveOrExpression392.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, inclusiveOrExpression392.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop111;
+               default :
+                   break loop111;
                 }
             } while (true);
 
@@ -13463,7 +13463,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -13519,26 +13519,26 @@ public class JavaParser extends Parser {
 
 
                 switch (alt112) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:879:32: OR exclusiveOrExpression
-            	    {
-            	    OR394=(Token)match(input,OR,FOLLOW_OR_in_inclusiveOrExpression10892); if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) {
-            	    OR394_tree = (CommonTree)adaptor.create(OR394);
-            	    root_0 = (CommonTree)adaptor.becomeRoot(OR394_tree, root_0);
-            	    }
-            	    pushFollow(FOLLOW_exclusiveOrExpression_in_inclusiveOrExpression10895);
-            	    exclusiveOrExpression395=exclusiveOrExpression();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:879:32: OR exclusiveOrExpression
+                   {
+                   OR394=(Token)match(input,OR,FOLLOW_OR_in_inclusiveOrExpression10892); if (state.failed) return retval;
+                   if ( state.backtracking==0 ) {
+                   OR394_tree = (CommonTree)adaptor.create(OR394);
+                   root_0 = (CommonTree)adaptor.becomeRoot(OR394_tree, root_0);
+                   }
+                   pushFollow(FOLLOW_exclusiveOrExpression_in_inclusiveOrExpression10895);
+                   exclusiveOrExpression395=exclusiveOrExpression();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, exclusiveOrExpression395.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, exclusiveOrExpression395.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop112;
+               default :
+                   break loop112;
                 }
             } while (true);
 
@@ -13556,7 +13556,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -13612,26 +13612,26 @@ public class JavaParser extends Parser {
 
 
                 switch (alt113) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:883:24: XOR andExpression
-            	    {
-            	    XOR397=(Token)match(input,XOR,FOLLOW_XOR_in_exclusiveOrExpression10919); if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) {
-            	    XOR397_tree = (CommonTree)adaptor.create(XOR397);
-            	    root_0 = (CommonTree)adaptor.becomeRoot(XOR397_tree, root_0);
-            	    }
-            	    pushFollow(FOLLOW_andExpression_in_exclusiveOrExpression10922);
-            	    andExpression398=andExpression();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:883:24: XOR andExpression
+                   {
+                   XOR397=(Token)match(input,XOR,FOLLOW_XOR_in_exclusiveOrExpression10919); if (state.failed) return retval;
+                   if ( state.backtracking==0 ) {
+                   XOR397_tree = (CommonTree)adaptor.create(XOR397);
+                   root_0 = (CommonTree)adaptor.becomeRoot(XOR397_tree, root_0);
+                   }
+                   pushFollow(FOLLOW_andExpression_in_exclusiveOrExpression10922);
+                   andExpression398=andExpression();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, andExpression398.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, andExpression398.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop113;
+               default :
+                   break loop113;
                 }
             } while (true);
 
@@ -13649,7 +13649,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -13705,26 +13705,26 @@ public class JavaParser extends Parser {
 
 
                 switch (alt114) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:887:29: AND equalityExpression
-            	    {
-            	    AND400=(Token)match(input,AND,FOLLOW_AND_in_andExpression10946); if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) {
-            	    AND400_tree = (CommonTree)adaptor.create(AND400);
-            	    root_0 = (CommonTree)adaptor.becomeRoot(AND400_tree, root_0);
-            	    }
-            	    pushFollow(FOLLOW_equalityExpression_in_andExpression10949);
-            	    equalityExpression401=equalityExpression();
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:887:29: AND equalityExpression
+                   {
+                   AND400=(Token)match(input,AND,FOLLOW_AND_in_andExpression10946); if (state.failed) return retval;
+                   if ( state.backtracking==0 ) {
+                   AND400_tree = (CommonTree)adaptor.create(AND400);
+                   root_0 = (CommonTree)adaptor.becomeRoot(AND400_tree, root_0);
+                   }
+                   pushFollow(FOLLOW_equalityExpression_in_andExpression10949);
+                   equalityExpression401=equalityExpression();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, equalityExpression401.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, equalityExpression401.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop114;
+               default :
+                   break loop114;
                 }
             } while (true);
 
@@ -13742,7 +13742,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -13800,64 +13800,64 @@ public class JavaParser extends Parser {
 
 
                 switch (alt116) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:892:13: ( EQUAL | NOT_EQUAL ) instanceOfExpression
-            	    {
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:892:13: ( EQUAL | NOT_EQUAL )
-            	    int alt115=2;
-            	    int LA115_0 = input.LA(1);
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:892:13: ( EQUAL | NOT_EQUAL ) instanceOfExpression
+                   {
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:892:13: ( EQUAL | NOT_EQUAL )
+                   int alt115=2;
+                   int LA115_0 = input.LA(1);
 
-            	    if ( (LA115_0==EQUAL) ) {
-            	        alt115=1;
-            	    }
-            	    else if ( (LA115_0==NOT_EQUAL) ) {
-            	        alt115=2;
-            	    }
-            	    else {
-            	        if (state.backtracking>0) {state.failed=true; return retval;}
-            	        NoViableAltException nvae =
-            	            new NoViableAltException("", 115, 0, input);
+                   if ( (LA115_0==EQUAL) ) {
+                       alt115=1;
+                   }
+                   else if ( (LA115_0==NOT_EQUAL) ) {
+                       alt115=2;
+                   }
+                   else {
+                       if (state.backtracking>0) {state.failed=true; return retval;}
+                       NoViableAltException nvae =
+                           new NoViableAltException("", 115, 0, input);
 
-            	        throw nvae;
-            	    }
-            	    switch (alt115) {
-            	        case 1 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:892:17: EQUAL
-            	            {
-            	            EQUAL403=(Token)match(input,EQUAL,FOLLOW_EQUAL_in_equalityExpression10989); if (state.failed) return retval;
-            	            if ( state.backtracking==0 ) {
-            	            EQUAL403_tree = (CommonTree)adaptor.create(EQUAL403);
-            	            root_0 = (CommonTree)adaptor.becomeRoot(EQUAL403_tree, root_0);
-            	            }
+                       throw nvae;
+                   }
+                   switch (alt115) {
+                       case 1 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:892:17: EQUAL
+                           {
+                           EQUAL403=(Token)match(input,EQUAL,FOLLOW_EQUAL_in_equalityExpression10989); if (state.failed) return retval;
+                           if ( state.backtracking==0 ) {
+                           EQUAL403_tree = (CommonTree)adaptor.create(EQUAL403);
+                           root_0 = (CommonTree)adaptor.becomeRoot(EQUAL403_tree, root_0);
+                           }
 
-            	            }
-            	            break;
-            	        case 2 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:893:17: NOT_EQUAL
-            	            {
-            	            NOT_EQUAL404=(Token)match(input,NOT_EQUAL,FOLLOW_NOT_EQUAL_in_equalityExpression11008); if (state.failed) return retval;
-            	            if ( state.backtracking==0 ) {
-            	            NOT_EQUAL404_tree = (CommonTree)adaptor.create(NOT_EQUAL404);
-            	            root_0 = (CommonTree)adaptor.becomeRoot(NOT_EQUAL404_tree, root_0);
-            	            }
+                           }
+                           break;
+                       case 2 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:893:17: NOT_EQUAL
+                           {
+                           NOT_EQUAL404=(Token)match(input,NOT_EQUAL,FOLLOW_NOT_EQUAL_in_equalityExpression11008); if (state.failed) return retval;
+                           if ( state.backtracking==0 ) {
+                           NOT_EQUAL404_tree = (CommonTree)adaptor.create(NOT_EQUAL404);
+                           root_0 = (CommonTree)adaptor.becomeRoot(NOT_EQUAL404_tree, root_0);
+                           }
 
-            	            }
-            	            break;
+                           }
+                           break;
 
-            	    }
+                   }
 
-            	    pushFollow(FOLLOW_instanceOfExpression_in_equalityExpression11038);
-            	    instanceOfExpression405=instanceOfExpression();
+                   pushFollow(FOLLOW_instanceOfExpression_in_equalityExpression11038);
+                   instanceOfExpression405=instanceOfExpression();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, instanceOfExpression405.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, instanceOfExpression405.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop116;
+               default :
+                   break loop116;
                 }
             } while (true);
 
@@ -13875,7 +13875,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -13961,7 +13961,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -14023,100 +14023,100 @@ public class JavaParser extends Parser {
 
 
                 switch (alt119) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:905:13: ( LESS_OR_EQUAL | GREATER_OR_EQUAL | LESS_THAN | GREATER_THAN ) shiftExpression
-            	    {
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:905:13: ( LESS_OR_EQUAL | GREATER_OR_EQUAL | LESS_THAN | GREATER_THAN )
-            	    int alt118=4;
-            	    switch ( input.LA(1) ) {
-            	    case LESS_OR_EQUAL:
-            	        {
-            	        alt118=1;
-            	        }
-            	        break;
-            	    case GREATER_OR_EQUAL:
-            	        {
-            	        alt118=2;
-            	        }
-            	        break;
-            	    case LESS_THAN:
-            	        {
-            	        alt118=3;
-            	        }
-            	        break;
-            	    case GREATER_THAN:
-            	        {
-            	        alt118=4;
-            	        }
-            	        break;
-            	    default:
-            	        if (state.backtracking>0) {state.failed=true; return retval;}
-            	        NoViableAltException nvae =
-            	            new NoViableAltException("", 118, 0, input);
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:905:13: ( LESS_OR_EQUAL | GREATER_OR_EQUAL | LESS_THAN | GREATER_THAN ) shiftExpression
+                   {
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:905:13: ( LESS_OR_EQUAL | GREATER_OR_EQUAL | LESS_THAN | GREATER_THAN )
+                   int alt118=4;
+                   switch ( input.LA(1) ) {
+                   case LESS_OR_EQUAL:
+                       {
+                       alt118=1;
+                       }
+                       break;
+                   case GREATER_OR_EQUAL:
+                       {
+                       alt118=2;
+                       }
+                       break;
+                   case LESS_THAN:
+                       {
+                       alt118=3;
+                       }
+                       break;
+                   case GREATER_THAN:
+                       {
+                       alt118=4;
+                       }
+                       break;
+                   default:
+                       if (state.backtracking>0) {state.failed=true; return retval;}
+                       NoViableAltException nvae =
+                           new NoViableAltException("", 118, 0, input);
 
-            	        throw nvae;
-            	    }
+                       throw nvae;
+                   }
 
-            	    switch (alt118) {
-            	        case 1 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:905:17: LESS_OR_EQUAL
-            	            {
-            	            LESS_OR_EQUAL410=(Token)match(input,LESS_OR_EQUAL,FOLLOW_LESS_OR_EQUAL_in_relationalExpression11114); if (state.failed) return retval;
-            	            if ( state.backtracking==0 ) {
-            	            LESS_OR_EQUAL410_tree = (CommonTree)adaptor.create(LESS_OR_EQUAL410);
-            	            root_0 = (CommonTree)adaptor.becomeRoot(LESS_OR_EQUAL410_tree, root_0);
-            	            }
+                   switch (alt118) {
+                       case 1 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:905:17: LESS_OR_EQUAL
+                           {
+                           LESS_OR_EQUAL410=(Token)match(input,LESS_OR_EQUAL,FOLLOW_LESS_OR_EQUAL_in_relationalExpression11114); if (state.failed) return retval;
+                           if ( state.backtracking==0 ) {
+                           LESS_OR_EQUAL410_tree = (CommonTree)adaptor.create(LESS_OR_EQUAL410);
+                           root_0 = (CommonTree)adaptor.becomeRoot(LESS_OR_EQUAL410_tree, root_0);
+                           }
 
-            	            }
-            	            break;
-            	        case 2 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:906:17: GREATER_OR_EQUAL
-            	            {
-            	            GREATER_OR_EQUAL411=(Token)match(input,GREATER_OR_EQUAL,FOLLOW_GREATER_OR_EQUAL_in_relationalExpression11133); if (state.failed) return retval;
-            	            if ( state.backtracking==0 ) {
-            	            GREATER_OR_EQUAL411_tree = (CommonTree)adaptor.create(GREATER_OR_EQUAL411);
-            	            root_0 = (CommonTree)adaptor.becomeRoot(GREATER_OR_EQUAL411_tree, root_0);
-            	            }
+                           }
+                           break;
+                       case 2 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:906:17: GREATER_OR_EQUAL
+                           {
+                           GREATER_OR_EQUAL411=(Token)match(input,GREATER_OR_EQUAL,FOLLOW_GREATER_OR_EQUAL_in_relationalExpression11133); if (state.failed) return retval;
+                           if ( state.backtracking==0 ) {
+                           GREATER_OR_EQUAL411_tree = (CommonTree)adaptor.create(GREATER_OR_EQUAL411);
+                           root_0 = (CommonTree)adaptor.becomeRoot(GREATER_OR_EQUAL411_tree, root_0);
+                           }
 
-            	            }
-            	            break;
-            	        case 3 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:907:17: LESS_THAN
-            	            {
-            	            LESS_THAN412=(Token)match(input,LESS_THAN,FOLLOW_LESS_THAN_in_relationalExpression11152); if (state.failed) return retval;
-            	            if ( state.backtracking==0 ) {
-            	            LESS_THAN412_tree = (CommonTree)adaptor.create(LESS_THAN412);
-            	            root_0 = (CommonTree)adaptor.becomeRoot(LESS_THAN412_tree, root_0);
-            	            }
+                           }
+                           break;
+                       case 3 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:907:17: LESS_THAN
+                           {
+                           LESS_THAN412=(Token)match(input,LESS_THAN,FOLLOW_LESS_THAN_in_relationalExpression11152); if (state.failed) return retval;
+                           if ( state.backtracking==0 ) {
+                           LESS_THAN412_tree = (CommonTree)adaptor.create(LESS_THAN412);
+                           root_0 = (CommonTree)adaptor.becomeRoot(LESS_THAN412_tree, root_0);
+                           }
 
-            	            }
-            	            break;
-            	        case 4 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:908:17: GREATER_THAN
-            	            {
-            	            GREATER_THAN413=(Token)match(input,GREATER_THAN,FOLLOW_GREATER_THAN_in_relationalExpression11171); if (state.failed) return retval;
-            	            if ( state.backtracking==0 ) {
-            	            GREATER_THAN413_tree = (CommonTree)adaptor.create(GREATER_THAN413);
-            	            root_0 = (CommonTree)adaptor.becomeRoot(GREATER_THAN413_tree, root_0);
-            	            }
+                           }
+                           break;
+                       case 4 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:908:17: GREATER_THAN
+                           {
+                           GREATER_THAN413=(Token)match(input,GREATER_THAN,FOLLOW_GREATER_THAN_in_relationalExpression11171); if (state.failed) return retval;
+                           if ( state.backtracking==0 ) {
+                           GREATER_THAN413_tree = (CommonTree)adaptor.create(GREATER_THAN413);
+                           root_0 = (CommonTree)adaptor.becomeRoot(GREATER_THAN413_tree, root_0);
+                           }
 
-            	            }
-            	            break;
+                           }
+                           break;
 
-            	    }
+                   }
 
-            	    pushFollow(FOLLOW_shiftExpression_in_relationalExpression11200);
-            	    shiftExpression414=shiftExpression();
+                   pushFollow(FOLLOW_shiftExpression_in_relationalExpression11200);
+                   shiftExpression414=shiftExpression();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, shiftExpression414.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, shiftExpression414.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop119;
+               default :
+                   break loop119;
                 }
             } while (true);
 
@@ -14134,7 +14134,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -14194,84 +14194,84 @@ public class JavaParser extends Parser {
 
 
                 switch (alt121) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:916:13: ( BIT_SHIFT_RIGHT | SHIFT_RIGHT | SHIFT_LEFT ) additiveExpression
-            	    {
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:916:13: ( BIT_SHIFT_RIGHT | SHIFT_RIGHT | SHIFT_LEFT )
-            	    int alt120=3;
-            	    switch ( input.LA(1) ) {
-            	    case BIT_SHIFT_RIGHT:
-            	        {
-            	        alt120=1;
-            	        }
-            	        break;
-            	    case SHIFT_RIGHT:
-            	        {
-            	        alt120=2;
-            	        }
-            	        break;
-            	    case SHIFT_LEFT:
-            	        {
-            	        alt120=3;
-            	        }
-            	        break;
-            	    default:
-            	        if (state.backtracking>0) {state.failed=true; return retval;}
-            	        NoViableAltException nvae =
-            	            new NoViableAltException("", 120, 0, input);
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:916:13: ( BIT_SHIFT_RIGHT | SHIFT_RIGHT | SHIFT_LEFT ) additiveExpression
+                   {
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:916:13: ( BIT_SHIFT_RIGHT | SHIFT_RIGHT | SHIFT_LEFT )
+                   int alt120=3;
+                   switch ( input.LA(1) ) {
+                   case BIT_SHIFT_RIGHT:
+                       {
+                       alt120=1;
+                       }
+                       break;
+                   case SHIFT_RIGHT:
+                       {
+                       alt120=2;
+                       }
+                       break;
+                   case SHIFT_LEFT:
+                       {
+                       alt120=3;
+                       }
+                       break;
+                   default:
+                       if (state.backtracking>0) {state.failed=true; return retval;}
+                       NoViableAltException nvae =
+                           new NoViableAltException("", 120, 0, input);
 
-            	        throw nvae;
-            	    }
+                       throw nvae;
+                   }
 
-            	    switch (alt120) {
-            	        case 1 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:916:17: BIT_SHIFT_RIGHT
-            	            {
-            	            BIT_SHIFT_RIGHT416=(Token)match(input,BIT_SHIFT_RIGHT,FOLLOW_BIT_SHIFT_RIGHT_in_shiftExpression11252); if (state.failed) return retval;
-            	            if ( state.backtracking==0 ) {
-            	            BIT_SHIFT_RIGHT416_tree = (CommonTree)adaptor.create(BIT_SHIFT_RIGHT416);
-            	            root_0 = (CommonTree)adaptor.becomeRoot(BIT_SHIFT_RIGHT416_tree, root_0);
-            	            }
+                   switch (alt120) {
+                       case 1 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:916:17: BIT_SHIFT_RIGHT
+                           {
+                           BIT_SHIFT_RIGHT416=(Token)match(input,BIT_SHIFT_RIGHT,FOLLOW_BIT_SHIFT_RIGHT_in_shiftExpression11252); if (state.failed) return retval;
+                           if ( state.backtracking==0 ) {
+                           BIT_SHIFT_RIGHT416_tree = (CommonTree)adaptor.create(BIT_SHIFT_RIGHT416);
+                           root_0 = (CommonTree)adaptor.becomeRoot(BIT_SHIFT_RIGHT416_tree, root_0);
+                           }
 
-            	            }
-            	            break;
-            	        case 2 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:917:17: SHIFT_RIGHT
-            	            {
-            	            SHIFT_RIGHT417=(Token)match(input,SHIFT_RIGHT,FOLLOW_SHIFT_RIGHT_in_shiftExpression11271); if (state.failed) return retval;
-            	            if ( state.backtracking==0 ) {
-            	            SHIFT_RIGHT417_tree = (CommonTree)adaptor.create(SHIFT_RIGHT417);
-            	            root_0 = (CommonTree)adaptor.becomeRoot(SHIFT_RIGHT417_tree, root_0);
-            	            }
+                           }
+                           break;
+                       case 2 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:917:17: SHIFT_RIGHT
+                           {
+                           SHIFT_RIGHT417=(Token)match(input,SHIFT_RIGHT,FOLLOW_SHIFT_RIGHT_in_shiftExpression11271); if (state.failed) return retval;
+                           if ( state.backtracking==0 ) {
+                           SHIFT_RIGHT417_tree = (CommonTree)adaptor.create(SHIFT_RIGHT417);
+                           root_0 = (CommonTree)adaptor.becomeRoot(SHIFT_RIGHT417_tree, root_0);
+                           }
 
-            	            }
-            	            break;
-            	        case 3 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:918:17: SHIFT_LEFT
-            	            {
-            	            SHIFT_LEFT418=(Token)match(input,SHIFT_LEFT,FOLLOW_SHIFT_LEFT_in_shiftExpression11290); if (state.failed) return retval;
-            	            if ( state.backtracking==0 ) {
-            	            SHIFT_LEFT418_tree = (CommonTree)adaptor.create(SHIFT_LEFT418);
-            	            root_0 = (CommonTree)adaptor.becomeRoot(SHIFT_LEFT418_tree, root_0);
-            	            }
+                           }
+                           break;
+                       case 3 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:918:17: SHIFT_LEFT
+                           {
+                           SHIFT_LEFT418=(Token)match(input,SHIFT_LEFT,FOLLOW_SHIFT_LEFT_in_shiftExpression11290); if (state.failed) return retval;
+                           if ( state.backtracking==0 ) {
+                           SHIFT_LEFT418_tree = (CommonTree)adaptor.create(SHIFT_LEFT418);
+                           root_0 = (CommonTree)adaptor.becomeRoot(SHIFT_LEFT418_tree, root_0);
+                           }
 
-            	            }
-            	            break;
+                           }
+                           break;
 
-            	    }
+                   }
 
-            	    pushFollow(FOLLOW_additiveExpression_in_shiftExpression11319);
-            	    additiveExpression419=additiveExpression();
+                   pushFollow(FOLLOW_additiveExpression_in_shiftExpression11319);
+                   additiveExpression419=additiveExpression();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, additiveExpression419.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, additiveExpression419.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop121;
+               default :
+                   break loop121;
                 }
             } while (true);
 
@@ -14289,7 +14289,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -14347,64 +14347,64 @@ public class JavaParser extends Parser {
 
 
                 switch (alt123) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:926:13: ( PLUS | MINUS ) multiplicativeExpression
-            	    {
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:926:13: ( PLUS | MINUS )
-            	    int alt122=2;
-            	    int LA122_0 = input.LA(1);
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:926:13: ( PLUS | MINUS ) multiplicativeExpression
+                   {
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:926:13: ( PLUS | MINUS )
+                   int alt122=2;
+                   int LA122_0 = input.LA(1);
 
-            	    if ( (LA122_0==PLUS) ) {
-            	        alt122=1;
-            	    }
-            	    else if ( (LA122_0==MINUS) ) {
-            	        alt122=2;
-            	    }
-            	    else {
-            	        if (state.backtracking>0) {state.failed=true; return retval;}
-            	        NoViableAltException nvae =
-            	            new NoViableAltException("", 122, 0, input);
+                   if ( (LA122_0==PLUS) ) {
+                       alt122=1;
+                   }
+                   else if ( (LA122_0==MINUS) ) {
+                       alt122=2;
+                   }
+                   else {
+                       if (state.backtracking>0) {state.failed=true; return retval;}
+                       NoViableAltException nvae =
+                           new NoViableAltException("", 122, 0, input);
 
-            	        throw nvae;
-            	    }
-            	    switch (alt122) {
-            	        case 1 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:926:17: PLUS
-            	            {
-            	            PLUS421=(Token)match(input,PLUS,FOLLOW_PLUS_in_additiveExpression11367); if (state.failed) return retval;
-            	            if ( state.backtracking==0 ) {
-            	            PLUS421_tree = (CommonTree)adaptor.create(PLUS421);
-            	            root_0 = (CommonTree)adaptor.becomeRoot(PLUS421_tree, root_0);
-            	            }
+                       throw nvae;
+                   }
+                   switch (alt122) {
+                       case 1 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:926:17: PLUS
+                           {
+                           PLUS421=(Token)match(input,PLUS,FOLLOW_PLUS_in_additiveExpression11367); if (state.failed) return retval;
+                           if ( state.backtracking==0 ) {
+                           PLUS421_tree = (CommonTree)adaptor.create(PLUS421);
+                           root_0 = (CommonTree)adaptor.becomeRoot(PLUS421_tree, root_0);
+                           }
 
-            	            }
-            	            break;
-            	        case 2 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:927:17: MINUS
-            	            {
-            	            MINUS422=(Token)match(input,MINUS,FOLLOW_MINUS_in_additiveExpression11386); if (state.failed) return retval;
-            	            if ( state.backtracking==0 ) {
-            	            MINUS422_tree = (CommonTree)adaptor.create(MINUS422);
-            	            root_0 = (CommonTree)adaptor.becomeRoot(MINUS422_tree, root_0);
-            	            }
+                           }
+                           break;
+                       case 2 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:927:17: MINUS
+                           {
+                           MINUS422=(Token)match(input,MINUS,FOLLOW_MINUS_in_additiveExpression11386); if (state.failed) return retval;
+                           if ( state.backtracking==0 ) {
+                           MINUS422_tree = (CommonTree)adaptor.create(MINUS422);
+                           root_0 = (CommonTree)adaptor.becomeRoot(MINUS422_tree, root_0);
+                           }
 
-            	            }
-            	            break;
+                           }
+                           break;
 
-            	    }
+                   }
 
-            	    pushFollow(FOLLOW_multiplicativeExpression_in_additiveExpression11415);
-            	    multiplicativeExpression423=multiplicativeExpression();
+                   pushFollow(FOLLOW_multiplicativeExpression_in_additiveExpression11415);
+                   multiplicativeExpression423=multiplicativeExpression();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, multiplicativeExpression423.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, multiplicativeExpression423.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop123;
+               default :
+                   break loop123;
                 }
             } while (true);
 
@@ -14422,7 +14422,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -14482,84 +14482,84 @@ public class JavaParser extends Parser {
 
 
                 switch (alt125) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:935:13: ( STAR | DIV | MOD ) unaryExpression
-            	    {
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:935:13: ( STAR | DIV | MOD )
-            	    int alt124=3;
-            	    switch ( input.LA(1) ) {
-            	    case STAR:
-            	        {
-            	        alt124=1;
-            	        }
-            	        break;
-            	    case DIV:
-            	        {
-            	        alt124=2;
-            	        }
-            	        break;
-            	    case MOD:
-            	        {
-            	        alt124=3;
-            	        }
-            	        break;
-            	    default:
-            	        if (state.backtracking>0) {state.failed=true; return retval;}
-            	        NoViableAltException nvae =
-            	            new NoViableAltException("", 124, 0, input);
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:935:13: ( STAR | DIV | MOD ) unaryExpression
+                   {
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:935:13: ( STAR | DIV | MOD )
+                   int alt124=3;
+                   switch ( input.LA(1) ) {
+                   case STAR:
+                       {
+                       alt124=1;
+                       }
+                       break;
+                   case DIV:
+                       {
+                       alt124=2;
+                       }
+                       break;
+                   case MOD:
+                       {
+                       alt124=3;
+                       }
+                       break;
+                   default:
+                       if (state.backtracking>0) {state.failed=true; return retval;}
+                       NoViableAltException nvae =
+                           new NoViableAltException("", 124, 0, input);
 
-            	        throw nvae;
-            	    }
+                       throw nvae;
+                   }
 
-            	    switch (alt124) {
-            	        case 1 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:935:17: STAR
-            	            {
-            	            STAR425=(Token)match(input,STAR,FOLLOW_STAR_in_multiplicativeExpression11464); if (state.failed) return retval;
-            	            if ( state.backtracking==0 ) {
-            	            STAR425_tree = (CommonTree)adaptor.create(STAR425);
-            	            root_0 = (CommonTree)adaptor.becomeRoot(STAR425_tree, root_0);
-            	            }
+                   switch (alt124) {
+                       case 1 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:935:17: STAR
+                           {
+                           STAR425=(Token)match(input,STAR,FOLLOW_STAR_in_multiplicativeExpression11464); if (state.failed) return retval;
+                           if ( state.backtracking==0 ) {
+                           STAR425_tree = (CommonTree)adaptor.create(STAR425);
+                           root_0 = (CommonTree)adaptor.becomeRoot(STAR425_tree, root_0);
+                           }
 
-            	            }
-            	            break;
-            	        case 2 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:936:17: DIV
-            	            {
-            	            DIV426=(Token)match(input,DIV,FOLLOW_DIV_in_multiplicativeExpression11483); if (state.failed) return retval;
-            	            if ( state.backtracking==0 ) {
-            	            DIV426_tree = (CommonTree)adaptor.create(DIV426);
-            	            root_0 = (CommonTree)adaptor.becomeRoot(DIV426_tree, root_0);
-            	            }
+                           }
+                           break;
+                       case 2 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:936:17: DIV
+                           {
+                           DIV426=(Token)match(input,DIV,FOLLOW_DIV_in_multiplicativeExpression11483); if (state.failed) return retval;
+                           if ( state.backtracking==0 ) {
+                           DIV426_tree = (CommonTree)adaptor.create(DIV426);
+                           root_0 = (CommonTree)adaptor.becomeRoot(DIV426_tree, root_0);
+                           }
 
-            	            }
-            	            break;
-            	        case 3 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:937:17: MOD
-            	            {
-            	            MOD427=(Token)match(input,MOD,FOLLOW_MOD_in_multiplicativeExpression11502); if (state.failed) return retval;
-            	            if ( state.backtracking==0 ) {
-            	            MOD427_tree = (CommonTree)adaptor.create(MOD427);
-            	            root_0 = (CommonTree)adaptor.becomeRoot(MOD427_tree, root_0);
-            	            }
+                           }
+                           break;
+                       case 3 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:937:17: MOD
+                           {
+                           MOD427=(Token)match(input,MOD,FOLLOW_MOD_in_multiplicativeExpression11502); if (state.failed) return retval;
+                           if ( state.backtracking==0 ) {
+                           MOD427_tree = (CommonTree)adaptor.create(MOD427);
+                           root_0 = (CommonTree)adaptor.becomeRoot(MOD427_tree, root_0);
+                           }
 
-            	            }
-            	            break;
+                           }
+                           break;
 
-            	    }
+                   }
 
-            	    pushFollow(FOLLOW_unaryExpression_in_multiplicativeExpression11531);
-            	    unaryExpression428=unaryExpression();
+                   pushFollow(FOLLOW_unaryExpression_in_multiplicativeExpression11531);
+                   unaryExpression428=unaryExpression();
 
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, unaryExpression428.getTree());
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) adaptor.addChild(root_0, unaryExpression428.getTree());
 
-            	    }
-            	    break;
+                   }
+                   break;
 
-            	default :
-            	    break loop125;
+               default :
+                   break loop125;
                 }
             } while (true);
 
@@ -14577,7 +14577,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -14888,7 +14888,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -15108,7 +15108,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -15233,476 +15233,476 @@ public class JavaParser extends Parser {
 
 
                 switch (alt132) {
-            	case 1 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:963:13: outerDot= DOT ( ( ( genericTypeArgumentListSimplified )? IDENT -> ^( DOT $postfixedExpression IDENT ) ) ( arguments -> ^( METHOD_CALL $postfixedExpression ( genericTypeArgumentListSimplified )? arguments ) )? | THIS -> ^( DOT $postfixedExpression THIS ) | Super= SUPER arguments -> ^( SUPER_CONSTRUCTOR_CALL[$Super, \"SUPER_CONSTRUCTOR_CALL\"] $postfixedExpression arguments ) | ( SUPER innerDot= DOT IDENT -> ^( $innerDot ^( $outerDot $postfixedExpression SUPER ) IDENT ) ) ( arguments -> ^( METHOD_CALL $postfixedExpression arguments ) )? | innerNewExpression -> ^( DOT $postfixedExpression innerNewExpression ) )
-            	    {
-            	    outerDot=(Token)match(input,DOT,FOLLOW_DOT_in_postfixedExpression11922); if (state.failed) return retval; 
-            	    if ( state.backtracking==0 ) stream_DOT.add(outerDot);
-
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:964:13: ( ( ( genericTypeArgumentListSimplified )? IDENT -> ^( DOT $postfixedExpression IDENT ) ) ( arguments -> ^( METHOD_CALL $postfixedExpression ( genericTypeArgumentListSimplified )? arguments ) )? | THIS -> ^( DOT $postfixedExpression THIS ) | Super= SUPER arguments -> ^( SUPER_CONSTRUCTOR_CALL[$Super, \"SUPER_CONSTRUCTOR_CALL\"] $postfixedExpression arguments ) | ( SUPER innerDot= DOT IDENT -> ^( $innerDot ^( $outerDot $postfixedExpression SUPER ) IDENT ) ) ( arguments -> ^( METHOD_CALL $postfixedExpression arguments ) )? | innerNewExpression -> ^( DOT $postfixedExpression innerNewExpression ) )
-            	    int alt131=5;
-            	    switch ( input.LA(1) ) {
-            	    case LESS_THAN:
-            	    case IDENT:
-            	        {
-            	        alt131=1;
-            	        }
-            	        break;
-            	    case THIS:
-            	        {
-            	        alt131=2;
-            	        }
-            	        break;
-            	    case SUPER:
-            	        {
-            	        int LA131_3 = input.LA(2);
-
-            	        if ( (LA131_3==DOT) ) {
-            	            alt131=4;
-            	        }
-            	        else if ( (LA131_3==LPAREN) ) {
-            	            alt131=3;
-            	        }
-            	        else {
-            	            if (state.backtracking>0) {state.failed=true; return retval;}
-            	            NoViableAltException nvae =
-            	                new NoViableAltException("", 131, 3, input);
-
-            	            throw nvae;
-            	        }
-            	        }
-            	        break;
-            	    case NEW:
-            	        {
-            	        alt131=5;
-            	        }
-            	        break;
-            	    default:
-            	        if (state.backtracking>0) {state.failed=true; return retval;}
-            	        NoViableAltException nvae =
-            	            new NoViableAltException("", 131, 0, input);
-
-            	        throw nvae;
-            	    }
-
-            	    switch (alt131) {
-            	        case 1 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:964:17: ( ( genericTypeArgumentListSimplified )? IDENT -> ^( DOT $postfixedExpression IDENT ) ) ( arguments -> ^( METHOD_CALL $postfixedExpression ( genericTypeArgumentListSimplified )? arguments ) )?
-            	            {
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:964:17: ( ( genericTypeArgumentListSimplified )? IDENT -> ^( DOT $postfixedExpression IDENT ) )
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:964:21: ( genericTypeArgumentListSimplified )? IDENT
-            	            {
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:964:21: ( genericTypeArgumentListSimplified )?
-            	            int alt128=2;
-            	            int LA128_0 = input.LA(1);
-
-            	            if ( (LA128_0==LESS_THAN) ) {
-            	                alt128=1;
-            	            }
-            	            switch (alt128) {
-            	                case 1 :
-            	                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: genericTypeArgumentListSimplified
-            	                    {
-            	                    pushFollow(FOLLOW_genericTypeArgumentListSimplified_in_postfixedExpression11972);
-            	                    genericTypeArgumentListSimplified448=genericTypeArgumentListSimplified();
-
-            	                    state._fsp--;
-            	                    if (state.failed) return retval;
-            	                    if ( state.backtracking==0 ) stream_genericTypeArgumentListSimplified.add(genericTypeArgumentListSimplified448.getTree());
-
-            	                    }
-            	                    break;
-
-            	            }
-
-            	            IDENT449=(Token)match(input,IDENT,FOLLOW_IDENT_in_postfixedExpression12054); if (state.failed) return retval; 
-            	            if ( state.backtracking==0 ) stream_IDENT.add(IDENT449);
-
-
-
-            	            // AST REWRITE
-            	            // elements: DOT, IDENT, postfixedExpression
-            	            // token labels: 
-            	            // rule labels: retval
-            	            // token list labels: 
-            	            // rule list labels: 
-            	            // wildcard labels: 
-            	            if ( state.backtracking==0 ) {
-            	            retval.tree = root_0;
-            	            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-            	            root_0 = (CommonTree)adaptor.nil();
-            	            // 966:53: -> ^( DOT $postfixedExpression IDENT )
-            	            {
-            	                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:966:57: ^( DOT $postfixedExpression IDENT )
-            	                {
-            	                CommonTree root_1 = (CommonTree)adaptor.nil();
-            	                root_1 = (CommonTree)adaptor.becomeRoot(stream_DOT.nextNode(), root_1);
-
-            	                adaptor.addChild(root_1, stream_retval.nextTree());
-            	                adaptor.addChild(root_1, stream_IDENT.nextNode());
-
-            	                adaptor.addChild(root_0, root_1);
-            	                }
-
-            	            }
-
-            	            retval.tree = root_0;}
-            	            }
-
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:968:17: ( arguments -> ^( METHOD_CALL $postfixedExpression ( genericTypeArgumentListSimplified )? arguments ) )?
-            	            int alt129=2;
-            	            int LA129_0 = input.LA(1);
-
-            	            if ( (LA129_0==LPAREN) ) {
-            	                alt129=1;
-            	            }
-            	            switch (alt129) {
-            	                case 1 :
-            	                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:968:21: arguments
-            	                    {
-            	                    pushFollow(FOLLOW_arguments_in_postfixedExpression12133);
-            	                    arguments450=arguments();
-
-            	                    state._fsp--;
-            	                    if (state.failed) return retval;
-            	                    if ( state.backtracking==0 ) stream_arguments.add(arguments450.getTree());
-
-
-            	                    // AST REWRITE
-            	                    // elements: genericTypeArgumentListSimplified, arguments, postfixedExpression
-            	                    // token labels: 
-            	                    // rule labels: retval
-            	                    // token list labels: 
-            	                    // rule list labels: 
-            	                    // wildcard labels: 
-            	                    if ( state.backtracking==0 ) {
-            	                    retval.tree = root_0;
-            	                    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-            	                    root_0 = (CommonTree)adaptor.nil();
-            	                    // 968:53: -> ^( METHOD_CALL $postfixedExpression ( genericTypeArgumentListSimplified )? arguments )
-            	                    {
-            	                        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:968:57: ^( METHOD_CALL $postfixedExpression ( genericTypeArgumentListSimplified )? arguments )
-            	                        {
-            	                        CommonTree root_1 = (CommonTree)adaptor.nil();
-            	                        root_1 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(METHOD_CALL, "METHOD_CALL"), root_1);
-
-            	                        adaptor.addChild(root_1, stream_retval.nextTree());
-            	                        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:968:92: ( genericTypeArgumentListSimplified )?
-            	                        if ( stream_genericTypeArgumentListSimplified.hasNext() ) {
-            	                            adaptor.addChild(root_1, stream_genericTypeArgumentListSimplified.nextTree());
-
-            	                        }
-            	                        stream_genericTypeArgumentListSimplified.reset();
-            	                        adaptor.addChild(root_1, stream_arguments.nextTree());
-
-            	                        adaptor.addChild(root_0, root_1);
-            	                        }
-
-            	                    }
-
-            	                    retval.tree = root_0;}
-            	                    }
-            	                    break;
-
-            	            }
-
-
-            	            }
-            	            break;
-            	        case 2 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:970:17: THIS
-            	            {
-            	            THIS451=(Token)match(input,THIS,FOLLOW_THIS_in_postfixedExpression12207); if (state.failed) return retval; 
-            	            if ( state.backtracking==0 ) stream_THIS.add(THIS451);
-
-
-
-            	            // AST REWRITE
-            	            // elements: DOT, THIS, postfixedExpression
-            	            // token labels: 
-            	            // rule labels: retval
-            	            // token list labels: 
-            	            // rule list labels: 
-            	            // wildcard labels: 
-            	            if ( state.backtracking==0 ) {
-            	            retval.tree = root_0;
-            	            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-            	            root_0 = (CommonTree)adaptor.nil();
-            	            // 970:53: -> ^( DOT $postfixedExpression THIS )
-            	            {
-            	                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:970:57: ^( DOT $postfixedExpression THIS )
-            	                {
-            	                CommonTree root_1 = (CommonTree)adaptor.nil();
-            	                root_1 = (CommonTree)adaptor.becomeRoot(stream_DOT.nextNode(), root_1);
-
-            	                adaptor.addChild(root_1, stream_retval.nextTree());
-            	                adaptor.addChild(root_1, stream_THIS.nextNode());
-
-            	                adaptor.addChild(root_0, root_1);
-            	                }
-
-            	            }
-
-            	            retval.tree = root_0;}
-            	            }
-            	            break;
-            	        case 3 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:971:17: Super= SUPER arguments
-            	            {
-            	            Super=(Token)match(input,SUPER,FOLLOW_SUPER_in_postfixedExpression12270); if (state.failed) return retval; 
-            	            if ( state.backtracking==0 ) stream_SUPER.add(Super);
-
-            	            pushFollow(FOLLOW_arguments_in_postfixedExpression12272);
-            	            arguments452=arguments();
-
-            	            state._fsp--;
-            	            if (state.failed) return retval;
-            	            if ( state.backtracking==0 ) stream_arguments.add(arguments452.getTree());
-
-
-            	            // AST REWRITE
-            	            // elements: arguments, postfixedExpression
-            	            // token labels: 
-            	            // rule labels: retval
-            	            // token list labels: 
-            	            // rule list labels: 
-            	            // wildcard labels: 
-            	            if ( state.backtracking==0 ) {
-            	            retval.tree = root_0;
-            	            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-            	            root_0 = (CommonTree)adaptor.nil();
-            	            // 971:57: -> ^( SUPER_CONSTRUCTOR_CALL[$Super, \"SUPER_CONSTRUCTOR_CALL\"] $postfixedExpression arguments )
-            	            {
-            	                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:971:61: ^( SUPER_CONSTRUCTOR_CALL[$Super, \"SUPER_CONSTRUCTOR_CALL\"] $postfixedExpression arguments )
-            	                {
-            	                CommonTree root_1 = (CommonTree)adaptor.nil();
-            	                root_1 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(SUPER_CONSTRUCTOR_CALL, Super, "SUPER_CONSTRUCTOR_CALL"), root_1);
-
-            	                adaptor.addChild(root_1, stream_retval.nextTree());
-            	                adaptor.addChild(root_1, stream_arguments.nextTree());
-
-            	                adaptor.addChild(root_0, root_1);
-            	                }
-
-            	            }
-
-            	            retval.tree = root_0;}
-            	            }
-            	            break;
-            	        case 4 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:972:17: ( SUPER innerDot= DOT IDENT -> ^( $innerDot ^( $outerDot $postfixedExpression SUPER ) IDENT ) ) ( arguments -> ^( METHOD_CALL $postfixedExpression arguments ) )?
-            	            {
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:972:17: ( SUPER innerDot= DOT IDENT -> ^( $innerDot ^( $outerDot $postfixedExpression SUPER ) IDENT ) )
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:972:21: SUPER innerDot= DOT IDENT
-            	            {
-            	            SUPER453=(Token)match(input,SUPER,FOLLOW_SUPER_in_postfixedExpression12325); if (state.failed) return retval; 
-            	            if ( state.backtracking==0 ) stream_SUPER.add(SUPER453);
-
-            	            innerDot=(Token)match(input,DOT,FOLLOW_DOT_in_postfixedExpression12329); if (state.failed) return retval; 
-            	            if ( state.backtracking==0 ) stream_DOT.add(innerDot);
-
-            	            IDENT454=(Token)match(input,IDENT,FOLLOW_IDENT_in_postfixedExpression12331); if (state.failed) return retval; 
-            	            if ( state.backtracking==0 ) stream_IDENT.add(IDENT454);
-
-
-
-            	            // AST REWRITE
-            	            // elements: innerDot, SUPER, IDENT, outerDot, postfixedExpression
-            	            // token labels: outerDot, innerDot
-            	            // rule labels: retval
-            	            // token list labels: 
-            	            // rule list labels: 
-            	            // wildcard labels: 
-            	            if ( state.backtracking==0 ) {
-            	            retval.tree = root_0;
-            	            RewriteRuleTokenStream stream_outerDot=new RewriteRuleTokenStream(adaptor,"token outerDot",outerDot);
-            	            RewriteRuleTokenStream stream_innerDot=new RewriteRuleTokenStream(adaptor,"token innerDot",innerDot);
-            	            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-            	            root_0 = (CommonTree)adaptor.nil();
-            	            // 972:53: -> ^( $innerDot ^( $outerDot $postfixedExpression SUPER ) IDENT )
-            	            {
-            	                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:972:57: ^( $innerDot ^( $outerDot $postfixedExpression SUPER ) IDENT )
-            	                {
-            	                CommonTree root_1 = (CommonTree)adaptor.nil();
-            	                root_1 = (CommonTree)adaptor.becomeRoot(stream_innerDot.nextNode(), root_1);
-
-            	                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:972:69: ^( $outerDot $postfixedExpression SUPER )
-            	                {
-            	                CommonTree root_2 = (CommonTree)adaptor.nil();
-            	                root_2 = (CommonTree)adaptor.becomeRoot(stream_outerDot.nextNode(), root_2);
-
-            	                adaptor.addChild(root_2, stream_retval.nextTree());
-            	                adaptor.addChild(root_2, stream_SUPER.nextNode());
-
-            	                adaptor.addChild(root_1, root_2);
-            	                }
-            	                adaptor.addChild(root_1, stream_IDENT.nextNode());
-
-            	                adaptor.addChild(root_0, root_1);
-            	                }
-
-            	            }
-
-            	            retval.tree = root_0;}
-            	            }
-
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:974:17: ( arguments -> ^( METHOD_CALL $postfixedExpression arguments ) )?
-            	            int alt130=2;
-            	            int LA130_0 = input.LA(1);
-
-            	            if ( (LA130_0==LPAREN) ) {
-            	                alt130=1;
-            	            }
-            	            switch (alt130) {
-            	                case 1 :
-            	                    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:974:21: arguments
-            	                    {
-            	                    pushFollow(FOLLOW_arguments_in_postfixedExpression12398);
-            	                    arguments455=arguments();
-
-            	                    state._fsp--;
-            	                    if (state.failed) return retval;
-            	                    if ( state.backtracking==0 ) stream_arguments.add(arguments455.getTree());
-
-
-            	                    // AST REWRITE
-            	                    // elements: arguments, postfixedExpression
-            	                    // token labels: 
-            	                    // rule labels: retval
-            	                    // token list labels: 
-            	                    // rule list labels: 
-            	                    // wildcard labels: 
-            	                    if ( state.backtracking==0 ) {
-            	                    retval.tree = root_0;
-            	                    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-            	                    root_0 = (CommonTree)adaptor.nil();
-            	                    // 974:53: -> ^( METHOD_CALL $postfixedExpression arguments )
-            	                    {
-            	                        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:974:57: ^( METHOD_CALL $postfixedExpression arguments )
-            	                        {
-            	                        CommonTree root_1 = (CommonTree)adaptor.nil();
-            	                        root_1 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(METHOD_CALL, "METHOD_CALL"), root_1);
-
-            	                        adaptor.addChild(root_1, stream_retval.nextTree());
-            	                        adaptor.addChild(root_1, stream_arguments.nextTree());
-
-            	                        adaptor.addChild(root_0, root_1);
-            	                        }
-
-            	                    }
-
-            	                    retval.tree = root_0;}
-            	                    }
-            	                    break;
-
-            	            }
-
-
-            	            }
-            	            break;
-            	        case 5 :
-            	            // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:976:17: innerNewExpression
-            	            {
-            	            pushFollow(FOLLOW_innerNewExpression_in_postfixedExpression12469);
-            	            innerNewExpression456=innerNewExpression();
-
-            	            state._fsp--;
-            	            if (state.failed) return retval;
-            	            if ( state.backtracking==0 ) stream_innerNewExpression.add(innerNewExpression456.getTree());
-
-
-            	            // AST REWRITE
-            	            // elements: innerNewExpression, DOT, postfixedExpression
-            	            // token labels: 
-            	            // rule labels: retval
-            	            // token list labels: 
-            	            // rule list labels: 
-            	            // wildcard labels: 
-            	            if ( state.backtracking==0 ) {
-            	            retval.tree = root_0;
-            	            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-            	            root_0 = (CommonTree)adaptor.nil();
-            	            // 976:53: -> ^( DOT $postfixedExpression innerNewExpression )
-            	            {
-            	                // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:976:57: ^( DOT $postfixedExpression innerNewExpression )
-            	                {
-            	                CommonTree root_1 = (CommonTree)adaptor.nil();
-            	                root_1 = (CommonTree)adaptor.becomeRoot(stream_DOT.nextNode(), root_1);
-
-            	                adaptor.addChild(root_1, stream_retval.nextTree());
-            	                adaptor.addChild(root_1, stream_innerNewExpression.nextTree());
-
-            	                adaptor.addChild(root_0, root_1);
-            	                }
-
-            	            }
-
-            	            retval.tree = root_0;}
-            	            }
-            	            break;
-
-            	    }
-
-
-            	    }
-            	    break;
-            	case 2 :
-            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:978:13: LBRACK expression RBRACK
-            	    {
-            	    LBRACK457=(Token)match(input,LBRACK,FOLLOW_LBRACK_in_postfixedExpression12526); if (state.failed) return retval; 
-            	    if ( state.backtracking==0 ) stream_LBRACK.add(LBRACK457);
-
-            	    pushFollow(FOLLOW_expression_in_postfixedExpression12528);
-            	    expression458=expression();
-
-            	    state._fsp--;
-            	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) stream_expression.add(expression458.getTree());
-            	    RBRACK459=(Token)match(input,RBRACK,FOLLOW_RBRACK_in_postfixedExpression12530); if (state.failed) return retval; 
-            	    if ( state.backtracking==0 ) stream_RBRACK.add(RBRACK459);
-
-
-
-            	    // AST REWRITE
-            	    // elements: expression, postfixedExpression
-            	    // token labels: 
-            	    // rule labels: retval
-            	    // token list labels: 
-            	    // rule list labels: 
-            	    // wildcard labels: 
-            	    if ( state.backtracking==0 ) {
-            	    retval.tree = root_0;
-            	    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
-
-            	    root_0 = (CommonTree)adaptor.nil();
-            	    // 978:53: -> ^( ARRAY_ELEMENT_ACCESS $postfixedExpression expression )
-            	    {
-            	        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:978:57: ^( ARRAY_ELEMENT_ACCESS $postfixedExpression expression )
-            	        {
-            	        CommonTree root_1 = (CommonTree)adaptor.nil();
-            	        root_1 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(ARRAY_ELEMENT_ACCESS, "ARRAY_ELEMENT_ACCESS"), root_1);
-
-            	        adaptor.addChild(root_1, stream_retval.nextTree());
-            	        adaptor.addChild(root_1, stream_expression.nextTree());
-
-            	        adaptor.addChild(root_0, root_1);
-            	        }
-
-            	    }
-
-            	    retval.tree = root_0;}
-            	    }
-            	    break;
-
-            	default :
-            	    break loop132;
+               case 1 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:963:13: outerDot= DOT ( ( ( genericTypeArgumentListSimplified )? IDENT -> ^( DOT $postfixedExpression IDENT ) ) ( arguments -> ^( METHOD_CALL $postfixedExpression ( genericTypeArgumentListSimplified )? arguments ) )? | THIS -> ^( DOT $postfixedExpression THIS ) | Super= SUPER arguments -> ^( SUPER_CONSTRUCTOR_CALL[$Super, \"SUPER_CONSTRUCTOR_CALL\"] $postfixedExpression arguments ) | ( SUPER innerDot= DOT IDENT -> ^( $innerDot ^( $outerDot $postfixedExpression SUPER ) IDENT ) ) ( arguments -> ^( METHOD_CALL $postfixedExpression arguments ) )? | innerNewExpression -> ^( DOT $postfixedExpression innerNewExpression ) )
+                   {
+                   outerDot=(Token)match(input,DOT,FOLLOW_DOT_in_postfixedExpression11922); if (state.failed) return retval; 
+                   if ( state.backtracking==0 ) stream_DOT.add(outerDot);
+
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:964:13: ( ( ( genericTypeArgumentListSimplified )? IDENT -> ^( DOT $postfixedExpression IDENT ) ) ( arguments -> ^( METHOD_CALL $postfixedExpression ( genericTypeArgumentListSimplified )? arguments ) )? | THIS -> ^( DOT $postfixedExpression THIS ) | Super= SUPER arguments -> ^( SUPER_CONSTRUCTOR_CALL[$Super, \"SUPER_CONSTRUCTOR_CALL\"] $postfixedExpression arguments ) | ( SUPER innerDot= DOT IDENT -> ^( $innerDot ^( $outerDot $postfixedExpression SUPER ) IDENT ) ) ( arguments -> ^( METHOD_CALL $postfixedExpression arguments ) )? | innerNewExpression -> ^( DOT $postfixedExpression innerNewExpression ) )
+                   int alt131=5;
+                   switch ( input.LA(1) ) {
+                   case LESS_THAN:
+                   case IDENT:
+                       {
+                       alt131=1;
+                       }
+                       break;
+                   case THIS:
+                       {
+                       alt131=2;
+                       }
+                       break;
+                   case SUPER:
+                       {
+                       int LA131_3 = input.LA(2);
+
+                       if ( (LA131_3==DOT) ) {
+                           alt131=4;
+                       }
+                       else if ( (LA131_3==LPAREN) ) {
+                           alt131=3;
+                       }
+                       else {
+                           if (state.backtracking>0) {state.failed=true; return retval;}
+                           NoViableAltException nvae =
+                               new NoViableAltException("", 131, 3, input);
+
+                           throw nvae;
+                       }
+                       }
+                       break;
+                   case NEW:
+                       {
+                       alt131=5;
+                       }
+                       break;
+                   default:
+                       if (state.backtracking>0) {state.failed=true; return retval;}
+                       NoViableAltException nvae =
+                           new NoViableAltException("", 131, 0, input);
+
+                       throw nvae;
+                   }
+
+                   switch (alt131) {
+                       case 1 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:964:17: ( ( genericTypeArgumentListSimplified )? IDENT -> ^( DOT $postfixedExpression IDENT ) ) ( arguments -> ^( METHOD_CALL $postfixedExpression ( genericTypeArgumentListSimplified )? arguments ) )?
+                           {
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:964:17: ( ( genericTypeArgumentListSimplified )? IDENT -> ^( DOT $postfixedExpression IDENT ) )
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:964:21: ( genericTypeArgumentListSimplified )? IDENT
+                           {
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:964:21: ( genericTypeArgumentListSimplified )?
+                           int alt128=2;
+                           int LA128_0 = input.LA(1);
+
+                           if ( (LA128_0==LESS_THAN) ) {
+                               alt128=1;
+                           }
+                           switch (alt128) {
+                               case 1 :
+                                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:0:0: genericTypeArgumentListSimplified
+                                   {
+                                   pushFollow(FOLLOW_genericTypeArgumentListSimplified_in_postfixedExpression11972);
+                                   genericTypeArgumentListSimplified448=genericTypeArgumentListSimplified();
+
+                                   state._fsp--;
+                                   if (state.failed) return retval;
+                                   if ( state.backtracking==0 ) stream_genericTypeArgumentListSimplified.add(genericTypeArgumentListSimplified448.getTree());
+
+                                   }
+                                   break;
+
+                           }
+
+                           IDENT449=(Token)match(input,IDENT,FOLLOW_IDENT_in_postfixedExpression12054); if (state.failed) return retval; 
+                           if ( state.backtracking==0 ) stream_IDENT.add(IDENT449);
+
+
+
+                           // AST REWRITE
+                           // elements: DOT, IDENT, postfixedExpression
+                           // token labels: 
+                           // rule labels: retval
+                           // token list labels: 
+                           // rule list labels: 
+                           // wildcard labels: 
+                           if ( state.backtracking==0 ) {
+                           retval.tree = root_0;
+                           RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+                           root_0 = (CommonTree)adaptor.nil();
+                           // 966:53: -> ^( DOT $postfixedExpression IDENT )
+                           {
+                               // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:966:57: ^( DOT $postfixedExpression IDENT )
+                               {
+                               CommonTree root_1 = (CommonTree)adaptor.nil();
+                               root_1 = (CommonTree)adaptor.becomeRoot(stream_DOT.nextNode(), root_1);
+
+                               adaptor.addChild(root_1, stream_retval.nextTree());
+                               adaptor.addChild(root_1, stream_IDENT.nextNode());
+
+                               adaptor.addChild(root_0, root_1);
+                               }
+
+                           }
+
+                           retval.tree = root_0;}
+                           }
+
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:968:17: ( arguments -> ^( METHOD_CALL $postfixedExpression ( genericTypeArgumentListSimplified )? arguments ) )?
+                           int alt129=2;
+                           int LA129_0 = input.LA(1);
+
+                           if ( (LA129_0==LPAREN) ) {
+                               alt129=1;
+                           }
+                           switch (alt129) {
+                               case 1 :
+                                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:968:21: arguments
+                                   {
+                                   pushFollow(FOLLOW_arguments_in_postfixedExpression12133);
+                                   arguments450=arguments();
+
+                                   state._fsp--;
+                                   if (state.failed) return retval;
+                                   if ( state.backtracking==0 ) stream_arguments.add(arguments450.getTree());
+
+
+                                   // AST REWRITE
+                                   // elements: genericTypeArgumentListSimplified, arguments, postfixedExpression
+                                   // token labels: 
+                                   // rule labels: retval
+                                   // token list labels: 
+                                   // rule list labels: 
+                                   // wildcard labels: 
+                                   if ( state.backtracking==0 ) {
+                                   retval.tree = root_0;
+                                   RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+                                   root_0 = (CommonTree)adaptor.nil();
+                                   // 968:53: -> ^( METHOD_CALL $postfixedExpression ( genericTypeArgumentListSimplified )? arguments )
+                                   {
+                                       // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:968:57: ^( METHOD_CALL $postfixedExpression ( genericTypeArgumentListSimplified )? arguments )
+                                       {
+                                       CommonTree root_1 = (CommonTree)adaptor.nil();
+                                       root_1 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(METHOD_CALL, "METHOD_CALL"), root_1);
+
+                                       adaptor.addChild(root_1, stream_retval.nextTree());
+                                       // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:968:92: ( genericTypeArgumentListSimplified )?
+                                       if ( stream_genericTypeArgumentListSimplified.hasNext() ) {
+                                           adaptor.addChild(root_1, stream_genericTypeArgumentListSimplified.nextTree());
+
+                                       }
+                                       stream_genericTypeArgumentListSimplified.reset();
+                                       adaptor.addChild(root_1, stream_arguments.nextTree());
+
+                                       adaptor.addChild(root_0, root_1);
+                                       }
+
+                                   }
+
+                                   retval.tree = root_0;}
+                                   }
+                                   break;
+
+                           }
+
+
+                           }
+                           break;
+                       case 2 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:970:17: THIS
+                           {
+                           THIS451=(Token)match(input,THIS,FOLLOW_THIS_in_postfixedExpression12207); if (state.failed) return retval; 
+                           if ( state.backtracking==0 ) stream_THIS.add(THIS451);
+
+
+
+                           // AST REWRITE
+                           // elements: DOT, THIS, postfixedExpression
+                           // token labels: 
+                           // rule labels: retval
+                           // token list labels: 
+                           // rule list labels: 
+                           // wildcard labels: 
+                           if ( state.backtracking==0 ) {
+                           retval.tree = root_0;
+                           RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+                           root_0 = (CommonTree)adaptor.nil();
+                           // 970:53: -> ^( DOT $postfixedExpression THIS )
+                           {
+                               // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:970:57: ^( DOT $postfixedExpression THIS )
+                               {
+                               CommonTree root_1 = (CommonTree)adaptor.nil();
+                               root_1 = (CommonTree)adaptor.becomeRoot(stream_DOT.nextNode(), root_1);
+
+                               adaptor.addChild(root_1, stream_retval.nextTree());
+                               adaptor.addChild(root_1, stream_THIS.nextNode());
+
+                               adaptor.addChild(root_0, root_1);
+                               }
+
+                           }
+
+                           retval.tree = root_0;}
+                           }
+                           break;
+                       case 3 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:971:17: Super= SUPER arguments
+                           {
+                           Super=(Token)match(input,SUPER,FOLLOW_SUPER_in_postfixedExpression12270); if (state.failed) return retval; 
+                           if ( state.backtracking==0 ) stream_SUPER.add(Super);
+
+                           pushFollow(FOLLOW_arguments_in_postfixedExpression12272);
+                           arguments452=arguments();
+
+                           state._fsp--;
+                           if (state.failed) return retval;
+                           if ( state.backtracking==0 ) stream_arguments.add(arguments452.getTree());
+
+
+                           // AST REWRITE
+                           // elements: arguments, postfixedExpression
+                           // token labels: 
+                           // rule labels: retval
+                           // token list labels: 
+                           // rule list labels: 
+                           // wildcard labels: 
+                           if ( state.backtracking==0 ) {
+                           retval.tree = root_0;
+                           RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+                           root_0 = (CommonTree)adaptor.nil();
+                           // 971:57: -> ^( SUPER_CONSTRUCTOR_CALL[$Super, \"SUPER_CONSTRUCTOR_CALL\"] $postfixedExpression arguments )
+                           {
+                               // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:971:61: ^( SUPER_CONSTRUCTOR_CALL[$Super, \"SUPER_CONSTRUCTOR_CALL\"] $postfixedExpression arguments )
+                               {
+                               CommonTree root_1 = (CommonTree)adaptor.nil();
+                               root_1 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(SUPER_CONSTRUCTOR_CALL, Super, "SUPER_CONSTRUCTOR_CALL"), root_1);
+
+                               adaptor.addChild(root_1, stream_retval.nextTree());
+                               adaptor.addChild(root_1, stream_arguments.nextTree());
+
+                               adaptor.addChild(root_0, root_1);
+                               }
+
+                           }
+
+                           retval.tree = root_0;}
+                           }
+                           break;
+                       case 4 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:972:17: ( SUPER innerDot= DOT IDENT -> ^( $innerDot ^( $outerDot $postfixedExpression SUPER ) IDENT ) ) ( arguments -> ^( METHOD_CALL $postfixedExpression arguments ) )?
+                           {
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:972:17: ( SUPER innerDot= DOT IDENT -> ^( $innerDot ^( $outerDot $postfixedExpression SUPER ) IDENT ) )
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:972:21: SUPER innerDot= DOT IDENT
+                           {
+                           SUPER453=(Token)match(input,SUPER,FOLLOW_SUPER_in_postfixedExpression12325); if (state.failed) return retval; 
+                           if ( state.backtracking==0 ) stream_SUPER.add(SUPER453);
+
+                           innerDot=(Token)match(input,DOT,FOLLOW_DOT_in_postfixedExpression12329); if (state.failed) return retval; 
+                           if ( state.backtracking==0 ) stream_DOT.add(innerDot);
+
+                           IDENT454=(Token)match(input,IDENT,FOLLOW_IDENT_in_postfixedExpression12331); if (state.failed) return retval; 
+                           if ( state.backtracking==0 ) stream_IDENT.add(IDENT454);
+
+
+
+                           // AST REWRITE
+                           // elements: innerDot, SUPER, IDENT, outerDot, postfixedExpression
+                           // token labels: outerDot, innerDot
+                           // rule labels: retval
+                           // token list labels: 
+                           // rule list labels: 
+                           // wildcard labels: 
+                           if ( state.backtracking==0 ) {
+                           retval.tree = root_0;
+                           RewriteRuleTokenStream stream_outerDot=new RewriteRuleTokenStream(adaptor,"token outerDot",outerDot);
+                           RewriteRuleTokenStream stream_innerDot=new RewriteRuleTokenStream(adaptor,"token innerDot",innerDot);
+                           RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+                           root_0 = (CommonTree)adaptor.nil();
+                           // 972:53: -> ^( $innerDot ^( $outerDot $postfixedExpression SUPER ) IDENT )
+                           {
+                               // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:972:57: ^( $innerDot ^( $outerDot $postfixedExpression SUPER ) IDENT )
+                               {
+                               CommonTree root_1 = (CommonTree)adaptor.nil();
+                               root_1 = (CommonTree)adaptor.becomeRoot(stream_innerDot.nextNode(), root_1);
+
+                               // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:972:69: ^( $outerDot $postfixedExpression SUPER )
+                               {
+                               CommonTree root_2 = (CommonTree)adaptor.nil();
+                               root_2 = (CommonTree)adaptor.becomeRoot(stream_outerDot.nextNode(), root_2);
+
+                               adaptor.addChild(root_2, stream_retval.nextTree());
+                               adaptor.addChild(root_2, stream_SUPER.nextNode());
+
+                               adaptor.addChild(root_1, root_2);
+                               }
+                               adaptor.addChild(root_1, stream_IDENT.nextNode());
+
+                               adaptor.addChild(root_0, root_1);
+                               }
+
+                           }
+
+                           retval.tree = root_0;}
+                           }
+
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:974:17: ( arguments -> ^( METHOD_CALL $postfixedExpression arguments ) )?
+                           int alt130=2;
+                           int LA130_0 = input.LA(1);
+
+                           if ( (LA130_0==LPAREN) ) {
+                               alt130=1;
+                           }
+                           switch (alt130) {
+                               case 1 :
+                                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:974:21: arguments
+                                   {
+                                   pushFollow(FOLLOW_arguments_in_postfixedExpression12398);
+                                   arguments455=arguments();
+
+                                   state._fsp--;
+                                   if (state.failed) return retval;
+                                   if ( state.backtracking==0 ) stream_arguments.add(arguments455.getTree());
+
+
+                                   // AST REWRITE
+                                   // elements: arguments, postfixedExpression
+                                   // token labels: 
+                                   // rule labels: retval
+                                   // token list labels: 
+                                   // rule list labels: 
+                                   // wildcard labels: 
+                                   if ( state.backtracking==0 ) {
+                                   retval.tree = root_0;
+                                   RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+                                   root_0 = (CommonTree)adaptor.nil();
+                                   // 974:53: -> ^( METHOD_CALL $postfixedExpression arguments )
+                                   {
+                                       // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:974:57: ^( METHOD_CALL $postfixedExpression arguments )
+                                       {
+                                       CommonTree root_1 = (CommonTree)adaptor.nil();
+                                       root_1 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(METHOD_CALL, "METHOD_CALL"), root_1);
+
+                                       adaptor.addChild(root_1, stream_retval.nextTree());
+                                       adaptor.addChild(root_1, stream_arguments.nextTree());
+
+                                       adaptor.addChild(root_0, root_1);
+                                       }
+
+                                   }
+
+                                   retval.tree = root_0;}
+                                   }
+                                   break;
+
+                           }
+
+
+                           }
+                           break;
+                       case 5 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:976:17: innerNewExpression
+                           {
+                           pushFollow(FOLLOW_innerNewExpression_in_postfixedExpression12469);
+                           innerNewExpression456=innerNewExpression();
+
+                           state._fsp--;
+                           if (state.failed) return retval;
+                           if ( state.backtracking==0 ) stream_innerNewExpression.add(innerNewExpression456.getTree());
+
+
+                           // AST REWRITE
+                           // elements: innerNewExpression, DOT, postfixedExpression
+                           // token labels: 
+                           // rule labels: retval
+                           // token list labels: 
+                           // rule list labels: 
+                           // wildcard labels: 
+                           if ( state.backtracking==0 ) {
+                           retval.tree = root_0;
+                           RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+                           root_0 = (CommonTree)adaptor.nil();
+                           // 976:53: -> ^( DOT $postfixedExpression innerNewExpression )
+                           {
+                               // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:976:57: ^( DOT $postfixedExpression innerNewExpression )
+                               {
+                               CommonTree root_1 = (CommonTree)adaptor.nil();
+                               root_1 = (CommonTree)adaptor.becomeRoot(stream_DOT.nextNode(), root_1);
+
+                               adaptor.addChild(root_1, stream_retval.nextTree());
+                               adaptor.addChild(root_1, stream_innerNewExpression.nextTree());
+
+                               adaptor.addChild(root_0, root_1);
+                               }
+
+                           }
+
+                           retval.tree = root_0;}
+                           }
+                           break;
+
+                   }
+
+
+                   }
+                   break;
+               case 2 :
+                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:978:13: LBRACK expression RBRACK
+                   {
+                   LBRACK457=(Token)match(input,LBRACK,FOLLOW_LBRACK_in_postfixedExpression12526); if (state.failed) return retval; 
+                   if ( state.backtracking==0 ) stream_LBRACK.add(LBRACK457);
+
+                   pushFollow(FOLLOW_expression_in_postfixedExpression12528);
+                   expression458=expression();
+
+                   state._fsp--;
+                   if (state.failed) return retval;
+                   if ( state.backtracking==0 ) stream_expression.add(expression458.getTree());
+                   RBRACK459=(Token)match(input,RBRACK,FOLLOW_RBRACK_in_postfixedExpression12530); if (state.failed) return retval; 
+                   if ( state.backtracking==0 ) stream_RBRACK.add(RBRACK459);
+
+
+
+                   // AST REWRITE
+                   // elements: expression, postfixedExpression
+                   // token labels: 
+                   // rule labels: retval
+                   // token list labels: 
+                   // rule list labels: 
+                   // wildcard labels: 
+                   if ( state.backtracking==0 ) {
+                   retval.tree = root_0;
+                   RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+                   root_0 = (CommonTree)adaptor.nil();
+                   // 978:53: -> ^( ARRAY_ELEMENT_ACCESS $postfixedExpression expression )
+                   {
+                       // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:978:57: ^( ARRAY_ELEMENT_ACCESS $postfixedExpression expression )
+                       {
+                       CommonTree root_1 = (CommonTree)adaptor.nil();
+                       root_1 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(ARRAY_ELEMENT_ACCESS, "ARRAY_ELEMENT_ACCESS"), root_1);
+
+                       adaptor.addChild(root_1, stream_retval.nextTree());
+                       adaptor.addChild(root_1, stream_expression.nextTree());
+
+                       adaptor.addChild(root_0, root_1);
+                       }
+
+                   }
+
+                   retval.tree = root_0;}
+                   }
+                   break;
+
+               default :
+                   break loop132;
                 }
             } while (true);
 
@@ -15808,7 +15808,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -16523,49 +16523,49 @@ public class JavaParser extends Parser {
 
 
                         switch (alt138) {
-                    	case 1 :
-                    	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1011:13: arrayDeclarator
-                    	    {
-                    	    pushFollow(FOLLOW_arrayDeclarator_in_primaryExpression13411);
-                    	    arrayDeclarator485=arrayDeclarator();
+                       case 1 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1011:13: arrayDeclarator
+                           {
+                           pushFollow(FOLLOW_arrayDeclarator_in_primaryExpression13411);
+                           arrayDeclarator485=arrayDeclarator();
 
-                    	    state._fsp--;
-                    	    if (state.failed) return retval;
-                    	    if ( state.backtracking==0 ) stream_arrayDeclarator.add(arrayDeclarator485.getTree());
+                           state._fsp--;
+                           if (state.failed) return retval;
+                           if ( state.backtracking==0 ) stream_arrayDeclarator.add(arrayDeclarator485.getTree());
 
 
-                    	    // AST REWRITE
-                    	    // elements: arrayDeclarator, primaryExpression
-                    	    // token labels: 
-                    	    // rule labels: retval
-                    	    // token list labels: 
-                    	    // rule list labels: 
-                    	    // wildcard labels: 
-                    	    if ( state.backtracking==0 ) {
-                    	    retval.tree = root_0;
-                    	    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+                           // AST REWRITE
+                           // elements: arrayDeclarator, primaryExpression
+                           // token labels: 
+                           // rule labels: retval
+                           // token list labels: 
+                           // rule list labels: 
+                           // wildcard labels: 
+                           if ( state.backtracking==0 ) {
+                           retval.tree = root_0;
+                           RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
-                    	    root_0 = (CommonTree)adaptor.nil();
-                    	    // 1011:57: -> ^( arrayDeclarator $primaryExpression)
-                    	    {
-                    	        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1011:61: ^( arrayDeclarator $primaryExpression)
-                    	        {
-                    	        CommonTree root_1 = (CommonTree)adaptor.nil();
-                    	        root_1 = (CommonTree)adaptor.becomeRoot(stream_arrayDeclarator.nextNode(), root_1);
+                           root_0 = (CommonTree)adaptor.nil();
+                           // 1011:57: -> ^( arrayDeclarator $primaryExpression)
+                           {
+                               // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1011:61: ^( arrayDeclarator $primaryExpression)
+                               {
+                               CommonTree root_1 = (CommonTree)adaptor.nil();
+                               root_1 = (CommonTree)adaptor.becomeRoot(stream_arrayDeclarator.nextNode(), root_1);
 
-                    	        adaptor.addChild(root_1, stream_retval.nextTree());
+                               adaptor.addChild(root_1, stream_retval.nextTree());
 
-                    	        adaptor.addChild(root_0, root_1);
-                    	        }
+                               adaptor.addChild(root_0, root_1);
+                               }
 
-                    	    }
+                           }
 
-                    	    retval.tree = root_0;}
-                    	    }
-                    	    break;
+                           retval.tree = root_0;}
+                           }
+                           break;
 
-                    	default :
-                    	    break loop138;
+                       default :
+                           break loop138;
                         }
                     } while (true);
 
@@ -16664,7 +16664,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -16793,50 +16793,50 @@ public class JavaParser extends Parser {
 
 
                         switch (alt140) {
-                    	case 1 :
-                    	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1022:17: arrayDeclarator
-                    	    {
-                    	    pushFollow(FOLLOW_arrayDeclarator_in_qualifiedIdentExpression13690);
-                    	    arrayDeclarator492=arrayDeclarator();
+                       case 1 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1022:17: arrayDeclarator
+                           {
+                           pushFollow(FOLLOW_arrayDeclarator_in_qualifiedIdentExpression13690);
+                           arrayDeclarator492=arrayDeclarator();
 
-                    	    state._fsp--;
-                    	    if (state.failed) return retval;
-                    	    if ( state.backtracking==0 ) stream_arrayDeclarator.add(arrayDeclarator492.getTree());
+                           state._fsp--;
+                           if (state.failed) return retval;
+                           if ( state.backtracking==0 ) stream_arrayDeclarator.add(arrayDeclarator492.getTree());
 
 
-                    	    // AST REWRITE
-                    	    // elements: arrayDeclarator, qualifiedIdentExpression
-                    	    // token labels: 
-                    	    // rule labels: retval
-                    	    // token list labels: 
-                    	    // rule list labels: 
-                    	    // wildcard labels: 
-                    	    if ( state.backtracking==0 ) {
-                    	    retval.tree = root_0;
-                    	    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+                           // AST REWRITE
+                           // elements: arrayDeclarator, qualifiedIdentExpression
+                           // token labels: 
+                           // rule labels: retval
+                           // token list labels: 
+                           // rule list labels: 
+                           // wildcard labels: 
+                           if ( state.backtracking==0 ) {
+                           retval.tree = root_0;
+                           RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
-                    	    root_0 = (CommonTree)adaptor.nil();
-                    	    // 1022:57: -> ^( arrayDeclarator $qualifiedIdentExpression)
-                    	    {
-                    	        // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1022:61: ^( arrayDeclarator $qualifiedIdentExpression)
-                    	        {
-                    	        CommonTree root_1 = (CommonTree)adaptor.nil();
-                    	        root_1 = (CommonTree)adaptor.becomeRoot(stream_arrayDeclarator.nextNode(), root_1);
+                           root_0 = (CommonTree)adaptor.nil();
+                           // 1022:57: -> ^( arrayDeclarator $qualifiedIdentExpression)
+                           {
+                               // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1022:61: ^( arrayDeclarator $qualifiedIdentExpression)
+                               {
+                               CommonTree root_1 = (CommonTree)adaptor.nil();
+                               root_1 = (CommonTree)adaptor.becomeRoot(stream_arrayDeclarator.nextNode(), root_1);
 
-                    	        adaptor.addChild(root_1, stream_retval.nextTree());
+                               adaptor.addChild(root_1, stream_retval.nextTree());
 
-                    	        adaptor.addChild(root_0, root_1);
-                    	        }
+                               adaptor.addChild(root_0, root_1);
+                               }
 
-                    	    }
+                           }
 
-                    	    retval.tree = root_0;}
-                    	    }
-                    	    break;
+                           retval.tree = root_0;}
+                           }
+                           break;
 
-                    	default :
-                    	    if ( cnt140 >= 1 ) break loop140;
-                    	    if (state.backtracking>0) {state.failed=true; return retval;}
+                       default :
+                           if ( cnt140 >= 1 ) break loop140;
+                           if (state.backtracking>0) {state.failed=true; return retval;}
                                 EarlyExitException eee =
                                     new EarlyExitException(140, input);
                                 throw eee;
@@ -17373,7 +17373,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -17689,7 +17689,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -17846,7 +17846,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -17959,23 +17959,23 @@ public class JavaParser extends Parser {
                         int alt150=2;
                         alt150 = dfa150.predict(input);
                         switch (alt150) {
-                    	case 1 :
-                    	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1061:37: LBRACK expression RBRACK
-                    	    {
-                    	    LBRACK525=(Token)match(input,LBRACK,FOLLOW_LBRACK_in_newArrayConstruction14701); if (state.failed) return retval;
-                    	    pushFollow(FOLLOW_expression_in_newArrayConstruction14704);
-                    	    expression526=expression();
+                       case 1 :
+                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1061:37: LBRACK expression RBRACK
+                           {
+                           LBRACK525=(Token)match(input,LBRACK,FOLLOW_LBRACK_in_newArrayConstruction14701); if (state.failed) return retval;
+                           pushFollow(FOLLOW_expression_in_newArrayConstruction14704);
+                           expression526=expression();
 
-                    	    state._fsp--;
-                    	    if (state.failed) return retval;
-                    	    if ( state.backtracking==0 ) adaptor.addChild(root_0, expression526.getTree());
-                    	    RBRACK527=(Token)match(input,RBRACK,FOLLOW_RBRACK_in_newArrayConstruction14706); if (state.failed) return retval;
+                           state._fsp--;
+                           if (state.failed) return retval;
+                           if ( state.backtracking==0 ) adaptor.addChild(root_0, expression526.getTree());
+                           RBRACK527=(Token)match(input,RBRACK,FOLLOW_RBRACK_in_newArrayConstruction14706); if (state.failed) return retval;
 
-                    	    }
-                    	    break;
+                           }
+                           break;
 
-                    	default :
-                    	    break loop150;
+                       default :
+                           break loop150;
                         }
                     } while (true);
 
@@ -18022,7 +18022,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -18136,7 +18136,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -18196,7 +18196,7 @@ public class JavaParser extends Parser {
         catch (RecognitionException re) {
             reportError(re);
             recover(input,re);
-    	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+       retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
 
         }
         finally {
@@ -19522,21 +19522,21 @@ public class JavaParser extends Parser {
 
 
             switch (alt191) {
-        	case 1 :
-        	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:642:42: COMMA formalParameterStandardDecl
-        	    {
-        	    match(input,COMMA,FOLLOW_COMMA_in_synpred99_Java7635); if (state.failed) return ;
-        	    pushFollow(FOLLOW_formalParameterStandardDecl_in_synpred99_Java7637);
-        	    formalParameterStandardDecl();
+           case 1 :
+               // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:642:42: COMMA formalParameterStandardDecl
+               {
+               match(input,COMMA,FOLLOW_COMMA_in_synpred99_Java7635); if (state.failed) return ;
+               pushFollow(FOLLOW_formalParameterStandardDecl_in_synpred99_Java7637);
+               formalParameterStandardDecl();
 
-        	    state._fsp--;
-        	    if (state.failed) return ;
+               state._fsp--;
+               if (state.failed) return ;
 
-        	    }
-        	    break;
+               }
+               break;
 
-        	default :
-        	    break loop191;
+           default :
+               break loop191;
             }
         } while (true);
 
@@ -19876,21 +19876,21 @@ public class JavaParser extends Parser {
 
 
             switch (alt220) {
-        	case 1 :
-        	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1022:17: arrayDeclarator
-        	    {
-        	    pushFollow(FOLLOW_arrayDeclarator_in_synpred218_Java13690);
-        	    arrayDeclarator();
+           case 1 :
+               // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1022:17: arrayDeclarator
+               {
+               pushFollow(FOLLOW_arrayDeclarator_in_synpred218_Java13690);
+               arrayDeclarator();
 
-        	    state._fsp--;
-        	    if (state.failed) return ;
+               state._fsp--;
+               if (state.failed) return ;
 
-        	    }
-        	    break;
+               }
+               break;
 
-        	default :
-        	    if ( cnt220 >= 1 ) break loop220;
-        	    if (state.backtracking>0) {state.failed=true; return ;}
+           default :
+               if ( cnt220 >= 1 ) break loop220;
+               if (state.backtracking>0) {state.failed=true; return ;}
                     EarlyExitException eee =
                         new EarlyExitException(220, input);
                     throw eee;
@@ -20672,7 +20672,7 @@ public class JavaParser extends Parser {
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
-        	int _s = s;
+           int _s = s;
             switch ( s ) {
                     case 0 : 
                         int LA36_2 = input.LA(1);
@@ -20939,7 +20939,7 @@ public class JavaParser extends Parser {
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
-        	int _s = s;
+           int _s = s;
             switch ( s ) {
                     case 0 : 
                         int LA43_1 = input.LA(1);
@@ -21199,7 +21199,7 @@ public class JavaParser extends Parser {
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
-        	int _s = s;
+           int _s = s;
             switch ( s ) {
                     case 0 : 
                         int LA86_1 = input.LA(1);
@@ -21488,7 +21488,7 @@ public class JavaParser extends Parser {
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
-        	int _s = s;
+           int _s = s;
             switch ( s ) {
                     case 0 : 
                         int LA88_1 = input.LA(1);
@@ -21719,7 +21719,7 @@ public class JavaParser extends Parser {
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
-        	int _s = s;
+           int _s = s;
             switch ( s ) {
                     case 0 : 
                         int LA91_1 = input.LA(1);
@@ -21861,7 +21861,7 @@ public class JavaParser extends Parser {
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
-        	int _s = s;
+           int _s = s;
             switch ( s ) {
                     case 0 : 
                         int LA103_3 = input.LA(1);
@@ -21966,7 +21966,7 @@ public class JavaParser extends Parser {
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
-        	int _s = s;
+           int _s = s;
             switch ( s ) {
                     case 0 : 
                         int LA127_3 = input.LA(1);
@@ -22152,7 +22152,7 @@ public class JavaParser extends Parser {
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
-        	int _s = s;
+           int _s = s;
             switch ( s ) {
                     case 0 : 
                         int LA143_1 = input.LA(1);
@@ -22288,7 +22288,7 @@ public class JavaParser extends Parser {
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
-        	int _s = s;
+           int _s = s;
             switch ( s ) {
                     case 0 : 
                         int LA150_1 = input.LA(1);

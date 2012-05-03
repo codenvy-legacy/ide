@@ -14,7 +14,7 @@ package org.eclipse.jdt.client.internal.compiler.problem;
  * Special unchecked exception type used
  * to denote implementation that should never be reached.
  *
- *	(internal only)
+ *   (internal only)
  */
 public class ShouldNotImplement extends RuntimeException
 {

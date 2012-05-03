@@ -15,13 +15,13 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
  * reduce a explicit constructor call containing the cursor.
  * e.g.
  *
- *	class X {
+ *   class X {
  *    X() {
  *      this(1, 2, [cursor]
  *    }
  *  }
  *
- *	---> class X {
+ *   ---> class X {
  *         X() {
  *           <CompleteOnExplicitConstructorCall:this(1, 2)>
  *         }

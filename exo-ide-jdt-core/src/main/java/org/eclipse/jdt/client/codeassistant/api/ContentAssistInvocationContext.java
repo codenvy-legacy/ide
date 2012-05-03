@@ -161,17 +161,17 @@ public class ContentAssistInvocationContext
     * 
     * <pre>
     * class MyContext extends ContentAssistInvocationContext {
-    * 	private final Object fState;
-    * 	private Object fCachedInfo;
+    *    private final Object fState;
+    *    private Object fCachedInfo;
     * 
-    * 	...
+    *    ...
     * 
-    * 	public boolean equals(Object obj) {
-    * 		if (!super.equals(obj))
-    * 			return false;
-    * 		MyContext other= (MyContext) obj;
-    * 		return fState.equals(other.fState);
-    * 	}
+    *    public boolean equals(Object obj) {
+    *       if (!super.equals(obj))
+    *          return false;
+    *       MyContext other= (MyContext) obj;
+    *       return fState.equals(other.fState);
+    *    }
     * }
     * </pre>
     * 
