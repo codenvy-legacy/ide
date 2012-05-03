@@ -97,27 +97,27 @@ public class TextFileChange extends TextChange
       return fSaveMode;
    }
 
-//   /**
-//    * Hook to create an undo change for the given undo edit and content stamp.
-//    * This hook gets called while performing the change to construct the
-//    * corresponding undo change object.
-//    *
-//    * @param edit the {@link UndoEdit} to create an undo change for
-//    * @param stampToRestore the content stamp to restore when the undo
-//    *  edit is executed.
-//    *
-//    * @return the undo change or <code>null</code> if no undo change can
-//    *  be created. Returning <code>null</code> results in the fact that
-//    *  the whole change tree can't be undone. So returning <code>null</code>
-//    *  is only recommended if an exception occurred during creating the
-//    *  undo change.
-//    */
-//   protected Change createUndoChange(UndoEdit edit)
-//   {
-//      //TODO
-////      return new UndoTextFileChange(getName(), fFile, edit, stampToRestore, fSaveMode);
-//      return null;
-//   }
+   //   /**
+   //    * Hook to create an undo change for the given undo edit and content stamp.
+   //    * This hook gets called while performing the change to construct the
+   //    * corresponding undo change object.
+   //    *
+   //    * @param edit the {@link UndoEdit} to create an undo change for
+   //    * @param stampToRestore the content stamp to restore when the undo
+   //    *  edit is executed.
+   //    *
+   //    * @return the undo change or <code>null</code> if no undo change can
+   //    *  be created. Returning <code>null</code> results in the fact that
+   //    *  the whole change tree can't be undone. So returning <code>null</code>
+   //    *  is only recommended if an exception occurred during creating the
+   //    *  undo change.
+   //    */
+   //   protected Change createUndoChange(UndoEdit edit)
+   //   {
+   //      //TODO
+   ////      return new UndoTextFileChange(getName(), fFile, edit, stampToRestore, fSaveMode);
+   //      return null;
+   //   }
 
    //	/**
    //	 * {@inheritDoc}
@@ -140,17 +140,17 @@ public class TextFileChange extends TextChange
    public void initializeValidationData(IProgressMonitor monitor)
    {
       //TODO
-//      if (monitor == null)
-//         monitor = new NullProgressMonitor();
-//      try
-//      {
-//         monitor.beginTask("", 1); //$NON-NLS-1$
-//         fValidationState = BufferValidationState.create(fFile);
-//      }
-//      finally
-//      {
-//         monitor.done();
-//      }
+      //      if (monitor == null)
+      //         monitor = new NullProgressMonitor();
+      //      try
+      //      {
+      //         monitor.beginTask("", 1); //$NON-NLS-1$
+      //         fValidationState = BufferValidationState.create(fFile);
+      //      }
+      //      finally
+      //      {
+      //         monitor.done();
+      //      }
    }
 
    /**
@@ -159,32 +159,32 @@ public class TextFileChange extends TextChange
    public RefactoringStatus isValid(IProgressMonitor monitor) throws CoreException
    {
       //TODO
-//      if (monitor == null)
-//         monitor = new NullProgressMonitor();
-//      try
-//      {
-//         monitor.beginTask("", 1); //$NON-NLS-1$
-//         if (fValidationState == null)
-//            throw new CoreException(new Status(IStatus.ERROR, RefactoringCorePlugin.getPluginId(),
-//               "TextFileChange has not been initialialized")); //$NON-NLS-1$
-//
-//         boolean needsSaving = needsSaving();
-//         RefactoringStatus result = fValidationState.isValid(needsSaving);
-//         if (needsSaving)
-//         {
-//            result.merge(Changes.validateModifiesFiles(new IFile[]{fFile}));
-//         }
-//         else
-//         {
-//            // we are reading the file. So it should be at least in sync
-//            result.merge(Changes.checkInSync(new IFile[]{fFile}));
-//         }
-//         return result;
-//      }
-//      finally
-//      {
-//         monitor.done();
-//      }
+      //      if (monitor == null)
+      //         monitor = new NullProgressMonitor();
+      //      try
+      //      {
+      //         monitor.beginTask("", 1); //$NON-NLS-1$
+      //         if (fValidationState == null)
+      //            throw new CoreException(new Status(IStatus.ERROR, RefactoringCorePlugin.getPluginId(),
+      //               "TextFileChange has not been initialialized")); //$NON-NLS-1$
+      //
+      //         boolean needsSaving = needsSaving();
+      //         RefactoringStatus result = fValidationState.isValid(needsSaving);
+      //         if (needsSaving)
+      //         {
+      //            result.merge(Changes.validateModifiesFiles(new IFile[]{fFile}));
+      //         }
+      //         else
+      //         {
+      //            // we are reading the file. So it should be at least in sync
+      //            result.merge(Changes.checkInSync(new IFile[]{fFile}));
+      //         }
+      //         return result;
+      //      }
+      //      finally
+      //      {
+      //         monitor.done();
+      //      }
       return null;
    }
 
@@ -228,10 +228,10 @@ public class TextFileChange extends TextChange
    protected void commit(IDocument document, IProgressMonitor pm) throws CoreException
    {
       //TODO
-//      if (needsSaving())
-//      {
-//         fBuffer.commit(pm, false);
-//      }
+      //      if (needsSaving())
+      //      {
+      //         fBuffer.commit(pm, false);
+      //      }
    }
 
    /**
@@ -253,7 +253,7 @@ public class TextFileChange extends TextChange
    protected final Change createUndoChange(UndoEdit edit)
    {
       //TODO 
-//      return createUndoChange(edit);
+      //      return createUndoChange(edit);
       return null;
    }
 

@@ -152,10 +152,12 @@ public class ConvertLoopFix extends CompilationUnitRewriteOperationsFix
 
       CompilationUnitRewriteOperation[] ops =
          operations.toArray(new CompilationUnitRewriteOperation[operations.size()]);
-      return new ConvertLoopFix(FixMessages.INSTANCE.ControlStatementsFix_change_name(), compilationUnit, ops, null, document);
+      return new ConvertLoopFix(FixMessages.INSTANCE.ControlStatementsFix_change_name(), compilationUnit, ops, null,
+         document);
    }
 
-   public static ConvertLoopFix createConvertForLoopToEnhancedFix(CompilationUnit compilationUnit, ForStatement loop, IDocument document)
+   public static ConvertLoopFix createConvertForLoopToEnhancedFix(CompilationUnit compilationUnit, ForStatement loop,
+      IDocument document)
    {
       ConvertLoopOperation convertForLoopOperation = new ConvertForLoopOperation(loop);
       if (!convertForLoopOperation.satisfiesPreconditions().isOK())

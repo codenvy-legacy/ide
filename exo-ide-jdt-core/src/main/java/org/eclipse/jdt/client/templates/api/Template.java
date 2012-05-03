@@ -25,7 +25,7 @@ public class Template
 {
 
    private String id;
-   
+
    /** The name of this template */
    private/* final */String fName;
 
@@ -60,8 +60,8 @@ public class Template
     */
    public Template(Template template)
    {
-      this(template.getId(), template.getName(), template.getDescription(), template.getContextTypeId(), template.getPattern(), template
-         .isAutoInsertable());
+      this(template.getId(), template.getName(), template.getDescription(), template.getContextTypeId(), template
+         .getPattern(), template.isAutoInsertable());
    }
 
    /**
@@ -74,7 +74,8 @@ public class Template
     * @param isAutoInsertable the auto insertable property of the template
     * @since 3.1
     */
-   public Template(String id, String name, String description, String contextTypeId, String pattern, boolean isAutoInsertable)
+   public Template(String id, String name, String description, String contextTypeId, String pattern,
+      boolean isAutoInsertable)
    {
       Assert.isNotNull(description);
       fDescription = description;
@@ -171,7 +172,7 @@ public class Template
    {
       return fIsAutoInsertable;
    }
-   
+
    /**
     * Template id
     * @return the id

@@ -113,50 +113,50 @@ public class DocumentChange extends TextChange
     */
    protected UndoEdit performEdits(final IDocument document) throws BadLocationException, MalformedTreeException
    {
-//      ITextFileBufferManager fileBufferManager = FileBuffers.getTextFileBufferManager();
-//
-//      ITextFileBuffer fileBuffer = fileBufferManager.getTextFileBuffer(document);
-//      if (fileBuffer == null || !fileBuffer.isSynchronizationContextRequested())
-//      {
+      //      ITextFileBufferManager fileBufferManager = FileBuffers.getTextFileBufferManager();
+      //
+      //      ITextFileBuffer fileBuffer = fileBufferManager.getTextFileBuffer(document);
+      //      if (fileBuffer == null || !fileBuffer.isSynchronizationContextRequested())
+      //      {
       //TODO
-         return super.performEdits(document);
-//      }
-//
-//      final UndoEdit[] result = new UndoEdit[1];
-//      final BadLocationException[] exception = new BadLocationException[1];
-//      Runnable runnable = new Runnable()
-//      {
-//         public void run()
-//         {
-//               try
-//               {
-//                  result[0] = DocumentChange.super.performEdits(document);
-//               }
-//               catch (BadLocationException e)
-//               {
-//                  exception[0] = e;
-//               }
-//         }
-//      };
-//
-//         fileBufferManager.execute(runnable);
-//         while (!completionLock.fDone)
-//         {
-//            try
-//            {
-//               completionLock.wait(500);
-//            }
-//            catch (InterruptedException x)
-//            {
-//            }
-//         }
-//
-//      if (exception[0] != null)
-//      {
-//         throw exception[0];
-//      }
-//
-//      return result[0];
+      return super.performEdits(document);
+      //      }
+      //
+      //      final UndoEdit[] result = new UndoEdit[1];
+      //      final BadLocationException[] exception = new BadLocationException[1];
+      //      Runnable runnable = new Runnable()
+      //      {
+      //         public void run()
+      //         {
+      //               try
+      //               {
+      //                  result[0] = DocumentChange.super.performEdits(document);
+      //               }
+      //               catch (BadLocationException e)
+      //               {
+      //                  exception[0] = e;
+      //               }
+      //         }
+      //      };
+      //
+      //         fileBufferManager.execute(runnable);
+      //         while (!completionLock.fDone)
+      //         {
+      //            try
+      //            {
+      //               completionLock.wait(500);
+      //            }
+      //            catch (InterruptedException x)
+      //            {
+      //            }
+      //         }
+      //
+      //      if (exception[0] != null)
+      //      {
+      //         throw exception[0];
+      //      }
+      //
+      //      return result[0];
    }
 
    /**

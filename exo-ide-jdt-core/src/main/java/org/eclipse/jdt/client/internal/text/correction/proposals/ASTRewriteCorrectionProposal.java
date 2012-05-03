@@ -50,7 +50,7 @@ public class ASTRewriteCorrectionProposal extends CUCorrectionProposal
     * @param image The image that is displayed for this proposal or <code>null</code> if no
     * image is desired.
     */
-   public ASTRewriteCorrectionProposal(String name, ASTRewrite rewrite, int relevance, IDocument document,Image image)
+   public ASTRewriteCorrectionProposal(String name, ASTRewrite rewrite, int relevance, IDocument document, Image image)
    {
       super(name, relevance, document, image);
       fRewrite = rewrite;

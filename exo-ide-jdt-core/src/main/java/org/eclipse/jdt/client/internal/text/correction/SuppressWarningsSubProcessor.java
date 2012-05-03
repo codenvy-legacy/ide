@@ -108,8 +108,7 @@ public class SuppressWarningsSubProcessor
       do
       {
          relevance =
-            addSuppressWarningsProposalIfPossible(context.getDocument(), target, warningToken, relevance,
-               proposals);
+            addSuppressWarningsProposalIfPossible(context.getDocument(), target, warningToken, relevance, proposals);
          if (relevance == 0)
             return;
          target = target.getParent();
@@ -148,7 +147,7 @@ public class SuppressWarningsSubProcessor
       public SuppressWarningsProposal(String warningToken, String label, ASTNode node,
          ChildListPropertyDescriptor property, int relevance, IDocument document)
       {
-         super(label, null, relevance, document,new Image(JdtClientBundle.INSTANCE.javadoc()));
+         super(label, null, relevance, document, new Image(JdtClientBundle.INSTANCE.javadoc()));
          fWarningToken = warningToken;
          fNode = node;
          fProperty = property;
@@ -345,8 +344,7 @@ public class SuppressWarningsSubProcessor
       }
 
       String label =
-        CorrectionMessages.INSTANCE.SuppressWarningsSubProcessor_suppress_warnings_label(
-            warningToken, name);
+         CorrectionMessages.INSTANCE.SuppressWarningsSubProcessor_suppress_warnings_label(warningToken, name);
       ASTRewriteCorrectionProposal proposal =
          new SuppressWarningsProposal(warningToken, label, node, property, relevance, document);
 

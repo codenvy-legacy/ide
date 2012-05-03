@@ -58,23 +58,23 @@ public class CompilationUnitChange extends TextFileChange
       return this;
    }
 
-//   /**
-//    * Returns the compilation unit this change works on.
-//    *
-//    * @return the compilation unit this change works on
-//    */
-//   public ICompilationUnit getCompilationUnit()
-//   {
-//      return fCUnit;
-//   }
+   //   /**
+   //    * Returns the compilation unit this change works on.
+   //    *
+   //    * @return the compilation unit this change works on
+   //    */
+   //   public ICompilationUnit getCompilationUnit()
+   //   {
+   //      return fCUnit;
+   //   }
 
    /**
     * {@inheritDoc}
     */
    protected IDocument acquireDocument(IProgressMonitor pm) throws CoreException
    {
-//      pm.beginTask("", 2); //$NON-NLS-1$
-//      fCUnit.becomeWorkingCopy(new SubProgressMonitor(pm, 1));
+      //      pm.beginTask("", 2); //$NON-NLS-1$
+      //      fCUnit.becomeWorkingCopy(new SubProgressMonitor(pm, 1));
       return super.acquireDocument(pm);
    }
 
@@ -84,43 +84,43 @@ public class CompilationUnitChange extends TextFileChange
    protected void releaseDocument(IDocument document, IProgressMonitor pm) throws CoreException
    {
       //TODO
-//      boolean isModified = isDocumentModified();
-//      super.releaseDocument(document, pm);
-//      try
-//      {
-//         fCUnit.discardWorkingCopy();
-//      }
-//      finally
-//      {
-//         if (isModified && !isDocumentAcquired())
-//         {
-//            if (fCUnit.isWorkingCopy())
-//               fCUnit.reconcile(ICompilationUnit.NO_AST, false /* don't force problem detection */,
-//                  null /* use primary owner */, null /* no progress monitor */);
-//
-//            else
-//               fCUnit.makeConsistent(pm);
-//         }
-//      }
+      //      boolean isModified = isDocumentModified();
+      //      super.releaseDocument(document, pm);
+      //      try
+      //      {
+      //         fCUnit.discardWorkingCopy();
+      //      }
+      //      finally
+      //      {
+      //         if (isModified && !isDocumentAcquired())
+      //         {
+      //            if (fCUnit.isWorkingCopy())
+      //               fCUnit.reconcile(ICompilationUnit.NO_AST, false /* don't force problem detection */,
+      //                  null /* use primary owner */, null /* no progress monitor */);
+      //
+      //            else
+      //               fCUnit.makeConsistent(pm);
+      //         }
+      //      }
    }
 
-//   /**
-//    * {@inheritDoc}
-//    */
-//   protected Change createUndoChange(UndoEdit edit)
-//   {
-      //TODO
-//      try
-//      {
-//         return new UndoCompilationUnitChange(getName(), fCUnit, edit, stampToRestore, getSaveMode());
-//      }
-//      catch (CoreException e)
-//      {
-//         JavaManipulationPlugin.log(e);
-//         return null;
-//      }
-//         return null;
-//   }
+   //   /**
+   //    * {@inheritDoc}
+   //    */
+   //   protected Change createUndoChange(UndoEdit edit)
+   //   {
+   //TODO
+   //      try
+   //      {
+   //         return new UndoCompilationUnitChange(getName(), fCUnit, edit, stampToRestore, getSaveMode());
+   //      }
+   //      catch (CoreException e)
+   //      {
+   //         JavaManipulationPlugin.log(e);
+   //         return null;
+   //      }
+   //         return null;
+   //   }
 
    /**
     * {@inheritDoc}
@@ -128,9 +128,9 @@ public class CompilationUnitChange extends TextFileChange
    public Object getAdapter(Class adapter)
    {
       //TODO
-//      if (ICompilationUnit.class.equals(adapter))
-//         return fCUnit;
-//      return super.getAdapter(adapter);
+      //      if (ICompilationUnit.class.equals(adapter))
+      //         return fCUnit;
+      //      return super.getAdapter(adapter);
       return null;
    }
 

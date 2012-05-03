@@ -86,7 +86,7 @@ public class ImplementInterfaceProposal extends LinkedCorrectionProposal
 
          // set up linked mode
          final String KEY_TYPE = "type"; //$NON-NLS-1$
-//         addLinkedPosition(rewrite.track(newInterface), true, KEY_TYPE);
+         //         addLinkedPosition(rewrite.track(newInterface), true, KEY_TYPE);
          return rewrite;
       }
       return null;

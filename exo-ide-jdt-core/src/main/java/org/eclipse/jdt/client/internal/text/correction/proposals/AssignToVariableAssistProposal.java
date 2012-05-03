@@ -127,9 +127,9 @@ public class AssignToVariableAssistProposal extends LinkedCorrectionProposal
       }
       else
       {
-         setDisplayName(
-            CorrectionMessages.INSTANCE.AssignToVariableAssistProposal_assigntoexistingfield_description(
-            existingFragment.getName().getIdentifier()));
+         setDisplayName(CorrectionMessages.INSTANCE
+            .AssignToVariableAssistProposal_assigntoexistingfield_description(existingFragment.getName()
+               .getIdentifier()));
       }
       setImage(new Image(JdtClientBundle.INSTANCE.privateField()));
    }
@@ -157,10 +157,10 @@ public class AssignToVariableAssistProposal extends LinkedCorrectionProposal
       createImportRewrite((CompilationUnit)fNodeToAssign.getRoot());
 
       String[] varNames = suggestLocalVariableNames(fTypeBinding, expression);
-//      for (int i = 0; i < varNames.length; i++)
-//      {
-//         addLinkedPositionProposal(KEY_NAME, varNames[i], null);
-//      }
+      //      for (int i = 0; i < varNames.length; i++)
+      //      {
+      //         addLinkedPositionProposal(KEY_NAME, varNames[i], null);
+      //      }
 
       VariableDeclarationFragment newDeclFrag = ast.newVariableDeclarationFragment();
       newDeclFrag.setName(ast.newSimpleName(varNames[0]));
@@ -189,9 +189,9 @@ public class AssignToVariableAssistProposal extends LinkedCorrectionProposal
          rewrite.replace(expression, varExpression, null);
       }
 
-//      addLinkedPosition(rewrite.track(newDeclFrag.getName()), true, KEY_NAME);
-//      addLinkedPosition(rewrite.track(type), false, KEY_TYPE);
-//      setEndPosition(rewrite.track(fNodeToAssign)); // set cursor after expression statement
+      //      addLinkedPosition(rewrite.track(newDeclFrag.getName()), true, KEY_NAME);
+      //      addLinkedPosition(rewrite.track(type), false, KEY_TYPE);
+      //      setEndPosition(rewrite.track(fNodeToAssign)); // set cursor after expression statement
 
       return rewrite;
    }
@@ -318,23 +318,23 @@ public class AssignToVariableAssistProposal extends LinkedCorrectionProposal
          selectionNode = fNodeToAssign;
       }
 
-//      addLinkedPosition(rewrite.track(newDeclFrag.getName()), false, KEY_NAME);
-//      if (!isParamToField)
-//      {
-//         FieldDeclaration fieldDeclaration = (FieldDeclaration)newDeclFrag.getParent();
-//         addLinkedPosition(rewrite.track(fieldDeclaration.getType()), false, KEY_TYPE);
-//      }
-//      addLinkedPosition(rewrite.track(accessName), true, KEY_NAME);
-//      IVariableBinding variableBinding = newDeclFrag.resolveBinding();
-//      if (variableBinding != null)
-//      {
-//         SimpleName[] linkedNodes = LinkedNodeFinder.findByBinding(fNodeToAssign.getRoot(), variableBinding);
-//         for (int i = 0; i < linkedNodes.length; i++)
-//         {
-//            addLinkedPosition(rewrite.track(linkedNodes[i]), false, KEY_NAME);
-//         }
-//      }
-//      setEndPosition(rewrite.track(selectionNode));
+      //      addLinkedPosition(rewrite.track(newDeclFrag.getName()), false, KEY_NAME);
+      //      if (!isParamToField)
+      //      {
+      //         FieldDeclaration fieldDeclaration = (FieldDeclaration)newDeclFrag.getParent();
+      //         addLinkedPosition(rewrite.track(fieldDeclaration.getType()), false, KEY_TYPE);
+      //      }
+      //      addLinkedPosition(rewrite.track(accessName), true, KEY_NAME);
+      //      IVariableBinding variableBinding = newDeclFrag.resolveBinding();
+      //      if (variableBinding != null)
+      //      {
+      //         SimpleName[] linkedNodes = LinkedNodeFinder.findByBinding(fNodeToAssign.getRoot(), variableBinding);
+      //         for (int i = 0; i < linkedNodes.length; i++)
+      //         {
+      //            addLinkedPosition(rewrite.track(linkedNodes[i]), false, KEY_NAME);
+      //         }
+      //      }
+      //      setEndPosition(rewrite.track(selectionNode));
 
       return rewrite;
    }
@@ -351,10 +351,10 @@ public class AssignToVariableAssistProposal extends LinkedCorrectionProposal
       List<BodyDeclaration> decls = (List<BodyDeclaration>)newTypeDecl.getStructuralProperty(property);
       AST ast = newTypeDecl.getAST();
       String[] varNames = suggestFieldNames(fTypeBinding, expression, modifiers);
-//      for (int i = 0; i < varNames.length; i++)
-//      {
-//         addLinkedPositionProposal(KEY_NAME, varNames[i], null);
-//      }
+      //      for (int i = 0; i < varNames.length; i++)
+      //      {
+      //         addLinkedPositionProposal(KEY_NAME, varNames[i], null);
+      //      }
       String varName = varNames[0];
 
       VariableDeclarationFragment newDeclFrag = ast.newVariableDeclarationFragment();
@@ -366,8 +366,8 @@ public class AssignToVariableAssistProposal extends LinkedCorrectionProposal
       newDecl.setType(type);
       newDecl.modifiers().addAll(ASTNodeFactory.newModifiers(ast, modifiers));
 
-//      ModifierCorrectionSubProcessor.installLinkedVisibilityProposals(getLinkedProposalModel(), rewrite,
-//         newDecl.modifiers(), false);
+      //      ModifierCorrectionSubProcessor.installLinkedVisibilityProposals(getLinkedProposalModel(), rewrite,
+      //         newDecl.modifiers(), false);
 
       int insertIndex = findFieldInsertIndex(decls, fNodeToAssign.getStartPosition());
       rewrite.getListRewrite(newTypeDecl, property).insertAt(newDecl, insertIndex, null);
@@ -378,10 +378,10 @@ public class AssignToVariableAssistProposal extends LinkedCorrectionProposal
    private Type evaluateType(AST ast)
    {
       ITypeBinding[] proposals = ASTResolving.getRelaxingTypes(ast, fTypeBinding);
-//      for (int i = 0; i < proposals.length; i++)
-//      {
-//         addLinkedPositionProposal(KEY_TYPE, proposals[i]);
-//      }
+      //      for (int i = 0; i < proposals.length; i++)
+      //      {
+      //         addLinkedPositionProposal(KEY_TYPE, proposals[i]);
+      //      }
       ImportRewrite importRewrite = getImportRewrite();
       CompilationUnit cuNode = (CompilationUnit)fNodeToAssign.getRoot();
       ImportRewriteContext context =

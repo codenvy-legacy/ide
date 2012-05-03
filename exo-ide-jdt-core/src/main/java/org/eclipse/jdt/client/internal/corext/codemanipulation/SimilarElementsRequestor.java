@@ -165,7 +165,7 @@ public class SimilarElementsRequestor extends CompletionRequestor
    {
       try
       {
-//         cu.codeComplete(pos, this);
+         //         cu.codeComplete(pos, this);
          processKeywords();
          return fResult.toArray(new SimilarElement[fResult.size()]);
       }

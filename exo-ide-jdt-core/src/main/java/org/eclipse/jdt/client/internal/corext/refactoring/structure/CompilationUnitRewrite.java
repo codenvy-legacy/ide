@@ -360,14 +360,14 @@ public class CompilationUnitRewrite
          fRewrite = ASTRewrite.create(getRoot().getAST());
          if (fRememberContent != null)
          { // wain until ast rewrite is accessed first
-//            try
-//            {
-               fRememberContent = document;
-//            }
-//            catch (JavaModelException e)
-//            {
-//               fRememberContent = null;
-//            }
+         //            try
+         //            {
+            fRememberContent = document;
+            //            }
+            //            catch (JavaModelException e)
+            //            {
+            //               fRememberContent = null;
+            //            }
          }
       }
       return fRewrite;
@@ -378,25 +378,25 @@ public class CompilationUnitRewrite
       if (fImportRewrite == null)
       {
          // lazily initialized to avoid lengthy processing in checkInitialConditions(..)
-//         try
-//         {
-            /* If bindings are to be resolved, then create the AST, so that
-             * ImportRewrite#setUseContextToFilterImplicitImports(boolean) will be set to true
-             * and ContextSensitiveImportRewriteContext etc. can be used. */
-            if (fRoot == null && !fResolveBindings)
-            {
-               fImportRewrite = StubUtility.createImportRewrite(document, getRoot(), true);
-            }
-            else
-            {
-               fImportRewrite = StubUtility.createImportRewrite(document, getRoot(), true);
-            }
-//         }
-//         catch (CoreException e)
-//         {
-////            JavaPlugin.log(e);
-//            throw new IllegalStateException(e.getMessage()); // like ASTParser#createAST(..) does
-//         }
+         //         try
+         //         {
+         /* If bindings are to be resolved, then create the AST, so that
+          * ImportRewrite#setUseContextToFilterImplicitImports(boolean) will be set to true
+          * and ContextSensitiveImportRewriteContext etc. can be used. */
+         if (fRoot == null && !fResolveBindings)
+         {
+            fImportRewrite = StubUtility.createImportRewrite(document, getRoot(), true);
+         }
+         else
+         {
+            fImportRewrite = StubUtility.createImportRewrite(document, getRoot(), true);
+         }
+         //         }
+         //         catch (CoreException e)
+         //         {
+         ////            JavaPlugin.log(e);
+         //            throw new IllegalStateException(e.getMessage()); // like ASTParser#createAST(..) does
+         //         }
       }
       return fImportRewrite;
 

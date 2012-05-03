@@ -53,24 +53,24 @@ public final class SerialVersionDefaultOperation extends AbstractSerialVersionOp
       return true;
    }
 
-//   /**
-//    * {@inheritDoc}
-//    */
-//   @Override
-//   protected void addLinkedPositions(final ASTRewrite rewrite, final VariableDeclarationFragment fragment,
-//      final LinkedProposalModel positionGroups)
-//   {
-//
-//      Assert.isNotNull(rewrite);
-//      Assert.isNotNull(fragment);
-//
-//      final Expression initializer = fragment.getInitializer();
-//      if (initializer != null)
-//      {
-//         LinkedProposalPositionGroup group = new LinkedProposalPositionGroup(GROUP_INITIALIZER);
-//         group.addPosition(rewrite.track(initializer), true);
-//         positionGroups.addPositionGroup(group);
-//      }
-//   }
+   //   /**
+   //    * {@inheritDoc}
+   //    */
+   //   @Override
+   //   protected void addLinkedPositions(final ASTRewrite rewrite, final VariableDeclarationFragment fragment,
+   //      final LinkedProposalModel positionGroups)
+   //   {
+   //
+   //      Assert.isNotNull(rewrite);
+   //      Assert.isNotNull(fragment);
+   //
+   //      final Expression initializer = fragment.getInitializer();
+   //      if (initializer != null)
+   //      {
+   //         LinkedProposalPositionGroup group = new LinkedProposalPositionGroup(GROUP_INITIALIZER);
+   //         group.addPosition(rewrite.track(initializer), true);
+   //         positionGroups.addPositionGroup(group);
+   //      }
+   //   }
 
 }

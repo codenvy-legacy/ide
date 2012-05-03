@@ -14,7 +14,6 @@ import org.eclipse.jdt.client.ltk.refactoring.RefactoringStatus;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 
-
 /**
  * A clean up solves problems in a compilation unit.
  * <p>
@@ -34,65 +33,66 @@ import org.eclipse.jdt.client.runtime.IProgressMonitor;
  * 
  * @since 3.5
  */
-public interface ICleanUp {
+public interface ICleanUp
+{
 
-	/**
-	 * Sets the options that will be used.
-	 * 
-	 * @param options the options to use
-	 */
-	void setOptions(CleanUpOptions options);
+   /**
+    * Sets the options that will be used.
+    * 
+    * @param options the options to use
+    */
+   void setOptions(CleanUpOptions options);
 
-	/**
-	 * Human readable description for each step this clean up will execute.
-	 * <p>
-	 * <strong>Note:</strong> This method must only be called after the options have been set.
-	 * </p>
-	 * 
-	 * @return descriptions an array of {@linkplain String strings} or <code>null</code>
-	 */
-	String[] getStepDescriptions();
+   /**
+    * Human readable description for each step this clean up will execute.
+    * <p>
+    * <strong>Note:</strong> This method must only be called after the options have been set.
+    * </p>
+    * 
+    * @return descriptions an array of {@linkplain String strings} or <code>null</code>
+    */
+   String[] getStepDescriptions();
 
-	/**
-	 * The requirements of this clean up.
-	 * <p>
-	 * <strong>Note:</strong> This method must only be called after the options have been set.
-	 * </p>
-	 * 
-	 * @return the requirements used for {@link #createFix(CleanUpContext)} to work
-	 */
-	CleanUpRequirements getRequirements();
+   /**
+    * The requirements of this clean up.
+    * <p>
+    * <strong>Note:</strong> This method must only be called after the options have been set.
+    * </p>
+    * 
+    * @return the requirements used for {@link #createFix(CleanUpContext)} to work
+    */
+   CleanUpRequirements getRequirements();
 
-//	/**
-//	 * After call to checkPreConditions clients will start creating fixes for
-//	 * <code>compilationUnits</code> in <code>project</code> unless the result of checkPreConditions
-//	 * contains a fatal error
-//	 * 
-//	 * @param project the project to clean up
-//	 * @param compilationUnits an array of compilation units to clean up, all member of <code>project</code>
-//	 * @param monitor the monitor to show progress
-//	 * @return the result of the precondition check
-//	 * @throws CoreException if an unexpected error occurred
-//	 */
-//	RefactoringStatus checkPreConditions(IJavaProject project, ICompilationUnit[] compilationUnits, IProgressMonitor monitor) throws CoreException;
+   //	/**
+   //	 * After call to checkPreConditions clients will start creating fixes for
+   //	 * <code>compilationUnits</code> in <code>project</code> unless the result of checkPreConditions
+   //	 * contains a fatal error
+   //	 * 
+   //	 * @param project the project to clean up
+   //	 * @param compilationUnits an array of compilation units to clean up, all member of <code>project</code>
+   //	 * @param monitor the monitor to show progress
+   //	 * @return the result of the precondition check
+   //	 * @throws CoreException if an unexpected error occurred
+   //	 */
+   //	RefactoringStatus checkPreConditions(IJavaProject project, ICompilationUnit[] compilationUnits, IProgressMonitor monitor) throws CoreException;
 
-	/**
-	 * Create an <code>ICleanUpFix</code> which fixes all problems in <code>context</code> or
-	 * <code>null</code> if nothing to fix.
-	 * 
-	 * @param context a context containing all information requested by {@link #getRequirements()}
-	 * @return the fix for the problems or <code>null</code> if nothing to fix
-	 * @throws CoreException if an unexpected error occurred
-	 */
-	ICleanUpFix createFix(CleanUpContext context) throws CoreException;
+   /**
+    * Create an <code>ICleanUpFix</code> which fixes all problems in <code>context</code> or
+    * <code>null</code> if nothing to fix.
+    * 
+    * @param context a context containing all information requested by {@link #getRequirements()}
+    * @return the fix for the problems or <code>null</code> if nothing to fix
+    * @throws CoreException if an unexpected error occurred
+    */
+   ICleanUpFix createFix(CleanUpContext context) throws CoreException;
 
-	/**
-	 * Called when done cleaning up.
-	 * 
-	 * @param monitor the monitor to show progress
-	 * @return the result of the postcondition check, not null
-	 * @throws CoreException if an unexpected error occurred
-	 */
-	RefactoringStatus checkPostConditions(IProgressMonitor monitor) throws CoreException;
+   /**
+    * Called when done cleaning up.
+    * 
+    * @param monitor the monitor to show progress
+    * @return the result of the postcondition check, not null
+    * @throws CoreException if an unexpected error occurred
+    */
+   RefactoringStatus checkPostConditions(IProgressMonitor monitor) throws CoreException;
 
 }

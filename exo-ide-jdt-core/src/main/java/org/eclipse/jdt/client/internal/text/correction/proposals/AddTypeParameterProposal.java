@@ -52,24 +52,31 @@ public class AddTypeParameterProposal extends LinkedCorrectionProposal
 
    private final ITypeBinding[] fBounds;
 
-   public AddTypeParameterProposal(IBinding binding, CompilationUnit astRoot, String name, ITypeBinding[] bounds, int relevance, IDocument document) {
-		super("", null, relevance, document, new Image(JdtClientBundle.INSTANCE.field_public())); //$NON-NLS-1$
+   public AddTypeParameterProposal(IBinding binding, CompilationUnit astRoot, String name, ITypeBinding[] bounds,
+      int relevance, IDocument document)
+   {
+      super("", null, relevance, document, new Image(JdtClientBundle.INSTANCE.field_public())); //$NON-NLS-1$
 
-		Assert.isTrue(binding != null && Bindings.isDeclarationBinding(binding));
-		Assert.isTrue(binding instanceof IMethodBinding || binding instanceof ITypeBinding);
+      Assert.isTrue(binding != null && Bindings.isDeclarationBinding(binding));
+      Assert.isTrue(binding instanceof IMethodBinding || binding instanceof ITypeBinding);
 
-		fBinding= binding;
-		fAstRoot= astRoot;
-		fTypeParamName= name;
-		fBounds= bounds;
+      fBinding = binding;
+      fAstRoot = astRoot;
+      fTypeParamName = name;
+      fBounds = bounds;
 
-		if (binding instanceof IMethodBinding) {
-		   
-			setDisplayName(CorrectionMessages.INSTANCE.AddTypeParameterProposal_method_label(fTypeParamName, ASTResolving.getMethodSignature((IMethodBinding) binding)));
-		} else {
-			setDisplayName(CorrectionMessages.INSTANCE.AddTypeParameterProposal_type_label(fTypeParamName, ASTResolving.getTypeSignature((ITypeBinding) binding)));
-		}
-	}
+      if (binding instanceof IMethodBinding)
+      {
+
+         setDisplayName(CorrectionMessages.INSTANCE.AddTypeParameterProposal_method_label(fTypeParamName,
+            ASTResolving.getMethodSignature((IMethodBinding)binding)));
+      }
+      else
+      {
+         setDisplayName(CorrectionMessages.INSTANCE.AddTypeParameterProposal_type_label(fTypeParamName,
+            ASTResolving.getTypeSignature((ITypeBinding)binding)));
+      }
+   }
 
    @Override
    protected ASTRewrite getRewrite() throws CoreException

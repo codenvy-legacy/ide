@@ -24,52 +24,52 @@ import java.util.Collection;
 public final class SerialVersionSubProcessor
 {
 
-//   public static final class SerialVersionProposal extends FixCorrectionProposal
-//   {
-//      private boolean fIsDefaultProposal;
-//
-//      public SerialVersionProposal(IProposableFix fix, int relevance, IInvocationContext context, boolean isDefault)
-//      {
-//         super(fix, createCleanUp(isDefault), relevance, new Image(JdtClientBundle.INSTANCE.add_obj()), context);
-//         fIsDefaultProposal = isDefault;
-//      }
-//
-//      private static ICleanUp createCleanUp(boolean isDefault)
-//      {
-//         Map<String, String> options = new Hashtable<String, String>();
-//         options.put(CleanUpConstants.ADD_MISSING_SERIAL_VERSION_ID, CleanUpOptions.TRUE);
-//         if (isDefault)
-//         {
-//            options.put(CleanUpConstants.ADD_MISSING_SERIAL_VERSION_ID_DEFAULT, CleanUpOptions.TRUE);
-//         }
-//         else
-//         {
-//            options.put(CleanUpConstants.ADD_MISSING_SERIAL_VERSION_ID_GENERATED, CleanUpOptions.TRUE);
-//         }
-//         return new PotentialProgrammingProblemsCleanUp(options);
-//      }
-//
-//      public boolean isDefaultProposal()
-//      {
-//         return fIsDefaultProposal;
-//      }
-//
-//      /**
-//       * {@inheritDoc}
-//       */
-//      @Override
-//      public Object getAdditionalProposalInfo(IProgressMonitor monitor)
-//      {
-//         if (fIsDefaultProposal)
-//         {
-//            return CorrectionMessages.INSTANCE.SerialVersionDefaultProposal_message_default_info();
-//         }
-//         else
-//         {
-//            return CorrectionMessages.INSTANCE.SerialVersionHashProposal_message_generated_info();
-//         }
-//      }
-//   }
+   //   public static final class SerialVersionProposal extends FixCorrectionProposal
+   //   {
+   //      private boolean fIsDefaultProposal;
+   //
+   //      public SerialVersionProposal(IProposableFix fix, int relevance, IInvocationContext context, boolean isDefault)
+   //      {
+   //         super(fix, createCleanUp(isDefault), relevance, new Image(JdtClientBundle.INSTANCE.add_obj()), context);
+   //         fIsDefaultProposal = isDefault;
+   //      }
+   //
+   //      private static ICleanUp createCleanUp(boolean isDefault)
+   //      {
+   //         Map<String, String> options = new Hashtable<String, String>();
+   //         options.put(CleanUpConstants.ADD_MISSING_SERIAL_VERSION_ID, CleanUpOptions.TRUE);
+   //         if (isDefault)
+   //         {
+   //            options.put(CleanUpConstants.ADD_MISSING_SERIAL_VERSION_ID_DEFAULT, CleanUpOptions.TRUE);
+   //         }
+   //         else
+   //         {
+   //            options.put(CleanUpConstants.ADD_MISSING_SERIAL_VERSION_ID_GENERATED, CleanUpOptions.TRUE);
+   //         }
+   //         return new PotentialProgrammingProblemsCleanUp(options);
+   //      }
+   //
+   //      public boolean isDefaultProposal()
+   //      {
+   //         return fIsDefaultProposal;
+   //      }
+   //
+   //      /**
+   //       * {@inheritDoc}
+   //       */
+   //      @Override
+   //      public Object getAdditionalProposalInfo(IProgressMonitor monitor)
+   //      {
+   //         if (fIsDefaultProposal)
+   //         {
+   //            return CorrectionMessages.INSTANCE.SerialVersionDefaultProposal_message_default_info();
+   //         }
+   //         else
+   //         {
+   //            return CorrectionMessages.INSTANCE.SerialVersionHashProposal_message_generated_info();
+   //         }
+   //      }
+   //   }
 
    /**
     * Determines the serial version quickfix proposals.

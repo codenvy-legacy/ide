@@ -126,8 +126,8 @@ public class NewMethodCorrectionProposal extends AbstractMethodCorrectionProposa
    protected void addNewModifiers(ASTRewrite rewrite, ASTNode targetTypeDecl, List<IExtendedModifier> modifiers)
    {
       modifiers.addAll(rewrite.getAST().newModifiers(evaluateModifiers(targetTypeDecl)));
-//      ModifierCorrectionSubProcessor.installLinkedVisibilityProposals(rewrite, modifiers,
-//         getSenderBinding().isInterface());
+      //      ModifierCorrectionSubProcessor.installLinkedVisibilityProposals(rewrite, modifiers,
+      //         getSenderBinding().isInterface());
    }
 
    /* (non-Javadoc)
@@ -163,13 +163,13 @@ public class NewMethodCorrectionProposal extends AbstractMethodCorrectionProposa
       }
       AST ast = rewrite.getAST();
       SimpleName newNameNode = ast.newSimpleName(name);
-//      addLinkedPosition(rewrite.track(newNameNode), false, KEY_NAME);
+      //      addLinkedPosition(rewrite.track(newNameNode), false, KEY_NAME);
 
       ASTNode invocationName = getInvocationNameNode();
-//      if (invocationName != null && invocationName.getAST() == ast)
-//      { // in the same CU
-//         addLinkedPosition(rewrite.track(invocationName), true, KEY_NAME);
-//      }
+      //      if (invocationName != null && invocationName.getAST() == ast)
+      //      { // in the same CU
+      //         addLinkedPosition(rewrite.track(invocationName), true, KEY_NAME);
+      //      }
       return newNameNode;
    }
 
@@ -253,14 +253,14 @@ public class NewMethodCorrectionProposal extends AbstractMethodCorrectionProposa
          }
       }
 
-//      addLinkedPosition(rewrite.track(newTypeNode), false, KEY_TYPE);
-//      if (otherProposals != null)
-//      {
-//         for (int i = 0; i < otherProposals.length; i++)
-//         {
-//            addLinkedPositionProposal(KEY_TYPE, otherProposals[i]);
-//         }
-//      }
+      //      addLinkedPosition(rewrite.track(newTypeNode), false, KEY_TYPE);
+      //      if (otherProposals != null)
+      //      {
+      //         for (int i = 0; i < otherProposals.length; i++)
+      //         {
+      //            addLinkedPositionProposal(KEY_TYPE, otherProposals[i]);
+      //         }
+      //      }
 
       return newTypeNode;
    }
@@ -295,9 +295,9 @@ public class NewMethodCorrectionProposal extends AbstractMethodCorrectionProposa
          param.setName(ast.newSimpleName(name));
 
          params.add(param);
-//
-//         addLinkedPosition(rewrite.track(param.getType()), false, argTypeKey);
-//         addLinkedPosition(rewrite.track(param.getName()), false, argNameKey);
+         //
+         //         addLinkedPosition(rewrite.track(param.getType()), false, argTypeKey);
+         //         addLinkedPosition(rewrite.track(param.getName()), false, argNameKey);
       }
    }
 
@@ -310,11 +310,11 @@ public class NewMethodCorrectionProposal extends AbstractMethodCorrectionProposa
       }
       if (binding != null)
       {
-//         ITypeBinding[] typeProposals = ASTResolving.getRelaxingTypes(ast, binding);
-//         for (int i = 0; i < typeProposals.length; i++)
-//         {
-//            addLinkedPositionProposal(key, typeProposals[i]);
-//         }
+         //         ITypeBinding[] typeProposals = ASTResolving.getRelaxingTypes(ast, binding);
+         //         for (int i = 0; i < typeProposals.length; i++)
+         //         {
+         //            addLinkedPositionProposal(key, typeProposals[i]);
+         //         }
          return getImportRewrite().addImport(binding, ast, context);
       }
       return ast.newSimpleType(ast.newSimpleName("Object")); //$NON-NLS-1$
@@ -322,13 +322,13 @@ public class NewMethodCorrectionProposal extends AbstractMethodCorrectionProposa
 
    private String evaluateParameterName(List<String> takenNames, Expression argNode, Type type, String key)
    {
-//      IJavaProject project = getCompilationUnit().getJavaProject();
+      //      IJavaProject project = getCompilationUnit().getJavaProject();
       String[] names =
          StubUtility.getVariableNameSuggestions(NamingConventions.VK_PARAMETER, type, argNode, takenNames);
-//      for (int i = 0; i < names.length; i++)
-//      {
-//         addLinkedPositionProposal(key, names[i], null);
-//      }
+      //      for (int i = 0; i < names.length; i++)
+      //      {
+      //         addLinkedPositionProposal(key, names[i], null);
+      //      }
       String favourite = names[0];
       takenNames.add(favourite);
       return favourite;

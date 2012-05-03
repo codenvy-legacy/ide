@@ -71,34 +71,33 @@ public class UnusedCodeCleanUp extends AbstractMultiFix
    {
       boolean removeUnuseMembers = isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_MEMBERS);
 
-      return UnusedCodeFix
-         .createCleanUp(compilationUnit, removeUnuseMembers
-            && isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_METHODS), removeUnuseMembers
-            && isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_CONSTRUCTORS), removeUnuseMembers
-            && isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_FELDS), removeUnuseMembers
-            && isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_TYPES),
-            isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_LOCAL_VARIABLES),
-            isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_IMPORTS) && !isEnabled(CleanUpConstants.ORGANIZE_IMPORTS),
-            false, document);
+      return UnusedCodeFix.createCleanUp(compilationUnit, removeUnuseMembers
+         && isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_METHODS), removeUnuseMembers
+         && isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_CONSTRUCTORS), removeUnuseMembers
+         && isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_FELDS), removeUnuseMembers
+         && isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_TYPES),
+         isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_LOCAL_VARIABLES),
+         isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_IMPORTS) && !isEnabled(CleanUpConstants.ORGANIZE_IMPORTS),
+         false, document);
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   protected ICleanUpFix createFix(CompilationUnit compilationUnit, IDocument document, IProblemLocation[] problems) throws CoreException
+   protected ICleanUpFix createFix(CompilationUnit compilationUnit, IDocument document, IProblemLocation[] problems)
+      throws CoreException
    {
       boolean removeMembers = isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_MEMBERS);
 
-      return UnusedCodeFix
-         .createCleanUp(compilationUnit, problems, removeMembers
-            && isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_METHODS), removeMembers
-            && isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_CONSTRUCTORS), removeMembers
-            && isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_FELDS), removeMembers
-            && isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_TYPES),
-            isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_LOCAL_VARIABLES),
-            isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_IMPORTS) && !isEnabled(CleanUpConstants.ORGANIZE_IMPORTS),
-            false, document);
+      return UnusedCodeFix.createCleanUp(compilationUnit, problems, removeMembers
+         && isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_METHODS), removeMembers
+         && isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_CONSTRUCTORS), removeMembers
+         && isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_FELDS), removeMembers
+         && isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_TYPES),
+         isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_LOCAL_VARIABLES),
+         isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_IMPORTS) && !isEnabled(CleanUpConstants.ORGANIZE_IMPORTS),
+         false, document);
    }
 
    public Map<String, String> getRequiredOptions()

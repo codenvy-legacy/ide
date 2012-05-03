@@ -10014,8 +10014,8 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    {
       this.scanner =
          new Scanner(false /* comment */, false /* whitespace */, false, /*
-                                                                            * will be set in initialize ( boolean )
-                                                                            */
+                                                                              * will be set in initialize ( boolean )
+                                                                              */
          this.options.sourceLevel /* sourceLevel */, this.options.complianceLevel /* complianceLevel */,
             this.options.taskTags/* taskTags */, this.options.taskPriorities/* taskPriorities */,
             this.options.isTaskCaseSensitive/* taskCaseSensitive */);

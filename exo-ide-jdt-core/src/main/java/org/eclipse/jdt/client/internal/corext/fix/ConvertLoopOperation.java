@@ -69,8 +69,7 @@ public abstract class ConvertLoopOperation extends CompilationUnitRewriteOperati
       return fStatement;
    }
 
-   protected Statement getBody(CompilationUnitRewrite cuRewrite, TextEditGroup group)
-      throws CoreException
+   protected Statement getBody(CompilationUnitRewrite cuRewrite, TextEditGroup group) throws CoreException
    {
       if (fOperation != null)
       {

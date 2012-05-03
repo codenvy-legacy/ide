@@ -38,14 +38,14 @@ import java.util.List;
 public class MissingReturnTypeCorrectionProposal extends LinkedCorrectionProposal
 {
 
-//   private static final String RETURN_EXPRESSION_KEY = "value"; //$NON-NLS-1$
+   //   private static final String RETURN_EXPRESSION_KEY = "value"; //$NON-NLS-1$
 
    private MethodDeclaration fMethodDecl;
 
    private ReturnStatement fExistingReturn;
 
-   public MissingReturnTypeCorrectionProposal(MethodDeclaration decl,
-      ReturnStatement existingReturn, int relevance, IDocument document)
+   public MissingReturnTypeCorrectionProposal(MethodDeclaration decl, ReturnStatement existingReturn, int relevance,
+      IDocument document)
    {
       super("", null, relevance, document, new Image(JdtClientBundle.INSTANCE.correction_change())); //$NON-NLS-1$
       fMethodDecl = decl;
@@ -84,7 +84,7 @@ public class MissingReturnTypeCorrectionProposal extends LinkedCorrectionProposa
          {
             rewrite.set(fExistingReturn, ReturnStatement.EXPRESSION_PROPERTY, expression, null);
 
-//            addLinkedPosition(rewrite.track(expression), true, RETURN_EXPRESSION_KEY);
+            //            addLinkedPosition(rewrite.track(expression), true, RETURN_EXPRESSION_KEY);
          }
          return rewrite;
       }
@@ -135,7 +135,7 @@ public class MissingReturnTypeCorrectionProposal extends LinkedCorrectionProposa
 
          rewrite.getListRewrite(block, Block.STATEMENTS_PROPERTY).insertLast(returnStatement, null);
 
-//         addLinkedPosition(rewrite.track(returnStatement.getExpression()), true, RETURN_EXPRESSION_KEY);
+         //         addLinkedPosition(rewrite.track(returnStatement.getExpression()), true, RETURN_EXPRESSION_KEY);
          return rewrite;
       }
    }
@@ -173,13 +173,13 @@ public class MissingReturnTypeCorrectionProposal extends LinkedCorrectionProposa
                {
                   result = ast.newSimpleName(curr.getName());
                }
-//               addLinkedPositionProposal(RETURN_EXPRESSION_KEY, curr.getName(), null);
+               //               addLinkedPositionProposal(RETURN_EXPRESSION_KEY, curr.getName(), null);
             }
          }
       }
       Expression defaultExpression =
          ASTNodeFactory.newDefaultExpression(ast, fMethodDecl.getReturnType2(), fMethodDecl.getExtraDimensions());
-//      addLinkedPositionProposal(RETURN_EXPRESSION_KEY, ASTNodes.asString(defaultExpression), null);
+      //      addLinkedPositionProposal(RETURN_EXPRESSION_KEY, ASTNodes.asString(defaultExpression), null);
       if (result == null)
       {
          return defaultExpression;

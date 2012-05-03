@@ -33,10 +33,10 @@ public class TypeRules
    public static boolean canAssign(ITypeBinding typeToAssign, ITypeBinding definedType)
    {
       //TODO
-//      TypeEnvironment typeEnvironment = new TypeEnvironment(false, true);
-//      TType defined = typeEnvironment.create(definedType);
-//      TType toAssign = typeEnvironment.create(typeToAssign);
-//      return toAssign.canAssignTo(defined);
+      //      TypeEnvironment typeEnvironment = new TypeEnvironment(false, true);
+      //      TType defined = typeEnvironment.create(definedType);
+      //      TType toAssign = typeEnvironment.create(typeToAssign);
+      //      return toAssign.canAssignTo(defined);
       return false;
    }
 

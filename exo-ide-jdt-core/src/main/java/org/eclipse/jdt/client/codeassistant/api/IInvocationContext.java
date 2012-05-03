@@ -32,7 +32,7 @@ public interface IInvocationContext
    //	 * @return Returns the current compilation unit.
    //	 */
    //	ICompilationUnit getCompilationUnit();
-   
+
    IDocument getDocument();
 
    /**

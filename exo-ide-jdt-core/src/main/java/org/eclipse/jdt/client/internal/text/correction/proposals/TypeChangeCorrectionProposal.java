@@ -94,21 +94,25 @@ public class TypeChangeCorrectionProposal extends LinkedCorrectionProposal
          IVariableBinding varBinding = (IVariableBinding)binding;
          if (varBinding.isField())
          {
-            setDisplayName(CorrectionMessages.INSTANCE.TypeChangeCompletionProposal_field_name(varBinding.getName(), typeName));
+            setDisplayName(CorrectionMessages.INSTANCE.TypeChangeCompletionProposal_field_name(varBinding.getName(),
+               typeName));
          }
          else if (astRoot.findDeclaringNode(binding) instanceof SingleVariableDeclaration)
          {
-            setDisplayName(CorrectionMessages.INSTANCE.TypeChangeCompletionProposal_param_name(varBinding.getName(), typeName));
+            setDisplayName(CorrectionMessages.INSTANCE.TypeChangeCompletionProposal_param_name(varBinding.getName(),
+               typeName));
          }
          else
          {
-            setDisplayName(CorrectionMessages.INSTANCE.TypeChangeCompletionProposal_variable_name(varBinding.getName(), typeName));
+            setDisplayName(CorrectionMessages.INSTANCE.TypeChangeCompletionProposal_variable_name(varBinding.getName(),
+               typeName));
          }
       }
       else
       {
          String[] args = {binding.getName(), typeName};
-         setDisplayName(CorrectionMessages.INSTANCE.TypeChangeCompletionProposal_method_name(binding.getName(), typeName));
+         setDisplayName(CorrectionMessages.INSTANCE.TypeChangeCompletionProposal_method_name(binding.getName(),
+            typeName));
       }
    }
 
@@ -156,7 +160,7 @@ public class TypeChangeCorrectionProposal extends LinkedCorrectionProposal
                   returnTag.setTagName(TagElement.TAG_RETURN);
                   TextElement commentStart = ast.newTextElement();
                   returnTag.fragments().add(commentStart);
-//                  addLinkedPosition(rewrite.track(commentStart), false, "comment_start"); //$NON-NLS-1$
+                  //                  addLinkedPosition(rewrite.track(commentStart), false, "comment_start"); //$NON-NLS-1$
 
                   ListRewrite tagsRewriter = rewrite.getListRewrite(javadoc, Javadoc.TAGS_PROPERTY);
                   JavadocTagsSubProcessor.insertTag(tagsRewriter, returnTag, null);
@@ -241,15 +245,15 @@ public class TypeChangeCorrectionProposal extends LinkedCorrectionProposal
          }
 
          // set up linked mode
-//         final String KEY_TYPE = "type"; //$NON-NLS-1$
-//         addLinkedPosition(rewrite.track(type), true, KEY_TYPE);
-//         if (fTypeProposals != null)
-//         {
-//            for (int i = 0; i < fTypeProposals.length; i++)
-//            {
-//               addLinkedPositionProposal(KEY_TYPE, fTypeProposals[i]);
-//            }
-//         }
+         //         final String KEY_TYPE = "type"; //$NON-NLS-1$
+         //         addLinkedPosition(rewrite.track(type), true, KEY_TYPE);
+         //         if (fTypeProposals != null)
+         //         {
+         //            for (int i = 0; i < fTypeProposals.length; i++)
+         //            {
+         //               addLinkedPositionProposal(KEY_TYPE, fTypeProposals[i]);
+         //            }
+         //         }
          return rewrite;
       }
       return null;

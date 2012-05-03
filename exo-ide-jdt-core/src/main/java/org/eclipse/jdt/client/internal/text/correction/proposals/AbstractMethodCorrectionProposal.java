@@ -190,13 +190,11 @@ public abstract class AbstractMethodCorrectionProposal extends LinkedCorrectionP
       }
       decl.setBody(body);
 
-      CodeGenerationSettings settings =
-         JavaPreferencesSettings.getCodeGenerationSettings();
+      CodeGenerationSettings settings = JavaPreferencesSettings.getCodeGenerationSettings();
       if (settings.createComments && !fSenderBinding.isAnonymous())
       {
-         String string = getMethodComment(fSenderBinding.getName(), decl, null,
-            String.valueOf('\n'));
-         
+         String string = getMethodComment(fSenderBinding.getName(), decl, null, String.valueOf('\n'));
+
          if (string != null)
          {
             Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);

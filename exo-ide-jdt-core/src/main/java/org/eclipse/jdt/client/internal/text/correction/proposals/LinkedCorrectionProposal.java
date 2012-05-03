@@ -52,15 +52,20 @@ public class LinkedCorrectionProposal extends ASTRewriteCorrectionProposal
     * @param valueOf
     * @return
     */
-   public static String getMethodComment(String declaringTypeName, MethodDeclaration decl, IMethodBinding overridden, String lineDelimiter) throws CoreException
+   public static String getMethodComment(String declaringTypeName, MethodDeclaration decl, IMethodBinding overridden,
+      String lineDelimiter) throws CoreException
    {
-      if (overridden != null) {
-         overridden= overridden.getMethodDeclaration();
-         String declaringClassQualifiedName= overridden.getDeclaringClass().getQualifiedName();
-         String linkToMethodName= overridden.getName();
-         String[] parameterTypesQualifiedNames= StubUtility.getParameterTypeNamesForSeeTag(overridden);
-         return StubUtility.getMethodComment(declaringTypeName, decl, overridden.isDeprecated(), linkToMethodName, declaringClassQualifiedName, parameterTypesQualifiedNames, false, lineDelimiter);
-      } else {
+      if (overridden != null)
+      {
+         overridden = overridden.getMethodDeclaration();
+         String declaringClassQualifiedName = overridden.getDeclaringClass().getQualifiedName();
+         String linkToMethodName = overridden.getName();
+         String[] parameterTypesQualifiedNames = StubUtility.getParameterTypeNamesForSeeTag(overridden);
+         return StubUtility.getMethodComment(declaringTypeName, decl, overridden.isDeprecated(), linkToMethodName,
+            declaringClassQualifiedName, parameterTypesQualifiedNames, false, lineDelimiter);
+      }
+      else
+      {
          return StubUtility.getMethodComment(declaringTypeName, decl, false, null, null, null, false, lineDelimiter);
       }
    }

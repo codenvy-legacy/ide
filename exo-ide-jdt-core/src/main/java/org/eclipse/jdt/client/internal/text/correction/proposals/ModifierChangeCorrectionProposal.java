@@ -102,8 +102,8 @@ public class ModifierChangeCorrectionProposal extends LinkedCorrectionProposal
             }
             declNode = parent;
          }
-//         ModifierRewrite listRewrite = ModifierRewrite.create(rewrite, declNode);
-//         PositionInformation trackedDeclNode = listRewrite.setModifiers(fIncludedModifiers, fExcludedModifiers, null);
+         //         ModifierRewrite listRewrite = ModifierRewrite.create(rewrite, declNode);
+         //         PositionInformation trackedDeclNode = listRewrite.setModifiers(fIncludedModifiers, fExcludedModifiers, null);
 
          //			LinkedProposalPositionGroup positionGroup= new LinkedProposalPositionGroup("group"); //$NON-NLS-1$
          //			positionGroup.addPosition(trackedDeclNode);

@@ -77,27 +77,27 @@ public class TokenScanner
       fEndPosition = fScanner.getSource().length - 1;
    }
 
-//   /**
-//    * Creates a TokenScanner
-//    * @param typeRoot The type root to scan on
-//    * @throws CoreException thrown if the buffer cannot be accessed
-//    */
-//   public TokenScanner(ITypeRoot typeRoot) throws CoreException
-//   {
-//      IJavaProject project = typeRoot.getJavaProject();
-//      IBuffer buffer = typeRoot.getBuffer();
-//      if (buffer == null)
-//      {
-//         throw new CoreException(createError(DOCUMENT_ERROR, "Element has no source", null)); //$NON-NLS-1$
-//      }
-//      String sourceLevel = project.getOption(JavaCore.COMPILER_SOURCE, true);
-//      String complianceLevel = project.getOption(JavaCore.COMPILER_COMPLIANCE, true);
-//      fScanner = ToolFactory.createScanner(true, false, true, sourceLevel, complianceLevel); // line info required
-//
-//      fScanner.setSource(buffer.getCharacters());
-//      fDocument = null; // use scanner for line information
-//      fEndPosition = fScanner.getSource().length - 1;
-//   }
+   //   /**
+   //    * Creates a TokenScanner
+   //    * @param typeRoot The type root to scan on
+   //    * @throws CoreException thrown if the buffer cannot be accessed
+   //    */
+   //   public TokenScanner(ITypeRoot typeRoot) throws CoreException
+   //   {
+   //      IJavaProject project = typeRoot.getJavaProject();
+   //      IBuffer buffer = typeRoot.getBuffer();
+   //      if (buffer == null)
+   //      {
+   //         throw new CoreException(createError(DOCUMENT_ERROR, "Element has no source", null)); //$NON-NLS-1$
+   //      }
+   //      String sourceLevel = project.getOption(JavaCore.COMPILER_SOURCE, true);
+   //      String complianceLevel = project.getOption(JavaCore.COMPILER_COMPLIANCE, true);
+   //      fScanner = ToolFactory.createScanner(true, false, true, sourceLevel, complianceLevel); // line info required
+   //
+   //      fScanner.setSource(buffer.getCharacters());
+   //      fDocument = null; // use scanner for line information
+   //      fEndPosition = fScanner.getSource().length - 1;
+   //   }
 
    /**
     * Returns the wrapped scanner

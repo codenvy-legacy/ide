@@ -38,13 +38,13 @@ public abstract class AbstractFix implements IProposableFix
       return fDisplayString;
    }
 
-//   /**
-//    * {@inheritDoc}
-//    */
-//   public LinkedProposalModel getLinkedPositions()
-//   {
-//      return null;
-//   }
+   //   /**
+   //    * {@inheritDoc}
+   //    */
+   //   public LinkedProposalModel getLinkedPositions()
+   //   {
+   //      return null;
+   //   }
 
    /**
     * {@inheritDoc}

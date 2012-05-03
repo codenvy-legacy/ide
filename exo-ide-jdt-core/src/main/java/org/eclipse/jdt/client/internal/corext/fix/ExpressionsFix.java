@@ -207,7 +207,8 @@ public class ExpressionsFix extends CompilationUnitRewriteOperationsFix
          compilationUnit, new CompilationUnitRewriteOperation[]{op}, document);
    }
 
-   public static ExpressionsFix createRemoveUnnecessaryParenthesisFix(CompilationUnit compilationUnit, ASTNode[] nodes, IDocument document)
+   public static ExpressionsFix createRemoveUnnecessaryParenthesisFix(CompilationUnit compilationUnit, ASTNode[] nodes,
+      IDocument document)
    {
       // check sub-expressions in fully covered nodes
       final ArrayList<ParenthesizedExpression> changedNodes = new ArrayList<ParenthesizedExpression>();

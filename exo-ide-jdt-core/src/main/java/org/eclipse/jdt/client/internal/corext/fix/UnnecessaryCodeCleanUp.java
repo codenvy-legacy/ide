@@ -63,7 +63,8 @@ public class UnnecessaryCodeCleanUp extends AbstractMultiFix
     * {@inheritDoc}
     */
    @Override
-   protected ICleanUpFix createFix(CompilationUnit compilationUnit,IDocument document, IProblemLocation[] problems) throws CoreException
+   protected ICleanUpFix createFix(CompilationUnit compilationUnit, IDocument document, IProblemLocation[] problems)
+      throws CoreException
    {
       return UnusedCodeFix.createCleanUp(compilationUnit, problems, false, false, false, false, false, false,
          isEnabled(CleanUpConstants.REMOVE_UNNECESSARY_CASTS), document);

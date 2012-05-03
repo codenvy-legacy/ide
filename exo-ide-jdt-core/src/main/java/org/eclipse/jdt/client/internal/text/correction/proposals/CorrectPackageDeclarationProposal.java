@@ -46,29 +46,29 @@ public class CorrectPackageDeclarationProposal extends CUCorrectionProposal
    {
       super.addEdits(doc, root);
 
-//      ICompilationUnit cu = getCompilationUnit();
-//TODO
-//      IPackageFragment parentPack = (IPackageFragment)cu.getParent();
-//      IPackageDeclaration[] decls = cu.getPackageDeclarations();
-//
-//      if (parentPack.isDefaultPackage() && decls.length > 0)
-//      {
-//         for (int i = 0; i < decls.length; i++)
-//         {
-//            ISourceRange range = decls[i].getSourceRange();
-//            root.addChild(new DeleteEdit(range.getOffset(), range.getLength()));
-//         }
-//         return;
-//      }
-//      if (!parentPack.isDefaultPackage() && decls.length == 0)
-//      {
-//         String lineDelim = StubUtility.getLineDelimiterUsed(cu);
-//         String str = "package " + parentPack.getElementName() + ';' + lineDelim + lineDelim; //$NON-NLS-1$
-//         root.addChild(new InsertEdit(0, str));
-//         return;
-//      }
-//
-//      root.addChild(new ReplaceEdit(fLocation.getOffset(), fLocation.getLength(), parentPack.getElementName()));
+      //      ICompilationUnit cu = getCompilationUnit();
+      //TODO
+      //      IPackageFragment parentPack = (IPackageFragment)cu.getParent();
+      //      IPackageDeclaration[] decls = cu.getPackageDeclarations();
+      //
+      //      if (parentPack.isDefaultPackage() && decls.length > 0)
+      //      {
+      //         for (int i = 0; i < decls.length; i++)
+      //         {
+      //            ISourceRange range = decls[i].getSourceRange();
+      //            root.addChild(new DeleteEdit(range.getOffset(), range.getLength()));
+      //         }
+      //         return;
+      //      }
+      //      if (!parentPack.isDefaultPackage() && decls.length == 0)
+      //      {
+      //         String lineDelim = StubUtility.getLineDelimiterUsed(cu);
+      //         String str = "package " + parentPack.getElementName() + ';' + lineDelim + lineDelim; //$NON-NLS-1$
+      //         root.addChild(new InsertEdit(0, str));
+      //         return;
+      //      }
+      //
+      //      root.addChild(new ReplaceEdit(fLocation.getOffset(), fLocation.getLength(), parentPack.getElementName()));
    }
 
    /* (non-Javadoc)
@@ -78,28 +78,28 @@ public class CorrectPackageDeclarationProposal extends CUCorrectionProposal
    public String getName()
    {
       //TODO
-//      ICompilationUnit cu = getCompilationUnit();
-//      IPackageFragment parentPack = (IPackageFragment)cu.getParent();
-//      try
-//      {
-//         IPackageDeclaration[] decls = cu.getPackageDeclarations();
-//         if (parentPack.isDefaultPackage() && decls.length > 0)
-//         {
-//            return Messages.format(CorrectionMessages.CorrectPackageDeclarationProposal_remove_description,
-//               BasicElementLabels.getJavaElementName(decls[0].getElementName()));
-//         }
-//         if (!parentPack.isDefaultPackage() && decls.length == 0)
-//         {
-//            return (Messages.format(CorrectionMessages.CorrectPackageDeclarationProposal_add_description,
-//               JavaElementLabels.getElementLabel(parentPack, JavaElementLabels.ALL_DEFAULT)));
-//         }
-//      }
-//      catch (JavaModelException e)
-//      {
-//         JavaPlugin.log(e);
-//      }
-//      return (Messages.format(CorrectionMessages.CorrectPackageDeclarationProposal_change_description,
-//         JavaElementLabels.getElementLabel(parentPack, JavaElementLabels.ALL_DEFAULT)));
-      return "fix me in " +  getClass().getSimpleName();
+      //      ICompilationUnit cu = getCompilationUnit();
+      //      IPackageFragment parentPack = (IPackageFragment)cu.getParent();
+      //      try
+      //      {
+      //         IPackageDeclaration[] decls = cu.getPackageDeclarations();
+      //         if (parentPack.isDefaultPackage() && decls.length > 0)
+      //         {
+      //            return Messages.format(CorrectionMessages.CorrectPackageDeclarationProposal_remove_description,
+      //               BasicElementLabels.getJavaElementName(decls[0].getElementName()));
+      //         }
+      //         if (!parentPack.isDefaultPackage() && decls.length == 0)
+      //         {
+      //            return (Messages.format(CorrectionMessages.CorrectPackageDeclarationProposal_add_description,
+      //               JavaElementLabels.getElementLabel(parentPack, JavaElementLabels.ALL_DEFAULT)));
+      //         }
+      //      }
+      //      catch (JavaModelException e)
+      //      {
+      //         JavaPlugin.log(e);
+      //      }
+      //      return (Messages.format(CorrectionMessages.CorrectPackageDeclarationProposal_change_description,
+      //         JavaElementLabels.getElementLabel(parentPack, JavaElementLabels.ALL_DEFAULT)));
+      return "fix me in " + getClass().getSimpleName();
    }
 }

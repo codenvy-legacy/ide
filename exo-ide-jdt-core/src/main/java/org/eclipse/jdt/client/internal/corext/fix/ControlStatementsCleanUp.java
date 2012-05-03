@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
 public class ControlStatementsCleanUp extends AbstractCleanUp
 {
 
@@ -81,13 +80,15 @@ public class ControlStatementsCleanUp extends AbstractCleanUp
       List<String> result = new ArrayList<String>();
       if (isEnabled(CleanUpConstants.CONTROL_STATEMENTS_USE_BLOCKS)
          && isEnabled(CleanUpConstants.CONTROL_STATMENTS_USE_BLOCKS_ALWAYS))
-         result.add(MultiFixMessages.INSTANCE.CodeStyleMultiFix_ConvertSingleStatementInControlBodeyToBlock_description());
+         result.add(MultiFixMessages.INSTANCE
+            .CodeStyleMultiFix_ConvertSingleStatementInControlBodeyToBlock_description());
       if (isEnabled(CleanUpConstants.CONTROL_STATEMENTS_USE_BLOCKS)
          && isEnabled(CleanUpConstants.CONTROL_STATMENTS_USE_BLOCKS_NEVER))
          result.add(MultiFixMessages.INSTANCE.ControlStatementsCleanUp_RemoveUnnecessaryBlocks_description());
       if (isEnabled(CleanUpConstants.CONTROL_STATEMENTS_USE_BLOCKS)
          && isEnabled(CleanUpConstants.CONTROL_STATMENTS_USE_BLOCKS_NO_FOR_RETURN_AND_THROW))
-         result.add(MultiFixMessages.INSTANCE.ControlStatementsCleanUp_RemoveUnnecessaryBlocksWithReturnOrThrow_description());
+         result.add(MultiFixMessages.INSTANCE
+            .ControlStatementsCleanUp_RemoveUnnecessaryBlocksWithReturnOrThrow_description());
 
       return result.toArray(new String[result.size()]);
    }

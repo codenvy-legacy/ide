@@ -21,12 +21,14 @@ package org.eclipse.jdt.client.ltk.refactoring;
  *
  * @since 3.2
  */
-public abstract class ChangeDescriptor {
+public abstract class ChangeDescriptor
+{
 
-	/**
-	 * Creates a new change descriptor.
-	 */
-	protected ChangeDescriptor() {
-		// Do nothing
-	}
+   /**
+    * Creates a new change descriptor.
+    */
+   protected ChangeDescriptor()
+   {
+      // Do nothing
+   }
 }

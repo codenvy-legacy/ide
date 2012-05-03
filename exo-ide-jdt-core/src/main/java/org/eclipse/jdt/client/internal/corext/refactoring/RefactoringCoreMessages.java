@@ -149,6 +149,6 @@ public interface RefactoringCoreMessages extends Messages
    /**
     * @return
     */
-   String ASTData_update_imports(); 
+   String ASTData_update_imports();
 
 }

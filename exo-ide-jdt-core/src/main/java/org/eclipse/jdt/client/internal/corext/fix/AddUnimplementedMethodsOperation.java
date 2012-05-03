@@ -98,8 +98,8 @@ public class AddUnimplementedMethodsOperation extends CompilationUnitRewriteOper
                enumConstantDeclaration,
                EnumConstantDeclaration.ANONYMOUS_CLASS_DECLARATION_PROPERTY,
                anonymousClassDeclaration,
-               createTextEditGroup(CorrectionMessages.INSTANCE.AddUnimplementedMethodsOperation_AddMissingMethod_group(),
-                  cuRewrite));
+               createTextEditGroup(
+                  CorrectionMessages.INSTANCE.AddUnimplementedMethodsOperation_AddMissingMethod_group(), cuRewrite));
          }
          listRewrite =
             rewrite.getListRewrite(anonymousClassDeclaration, AnonymousClassDeclaration.BODY_DECLARATIONS_PROPERTY);
@@ -119,8 +119,10 @@ public class AddUnimplementedMethodsOperation extends CompilationUnitRewriteOper
          MethodDeclaration newMethodDecl =
             StubUtility2.createImplementationStub(rewrite, imports, context, curr, curr.getDeclaringClass().getName(),
                settings, false);
-         listRewrite.insertLast(newMethodDecl,
-            createTextEditGroup(CorrectionMessages.INSTANCE.AddUnimplementedMethodsOperation_AddMissingMethod_group(), cuRewrite));
+         listRewrite.insertLast(
+            newMethodDecl,
+            createTextEditGroup(CorrectionMessages.INSTANCE.AddUnimplementedMethodsOperation_AddMissingMethod_group(),
+               cuRewrite));
       }
    }
 
@@ -142,15 +144,15 @@ public class AddUnimplementedMethodsOperation extends CompilationUnitRewriteOper
       }
       else
       {
-         buf.append(CorrectionMessages.INSTANCE.UnimplementedMethodsCorrectionProposal_info_plural(
-            String.valueOf(methodsToOverride.length)));
+         buf.append(CorrectionMessages.INSTANCE.UnimplementedMethodsCorrectionProposal_info_plural(String
+            .valueOf(methodsToOverride.length)));
       }
       buf.append("</b><ul>"); //$NON-NLS-1$
       for (int i = 0; i < methodsToOverride.length; i++)
       {
          buf.append("<li>"); //$NON-NLS-1$
          //TODO
-//         buf.append(BindingLabelProvider.getBindingLabel(methodsToOverride[i], JavaElementLabels.ALL_FULLY_QUALIFIED));
+         //         buf.append(BindingLabelProvider.getBindingLabel(methodsToOverride[i], JavaElementLabels.ALL_FULLY_QUALIFIED));
          buf.append(methodsToOverride[0].getName());
          buf.append("</li>"); //$NON-NLS-1$
       }

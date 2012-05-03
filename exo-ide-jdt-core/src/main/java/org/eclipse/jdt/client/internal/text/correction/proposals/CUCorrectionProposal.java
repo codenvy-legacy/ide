@@ -51,7 +51,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal
 
    //   private LinkedProposalModel fLinkedProposalModel;
 
-//   private boolean fSwitchedEditor;
+   //   private boolean fSwitchedEditor;
 
    protected final IDocument document;
 

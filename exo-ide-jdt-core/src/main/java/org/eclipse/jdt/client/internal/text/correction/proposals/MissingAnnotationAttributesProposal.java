@@ -120,8 +120,8 @@ public class MissingAnnotationAttributesProposal extends LinkedCorrectionProposa
             pair.setValue(newDefaultExpression(ast, curr.getReturnType(), context));
             listRewriter.insertLast(pair, null);
 
-//            addLinkedPosition(rewriter.track(pair.getName()), false, "val_name_" + i); //$NON-NLS-1$
-//            addLinkedPosition(rewriter.track(pair.getValue()), false, "val_type_" + i); //$NON-NLS-1$
+            //            addLinkedPosition(rewriter.track(pair.getName()), false, "val_name_" + i); //$NON-NLS-1$
+            //            addLinkedPosition(rewriter.track(pair.getValue()), false, "val_type_" + i); //$NON-NLS-1$
          }
       }
    }

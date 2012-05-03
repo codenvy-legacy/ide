@@ -17,7 +17,6 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
-
 /**
  * Allows to set and retrieve clean up settings for given options keys.
  * 

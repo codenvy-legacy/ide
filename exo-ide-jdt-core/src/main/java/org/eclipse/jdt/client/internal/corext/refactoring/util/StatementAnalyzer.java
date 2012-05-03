@@ -283,11 +283,11 @@ public class StatementAnalyzer extends SelectionAnalyzer
       reset();
    }
 
-//   protected void invalidSelection(String message, RefactoringStatusContext context)
-//   {
-//      fStatus.addFatalError(message, context);
-//      reset();
-//   }
+   //   protected void invalidSelection(String message, RefactoringStatusContext context)
+   //   {
+   //      fStatus.addFatalError(message, context);
+   //      reset();
+   //   }
 
    private static List<SwitchCase> getSwitchCases(SwitchStatement node)
    {

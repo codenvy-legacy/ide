@@ -36,19 +36,19 @@ public interface IQuickAssistInvocationContext
     * @return the length of the current selection or <code>-1</code> if none or unknown
     */
    int getLength();
-   
+
    /**
     * Return the document where quick assist was invoked
     * @return the document
     */
    IDocument getDocument();
-   
+
    /**
     * Return the problems at cursor
     * @return
     */
    IProblemLocation[] getProblemsAtOffset();
-   
+
    boolean isUpdatedOffset();
 
    //	/**

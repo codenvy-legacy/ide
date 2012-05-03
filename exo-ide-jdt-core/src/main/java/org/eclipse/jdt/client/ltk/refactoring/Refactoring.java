@@ -15,7 +15,6 @@ import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
 import org.eclipse.jdt.client.runtime.OperationCanceledException;
 
-
 /**
  * Abstract super class for all refactorings. Refactorings are used to perform
  * behavior-preserving workspace transformations. A refactoring offers two
@@ -63,193 +62,204 @@ import org.eclipse.jdt.client.runtime.OperationCanceledException;
  *
  * @since 3.0
  */
-public abstract class Refactoring {
+public abstract class Refactoring
+{
 
-	private Object fValidationContext;
+   private Object fValidationContext;
 
-	/**
-	 * Sets the validation context used when calling
-	 * {@link org.eclipse.core.resources.IWorkspace#validateEdit(org.eclipse.core.resources.IFile[], java.lang.Object)}.
-	 *
-	 * @param context the <code>org.eclipse.swt.widgets.Shell</code> that is
-	 * to be used to parent any dialogs with the user, or <code>null</code> if
-	 * there is no UI context (declared as an <code>Object</code> to avoid any
-	 * direct references on the SWT component)
-	 */
-	public final void setValidationContext(Object context) {
-		fValidationContext= context;
-	}
+   /**
+    * Sets the validation context used when calling
+    * {@link org.eclipse.core.resources.IWorkspace#validateEdit(org.eclipse.core.resources.IFile[], java.lang.Object)}.
+    *
+    * @param context the <code>org.eclipse.swt.widgets.Shell</code> that is
+    * to be used to parent any dialogs with the user, or <code>null</code> if
+    * there is no UI context (declared as an <code>Object</code> to avoid any
+    * direct references on the SWT component)
+    */
+   public final void setValidationContext(Object context)
+   {
+      fValidationContext = context;
+   }
 
-	/**
-	 * Returns the validation context
-	 *
-	 * @return the validation context or <code>null</code> if no validation
-	 *  context has been set.
-	 */
-	public final Object getValidationContext() {
-		return fValidationContext;
-	}
+   /**
+    * Returns the validation context
+    *
+    * @return the validation context or <code>null</code> if no validation
+    *  context has been set.
+    */
+   public final Object getValidationContext()
+   {
+      return fValidationContext;
+   }
 
-	/**
-	 * Returns the refactoring's name.
-	 *
-	 * @return the refactoring's human readable name. Must not be
-	 *  <code>null</code>
-	 */
-	public abstract String getName();
+   /**
+    * Returns the refactoring's name.
+    *
+    * @return the refactoring's human readable name. Must not be
+    *  <code>null</code>
+    */
+   public abstract String getName();
 
-	//---- Conditions ------------------------------------------------------------
+   //---- Conditions ------------------------------------------------------------
 
-	/**
-	 * Returns the tick provider used for progress reporting for this
-	 * refactoring.
-	 *
-	 * @return the refactoring tick provider used for progress reporting
-	 *
-	 * @since 3.2
-	 */
-	public final RefactoringTickProvider getRefactoringTickProvider() {
-		RefactoringTickProvider result= doGetRefactoringTickProvider();
-		if (result == null) {
-			result= RefactoringTickProvider.DEFAULT;
-		}
-		return result;
-	}
+   /**
+    * Returns the tick provider used for progress reporting for this
+    * refactoring.
+    *
+    * @return the refactoring tick provider used for progress reporting
+    *
+    * @since 3.2
+    */
+   public final RefactoringTickProvider getRefactoringTickProvider()
+   {
+      RefactoringTickProvider result = doGetRefactoringTickProvider();
+      if (result == null)
+      {
+         result = RefactoringTickProvider.DEFAULT;
+      }
+      return result;
+   }
 
-	/**
-	 * Hook method to provide the tick provider used for progress reporting.
-	 * <p>
-	 * Subclasses may override this method
-	 * </p>
-	 * @return the refactoring tick provider used for progress reporting
-	 *
-	 * @since 3.2
-	 */
-	protected RefactoringTickProvider doGetRefactoringTickProvider() {
-		return RefactoringTickProvider.DEFAULT;
-	}
+   /**
+    * Hook method to provide the tick provider used for progress reporting.
+    * <p>
+    * Subclasses may override this method
+    * </p>
+    * @return the refactoring tick provider used for progress reporting
+    *
+    * @since 3.2
+    */
+   protected RefactoringTickProvider doGetRefactoringTickProvider()
+   {
+      return RefactoringTickProvider.DEFAULT;
+   }
 
-	/**
-	 * Checks all conditions. This implementation calls <code>checkInitialConditions</code>
-	 * and <code>checkFinalConditions</code>.
-	 * <p>
-	 * Subclasses may extend this method to provide additional condition checks.
-	 * </p>
-	 *
-	 * @param pm a progress monitor to report progress
-	 *
-	 * @return a refactoring status. If the status is <code>RefactoringStatus#FATAL</code>
-	 *  the refactoring has to be considered as not being executable.
-	 *
-	 * @throws CoreException if an exception occurred during condition checking.
-	 *  If this happens then the condition checking has to be interpreted as failed
-	 *
-	 * @throws OperationCanceledException if the condition checking got canceled
-	 *
-	 * @see #checkInitialConditions(IProgressMonitor)
-	 * @see #checkFinalConditions(IProgressMonitor)
-	 */
-	public RefactoringStatus checkAllConditions(IProgressMonitor pm) throws CoreException, OperationCanceledException {
-		RefactoringTickProvider refactoringTickProvider= getRefactoringTickProvider();
-		pm.beginTask("", refactoringTickProvider.getCheckAllConditionsTicks()); //$NON-NLS-1$
-		RefactoringStatus result= new RefactoringStatus();
-		result.merge(checkInitialConditions(new NullProgressMonitor()));
-		if (!result.hasFatalError()) {
-			if (pm.isCanceled())
-				throw new OperationCanceledException();
-			result.merge(checkFinalConditions(new NullProgressMonitor()));
-		}
-		pm.done();
-		return result;
-	}
+   /**
+    * Checks all conditions. This implementation calls <code>checkInitialConditions</code>
+    * and <code>checkFinalConditions</code>.
+    * <p>
+    * Subclasses may extend this method to provide additional condition checks.
+    * </p>
+    *
+    * @param pm a progress monitor to report progress
+    *
+    * @return a refactoring status. If the status is <code>RefactoringStatus#FATAL</code>
+    *  the refactoring has to be considered as not being executable.
+    *
+    * @throws CoreException if an exception occurred during condition checking.
+    *  If this happens then the condition checking has to be interpreted as failed
+    *
+    * @throws OperationCanceledException if the condition checking got canceled
+    *
+    * @see #checkInitialConditions(IProgressMonitor)
+    * @see #checkFinalConditions(IProgressMonitor)
+    */
+   public RefactoringStatus checkAllConditions(IProgressMonitor pm) throws CoreException, OperationCanceledException
+   {
+      RefactoringTickProvider refactoringTickProvider = getRefactoringTickProvider();
+      pm.beginTask("", refactoringTickProvider.getCheckAllConditionsTicks()); //$NON-NLS-1$
+      RefactoringStatus result = new RefactoringStatus();
+      result.merge(checkInitialConditions(new NullProgressMonitor()));
+      if (!result.hasFatalError())
+      {
+         if (pm.isCanceled())
+            throw new OperationCanceledException();
+         result.merge(checkFinalConditions(new NullProgressMonitor()));
+      }
+      pm.done();
+      return result;
+   }
 
-	/**
-	 * Checks some initial conditions based on the element to be refactored. The
-	 * method is typically called by the UI to perform an initial checks after an
-	 * action has been executed.
-	 * <p>
-	 * The refactoring has to be considered as not being executable if the returned status
-	 * has the severity of <code>RefactoringStatus#FATAL</code>.
-	 * </p>
-	 * <p>
-	 * This method can be called more than once.
-	 * </p>
-	 *
-	 * @param pm a progress monitor to report progress. Although initial checks
-	 *  are supposed to execute fast, there can be certain situations where progress
-	 *  reporting is necessary. For example rebuilding a corrupted index may report
-	 *  progress.
-	 *
-	 * @return a refactoring status. If the status is <code>RefactoringStatus#FATAL</code>
-	 *  the refactoring has to be considered as not being executable.
-	 *
-	 * @throws CoreException if an exception occurred during initial condition checking.
-	 *  If this happens then the initial condition checking has to be interpreted as failed
-	 *
-	 * @throws OperationCanceledException if the condition checking got canceled
-	 *
-	 * @see #checkFinalConditions(IProgressMonitor)
-	 * @see RefactoringStatus#FATAL
-	 */
-	public abstract RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws CoreException, OperationCanceledException;
+   /**
+    * Checks some initial conditions based on the element to be refactored. The
+    * method is typically called by the UI to perform an initial checks after an
+    * action has been executed.
+    * <p>
+    * The refactoring has to be considered as not being executable if the returned status
+    * has the severity of <code>RefactoringStatus#FATAL</code>.
+    * </p>
+    * <p>
+    * This method can be called more than once.
+    * </p>
+    *
+    * @param pm a progress monitor to report progress. Although initial checks
+    *  are supposed to execute fast, there can be certain situations where progress
+    *  reporting is necessary. For example rebuilding a corrupted index may report
+    *  progress.
+    *
+    * @return a refactoring status. If the status is <code>RefactoringStatus#FATAL</code>
+    *  the refactoring has to be considered as not being executable.
+    *
+    * @throws CoreException if an exception occurred during initial condition checking.
+    *  If this happens then the initial condition checking has to be interpreted as failed
+    *
+    * @throws OperationCanceledException if the condition checking got canceled
+    *
+    * @see #checkFinalConditions(IProgressMonitor)
+    * @see RefactoringStatus#FATAL
+    */
+   public abstract RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws CoreException,
+      OperationCanceledException;
 
-	/**
-	 * After <code>checkInitialConditions</code> has been performed and the user has
-	 * provided all input necessary to perform the refactoring this method is called
-	 * to check the remaining preconditions.
-	 * <p>
-	 * The refactoring has to be considered as not being executable if the returned status
-	 * has the severity of <code>RefactoringStatus#FATAL</code>.
-	 * </p>
-	 * <p>
-	 * This method can be called more than once.
-	 * </p>
-	 *
-	 * @param pm a progress monitor to report progress
-	 *
-	 * @return a refactoring status. If the status is <code>RefactoringStatus#FATAL</code>
-	 *  the refactoring is considered as not being executable.
-	 *
-	 * @throws CoreException if an exception occurred during final condition checking
-	 *  If this happens then the final condition checking is interpreted as failed
-	 *
-	 * @throws OperationCanceledException if the condition checking got canceled
-	 *
-	 * @see #checkInitialConditions(IProgressMonitor)
-	 * @see RefactoringStatus#FATAL
-	 */
-	public abstract RefactoringStatus checkFinalConditions(IProgressMonitor pm) throws CoreException, OperationCanceledException;
+   /**
+    * After <code>checkInitialConditions</code> has been performed and the user has
+    * provided all input necessary to perform the refactoring this method is called
+    * to check the remaining preconditions.
+    * <p>
+    * The refactoring has to be considered as not being executable if the returned status
+    * has the severity of <code>RefactoringStatus#FATAL</code>.
+    * </p>
+    * <p>
+    * This method can be called more than once.
+    * </p>
+    *
+    * @param pm a progress monitor to report progress
+    *
+    * @return a refactoring status. If the status is <code>RefactoringStatus#FATAL</code>
+    *  the refactoring is considered as not being executable.
+    *
+    * @throws CoreException if an exception occurred during final condition checking
+    *  If this happens then the final condition checking is interpreted as failed
+    *
+    * @throws OperationCanceledException if the condition checking got canceled
+    *
+    * @see #checkInitialConditions(IProgressMonitor)
+    * @see RefactoringStatus#FATAL
+    */
+   public abstract RefactoringStatus checkFinalConditions(IProgressMonitor pm) throws CoreException,
+      OperationCanceledException;
 
-	//---- change creation ------------------------------------------------------
+   //---- change creation ------------------------------------------------------
 
-	/**
-	 * Creates a {@link Change} object that performs the actual workspace
-	 * transformation.
-	 *
-	 * @param pm a progress monitor to report progress
-	 *
-	 * @return the change representing the workspace modifications of the
-	 *  refactoring
-	 *
-	 * @throws CoreException if an error occurred while creating the change
-	 *
-	 * @throws OperationCanceledException if the condition checking got canceled
-	 */
-	public abstract Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException;
+   /**
+    * Creates a {@link Change} object that performs the actual workspace
+    * transformation.
+    *
+    * @param pm a progress monitor to report progress
+    *
+    * @return the change representing the workspace modifications of the
+    *  refactoring
+    *
+    * @throws CoreException if an error occurred while creating the change
+    *
+    * @throws OperationCanceledException if the condition checking got canceled
+    */
+   public abstract Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException;
 
-//	/**
-//	 * {@inheritDoc}
-//	 */
-//	public Object getAdapter(Class adapter) {
-//		if (adapter.isInstance(this))
-//			return this;
-//		return super.getAdapter(adapter);
-//	}
+   //	/**
+   //	 * {@inheritDoc}
+   //	 */
+   //	public Object getAdapter(Class adapter) {
+   //		if (adapter.isInstance(this))
+   //			return this;
+   //		return super.getAdapter(adapter);
+   //	}
 
-	/* (non-Javadoc)
-	 * for debugging only
-	 */
-	public String toString() {
-		return getName();
-	}
+   /* (non-Javadoc)
+    * for debugging only
+    */
+   public String toString()
+   {
+      return getName();
+   }
 }

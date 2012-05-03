@@ -277,7 +277,8 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
          Statement moveTarget = (Statement)rewrite.createMoveTarget(statement);
 
          TextEditGroup group =
-            createTextEditGroup(FixMessages.INSTANCE.ControlStatementsFix_removeBrackets_proposalDescription(), cuRewrite);
+            createTextEditGroup(FixMessages.INSTANCE.ControlStatementsFix_removeBrackets_proposalDescription(),
+               cuRewrite);
          rewrite.set(fStatement, fChild, moveTarget, group);
       }
 
@@ -440,7 +441,8 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
 
    }
 
-   public static ControlStatementsFix[] createRemoveBlockFix(CompilationUnit compilationUnit, ASTNode node, IDocument document)
+   public static ControlStatementsFix[] createRemoveBlockFix(CompilationUnit compilationUnit, ASTNode node,
+      IDocument document)
    {
       if (!(node instanceof Statement))
       {
@@ -477,8 +479,8 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
                RemoveBlockOperation op = new RemoveBlockOperation(item, IfStatement.THEN_STATEMENT_PROPERTY);
                removeAllList.add(op);
                if (item == statement)
-                  result.add(new ControlStatementsFix(
-                     FixMessages.INSTANCE.ControlStatementsFix_removeIfBlock_proposalDescription(), compilationUnit,
+                  result.add(new ControlStatementsFix(FixMessages.INSTANCE
+                     .ControlStatementsFix_removeIfBlock_proposalDescription(), compilationUnit,
                      new CompilationUnitRewriteOperation[]{op}, document));
             }
          }
@@ -488,8 +490,8 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
             RemoveBlockOperation op = new RemoveBlockOperation(item, IfStatement.ELSE_STATEMENT_PROPERTY);
             removeAllList.add(op);
             if (item == statement)
-               result.add(new ControlStatementsFix(
-                  FixMessages.INSTANCE.ControlStatementsFix_removeElseBlock_proposalDescription(), compilationUnit,
+               result.add(new ControlStatementsFix(FixMessages.INSTANCE
+                  .ControlStatementsFix_removeElseBlock_proposalDescription(), compilationUnit,
                   new CompilationUnitRewriteOperation[]{op}, document));
          }
 
@@ -497,8 +499,8 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
          {
             CompilationUnitRewriteOperation[] allConvert =
                removeAllList.toArray(new CompilationUnitRewriteOperation[removeAllList.size()]);
-            result.add(new ControlStatementsFix(FixMessages.INSTANCE.ControlStatementsFix_removeIfElseBlock_proposalDescription(),
-               compilationUnit, allConvert, document));
+            result.add(new ControlStatementsFix(FixMessages.INSTANCE
+               .ControlStatementsFix_removeIfElseBlock_proposalDescription(), compilationUnit, allConvert, document));
          }
 
          return result.toArray(new ControlStatementsFix[result.size()]);
@@ -565,7 +567,8 @@ public class ControlStatementsFix extends CompilationUnitRewriteOperationsFix
 
       CompilationUnitRewriteOperation[] ops =
          operations.toArray(new CompilationUnitRewriteOperation[operations.size()]);
-      return new ControlStatementsFix(FixMessages.INSTANCE.ControlStatementsFix_change_name(), compilationUnit, ops, document);
+      return new ControlStatementsFix(FixMessages.INSTANCE.ControlStatementsFix_change_name(), compilationUnit, ops,
+         document);
    }
 
    protected ControlStatementsFix(String name, CompilationUnit compilationUnit,

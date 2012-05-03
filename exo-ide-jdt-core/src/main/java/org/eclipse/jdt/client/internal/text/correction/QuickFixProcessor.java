@@ -586,8 +586,8 @@ public class QuickFixProcessor implements IQuickFixProcessor
          case IProblem.InvalidUsageOfAnnotations :
          case IProblem.InvalidUsageOfAnnotationDeclarations :
             //TODO;
-//            ReorgCorrectionsSubProcessor.getNeedHigherComplianceProposals(context, problem, proposals,
-//               JavaCore.VERSION_1_5);
+            //            ReorgCorrectionsSubProcessor.getNeedHigherComplianceProposals(context, problem, proposals,
+            //               JavaCore.VERSION_1_5);
             break;
          case IProblem.DiamondNotBelow17 :
             TypeArgumentMismatchSubProcessor.getInferDiamondArgumentsProposal(context, problem, proposals);
@@ -599,8 +599,8 @@ public class QuickFixProcessor implements IQuickFixProcessor
          case IProblem.UnderscoresInLiteralsNotBelow17 :
          case IProblem.SwitchOnStringsNotBelow17 :
             //TODO
-//            ReorgCorrectionsSubProcessor.getNeedHigherComplianceProposals(context, problem, proposals,
-//               JavaCore.VERSION_1_7);
+            //            ReorgCorrectionsSubProcessor.getNeedHigherComplianceProposals(context, problem, proposals,
+            //               JavaCore.VERSION_1_7);
             break;
          case IProblem.NonGenericType :
             TypeArgumentMismatchSubProcessor.removeMismatchedArguments(context, problem, proposals);
@@ -622,7 +622,7 @@ public class QuickFixProcessor implements IQuickFixProcessor
             ModifierCorrectionSubProcessor.addOverridingDeprecatedMethodProposal(context, problem, proposals);
             break;
          case IProblem.IsClassPathCorrect :
-//            ReorgCorrectionsSubProcessor.getIncorrectBuildPathProposals(context, problem, proposals);
+            //            ReorgCorrectionsSubProcessor.getIncorrectBuildPathProposals(context, problem, proposals);
             break;
          case IProblem.ForbiddenReference :
          case IProblem.DiscouragedReference :

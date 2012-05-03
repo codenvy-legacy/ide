@@ -47,10 +47,10 @@ public class NewDefiningMethodProposal extends AbstractMethodCorrectionProposal
       fParamNames = paramNames;
 
       //TODO
-//      ImageDescriptor desc =
-//         JavaElementImageProvider.getMethodImageDescriptor(binding.isInterface() || binding.isAnnotation(),
-//            method.getModifiers());
-//      setImage(JavaPlugin.getImageDescriptorRegistry().get(desc));
+      //      ImageDescriptor desc =
+      //         JavaElementImageProvider.getMethodImageDescriptor(binding.isInterface() || binding.isAnnotation(),
+      //            method.getModifiers());
+      //      setImage(JavaPlugin.getImageDescriptorRegistry().get(desc));
       setImage(new Image());
    }
 
@@ -74,7 +74,7 @@ public class NewDefiningMethodProposal extends AbstractMethodCorrectionProposal
       ImportRewrite importRewrite = getImportRewrite();
       ITypeBinding[] bindings = fMethod.getParameterTypes();
 
-//      IJavaProject project = getCompilationUnit().getJavaProject();
+      //      IJavaProject project = getCompilationUnit().getJavaProject();
       String[][] paramNames = StubUtility.suggestArgumentNamesWithProposals(fParamNames);
 
       for (int i = 0; i < bindings.length; i++)
@@ -91,12 +91,12 @@ public class NewDefiningMethodProposal extends AbstractMethodCorrectionProposal
          params.add(newParam);
 
          String groupId = "arg_name_" + i; //$NON-NLS-1$
-//         addLinkedPosition(rewrite.track(newParam.getName()), false, groupId);
-//
-//         for (int k = 0; k < proposedNames.length; k++)
-//         {
-//            addLinkedPositionProposal(groupId, proposedNames[k], null);
-//         }
+         //         addLinkedPosition(rewrite.track(newParam.getName()), false, groupId);
+         //
+         //         for (int k = 0; k < proposedNames.length; k++)
+         //         {
+         //            addLinkedPositionProposal(groupId, proposedNames[k], null);
+         //         }
       }
    }
 
@@ -161,7 +161,7 @@ public class NewDefiningMethodProposal extends AbstractMethodCorrectionProposal
          Name newNode = ASTNodeFactory.newName(ast, typeName);
          exceptions.add(newNode);
 
-//         addLinkedPosition(rewrite.track(newNode), false, "exc_type_" + i); //$NON-NLS-1$
+         //         addLinkedPosition(rewrite.track(newNode), false, "exc_type_" + i); //$NON-NLS-1$
       }
    }
 

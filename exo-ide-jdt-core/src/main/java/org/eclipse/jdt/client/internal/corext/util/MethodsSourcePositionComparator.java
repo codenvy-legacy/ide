@@ -42,83 +42,101 @@ import org.eclipse.jdt.client.core.dom.ITypeBinding;
  * defines <code>m1</code> in <code>implements</code> clause of declaration of type <code>T</code></li>
  * </ul>
  */
-public class MethodsSourcePositionComparator implements Comparator<IMethodBinding> {
+public class MethodsSourcePositionComparator implements Comparator<IMethodBinding>
+{
 
-	private final ITypeBinding fTypeBinding;
+   private final ITypeBinding fTypeBinding;
 
-	public MethodsSourcePositionComparator(ITypeBinding typeBinding) {
-		if (typeBinding == null) {
-			throw new IllegalArgumentException();
-		}
-		fTypeBinding= typeBinding;
-	}
+   public MethodsSourcePositionComparator(ITypeBinding typeBinding)
+   {
+      if (typeBinding == null)
+      {
+         throw new IllegalArgumentException();
+      }
+      fTypeBinding = typeBinding;
+   }
 
-	public int compare(IMethodBinding firstMethodBinding, IMethodBinding secondMethodBinding) {
-		if (firstMethodBinding == null || secondMethodBinding == null) {
-			return 0;
-		}
-		ITypeBinding firstMethodType= firstMethodBinding.getDeclaringClass();
-		ITypeBinding secondMethodType= secondMethodBinding.getDeclaringClass();
+   public int compare(IMethodBinding firstMethodBinding, IMethodBinding secondMethodBinding)
+   {
+      if (firstMethodBinding == null || secondMethodBinding == null)
+      {
+         return 0;
+      }
+      ITypeBinding firstMethodType = firstMethodBinding.getDeclaringClass();
+      ITypeBinding secondMethodType = secondMethodBinding.getDeclaringClass();
 
-		if (firstMethodType.equals(secondMethodType)) {
-			return compareInTheSameType(firstMethodBinding, secondMethodBinding);
-		}
+      if (firstMethodType.equals(secondMethodType))
+      {
+         return compareInTheSameType(firstMethodBinding, secondMethodBinding);
+      }
 
-		if (firstMethodType.equals(fTypeBinding)) {
-			return 1;
-		}
-		if (secondMethodType.equals(fTypeBinding)) {
-			return -1;
-		}
+      if (firstMethodType.equals(fTypeBinding))
+      {
+         return 1;
+      }
+      if (secondMethodType.equals(fTypeBinding))
+      {
+         return -1;
+      }
 
-		ITypeBinding type= fTypeBinding;
-		int count= 0, firstCount= -1, secondCount= -1;
-		while ((type= type.getSuperclass()) != null) {
-			if (firstMethodType.equals(type)) {
-				firstCount= count;
-			}
-			if (secondMethodType.equals(type)) {
-				secondCount= count;
-			}
-			count++;
-		}
-		if (firstCount != -1 && secondCount != -1) {
-			return (firstCount - secondCount);
-		}
-		if (firstCount != -1 && secondCount == -1) {
-			return 1;
-		}
-		if (firstCount == -1 && secondCount != -1) {
-			return -1;
-		}
+      ITypeBinding type = fTypeBinding;
+      int count = 0, firstCount = -1, secondCount = -1;
+      while ((type = type.getSuperclass()) != null)
+      {
+         if (firstMethodType.equals(type))
+         {
+            firstCount = count;
+         }
+         if (secondMethodType.equals(type))
+         {
+            secondCount = count;
+         }
+         count++;
+      }
+      if (firstCount != -1 && secondCount != -1)
+      {
+         return (firstCount - secondCount);
+      }
+      if (firstCount != -1 && secondCount == -1)
+      {
+         return 1;
+      }
+      if (firstCount == -1 && secondCount != -1)
+      {
+         return -1;
+      }
 
-		ITypeBinding[] interfaces= fTypeBinding.getInterfaces();
-		for (int i= 0; i < interfaces.length; i++) {
-			if (firstMethodType.equals(interfaces[i])) {
-				return 1;
-			}
-			if (secondMethodType.equals(interfaces[i])) {
-				return -1;
-			}
-		}
-		return 0;
-	}
+      ITypeBinding[] interfaces = fTypeBinding.getInterfaces();
+      for (int i = 0; i < interfaces.length; i++)
+      {
+         if (firstMethodType.equals(interfaces[i]))
+         {
+            return 1;
+         }
+         if (secondMethodType.equals(interfaces[i]))
+         {
+            return -1;
+         }
+      }
+      return 0;
+   }
 
-	private int compareInTheSameType(IMethodBinding firstMethodBinding, IMethodBinding secondMethodBinding) {
-//			IMethod firstMethod= (IMethod)firstMethodBinding.getJavaElement();
-//			IMethod secondMethod= (IMethod)secondMethodBinding.getJavaElement();
-	   //TODO
-//			if (firstMethod == null || secondMethod == null) {
-//				return 0;
-//			}
-//			ISourceRange firstSourceRange= firstMethod.getSourceRange();
-//			ISourceRange secondSourceRange= secondMethod.getSourceRange();
-//
-//			if (!SourceRange.isAvailable(firstSourceRange) || !SourceRange.isAvailable(secondSourceRange)) {
-//				return firstMethod.getElementName().compareTo(secondMethod.getElementName());
-//			} else {
-//				return firstSourceRange.getOffset() - secondSourceRange.getOffset();
-//			}
-			return 0;
-	}
+   private int compareInTheSameType(IMethodBinding firstMethodBinding, IMethodBinding secondMethodBinding)
+   {
+      //			IMethod firstMethod= (IMethod)firstMethodBinding.getJavaElement();
+      //			IMethod secondMethod= (IMethod)secondMethodBinding.getJavaElement();
+      //TODO
+      //			if (firstMethod == null || secondMethod == null) {
+      //				return 0;
+      //			}
+      //			ISourceRange firstSourceRange= firstMethod.getSourceRange();
+      //			ISourceRange secondSourceRange= secondMethod.getSourceRange();
+      //
+      //			if (!SourceRange.isAvailable(firstSourceRange) || !SourceRange.isAvailable(secondSourceRange)) {
+      //				return firstMethod.getElementName().compareTo(secondMethod.getElementName());
+      //			} else {
+      //				return firstSourceRange.getOffset() - secondSourceRange.getOffset();
+      //			}
+      return 0;
+   }
 }

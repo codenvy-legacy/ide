@@ -18,7 +18,7 @@ public interface FixMessages extends Messages
 {
 
    FixMessages INSTANCE = GWT.create(FixMessages.class);
-   
+
    String CleanUpPostSaveListener_name();
 
    String CleanUpPostSaveListener_SaveAction_ChangeName();

@@ -111,7 +111,7 @@ public class RemoveDeclarationCorrectionProposal extends ASTRewriteCorrectionPro
    }
 
    private SimpleName fName;
-   
+
    private final CompilationUnit completeRoot;
 
    public RemoveDeclarationCorrectionProposal(CompilationUnit cUnit, SimpleName name, int relevance, IDocument document)
@@ -133,16 +133,19 @@ public class RemoveDeclarationCorrectionProposal extends ASTRewriteCorrectionPro
          case IBinding.METHOD :
             if (((IMethodBinding)binding).isConstructor())
             {
-               return CorrectionMessages.INSTANCE.RemoveDeclarationCorrectionProposal_removeunusedconstructor_description(name);
+               return CorrectionMessages.INSTANCE
+                  .RemoveDeclarationCorrectionProposal_removeunusedconstructor_description(name);
             }
             else
             {
-               return CorrectionMessages.INSTANCE.RemoveDeclarationCorrectionProposal_removeunusedmethod_description(name);
+               return CorrectionMessages.INSTANCE
+                  .RemoveDeclarationCorrectionProposal_removeunusedmethod_description(name);
             }
          case IBinding.VARIABLE :
             if (((IVariableBinding)binding).isField())
             {
-               return CorrectionMessages.INSTANCE.RemoveDeclarationCorrectionProposal_removeunusedfield_description(name);
+               return CorrectionMessages.INSTANCE
+                  .RemoveDeclarationCorrectionProposal_removeunusedfield_description(name);
             }
             else
             {
@@ -178,7 +181,7 @@ public class RemoveDeclarationCorrectionProposal extends ASTRewriteCorrectionPro
       }
       else if (binding.getKind() == IBinding.VARIABLE)
       {
-       
+
          SimpleName nameNode =
             (SimpleName)NodeFinder.perform(completeRoot, fName.getStartPosition(), fName.getLength());
 

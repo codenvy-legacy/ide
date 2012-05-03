@@ -116,8 +116,8 @@ public class ChangeMethodSignatureProposal extends LinkedCorrectionProposal
 
    private ChangeDescription[] fExceptionChanges;
 
-   public ChangeMethodSignatureProposal(String label, ASTNode invocationNode,
-      IMethodBinding binding, ChangeDescription[] paramChanges, ChangeDescription[] exceptionChanges, int relevance, IDocument document,
+   public ChangeMethodSignatureProposal(String label, ASTNode invocationNode, IMethodBinding binding,
+      ChangeDescription[] paramChanges, ChangeDescription[] exceptionChanges, int relevance, IDocument document,
       Image image)
    {
       super(label, null, relevance, document, image);
@@ -362,51 +362,49 @@ public class ChangeMethodSignatureProposal extends LinkedCorrectionProposal
             String suggestedName = desc.name;
             if (suggestedName != null)
             {
-               favourite =
-                  StubUtility.suggestArgumentName(suggestedName, excludedNames);
-//               addLinkedPositionProposal(nameKey, favourite, null);
+               favourite = StubUtility.suggestArgumentName(suggestedName, excludedNames);
+               //               addLinkedPositionProposal(nameKey, favourite, null);
             }
 
-//            if (desc instanceof EditDescription)
-//            {
-//               addLinkedPositionProposal(nameKey, ((EditDescription)desc).orginalName, null);
-//            }
+            //            if (desc instanceof EditDescription)
+            //            {
+            //               addLinkedPositionProposal(nameKey, ((EditDescription)desc).orginalName, null);
+            //            }
 
             Type type = desc.resultingParamType;
-            String[] suggestedNames =
-               StubUtility.getArgumentNameSuggestions(type, excludedNames);
-//            for (int k = 0; k < suggestedNames.length; k++)
-//            {
-//               addLinkedPositionProposal(nameKey, suggestedNames[k], null);
-//            }
+            String[] suggestedNames = StubUtility.getArgumentNameSuggestions(type, excludedNames);
+            //            for (int k = 0; k < suggestedNames.length; k++)
+            //            {
+            //               addLinkedPositionProposal(nameKey, suggestedNames[k], null);
+            //            }
             if (favourite == null)
             {
                favourite = suggestedNames[0];
             }
             usedNames.add(favourite);
 
-//            SimpleName[] names = desc.resultingParamName;
-//            for (int j = 0; j < names.length; j++)
-//            {
-//               names[j].setIdentifier(favourite);
-//               addLinkedPosition(rewrite.track(names[j]), false, nameKey);
-//            }
+            //            SimpleName[] names = desc.resultingParamName;
+            //            for (int j = 0; j < names.length; j++)
+            //            {
+            //               names[j].setIdentifier(favourite);
+            //               addLinkedPosition(rewrite.track(names[j]), false, nameKey);
+            //            }
 
-//            addLinkedPosition(rewrite.track(desc.resultingParamType), true, typeKey);
+            //            addLinkedPosition(rewrite.track(desc.resultingParamType), true, typeKey);
 
             // collect type suggestions
-//            ITypeBinding[] bindings = ASTResolving.getRelaxingTypes(ast, desc.type);
-//            for (int k = 0; k < bindings.length; k++)
-//            {
-//               addLinkedPositionProposal(typeKey, bindings[k]);
-//            }
+            //            ITypeBinding[] bindings = ASTResolving.getRelaxingTypes(ast, desc.type);
+            //            for (int k = 0; k < bindings.length; k++)
+            //            {
+            //               addLinkedPositionProposal(typeKey, bindings[k]);
+            //            }
 
-//            SimpleName tagArg = desc.resultingTagArg;
-//            if (tagArg != null)
-//            {
-//               tagArg.setIdentifier(favourite);
-//               addLinkedPosition(rewrite.track(tagArg), false, nameKey);
-//            }
+            //            SimpleName tagArg = desc.resultingTagArg;
+            //            if (tagArg != null)
+            //            {
+            //               tagArg.setIdentifier(favourite);
+            //               addLinkedPosition(rewrite.track(tagArg), false, nameKey);
+            //            }
          }
       }
    }
@@ -463,7 +461,7 @@ public class ChangeMethodSignatureProposal extends LinkedCorrectionProposal
             listRewrite.insertAt(newNode, i, null);
 
             String key = getExceptionTypeGroupId(i);
-//            addLinkedPosition(rewrite.track(newNode), false, key);
+            //            addLinkedPosition(rewrite.track(newNode), false, key);
 
             Javadoc javadoc = methodDecl.getJavadoc();
             if (javadoc != null && JavadocTagsSubProcessor.findThrowsTag(javadoc, type) == null)
@@ -475,7 +473,7 @@ public class ChangeMethodSignatureProposal extends LinkedCorrectionProposal
                insertTabStop(rewrite, newTagElement.fragments(), "throws_tagcomment" + i); //$NON-NLS-1$
                insertThrowsTag(rewrite.getListRewrite(javadoc, Javadoc.TAGS_PROPERTY), exceptions, k, newTagElement);
 
-//               addLinkedPosition(rewrite.track(newRef), false, key);
+               //               addLinkedPosition(rewrite.track(newRef), false, key);
             }
 
          }
@@ -503,7 +501,7 @@ public class ChangeMethodSignatureProposal extends LinkedCorrectionProposal
 
             listRewrite.replace(oldNode, newNode, null);
             String key = getExceptionTypeGroupId(i);
-//            addLinkedPosition(rewrite.track(newNode), false, key);
+            //            addLinkedPosition(rewrite.track(newNode), false, key);
 
             k++;
 
@@ -512,7 +510,7 @@ public class ChangeMethodSignatureProposal extends LinkedCorrectionProposal
             {
                ASTNode newRef = ASTNodeFactory.newName(ast, type);
                rewrite.replace((ASTNode)tagNode.fragments().get(0), newRef, null);
-//               addLinkedPosition(rewrite.track(newRef), false, key);
+               //               addLinkedPosition(rewrite.track(newRef), false, key);
             }
 
          }
@@ -542,7 +540,7 @@ public class ChangeMethodSignatureProposal extends LinkedCorrectionProposal
       TextElement textElement = rewriter.getAST().newTextElement();
       textElement.setText(""); //$NON-NLS-1$
       fragments.add(textElement);
-//      addLinkedPosition(rewriter.track(textElement), false, linkedName);
+      //      addLinkedPosition(rewriter.track(textElement), false, linkedName);
    }
 
    private TagElement findThrowsTag(MethodDeclaration decl, Name exception)

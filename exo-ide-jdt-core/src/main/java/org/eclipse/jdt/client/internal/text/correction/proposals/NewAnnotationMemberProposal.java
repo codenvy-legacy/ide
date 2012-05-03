@@ -100,8 +100,8 @@ public class NewAnnotationMemberProposal extends LinkedCorrectionProposal
 
       decl.modifiers().addAll(ASTNodeFactory.newModifiers(ast, evaluateModifiers(targetTypeDecl)));
 
-//      ModifierCorrectionSubProcessor.installLinkedVisibilityProposals(getLinkedProposalModel(), rewrite,
-//         decl.modifiers(), true);
+      //      ModifierCorrectionSubProcessor.installLinkedVisibilityProposals(getLinkedProposalModel(), rewrite,
+      //         decl.modifiers(), true);
 
       decl.setName(newNameNode);
 
@@ -134,7 +134,7 @@ public class NewAnnotationMemberProposal extends LinkedCorrectionProposal
       {
          newTypeNode = ast.newSimpleType(ast.newSimpleName("String")); //$NON-NLS-1$
       }
-//      addLinkedPosition(rewrite.track(newTypeNode), false, KEY_TYPE);
+      //      addLinkedPosition(rewrite.track(newTypeNode), false, KEY_TYPE);
       return newTypeNode;
    }
 
@@ -159,10 +159,10 @@ public class NewAnnotationMemberProposal extends LinkedCorrectionProposal
       if (fInvocationNode.getLocationInParent() == MemberValuePair.NAME_PROPERTY)
       {
          name = ((SimpleName)fInvocationNode).getIdentifier();
-//         if (ast == fInvocationNode.getAST())
-//         {
-//            addLinkedPosition(rewrite.track(fInvocationNode), true, KEY_NAME);
-//         }
+         //         if (ast == fInvocationNode.getAST())
+         //         {
+         //            addLinkedPosition(rewrite.track(fInvocationNode), true, KEY_NAME);
+         //         }
       }
       else
       {
@@ -170,7 +170,7 @@ public class NewAnnotationMemberProposal extends LinkedCorrectionProposal
       }
 
       SimpleName newNameNode = ast.newSimpleName(name);
-//      addLinkedPosition(rewrite.track(newNameNode), false, KEY_NAME);
+      //      addLinkedPosition(rewrite.track(newNameNode), false, KEY_NAME);
       return newNameNode;
    }
 

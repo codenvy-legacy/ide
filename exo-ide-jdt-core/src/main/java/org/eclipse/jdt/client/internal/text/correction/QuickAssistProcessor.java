@@ -1751,184 +1751,184 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
       Collection<ICommandAccess> resultingCollections)
    {
       //TODO Java 7
-//      if (!JavaModelUtil.is17OrHigher(context.getCompilationUnit().getJavaProject()))
-         return false;
+      //      if (!JavaModelUtil.is17OrHigher(context.getCompilationUnit().getJavaProject()))
+      return false;
 
-//      CatchClause catchClause = (CatchClause)ASTResolving.findAncestor(covering, ASTNode.CATCH_CLAUSE);
-//      if (catchClause == null)
-//      {
-//         return false;
-//      }
-//
-//      Statement statement = ASTResolving.findParentStatement(covering);
-//      if (statement != catchClause.getParent() && statement != catchClause.getBody())
-//      {
-//         return false; // selection is in a statement inside the body
-//      }
-//
-//      Type type1 = catchClause.getException().getType();
-//      SimpleType selectedMultiCatchType = null;
-//      if (type1.isUnionType() && covering instanceof Name)
-//      {
-//         Name topMostName = ASTNodes.getTopMostName((Name)covering);
-//         ASTNode parent = topMostName.getParent();
-//         if (parent instanceof SimpleType)
-//         {
-//            selectedMultiCatchType = (SimpleType)parent;
-//         }
-//      }
-//      if (selectedMultiCatchType != null)
-//         return false;
-//
-//      TryStatement tryStatement = (TryStatement)catchClause.getParent();
-//      List<CatchClause> catchClauses = tryStatement.catchClauses();
-//      if (catchClauses.size() <= 1)
-//         return false;
-//
-//      String commonSource = null;
-//      try
-//      {
-//         IBuffer buffer = context.getCompilationUnit().getBuffer();
-//         for (Iterator<CatchClause> iterator = catchClauses.iterator(); iterator.hasNext();)
-//         {
-//            CatchClause catchClause1 = iterator.next();
-//            Block body = catchClause1.getBody();
-//            String source = buffer.getText(body.getStartPosition(), body.getLength());
-//            if (commonSource == null)
-//            {
-//               commonSource = source;
-//            }
-//            else
-//            {
-//               if (!commonSource.equals(source))
-//                  return false;
-//            }
-//         }
-//      }
-//      catch (JavaModelException e)
-//      {
-//         return false;
-//      }
-//
-//      if (resultingCollections == null)
-//         return true;
-//
-//      AST ast = covering.getAST();
-//      ASTRewrite rewrite = ASTRewrite.create(ast);
-//      TightSourceRangeComputer sourceRangeComputer = new TightSourceRangeComputer();
-//      sourceRangeComputer.addTightSourceNode(catchClauses.get(catchClauses.size() - 1));
-//      rewrite.setTargetSourceRangeComputer(sourceRangeComputer);
-//
-//      CatchClause firstCatchClause = catchClauses.get(0);
-//
-//      UnionType newUnionType = ast.newUnionType();
-//      List<Type> types = newUnionType.types();
-//      for (Iterator<CatchClause> iterator = catchClauses.iterator(); iterator.hasNext();)
-//      {
-//         CatchClause catchClause1 = iterator.next();
-//         Type type = catchClause1.getException().getType();
-//         if (type instanceof UnionType)
-//         {
-//            List<Type> types2 = ((UnionType)type).types();
-//            for (Iterator<Type> iterator2 = types2.iterator(); iterator2.hasNext();)
-//            {
-//               types.add((Type)rewrite.createCopyTarget(iterator2.next()));
-//            }
-//         }
-//         else
-//         {
-//            types.add((Type)rewrite.createCopyTarget(type));
-//         }
-//      }
-//
-//      SingleVariableDeclaration newExceptionDeclaration = ast.newSingleVariableDeclaration();
-//      newExceptionDeclaration.setType(newUnionType);
-//      newExceptionDeclaration.setName((SimpleName)rewrite.createCopyTarget(firstCatchClause.getException().getName()));
-//      rewrite.replace(firstCatchClause.getException(), newExceptionDeclaration, null);
-//
-//      for (int i = 1; i < catchClauses.size(); i++)
-//      {
-//         rewrite.remove(catchClauses.get(i), null);
-//      }
-//
-//      Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
-//      String label = CorrectionMessages.INSTANCE.QuickAssistProcessor_convert_to_single_multicatch_block;
-//      ASTRewriteCorrectionProposal proposal =
-//         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 2, image);
-//      resultingCollections.add(proposal);
-//      return true;
+      //      CatchClause catchClause = (CatchClause)ASTResolving.findAncestor(covering, ASTNode.CATCH_CLAUSE);
+      //      if (catchClause == null)
+      //      {
+      //         return false;
+      //      }
+      //
+      //      Statement statement = ASTResolving.findParentStatement(covering);
+      //      if (statement != catchClause.getParent() && statement != catchClause.getBody())
+      //      {
+      //         return false; // selection is in a statement inside the body
+      //      }
+      //
+      //      Type type1 = catchClause.getException().getType();
+      //      SimpleType selectedMultiCatchType = null;
+      //      if (type1.isUnionType() && covering instanceof Name)
+      //      {
+      //         Name topMostName = ASTNodes.getTopMostName((Name)covering);
+      //         ASTNode parent = topMostName.getParent();
+      //         if (parent instanceof SimpleType)
+      //         {
+      //            selectedMultiCatchType = (SimpleType)parent;
+      //         }
+      //      }
+      //      if (selectedMultiCatchType != null)
+      //         return false;
+      //
+      //      TryStatement tryStatement = (TryStatement)catchClause.getParent();
+      //      List<CatchClause> catchClauses = tryStatement.catchClauses();
+      //      if (catchClauses.size() <= 1)
+      //         return false;
+      //
+      //      String commonSource = null;
+      //      try
+      //      {
+      //         IBuffer buffer = context.getCompilationUnit().getBuffer();
+      //         for (Iterator<CatchClause> iterator = catchClauses.iterator(); iterator.hasNext();)
+      //         {
+      //            CatchClause catchClause1 = iterator.next();
+      //            Block body = catchClause1.getBody();
+      //            String source = buffer.getText(body.getStartPosition(), body.getLength());
+      //            if (commonSource == null)
+      //            {
+      //               commonSource = source;
+      //            }
+      //            else
+      //            {
+      //               if (!commonSource.equals(source))
+      //                  return false;
+      //            }
+      //         }
+      //      }
+      //      catch (JavaModelException e)
+      //      {
+      //         return false;
+      //      }
+      //
+      //      if (resultingCollections == null)
+      //         return true;
+      //
+      //      AST ast = covering.getAST();
+      //      ASTRewrite rewrite = ASTRewrite.create(ast);
+      //      TightSourceRangeComputer sourceRangeComputer = new TightSourceRangeComputer();
+      //      sourceRangeComputer.addTightSourceNode(catchClauses.get(catchClauses.size() - 1));
+      //      rewrite.setTargetSourceRangeComputer(sourceRangeComputer);
+      //
+      //      CatchClause firstCatchClause = catchClauses.get(0);
+      //
+      //      UnionType newUnionType = ast.newUnionType();
+      //      List<Type> types = newUnionType.types();
+      //      for (Iterator<CatchClause> iterator = catchClauses.iterator(); iterator.hasNext();)
+      //      {
+      //         CatchClause catchClause1 = iterator.next();
+      //         Type type = catchClause1.getException().getType();
+      //         if (type instanceof UnionType)
+      //         {
+      //            List<Type> types2 = ((UnionType)type).types();
+      //            for (Iterator<Type> iterator2 = types2.iterator(); iterator2.hasNext();)
+      //            {
+      //               types.add((Type)rewrite.createCopyTarget(iterator2.next()));
+      //            }
+      //         }
+      //         else
+      //         {
+      //            types.add((Type)rewrite.createCopyTarget(type));
+      //         }
+      //      }
+      //
+      //      SingleVariableDeclaration newExceptionDeclaration = ast.newSingleVariableDeclaration();
+      //      newExceptionDeclaration.setType(newUnionType);
+      //      newExceptionDeclaration.setName((SimpleName)rewrite.createCopyTarget(firstCatchClause.getException().getName()));
+      //      rewrite.replace(firstCatchClause.getException(), newExceptionDeclaration, null);
+      //
+      //      for (int i = 1; i < catchClauses.size(); i++)
+      //      {
+      //         rewrite.remove(catchClauses.get(i), null);
+      //      }
+      //
+      //      Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      //      String label = CorrectionMessages.INSTANCE.QuickAssistProcessor_convert_to_single_multicatch_block;
+      //      ASTRewriteCorrectionProposal proposal =
+      //         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 2, image);
+      //      resultingCollections.add(proposal);
+      //      return true;
    }
 
    private static boolean getUnrollMultiCatchProposals(IInvocationContext context, ASTNode covering,
       Collection<ICommandAccess> resultingCollections)
    {
       //TODO Java 7
-//      if (!JavaModelUtil.is17OrHigher(context.getCompilationUnit().getJavaProject()))
-         return false;
+      //      if (!JavaModelUtil.is17OrHigher(context.getCompilationUnit().getJavaProject()))
+      return false;
 
-//      CatchClause catchClause = (CatchClause)ASTResolving.findAncestor(covering, ASTNode.CATCH_CLAUSE);
-//      if (catchClause == null)
-//      {
-//         return false;
-//      }
-//
-//      Statement statement = ASTResolving.findParentStatement(covering);
-//      if (statement != catchClause.getParent() && statement != catchClause.getBody())
-//      {
-//         return false; // selection is in a statement inside the body
-//      }
-//
-//      Type type1 = catchClause.getException().getType();
-//      SimpleType selectedMultiCatchType = null;
-//      if (type1.isUnionType() && covering instanceof Name)
-//      {
-//         Name topMostName = ASTNodes.getTopMostName((Name)covering);
-//         ASTNode parent = topMostName.getParent();
-//         if (parent instanceof SimpleType)
-//         {
-//            selectedMultiCatchType = (SimpleType)parent;
-//         }
-//      }
-//      if (selectedMultiCatchType != null)
-//         return false;
-//
-//      SingleVariableDeclaration singleVariableDeclaration = catchClause.getException();
-//      Type type = singleVariableDeclaration.getType();
-//      if (!(type instanceof UnionType))
-//         return false;
-//
-//      if (resultingCollections == null)
-//         return true;
-//
-//      AST ast = covering.getAST();
-//      ASTRewrite rewrite = ASTRewrite.create(ast);
-//
-//      TryStatement tryStatement = (TryStatement)catchClause.getParent();
-//      ListRewrite listRewrite = rewrite.getListRewrite(tryStatement, TryStatement.CATCH_CLAUSES_PROPERTY);
-//
-//      UnionType unionType = (UnionType)type;
-//      List<Type> types = unionType.types();
-//      for (int i = types.size() - 1; i >= 0; i--)
-//      {
-//         Type type2 = types.get(i);
-//         CatchClause newCatchClause = ast.newCatchClause();
-//
-//         SingleVariableDeclaration newSingleVariableDeclaration = ast.newSingleVariableDeclaration();
-//         newSingleVariableDeclaration.setType((Type)rewrite.createCopyTarget(type2));
-//         newSingleVariableDeclaration
-//            .setName((SimpleName)rewrite.createCopyTarget(singleVariableDeclaration.getName()));
-//         newCatchClause.setException(newSingleVariableDeclaration);
-//         setCatchClauseBody(newCatchClause, rewrite, catchClause);
-//         listRewrite.insertAfter(newCatchClause, catchClause, null);
-//      }
-//      rewrite.remove(catchClause, null);
-//
-//      Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
-//      String label = CorrectionMessages.INSTANCE.QuickAssistProcessor_convert_to_multiple_singletype_catch_blocks;
-//      ASTRewriteCorrectionProposal proposal =
-//         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 2, image);
-//      resultingCollections.add(proposal);
-//      return true;
+      //      CatchClause catchClause = (CatchClause)ASTResolving.findAncestor(covering, ASTNode.CATCH_CLAUSE);
+      //      if (catchClause == null)
+      //      {
+      //         return false;
+      //      }
+      //
+      //      Statement statement = ASTResolving.findParentStatement(covering);
+      //      if (statement != catchClause.getParent() && statement != catchClause.getBody())
+      //      {
+      //         return false; // selection is in a statement inside the body
+      //      }
+      //
+      //      Type type1 = catchClause.getException().getType();
+      //      SimpleType selectedMultiCatchType = null;
+      //      if (type1.isUnionType() && covering instanceof Name)
+      //      {
+      //         Name topMostName = ASTNodes.getTopMostName((Name)covering);
+      //         ASTNode parent = topMostName.getParent();
+      //         if (parent instanceof SimpleType)
+      //         {
+      //            selectedMultiCatchType = (SimpleType)parent;
+      //         }
+      //      }
+      //      if (selectedMultiCatchType != null)
+      //         return false;
+      //
+      //      SingleVariableDeclaration singleVariableDeclaration = catchClause.getException();
+      //      Type type = singleVariableDeclaration.getType();
+      //      if (!(type instanceof UnionType))
+      //         return false;
+      //
+      //      if (resultingCollections == null)
+      //         return true;
+      //
+      //      AST ast = covering.getAST();
+      //      ASTRewrite rewrite = ASTRewrite.create(ast);
+      //
+      //      TryStatement tryStatement = (TryStatement)catchClause.getParent();
+      //      ListRewrite listRewrite = rewrite.getListRewrite(tryStatement, TryStatement.CATCH_CLAUSES_PROPERTY);
+      //
+      //      UnionType unionType = (UnionType)type;
+      //      List<Type> types = unionType.types();
+      //      for (int i = types.size() - 1; i >= 0; i--)
+      //      {
+      //         Type type2 = types.get(i);
+      //         CatchClause newCatchClause = ast.newCatchClause();
+      //
+      //         SingleVariableDeclaration newSingleVariableDeclaration = ast.newSingleVariableDeclaration();
+      //         newSingleVariableDeclaration.setType((Type)rewrite.createCopyTarget(type2));
+      //         newSingleVariableDeclaration
+      //            .setName((SimpleName)rewrite.createCopyTarget(singleVariableDeclaration.getName()));
+      //         newCatchClause.setException(newSingleVariableDeclaration);
+      //         setCatchClauseBody(newCatchClause, rewrite, catchClause);
+      //         listRewrite.insertAfter(newCatchClause, catchClause, null);
+      //      }
+      //      rewrite.remove(catchClause, null);
+      //
+      //      Image image = new Image();//TODO JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      //      String label = CorrectionMessages.INSTANCE.QuickAssistProcessor_convert_to_multiple_singletype_catch_blocks;
+      //      ASTRewriteCorrectionProposal proposal =
+      //         new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 2, image);
+      //      resultingCollections.add(proposal);
+      //      return true;
    }
 
    private static void setCatchClauseBody(CatchClause newCatchClause, ASTRewrite rewrite, CatchClause catchClause)
@@ -1949,35 +1949,35 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
       IProblemLocation[] locations, Collection<ICommandAccess> resultingCollections)
    {
       //TODO Linked edit
-//      if (!(node instanceof SimpleName))
-//      {
-//         return false;
-//      }
-//      SimpleName name = (SimpleName)node;
-//      IBinding binding = name.resolveBinding();
-//      if (binding != null && binding.getKind() == IBinding.PACKAGE)
-//      {
-//         return false;
-//      }
-//
-//      if (containsQuickFixableRenameLocal(locations))
-//      {
-//         return false;
-//      }
-//
-//      if (resultingCollections == null)
-//      {
-//         return true;
-//      }
-//
-//      LinkedNamesAssistProposal proposal = new LinkedNamesAssistProposal(context, name);
-//      if (locations.length != 0)
-//      {
-//         proposal.setRelevance(1);
-//      }
-//
-//      resultingCollections.add(proposal);
-//      return true;
+      //      if (!(node instanceof SimpleName))
+      //      {
+      //         return false;
+      //      }
+      //      SimpleName name = (SimpleName)node;
+      //      IBinding binding = name.resolveBinding();
+      //      if (binding != null && binding.getKind() == IBinding.PACKAGE)
+      //      {
+      //         return false;
+      //      }
+      //
+      //      if (containsQuickFixableRenameLocal(locations))
+      //      {
+      //         return false;
+      //      }
+      //
+      //      if (resultingCollections == null)
+      //      {
+      //         return true;
+      //      }
+      //
+      //      LinkedNamesAssistProposal proposal = new LinkedNamesAssistProposal(context, name);
+      //      if (locations.length != 0)
+      //      {
+      //         proposal.setRelevance(1);
+      //      }
+      //
+      //      resultingCollections.add(proposal);
+      //      return true;
       return false;
    }
 
@@ -2247,7 +2247,8 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
    private static boolean getRemoveBlockProposals(IInvocationContext context, ASTNode coveringNode,
       Collection<ICommandAccess> resultingCollections)
    {
-      IProposableFix[] fixes = ControlStatementsFix.createRemoveBlockFix(context.getASTRoot(), coveringNode, context.getDocument());
+      IProposableFix[] fixes =
+         ControlStatementsFix.createRemoveBlockFix(context.getASTRoot(), coveringNode, context.getDocument());
       if (fixes != null)
       {
          if (resultingCollections == null)
@@ -2413,9 +2414,9 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
 
          Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
          LinkedCorrectionProposal proposal =
-            new LinkedCorrectionProposal(label, rewrite, 5,context.getDocument(), image);
+            new LinkedCorrectionProposal(label, rewrite, 5, context.getDocument(), image);
          proposal.setCommandId(ADD_BLOCK_ID);
-//         proposal.setEndPosition(rewrite.track(child));
+         //         proposal.setEndPosition(rewrite.track(child));
          resultingCollections.add(proposal);
       }
 
@@ -2560,8 +2561,7 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
       String label = CorrectionMessages.INSTANCE.QuickAssistProcessor_invertequals_description();
       Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
 
-      LinkedCorrectionProposal proposal =
-         new LinkedCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
+      LinkedCorrectionProposal proposal = new LinkedCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
       resultingCollections.add(proposal);
       return true;
    }
@@ -2597,8 +2597,7 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
       String label = CorrectionMessages.INSTANCE.QuickAssistProcessor_typetoarrayInitializer_description();
       Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
 
-      LinkedCorrectionProposal proposal =
-         new LinkedCorrectionProposal(label, rewrite, 1,context.getDocument(), image);
+      LinkedCorrectionProposal proposal = new LinkedCorrectionProposal(label, rewrite, 1, context.getDocument(), image);
 
       ImportRewrite imports = proposal.createImportRewrite(context.getASTRoot());
       ImportRewriteContext importRewriteContext = new ContextSensitiveImportRewriteContext(node, imports);
@@ -2684,26 +2683,26 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
       Collection<ICommandAccess> resultingCollections)
    {
       //TODO
-//      ForStatement forStatement = getEnclosingForStatementHeader(node);
-//      if (forStatement == null)
-//         return false;
-//
-//      if (resultingCollections == null)
-//         return true;
-//
-//      IProposableFix fix = ConvertLoopFix.createConvertForLoopToEnhancedFix(context.getASTRoot(), forStatement, context.getDocument());
-//      if (fix == null)
-//         return false;
-//
-//      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
-//      Map<String, String> options = new HashMap<String, String>();
-//      options.put(CleanUpConstants.CONTROL_STATMENTS_CONVERT_FOR_LOOP_TO_ENHANCED, CleanUpOptions.TRUE);
-//      ICleanUp cleanUp = new ConvertLoopCleanUp(options);
-//      FixCorrectionProposal proposal = new FixCorrectionProposal(fix, cleanUp, 1, image, context);
-//      proposal.setCommandId(CONVERT_FOR_LOOP_ID);
-//
-//      resultingCollections.add(proposal);
-//      return true;
+      //      ForStatement forStatement = getEnclosingForStatementHeader(node);
+      //      if (forStatement == null)
+      //         return false;
+      //
+      //      if (resultingCollections == null)
+      //         return true;
+      //
+      //      IProposableFix fix = ConvertLoopFix.createConvertForLoopToEnhancedFix(context.getASTRoot(), forStatement, context.getDocument());
+      //      if (fix == null)
+      //         return false;
+      //
+      //      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
+      //      Map<String, String> options = new HashMap<String, String>();
+      //      options.put(CleanUpConstants.CONTROL_STATMENTS_CONVERT_FOR_LOOP_TO_ENHANCED, CleanUpOptions.TRUE);
+      //      ICleanUp cleanUp = new ConvertLoopCleanUp(options);
+      //      FixCorrectionProposal proposal = new FixCorrectionProposal(fix, cleanUp, 1, image, context);
+      //      proposal.setCommandId(CONVERT_FOR_LOOP_ID);
+      //
+      //      resultingCollections.add(proposal);
+      //      return true;
       return false;
    }
 
@@ -2711,27 +2710,27 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
       Collection<ICommandAccess> resultingCollections)
    {
       //TODO
-//      ForStatement forStatement = getEnclosingForStatementHeader(node);
-//      if (forStatement == null)
-//         return false;
-//
-//      if (resultingCollections == null)
-//         return true;
-//
-//      IProposableFix fix = ConvertLoopFix.createConvertIterableLoopToEnhancedFix(context.getASTRoot(), forStatement, context.getDocument());
-//      if (fix == null)
-//         return false;
-//
-//      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
-//      Map<String, String> options = new HashMap<String, String>();
-//      options.put(CleanUpConstants.CONTROL_STATMENTS_CONVERT_FOR_LOOP_TO_ENHANCED, CleanUpOptions.TRUE);
-//      ICleanUp cleanUp = new ConvertLoopCleanUp(options);
-//      FixCorrectionProposal proposal = new FixCorrectionProposal(fix, cleanUp, 1, image, context);
-//      proposal.setCommandId(CONVERT_FOR_LOOP_ID);
-//
-//      resultingCollections.add(proposal);
-//      return true;
-      return false; 
+      //      ForStatement forStatement = getEnclosingForStatementHeader(node);
+      //      if (forStatement == null)
+      //         return false;
+      //
+      //      if (resultingCollections == null)
+      //         return true;
+      //
+      //      IProposableFix fix = ConvertLoopFix.createConvertIterableLoopToEnhancedFix(context.getASTRoot(), forStatement, context.getDocument());
+      //      if (fix == null)
+      //         return false;
+      //
+      //      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
+      //      Map<String, String> options = new HashMap<String, String>();
+      //      options.put(CleanUpConstants.CONTROL_STATMENTS_CONVERT_FOR_LOOP_TO_ENHANCED, CleanUpOptions.TRUE);
+      //      ICleanUp cleanUp = new ConvertLoopCleanUp(options);
+      //      FixCorrectionProposal proposal = new FixCorrectionProposal(fix, cleanUp, 1, image, context);
+      //      proposal.setCommandId(CONVERT_FOR_LOOP_ID);
+      //
+      //      resultingCollections.add(proposal);
+      //      return true;
+      return false;
    }
 
    private static ForStatement getEnclosingForStatementHeader(ASTNode node)
@@ -2761,31 +2760,31 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
       Collection<ICommandAccess> resultingCollections)
    {
       //TODO
-//      SelectionAnalyzer analyzer =
-//         new SelectionAnalyzer(Selection.createFromStartLength(context.getSelectionOffset(),
-//            context.getSelectionLength()), false);
-//      context.getASTRoot().accept(analyzer);
-//      ASTNode[] selectedNodes = analyzer.getSelectedNodes();
-//      if (selectedNodes.length == 0)
-//         return false;
-//
-//      IProposableFix fix = VariableDeclarationFix.createChangeModifierToFinalFix(context.getASTRoot(), selectedNodes);
-//      if (fix == null)
-//         return false;
-//
-//      if (resultingCollections == null)
-//         return true;
-//
-//      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
-//      Map<String, String> options = new Hashtable<String, String>();
-//      options.put(CleanUpConstants.VARIABLE_DECLARATIONS_USE_FINAL, CleanUpOptions.TRUE);
-//      options.put(CleanUpConstants.VARIABLE_DECLARATIONS_USE_FINAL_LOCAL_VARIABLES, CleanUpOptions.TRUE);
-//      options.put(CleanUpConstants.VARIABLE_DECLARATIONS_USE_FINAL_PARAMETERS, CleanUpOptions.TRUE);
-//      options.put(CleanUpConstants.VARIABLE_DECLARATIONS_USE_FINAL_PRIVATE_FIELDS, CleanUpOptions.TRUE);
-//      VariableDeclarationCleanUp cleanUp = new VariableDeclarationCleanUp(options);
-//      FixCorrectionProposal proposal = new FixCorrectionProposal(fix, cleanUp, 5, image, context);
-//      resultingCollections.add(proposal);
-//      return true;
+      //      SelectionAnalyzer analyzer =
+      //         new SelectionAnalyzer(Selection.createFromStartLength(context.getSelectionOffset(),
+      //            context.getSelectionLength()), false);
+      //      context.getASTRoot().accept(analyzer);
+      //      ASTNode[] selectedNodes = analyzer.getSelectedNodes();
+      //      if (selectedNodes.length == 0)
+      //         return false;
+      //
+      //      IProposableFix fix = VariableDeclarationFix.createChangeModifierToFinalFix(context.getASTRoot(), selectedNodes);
+      //      if (fix == null)
+      //         return false;
+      //
+      //      if (resultingCollections == null)
+      //         return true;
+      //
+      //      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
+      //      Map<String, String> options = new Hashtable<String, String>();
+      //      options.put(CleanUpConstants.VARIABLE_DECLARATIONS_USE_FINAL, CleanUpOptions.TRUE);
+      //      options.put(CleanUpConstants.VARIABLE_DECLARATIONS_USE_FINAL_LOCAL_VARIABLES, CleanUpOptions.TRUE);
+      //      options.put(CleanUpConstants.VARIABLE_DECLARATIONS_USE_FINAL_PARAMETERS, CleanUpOptions.TRUE);
+      //      options.put(CleanUpConstants.VARIABLE_DECLARATIONS_USE_FINAL_PRIVATE_FIELDS, CleanUpOptions.TRUE);
+      //      VariableDeclarationCleanUp cleanUp = new VariableDeclarationCleanUp(options);
+      //      FixCorrectionProposal proposal = new FixCorrectionProposal(fix, cleanUp, 5, image, context);
+      //      resultingCollections.add(proposal);
+      //      return true;
       return false;
    }
 
@@ -2793,38 +2792,38 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
       Collection<ICommandAccess> proposals) throws CoreException
    {
       //TODO
-//      if (!(node instanceof SimpleName))
-//         return false;
-//
-//      SimpleName name = (SimpleName)node;
-//      IBinding binding = name.resolveBinding();
-//      if (!(binding instanceof IVariableBinding))
-//         return false;
-//      IVariableBinding varBinding = (IVariableBinding)binding;
-//      if (varBinding.isField() || varBinding.isParameter())
-//         return false;
-//      ASTNode decl = context.getASTRoot().findDeclaringNode(varBinding);
-//      if (!(decl instanceof VariableDeclarationFragment)
-//         || decl.getLocationInParent() != VariableDeclarationStatement.FRAGMENTS_PROPERTY)
-//         return false;
-//
-//      if (proposals == null)
-//      {
-//         return true;
-//      }
-//
-//      InlineTempRefactoring refactoring = new InlineTempRefactoring((VariableDeclaration)decl);
-//      if (refactoring.checkInitialConditions(new NullProgressMonitor()).isOK())
-//      {
-//         String label = CorrectionMessages.INSTANCE.QuickAssistProcessor_inline_local_description();
-//         Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
-//         RefactoringCorrectionProposal proposal =
-//            new RefactoringCorrectionProposal(label, refactoring, 5,context.getDocument() image);
-//         proposal.setCommandId(INLINE_LOCAL_ID);
-//         proposals.add(proposal);
-//
-//      }
-//      return true;
+      //      if (!(node instanceof SimpleName))
+      //         return false;
+      //
+      //      SimpleName name = (SimpleName)node;
+      //      IBinding binding = name.resolveBinding();
+      //      if (!(binding instanceof IVariableBinding))
+      //         return false;
+      //      IVariableBinding varBinding = (IVariableBinding)binding;
+      //      if (varBinding.isField() || varBinding.isParameter())
+      //         return false;
+      //      ASTNode decl = context.getASTRoot().findDeclaringNode(varBinding);
+      //      if (!(decl instanceof VariableDeclarationFragment)
+      //         || decl.getLocationInParent() != VariableDeclarationStatement.FRAGMENTS_PROPERTY)
+      //         return false;
+      //
+      //      if (proposals == null)
+      //      {
+      //         return true;
+      //      }
+      //
+      //      InlineTempRefactoring refactoring = new InlineTempRefactoring((VariableDeclaration)decl);
+      //      if (refactoring.checkInitialConditions(new NullProgressMonitor()).isOK())
+      //      {
+      //         String label = CorrectionMessages.INSTANCE.QuickAssistProcessor_inline_local_description();
+      //         Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
+      //         RefactoringCorrectionProposal proposal =
+      //            new RefactoringCorrectionProposal(label, refactoring, 5,context.getDocument() image);
+      //         proposal.setCommandId(INLINE_LOCAL_ID);
+      //         proposals.add(proposal);
+      //
+      //      }
+      //      return true;
       return false;
    }
 
@@ -2860,41 +2859,41 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
       Collection<ICommandAccess> proposals) throws CoreException
    {
       //TODO
-//      if (!(node instanceof SimpleName))
-//         return false;
-//
-//      SimpleName name = (SimpleName)node;
-//      IBinding binding = name.resolveBinding();
-//      if (!(binding instanceof IVariableBinding)
-//         || name.getLocationInParent() != VariableDeclarationFragment.NAME_PROPERTY)
-//         return false;
-//      IVariableBinding varBinding = (IVariableBinding)binding;
-//      if (varBinding.isField() || varBinding.isParameter())
-//         return false;
-//      VariableDeclarationFragment decl = (VariableDeclarationFragment)name.getParent();
-//      if (decl.getLocationInParent() != VariableDeclarationStatement.FRAGMENTS_PROPERTY)
-//         return false;
-//
-//      if (proposals == null)
-//      {
-//         return true;
-//      }
-//
-//      PromoteTempToFieldRefactoring refactoring = new PromoteTempToFieldRefactoring(decl);
-//      if (refactoring.checkInitialConditions(new NullProgressMonitor()).isOK())
-//      {
-//         String label = CorrectionMessages.INSTANCE.QuickAssistProcessor_convert_local_to_field_description;
-//         Image image = JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
-////         LinkedProposalModel linkedProposalModel = new LinkedProposalModel();
-//         refactoring.setLinkedProposalModel(linkedProposalModel);
-//
-//         RefactoringCorrectionProposal proposal =
-//            new RefactoringCorrectionProposal(label, context.getCompilationUnit(), refactoring, 5, image);
-//         proposal.setLinkedProposalModel(linkedProposalModel);
-//         proposal.setCommandId(CONVERT_LOCAL_TO_FIELD_ID);
-//         proposals.add(proposal);
-//      }
-//      return true;
+      //      if (!(node instanceof SimpleName))
+      //         return false;
+      //
+      //      SimpleName name = (SimpleName)node;
+      //      IBinding binding = name.resolveBinding();
+      //      if (!(binding instanceof IVariableBinding)
+      //         || name.getLocationInParent() != VariableDeclarationFragment.NAME_PROPERTY)
+      //         return false;
+      //      IVariableBinding varBinding = (IVariableBinding)binding;
+      //      if (varBinding.isField() || varBinding.isParameter())
+      //         return false;
+      //      VariableDeclarationFragment decl = (VariableDeclarationFragment)name.getParent();
+      //      if (decl.getLocationInParent() != VariableDeclarationStatement.FRAGMENTS_PROPERTY)
+      //         return false;
+      //
+      //      if (proposals == null)
+      //      {
+      //         return true;
+      //      }
+      //
+      //      PromoteTempToFieldRefactoring refactoring = new PromoteTempToFieldRefactoring(decl);
+      //      if (refactoring.checkInitialConditions(new NullProgressMonitor()).isOK())
+      //      {
+      //         String label = CorrectionMessages.INSTANCE.QuickAssistProcessor_convert_local_to_field_description;
+      //         Image image = JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
+      ////         LinkedProposalModel linkedProposalModel = new LinkedProposalModel();
+      //         refactoring.setLinkedProposalModel(linkedProposalModel);
+      //
+      //         RefactoringCorrectionProposal proposal =
+      //            new RefactoringCorrectionProposal(label, context.getCompilationUnit(), refactoring, 5, image);
+      //         proposal.setLinkedProposalModel(linkedProposalModel);
+      //         proposal.setCommandId(CONVERT_LOCAL_TO_FIELD_ID);
+      //         proposals.add(proposal);
+      //      }
+      //      return true;
       return false;
    }
 
@@ -2930,9 +2929,9 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
          if (fRefactoringStatus.hasFatalError())
          {
             //TODO
-//            TextFileChange dummyChange = new TextFileChange("fatal error", (IFile)getCompilationUnit().getResource()); //$NON-NLS-1$
-//            dummyChange.setEdit(new InsertEdit(0, "")); //$NON-NLS-1$
-//            return dummyChange;
+            //            TextFileChange dummyChange = new TextFileChange("fatal error", (IFile)getCompilationUnit().getResource()); //$NON-NLS-1$
+            //            dummyChange.setEdit(new InsertEdit(0, "")); //$NON-NLS-1$
+            //            return dummyChange;
             return null;
          }
          return (TextChange)fRefactoring.createChange(new NullProgressMonitor());

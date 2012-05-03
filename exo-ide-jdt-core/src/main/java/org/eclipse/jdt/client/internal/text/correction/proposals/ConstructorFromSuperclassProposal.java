@@ -130,8 +130,8 @@ public class ConstructorFromSuperclassProposal extends LinkedCorrectionProposal
       {
          SingleVariableDeclaration curr = parameters.get(i);
          String name = curr.getName().getIdentifier();
-//         addLinkedPosition(rewrite.track(curr.getType()), false, "arg_type_" + name); //$NON-NLS-1$
-//         addLinkedPosition(rewrite.track(curr.getName()), false, "arg_name_" + name); //$NON-NLS-1$
+         //         addLinkedPosition(rewrite.track(curr.getType()), false, "arg_type_" + name); //$NON-NLS-1$
+         //         addLinkedPosition(rewrite.track(curr.getName()), false, "arg_name_" + name); //$NON-NLS-1$
       }
    }
 
@@ -192,7 +192,7 @@ public class ConstructorFromSuperclassProposal extends LinkedCorrectionProposal
          {
             Name argument = ast.newSimpleName(paramNames[i]);
             arguments.add(argument);
-//            addLinkedPosition(rewrite.track(argument), false, "arg_name_" + paramNames[i]); //$NON-NLS-1$
+            //            addLinkedPosition(rewrite.track(argument), false, "arg_name_" + paramNames[i]); //$NON-NLS-1$
          }
       }
 
@@ -200,8 +200,8 @@ public class ConstructorFromSuperclassProposal extends LinkedCorrectionProposal
          (invocation == null)
             ? "" : ASTNodes.asFormattedString(invocation, 0, String.valueOf('\n'), JdtExtension.get().getOptions()); //$NON-NLS-1$
       String placeHolder = StubUtility.getMethodBodyContent(true, name, name, bodyStatement, String.valueOf('\n'));
-//         CodeGeneration.getMethodBodyContent(name, name, true, bodyStatement,
-//            String.valueOf('\n'));
+      //         CodeGeneration.getMethodBodyContent(name, name, true, bodyStatement,
+      //            String.valueOf('\n'));
       if (placeHolder != null)
       {
          ASTNode todoNode = rewrite.createStringPlaceholder(placeHolder, ASTNode.RETURN_STATEMENT);
@@ -229,8 +229,7 @@ public class ConstructorFromSuperclassProposal extends LinkedCorrectionProposal
       SingleVariableDeclaration var = ast.newSingleVariableDeclaration();
       var.setType(getImportRewrite().addImport(enclosingInstance, ast, importRewriteContext));
       String[] enclosingArgNames =
-         StubUtility.getArgumentNameSuggestions(enclosingInstance
-            .getTypeDeclaration().getName(), 0, paramNames);
+         StubUtility.getArgumentNameSuggestions(enclosingInstance.getTypeDeclaration().getName(), 0, paramNames);
       String firstName = enclosingArgNames[0];
       var.setName(ast.newSimpleName(firstName));
       parameters.add(var);
@@ -239,11 +238,11 @@ public class ConstructorFromSuperclassProposal extends LinkedCorrectionProposal
       invocation.setExpression(enclosing);
 
       String key = "arg_name_" + firstName; //$NON-NLS-1$
-//      addLinkedPosition(rewrite.track(enclosing), false, key);
-//      for (int i = 0; i < enclosingArgNames.length; i++)
-//      {
-//         addLinkedPositionProposal(key, enclosingArgNames[i], null); // alternative names
-//      }
+      //      addLinkedPosition(rewrite.track(enclosing), false, key);
+      //      for (int i = 0; i < enclosingArgNames.length; i++)
+      //      {
+      //         addLinkedPositionProposal(key, enclosingArgNames[i], null); // alternative names
+      //      }
       return invocation;
    }
 

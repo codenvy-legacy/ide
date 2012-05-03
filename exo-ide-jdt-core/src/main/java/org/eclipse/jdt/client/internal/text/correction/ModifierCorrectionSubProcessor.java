@@ -222,9 +222,9 @@ public class ModifierCorrectionSubProcessor
          //               typeBinding.getTypeDeclaration());
          //         if (targetCU != null)
          //         {
-//         Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
-//         proposals.add(new ModifierChangeCorrectionProposal(label, bindingDecl, selectedNode, includedModifiers,
-//            excludedModifiers, relevance, context.getDocument(), image));
+         //         Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
+         //         proposals.add(new ModifierChangeCorrectionProposal(label, bindingDecl, selectedNode, includedModifiers,
+         //            excludedModifiers, relevance, context.getDocument(), image));
          //         }
       }
       if (kind == TO_VISIBLE && bindingDecl.getKind() == IBinding.VARIABLE)
@@ -272,46 +272,46 @@ public class ModifierCorrectionSubProcessor
       {
          IMethodBinding overriddenDecl = overriddenInClass.getMethodDeclaration();
          //TODO
-//         ICompilationUnit targetCU =
-//            ASTResolving.findCompilationUnitForBinding(cu, context.getASTRoot(), overriddenDecl.getDeclaringClass());
-//         if (targetCU != null)
-//         {
-//            String methodLabel = curr.getName() + '.' + overriddenInClass.getName();
-//            String label;
-//            int excludedModifiers;
-//            int includedModifiers;
-//            switch (kind)
-//            {
-//               case TO_VISIBLE :
-//                  excludedModifiers = Modifier.PRIVATE | Modifier.PROTECTED | Modifier.PUBLIC;
-//                  includedModifiers = JdtFlags.getVisibilityCode(method);
-//                  label =
-//                     CorrectionMessages.INSTANCE.INSTANCE
-//                        .ModifierCorrectionSubProcessor_changeoverriddenvisibility_description(methodLabel,
-//                           getVisibilityString(includedModifiers));
-//                  break;
-//               case TO_NON_FINAL :
-//                  label =
-//                     CorrectionMessages.INSTANCE.INSTANCE
-//                        .ModifierCorrectionSubProcessor_changemethodtononfinal_description(methodLabel);
-//                  excludedModifiers = Modifier.FINAL;
-//                  includedModifiers = 0;
-//                  break;
-//               case TO_NON_STATIC :
-//                  label =
-//                     CorrectionMessages.INSTANCE.INSTANCE
-//                        .ModifierCorrectionSubProcessor_changemethodtononstatic_description(methodLabel);
-//                  excludedModifiers = Modifier.STATIC;
-//                  includedModifiers = 0;
-//                  break;
-//               default :
-//                  Assert.isTrue(false, "not supported"); //$NON-NLS-1$
-//                  return;
-//            }
-//            Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
-//            proposals.add(new ModifierChangeCorrectionProposal(label, overriddenDecl, selectedNode, includedModifiers,
-//               excludedModifiers, 7, context.getDocument(), image));
-//         }
+         //         ICompilationUnit targetCU =
+         //            ASTResolving.findCompilationUnitForBinding(cu, context.getASTRoot(), overriddenDecl.getDeclaringClass());
+         //         if (targetCU != null)
+         //         {
+         //            String methodLabel = curr.getName() + '.' + overriddenInClass.getName();
+         //            String label;
+         //            int excludedModifiers;
+         //            int includedModifiers;
+         //            switch (kind)
+         //            {
+         //               case TO_VISIBLE :
+         //                  excludedModifiers = Modifier.PRIVATE | Modifier.PROTECTED | Modifier.PUBLIC;
+         //                  includedModifiers = JdtFlags.getVisibilityCode(method);
+         //                  label =
+         //                     CorrectionMessages.INSTANCE.INSTANCE
+         //                        .ModifierCorrectionSubProcessor_changeoverriddenvisibility_description(methodLabel,
+         //                           getVisibilityString(includedModifiers));
+         //                  break;
+         //               case TO_NON_FINAL :
+         //                  label =
+         //                     CorrectionMessages.INSTANCE.INSTANCE
+         //                        .ModifierCorrectionSubProcessor_changemethodtononfinal_description(methodLabel);
+         //                  excludedModifiers = Modifier.FINAL;
+         //                  includedModifiers = 0;
+         //                  break;
+         //               case TO_NON_STATIC :
+         //                  label =
+         //                     CorrectionMessages.INSTANCE.INSTANCE
+         //                        .ModifierCorrectionSubProcessor_changemethodtononstatic_description(methodLabel);
+         //                  excludedModifiers = Modifier.STATIC;
+         //                  includedModifiers = 0;
+         //                  break;
+         //               default :
+         //                  Assert.isTrue(false, "not supported"); //$NON-NLS-1$
+         //                  return;
+         //            }
+         //            Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
+         //            proposals.add(new ModifierChangeCorrectionProposal(label, overriddenDecl, selectedNode, includedModifiers,
+         //               excludedModifiers, 7, context.getDocument(), image));
+         //         }
       }
    }
 
@@ -631,7 +631,8 @@ public class ModifierCorrectionSubProcessor
          CorrectionMessages.INSTANCE.ModifierCorrectionSubProcessor_addabstract_description(parentTypeDecl.getName()
             .getIdentifier());
       UnimplementedCodeFix fix =
-         new UnimplementedCodeFix(label, context.getASTRoot(), new CompilationUnitRewriteOperation[]{operation}, context.getDocument());
+         new UnimplementedCodeFix(label, context.getASTRoot(), new CompilationUnitRewriteOperation[]{operation},
+            context.getDocument());
 
       Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
       FixCorrectionProposal proposal = new FixCorrectionProposal(fix, null, 5, image, context);

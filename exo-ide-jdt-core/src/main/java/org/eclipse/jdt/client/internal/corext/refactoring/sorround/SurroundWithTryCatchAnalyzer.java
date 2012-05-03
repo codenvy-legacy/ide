@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.refactoring.sorround;
 
-
 import org.eclipse.jdt.client.core.dom.BodyDeclaration;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.ITypeBinding;

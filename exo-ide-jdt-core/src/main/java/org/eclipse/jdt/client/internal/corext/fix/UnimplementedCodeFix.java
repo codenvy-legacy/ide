@@ -55,8 +55,7 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
        * {@inheritDoc}
        */
       @Override
-      public void rewriteAST(CompilationUnitRewrite cuRewrite)
-         throws CoreException
+      public void rewriteAST(CompilationUnitRewrite cuRewrite) throws CoreException
       {
          AST ast = cuRewrite.getAST();
          ASTRewrite rewrite = cuRewrite.getASTRewrite();
@@ -67,9 +66,9 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
             textEditGroup);
 
          //TODO
-//         LinkedProposalPositionGroup group = new LinkedProposalPositionGroup("modifier"); //$NON-NLS-1$
-//         group.addPosition(rewrite.track(newModifier), !linkedProposalPositions.hasLinkedPositions());
-//         linkedProposalPositions.addPositionGroup(group);
+         //         LinkedProposalPositionGroup group = new LinkedProposalPositionGroup("modifier"); //$NON-NLS-1$
+         //         group.addPosition(rewrite.track(newModifier), !linkedProposalPositions.hasLinkedPositions());
+         //         linkedProposalPositions.addPositionGroup(group);
       }
    }
 
@@ -122,7 +121,8 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
          .size()]), document);
    }
 
-   public static IProposableFix createAddUnimplementedMethodsFix(final CompilationUnit root, IProblemLocation problem, IDocument document)
+   public static IProposableFix createAddUnimplementedMethodsFix(final CompilationUnit root, IProblemLocation problem,
+      IDocument document)
    {
       ASTNode typeNode = getSelectedTypeNode(root, problem);
       if (typeNode == null)
@@ -134,7 +134,8 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
       AddUnimplementedMethodsOperation operation = new AddUnimplementedMethodsOperation(typeNode);
       if (operation.getMethodsToImplement().length > 0)
       {
-         return new UnimplementedCodeFix(CorrectionMessages.INSTANCE.UnimplementedMethodsCorrectionProposal_description(), root,
+         return new UnimplementedCodeFix(
+            CorrectionMessages.INSTANCE.UnimplementedMethodsCorrectionProposal_description(), root,
             new CompilationUnitRewriteOperation[]{operation}, document);
       }
       else
@@ -144,7 +145,8 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
             public CompilationUnitChange createChange(IProgressMonitor progressMonitor) throws CoreException
             {
                CompilationUnitChange change =
-                  new CompilationUnitChange(CorrectionMessages.INSTANCE.UnimplementedMethodsCorrectionProposal_description())
+                  new CompilationUnitChange(
+                     CorrectionMessages.INSTANCE.UnimplementedMethodsCorrectionProposal_description())
                   {
                      @Override
                      public Change perform(IProgressMonitor pm) throws CoreException
@@ -181,7 +183,8 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
       }
    }
 
-   public static UnimplementedCodeFix createMakeTypeAbstractFix(CompilationUnit root, IProblemLocation problem, IDocument document)
+   public static UnimplementedCodeFix createMakeTypeAbstractFix(CompilationUnit root, IProblemLocation problem,
+      IDocument document)
    {
       ASTNode typeNode = getSelectedTypeNode(root, problem);
       if (!(typeNode instanceof TypeDeclaration))
@@ -191,10 +194,11 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
       MakeTypeAbstractOperation operation = new MakeTypeAbstractOperation(typeDeclaration);
 
       //TODO
-      String label =CorrectionMessages.INSTANCE.ModifierCorrectionSubProcessor_addabstract_description(
-       typeDeclaration.getName().getIdentifier());
-//         CorrectionMessages.INSTANCE.ModifierCorrectionSubProcessor_addabstract_description(
-//            BasicElementLabels.getJavaElementName(typeDeclaration.getName().getIdentifier()));
+      String label =
+         CorrectionMessages.INSTANCE.ModifierCorrectionSubProcessor_addabstract_description(typeDeclaration.getName()
+            .getIdentifier());
+      //         CorrectionMessages.INSTANCE.ModifierCorrectionSubProcessor_addabstract_description(
+      //            BasicElementLabels.getJavaElementName(typeDeclaration.getName().getIdentifier()));
       return new UnimplementedCodeFix(label, root, new CompilationUnitRewriteOperation[]{operation}, document);
    }
 

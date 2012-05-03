@@ -66,7 +66,7 @@ public class SurroundWithAnalyzer extends CodeAnalyzer
       ASTNode node = getFirstSelectedNode();
       if (node == null)
          return null;
-      
+
       return ASTResolving.findParentBodyDeclaration(node);
    }
 
@@ -122,7 +122,7 @@ public class SurroundWithAnalyzer extends CodeAnalyzer
       if (getSelection().getEndVisitSelectionMode(node) == Selection.SELECTED)
       {
          invalidSelection(RefactoringCoreMessages.INSTANCE.SurroundWithTryCatchAnalyzer_cannotHandleSuper());
-            
+
       }
       super.endVisit(node);
    }

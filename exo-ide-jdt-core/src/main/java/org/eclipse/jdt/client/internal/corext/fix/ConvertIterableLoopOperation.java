@@ -62,7 +62,7 @@ import org.exoplatform.ide.editor.text.edits.TextEditGroup;
 public final class ConvertIterableLoopOperation extends ConvertLoopOperation
 {
 
-   private static final Status SEMANTIC_CHANGE_WARNING_STATUS = new Status(IStatus.WARNING,"",
+   private static final Status SEMANTIC_CHANGE_WARNING_STATUS = new Status(IStatus.WARNING, "",
       FixMessages.INSTANCE.ConvertIterableLoopOperation_semanticChangeWarning());
 
    /**
@@ -269,13 +269,13 @@ public final class ConvertIterableLoopOperation extends ConvertLoopOperation
       {
          name = names[0];
       }
-//      final LinkedProposalPositionGroup pg = positionGroups.getPositionGroup(name, true);
-//      if (fElement != null)
-//         pg.addProposal(name, null, 10);
-//      for (int i = 0; i < names.length; i++)
-//      {
-//         pg.addProposal(names[i], null, 10);
-//      }
+      //      final LinkedProposalPositionGroup pg = positionGroups.getPositionGroup(name, true);
+      //      if (fElement != null)
+      //         pg.addProposal(name, null, 10);
+      //      for (int i = 0; i < names.length; i++)
+      //      {
+      //         pg.addProposal(names[i], null, 10);
+      //      }
 
       final Statement body = getForStatement().getBody();
       if (body != null)
@@ -307,7 +307,7 @@ public final class ConvertIterableLoopOperation extends ConvertLoopOperation
                final SimpleName node = ast.newSimpleName(text);
                astRewrite.replace(expression, node, group);
                remover.registerRemovedNode(expression);
-//               pg.addPosition(astRewrite.track(node), false);
+               //               pg.addPosition(astRewrite.track(node), false);
                return false;
             }
 
@@ -345,7 +345,7 @@ public final class ConvertIterableLoopOperation extends ConvertLoopOperation
                      final Statement parent = ASTResolving.findParentStatement(node); //TODO// (Statement)ASTNodes.getParent(node, Statement.class);
                      if (parent != null && (list == null || list.getRewrittenList().contains(parent)))
                      {
-//                        pg.addPosition(astRewrite.track(node), false);
+                        //                        pg.addPosition(astRewrite.track(node), false);
                      }
                   }
                }
@@ -357,7 +357,7 @@ public final class ConvertIterableLoopOperation extends ConvertLoopOperation
       }
       final SingleVariableDeclaration declaration = ast.newSingleVariableDeclaration();
       final SimpleName simple = ast.newSimpleName(name);
-//      pg.addPosition(astRewrite.track(simple), true);
+      //      pg.addPosition(astRewrite.track(simple), true);
       declaration.setName(simple);
       final ITypeBinding iterable = getIterableType(fIterator.getType());
       declaration.setType(importType(iterable, getForStatement(), importRewrite, getRoot()));
@@ -413,14 +413,15 @@ public final class ConvertIterableLoopOperation extends ConvertLoopOperation
          if (updateExpressions.size() == 1)
          {
             resultStatus =
-               new Status(IStatus.WARNING, "", 
-                  FixMessages.INSTANCE.ConvertIterableLoopOperation_RemoveUpdateExpression_Warning(updateExpressions.get(0)
-                     .toString()));
+               new Status(IStatus.WARNING, "",
+                  FixMessages.INSTANCE.ConvertIterableLoopOperation_RemoveUpdateExpression_Warning(updateExpressions
+                     .get(0).toString()));
          }
          else if (updateExpressions.size() > 1)
          {
             resultStatus =
-               new Status(IStatus.WARNING, "", FixMessages.INSTANCE.ConvertIterableLoopOperation_RemoveUpdateExpressions_Warning());
+               new Status(IStatus.WARNING, "",
+                  FixMessages.INSTANCE.ConvertIterableLoopOperation_RemoveUpdateExpressions_Warning());
          }
 
          for (final Iterator<Expression> outer = getForStatement().initializers().iterator(); outer.hasNext();)

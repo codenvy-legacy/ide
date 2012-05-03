@@ -274,26 +274,26 @@ public abstract class TextChange extends TextEditBasedChange
     */
    protected UndoEdit performEdits(IDocument document) throws BadLocationException, MalformedTreeException
    {
-//      DocumentRewriteSession session = null;
-//      try
-//      {
-//         if (document instanceof IDocumentExtension4)
-//         {
-//            session = ((IDocumentExtension4)document).startRewriteSession(DocumentRewriteSessionType.UNRESTRICTED);
-//         }
+      //      DocumentRewriteSession session = null;
+      //      try
+      //      {
+      //         if (document instanceof IDocumentExtension4)
+      //         {
+      //            session = ((IDocumentExtension4)document).startRewriteSession(DocumentRewriteSessionType.UNRESTRICTED);
+      //         }
 
-//         LinkedModeModel.closeAllModels(document);
-         TextEditProcessor processor = createTextEditProcessor(document, TextEdit.CREATE_UNDO, false);
-         return processor.performEdits();
+      //         LinkedModeModel.closeAllModels(document);
+      TextEditProcessor processor = createTextEditProcessor(document, TextEdit.CREATE_UNDO, false);
+      return processor.performEdits();
 
-//      }
-//      finally
-//      {
-//         if (session != null)
-//         {
-//            ((IDocumentExtension4)document).stopRewriteSession(session);
-//         }
-//      }
+      //      }
+      //      finally
+      //      {
+      //         if (session != null)
+      //         {
+      //            ((IDocumentExtension4)document).stopRewriteSession(session);
+      //         }
+      //      }
    }
 
    //---- Method to access the current content of the text change ---------

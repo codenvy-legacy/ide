@@ -168,7 +168,7 @@ public final class JavaCore
     * @category CompilerOptionID
     */
    public static final String COMPILER_CODEGEN_INLINE_JSR_BYTECODE = PLUGIN_ID + ".compiler.codegen.inlineJsrBytecode"; //$NON-NLS-1$
-   
+
    /**
     * Compiler option ID: Reporting Unnecessary Type Check.
     * <p>When enabled, the compiler will issue an error or a warning when a cast or an <code>instanceof</code> operation
@@ -740,7 +740,7 @@ public final class JavaCore
    {
       return getOptions().get(key);
    }
-   
+
    /**
     * Returns the option that can be used to configure the severity of the
     * compiler problem identified by <code>problemID</code> if any,
@@ -756,7 +756,8 @@ public final class JavaCore
     *         <code>null</code> otherwise
     * @since 3.4
     */
-   public static String getOptionForConfigurableSeverity(int problemID) {
+   public static String getOptionForConfigurableSeverity(int problemID)
+   {
       return CompilerOptions.optionKeyFromIrritant(ProblemReporter.getIrritant(problemID));
    }
 

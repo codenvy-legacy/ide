@@ -494,10 +494,9 @@ public class CompilerOptions
    public static final int MethodCanBePotentiallyStatic = IrritantSet.GROUP2 | ASTNode.Bit6;
 
    public static final int RedundantSpecificationOfTypeArguments = IrritantSet.GROUP2 | ASTNode.Bit7;
-   
-// keep in sync with warningTokenToIrritant and warningTokenFromIrritant
-   public final static String[] warningTokens = {
-      "all", //$NON-NLS-1$
+
+   // keep in sync with warningTokenToIrritant and warningTokenFromIrritant
+   public final static String[] warningTokens = {"all", //$NON-NLS-1$
       "boxing", //$NON-NLS-1$
       "cast", //$NON-NLS-1$
       "dep-ann", //$NON-NLS-1$
@@ -520,7 +519,6 @@ public class CompilerOptions
       "unqualified-field-access", //$NON-NLS-1$
       "unused", //$NON-NLS-1$
    };
-
 
    // Severity level for handlers
    /**

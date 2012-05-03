@@ -20,108 +20,128 @@ import org.exoplatform.ide.editor.text.IDocument;
 import java.util.ArrayList;
 import java.util.Map;
 
+public abstract class AbstractMultiFix extends AbstractCleanUp implements IMultiFix
+{
 
+   protected AbstractMultiFix()
+   {
+   }
 
-public abstract class AbstractMultiFix extends AbstractCleanUp implements IMultiFix {
+   protected AbstractMultiFix(Map<String, String> settings)
+   {
+      super(settings);
+   }
 
-	protected AbstractMultiFix() {
-	}
+   @Override
+   public final ICleanUpFix createFix(CleanUpContext context) throws CoreException
+   {
+      CompilationUnit unit = context.getAST();
+      if (unit == null)
+         return null;
 
-	protected AbstractMultiFix(Map<String, String> settings) {
-		super(settings);
-	}
+      if (context instanceof MultiFixContext)
+      {
+         return createFix(unit, context.getDocument(), ((MultiFixContext)context).getProblemLocations());
+      }
+      else
+      {
+         return createFix(unit, context.getDocument());
+      }
+   }
 
-	@Override
-	public final ICleanUpFix createFix(CleanUpContext context) throws CoreException {
-		CompilationUnit unit= context.getAST();
-		if (unit == null)
-			return null;
+   protected abstract ICleanUpFix createFix(CompilationUnit unit, IDocument document) throws CoreException;
 
-		if (context instanceof MultiFixContext) {
-			return createFix(unit,context.getDocument(), ((MultiFixContext)context).getProblemLocations());
-		} else {
-			return createFix(unit, context.getDocument());
-		}
-	}
+   protected abstract ICleanUpFix createFix(CompilationUnit unit, IDocument document, IProblemLocation[] problems)
+      throws CoreException;
 
-	protected abstract ICleanUpFix createFix(CompilationUnit unit, IDocument document) throws CoreException;
+   /**
+    * {@inheritDoc}
+    */
+   public int computeNumberOfFixes(CompilationUnit compilationUnit)
+   {
+      return -1;
+   }
 
-	protected abstract ICleanUpFix createFix(CompilationUnit unit, IDocument document, IProblemLocation[] problems) throws CoreException;
+   /**
+    * Utility method to: count number of problems in <code>problems</code> with <code>problemId</code>
+    * @param problems the set of problems
+    * @param problemId the problem id to look for
+    * @return number of problems with problem id
+    */
+   protected static int getNumberOfProblems(IProblem[] problems, int problemId)
+   {
+      int result = 0;
+      for (int i = 0; i < problems.length; i++)
+      {
+         if (problems[i].getID() == problemId)
+            result++;
+      }
+      return result;
+   }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public int computeNumberOfFixes(CompilationUnit compilationUnit) {
-		return -1;
-	}
+   /**
+    * Convert set of IProblems to IProblemLocations
+    * @param problems the problems to convert
+    * @return the converted set
+    */
+   protected static IProblemLocation[] convertProblems(IProblem[] problems)
+   {
+      IProblemLocation[] result = new IProblemLocation[problems.length];
 
-	/**
-	 * Utility method to: count number of problems in <code>problems</code> with <code>problemId</code>
-	 * @param problems the set of problems
-	 * @param problemId the problem id to look for
-	 * @return number of problems with problem id
-	 */
-	protected static int getNumberOfProblems(IProblem[] problems, int problemId) {
-		int result= 0;
-		for (int i= 0; i < problems.length; i++) {
-			if (problems[i].getID() == problemId)
-				result++;
-		}
-		return result;
-	}
+      for (int i = 0; i < problems.length; i++)
+      {
+         result[i] = new ProblemLocation(problems[i]);
+      }
 
-	/**
-	 * Convert set of IProblems to IProblemLocations
-	 * @param problems the problems to convert
-	 * @return the converted set
-	 */
-	protected static IProblemLocation[] convertProblems(IProblem[] problems) {
-		IProblemLocation[] result= new IProblemLocation[problems.length];
+      return result;
+   }
 
-		for (int i= 0; i < problems.length; i++) {
-			result[i]= new ProblemLocation(problems[i]);
-		}
+   /**
+    * Returns unique problem locations. All locations in result
+    * have an id element <code>problemIds</code>.
+    *
+    * @param problems the problems to filter
+    * @param problemIds the ids of the resulting problem locations
+    * @return problem locations
+    */
+   protected static IProblemLocation[] filter(IProblemLocation[] problems, int[] problemIds)
+   {
+      ArrayList<IProblemLocation> result = new ArrayList<IProblemLocation>();
 
-		return result;
-	}
+      for (int i = 0; i < problems.length; i++)
+      {
+         IProblemLocation problem = problems[i];
+         if (contains(problemIds, problem.getProblemId()) && !contains(result, problem))
+         {
+            result.add(problem);
+         }
+      }
 
-	/**
-	 * Returns unique problem locations. All locations in result
-	 * have an id element <code>problemIds</code>.
-	 *
-	 * @param problems the problems to filter
-	 * @param problemIds the ids of the resulting problem locations
-	 * @return problem locations
-	 */
-	protected static IProblemLocation[] filter(IProblemLocation[] problems, int[] problemIds) {
-		ArrayList<IProblemLocation> result= new ArrayList<IProblemLocation>();
+      return result.toArray(new IProblemLocation[result.size()]);
+   }
 
-		for (int i= 0; i < problems.length; i++) {
-			IProblemLocation problem= problems[i];
-			if (contains(problemIds, problem.getProblemId()) && !contains(result, problem)) {
-				result.add(problem);
-			}
-		}
+   private static boolean contains(ArrayList<IProblemLocation> problems, IProblemLocation problem)
+   {
+      for (int i = 0; i < problems.size(); i++)
+      {
+         IProblemLocation existing = problems.get(i);
+         if (existing.getProblemId() == problem.getProblemId() && existing.getOffset() == problem.getOffset()
+            && existing.getLength() == problem.getLength())
+         {
+            return true;
+         }
+      }
 
-		return result.toArray(new IProblemLocation[result.size()]);
-	}
+      return false;
+   }
 
-	private static boolean contains(ArrayList<IProblemLocation> problems, IProblemLocation problem) {
-		for (int i= 0; i < problems.size(); i++) {
-			IProblemLocation existing= problems.get(i);
-			if (existing.getProblemId() == problem.getProblemId() && existing.getOffset() == problem.getOffset() && existing.getLength() == problem.getLength()) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	private static boolean contains(int[] ids, int id) {
-		for (int i= 0; i < ids.length; i++) {
-			if (ids[i] == id)
-				return true;
-		}
-		return false;
-	}
+   private static boolean contains(int[] ids, int id)
+   {
+      for (int i = 0; i < ids.length; i++)
+      {
+         if (ids[i] == id)
+            return true;
+      }
+      return false;
+   }
 }

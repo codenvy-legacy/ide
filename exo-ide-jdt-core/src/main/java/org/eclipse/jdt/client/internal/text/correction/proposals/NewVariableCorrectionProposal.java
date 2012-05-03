@@ -172,15 +172,15 @@ public class NewVariableCorrectionProposal extends LinkedCorrectionProposal
             TextElement commentStart = ast.newTextElement();
             newTagElement.fragments().add(commentStart);
 
-//            addLinkedPosition(rewrite.track(newTagRef), false, KEY_NAME);
-//            addLinkedPosition(rewrite.track(commentStart), false, "comment_start"); //$NON-NLS-1$
+            //            addLinkedPosition(rewrite.track(newTagRef), false, KEY_NAME);
+            //            addLinkedPosition(rewrite.track(commentStart), false, "comment_start"); //$NON-NLS-1$
 
             ListRewrite tagsRewriter = rewrite.getListRewrite(javadoc, Javadoc.TAGS_PROPERTY);
             JavadocTagsSubProcessor.insertTag(tagsRewriter, newTagElement, leadingNames);
          }
 
-//         addLinkedPosition(rewrite.track(newDecl.getType()), false, KEY_TYPE);
-//         addLinkedPosition(rewrite.track(newDecl.getName()), false, KEY_NAME);
+         //         addLinkedPosition(rewrite.track(newDecl.getType()), false, KEY_TYPE);
+         //         addLinkedPosition(rewrite.track(newDecl.getName()), false, KEY_NAME);
 
          return rewrite;
       }
@@ -269,10 +269,10 @@ public class NewVariableCorrectionProposal extends LinkedCorrectionProposal
          newDeclFrag.setName(ast.newSimpleName(node.getIdentifier()));
          rewrite.replace(assignment, newDecl, null);
 
-//         addLinkedPosition(rewrite.track(newDecl.getType()), false, KEY_TYPE);
-//         addLinkedPosition(rewrite.track(newDeclFrag.getName()), true, KEY_NAME);
-//
-//         setEndPosition(rewrite.track(assignment.getParent()));
+         //         addLinkedPosition(rewrite.track(newDecl.getType()), false, KEY_TYPE);
+         //         addLinkedPosition(rewrite.track(newDeclFrag.getName()), true, KEY_NAME);
+         //
+         //         setEndPosition(rewrite.track(assignment.getParent()));
 
          return rewrite;
       }
@@ -291,10 +291,10 @@ public class NewVariableCorrectionProposal extends LinkedCorrectionProposal
 
          rewrite.replace(assignment, expression, null);
 
-//         addLinkedPosition(rewrite.track(expression.getType()), false, KEY_TYPE);
-//         addLinkedPosition(rewrite.track(frag.getName()), true, KEY_NAME);
-//
-//         setEndPosition(rewrite.track(expression));
+         //         addLinkedPosition(rewrite.track(expression.getType()), false, KEY_TYPE);
+         //         addLinkedPosition(rewrite.track(frag.getName()), true, KEY_NAME);
+         //
+         //         setEndPosition(rewrite.track(expression));
 
          return rewrite;
       }
@@ -307,9 +307,9 @@ public class NewVariableCorrectionProposal extends LinkedCorrectionProposal
       newDecl.setType(evaluateVariableType(ast, imports, importRewriteContext, targetContext));
       //		newDeclFrag.setInitializer(ASTNodeFactory.newDefaultExpression(ast, newDecl.getType(), 0));
 
-//      addLinkedPosition(rewrite.track(newDecl.getType()), false, KEY_TYPE);
-//      addLinkedPosition(rewrite.track(node), true, KEY_NAME);
-//      addLinkedPosition(rewrite.track(newDeclFrag.getName()), false, KEY_NAME);
+      //      addLinkedPosition(rewrite.track(newDecl.getType()), false, KEY_TYPE);
+      //      addLinkedPosition(rewrite.track(node), true, KEY_NAME);
+      //      addLinkedPosition(rewrite.track(newDeclFrag.getName()), false, KEY_NAME);
 
       Statement statement = dominantStatement;
       List<? extends ASTNode> list = ASTNodes.getContainingList(statement);
@@ -440,20 +440,20 @@ public class NewVariableCorrectionProposal extends LinkedCorrectionProposal
          ListRewrite listRewriter = rewrite.getListRewrite(newTypeDecl, property);
          listRewriter.insertAt(newDecl, insertIndex, null);
 
-//         ModifierCorrectionSubProcessor.installLinkedVisibilityProposals(getLinkedProposalModel(), rewrite,
-//            newDecl.modifiers(), fSenderBinding.isInterface());
+         //         ModifierCorrectionSubProcessor.installLinkedVisibilityProposals(getLinkedProposalModel(), rewrite,
+         //            newDecl.modifiers(), fSenderBinding.isInterface());
 
-//         addLinkedPosition(rewrite.track(newDecl.getType()), false, KEY_TYPE);
-//         if (!isInDifferentCU)
-//         {
-//            addLinkedPosition(rewrite.track(node), true, KEY_NAME);
-//         }
-//         addLinkedPosition(rewrite.track(fragment.getName()), false, KEY_NAME);
-//
-//         if (fragment.getInitializer() != null)
-//         {
-//            addLinkedPosition(rewrite.track(fragment.getInitializer()), false, KEY_INITIALIZER);
-//         }
+         //         addLinkedPosition(rewrite.track(newDecl.getType()), false, KEY_TYPE);
+         //         if (!isInDifferentCU)
+         //         {
+         //            addLinkedPosition(rewrite.track(node), true, KEY_NAME);
+         //         }
+         //         addLinkedPosition(rewrite.track(fragment.getName()), false, KEY_NAME);
+         //
+         //         if (fragment.getInitializer() != null)
+         //         {
+         //            addLinkedPosition(rewrite.track(fragment.getInitializer()), false, KEY_INITIALIZER);
+         //         }
          return rewrite;
       }
       return null;
@@ -490,10 +490,10 @@ public class NewVariableCorrectionProposal extends LinkedCorrectionProposal
                   parent.arguments(), targetContext);
             if (bindings.length > 0)
             {
-//               for (int i = 0; i < bindings.length; i++)
-//               {
-//                  addLinkedPositionProposal(KEY_TYPE, bindings[i]);
-//               }
+               //               for (int i = 0; i < bindings.length; i++)
+               //               {
+               //                  addLinkedPositionProposal(KEY_TYPE, bindings[i]);
+               //               }
                return imports.addImport(bindings[0], ast, importRewriteContext);
             }
          }
@@ -515,10 +515,10 @@ public class NewVariableCorrectionProposal extends LinkedCorrectionProposal
          if (isVariableAssigned())
          {
             ITypeBinding[] typeProposals = ASTResolving.getRelaxingTypes(ast, binding);
-//            for (int i = 0; i < typeProposals.length; i++)
-//            {
-//               addLinkedPositionProposal(KEY_TYPE, typeProposals[i]);
-//            }
+            //            for (int i = 0; i < typeProposals.length; i++)
+            //            {
+            //               addLinkedPositionProposal(KEY_TYPE, typeProposals[i]);
+            //            }
          }
          return imports.addImport(binding, ast);
       }
@@ -619,7 +619,7 @@ public class NewVariableCorrectionProposal extends LinkedCorrectionProposal
          ListRewrite listRewriter = rewrite.getListRewrite(newTypeDecl, EnumDeclaration.ENUM_CONSTANTS_PROPERTY);
          listRewriter.insertLast(constDecl, null);
 
-//         addLinkedPosition(rewrite.track(constDecl.getName()), false, KEY_NAME);
+         //         addLinkedPosition(rewrite.track(constDecl.getName()), false, KEY_NAME);
 
          return rewrite;
       }

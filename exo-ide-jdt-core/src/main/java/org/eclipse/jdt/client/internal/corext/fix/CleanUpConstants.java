@@ -15,7 +15,6 @@ import org.exoplatform.ide.editor.runtime.Assert;
 
 import java.util.Iterator;
 
-
 public class CleanUpConstants
 {
 
@@ -1274,17 +1273,17 @@ public class CleanUpConstants
    public static void initDefaults()
    {
       //TODO
-//      CleanUpOptions settings =
-//         JavaPlugin.getDefault().getCleanUpRegistry().getDefaultOptions(CleanUpConstants.DEFAULT_CLEAN_UP_OPTIONS);
-//      for (Iterator<String> iterator = settings.getKeys().iterator(); iterator.hasNext();)
-//      {
-//         String key = iterator.next();
-//         store.setDefault(key, settings.getValue(key));
-//      }
-//
-//      store.setDefault(SHOW_CLEAN_UP_WIZARD, true);
-//      store.setDefault(CLEANUP_PROFILE, DEFAULT_PROFILE);
-//      store.setDefault(CLEANUP_ON_SAVE_PROFILE, DEFAULT_SAVE_PARTICIPANT_PROFILE);
+      //      CleanUpOptions settings =
+      //         JavaPlugin.getDefault().getCleanUpRegistry().getDefaultOptions(CleanUpConstants.DEFAULT_CLEAN_UP_OPTIONS);
+      //      for (Iterator<String> iterator = settings.getKeys().iterator(); iterator.hasNext();)
+      //      {
+      //         String key = iterator.next();
+      //         store.setDefault(key, settings.getValue(key));
+      //      }
+      //
+      //      store.setDefault(SHOW_CLEAN_UP_WIZARD, true);
+      //      store.setDefault(CLEANUP_PROFILE, DEFAULT_PROFILE);
+      //      store.setDefault(CLEANUP_ON_SAVE_PROFILE, DEFAULT_SAVE_PARTICIPANT_PROFILE);
    }
 
    public static void setDefaultOptions(int kind, CleanUpOptions options)

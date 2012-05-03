@@ -29,7 +29,7 @@ import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
  */
 public class CorrectionEngine
 {
-   
+
    /**
     * Return an array of strings which contains one entry per warning token
     * accepted by the <code>@SuppressWarnings</code> annotation. This array is
@@ -45,7 +45,8 @@ public class CorrectionEngine
     *          accepted by the <code>@SuppressWarnings</code> annotation.
     * @since 3.2
     */
-   public static String[] getAllWarningTokens() {
+   public static String[] getAllWarningTokens()
+   {
       return CompilerOptions.warningTokens;
    }
 

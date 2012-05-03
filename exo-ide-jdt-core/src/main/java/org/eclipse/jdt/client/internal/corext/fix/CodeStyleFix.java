@@ -705,7 +705,8 @@ public class CodeStyleFix extends CompilationUnitRewriteOperationsFix
 
       CompilationUnitRewriteOperation[] operationsArray =
          operations.toArray(new CompilationUnitRewriteOperation[operations.size()]);
-      return new CodeStyleFix(FixMessages.INSTANCE.CodeStyleFix_change_name(), compilationUnit, operationsArray, document);
+      return new CodeStyleFix(FixMessages.INSTANCE.CodeStyleFix_change_name(), compilationUnit, operationsArray,
+         document);
    }
 
    public static ICleanUpFix createCleanUp(CompilationUnit compilationUnit, IDocument document,
@@ -740,7 +741,8 @@ public class CodeStyleFix extends CompilationUnitRewriteOperationsFix
 
       CompilationUnitRewriteOperation[] operationsArray =
          operations.toArray(new CompilationUnitRewriteOperation[operations.size()]);
-      return new CodeStyleFix(FixMessages.INSTANCE.CodeStyleFix_change_name(), compilationUnit, operationsArray, document);
+      return new CodeStyleFix(FixMessages.INSTANCE.CodeStyleFix_change_name(), compilationUnit, operationsArray,
+         document);
    }
 
    private static void addToStaticAccessOperations(CompilationUnit compilationUnit, IProblemLocation[] problems,
@@ -971,7 +973,8 @@ public class CodeStyleFix extends CompilationUnitRewriteOperationsFix
       return (SimpleName)selectedNode;
    }
 
-   private CodeStyleFix(String name, CompilationUnit compilationUnit, CompilationUnitRewriteOperation[] operations, IDocument document)
+   private CodeStyleFix(String name, CompilationUnit compilationUnit, CompilationUnitRewriteOperation[] operations,
+      IDocument document)
    {
       super(name, compilationUnit, operations, document);
    }

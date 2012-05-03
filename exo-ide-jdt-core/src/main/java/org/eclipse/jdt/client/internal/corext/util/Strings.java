@@ -44,10 +44,12 @@ public class Strings
     * @return the indent part of <code>line</code>, but no odd spaces
     * @since 3.1
     */
-   public static String getIndentString(String line) {
-      return IndentManipulation.extractIndentString(line, CodeFormatterUtil.getTabWidth(), CodeFormatterUtil.getIndentWidth());
+   public static String getIndentString(String line)
+   {
+      return IndentManipulation.extractIndentString(line, CodeFormatterUtil.getTabWidth(),
+         CodeFormatterUtil.getIndentWidth());
    }
-   
+
    /**
     * Change the indent of, possible multi-line, code range. The current indent is removed, a new indent added.
     * The first line of the code will not be changed. (It is considered to have no indent as it might start in
@@ -62,10 +64,12 @@ public class Strings
     * @return the changed code
     * @since 3.1
     */
-   public static String changeIndent(String code, int codeIndentLevel, String newIndent, String lineDelim) {
-      return IndentManipulation.changeIndent(code, codeIndentLevel, CodeFormatterUtil.getTabWidth(), CodeFormatterUtil.getIndentWidth(), newIndent, lineDelim);
+   public static String changeIndent(String code, int codeIndentLevel, String newIndent, String lineDelim)
+   {
+      return IndentManipulation.changeIndent(code, codeIndentLevel, CodeFormatterUtil.getTabWidth(),
+         CodeFormatterUtil.getIndentWidth(), newIndent, lineDelim);
    }
-   
+
    /**
     * Change the indent of, possible muti-line, code range. The current indent is removed, a new indent added.
     * The first line of the code will not be changed. (It is considered to have no indent as it might start in

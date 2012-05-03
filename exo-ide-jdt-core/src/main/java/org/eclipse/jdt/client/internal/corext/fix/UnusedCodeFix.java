@@ -511,8 +511,8 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
          }
          else if (fRemovedAssignmentsCount > 1)
          {
-            sb.append(FixMessages.INSTANCE.UnusedCodeFix_RemoveFieldOrLocal_RemovedAssignments_preview_plural(
-               String.valueOf(fRemovedAssignmentsCount)));
+            sb.append(FixMessages.INSTANCE.UnusedCodeFix_RemoveFieldOrLocal_RemovedAssignments_preview_plural(String
+               .valueOf(fRemovedAssignmentsCount)));
          }
          if (fAlteredAssignmentsCount == 1)
          {
@@ -520,8 +520,8 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
          }
          else if (fAlteredAssignmentsCount > 1)
          {
-            sb.append(FixMessages.INSTANCE.UnusedCodeFix_RemoveFieldOrLocal_AlteredAssignments_preview_plural(
-               String.valueOf(fAlteredAssignmentsCount)));
+            sb.append(FixMessages.INSTANCE.UnusedCodeFix_RemoveFieldOrLocal_AlteredAssignments_preview_plural(String
+               .valueOf(fAlteredAssignmentsCount)));
          }
          if (sb.length() > 0)
          {
@@ -552,7 +552,8 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
       public void rewriteAST(CompilationUnitRewrite cuRewrite) throws CoreException
       {
 
-         TextEditGroup group = createTextEditGroup(FixMessages.INSTANCE.UnusedCodeFix_RemoveCast_description(), cuRewrite);
+         TextEditGroup group =
+            createTextEditGroup(FixMessages.INSTANCE.UnusedCodeFix_RemoveCast_description(), cuRewrite);
 
          ASTRewrite rewrite = cuRewrite.getASTRewrite();
 
@@ -590,7 +591,8 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
       {
          ASTRewrite rewrite = cuRewrite.getASTRewrite();
 
-         TextEditGroup group = createTextEditGroup(FixMessages.INSTANCE.UnusedCodeFix_RemoveCast_description(), cuRewrite);
+         TextEditGroup group =
+            createTextEditGroup(FixMessages.INSTANCE.UnusedCodeFix_RemoveCast_description(), cuRewrite);
 
          while (fUnnecessaryCasts.size() > 0)
          {
@@ -624,7 +626,8 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
       }
    }
 
-   public static UnusedCodeFix createRemoveUnusedImportFix(CompilationUnit compilationUnit, IProblemLocation problem, IDocument document)
+   public static UnusedCodeFix createRemoveUnusedImportFix(CompilationUnit compilationUnit, IProblemLocation problem,
+      IDocument document)
    {
       if (isUnusedImport(problem))
       {
@@ -635,7 +638,8 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
             RemoveImportOperation operation = new RemoveImportOperation(node);
             Map<String, String> options = new Hashtable<String, String>();
             options.put(CleanUpConstants.REMOVE_UNUSED_CODE_IMPORTS, CleanUpOptions.TRUE);
-            return new UnusedCodeFix(label, compilationUnit, new CompilationUnitRewriteOperation[]{operation}, options, document);
+            return new UnusedCodeFix(label, compilationUnit, new CompilationUnitRewriteOperation[]{operation}, options,
+               document);
          }
       }
       return null;
@@ -681,7 +685,8 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
          || id == IProblem.LocalVariableIsNeverUsed || id == IProblem.ArgumentIsNeverUsed;
    }
 
-   public static UnusedCodeFix createRemoveUnusedCastFix(CompilationUnit compilationUnit, IProblemLocation problem, IDocument document)
+   public static UnusedCodeFix createRemoveUnusedCastFix(CompilationUnit compilationUnit, IProblemLocation problem,
+      IDocument document)
    {
       if (problem.getProblemId() != IProblem.UnnecessaryCast)
          return null;
@@ -770,7 +775,8 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
                   && (!((IVariableBinding)binding).isField() || isSideEffectFree(name, compilationUnit)))
                {
                   VariableDeclarationFragment parent =
-                     (VariableDeclarationFragment)ASTNodes.getParent(name, VariableDeclarationFragment.VARIABLE_DECLARATION_FRAGMENT);
+                     (VariableDeclarationFragment)ASTNodes.getParent(name,
+                        VariableDeclarationFragment.VARIABLE_DECLARATION_FRAGMENT);
                   if (parent != null)
                   {
                      ASTNode varDecl = parent.getParent();
