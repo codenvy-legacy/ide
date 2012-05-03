@@ -45,6 +45,8 @@ public class Menu extends AbstractTestModule
       String LOCK_LAYER_CLASS = "exo-lockLayer";
 
       String TOP_MENU_ITEM_LOCATOR = "//td[@class='exo-menuBarItem' and text()='%s']";
+      
+      String TOP_MENU_ITEM_DISABLED_LOCATOR = "//td[@class='exo-menuBarItemDisabled' and text()='%s']";
 
       String MENU_ITEM_LOCATOR = "//td[contains(@class,'exo-popupMenuTitleField')]//nobr[text()='%s']";
 
@@ -80,7 +82,6 @@ public class Menu extends AbstractTestModule
       waitMenuPopUpClosed();
    }
 
-   
    /**
     * Run command from top menu.
     * 
@@ -97,7 +98,7 @@ public class Menu extends AbstractTestModule
       topMenuItem.click();
       waitMenuPopUp();
    }
-   
+
    /**
     * Run command from sub menu.
     * 
@@ -194,7 +195,7 @@ public class Menu extends AbstractTestModule
             try
             {
                return driver.findElement(By.cssSelector(Locators.POPUP_SELECTOR)) != null
-                     && driver.findElement(By.cssSelector(Locators.POPUP_SELECTOR)).isDisplayed();
+                  && driver.findElement(By.cssSelector(Locators.POPUP_SELECTOR)).isDisplayed();
             }
             catch (NoSuchElementException e)
             {
@@ -218,8 +219,8 @@ public class Menu extends AbstractTestModule
             try
             {
                WebElement menuPopup = driver.findElement(By.cssSelector(Locators.POPUP_SELECTOR));
-               
-               return ! menuPopup.isDisplayed();
+
+               return !menuPopup.isDisplayed();
             }
             catch (NoSuchElementException e)
             {
@@ -294,6 +295,42 @@ public class Menu extends AbstractTestModule
    }
 
    /**
+    * check disabled state top menu
+    */
+   public void isTopMenuDisabled(String topMenuName) throws Exception
+   {
+
+      try
+      {
+         WebElement topMenuItem =
+            driver().findElement(By.xpath(String.format(Locators.TOP_MENU_ITEM_DISABLED_LOCATOR, topMenuName)));
+      }
+      catch (NoSuchElementException e)
+      {
+
+      }
+
+   }
+
+   /**
+    * check enabled state top menu
+    */
+   public void isTopMenuEnabled(String topMenuName) throws Exception
+   {
+
+      try
+      {
+         WebElement topMenuItem =
+            driver().findElement(By.xpath(String.format(Locators.TOP_MENU_ITEM_LOCATOR, topMenuName)));
+      }
+      catch (NoSuchElementException e)
+      {
+
+      }
+
+   }
+
+   /**
     * Wait for menu item to appear.
     * 
     * @param itemName name of item to wait
@@ -342,7 +379,6 @@ public class Menu extends AbstractTestModule
       }
    }
 
-   
    /**
     * click for onlock leayer
     */
@@ -350,7 +386,6 @@ public class Menu extends AbstractTestModule
    {
       lockLayer.click();
    }
-   
 
    /**
     * Wait appearance Top menu
