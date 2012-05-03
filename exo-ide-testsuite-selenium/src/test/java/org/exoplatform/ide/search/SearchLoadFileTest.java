@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import javax.validation.constraints.AssertFalse;
+import javax.validation.constraints.AssertTrue;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -84,153 +85,63 @@ public class SearchLoadFileTest extends BaseTest
     * 
     * @throws Exception
     */
-   @Ignore
    @Test
    //TODO after fix IDE-1483, IDE-1484  test should be complete
    public void testLoadFoundFile() throws Exception
    {
-      //step 1 open project an folders
+      //step 1 open project an folders, search groovy and check result
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.WELCOME_PAGE.close();
+      IDE.WELCOME_PAGE.waitClose();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER);
-      IDE.SEARCH.performSearch("/" + PROJECT, "", MimeType.APPLICATION_GROOVY);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_FOLDER);
+      IDE.SEARCH.performSearch("/" + PROJECT + "/" + TEST_FOLDER, "", MimeType.APPLICATION_GROOVY);
+      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);
 
-   /*   IDE.SEARCH.waitSearchResultsOpened();
-      IDE.SEARCH.isFilePresent(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);
-      IDE.SEARCH.selectItem(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);
-      IDE.SEARCH.doubleClickOnFile(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);*/
+      IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);
+      IDE.SEARCH_RESULT.openItem(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);
 
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.DELETE));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.REFRESH));
-
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.REFRESH));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE));
-
+      chekButtonState();
+      
+      //step 2 check GOTO folder and close groovy file
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      //TODO after fix IDE-1483, IDE-1484  test should be complete
+      IDE.EDITOR.waitTabPresent(0);
+      assertEquals(restFileName, IDE.EDITOR.getTabTitle(0));
+      IDE.EDITOR.closeFile(0);
+
+      //step 3 open social gadget file, edit, save. Search this file and check results 
+      //TODO Tets fail issue IDE - IDE-1632
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FOLDER + "/" + gadgetFileName);
+      IDE.EDITOR.waitTabPresent(0);
+      IDE.EDITOR.deleteFileContent(1);
+      IDE.EDITOR.typeTextIntoEditor(1, gadgetFileContent);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER + "/" + gadgetFileName);
+      IDE.EDITOR.closeFile(0);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.SEARCH.performSearch("/" + PROJECT, "", MimeType.GOOGLE_GADGET);
+      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + TEST_FOLDER + "/" + gadgetFileName);
+
       Thread.sleep(3000);
 
-      //-------------------------------------------------------------------------------------------------
+   }
 
-      //
-      //      IDE.WORKSPACE.doubleClickOnFileFromSearchTab(WS_URL + TEST_FOLDER + "/" + restFileName);
-      //      IDE.EDITOR.waitTabPresent(0);
-      //      assertEquals(restFileName, IDE.EDITOR.getTabTitle(0));
-      //
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, false);
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, false);
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, false);
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.REFRESH, false);
-      //
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.REFRESH, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.RENAME, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, false);
-      //
-      //      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      //      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + restFileName);
-      //      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      //      
-      //
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, true);
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, true);
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, true);
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.REFRESH, true);
-      //
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.REFRESH, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.RENAME, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, true);
-      //
-      //      IDE.EDITOR.closeFile(0);
-      //
-      //      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
-      //      IDE.EDITOR.waitTabPresent(0);
-      //
-      //      IDE.EDITOR.deleteLinesInEditor(0, 7);
-      //
-      //      IDE.EDITOR.typeTextIntoEditor(0, gadgetFileContent);
-      //      IDE.NAVIGATION.saveFileAs(gadgetFileName);
-      //      Thread.sleep(TestConstants.SLEEP);
-      //      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + gadgetFileName);
-      //      IDE.EDITOR.closeFile(0);
-      //      IDE.WORKSPACE.selectRootItem();
-      //
-      //      IDE.SEARCH.performSearch("/", "", "");
-      //      IDE.SEARCH.waitSearchResultsOpened();
-      //      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + TEST_FOLDER + "/" + gadgetFileName);
-      //
-      //      IDE.WORKSPACE.doubleClickOnFileFromSearchTab(WS_URL + TEST_FOLDER + "/" + gadgetFileName);
-      //      IDE.EDITOR.waitTabPresent(0);
-      //      assertEquals(gadgetFileName, IDE.EDITOR.getTabTitle(0));
-      //
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, false);
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, false);
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, false);
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.REFRESH, false);
-      //
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.REFRESH, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.RENAME, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, false);
-      //
-      //      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      //      //TODO test selected
-      //      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + restFileName);
-      //      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      //
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, true);
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, true);
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, true);
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.REFRESH, true);
-      //
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DOWNLOAD_ZIPPED_FOLDER, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.REFRESH, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.RENAME, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SEARCH, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE, true);
+   private void chekButtonState() throws Exception
+   {
+      IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE);
+      assertFalse(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.File.DELETE));
+      assertFalse(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.File.CUT_SELECTED_ITEM));
+      assertFalse(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.File.COPY_SELECTED_ITEM));
+      assertFalse(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.File.PASTE));
+      assertFalse(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.File.REFRESH));
+      assertFalse(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.File.SEARCH));
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.Editor.LOCK_FILE));
+      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.FORMAT));
+      IDE.MENU.isTopMenuDisabled(MenuCommands.File.FILE);
    }
 
    @AfterClass
