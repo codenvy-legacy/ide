@@ -150,19 +150,14 @@ public class CopyItemsCommand extends SimpleControl implements IDEControl, Items
          return;
       }
 
-      if (!isProjectOpened && isProjectExplorerVisible)
+      if (!isProjectOpened && isProjectExplorerVisible && !isBrowserPanelVisible)
       {
          setVisible(false);
          return;
       }
-
-      if (!isBrowserPanelVisible)
-      {
-         setVisible(false);
-         return;
-      }
-
+      
       setVisible(true);
+      setShowInContextMenu(browserPanelSelected);
 
       if (selectedItems == null || selectedItems.size() != 1)
       {
@@ -178,7 +173,6 @@ public class CopyItemsCommand extends SimpleControl implements IDEControl, Items
       }
 
       setEnabled(browserPanelSelected);
-      setShowInContextMenu(browserPanelSelected);
    }
 
    @Override

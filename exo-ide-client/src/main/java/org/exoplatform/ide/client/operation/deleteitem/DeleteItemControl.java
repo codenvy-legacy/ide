@@ -89,7 +89,6 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.delete(), IDEImageBundle.INSTANCE.deleteDisabled());
       setEvent(new DeleteItemEvent());
-      setShowInContextMenu(true);
    }
 
    /**
@@ -176,6 +175,9 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
     */
    protected void updateState()
    {
+      boolean browserPanelSelected =
+         (activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay);
+
       if (vfsInfo == null)
       {
          setVisible(false);
@@ -195,6 +197,7 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
       }
 
       setVisible(true);
+      setShowInContextMenu(browserPanelSelected);
 
       if (selectedItems == null || selectedItems.size() != 1)
       {
@@ -214,10 +217,7 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
          return;
       }
 
-      boolean browserPanelSelected =
-         (activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay);
       setEnabled(browserPanelSelected);
-      setShowInContextMenu(browserPanelSelected);
    }
 
 }
