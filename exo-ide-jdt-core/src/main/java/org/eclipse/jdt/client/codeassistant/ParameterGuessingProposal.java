@@ -6,8 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *		Andrew McCullough - initial API and implementation
- *		IBM Corporation  - general improvement and bug fixes, partial reimplementation
+ *      Andrew McCullough - initial API and implementation
+ *      IBM Corporation  - general improvement and bug fixes, partial reimplementation
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant;
 

@@ -284,8 +284,8 @@ public interface IJavaSearchConstants
     *    }
     * 
     *    static Test bar()  {
-    * 		return new &lt;i&gt;Test&lt;/i&gt;();
-    * 	}
+    *       return new &lt;i&gt;Test&lt;/i&gt;();
+    *    }
     * }
     * </pre>
     * 

@@ -31,7 +31,7 @@ public abstract class CompilationUnitContextType extends TemplateContextType
 
    // protected static class ReturnType extends TemplateVariableResolver {
    // public ReturnType() {
-   //	 	 	super("return_type", JavaTemplateMessages.CompilationUnitContextType_variable_description_return_type);  //$NON-NLS-1$
+   //           super("return_type", JavaTemplateMessages.CompilationUnitContextType_variable_description_return_type);  //$NON-NLS-1$
    // }
    // @Override
    // protected String resolve(TemplateContext context) {
@@ -49,7 +49,7 @@ public abstract class CompilationUnitContextType extends TemplateContextType
    //
    // protected static class File extends TemplateVariableResolver {
    // public File() {
-   //			super("file", JavaTemplateMessages.CompilationUnitContextType_variable_description_file);  //$NON-NLS-1$
+   //         super("file", JavaTemplateMessages.CompilationUnitContextType_variable_description_file);  //$NON-NLS-1$
    // }
    // @Override
    // protected String resolve(TemplateContext context) {
@@ -70,7 +70,7 @@ public abstract class CompilationUnitContextType extends TemplateContextType
    //
    // protected static class PrimaryTypeName extends TemplateVariableResolver {
    // public PrimaryTypeName() {
-   //			super("primary_type_name", JavaTemplateMessages.CompilationUnitContextType_variable_description_primary_type_name);  //$NON-NLS-1$
+   //         super("primary_type_name", JavaTemplateMessages.CompilationUnitContextType_variable_description_primary_type_name);  //$NON-NLS-1$
    //
    // }
    // @Override
@@ -126,7 +126,7 @@ public abstract class CompilationUnitContextType extends TemplateContextType
    //
    // protected static class Method extends EnclosingJavaElement {
    // public Method() {
-   //			super("enclosing_method", JavaTemplateMessages.CompilationUnitContextType_variable_description_enclosing_method, IJavaElement.METHOD);  //$NON-NLS-1$
+   //         super("enclosing_method", JavaTemplateMessages.CompilationUnitContextType_variable_description_enclosing_method, IJavaElement.METHOD);  //$NON-NLS-1$
    // }
    // }
    //
@@ -148,13 +148,13 @@ public abstract class CompilationUnitContextType extends TemplateContextType
    // */
    // protected static class Package extends EnclosingJavaElement {
    // public Package() {
-   //			super("enclosing_package", JavaTemplateMessages.CompilationUnitContextType_variable_description_enclosing_package, IJavaElement.PACKAGE_FRAGMENT);  //$NON-NLS-1$
+   //         super("enclosing_package", JavaTemplateMessages.CompilationUnitContextType_variable_description_enclosing_package, IJavaElement.PACKAGE_FRAGMENT);  //$NON-NLS-1$
    // }
    // }
    //
    // protected static class Project extends EnclosingJavaElement {
    // public Project() {
-   //			super("enclosing_project", JavaTemplateMessages.CompilationUnitContextType_variable_description_enclosing_project, IJavaElement.JAVA_PROJECT);  //$NON-NLS-1$
+   //         super("enclosing_project", JavaTemplateMessages.CompilationUnitContextType_variable_description_enclosing_project, IJavaElement.JAVA_PROJECT);  //$NON-NLS-1$
    // }
    // }
    // /*
@@ -170,7 +170,7 @@ public abstract class CompilationUnitContextType extends TemplateContextType
    // */
    // protected static class Arguments extends TemplateVariableResolver {
    // public Arguments() {
-   //			super("enclosing_method_arguments", JavaTemplateMessages.CompilationUnitContextType_variable_description_enclosing_method_arguments);  //$NON-NLS-1$
+   //         super("enclosing_method_arguments", JavaTemplateMessages.CompilationUnitContextType_variable_description_enclosing_method_arguments);  //$NON-NLS-1$
    // }
    // @Override
    // protected String resolve(TemplateContext context) {
@@ -186,7 +186,7 @@ public abstract class CompilationUnitContextType extends TemplateContextType
    //
    // for (int i= 0; i < arguments.length; i++) {
    // if (i > 0)
-   //						buffer.append(", "); //$NON-NLS-1$
+   //                  buffer.append(", "); //$NON-NLS-1$
    // buffer.append(arguments[i]);
    // }
    //
@@ -232,7 +232,7 @@ public abstract class CompilationUnitContextType extends TemplateContextType
    // protected String resolve(TemplateContext context) {
    // String selection= context.getVariable(org.eclipse.jdt.client.templates.api.GlobalTemplateVariables.SELECTION);
    // if (selection == null)
-   //				return ""; //$NON-NLS-1$
+   //            return ""; //$NON-NLS-1$
    // return selection;
    // }
    // }

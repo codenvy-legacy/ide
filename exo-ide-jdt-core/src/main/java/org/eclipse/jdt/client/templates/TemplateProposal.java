@@ -438,7 +438,7 @@ public class TemplateProposal implements IJavaCompletionProposal, ICompletionPro
       }
       catch (BadLocationException e)
       {
-         //			handleException(JavaPlugin.getActiveWorkbenchShell(), new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.OK, "", e))); //$NON-NLS-1$
+         //         handleException(JavaPlugin.getActiveWorkbenchShell(), new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.OK, "", e))); //$NON-NLS-1$
          return null;
       }
    }

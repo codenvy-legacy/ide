@@ -267,7 +267,7 @@ public class CompletionProposal
 
    /**
     * Completion is a link reference to a field in a javadoc text. This kind of completion might occur in a context like
-    * <code>"	* blabla System.o^ blabla"</code> and complete it to <code>"	* blabla {&#64;link System#out } blabla"</code>.
+    * <code>"   * blabla System.o^ blabla"</code> and complete it to <code>"   * blabla {&#64;link System#out } blabla"</code>.
     * <p>
     * The following additional context information is available for this kind of completion proposal at little extra cost:
     * <ul>
@@ -286,7 +286,7 @@ public class CompletionProposal
 
    /**
     * Completion is a link reference to a method in a javadoc text. This kind of completion might occur in a context like
-    * <code>"	* blabla Runtime#get^ blabla"</code> and complete it to <code>"	* blabla {&#64;link Runtime#getRuntime() }"</code>.
+    * <code>"   * blabla Runtime#get^ blabla"</code> and complete it to <code>"   * blabla {&#64;link Runtime#getRuntime() }"</code>.
     * <p>
     * The following additional context information is available for this kind of completion proposal at little extra cost:
     * <ul>
@@ -305,7 +305,7 @@ public class CompletionProposal
    /**
     * Completion is a link reference to a type in a javadoc text. Any kind of type is allowed, including primitive types,
     * reference types, array types, parameterized types, and type variables. This kind of completion might occur in a context like
-    * <code>"	* blabla Str^ blabla"</code> and complete it to <code>"	* blabla {&#64;link String } blabla"</code>.
+    * <code>"   * blabla Str^ blabla"</code> and complete it to <code>"   * blabla {&#64;link String } blabla"</code>.
     * <p>
     * The following additional context information is available for this kind of completion proposal at little extra cost:
     * <ul>
@@ -324,7 +324,7 @@ public class CompletionProposal
 
    /**
     * Completion is a value reference to a static field in a javadoc text. This kind of completion might occur in a context like
-    * <code>"	* blabla System.o^ blabla"</code> and complete it to <code>"	* blabla {&#64;value System#out } blabla"</code>.
+    * <code>"   * blabla System.o^ blabla"</code> and complete it to <code>"   * blabla {&#64;value System#out } blabla"</code>.
     * <p>
     * The following additional context information is available for this kind of completion proposal at little extra cost:
     * <ul>
@@ -343,8 +343,8 @@ public class CompletionProposal
 
    /**
     * Completion is a method argument or a class/method type parameter in javadoc param tag. This kind of completion might occur
-    * in a context like <code>"	* @param arg^ blabla"</code> and complete it to <code>"	* @param argument blabla"</code>. or
-    * <code>"	* @param &lt;T^ blabla"</code> and complete it to <code>"	* @param &lt;TT&gt; blabla"</code>.
+    * in a context like <code>"   * @param arg^ blabla"</code> and complete it to <code>"   * @param argument blabla"</code>. or
+    * <code>"   * @param &lt;T^ blabla"</code> and complete it to <code>"   * @param &lt;TT&gt; blabla"</code>.
     * <p>
     * The following additional context information is available for this kind of completion proposal at little extra cost:
     * <ul>
@@ -362,8 +362,8 @@ public class CompletionProposal
    public static final int JAVADOC_PARAM_REF = 18;
 
    /**
-    * Completion is a javadoc block tag. This kind of completion might occur in a context like <code>"	* @s^ blabla"</code> and
-    * complete it to <code>"	* @see blabla"</code>.
+    * Completion is a javadoc block tag. This kind of completion might occur in a context like <code>"   * @s^ blabla"</code> and
+    * complete it to <code>"   * @see blabla"</code>.
     * <p>
     * The following additional context information is available for this kind of completion proposal at little extra cost:
     * <ul>
@@ -382,7 +382,7 @@ public class CompletionProposal
 
    /**
     * Completion is a javadoc inline tag. This kind of completion might occur in a context like
-    * <code>"	* Insert @l^ Object"</code> and complete it to <code>"	* Insert {&#64;link Object }"</code>.
+    * <code>"   * Insert @l^ Object"</code> and complete it to <code>"   * Insert {&#64;link Object }"</code>.
     * <p>
     * The following additional context information is available for this kind of completion proposal at little extra cost:
     * <ul>

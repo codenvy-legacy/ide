@@ -15,13 +15,13 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
  * reduce a single name reference containing the completion identifier.
  * e.g.
  *
- *	class X {
+ *   class X {
  *    void foo() {
  *      ba[cursor]
  *    }
  *  }
  *
- *	---> class X {
+ *   ---> class X {
  *         void foo() {
  *           <CompleteOnName:ba>
  *         }

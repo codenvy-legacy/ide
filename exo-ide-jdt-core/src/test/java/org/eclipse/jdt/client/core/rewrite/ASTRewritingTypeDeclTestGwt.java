@@ -633,7 +633,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
 
    public void testBug22161() throws Exception
    {
-      //	System.out.println(getClass().getName()+"::" + getName() +" disabled (bug 22161)");
+      //   System.out.println(getClass().getName()+"::" + getName() +" disabled (bug 22161)");
 
       StringBuffer buf = new StringBuffer();
       buf.append("package test1;\n");

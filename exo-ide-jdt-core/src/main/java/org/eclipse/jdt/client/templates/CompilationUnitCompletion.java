@@ -245,11 +245,11 @@ final class CompilationUnitCompletion extends CompletionRequestor
          // try {
          // try {
          // TypeParameterResolver util= new TypeParameterResolver(this);
-         //							fMemberTypes= util.computeBinding("java.lang.Iterable", 0); //$NON-NLS-1$
+         //                     fMemberTypes= util.computeBinding("java.lang.Iterable", 0); //$NON-NLS-1$
          // } catch (JavaModelException e) {
          // try {
          // TypeParameterResolver util= new TypeParameterResolver(this);
-         //								fMemberTypes= util.computeBinding("java.util.Collection", 0); //$NON-NLS-1$
+         //                        fMemberTypes= util.computeBinding("java.util.Collection", 0); //$NON-NLS-1$
          // } catch (JavaModelException x) {
          // fMemberTypes= new String[0];
          // }
@@ -404,7 +404,7 @@ final class CompilationUnitCompletion extends CompletionRequestor
          // IJavaProject project= fUnit.getJavaProject();
          // IType type= project.findType(superType);
          // if (type == null)
-         //				throw new JavaModelException(new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.OK, "No such type", null))); //$NON-NLS-1$
+         //            throw new JavaModelException(new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.OK, "No such type", null))); //$NON-NLS-1$
          // return computeBinding(type, index);
          return new String[0];
       }
@@ -575,7 +575,7 @@ final class CompilationUnitCompletion extends CompletionRequestor
       // }
       // }
       //
-      //			throw new JavaModelException(new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.OK, "Illegal hierarchy", null))); //$NON-NLS-1$
+      //         throw new JavaModelException(new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.OK, "Illegal hierarchy", null))); //$NON-NLS-1$
       // }
 
       // /**

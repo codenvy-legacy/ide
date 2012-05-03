@@ -124,7 +124,7 @@ public class TextEditProcessor
     * Checks if the processor can execute all its edits.
     * 
     * @return <code>true</code> if the edits can be executed. Return <code>false
-    * 	</code>otherwise. One major reason why edits cannot be executed are wrong offset or length values of edits. Calling perform
+    *    </code>otherwise. One major reason why edits cannot be executed are wrong offset or length values of edits. Calling perform
     *         in this case will very likely end in a <code>BadLocationException</code>.
     */
    public boolean canPerformEdits()

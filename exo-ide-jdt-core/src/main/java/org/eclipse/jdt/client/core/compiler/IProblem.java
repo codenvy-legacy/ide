@@ -8,73 +8,73 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     IBM Corporation - added the following constants
- *								   NonStaticAccessToStaticField
- *								   NonStaticAccessToStaticMethod
- *								   Task
- *								   ExpressionShouldBeAVariable
- *								   AssignmentHasNoEffect
+ *                           NonStaticAccessToStaticField
+ *                           NonStaticAccessToStaticMethod
+ *                           Task
+ *                           ExpressionShouldBeAVariable
+ *                           AssignmentHasNoEffect
  *     IBM Corporation - added the following constants
- *								   TooManySyntheticArgumentSlots
- *								   TooManyArrayDimensions
- *								   TooManyBytesForStringConstant
- *								   TooManyMethods
- *								   TooManyFields
- *								   NonBlankFinalLocalAssignment
- *								   ObjectCannotHaveSuperTypes
- *								   MissingSemiColon
- *								   InvalidParenthesizedExpression
- *								   EnclosingInstanceInConstructorCall
- *								   BytecodeExceeds64KLimitForConstructor
- *								   IncompatibleReturnTypeForNonInheritedInterfaceMethod
- *								   UnusedPrivateMethod
- *								   UnusedPrivateConstructor
- *								   UnusedPrivateType
- *								   UnusedPrivateField
- *								   IncompatibleExceptionInThrowsClauseForNonInheritedInterfaceMethod
- *								   InvalidExplicitConstructorCall
+ *                           TooManySyntheticArgumentSlots
+ *                           TooManyArrayDimensions
+ *                           TooManyBytesForStringConstant
+ *                           TooManyMethods
+ *                           TooManyFields
+ *                           NonBlankFinalLocalAssignment
+ *                           ObjectCannotHaveSuperTypes
+ *                           MissingSemiColon
+ *                           InvalidParenthesizedExpression
+ *                           EnclosingInstanceInConstructorCall
+ *                           BytecodeExceeds64KLimitForConstructor
+ *                           IncompatibleReturnTypeForNonInheritedInterfaceMethod
+ *                           UnusedPrivateMethod
+ *                           UnusedPrivateConstructor
+ *                           UnusedPrivateType
+ *                           UnusedPrivateField
+ *                           IncompatibleExceptionInThrowsClauseForNonInheritedInterfaceMethod
+ *                           InvalidExplicitConstructorCall
  *     IBM Corporation - added the following constants
- *								   PossibleAccidentalBooleanAssignment
- *								   SuperfluousSemicolon
- *								   IndirectAccessToStaticField
- *								   IndirectAccessToStaticMethod
- *								   IndirectAccessToStaticType
- *								   BooleanMethodThrowingException
- *								   UnnecessaryCast
- *								   UnnecessaryArgumentCast
- *								   UnnecessaryInstanceof
- *								   FinallyMustCompleteNormally
- *								   UnusedMethodDeclaredThrownException
- *								   UnusedConstructorDeclaredThrownException
- *								   InvalidCatchBlockSequence
- *								   UnqualifiedFieldAccess
+ *                           PossibleAccidentalBooleanAssignment
+ *                           SuperfluousSemicolon
+ *                           IndirectAccessToStaticField
+ *                           IndirectAccessToStaticMethod
+ *                           IndirectAccessToStaticType
+ *                           BooleanMethodThrowingException
+ *                           UnnecessaryCast
+ *                           UnnecessaryArgumentCast
+ *                           UnnecessaryInstanceof
+ *                           FinallyMustCompleteNormally
+ *                           UnusedMethodDeclaredThrownException
+ *                           UnusedConstructorDeclaredThrownException
+ *                           InvalidCatchBlockSequence
+ *                           UnqualifiedFieldAccess
  *     IBM Corporation - added the following constants
- *								   Javadoc
- *								   JavadocUnexpectedTag
- *								   JavadocMissingParamTag
- *								   JavadocMissingParamName
- *								   JavadocDuplicateParamName
- *								   JavadocInvalidParamName
- *								   JavadocMissingReturnTag
- *								   JavadocDuplicateReturnTag
- *								   JavadocMissingThrowsTag
- *								   JavadocMissingThrowsClassName
- *								   JavadocInvalidThrowsClass
- *								   JavadocDuplicateThrowsClassName
- *								   JavadocInvalidThrowsClassName
- *								   JavadocMissingSeeReference
- *								   JavadocInvalidSeeReference
- *								   JavadocInvalidSeeHref
- *								   JavadocInvalidSeeArgs
- *								   JavadocMissing
- *								   JavadocInvalidTag
- *								   JavadocMessagePrefix
- *								   EmptyControlFlowStatement
+ *                           Javadoc
+ *                           JavadocUnexpectedTag
+ *                           JavadocMissingParamTag
+ *                           JavadocMissingParamName
+ *                           JavadocDuplicateParamName
+ *                           JavadocInvalidParamName
+ *                           JavadocMissingReturnTag
+ *                           JavadocDuplicateReturnTag
+ *                           JavadocMissingThrowsTag
+ *                           JavadocMissingThrowsClassName
+ *                           JavadocInvalidThrowsClass
+ *                           JavadocDuplicateThrowsClassName
+ *                           JavadocInvalidThrowsClassName
+ *                           JavadocMissingSeeReference
+ *                           JavadocInvalidSeeReference
+ *                           JavadocInvalidSeeHref
+ *                           JavadocInvalidSeeArgs
+ *                           JavadocMissing
+ *                           JavadocInvalidTag
+ *                           JavadocMessagePrefix
+ *                           EmptyControlFlowStatement
  *     IBM Corporation - added the following constants
- *								   IllegalUsageOfQualifiedTypeReference
- *								   InvalidDigit
+ *                           IllegalUsageOfQualifiedTypeReference
+ *                           InvalidDigit
  *     IBM Corporation - added the following constants
- *								   ParameterAssignment
- *								   FallthroughCase
+ *                           ParameterAssignment
+ *                           FallthroughCase
  *     IBM Corporation - added the following constants
  *                                 UnusedLabel
  *                                 UnnecessaryNLSTag
@@ -100,23 +100,23 @@
  *                                 TypeHidingTypeParameterFromMethod
  *                                 TypeHidingType
  *     IBM Corporation - added the following constants
- *								   NullLocalVariableReference
- *								   PotentialNullLocalVariableReference
- *								   RedundantNullCheckOnNullLocalVariable
- * 								   NullLocalVariableComparisonYieldsFalse
- * 								   RedundantLocalVariableNullAssignment
- * 								   NullLocalVariableInstanceofYieldsFalse
- * 								   RedundantNullCheckOnNonNullLocalVariable
- * 								   NonNullLocalVariableComparisonYieldsFalse
+ *                           NullLocalVariableReference
+ *                           PotentialNullLocalVariableReference
+ *                           RedundantNullCheckOnNullLocalVariable
+ *                            NullLocalVariableComparisonYieldsFalse
+ *                            RedundantLocalVariableNullAssignment
+ *                            NullLocalVariableInstanceofYieldsFalse
+ *                            RedundantNullCheckOnNonNullLocalVariable
+ *                            NonNullLocalVariableComparisonYieldsFalse
  *     IBM Corporation - added the following constants
  *                                 InvalidUsageOfTypeParametersForAnnotationDeclaration
  *                                 InvalidUsageOfTypeParametersForEnumDeclaration
  *     IBM Corporation - added the following constants
- *								   RedundantSuperinterface
- *		Benjamin Muskalla - added the following constants
- *									MissingSynchronizedModifierInInheritedMethod
- *		Stephan Herrmann  - added the following constants
- *									UnusedObjectAllocation									
+ *                           RedundantSuperinterface
+ *      Benjamin Muskalla - added the following constants
+ *                           MissingSynchronizedModifierInInheritedMethod
+ *      Stephan Herrmann  - added the following constants
+ *                           UnusedObjectAllocation                           
  *******************************************************************************/
 package org.eclipse.jdt.client.core.compiler;
 

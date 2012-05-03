@@ -8,9 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Stephan Herrmann <stephan@cs.tu-berlin.de> - Contributions for 
- *     						bug 319201 - [null] no warning when unboxing SingleNameReference causes NPE
- *     						bug 292478 - Report potentially null across variable assignment
- *     						bug 335093 - [compiler][null] minimal hook for future null annotation support
+ *                       bug 319201 - [null] no warning when unboxing SingleNameReference causes NPE
+ *                       bug 292478 - Report potentially null across variable assignment
+ *                       bug 335093 - [compiler][null] minimal hook for future null annotation support
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 

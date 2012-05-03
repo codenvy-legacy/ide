@@ -6597,10 +6597,10 @@ public class Scribe implements IJavaDocTagConstants
          .append(") - (tabSize = " + this.tabLength + ")")//$NON-NLS-1$//$NON-NLS-2$
          .append(this.lineSeparator)
          .append(
-            "(line = " + this.line + ") - (column = " + this.column + ") - (identationLevel = " + this.indentationLevel + ")") //$NON-NLS-1$	//$NON-NLS-2$	//$NON-NLS-3$	//$NON-NLS-4$
+            "(line = " + this.line + ") - (column = " + this.column + ") - (identationLevel = " + this.indentationLevel + ")") //$NON-NLS-1$   //$NON-NLS-2$   //$NON-NLS-3$   //$NON-NLS-4$
          .append(this.lineSeparator)
          .append(
-            "(needSpace = " + this.needSpace + ") - (lastNumberOfNewLines = " + this.lastNumberOfNewLines + ") - (checkLineWrapping = " + this.checkLineWrapping + ")") //$NON-NLS-1$	//$NON-NLS-2$	//$NON-NLS-3$	//$NON-NLS-4$
+            "(needSpace = " + this.needSpace + ") - (lastNumberOfNewLines = " + this.lastNumberOfNewLines + ") - (checkLineWrapping = " + this.checkLineWrapping + ")") //$NON-NLS-1$   //$NON-NLS-2$   //$NON-NLS-3$   //$NON-NLS-4$
          .append(this.lineSeparator)
          .append("==================================================================================") //$NON-NLS-1$
          .append(this.lineSeparator);

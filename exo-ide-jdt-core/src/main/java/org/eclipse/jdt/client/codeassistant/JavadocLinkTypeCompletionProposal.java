@@ -40,7 +40,7 @@ public final class JavadocLinkTypeCompletionProposal extends LazyJavaTypeComplet
       // if (autocloseBrackets())
       return "{@link " + typeReplacement + "}"; //$NON-NLS-1$ //$NON-NLS-2$
       // else
-      //			return "{@link " + typeReplacement; //$NON-NLS-1$
+      //         return "{@link " + typeReplacement; //$NON-NLS-1$
    }
 
    /*

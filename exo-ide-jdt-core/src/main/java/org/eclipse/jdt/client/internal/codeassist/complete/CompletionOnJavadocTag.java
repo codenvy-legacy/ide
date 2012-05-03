@@ -73,7 +73,7 @@ public class CompletionOnJavadocTag extends JavadocSingleNameReference implement
             output.append("\npossible block tags:"); //$NON-NLS-1$
             for (int i = 0; i < length; i++)
             {
-               output.append("\n	- "); //$NON-NLS-1$
+               output.append("\n   - "); //$NON-NLS-1$
                output.append(blockTags[i]);
             }
             output.append('\n');
@@ -89,7 +89,7 @@ public class CompletionOnJavadocTag extends JavadocSingleNameReference implement
             output.append("\npossible inline tags:"); //$NON-NLS-1$
             for (int i = 0; i < length; i++)
             {
-               output.append("\n	- "); //$NON-NLS-1$
+               output.append("\n   - "); //$NON-NLS-1$
                output.append(inlineTags[i]);
             }
             output.append('\n');

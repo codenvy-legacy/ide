@@ -52,91 +52,91 @@ import java.util.List;
 public class CheckoutResult_Copy
 {
 
-	/**
-	 * The {@link Status#OK} result;
-	 */
-	public static final CheckoutResult_Copy OK_RESULT = new CheckoutResult_Copy(
-			Status.OK, null);
+   /**
+    * The {@link Status#OK} result;
+    */
+   public static final CheckoutResult_Copy OK_RESULT = new CheckoutResult_Copy(
+         Status.OK, null);
 
-	/**
-	 * The {@link Status#ERROR} result;
-	 */
-	public static final CheckoutResult_Copy ERROR_RESULT = new CheckoutResult_Copy(
-			Status.ERROR, null);
+   /**
+    * The {@link Status#ERROR} result;
+    */
+   public static final CheckoutResult_Copy ERROR_RESULT = new CheckoutResult_Copy(
+         Status.ERROR, null);
 
-	/**
-	 * The {@link Status#NOT_TRIED} result;
-	 */
-	public static final CheckoutResult_Copy NOT_TRIED_RESULT = new CheckoutResult_Copy(
-			Status.NOT_TRIED, null);
+   /**
+    * The {@link Status#NOT_TRIED} result;
+    */
+   public static final CheckoutResult_Copy NOT_TRIED_RESULT = new CheckoutResult_Copy(
+         Status.NOT_TRIED, null);
 
-	/**
-	 * The status
-	 */
-	public enum Status {
-		/**
-		 * The call() method has not yet been executed
-		 */
-		NOT_TRIED,
-		/**
-		 * Checkout completed normally
-		 */
-		OK,
-		/**
-		 * Checkout has not completed because of checkout conflicts
-		 */
-		CONFLICTS,
-		/**
-		 * Checkout has completed, but some files could not be deleted
-		 */
-		NONDELETED,
-		/**
-		 * An Exception occurred during checkout
-		 */
-		ERROR;
-	}
+   /**
+    * The status
+    */
+   public enum Status {
+      /**
+       * The call() method has not yet been executed
+       */
+      NOT_TRIED,
+      /**
+       * Checkout completed normally
+       */
+      OK,
+      /**
+       * Checkout has not completed because of checkout conflicts
+       */
+      CONFLICTS,
+      /**
+       * Checkout has completed, but some files could not be deleted
+       */
+      NONDELETED,
+      /**
+       * An Exception occurred during checkout
+       */
+      ERROR;
+   }
 
-	private final Status myStatus;
+   private final Status myStatus;
 
-	private final List<String> conflictList;
+   private final List<String> conflictList;
 
-	private final List<String> undeletedList;
+   private final List<String> undeletedList;
 
-	CheckoutResult_Copy(Status status, List<String> fileList) {
-		myStatus = status;
-		if (status == Status.CONFLICTS)
-			this.conflictList = fileList;
-		else
-			this.conflictList = new ArrayList<String>(0);
-		if (status == Status.NONDELETED)
-			this.undeletedList = fileList;
-		else
-			this.undeletedList = new ArrayList<String>(0);
+   CheckoutResult_Copy(Status status, List<String> fileList) {
+      myStatus = status;
+      if (status == Status.CONFLICTS)
+         this.conflictList = fileList;
+      else
+         this.conflictList = new ArrayList<String>(0);
+      if (status == Status.NONDELETED)
+         this.undeletedList = fileList;
+      else
+         this.undeletedList = new ArrayList<String>(0);
 
-	}
+   }
 
-	/**
-	 * @return the status
-	 */
-	public Status getStatus() {
-		return myStatus;
-	}
+   /**
+    * @return the status
+    */
+   public Status getStatus() {
+      return myStatus;
+   }
 
-	/**
-	 * @return the list of files that created a checkout conflict, or an empty
-	 *         list if {@link #getStatus()} is not {@link Status#CONFLICTS};
-	 */
-	public List<String> getConflictList() {
-		return conflictList;
-	}
+   /**
+    * @return the list of files that created a checkout conflict, or an empty
+    *         list if {@link #getStatus()} is not {@link Status#CONFLICTS};
+    */
+   public List<String> getConflictList() {
+      return conflictList;
+   }
 
-	/**
-	 * @return the list of files that could not be deleted during checkout, or
-	 *         an empty list if {@link #getStatus()} is not
-	 *         {@link Status#NONDELETED};
-	 */
-	public List<String> getUndeletedList() {
-		return undeletedList;
-	}
+   /**
+    * @return the list of files that could not be deleted during checkout, or
+    *         an empty list if {@link #getStatus()} is not
+    *         {@link Status#NONDELETED};
+    */
+   public List<String> getUndeletedList() {
+      return undeletedList;
+   }
 
 }

@@ -8,8 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Stephan Herrmann - Contributions for
- *     							bug 332637 - Dead Code detection removing code that isn't dead
- *     							bug 358827 - [1.7] exception analysis for t-w-r spoils null analysis
+ *                          bug 332637 - Dead Code detection removing code that isn't dead
+ *                          bug 358827 - [1.7] exception analysis for t-w-r spoils null analysis
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 

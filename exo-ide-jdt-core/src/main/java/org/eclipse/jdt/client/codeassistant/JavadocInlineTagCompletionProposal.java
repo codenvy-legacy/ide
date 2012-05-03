@@ -39,7 +39,7 @@ public final class JavadocInlineTagCompletionProposal extends LazyJavaCompletion
       String replacement = super.computeReplacementString();
       // TODO respect the auto-close preference, but do so consistently with method completions
       // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=113544
-      //		if (!autocloseBrackets() && replacement.endsWith("}")) //$NON-NLS-1$
+      //      if (!autocloseBrackets() && replacement.endsWith("}")) //$NON-NLS-1$
       // return replacement.substring(0, replacement.length() - 1);
       return replacement;
    }

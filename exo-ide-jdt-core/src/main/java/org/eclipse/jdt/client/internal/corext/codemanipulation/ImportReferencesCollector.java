@@ -84,9 +84,9 @@ public class ImportReferencesCollector extends GenericVisitor
       fTypeImports = resultingTypeImports;
       fStaticImports = resultingStaticImports;
       fSubRange = rangeLimit;
-      //		if (project == null || !JavaModelUtil.is50OrHigher(project)) {
-      //			fStaticImports= null; // do not collect
-      //		}
+      //      if (project == null || !JavaModelUtil.is50OrHigher(project)) {
+      //         fStaticImports= null; // do not collect
+      //      }
       fASTRoot = astRoot; // can be null
       fSkipMethodBodies = skipMethodBodies;
    }

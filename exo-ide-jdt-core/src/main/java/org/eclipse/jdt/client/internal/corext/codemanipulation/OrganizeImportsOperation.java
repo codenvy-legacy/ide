@@ -322,7 +322,7 @@ public class OrganizeImportsOperation
          }
          finally
          {
-            //				monitor.done();
+            //            monitor.done();
          }
       }
 
@@ -472,22 +472,22 @@ public class OrganizeImportsOperation
    //    */
    //   public void run() throws CoreException
    //   {
-   //      //		if (monitor == null) {
-   //      //			monitor= new NullProgressMonitor();
-   //      //		}
+   //      //      if (monitor == null) {
+   //      //         monitor= new NullProgressMonitor();
+   //      //      }
    //      try
    //      {
-   //         //			monitor.beginTask(Messages.format(CodeGenerationMessages.OrganizeImportsOperation_description, BasicElementLabels.getFileName(fCompilationUnit)), 10);
+   //         //         monitor.beginTask(Messages.format(CodeGenerationMessages.OrganizeImportsOperation_description, BasicElementLabels.getFileName(fCompilationUnit)), 10);
    //
    //         TextEdit edit = createTextEdit();
    //         if (edit == null)
    //            return;
    //         //TODO
-   //         //    		JavaModelUtil.applyEdit(fCompilationUnit, edit, fDoSave, new SubProgressMonitor(monitor, 1));
+   //         //          JavaModelUtil.applyEdit(fCompilationUnit, edit, fDoSave, new SubProgressMonitor(monitor, 1));
    //      }
    //      finally
    //      {
-   //         //			monitor.done();
+   //         //         monitor.done();
    //      }
    //   }
 
@@ -499,16 +499,16 @@ public class OrganizeImportsOperation
          fNumberOfImportsAdded = 0;
          fNumberOfImportsRemoved = 0;
 
-         //			monitor.beginTask(Messages.format(CodeGenerationMessages.OrganizeImportsOperation_description, BasicElementLabels.getFileName(fCompilationUnit)), 9);
+         //         monitor.beginTask(Messages.format(CodeGenerationMessages.OrganizeImportsOperation_description, BasicElementLabels.getFileName(fCompilationUnit)), 9);
 
          CompilationUnit astRoot = fASTRoot;
-         //			if (astRoot == null) {
-         //				astRoot= SharedASTProvider.getAST(fCompilationUnit, SharedASTProvider.WAIT_YES, new SubProgressMonitor(monitor, 2));
-         //				if (monitor.isCanceled())
-         //					throw new OperationCanceledException();
-         //			} else {
-         ////				monitor.worked(2);
-         //			}
+         //         if (astRoot == null) {
+         //            astRoot= SharedASTProvider.getAST(fCompilationUnit, SharedASTProvider.WAIT_YES, new SubProgressMonitor(monitor, 2));
+         //            if (monitor.isCanceled())
+         //               throw new OperationCanceledException();
+         //         } else {
+         ////            monitor.worked(2);
+         //         }
 
          final ImportRewrite importsRewrite = StubUtility.createImportRewrite(document, astRoot, false);
 
@@ -522,7 +522,7 @@ public class OrganizeImportsOperation
             callback.textEditCreated(null);
             return;
          }
-         //			monitor.worked(1);
+         //         monitor.worked(1);
 
          final TypeReferenceProcessor processor =
             new TypeReferenceProcessor(oldSingleImports, oldDemandImports, astRoot, importsRewrite,
@@ -557,7 +557,7 @@ public class OrganizeImportsOperation
                         {
                            //TODO
                            // cancel pressed by the user
-                           //					throw new OperationCanceledException();
+                           //               throw new OperationCanceledException();
                            return;
                         }
                         for (int i = 0; i < chosen.length; i++)
@@ -579,7 +579,7 @@ public class OrganizeImportsOperation
       }
       finally
       {
-         //			monitor.done();
+         //         monitor.done();
       }
    }
 
@@ -705,11 +705,11 @@ public class OrganizeImportsOperation
       return fNumberOfImportsRemoved;
    }
 
-   //	/**
-   //	 * @return Returns the scheduling rule for this operation
-   //	 */
-   //	public ISchedulingRule getScheduleRule() {
-   //		return fCompilationUnit.getResource();
-   //	}
+   //   /**
+   //    * @return Returns the scheduling rule for this operation
+   //    */
+   //   public ISchedulingRule getScheduleRule() {
+   //      return fCompilationUnit.getResource();
+   //   }
 
 }

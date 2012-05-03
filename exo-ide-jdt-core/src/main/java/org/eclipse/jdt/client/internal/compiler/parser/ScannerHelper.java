@@ -177,7 +177,7 @@ public class ScannerHelper
    // Tables7[START_INDEX] = new long[3][];
    // Tables7[PART_INDEX] = new long[4][];
    // try {
-   //		DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/start0.rsc"))); //$NON-NLS-1$
+   //      DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/start0.rsc"))); //$NON-NLS-1$
    // long[] readValues = new long[1024];
    // for (int i = 0; i < 1024; i++) {
    // readValues[i] = inputStream.readLong();
@@ -190,7 +190,7 @@ public class ScannerHelper
    // e.printStackTrace();
    // }
    // try {
-   //		DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/start1.rsc"))); //$NON-NLS-1$
+   //      DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/start1.rsc"))); //$NON-NLS-1$
    // long[] readValues = new long[1024];
    // for (int i = 0; i < 1024; i++) {
    // readValues[i] = inputStream.readLong();
@@ -203,7 +203,7 @@ public class ScannerHelper
    // e.printStackTrace();
    // }
    // try {
-   //		DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/start2.rsc"))); //$NON-NLS-1$
+   //      DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/start2.rsc"))); //$NON-NLS-1$
    // long[] readValues = new long[1024];
    // for (int i = 0; i < 1024; i++) {
    // readValues[i] = inputStream.readLong();
@@ -216,7 +216,7 @@ public class ScannerHelper
    // e.printStackTrace();
    // }
    // try {
-   //		DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/part0.rsc"))); //$NON-NLS-1$
+   //      DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/part0.rsc"))); //$NON-NLS-1$
    // long[] readValues = new long[1024];
    // for (int i = 0; i < 1024; i++) {
    // readValues[i] = inputStream.readLong();
@@ -229,7 +229,7 @@ public class ScannerHelper
    // e.printStackTrace();
    // }
    // try {
-   //		DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/part1.rsc"))); //$NON-NLS-1$
+   //      DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/part1.rsc"))); //$NON-NLS-1$
    // long[] readValues = new long[1024];
    // for (int i = 0; i < 1024; i++) {
    // readValues[i] = inputStream.readLong();
@@ -242,7 +242,7 @@ public class ScannerHelper
    // e.printStackTrace();
    // }
    // try {
-   //		DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/part2.rsc"))); //$NON-NLS-1$
+   //      DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/part2.rsc"))); //$NON-NLS-1$
    // long[] readValues = new long[1024];
    // for (int i = 0; i < 1024; i++) {
    // readValues[i] = inputStream.readLong();
@@ -255,7 +255,7 @@ public class ScannerHelper
    // e.printStackTrace();
    // }
    // try {
-   //		DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/part14.rsc"))); //$NON-NLS-1$
+   //      DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/part14.rsc"))); //$NON-NLS-1$
    // long[] readValues = new long[1024];
    // for (int i = 0; i < 1024; i++) {
    // readValues[i] = inputStream.readLong();

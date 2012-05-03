@@ -444,98 +444,6 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 		}
    }-*/;
 
-   // /**
-   // * Set listeners of hot keys clicking. Listen "Ctrl+S" key pressing if hotKeyList is null. Listen Ctrl+Space in any case
-   // */
-   // private native void setHotKeysClickListener() /*-{
-   // var instance = this;
-   //
-   // var editor = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-   // if (editor)
-   // {
-   // instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::addScrollAndResizeListener(Lorg/exoplatform/ide/editor/codemirror/CodeMirror;)(instance);
-   //
-   // editor.grabKeys(
-   // function (event) {},
-   // function (keyCode, event)
-   // {
-   // // filter key pressed without ctrl or alt or event type not "keypress"
-   // if (! (event.ctrlKey || event.altKey) || (event.type != "keydown"))
-   // return instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::handleKey(Lcom/google/gwt/user/client/Event;)(event);
-   //
-   // var fileConfiguration = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::configuration;
-   // if (fileConfiguration.@org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration::canBeAutocompleted()())
-   // {
-   // // check if this is MacOS
-   // if (@org.exoplatform.gwtframework.commons.util.BrowserResolver::isMacOs()())
-   // {
-   // // check if this is MacOS and the Alt+Space
-   // if ( keyCode == 32 && event.altKey ) {
-   // event.stop();
-   // instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::ctrlSpaceClickHandler()();
-   // return true;
-   // }
-   // }
-   // else
-   // {
-   // // check if this is non-MacOS and the Ctrl+Space
-   // if ( keyCode == 32 && event.ctrlKey ) {
-   // event.stop();
-   // instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::ctrlSpaceClickHandler()();
-   // return true;
-   // }
-   // }
-   // }
-   //
-   // // for Ctrl+l firstly called <event.keyCode = 76, event.charCode = 0>, then <event.keyCode = 0, event.charCode = 108>
-   // // for Ctrl+L firstly called <event.keyCode = 76, event.charCode = 0>, then <event.keyCode = 0, event.charCode = 76>
-   // var keyPressed = "";
-   // event.ctrlKey ? keyPressed += "Ctrl+" : keyPressed += "";
-   // event.altKey ? keyPressed += "Alt+" : keyPressed += "";
-   // keyPressed += keyCode;
-   //
-   // // find similar key ammong the hotKeyList
-   // var hotKeyList = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::getHotKeyList()();
-   //
-   // // listen Ctrl+S key pressing if hotKeyList is null
-   // if (hotKeyList === null) {
-   // if (keyPressed == "Ctrl+" + "S".charCodeAt(0)) {
-   // event.stop();
-   // instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::onSaveContent()();
-   // return true;
-   // } else {
-   // return false;
-   // }
-   // }
-   //
-   // for (var i = 0; i < hotKeyList.@java.util.List::size()(); i++) {
-   // var currentHotKey = hotKeyList.@java.util.List::get(I)(i);
-   // if (currentHotKey == keyPressed) {
-   // event.stop();
-   //
-   // // fire EditorHotKeyCalledEvent
-   // var editorHotKeyCalledEventInstance =
-   // @org.exoplatform.ide.editor.api.event.EditorHotKeyCalledEvent::new(Ljava/lang/String;)(
-   // currentHotKey
-   // );
-   // var eventBus = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::getEventBus()();
-   // eventBus.@com.google.gwt.event.shared.HandlerManager::fireEvent(Lcom/google/gwt/event/shared/GwtEvent;)(editorHotKeyCalledEventInstance);
-   //
-   // return true;
-   // }
-   // }
-   //
-   // // fix bug with pasting text into emptied document in the IE (IDE-1142)
-   // if (editor.getCode() == "")
-   // {
-   // editor.setCode("");
-   // }
-   //
-   // return false;
-   // });
-   // }
-   // }-*/;
-
    @SuppressWarnings("unchecked")
    private List<String> getHotKeyList()
    {
@@ -1046,7 +954,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
 		var content = editor.getCode();
 		var lastLineHandler = editor.lastLine();
-		//				.nthLine(this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getLastLineNumber(Ljava/lang/String;)(content));
+		//            .nthLine(this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getLastLineNumber(Ljava/lang/String;)(content));
 
 		if (content.charAt(content.length - 1) == "\n") {
 			editor.setLineContent(lastLineHandler, "");

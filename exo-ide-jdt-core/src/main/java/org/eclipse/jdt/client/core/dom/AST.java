@@ -2705,37 +2705,37 @@ public final class AST
       return getBindingResolver().resolveWellKnownType(name);
    }
 
-   //	/**TODO
-   //	 * Converts all modifications recorded into an object
-   //	 * representing the corresponding text edits to the
-   //	 * given document containing the original source
-   //	 * code for the compilation unit that gave rise to
-   //	 * this AST.
-   //	 *
-   //	 * @param document original document containing source code
-   //	 * for the compilation unit
-   //	 * @param options the table of formatter options
-   //	 * (key type: <code>String</code>; value type: <code>String</code>);
-   //	 * or <code>null</code> to use the standard global options
-   //	 * {@link JavaCore#getOptions() JavaCore.getOptions()}.
-   //	 * @return text edit object describing the changes to the
-   //	 * document corresponding to the recorded AST modifications
-   //	 * @exception IllegalArgumentException if the document passed is
-   //	 * <code>null</code> or does not correspond to this AST
-   //	 * @exception IllegalStateException if <code>recordModifications</code>
-   //	 * was not called to enable recording
-   //	 * @see CompilationUnit#rewrite(IDocument, Map)
-   //	 * @since 3.0
-   //	 */
-   //	TextEdit rewrite(IDocument document, Map options) {
-   //		if (document == null) {
-   //			throw new IllegalArgumentException();
-   //		}
-   //		if (this.rewriter  == null) {
-   //			throw new IllegalStateException("Modifications record is not enabled"); //$NON-NLS-1$
-   //		}
-   //		return this.rewriter.rewriteAST(document, options);
-   //	}
+   //   /**TODO
+   //    * Converts all modifications recorded into an object
+   //    * representing the corresponding text edits to the
+   //    * given document containing the original source
+   //    * code for the compilation unit that gave rise to
+   //    * this AST.
+   //    *
+   //    * @param document original document containing source code
+   //    * for the compilation unit
+   //    * @param options the table of formatter options
+   //    * (key type: <code>String</code>; value type: <code>String</code>);
+   //    * or <code>null</code> to use the standard global options
+   //    * {@link JavaCore#getOptions() JavaCore.getOptions()}.
+   //    * @return text edit object describing the changes to the
+   //    * document corresponding to the recorded AST modifications
+   //    * @exception IllegalArgumentException if the document passed is
+   //    * <code>null</code> or does not correspond to this AST
+   //    * @exception IllegalStateException if <code>recordModifications</code>
+   //    * was not called to enable recording
+   //    * @see CompilationUnit#rewrite(IDocument, Map)
+   //    * @since 3.0
+   //    */
+   //   TextEdit rewrite(IDocument document, Map options) {
+   //      if (document == null) {
+   //         throw new IllegalArgumentException();
+   //      }
+   //      if (this.rewriter  == null) {
+   //         throw new IllegalStateException("Modifications record is not enabled"); //$NON-NLS-1$
+   //      }
+   //      return this.rewriter.rewriteAST(document, options);
+   //   }
 
    /**
     * Sets the binding resolver for this AST.

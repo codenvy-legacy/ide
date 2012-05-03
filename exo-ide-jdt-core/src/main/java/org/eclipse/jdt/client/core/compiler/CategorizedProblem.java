@@ -137,15 +137,15 @@ public abstract class CategorizedProblem implements IProblem
     * Extra attributes are only optional, and are allowing client customization of generated markers. By default, no EXTRA
     * attributes is persisted, and a categorized problem only persists the following attributes:
     * <ul>
-    * <li>	<code>IMarker#MESSAGE</code> -&gt; {@link IProblem#getMessage()}</li>
-    * <li>	<code>IMarker#SEVERITY</code> -&gt; <code> IMarker#SEVERITY_ERROR</code> or <code>IMarker#SEVERITY_WARNING</code>
+    * <li>   <code>IMarker#MESSAGE</code> -&gt; {@link IProblem#getMessage()}</li>
+    * <li>   <code>IMarker#SEVERITY</code> -&gt; <code> IMarker#SEVERITY_ERROR</code> or <code>IMarker#SEVERITY_WARNING</code>
     * depending on {@link IProblem#isError()} or {@link IProblem#isWarning()}</li>
-    * <li>	<code>IJavaModelMarker#ID</code> -&gt; {@link IProblem#getID()}</li>
-    * <li>	<code>IMarker#CHAR_START</code> -&gt; {@link IProblem#getSourceStart()}</li>
-    * <li>	<code>IMarker#CHAR_END</code> -&gt; {@link IProblem#getSourceEnd()}</li>
-    * <li>	<code>IMarker#LINE_NUMBER</code> -&gt; {@link IProblem#getSourceLineNumber()}</li>
-    * <li>	<code>IJavaModelMarker#ARGUMENTS</code> -&gt; some <code>String[]</code> used to compute quickfixes</li>
-    * <li>	<code>IJavaModelMarker#CATEGORY_ID</code> -&gt; {@link CategorizedProblem#getCategoryID()}</li>
+    * <li>   <code>IJavaModelMarker#ID</code> -&gt; {@link IProblem#getID()}</li>
+    * <li>   <code>IMarker#CHAR_START</code> -&gt; {@link IProblem#getSourceStart()}</li>
+    * <li>   <code>IMarker#CHAR_END</code> -&gt; {@link IProblem#getSourceEnd()}</li>
+    * <li>   <code>IMarker#LINE_NUMBER</code> -&gt; {@link IProblem#getSourceLineNumber()}</li>
+    * <li>   <code>IJavaModelMarker#ARGUMENTS</code> -&gt; some <code>String[]</code> used to compute quickfixes</li>
+    * <li>   <code>IJavaModelMarker#CATEGORY_ID</code> -&gt; {@link CategorizedProblem#getCategoryID()}</li>
     * </ul>
     * The names must be eligible for marker creation, as defined by <code>IMarker#setAttributes(String[], Object[])</code>, and
     * there must be as many names as values according to {@link #getExtraMarkerAttributeValues()}. Note that extra marker

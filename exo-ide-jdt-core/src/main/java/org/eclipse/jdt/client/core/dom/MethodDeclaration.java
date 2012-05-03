@@ -23,12 +23,12 @@ import java.util.List;
  * MethodDeclaration:
  *    [ Javadoc ] { Modifier } ( Type | <b>void</b> ) Identifier <b>(</b>
  *        [ FormalParameter
- * 		     { <b>,</b> FormalParameter } ] <b>)</b> {<b>[</b> <b>]</b> }
+ *            { <b>,</b> FormalParameter } ] <b>)</b> {<b>[</b> <b>]</b> }
  *        [ <b>throws</b> TypeName { <b>,</b> TypeName } ] ( Block | <b>;</b> )
  * ConstructorDeclaration:
  *    [ Javadoc ] { Modifier } Identifier <b>(</b>
- * 		  [ FormalParameter
- * 			 { <b>,</b> FormalParameter } ] <b>)</b>
+ *         [ FormalParameter
+ *           { <b>,</b> FormalParameter } ] <b>)</b>
  *        [<b>throws</b> TypeName { <b>,</b> TypeName } ] Block
  * </pre>
  * 
@@ -37,17 +37,17 @@ import java.util.List;
  * <pre>
  * MethodDeclaration:
  *    [ Javadoc ] { ExtendedModifier }
- * 	  [ <b>&lt;</b> TypeParameter { <b>,</b> TypeParameter } <b>&gt;</b> ]
+ *      [ <b>&lt;</b> TypeParameter { <b>,</b> TypeParameter } <b>&gt;</b> ]
  *        ( Type | <b>void</b> ) Identifier <b>(</b>
  *        [ FormalParameter
- * 		     { <b>,</b> FormalParameter } ] <b>)</b> {<b>[</b> <b>]</b> }
+ *            { <b>,</b> FormalParameter } ] <b>)</b> {<b>[</b> <b>]</b> }
  *        [ <b>throws</b> TypeName { <b>,</b> TypeName } ] ( Block | <b>;</b> )
  * ConstructorDeclaration:
  *    [ Javadoc ] { ExtendedModifier }
- * 	  [ <b>&lt;</b> TypeParameter { <b>,</b> TypeParameter } <b>&gt;</b> ]
+ *      [ <b>&lt;</b> TypeParameter { <b>,</b> TypeParameter } <b>&gt;</b> ]
  *        Identifier <b>(</b>
- * 		  [ FormalParameter
- * 			 { <b>,</b> FormalParameter } ] <b>)</b>
+ *         [ FormalParameter
+ *           { <b>,</b> FormalParameter } ] <b>)</b>
  *        [<b>throws</b> TypeName { <b>,</b> TypeName } ] Block
  * </pre>
  * <p>

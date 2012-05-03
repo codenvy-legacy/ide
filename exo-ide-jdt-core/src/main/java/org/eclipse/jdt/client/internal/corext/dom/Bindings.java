@@ -1059,7 +1059,7 @@ public class Bindings
    // String[][] qualifiedCandidates= scope.resolveType(Signature.toString(candidate));
    // if (qualifiedCandidates == null || qualifiedCandidates.length == 0)
    // return false;
-   //				String packageName= type.getPackage().isUnnamed() ? "" : type.getPackage().getName(); //$NON-NLS-1$
+   //            String packageName= type.getPackage().isUnnamed() ? "" : type.getPackage().getName(); //$NON-NLS-1$
    // String typeName= getTypeQualifiedName(type);
    // for (int i= 0; i < qualifiedCandidates.length; i++) {
    // String[] qualifiedCandidate= qualifiedCandidates[i];

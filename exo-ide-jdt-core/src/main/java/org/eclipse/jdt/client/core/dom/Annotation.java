@@ -16,9 +16,9 @@ package org.eclipse.jdt.client.core.dom;
  * 
  * <pre>
  * Annotation:
- * 	NormalAnnotation
- * 	MarkerAnnotation
- * 	SingleMemberAnnotation
+ *    NormalAnnotation
+ *    MarkerAnnotation
+ *    SingleMemberAnnotation
  * </pre>
  * 
  * </p>

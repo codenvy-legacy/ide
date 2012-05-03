@@ -103,25 +103,25 @@ public class StringAsserts
       }
       //TODO
       //
-      //		BufferedReader read1= new BufferedReader(new StringReader(actual));
-      //		BufferedReader read2= new BufferedReader(new StringReader(expected));
+      //      BufferedReader read1= new BufferedReader(new StringReader(actual));
+      //      BufferedReader read2= new BufferedReader(new StringReader(expected));
       //
-      //		int line= 1;
-      //		do {
-      //			String s1= read1.readLine();
-      //			String s2= read2.readLine();
+      //      int line= 1;
+      //      do {
+      //         String s1= read1.readLine();
+      //         String s2= read2.readLine();
       //
-      //			if (s1 == null || !s1.equals(s2)) {
-      //				if (s1 == null && s2 == null) {
-      //					return;
-      //				}
-      //				String diffStr= (s1 == null) ? s2 : s1;
+      //         if (s1 == null || !s1.equals(s2)) {
+      //            if (s1 == null && s2 == null) {
+      //               return;
+      //            }
+      //            String diffStr= (s1 == null) ? s2 : s1;
       //
-      //				String message= "Content not as expected: Content is: \n" + actual + "\nDiffers at line " + line + ": " + diffStr + "\nExpected contents: \n" + expected;
-      //				Assert.assertEquals(message, expected, actual);
-      //			}
-      //			line++;
-      //		} while (true);
+      //            String message= "Content not as expected: Content is: \n" + actual + "\nDiffers at line " + line + ": " + diffStr + "\nExpected contents: \n" + expected;
+      //            Assert.assertEquals(message, expected, actual);
+      //         }
+      //         line++;
+      //      } while (true);
    }
 
    public static void assertEqualStringsIgnoreOrder(String[] actuals, String[] expecteds)

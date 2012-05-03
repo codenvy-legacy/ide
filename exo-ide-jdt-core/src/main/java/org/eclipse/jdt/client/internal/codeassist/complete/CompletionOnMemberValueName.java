@@ -17,12 +17,12 @@ import org.eclipse.jdt.client.internal.compiler.ast.MemberValuePair;
  * reduce annotation's attribute name containing the cursor.
  * e.g.
  *
- *	@Annot(attri[cursor]
- *	class X {
+ *   @Annot(attri[cursor]
+ *   class X {
  *  }
  *
- *	---> @Annot(<CompletionOnAttributeName:attri>)
- *		 class X {
+ *   ---> @Annot(<CompletionOnAttributeName:attri>)
+ *       class X {
  *       }
  */
 public class CompletionOnMemberValueName extends MemberValuePair

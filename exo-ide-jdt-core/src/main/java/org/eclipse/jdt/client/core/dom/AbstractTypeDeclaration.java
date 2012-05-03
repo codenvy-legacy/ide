@@ -17,9 +17,9 @@ import java.util.List;
  * 
  * <pre>
  * AbstractTypeDeclaration:
- * 		TypeDeclaration
- * 		EnumDeclaration
- * 		AnnotationTypeDeclaration
+ *       TypeDeclaration
+ *       EnumDeclaration
+ *       AnnotationTypeDeclaration
  * </pre>
  * 
  * @since 3.0

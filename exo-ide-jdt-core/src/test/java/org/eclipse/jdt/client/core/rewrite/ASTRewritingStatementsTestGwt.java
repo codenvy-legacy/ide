@@ -4188,7 +4188,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       buf.append("public class E {\n");
       buf.append("    public void foo(int i) {\n");
       buf.append("        switch(4){\n");
-      buf.append("        	case 4:break;break;\n");
+      buf.append("           case 4:break;break;\n");
       buf.append("            default:System.out.println(\"Not 4\");\n");
       buf.append("        }\n");
       buf.append("    }\n");
@@ -4224,7 +4224,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       buf.append("public class E {\n");
       buf.append("    public void foo(int i) {\n");
       buf.append("        switch(4){\n");
-      buf.append("        	case 4:break;\n");
+      buf.append("           case 4:break;\n");
       buf.append("            default:System.out.println(\"Not 4\");\n");
       buf.append("        }\n");
       buf.append("    }\n");
@@ -4240,7 +4240,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       buf.append("public class E {\n");
       buf.append("    public void foo(int i) {\n");
       buf.append("        switch(4){\n");
-      buf.append("        	case 4:break;break;default:System.out.println(\"Not 4\");\n");
+      buf.append("           case 4:break;break;default:System.out.println(\"Not 4\");\n");
       buf.append("        }\n");
       buf.append("    }\n");
       buf.append("}\n");
@@ -4275,7 +4275,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       buf.append("public class E {\n");
       buf.append("    public void foo(int i) {\n");
       buf.append("        switch(4){\n");
-      buf.append("        	case 4:break;default:System.out.println(\"Not 4\");\n");
+      buf.append("           case 4:break;default:System.out.println(\"Not 4\");\n");
       buf.append("        }\n");
       buf.append("    }\n");
       buf.append("}\n");
@@ -4321,8 +4321,8 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       buf.append("    public void foo(int i) {\n");
       buf.append("        switch(4){\n");
       buf.append("            case 4:break;default:System.out.println(\"Not 4\");\n");
-      buf.append("			case 5:\n");
-      buf.append("			System.out.println(\"This is 5\");break;\n");
+      buf.append("         case 5:\n");
+      buf.append("         System.out.println(\"This is 5\");break;\n");
       buf.append("        }\n");
       buf.append("    }\n");
       buf.append("}\n");
@@ -4813,16 +4813,16 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       buf.append("package test0017;\n");
       buf.append("\n");
       buf.append("public class X {\n");
-      buf.append("	void foo() {\n");
-      buf.append("		FileReader reader1 = new FileReader(\"file1\");\n");
-      buf.append("		try {\n");
-      buf.append("			int ch;\n");
-      buf.append("			while ((ch = reader1.read()) != -1) {\n");
-      buf.append("				System.out.println(ch);\n");
-      buf.append("			}\n");
-      buf.append("		} finally {\n");
-      buf.append("		}\n");
-      buf.append("	}\n");
+      buf.append("   void foo() {\n");
+      buf.append("      FileReader reader1 = new FileReader(\"file1\");\n");
+      buf.append("      try {\n");
+      buf.append("         int ch;\n");
+      buf.append("         while ((ch = reader1.read()) != -1) {\n");
+      buf.append("            System.out.println(ch);\n");
+      buf.append("         }\n");
+      buf.append("      } finally {\n");
+      buf.append("      }\n");
+      buf.append("   }\n");
       buf.append("}");
 
       ICompilationUnit cu =
@@ -4858,15 +4858,15 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       buf.append("package test0017;\n");
       buf.append("\n");
       buf.append("public class X {\n");
-      buf.append("	void foo() {\n");
-      buf.append("		try (FileReader reader1 = new FileReader(\"file1\")) {\n");
-      buf.append("			int ch;\n");
-      buf.append("			while ((ch = reader1.read()) != -1) {\n");
-      buf.append("				System.out.println(ch);\n");
-      buf.append("			}\n");
-      buf.append("		} finally {\n");
-      buf.append("		}\n");
-      buf.append("	}\n");
+      buf.append("   void foo() {\n");
+      buf.append("      try (FileReader reader1 = new FileReader(\"file1\")) {\n");
+      buf.append("         int ch;\n");
+      buf.append("         while ((ch = reader1.read()) != -1) {\n");
+      buf.append("            System.out.println(ch);\n");
+      buf.append("         }\n");
+      buf.append("      } finally {\n");
+      buf.append("      }\n");
+      buf.append("   }\n");
       buf.append("}");
       assertEqualString(preview, buf.toString());
    }
@@ -4880,15 +4880,15 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       buf.append("package test0017;\n");
       buf.append("\n");
       buf.append("public class X {\n");
-      buf.append("	void foo() {\n");
-      buf.append("		try (FileReader reader1 = new FileReader(\"file1\")) {\n");
-      buf.append("			int ch;\n");
-      buf.append("			while ((ch = reader1.read()) != -1) {\n");
-      buf.append("				System.out.println(ch);\n");
-      buf.append("			}\n");
-      buf.append("		} finally {\n");
-      buf.append("		}\n");
-      buf.append("	}\n");
+      buf.append("   void foo() {\n");
+      buf.append("      try (FileReader reader1 = new FileReader(\"file1\")) {\n");
+      buf.append("         int ch;\n");
+      buf.append("         while ((ch = reader1.read()) != -1) {\n");
+      buf.append("            System.out.println(ch);\n");
+      buf.append("         }\n");
+      buf.append("      } finally {\n");
+      buf.append("      }\n");
+      buf.append("   }\n");
       buf.append("}");
 
       ICompilationUnit cu =
@@ -4928,16 +4928,16 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       buf.append("package test0017;\n");
       buf.append("\n");
       buf.append("public class X {\n");
-      buf.append("	void foo() {\n");
-      buf.append("		try (FileReader reader1 = new FileReader(\"file1\");\n");
-      buf.append("				FileReader reader2 = new FileReader(\"file2\")) {\n");
-      buf.append("			int ch;\n");
-      buf.append("			while ((ch = reader1.read()) != -1) {\n");
-      buf.append("				System.out.println(ch);\n");
-      buf.append("			}\n");
-      buf.append("		} finally {\n");
-      buf.append("		}\n");
-      buf.append("	}\n");
+      buf.append("   void foo() {\n");
+      buf.append("      try (FileReader reader1 = new FileReader(\"file1\");\n");
+      buf.append("            FileReader reader2 = new FileReader(\"file2\")) {\n");
+      buf.append("         int ch;\n");
+      buf.append("         while ((ch = reader1.read()) != -1) {\n");
+      buf.append("            System.out.println(ch);\n");
+      buf.append("         }\n");
+      buf.append("      } finally {\n");
+      buf.append("      }\n");
+      buf.append("   }\n");
       buf.append("}");
       assertEqualString(preview, buf.toString());
    }
@@ -4951,15 +4951,15 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       buf.append("package test0017;\n");
       buf.append("\n");
       buf.append("public class X {\n");
-      buf.append("	void foo() {\n");
-      buf.append("		try (FileReader reader1 = new FileReader(\"file1\");) {\n");
-      buf.append("			int ch;\n");
-      buf.append("			while ((ch = reader1.read()) != -1) {\n");
-      buf.append("				System.out.println(ch);\n");
-      buf.append("			}\n");
-      buf.append("		} finally {\n");
-      buf.append("		}\n");
-      buf.append("	}\n");
+      buf.append("   void foo() {\n");
+      buf.append("      try (FileReader reader1 = new FileReader(\"file1\");) {\n");
+      buf.append("         int ch;\n");
+      buf.append("         while ((ch = reader1.read()) != -1) {\n");
+      buf.append("            System.out.println(ch);\n");
+      buf.append("         }\n");
+      buf.append("      } finally {\n");
+      buf.append("      }\n");
+      buf.append("   }\n");
       buf.append("}");
 
       ICompilationUnit cu =
@@ -4999,16 +4999,16 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       buf.append("package test0017;\n");
       buf.append("\n");
       buf.append("public class X {\n");
-      buf.append("	void foo() {\n");
-      buf.append("		try (FileReader reader1 = new FileReader(\"file1\");\n");
-      buf.append("				FileReader reader2 = new FileReader(\"file2\");) {\n");
-      buf.append("			int ch;\n");
-      buf.append("			while ((ch = reader1.read()) != -1) {\n");
-      buf.append("				System.out.println(ch);\n");
-      buf.append("			}\n");
-      buf.append("		} finally {\n");
-      buf.append("		}\n");
-      buf.append("	}\n");
+      buf.append("   void foo() {\n");
+      buf.append("      try (FileReader reader1 = new FileReader(\"file1\");\n");
+      buf.append("            FileReader reader2 = new FileReader(\"file2\");) {\n");
+      buf.append("         int ch;\n");
+      buf.append("         while ((ch = reader1.read()) != -1) {\n");
+      buf.append("            System.out.println(ch);\n");
+      buf.append("         }\n");
+      buf.append("      } finally {\n");
+      buf.append("      }\n");
+      buf.append("   }\n");
       buf.append("}");
       assertEqualString(preview, buf.toString());
    }

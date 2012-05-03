@@ -57,7 +57,7 @@ class PackageBinding implements IPackageBinding
       // int fragType = pkgs[i].getKind();
       // switch(fragType) {
       // case IPackageFragmentRoot.K_SOURCE:
-      //						String unitName = "package-info.java"; //$NON-NLS-1$
+      //                  String unitName = "package-info.java"; //$NON-NLS-1$
       // ICompilationUnit unit = pkgs[i].getCompilationUnit(unitName);
       // if (unit != null && unit.exists()) {
       // ASTParser p = ASTParser.newParser(AST.JLS3);

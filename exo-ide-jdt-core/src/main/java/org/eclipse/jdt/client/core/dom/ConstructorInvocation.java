@@ -19,7 +19,7 @@ import java.util.List;
  * 
  * <pre>
  * ConstructorInvocation:
- * 	<b>this</b> <b>(</b> [ Expression { <b>,</b> Expression } ] <b>)</b> <b>;</b>
+ *    <b>this</b> <b>(</b> [ Expression { <b>,</b> Expression } ] <b>)</b> <b>;</b>
  * </pre>
  * 
  * For JLS3, type arguments are added:
@@ -27,7 +27,7 @@ import java.util.List;
  * <pre>
  * ConstructorInvocation:
  *      [ <b>&lt;</b> Type { <b>,</b> Type } <b>&gt;</b> ]
- * 	      <b>this</b> <b>(</b> [ Expression { <b>,</b> Expression } ] <b>)</b> <b>;</b>
+ *          <b>this</b> <b>(</b> [ Expression { <b>,</b> Expression } ] <b>)</b> <b>;</b>
  * </pre>
  * 
  * @since 2.0

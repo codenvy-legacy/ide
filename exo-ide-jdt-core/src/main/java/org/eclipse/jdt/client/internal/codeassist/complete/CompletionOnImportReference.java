@@ -16,13 +16,13 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
  * e.g.
  *
  *  import java.io[cursor];
- *	class X {
+ *   class X {
  *    void foo() {
  *    }
  *  }
  *
- *	---> <CompleteOnImport:java.io>
- *		 class X {
+ *   ---> <CompleteOnImport:java.io>
+ *       class X {
  *         void foo() {
  *         }
  *       }

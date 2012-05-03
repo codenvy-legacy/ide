@@ -532,7 +532,7 @@ public class JavaContext extends CompilationUnitContext
       // String memberName= qualifiedMemberName.substring(memberOffset + 1, qualifiedMemberName.length());
       // try {
       // boolean isField;
-      //			if ("*".equals(memberName)) { //$NON-NLS-1$
+      //         if ("*".equals(memberName)) { //$NON-NLS-1$
       // isField= true;
       // } else {
       // IJavaProject javaProject= cu.getJavaProject();
@@ -609,7 +609,7 @@ public class JavaContext extends CompilationUnitContext
       // try {
       // Position position= new Position(getCompletionOffset(), 0);
       // IDocument document= getDocument();
-      //			final String category= "__template_position_importer" + System.currentTimeMillis(); //$NON-NLS-1$
+      //         final String category= "__template_position_importer" + System.currentTimeMillis(); //$NON-NLS-1$
       // IPositionUpdater updater= new DefaultPositionUpdater(category);
       // document.addPositionCategory(category);
       // document.addPositionUpdater(updater);

@@ -128,7 +128,7 @@ public class ImportCompletionProposal extends AbstractJavaCompletionProposal
       // /* No imports for implicit imports. */
       //
       // if (fProposal.getKind() == CompletionProposal.TYPE_IMPORT && fParentProposalKind == CompletionProposal.FIELD_REF)
-      //				return ""; //$NON-NLS-1$
+      //            return ""; //$NON-NLS-1$
       // qualifiedTypeName= String.valueOf(Signature.getSignatureSimpleName(qualifiedType));
       // }
 

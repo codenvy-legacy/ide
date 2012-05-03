@@ -151,7 +151,7 @@ public class InternalCompletionContext extends CompletionContext
    // * @since 3.4
    // */
    // public IJavaElement getEnclosingElement() {
-   //		if (!this.isExtended) throw new UnsupportedOperationException("Operation only supported in extended context"); //$NON-NLS-1$
+   //      if (!this.isExtended) throw new UnsupportedOperationException("Operation only supported in extended context"); //$NON-NLS-1$
    //
    // if (this.extendedContext == null) return null;
    //
@@ -314,7 +314,7 @@ public class InternalCompletionContext extends CompletionContext
    // * @since 3.4
    // */
    // public IJavaElement[] getVisibleElements(String typeSignature) {
-   //		if (!this.isExtended) throw new UnsupportedOperationException("Operation only supported in extended context"); //$NON-NLS-1$
+   //      if (!this.isExtended) throw new UnsupportedOperationException("Operation only supported in extended context"); //$NON-NLS-1$
    //
    // if (this.extendedContext == null) return new IJavaElement[0];
    //
