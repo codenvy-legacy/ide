@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.fix;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +36,7 @@ public class MapCleanUpOptions extends CleanUpOptions
 
    public MapCleanUpOptions()
    {
-      this(new Hashtable<String, String>());
+      this(new HashMap<String, String>());
    }
 
    /**

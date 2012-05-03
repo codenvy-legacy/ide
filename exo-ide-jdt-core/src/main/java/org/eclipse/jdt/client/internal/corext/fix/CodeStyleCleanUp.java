@@ -10,20 +10,17 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.fix;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
-
-import org.eclipse.jdt.client.internal.corext.fix.CleanUpConstants;
-import org.eclipse.jdt.client.internal.corext.fix.CodeStyleFix;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.exoplatform.ide.editor.text.IDocument;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Creates fixes which can resolve code style issues
@@ -116,7 +113,7 @@ public class CodeStyleCleanUp extends AbstractMultiFix
 
    private Map<String, String> getRequiredOptions()
    {
-      Map<String, String> result = new Hashtable<String, String>();
+      Map<String, String> result = new HashMap<String, String>();
       if (isEnabled(CleanUpConstants.MEMBER_ACCESSES_STATIC_QUALIFY_WITH_DECLARING_CLASS)
          && isEnabled(CleanUpConstants.MEMBER_ACCESSES_STATIC_QUALIFY_WITH_DECLARING_CLASS_INSTANCE_ACCESS))
          result.put(JavaCore.COMPILER_PB_STATIC_ACCESS_RECEIVER, JavaCore.WARNING);

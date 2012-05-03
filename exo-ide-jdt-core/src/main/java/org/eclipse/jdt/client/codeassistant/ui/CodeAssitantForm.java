@@ -40,7 +40,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.eclipse.jdt.client.CodeAssistantPresenter.Display;
+import org.eclipse.jdt.client.AssistDisplay;
+import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
@@ -59,7 +60,7 @@ import java.util.List;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 25, 2010 4:18:55 PM evgen $
  */
-public class CodeAssitantForm extends Composite implements ResizeHandler, Display
+public class CodeAssitantForm extends Composite implements ResizeHandler, AssistDisplay
 {
    private static final String PANEL_ID = "exo-ide-autocomplete-panel";
 
@@ -95,8 +96,7 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Displa
 
    private boolean editorHasFocus = true;
 
-   public CodeAssitantForm(int left, int top, IJavaCompletionProposal[] items, ProposalSelectedHandler handler)
-   {
+   public CodeAssitantForm(int left, int top, ICompletionProposal[] items, ProposalSelectedHandler handler)   {
       this.handler = handler;
 
       resizeHandler = Window.addResizeHandler(this);
@@ -151,7 +151,7 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Displa
 
    }
 
-   private void addProposalsToPanel(IJavaCompletionProposal[] proposals)
+   private void addProposalsToPanel(ICompletionProposal[] proposals)
    {
       flowPanel.clear();
       widgets.clear();
@@ -160,7 +160,7 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Displa
          flowPanel.add(new Label("No Proposals"));
          return;
       }
-      for (IJavaCompletionProposal t : proposals)
+      for (ICompletionProposal t : proposals)
       {
          ProposalWidget w = new ProposalWidget(t);
          w.addClickHandler(mousHandler);

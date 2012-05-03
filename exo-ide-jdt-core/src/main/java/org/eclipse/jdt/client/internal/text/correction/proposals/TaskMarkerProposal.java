@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.Image;
 import org.eclipse.jdt.client.JdtClientBundle;
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
 import org.eclipse.jdt.client.core.ToolFactory;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.IScanner;
 import org.eclipse.jdt.client.core.compiler.ITerminalSymbols;
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
@@ -178,7 +179,7 @@ public class TaskMarkerProposal extends CUCorrectionProposal
       for (int i = start; i < end; i++)
       {
          char ch = document.getChar(i);
-         if (!Character.isWhitespace(ch))
+         if (!CharOperation.isWhitespace(ch))
          {
             return true;
          }

@@ -11,7 +11,7 @@
 package org.eclipse.jdt.client.internal.corext.fix;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -72,7 +72,7 @@ public class UnnecessaryCodeCleanUp extends AbstractMultiFix
 
    private Map<String, String> getRequiredOptions()
    {
-      Map<String, String> result = new Hashtable<String, String>();
+      Map<String, String> result = new HashMap<String, String>();
 
       if (isEnabled(CleanUpConstants.REMOVE_UNNECESSARY_CASTS))
          result.put(JavaCore.COMPILER_PB_UNNECESSARY_TYPE_CHECK, JavaCore.WARNING);

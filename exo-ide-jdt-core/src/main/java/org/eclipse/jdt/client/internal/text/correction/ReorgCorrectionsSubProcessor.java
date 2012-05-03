@@ -36,7 +36,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.text.IDocument;
 
 import java.util.Collection;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ReorgCorrectionsSubProcessor
@@ -165,7 +165,7 @@ public class ReorgCorrectionsSubProcessor
       if (fix != null)
       {
          Image image = new Image(JdtClientBundle.INSTANCE.correction_delete_import());
-         Map<String, String> options = new Hashtable<String, String>();
+         Map<String, String> options = new HashMap<String, String>();
          options.put(CleanUpConstants.REMOVE_UNUSED_CODE_IMPORTS, CleanUpOptions.TRUE);
          FixCorrectionProposal proposal =
             new FixCorrectionProposal(fix, new UnusedCodeCleanUp(options), 6, image, context);
@@ -677,7 +677,7 @@ public class ReorgCorrectionsSubProcessor
    //      {
    //         if (fChangeOnWorkspace)
    //         {
-   //            Hashtable<String, String> map = JavaCore.getOptions();
+   //            HashMap<String, String> map = JavaCore.getOptions();
    //            JavaModelUtil.setComplianceOptions(map, fRequiredVersion);
    //            JavaCore.setOptions(map);
    //         }

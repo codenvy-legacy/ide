@@ -36,7 +36,7 @@ public final class SerialVersionSubProcessor
    //
    //      private static ICleanUp createCleanUp(boolean isDefault)
    //      {
-   //         Map<String, String> options = new Hashtable<String, String>();
+   //         Map<String, String> options = new HashMap<String, String>();
    //         options.put(CleanUpConstants.ADD_MISSING_SERIAL_VERSION_ID, CleanUpOptions.TRUE);
    //         if (isDefault)
    //         {

@@ -128,9 +128,12 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new FormatterProfilesControl());
       IDE.getInstance().addControl(new OrganizeImportsControl());
       IDE.getInstance().addControl(new CreatePackageControl());
+      IDE.getInstance().addControl(new QuickFixControl());
       IDE.fireEvent(new AddCodeFormatterEvent(new JavaCodeFormatter(), MimeType.APPLICATION_JAVA));
+
       Window.addCloseHandler(this);
       formatterProfileManager = new FormatterProfilePresenter(IDE.eventBus());
+      new QuickFixPresenter(IDE.eventBus());
    }
 
    /**

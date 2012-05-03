@@ -13,7 +13,7 @@ package org.eclipse.jdt.client.internal.corext.fix;
 import org.exoplatform.ide.editor.runtime.Assert;
 
 import java.util.Collections;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -54,7 +54,7 @@ public class CleanUpOptions
     */
    public CleanUpOptions()
    {
-      fOptions = new Hashtable<String, String>();
+      fOptions = new HashMap<String, String>();
    }
 
    /**

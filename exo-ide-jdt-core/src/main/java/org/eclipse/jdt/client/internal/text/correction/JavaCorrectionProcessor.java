@@ -188,7 +188,16 @@ public class JavaCorrectionProcessor
       {
          return new Status(IStatus.ERROR, "", "Error", e);
       }
+   }
 
+   /**
+    * @param annot
+    * @return
+    */
+   public static boolean hasCorrections(IProblemLocation annot)
+   {
+      // TODO Auto-generated method stub
+      return false;
    }
 
 }

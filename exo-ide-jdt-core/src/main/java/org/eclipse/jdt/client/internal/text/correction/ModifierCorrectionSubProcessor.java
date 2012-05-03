@@ -838,7 +838,7 @@ public class ModifierCorrectionSubProcessor
       //      if (fix != null)
       //      {
       //         Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
-      //         Map<String, String> options = new Hashtable<String, String>();
+      //         Map<String, String> options = new HashMap<String, String>();
       //         options.put(CleanUpConstants.ADD_MISSING_ANNOTATIONS, CleanUpOptions.TRUE);
       //         options.put(CleanUpConstants.ADD_MISSING_ANNOTATIONS_OVERRIDE, CleanUpOptions.TRUE);
       //         options.put(CleanUpConstants.ADD_MISSING_ANNOTATIONS_OVERRIDE_FOR_INTERFACE_METHOD_IMPLEMENTATION,
@@ -857,7 +857,7 @@ public class ModifierCorrectionSubProcessor
       //      if (fix != null)
       //      {
       //         Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
-      //         Map<String, String> options = new Hashtable<String, String>();
+      //         Map<String, String> options = new HashMap<String, String>();
       //         options.put(CleanUpConstants.ADD_MISSING_ANNOTATIONS, CleanUpOptions.TRUE);
       //         options.put(CleanUpConstants.ADD_MISSING_ANNOTATIONS_DEPRECATED, CleanUpOptions.TRUE);
       //         FixCorrectionProposal proposal =

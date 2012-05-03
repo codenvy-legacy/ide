@@ -70,67 +70,67 @@ public interface CorrectionMessages extends Messages
 
    String QuickAssistProcessor_inline_local_description();
 
-   String QuickAssistProcessor_name_extension_from_class();
+//   String QuickAssistProcessor_name_extension_from_class();
+//
+//   String QuickAssistProcessor_name_extension_from_interface();
 
-   String QuickAssistProcessor_name_extension_from_interface();
+//   String SerialVersionHashOperation_computing_id();
 
-   String SerialVersionHashOperation_computing_id();
+//   String SerialVersionHashOperation_error_classnotfound();
 
-   String SerialVersionHashOperation_error_classnotfound();
+//   String SerialVersionHashOperation_save_caption();
 
-   String SerialVersionHashOperation_save_caption();
+//   String SerialVersionHashOperation_save_message();
 
-   String SerialVersionHashOperation_save_message();
+//   String SerialVersionDefaultProposal_message_default_info();
 
-   String SerialVersionDefaultProposal_message_default_info();
+//   String SerialVersionHashProposal_message_generated_info();
 
-   String SerialVersionHashProposal_message_generated_info();
+//   String SerialVersionHashOperation_dialog_error_caption();
 
-   String SerialVersionHashOperation_dialog_error_caption();
-
-   String SerialVersionHashOperation_dialog_error_message();
+//   String SerialVersionHashOperation_dialog_error_message();
 
    String CorrectPackageDeclarationProposal_name();
 
-   String CorrectPackageDeclarationProposal_remove_description();
+//   String CorrectPackageDeclarationProposal_remove_description();
 
-   String CorrectPackageDeclarationProposal_add_description();
+//   String CorrectPackageDeclarationProposal_add_description();
 
-   String CorrectPackageDeclarationProposal_change_description();
+//   String CorrectPackageDeclarationProposal_change_description();
 
-   String ChangeCorrectionProposal_error_title();
+//   String ChangeCorrectionProposal_error_title();
 
-   String ChangeCorrectionProposal_error_message();
+//   String ChangeCorrectionProposal_error_message();
 
-   String ChangeCorrectionProposal_name_with_shortcut();
+//   String ChangeCorrectionProposal_name_with_shortcut();
 
-   String CUCorrectionProposal_error_title();
-
-   String CUCorrectionProposal_error_message();
+//   String CUCorrectionProposal_error_title();
+//
+//   String CUCorrectionProposal_error_message();
 
    String ReorgCorrectionsSubProcessor_renametype_description(String newTypeName);
 
-   String ReorgCorrectionsSubProcessor_renamecu_description();
+//   String ReorgCorrectionsSubProcessor_renamecu_description();
 
-   String ReorgCorrectionsSubProcessor_movecu_default_description();
+//   String ReorgCorrectionsSubProcessor_movecu_default_description();
 
-   String ReorgCorrectionsSubProcessor_movecu_description();
+//   String ReorgCorrectionsSubProcessor_movecu_description();
 
    String ReorgCorrectionsSubProcessor_organizeimports_description();
 
-   String ReorgCorrectionsSubProcessor_addcp_project_description();
+//   String ReorgCorrectionsSubProcessor_addcp_project_description();
 
-   String ReorgCorrectionsSubProcessor_addcp_archive_description();
+//   String ReorgCorrectionsSubProcessor_addcp_archive_description();
 
-   String ReorgCorrectionsSubProcessor_addcp_classfolder_description();
+//   String ReorgCorrectionsSubProcessor_addcp_classfolder_description();
 
-   String ReorgCorrectionsSubProcessor_change_project_compliance_description(String requiredVersion);
+//   String ReorgCorrectionsSubProcessor_change_project_compliance_description(String requiredVersion);
+//
+//   String ReorgCorrectionsSubProcessor_change_workspace_compliance_description();
 
-   String ReorgCorrectionsSubProcessor_change_workspace_compliance_description();
+//   String ReorgCorrectionsSubProcessor_addcp_variable_description();
 
-   String ReorgCorrectionsSubProcessor_addcp_variable_description();
-
-   String ReorgCorrectionsSubProcessor_addcp_library_description();
+//   String ReorgCorrectionsSubProcessor_addcp_library_description();
 
    String LocalCorrectionsSubProcessor_surroundwith_trycatch_description();
 
@@ -302,7 +302,7 @@ public interface CorrectionMessages extends Messages
 
    String UnresolvedElementsSubProcessor_createmethod_other_description(String sig, String string);
 
-   String UnresolvedElementsSubProcessor_createconstructor_description();
+//   String UnresolvedElementsSubProcessor_createconstructor_description();
 
    String UnresolvedElementsSubProcessor_changetype_description(String simpleName, String packName);
 
@@ -328,15 +328,15 @@ public interface CorrectionMessages extends Messages
 
    String UnresolvedElementsSubProcessor_removestatement_description();
 
-   String UnresolvedElementsSubProcessor_changeparamsignature_description();
+//   String UnresolvedElementsSubProcessor_changeparamsignature_description();
 
    String UnresolvedElementsSubProcessor_changemethodtargetcast_description();
 
-   String UnresolvedElementsSubProcessor_changeparamsignature_constr_description();
+//   String UnresolvedElementsSubProcessor_changeparamsignature_constr_description();
 
-   String UnresolvedElementsSubProcessor_swapparams_description();
-
-   String UnresolvedElementsSubProcessor_swapparams_constr_description();
+//   String UnresolvedElementsSubProcessor_swapparams_description();
+//
+//   String UnresolvedElementsSubProcessor_swapparams_constr_description();
 
    String UnresolvedElementsSubProcessor_removeparam_description(String signature, String typeNames);
 
@@ -354,15 +354,15 @@ public interface CorrectionMessages extends Messages
 
    String UnresolvedElementsSubProcessor_removearguments_description(String string);
 
-   String UnresolvedElementsSubProcessor_addparam_description();
+//   String UnresolvedElementsSubProcessor_addparam_description();
+//
+//   String UnresolvedElementsSubProcessor_addparams_description();
+//
+//   String UnresolvedElementsSubProcessor_addparam_constr_description();
+//
+//   String UnresolvedElementsSubProcessor_addparams_constr_description();
 
-   String UnresolvedElementsSubProcessor_addparams_description();
-
-   String UnresolvedElementsSubProcessor_addparam_constr_description();
-
-   String UnresolvedElementsSubProcessor_addparams_constr_description();
-
-   String UnresolvedElementsSubProcessor_importexplicit_description();
+//   String UnresolvedElementsSubProcessor_importexplicit_description();
 
    String UnresolvedElementsSubProcessor_missingcastbrackets_description();
 
@@ -400,47 +400,47 @@ public interface CorrectionMessages extends Messages
 
    String NoCorrectionProposal_description();
 
-   String MarkerResolutionProposal_additionaldesc();
+//   String MarkerResolutionProposal_additionaldesc();
 
-   String NewCUCompletionUsingWizardProposal_createclass_description();
+//   String NewCUCompletionUsingWizardProposal_createclass_description();
+//
+//   String NewCUCompletionUsingWizardProposal_createenum_description();
+//
+//   String NewCUCompletionUsingWizardProposal_createclass_inpackage_description();
+//
+//   String NewCUCompletionUsingWizardProposal_createinnerclass_description();
+//
+//   String NewCUCompletionUsingWizardProposal_createinnerenum_description();
+//
+//   String NewCUCompletionUsingWizardProposal_createannotation_description();
 
-   String NewCUCompletionUsingWizardProposal_createenum_description();
-
-   String NewCUCompletionUsingWizardProposal_createclass_inpackage_description();
-
-   String NewCUCompletionUsingWizardProposal_createinnerclass_description();
-
-   String NewCUCompletionUsingWizardProposal_createinnerenum_description();
-
-   String NewCUCompletionUsingWizardProposal_createannotation_description();
-
-   String NewCUCompletionUsingWizardProposal_createinnerclass_intype_description();
-
-   String NewCUCompletionUsingWizardProposal_createinnerenum_intype_description();
-
-   String NewCUCompletionUsingWizardProposal_createinterface_description();
-
-   String NewCUCompletionUsingWizardProposal_createinterface_inpackage_description();
-
-   String NewCUCompletionUsingWizardProposal_createinnerinterface_description();
-
-   String NewCUCompletionUsingWizardProposal_createenum_inpackage_description();
-
-   String NewCUCompletionUsingWizardProposal_createinnerannotation_description();
-
-   String NewCUCompletionUsingWizardProposal_createinnerinterface_intype_description();
-
-   String NewCUCompletionUsingWizardProposal_createinnerannotation_intype_description();
-
-   String NewCUCompletionUsingWizardProposal_createannotation_inpackage_description();
-
-   String NewCUCompletionUsingWizardProposal_createclass_info();
-
-   String NewCUCompletionUsingWizardProposal_createenum_info();
-
-   String NewCUCompletionUsingWizardProposal_createinterface_info();
-
-   String NewCUCompletionUsingWizardProposal_createannotation_info();
+//   String NewCUCompletionUsingWizardProposal_createinnerclass_intype_description();
+//
+//   String NewCUCompletionUsingWizardProposal_createinnerenum_intype_description();
+//
+//   String NewCUCompletionUsingWizardProposal_createinterface_description();
+//
+//   String NewCUCompletionUsingWizardProposal_createinterface_inpackage_description();
+//
+//   String NewCUCompletionUsingWizardProposal_createinnerinterface_description();
+//
+//   String NewCUCompletionUsingWizardProposal_createenum_inpackage_description();
+//
+//   String NewCUCompletionUsingWizardProposal_createinnerannotation_description();
+//
+//   String NewCUCompletionUsingWizardProposal_createinnerinterface_intype_description();
+//
+//   String NewCUCompletionUsingWizardProposal_createinnerannotation_intype_description();
+//
+//   String NewCUCompletionUsingWizardProposal_createannotation_inpackage_description();
+//
+//   String NewCUCompletionUsingWizardProposal_createclass_info();
+//
+//   String NewCUCompletionUsingWizardProposal_createenum_info();
+//
+//   String NewCUCompletionUsingWizardProposal_createinterface_info();
+//
+//   String NewCUCompletionUsingWizardProposal_createannotation_info();
 
    String ConstructorFromSuperclassProposal_description(String string);
 
@@ -496,19 +496,19 @@ public interface CorrectionMessages extends Messages
 
    String QuickAssistProcessor_typetoarrayInitializer_description();
 
-   String QuickAssistProcessor_createmethodinsuper_description();
+//   String QuickAssistProcessor_createmethodinsuper_description();
 
    String LinkedNamesAssistProposal_proposalinfo();
 
    String LinkedNamesAssistProposal_description();
 
-   String QuickTemplateProcessor_surround_label();
+//   String QuickTemplateProcessor_surround_label();
 
-   String NewCUCompletionUsingWizardProposal_dialogtitle();
-
-   String NewCUCompletionUsingWizardProposal_tooltip_enclosingtype();
-
-   String NewCUCompletionUsingWizardProposal_tooltip_package();
+//   String NewCUCompletionUsingWizardProposal_dialogtitle();
+//
+//   String NewCUCompletionUsingWizardProposal_tooltip_enclosingtype();
+//
+//   String NewCUCompletionUsingWizardProposal_tooltip_package();
 
    String JavaCorrectionProcessor_addquote_description();
 
@@ -518,13 +518,13 @@ public interface CorrectionMessages extends Messages
 
    String JavaCorrectionProcessor_error_quickassist_message();
 
-   String JavaCorrectionProcessor_go_to_closest_using_menu();
+//   String JavaCorrectionProcessor_go_to_closest_using_menu();
+//
+//   String JavaCorrectionProcessor_go_to_closest_using_key();
+//
+//   String JavaCorrectionProcessor_go_to_original_using_menu();
 
-   String JavaCorrectionProcessor_go_to_closest_using_key();
-
-   String JavaCorrectionProcessor_go_to_original_using_menu();
-
-   String JavaCorrectionProcessor_go_to_original_using_key();
+//   String JavaCorrectionProcessor_go_to_original_using_key();
 
    String TaskMarkerProposal_description();
 
@@ -602,39 +602,39 @@ public interface CorrectionMessages extends Messages
 
    String AssignToVariableAssistProposal_assigntoexistingfield_description(String string);
 
-   String ReorgCorrectionsSubProcessor_50_compliance_operation();
+//   String ReorgCorrectionsSubProcessor_50_compliance_operation();
 
-   String ReorgCorrectionsSubProcessor_no_required_jre_title();
+//   String ReorgCorrectionsSubProcessor_no_required_jre_title();
 
-   String ReorgCorrectionsSubProcessor_no_required_jre_message();
+//   String ReorgCorrectionsSubProcessor_no_required_jre_message();
 
-   String ReorgCorrectionsSubProcessor_required_compliance_changeworkspace_description();
+//   String ReorgCorrectionsSubProcessor_required_compliance_changeworkspace_description();
 
-   String ReorgCorrectionsSubProcessor_required_compliance_changeproject_description();
+//   String ReorgCorrectionsSubProcessor_required_compliance_changeproject_description();
 
-   String GetterSetterCorrectionSubProcessor_creategetterunsingencapsulatefield_description();
+//   String GetterSetterCorrectionSubProcessor_creategetterunsingencapsulatefield_description();
 
-   String GetterSetterCorrectionSubProcessor_encapsulate_field_error_message();
+//   String GetterSetterCorrectionSubProcessor_encapsulate_field_error_message();
 
-   String GetterSetterCorrectionSubProcessor_additional_info();
+//   String GetterSetterCorrectionSubProcessor_additional_info();
 
-   String GetterSetterCorrectionSubProcessor_encapsulate_field_error_title();
+//   String GetterSetterCorrectionSubProcessor_encapsulate_field_error_title();
 
    String GetterSetterCorrectionSubProcessor_replacewithgetter_description(String string);
 
    String GetterSetterCorrectionSubProcessor_replacewithsetter_description(String string);
 
-   String ReorgCorrectionsSubProcessor_50_compliance_changeProjectJREToDefault_description();
-
-   String ReorgCorrectionsSubProcessor_50_compliance_changeWorkspaceJRE_description();
-
-   String ReorgCorrectionsSubProcessor_50_compliance_changeProjectJRE_description();
+//   String ReorgCorrectionsSubProcessor_50_compliance_changeProjectJREToDefault_description();
+//
+//   String ReorgCorrectionsSubProcessor_50_compliance_changeWorkspaceJRE_description();
+//
+//   String ReorgCorrectionsSubProcessor_50_compliance_changeProjectJRE_description();
 
    String ModifierCorrectionSubProcessor_default_visibility_label();
 
-   String ReorgCorrectionsSubProcessor_configure_buildpath_label();
+//   String ReorgCorrectionsSubProcessor_configure_buildpath_label();
 
-   String ReorgCorrectionsSubProcessor_configure_buildpath_description();
+//   String ReorgCorrectionsSubProcessor_configure_buildpath_description();
 
    String QuickAssistProcessor_extract_to_local_all_description();
 
@@ -650,9 +650,9 @@ public interface CorrectionMessages extends Messages
 
    String ReorgCorrectionsSubProcessor_accessrules_description();
 
-   String ReorgCorrectionsSubProcessor_project_seup_fix_description();
-
-   String ReorgCorrectionsSubProcessor_project_seup_fix_info();
+//   String ReorgCorrectionsSubProcessor_project_seup_fix_description();
+//
+//   String ReorgCorrectionsSubProcessor_project_seup_fix_info();
 
    String UnresolvedElementsSubProcessor_change_full_type_description(String string);
 
@@ -670,7 +670,7 @@ public interface CorrectionMessages extends Messages
 
    String UnresolvedElementsSubProcessor_UnresolvedElementsSubProcessor_changetoattribute_description(String curr);
 
-   String UnresolvedElementsSubProcessor_UnresolvedElementsSubProcessor_createattribute_description();
+//   String UnresolvedElementsSubProcessor_UnresolvedElementsSubProcessor_createattribute_description();
 
    String MissingAnnotationAttributesProposal_add_missing_attributes_label();
 
@@ -696,7 +696,7 @@ public interface CorrectionMessages extends Messages
 
    String VarargsWarningsSubProcessor_add_safevarargs_label();
 
-   String VarargsWarningsSubProcessor_add_safevarargs_to_method_label();
+//   String VarargsWarningsSubProcessor_add_safevarargs_to_method_label();
 
    String VarargsWarningsSubProcessor_remove_safevarargs_label();
 }

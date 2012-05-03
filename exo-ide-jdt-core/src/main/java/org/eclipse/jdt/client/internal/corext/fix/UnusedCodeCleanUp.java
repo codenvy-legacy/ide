@@ -18,7 +18,7 @@ import org.eclipse.jdt.client.runtime.CoreException;
 import org.exoplatform.ide.editor.text.IDocument;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -102,7 +102,7 @@ public class UnusedCodeCleanUp extends AbstractMultiFix
 
    public Map<String, String> getRequiredOptions()
    {
-      Map<String, String> result = new Hashtable<String, String>();
+      Map<String, String> result = new HashMap<String, String>();
 
       if (isEnabled(CleanUpConstants.REMOVE_UNUSED_CODE_IMPORTS) && !isEnabled(CleanUpConstants.ORGANIZE_IMPORTS))
          result.put(JavaCore.COMPILER_PB_UNUSED_IMPORT, JavaCore.WARNING);

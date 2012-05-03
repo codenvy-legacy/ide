@@ -113,7 +113,7 @@ import org.exoplatform.ide.editor.text.IDocument;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -2255,7 +2255,7 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
          {
             return true;
          }
-         Map<String, String> options = new Hashtable<String, String>();
+         Map<String, String> options = new HashMap<String, String>();
          options.put(CleanUpConstants.CONTROL_STATEMENTS_USE_BLOCKS, CleanUpOptions.TRUE);
          options.put(CleanUpConstants.CONTROL_STATMENTS_USE_BLOCKS_NEVER, CleanUpOptions.TRUE);
          ICleanUp cleanUp = new ControlStatementsCleanUp(options);
@@ -2776,7 +2776,7 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
       //         return true;
       //
       //      Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
-      //      Map<String, String> options = new Hashtable<String, String>();
+      //      Map<String, String> options = new HashMap<String, String>();
       //      options.put(CleanUpConstants.VARIABLE_DECLARATIONS_USE_FINAL, CleanUpOptions.TRUE);
       //      options.put(CleanUpConstants.VARIABLE_DECLARATIONS_USE_FINAL_LOCAL_VARIABLES, CleanUpOptions.TRUE);
       //      options.put(CleanUpConstants.VARIABLE_DECLARATIONS_USE_FINAL_PARAMETERS, CleanUpOptions.TRUE);

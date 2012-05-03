@@ -98,7 +98,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -769,7 +769,7 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
          return true;
 
       Image image = new Image(JdtClientBundle.INSTANCE.delete_obj());
-      Map<String, String> options = new Hashtable<String, String>();
+      Map<String, String> options = new HashMap<String, String>();
       options.put(CleanUpConstants.EXPRESSIONS_USE_PARENTHESES, CleanUpOptions.TRUE);
       options.put(CleanUpConstants.EXPRESSIONS_USE_PARENTHESES_NEVER, CleanUpOptions.TRUE);
       FixCorrectionProposal proposal =
@@ -793,7 +793,7 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
 
       // add correction proposal
       Image image = new Image(JdtClientBundle.INSTANCE.correction_cast());
-      Map<String, String> options = new Hashtable<String, String>();
+      Map<String, String> options = new HashMap<String, String>();
       options.put(CleanUpConstants.EXPRESSIONS_USE_PARENTHESES, CleanUpOptions.TRUE);
       options.put(CleanUpConstants.EXPRESSIONS_USE_PARENTHESES_ALWAYS, CleanUpOptions.TRUE);
       FixCorrectionProposal proposal =

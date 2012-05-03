@@ -987,7 +987,7 @@ public class StubUtility
       for (int i = 0; i < lineStart.length(); i++)
       {
          char ch = lineStart.charAt(i);
-         if (!Character.isWhitespace(ch) && ch != '*')
+         if (!CharOperation.isWhitespace(ch) && ch != '*')
          {
             return false;
          }

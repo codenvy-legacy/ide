@@ -15,7 +15,7 @@ package org.eclipse.jdt.client.internal.corext.fix;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
@@ -33,7 +33,7 @@ public class ConvertLoopFix extends CompilationUnitRewriteOperationsFix
 
       private final List<ConvertLoopOperation> fResult;
 
-      private final Hashtable<ForStatement, String> fUsedNames;
+      private final HashMap<ForStatement, String> fUsedNames;
 
       private final boolean fFindForLoopsToConvert;
 
@@ -48,7 +48,7 @@ public class ConvertLoopFix extends CompilationUnitRewriteOperationsFix
          fConvertIterableForLoops = convertIterableForLoops;
          fMakeFinal = makeFinal;
          fResult = resultingCollection;
-         fUsedNames = new Hashtable<ForStatement, String>();
+         fUsedNames = new HashMap<ForStatement, String>();
       }
 
       /* (non-Javadoc)

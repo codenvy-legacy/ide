@@ -125,7 +125,7 @@ import org.exoplatform.ide.editor.text.edits.TextEdit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -494,7 +494,7 @@ public class LocalCorrectionsSubProcessor
    //      if (fix != null)
    //      {
    //         Image image = JavaPluginImages.get(JavaPluginImages.IMG_OBJS_NLS_NEVER_TRANSLATE);
-   //         Map<String, String> options = new Hashtable<String, String>();
+   //         Map<String, String> options = new HashMap<String, String>();
    //         options.put(CleanUpConstants.ADD_MISSING_NLS_TAGS, CleanUpOptions.TRUE);
    //         FixCorrectionProposal addNLS = new FixCorrectionProposal(fix, new StringCleanUp(options), 5, image, context);
    //         addNLS.setCommandId(ADD_NON_NLS_ID);
@@ -509,7 +509,7 @@ public class LocalCorrectionsSubProcessor
    //      if (fix != null)
    //      {
    //         Image image = new Image(JdtClientBundle.INSTANCE.delete_obj());
-   //         Map<String, String> options = new Hashtable<String, String>();
+   //         Map<String, String> options = new HashMap<String, String>();
    //         options.put(CleanUpConstants.REMOVE_UNNECESSARY_NLS_TAGS, CleanUpOptions.TRUE);
    //         FixCorrectionProposal proposal = new FixCorrectionProposal(fix, new StringCleanUp(options), 6, image, context);
    //         proposal.setCommandId(REMOVE_UNNECESSARY_NLS_TAG_ID);
@@ -581,7 +581,7 @@ public class LocalCorrectionsSubProcessor
       {
          Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
 
-         Map<String, String> settings = new Hashtable<String, String>();
+         Map<String, String> settings = new HashMap<String, String>();
          settings.put(CleanUpConstants.ADD_MISSING_METHODES, CleanUpOptions.TRUE);
          ICleanUp cleanUp = new UnimplementedCodeCleanUp(settings);
 
@@ -594,7 +594,7 @@ public class LocalCorrectionsSubProcessor
       {
          Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
 
-         Map<String, String> settings = new Hashtable<String, String>();
+         Map<String, String> settings = new HashMap<String, String>();
          settings.put(UnimplementedCodeCleanUp.MAKE_TYPE_ABSTRACT, CleanUpOptions.TRUE);
          ICleanUp cleanUp = new UnimplementedCodeCleanUp(settings);
 
@@ -767,7 +767,7 @@ public class LocalCorrectionsSubProcessor
       if (fix != null)
       {
          Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
-         Map<String, String> options = new Hashtable<String, String>();
+         Map<String, String> options = new HashMap<String, String>();
          options.put(CleanUpConstants.REMOVE_UNNECESSARY_CASTS, CleanUpOptions.TRUE);
          FixCorrectionProposal proposal =
             new FixCorrectionProposal(fix, new UnnecessaryCodeCleanUp(options), 10, image, context);
@@ -1604,7 +1604,7 @@ public class LocalCorrectionsSubProcessor
       //            }
       //         }
       //         Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
-      //         Map<String, String> options = new Hashtable<String, String>();
+      //         Map<String, String> options = new HashMap<String, String>();
       //         options.put(CleanUpConstants.VARIABLE_DECLARATION_USE_TYPE_ARGUMENTS_FOR_RAW_TYPE_REFERENCES,
       //            CleanUpOptions.TRUE);
       //         FixCorrectionProposal proposal = new FixCorrectionProposal(fix, new Java50CleanUp(options), 6, image, context);

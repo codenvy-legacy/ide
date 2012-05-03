@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,21 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.codeassistant.ui;
+package org.eclipse.jdt.client;
 
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
+import com.google.gwt.user.client.ui.IsWidget;
 
-/**
- * Created by The eXo Platform SAS.
- * 
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 25, 2010 5:01:51 PM evgen $
- */
-public interface ProposalSelectedHandler
+import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
+
+public interface AssistDisplay extends IsWidget
 {
 
-   void onTokenSelected(ICompletionProposal proposal, boolean editorHasFocus);
+   void moveSelectionUp();
 
-   void onCancelAutoComplete(boolean editorHasFocus);
+   void moveSelectionDown();
+
+   void proposalSelected();
+
+   void cancelCodeAssistant();
+
+   void setNewProposals(IJavaCompletionProposal[] proposals);
 
 }

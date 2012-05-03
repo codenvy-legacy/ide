@@ -10,14 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.fix;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.core.dom.ASTNode;
@@ -57,8 +49,6 @@ import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.client.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
-
-import org.eclipse.jdt.client.internal.corext.codemanipulation.ASTResolving;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.corext.dom.LinkedNodeFinder;
 import org.eclipse.jdt.client.internal.corext.dom.NecessaryParenthesesChecker;
@@ -69,6 +59,14 @@ import org.eclipse.jdt.client.runtime.CoreException;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.edits.TextEditGroup;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
 /**
  * Fix which removes unused code.
@@ -636,7 +634,7 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
          {
             String label = FixMessages.INSTANCE.UnusedCodeFix_RemoveImport_description();
             RemoveImportOperation operation = new RemoveImportOperation(node);
-            Map<String, String> options = new Hashtable<String, String>();
+            Map<String, String> options = new HashMap<String, String>();
             options.put(CleanUpConstants.REMOVE_UNUSED_CODE_IMPORTS, CleanUpOptions.TRUE);
             return new UnusedCodeFix(label, compilationUnit, new CompilationUnitRewriteOperation[]{operation}, options,
                document);
@@ -730,7 +728,7 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
    {
 
       List<CompilationUnitRewriteOperation> result = new ArrayList<CompilationUnitRewriteOperation>();
-      Hashtable<ASTNode, List<SimpleName>> variableDeclarations = new Hashtable<ASTNode, List<SimpleName>>();
+      HashMap<ASTNode, List<SimpleName>> variableDeclarations = new HashMap<ASTNode, List<SimpleName>>();
       HashSet<CastExpression> unnecessaryCasts = new HashSet<CastExpression>();
       for (int i = 0; i < problems.length; i++)
       {
@@ -933,7 +931,7 @@ public class UnusedCodeFix extends CompilationUnitRewriteOperationsFix
 
    private static Map<String, String> getCleanUpOptions(IBinding binding, boolean removeAll)
    {
-      Map<String, String> result = new Hashtable<String, String>();
+      Map<String, String> result = new HashMap<String, String>();
 
       result.put(CleanUpConstants.REMOVE_UNUSED_CODE_PRIVATE_MEMBERS, CleanUpOptions.TRUE);
       switch (binding.getKind())

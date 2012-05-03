@@ -19,43 +19,43 @@ public interface FixMessages extends Messages
 
    FixMessages INSTANCE = GWT.create(FixMessages.class);
 
-   String CleanUpPostSaveListener_name();
+//   String CleanUpPostSaveListener_name();
 
-   String CleanUpPostSaveListener_SaveAction_ChangeName();
+//   String CleanUpPostSaveListener_SaveAction_ChangeName();
 
-   String CleanUpPostSaveListener_SlowCleanUpDialog_link();
+//   String CleanUpPostSaveListener_SlowCleanUpDialog_link();
 
-   String CleanUpPostSaveListener_SlowCleanUpDialog_title();
+//   String CleanUpPostSaveListener_SlowCleanUpDialog_title();
 
-   String CleanUpPostSaveListener_SlowCleanUpWarningDialog_explain();
+//   String CleanUpPostSaveListener_SlowCleanUpWarningDialog_explain();
 
-   String CleanUpPostSaveListener_unknown_profile_error_message();
+//   String CleanUpPostSaveListener_unknown_profile_error_message();
 
-   String CleanUpRefactoring_checkingPostConditions_message();
+//   String CleanUpRefactoring_checkingPostConditions_message();
 
-   String CleanUpRefactoring_clean_up_multi_chang_name();
+//   String CleanUpRefactoring_clean_up_multi_chang_name();
 
-   String CleanUpRefactoring_could_not_retrive_profile();
+//   String CleanUpRefactoring_could_not_retrive_profile();
 
-   String CleanUpRefactoring_Parser_Startup_message();
+//   String CleanUpRefactoring_Parser_Startup_message();
 
-   String CleanUpRefactoring_Refactoring_name();
-
-   String CleanUpRefactoring_ProcessingCompilationUnit_message();
-
-   String CleanUpRefactoring_Initialize_message();
-
-   String CleanUpRegistry_ErrorTabPage_description();
-
-   String CleanUpRegistry_ErrorTabPage_preview();
-
-   String CleanUpRegistry_UnknownInitializerKind_errorMessage();
-
-   String CleanUpRegistry_WrongKindForConfigurationUI_error();
-
-   String CleanUpRegistry_cleanUpAlwaysEnabled_error();
-
-   String CleanUpRegistry_cleanUpCreation_error();
+//   String CleanUpRefactoring_Refactoring_name();
+//
+//   String CleanUpRefactoring_ProcessingCompilationUnit_message();
+//
+//   String CleanUpRefactoring_Initialize_message();
+//
+//   String CleanUpRegistry_ErrorTabPage_description();
+//
+//   String CleanUpRegistry_ErrorTabPage_preview();
+//
+//   String CleanUpRegistry_UnknownInitializerKind_errorMessage();
+//
+//   String CleanUpRegistry_WrongKindForConfigurationUI_error();
+//
+//   String CleanUpRegistry_cleanUpAlwaysEnabled_error();
+//
+//   String CleanUpRegistry_cleanUpCreation_error();
 
    String CompilationUnitRewriteOperationsFix_nullChangeError(String string);
 
@@ -78,12 +78,12 @@ public interface FixMessages extends Messages
    String Java50Fix_add_annotations_change_name();
 
    String Java50Fix_add_type_parameters_change_name();
-
-   String PotentialProgrammingProblemsFix_add_id_change_name();
-
-   String PotentialProgrammingProblemsFix_calculatingUIDFailed_exception();
-
-   String PotentialProgrammingProblemsFix_calculatingUIDFailed_unknown();
+//
+//   String PotentialProgrammingProblemsFix_add_id_change_name();
+//
+//   String PotentialProgrammingProblemsFix_calculatingUIDFailed_exception();
+//
+//   String PotentialProgrammingProblemsFix_calculatingUIDFailed_unknown();
 
    String SortMembersFix_Change_description();
 
@@ -123,7 +123,7 @@ public interface FixMessages extends Messages
 
    String UnusedCodeFix_RemoveUnusedVariabl_description();
 
-   String Java50Fix_AddMissingAnnotation_description();
+//   String Java50Fix_AddMissingAnnotation_description();
 
    String Java50Fix_AddDeprecated_description();
 
@@ -131,15 +131,15 @@ public interface FixMessages extends Messages
 
    String Java50Fix_ConvertToEnhancedForLoop_description();
 
-   String Java50Fix_AddTypeArguments_description();
+//   String Java50Fix_AddTypeArguments_description();
 
-   String Java50Fix_SerialVersion_default_description();
+//   String Java50Fix_SerialVersion_default_description();
 
-   String Java50Fix_SerialVersion_hash_description();
+//   String Java50Fix_SerialVersion_hash_description();
 
-   String Java50Fix_InitializeSerialVersionId_subtask_description();
-
-   String Java50Fix_SerialVersion_CalculateHierarchy_description();
+//   String Java50Fix_InitializeSerialVersionId_subtask_description();
+//
+//   String Java50Fix_SerialVersion_CalculateHierarchy_description();
 
    String StringFix_AddRemoveNonNls_description();
 

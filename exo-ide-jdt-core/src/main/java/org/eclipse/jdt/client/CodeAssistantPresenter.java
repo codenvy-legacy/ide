@@ -23,7 +23,6 @@ import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.IsWidget;
 
 import org.eclipse.jdt.client.codeassistant.AbstractJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.CompletionProposalCollector;
@@ -31,6 +30,7 @@ import org.eclipse.jdt.client.codeassistant.FillArgumentNamesCompletionProposalC
 import org.eclipse.jdt.client.codeassistant.JavaContentAssistInvocationContext;
 import org.eclipse.jdt.client.codeassistant.LazyGenericTypeProposal;
 import org.eclipse.jdt.client.codeassistant.TemplateCompletionProposalComputer;
+import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.ui.CodeAssitantForm;
 import org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler;
@@ -77,21 +77,6 @@ import java.util.Set;
 public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorActiveFileChangedHandler,
    ProposalSelectedHandler, EditorHotKeyPressedHandler
 {
-
-   public interface Display extends IsWidget
-   {
-
-      void moveSelectionUp();
-
-      void moveSelectionDown();
-
-      void proposalSelected();
-
-      void cancelCodeAssistant();
-
-      void setNewProposals(IJavaCompletionProposal[] proposals);
-
-   }
 
    private static final class ProgressMonitor implements IProgressMonitor
    {
@@ -151,7 +136,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
 
    private HandlerRegistration keyHandler;
 
-   private Display display;
+   private AssistDisplay display;
 
    /**
     * 
@@ -389,7 +374,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
 
    /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onTokenSelected(org.eclipse.jdt.client.codeassistant.ui.ProposalWidget) */
    @Override
-   public void onTokenSelected(IJavaCompletionProposal proposal, boolean editorHasFocus)
+   public void onTokenSelected(ICompletionProposal proposal, boolean editorHasFocus)
    {
       try
       {
