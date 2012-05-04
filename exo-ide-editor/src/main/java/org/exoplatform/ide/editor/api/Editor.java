@@ -66,7 +66,7 @@ public abstract class Editor extends AbsolutePanel
     * @return content of editor
     */
    public abstract String getText();
-   
+
    /**
     * @return content of editor
     */
@@ -218,11 +218,36 @@ public abstract class Editor extends AbsolutePanel
     * @return String content of line
     */
    public abstract String getLineContent(int line);
-   
+
    /**
     * Get the range of the selection.
     * 
     * @return {@link SelectionRange} range of the selection
     */
    public abstract SelectionRange getSelectionRange();
+
+   /**
+    * Select all text in editor.
+    */
+   public abstract void selectAll();
+
+   /**
+    * Cut selected text in editor.
+    */
+   public abstract void cut();
+
+   /**
+    * Copy selected text in editor.
+    */
+   public abstract void copy();
+
+   /**
+    * Paste text to editor.
+    */
+   public abstract void paste();
+
+   /**
+    * Delete selected text in editor.
+    */
+   public abstract void delete();
 }

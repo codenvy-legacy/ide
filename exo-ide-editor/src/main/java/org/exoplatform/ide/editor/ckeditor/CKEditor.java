@@ -671,4 +671,64 @@ public class CKEditor extends Editor
    {
       return null;
    }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#selectAll()
+    */
+   @Override
+   public native void selectAll()
+   /*-{
+   var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+   if (editor != null) {
+   editor.execCommand("SelectAll");
+   }
+   }-*/;
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#cut()
+    */
+   @Override
+   public native void cut()
+   /*-{
+   var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+   if (editor != null) {
+   editor.execCommand("cut");
+   }
+   }-*/;
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#copy()
+    */
+   @Override
+   public native void copy()
+   /*-{
+   var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+   if (editor != null) {
+   editor.execCommand("copy");
+   }
+   }-*/;
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#paste()
+    */
+   @Override
+   public native void paste()
+   /*-{
+   var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+   if (editor != null) {
+   editor.execCommand("paste");
+   }
+   }-*/;
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#delete()
+    */
+   @Override
+   public native void delete()
+   /*-{
+   var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+   if (editor != null) {
+   editor.execCommand("delete");
+   }
+   }-*/;
 }
