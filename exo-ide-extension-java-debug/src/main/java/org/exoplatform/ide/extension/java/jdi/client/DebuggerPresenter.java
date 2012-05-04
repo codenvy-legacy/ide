@@ -18,6 +18,13 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Timer;
+import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
@@ -41,6 +48,7 @@ import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.ChangeValueEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebugAppEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebugAppHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
@@ -51,6 +59,8 @@ import org.exoplatform.ide.extension.java.jdi.client.events.RunAppEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.RunAppHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.StopAppHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.UpdateVariableValueInTreeEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.UpdateVariableValueInTreeHandler;
 import org.exoplatform.ide.extension.java.jdi.client.ui.DebuggerView;
 import org.exoplatform.ide.extension.java.jdi.client.ui.RunDebuggerView;
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
@@ -63,6 +73,7 @@ import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Location;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
 import org.exoplatform.ide.extension.java.jdi.shared.StepEvent;
+import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
@@ -79,13 +90,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Timer;
-import com.google.web.bindery.autobean.shared.AutoBean;
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
@@ -93,7 +97,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 */
 public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisconnectedHandler, ViewClosedHandler,
    BreakPointsUpdatedHandler, RunAppHandler, DebugAppHandler, ProjectBuiltHandler, StopAppHandler, AppStopedHandler,
-   ProjectClosedHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler
+   ProjectClosedHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler, UpdateVariableValueInTreeHandler
 {
    private Display display;
 
@@ -108,9 +112,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    private String warUrl;
 
    private boolean startDebugger;
-   
+
    private FileModel activeFile;
-   
+
    private ProjectModel project;
 
    public interface Display extends IsView
@@ -128,22 +132,29 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
       HasClickHandlers getStepReturnButton();
 
+      HasClickHandlers getChangeValueButton();
+
+      Variable getSelectedVariable();
+
+      List<Variable> getVariables();
+
       void setBreakPoints(List<BreakPoint> breakPoints);
 
-      void setVariebels(List<Variable> variables);
+      void setVariables(List<Variable> variables);
 
-      void setEnabelResumeButton(boolean isEnabel);
+      void setEnableResumeButton(boolean isEnable);
 
-      void setRemoveAllBreakpointsButton(boolean isEnabel);
+      void setRemoveAllBreakpointsButton(boolean isEnable);
 
-      void setDisconnectButton(boolean isEnabel);
+      void setDisconnectButton(boolean isEnable);
 
-      void setStepIntoButton(boolean isEnabel);
+      void setStepIntoButton(boolean isEnable);
 
-      void setStepOverButton(boolean isEnabel);
+      void setStepOverButton(boolean isEnable);
 
-      void setStepReturnButton(boolean isEnabel);
+      void setStepReturnButton(boolean isEnable);
 
+      void setChangeValueButtonEnable(boolean isEnable);
    }
 
    public DebuggerPresenter(BreakpointsManager breakpointsManager)
@@ -214,41 +225,49 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          }
       });
 
-      disabelButtons();
+      display.getChangeValueButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            IDE.fireEvent(new ChangeValueEvent(debuggerInfo, display.getSelectedVariable()));
+         }
+      });
+
+      disableButtons();
    }
-   
-   
+
    private void doResume()
    {
-      disabelButtons();
+      disableButtons();
       try
       {
          DebuggerClientService.getInstance().resume(debuggerInfo.getId(), new AsyncRequestCallback<String>()
-            {
-            
+         {
+
             @Override
             protected void onSuccess(String result)
             {
                resetStates();
             }
-            
+
             @Override
             protected void onFailure(Throwable exception)
             {
                IDE.fireEvent(new ExceptionThrownEvent(exception));
             }
-            
-            });
+
+         });
       }
       catch (RequestException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
-   
+
    private void doStepInto()
    {
-      disabelButtons();
+      disableButtons();
       try
       {
          DebuggerClientService.getInstance().stepInto(debuggerInfo.getId(), new AsyncRequestCallback<String>()
@@ -273,10 +292,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
-   
+
    private void doStepOver()
    {
-      disabelButtons();
+      disableButtons();
       try
       {
          DebuggerClientService.getInstance().stepOver(debuggerInfo.getId(), new AsyncRequestCallback<String>()
@@ -301,11 +320,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
-   
 
    private void doStepReturn()
    {
-      disabelButtons();
+      disableButtons();
       try
       {
          DebuggerClientService.getInstance().stepReturn(debuggerInfo.getId(), new AsyncRequestCallback<String>()
@@ -330,7 +348,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
-   
 
    private void doDisconnectDebugger()
    {
@@ -345,7 +362,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                protected void onSuccess(String result)
                {
                   checkDebugEventsTimer.cancel();
-                  disabelButtons();
+                  disableButtons();
                   debuggerInfo = null;
                   breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
                   currentBreakPoint = null;
@@ -383,7 +400,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   List<Variable> variables = new ArrayList<Variable>(result.getFields());
                   if (result.getLocalVariables() != null)
                      variables.addAll(result.getLocalVariables());
-                  display.setVariebels(variables);
+                  display.setVariables(variables);
                }
 
                @Override
@@ -412,9 +429,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       }
    }
 
-   private void disabelButtons()
+   private void disableButtons()
    {
-      display.setEnabelResumeButton(false);
+      display.setEnableResumeButton(false);
       display.setStepIntoButton(false);
       display.setStepOverButton(false);
       display.setStepReturnButton(false);
@@ -422,7 +439,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    private void enabelButtons()
    {
-      display.setEnabelResumeButton(true);
+      display.setEnableResumeButton(true);
       display.setStepIntoButton(true);
       display.setStepOverButton(true);
       display.setStepReturnButton(true);
@@ -460,7 +477,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                               filePath = resolveFilePath(location);
                               if (!filePath.equalsIgnoreCase(activeFile.getPath()))
                                  openFile(location);
-                              currentBreakPoint = new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath); 
+                              currentBreakPoint =
+                                 new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
                            }
                            else if (event instanceof BreakPointEvent)
                            {
@@ -469,7 +487,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                               filePath = resolveFilePath(location);
                               if (!filePath.equalsIgnoreCase(activeFile.getPath()))
                                  openFile(location);
-                              currentBreakPoint = new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
+                              currentBreakPoint =
+                                 new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
                               currentBreakPoint.setLine(location.getLineNumber());
                            }
                            doGetDump();
@@ -495,8 +514,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       }
    };
 
-  
-
    private void openFile(final Location location)
    {
       FileModel fileModel = breakpointsManager.getFileWithBreakPoints().get(location.getClassName());
@@ -512,13 +529,15 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   @Override
                   protected void onSuccess(ItemWrapper result)
                   {
-                     IDE.eventBus().fireEvent(new OpenFileEvent((FileModel)result.getItem(), new CursorPosition(location.getLineNumber())));
+                     IDE.eventBus().fireEvent(
+                        new OpenFileEvent((FileModel)result.getItem(), new CursorPosition(location.getLineNumber())));
                   }
 
                   @Override
                   protected void onFailure(Throwable exception)
                   {
-                     Dialogs.getInstance().showInfo("Source not found", "Can't load source of the " + location.getClassName() + " class.");
+                     Dialogs.getInstance().showInfo("Source not found",
+                        "Can't load source of the " + location.getClassName() + " class.");
                   }
                });
          }
@@ -650,8 +669,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                protected void onFailure(Throwable exception)
                {
                   exception.printStackTrace();
-                  IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed() + " : " + exception.getMessage(),
-                     OutputMessage.Type.ERROR));
+                  IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed()
+                     + " : " + exception.getMessage(), OutputMessage.Type.ERROR));
                }
             });
       }
@@ -720,8 +739,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                protected void onFailure(Throwable exception)
                {
                   exception.printStackTrace();
-                  IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed() + " : " + exception.getMessage(),
-                     OutputMessage.Type.ERROR));
+                  IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed()
+                     + " : " + exception.getMessage(), OutputMessage.Type.ERROR));
                }
             });
       }
@@ -816,7 +835,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    private void resetStates()
    {
-      display.setVariebels(Collections.<Variable> emptyList());
+      display.setVariables(Collections.<Variable> emptyList());
       breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
       currentBreakPoint = null;
    }
@@ -832,8 +851,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                @Override
                protected void onSuccess(String result)
                {
-                  IDE.fireEvent(new BreakPointsUpdatedEvent(Collections
-                     .<String, Set<EditorBreakPoint>> emptyMap()));
+                  IDE.fireEvent(new BreakPointsUpdatedEvent(Collections.<String, Set<EditorBreakPoint>> emptyMap()));
                }
 
                @Override
@@ -848,6 +866,22 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.client.events.UpdateVariableValueInTreeHandler#onUpdateVariableValueInTree(org.exoplatform.ide.extension.java.jdi.client.events.UpdateVariableValueInTreeEvent)
+    */
+   @Override
+   public void onUpdateVariableValueInTree(UpdateVariableValueInTreeEvent event)
+   {
+      Variable variable = event.getVariable();
+      Value value = event.getValue();
+
+      List<Variable> list = display.getVariables();
+      variable.setValue(value.getValue());
+      int index = list.lastIndexOf(variable);
+      list.set(index, variable);
+      display.setVariables(list);
    }
 
 }
