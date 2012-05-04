@@ -1754,11 +1754,8 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 		var contextMenuListener = function(e) {
 			if (!e)
 				var e = $wnd.event;
-			try {
-				instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::onContextMenu(Lcom/google/gwt/dom/client/NativeEvent;)(e);
-			} catch (err) {
-				alert(err.message);
-			}
+			instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::onContextMenu(Lcom/google/gwt/dom/client/NativeEvent;)(e);
+
 		};
 
 		var editor = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
@@ -1787,4 +1784,64 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       int y = event.getClientY() + getAbsoluteTop();
       eventBus.fireEvent(new EditorContextMenuEvent(x, y, getEditorId()));
    }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#selectAll()
+    */
+   @Override
+   public void selectAll()
+   {
+      executeCommand("selectAll");
+   };
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#cut()
+    */
+   @Override
+   public void cut()
+   {
+      executeCommand("cut");
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#copy()
+    */
+   @Override
+   public void copy()
+   {
+      executeCommand("copy");
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#paste()
+    */
+   @Override
+   public void paste()
+   {
+      executeCommand("paste");
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#delete()
+    */
+   @Override
+   public void delete()
+   {
+      executeCommand("delete");
+   }
+
+   private native void executeCommand(String command)
+   /*-{
+		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+		var frame = editor.frame;
+		try {
+			if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) {
+				frame.contentWindow.document.execCommand(command, false, null);
+			} else {
+				frame.contentDocument.execCommand(command, false, null);
+			}
+		} catch (e) {
+			alert(e.message);
+		}
+   }-*/;
 }

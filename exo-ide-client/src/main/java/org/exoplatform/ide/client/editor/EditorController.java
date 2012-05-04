@@ -35,8 +35,14 @@ import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileE
 import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorCopyTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorCopyTextHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorCutTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorCutTextHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorDeleteCurrentLineEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorDeleteCurrentLineHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -46,6 +52,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorPasteTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorPasteTextHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextEvent;
@@ -54,6 +62,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceTextEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceTextHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorSelectAllEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorSelectAllHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorTextFoundEvent;
@@ -111,7 +121,8 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
    EditorReplaceFileHandler, EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler,
    EditorContextMenuHandler, EditorReplaceTextHandler, EditorReplaceAndFindTextHandler, EditorSetFocusHandler,
    ApplicationSettingsReceivedHandler, SaveFileAsHandler, ViewVisibilityChangedHandler, ViewClosedHandler,
-   ClosingViewHandler, EditorFocusReceivedHandler, VersionRestoredHandler
+   ClosingViewHandler, EditorFocusReceivedHandler, VersionRestoredHandler, EditorSelectAllHandler,
+   EditorCutTextHandler, EditorCopyTextHandler, EditorPasteTextHandler, EditorDeleteTextHandler
 
 {
 
@@ -155,6 +166,13 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       IDE.addHandler(EditorCloseFileEvent.TYPE, this);
       IDE.addHandler(EditorUndoTypingEvent.TYPE, this);
       IDE.addHandler(EditorRedoTypingEvent.TYPE, this);
+      IDE.addHandler(EditorSelectAllEvent.TYPE, this);
+
+      IDE.addHandler(EditorCutTextEvent.TYPE, this);
+      IDE.addHandler(EditorCopyTextEvent.TYPE, this);
+      IDE.addHandler(EditorPasteTextEvent.TYPE, this);
+      IDE.addHandler(EditorDeleteTextEvent.TYPE, this);
+
       IDE.addHandler(FileSavedEvent.TYPE, this);
       IDE.addHandler(ShowLineNumbersEvent.TYPE, this);
       IDE.addHandler(EditorChangeActiveFileEvent.TYPE, this);
@@ -840,5 +858,50 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
    public void onEditorContextMenu(EditorContextMenuEvent event)
    {
       IDE.fireEvent(new ShowContextMenuEvent(event.getX(), event.getY(), "editor"));
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorSelectAllHandler#onEditorSelectAll(org.exoplatform.ide.client.framework.editor.event.EditorSelectAllEvent)
+    */
+   @Override
+   public void onEditorSelectAll(EditorSelectAllEvent event)
+   {
+      getEditorFromView(activeFile.getId()).selectAll();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextHandler#onEditorDeleteText(org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextEvent)
+    */
+   @Override
+   public void onEditorDeleteText(EditorDeleteTextEvent event)
+   {
+      getEditorFromView(activeFile.getId()).delete();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorPasteTextHandler#onEditorPasteText(org.exoplatform.ide.client.framework.editor.event.EditorPasteTextEvent)
+    */
+   @Override
+   public void onEditorPasteText(EditorPasteTextEvent event)
+   {
+      getEditorFromView(activeFile.getId()).paste();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorCopyTextHandler#onEditorCopyText(org.exoplatform.ide.client.framework.editor.event.EditorCopyTextEvent)
+    */
+   @Override
+   public void onEditorCopyText(EditorCopyTextEvent event)
+   {
+      getEditorFromView(activeFile.getId()).copy();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorCutTextHandler#onEditorCutText(org.exoplatform.ide.client.framework.editor.event.EditorCutTextEvent)
+    */
+   @Override
+   public void onEditorCutText(EditorCutTextEvent event)
+   {
+      getEditorFromView(activeFile.getId()).cut();
    }
 }

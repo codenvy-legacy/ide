@@ -164,7 +164,8 @@ public class CutItemsCommand extends SimpleControl implements IDEControl, VfsCha
       }
 
       setVisible(true);
-
+      setShowInContextMenu(browserPanelSelected);
+      
       if (selectedItems == null || selectedItems.size() != 1)
       {
          setEnabled(false);
@@ -179,7 +180,6 @@ public class CutItemsCommand extends SimpleControl implements IDEControl, VfsCha
       }
 
       setEnabled(browserPanelSelected);
-      setShowInContextMenu(browserPanelSelected);
    }
 
    @Override
