@@ -384,15 +384,17 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
       {
          this.currentEditor = event.getEditor();
          boolean isOutlineOpened = applicationSettings.getValueAsBoolean("outline");
-         if (isOutlineOpened && display == null)
+         if (isOutlineOpened)
          {
-            display = GWT.create(Display.class);
-            IDE.getInstance().openView(display.asView());
-            bindDisplay();
+            if (display == null)
+            {
+               display = GWT.create(Display.class);
+               IDE.getInstance().openView(display.asView());
+               bindDisplay();
+            }
+            compilationUnit = openedFiles.get(activeFile.getId());
+            display.updateOutline(compilationUnit);
          }
-
-         compilationUnit = openedFiles.get(activeFile.getId());
-         display.updateOutline(compilationUnit);
       }
       else
       {
@@ -412,11 +414,8 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
    {
       if (event.isShow() && display == null && canShowOutline())
       {
-         if (display == null)
-         {
-            display = GWT.create(Display.class);
-            bindDisplay();
-         }
+         display = GWT.create(Display.class);
+         bindDisplay();
          IDE.getInstance().openView(display.asView());
          return;
       }
