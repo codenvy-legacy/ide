@@ -122,9 +122,7 @@ public abstract class BaseTest
 
    //for restore default hotkeys values in IDE
    public final static String PRODUCTION_SERVICE_PREFIX = "production/ide-home/users/" + USER_NAME
-   + "/settings/userSettings";
-   
-   
+      + "/settings/userSettings";
 
    public static Selenium selenium;
 
@@ -184,7 +182,6 @@ public abstract class BaseTest
             driver = new ChromeDriver(capabilities);
 
             // driver = new ChromeDriver(options);
-           
 
             break;
          case IE_EXPLORE_PROXY :
@@ -197,7 +194,7 @@ public abstract class BaseTest
       selenium = new WebDriverBackedSelenium(driver, APPLICATION_URL);
 
       IDE = new IDE(selenium(), ENTRY_POINT_URL + WS_NAME + "/", driver);
-       try
+      try
       {
 
          if (IDE_SETTINGS.getString("selenium.browser.commad").equals("CHROME"))
@@ -592,44 +589,12 @@ public abstract class BaseTest
    public static void killFireFox()
    {
       driver.close();
-      //      try
-      //      {
-      //         if (System.getProperty("os.name").equals("Linux"))
-      //         {
-      //            Runtime.getRuntime().exec("killall firefox");
-      //         }
-      //      }
-      //      catch (IOException e)
-      //      {
-      //      }
-   }
+      if (IDE.POPUP.isAlertPresent())
+      {
+         IDE.POPUP.acceptAlert();
+      }
 
-   //   public enum IdeAddress {
-   //      SHELL("http://127.0.0.1:8888/", "http://127.0.0.1:8888/IDE/Shell.html?gwt.codesvr=127.0.0.1:9997"), PORTAL(
-   //         "http://127.0.0.1:8080/", "http://127.0.0.1:8080/portal/private/default/ide"), STANDALONE(
-   //         "http://localhost:8080/", "http://localhost:8080/site/index.html");
-   //
-   //      private String baseUrl;
-   //
-   //      private String applicationUrl;
-   //
-   //      IdeAddress(String baseUrl, String applicationUrl)
-   //      {
-   //         this.baseUrl = baseUrl;
-   //         this.applicationUrl = applicationUrl;
-   //      }
-   //
-   //      public String getBaseUrl()
-   //      {
-   //         return this.baseUrl;
-   //      }
-   //
-   //      public String getApplicationUrl()
-   //      {
-   //         return this.applicationUrl;
-   //      }
-   //
-   //   }
+   }
 
    protected static boolean isRunIdeUnderPortal()
    {
