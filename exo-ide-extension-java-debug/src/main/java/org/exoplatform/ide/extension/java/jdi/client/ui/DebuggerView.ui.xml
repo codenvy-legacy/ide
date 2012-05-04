@@ -37,6 +37,9 @@
                      <c:ImageButton ui:field="removeAllBreakpointsButton" width="22px" buttonId="removeAllBreakpointsButton"
                         imageResource="{resource.removeAllBreakpointsButton}"></c:ImageButton>
                   </c:ToolbarItem>
+                  <c:ToolbarItem rightDocked="false" paddingRight="2">
+                     <c:ImageButton ui:field="changeValueButton" width="22px" buttonId="changeValueButton" title="{locale.changeValue}" imageResource="{resource.variable}" disabledImageResource="{resource.variableDisabled}"></c:ImageButton>
+                  </c:ToolbarItem>
                   <c:ToolbarItem rightDocked="true" paddingRight="2">
                      <c:Label ui:field="vmName" width="280px" wordWrap="false" title="{locale.vmName}"></c:Label>
                   </c:ToolbarItem>
@@ -53,7 +56,7 @@
                            <g:FlexTable></g:FlexTable>
                         </g:center>
                         <g:west size="49">
-                           <tp:TabPanel ui:field="variabelsPanel"></tp:TabPanel>
+                           <tp:TabPanel ui:field="variablesPanel"></tp:TabPanel>
                         </g:west>
                      </g:DockLayoutPanel>
                   </c:layer>

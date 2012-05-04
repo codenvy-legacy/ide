@@ -29,6 +29,7 @@ import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Field;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
 import org.exoplatform.ide.extension.java.jdi.shared.StepEvent;
+import org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest;
 import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
@@ -75,5 +76,7 @@ public interface DebuggerAutoBeanFactory extends AutoBeanFactory
    AutoBean<ApplicationInstance> applicationInstance();
 
    AutoBean<DebugApplicationInstance> debugApplicationInstance();
+
+   AutoBean<UpdateVariableRequest> updateVariableRequest(UpdateVariableRequest request);
 
 }
