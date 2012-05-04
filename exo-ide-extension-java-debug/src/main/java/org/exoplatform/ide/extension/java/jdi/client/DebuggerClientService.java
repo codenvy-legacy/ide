@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -29,14 +34,10 @@ import org.exoplatform.ide.extension.java.jdi.shared.BreakPointList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
+import org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest;
 import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
-
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestException;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 /**
  * Created by The eXo Platform SAS.
@@ -48,9 +49,9 @@ public class DebuggerClientService
 {
 
    private static String BASE_URL;
-   
+
    private static DebuggerClientService instance;
-   
+
    public DebuggerClientService(String restContext)
    {
       BASE_URL = restContext + "/ide/java/debug";
@@ -98,13 +99,9 @@ public class DebuggerClientService
       AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/breakpoints/" + id).loader(new EmptyLoader()).send(callback);
    }
 
-   
-
-   public void checkEvents(String id, AsyncRequestCallback<DebuggerEventList> callback)
-      throws RequestException
+   public void checkEvents(String id, AsyncRequestCallback<DebuggerEventList> callback) throws RequestException
    {
-      AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/events/" + id).loader(new EmptyLoader())
-         .send(callback);
+      AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/events/" + id).loader(new EmptyLoader()).send(callback);
    }
 
    public void dump(String id, AsyncRequestCallback<StackFrameDump> callback) throws RequestException
@@ -125,6 +122,15 @@ public class DebuggerClientService
          .header("Content-Type", "application/json").loader(new EmptyLoader()).send(callback);
    }
 
+   public void setValue(String id, UpdateVariableRequest request, AsyncRequestCallback<String> callback)
+      throws RequestException
+   {
+      AutoBean<UpdateVariableRequest> autoBean = DebuggerExtension.AUTO_BEAN_FACTORY.updateVariableRequest(request);
+      String json = AutoBeanCodex.encode(autoBean).getPayload();
+      AsyncRequest.build(RequestBuilder.POST, BASE_URL + "/value/set/" + id).data(json)
+         .header("Content-Type", "application/json").loader(new EmptyLoader()).send(callback);
+   }
+
    public void stepInto(String id, AsyncRequestCallback<String> callback) throws RequestException
    {
       AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/step/into/" + id).loader(new EmptyLoader()).send(callback);
@@ -140,14 +146,16 @@ public class DebuggerClientService
       AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/step/out/" + id).loader(new EmptyLoader()).send(callback);
    }
 
-   public void stopApplication(ApplicationInstance runningApp, AsyncRequestCallback<String> callback) throws RequestException
+   public void stopApplication(ApplicationInstance runningApp, AsyncRequestCallback<String> callback)
+      throws RequestException
    {
       AsyncRequest.build(RequestBuilder.GET, runningApp.getStopURL()).loader(new EmptyLoader()).send(callback);
    }
 
    public void deleteAllBreakPoint(String id, AsyncRequestCallback<String> callback) throws RequestException
    {
-      AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/breakpoints/delete_all/" + id).loader(new EmptyLoader()).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/breakpoints/delete_all/" + id).loader(new EmptyLoader())
+         .send(callback);
    }
 
 }
