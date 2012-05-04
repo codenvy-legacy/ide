@@ -588,6 +588,13 @@ public abstract class BaseTest
    @AfterClass
    public static void killFireFox()
    {
+    
+      if (IDE.POPUP.isAlertPresent())
+      {
+         IDE.POPUP.acceptAlert();
+      }
+
+      
       driver.close();
       if (IDE.POPUP.isAlertPresent())
       {
