@@ -137,6 +137,13 @@ public interface ProjectExplorerDisplay extends IsView
    void setProjectsListGridVisible(boolean visible);
 
    /**
+    * Change ProjectNotOpenedPanel visibility.
+    * 
+    * @param visible <code>true</code> if visible
+    */
+   void setProjectNotOpenedPanelVisible(boolean visible);
+
+   /**
     * Get projects list grid.
     * 
     * @return projects list grid

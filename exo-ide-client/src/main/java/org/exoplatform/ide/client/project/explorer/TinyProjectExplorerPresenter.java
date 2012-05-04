@@ -143,7 +143,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    private static final String RECEIVE_CHILDREN_ERROR_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
       .workspaceReceiveChildrenError();
 
-
    /**
     * Comparator for ordering projects by name.
     */
@@ -779,7 +778,11 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
 
       display.setProjectExplorerTreeVisible(false);
-      refreshProjectsList();
+      if (ideLoadComplete)
+      {
+         refreshProjectsList();
+      }
+
       display.asView().setTitle(DEFAULT_TITLE);
    }
 
@@ -1063,6 +1066,11 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       {
          goToFolder();
       }
+
+      if (openedProject == null)
+      {
+         refreshProjectsList();
+      }
    }
 
    /**
@@ -1098,7 +1106,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    }
 
    /**
-    * Refreshes the list of existing projects in project explorer.
+    * Refreshes the list of existing projects in project explorer and changes visibility of projects list.
     */
    private void refreshProjectsList()
    {
@@ -1110,6 +1118,13 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
                @Override
                protected void onSuccess(List<Item> result)
                {
+                  if (openedProject != null)
+                  {
+                     display.setProjectsListGridVisible(false);
+                     display.setProjectNotOpenedPanelVisible(false);
+                     return;
+                  }
+
                   List<ProjectModel> projects = new ArrayList<ProjectModel>();
                   for (Item item : result)
                   {
@@ -1125,10 +1140,12 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
                   if (projects.size() == 0)
                   {
                      display.setProjectsListGridVisible(false);
+                     display.setProjectNotOpenedPanelVisible(true);
                   }
                   else
                   {
                      display.setProjectsListGridVisible(true);
+                     display.setProjectNotOpenedPanelVisible(false);
                   }
                }
 
@@ -1153,7 +1170,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    {
       if (event.getItem() instanceof ProjectModel)
       {
-         // if any project is opened then projects list will be refreshed when the project will be closed
          if (openedProject == null)
          {
             refreshProjectsList();
