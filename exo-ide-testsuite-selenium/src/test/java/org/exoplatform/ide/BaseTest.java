@@ -593,8 +593,6 @@ public abstract class BaseTest
       {
          IDE.POPUP.acceptAlert();
       }
-
-      
       driver.close();
       if (IDE.POPUP.isAlertPresent())
       {
