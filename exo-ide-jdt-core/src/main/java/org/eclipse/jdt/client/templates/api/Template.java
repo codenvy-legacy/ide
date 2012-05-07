@@ -77,6 +77,7 @@ public class Template
    public Template(String id, String name, String description, String contextTypeId, String pattern,
       boolean isAutoInsertable)
    {
+      this.id = id;
       Assert.isNotNull(description);
       fDescription = description;
       fName = name;

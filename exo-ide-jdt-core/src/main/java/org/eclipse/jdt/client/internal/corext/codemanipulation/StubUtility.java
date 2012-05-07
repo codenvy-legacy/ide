@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
+import org.eclipse.jdt.client.JavaCodeController;
 import org.eclipse.jdt.client.JdtExtension;
 import org.eclipse.jdt.client.core.Flags;
 import org.eclipse.jdt.client.core.JavaCore;
@@ -297,7 +298,7 @@ public class StubUtility
          return null;
       }
       CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelim);
-      //      context.setCompilationUnitVariables(cu);
+      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
       context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, Signature.getQualifier(typeQualifiedName));
       context.setVariable(CodeTemplateContextType.TYPENAME, Signature.getSimpleName(typeQualifiedName));
 
@@ -468,8 +469,7 @@ public class StubUtility
          return null;
       }
       CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
-      //TODO
-      //      context.setCompilationUnitVariables(cu);
+      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
       context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
       context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
 
@@ -601,7 +601,7 @@ public class StubUtility
          return null;
       }
       CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
-      //      context.setCompilationUnitVariables(cu);
+      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
       context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
       context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, decl.getName().getIdentifier());
       if (!decl.isConstructor())
@@ -700,7 +700,7 @@ public class StubUtility
          return null;
       }
       CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
-      //      context.setCompilationUnitVariables(cu);
+      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
       context.setVariable(CodeTemplateContextType.FIELD_TYPE, typeName);
       context.setVariable(CodeTemplateContextType.FIELD, fieldName);
 
@@ -1964,8 +1964,8 @@ public class StubUtility
    {
       //TODO
       return true;
-//      return Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS, project))
-//         .booleanValue();
+      //      return Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS, project))
+      //         .booleanValue();
    }
 
    //

@@ -199,4 +199,9 @@ public interface RefactoringCoreMessages extends Messages
     */
    String PromoteTempToFieldRefactoring_uses_type_declared_locally();
 
+   /**
+    * @return
+    */
+   String ExtractMethodAnalyzer_ambiguous_return_value();
+
 }

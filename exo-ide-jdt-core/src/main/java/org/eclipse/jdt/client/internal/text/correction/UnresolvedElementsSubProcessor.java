@@ -76,6 +76,7 @@ import org.eclipse.jdt.client.internal.text.correction.proposals.CastCorrectionP
 import org.eclipse.jdt.client.internal.text.correction.proposals.ChangeMethodSignatureProposal.ChangeDescription;
 import org.eclipse.jdt.client.internal.text.correction.proposals.ChangeMethodSignatureProposal.EditDescription;
 import org.eclipse.jdt.client.internal.text.correction.proposals.LinkedCorrectionProposal;
+import org.eclipse.jdt.client.internal.text.correction.proposals.NewMethodCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.NewVariableCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.RenameNodeCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.ReplaceCorrectionProposal;
@@ -1134,55 +1135,55 @@ public class UnresolvedElementsSubProcessor
          ITypeBinding senderDeclBinding = binding.getTypeDeclaration();
 
          //TODO load class file
-         //         ICompilationUnit targetCU = ASTResolving.findCompilationUnitForBinding(cu, astRoot, senderDeclBinding);
-         //         if (targetCU != null)
-         //         {
-         //         String label;
-         //         Image image;
-         //         ITypeBinding[] parameterTypes = getParameterTypes(arguments);
-         //         if (parameterTypes != null)
-         //         {
-         //            String sig = ASTResolving.getMethodSignature(methodName, parameterTypes, false);
-         //
-         //            if (ASTResolving.isUseableTypeInContext(parameterTypes, senderDeclBinding, false))
-         //            {
-         //               if (nodeParentType == senderDeclBinding)
-         //               {
-         //                  label = CorrectionMessages.INSTANCE.UnresolvedElementsSubProcessor_createmethod_description(sig);
-         //                  image = new Image(JdtClientBundle.INSTANCE.privateMethod());
-         //               }
-         //               else
-         //               {
-         //                  label =
-         //                     CorrectionMessages.INSTANCE.UnresolvedElementsSubProcessor_createmethod_other_description(sig,
-         //                        senderDeclBinding.getName());
-         //                  image = new Image(JdtClientBundle.INSTANCE.publicMethod());
-         //               }
-         //               proposals.add(new NewMethodCorrectionProposal(label, invocationNode, arguments, senderDeclBinding, 5,
-         //                  document, image));
-         //            }
-         //            if (senderDeclBinding.isNested() && sender == null
-         //               && Bindings.findMethodInHierarchy(senderDeclBinding, methodName, (ITypeBinding[])null) == null)
-         //            { // no covering method
-         //               ASTNode anonymDecl = astRoot.findDeclaringNode(senderDeclBinding);
-         //               if (anonymDecl != null)
-         //               {
-         //                  senderDeclBinding = Bindings.getBindingOfParentType(anonymDecl.getParent());
-         //                  if (!senderDeclBinding.isAnonymous()
-         //                     && ASTResolving.isUseableTypeInContext(parameterTypes, senderDeclBinding, false))
-         //                  {
-         //                     label =
-         //
-         //                        CorrectionMessages.INSTANCE.UnresolvedElementsSubProcessor_createmethod_other_description(sig,
-         //                           ASTResolving.getTypeSignature(senderDeclBinding));
-         //                     image = new Image(JdtClientBundle.INSTANCE.protectedMethod());
-         //                     proposals.add(new NewMethodCorrectionProposal(label, invocationNode, arguments, senderDeclBinding,
-         //                        5, document, image));
-         //                  }
-         //               }
-         //            }
-         //         }
-         //         }
+//         ICompilationUnit targetCU = ASTResolving.findCompilationUnitForBinding(cu, astRoot, senderDeclBinding);
+//         if (targetCU != null)
+//         {
+            String label;
+            Image image;
+            ITypeBinding[] parameterTypes = getParameterTypes(arguments);
+            if (parameterTypes != null)
+            {
+               String sig = ASTResolving.getMethodSignature(methodName, parameterTypes, false);
+
+               if (ASTResolving.isUseableTypeInContext(parameterTypes, senderDeclBinding, false))
+               {
+                  if (nodeParentType == senderDeclBinding)
+                  {
+                     label = CorrectionMessages.INSTANCE.UnresolvedElementsSubProcessor_createmethod_description(sig);
+                     image = new Image(JdtClientBundle.INSTANCE.privateMethod());
+                  }
+                  else
+                  {
+                     label =
+                        CorrectionMessages.INSTANCE.UnresolvedElementsSubProcessor_createmethod_other_description(sig,
+                           senderDeclBinding.getName());
+                     image = new Image(JdtClientBundle.INSTANCE.publicMethod());
+                  }
+                  proposals.add(new NewMethodCorrectionProposal(label, invocationNode, arguments, senderDeclBinding, 5,
+                     document, image));
+               }
+               if (senderDeclBinding.isNested() && sender == null
+                  && Bindings.findMethodInHierarchy(senderDeclBinding, methodName, (ITypeBinding[])null) == null)
+               { // no covering method
+                  ASTNode anonymDecl = astRoot.findDeclaringNode(senderDeclBinding);
+                  if (anonymDecl != null)
+                  {
+                     senderDeclBinding = Bindings.getBindingOfParentType(anonymDecl.getParent());
+                     if (!senderDeclBinding.isAnonymous()
+                        && ASTResolving.isUseableTypeInContext(parameterTypes, senderDeclBinding, false))
+                     {
+                        label =
+
+                           CorrectionMessages.INSTANCE.UnresolvedElementsSubProcessor_createmethod_other_description(
+                              sig, ASTResolving.getTypeSignature(senderDeclBinding));
+                        image = new Image(JdtClientBundle.INSTANCE.protectedMethod());
+                        proposals.add(new NewMethodCorrectionProposal(label, invocationNode, arguments,
+                           senderDeclBinding, 5, document, image));
+                     }
+                  }
+               }
+            }
+//         }
       }
    }
 

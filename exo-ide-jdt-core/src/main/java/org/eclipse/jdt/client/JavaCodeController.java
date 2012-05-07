@@ -73,8 +73,11 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
    public static NameEnvironment NAME_ENVIRONMENT;
 
+   private static JavaCodeController instance;
+   
    public JavaCodeController()
    {
+      instance = this;
       IDE.addHandler(EditorFileContentChangedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
@@ -84,6 +87,11 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
    }
 
+   public static JavaCodeController get()
+   {
+      return instance;
+   }
+   
    /** @return */
    private CompilationUnit parseFile()
    {
@@ -286,5 +294,10 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
       startJob(activeFile);
       timer.cancel();
       timer.schedule(2000);
+   }
+   
+   public FileModel getActiveFile()
+   {
+      return activeFile;
    }
 }

@@ -17,11 +17,14 @@ import org.eclipse.jdt.client.templates.api.TemplateContext;
 import org.eclipse.jdt.client.templates.api.TemplateException;
 import org.eclipse.jdt.client.templates.api.TemplateTranslator;
 import org.eclipse.jdt.client.templates.api.TemplateVariableResolver;
+import org.exoplatform.ide.editor.java.client.create.CreateJavaPresenter;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.DefaultLineTracker;
 import org.exoplatform.ide.editor.text.ILineTracker;
 import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.Iterator;
 
@@ -105,10 +108,26 @@ public class CodeTemplateContext extends TemplateContext
       return true;
    }
 
-   //	public void setCompilationUnitVariables(ICompilationUnit cu) {
-   //		setVariable(CodeTemplateContextType.FILENAME, cu.getElementName());
-   //		setVariable(CodeTemplateContextType.PACKAGENAME, cu.getParent().getElementName());
-   //		setVariable(CodeTemplateContextType.PROJECTNAME, cu.getJavaProject().getElementName());
-   //	}
+   public void setCompilationUnitVariables(FileModel file)
+   {
 
+      setVariable(CodeTemplateContextType.FILENAME, file.getName());
+      setVariable(CodeTemplateContextType.PACKAGENAME, getPackage(file));
+      setVariable(CodeTemplateContextType.PROJECTNAME, file.getProject().getName());
+   }
+
+   private String getPackage(FileModel file)
+   {
+      ProjectModel project = file.getProject();
+      String sourcePath =
+         project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder")
+            : CreateJavaPresenter.DEFAULT_SOURCE_FOLDER;
+      String parentPath = file.getPath();
+      String packageText = parentPath.substring((project.getPath() + "/" + sourcePath + "/").length());
+      if (packageText.isEmpty())
+         return "";
+      if (packageText.endsWith("/"))
+         packageText = packageText.substring(0, packageText.length() - 1);
+      return packageText.replaceAll("/", ".");
+   }
 }
