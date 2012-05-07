@@ -215,16 +215,8 @@ public class OutlineTreeHelper extends BaseTest
       {
          Entry<Integer, OutlineItemInfo> item = iterator.next();
          OutlineItemInfo outlineItem = item.getValue();
-
-         //checkItemPresent(outlineItem.getId());
-         //         if (outlineItem.getFileLineNumber() > 30)
-         //         {
-         //            break;
-         //         }
-         //         else
-         //         {
          checkOutlineItemFromOutlinePanel(item.getKey(), outlineItem.getLabel(), outlineItem.getFileLineNumber());
-         //         }
+         
       }
 
       // test outline item from file
