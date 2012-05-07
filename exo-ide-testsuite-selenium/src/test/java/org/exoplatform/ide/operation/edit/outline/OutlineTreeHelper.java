@@ -304,10 +304,9 @@ public class OutlineTreeHelper extends BaseTest
    {
 
       IDE.GOTOLINE.goToLine(fileLineNumber);
-
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       assertTrue("Verifing if is selected an outline item with row number = " + itemRowNumber,
-         IDE.OUTLINE.isItemSelected(itemRowNumber));
+      IDE.OUTLINE.isItemSelected(itemRowNumber));
    }
 
    /**
