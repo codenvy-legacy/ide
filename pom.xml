@@ -27,7 +27,7 @@
       <org.exoplatform.ws.version>2.2.7-GA</org.exoplatform.ws.version>
       <org.exoplatform.gwtframework.version>1.2.0-M7</org.exoplatform.gwtframework.version>
       <!-- CodeAssistant DataBase -->
-       <ide.codeassistant.lucene.index.version>20120306</ide.codeassistant.lucene.index.version>
+      <ide.codeassistant.lucene.index.version>20120306</ide.codeassistant.lucene.index.version>
       <!-- Third parties -->
       <gwt.version>2.4.0</gwt.version>
       <shindig.version>1.0-r790473-Patch02</shindig.version>
@@ -288,19 +288,19 @@
             <version>${project.version}</version>
          </dependency>
 
-        <dependency>
+         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-xml</artifactId>
             <version>${project.version}</version>
          </dependency>
 
-        <dependency>
+         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-css</artifactId>
             <version>${project.version}</version>
          </dependency>
 
-        <dependency>
+         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-html</artifactId>
             <version>${project.version}</version>
@@ -323,13 +323,13 @@
             <artifactId>exo-ide-extension-git</artifactId>
             <version>${project.version}</version>
          </dependency>
-         
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-git-server</artifactId>
             <version>${project.version}</version>
          </dependency>
-         
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-ssh</artifactId>
@@ -359,13 +359,13 @@
             <artifactId>exo-ide-extension-maven</artifactId>
             <version>${project.version}</version>
          </dependency>
-         
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-cloudbees</artifactId>
             <version>${project.version}</version>
          </dependency>
-         
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-cloudfoundry</artifactId>
@@ -430,24 +430,30 @@
             <version>${project.version}</version>
          </dependency>
          <dependency>
-           <groupId>org.exoplatform.ide</groupId>
-           <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
-           <version>${project.version}</version>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
+            <version>${project.version}</version>
          </dependency>
-        <dependency>
-          <groupId>org.exoplatform.ide</groupId>
-          <artifactId>ide-codeassistant-lucene-index</artifactId>
-          <version>${ide.codeassistant.lucene.index.version}</version>
-          <type>zip</type>
-        </dependency>
-      
-        <dependency>
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>ide-codeassistant-lucene-index</artifactId>
+            <version>${ide.codeassistant.lucene.index.version}</version>
+            <type>zip</type>
+         </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-git-server</artifactId>
+            <type>war</type>
+            <version>${project.version}</version> 
+         </dependency>
+
+         <dependency>
             <groupId>org.exoplatform.log-reader</groupId>
-             <artifactId>log-reader-service</artifactId>
-             <version>1.0-M5</version>
+            <artifactId>log-reader-service</artifactId>
+            <version>1.0-M5</version>
          </dependency>
-      
-      
+         
          <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
@@ -473,7 +479,7 @@
             <artifactId>hsqldb</artifactId>
             <version>2.0.0</version>
          </dependency>
-         
+
          <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -601,49 +607,49 @@
                </exclusion>
             </exclusions>
          </dependency>
-         
+
          <dependency>
             <groupId>quartz</groupId>
             <artifactId>quartz</artifactId>
             <version>1.5.2</version>
          </dependency>
 
-        <dependency>
-          <groupId>picocontainer</groupId>
-          <artifactId>picocontainer</artifactId>
-          <version>1.1</version>
-       </dependency>
+         <dependency>
+            <groupId>picocontainer</groupId>
+            <artifactId>picocontainer</artifactId>
+            <version>1.1</version>
+         </dependency>
 
-       <dependency>
-         <groupId>org.everrest</groupId>
-         <artifactId>everrest-core</artifactId>
-         <version>${everrest.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.everrest</groupId>
-         <artifactId>everrest-integration-exo</artifactId>
-         <version>${everrest.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.everrest</groupId>
-         <artifactId>everrest-httpclient</artifactId>
-         <version>${everrest.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.everrest</groupId>
-         <artifactId>everrest-proxy</artifactId>
-         <version>${everrest.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.everrest</groupId>
-         <artifactId>everrest-groovy</artifactId>
-         <version>${everrest.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.everrest</groupId>
-         <artifactId>everrest-test</artifactId>
-         <version>${everrest.version}</version>
-      </dependency>
+         <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-core</artifactId>
+            <version>${everrest.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-integration-exo</artifactId>
+            <version>${everrest.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-httpclient</artifactId>
+            <version>${everrest.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-proxy</artifactId>
+            <version>${everrest.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-groovy</artifactId>
+            <version>${everrest.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-test</artifactId>
+            <version>${everrest.version}</version>
+         </dependency>
 
       </dependencies>
    </dependencyManagement>
@@ -757,7 +763,7 @@
 
       <module>exo-ide-framework-client</module>
       <module>exo-ide-codeassistant-api</module>
-      <module>exo-ide-codeassistant-asm</module>      
+      <module>exo-ide-codeassistant-asm</module>
       <module>exo-ide-codeassistant-storage-lucene</module>
 
       <module>exo-ide-editor-api</module>
@@ -793,25 +799,25 @@
       <module>exo-ide-extension-ssh</module>
       <module>exo-ide-extension-heroku</module>
       <module>exo-ide-extension-openshift</module>
-      <module>exo-ide-extension-cloudbees</module>      
+      <module>exo-ide-extension-cloudbees</module>
       <module>exo-ide-extension-cloudfoundry</module>
       <module>exo-ide-extension-jenkins</module>
       <module>exo-ide-extension-ruby</module>
       <module>exo-ide-extension-samples</module>
-      <module>exo-ide-extension-logreader</module>            
+      <module>exo-ide-extension-logreader</module>
 
       <module>exo-ide-docs</module>
 
       <module>exo-ide-client</module>
-      <module>exo-ide-shell</module>   
-      
+      <module>exo-ide-shell</module>
+
       <module>exo-ide-git-server</module>
       <module>exo-ide-packaging-application-war</module>
       <module>exo-ide-rest-war</module>
       <module>exo-ide-site-war</module>
       <module>exo-ide-packaging-shell-war</module>
-      
-      <!--module>exo-ide-packaging-gadget-war</module-->
+
+      <!--module>exo-ide-packaging-gadget-war</module -->
       <module>exo-ide-testsuite-selenium</module>
       <module>exo-ide-shell-testsuite-selenium</module>
       <module>exo-ide-packaging-standalone-tomcat</module>
@@ -819,5 +825,5 @@
       <module>exo-ide-maven</module>
       <module>exo-ide-extension-maven</module>
       <module>exo-ide-packaging-maven-builder</module>
-  </modules>
+   </modules>
 </project>
