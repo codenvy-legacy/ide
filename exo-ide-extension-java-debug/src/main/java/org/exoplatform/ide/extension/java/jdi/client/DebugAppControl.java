@@ -36,7 +36,7 @@ import org.exoplatform.ide.extension.java.jdi.client.events.DebugAppEvent;
 public class DebugAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
    ProjectOpenedHandler, AppStartedHandler, AppStopedHandler
 {
-   public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.launchDebuggerControlId();
+   public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.debugAppControlId();
 
    private static final String TITLE = "Debug Application";
 
@@ -50,6 +50,8 @@ public class DebugAppControl extends SimpleControl implements IDEControl, Projec
       setImages(DebuggerClientBundle.INSTANCE.debugApp(), DebuggerClientBundle.INSTANCE.debugAppDisabled());
       setEvent(new DebugAppEvent());
    }
+   
+   
 
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
@@ -74,7 +76,7 @@ public class DebugAppControl extends SimpleControl implements IDEControl, Projec
    {
       setEnabled(false);
    }
-
+   
    /**
     * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
     */

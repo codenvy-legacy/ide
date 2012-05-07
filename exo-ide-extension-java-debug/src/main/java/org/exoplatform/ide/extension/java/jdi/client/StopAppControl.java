@@ -21,10 +21,6 @@ package org.exoplatform.ide.extension.java.jdi.client;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
@@ -34,7 +30,7 @@ import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
 
 public class StopAppControl extends SimpleControl implements IDEControl, AppStartedHandler, AppStopedHandler
 {
-   public static final String ID = "Project/Stop";
+   public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.stopAppControlId();
 
    private static final String TITLE = "Stop Application";
 

@@ -36,7 +36,7 @@ import org.exoplatform.ide.extension.java.jdi.client.events.RunAppEvent;
 public class RunAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
    ProjectOpenedHandler, AppStartedHandler, AppStopedHandler
 {
-   public static final String ID = "Project/Run";
+   public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.runAppControlId();
 
    private static final String TITLE = "Run Application";
 
