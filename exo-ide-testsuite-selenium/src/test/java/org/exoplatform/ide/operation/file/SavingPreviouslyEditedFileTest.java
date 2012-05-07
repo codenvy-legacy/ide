@@ -124,7 +124,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       IDE.EDITOR.typeTextIntoEditor(1, XML_TEXT1);
       IDE.EDITOR.typeTextIntoEditor(1, XML_TEXT2);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.EDITOR.waitNoContentModificationMark(FILE_NAME);
       IDE.EDITOR.closeFile(1);
 
       driver.navigate().refresh();
@@ -145,6 +145,11 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
 
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE));
       assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
+
+      //add save file command because if file not saved, appear pop up window with warning info see IDE-1599
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
+      IDE.LOADER.waitClosed();
+
    }
 
    /**
@@ -181,6 +186,10 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
 
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE));
       assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
+
+      //add save file command because if file not saved, appear pop up window with warning info see IDE-1599
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
+      IDE.LOADER.waitClosed();
    }
 
    /**
@@ -222,5 +231,9 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
 
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE));
       assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
+
+      //add save file command because if file not saved, appear pop up window with warning info see IDE-1599 
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
+      IDE.LOADER.waitClosed();
    }
 }
