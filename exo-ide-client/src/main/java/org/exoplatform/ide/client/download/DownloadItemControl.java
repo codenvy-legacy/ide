@@ -25,22 +25,10 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -49,8 +37,7 @@ import java.util.List;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class DownloadItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   ProjectOpenedHandler, ProjectClosedHandler, ViewVisibilityChangedHandler
+public class DownloadItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {
 
    enum Type {
@@ -70,14 +57,6 @@ public class DownloadItemControl extends SimpleControl implements IDEControl, It
    private static final String PROMPT_ZIP = IDE.IDE_LOCALIZATION_CONSTANT.downloadZippedFolderControl();
 
    private boolean downloadZip;
-
-   private boolean isProjectOpened = false;
-
-   private List<Item> selectedItems = new ArrayList<Item>();
-
-   private boolean isBrowserPanelVisible;
-
-   private boolean isProjectExplorerVisible;
 
    /**
     * 
@@ -111,31 +90,6 @@ public class DownloadItemControl extends SimpleControl implements IDEControl, It
    {
       setVisible(true);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-   }
-
-   /**
-    * Update control's state.
-    */
-   private void updateState()
-   {
-      if (!isProjectOpened && isProjectExplorerVisible)
-      {
-         setVisible(false);
-         return;
-      }
-
-      if (!isBrowserPanelVisible)
-      {
-         setVisible(false);
-         return;
-      }
-
-      setVisible(true);
-
-      setEnabled(selectedItems.size() == 1 && isApplicableFor(selectedItems.get(0)));
    }
 
    private boolean isApplicableFor(Item item)
@@ -158,49 +112,14 @@ public class DownloadItemControl extends SimpleControl implements IDEControl, It
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      selectedItems = event.getSelectedItems();
-      updateState();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      isProjectOpened = false;
-      updateState();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      isProjectOpened = true;
-      updateState();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
-    */
-   @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
-   {
-      View view = event.getView();
-
-      if (view instanceof NavigatorDisplay || view instanceof ProjectExplorerDisplay)
+      if (event.getSelectedItems().size() == 1 && isApplicableFor(event.getSelectedItems().get(0)))
       {
-         isBrowserPanelVisible = view.isViewVisible();
-
-         if (view instanceof ProjectExplorerDisplay)
-         {
-            isProjectExplorerVisible = view.isViewVisible();
-         }
+         setEnabled(true);
       }
-
-      updateState();
+      else
+      {
+         setEnabled(false);
+      }
    }
 
 }

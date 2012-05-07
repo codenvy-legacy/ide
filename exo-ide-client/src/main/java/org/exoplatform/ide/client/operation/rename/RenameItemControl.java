@@ -28,16 +28,10 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -52,7 +46,7 @@ import java.util.List;
  */
 @RolesAllowed({"administrators", "developers"})
 public class RenameItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler,
-   ViewActivatedHandler, ViewVisibilityChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
+   ViewActivatedHandler
 {
 
    private static final String ID = "File/Rename...";
@@ -68,16 +62,10 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
     */
    private VirtualFileSystemInfo vfsInfo = null;
 
-   private boolean isProjectOpened = false;
-
    /**
     * Current active view.
     */
    private View activeView;
-
-   private boolean isBrowserPanelVisible;
-
-   private boolean isProjectExplorerVisible;
 
    /**
     * 
@@ -101,9 +89,6 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
-      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
    /**
@@ -116,19 +101,6 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
          setVisible(false);
          return;
       }
-
-      if (!isProjectOpened && isProjectExplorerVisible)
-      {
-         setVisible(false);
-         return;
-      }
-
-      if (!isBrowserPanelVisible)
-      {
-         setVisible(false);
-         return;
-      }
-
       setVisible(true);
 
       if (!(activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay))
@@ -174,47 +146,6 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
    public void onViewActivated(ViewActivatedEvent event)
    {
       activeView = event.getView();
-      updateState();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
-    */
-   @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
-   {
-      View view = event.getView();
-
-      if (view instanceof NavigatorDisplay || view instanceof ProjectExplorerDisplay)
-      {
-         isBrowserPanelVisible = view.isViewVisible();
-
-         if (view instanceof ProjectExplorerDisplay)
-         {
-            isProjectExplorerVisible = view.isViewVisible();
-         }
-      }
-
-      updateState();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      isProjectOpened = false;
-      updateState();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      isProjectOpened = true;
       updateState();
    }
 
