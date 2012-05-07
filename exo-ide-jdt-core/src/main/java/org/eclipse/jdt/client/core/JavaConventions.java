@@ -22,6 +22,7 @@ import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.InvalidInputException;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeConstants;
 import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
@@ -37,6 +38,8 @@ public class JavaConventions
 {
 
    private static final char DOT = '.';
+
+   private static final String PACKAGE_INFO = new String(TypeConstants.PACKAGE_INFO_NAME);
 
    private static final Scanner SCANNER =
       new Scanner(false /*comment*/, true /*whitespace*/, false /*nls*/, ClassFileConstants.JDK1_3 /*sourceLevel*/,
@@ -174,6 +177,91 @@ public class JavaConventions
       catch (InvalidInputException e)
       {
          return null;
+      }
+   }
+
+   /**
+    * Validate the given compilation unit name for the given source and compliance levels.
+    * <p>
+    * A compilation unit name must obey the following rules:
+    * <ul>
+    * <li> it must not be null
+    * <li> it must be suffixed by a dot ('.') followed by one of the
+    *       {@link JavaCore#getJavaLikeExtensions() Java-like extensions}
+    * <li> its prefix must be a valid identifier
+    * <li> it must not contain any characters or substrings that are not valid
+    *       on the file system on which workspace root is located.
+    * </ul>
+    * </p>
+    * @param name the name of a compilation unit
+    * @param sourceLevel the source level
+    * @param complianceLevel the compliance level
+    * @return a status object with code <code>IStatus.OK</code> if
+    *    the given name is valid as a compilation unit name, otherwise a status
+    *    object indicating what is wrong with the name
+    * @since 3.3
+    */
+   public static IStatus validateCompilationUnitName(String name, String sourceLevel, String complianceLevel)
+   {
+      if (name == null)
+      {
+         return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1, "Compilation unit name must not be null", null);
+      }
+      String message = "Compilation unit name must end with .java, or one of the registered Java-like extensions";
+//      if (!org.eclipse.jdt.client.internal.core.util.Util.isJavaLikeFileName(name))
+//      {
+//         return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1, message, null);
+//      }
+      String identifier;
+      int index;
+      index = name.lastIndexOf('.');
+      if (index == -1)
+      {
+         return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1, message, null);
+      }
+      identifier = name.substring(0, index);
+      // JSR-175 metadata strongly recommends "package-info.java" as the
+      // file in which to store package annotations and
+      // the package-level spec (replaces package.html)
+      if (!identifier.equals(PACKAGE_INFO))
+      {
+         IStatus status = validateIdentifier(identifier, sourceLevel, complianceLevel);
+         if (!status.isOK())
+         {
+            return status;
+         }
+      }
+      //      IStatus status = ResourcesPlugin.getWorkspace().validateName(name, IResource.FILE);
+      //      if (!status.isOK()) {
+      //         return status;
+      //      }
+      return Status.OK_STATUS;
+   }
+
+   /**
+    * Validate the given Java identifier for the given source and compliance levels
+    * The identifier must not have the same spelling as a Java keyword,
+    * boolean literal (<code>"true"</code>, <code>"false"</code>), or null literal (<code>"null"</code>).
+    * See section 3.8 of the <em>Java Language Specification, Second Edition</em> (JLS2).
+    * A valid identifier can act as a simple type name, method name or field name.
+    *
+    * @param id the Java identifier
+    * @param sourceLevel the source level
+    * @param complianceLevel the compliance level
+    * @return a status object with code <code>IStatus.OK</code> if
+    *    the given identifier is a valid Java identifier, otherwise a status
+    *    object indicating what is wrong with the identifier
+    * @since 3.3
+    */
+   public static IStatus validateIdentifier(String id, String sourceLevel, String complianceLevel)
+   {
+      if (scannedIdentifier(id, sourceLevel, complianceLevel) != null)
+      {
+         return Status.OK_STATUS;
+      }
+      else
+      {
+         return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1, id + " is not a valid Java identifier", null);
       }
    }
 

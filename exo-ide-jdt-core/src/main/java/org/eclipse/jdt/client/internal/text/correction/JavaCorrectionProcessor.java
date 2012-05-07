@@ -48,16 +48,25 @@ public class JavaCorrectionProcessor
 
    private static IQuickAssistProcessor[] assistProcessors;
 
-   /*
-    * @see IContentAssistProcessor#computeCompletionProposals(ITextViewer, int)
+   /**
+    * 
     */
-   public ICompletionProposal[] computeQuickAssistProposals(IQuickAssistInvocationContext quickAssistContext)
+   public JavaCorrectionProcessor()
    {
       if (fixProcessor == null)
       {
          fixProcessor = new QuickFixProcessor();
          assistProcessors = new IQuickAssistProcessor[]{new QuickAssistProcessor(), new AdvancedQuickAssistProcessor()};
       }
+   }
+
+   /*
+    * @see IContentAssistProcessor#computeCompletionProposals(ITextViewer, int)
+    */
+   public ICompletionProposal[] computeQuickAssistProposals(IQuickAssistInvocationContext quickAssistContext)
+      throws CoreException
+   {
+
       //      ISourceViewer viewer= quickAssistContext.getSourceViewer();
       //      int documentOffset= quickAssistContext.getOffset();
       //
@@ -89,6 +98,7 @@ public class JavaCorrectionProcessor
          res = proposals.toArray(new ICompletionProposal[proposals.size()]);
          if (!status.isOK())
          {
+            throw new CoreException(status);
             //            fErrorMessage = status.getMessage();
             //            JavaPlugin.log(status);
             //TODO;
@@ -107,7 +117,7 @@ public class JavaCorrectionProcessor
    }
 
    public static IStatus collectProposals(IInvocationContext context, boolean addQuickFixes, boolean addQuickAssists,
-      IProblemLocation[] problemLocations, Collection<IJavaCompletionProposal> proposals)
+      IProblemLocation[] problemLocations, Collection<IJavaCompletionProposal> proposals) throws CoreException
    {
       MultiStatus resStatus = null;
       //
@@ -144,12 +154,28 @@ public class JavaCorrectionProcessor
    }
 
    public static IStatus collectCorrections(IInvocationContext context, IProblemLocation[] locations,
-      Collection<IJavaCompletionProposal> proposals)
+      Collection<IJavaCompletionProposal> proposals) throws CoreException
    {
       IJavaCompletionProposal[] res;
-      try
+      res = fixProcessor.getCorrections(context, locations);
+      if (res != null)
       {
-         res = fixProcessor.getCorrections(context, locations);
+         for (int k = 0; k < res.length; k++)
+         {
+            proposals.add(res[k]);
+         }
+      }
+      return Status.OK_STATUS;
+   }
+
+   public static IStatus collectAssists(IInvocationContext context, IProblemLocation[] locations,
+      Collection<IJavaCompletionProposal> proposals) throws CoreException
+   {
+
+      for (IQuickAssistProcessor curr : assistProcessors)
+      {
+         IJavaCompletionProposal[] res;
+         res = curr.getAssists(context, locations);
          if (res != null)
          {
             for (int k = 0; k < res.length; k++)
@@ -157,37 +183,9 @@ public class JavaCorrectionProcessor
                proposals.add(res[k]);
             }
          }
-         return Status.OK_STATUS;
       }
-      catch (CoreException e)
-      {
-         return new Status(IStatus.ERROR, "", "Error", e);
-      }
-   }
+      return Status.OK_STATUS;
 
-   public static IStatus collectAssists(IInvocationContext context, IProblemLocation[] locations,
-      Collection<IJavaCompletionProposal> proposals)
-   {
-      try
-      {
-         for (IQuickAssistProcessor curr : assistProcessors)
-         {
-            IJavaCompletionProposal[] res;
-            res = curr.getAssists(context, locations);
-            if (res != null)
-            {
-               for (int k = 0; k < res.length; k++)
-               {
-                  proposals.add(res[k]);
-               }
-            }
-         }
-         return Status.OK_STATUS;
-      }
-      catch (CoreException e)
-      {
-         return new Status(IStatus.ERROR, "", "Error", e);
-      }
    }
 
    /**
@@ -196,8 +194,7 @@ public class JavaCorrectionProcessor
     */
    public static boolean hasCorrections(IProblemLocation annot)
    {
-      // TODO Auto-generated method stub
-      return false;
+      return fixProcessor.hasCorrections(annot.getProblemId());
    }
 
 }

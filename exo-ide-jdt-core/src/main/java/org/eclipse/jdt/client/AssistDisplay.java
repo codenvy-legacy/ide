@@ -20,7 +20,7 @@ package org.eclipse.jdt.client;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
-import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
+import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
 
 public interface AssistDisplay extends IsWidget
 {
@@ -33,6 +33,6 @@ public interface AssistDisplay extends IsWidget
 
    void cancelCodeAssistant();
 
-   void setNewProposals(IJavaCompletionProposal[] proposals);
+   void setNewProposals(ICompletionProposal[] proposals);
 
 }

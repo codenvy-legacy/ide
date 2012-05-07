@@ -18,7 +18,11 @@
  */
 package org.exoplatform.ide.client;
 
+import com.google.gwt.event.shared.UmbrellaException;
+
 import org.exoplatform.gwtframework.commons.util.Log;
+
+import java.util.Set;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -45,6 +49,15 @@ public class IDEShell implements EntryPoint
       public void onUncaughtException(Throwable e)
       {
          Log.info(e.getMessage());
+         if (e instanceof UmbrellaException)
+         {
+            Set<Throwable> set = ((UmbrellaException)e).getCauses();
+            for(Throwable t : set)
+            {
+               Log.info(t.getMessage());
+               t.printStackTrace();
+            }
+         }
       }
    }
 

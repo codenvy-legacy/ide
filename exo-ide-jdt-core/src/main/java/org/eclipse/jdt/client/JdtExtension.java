@@ -107,6 +107,11 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
       options.put(CompilerOptions.OPTION_TargetPlatform, JavaCore.VERSION_1_6);
       options.put(AssistOptions.OPTION_PerformVisibilityCheck, AssistOptions.ENABLED);
+      options.put(CompilerOptions.OPTION_ReportUnusedLocal, CompilerOptions.WARNING);
+      options.put(CompilerOptions.OPTION_TaskTags, CompilerOptions.WARNING);
+      options.put(CompilerOptions.OPTION_ReportUnusedPrivateMember, CompilerOptions.WARNING);
+      options.put(CompilerOptions.OPTION_SuppressWarnings, CompilerOptions.DISABLED);
+      
    }
 
    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
@@ -131,7 +136,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new QuickFixControl());
       IDE.fireEvent(new AddCodeFormatterEvent(new JavaCodeFormatter(), MimeType.APPLICATION_JAVA));
 
-      Window.addCloseHandler(this);
+//      Window.addCloseHandler(this);
       formatterProfileManager = new FormatterProfilePresenter(IDE.eventBus());
       new QuickFixPresenter(IDE.eventBus());
    }
@@ -255,6 +260,8 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
    @Override
    public void onClose(CloseEvent<Window> event)
    {
+      if(userInfo == null)
+         return;
       Preferences preferences = GWT.create(Preferences.class);
       ContentAssistHistory.store(contentAssistHistory, preferences,
          Preferences.CODEASSIST_LRU_HISTORY + userInfo.getName());

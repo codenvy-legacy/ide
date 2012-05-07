@@ -12,6 +12,7 @@
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
 import org.eclipse.jdt.client.JdtExtension;
+import org.eclipse.jdt.client.core.Flags;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.NamingConventions;
 import org.eclipse.jdt.client.core.Signature;
@@ -1596,24 +1597,22 @@ public class StubUtility
          excluded), true);
    }
 
-   //
-   // public static String[] getFieldNameSuggestions(IType type, int fieldModifiers, String[] excluded) {
-   // return getFieldNameSuggestions(type.getJavaProject(), type.getElementName(), 0, fieldModifiers, excluded);
-   // }
-   //
-   // public static String[] getFieldNameSuggestions(IJavaProject project, String baseName, int dimensions, int modifiers,
-   // String[] excluded) {
-   // if (Flags.isFinal(modifiers) && Flags.isStatic(modifiers)) {
-   // return getVariableNameSuggestions(NamingConventions.VK_STATIC_FINAL_FIELD, project, baseName, dimensions, new
-   // ExcludedCollection(excluded), true);
-   // } else if (Flags.isStatic(modifiers)) {
-   // return getVariableNameSuggestions(NamingConventions.VK_STATIC_FIELD, project, baseName, dimensions, new
-   // ExcludedCollection(excluded), true);
-   // }
-   // return getVariableNameSuggestions(NamingConventions.VK_INSTANCE_FIELD, project, baseName, dimensions, new
-   // ExcludedCollection(excluded), true);
-   // }
-   //
+   public static String[] getFieldNameSuggestions(String baseName, int dimensions, int modifiers, String[] excluded)
+   {
+      if (Flags.isFinal(modifiers) && Flags.isStatic(modifiers))
+      {
+         return getVariableNameSuggestions(NamingConventions.VK_STATIC_FINAL_FIELD, baseName, dimensions,
+            new ExcludedCollection(excluded), true);
+      }
+      else if (Flags.isStatic(modifiers))
+      {
+         return getVariableNameSuggestions(NamingConventions.VK_STATIC_FIELD, baseName, dimensions,
+            new ExcludedCollection(excluded), true);
+      }
+      return getVariableNameSuggestions(NamingConventions.VK_INSTANCE_FIELD, baseName, dimensions,
+         new ExcludedCollection(excluded), true);
+   }
+
    public static String[] getLocalNameSuggestions(String baseName, int dimensions, String[] excluded)
    {
       return getVariableNameSuggestions(NamingConventions.VK_LOCAL, baseName, dimensions, new ExcludedCollection(
@@ -1961,10 +1960,14 @@ public class StubUtility
       return "e"; //PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_EXCEPTION_VAR_NAME, project);
    }
 
-   //
-   // public static boolean doAddComments(IJavaProject project) {
-   // return Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS, project)).booleanValue();
-   // }
+   public static boolean doAddComments()
+   {
+      //TODO
+      return true;
+//      return Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS, project))
+//         .booleanValue();
+   }
+
    //
    // /**
    // * Only to be used by tests

@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -56,6 +57,7 @@ public class QuickFixControl extends SimpleControl implements IDEControl, Editor
       setEnabled(false);
       setVisible(false);
       setShowInMenu(false);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    /**

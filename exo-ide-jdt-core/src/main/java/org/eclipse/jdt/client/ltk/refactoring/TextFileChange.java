@@ -12,6 +12,9 @@ package org.eclipse.jdt.client.ltk.refactoring;
 
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
+import org.eclipse.jdt.client.runtime.IStatus;
+import org.eclipse.jdt.client.runtime.NullProgressMonitor;
+import org.eclipse.jdt.client.runtime.Status;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.edits.MalformedTreeException;
@@ -58,8 +61,10 @@ public class TextFileChange extends TextChange
    // the mapped text buffer
    private int fAcquireCount;
 
+   private final IDocument document;
+
    //	private ITextFileBuffer fBuffer;
-   //	private BufferValidationState fValidationState;
+//   	private BufferValidationState fValidationState;
    //	private ContentStamp fContentStamp;
 
    /**
@@ -68,11 +73,12 @@ public class TextFileChange extends TextChange
     * @param name the change's name mainly used to render the change in the UI
     * @param file the file this text change operates on
     */
-   public TextFileChange(String name)
+   public TextFileChange(String name, IDocument document)
    {
       super(name);
       //		Assert.isNotNull(file);
       //		fFile= file;
+      this.document = document;
    }
 
    /**
@@ -159,33 +165,34 @@ public class TextFileChange extends TextChange
    public RefactoringStatus isValid(IProgressMonitor monitor) throws CoreException
    {
       //TODO
-      //      if (monitor == null)
-      //         monitor = new NullProgressMonitor();
-      //      try
-      //      {
-      //         monitor.beginTask("", 1); //$NON-NLS-1$
-      //         if (fValidationState == null)
-      //            throw new CoreException(new Status(IStatus.ERROR, RefactoringCorePlugin.getPluginId(),
-      //               "TextFileChange has not been initialialized")); //$NON-NLS-1$
-      //
-      //         boolean needsSaving = needsSaving();
-      //         RefactoringStatus result = fValidationState.isValid(needsSaving);
-      //         if (needsSaving)
-      //         {
-      //            result.merge(Changes.validateModifiesFiles(new IFile[]{fFile}));
-      //         }
-      //         else
-      //         {
-      //            // we are reading the file. So it should be at least in sync
-      //            result.merge(Changes.checkInSync(new IFile[]{fFile}));
-      //         }
-      //         return result;
-      //      }
-      //      finally
-      //      {
-      //         monitor.done();
-      //      }
-      return null;
+//            if (monitor == null)
+//               monitor = new NullProgressMonitor();
+//            try
+//            {
+//               monitor.beginTask("", 1); //$NON-NLS-1$
+//               if (fValidationState == null)
+//                  throw new CoreException(new Status(IStatus.ERROR, "",
+//                     "TextFileChange has not been initialialized")); //$NON-NLS-1$
+//      
+//               boolean needsSaving = needsSaving();
+//               RefactoringStatus result = fValidationState.isValid(needsSaving);
+//               if (needsSaving)
+//               {
+//                  result.merge(Changes.validateModifiesFiles(new IFile[]{fFile}));
+//               }
+//               else
+//               {
+//                  // we are reading the file. So it should be at least in sync
+//                  result.merge(Changes.checkInSync(new IFile[]{fFile}));
+//               }
+//               return result;
+//            }
+//            finally
+//            {
+//               monitor.done();
+//            }
+//      return null;
+      return new RefactoringStatus();
    }
 
    /**
@@ -215,7 +222,7 @@ public class TextFileChange extends TextChange
       //		IDocument result= fBuffer.getDocument();
       //		fContentStamp= ContentStamps.get(fFile, result);
       //		return result;
-      return null;
+      return document;
    }
 
    /**
@@ -264,7 +271,7 @@ public class TextFileChange extends TextChange
    protected UndoEdit performEdits(final IDocument document) throws BadLocationException, MalformedTreeException
    {
       //		if (! fBuffer.isSynchronizationContextRequested()) {
-      //			return super.performEdits(document);
+      			return super.performEdits(document);
       //		}
 
       //		ITextFileBufferManager fileBufferManager= FileBuffers.getTextFileBufferManager();
@@ -304,7 +311,7 @@ public class TextFileChange extends TextChange
       //		}
       //		
       //		return result[0];
-      return null;
+//      return null;
    }
 
    /**

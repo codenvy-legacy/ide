@@ -122,7 +122,7 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
    }
 
    public static IProposableFix createAddUnimplementedMethodsFix(final CompilationUnit root, IProblemLocation problem,
-      IDocument document)
+      final IDocument document)
    {
       ASTNode typeNode = getSelectedTypeNode(root, problem);
       if (typeNode == null)
@@ -146,7 +146,7 @@ public class UnimplementedCodeFix extends CompilationUnitRewriteOperationsFix
             {
                CompilationUnitChange change =
                   new CompilationUnitChange(
-                     CorrectionMessages.INSTANCE.UnimplementedMethodsCorrectionProposal_description())
+                     CorrectionMessages.INSTANCE.UnimplementedMethodsCorrectionProposal_description(), document)
                   {
                      @Override
                      public Change perform(IProgressMonitor pm) throws CoreException

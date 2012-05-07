@@ -210,7 +210,7 @@ public class SurroundWithTryCatchRefactoring extends Refactoring
       pm.beginTask(NN, 2);
       try
       {
-         final CompilationUnitChange result = new CompilationUnitChange(getName());
+         final CompilationUnitChange result = new CompilationUnitChange(getName(), document);
          if (fLeaveDirty)
             result.setSaveMode(TextFileChange.LEAVE_DIRTY);
          MultiTextEdit root = new MultiTextEdit();

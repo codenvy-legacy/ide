@@ -10,13 +10,11 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.refactoring.code;
 
-import org.eclipse.jdt.client.ltk.refactoring.Change;
 import org.eclipse.jdt.client.ltk.refactoring.ChangeDescriptor;
 import org.eclipse.jdt.client.ltk.refactoring.TextFileChange;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.edits.UndoEdit;
 
 /**
  * A {@link TextFileChange} that operates on an CompilationUnit in the workspace.
@@ -37,9 +35,9 @@ public class CompilationUnitChange extends TextFileChange
     * @param name the change's name, mainly used to render the change in the UI
     * @param cunit the compilation unit this change works on
     */
-   public CompilationUnitChange(String name)
+   public CompilationUnitChange(String name, IDocument document)
    {
-      super(name);
+      super(name, document);
       //		Assert.isNotNull(cunit);
       //		fCUnit= cunit;
       setTextType("java"); //$NON-NLS-1$

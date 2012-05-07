@@ -188,7 +188,7 @@ public class AssistContext implements IInvocationContext
    @Override
    public IDocument getDocument()
    {
-      return null;
+      return document;
    }
 
 }

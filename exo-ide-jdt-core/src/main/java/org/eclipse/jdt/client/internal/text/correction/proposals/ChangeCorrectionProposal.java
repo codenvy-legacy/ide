@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.text.correction.proposals;
 
-import com.google.gwt.user.client.ui.Widget;
-
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Widget;
 
 import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
@@ -200,10 +200,9 @@ public class ChangeCorrectionProposal implements IJavaCompletionProposal, IComma
     */
    public Widget getAdditionalProposalInfo()
    {
-      //TODO
-      //		Object info= getAdditionalProposalInfo(new NullProgressMonitor());
-      //		return info == null ? null : info.toString();
-      return null;
+      		Object info= getAdditionalProposalInfo(new NullProgressMonitor());
+      		return info == null ? null : new HTML(info.toString());
+//      return null;
    }
 
    /*

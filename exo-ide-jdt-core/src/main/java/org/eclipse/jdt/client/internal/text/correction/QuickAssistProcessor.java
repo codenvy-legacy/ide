@@ -94,6 +94,7 @@ import org.eclipse.jdt.client.internal.corext.fix.ControlStatementsCleanUp;
 import org.eclipse.jdt.client.internal.corext.fix.ControlStatementsFix;
 import org.eclipse.jdt.client.internal.corext.fix.ICleanUp;
 import org.eclipse.jdt.client.internal.corext.fix.IProposableFix;
+import org.eclipse.jdt.client.internal.corext.refactoring.code.PromoteTempToFieldRefactoring;
 import org.eclipse.jdt.client.internal.corext.refactoring.util.TightSourceRangeComputer;
 import org.eclipse.jdt.client.internal.text.correction.proposals.ASTRewriteCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.AssignToVariableAssistProposal;
@@ -2858,43 +2859,41 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
    private static boolean getConvertLocalToFieldProposal(IInvocationContext context, final ASTNode node,
       Collection<ICommandAccess> proposals) throws CoreException
    {
-      //TODO
-      //      if (!(node instanceof SimpleName))
-      //         return false;
-      //
-      //      SimpleName name = (SimpleName)node;
-      //      IBinding binding = name.resolveBinding();
-      //      if (!(binding instanceof IVariableBinding)
-      //         || name.getLocationInParent() != VariableDeclarationFragment.NAME_PROPERTY)
-      //         return false;
-      //      IVariableBinding varBinding = (IVariableBinding)binding;
-      //      if (varBinding.isField() || varBinding.isParameter())
-      //         return false;
-      //      VariableDeclarationFragment decl = (VariableDeclarationFragment)name.getParent();
-      //      if (decl.getLocationInParent() != VariableDeclarationStatement.FRAGMENTS_PROPERTY)
-      //         return false;
-      //
-      //      if (proposals == null)
-      //      {
-      //         return true;
-      //      }
-      //
-      //      PromoteTempToFieldRefactoring refactoring = new PromoteTempToFieldRefactoring(decl);
-      //      if (refactoring.checkInitialConditions(new NullProgressMonitor()).isOK())
-      //      {
-      //         String label = CorrectionMessages.INSTANCE.QuickAssistProcessor_convert_local_to_field_description;
-      //         Image image = JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
-      ////         LinkedProposalModel linkedProposalModel = new LinkedProposalModel();
-      //         refactoring.setLinkedProposalModel(linkedProposalModel);
-      //
-      //         RefactoringCorrectionProposal proposal =
-      //            new RefactoringCorrectionProposal(label, context.getCompilationUnit(), refactoring, 5, image);
-      //         proposal.setLinkedProposalModel(linkedProposalModel);
-      //         proposal.setCommandId(CONVERT_LOCAL_TO_FIELD_ID);
-      //         proposals.add(proposal);
-      //      }
-      //      return true;
-      return false;
+      if (!(node instanceof SimpleName))
+         return false;
+
+      SimpleName name = (SimpleName)node;
+      IBinding binding = name.resolveBinding();
+      if (!(binding instanceof IVariableBinding)
+         || name.getLocationInParent() != VariableDeclarationFragment.NAME_PROPERTY)
+         return false;
+      IVariableBinding varBinding = (IVariableBinding)binding;
+      if (varBinding.isField() || varBinding.isParameter())
+         return false;
+      VariableDeclarationFragment decl = (VariableDeclarationFragment)name.getParent();
+      if (decl.getLocationInParent() != VariableDeclarationStatement.FRAGMENTS_PROPERTY)
+         return false;
+
+      if (proposals == null)
+      {
+         return true;
+      }
+
+      PromoteTempToFieldRefactoring refactoring = new PromoteTempToFieldRefactoring(decl, context.getDocument());
+      if (refactoring.checkInitialConditions(new NullProgressMonitor()).isOK())
+      {
+         String label = CorrectionMessages.INSTANCE.QuickAssistProcessor_convert_local_to_field_description();
+         Image image = new Image(JdtClientBundle.INSTANCE.correction_change());
+         //         LinkedProposalModel linkedProposalModel = new LinkedProposalModel();
+         //               refactoring.setLinkedProposalModel(linkedProposalModel);
+
+         RefactoringCorrectionProposal proposal =
+            new RefactoringCorrectionProposal(label, refactoring, 5, context.getDocument(), image);
+         //               proposal.setLinkedProposalModel(linkedProposalModel);
+         proposal.setCommandId(CONVERT_LOCAL_TO_FIELD_ID);
+         proposals.add(proposal);
+      }
+      return true;
    }
 
    private static class RefactoringCorrectionProposal extends CUCorrectionProposal

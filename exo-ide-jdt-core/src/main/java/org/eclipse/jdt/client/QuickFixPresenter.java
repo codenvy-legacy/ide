@@ -18,6 +18,14 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+
+import com.google.gwt.core.client.Scheduler;
+
+import com.google.gwt.event.dom.client.KeyCodes;
+
+import com.google.gwt.event.shared.HandlerRegistration;
+
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
@@ -31,10 +39,20 @@ import org.eclipse.jdt.client.event.ShowQuickFixHandler;
 import org.eclipse.jdt.client.internal.text.correction.JavaCorrectionProcessor;
 import org.eclipse.jdt.client.internal.text.correction.ProblemLocation;
 import org.eclipse.jdt.client.internal.text.quickassist.IQuickAssistInvocationContext;
+import org.eclipse.jdt.client.runtime.CoreException;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.SelectionRange;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
+import org.exoplatform.ide.editor.codemirror.CodeMirror;
+import org.exoplatform.ide.editor.problem.Problem;
+import org.exoplatform.ide.editor.problem.ProblemClickEvent;
+import org.exoplatform.ide.editor.problem.ProblemClickHandler;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.IRegion;
@@ -50,10 +68,10 @@ import java.util.List;
  *
  */
 public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorActiveFileChangedHandler,
-   ShowQuickFixHandler, UpdateOutlineHandler, ProposalSelectedHandler
+   ShowQuickFixHandler, UpdateOutlineHandler, ProposalSelectedHandler, EditorHotKeyPressedHandler, ProblemClickHandler
 {
 
-   private Editor editor;
+   private CodeMirror editor;
 
    private CompilationUnit compilationUnit;
 
@@ -71,11 +89,18 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
 
    private JavaCorrectionProcessor correctionProcessor;
 
+   private HandlerRegistration keyHandler;
+
+   private HandlerRegistration problemClickHandler;
+
+   private final HandlerManager eventBus;
+
    /**
     * 
     */
    public QuickFixPresenter(HandlerManager eventBus)
    {
+      this.eventBus = eventBus;
       correctionProcessor = new JavaCorrectionProcessor();
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(ShowQuickFixEvent.TYPE, this);
@@ -88,8 +113,17 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      editor = event.getEditor();
-      file = event.getFile();
+      if (problemClickHandler != null)
+         problemClickHandler.removeHandler();
+      if (event.getFile() == null)
+         return;
+
+      if (event.getEditor() instanceof CodeMirror)
+      {
+         editor = (CodeMirror)event.getEditor();
+         problemClickHandler = editor.addProblemClickHandler(this);
+         file = event.getFile();
+      }
    }
 
    /**
@@ -146,59 +180,87 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
       if (editor == null || compilationUnit == null)
          return;
       IProblem[] problems = compilationUnit.getProblems();
-
+      new String();
       boolean isReinvoked = false;
-      //      fIsProblemLocationAvailable = false;
 
       if (display != null)
       {
          if (isUpdatedOffset())
          {
             isReinvoked = true;
-            //            restorePosition();
-            //            hide();
-            //            fIsProblemLocationAvailable = true;
          }
       }
 
-      //      fPosition = null;
-      //      fCurrentAnnotations = null;
-
       document = editor.getDocument();
-      ArrayList<IProblemLocation> resultingAnnotations = new ArrayList<IProblemLocation>(20);
       try
       {
          SelectionRange selectedRange = editor.getSelectionRange();
-         currOffset = document.getLineOffset(selectedRange.getStartLine()) + selectedRange.getStartSymbol();
-         currLength = document.getLineOffset(selectedRange.getEndLine()) + selectedRange.getEndSymbol() - currOffset;
+         currOffset = document.getLineOffset(selectedRange.getStartLine() - 1) + selectedRange.getStartSymbol();
+         currLength =
+            document.getLineOffset(selectedRange.getEndLine() - 1) + selectedRange.getEndSymbol() - currOffset;
          boolean goToClosest = (currLength == 0) && !isReinvoked;
 
-         int newOffset =
-            collectQuickFixableAnnotations(editor, currOffset, goToClosest, problems, resultingAnnotations);
-         if (newOffset != currOffset)
-         {
-            //            storePosition(currOffset, currLength);
-            int row = document.getLineOfOffset(newOffset);
-            editor.goToPosition(row, newOffset - row);
-            currOffset = newOffset;
-            //            fViewer.revealRange(newOffset, 0);
-            //            fIsProblemLocationAvailable = true;
-            //            if (fIsCompletionActive)
-            //            {
-            //               hide();
-            //            }
-         }
+         selectProposalPosition(problems, goToClosest);
       }
       catch (BadLocationException e)
       {
-         //TODO
          e.printStackTrace();
-         //         JavaPlugin.log(e);
+         eventBus.fireEvent(new OutputEvent(e.getMessage(), Type.ERROR));
+      }
+      Scheduler.get().scheduleDeferred(quickFx);
+   }
+
+   /**
+    * @param problems
+    * @param goToClosest
+    * @throws BadLocationException
+    */
+   private void selectProposalPosition(IProblem[] problems, boolean goToClosest) throws BadLocationException
+   {
+      final ArrayList<IProblemLocation> resultingAnnotations = new ArrayList<IProblemLocation>(20);
+      int newOffset = collectQuickFixableAnnotations(editor, currOffset, goToClosest, problems, resultingAnnotations);
+      if (newOffset != currOffset)
+      {
+         int row = document.getLineOfOffset(newOffset) + 1;
+         editor.goToPosition(row, newOffset - document.getLineOffset(row - 1) + 1);
+         currOffset = newOffset;
+
       }
       currentAnnotations = resultingAnnotations.toArray(new IProblemLocation[resultingAnnotations.size()]);
-      ICompletionProposal[] proposals = correctionProcessor.computeQuickAssistProposals(this);
-      display = new CodeAssitantForm(0, 0, proposals, this);
    }
+
+   private ScheduledCommand quickFx = new ScheduledCommand()
+   {
+
+      @Override
+      public void execute()
+      {
+         try
+         {
+            ICompletionProposal[] proposals = correctionProcessor.computeQuickAssistProposals(QuickFixPresenter.this);
+            if (display == null)
+            {
+               int posX = editor.getCursorOffsetX() + 8;
+               int posY = editor.getCursorOffsetY() + 22;
+               keyHandler = IDE.addHandler(EditorHotKeyPressedEvent.TYPE, QuickFixPresenter.this);
+               display = new CodeAssitantForm(posX, posY, proposals, QuickFixPresenter.this);
+            }
+            else
+            {
+               display.setNewProposals(proposals);
+            }
+         }
+         catch (CoreException e)
+         {
+            eventBus.fireEvent(new OutputEvent(e.getStatus().getMessage(), Type.ERROR));
+         }
+         catch (Exception e)
+         {
+            e.printStackTrace();
+            eventBus.fireEvent(new OutputEvent(e.getMessage(), Type.ERROR));
+         }
+      }
+   };
 
    /**
     * @see org.eclipse.jdt.client.UpdateOutlineHandler#onUpdateOutline(org.eclipse.jdt.client.UpdateOutlineEvent)
@@ -372,8 +434,93 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
    {
       if (!editorHasFocus)
          editor.setFocus();
-      //      keyHandler.removeHandler();
+      keyHandler.removeHandler();
       display = null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler#onEditorHotKeyPressed(org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent)
+    */
+   @Override
+   public void onEditorHotKeyPressed(EditorHotKeyPressedEvent event)
+   {
+      switch (event.getKeyCode())
+      {
+         case KeyCodes.KEY_DOWN :
+            display.moveSelectionDown();
+            event.setHotKeyHandled(true);
+            break;
+
+         case KeyCodes.KEY_UP :
+            display.moveSelectionUp();
+            event.setHotKeyHandled(true);
+            break;
+
+         case KeyCodes.KEY_ENTER :
+            display.proposalSelected();
+            event.setHotKeyHandled(true);
+            break;
+
+         case KeyCodes.KEY_ESCAPE :
+            display.cancelCodeAssistant();
+            event.setHotKeyHandled(true);
+            break;
+
+         case KeyCodes.KEY_RIGHT :
+            if (editor.getCursorCol() + 1 > editor.getLineContent(editor.getCursorRow()).length())
+               display.cancelCodeAssistant();
+            else
+               generateNewProposals();
+            break;
+
+         case KeyCodes.KEY_LEFT :
+            if (editor.getCursorCol() - 1 <= 0)
+               display.cancelCodeAssistant();
+            else
+               generateNewProposals();
+            break;
+
+         default :
+            display.cancelCodeAssistant();
+            break;
+      }
+   }
+
+   /**
+    * 
+    */
+   private void generateNewProposals()
+   {
+      onShowQuickFix(null);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.problem.ProblemClickHandler#onProblemClick(org.exoplatform.ide.editor.problem.ProblemClickEvent)
+    */
+   @Override
+   public void onProblemClick(ProblemClickEvent event)
+   {
+      List<IProblem> problems = new ArrayList<IProblem>();
+      for (Problem p : event.getProblems())
+      {
+         if (p instanceof ProblemImpl)
+         {
+            problems.add(((ProblemImpl)p).getOriginalProblem());
+         }
+      }
+      document = editor.getDocument();
+      currLength = 0;
+      try
+      {
+         currOffset = document.getLineOffset(event.getProblems()[0].getLineNumber() - 1);
+         selectProposalPosition(problems.toArray(new IProblem[problems.size()]), true);
+         Scheduler.get().scheduleDeferred(quickFx);
+      }
+      catch (BadLocationException e)
+      {
+         e.printStackTrace();
+         eventBus.fireEvent(new OutputEvent(e.getMessage(), Type.ERROR));
+      }
    }
 
 }

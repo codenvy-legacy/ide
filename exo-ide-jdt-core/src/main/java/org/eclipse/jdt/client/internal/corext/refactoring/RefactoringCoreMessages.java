@@ -151,4 +151,52 @@ public interface RefactoringCoreMessages extends Messages
     */
    String ASTData_update_imports();
 
+   /**
+    * @return
+    */
+   String PromoteTempToFieldRefactoring_name();
+
+   /**
+    * @return
+    */
+   String PromoteTempToFieldRefactoring_editName();
+
+   /**
+    * @return
+    */
+   String PromoteTempToFieldRefactoring_Name_conflict_with_field();
+
+
+   /**
+    * @param fFieldName
+    * @param bindingLabel
+    * @return
+    */
+   String PromoteTempToFieldRefactoring_Name_conflict(String fFieldName, String bindingLabel);
+
+   /**
+    * @return
+    */
+   String PromoteTempToFieldRefactoring_select_declaration();
+
+   /**
+    * @return
+    */
+   String PromoteTempToFieldRefactoring_method_parameters();
+
+   /**
+    * @return
+    */
+   String PromoteTempToFieldRefactoring_exceptions();
+
+   /**
+    * @return
+    */
+   String PromoteTempToFieldRefactoring_cannot_promote();
+
+   /**
+    * @return
+    */
+   String PromoteTempToFieldRefactoring_uses_type_declared_locally();
+
 }

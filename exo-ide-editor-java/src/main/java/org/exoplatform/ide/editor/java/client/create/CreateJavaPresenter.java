@@ -53,6 +53,7 @@ import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
@@ -354,6 +355,9 @@ public class CreateJavaPresenter implements CreateJavaClassHandler, ViewClosedHa
          if (item instanceof FolderModel)
             parentFolder = (FolderModel)item;
          else
+            if(item instanceof ProjectModel)
+               parentFolder = new FolderModel((Folder)item);
+            else
             parentFolder = ((FileModel)item).getParent();
       }
       else

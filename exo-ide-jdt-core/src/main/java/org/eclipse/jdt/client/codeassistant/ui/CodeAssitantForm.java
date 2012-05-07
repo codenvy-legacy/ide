@@ -42,7 +42,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.eclipse.jdt.client.AssistDisplay;
 import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
-import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
@@ -448,7 +447,7 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Assist
     * @see org.eclipse.jdt.client.codeassistant.api.CodeAssistantDisplay#setNewProposals(org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal[])
     */
    @Override
-   public void setNewProposals(IJavaCompletionProposal[] proposals)
+   public void setNewProposals(ICompletionProposal[] proposals)
    {
       addProposalsToPanel(proposals);
    }

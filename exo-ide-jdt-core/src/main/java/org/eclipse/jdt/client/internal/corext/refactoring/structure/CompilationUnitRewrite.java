@@ -242,7 +242,7 @@ public class CompilationUnitRewrite
    public CompilationUnitChange createChange(String name, boolean generateGroups, IProgressMonitor monitor)
       throws CoreException
    {
-      CompilationUnitChange cuChange = new CompilationUnitChange(name);
+      CompilationUnitChange cuChange = new CompilationUnitChange(name, document);
       MultiTextEdit multiEdit = new MultiTextEdit();
       cuChange.setEdit(multiEdit);
       return attachChange(cuChange, generateGroups, monitor);
